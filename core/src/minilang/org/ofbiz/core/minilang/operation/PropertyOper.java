@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.operation;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+
 
 /**
  * A MakeInStringOperation that insert the value of a property from a properties file
@@ -52,6 +54,7 @@ public class PropertyOper extends MakeInStringOperation {
 
     public String exec(Map inMap, List messages, Locale locale, ClassLoader loader) {
         String propStr = UtilProperties.getPropertyValue(UtilURL.fromResource(resource, loader), property);
+
         if (propStr == null || propStr.length() == 0) {
             Debug.logWarning("[SimpleMapProcessor.PropertyOper.exec] Property " + property + " in resource " + resource + " not found, not appending anything");
             return null;

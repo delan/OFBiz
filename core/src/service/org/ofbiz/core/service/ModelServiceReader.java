@@ -1,4 +1,4 @@
-/*                                                                      Debug
+/* Debug
  * $Id$
  *
  * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.service;
 
+
 import java.io.*;
 import java.util.*;
 import java.net.*;
@@ -34,6 +35,7 @@ import org.xml.sax.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Generic Service - Service Definition Reader
@@ -59,14 +61,15 @@ public class ModelServiceReader {
 
     public static ModelServiceReader getModelServiceReader(URL readerURL) {
         ModelServiceReader reader = null;
-        //if ( readersUrl.containsKey(readerURL) ) <-- this is unnecessary as it will return null below if not found
+
+        // if ( readersUrl.containsKey(readerURL) ) <-- this is unnecessary as it will return null below if not found
         reader = (ModelServiceReader) readersUrl.get(readerURL);
-        if (reader == null) { //don't want to block here
+        if (reader == null) { // don't want to block here
             synchronized (ModelServiceReader.class) {
-                //must check if null again as one of the blocked threads can still enter
+                // must check if null again as one of the blocked threads can still enter
                 reader = (ModelServiceReader) readersUrl.get(readerURL);
                 if (reader == null) {
-                    //if (Debug.infoOn()) Debug.logInfo("[Creating reader]: " + readerURL.toExternalForm(), module);
+                    // if (Debug.infoOn()) Debug.logInfo("[Creating reader]: " + readerURL.toExternalForm(), module);
                     reader = new ModelServiceReader(readerURL);
                     readersUrl.put(readerURL, reader);
                 }
@@ -77,13 +80,14 @@ public class ModelServiceReader {
 
     public static ModelServiceReader getModelServiceReader(ResourceHandler handler) {
         ModelServiceReader reader = null;
+
         reader = (ModelServiceReader) readersLoader.get(handler);
-        if (reader == null) { //don't want to block here
+        if (reader == null) { // don't want to block here
             synchronized (ModelServiceReader.class) {
-                //must check if null again as one of the blocked threads can still enter
+                // must check if null again as one of the blocked threads can still enter
                 reader = (ModelServiceReader) readersLoader.get(handler);
                 if (reader == null) {
-                    //if (Debug.infoOn()) Debug.logInfo("[Creating reader]: " + handler, module);
+                    // if (Debug.infoOn()) Debug.logInfo("[Creating reader]: " + handler, module);
                     reader = new ModelServiceReader(handler);
                     readersLoader.put(handler, reader);
                 }
@@ -96,7 +100,7 @@ public class ModelServiceReader {
         this.isFromURL = true;
         this.readerURL = readerURL;
         this.handler = null;
-        //preload models...
+        // preload models...
         getModelServices();
     }
 
@@ -104,30 +108,31 @@ public class ModelServiceReader {
         this.isFromURL = false;
         this.readerURL = null;
         this.handler = handler;
-        //preload models...
+        // preload models...
         getModelServices();
     }
 
     public Map getModelServices() {
-        if (modelServices == null) { //don't want to block here
+        if (modelServices == null) { // don't want to block here
             synchronized (ModelServiceReader.class) {
-                //must check if null again as one of the blocked threads can still enter
-                if (modelServices == null) { //now it's safe
+                // must check if null again as one of the blocked threads can still enter
+                if (modelServices == null) { // now it's safe
                     modelServices = new HashMap();
 
                     UtilTimer utilTimer = new UtilTimer();
 
                     Document document = null;
+
                     if (this.isFromURL) {
-                        //utilTimer.timerString("Before getDocument in file " + readerURL);
+                        // utilTimer.timerString("Before getDocument in file " + readerURL);
                         document = getDocument(readerURL);
-                        
+
                         if (document == null) {
                             modelServices = null;
                             return null;
                         }
                     } else {
-                        //utilTimer.timerString("Before getDocument in " + handler);
+                        // utilTimer.timerString("Before getDocument in " + handler);
                         try {
                             document = handler.getDocument();
                         } catch (GenericConfigException e) {
@@ -135,13 +140,12 @@ public class ModelServiceReader {
                             return null;
                         }
                     }
-                    
-                    if (this.isFromURL) {
-                        //utilTimer.timerString("Before getDocumentElement in file " + readerURL);
-                    } else {
-                        //utilTimer.timerString("Before getDocumentElement in " + handler);
+
+                    if (this.isFromURL) {// utilTimer.timerString("Before getDocumentElement in file " + readerURL);
+                    } else {// utilTimer.timerString("Before getDocumentElement in " + handler);
                     }
                     Element docElement = document.getDocumentElement();
+
                     if (docElement == null) {
                         modelServices = null;
                         return null;
@@ -150,6 +154,7 @@ public class ModelServiceReader {
                     Node curChild = docElement.getFirstChild();
 
                     int i = 0;
+
                     if (curChild != null) {
                         if (this.isFromURL) {
                             utilTimer.timerString("Before start of service loop in file " + readerURL);
@@ -157,37 +162,41 @@ public class ModelServiceReader {
                             utilTimer.timerString("Before start of service loop in " + handler);
                         }
                         int servicesLoaded = 0;
+
                         do {
                             if (curChild.getNodeType() == Node.ELEMENT_NODE && "service".equals(curChild.getNodeName())) {
                                 i++;
                                 Element curService = (Element) curChild;
                                 String serviceName = UtilXml.checkEmpty(curService.getAttribute("name"));
 
-                                //check to see if service with same name has already been read
+                                // check to see if service with same name has already been read
                                 if (modelServices.containsKey(serviceName)) {
                                     Debug.logWarning("WARNING: Service " + serviceName + " is defined more than once, " +
-                                                     "most recent will over-write previous definition(s)", module);
+                                        "most recent will over-write previous definition(s)", module);
                                 }
 
-                                //utilTimer.timerString("  After serviceName -- " + i + " --");
+                                // utilTimer.timerString("  After serviceName -- " + i + " --");
                                 ModelService service = createModelService(curService);
-                                //utilTimer.timerString("  After createModelService -- " + i + " --");
+
+                                // utilTimer.timerString("  After createModelService -- " + i + " --");
                                 if (service != null) {
                                     modelServices.put(serviceName, service);
-                                    //utilTimer.timerString("  After modelServices.put -- " + i + " --");
+                                    // utilTimer.timerString("  After modelServices.put -- " + i + " --");
                                     int reqIn = service.getParameterNames(ModelService.IN_PARAM, false).size();
                                     int optIn = service.getParameterNames(ModelService.IN_PARAM, true).size() - reqIn;
                                     int reqOut = service.getParameterNames(ModelService.OUT_PARAM, false).size();
                                     int optOut = service.getParameterNames(ModelService.OUT_PARAM, true).size() - reqOut;
+
                                     if (Debug.verboseOn()) {
-				        String msg = "-- getModelService: # " + i + " Loaded service: " + serviceName +
-                                                " (IN) " + reqIn + "/" + optIn + " (OUT) " + reqOut + "/" + optOut;
+                                        String msg = "-- getModelService: # " + i + " Loaded service: " + serviceName +
+                                            " (IN) " + reqIn + "/" + optIn + " (OUT) " + reqOut + "/" + optOut;
+
                                         Debug.logVerbose(msg, module);
-				    }
+                                    }
                                 } else {
                                     Debug.logWarning(
-                                            "-- -- SERVICE ERROR:getModelService: Could not create service for serviceName: " +
-                                            serviceName, module);
+                                        "-- -- SERVICE ERROR:getModelService: Could not create service for serviceName: " +
+                                        serviceName, module);
                                 }
 
                             }
@@ -214,6 +223,7 @@ public class ModelServiceReader {
      */
     public ModelService getModelService(String serviceName) {
         Map ec = getModelServices();
+
         if (ec != null)
             return (ModelService) ec.get(serviceName);
         else
@@ -225,6 +235,7 @@ public class ModelServiceReader {
      */
     public Iterator getServiceNamesIterator() {
         Collection collection = getServiceNames();
+
         if (collection != null) {
             return collection.iterator();
         } else {
@@ -237,6 +248,7 @@ public class ModelServiceReader {
      */
     public Collection getServiceNames() {
         Map ec = getModelServices();
+
         return ec.keySet();
     }
 
@@ -249,7 +261,7 @@ public class ModelServiceReader {
         service.invoke = UtilXml.checkEmpty(serviceElement.getAttribute("invoke"));
         service.auth = "true".equalsIgnoreCase(serviceElement.getAttribute("auth"));
         service.export = "true".equalsIgnoreCase(serviceElement.getAttribute("export"));
-        //this defaults to true, so if anything but false, make it true
+        // this defaults to true, so if anything but false, make it true
         service.validate = !"false".equalsIgnoreCase(serviceElement.getAttribute("validate"));
         service.useTransaction = !"false".equalsIgnoreCase(serviceElement.getAttribute("use-transaction"));
         service.description = getCDATADef(serviceElement, "description");
@@ -263,12 +275,15 @@ public class ModelServiceReader {
     protected String getCDATADef(Element baseElement, String tagName) {
         String value = "";
         NodeList nl = baseElement.getElementsByTagName(tagName);
+
         // if there are more then one decriptions we will use only the first one
         if (nl.getLength() > 0) {
             Node n = nl.item(0);
             NodeList childNodes = n.getChildNodes();
+
             if (childNodes.getLength() > 0) {
                 Node cdata = childNodes.item(0);
+
                 value = UtilXml.checkEmpty(cdata.getNodeValue());
             }
         }
@@ -279,9 +294,11 @@ public class ModelServiceReader {
         // Add in the defined attributes (override the above defaults if specified)
         List paramElements = UtilXml.childElementList(baseElement, "attribute");
         Iterator paramIter = paramElements.iterator();
+
         while (paramIter.hasNext()) {
             Element attribute = (Element) paramIter.next();
             ModelParam param = new ModelParam();
+
             param.name = UtilXml.checkEmpty(attribute.getAttribute("name"));
             param.type = UtilXml.checkEmpty(attribute.getAttribute("type"));
             param.mode = UtilXml.checkEmpty(attribute.getAttribute("mode"));
@@ -292,6 +309,7 @@ public class ModelServiceReader {
 
         // Add the default optional parameters
         ModelParam def = null;
+
         // responseMessage
         def = new ModelParam();
         def.name = ModelService.RESPONSE_MESSAGE;
@@ -340,11 +358,13 @@ public class ModelServiceReader {
         if (url == null)
             return null;
         Document document = null;
+
         try {
             document = UtilXml.readXmlDocument(url, true);
         } catch (SAXException sxe) {
             // Error generated during parsing)
             Exception x = sxe;
+
             if (sxe.getException() != null)
                 x = sxe.getException();
             x.printStackTrace();

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.operation;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+
 
 /**
  * Convert the current field from the in-map and place it in the out-map
@@ -55,9 +57,9 @@ public class Convert extends SimpleMapOperation {
         }
 
         type = element.getAttribute("type");
-        //if anything but false it will be true
+        // if anything but false it will be true
         replace = !"false".equals(element.getAttribute("replace"));
-        //if anything but false it will be true
+        // if anything but false it will be true
         setIfNull = !"false".equals(element.getAttribute("set-if-null"));
 
         format = element.getAttribute("format");
@@ -72,7 +74,7 @@ public class Convert extends SimpleMapOperation {
             return;
         }
 
-        //if an incoming string is empty,
+        // if an incoming string is empty,
         // set to null if setIfNull is true, otherwise do nothing, ie treat as if null
         if (fieldObject instanceof java.lang.String) {
             if (((String) fieldObject).length() == 0) {
@@ -83,6 +85,7 @@ public class Convert extends SimpleMapOperation {
         }
 
         Object convertedObject = null;
+
         try {
             convertedObject = ObjectType.simpleTypeConvert(fieldObject, type, format, locale);
         } catch (GeneralException e) {
@@ -95,13 +98,12 @@ public class Convert extends SimpleMapOperation {
 
         if (replace) {
             results.put(toField, convertedObject);
-            //if (Debug.infoOn()) Debug.logInfo("[SimpleMapProcessor.Converted.exec] Put converted value \"" + convertedObject + "\" in field \"" + toField + "\"");
+            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapProcessor.Converted.exec] Put converted value \"" + convertedObject + "\" in field \"" + toField + "\"");
         } else {
-            if (results.containsKey(toField)) {
-                //do nothing
+            if (results.containsKey(toField)) {// do nothing
             } else {
                 results.put(toField, convertedObject);
-                //if (Debug.infoOn()) Debug.logInfo("[SimpleMapProcessor.Converted.exec] Put converted value \"" + convertedObject + "\" in field \"" + toField + "\"");
+                // if (Debug.infoOn()) Debug.logInfo("[SimpleMapProcessor.Converted.exec] Put converted value \"" + convertedObject + "\" in field \"" + toField + "\"");
             }
         }
     }

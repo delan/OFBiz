@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.control;
 
+
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
@@ -37,6 +38,7 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.stats.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.view.*;
+
 
 /**
  * RequestHandler - Request Processor Object
@@ -61,14 +63,14 @@ public class RequestHandler implements Serializable {
     }
 
     public void doRequest(HttpServletRequest request, HttpServletResponse response, String chain,
-                          GenericValue userLogin, GenericDelegator delegator) throws RequestHandlerException {
+        GenericValue userLogin, GenericDelegator delegator) throws RequestHandlerException {
 
         String eventType = null;
         String eventPath = null;
         String eventMethod = null;
 
-		// workaraound if we are in the root webapp
-		String cname = UtilMisc.getApplicationName(request);
+        // workaraound if we are in the root webapp
+        String cname = UtilMisc.getApplicationName(request);
 
         /* Grab data from request object to process. */
         String requestUri = RequestHandler.getRequestUri(request.getPathInfo());
@@ -87,10 +89,13 @@ public class RequestHandler implements Serializable {
             // Check if we SHOULD be secure and are not. If we are posting let it pass to not lose data. (too late now anyway)
             if (!request.isSecure() && rm.requiresHttps(requestUri) && !request.getMethod().equalsIgnoreCase("POST")) {
                 String port = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
+
                 if (UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y")) {
                     StringBuffer newUrl = new StringBuffer();
+
                     newUrl.append("https://");
                     String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
+
                     newUrl.append(server);
                     if (!port.equals("443")) {
                         newUrl.append(":" + port);
@@ -107,20 +112,25 @@ public class RequestHandler implements Serializable {
 
             // If its the first visit run the first visit events.
             HttpSession session = request.getSession();
+
             if (session.getAttribute("visit") == null) {
                 // This isn't an event because it is required to run. We do not want to make it optional.
                 VisitHandler.setInitialVisit(request);
                 Collection events = rm.getFirstVisitEvents();
+
                 if (events != null) {
                     Iterator i = events.iterator();
+
                     while (i.hasNext()) {
                         Map eventMap = (Map) i.next();
                         String eType = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_TYPE);
                         String ePath = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_PATH);
                         String eMeth = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_METHOD);
+
                         try {
                             EventHandler eh = EventFactory.getEventHandler(this, eType);
                             String returnString = eh.invoke(ePath, eMeth, request, response);
+
                             if (!returnString.equalsIgnoreCase("success"))
                                 throw new EventHandlerException("Event did not return 'success'.");
                         } catch (EventHandlerException e) {
@@ -132,16 +142,20 @@ public class RequestHandler implements Serializable {
 
             // Invoke the pre-processor (but NOT in a chain)
             Collection preProcEvents = rm.getPreProcessor();
+
             if (preProcEvents != null) {
                 Iterator i = preProcEvents.iterator();
+
                 while (i.hasNext()) {
                     Map eventMap = (HashMap) i.next();
                     String eType = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_TYPE);
                     String ePath = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_PATH);
                     String eMeth = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_METHOD);
+
                     try {
                         EventHandler preEvent = EventFactory.getEventHandler(this, eType);
                         String returnString = preEvent.invoke(ePath, eMeth, request, response);
+
                         if (!returnString.equalsIgnoreCase("success"))
                             throw new EventHandlerException("Event did not return 'success'.");
                     } catch (EventHandlerException e) {
@@ -154,6 +168,7 @@ public class RequestHandler implements Serializable {
         if (Debug.infoOn()) Debug.logInfo("[Processing Request]: " + requestUri, module);
 
         String eventReturnString = null;
+
         /* Perform security check. */
         if (rm.requiresAuth(requestUri)) {
             // Invoke the security handler
@@ -163,14 +178,16 @@ public class RequestHandler implements Serializable {
             String checkLoginPath = rm.getEventPath(SiteDefs.CHECK_LOGIN_REQUEST_URI);
             String checkLoginMethod = rm.getEventMethod(SiteDefs.CHECK_LOGIN_REQUEST_URI);
             String checkLoginReturnString = null;
+
             try {
                 EventHandler loginEvent = EventFactory.getEventHandler(this, checkLoginType);
+
                 checkLoginReturnString = loginEvent.invoke(checkLoginPath, checkLoginMethod, request, response);
             } catch (EventHandlerException e) {
                 throw new RequestHandlerException(e.getMessage(), e);
             }
             if (!"success".equalsIgnoreCase(checkLoginReturnString)) {
-                //previous URL already saved by event, so just do as the return says...
+                // previous URL already saved by event, so just do as the return says...
                 eventReturnString = checkLoginReturnString;
                 eventType = checkLoginType;
                 eventPath = checkLoginPath;
@@ -192,12 +209,14 @@ public class RequestHandler implements Serializable {
                 try {
                     long eventStartTime = System.currentTimeMillis();
                     EventHandler eh = EventFactory.getEventHandler(this, eventType);
+
                     eventReturnString = eh.invoke(eventPath, eventMethod, request, response);
                     ServerHitBin.countEvent(cname + "." + eventMethod, request, eventStartTime,
-                            System.currentTimeMillis() - eventStartTime, userLogin, delegator);
+                        System.currentTimeMillis() - eventStartTime, userLogin, delegator);
                 } catch (EventHandlerException e) {
-                    //check to see if there is an "error" response, if so go there and make an request error message
+                    // check to see if there is an "error" response, if so go there and make an request error message
                     String tryErrorMsg = rm.getRequestAttribute(requestUri, "error");
+
                     if (tryErrorMsg != null) {
                         eventReturnString = "error";
                         request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error calling event: " + e.toString());
@@ -210,6 +229,7 @@ public class RequestHandler implements Serializable {
 
         // Process the eventReturn.
         String eventReturn = rm.getRequestAttribute(requestUri, eventReturnString);
+
         if (Debug.verboseOn()) Debug.logVerbose("[Response Qualified]: " + eventReturn, module);
 
         // Set the next view if we aren't 'success'
@@ -219,6 +239,7 @@ public class RequestHandler implements Serializable {
         // get the previous request info
         String previousRequest = (String) request.getSession().getAttribute(SiteDefs.PREVIOUS_REQUEST);
         String loginPass = (String) request.getAttribute(SiteDefs.LOGIN_PASSED);
+
         if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: previousRequest - " + previousRequest + " (" + loginPass + ")", module);
 
         // check for a chain request.
@@ -226,41 +247,29 @@ public class RequestHandler implements Serializable {
             if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a chained request.", module);
             nextView = nextView.substring(8);
             doRequest(request, response, nextView, userLogin, delegator);
-        }
-
-        // if previous request exists, and a login just succeeded, do that now.
+        } // if previous request exists, and a login just succeeded, do that now.
         else if (previousRequest != null && loginPass != null && loginPass.equalsIgnoreCase("TRUE")) {
             request.getSession().removeAttribute(SiteDefs.PREVIOUS_REQUEST);
             if (Debug.infoOn()) Debug.logInfo("[Doing Previous Request]: " + previousRequest, module);
             doRequest(request, response, previousRequest, userLogin, delegator);
-        }
-
-        // check for a url for redirection
+        } // check for a url for redirection
         else if (nextView != null && nextView.startsWith("url:")) {
             if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect.", module);
             nextView = nextView.substring(4);
             callRedirect(nextView, request, response);
-        }
-
-        // check for a View
+        } // check for a View
         else if (nextView != null && nextView.startsWith("view:")) {
             Debug.logVerbose("[RequestHandler.doRequest]: Response is a view.", module);
             nextView = nextView.substring(5);
             renderView(nextView, rm.allowExtView(requestUri), request, response);
-        }
-
-        // check for a no dispatch return (meaning the return was processed by the event
+        } // check for a no dispatch return (meaning the return was processed by the event
         else if (nextView != null && nextView.startsWith("none:")) {
             Debug.logVerbose("[RequestHandler.doRequest]: Response is handled by the event.", module);
-        }
-
-        // a page request
+        } // a page request
         else if (nextView != null) {
             Debug.logVerbose("[RequestHandler.doRequest]: Response is a page.", module);
             renderView(nextView, rm.allowExtView(requestUri), request, response);
-        }
-
-        // unknow request
+        } // unknow request
         else {
             throw new RequestHandlerException("Illegal request; handler could not process the request.");
         }
@@ -269,6 +278,7 @@ public class RequestHandler implements Serializable {
     /** Returns the default error page for this request. */
     public String getDefaultErrorPage(HttpServletRequest request) {
         String requestUri = RequestHandler.getRequestUri(request.getPathInfo());
+
         return rm.getErrorPage(requestUri);
     }
 
@@ -290,6 +300,7 @@ public class RequestHandler implements Serializable {
         if (path.lastIndexOf('/') == 0)
             return path.substring(1);
         int nextIndex = path.indexOf('/', 1);
+
         return path.substring(1, nextIndex);
     }
 
@@ -297,11 +308,12 @@ public class RequestHandler implements Serializable {
         if (path.indexOf('/') == -1 || path.lastIndexOf('/') == 0)
             return null;
         int nextIndex = path.indexOf('/', 1);
+
         return path.substring(nextIndex + 1);
     }
 
     private void callRedirect(String url, HttpServletRequest req, HttpServletResponse resp)
-            throws RequestHandlerException {
+        throws RequestHandlerException {
         if (Debug.infoOn()) Debug.logInfo("[Sending redirect]: " + url, module);
         try {
             resp.sendRedirect(url);
@@ -313,7 +325,7 @@ public class RequestHandler implements Serializable {
     }
 
     private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp)
-            throws RequestHandlerException {
+        throws RequestHandlerException {
         GenericValue userLogin = (GenericValue) req.getSession().getAttribute("userLogin");
         GenericDelegator delegator = (GenericDelegator) req.getAttribute("delegator");
         // workaraound if we are in the root webapp
@@ -322,16 +334,17 @@ public class RequestHandler implements Serializable {
 
         if (view != null && view.length() > 0 && view.charAt(0) == '/') view = view.substring(1);
 
-        //if the view name starts with the control servlet name and a /, then it was an 
-        //  attempt to override the default view with a call back into the control servlet,
-        //  so just get the target view name and use that
+        // if the view name starts with the control servlet name and a /, then it was an 
+        // attempt to override the default view with a call back into the control servlet,
+        // so just get the target view name and use that
         String servletName = req.getServletPath().substring(1);
+
         Debug.logInfo("servletName=" + servletName + ", view=" + view);
         if (view.startsWith(servletName + "/")) {
             view = view.substring(servletName.length() + 1);
             Debug.logInfo("a manual control servlet request was received, removing control servlet path resulting in: view=" + view);
         }
-        
+
         if (Debug.verboseOn()) Debug.logVerbose("[Getting View Map]: " + view, module);
 
         // before mapping the view, set a session attribute so we know where we are
@@ -340,6 +353,7 @@ public class RequestHandler implements Serializable {
         String viewType = rm.getViewType(view);
         String tempView = rm.getViewPage(view);
         String nextPage = null;
+
         if (tempView == null) {
             if (!allowExtView) {
                 throw new RequestHandlerException("No view to render.");
@@ -353,26 +367,30 @@ public class RequestHandler implements Serializable {
         if (Debug.verboseOn()) Debug.logVerbose("[Mapped To]: " + nextPage, module);
 
         long viewStartTime = System.currentTimeMillis();
+
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewType + "]");
             ViewHandler vh = ViewFactory.getViewHandler(this, viewType);
+
             vh.render(view, nextPage, rm.getViewInfo(view), req, resp);
         } catch (ViewHandlerException e) {
             Throwable throwable = e.getNested() != null ? e.getNested() : e;
+
             throw new RequestHandlerException(e.getNonNestedMessage(), throwable);
         }
 
-        //before getting the view generation time flush the response output to get more consistent results
+        // before getting the view generation time flush the response output to get more consistent results
         try {
             resp.flushBuffer();
         } catch (java.io.IOException e) {
             throw new RequestHandlerException("Error flushing response buffer", e);
         }
-        
+
         String vname = (String) req.getAttribute(SiteDefs.CURRENT_VIEW);
+
         if (vname != null) {
             ServerHitBin.countView(cname + "." + vname, req, viewStartTime,
-                    System.currentTimeMillis() - viewStartTime, userLogin, delegator);
+                System.currentTimeMillis() - viewStartTime, userLogin, delegator);
         }
     }
 }

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/12/16 00:24:25  jonesde
+ * Changed constant to be consistent with that used elsewhere
+ *
  * Revision 1.3  2001/09/28 21:51:21  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -13,6 +16,7 @@
  */
 
 package org.ofbiz.commonapp.common;
+
 
 /**
  * <p><b>Title:</b> DataModelConstants.java
@@ -41,7 +45,8 @@ package org.ofbiz.commonapp.common;
  * Created on June 28, 2001, 10:12 PM
  */
 public final class DataModelConstants {
+
     /** Constant for denote that the Sequence ID does not apply (i.e. corresponds to all) */
     public static final String SEQ_ID_NA = "_NA_";
-    
+
 }

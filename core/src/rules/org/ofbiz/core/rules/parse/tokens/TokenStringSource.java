@@ -1,7 +1,9 @@
 package org.ofbiz.core.rules.parse.tokens;
 
+
 import java.io.*;
 import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Token String Source
@@ -60,6 +62,7 @@ public class TokenStringSource {
     protected Tokenizer tokenizer;
     protected String delimiter;
     protected TokenString cachedTokenString = null;
+
     /**
      * Constructs a TokenStringSource that will read TokenStrings
      * using the specified tokenizer, delimited by the specified
@@ -75,11 +78,12 @@ public class TokenStringSource {
      *            specified delimiter
      */
     public TokenStringSource(
-    Tokenizer tokenizer, String delimiter) {
-        
+        Tokenizer tokenizer, String delimiter) {
+
         this.tokenizer = tokenizer;
         this.delimiter = delimiter;
     }
+
     /**
      * The design of <code>nextTokenString</code> is that is
      * always returns a cached value. This method will (at least
@@ -90,6 +94,7 @@ public class TokenStringSource {
             loadCache();
         }
     }
+
     /**
      * Returns true if the source has more TokenStrings.
      *
@@ -101,35 +106,40 @@ public class TokenStringSource {
         ensureCacheIsLoaded();
         return cachedTokenString != null;
     }
+
     /**
      * Loads the next TokenString into the cache, or sets the
      * cache to null if the source is out of tokens.
      */
     protected void loadCache() {
         List tokenVector = nextVector();
+
         if (tokenVector.isEmpty()) {
             cachedTokenString = null;
         } else {
             Token tokens[] = (Token[]) tokenVector.toArray(new Token[tokenVector.size()]);
+
             cachedTokenString = new TokenString(tokens);
         }
     }
+
     /**
      * Shows the example in the class comment.
      *
      * @param args ignored
      */
     public static void main(String args[]) {
-        
+
         String s = "I came; I saw; I left in peace;";
-        
+
         TokenStringSource tss =
-        new TokenStringSource(new Tokenizer(s), ";");
-        
+            new TokenStringSource(new Tokenizer(s), ";");
+
         while (tss.hasMoreTokenStrings()) {
             System.out.println(tss.nextTokenString());
         }
     }
+
     /**
      * Returns the next TokenString from the source.
      *
@@ -138,9 +148,11 @@ public class TokenStringSource {
     public TokenString nextTokenString() {
         ensureCacheIsLoaded();
         TokenString returnTokenString = cachedTokenString;
+
         cachedTokenString = null;
         return returnTokenString;
     }
+
     /**
      * Returns a List of the tokens in the source up to either
      * the delimiter or the end of the source.
@@ -150,20 +162,21 @@ public class TokenStringSource {
      */
     protected List nextVector() {
         List v = new ArrayList();
+
         try {
             while (true) {
                 Token tok = tokenizer.nextToken();
+
                 if (tok.ttype() == Token.TT_EOF ||
-                tok.sval().equals(delimiter)) {
-                    
+                    tok.sval().equals(delimiter)) {
+
                     break;
                 }
                 v.add(tok);
             }
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             throw new InternalError(
-            "Problem tokenizing string: " + e);
+                    "Problem tokenizing string: " + e);
         }
         return v;
     }

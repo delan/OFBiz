@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.callops;
 
+
 import java.io.*;
 import java.net.*;
 import java.text.*;
@@ -37,6 +38,7 @@ import org.ofbiz.core.minilang.method.*;
 
 import bsh.*;
 
+
 /**
  * Simple class to wrap messages that come either from a straight string or a properties file
  *
@@ -46,47 +48,51 @@ import bsh.*;
  */
 public class CallBsh extends MethodOperation {
     public static final int bufferLength = 4096;
-    
+
     String inline = null;
     String resource = null;
     String errorListName;
-    
+
     public CallBsh(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         inline = UtilXml.elementValue(element);
         resource = element.getAttribute("resource");
-        
+
         errorListName = element.getAttribute("error-list-name");
         if (errorListName == null || errorListName.length() == 0) {
             errorListName = "error_list";
         }
-        
-        if (inline != null && inline.length() > 0) {
-            //pre-parse/compile inlined bsh, only accessed here
+
+        if (inline != null && inline.length() > 0) {// pre-parse/compile inlined bsh, only accessed here
         }
     }
 
     public boolean exec(MethodContext methodContext) {
         List messages = (List) methodContext.getEnv(errorListName);
+
         if (messages == null) {
             messages = new LinkedList();
             methodContext.putEnv(errorListName, messages);
         }
-        
+
         Interpreter bsh = new Interpreter();
+
         bsh.setClassLoader(methodContext.getLoader());
 
         try {
-            //setup environment
+            // setup environment
             Iterator envEntries = methodContext.getEnvEntryIterator();
+
             while (envEntries.hasNext()) {
                 Map.Entry entry = (Map.Entry) envEntries.next();
+
                 bsh.set((String) entry.getKey(), entry.getValue());
             }
 
-            //run external, from resource, first if resource specified
+            // run external, from resource, first if resource specified
             if (resource != null && resource.length() > 0) {
                 InputStream is = methodContext.getLoader().getResourceAsStream(resource);
+
                 if (is == null) {
                     messages.add("Could not find bsh resource: " + resource);
                 } else {
@@ -95,6 +101,7 @@ public class CallBsh extends MethodOperation {
                         StringBuffer outSb = new StringBuffer();
 
                         String tempStr = null;
+
                         while ((tempStr = reader.readLine()) != null) {
                             outSb.append(tempStr);
                             outSb.append('\n');
@@ -102,7 +109,7 @@ public class CallBsh extends MethodOperation {
 
                         Object resourceResult = bsh.eval(outSb.toString());
 
-                        //if map is returned, copy values into env
+                        // if map is returned, copy values into env
                         if ((resourceResult != null) && (resourceResult instanceof Map)) {
                             methodContext.putAllEnv((Map) resourceResult);
                         }
@@ -112,10 +119,10 @@ public class CallBsh extends MethodOperation {
                 }
             }
 
-            //run inlined second to it can override the one from the property
+            // run inlined second to it can override the one from the property
             Object inlineResult = bsh.eval(inline);
 
-            //if map is returned, copy values into env
+            // if map is returned, copy values into env
             if ((inlineResult != null) && (inlineResult instanceof Map)) {
                 methodContext.putAllEnv((Map) inlineResult);
             }
@@ -123,8 +130,8 @@ public class CallBsh extends MethodOperation {
             Debug.logError(e, "BeanShell execution caused an error");
             messages.add("BeanShell execution caused an error: " + e.getMessage());
         }
-        
-        //always return true, error messages just go on the error list
+
+        // always return true, error messages just go on the error list
         return true;
     }
 }

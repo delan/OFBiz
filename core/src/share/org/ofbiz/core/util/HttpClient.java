@@ -24,9 +24,11 @@
 
 package org.ofbiz.core.util;
 
+
 import java.io.*;
 import java.util.*;
 import java.net.*;
+
 
 /**
  * Send HTTP GET/POST requests.
@@ -45,8 +47,7 @@ public class HttpClient {
     private URLConnection con;
 
     /** Creates an empty HttpClient object. */
-    public HttpClient() {
-    }
+    public HttpClient() {}
 
     /** Creates a new HttpClient object. */
     public HttpClient(URL url) {
@@ -195,12 +196,15 @@ public class HttpClient {
 
     private String sendHttpRequest(String method) throws HttpClientException {
         InputStream in = sendHttpRequestStream(method);
+
         if (in == null) return null;
 
         StringBuffer buf = new StringBuffer();
+
         try {
             BufferedReader post = new BufferedReader(new InputStreamReader(in));
             String line = new String();
+
             while ((line = post.readLine()) != null) {
                 buf.append(line);
                 if (lineFeed)
@@ -241,15 +245,18 @@ public class HttpClient {
             if (headers != null && headers.size() > 0) {
                 Set headerSet = headers.keySet();
                 Iterator i = headerSet.iterator();
+
                 while (i.hasNext()) {
                     String headerName = (String) i.next();
                     String headerValue = (String) headers.get(headerName);
+
                     con.setRequestProperty(headerName, headerValue);
                 }
             }
 
             if (method.equalsIgnoreCase("post")) {
                 DataOutputStream out = new DataOutputStream(con.getOutputStream());
+
                 out.writeBytes(arguments);
                 out.flush();
                 out.close();
@@ -267,9 +274,11 @@ public class HttpClient {
         StringBuffer buf = new StringBuffer();
         Set names = args.keySet();
         Iterator i = names.iterator();
+
         while (i.hasNext()) {
             String name = (String) i.next();
             String value = (String) args.get(name);
+
             buf.append(URLEncoder.encode(name));
             buf.append("=");
             buf.append(URLEncoder.encode(value));

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.taglib;
 
+
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -36,6 +37,7 @@ import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.util.*;
 
 import org.ofbiz.core.pseudotag.*;
+
 
 /**
  * InputValueTag - Outputs a string for an input box from either an entity field or

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * NotEnabled Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class NotEnabled extends WfException {
 
-    public NotEnabled() {
-    }
+    public NotEnabled() {}
 
     public NotEnabled(String msg) {
         super(msg);

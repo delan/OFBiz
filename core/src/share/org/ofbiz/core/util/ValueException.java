@@ -24,7 +24,9 @@
 
 package org.ofbiz.core.util;
 
+
 import java.rmi.RemoteException;
+
 
 /**
  * <p>Exception used by Value classes of Entity Beans

@@ -24,10 +24,12 @@
 
 package org.ofbiz.core.util;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
 import javax.servlet.*;
+
 
 /**
  * Misc J2EE Compatibility Utility Functions
@@ -44,7 +46,7 @@ public class UtilJ2eeCompat {
     public static final String REX_IP = "TradeCity";
     public static final String OC4J = "Oracle";
     public static final String JRUN = "JRun";
-    
+
     protected static Boolean doFlushOnRenderValue = null;
     protected static Boolean useOutputStreamNotWriterValue = null;
     protected static Boolean useNestedJspException = null;
@@ -53,7 +55,7 @@ public class UtilJ2eeCompat {
         initCompatibilityOptions(context);
         return doFlushOnRenderValue.booleanValue();
     }
-    
+
     public static boolean useOutputStreamNotWriter(ServletContext context) {
         initCompatibilityOptions(context);
         return useOutputStreamNotWriterValue.booleanValue();
@@ -65,16 +67,17 @@ public class UtilJ2eeCompat {
     }
 
     protected static void initCompatibilityOptions(ServletContext context) {
-        //this check to see if we should flush is done because on most servers this 
+        // this check to see if we should flush is done because on most servers this 
         // will just slow things down and not solve any problems, but on Tomcat, Orion, etc it is necessary
         if (useOutputStreamNotWriterValue == null || doFlushOnRenderValue == null) {
             boolean doflush = true;
             boolean usestream = true;
             boolean nestjspexception = true;
-            //if context is null use an empty string here which will cause the defaults to be used
+            // if context is null use an empty string here which will cause the defaults to be used
             String serverInfo = context == null ? "" : context.getServerInfo();
+
             Debug.logInfo("serverInfo: " + serverInfo);
-            
+
             if (serverInfo.indexOf(RESIN) >= 0) {
                 Debug.logImportant("Resin detected, disabling the flush on the region render from PageContext for better performance");
                 doflush = false;

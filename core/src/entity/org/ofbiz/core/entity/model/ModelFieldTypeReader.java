@@ -77,10 +77,10 @@ public class ModelFieldTypeReader {
         String tempModelName = datasourceInfo.fieldTypeName;
         ModelFieldTypeReader reader = (ModelFieldTypeReader) readers.get(tempModelName);
 
-        if (reader == null) //don't want to block here
+        if (reader == null) // don't want to block here
         {
             synchronized (ModelFieldTypeReader.class) {
-                //must check if null again as one of the blocked threads can still enter
+                // must check if null again as one of the blocked threads can still enter
                 reader = (ModelFieldTypeReader) readers.get(tempModelName);
                 if (reader == null) {
                     reader = new ModelFieldTypeReader(tempModelName);
@@ -94,26 +94,27 @@ public class ModelFieldTypeReader {
     public ModelFieldTypeReader(String modelName) {
         this.modelName = modelName;
         EntityConfigUtil.FieldTypeInfo fieldTypeInfo = EntityConfigUtil.getFieldTypeInfo(modelName);
+
         if (fieldTypeInfo == null) {
             throw new IllegalStateException("Could not find a field-type definition with name \"" + modelName + "\"");
         }
         fieldTypeResourceHandler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, fieldTypeInfo.resourceElement);
 
-        //preload caches...
+        // preload caches...
         getFieldTypeCache();
     }
 
     public Map getFieldTypeCache() {
-        if (fieldTypeCache == null) //don't want to block here
+        if (fieldTypeCache == null) // don't want to block here
         {
             synchronized (ModelFieldTypeReader.class) {
-                //must check if null again as one of the blocked threads can still enter
-                if (fieldTypeCache == null) //now it's safe
+                // must check if null again as one of the blocked threads can still enter
+                if (fieldTypeCache == null) // now it's safe
                 {
                     fieldTypeCache = new HashMap();
 
                     UtilTimer utilTimer = new UtilTimer();
-                    //utilTimer.timerString("Before getDocument");
+                    // utilTimer.timerString("Before getDocument");
 
                     Document document = null;
 
@@ -127,7 +128,7 @@ public class ModelFieldTypeReader {
                         return null;
                     }
 
-                    //utilTimer.timerString("Before getDocumentElement");
+                    // utilTimer.timerString("Before getDocumentElement");
                     Element docElement = document.getDocumentElement();
 
                     if (docElement == null) {
@@ -145,24 +146,23 @@ public class ModelFieldTypeReader {
                         do {
                             if (curChild.getNodeType() == Node.ELEMENT_NODE && "field-type-def".equals(curChild.getNodeName())) {
                                 i++;
-                                //utilTimer.timerString("Start loop -- " + i + " --");
+                                // utilTimer.timerString("Start loop -- " + i + " --");
                                 Element curFieldType = (Element) curChild;
                                 String fieldTypeName = UtilXml.checkEmpty(curFieldType.getAttribute("type"), "[No type name]");
-                                //utilTimer.timerString("  After fieldTypeName -- " + i + " --");
+                                // utilTimer.timerString("  After fieldTypeName -- " + i + " --");
                                 ModelFieldType fieldType = createModelFieldType(curFieldType, docElement, null);
 
-                                //utilTimer.timerString("  After createModelFieldType -- " + i + " --");
+                                // utilTimer.timerString("  After createModelFieldType -- " + i + " --");
                                 if (fieldType != null) {
                                     fieldTypeCache.put(fieldTypeName, fieldType);
-                                    //utilTimer.timerString("  After fieldTypeCache.put -- " + i + " --");
+                                    // utilTimer.timerString("  After fieldTypeCache.put -- " + i + " --");
                                     if (Debug.verboseOn()) Debug.logVerbose("-- getModelFieldType: #" + i + " Created fieldType: " + fieldTypeName, module);
                                 } else {
                                     Debug.logWarning("-- -- ENTITYGEN ERROR:getModelFieldType: Could not create fieldType for fieldTypeName: " + fieldTypeName, module);
                                 }
 
                             }
-                        }
-                        while ((curChild = curChild.getNextSibling()) != null);
+                        } while ((curChild = curChild.getNextSibling()) != null);
                     } else
                         Debug.logWarning("No child nodes found.", module);
                     utilTimer.timerString("FINISHED - Total Field Types: " + i + " FINISHED");

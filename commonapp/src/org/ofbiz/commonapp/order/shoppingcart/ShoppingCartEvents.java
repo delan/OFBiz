@@ -24,6 +24,7 @@
 
 package org.ofbiz.commonapp.order.shoppingcart;
 
+
 import java.util.*;
 import java.text.*;
 
@@ -36,6 +37,7 @@ import org.ofbiz.core.util.*;
 
 import org.ofbiz.commonapp.product.catalog.*;
 
+
 /**
  * Shopping cart events.
  *
@@ -44,32 +46,33 @@ import org.ofbiz.commonapp.product.catalog.*;
  * @created    August 4, 2001, 8:21 PM
  */
 public class ShoppingCartEvents {
-    
+
     /** Event to add an item to the shopping cart. */
     public static String addToCart(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         ShoppingCart cart = getCartObject(request);
-        
+
         String productId = null;
         String quantityStr = null;
         double quantity = 0;
         HashMap attributes = null;
-        
+
         // Get the parameters as a MAP, remove the productId and quantity params.
         // The rest should be product attributes.This only works w/ servlet api 2.3
-        //Map paramMap = request.getParameterMap();
+        // Map paramMap = request.getParameterMap();
         Map paramMap = UtilMisc.getParameterMap(request);
+
         if (paramMap.containsKey("ADD_PRODUCT_ID")) {
             productId = (String) paramMap.remove("ADD_PRODUCT_ID");
         } else if (paramMap.containsKey("add_product_id")) {
             productId = (String) paramMap.remove("add_product_id");
         }
         if (productId == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,"No add_product_id passed, not adding anything to cart.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "No add_product_id passed, not adding anything to cart.");
             return "error";
         }
-        
+
         if (paramMap.containsKey("QUANTITY")) {
             quantityStr = (String) paramMap.remove("QUANTITY");
         } else if (paramMap.containsKey("quantity")) {
@@ -77,63 +80,67 @@ public class ShoppingCartEvents {
         }
         if (quantityStr == null)
             quantityStr = "1";  // default quantity is 1
-        
+
         // parse the quantity
         try {
             quantity = Double.parseDouble(quantityStr);
         } catch (NumberFormatException nfe) {
             quantity = 1;
         }
-        
+
         // Create a HashMap of product attributes.
-        /* 
+        /*
          * commenting this out because this pulls in parameters that we don't want; we need some way to specify which parameters to put into attributes...
-        if (paramMap.size() > 0) {
-            attributes = new HashMap(paramMap);
-        }
+         if (paramMap.size() > 0) {
+         attributes = new HashMap(paramMap);
+         }
          */
-        
+
         try {
             cart.addOrIncreaseItem(productId, quantity, null, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
         } catch (CartItemModifyException e) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
-            return "success"; //don't return error because this is a non-critical error and should go back to the same page
+            return "success"; // don't return error because this is a non-critical error and should go back to the same page
         }
-        
+
         if (cart.viewCartOnAdd()) {
             return "viewcart";
         } else {
             return "success";
         }
     }
-    
+
     public static String addToCartFromOrder(HttpServletRequest request, HttpServletResponse response) {
         String orderId = request.getParameter("order_id");
         String[] itemIds = request.getParameterValues("item_id");
-        
+
         if (orderId == null || orderId.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "No order specified to add from.");
             return "error";
         }
-        
+
         ShoppingCart cart = getCartObject(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        
+
         boolean noItems = true;
+
         if ("true".equals(request.getParameter("add_all"))) {
             Iterator itemIter = null;
+
             try {
                 itemIter = UtilMisc.toIterator(delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId), null));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage());
                 itemIter = null;
             }
-            
+
             if (itemIter != null && itemIter.hasNext()) {
                 String errMsg = "";
-                while(itemIter.hasNext()) {
+
+                while (itemIter.hasNext()) {
                     GenericValue orderItem = (GenericValue) itemIter.next();
+
                     if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
                         try {
                             cart.addOrIncreaseItem(orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
@@ -145,7 +152,7 @@ public class ShoppingCartEvents {
                 }
                 if (errMsg.length() > 0) {
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
-                    return "success"; //don't return error because this is a non-critical error and should go back to the same page
+                    return "success"; // don't return error because this is a non-critical error and should go back to the same page
                 }
             } else {
                 noItems = true;
@@ -154,12 +161,14 @@ public class ShoppingCartEvents {
             noItems = true;
             if (itemIds != null) {
                 String errMsg = "";
-                for(int i=0; i<itemIds.length; i++) {
+
+                for (int i = 0; i < itemIds.length; i++) {
                     String orderItemSeqId = itemIds[i];
                     GenericValue orderItem = null;
+
                     try {
                         orderItem = delegator.findByPrimaryKey("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId));
-                    } catch(GenericEntityException e) {
+                    } catch (GenericEntityException e) {
                         Debug.logWarning(e.getMessage());
                         errMsg += "<li>Order line \"" + orderItemSeqId + "\" not found, so not added.";
                         continue;
@@ -177,58 +186,65 @@ public class ShoppingCartEvents {
                 }
                 if (errMsg.length() > 0) {
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
-                    return "success"; //don't return error because this is a non-critical error and should go back to the same page
+                    return "success"; // don't return error because this is a non-critical error and should go back to the same page
                 }
-            }//else no items
+            }// else no items
         }
-        
+
         if (noItems) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "No items found to add.");
-            return "success"; //don't return error because this is a non-critical error and should go back to the same page
+            return "success"; // don't return error because this is a non-critical error and should go back to the same page
         }
-        
+
         return "success";
     }
-    
+
     /** Adds all products in a category according to quantity request parameter
      * for each; if no parameter for a certain product in the category, or if
      * quantity is 0, do not add
      */
     public static String addToCartBulk(HttpServletRequest request, HttpServletResponse response) {
         String categoryId = request.getParameter("category_id");
-        
+
         if (categoryId == null || categoryId.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "No category specified to add from.");
             return "error";
         }
-        
+
         ShoppingCart cart = getCartObject(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        
+
         Collection prodCatMemberCol = null;
+
         try {
-            prodCatMemberCol = delegator.findByAndCache("ProductCategoryMember",UtilMisc.toMap("productCategoryId",categoryId));
-        } catch(GenericEntityException e) {
+            prodCatMemberCol = delegator.findByAndCache("ProductCategoryMember", UtilMisc.toMap("productCategoryId", categoryId));
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not get products in category " + categoryId + " to add to cart (read error): " + e.getMessage());
             return "error";
         }
-        
+
         if (prodCatMemberCol == null) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not get products in category " + categoryId + " to add to cart (read error).");
             return "error";
         }
-        
+
         String errMsg = "";
         Iterator pcmIter = prodCatMemberCol.iterator();
-        while(pcmIter.hasNext()) {
-            GenericValue productCategoryMember = (GenericValue)pcmIter.next();
+
+        while (pcmIter.hasNext()) {
+            GenericValue productCategoryMember = (GenericValue) pcmIter.next();
             String quantStr = request.getParameter("quantity_" + productCategoryMember.getString("productId"));
+
             if (quantStr != null && quantStr.length() > 0) {
                 double quantity = 0;
-                try { quantity = Double.parseDouble(quantStr); }
-                catch(NumberFormatException nfe) { quantity = 0; }
+
+                try {
+                    quantity = Double.parseDouble(quantStr);
+                } catch (NumberFormatException nfe) {
+                    quantity = 0;
+                }
                 if (quantity > 0.0) {
                     try {
                         cart.addOrIncreaseItem(productCategoryMember.getString("productId"), quantity, null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
@@ -240,48 +256,51 @@ public class ShoppingCartEvents {
         }
         if (errMsg.length() > 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
-            return "success"; //don't return error because this is a non-critical error and should go back to the same page
+            return "success"; // don't return error because this is a non-critical error and should go back to the same page
         }
-        
+
         return "success";
     }
-    
+
     /** Adds all products in a category according to default quantity on ProductCategoryMember
      * for each; if no default for a certain product in the category, or if
      * quantity is 0, do not add
      */
     public static String addCategoryDefaults(HttpServletRequest request, HttpServletResponse response) {
         String categoryId = request.getParameter("category_id");
-        
+
         if (categoryId == null || categoryId.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "No category specified to add from.");
             return "error";
         }
-        
+
         ShoppingCart cart = getCartObject(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        
+
         Collection prodCatMemberCol = null;
+
         try {
-            prodCatMemberCol = delegator.findByAndCache("ProductCategoryMember",UtilMisc.toMap("productCategoryId",categoryId));
-        } catch(GenericEntityException e) {
+            prodCatMemberCol = delegator.findByAndCache("ProductCategoryMember", UtilMisc.toMap("productCategoryId", categoryId));
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.toString());
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not get products in category " + categoryId + " to add to cart (read error): " + e.getMessage());
             return "error";
         }
-        
+
         if (prodCatMemberCol == null) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not get products in category " + categoryId + " to add to cart (read error).");
             return "error";
         }
-        
+
         String errMsg = "";
         double totalQuantity = 0;
         Iterator pcmIter = prodCatMemberCol.iterator();
-        while(pcmIter.hasNext()) {
-            GenericValue productCategoryMember = (GenericValue)pcmIter.next();
+
+        while (pcmIter.hasNext()) {
+            GenericValue productCategoryMember = (GenericValue) pcmIter.next();
             Double quantity = productCategoryMember.getDouble("quantity");
+
             if (quantity != null && quantity.doubleValue() > 0.0) {
                 try {
                     cart.addOrIncreaseItem(productCategoryMember.getString("productId"), quantity.doubleValue(), null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
@@ -293,13 +312,13 @@ public class ShoppingCartEvents {
         }
         if (errMsg.length() > 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
-            return "success"; //don't return error because this is a non-critical error and should go back to the same page
+            return "success"; // don't return error because this is a non-critical error and should go back to the same page
         }
-        
+
         request.setAttribute(SiteDefs.EVENT_MESSAGE, "Added " + UtilFormatOut.formatQuantity(totalQuantity) + " items to the cart.");
         return "success";
     }
-    
+
     /** Delete an item from the shopping cart. */
     public static String deleteFromCart(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);
@@ -307,31 +326,34 @@ public class ShoppingCartEvents {
         Map paramMap = UtilMisc.getParameterMap(request);
         Set names = paramMap.keySet();
         Iterator i = names.iterator();
-        
+
         String errMsg = "";
-        while ( i.hasNext() ) {
+
+        while (i.hasNext()) {
             String o = (String) i.next();
-            if ( o.toUpperCase().startsWith("DELETE") ) {
+
+            if (o.toUpperCase().startsWith("DELETE")) {
                 try {
-                    String indexStr = o.substring(o.lastIndexOf('_')+1);
+                    String indexStr = o.substring(o.lastIndexOf('_') + 1);
                     int index = Integer.parseInt(indexStr);
+
                     try {
                         cart.removeCartItem(index, dispatcher);
                     } catch (CartItemModifyException e) {
                         errMsg += "<li>" + e.getMessage();
                     }
-                } catch ( NumberFormatException nfe ) { }
+                } catch (NumberFormatException nfe) {}
             }
         }
 
         if (errMsg.length() > 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
-            return "success"; //don't return error because this is a non-critical error and should go back to the same page
+            return "success"; // don't return error because this is a non-critical error and should go back to the same page
         }
 
         return "success";
     }
-    
+
     /** Update the items in the shopping cart. */
     public static String modifyCart(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);
@@ -339,26 +361,30 @@ public class ShoppingCartEvents {
         ArrayList deleteList = new ArrayList();
         Map paramMap = UtilMisc.getParameterMap(request);
         String errMsg = "";
-        
+
         Set names = paramMap.keySet();
         Iterator i = names.iterator();
+
         while (i.hasNext()) {
             String o = (String) i.next();
             int underscorePos = o.lastIndexOf('_');
+
             if (underscorePos >= 0) {
                 try {
-                    String indexStr = o.substring(underscorePos+1);
+                    String indexStr = o.substring(underscorePos + 1);
                     int index = Integer.parseInt(indexStr);
                     String quantString = (String) paramMap.get(o);
                     double quantity = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
+
                     if (Debug.infoOn()) Debug.logInfo("Got index: " + index + "  AND  quantity: " + quantity);
-                    
+
                     if (o.toUpperCase().startsWith("UPDATE")) {
                         if (quantity == 0.0) {
                             deleteList.add(cart.findCartItem(index));
                             if (Debug.infoOn()) Debug.logInfo("Added index: " + index + " to delete list.");
                         } else {
                             ShoppingCartItem item = cart.findCartItem(index);
+
                             if (item != null) {
                                 try {
                                     Debug.logInfo("Setting quantity.");
@@ -369,7 +395,7 @@ public class ShoppingCartEvents {
                             }
                         }
                     }
-                    
+
                     if (o.toUpperCase().startsWith("DELETE")) {
                         deleteList.add(cart.findCartItem(index));
                         if (Debug.infoOn()) Debug.logInfo("Added index: " + index + " to delete list.");
@@ -381,13 +407,15 @@ public class ShoppingCartEvents {
                 } catch (Exception e) {
                     Debug.logWarning(e, "Caught exception on cart update.");
                 }
-            }//else not a parameter we need
+            }// else not a parameter we need
         }
-        
+
         Iterator di = deleteList.iterator();
+
         while (di.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) di.next();
             int itemIndex = cart.getItemIndex(item);
+
             if (Debug.infoOn()) Debug.logInfo("Removing item index: " + itemIndex);
             try {
                 cart.removeCartItem(itemIndex, dispatcher);
@@ -395,7 +423,7 @@ public class ShoppingCartEvents {
                 errMsg += "<li>" + e.getMessage();
             }
         }
-        
+
         if (!paramMap.containsKey("always_showcart")) {
             cart.setViewCartOnAdd(false);
         }
@@ -404,27 +432,28 @@ public class ShoppingCartEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
             return "error";
         }
-        
+
         return "success";
     }
-    
+
     /** Empty the shopping cart. */
     public static String clearCart(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);
+
         cart.clear();
         return "success";
     }
-    
-    
+
     // Gets the shopping cart from the session. Used by all events.
     public static ShoppingCart getCartObject(HttpServletRequest request) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         HttpSession session = request.getSession(true);
         ShoppingCart cart = (ShoppingCart) session.getAttribute(SiteDefs.SHOPPING_CART);
+
         if (cart == null) {
             cart = new ShoppingCart(delegator, session);
         }
-        session.setAttribute(SiteDefs.SHOPPING_CART,cart);
+        session.setAttribute(SiteDefs.SHOPPING_CART, cart);
         return cart;
     }
 }

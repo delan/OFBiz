@@ -25,12 +25,14 @@
 
 package org.ofbiz.core.service;
 
+
 import java.util.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
+
 
 /**
  * Generic Service Utility Class
@@ -44,6 +46,7 @@ public class ServiceUtil {
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
     public static Map returnError(String errorMessage) {
         Map result = new HashMap();
+
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
         if (errorMessage != null) result.put(ModelService.ERROR_MESSAGE, errorMessage);
         return result;
@@ -52,6 +55,7 @@ public class ServiceUtil {
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
     public static Map returnError(List errorMessageList) {
         Map result = new HashMap();
+
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
         if (errorMessageList != null) result.put(ModelService.ERROR_MESSAGE_LIST, errorMessageList);
         return result;
@@ -73,6 +77,7 @@ public class ServiceUtil {
      */
     public static Map returnMessage(String code, String message) {
         Map result = new HashMap();
+
         if (code != null) result.put(ModelService.RESPONSE_MESSAGE, code);
         if (message != null) result.put(ModelService.SUCCESS_MESSAGE, message);
         return result;
@@ -83,18 +88,19 @@ public class ServiceUtil {
      */
     public static String getPartyIdCheckSecurity(GenericValue userLogin, Security security, Map context, Map result, String secEntity, String secOperation) {
         String partyId = (String) context.get("partyId");
+
         if (partyId == null || partyId.length() == 0) {
             partyId = userLogin.getString("partyId");
         }
 
-        //partyId might be null, so check it
+        // partyId might be null, so check it
         if (partyId == null || partyId.length() == 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Party ID missing");
             return partyId;
         }
 
-        //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
+        // <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
         if (!partyId.equals(userLogin.getString("partyId"))) {
             if (!security.hasEntityPermission(secEntity, secOperation, userLogin)) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -106,12 +112,14 @@ public class ServiceUtil {
     }
 
     public static void getMessages(HttpServletRequest request, Map result, String defaultMessage,
-                                   String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix, String successPrefix, String successSuffix) {
+        String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix, String successPrefix, String successSuffix) {
         String errorMessage = ServiceUtil.makeErrorMessage(result, msgPrefix, msgSuffix, errorPrefix, errorSuffix);
+
         if (UtilValidate.isNotEmpty(errorMessage))
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage);
 
         String successMessage = ServiceUtil.makeSuccessMessage(result, msgPrefix, msgSuffix, successPrefix, successSuffix);
+
         if (UtilValidate.isNotEmpty(successMessage))
             request.setAttribute(SiteDefs.EVENT_MESSAGE, successMessage);
 
@@ -135,8 +143,10 @@ public class ServiceUtil {
 
         if (errorMsgMap != null) {
             Iterator mapIter = errorMsgMap.entrySet().iterator();
+
             while (mapIter.hasNext()) {
                 Map.Entry entry = (Map.Entry) mapIter.next();
+
                 outMsg.append(msgPrefix);
                 outMsg.append(entry.getKey());
                 outMsg.append(": ");
@@ -144,9 +154,10 @@ public class ServiceUtil {
                 outMsg.append(msgSuffix);
             }
         }
-        
+
         if (outMsg.length() > 0) {
             StringBuffer strBuf = new StringBuffer();
+
             if (errorPrefix != null) strBuf.append(errorPrefix);
             strBuf.append(outMsg.toString());
             if (errorSuffix != null) strBuf.append(errorSuffix);
@@ -171,6 +182,7 @@ public class ServiceUtil {
 
         if (outMsg.length() > 0) {
             StringBuffer strBuf = new StringBuffer();
+
             if (successPrefix != null) strBuf.append(successPrefix);
             strBuf.append(outMsg.toString());
             if (successSuffix != null) strBuf.append(successSuffix);
@@ -182,10 +194,13 @@ public class ServiceUtil {
 
     public static String makeMessageList(List msgList, String msgPrefix, String msgSuffix) {
         StringBuffer outMsg = new StringBuffer();
+
         if (msgList != null && msgList.size() > 0) {
             Iterator iter = msgList.iterator();
+
             while (iter.hasNext()) {
                 String curMsg = (String) iter.next();
+
                 if (msgPrefix != null) outMsg.append(msgPrefix);
                 outMsg.append(curMsg);
                 if (msgSuffix != null) outMsg.append(msgSuffix);

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.operation;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+
 
 /**
  * Checks to see if the current field is empty (null or zero length)
@@ -50,6 +52,7 @@ public class NotEmpty extends SimpleMapOperation {
 
         if (obj instanceof java.lang.String) {
             String fieldValue = (java.lang.String) obj;
+
             if (!UtilValidate.isNotEmpty(fieldValue)) {
                 addMessage(messages, loader);
             }

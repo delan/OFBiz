@@ -24,8 +24,10 @@
 
 package org.ofbiz.core.util;
 
+
 import java.util.*;
 import java.net.*;
+
 
 /**
  * Generic Property Accessor with Cache - Utilities for working with properties files
@@ -54,6 +56,7 @@ public class UtilProperties {
      */
     public static boolean propertyValueEquals(String resource, String name, String compareString) {
         String value = getPropertyValue(resource, name);
+
         if (value == null) return false;
         return value.trim().equals(compareString);
     }
@@ -66,6 +69,7 @@ public class UtilProperties {
      */
     public static boolean propertyValueEqualsIgnoreCase(String resource, String name, String compareString) {
         String value = getPropertyValue(resource, name);
+
         if (value == null) return false;
         return value.trim().equalsIgnoreCase(compareString);
     }
@@ -79,6 +83,7 @@ public class UtilProperties {
      */
     public static String getPropertyValue(String resource, String name, String defaultValue) {
         String value = getPropertyValue(resource, name);
+
         if (value == null || value.length() == 0)
             return defaultValue;
         else
@@ -88,10 +93,10 @@ public class UtilProperties {
     public static double getPropertyNumber(String resource, String name) {
         String str = getPropertyValue(resource, name);
         double strValue = 0.00000;
+
         try {
             strValue = Double.parseDouble(str);
-        } catch (NumberFormatException nfe) {
-        }
+        } catch (NumberFormatException nfe) {}
         return strValue;
     }
 
@@ -104,9 +109,11 @@ public class UtilProperties {
         if (resource == null || resource.length() <= 0) return "";
         if (name == null || name.length() <= 0) return "";
         FlexibleProperties properties = (FlexibleProperties) resCache.get(resource);
+
         if (properties == null) {
             try {
                 URL url = UtilURL.fromResource(resource);
+
                 if (url == null) return "";
                 properties = FlexibleProperties.makeFlexibleProperties(url);
                 resCache.put(resource, properties);
@@ -120,6 +127,7 @@ public class UtilProperties {
         }
 
         String value = null;
+
         try {
             value = properties.getProperty(name);
         } catch (Exception e) {
@@ -136,9 +144,11 @@ public class UtilProperties {
         if (resource == null || resource.length() <= 0)
             return null;
         Properties properties = (FlexibleProperties) resCache.get(resource);
+
         if (properties == null) {
             try {
                 URL url = UtilURL.fromResource(resource);
+
                 if (url == null)
                     return null;
                 properties = FlexibleProperties.makeFlexibleProperties(url);
@@ -154,7 +164,7 @@ public class UtilProperties {
         return properties;
     }
 
-//========= URL Based Methods ==========
+    // ========= URL Based Methods ==========
 
     /** Compares the specified property to the compareString, returns true if they are the same, false otherwise
      * @param url URL object specifying the location of the resource
@@ -164,6 +174,7 @@ public class UtilProperties {
      */
     public static boolean propertyValueEquals(URL url, String name, String compareString) {
         String value = getPropertyValue(url, name);
+
         if (value == null) return false;
         return value.trim().equals(compareString);
     }
@@ -176,6 +187,7 @@ public class UtilProperties {
      */
     public static boolean propertyValueEqualsIgnoreCase(URL url, String name, String compareString) {
         String value = getPropertyValue(url, name);
+
         if (value == null) return false;
         return value.trim().equalsIgnoreCase(compareString);
     }
@@ -189,6 +201,7 @@ public class UtilProperties {
      */
     public static String getPropertyValue(URL url, String name, String defaultValue) {
         String value = getPropertyValue(url, name);
+
         if (value == null || value.length() <= 0)
             return defaultValue;
         else
@@ -198,10 +211,10 @@ public class UtilProperties {
     public static double getPropertyNumber(URL url, String name) {
         String str = getPropertyValue(url, name);
         double strValue = 0.00000;
+
         try {
             strValue = Double.parseDouble(str);
-        } catch (NumberFormatException nfe) {
-        }
+        } catch (NumberFormatException nfe) {}
         return strValue;
     }
 
@@ -214,6 +227,7 @@ public class UtilProperties {
         if (url == null) return "";
         if (name == null || name.length() <= 0) return "";
         FlexibleProperties properties = (FlexibleProperties) urlCache.get(url);
+
         if (properties == null) {
             try {
                 properties = FlexibleProperties.makeFlexibleProperties(url);
@@ -228,6 +242,7 @@ public class UtilProperties {
         }
 
         String value = null;
+
         try {
             value = properties.getProperty(name);
         } catch (Exception e) {
@@ -235,7 +250,6 @@ public class UtilProperties {
         }
         return value == null ? "" : value.trim();
     }
-
 
     /** Returns the value of a split property name from the specified resource/properties file
      * Rather than specifying the property name the value of a name.X property is specified which
@@ -250,6 +264,7 @@ public class UtilProperties {
         if (name == null || name.length() <= 0) return "";
 
         FlexibleProperties properties = (FlexibleProperties) urlCache.get(url);
+
         if (properties == null) {
             try {
                 properties = FlexibleProperties.makeFlexibleProperties(url);
@@ -264,9 +279,11 @@ public class UtilProperties {
         }
 
         String value = null;
+
         try {
             int curIdx = 1;
             String curName = null;
+
             while ((curName = properties.getProperty("name." + curIdx)) != null) {
                 if (name.equals(curName)) {
                     value = properties.getProperty("value." + curIdx);

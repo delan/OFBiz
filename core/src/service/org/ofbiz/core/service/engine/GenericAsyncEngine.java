@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.service.engine;
 
+
 import java.io.*;
 import java.util.*;
 
@@ -36,6 +37,7 @@ import org.ofbiz.core.serialize.*;
 import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Generic Asynchronous Engine
@@ -99,7 +101,7 @@ public abstract class GenericAsyncEngine implements GenericEngine {
      * @throws GenericServiceException
      */
     public void runAsync(ModelService modelService, Map context, GenericRequester requester, boolean persist)
-            throws GenericServiceException {
+        throws GenericServiceException {
 
         DispatchContext dctx = dispatcher.getLocalContext(loader);
         Job job = null;
@@ -107,10 +109,12 @@ public abstract class GenericAsyncEngine implements GenericEngine {
         if (persist) {
             // suspend the current transaction
             TransactionManager tm = TransactionFactory.getTransactionManager();
+
             if (tm == null)
                 throw new GenericServiceException("Cannot get the transaction manager; cannot run persisted services.");
 
             Transaction parentTrans = null;
+
             try {
                 parentTrans = tm.suspend();
             } catch (SystemException se) {
@@ -129,14 +133,15 @@ public abstract class GenericAsyncEngine implements GenericEngine {
 
                 GenericValue runtimeData = dispatcher.getDelegator().makeValue("RuntimeData",
                         UtilMisc.toMap("runtimeDataId", dataId));
+
                 runtimeData.set("runtimeInfo", XmlSerializer.serialize(context));
                 toBeStored.add(runtimeData);
 
                 // Create the job info
                 String jobName = new String(new Long((new Date().getTime())).toString());
                 Map jFields = UtilMisc.toMap("jobName", jobName, "runTime", UtilDateTime.nowTimestamp(),
-                                             "serviceName", modelService.name, "loaderName", loader,
-                                             "runtimeDataId", dataId);
+                        "serviceName", modelService.name, "loaderName", loader,
+                        "runtimeDataId", dataId);
 
                 jobV = dispatcher.getDelegator().makeValue("JobSandbox", jFields);
                 toBeStored.add(jobV);
@@ -163,6 +168,7 @@ public abstract class GenericAsyncEngine implements GenericEngine {
             job = new PersistedServiceJob(dctx, jobV, requester);
         } else {
             String name = new Long(new Date().getTime()).toString();
+
             job = new GenericServiceJob(dctx, name, modelService.name, context, requester);
         }
 
@@ -186,5 +192,4 @@ public abstract class GenericAsyncEngine implements GenericEngine {
         }
     }
 }
-
 

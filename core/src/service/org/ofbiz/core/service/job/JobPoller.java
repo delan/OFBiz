@@ -25,12 +25,14 @@
 
 package org.ofbiz.core.service.job;
 
+
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.config.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * JobPoller - Polls for persisted jobs to run.
@@ -79,8 +81,10 @@ public class JobPoller implements Runnable {
             try {
                 // grab a list of jobs to run.
                 Iterator poll = jm.poll();
+
                 while (poll.hasNext()) {
                     Job job = (Job) poll.next();
+
                     if (job.isValid())
                         queueNow(job);
                 }
@@ -127,8 +131,10 @@ public class JobPoller implements Runnable {
         if (run.size() > pool.size() && pool.size() < maxThreads()) {
             int calcSize = (run.size() / jobsPerThread()) - (pool.size());
             int addSize = calcSize > maxThreads() ? maxThreads() : calcSize;
+
             for (int i = 0; i < addSize; i++) {
                 JobInvoker iv = new JobInvoker(this, invokerWaitTime());
+
                 pool.add(iv);
             }
         }
@@ -144,6 +150,7 @@ public class JobPoller implements Runnable {
         if (pool.size() < minThreads()) {
             for (int i = 0; i < minThreads() - pool.size(); i++) {
                 JobInvoker iv = new JobInvoker(this, invokerWaitTime());
+
                 pool.add(iv);
             }
         }
@@ -152,8 +159,10 @@ public class JobPoller implements Runnable {
     // Creates the invoker pool
     private LinkedList createThreadPool() {
         LinkedList threadPool = new LinkedList();
+
         while (threadPool.size() < minThreads()) {
             JobInvoker iv = new JobInvoker(this, invokerWaitTime());
+
             threadPool.add(iv);
         }
 
@@ -162,6 +171,7 @@ public class JobPoller implements Runnable {
 
     private int maxThreads() {
         int max = MAX_THREADS;
+
         try {
             max = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "max-threads"));
         } catch (NumberFormatException nfe) {
@@ -172,6 +182,7 @@ public class JobPoller implements Runnable {
 
     private int minThreads() {
         int min = MIN_THREADS;
+
         try {
             min = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "min-threads"));
         } catch (NumberFormatException nfe) {
@@ -182,6 +193,7 @@ public class JobPoller implements Runnable {
 
     private int jobsPerThread() {
         int jobs = MAX_JOBS;
+
         try {
             jobs = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "jobs"));
         } catch (NumberFormatException nfe) {
@@ -192,6 +204,7 @@ public class JobPoller implements Runnable {
 
     private int invokerWaitTime() {
         int wait = JobInvoker.WAIT_TIME;
+
         try {
             wait = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "wait-millis"));
         } catch (NumberFormatException nfe) {
@@ -202,6 +215,7 @@ public class JobPoller implements Runnable {
 
     private int pollWaitTime() {
         int poll = POLL_WAIT;
+
         try {
             poll = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "poll-db-millis"));
         } catch (NumberFormatException nfe) {
@@ -212,6 +226,7 @@ public class JobPoller implements Runnable {
 
     private boolean pollEnabled() {
         String enabled = ServiceConfigUtil.getElementAttr("thread-pool", "poll-enabled");
+
         if (enabled.equalsIgnoreCase("false"))
             return false;
         return true;

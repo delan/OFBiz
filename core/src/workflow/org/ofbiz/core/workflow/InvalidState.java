@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * InvalidState Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class InvalidState extends WfException {
 
-    public InvalidState() {
-    }
+    public InvalidState() {}
 
     public InvalidState(String msg) {
         super(msg);

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity.jdbc;
 
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -33,6 +34,7 @@ package org.ofbiz.core.entity.jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 
 public interface ExecQueryCallbackFunctionIF {
     public boolean processNextRow(ResultSet rs) throws SQLException;

@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * <p><b>Title:</b> Evaluation Exception
  * <p><b>Description:</b> None
@@ -34,19 +35,21 @@ package org.ofbiz.core.rules.engine;
  * @version 1.0
  */
 public class EvaluationException extends RuntimeException {
-  /**
-   * Constructs an EvaluationException with no detail message.
-   *
-   */
-  public EvaluationException() {
-    super();
-  }
-  /**
-   * Constructs an EvaluationException with the specified detail message.
-   *
-   * @param   detail   the detail message
-   */
-  public EvaluationException(String detail) {
-    super(detail);
-  }
+
+    /**
+     * Constructs an EvaluationException with no detail message.
+     *
+     */
+    public EvaluationException() {
+        super();
+    }
+
+    /**
+     * Constructs an EvaluationException with the specified detail message.
+     *
+     * @param   detail   the detail message
+     */
+    public EvaluationException(String detail) {
+        super(detail);
+    }
 }

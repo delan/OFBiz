@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.taglib;
 
+
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * FormatTag - JSP Tag to format numbers and dates.
@@ -66,6 +68,7 @@ public class FormatTag extends BodyTagSupport {
         DateFormat df = null;
         BodyContent body = getBodyContent();
         String value = body.getString();
+
         if (value == null || value.length() == 0)
             return SKIP_BODY;
 
@@ -80,6 +83,7 @@ public class FormatTag extends BodyTagSupport {
             if (nf != null) {
                 // do the number formatting
                 NumberFormat strFormat = NumberFormat.getInstance();
+
                 getPreviousOut().print(nf.format(strFormat.parse(value.trim())));
             } else if (df != null) {
                 // do the date formatting
@@ -101,5 +105,4 @@ public class FormatTag extends BodyTagSupport {
     }
 
 }
-
 

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.control;
 
+
 import java.net.*;
 import java.sql.*;
 import java.util.*;
@@ -43,16 +44,16 @@ import org.ofbiz.core.stats.*;
  *@version    1.0
  */
 public class ControlActivationEventListener implements HttpSessionActivationListener {
-    //Debug module name
+    // Debug module name
     public static final String module = ControlActivationEventListener.class.getName();
-    
-    public ControlActivationEventListener() { }
-    
+
+    public ControlActivationEventListener() {}
+
     public void sessionWillPassivate(HttpSessionEvent event) {
         ControlEventListener.countPassivateSession();
         Debug.logInfo("Passivating session: " + event.getSession().toString(), module);
     }
-    
+
     public void sessionDidActivate(HttpSessionEvent event) {
         ControlEventListener.countActivateSession();
         Debug.logInfo("Activating session: " + event.getSession().toString(), module);

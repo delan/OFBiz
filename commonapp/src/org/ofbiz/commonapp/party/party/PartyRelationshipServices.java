@@ -24,6 +24,7 @@
 
 package org.ofbiz.commonapp.party.party;
 
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
+
 
 /**
  * Services for Party Relationship maintenance
@@ -42,6 +44,7 @@ import org.ofbiz.core.service.*;
  * @created March 13, 2002
  */
 public class PartyRelationshipServices {
+
     /** Creates a PartyRelationship
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -52,43 +55,49 @@ public class PartyRelationshipServices {
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
+
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+
         if (result.size() > 0)
             return result;
-        
+
         String partyIdFrom = (String) context.get("partyIdFrom");
+
         if (partyIdFrom == null) {
             partyIdFrom = (String) userLogin.getString("partyId");
         }
-        
+
         String partyIdTo = (String) context.get("partyIdTo");
+
         if (partyIdTo == null) {
             return ServiceUtil.returnError("Cannot create party relationship, partyIdTo cannot be null.");
         }
-        
+
         String roleTypeIdFrom = (String) context.get("roleTypeIdFrom");
+
         if (roleTypeIdFrom == null) {
             roleTypeIdFrom = "_NA_";
         }
-        
+
         String roleTypeIdTo = (String) context.get("roleTypeIdTo");
+
         if (roleTypeIdTo == null) {
             roleTypeIdTo = "_NA_";
         }
-        
+
         Timestamp fromDate = (Timestamp) context.get("fromDate");
+
         if (fromDate == null) {
             fromDate = UtilDateTime.nowTimestamp();
         }
-        
+
         GenericValue partyRelationship = delegator.makeValue("PartyRelationship", UtilMisc.toMap("partyIdFrom", partyIdFrom, "partyIdTo", partyIdTo, "roleTypeIdFrom", roleTypeIdFrom, "roleTypeIdTo", roleTypeIdTo, "fromDate", fromDate));
-        
-        partyRelationship.set( "thruDate", context.get("thruDate"), false);
-        partyRelationship.set( "priorityTypeId", context.get("priorityTypeId"), false);
-        partyRelationship.set( "comments", context.get("comments"), false);
-        partyRelationship.set( "partyRelationshipTypeId", context.get("partyRelationshipTypeId"), false);
-        
+
+        partyRelationship.set("thruDate", context.get("thruDate"), false);
+        partyRelationship.set("priorityTypeId", context.get("priorityTypeId"), false);
+        partyRelationship.set("comments", context.get("comments"), false);
+        partyRelationship.set("partyRelationshipTypeId", context.get("partyRelationshipTypeId"), false);
+
         try {
             if (delegator.findByPrimaryKey(partyRelationship.getPrimaryKey()) != null) {
                 return ServiceUtil.returnError("Could not create party relationship: already exists");
@@ -97,18 +106,18 @@ public class PartyRelationshipServices {
             Debug.logWarning(e);
             return ServiceUtil.returnError("Could not create party role (read failure): " + e.getMessage());
         }
-        
+
         try {
             partyRelationship.create();
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could not create party relationship (write failure): " + e.getMessage());
         }
-        
+
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
-    
+
     /** Updates a PartyRelationship
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -119,61 +128,67 @@ public class PartyRelationshipServices {
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
+
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+
         if (result.size() > 0)
             return result;
-        
+
         String partyIdFrom = (String) context.get("partyIdFrom");
+
         if (partyIdFrom == null) {
             partyIdFrom = (String) userLogin.getString("partyId");
         }
-        
+
         String partyIdTo = (String) context.get("partyIdTo");
+
         if (partyIdTo == null) {
             return ServiceUtil.returnError("Cannot create party relationship, partyIdTo cannot be null.");
         }
-        
+
         String roleTypeIdFrom = (String) context.get("roleTypeIdFrom");
+
         if (roleTypeIdFrom == null) {
             roleTypeIdFrom = "_NA_";
         }
-        
+
         String roleTypeIdTo = (String) context.get("roleTypeIdTo");
+
         if (roleTypeIdTo == null) {
             roleTypeIdTo = "_NA_";
         }
-        
+
         GenericValue partyRelationship = null;
+
         try {
-            partyRelationship = delegator.findByPrimaryKey("PartyRelationship", UtilMisc.toMap("partyIdFrom", partyIdFrom, 
-                    "partyIdTo", partyIdTo, "roleTypeIdFrom", roleTypeIdFrom, "roleTypeIdTo", roleTypeIdTo, "fromDate", context.get("fromDate")));
+            partyRelationship = delegator.findByPrimaryKey("PartyRelationship", UtilMisc.toMap("partyIdFrom", partyIdFrom,
+                            "partyIdTo", partyIdTo, "roleTypeIdFrom", roleTypeIdFrom, "roleTypeIdTo", roleTypeIdTo, "fromDate", context.get("fromDate")));
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
             return ServiceUtil.returnError("Could not update party realtion (read failure): " + e.getMessage());
         }
-        
-        if (partyRelationship == null)  {
+
+        if (partyRelationship == null) {
             return ServiceUtil.returnError("Could not update party relationship (relationship not found)");
         }
-        
+
         partyRelationship.set("thruDate", context.get("thruDate"), false);
         partyRelationship.set("statusId", context.get("statusId"), false);
         partyRelationship.set("priorityTypeId", context.get("priorityTypeId"), false);
         partyRelationship.set("partyRelationshipTypeId", context.get("partyRelationshipTypeId"), false);
         partyRelationship.set("comments", context.get("comments"), false);
-        
+
         try {
             partyRelationship.store();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could not update party relationship (write failure): " + e.getMessage());
         }
-        
+
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
-    
+
     /** Deletes a PartyRelationship
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -184,30 +199,32 @@ public class PartyRelationshipServices {
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
+
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+
         if (result.size() > 0)
             return result;
-        
+
         GenericValue partyRelationship = null;
+
         try {
             partyRelationship = delegator.findByPrimaryKey("PartyRelationship", UtilMisc.toMap("partyIdFrom", context.get("partyIdFrom"), "partyIdTo", context.get("partyIdTo"), "roleTypeIdFrom", context.get("roleTypeIdFrom"), "roleTypeIdTo", context.get("roleTypeIdTo"), "fromDate", context.get("fromDate")));
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e);
             return ServiceUtil.returnError("Could not delete party relationship (read failure): " + e.getMessage());
         }
-        
-        if(partyRelationship == null) {
+
+        if (partyRelationship == null) {
             return ServiceUtil.returnError("Could not delete party relationship (partyRelationship not found)");
         }
-        
+
         try {
             partyRelationship.remove();
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could delete party role (write failure): " + e.getMessage());
         }
-        
+
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
@@ -224,10 +241,12 @@ public class PartyRelationshipServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+
         if (result.size() > 0)
             return result;
 
         GenericValue partyRelationshipType = delegator.makeValue("PartyRelationshipType", UtilMisc.toMap("partyRelationshipTypeId", context.get("partyRelationshipTypeId")));
+
         partyRelationshipType.set("parentTypeId", context.get("parentTypeId"), false);
         partyRelationshipType.set("hasTable", context.get("hasTable"), false);
         partyRelationshipType.set("roleTypeIdValidFrom", context.get("roleTypeIdValidFrom"), false);
@@ -246,7 +265,7 @@ public class PartyRelationshipServices {
 
         try {
             partyRelationshipType.create();
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could not create party relationship type (write failure): " + e.getMessage());
         }
@@ -254,9 +273,5 @@ public class PartyRelationshipServices {
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
-
-
-
-
 
 }

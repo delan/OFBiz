@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.service.job;
 
+
 import java.io.*;
 import java.util.*;
 
@@ -37,6 +38,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.serialize.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * JobManager
@@ -81,7 +83,8 @@ public class JobManager {
         Collection jobEnt = null;
         List order = UtilMisc.toList("runTime");
         List expressions = UtilMisc.toList(new EntityExpr("runTime", EntityOperator.LESS_THAN, UtilDateTime.nowTimestamp()),
-                                           new EntityExpr("startDateTime", EntityOperator.EQUALS, null));
+                new EntityExpr("startDateTime", EntityOperator.EQUALS, null));
+
         try {
             jobEnt = delegator.findByAnd("JobSandbox", expressions, order);
         } catch (GenericEntityException ee) {
@@ -92,16 +95,19 @@ public class JobManager {
         }
         if (jobEnt != null && jobEnt.size() > 0) {
             Iterator i = jobEnt.iterator();
+
             while (i.hasNext()) {
                 GenericValue v = (GenericValue) i.next();
                 String loader = v.getString("loaderName");
                 DispatchContext dctx = dispatcher.getLocalContext(loader);
+
                 if (dctx == null) {
                     Debug.logWarning("Job (" + v.getString("jobName") + " scheduled to run at " +
-                                     v.getTimestamp("runTime") + " has an invalid service loader.", module);
+                        v.getTimestamp("runTime") + " has an invalid service loader.", module);
                     continue;
                 }
                 Job job = new PersistedServiceJob(dctx, v, null); // todo fix the requester
+
                 poll.add(job);
             }
         }
@@ -118,13 +124,15 @@ public class JobManager {
      *@param count The number of times to repeat
      */
     public void schedule(String loader, String serviceName, Map context, long startTime,
-                                      int frequency, int interval, int count) throws JobManagerException {
+        int frequency, int interval, int count) throws JobManagerException {
         String dataId = null;
         String infoId = null;
         String jobName = new String(new Long((new Date().getTime())).toString());
+
         try {
             dataId = delegator.getNextSeqId("RuntimeData").toString();
             GenericValue runtimeData = delegator.makeValue("RuntimeData", UtilMisc.toMap("runtimeDataId", dataId));
+
             runtimeData.set("runtimeInfo", XmlSerializer.serialize(context));
             delegator.create(runtimeData);
         } catch (GenericEntityException ee) {
@@ -136,15 +144,17 @@ public class JobManager {
         }
         try {
             RecurrenceInfo info = RecurrenceInfo.makeInfo(delegator, startTime, frequency, interval, count);
+
             infoId = info.primaryKey();
         } catch (RecurrenceInfoException e) {
             throw new JobManagerException(e.getMessage(), e);
         }
         Map jFields = UtilMisc.toMap("jobName", jobName, "runTime", new java.sql.Timestamp(startTime),
-                                     "serviceName", serviceName, "loaderName", loader,
-                                     "recurrenceInfoId", infoId, "runtimeDataId", dataId);
+                "serviceName", serviceName, "loaderName", loader,
+                "recurrenceInfoId", infoId, "runtimeDataId", dataId);
 
         GenericValue jobV = null;
+
         try {
             jobV = delegator.makeValue("JobSandbox", jFields);
             delegator.create(jobV);

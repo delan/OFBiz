@@ -25,6 +25,7 @@
 
 package org.ofbiz.commonapp.common;
 
+
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.jsp.*;
@@ -32,6 +33,7 @@ import javax.servlet.jsp.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Common Workers
@@ -49,19 +51,22 @@ public class CommonWorkers {
     public static String makeLoginUrl(PageContext pageContext, String requestName) {
         String queryString = null;
         ServletRequest request = pageContext.getRequest();
-        
+
         Enumeration parameterNames = request.getParameterNames();
-        while(parameterNames != null && parameterNames.hasMoreElements()) {
-            String paramName = (String)parameterNames.nextElement();
-            if(paramName != null) {
-                if(queryString == null) queryString = paramName + "=" + request.getParameter(paramName);
+
+        while (parameterNames != null && parameterNames.hasMoreElements()) {
+            String paramName = (String) parameterNames.nextElement();
+
+            if (paramName != null) {
+                if (queryString == null) queryString = paramName + "=" + request.getParameter(paramName);
                 else queryString = queryString + "&" + paramName + "=" + request.getParameter(paramName);
             }
         }
-        
-        String loginUrl = "/" + requestName + "/" + UtilFormatOut.checkNull((String)request.getAttribute(SiteDefs.CURRENT_VIEW));
-        if(queryString != null) loginUrl = loginUrl  + "?" + UtilFormatOut.checkNull(queryString);
-        
+
+        String loginUrl = "/" + requestName + "/" + UtilFormatOut.checkNull((String) request.getAttribute(SiteDefs.CURRENT_VIEW));
+
+        if (queryString != null) loginUrl = loginUrl + "?" + UtilFormatOut.checkNull(queryString);
+
         return loginUrl;
     }
 }

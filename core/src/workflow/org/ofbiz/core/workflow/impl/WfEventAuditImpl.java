@@ -25,11 +25,13 @@
 
 package org.ofbiz.core.workflow.impl;
 
+
 import java.sql.Timestamp;
 import java.util.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
+
 
 /**
  * WfEventAuditImpl - Workflow Event Audit implementation
@@ -98,8 +100,7 @@ public class WfEventAuditImpl implements WfEventAudit {
         try {
             if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfActivity"))
                 return object.name();
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         throw new WfException("Source is not a WfActivity object");
 
     }
@@ -112,8 +113,7 @@ public class WfEventAuditImpl implements WfEventAudit {
         try {
             if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfProcess"))
                 return object.key();
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         throw new WfException("Source is not a WfProcess object");
 
     }
@@ -126,8 +126,7 @@ public class WfEventAuditImpl implements WfEventAudit {
         try {
             if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfProcess"))
                 return object.name();
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         throw new WfException("Source is not a WfProcess object");
 
     }
@@ -142,8 +141,7 @@ public class WfEventAuditImpl implements WfEventAudit {
                 return ((WfProcess) object).manager().name();
             else if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfActivity"))
                 return ((WfActivity) object).container().manager().name();
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         throw new WfException("Illegal source object");
     }
 
@@ -157,11 +155,9 @@ public class WfEventAuditImpl implements WfEventAudit {
                 return ((WfProcess) object).manager().version();
             else if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfActivity"))
                 return ((WfActivity) object).container().manager().version();
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         throw new WfException("Illegal source object");
     }
 
 }
-
 

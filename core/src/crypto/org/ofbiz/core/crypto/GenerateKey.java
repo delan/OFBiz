@@ -4,12 +4,14 @@
 
 package org.ofbiz.core.crypto;
 
+
 import java.security.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
 import java.io.*;
 
 import org.ofbiz.core.crypto.BlowFishCrypt;
+
 
 /**
  * <p><b>Title:</b> GenerateKey.java
@@ -68,8 +70,10 @@ public class GenerateKey {
         System.out.println();
         System.out.print("Generating key...");
         KeyGenerator keyGen = KeyGenerator.getInstance("Blowfish");
+
         keyGen.init(448);
         SecretKey secretKey = keyGen.generateKey();
+
         System.out.println("Done.");
         System.out.print("Saving key file...");
         byte[] keyBytes = secretKey.getEncoded();
@@ -77,21 +81,25 @@ public class GenerateKey {
 
         FileOutputStream fos = new FileOutputStream("ofbkey");
         ObjectOutputStream os = new ObjectOutputStream(fos);
+
         os.writeObject(keyString);
         fos.close();
         System.out.println("Done.");
         System.out.println();
 
         String testString = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstufwxyz";
+
         System.out.println("Testing key...");
         System.out.println(testString);
         File file = new File("ofbkey");
         BlowFishCrypt c = new BlowFishCrypt(file);
         byte[] encryptedBytes = c.encrypt(testString);
         String encryptedMessage = new String(encryptedBytes);
+
         System.out.println(encryptedMessage);
         byte[] decryptedBytes = c.decrypt(encryptedMessage);
         String decryptedMessage = new String(decryptedBytes);
+
         System.out.println(decryptedMessage);
         System.out.println("Strings match: " + (decryptedMessage.equals(testString) ? "Yes" : "No"));
         System.out.println();

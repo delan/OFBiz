@@ -25,8 +25,10 @@
 
 package org.ofbiz.core.taglib;
 
+
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
+
 
 /**
  * UnlessTag - Conditional Tag.
@@ -38,7 +40,7 @@ import javax.servlet.jsp.tagext.*;
 public class UnlessTag extends IfTag {
 
     public int doStartTag() throws JspTagException {
-        //do the opposite of what IfTag does. EVAL_BODY_AGAIN -> SKIP_BODY, vice-versa
+        // do the opposite of what IfTag does. EVAL_BODY_AGAIN -> SKIP_BODY, vice-versa
         return (EVAL_BODY_AGAIN + SKIP_BODY) - super.doStartTag();
     }
 }

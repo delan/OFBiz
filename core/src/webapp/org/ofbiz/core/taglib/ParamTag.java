@@ -25,12 +25,14 @@
 
 package org.ofbiz.core.taglib;
 
+
 import java.util.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * ParamTag - Defines a parameter for the service tag.
@@ -47,7 +49,6 @@ public class ParamTag extends TagSupport {
     protected String alias = null;
     protected String attribute = null;
     protected Object paramValue = null;
-
 
     public void setName(String name) {
         this.name = name;
@@ -99,6 +100,7 @@ public class ParamTag extends TagSupport {
 
     public int doStartTag() throws JspTagException {
         AbstractParameterTag sTag = (AbstractParameterTag) findAncestorWithClass(this, AbstractParameterTag.class);
+
         if (sTag == null)
             throw new JspTagException("ParamTag not inside a ServiceTag.");
 
@@ -110,6 +112,7 @@ public class ParamTag extends TagSupport {
 
         if (mode == null || mode.equals("IN") || mode.equals("INOUT")) {
             Object value = null;
+
             if (attribute != null) {
                 if (map == null) {
                     value = pageContext.findAttribute(attribute);
@@ -118,6 +121,7 @@ public class ParamTag extends TagSupport {
                 } else {
                     try {
                         Map mapObject = (Map) pageContext.findAttribute(map);
+
                         value = mapObject.get(attribute);
                     } catch (Exception e) {
                         throw new JspTagException("Problem processing map (" + map + ") for attributes.");
@@ -127,7 +131,7 @@ public class ParamTag extends TagSupport {
             if (value == null && paramValue != null) {
                 value = paramValue;
             }
-            
+
             sTag.addInParameter(name, value);
         }
 

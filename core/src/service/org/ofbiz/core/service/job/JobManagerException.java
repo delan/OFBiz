@@ -25,7 +25,9 @@
 
 package org.ofbiz.core.service.job;
 
+
 import java.io.*;
+
 
 /**
  * Job Scheduler Exception
@@ -35,31 +37,30 @@ import java.io.*;
  * @version    1.0
  */
 public class JobManagerException extends org.ofbiz.core.util.GeneralException {
-    
+
     Throwable nested = null;
-    
+
     /**
      * Creates new <code>JobManagerException</code> without detail message.
      */
     public JobManagerException() {
         super();
     }
-        
+
     /**
      * Constructs an <code>JobManagerException</code> with the specified detail message.
      * @param msg the detail message.
      */
     public JobManagerException(String msg) {
-        super(msg);        
+        super(msg);
     }
-    
+
     /**
      * Constructs an <code>JobManagerException</code> with the specified detail message and nested Exception.
      * @param msg the detail message.
      */
     public JobManagerException(String msg, Throwable nested) {
-        super(msg,nested);        
-    }            
+        super(msg, nested);
+    }
 }
-
 

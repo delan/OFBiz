@@ -4,9 +4,11 @@
 
 package org.ofbiz.core.serialize;
 
+
 import java.io.*;
 
 import org.ofbiz.core.util.GeneralException;
+
 
 /**
  * <p><b>Title:</b> SerializeException

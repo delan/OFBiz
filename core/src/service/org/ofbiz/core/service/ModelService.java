@@ -26,9 +26,11 @@
 
 package org.ofbiz.core.service;
 
+
 import java.lang.*;
 import java.util.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Generic Service Model Class
@@ -97,7 +99,7 @@ public class ModelService {
     public ModelParam getParam(String name) {
         return (ModelParam) contextInfo.get(name);
     }
-    
+
     /**
      * Adds a parameter definition to this service; puts on list in order added
      * then sorts by order if specified.
@@ -110,25 +112,29 @@ public class ModelService {
     public List getAllParamNames() {
         List nameList = new LinkedList();
         Iterator i = this.contextParamList.iterator();
+
         while (i.hasNext()) {
             ModelParam p = (ModelParam) i.next();
+
             nameList.add(p.name);
         }
         return nameList;
     }
-    
+
     public List getInParamNames() {
         List nameList = new LinkedList();
         Iterator i = this.contextParamList.iterator();
+
         while (i.hasNext()) {
             ModelParam p = (ModelParam) i.next();
-            //don't include OUT parameters in this list, only IN and INOUT
+
+            // don't include OUT parameters in this list, only IN and INOUT
             if ("OUT".equals(p.mode)) continue;
             nameList.add(p.name);
         }
         return nameList;
     }
-    
+
     /**
      * Validates a Map against the IN or OUT parameter information
      * @param test The Map object to test
@@ -139,12 +145,12 @@ public class ModelService {
         Map requiredInfo = new HashMap();
         Map optionalInfo = new HashMap();
         boolean verboseOn = Debug.verboseOn();
-        
+
         if (verboseOn) Debug.logVerbose("[ModelService.validate] : Validating context - " + test, module);
 
         // do not validate results with errors
         if (mode.equals(OUT_PARAM) && test != null && test.containsKey(RESPONSE_MESSAGE) &&
-                test.get(RESPONSE_MESSAGE).equals(RESPOND_ERROR)) {
+            test.get(RESPONSE_MESSAGE).equals(RESPOND_ERROR)) {
             if (verboseOn) Debug.logVerbose("[ModelService.validate] : response was an error, not validating.", module);
             return;
         }
@@ -153,8 +159,10 @@ public class ModelService {
         Collection values = contextInfo.values();
 
         Iterator i = values.iterator();
+
         while (i.hasNext()) {
             ModelParam p = (ModelParam) i.next();
+
             if (p.mode.equals("INOUT") || p.mode.equals(mode)) {
                 if (!p.optional)
                     requiredInfo.put(p.name, p.type);
@@ -166,15 +174,18 @@ public class ModelService {
         // get the test values
         Map requiredTest = new HashMap();
         Map optionalTest = new HashMap();
+
         if (test == null) test = new HashMap();
 
         requiredTest.putAll(test);
         if (requiredTest != null) {
             List keyList = new ArrayList(requiredTest.keySet());
             Iterator t = keyList.iterator();
+
             while (t.hasNext()) {
                 Object key = t.next();
                 Object value = requiredTest.get(key);
+
                 if (!requiredInfo.containsKey(key)) {
                     requiredTest.remove(key);
                     optionalTest.put(key, value);
@@ -184,9 +195,9 @@ public class ModelService {
 
         if (verboseOn) {
             Debug.logVerbose("[ModelService.validate] : (" + mode + ") Required - " +
-                    requiredTest.size() + " / " + requiredInfo.size(), module);
+                requiredTest.size() + " / " + requiredInfo.size(), module);
             Debug.logVerbose("[ModelService.validate] : (" + mode + ") Optional - " +
-                    optionalTest.size() + " / " + optionalInfo.size(), module);
+                optionalTest.size() + " / " + optionalInfo.size(), module);
         }
 
         try {
@@ -219,9 +230,11 @@ public class ModelService {
         // This is to see if the test set contains all from the info set (reverse)
         if (reverse && !testSet.containsAll(keySet)) {
             Set missing = new TreeSet(keySet);
+
             missing.removeAll(testSet);
             String missingStr = "";
             Iterator iter = missing.iterator();
+
             while (iter.hasNext()) {
                 missingStr += (String) iter.next();
                 if (iter.hasNext()) {
@@ -234,9 +247,11 @@ public class ModelService {
         // This is to see if the info set contains all from the test set
         if (!keySet.containsAll(testSet)) {
             Set extra = new TreeSet(testSet);
+
             extra.removeAll(keySet);
             String extraStr = "";
             Iterator iter = extra.iterator();
+
             while (iter.hasNext()) {
                 extraStr += (String) iter.next();
                 if (iter.hasNext()) {
@@ -248,13 +263,15 @@ public class ModelService {
 
         // * Validate types next
         Iterator i = testSet.iterator();
+
         while (i.hasNext()) {
             Object key = i.next();
             Object testObject = test.get(key);
             String infoType = (String) info.get(key);
-            
+
             if (!ObjectType.instanceOf(testObject, infoType, null)) {
                 String testType = testObject == null ? "null" : testObject.getClass().getName();
+
                 throw new ServiceValidationException("Type check failed for field " + key + "; expected type is " +
                         infoType + "; actual type is: " + testType);
             }
@@ -271,6 +288,7 @@ public class ModelService {
      */
     public List getParameterNames(String mode, boolean optional) {
         List names = new ArrayList();
+
         if (!"IN".equals(mode) && !"OUT".equals(mode) && !"INOUT".equals(mode)) {
             return names;
         }
@@ -278,8 +296,10 @@ public class ModelService {
             return names;
         }
         Iterator i = contextParamList.iterator();
+
         while (i.hasNext()) {
             ModelParam param = (ModelParam) i.next();
+
             if (param.mode.equals("INOUT") || param.mode.equals(mode)) {
                 if (optional || (!optional && !param.optional)) {
                     names.add(param.name);
@@ -298,6 +318,7 @@ public class ModelService {
      */
     public Map makeValid(Map source, String mode) {
         Map target = new HashMap();
+
         if (source == null) {
             return target;
         }
@@ -308,17 +329,21 @@ public class ModelService {
             return target;
         }
         Iterator i = contextParamList.iterator();
+
         while (i.hasNext()) {
             ModelParam param = (ModelParam) i.next();
+
             if (param.mode.equals("INOUT") || param.mode.equals(mode)) {
                 Object key = param.name;
+
                 if (source.containsKey(key)) {
                     Object value = source.get(key);
+
                     try {
                         value = ObjectType.simpleTypeConvert(value, param.type, null, null);
                     } catch (GeneralException e) {
-                        Debug.logWarning("[ModelService.makeValid] : Simple type conversion of param " + 
-                                key + " failed: " + e.toString(), module);
+                        Debug.logWarning("[ModelService.makeValid] : Simple type conversion of param " +
+                            key + " failed: " + e.toString(), module);
                         // let this go. service invokation will catch it
                     }
                     target.put(key, value);
@@ -332,8 +357,9 @@ public class ModelService {
      * Gets a list of required IN parameters in sequence.
      * @return A list of required IN parameters in the order which they were defined.
      */
-     public List getInParameterSequence(Map source) {
+    public List getInParameterSequence(Map source) {
         List target = new LinkedList();
+
         if (source == null) {
             return target;
         }
@@ -341,35 +367,40 @@ public class ModelService {
             return target;
         }
         Iterator i = this.contextParamList.iterator();
+
         while (i.hasNext()) {
             ModelParam p = (ModelParam) i.next();
-            //don't include OUT parameters in this list, only IN and INOUT
+
+            // don't include OUT parameters in this list, only IN and INOUT
             if ("OUT".equals(p.mode)) continue;
-            
+
             Object srcObject = source.get(p.name);
+
             if (srcObject != null) {
                 target.add(srcObject);
             }
         }
         return target;
     }
-     
+
     /** Returns a list of ModelParam objects in the order they were defined when 
      * the service was created.
      */
     public List getModelParamList() {
         return new LinkedList(this.contextParamList);
     }
-     
+
     /** Returns a list of ModelParam objects in the order they were defined when 
      * the service was created.
      */
     public List getInModelParamList() {
         List inList = new LinkedList();
         Iterator i = this.contextParamList.iterator();
+
         while (i.hasNext()) {
             ModelParam p = (ModelParam) i.next();
-            //don't include OUT parameters in this list, only IN and INOUT
+
+            // don't include OUT parameters in this list, only IN and INOUT
             if ("OUT".equals(p.mode)) continue;
             inList.add(p);
         }

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.entityops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.entity.*;
+
 
 /**
  * Uses the delegator to clear elements from the cache; intelligently looks at
@@ -57,6 +59,7 @@ public class ClearCacheLine extends MethodOperation {
             methodContext.getDelegator().clearCacheLine(entityName, null);
         } else {
             Map theMap = (Map) methodContext.getEnv(mapName);
+
             if (theMap == null) {
                 Debug.logWarning("In clear-cache-line could not find map with name " + mapName + ", not clearing any cache lines");
             } else {

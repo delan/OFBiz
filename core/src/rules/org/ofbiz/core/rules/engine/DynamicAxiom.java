@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * <p><b>Title:</b> Dynamic Axiom
  * <p><b>Description:</b> None
@@ -32,18 +33,20 @@ package org.ofbiz.core.rules.engine;
  * @version 1.0
  */
 public interface DynamicAxiom {
-  /**
-   * Return the first structure of this dynamic axiom.
-   *
-   * @return the first structure of this dynamic axiom
-   */
-  Structure head();
-  /**
-   * Return the tail of this dynamic axiom.
-   *
-   * @return the tail of this dynamic axiom. This tail
-   *         is the part of the dynamic that still needs to
-   *         prove itself.
-   */
-  DynamicRule resolvent();
+
+    /**
+     * Return the first structure of this dynamic axiom.
+     *
+     * @return the first structure of this dynamic axiom
+     */
+    Structure head();
+
+    /**
+     * Return the tail of this dynamic axiom.
+     *
+     * @return the tail of this dynamic axiom. This tail
+     *         is the part of the dynamic that still needs to
+     *         prove itself.
+     */
+    DynamicRule resolvent();
 }

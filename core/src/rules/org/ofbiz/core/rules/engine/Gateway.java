@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * <p><b>Title:</b> Gateway
  * <p><b>Description:</b> None
@@ -68,97 +69,102 @@ package org.ofbiz.core.rules.engine;
  *
  */
 public abstract class Gateway extends Structure {
-  /**
-   * If this structure is involved in a proof, the gate is
-   * open and will shut when the rule fails back to this
-   * structure.
-   */
-  protected boolean open = false;
-  /**
-   * Allows subclasses to use this form of constructor. This typically
-   * happens when the subclass object is creating an executable copy
-   * of itself.
-   *
-   * @param   functor   the functor for this gateway
-   *
-   * @param   terms   the terms of the gateway
-   *
-   * @param   program   the program the gateway will prove itself
-   *                    against
-   */
-  protected Gateway(Object functor, Term[] terms) {
-    super(functor, terms);
-  }
-  /**
-   * Returns true if the gate is closed and this gateway can find a new
-   * proof.
-   * <p>
-   * A gateway is a structure that can prove itself in at most one
-   * way. After a successful proof, a gateway leaves its gate open.
-   * <p>
-   * If the gate is open when this method executes, this method will
-   * shut the gate and return false. This occurs after a gateway has
-   * proven itself true once, and a rule has failed back to the point
-   * where it is asking the gateway for another proof.
-   * <p>
-   * If the gate is not open, this gateway will try to prove itself.
-   * Then,
-   * <ul>
-   * <p><li>
-   * If the gate is not open and this gateway can prove itself, then
-   * this method will return true and leave the gate open. Returning
-   * true allows the containing rule to go on to prove whatever
-   * structures follow this one. When the rule fails back to this
-   * gateway, the gate will be open, and at that time this gateway
-   * will fail.
-   * <p><li>
-   * If the gate is not open and this gateway can not prove itself,
-   * this method returns false.
-   * </ul>
-   * <p>
-   * Upon leaving the gate closed, this method unbinds any variables
-   * that instantiated as part of this gateway's proof. This method
-   * also sets rule checking to begin again at the first program rule,
-   * upon the next request for a proof sent to this gateway.
-   *
-   * @param   depth   the depth at which to print tracing information
-   *
-   * @return   true   if the gate is closed and this gateway can find a
-   *                  new proof
-   */
-  public boolean canFindNextProof() {
-    if (open) {
-      open = false;
-    } else {
-      open = canProveOnce();
+
+    /**
+     * If this structure is involved in a proof, the gate is
+     * open and will shut when the rule fails back to this
+     * structure.
+     */
+    protected boolean open = false;
+
+    /**
+     * Allows subclasses to use this form of constructor. This typically
+     * happens when the subclass object is creating an executable copy
+     * of itself.
+     *
+     * @param   functor   the functor for this gateway
+     *
+     * @param   terms   the terms of the gateway
+     *
+     * @param   program   the program the gateway will prove itself
+     *                    against
+     */
+    protected Gateway(Object functor, Term[] terms) {
+        super(functor, terms);
     }
-    if (!open) {
-      cleanup();
+
+    /**
+     * Returns true if the gate is closed and this gateway can find a new
+     * proof.
+     * <p>
+     * A gateway is a structure that can prove itself in at most one
+     * way. After a successful proof, a gateway leaves its gate open.
+     * <p>
+     * If the gate is open when this method executes, this method will
+     * shut the gate and return false. This occurs after a gateway has
+     * proven itself true once, and a rule has failed back to the point
+     * where it is asking the gateway for another proof.
+     * <p>
+     * If the gate is not open, this gateway will try to prove itself.
+     * Then,
+     * <ul>
+     * <p><li>
+     * If the gate is not open and this gateway can prove itself, then
+     * this method will return true and leave the gate open. Returning
+     * true allows the containing rule to go on to prove whatever
+     * structures follow this one. When the rule fails back to this
+     * gateway, the gate will be open, and at that time this gateway
+     * will fail.
+     * <p><li>
+     * If the gate is not open and this gateway can not prove itself,
+     * this method returns false.
+     * </ul>
+     * <p>
+     * Upon leaving the gate closed, this method unbinds any variables
+     * that instantiated as part of this gateway's proof. This method
+     * also sets rule checking to begin again at the first program rule,
+     * upon the next request for a proof sent to this gateway.
+     *
+     * @param   depth   the depth at which to print tracing information
+     *
+     * @return   true   if the gate is closed and this gateway can find a
+     *                  new proof
+     */
+    public boolean canFindNextProof() {
+        if (open) {
+            open = false;
+        } else {
+            open = canProveOnce();
+        }
+        if (!open) {
+            cleanup();
+        }
+        return open;
     }
-    return open;
-  }
-  /**
-   * Returns true if the comparison operator holds true between each
-   * pair of terms.
-   * <p>
-   * This method recovers the comparison operator from the Token which
-   * is the functor for this Comparison. This method applies this
-   * comparison to each pair of terms. That is, this method compares
-   * term 0 with term 1, term 1 with term 2, term 2 with term 3, and
-   * so on. This method returns true if the comparison holds between
-   * each adjacent pair of terms.
-   * <p>
-   * If a term is a variable, this method uses the term's ground value
-   * in the comparison.
-   *
-   * @param   depth   the depth at which to print trace information
-   */
-  public boolean canProveOnce() {
-    return true;
-  }
-  /**
-   * Insert the method's description here.
-   * Creation date: (12/7/99 11:09:44 AM)
-   */
-  protected void cleanup() {}
+
+    /**
+     * Returns true if the comparison operator holds true between each
+     * pair of terms.
+     * <p>
+     * This method recovers the comparison operator from the Token which
+     * is the functor for this Comparison. This method applies this
+     * comparison to each pair of terms. That is, this method compares
+     * term 0 with term 1, term 1 with term 2, term 2 with term 3, and
+     * so on. This method returns true if the comparison holds between
+     * each adjacent pair of terms.
+     * <p>
+     * If a term is a variable, this method uses the term's ground value
+     * in the comparison.
+     *
+     * @param   depth   the depth at which to print trace information
+     */
+    public boolean canProveOnce() {
+        return true;
+    }
+
+    /**
+     * Insert the method's description here.
+     * Creation date: (12/7/99 11:09:44 AM)
+     */
+    protected void cleanup() {}
 }

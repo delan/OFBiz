@@ -37,6 +37,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.jdbc.*;
 import org.ofbiz.core.util.*;
 
+
 /**
  * Generic Entity - Entity model class
  *
@@ -67,7 +68,7 @@ public class ModelEntity implements Comparable {
     /** The entity-name of the Entity that this Entity is dependent on, if empty then no dependency */
     protected String dependentOn = "";
 
-    //Strings to go in the comment header.
+    // Strings to go in the comment header.
     /** The title for documentation purposes */
     protected String title = "";
 
@@ -134,7 +135,7 @@ public class ModelEntity implements Comparable {
             }
         }
 
-        //now that we have the pks and the fields, make the nopks vector
+        // now that we have the pks and the fields, make the nopks vector
         this.nopks = new ArrayList();
         for (int ind = 0; ind < this.fields.size(); ind++) {
             ModelField field = (ModelField) this.fields.get(ind);
@@ -244,7 +245,7 @@ public class ModelEntity implements Comparable {
         this.dependentOn = dependentOn;
     }
 
-    //Strings to go in the comment header.
+    // Strings to go in the comment header.
     /** The title for documentation purposes */
     public String getTitle() {
         return this.title;
@@ -395,9 +396,10 @@ public class ModelEntity implements Comparable {
         if (fieldName == null) return null;
         if (fieldsMap == null) {
             fieldsMap = new HashMap(fields.size());
-            
+
             for (int i = 0; i < fields.size(); i++) {
                 ModelField field = (ModelField) fields.get(i);
+
                 fieldsMap.put(field.name, field);
             }
         }

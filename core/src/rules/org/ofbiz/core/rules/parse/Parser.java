@@ -25,8 +25,10 @@
 
 package org.ofbiz.core.rules.parse;
 
+
 import java.util.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * A <code>Parser</code> is an object that recognizes the elements of a language.
@@ -77,18 +79,19 @@ import org.ofbiz.core.util.*;
  * @version 1.0
  */
 public abstract class Parser {
+
     /** a name to identify this parser */
     protected String name;
+
     /**
      * an object that will work on an assembly whenever this
      * parser successfully matches against the assembly
      */
     protected Assembler assembler;
-    
-    
+
     /** Constructs a nameless parser. */
-    public Parser() {
-    }
+    public Parser() {}
+
     /**
      * Constructs a parser with the given name.
      *
@@ -99,6 +102,7 @@ public abstract class Parser {
     public Parser(String name) {
         this.name = name;
     }
+
     /**
      * Accepts a "visitor" which will perform some operation on
      * a parser structure. The book, "Design Patterns", explains
@@ -109,6 +113,7 @@ public abstract class Parser {
     public void accept(ParserVisitor pv) {
         accept(pv, new ArrayList());
     }
+
     /**
      * Accepts a "visitor" along with a collection of previously
      * visited parsers.
@@ -118,6 +123,7 @@ public abstract class Parser {
      *                   parsers.
      */
     public abstract void accept(ParserVisitor pv, List visited);
+
     /**
      * Adds the elements of one vector to another.
      *
@@ -126,10 +132,12 @@ public abstract class Parser {
      */
     public static void add(List v1, List v2) {
         Enumeration e = Collections.enumeration(v2);
+
         while (e.hasMoreElements()) {
             v1.add(e.nextElement());
         }
     }
+
     /**
      * Returns the most-matched assembly in a collection.
      *
@@ -140,8 +148,10 @@ public abstract class Parser {
     public Assembly best(List v) {
         Assembly best = null;
         Enumeration e = Collections.enumeration(v);
+
         while (e.hasMoreElements()) {
             Assembly a = (Assembly) e.nextElement();
+
             if (!a.hasMoreElements()) {
                 return a;
             }
@@ -155,6 +165,7 @@ public abstract class Parser {
         }
         return best;
     }
+
     /**
      * Returns an assembly with the greatest possible number of
      * elements consumed by matches of this parser.
@@ -165,11 +176,14 @@ public abstract class Parser {
      */
     public Assembly bestMatch(Assembly a) {
         List in = new ArrayList();
+
         in.add(a);
         List out = matchAndAssemble(in);
-        //if (Debug.verboseOn()) Debug.logVerbose("[bestMatch] after match and assemble, before best: in=" + in + ", out=" + out);
+
+        // if (Debug.verboseOn()) Debug.logVerbose("[bestMatch] after match and assemble, before best: in=" + in + ", out=" + out);
         return best(out);
     }
+
     /**
      * Returns either null, or a completely matched version of
      * the supplied assembly.
@@ -180,11 +194,13 @@ public abstract class Parser {
      */
     public Assembly completeMatch(Assembly a) {
         Assembly best = bestMatch(a);
+
         if (best != null && !best.hasMoreElements()) {
             return best;
         }
         return null;
     }
+
     /**
      * Create a copy of a vector, cloning each element of
      * the vector.
@@ -196,12 +212,15 @@ public abstract class Parser {
     public static List elementClone(List v) {
         List copy = new ArrayList();
         Enumeration e = Collections.enumeration(v);
+
         while (e.hasMoreElements()) {
             Assembly a = (Assembly) e.nextElement();
+
             copy.add(a.clone());
         }
         return copy;
     }
+
     /**
      * Returns the name of this parser.
      *
@@ -210,7 +229,7 @@ public abstract class Parser {
     public String getName() {
         return name;
     }
-    
+
     /**
      * Given a set (well, a <code>List</code>, really) of
      * assemblies, this method matches this parser against
@@ -231,7 +250,7 @@ public abstract class Parser {
      * @param   in   a vector of assemblies to match against
      */
     public abstract List match(List in);
-    
+
     /**
      * Match this parser against an input state, and then
      * apply this parser's assembler against the resulting
@@ -243,24 +262,26 @@ public abstract class Parser {
      */
     public List matchAndAssemble(List in) {
         List out = match(in);
-        //if (Debug.verboseOn()) Debug.logVerbose("[matchAndAssemble] after match, before assemble: in=" + in + ", out=" + out);
-        
+
+        // if (Debug.verboseOn()) Debug.logVerbose("[matchAndAssemble] after match, before assemble: in=" + in + ", out=" + out);
+
         if (assembler != null) {
             Enumeration e = Collections.enumeration(out);
+
             while (e.hasMoreElements()) {
                 assembler.workOn((Assembly) e.nextElement());
             }
         }
         return out;
     }
-    
+
     /**
      * Create a random expansion for this parser, where a
      * concatenation of the returned collection will be a
      * language element.
      */
     protected abstract List randomExpansion(int maxDepth, int depth);
-    
+
     /**
      * Return a random element of this parser's language.
      *
@@ -270,6 +291,7 @@ public abstract class Parser {
         StringBuffer buf = new StringBuffer();
         Enumeration e = Collections.enumeration(randomExpansion(maxDepth, 0));
         boolean first = true;
+
         while (e.hasMoreElements()) {
             if (!first) {
                 buf.append(separator);
@@ -279,6 +301,7 @@ public abstract class Parser {
         }
         return buf.toString();
     }
+
     /**
      * Sets the object that will work on an assembly whenever
      * this parser successfully matches against the
@@ -292,6 +315,7 @@ public abstract class Parser {
         this.assembler = assembler;
         return this;
     }
+
     /**
      * Returns a textual description of this parser.
      *
@@ -302,6 +326,7 @@ public abstract class Parser {
     public String toString() {
         return toString(new ArrayList());
     }
+
     /**
      * Returns a textual description of this parser.
      * Parsers can be recursive, so when building a
@@ -319,15 +344,14 @@ public abstract class Parser {
     protected String toString(List visited) {
         if (name != null) {
             return name;
-        }
-        else if (visited.contains(this)) {
+        } else if (visited.contains(this)) {
             return "...";
-        }
-        else {
+        } else {
             visited.add(this);
             return unvisitedString(visited);
         }
     }
+
     /**
      * Returns a textual description of this string.
      */

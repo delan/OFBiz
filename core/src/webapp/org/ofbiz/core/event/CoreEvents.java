@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.event;
 
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -37,6 +38,7 @@ import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * CoreEvents - WebApp Events Related To CORE components
@@ -77,6 +79,7 @@ public class CoreEvents {
     public static String changeDelegator(HttpServletRequest request, HttpServletResponse response) {
         String delegatorName = request.getParameter("delegator");
         Security security = (Security) request.getAttribute("security");
+
         if (!security.hasPermission("ENTITY_MAINT", request.getSession())) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to use this function.");
             return "error";
@@ -87,6 +90,7 @@ public class CoreEvents {
         }
 
         GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorName);
+
         if (delegator == null) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>No delegator defined by that name.");
             return "error";
@@ -128,6 +132,7 @@ public class CoreEvents {
     public static String changeDispatcher(HttpServletRequest request, HttpServletResponse response) {
         String dispatcherName = request.getParameter("dispatcher");
         Security security = (Security) request.getAttribute("security");
+
         if (!security.hasPermission("ENTITY_MAINT", request.getSession())) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to use this function.");
             return "error";
@@ -139,11 +144,13 @@ public class CoreEvents {
 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         ServiceDispatcher sd = ServiceDispatcher.getInstance(dispatcherName, delegator);
+
         if (sd == null) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>No dispatcher with that name has been registered.");
             return "error";
         }
         LocalDispatcher dispatcher = sd.getLocalContext(dispatcherName).getDispatcher();
+
         request.getSession().setAttribute("dispatcher", dispatcher);
         return "success";
     }
@@ -165,6 +172,7 @@ public class CoreEvents {
     public static String scheduleService(HttpServletRequest request, HttpServletResponse response) {
         // first do a security check
         Security security = (Security) request.getAttribute("security");
+
         if (!security.hasPermission("ENTITY_MAINT", request.getSession())) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to use this function.");
             return "error";
@@ -177,12 +185,13 @@ public class CoreEvents {
         String serviceTime = (String) params.remove("SERVICE_TIME");
         String serviceFreq = (String) params.remove("SERVICE_FREQUENCY");
         String serviceIntr = (String) params.remove("SERVICE_INTERVAL");
-        String serviceCnt  = (String) params.remove("SERVICE_COUNT");
+        String serviceCnt = (String) params.remove("SERVICE_COUNT");
         // the rest is the service context
         Map context = new HashMap(params);
 
         // the frequency map
         Map freqMap = new HashMap();
+
         freqMap.put("SECONDLY", new Integer(1));
         freqMap.put("MINUTELY", new Integer(2));
         freqMap.put("HOURLY", new Integer(3));
@@ -208,8 +217,7 @@ public class CoreEvents {
         if (serviceTime != null) {
             try {
                 startTime = Long.parseLong(serviceTime);
-            }
-            catch (NumberFormatException nfe) {
+            } catch (NumberFormatException nfe) {
                 errorBuf.append("<li>Invalid format for SERVICE_TIME");
             }
             if (startTime < (new Date()).getTime()) {
@@ -232,6 +240,7 @@ public class CoreEvents {
         }
         if (serviceFreq != null) {
             int parsedValue = 0;
+
             try {
                 parsedValue = Integer.parseInt(serviceFreq);
                 if (parsedValue > 0 && parsedValue < 8)
@@ -243,7 +252,7 @@ public class CoreEvents {
                 if (!freqMap.containsKey(serviceFreq.toUpperCase())) {
                     errorBuf.append("<li>Invalid format for SERIVCE_FREQUENCY");
                 } else {
-                    frequency = ((Integer)freqMap.get(serviceFreq.toUpperCase())).intValue();
+                    frequency = ((Integer) freqMap.get(serviceFreq.toUpperCase())).intValue();
                 }
             }
         }
@@ -267,6 +276,7 @@ public class CoreEvents {
     }
 
     public static ServiceEventHandler seh = new ServiceEventHandler();
+
     /**
      * Run a service.
      *  Request Parameters which are used for this event:
@@ -276,9 +286,10 @@ public class CoreEvents {
      * @param response HttpServletResponse
      * @return Response code string
      */
-    public static String runService(HttpServletRequest request, HttpServletResponse response)  {
+    public static String runService(HttpServletRequest request, HttpServletResponse response) {
         // first do a security check
         Security security = (Security) request.getAttribute("security");
+
         if (!security.hasPermission("SERVICE_INVOKE_ANY", request.getSession())) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to use this function, you must have the SERVICE_INVOKE_ANY permission.");
             return "error";
@@ -292,11 +303,11 @@ public class CoreEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You must specify a 'serviceName', and optionally a 'mode' (sync or async, defaults to sync).");
             return "error";
         }
-        
+
         if (UtilValidate.isEmpty(mode)) {
             mode = "sync";
         }
-        
+
         // call the service via the ServiceEventHandler which 
         // adapts an event to a service.
         try {

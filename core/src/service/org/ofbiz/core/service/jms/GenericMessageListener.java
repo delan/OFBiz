@@ -24,9 +24,11 @@
 
 package org.ofbiz.core.service.jms;
 
+
 import javax.jms.*;
 
 import org.ofbiz.core.service.*;
+
 
 /**
  * GenericMessageListener - Estension to MessageListener

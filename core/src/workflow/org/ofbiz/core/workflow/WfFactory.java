@@ -25,12 +25,14 @@
 
 package org.ofbiz.core.workflow;
 
+
 import java.sql.Timestamp;
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.workflow.impl.*;
+
 
 /**
  * WfFactory - Workflow Factory Class
@@ -61,6 +63,7 @@ public class WfFactory {
         if (process == null) throw new WfException("Parent process WorkEffort key cannot be null");
         WfActivity act = new WfActivityImpl(value, process);
         String mapKey = value.getDelegator().getDelegatorName() + ":" + act.runtimeKey();
+
         activity.put(mapKey, act);
         return act;
     }
@@ -69,6 +72,7 @@ public class WfFactory {
         if (delegator == null) throw new WfException("The delegator object cannot be null");
         if (workEffortId == null) throw new WfException("The WorkEffort key cannot be null");
         String mapKey = delegator.getDelegatorName() + ":" + workEffortId;
+
         if (!activity.containsKey(mapKey)) {
             synchronized (WfFactory.class) {
                 if (!activity.containsKey(mapKey))
@@ -84,12 +88,13 @@ public class WfFactory {
      * @throws WfException
      */
     public static WfAssignment getWfAssignment(WfActivity activity, WfResource resource,
-                                               Timestamp fromDate, boolean create) throws WfException {
+        Timestamp fromDate, boolean create) throws WfException {
         if (activity == null) throw new WfException("WfActivity cannot be null");
         if (resource == null) throw new WfException("WfResource cannot be null");
         if (fromDate == null) fromDate = new Timestamp(new Date().getTime());
         String mapKey = activity.runtimeKey() + ":" + resource.resourcePartyId() + ":" +
-                resource.resourceRoleId() + ":" + fromDate.getTime();
+            resource.resourceRoleId() + ":" + fromDate.getTime();
+
         if (!assign.containsKey(mapKey)) {
             synchronized (WfFactory.class) {
                 if (!assign.containsKey(mapKey))
@@ -100,9 +105,10 @@ public class WfFactory {
     }
 
     public static WfAssignment getWfAssignment(GenericDelegator delegator, String work, String party, String role,
-                                               Timestamp from) throws WfException {
+        Timestamp from) throws WfException {
         WfActivity act = getWfActivity(delegator, work);
         WfResource res = getWfResource(delegator, null, null, party, role);
+
         return getWfAssignment(act, res, from, false);
     }
 
@@ -117,6 +123,7 @@ public class WfFactory {
         if (mgr == null) throw new WfException("WfProcessMgr cannot be null");
         WfProcess proc = new WfProcessImpl(value, mgr);
         String mapKey = value.getDelegator().getDelegatorName() + ":" + proc.runtimeKey();
+
         process.put(mapKey, proc);
         return proc;
     }
@@ -125,6 +132,7 @@ public class WfFactory {
         if (delegator == null) throw new WfException("The delegator object cannot be null");
         if (workEffortId == null) throw new WfException("The WorkEffort key cannot be null");
         String mapKey = delegator.getDelegatorName() + ":" + workEffortId;
+
         if (!process.containsKey(mapKey)) {
             synchronized (WfFactory.class) {
                 if (!process.containsKey(mapKey))
@@ -150,6 +158,7 @@ public class WfFactory {
 
         String mapKey = del.getDelegatorName() + ":" + pkg + ":" + pid;
         WfProcessMgr mgr = null;
+
         if (!manager.containsKey(mapKey)) {
             synchronized (WfFactory.class) {
                 if (!manager.containsKey(mapKey))
@@ -176,7 +185,8 @@ public class WfFactory {
         if (value == null) throw new WfException("Value object for WfResource definition cannot be null");
         WfResource res = new WfResourceImpl(value);
         String mapKey = value.getDelegator().getDelegatorName() + ":" + res.resourceKey() + ":" + res.resourceName() +
-                ":" + res.resourcePartyId() + ":" + res.resourceRoleId();
+            ":" + res.resourcePartyId() + ":" + res.resourceRoleId();
+
         resource.put(mapKey, res);
         return res;
     }
@@ -191,10 +201,11 @@ public class WfFactory {
      * @throws WfException
      */
     public static WfResource getWfResource(GenericDelegator delegator, String key, String name, String party,
-                                           String role) throws WfException {
+        String role) throws WfException {
         if (party == null) party = "_NA_";
         if (role == null) role = "_NA_";
         String mapKey = delegator.getDelegatorName() + ":" + key + ":" + name + ":" + party + ":" + role;
+
         if (!resource.containsKey(mapKey)) {
             synchronized (WfFactory.class) {
                 if (!resource.containsKey(mapKey))

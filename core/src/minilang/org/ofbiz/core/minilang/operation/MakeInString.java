@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.operation;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+
 
 /**
  * The container of MakeInString operations to make a new input String
@@ -48,11 +50,14 @@ public class MakeInString {
         fieldName = makeInStringElement.getAttribute("field");
 
         List operationElements = UtilXml.childElementList(makeInStringElement, null);
+
         if (operationElements != null && operationElements.size() > 0) {
             Iterator operElemIter = operationElements.iterator();
+
             while (operElemIter.hasNext()) {
                 Element curOperElem = (Element) operElemIter.next();
                 String nodeName = curOperElem.getNodeName();
+
                 if ("in-field".equals(nodeName)) {
                     operations.add(new InFieldOper(curOperElem));
                 } else if ("property".equals(nodeName)) {
@@ -69,9 +74,11 @@ public class MakeInString {
     public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
         Iterator iter = operations.iterator();
         StringBuffer buffer = new StringBuffer();
+
         while (iter.hasNext()) {
             MakeInStringOperation oper = (MakeInStringOperation) iter.next();
             String curStr = oper.exec(inMap, messages, locale, loader);
+
             if (curStr != null)
                 buffer.append(curStr);
         }

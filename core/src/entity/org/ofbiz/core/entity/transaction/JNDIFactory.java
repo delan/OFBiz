@@ -42,7 +42,7 @@ import org.ofbiz.core.util.*;
  *@created    July 1, 2001, 5:03 PM
  */
 public class JNDIFactory implements TransactionFactoryInterface {
-    //Debug module name
+    // Debug module name
     public static final String module = JNDIFactory.class.getName();
 
     static TransactionManager transactionManager = null;
@@ -51,13 +51,14 @@ public class JNDIFactory implements TransactionFactoryInterface {
     public TransactionManager getTransactionManager() {
         if (transactionManager == null) {
             synchronized (JNDIFactory.class) {
-                //try again inside the synch just in case someone when through while we were waiting
+                // try again inside the synch just in case someone when through while we were waiting
                 if (transactionManager == null) {
                     try {
                         String jndiName = EntityConfigUtil.getTxFactoryTxMgrJndiName();
                         String jndiServerName = EntityConfigUtil.getTxFactoryTxMgrJndiServerName();
+
                         if (jndiName != null && jndiName.length() > 0) {
-                            //if (Debug.verboseOn()) Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
+                            // if (Debug.verboseOn()) Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
 
                             try {
                                 InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);
@@ -86,13 +87,14 @@ public class JNDIFactory implements TransactionFactoryInterface {
     public UserTransaction getUserTransaction() {
         if (userTransaction == null) {
             synchronized (JNDIFactory.class) {
-                //try again inside the synch just in case someone when through while we were waiting
+                // try again inside the synch just in case someone when through while we were waiting
                 if (userTransaction == null) {
                     try {
                         String jndiName = EntityConfigUtil.getTxFactoryUserTxJndiName();
                         String jndiServerName = EntityConfigUtil.getTxFactoryUserTxJndiServerName();
+
                         if (jndiName != null && jndiName.length() > 0) {
-                            //if (Debug.verboseOn()) Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
+                            // if (Debug.verboseOn()) Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
 
                             try {
                                 InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);

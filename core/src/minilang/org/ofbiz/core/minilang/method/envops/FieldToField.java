@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.envops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
+
 
 /**
  * Copies a map field to a map field
@@ -54,7 +56,7 @@ public class FieldToField extends MethodOperation {
         toMapName = element.getAttribute("to-map-name");
         toFieldName = element.getAttribute("to-field-name");
 
-        //set toMapName and toFieldName to their defualt values of mapName and fieldName if empty
+        // set toMapName and toFieldName to their defualt values of mapName and fieldName if empty
         if (toMapName == null || toMapName.length() == 0) {
             toMapName = mapName;
         }
@@ -68,6 +70,7 @@ public class FieldToField extends MethodOperation {
 
         if (mapName != null && mapName.length() > 0) {
             Map fromMap = (Map) methodContext.getEnv(mapName);
+
             if (fromMap == null) {
                 if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", not copying from this map");
                 return true;
@@ -75,7 +78,7 @@ public class FieldToField extends MethodOperation {
 
             fieldVal = fromMap.get(fieldName);
         } else {
-            //no map name, try the env
+            // no map name, try the env
             fieldVal = methodContext.getEnv(fieldName);
         }
 
@@ -83,11 +86,12 @@ public class FieldToField extends MethodOperation {
             if (Debug.verboseOn()) Debug.logVerbose("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not copying field");
             return true;
         }
-        
-        //note that going to an env field will only work if it came from an env 
+
+        // note that going to an env field will only work if it came from an env 
         // field because if not specified the to-map-name will be set to the map-name
-        //to go from a map field to an env field, use the field-to-env operation
+        // to go from a map field to an env field, use the field-to-env operation
         Map toMap = null;
+
         if (toMapName != null && toMapName.length() > 0) {
             toMap = (Map) methodContext.getEnv(toMapName);
             if (toMap == null) {

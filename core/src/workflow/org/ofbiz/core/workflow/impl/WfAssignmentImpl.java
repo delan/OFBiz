@@ -25,12 +25,14 @@
 
 package org.ofbiz.core.workflow.impl;
 
+
 import java.util.*;
 import java.sql.Timestamp;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
+
 
 /**
  * WfAssignmentImpl - Workflow Assignment Object implementation
@@ -77,6 +79,7 @@ public class WfAssignmentImpl implements WfAssignment {
 
         GenericValue value = null;
         Map fields = new HashMap();
+
         fields.put("workEffortId", workEffortId);
         fields.put("partyId", partyId);
         fields.put("roleTypeId", roleTypeId);
@@ -97,6 +100,7 @@ public class WfAssignmentImpl implements WfAssignment {
             // none exist; create a new one
             try {
                 GenericValue v = activity.getDelegator().makeValue("WorkEffortPartyAssignment", fields);
+
                 value = activity.getDelegator().create(v);
                 Debug.logVerbose("[WfAssignment.checkAssignment] : created new party assignment.", module);
             } catch (GenericEntityException e) {
@@ -116,15 +120,17 @@ public class WfAssignmentImpl implements WfAssignment {
     public void accept() throws WfException {
         boolean allDelegated = true;
         boolean acceptAll = activity.getDefinitionObject().get("acceptAllAssignments") != null ?
-                activity.getDefinitionObject().getBoolean("acceptAllAssignments").booleanValue() : false;
+            activity.getDefinitionObject().getBoolean("acceptAllAssignments").booleanValue() : false;
 
         if (!acceptAll) {
             // check for existing accepted assignment
             if (!activity.state().equals("open.not_running.not_started")) {
                 // activity already running all assignments must be delegated in order to accept
                 Iterator ai = activity.getIteratorAssignment();
+
                 while (ai.hasNext() && allDelegated) {
                     WfAssignment a = (WfAssignment) ai.next();
+
                     if (!a.status().equals("CAL_DELEGATED"))
                         allDelegated = false;
                 }
@@ -135,8 +141,10 @@ public class WfAssignmentImpl implements WfAssignment {
                 // activity not running, auto change all assignments to delegated status
                 Debug.logInfo("[WfAssignment.accept] : setting other assignments to delegated status.", module);
                 Iterator ai = activity.getIteratorAssignment();
+
                 while (ai.hasNext()) {
                     WfAssignment a = (WfAssignment) ai.next();
+
                     if (!a.equals(this)) a.changeStatus("CAL_DELEGATED");
                 }
             }
@@ -182,6 +190,7 @@ public class WfAssignmentImpl implements WfAssignment {
      */
     public void changeStatus(String status) throws WfException {
         GenericValue valueObject = valueObject();
+
         try {
             valueObject.set("statusId", status);
             valueObject.store();
@@ -256,6 +265,7 @@ public class WfAssignmentImpl implements WfAssignment {
     private GenericValue valueObject() throws WfException {
         GenericValue value = null;
         Map fields = new HashMap();
+
         fields.put("workEffortId", activity.runtimeKey());
         fields.put("partyId", resource.resourcePartyId());
         fields.put("roleTypeId", resource.resourceRoleId());

@@ -24,10 +24,12 @@
 
 package org.ofbiz.core.util;
 
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletInputStream;
 import java.util.*;
 import java.io.*;
+
 
 /**
  * HttpRequestFileUpload - Receive a file upload through an HttpServletRequest
@@ -83,6 +85,7 @@ public class HttpRequestFileUpload {
             return;
 
         int pos = s.indexOf("filename=\"");
+
         if (pos != -1) {
             filepath = s.substring(pos + 10, s.length() - 1);
             // Windows browsers include the full path on the client
@@ -101,21 +104,25 @@ public class HttpRequestFileUpload {
             return;
 
         int pos = s.indexOf(": ");
+
         if (pos != -1)
             contentType = s.substring(pos + 2, s.length());
     }
 
     public void doUpload(HttpServletRequest request) throws IOException {
         ServletInputStream in = request.getInputStream();
-/*        System.out.println("Header:");
-        Enumeration ee = request.getHeaderNames();
-        while(ee.hasMoreElements()) {
-            String ss = (String)ee.nextElement();
-            System.out.println(ss + " = [" + request.getHeader(ss) + "]");
-        }*/
+
+        /* System.out.println("Header:");
+         Enumeration ee = request.getHeaderNames();
+         while(ee.hasMoreElements()) {
+         String ss = (String)ee.nextElement();
+         System.out.println(ss + " = [" + request.getHeader(ss) + "]");
+         }*/
         String reqLengthString = request.getHeader("content-length");
+
         System.out.println("expect " + reqLengthString + " bytes.");
         int requestLength = 0;
+
         try {
             requestLength = new Integer(reqLengthString).intValue();
         } catch (Exception e2) {
@@ -125,18 +132,21 @@ public class HttpRequestFileUpload {
         byte[] line = new byte[BUFFER_SIZE];
 
         int i = -1;
+
         i = waitingReadLine(in, line, 0, BUFFER_SIZE, requestLength);
         requestLength -= i;
         if (i < 3)
             return;
         int boundaryLength = i - 2;
 
-        String boundary = new String(line, 0, boundaryLength); //-2 discards the newline character
+        String boundary = new String(line, 0, boundaryLength); // -2 discards the newline character
+
         System.out.println("boundary=[" + boundary + "] length is " + boundaryLength);
         fields = new Hashtable();
 
-        while (requestLength > 0/*i != -1*/) {
+        while (requestLength > 0/* i != -1*/) {
             String newLine = "";
+
             if (i > -1)
                 newLine = new String(line, 0, i);
             if (newLine.startsWith("Content-Disposition: form-data; name=\"")) {
@@ -144,7 +154,7 @@ public class HttpRequestFileUpload {
                     setFilename(new String(line, 0, i - 2));
                     if (filename == null)
                         return;
-                    //this is the file content
+                    // this is the file content
                     i = waitingReadLine(in, line, 0, BUFFER_SIZE, requestLength);
                     requestLength -= i;
 
@@ -155,6 +165,7 @@ public class HttpRequestFileUpload {
                     requestLength -= i;
                     newLine = new String(line, 0, i);
                     String filenameToUse = filename;
+
                     if (overrideFilename != null) {
                         filenameToUse = overrideFilename;
                     }
@@ -165,15 +176,17 @@ public class HttpRequestFileUpload {
                     newLine = new String(line, 0, i);
 
                     byte[] lastTwoBytes = new byte[2];
+
                     if (i > 1) {
                         lastTwoBytes[0] = line[i - 2];
                         lastTwoBytes[1] = line[i - 1];
                     }
-                    System.out.println("about to create a file:" + (savePath == null? "" : savePath) + filenameToUse);
-                    FileOutputStream fos = new FileOutputStream((savePath == null? "" : savePath) + filenameToUse);
+                    System.out.println("about to create a file:" + (savePath == null ? "" : savePath) + filenameToUse);
+                    FileOutputStream fos = new FileOutputStream((savePath == null ? "" : savePath) + filenameToUse);
                     boolean bail = (new String(line, 0, i).startsWith(boundary));
                     boolean oneByteLine = (i == 1); // handle one-byte lines
-                    while ((requestLength > 0/*i != -1*/) && !bail) {
+
+                    while ((requestLength > 0/* i != -1*/) && !bail) {
 
                         // write the current buffer, except the last 2 bytes;
                         if (i > 1) {
@@ -211,11 +224,12 @@ public class HttpRequestFileUpload {
                     fos.flush();
                     fos.close();
                 } else {
-                    //this is a field
+                    // this is a field
                     // get the field name
                     int pos = newLine.indexOf("name=\"");
                     String fieldName = newLine.substring(pos + 6, newLine.length() - 3);
-                    //System.out.println("fieldName:" + fieldName);
+
+                    // System.out.println("fieldName:" + fieldName);
                     // blank line
                     i = waitingReadLine(in, line, 0, BUFFER_SIZE, requestLength);
                     requestLength -= i;
@@ -223,7 +237,8 @@ public class HttpRequestFileUpload {
                     requestLength -= i;
                     newLine = new String(line, 0, i);
                     StringBuffer fieldValue = new StringBuffer(BUFFER_SIZE);
-                    while (requestLength > 0/*i != -1*/ && !newLine.startsWith(boundary)) {
+
+                    while (requestLength > 0/* i != -1*/ && !newLine.startsWith(boundary)) {
                         // The last line of the field
                         // contains the new line character.
                         // So, we need to check if the current line is
@@ -231,13 +246,13 @@ public class HttpRequestFileUpload {
                         i = waitingReadLine(in, line, 0, BUFFER_SIZE, requestLength);
                         requestLength -= i;
                         if ((i == boundaryLength + 2 || i == boundaryLength + 4) // + 4 is eof
-                                && (new String(line, 0, i).startsWith(boundary)))
+                            && (new String(line, 0, i).startsWith(boundary)))
                             fieldValue.append(newLine.substring(0, newLine.length() - 2));
                         else
                             fieldValue.append(newLine);
                         newLine = new String(line, 0, i);
                     }
-                    //System.out.println("fieldValue:" + fieldValue.toString());
+                    // System.out.println("fieldValue:" + fieldValue.toString());
                     fields.put(fieldName, fieldValue.toString());
                 }
             }
@@ -251,16 +266,18 @@ public class HttpRequestFileUpload {
     // reads a line, waiting if there is nothing available and reqLen > 0
     private int waitingReadLine(ServletInputStream in, byte[] buf, int off, int len, int reqLen) throws IOException {
         int i = -1;
+
         while (((i = in.readLine(buf, off, len)) == -1) && (reqLen > 0)) {
             System.out.print("waiting");
             if (waitCount > MAX_WAITS) {
                 System.out.println("waited " + waitCount + " times, bailing out while still expecting " +
-                                   reqLen + " bytes.");
+                    reqLen + " bytes.");
                 throw new IOException("waited " + waitCount + " times, bailing out while still expecting " +
-                                      reqLen + " bytes.");
+                        reqLen + " bytes.");
             }
             waitCount++;
             long endMS = new Date().getTime() + WAIT_INTERVAL;
+
             while (endMS > (new Date().getTime())) {
                 try {
                     wait(WAIT_INTERVAL);

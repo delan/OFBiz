@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.envops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
+
 
 /**
  * Converts the specified field to a String, using toString()
@@ -53,20 +55,23 @@ public class ToString extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         if (mapName != null && mapName.length() > 0) {
             Map toMap = (Map) methodContext.getEnv(mapName);
+
             if (toMap == null) {
-                //it seems silly to create a new map, but necessary since whenever
+                // it seems silly to create a new map, but necessary since whenever
                 // an env field like a Map or List is referenced it should be created, even if empty
                 if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapName + ", creating new map");
                 toMap = new HashMap();
                 methodContext.putEnv(mapName, toMap);
             }
-            
+
             Object obj = toMap.get(fieldName);
+
             if (obj != null) {
                 toMap.put(fieldName, obj.toString());
             }
         } else {
             Object obj = methodContext.getEnv(fieldName);
+
             if (obj != null) {
                 methodContext.putEnv(fieldName, obj.toString());
             }

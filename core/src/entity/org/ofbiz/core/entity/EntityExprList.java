@@ -24,11 +24,13 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.io.*;
 import java.util.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.entity.jdbc.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Encapsulates simple expressions used for specifying queries
@@ -42,19 +44,21 @@ public class EntityExprList extends EntityCondition {
     protected List exprList;
     protected EntityOperator operator;
 
-    protected EntityExprList() { }
-    
+    protected EntityExprList() {}
+
     public EntityExprList(List exprList, EntityOperator operator) {
         this.exprList = exprList;
         this.operator = operator;
     }
-    
+
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
-        //if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName());
+        // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName());
         StringBuffer whereStringBuffer = new StringBuffer();
+
         if (exprList != null && exprList.size() > 0) {
             for (int i = 0; i < exprList.size(); i++) {
                 EntityExpr expr = (EntityExpr) exprList.get(i);
+
                 whereStringBuffer.append(expr.makeWhereString(modelEntity, entityConditionParams));
                 if (i < exprList.size() - 1) {
                     whereStringBuffer.append(' ');
@@ -67,20 +71,24 @@ public class EntityExprList extends EntityCondition {
     }
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
-        //if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName());
+        // if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName());
         Iterator exprIter = exprList.iterator();
+
         while (exprIter.hasNext()) {
             EntityExpr entityExpr = (EntityExpr) exprIter.next();
+
             entityExpr.checkCondition(modelEntity);
         }
     }
-    
+
     public String toString() {
         StringBuffer toStringBuffer = new StringBuffer();
+
         toStringBuffer.append("[ExprList::");
         if (exprList != null && exprList.size() > 0) {
             for (int i = 0; i < exprList.size(); i++) {
                 EntityExpr expr = (EntityExpr) exprList.get(i);
+
                 toStringBuffer.append(expr.toString());
                 if (i > 0) toStringBuffer.append("::");
             }

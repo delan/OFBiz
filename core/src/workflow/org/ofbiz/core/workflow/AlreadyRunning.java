@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * AlreadyRunning Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class AlreadyRunning extends WfException {
 
-    public AlreadyRunning() {
-    }
+    public AlreadyRunning() {}
 
     public AlreadyRunning(String msg) {
         super(msg);

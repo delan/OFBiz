@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.event;
 
+
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -32,6 +33,7 @@ import javax.servlet.http.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * <p><b>Title:</b> ServiceEventHandler - Service Event Handler
@@ -61,22 +63,23 @@ public class ServiceEventHandler implements EventHandler {
         String serviceName = null;
 
         if (eventPath == null || eventPath.length() == 0) {
-          mode = SYNC;
-        }
-        else {
-          mode = eventPath;
+            mode = SYNC;
+        } else {
+            mode = eventPath;
         }
         serviceName = eventMethod;
         if (Debug.verboseOn()) Debug.logVerbose("[Set mode/service]: " + mode + "/" + serviceName, module);
-        
+
         HttpSession session = request.getSession();
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+
         if (dispatcher == null) {
             throw new EventHandlerException("The local service dispatcher is null");
         }
 
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         DispatchContext dctx = dispatcher.getDispatchContext();
+
         if (dctx == null) {
             throw new EventHandlerException("Dispatch context cannot be found");
         }
@@ -87,10 +90,11 @@ public class ServiceEventHandler implements EventHandler {
 
         // get the service model to generate context
         ModelService model = null;
+
         try {
             model = dctx.getModelService(serviceName);
         } catch (GenericServiceException e) {
-            throw new EventHandlerException("Problems getting the service model",e);
+            throw new EventHandlerException("Problems getting the service model", e);
         }
 
         if (model == null) {
@@ -103,53 +107,59 @@ public class ServiceEventHandler implements EventHandler {
         // we have a service and the model; build the context
         Map serviceContext = new HashMap();
         Iterator ci = model.getInParamNames().iterator();
+
         while (ci.hasNext()) {
             String name = (String) ci.next();
-            //don't include userLogin, that's taken care of below
+
+            // don't include userLogin, that's taken care of below
             if ("userLogin".equals(name)) continue;
             String paramStr = request.getParameter(name);
-            //if the parameter wasn't passed, don't pass on the null
+
+            // if the parameter wasn't passed, don't pass on the null
             if (paramStr == null) {
                 continue;
             }
-            
-            //interpreting empty fields as null values for each in back end handling...
+
+            // interpreting empty fields as null values for each in back end handling...
             if (paramStr.length() == 0) {
                 paramStr = null;
             }
 
             Object value = paramStr;
+
             if (value == null) {
                 value = request.getAttribute(name);
             }
             if (value == null) {
                 value = request.getSession().getAttribute(name);
             }
-            
-            //set even if null so that values will get nulled in the db later on
-            serviceContext.put(name,value);
+
+            // set even if null so that values will get nulled in the db later on
+            serviceContext.put(name, value);
         }
 
         // get only the parameters for this service
-        serviceContext = model.makeValid(serviceContext,ModelService.IN_PARAM);
+        serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM);
         if (userLogin != null) {
             serviceContext.put("userLogin", userLogin);
         }
 
         // invoke the service
         Map result = null;
+
         try {
             if (ASYNC.equalsIgnoreCase(mode)) {
-              dispatcher.runAsync(serviceName,serviceContext);
+                dispatcher.runAsync(serviceName, serviceContext);
             } else {
-              result = dispatcher.runSync(serviceName,serviceContext);
+                result = dispatcher.runSync(serviceName, serviceContext);
             }
         } catch (GenericServiceException e) {
-            //Debug.logError(e);
+            // Debug.logError(e);
             throw new EventHandlerException("Service invocation error", e.getNested());
         }
 
         String responseString = null;
+
         if (result == null) {
             responseString = ModelService.RESPOND_SUCCESS;
         } else {
@@ -159,7 +169,7 @@ public class ServiceEventHandler implements EventHandler {
             else
                 responseString = (String) result.get(ModelService.RESPONSE_MESSAGE);
 
-            //Get the messages:
+            // Get the messages:
 
             String errorPrefixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.error.prefix");
             String errorSuffixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.error.suffix");
@@ -170,10 +180,12 @@ public class ServiceEventHandler implements EventHandler {
             String defaultMessageStr = UtilProperties.getPropertyValue("DefaultMessages", "service.default.message");
 
             String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, errorPrefixStr, errorSuffixStr);
+
             if (UtilValidate.isNotEmpty(errorMessage))
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage);
 
             String successMessage = ServiceUtil.makeSuccessMessage(result, messagePrefixStr, messageSuffixStr, successPrefixStr, successSuffixStr);
+
             if (UtilValidate.isNotEmpty(successMessage))
                 request.setAttribute(SiteDefs.EVENT_MESSAGE, successMessage);
 
@@ -182,12 +194,14 @@ public class ServiceEventHandler implements EventHandler {
 
             // set the results in the request
             Iterator ri = result.keySet().iterator();
+
             while (ri.hasNext()) {
                 String resultKey = (String) ri.next();
-                Object resultValue = result.get((Object)resultKey);
+                Object resultValue = result.get((Object) resultKey);
+
                 if (!resultKey.equals(ModelService.RESPONSE_MESSAGE) && !resultKey.equals(ModelService.ERROR_MESSAGE) &&
-                        !resultKey.equals(ModelService.ERROR_MESSAGE_LIST) && !resultKey.equals(ModelService.SUCCESS_MESSAGE) && !resultKey.equals(ModelService.SUCCESS_MESSAGE_LIST)) {
-                    request.setAttribute(resultKey,resultValue);
+                    !resultKey.equals(ModelService.ERROR_MESSAGE_LIST) && !resultKey.equals(ModelService.SUCCESS_MESSAGE) && !resultKey.equals(ModelService.SUCCESS_MESSAGE_LIST)) {
+                    request.setAttribute(resultKey, resultValue);
                 }
             }
         }

@@ -4,7 +4,9 @@
 
 package org.ofbiz.core.taglib;
 
+
 import javax.servlet.jsp.tagext.*;
+
 
 /**
  * <p><b>Title:</b> IterateNextTEI.java
@@ -51,8 +53,9 @@ public class IterateNextTEI extends TagExtraInfo {
             className = "org.ofbiz.core.entity.GenericValue";
 
         VariableInfo info =
-                new VariableInfo(name, className, true, VariableInfo.NESTED);
+            new VariableInfo(name, className, true, VariableInfo.NESTED);
         VariableInfo[] result = {info};
+
         return result;
     }
 
@@ -60,7 +63,4 @@ public class IterateNextTEI extends TagExtraInfo {
         return true;
     }
 }
-
-
-
 

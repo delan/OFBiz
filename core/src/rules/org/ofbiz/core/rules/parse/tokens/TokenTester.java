@@ -1,6 +1,8 @@
 package org.ofbiz.core.rules.parse.tokens;
 
+
 import org.ofbiz.core.rules.parse.*;
+
 
 /**
  * <p><b>Title:</b> Token Tester
@@ -29,16 +31,18 @@ import org.ofbiz.core.rules.parse.*;
  * <br>
  */
 public class TokenTester extends ParserTester {
-  /**
-   *
-   */
-  public TokenTester(Parser p) {
-    super(p);
-  }
-  /**
-   * assembly method comment.
-   */
-  protected Assembly assembly(String s) {
-    return new TokenAssembly(s);
-  }
+
+    /**
+     *
+     */
+    public TokenTester(Parser p) {
+        super(p);
+    }
+
+    /**
+     * assembly method comment.
+     */
+    protected Assembly assembly(String s) {
+        return new TokenAssembly(s);
+    }
 }

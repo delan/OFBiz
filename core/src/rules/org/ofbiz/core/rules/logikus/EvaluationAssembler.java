@@ -25,8 +25,10 @@
 
 package org.ofbiz.core.rules.logikus;
 
+
 import org.ofbiz.core.rules.engine.*;
 import org.ofbiz.core.rules.parse.*;
+
 
 /**
  * Pops two terms, constructs an Evaluation from these terms, and pushes it.
@@ -35,6 +37,7 @@ import org.ofbiz.core.rules.parse.*;
  * @version 1.0
  */
 public class EvaluationAssembler extends Assembler {
+
     /**
      * Pops two terms, constructs an Evaluation from these terms,
      * and pushes it.
@@ -44,6 +47,7 @@ public class EvaluationAssembler extends Assembler {
     public void workOn(Assembly a) {
         Term second = (Term) a.pop();
         Term first = (Term) a.pop();
+
         a.push(new Evaluation(first, second));
     }
 }

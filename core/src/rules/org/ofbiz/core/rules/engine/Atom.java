@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * <p><b>Title:</b> Atom
  * <p><b>Description:</b> None
@@ -38,20 +39,22 @@ package org.ofbiz.core.rules.engine;
  * @version 1.0
  */
 public class Atom extends Fact implements ComparisonTerm {
-  /**
-   * Contructs an atom from the specified object.
-   *
-   * @param Object the functor for this atom
-   */
-  public Atom(Object functor) {
-    super(functor);
-  }
-  /**
-   * Returns the functor if this structure.
-   *
-   * @return the functor if this structure
-   */
-  public Object eval() {
-    return functor;
-  }
+
+    /**
+     * Contructs an atom from the specified object.
+     *
+     * @param Object the functor for this atom
+     */
+    public Atom(Object functor) {
+        super(functor);
+    }
+
+    /**
+     * Returns the functor if this structure.
+     *
+     * @return the functor if this structure
+     */
+    public Object eval() {
+        return functor;
+    }
 }

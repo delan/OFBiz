@@ -54,7 +54,7 @@ public class ModelRelation {
 
     /** the name of the related entity */
     protected String relEntityName = "";
-    
+
     /** the name to use for a database foreign key, if applies */
     protected String fkName = "";
 

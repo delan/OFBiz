@@ -25,10 +25,12 @@
 
 package org.ofbiz.core.event;
 
+
 import java.util.*;
 
 import org.ofbiz.core.control.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * EventFactory - Event Handler Factory
@@ -43,11 +45,13 @@ public class EventFactory {
 
     public static EventHandler getEventHandler(RequestHandler rh, String type) throws EventHandlerException {
         EventHandler handler = (EventHandler) handlers.get(type);
+
         if (handler == null) {
             synchronized (EventHandler.class) {
                 handler = (EventHandler) handlers.get(type);
                 if (handler == null) {
                     String handlerClass = rh.getRequestManager().getHandlerClass(type, RequestManager.EVENT_HANDLER_KEY);
+
                     if (handlerClass == null)
                         throw new EventHandlerException("Unknown handler");
                     try {
@@ -68,6 +72,4 @@ public class EventFactory {
         return handler;
     }
 }
-
-
 

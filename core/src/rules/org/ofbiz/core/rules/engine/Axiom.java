@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * <p><b>Title:</b> Axiom
  * <p><b>Description:</b> None
@@ -40,18 +41,20 @@ package org.ofbiz.core.rules.engine;
  * @version 1.0
  */
 public interface Axiom {
-  /**
-   * Return an axiom that a consulting structure can use
-   * to prove itself.
-   *
-   * @return an axiom that a consulting structure can use
-   *         to prove itself.
-   */
-  DynamicAxiom dynamicAxiom(AxiomSource as);
-  /**
-   * Return the first structure of this axiom.
-   *
-   * @return the first structure of this axiom
-   */
-  Structure head();
+
+    /**
+     * Return an axiom that a consulting structure can use
+     * to prove itself.
+     *
+     * @return an axiom that a consulting structure can use
+     *         to prove itself.
+     */
+    DynamicAxiom dynamicAxiom(AxiomSource as);
+
+    /**
+     * Return the first structure of this axiom.
+     *
+     * @return the first structure of this axiom
+     */
+    Structure head();
 }

@@ -24,9 +24,11 @@
 
 package org.ofbiz.core.util;
 
+
 import java.util.*;
 import java.net.*;
 import java.io.*;
+
 
 /**
  * URL Utilities - Simple Class for flexibly working with properties files
@@ -40,6 +42,7 @@ public class UtilURL {
     public static URL fromClass(Class contextClass) {
         String resourceName = contextClass.getName();
         int dotIndex = resourceName.lastIndexOf('.');
+
         if (dotIndex != -1) resourceName = resourceName.substring(0, dotIndex);
         resourceName += ".properties";
 
@@ -59,6 +62,7 @@ public class UtilURL {
 
     public static URL fromResource(String resourceName, ClassLoader loader) {
         URL url = null;
+
         if (loader != null && url == null) url = loader.getResource(resourceName);
         if (loader != null && url == null) url = loader.getResource(resourceName + ".properties");
 
@@ -67,6 +71,7 @@ public class UtilURL {
                 loader = Thread.currentThread().getContextClassLoader();
             } catch (SecurityException e) {
                 UtilURL utilURL = new UtilURL();
+
                 loader = utilURL.getClass().getClassLoader();
             }
         }
@@ -79,7 +84,7 @@ public class UtilURL {
 
         if (url == null) url = fromFilename(resourceName);
 
-        //Debug.log("[fromResource] got URL " + url + " from resourceName " + resourceName);
+        // Debug.log("[fromResource] got URL " + url + " from resourceName " + resourceName);
         return url;
     }
 
@@ -87,6 +92,7 @@ public class UtilURL {
         if (filename == null) return null;
         File file = new File(filename);
         URL url = null;
+
         try {
             if (file.exists()) url = file.toURL();
         } catch (java.net.MalformedURLException e) {

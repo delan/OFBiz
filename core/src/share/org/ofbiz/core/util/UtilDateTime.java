@@ -24,8 +24,10 @@
 
 package org.ofbiz.core.util;
 
+
 import java.util.*;
 import java.lang.*;
+
 
 /**
  * Utility class for handling java.util.Date, the java.sql data/time classes and related information
@@ -57,6 +59,7 @@ public class UtilDateTime {
 
     public static java.sql.Timestamp getDayStart(java.sql.Timestamp stamp, int daysLater) {
         Calendar tempCal = Calendar.getInstance();
+
         tempCal.setTime(new java.util.Date(stamp.getTime()));
         tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         if (daysLater > 0) tempCal.add(Calendar.DAY_OF_MONTH, daysLater);
@@ -73,6 +76,7 @@ public class UtilDateTime {
 
     public static java.sql.Timestamp getDayEnd(java.sql.Timestamp stamp, int daysLater) {
         Calendar tempCal = Calendar.getInstance();
+
         tempCal.setTime(new java.util.Date(stamp.getTime()));
         tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
         if (daysLater > 0) tempCal.add(Calendar.DAY_OF_MONTH, daysLater);
@@ -85,6 +89,7 @@ public class UtilDateTime {
      */
     public static java.sql.Date toSqlDate(String date) {
         java.util.Date newDate = toDate(date, "00:00:00");
+
         if (newDate != null)
             return new java.sql.Date(newDate.getTime());
         else
@@ -99,6 +104,7 @@ public class UtilDateTime {
      */
     public static java.sql.Date toSqlDate(String monthStr, String dayStr, String yearStr) {
         java.util.Date newDate = toDate(monthStr, dayStr, yearStr, "0", "0", "0");
+
         if (newDate != null)
             return new java.sql.Date(newDate.getTime());
         else
@@ -113,6 +119,7 @@ public class UtilDateTime {
      */
     public static java.sql.Date toSqlDate(int month, int day, int year) {
         java.util.Date newDate = toDate(month, day, year, 0, 0, 0);
+
         if (newDate != null)
             return new java.sql.Date(newDate.getTime());
         else
@@ -125,6 +132,7 @@ public class UtilDateTime {
      */
     public static java.sql.Time toSqlTime(String time) {
         java.util.Date newDate = toDate("1/1/1970", time);
+
         if (newDate != null)
             return new java.sql.Time(newDate.getTime());
         else
@@ -139,6 +147,7 @@ public class UtilDateTime {
      */
     public static java.sql.Time toSqlTime(String hourStr, String minuteStr, String secondStr) {
         java.util.Date newDate = toDate("0", "0", "0", hourStr, minuteStr, secondStr);
+
         if (newDate != null)
             return new java.sql.Time(newDate.getTime());
         else
@@ -153,6 +162,7 @@ public class UtilDateTime {
      */
     public static java.sql.Time toSqlTime(int hour, int minute, int second) {
         java.util.Date newDate = toDate(0, 0, 0, hour, minute, second);
+
         if (newDate != null)
             return new java.sql.Time(newDate.getTime());
         else
@@ -165,6 +175,7 @@ public class UtilDateTime {
      */
     public static java.sql.Timestamp toTimestamp(String dateTime) {
         java.util.Date newDate = toDate(dateTime);
+
         if (newDate != null)
             return new java.sql.Timestamp(newDate.getTime());
         else
@@ -178,6 +189,7 @@ public class UtilDateTime {
      */
     public static java.sql.Timestamp toTimestamp(String date, String time) {
         java.util.Date newDate = toDate(date, time);
+
         if (newDate != null)
             return new java.sql.Timestamp(newDate.getTime());
         else
@@ -194,8 +206,9 @@ public class UtilDateTime {
      * @return A Timestamp made from separate Strings for month, day, year, hour, minute, and second.
      */
     public static java.sql.Timestamp toTimestamp(String monthStr, String dayStr, String yearStr, String hourStr,
-                                                 String minuteStr, String secondStr) {
+        String minuteStr, String secondStr) {
         java.util.Date newDate = toDate(monthStr, dayStr, yearStr, hourStr, minuteStr, secondStr);
+
         if (newDate != null)
             return new java.sql.Timestamp(newDate.getTime());
         else
@@ -213,6 +226,7 @@ public class UtilDateTime {
      */
     public static java.sql.Timestamp toTimestamp(int month, int day, int year, int hour, int minute, int second) {
         java.util.Date newDate = toDate(month, day, year, hour, minute, second);
+
         if (newDate != null)
             return new java.sql.Timestamp(newDate.getTime());
         else
@@ -224,9 +238,10 @@ public class UtilDateTime {
      * @return The corresponding Date
      */
     public static java.util.Date toDate(String dateTime) {
-        //dateTime must have one space between the date and time...
+        // dateTime must have one space between the date and time...
         String date = dateTime.substring(0, dateTime.indexOf(" "));
         String time = dateTime.substring(dateTime.indexOf(" ") + 1);
+
         return toDate(date, time);
     }
 
@@ -246,9 +261,11 @@ public class UtilDateTime {
 
         int dateSlash1 = date.indexOf("/");
         int dateSlash2 = date.lastIndexOf("/");
+
         if (dateSlash1 <= 0 || dateSlash1 == dateSlash2) return null;
         int timeColon1 = time.indexOf(":");
         int timeColon2 = time.lastIndexOf(":");
+
         if (timeColon1 <= 0) return null;
         month = date.substring(0, dateSlash1);
         day = date.substring(dateSlash1 + 1, dateSlash2);
@@ -276,8 +293,9 @@ public class UtilDateTime {
      * @return A Date made from separate Strings for month, day, year, hour, minute, and second.
      */
     public static java.util.Date toDate(String monthStr, String dayStr, String yearStr, String hourStr,
-                                        String minuteStr, String secondStr) {
+        String minuteStr, String secondStr) {
         int month, day, year, hour, minute, second;
+
         try {
             month = Integer.parseInt(monthStr);
             day = Integer.parseInt(dayStr);
@@ -302,6 +320,7 @@ public class UtilDateTime {
      */
     public static java.util.Date toDate(int month, int day, int year, int hour, int minute, int second) {
         Calendar calendar = Calendar.getInstance();
+
         try {
             calendar.set(year, month - 1, day, hour, minute, second);
         } catch (Exception e) {
@@ -317,6 +336,7 @@ public class UtilDateTime {
     public static String toDateString(java.util.Date date) {
         if (date == null) return "";
         Calendar calendar = Calendar.getInstance();
+
         calendar.setTime(date);
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -324,6 +344,7 @@ public class UtilDateTime {
         String monthStr;
         String dayStr;
         String yearStr;
+
         if (month < 10) {
             monthStr = "0" + month;
         } else {
@@ -345,6 +366,7 @@ public class UtilDateTime {
     public static String toTimeString(java.util.Date date) {
         if (date == null) return "";
         Calendar calendar = Calendar.getInstance();
+
         calendar.setTime(date);
         return (toTimeString(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)));
     }
@@ -359,6 +381,7 @@ public class UtilDateTime {
         String hourStr;
         String minuteStr;
         String secondStr;
+
         if (hour < 10) {
             hourStr = "0" + hour;
         } else {
@@ -388,6 +411,7 @@ public class UtilDateTime {
         if (date == null) return "";
         String dateString = toDateString(date);
         String timeString = toTimeString(date);
+
         if (dateString != null && timeString != null)
             return dateString + " " + timeString;
         else
@@ -399,6 +423,7 @@ public class UtilDateTime {
      */
     public static java.sql.Timestamp monthBegin() {
         Calendar mth = Calendar.getInstance();
+
         mth.set(Calendar.DAY_OF_MONTH, 1);
         mth.set(Calendar.HOUR_OF_DAY, 0);
         mth.set(Calendar.MINUTE, 0);

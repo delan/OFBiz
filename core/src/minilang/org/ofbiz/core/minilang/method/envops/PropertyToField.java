@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.envops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
+
 
 /**
  * Copies an properties file property value to a field
@@ -58,13 +60,14 @@ public class PropertyToField extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         String value = UtilProperties.getPropertyValue(resource, property);
-        
+
         if (value == null || value.length() == 0) {
             value = defaultVal;
         }
-        
+
         if (mapName != null && mapName.length() > 0) {
             Map toMap = (Map) methodContext.getEnv(mapName);
+
             if (toMap == null) {
                 if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", creating new map");
                 toMap = new HashMap();

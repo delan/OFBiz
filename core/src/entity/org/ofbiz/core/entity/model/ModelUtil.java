@@ -48,6 +48,7 @@ public class ModelUtil {
         if (string == null) return null;
         if (string.length() <= 1) return string.toLowerCase();
         StringBuffer sb = new StringBuffer(string);
+
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         return sb.toString();
     }
@@ -61,6 +62,7 @@ public class ModelUtil {
         if (string == null) return null;
         if (string.length() <= 1) return string.toLowerCase();
         StringBuffer sb = new StringBuffer(string);
+
         sb.setCharAt(0, Character.toLowerCase(sb.charAt(0)));
         return sb.toString();
     }
@@ -148,7 +150,7 @@ public class ModelUtil {
      * @return The path name corresponding to the specified package name.
      */
     public static String packageToPath(String packageName) {
-        //just replace all of the '.' characters with the folder separater character
+        // just replace all of the '.' characters with the folder separater character
         return packageName.replace('.', File.separatorChar);
     }
 

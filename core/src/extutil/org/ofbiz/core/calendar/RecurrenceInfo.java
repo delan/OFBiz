@@ -25,10 +25,12 @@
 
 package org.ofbiz.core.calendar;
 
+
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Recurrence Info Object
@@ -62,8 +64,10 @@ public class RecurrenceInfo {
 
         // Get start date
         long startTime = info.getTimestamp("startDateTime").getTime();
+
         if (startTime > 0) {
             int nanos = info.getTimestamp("startDateTime").getNanos();
+
             startTime += (nanos / 1000000);
         } else
             throw new RecurrenceInfoException("Recurrence startDateTime must have a value.");
@@ -73,6 +77,7 @@ public class RecurrenceInfo {
         try {
             Collection c = info.getRelated("RecurrenceRule");
             Iterator i = c.iterator();
+
             rRulesList = new ArrayList();
             while (i.hasNext())
                 rRulesList.add(new RecurrenceRule((GenericValue) i.next()));
@@ -86,6 +91,7 @@ public class RecurrenceInfo {
         try {
             Collection c = info.getRelated("ExceptionRecurrenceRule");
             Iterator i = c.iterator();
+
             eRulesList = new ArrayList();
             while (i.hasNext())
                 eRulesList.add(new RecurrenceRule((GenericValue) i.next()));
@@ -150,6 +156,7 @@ public class RecurrenceInfo {
     /** Increments the current count of this recurrence. */
     public void incrementCurrentCount() throws GenericEntityException {
         Long count = new Long(getCurrentCount() + 1);
+
         info.set("recurrenceCount", count);
         info.store();
     }
@@ -157,9 +164,11 @@ public class RecurrenceInfo {
     /** Removes the recurrence from persistant store. */
     public void remove() throws RecurrenceInfoException {
         List rulesList = new ArrayList();
+
         rulesList.addAll(rRulesList);
         rulesList.addAll(eRulesList);
         Iterator i = rulesList.iterator();
+
         try {
             while (i.hasNext())
                 ((RecurrenceRule) i.next()).remove();
@@ -203,8 +212,10 @@ public class RecurrenceInfo {
 
         // Get the next recurrence from the rule(s).
         Iterator rulesIterator = getRecurrenceRuleIterator();
+
         while (rulesIterator.hasNext()) {
             RecurrenceRule rule = (RecurrenceRule) rulesIterator.next();
+
             while (hasNext) {
                 nextRuleTime = getNextTime(rule, nextRuleTime);  // Gets the next recurrence time from the rule.
                 if (nextRuleTime == 0 || isValid(nextRuleTime))  // Tests the next recurrence against the rules.
@@ -216,15 +227,19 @@ public class RecurrenceInfo {
 
     private long getNextTime(RecurrenceRule rule, long fromTime) {
         long nextTime = rule.next(getStartTime(), fromTime, getCurrentCount());
+
         return checkDateList(rDateList, nextTime, fromTime);
     }
 
     private long checkDateList(List dateList, long time, long fromTime) {
         long nextTime = time;
+
         if (dateList != null && dateList.size() > 0) {
             Iterator dateIterator = dateList.iterator();
+
             while (dateIterator.hasNext()) {
                 Date thisDate = (Date) dateIterator.next();
+
                 if (nextTime > 0 && thisDate.getTime() < nextTime && thisDate.getTime() > fromTime)
                     nextTime = thisDate.getTime();
                 else if (nextTime == 0 && thisDate.getTime() > fromTime)
@@ -236,8 +251,10 @@ public class RecurrenceInfo {
 
     private boolean isValid(long time) {
         Iterator exceptRulesIterator = getExceptionRuleIterator();
+
         while (exceptRulesIterator.hasNext()) {
             RecurrenceRule except = (RecurrenceRule) exceptRulesIterator.next();
+
             if (except.isValid(getStartTime(), time) || eDateList.contains(new Date(time)))
                 return false;
         }
@@ -249,16 +266,18 @@ public class RecurrenceInfo {
     }
 
     public static RecurrenceInfo makeInfo(GenericDelegator delegator, long startTime, int frequency,
-                                          int interval, int count) throws RecurrenceInfoException {
+        int interval, int count) throws RecurrenceInfoException {
         try {
             RecurrenceRule r = RecurrenceRule.makeRule(delegator, frequency, interval, count);
             String ruleId = r.primaryKey();
             String infoId = delegator.getNextSeqId("RecurrenceInfo").toString();
             GenericValue value = delegator.makeValue("RecurrenceInfo", UtilMisc.toMap("recurrenceInfoId", infoId));
+
             value.set("recurrenceRuleId", ruleId);
             value.set("startDateTime", new java.sql.Timestamp(startTime));
             delegator.create(value);
             RecurrenceInfo newInfo = new RecurrenceInfo(value);
+
             return newInfo;
         } catch (RecurrenceRuleException re) {
             throw new RecurrenceInfoException(re.getMessage(), re);

@@ -4,6 +4,7 @@
 
 package org.ofbiz.core.event;
 
+
 /**
  * <p><b>Title:</b> EventHandlerException.java
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
@@ -32,11 +33,13 @@ package org.ofbiz.core.event;
 public class EventHandlerException extends org.ofbiz.core.util.GeneralException {
 
     public EventHandlerException(String str, Throwable t) {
-        super(str,t);
+        super(str, t);
     }
+
     public EventHandlerException(String str) {
         super(str);
     }
+
     public EventHandlerException() {
         super();
     }

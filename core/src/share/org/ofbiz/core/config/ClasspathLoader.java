@@ -25,10 +25,12 @@
 
 package org.ofbiz.core.config;
 
+
 import java.util.*;
 import java.net.*;
 import java.io.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Loads resources from the classpath
@@ -41,6 +43,7 @@ public class ClasspathLoader extends ResourceLoader {
     public InputStream loadResource(String location) throws GenericConfigException {
         String fullLocation = fullLocation(location);
         URL url = UtilURL.fromResource(fullLocation);
+
         if (url == null) {
             throw new GenericConfigException("Classpath Resource not found: " + fullLocation);
         }

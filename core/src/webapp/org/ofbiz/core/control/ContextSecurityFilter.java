@@ -25,12 +25,14 @@
 
 package org.ofbiz.core.control;
 
+
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * <p><b>Title:</b> ContextSecurityFilter - Security Filter to restrict access to raw JSP pages.
@@ -58,19 +60,20 @@ public class ContextSecurityFilter implements Filter {
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+        throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper((HttpServletResponse) response);
 
         // check if we are told to redirect everthing
         String redirectAllTo = config.getInitParameter("forceRedirectAll");
+
         if (Debug.verboseOn())
             Debug.logVerbose("RedirectAllForce Set To: " + redirectAllTo, module);
         if (redirectAllTo != null && redirectAllTo.length() > 0) {
             if (request.getAttribute("_FORCE_REDIRECT_") == null) {
                 request.setAttribute("_FORCE_REDIRECT_", "true");
                 Debug.logWarning("Redirecting user to: " + redirectAllTo, module);
-                //wrapper.sendRedirect(httpRequest.getContextPath() + redirectAllTo);
+                // wrapper.sendRedirect(httpRequest.getContextPath() + redirectAllTo);
                 request.getRequestDispatcher(redirectAllTo).forward(request, response);
                 return;
             } else {
@@ -86,12 +89,14 @@ public class ContextSecurityFilter implements Filter {
             String errorCode = config.getInitParameter("errorCode");
 
             List allowList = StringUtil.split(allowedPath, ":");
+
             allowList.add("/");    // No path is allowed.
             allowList.add("");      // No path is allowed.
 
             if (Debug.verboseOn()) Debug.logVerbose("[Request]: " + httpRequest.getRequestURI(), module);
 
             String requestPath = httpRequest.getServletPath();
+
             if (requestPath == null) requestPath = "";
 
             if (requestPath.lastIndexOf("/") > 0) {
@@ -102,6 +107,7 @@ public class ContextSecurityFilter implements Filter {
             }
 
             String requestInfo = httpRequest.getServletPath();
+
             if (requestInfo == null) requestInfo = "";
 
             if (requestInfo.lastIndexOf("/") >= 0) {
@@ -109,6 +115,7 @@ public class ContextSecurityFilter implements Filter {
             }
 
             StringBuffer contextUriBuffer = new StringBuffer();
+
             if (httpRequest.getContextPath() != null)
                 contextUriBuffer.append(httpRequest.getContextPath());
             if (httpRequest.getServletPath() != null)
@@ -127,12 +134,13 @@ public class ContextSecurityFilter implements Filter {
                 Debug.logVerbose("[Servlet path]: " + httpRequest.getServletPath(), module);
             }
 
-
             if (!allowList.contains(requestPath) && !allowList.contains(requestInfo) &&
-                    !allowList.contains(httpRequest.getServletPath())) {
+                !allowList.contains(httpRequest.getServletPath())) {
                 String filterMessage = "[Filtered request]: " + contextUri;
+
                 if (redirectPath == null) {
                     int error;
+
                     try {
                         error = Integer.parseInt(errorCode);
                     } catch (NumberFormatException nfe) {
@@ -143,7 +151,7 @@ public class ContextSecurityFilter implements Filter {
                 } else {
                     filterMessage = filterMessage + " (" + redirectPath + ")";
                     wrapper.sendRedirect(httpRequest.getContextPath() + redirectPath);
-                    //request.getRequestDispatcher(redirectPath).forward(request, response);
+                    // request.getRequestDispatcher(redirectPath).forward(request, response);
                 }
                 Debug.logWarning(filterMessage, module);
                 return;

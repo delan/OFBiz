@@ -25,8 +25,10 @@
 
 package org.ofbiz.core.calendar;
 
+
 import java.util.*;
 import java.text.*;
+
 
 /**
  * Recurrence Utilities
@@ -40,6 +42,7 @@ public class RecurrenceUtil {
     /** Returns a Date object from a String. */
     public static Date parseDate(String dateStr) {
         String formatString = new String();
+
         if (dateStr.length() == 16)
             dateStr = dateStr.substring(0, 14);
         if (dateStr.length() == 15)
@@ -49,15 +52,18 @@ public class RecurrenceUtil {
 
         SimpleDateFormat formatter = new SimpleDateFormat(formatString);
         ParsePosition pos = new ParsePosition(0);
+
         return formatter.parse(dateStr, pos);
     }
 
     /** Returns a List of parsed date strings. */
     public static List parseDateList(List dateList) {
         List newList = new ArrayList();
+
         if (dateList == null)
             return newList;
         Iterator i = dateList.iterator();
+
         while (i.hasNext())
             newList.add(parseDate((String) i.next()));
         return newList;
@@ -67,12 +73,14 @@ public class RecurrenceUtil {
     public static String formatDate(Date date) {
         String formatString = new String();
         Calendar cal = Calendar.getInstance();
+
         cal.setTime(date);
         if (cal.isSet(Calendar.MINUTE))
             formatString = "yyyyMMdd'T'hhmmss";
         else
             formatString = "yyyyMMdd";
         SimpleDateFormat formatter = new SimpleDateFormat(formatString);
+
         return formatter.format(date);
     }
 
@@ -80,6 +88,7 @@ public class RecurrenceUtil {
     public static List formatDateList(List dateList) {
         List newList = new ArrayList();
         Iterator i = dateList.iterator();
+
         while (i.hasNext())
             newList.add(formatDate((Date) i.next()));
         return newList;

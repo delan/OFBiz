@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.operation;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -34,6 +35,7 @@ import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+
 
 /**
  * A string operation that calls a validation method
@@ -56,6 +58,7 @@ public class ValidateMethod extends SimpleMapOperation {
         Object obj = inMap.get(fieldName);
 
         String fieldValue = null;
+
         try {
             fieldValue = (String) ObjectType.simpleTypeConvert(obj, "String", null, locale);
         } catch (GeneralException e) {
@@ -67,34 +70,40 @@ public class ValidateMethod extends SimpleMapOperation {
             loader = Thread.currentThread().getContextClassLoader();
         }
 
-        Class[] paramTypes = new Class[]{String.class};
-        Object[] params = new Object[]{fieldValue};
+        Class[] paramTypes = new Class[] {String.class};
+        Object[] params = new Object[] {fieldValue};
 
         Class valClass;
+
         try {
             valClass = loader.loadClass(className);
         } catch (ClassNotFoundException cnfe) {
             String msg = "Could not find validation class: " + className;
+
             messages.add(msg);
             Debug.logError("[ValidateMethod.exec] " + msg);
             return;
         }
 
         Method valMethod;
+
         try {
             valMethod = valClass.getMethod(methodName, paramTypes);
         } catch (NoSuchMethodException cnfe) {
             String msg = "Could not find validation method: " + methodName + " of class " + className;
+
             messages.add(msg);
             Debug.logError("[ValidateMethod.exec] " + msg);
             return;
         }
 
         Boolean resultBool = Boolean.FALSE;
+
         try {
             resultBool = (Boolean) valMethod.invoke(null, params);
         } catch (Exception e) {
             String msg = "Error in validation method " + methodName + " of class " + className + ": " + e.getMessage();
+
             messages.add(msg);
             Debug.logError("[ValidateMethod.exec] " + msg);
             return;

@@ -26,12 +26,14 @@
 
 package org.ofbiz.core.minilang;
 
+
 import java.util.*;
 import java.lang.reflect.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.engine.*;
+
 
 /**
  * Standard Java Static Method Service Engine
@@ -51,7 +53,7 @@ public final class SimpleServiceEngine extends GenericAsyncEngine {
      * @param context Map of name, value pairs composing the context
      */
     public void runSyncIgnore(ModelService modelService,
-                              Map context) throws GenericServiceException {
+        Map context) throws GenericServiceException {
         Map result = runSync(modelService, context);
     }
 
@@ -60,8 +62,9 @@ public final class SimpleServiceEngine extends GenericAsyncEngine {
      * @return Map of name, value pairs composing the result
      */
     public Map runSync(ModelService modelService,
-                       Map context) throws GenericServiceException {
+        Map context) throws GenericServiceException {
         Object result = serviceInvoker(modelService, context);
+
         if (result == null || !(result instanceof Map))
             throw new GenericServiceException("Service did not return expected result");
         return (Map) result;
@@ -69,7 +72,7 @@ public final class SimpleServiceEngine extends GenericAsyncEngine {
 
     // Invoke the simple method from a service context
     private Object serviceInvoker(ModelService modelService,
-                                  Map context) throws GenericServiceException {
+        Map context) throws GenericServiceException {
         // static java service methods should be: public Map methodName(DispatchContext dctx, Map context)
         DispatchContext dctx = dispatcher.getLocalContext(loader);
 
@@ -79,17 +82,18 @@ public final class SimpleServiceEngine extends GenericAsyncEngine {
 
         // get the classloader to use
         ClassLoader classLoader = null;
+
         if (loader != null)
             classLoader = dispatcher.getLocalContext(loader).getClassLoader();
-        
-        //if the classLoader is null, no big deal, SimpleMethod will use the 
+
+        // if the classLoader is null, no big deal, SimpleMethod will use the 
         // current thread's ClassLoader by default if null passed in
-        
+
         try {
             return SimpleMethod.runSimpleService(modelService.location, modelService.invoke, dctx, context, classLoader);
         } catch (MiniLangException e) {
-            throw new GenericServiceException("Error running simple method [" + modelService.invoke + 
-                "] in XML file [" + modelService.location + "]: ", e);
+            throw new GenericServiceException("Error running simple method [" + modelService.invoke +
+                    "] in XML file [" + modelService.location + "]: ", e);
         }
     }
 }

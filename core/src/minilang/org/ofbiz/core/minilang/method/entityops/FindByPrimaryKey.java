@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.entityops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.entity.*;
+
 
 /**
  * Uses the delegator to find an entity value by its primary key
@@ -52,7 +54,7 @@ public class FindByPrimaryKey extends MethodOperation {
         valueName = element.getAttribute("value-name");
         entityName = element.getAttribute("entity-name");
         mapName = element.getAttribute("map-name");
-        
+
         useCache = "true".equals(element.getAttribute("use-cache"));
     }
 
@@ -66,6 +68,7 @@ public class FindByPrimaryKey extends MethodOperation {
         } catch (GenericEntityException e) {
             Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem finding the " + entityName + " entity: " + e.getMessage() + "]";
+
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());

@@ -22,11 +22,13 @@
  */
 package org.ofbiz.commonapp.product.product;
 
+
 import java.util.*;
 import java.sql.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  *  Does a product search by keyword using the PRODUCT_KEYWORD table.
@@ -37,7 +39,7 @@ import org.ofbiz.core.util.*;
  *@created Sep 4, 2001
  */
 public class KeywordSearch {
-    
+
     /** Does a product search by keyword using the PRODUCT_KEYWORD table.
      *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.
      *@param delegator The delegator to look up the name of the helper/server to get a connection to
@@ -47,7 +49,7 @@ public class KeywordSearch {
     public static Collection productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId, String visitId) {
         return productsByKeywords(keywordsString, delegator, categoryId, visitId, false, false, "OR");
     }
-    
+
     /** Does a product search by keyword using the PRODUCT_KEYWORD table.
      *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.
      *@param delegator The delegator to look up the name of the helper/server to get a connection to
@@ -62,26 +64,30 @@ public class KeywordSearch {
             return null;
         }
         String helperName = null;
+
         helperName = delegator.getEntityHelperName("ProductKeyword");
         boolean useCategory = (categoryId != null && categoryId.length() > 0) ? true : false;
+
         intraKeywordOperator = intraKeywordOperator.toUpperCase();
         if (intraKeywordOperator == null || (!"AND".equals(intraKeywordOperator) && !"OR".equals(intraKeywordOperator))) {
             Debug.logWarning("intraKeywordOperator [" + intraKeywordOperator + "] was not valid, defaulting to OR");
             intraKeywordOperator = "OR";
         }
-        
+
         boolean removeStems = UtilProperties.propertyValueEquals("prodsearch", "remove.stems", "true");
 
         ArrayList pbkList = new ArrayList(100);
 
         List keywordFirstPass = makeKeywordList(keywordsString);
         List keywordList = fixKeywords(keywordFirstPass, anyPrefix, anySuffix, removeStems, intraKeywordOperator);
+
         if (keywordList.size() == 0) {
             return null;
         }
-        
+
         List params = new ArrayList();
         String sql = getSearchSQL(keywordList, params, useCategory, intraKeywordOperator);
+
         if (sql == null) {
             return null;
         }
@@ -92,6 +98,7 @@ public class KeywordSearch {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
+
         try {
             connection = ConnectionFactory.getConnection(helperName);
             statement = connection.prepareStatement(sql);
@@ -104,13 +111,14 @@ public class KeywordSearch {
 
             while (resultSet.next()) {
                 pbkList.add(resultSet.getString("PRODUCT_ID"));
-                //Debug.logInfo("PRODUCT_ID=" + resultSet.getString("PRODUCT_ID") + " TOTAL_WEIGHT=" + resultSet.getInt("TOTAL_WEIGHT"));
+                // Debug.logInfo("PRODUCT_ID=" + resultSet.getString("PRODUCT_ID") + " TOTAL_WEIGHT=" + resultSet.getInt("TOTAL_WEIGHT"));
             }
             if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix + ", removeStems=" + removeStems);
-            
+
             try {
                 GenericValue productKeywordResult = delegator.makeValue("ProductKeywordResult", null);
                 Long nextPkrSeqId = delegator.getNextSeqId("ProductKeywordResult");
+
                 productKeywordResult.set("productKeywordResultId", nextPkrSeqId.toString());
                 productKeywordResult.set("visitId", visitId);
                 if (useCategory) productKeywordResult.set("productCategoryId", categoryId);
@@ -125,7 +133,7 @@ public class KeywordSearch {
                 Debug.logError(e, "Error saving keyword result stats");
                 Debug.logError("[KeywordSearch] Stats are: got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix + ", removeStems=" + removeStems);
             }
-            
+
             if (pbkList.size() == 0) {
                 return null;
             } else {
@@ -135,19 +143,19 @@ public class KeywordSearch {
             Debug.logError(sqle);
         } catch (GenericEntityException e) {
             Debug.logError(e);
-        } finally { 
+        } finally {
             try {
                 if (resultSet != null)
                     resultSet.close();
-            } catch (SQLException sqle) { }
+            } catch (SQLException sqle) {}
             try {
                 if (statement != null)
                     statement.close();
-            } catch (SQLException sqle) { }
+            } catch (SQLException sqle) {}
             try {
                 if (connection != null)
                     connection.close();
-            } catch (SQLException sqle) { }
+            } catch (SQLException sqle) {}
         }
         return null;
     }
@@ -157,6 +165,7 @@ public class KeywordSearch {
 
         List keywords = new ArrayList(10);
         String curToken;
+
         while (tokenizer.hasMoreTokens()) {
             curToken = tokenizer.nextToken();
             keywords.add(curToken);
@@ -168,42 +177,48 @@ public class KeywordSearch {
         if (keywords == null) {
             return null;
         }
-        
+
         String stopWordBag = null;
+
         if (intraKeywordOperator.equals("AND")) {
             stopWordBag = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.and");
         } else {
             stopWordBag = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.or");
         }
-        
+
         String stemBag = UtilProperties.getPropertyValue("prodsearch", "stem.bag");
         List stemList = new ArrayList(10);
+
         if (UtilValidate.isNotEmpty(stemBag)) {
             String curToken;
             StringTokenizer tokenizer = new StringTokenizer(stemBag, ": ");
+
             while (tokenizer.hasMoreTokens()) {
                 curToken = tokenizer.nextToken();
                 stemList.add(curToken);
             }
         }
-        
+
         List fixedKeywords = new ArrayList(keywords.size());
         String str = null;
         Iterator kwiter = keywords.iterator();
+
         while (kwiter.hasNext()) {
             str = (String) kwiter.next();
-            
-            //do some cleanup, and replace wildcards
+
+            // do some cleanup, and replace wildcards
             str = str.replace('*', '%');
             str = str.replace('?', '_');
             str = str.toLowerCase();
             if (stopWordBag.indexOf(":" + str + ":") >= 0) continue;
 
-            //if enabled, remove stems in stem.bag
+            // if enabled, remove stems in stem.bag
             if (anySuffix && removeStems) {
                 Iterator stemIter = stemList.iterator();
+
                 while (stemIter.hasNext()) {
                     String stem = (String) stemIter.next();
+
                     if (str.endsWith(stem)) {
                         str = str.substring(0, str.length() - stem.length());
                     }
@@ -211,12 +226,13 @@ public class KeywordSearch {
             }
 
             StringBuffer strSb = new StringBuffer();
+
             if (anyPrefix) strSb.append('%');
             strSb.append(str);
             if (anySuffix) strSb.append('%');
             str = strSb.toString();
 
-            if(!fixedKeywords.contains(str)) {
+            if (!fixedKeywords.contains(str)) {
                 fixedKeywords.add(str);
             }
         }
@@ -231,34 +247,36 @@ public class KeywordSearch {
         Iterator keywordIter = keywords.iterator();
 
         boolean isAnd = intraKeywordOperator.equals("AND");
-        
-        //AND EXAMPLE:
-        //  SELECT DISTINCT P1.PRODUCT_ID, (P1.RELEVANCY_WEIGHT + P2.RELEVANCY_WEIGHT + P3.RELEVANCY_WEIGHT) AS TOTAL_WEIGHT FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3
-        //  WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD = '1003027' ORDER BY TOTAL_WEIGHT DESC
-        //AND EXAMPLE WITH CATEGORY CONSTRAINT:
-        //  SELECT DISTINCT P1.PRODUCT_ID, PCM.SEQUENCE_NUM AS CAT_SEQ_NUM, TOTAL_WEIGHT = P1.RELEVANCY_WEIGHT + P2.RELEVANCY_WEIGHT + P3.RELEVANCY_WEIGHT FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3, PRODUCT_CATEGORY_MEMBER PCM
-        //  WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD = '1003027' AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo' ORDER BY CAT_SEQ_NUM, TOTAL_WEIGHT DESC
 
-        //ORs are a little more complicated, so get individual results group them by PRODUCT_ID and sum the RELEVANCY_WEIGHT
-        //OR EXAMPLE:
-        //  SELECT DISTINCT P1.PRODUCT_ID, SUM(P1.RELEVANCY_WEIGHT) AS TOTAL_WEIGHT FROM PRODUCT_KEYWORD P1
-        //  WHERE (P1.KEYWORD LIKE 'TI%' OR P1.KEYWORD LIKE 'HOUS%' OR P1.KEYWORD = '1003027') GROUP BY P1.PRODUCT_ID ORDER BY TOTAL_WEIGHT DESC
-        //OR EXAMPLE WITH CATEGORY CONSTRAINT:
-        //  SELECT DISTINCT P1.PRODUCT_ID, MIN(PCM.SEQUENCE_NUM) AS CAT_SEQ_NUM, TOTAL_WEIGHT = SUM(P1.RELEVANCY_WEIGHT) FROM PRODUCT_KEYWORD P1, PRODUCT_CATEGORY_MEMBER PCM
-        //  WHERE (P1.KEYWORD LIKE 'TI%' OR P1.KEYWORD LIKE 'HOUS%' OR P1.KEYWORD = '1003027') AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo' GROUP BY P1.PRODUCT_ID ORDER BY CAT_SEQ_NUM, TOTAL_WEIGHT DESC
+        // AND EXAMPLE:
+        // SELECT DISTINCT P1.PRODUCT_ID, (P1.RELEVANCY_WEIGHT + P2.RELEVANCY_WEIGHT + P3.RELEVANCY_WEIGHT) AS TOTAL_WEIGHT FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3
+        // WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD = '1003027' ORDER BY TOTAL_WEIGHT DESC
+        // AND EXAMPLE WITH CATEGORY CONSTRAINT:
+        // SELECT DISTINCT P1.PRODUCT_ID, PCM.SEQUENCE_NUM AS CAT_SEQ_NUM, TOTAL_WEIGHT = P1.RELEVANCY_WEIGHT + P2.RELEVANCY_WEIGHT + P3.RELEVANCY_WEIGHT FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3, PRODUCT_CATEGORY_MEMBER PCM
+        // WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD = '1003027' AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo' ORDER BY CAT_SEQ_NUM, TOTAL_WEIGHT DESC
+
+        // ORs are a little more complicated, so get individual results group them by PRODUCT_ID and sum the RELEVANCY_WEIGHT
+        // OR EXAMPLE:
+        // SELECT DISTINCT P1.PRODUCT_ID, SUM(P1.RELEVANCY_WEIGHT) AS TOTAL_WEIGHT FROM PRODUCT_KEYWORD P1
+        // WHERE (P1.KEYWORD LIKE 'TI%' OR P1.KEYWORD LIKE 'HOUS%' OR P1.KEYWORD = '1003027') GROUP BY P1.PRODUCT_ID ORDER BY TOTAL_WEIGHT DESC
+        // OR EXAMPLE WITH CATEGORY CONSTRAINT:
+        // SELECT DISTINCT P1.PRODUCT_ID, MIN(PCM.SEQUENCE_NUM) AS CAT_SEQ_NUM, TOTAL_WEIGHT = SUM(P1.RELEVANCY_WEIGHT) FROM PRODUCT_KEYWORD P1, PRODUCT_CATEGORY_MEMBER PCM
+        // WHERE (P1.KEYWORD LIKE 'TI%' OR P1.KEYWORD LIKE 'HOUS%' OR P1.KEYWORD = '1003027') AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo' GROUP BY P1.PRODUCT_ID ORDER BY CAT_SEQ_NUM, TOTAL_WEIGHT DESC
 
         StringBuffer from = new StringBuffer(" FROM ");
         StringBuffer join = new StringBuffer(" WHERE ");
         StringBuffer where = new StringBuffer(" (");
         StringBuffer selectWeightTotal = new StringBuffer();
         StringBuffer groupBy = new StringBuffer();
-        
+
         if (isAnd) {
             selectWeightTotal.append(", (P1.RELEVANCY_WEIGHT");
             int i = 1;
+
             while (keywordIter.hasNext()) {
                 String keyword = (String) keywordIter.next();
                 String comparator = "=";
+
                 if (keyword.indexOf('%') >= 0 || keyword.indexOf('_') >= 0) {
                     comparator = " LIKE ";
                 }
@@ -302,9 +320,11 @@ public class KeywordSearch {
             from.append("PRODUCT_KEYWORD P1");
             groupBy.append(" GROUP BY P1.PRODUCT_ID ");
             int i = 1;
+
             while (keywordIter.hasNext()) {
                 String keyword = (String) keywordIter.next();
                 String comparator = "=";
+
                 if (keyword.indexOf('%') >= 0 || keyword.indexOf('_') >= 0) {
                     comparator = " LIKE ";
                 }
@@ -322,13 +342,14 @@ public class KeywordSearch {
             }
             where.append(") ");
         }
-        
+
         if (useCategory) {
             from.append(", PRODUCT_CATEGORY_MEMBER PCM");
             where.append(" AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID=?");
         }
 
         StringBuffer select = null;
+
         if (useCategory) {
             if (isAnd) {
                 select = new StringBuffer("SELECT DISTINCT P1.PRODUCT_ID, PCM.SEQUENCE_NUM AS CAT_SEQ_NUM");
@@ -344,7 +365,7 @@ public class KeywordSearch {
         sql.append(join.toString());
         sql.append(where.toString());
         sql.append(groupBy.toString());
-        //for order by: do by SEQUENCE_NUM first then by RELEVANCY_WEIGHT
+        // for order by: do by SEQUENCE_NUM first then by RELEVANCY_WEIGHT
         // this basicly allows a default ordering with the RELEVANCY_WEIGHT and a manual override with SEQUENCE_NUM
         sql.append(" ORDER BY ");
         if (useCategory) {
@@ -359,21 +380,23 @@ public class KeywordSearch {
     public static void induceKeywords(GenericValue product) throws GenericEntityException {
         if (product == null) return;
         GenericDelegator delegator = product.getDelegator();
+
         if (delegator == null) return;
         String productId = product.getString("productId");
 
-        //String separators = ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-_";
+        // String separators = ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-_";
         String separators = UtilProperties.getPropertyValue("prodsearch", "index.keyword.separators", ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-_");
         String stopWordBagOr = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.or");
         String stopWordBagAnd = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.and");
-        
+
         Map keywords = new TreeMap();
         List strings = new ArrayList(50);
-        
+
         int pidWeight = 1;
+
         try {
             pidWeight = Integer.parseInt(UtilProperties.getPropertyValue("prodsearch", "index.weight.Product.productId", "1"));
-        } catch (Exception e) { }
+        } catch (Exception e) {}
         keywords.put(product.getString("productId").toLowerCase(), new Long(pidWeight));
 
         addWeightedKeywordSourceString(product, "productName", strings);
@@ -381,12 +404,14 @@ public class KeywordSearch {
         addWeightedKeywordSourceString(product, "longDescription", strings);
 
         if (!"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductFeatureAndAppl.description", "1")) ||
-                !"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductFeatureAndAppl.abbrev", "1")) ||
-                !"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductFeatureAndAppl.idCode", "1"))) {
-            //get strings from attributes and features
+            !"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductFeatureAndAppl.abbrev", "1")) ||
+            !"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductFeatureAndAppl.idCode", "1"))) {
+            // get strings from attributes and features
             Iterator productFeatureAndAppls = UtilMisc.toIterator(delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId)));
+
             while (productFeatureAndAppls != null && productFeatureAndAppls.hasNext()) {
                 GenericValue productFeatureAndAppl = (GenericValue) productFeatureAndAppls.next();
+
                 addWeightedKeywordSourceString(productFeatureAndAppl, "description", strings);
                 addWeightedKeywordSourceString(productFeatureAndAppl, "abbrev", strings);
                 addWeightedKeywordSourceString(productFeatureAndAppl, "idCode", strings);
@@ -394,28 +419,34 @@ public class KeywordSearch {
         }
 
         if (!"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductAttribute.attrName", "1")) ||
-                !"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductAttribute.attrValue", "1"))) {
+            !"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductAttribute.attrValue", "1"))) {
             Iterator productAttributes = UtilMisc.toIterator(delegator.findByAnd("ProductAttribute", UtilMisc.toMap("productId", productId)));
+
             while (productAttributes != null && productAttributes.hasNext()) {
                 GenericValue productAttribute = (GenericValue) productAttributes.next();
+
                 addWeightedKeywordSourceString(productAttribute, "attrName", strings);
                 addWeightedKeywordSourceString(productAttribute, "attrValue", strings);
             }
         }
-        
+
         Iterator strIter = strings.iterator();
+
         while (strIter.hasNext()) {
             String str = (String) strIter.next();
+
             if (str.length() > 0) {
                 StringTokenizer tokener = new StringTokenizer(str, separators, false);
 
                 while (tokener.hasMoreTokens()) {
                     String token = tokener.nextToken().toLowerCase();
                     String colonToken = ":" + token + ":";
+
                     if (stopWordBagOr.indexOf(colonToken) >= 0 && stopWordBagAnd.indexOf(colonToken) >= 0) {
                         continue;
                     }
                     Long curWeight = (Long) keywords.get(token);
+
                     if (curWeight == null) {
                         keywords.put(token, new Long(1));
                     } else {
@@ -427,9 +458,11 @@ public class KeywordSearch {
 
         List toBeStored = new LinkedList();
         Iterator kiter = keywords.entrySet().iterator();
+
         while (kiter.hasNext()) {
             Map.Entry entry = (Map.Entry) kiter.next();
             GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", entry.getKey(), "relevancyWeight", entry.getValue()));
+
             toBeStored.add(productKeyword);
         }
         if (toBeStored.size() > 0) {
@@ -437,13 +470,14 @@ public class KeywordSearch {
             delegator.storeAll(toBeStored);
         }
     }
-    
+
     public static void addWeightedKeywordSourceString(GenericValue value, String fieldName, List strings) {
         if (value.getString(fieldName) != null) {
             int weight = 1;
+
             try {
                 weight = Integer.parseInt(UtilProperties.getPropertyValue("prodsearch", "index.weight." + value.getEntityName() + "." + fieldName, "1"));
-            } catch (Exception e) { }
+            } catch (Exception e) {}
 
             for (int i = 0; i < weight; i++) {
                 strings.add(value.getString(fieldName));

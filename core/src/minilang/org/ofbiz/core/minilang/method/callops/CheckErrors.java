@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.callops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -34,6 +35,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
+
 
 /**
  * An event operation that checks a message list and may introduce a return code and stop the event
@@ -68,11 +70,13 @@ public class CheckErrors extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         List messages = (List) methodContext.getEnv(errorListName);
+
         if (messages != null && messages.size() > 0) {
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 String errMsg = errorPrefix.getMessage(methodContext.getLoader()) +
-                        ServiceUtil.makeMessageList(messages, messagePrefix.getMessage(methodContext.getLoader()), messageSuffix.getMessage(methodContext.getLoader())) +
-                        errorSuffix.getMessage(methodContext.getLoader());
+                    ServiceUtil.makeMessageList(messages, messagePrefix.getMessage(methodContext.getLoader()), messageSuffix.getMessage(methodContext.getLoader())) +
+                    errorSuffix.getMessage(methodContext.getLoader());
+
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
 
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), errorCode);

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.taglib;
 
+
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * <p><b>Title:</b> PrintTag - Prints an attribute from the PageContext.
@@ -65,11 +67,13 @@ public class PrintTag extends TagSupport {
         if (attribute == null)
             return SKIP_BODY;
         Object obj = pageContext.findAttribute(attribute);
+
         if (obj == null)
             obj = defaultStr;
 
         try {
             JspWriter out = pageContext.getOut();
+
             out.print(obj.toString());
         } catch (IOException e) {
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
@@ -83,5 +87,4 @@ public class PrintTag extends TagSupport {
         return SKIP_BODY;
     }
 }
-
 

@@ -25,12 +25,14 @@
 
 package org.ofbiz.core.event;
 
+
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * SimpleEventHandler - Simple Event Mini-Lang Handler
@@ -55,6 +57,7 @@ public class SimpleEventHandler implements EventHandler {
     public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         String xmlResource = eventPath;
         String eventName = eventMethod;
+
         if (Debug.verboseOn()) Debug.logVerbose("[Set path/method]: " + xmlResource + " / " + eventName, module);
 
         if (xmlResource == null)
@@ -65,6 +68,7 @@ public class SimpleEventHandler implements EventHandler {
         Debug.logVerbose("[Processing]: SIMPLE Event", module);
         try {
             String eventReturn = SimpleMethod.runSimpleEvent(xmlResource, eventName, request, response);
+
             if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + eventReturn, module);
             return eventReturn;
         } catch (MiniLangException e) {

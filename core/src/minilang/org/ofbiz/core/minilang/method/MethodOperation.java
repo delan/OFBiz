@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 
 import org.ofbiz.core.minilang.*;
+
 
 /**
  * A single operation, does the specified operation on the given field

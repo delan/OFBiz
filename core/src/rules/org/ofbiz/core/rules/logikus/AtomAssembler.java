@@ -1,8 +1,10 @@
 package org.ofbiz.core.rules.logikus;
 
+
 import org.ofbiz.core.rules.parse.*;
 import org.ofbiz.core.rules.parse.tokens.*;
 import org.ofbiz.core.rules.engine.*;
+
 
 /**
  * <p><b>Title:</b> Atom Assembler
@@ -36,27 +38,30 @@ import org.ofbiz.core.rules.engine.*;
  * @version 1.0
  */
 public class AtomAssembler extends Assembler {
-  /**
-   * Exchanges a token on an assembly's stack with an atom
-   * that has the token's value as its functor. In the case
-   * of a quoted string, this assembler removes the quotes,
-   * so that a string such as "Smith" becomes just Smith. In
-   * the case of a number, this assembler pushes a NumberFact.
-   *
-   * @param  Assembly  the assembly to work on
-   */
-  public void workOn(Assembly a) {
-    Token t = (Token) a.pop();
-    // remove quotes from quoted string
-    if (t.isQuotedString()) {
-      String s = t.sval();
-      String plain = s.substring(1, s.length() - 1);
-      a.push(new Atom(plain));
-    } else
-      if (t.isNumber()) {
-        a.push(new NumberFact(t.nval()));
-      } else {
-        a.push(new Atom(t.value()));
-      }
-  }
+
+    /**
+     * Exchanges a token on an assembly's stack with an atom
+     * that has the token's value as its functor. In the case
+     * of a quoted string, this assembler removes the quotes,
+     * so that a string such as "Smith" becomes just Smith. In
+     * the case of a number, this assembler pushes a NumberFact.
+     *
+     * @param  Assembly  the assembly to work on
+     */
+    public void workOn(Assembly a) {
+        Token t = (Token) a.pop();
+
+        // remove quotes from quoted string
+        if (t.isQuotedString()) {
+            String s = t.sval();
+            String plain = s.substring(1, s.length() - 1);
+
+            a.push(new Atom(plain));
+        } else
+        if (t.isNumber()) {
+            a.push(new NumberFact(t.nval()));
+        } else {
+            a.push(new Atom(t.value()));
+        }
+    }
 }

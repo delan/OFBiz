@@ -1,6 +1,8 @@
 package org.ofbiz.core.rules.parse;
 
+
 import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Terminal
@@ -38,137 +40,150 @@ import java.util.*;
  * @version 1.0
  */
 public class Terminal extends Parser {
-  /**
-   * whether or not this terminal should push itself upon an
-   * assembly's stack after a successful match
-   */
-  protected boolean discard = false;
-  
-  /**
-   * Constructs an unnamed terminal.
-   */
-  public Terminal() {
-  }
-  /**
-   * Constructs a terminal with the given name.
-   *
-   * @param    String    A name to be known by.
-   */
-  public Terminal(String name) {
-    super(name);
-  }
-  /**
-   * Accept a "visitor" and a collection of previously visited
-   * parsers.
-   *
-   * @param   pv   the visitor to accept
-   *
-   * @param   visited   a collection of previously visited parsers
-   */
-  public void accept(ParserVisitor pv, List visited) {
-    pv.visitTerminal(this, visited);
-  }
-  /**
-   * A convenience method that sets discarding to be true.
-   *
-   * @return   this
-   */
-  public Terminal discard() {
-    return setDiscard(true);
-  }
-  /**
-   * Given a collection of assemblies, this method matches
-   * this terminal against all of them, and returns a new
-   * collection of the assemblies that result from the
-   * matches.
-   *
-   * @return   a List of assemblies that result from
-   *           matching against a beginning set of assemblies
-   *
-   * @param   in   a vector of assemblies to match against
-   *
-   */
-  public List match(List in) {
-    List out = new ArrayList();
-    Enumeration e = Collections.enumeration(in);
-    while (e.hasMoreElements()) {
-      Assembly a = (Assembly) e.nextElement();
-      Assembly b = matchOneAssembly(a);
-      if (b != null) {
-        out.add(b);
-      }
+
+    /**
+     * whether or not this terminal should push itself upon an
+     * assembly's stack after a successful match
+     */
+    protected boolean discard = false;
+
+    /**
+     * Constructs an unnamed terminal.
+     */
+    public Terminal() {}
+
+    /**
+     * Constructs a terminal with the given name.
+     *
+     * @param    String    A name to be known by.
+     */
+    public Terminal(String name) {
+        super(name);
     }
-    return out;
-  }
-  /**
-   * Returns an assembly equivalent to the supplied assembly,
-   * except that this terminal will have been removed from the
-   * front of the assembly. As with any parser, if the
-   * match succeeds, this terminal's assembler will work on
-   * the assembly. If the match fails, this method returns
-   * null.
-   *
-   * @param   Assembly  the assembly to match against
-   *
-   * @return a copy of the incoming assembly, advanced by this
-   *         terminal
-   */
-  protected Assembly matchOneAssembly(Assembly in) {
-    if (!in.hasMoreElements()) {
-      return null;
+
+    /**
+     * Accept a "visitor" and a collection of previously visited
+     * parsers.
+     *
+     * @param   pv   the visitor to accept
+     *
+     * @param   visited   a collection of previously visited parsers
+     */
+    public void accept(ParserVisitor pv, List visited) {
+        pv.visitTerminal(this, visited);
     }
-    if (qualifies(in.peek())) {
-      Assembly out = (Assembly) in.clone();
-      Object o = out.nextElement();
-      if (!discard) {
-        out.push(o);
-      }
-      return out;
+
+    /**
+     * A convenience method that sets discarding to be true.
+     *
+     * @return   this
+     */
+    public Terminal discard() {
+        return setDiscard(true);
     }
-    return null;
-  }
-  /**
-   * The mechanics of matching are the same for many terminals,
-   * except for the check that the next element on the assembly
-   * qualifies as the type of terminal this terminal looks for.
-   * This method performs that check.
-   *
-   * @param   Object   an element from a assembly
-   *
-   * @return   true, if the object is the kind of terminal this
-   *           parser seeks
-   */
-  protected boolean qualifies(Object o) {
-    return true;
-  }
-  /**
-   * By default, create a collection with this terminal's
-   * string representation of itself. (Most subclasses
-   * override this.)
-   */
-  public List randomExpansion(int maxDepth, int depth) {
-    List v = new ArrayList();
-    v.add(this.toString());
-    return v;
-  }
-  /**
-   * By default, terminals push themselves upon a assembly's
-   * stack, after a successful match. This routine will turn
-   * off (or turn back on) that behavior.
-   *
-   * @param   boolean   true, if this terminal should push
-   *                    itself on a assembly's stack
-   *
-   * @return   this
-   */
-  public Terminal setDiscard(boolean discard) {
-    this.discard = discard;
-    return this;
-  }
-  /**
-   * Returns a textual description of this parser.
-   */
-  protected String unvisitedString(List visited) {
-    return "any";
-  }
+
+    /**
+     * Given a collection of assemblies, this method matches
+     * this terminal against all of them, and returns a new
+     * collection of the assemblies that result from the
+     * matches.
+     *
+     * @return   a List of assemblies that result from
+     *           matching against a beginning set of assemblies
+     *
+     * @param   in   a vector of assemblies to match against
+     *
+     */
+    public List match(List in) {
+        List out = new ArrayList();
+        Enumeration e = Collections.enumeration(in);
+
+        while (e.hasMoreElements()) {
+            Assembly a = (Assembly) e.nextElement();
+            Assembly b = matchOneAssembly(a);
+
+            if (b != null) {
+                out.add(b);
+            }
+        }
+        return out;
+    }
+
+    /**
+     * Returns an assembly equivalent to the supplied assembly,
+     * except that this terminal will have been removed from the
+     * front of the assembly. As with any parser, if the
+     * match succeeds, this terminal's assembler will work on
+     * the assembly. If the match fails, this method returns
+     * null.
+     *
+     * @param   Assembly  the assembly to match against
+     *
+     * @return a copy of the incoming assembly, advanced by this
+     *         terminal
+     */
+    protected Assembly matchOneAssembly(Assembly in) {
+        if (!in.hasMoreElements()) {
+            return null;
+        }
+        if (qualifies(in.peek())) {
+            Assembly out = (Assembly) in.clone();
+            Object o = out.nextElement();
+
+            if (!discard) {
+                out.push(o);
+            }
+            return out;
+        }
+        return null;
+    }
+
+    /**
+     * The mechanics of matching are the same for many terminals,
+     * except for the check that the next element on the assembly
+     * qualifies as the type of terminal this terminal looks for.
+     * This method performs that check.
+     *
+     * @param   Object   an element from a assembly
+     *
+     * @return   true, if the object is the kind of terminal this
+     *           parser seeks
+     */
+    protected boolean qualifies(Object o) {
+        return true;
+    }
+
+    /**
+     * By default, create a collection with this terminal's
+     * string representation of itself. (Most subclasses
+     * override this.)
+     */
+    public List randomExpansion(int maxDepth, int depth) {
+        List v = new ArrayList();
+
+        v.add(this.toString());
+        return v;
+    }
+
+    /**
+     * By default, terminals push themselves upon a assembly's
+     * stack, after a successful match. This routine will turn
+     * off (or turn back on) that behavior.
+     *
+     * @param   boolean   true, if this terminal should push
+     *                    itself on a assembly's stack
+     *
+     * @return   this
+     */
+    public Terminal setDiscard(boolean discard) {
+        this.discard = discard;
+        return this;
+    }
+
+    /**
+     * Returns a textual description of this parser.
+     */
+    protected String unvisitedString(List visited) {
+        return "any";
+    }
 }

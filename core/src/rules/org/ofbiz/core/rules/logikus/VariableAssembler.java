@@ -25,9 +25,11 @@
 
 package org.ofbiz.core.rules.logikus;
 
+
 import org.ofbiz.core.rules.engine.*;
 import org.ofbiz.core.rules.parse.*;
 import org.ofbiz.core.rules.parse.tokens.*;
+
 
 /**
  * Pops a string like "X" or "Person" from an assembly's stack and pushes a variable with that name.
@@ -36,6 +38,7 @@ import org.ofbiz.core.rules.parse.tokens.*;
  * @version 1.0
  */
 public class VariableAssembler extends Assembler {
+
     /**
      * Pops a string like "X" or "Person" from an assembly's stack
      * and pushes a variable with that name.
@@ -45,6 +48,7 @@ public class VariableAssembler extends Assembler {
     public void workOn(Assembly a) {
         Token t = (Token) a.pop();
         String name = t.sval();
+
         a.push(new Variable(name));
     }
 }

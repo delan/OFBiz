@@ -26,29 +26,32 @@
 
 package org.ofbiz.core.region;
 
+
 import javax.servlet.*;
 import java.util.Stack;
 
+
 public class RegionStack {
-    private RegionStack() { } // no instantiations
-    
+    private RegionStack() {} // no instantiations
+
     public static Stack getStack(ServletRequest request) {
         Stack s = (Stack) request.getAttribute("region-stack");
-        if(s == null) {
+
+        if (s == null) {
             s = new Stack();
             request.setAttribute("region-stack", s);
         }
         return s;
     }
-    
+
     public static Region peek(ServletRequest request) {
         return (Region) getStack(request).peek();
     }
-    
+
     public static void push(ServletRequest request, Region region) {
         getStack(request).push(region);
     }
-    
+
     public static Region pop(ServletRequest request) {
         return (Region) getStack(request).pop();
     }

@@ -1,6 +1,8 @@
 package org.ofbiz.core.rules.parse;
 
+
 import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Assembler
@@ -44,42 +46,45 @@ import java.util.*;
  * @version 1.0
  */
 public abstract class Assembler {
-  /**
-   * Returns a vector of the elements on an assembly's stack
-   * that appear before a specified fence.
-   * <p>
-   * Sometimes a parser will recognize a list from within
-   * a pair of parentheses or brackets. The parser can mark
-   * the beginning of the list with a fence, and then retrieve
-   * all the items that come after the fence with this method.
-   *
-   * @param   assembly   a assembly whose stack should contain
-   * some number of items above a fence marker
-   *
-   * @param   object   the fence, a marker of where to stop
-   *                   popping the stack
-   *
-   * @return   List   the elements above the specified fence
-   *
-   */
-  public static List elementsAbove(Assembly a, Object fence) {
-    List items = new ArrayList();
-    
-    while (!a.stackIsEmpty()) {
-      Object top = a.pop();
-      if (top.equals(fence)) {
-        break;
-      }
-      items.add(top);
+
+    /**
+     * Returns a vector of the elements on an assembly's stack
+     * that appear before a specified fence.
+     * <p>
+     * Sometimes a parser will recognize a list from within
+     * a pair of parentheses or brackets. The parser can mark
+     * the beginning of the list with a fence, and then retrieve
+     * all the items that come after the fence with this method.
+     *
+     * @param   assembly   a assembly whose stack should contain
+     * some number of items above a fence marker
+     *
+     * @param   object   the fence, a marker of where to stop
+     *                   popping the stack
+     *
+     * @return   List   the elements above the specified fence
+     *
+     */
+    public static List elementsAbove(Assembly a, Object fence) {
+        List items = new ArrayList();
+
+        while (!a.stackIsEmpty()) {
+            Object top = a.pop();
+
+            if (top.equals(fence)) {
+                break;
+            }
+            items.add(top);
+        }
+        return items;
     }
-    return items;
-  }
-  /**
-   * This is the one method all subclasses must implement. It
-   * specifies what to do when a parser successfully
-   * matches against a assembly.
-   *
-   * @param   Assembly   the assembly to work on
-   */
-  public abstract void workOn(Assembly a);
+
+    /**
+     * This is the one method all subclasses must implement. It
+     * specifies what to do when a parser successfully
+     * matches against a assembly.
+     *
+     * @param   Assembly   the assembly to work on
+     */
+    public abstract void workOn(Assembly a);
 }

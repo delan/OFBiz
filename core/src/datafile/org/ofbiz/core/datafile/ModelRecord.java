@@ -1,7 +1,9 @@
 
 package org.ofbiz.core.datafile;
 
+
 import java.util.*;
+
 
 /**
  * <p><b>Title:</b>
@@ -38,24 +40,33 @@ public class ModelRecord {
 
     /** The name of the Record */
     public String name = "";
+
     /** The type-code of the Record */
     public String typeCode = "";
+
     /** The minimum type-code of the Record, an alternative to the single type code */
     public String tcMin = "";
     public long tcMinNum = -1;
+
     /** The maximum type-code of the Record, an alternative to the single type code */
     public String tcMax = "";
     public long tcMaxNum = -1;
+
     /** specifies whether or not the type min and max are numbers, if so does a number compare, otherwise a String compare */
     public boolean tcIsNum = true;
+
     /** The position of the type-code of the Record */
     public int tcPosition = -1;
+
     /** The length of the type-code of the Record - optional */
     public int tcLength = -1;
+
     /** A free form description of the Record */
     public String description = "";
+
     /** The name of the parent record for this record, if any */
     public String parentName = "";
+
     /** The number limit of records to go under the parent, may be one or many */
     public String limit = "";
 
@@ -68,6 +79,7 @@ public class ModelRecord {
     ModelField getModelField(String fieldName) {
         for (int i = 0; i < fields.size(); i++) {
             ModelField curField = (ModelField) fields.get(i);
+
             if (curField.name.equals(fieldName)) {
                 return curField;
             }

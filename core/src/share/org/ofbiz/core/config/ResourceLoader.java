@@ -25,12 +25,14 @@
 
 package org.ofbiz.core.config;
 
+
 import java.util.*;
 import java.net.*;
 import java.io.*;
 import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * Loads resources using dynamically specified resource loader classes
@@ -46,15 +48,17 @@ public abstract class ResourceLoader {
     protected String name;
     protected String prefix;
     protected String envName;
-    
+
     public static InputStream loadResource(String xmlFilename, String location, String loaderName) throws GenericConfigException {
         ResourceLoader loader = getLoader(xmlFilename, loaderName);
+
         if (loader == null) throw new IllegalArgumentException("ResourceLoader not found with name [" + loaderName + "] in " + xmlFilename);
         return loader.loadResource(location);
     }
-    
+
     public static ResourceLoader getLoader(String xmlFilename, String loaderName) throws GenericConfigException {
         ResourceLoader loader = (ResourceLoader) loaderCache.get(xmlFilename + "::" + loaderName);
+
         if (loader == null) {
             synchronized (ResourceLoader.class) {
                 loader = (ResourceLoader) loaderCache.get(xmlFilename + "::" + loaderName);
@@ -62,6 +66,7 @@ public abstract class ResourceLoader {
                     Element rootElement = getXmlRootElement(xmlFilename);
 
                     Element loaderElement = UtilXml.firstChildElement(rootElement, "resource-loader", "name", loaderName);
+
                     loader = makeLoader(loaderElement);
 
                     if (loader != null) {
@@ -70,12 +75,13 @@ public abstract class ResourceLoader {
                 }
             }
         }
-        
+
         return loader;
     }
-    
+
     public static Element getXmlRootElement(String xmlFilename) throws GenericConfigException {
         Document document = ResourceLoader.getXmlDocument(xmlFilename);
+
         if (document != null) {
             return document.getDocumentElement();
         } else {
@@ -83,20 +89,21 @@ public abstract class ResourceLoader {
         }
     }
 
-
     public static void invalidateDocument(String xmlFilename) throws GenericConfigException {
         synchronized (ResourceLoader.class) {
             docSaveMap.remove(xmlFilename);
         }
     }
-	
+
     public static Document getXmlDocument(String xmlFilename) throws GenericConfigException {
         Document document = (Document) docSaveMap.get(xmlFilename);
+
         if (document == null) {
             synchronized (ResourceLoader.class) {
                 document = (Document) docSaveMap.get(xmlFilename);
                 if (document == null) {
                     URL confUrl = UtilURL.fromResource(xmlFilename);
+
                     if (confUrl == null) {
                         throw new GenericConfigException("ERROR: could not find the [" + xmlFilename + "] XML file on the classpath");
                     }
@@ -110,7 +117,7 @@ public abstract class ResourceLoader {
                     } catch (java.io.IOException e) {
                         throw new GenericConfigException("Error reading " + xmlFilename + "", e);
                     }
-                    
+
                     if (document != null) {
                         docSaveMap.put(xmlFilename, document);
                     }
@@ -119,17 +126,18 @@ public abstract class ResourceLoader {
         }
         return document;
     }
-    
+
     public static ResourceLoader makeLoader(Element loaderElement) throws GenericConfigException {
         if (loaderElement == null)
             return null;
-        
+
         String loaderName = loaderElement.getAttribute("name");
         String className = loaderElement.getAttribute("class");
         ResourceLoader loader = null;
-        
+
         try {
             Class lClass = null;
+
             if (className != null && className.length() > 0) {
                 try {
                     lClass = Class.forName(className);
@@ -152,12 +160,12 @@ public abstract class ResourceLoader {
         if (loader != null) {
             loader.init(loaderName, loaderElement.getAttribute("prefix"), loaderElement.getAttribute("prepend-env"));
         }
-        
+
         return loader;
     }
-    
-    protected ResourceLoader() { }
-    
+
+    protected ResourceLoader() {}
+
     public void init(String name, String prefix, String envName) {
         this.name = name;
         this.prefix = prefix;
@@ -167,6 +175,7 @@ public abstract class ResourceLoader {
     /** Just a utility method to be used in loadResource by the implementing class */
     public String fullLocation(String location) {
         StringBuffer buf = new StringBuffer();
+
         if (envName != null && envName.length() > 0) {
             buf.append(System.getProperty(envName));
         }
@@ -176,6 +185,6 @@ public abstract class ResourceLoader {
         buf.append(location);
         return buf.toString();
     }
-    
+
     public abstract InputStream loadResource(String location) throws GenericConfigException;
 }

@@ -24,9 +24,11 @@
 
 package org.ofbiz.core.util;
 
+
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
 
 /**
  * <p> Generalized caching utility. Provides a number of caching features:
@@ -46,19 +48,25 @@ public class UtilCache {
 
     /** A static Map to keep track of all of the UtilCache instances. */
     public static Map utilCacheTable = new HashMap();
+
     /** An index number appended to utilCacheTable names when there are conflicts. */
     protected static Map defaultIndices = new HashMap();
+
     /** The name of the UtilCache instance, is also the key for the instance in utilCacheTable. */
     protected String name;
 
     /** A list of the elements order by Least Recent Use */
     public LinkedList keyLRUList = new LinkedList();
+
     /** A hashtable containing a CacheLine object with a value and a loadTime for each element. */
     public Map cacheLineTable = new HashMap();
+
     /** A count of the number of cache hits */
     protected long hitCount = 0;
+
     /** A count of the number of cache misses */
     protected long missCount = 0;
+
     /** The maximum number of elements in the cache.
      * If set to 0, there will be no limit on the number of elements in the cache.
      */
@@ -68,7 +76,7 @@ public class UtilCache {
      * If set to 0, elements will never expire.
      */
     protected long expireTime = 0;
-    
+
     /** Specifies whether or not to use soft references for this cache, defaults to false */
     protected boolean useSoftReference = false;
 
@@ -88,7 +96,7 @@ public class UtilCache {
         name = cacheName + this.getNextDefaultIndex(cacheName);
         utilCacheTable.put(name, this);
     }
-    
+
     /** Constructor which specifies the cacheName as well as the maxSize and expireTime.
      * The passed maxSize and expireTime will be overridden by values from cache.properties if found.
      * @param maxSize The maxSize member is set to this value
@@ -108,6 +116,7 @@ public class UtilCache {
         this.maxSize = maxSize;
         this.expireTime = expireTime;
         String name = "specified" + this.getNextDefaultIndex("specified");
+
         setPropertiesParams(name);
         utilCacheTable.put(name, this);
     }
@@ -131,9 +140,10 @@ public class UtilCache {
         name = "default" + this.getNextDefaultIndex("default");
         utilCacheTable.put(name, this);
     }
-    
+
     protected String getNextDefaultIndex(String cacheName) {
         Integer curInd = (Integer) this.defaultIndices.get(cacheName);
+
         if (curInd == null) {
             this.defaultIndices.put(cacheName, new Integer(1));
             return "";
@@ -145,31 +155,32 @@ public class UtilCache {
 
     protected void setPropertiesParams(String cacheName) {
         ResourceBundle res = ResourceBundle.getBundle("cache");
+
         if (res != null) {
             try {
                 String value = res.getString(cacheName + ".maxSize");
                 Long longValue = new Long(value);
+
                 if (longValue != null) {
                     maxSize = longValue.longValue();
                 }
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
             try {
                 String value = res.getString(cacheName + ".expireTime");
                 Long longValue = new Long(value);
+
                 if (longValue != null) {
                     expireTime = longValue.longValue();
                 }
-            } catch (Exception e) {
-            }
-            
+            } catch (Exception e) {}
+
             try {
                 String value = res.getString(cacheName + ".useSoftReference");
+
                 if (value != null) {
                     useSoftReference = "true".equals(value);
                 }
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
         }
     }
 
@@ -182,7 +193,7 @@ public class UtilCache {
             return;
 
         if (maxSize > 0) {
-            //when maxSize is changed, the setter will take care of filling the LRU list
+            // when maxSize is changed, the setter will take care of filling the LRU list
             if (cacheLineTable.containsKey(key)) {
                 keyLRUList.remove(key);
                 keyLRUList.addFirst(key);
@@ -191,7 +202,6 @@ public class UtilCache {
             }
         }
 
-        
         if (expireTime > 0) {
             cacheLineTable.put(key, new UtilCache.CacheLine(value, useSoftReference, System.currentTimeMillis()));
         } else {
@@ -199,6 +209,7 @@ public class UtilCache {
         }
         if (maxSize > 0 && cacheLineTable.size() > maxSize) {
             Object lastKey = keyLRUList.getLast();
+
             remove(lastKey);
         }
     }
@@ -214,19 +225,20 @@ public class UtilCache {
             return null;
         }
         UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
+
         if (hasExpired(line)) {
-            //note that print.info in debug.properties cannot be checked through UtilProperties here, it would cause infinite recursion...
-            //if (Debug.infoOn()) Debug.logInfo("Element has expired with key " + key);
+            // note that print.info in debug.properties cannot be checked through UtilProperties here, it would cause infinite recursion...
+            // if (Debug.infoOn()) Debug.logInfo("Element has expired with key " + key);
             remove(key);
             line = null;
         }
-        
+
         if (line == null) {
-            //if (Debug.infoOn()) Debug.logInfo("Element not found with key " + key);
+            // if (Debug.infoOn()) Debug.logInfo("Element not found with key " + key);
             missCount++;
             return null;
         }
-        //if (Debug.infoOn()) Debug.logInfo("Element found with key " + key);
+        // if (Debug.infoOn()) Debug.logInfo("Element found with key " + key);
         hitCount++;
 
         if (maxSize > 0) {
@@ -243,6 +255,7 @@ public class UtilCache {
     public synchronized Object remove(Object key) {
         if (key != null && cacheLineTable.containsKey(key)) {
             UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
+
             cacheLineTable.remove(key);
             keyLRUList.remove(key);
             return line.getValue();
@@ -255,8 +268,8 @@ public class UtilCache {
     /** Removes all element from the cache
      */
     public synchronized void clear() {
-        //Enumeration e;
-        //for (e = cacheLineTable.keys(); e.hasMoreElements();) remove(e.nextElement());
+        // Enumeration e;
+        // for (e = cacheLineTable.keys(); e.hasMoreElements();) remove(e.nextElement());
         cacheLineTable.clear();
         keyLRUList.clear();
         clearCounters();
@@ -295,21 +308,23 @@ public class UtilCache {
      * @param maxSize The maximum number of elements in the cache
      */
     public void setMaxSize(long maxSize) {
-        //if the new maxSize is <= 0, clear keyLRUList
+        // if the new maxSize is <= 0, clear keyLRUList
         if (maxSize <= 0) {
             keyLRUList.clear();
         } else if (maxSize > 0 && this.maxSize <= 0) {
-            //if the new maxSize > 0 and the old is <= 0, fill in LRU list - order will be meaningless for now
+            // if the new maxSize > 0 and the old is <= 0, fill in LRU list - order will be meaningless for now
             Iterator keys = cacheLineTable.keySet().iterator();
+
             while (keys.hasNext()) {
                 keyLRUList.add(keys.next());
             }
         }
 
-        //if the new maxSize is less than the current cache size, shrink the cache.
+        // if the new maxSize is less than the current cache size, shrink the cache.
         if (maxSize > 0 && cacheLineTable.size() > maxSize) {
             while (cacheLineTable.size() > maxSize) {
                 Object lastKey = keyLRUList.getLast();
+
                 remove(lastKey);
             }
         }
@@ -329,16 +344,17 @@ public class UtilCache {
      * @param expireTime The expire time for the cache elements
      */
     public void setExpireTime(long expireTime) {
-        //if expire time was <= 0 and is now greater, fill expire table now
+        // if expire time was <= 0 and is now greater, fill expire table now
         if (this.expireTime <= 0 && expireTime > 0) {
             long currentTime = System.currentTimeMillis();
             Iterator values = cacheLineTable.values().iterator();
+
             while (values.hasNext()) {
                 UtilCache.CacheLine line = (UtilCache.CacheLine) values.next();
+
                 line.loadTime = currentTime;
             }
-        } else if (this.expireTime <= 0 && expireTime > 0) {
-            //if expire time was > 0 and is now <=, do nothing, just leave the load times in place, won't hurt anything...
+        } else if (this.expireTime <= 0 && expireTime > 0) {// if expire time was > 0 and is now <=, do nothing, just leave the load times in place, won't hurt anything...
         }
 
         this.expireTime = expireTime;
@@ -356,18 +372,20 @@ public class UtilCache {
         if (this.useSoftReference != useSoftReference) {
             this.useSoftReference = useSoftReference;
             Iterator values = cacheLineTable.values().iterator();
+
             while (values.hasNext()) {
                 UtilCache.CacheLine line = (UtilCache.CacheLine) values.next();
+
                 line.setUseSoftReference(useSoftReference);
             }
         }
     }
-    
+
     /** Return whether or not the cache lines should use a soft reference to the data */
     public boolean getUseSoftReference() {
         return this.useSoftReference;
     }
-    
+
     /** Returns the number of elements currently in the cache
      * @return The number of elements currently in the cache
      */
@@ -382,6 +400,7 @@ public class UtilCache {
      */
     public boolean containsKey(Object key) {
         UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
+
         if (hasExpired(line)) {
             remove(key);
             line = null;
@@ -403,18 +422,19 @@ public class UtilCache {
      */
     public boolean hasExpired(Object key) {
         if (key == null) return false;
-        
+
         UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
+
         return hasExpired(line);
     }
 
     protected boolean hasExpired(UtilCache.CacheLine line) {
         if (line == null) return false;
-        //check this BEFORE checking to see if expireTime <= 0, ie if time expiration is enabled
+        // check this BEFORE checking to see if expireTime <= 0, ie if time expiration is enabled
         // check to see if we are using softReference first, slight performance increase
         if (this.useSoftReference && line.getValue() == null) return true;
         if (expireTime <= 0) return false;
-        
+
         if (line.loadTime <= 0) return true;
         if ((line.loadTime + expireTime) < System.currentTimeMillis()) {
             return true;
@@ -422,12 +442,14 @@ public class UtilCache {
             return false;
         }
     }
-    
+
     /** Clears all expired cache entries; also clear any cache entries where the SoftReference in the CacheLine object has been cleared by the gc */
     public void clearExpired() {
         Iterator keys = cacheLineTable.keySet().iterator();
+
         while (keys.hasNext()) {
             Object key = keys.next();
+
             if (hasExpired(key)) {
                 remove(key);
             }
@@ -437,9 +459,11 @@ public class UtilCache {
     /** Clears all expired cache entries from all caches */
     public static void clearExpiredFromAllCaches() {
         Iterator entries = utilCacheTable.entrySet().iterator();
+
         while (entries.hasNext()) {
             Map.Entry entry = (Map.Entry) entries.next();
             UtilCache utilCache = (UtilCache) entry.getValue();
+
             utilCache.clearExpired();
         }
     }
@@ -452,12 +476,15 @@ public class UtilCache {
      */
     public static String removeElementEvent(HttpServletRequest request, HttpServletResponse response) {
         String name = request.getParameter("UTIL_CACHE_NAME");
+
         if (name == null)
             return "error";
         String numString = request.getParameter("UTIL_CACHE_ELEMENT_NUMBER");
+
         if (numString == null)
             return "error";
         int number;
+
         try {
             number = Integer.parseInt(numString);
         } catch (Exception e) {
@@ -465,17 +492,19 @@ public class UtilCache {
         }
 
         UtilCache utilCache = (UtilCache) utilCacheTable.get(name);
+
         if (utilCache != null) {
             Object key = null;
+
             if (utilCache.getMaxSize() > 0) {
                 try {
                     key = utilCache.keyLRUList.get(number);
-                } catch (Exception e) {
-                }
+                } catch (Exception e) {}
             } else {
-                //no LRU, try looping through the keySet to see if we find the specified index...
+                // no LRU, try looping through the keySet to see if we find the specified index...
                 Iterator ksIter = utilCache.cacheLineTable.keySet().iterator();
                 int curNum = 0;
+
                 while (ksIter.hasNext()) {
                     if (number == curNum) {
                         key = ksIter.next();
@@ -508,11 +537,13 @@ public class UtilCache {
      */
     public static String clearEvent(HttpServletRequest request, HttpServletResponse response) {
         String name = request.getParameter("UTIL_CACHE_NAME");
+
         if (name == null) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not clear cache, no name specified.");
             return "error";
         }
         UtilCache utilCache = (UtilCache) utilCacheTable.get(name);
+
         if (utilCache != null) {
             utilCache.clear();
             request.setAttribute(SiteDefs.EVENT_MESSAGE, "Cleared cache with name: " + name);
@@ -530,6 +561,7 @@ public class UtilCache {
      */
     public static String updateEvent(HttpServletRequest request, HttpServletResponse response) {
         String name = request.getParameter("UTIL_CACHE_NAME");
+
         if (name == null)
             return "error";
         String maxSizeStr = request.getParameter("UTIL_CACHE_MAX_SIZE");
@@ -537,16 +569,16 @@ public class UtilCache {
         String useSoftReferenceStr = request.getParameter("UTIL_CACHE_USE_SOFT_REFERENCE");
 
         Long maxSize = null, expireTime = null;
+
         try {
             maxSize = Long.valueOf(maxSizeStr);
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         try {
             expireTime = Long.valueOf(expireTimeStr);
-        } catch (Exception e) {
-        }
-        
+        } catch (Exception e) {}
+
         UtilCache utilCache = (UtilCache) utilCacheTable.get(name);
+
         if (utilCache != null) {
             if (maxSize != null)
                 utilCache.setMaxSize(maxSize.longValue());
@@ -558,12 +590,12 @@ public class UtilCache {
         }
         return "success";
     }
-    
+
     public static class CacheLine {
         public Object valueRef = null;
         public long loadTime = 0;
         public boolean useSoftReference = false;
-        
+
         public CacheLine(Object value, boolean useSoftReference) {
             if (useSoftReference) {
                 this.valueRef = new java.lang.ref.SoftReference(value);
@@ -572,12 +604,12 @@ public class UtilCache {
             }
             this.useSoftReference = useSoftReference;
         }
-        
+
         public CacheLine(Object value, boolean useSoftReference, long loadTime) {
             this(value, useSoftReference);
             this.loadTime = loadTime;
         }
-        
+
         public Object getValue() {
             if (valueRef == null) return null;
             if (useSoftReference) {
@@ -586,7 +618,7 @@ public class UtilCache {
                 return valueRef;
             }
         }
-        
+
         public void setUseSoftReference(boolean useSoftReference) {
             if (this.useSoftReference != useSoftReference) {
                 synchronized (this) {

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.callops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -34,6 +35,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.minilang.operation.*;
+
 
 /**
  * An operation that calls a simple method in the same, or from another, file
@@ -54,14 +56,16 @@ public class CallSimpleMethod extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         if (xmlResource != null && xmlResource.length() > 0 &&
-                methodName != null && methodName.length() > 0) {
+            methodName != null && methodName.length() > 0) {
 
             Map simpleMethods = null;
+
             try {
                 simpleMethods = SimpleMethod.getSimpleMethods(xmlResource, methodName, methodContext.getLoader());
             } catch (MiniLangException e) {
                 Debug.logError(e);
                 String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [error getting methods from resource: " + e.getMessage() + "]";
+
                 if (methodContext.getMethodType() == MethodContext.EVENT) {
                     methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                     methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
@@ -71,10 +75,12 @@ public class CallSimpleMethod extends MethodOperation {
                 }
                 return false;
             }
-            
+
             SimpleMethod simpleMethodToCall = (SimpleMethod) simpleMethods.get(methodName);
+
             if (simpleMethodToCall == null) {
                 String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process, could not find SimpleMethod " + methodName + " in XML document in resource: " + xmlResource;
+
                 if (methodContext.getMethodType() == MethodContext.EVENT) {
                     methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                     methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
@@ -85,9 +91,9 @@ public class CallSimpleMethod extends MethodOperation {
                 return false;
             }
             String returnVal = simpleMethodToCall.exec(methodContext);
-            
+
             if (returnVal != null && returnVal.equals(simpleMethodToCall.getDefaultErrorCode())) {
-                //in this case just set the error code, the error messages will already be in place...
+                // in this case just set the error code, the error messages will already be in place...
                 if (methodContext.getMethodType() == MethodContext.EVENT) {
                     methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
                 } else if (methodContext.getMethodType() == MethodContext.SERVICE) {

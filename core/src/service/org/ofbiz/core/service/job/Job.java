@@ -25,7 +25,9 @@
 
 package org.ofbiz.core.service.job;
 
+
 import java.io.Serializable;
+
 
 /**
  * Job Interface
@@ -57,10 +59,4 @@ public interface Job extends Serializable {
     public boolean isValid();
 
 }
-
-
-
-
-
-
 

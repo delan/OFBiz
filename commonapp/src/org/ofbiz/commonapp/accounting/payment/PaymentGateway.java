@@ -24,6 +24,7 @@
 
 package org.ofbiz.commonapp.accounting.payment;
 
+
 /**
  * PaymentGateway.java
  *

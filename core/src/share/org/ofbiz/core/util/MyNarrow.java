@@ -24,9 +24,12 @@
 
 package org.ofbiz.core.util;
 
+
 import javax.naming.*;
 
+
 public final class MyNarrow {
+
     /**
      * instance
      */
@@ -35,8 +38,7 @@ public final class MyNarrow {
     /**
      * Private constructor
      */
-    private MyNarrow() {
-    }
+    private MyNarrow() {}
 
     /**
      * Return the instance
@@ -61,7 +63,7 @@ public final class MyNarrow {
      * narrow stuff
      */
     public static Object narrow(Object obj, Class c) throws Exception {
-        //if (Debug.infoOn()) Debug.logInfo("Narrowing object "+ obj +" of class " + c);
+        // if (Debug.infoOn()) Debug.logInfo("Narrowing object "+ obj +" of class " + c);
         return obj;
     }
 }

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.ifops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -34,6 +35,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 
+
 /**
  * Iff the specified field is not empty process sub-operations
  *
@@ -42,10 +44,10 @@ import org.ofbiz.core.minilang.method.*;
  *@version    1.0
  */
 public class IfNotEmpty extends MethodOperation {
-    
+
     List subOps = new LinkedList();
     List elseSubOps = null;
-    
+
     String mapName;
     String fieldName;
 
@@ -53,10 +55,11 @@ public class IfNotEmpty extends MethodOperation {
         super(element, simpleMethod);
         this.mapName = element.getAttribute("map-name");
         this.fieldName = element.getAttribute("field-name");
-        
+
         SimpleMethod.readOperations(element, subOps, simpleMethod);
-        
+
         Element elseElement = UtilXml.firstChildElement(element, "else");
+
         if (elseElement != null) {
             elseSubOps = new LinkedList();
             SimpleMethod.readOperations(elseElement, elseSubOps, simpleMethod);
@@ -64,42 +67,48 @@ public class IfNotEmpty extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        //if conditions fails, always return true; if a sub-op returns false 
+        // if conditions fails, always return true; if a sub-op returns false 
         // return false and stop, otherwise return true
-        //return true;
-        
+        // return true;
+
         Object fieldVal = null;
+
         if (mapName != null && mapName.length() > 0) {
             Map fromMap = (Map) methodContext.getEnv(mapName);
+
             if (fromMap == null) {
                 if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapName + ", not running operations");
             } else {
                 fieldVal = fromMap.get(fieldName);
             }
         } else {
-            //no map name, try the env
+            // no map name, try the env
             fieldVal = methodContext.getEnv(fieldName);
         }
 
         if (fieldVal == null) {
             if (Debug.verboseOn()) Debug.logVerbose("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not running operations");
         }
-        
-        //only run subOps if element is not empty/null
+
+        // only run subOps if element is not empty/null
         boolean runSubOps = false;
+
         if (fieldVal != null) {
             if (fieldVal instanceof String) {
                 String fieldStr = (String) fieldVal;
+
                 if (fieldStr.length() > 0) {
                     runSubOps = true;
                 }
             } else if (fieldVal instanceof Collection) {
                 Collection fieldCol = (Collection) fieldVal;
+
                 if (fieldCol.size() > 0) {
                     runSubOps = true;
                 }
             } else if (fieldVal instanceof Map) {
                 Map fieldMap = (Map) fieldVal;
+
                 if (fieldMap.size() > 0) {
                     runSubOps = true;
                 }
@@ -107,16 +116,16 @@ public class IfNotEmpty extends MethodOperation {
                 runSubOps = true;
             }
         }
-        
+
         if (runSubOps) {
-            //if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running if operations mapName=" + mapName + " fieldName=" + fieldName);
+            // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running if operations mapName=" + mapName + " fieldName=" + fieldName);
             return SimpleMethod.runSubOps(subOps, methodContext);
         } else {
             if (elseSubOps != null) {
-                //if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running else operations mapName=" + mapName + " fieldName=" + fieldName);
+                // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running else operations mapName=" + mapName + " fieldName=" + fieldName);
                 return SimpleMethod.runSubOps(elseSubOps, methodContext);
             } else {
-                //if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Not Running any operations mapName=" + mapName + " fieldName=" + fieldName);
+                // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Not Running any operations mapName=" + mapName + " fieldName=" + fieldName);
                 return true;
             }
         }

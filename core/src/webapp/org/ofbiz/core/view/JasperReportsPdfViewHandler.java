@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.view;
 
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -35,6 +36,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
 import dori.jasper.engine.*;
+
 
 /**
  * Handles JasperReports PDF view rendering
@@ -68,24 +70,27 @@ public class JasperReportsPdfViewHandler implements ViewHandler {
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+
         if (delegator == null) {
             throw new ViewHandlerException("The delegator object was null, how did that happen?");
         }
-        
+
         try {
             String datasourceName = delegator.getEntityHelperName(info);
             InputStream is = context.getResourceAsStream(page);
             Map parameters = UtilMisc.getParameterMap(request);
-            
+
             JasperReport report = JasperCompileManager.compileReport(is);
+
             response.setContentType("application/pdf");
-            
+
             PipedOutputStream fillToPrintOutputStream = new PipedOutputStream();
             PipedInputStream fillToPrintInputStream = new PipedInputStream(fillToPrintOutputStream);
-            //JasperFillManager.fillReportToStream(report, fillToPrintOutputStream, parameters, ConnectionFactory.getConnection(datasourceName));
-            //JasperPrintManager.printReportToPdfStream(fillToPrintInputStream, response.getOutputStream());
+            // JasperFillManager.fillReportToStream(report, fillToPrintOutputStream, parameters, ConnectionFactory.getConnection(datasourceName));
+            // JasperPrintManager.printReportToPdfStream(fillToPrintInputStream, response.getOutputStream());
 
-            JasperPrint jp = JasperManager.fillReport(report,parameters,ConnectionFactory.getConnection(datasourceName));
+            JasperPrint jp = JasperManager.fillReport(report, parameters, ConnectionFactory.getConnection(datasourceName));
+
             if (jp.getPages().size() < 1) {
                 throw new ViewHandlerException("Report is Empty (no results?)");
             }
@@ -96,8 +101,8 @@ public class JasperReportsPdfViewHandler implements ViewHandler {
             throw new ViewHandlerException("Database error while running report", e);
         } catch (Exception e) {
             throw new ViewHandlerException("Error in report", e);
-        //} catch (ServletException se) {
-        //    throw new ViewHandlerException("Error in region", se.getRootCause());
+            // } catch (ServletException se) {
+            // throw new ViewHandlerException("Error in region", se.getRootCause());
         }
     }
 }

@@ -24,9 +24,11 @@
 
 package org.ofbiz.core.util;
 
+
 import java.util.Date;
 import java.net.*;
 import java.io.*;
+
 
 /**
  * Sends Email via SMTP..
@@ -53,8 +55,7 @@ public class SendMailSMTP {
     // class constants
     public static final int SMTP_PORT = 25;
 
-    public SendMailSMTP() {
-    }
+    public SendMailSMTP() {}
 
     public SendMailSMTP(String sender) {
         setSender(sender);
@@ -74,7 +75,7 @@ public class SendMailSMTP {
     }
 
     public SendMailSMTP(String destinationSMTPServer, String localMachine, String sender, String recipientTO,
-                        String recipientCC, String recipientBCC, String subject, String message) {
+        String recipientCC, String recipientBCC, String subject, String message) {
         setSender(sender);
         setRecipientTO(recipientTO);
         setRecipientCC(recipientCC);
@@ -87,10 +88,11 @@ public class SendMailSMTP {
 
     public void setSender(String sender) {
         int indexOfAtSign = sender.indexOf('@');
+
         if (indexOfAtSign < 0) {
             throw new RuntimeException("Malformed sender address. Need full user@host format");
         }
-        this.senderName = sender; //.substring(0, indexOfAtSign);
+        this.senderName = sender; // .substring(0, indexOfAtSign);
         this.localMachine = sender.substring(indexOfAtSign + 1);
     }
 
@@ -134,6 +136,7 @@ public class SendMailSMTP {
 
         // attempt to make the connection, this might throw an exception
         Socket s = new Socket(destinationSMTPServer, SMTP_PORT);
+
         in = new BufferedReader(new InputStreamReader(s.getInputStream(), "8859_1"));
         out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "8859_1"));
         String response;
@@ -156,8 +159,9 @@ public class SendMailSMTP {
             header = header + "To: " + recipientTO + "\n";
 
             int indexofcomma = recipientTO.indexOf(',');
+
             while (indexofcomma > 0) {
-                //send, then remove, one email address at a time...
+                // send, then remove, one email address at a time...
                 say("RCPT TO: " + recipientTO.substring(0, indexofcomma) + "\n");
                 response = hear(false);
 
@@ -165,7 +169,7 @@ public class SendMailSMTP {
                 indexofcomma = recipientTO.indexOf(',');
             }
 
-            //no more commas, send the last email address
+            // no more commas, send the last email address
             say("RCPT TO: " + recipientTO + "\n");
             response = hear(false);
         }
@@ -173,8 +177,9 @@ public class SendMailSMTP {
             header = header + "Cc: " + recipientCC + "\n";
 
             int indexofcomma = recipientCC.indexOf(',');
+
             while (indexofcomma > 0) {
-                //send, then remove, one email address at a time...
+                // send, then remove, one email address at a time...
                 say("RCPT TO: " + recipientCC.substring(0, indexofcomma) + "\n");
                 response = hear(false);
 
@@ -182,14 +187,15 @@ public class SendMailSMTP {
                 indexofcomma = recipientCC.indexOf(',');
             }
 
-            //no more commas, send the last email address
+            // no more commas, send the last email address
             say("RCPT TO: " + recipientCC + "\n");
             response = hear(false);
         }
         if (recipientBCC != null) {
             int indexofcomma = recipientBCC.indexOf(',');
+
             while (indexofcomma > 0) {
-                //send, then remove, one email address at a time...
+                // send, then remove, one email address at a time...
                 say("RCPT TO: " + recipientBCC.substring(0, indexofcomma) + "\n");
                 response = hear(false);
 
@@ -197,16 +203,17 @@ public class SendMailSMTP {
                 indexofcomma = recipientBCC.indexOf(',');
             }
 
-            //no more commas, send the last email address
+            // no more commas, send the last email address
             say("RCPT TO: " + recipientBCC + "\n");
             response = hear(false);
         }
 
-        //add the date to the header...
+        // add the date to the header...
         Date today = new Date();
+
         header = header + "Date: " + today.toString() + "\n";
 
-        //add in the extra header string...
+        // add in the extra header string...
         if (extraHeader != null) header = header + extraHeader;
 
         say("DATA\n");
@@ -223,11 +230,12 @@ public class SendMailSMTP {
     private void say(String toSay) throws IOException {
         out.write(toSay);
         out.flush();
-        //Debug.log("SendMailSMTP: " + toSay);
+        // Debug.log("SendMailSMTP: " + toSay);
     }
 
     private String hear(boolean stop) throws IOException {
         String inString = in.readLine();
+
         if ("23".indexOf(inString.charAt(0)) < 0) {
             if (stop)
                 throw new IOException("SMTP problem: " + inString);
@@ -238,26 +246,26 @@ public class SendMailSMTP {
         return inString;
     }
 
-    //public static void main(String args[]) throws Exception {
-    //  BufferedReader in = new BufferedReader(
-    //                             new InputStreamReader(System.in));
-    //  System.out.print("Your address: ");
-    //  System.out.flush();
-    //  String sender = in.readLine();
-    //  System.out.print("Recipient address: ");
-    //  System.out.flush();
-    //  String recipient = in.readLine();
-    //  String message = "";
-    //  String part;
-    //  System.out.println("Message, end with '.' by itself:");
-    //  for (;;) {
-    //    part = in.readLine();
-    //    if ((part == null) || part.equals(".")) {
-    //      break;
-    //    }
-    //    message += part + "\n";
-    //  }
-    //  SMTP mailer = new SMTP(sender, recipient, message);
-    //  mailer.send();
-    //}
+    // public static void main(String args[]) throws Exception {
+    // BufferedReader in = new BufferedReader(
+    // new InputStreamReader(System.in));
+    // System.out.print("Your address: ");
+    // System.out.flush();
+    // String sender = in.readLine();
+    // System.out.print("Recipient address: ");
+    // System.out.flush();
+    // String recipient = in.readLine();
+    // String message = "";
+    // String part;
+    // System.out.println("Message, end with '.' by itself:");
+    // for (;;) {
+    // part = in.readLine();
+    // if ((part == null) || part.equals(".")) {
+    // break;
+    // }
+    // message += part + "\n";
+    // }
+    // SMTP mailer = new SMTP(sender, recipient, message);
+    // mailer.send();
+    // }
 }

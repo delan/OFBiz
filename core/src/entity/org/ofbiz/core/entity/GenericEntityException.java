@@ -24,8 +24,10 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.io.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * GenericEntityException

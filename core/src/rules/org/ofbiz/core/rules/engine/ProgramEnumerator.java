@@ -1,6 +1,8 @@
 package org.ofbiz.core.rules.engine;
 
+
 import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Program Enumerator
@@ -33,32 +35,35 @@ import java.util.*;
  * @version 1.0
  */
 public class ProgramEnumerator implements AxiomEnumeration {
-  protected Enumeration e;
-  /**
-   * Construct an enumeration of the given program.
-   *
-   * @param Program the program to enumerate over
-   *
-   */
-  public ProgramEnumerator(Program p) {
-    e = Collections.enumeration(p.axioms);
-  }
-  /**
-   * Tests if this enumeration contains more axioms.
-   *
-   * @return  <code>true</code> if the program this enumeration
-   *          is constructed for contains more axioms, and
-   *          <code>false</code> otherwise.
-   */
-  public boolean hasMoreAxioms() {
-    return e.hasMoreElements();
-  }
-  /**
-   * Returns the next axiom of this enumeration.
-   *
-   * @return the next axiom of this enumeration.
-   */
-  public Axiom nextAxiom() {
-    return (Axiom) e.nextElement();
-  }
+    protected Enumeration e;
+
+    /**
+     * Construct an enumeration of the given program.
+     *
+     * @param Program the program to enumerate over
+     *
+     */
+    public ProgramEnumerator(Program p) {
+        e = Collections.enumeration(p.axioms);
+    }
+
+    /**
+     * Tests if this enumeration contains more axioms.
+     *
+     * @return  <code>true</code> if the program this enumeration
+     *          is constructed for contains more axioms, and
+     *          <code>false</code> otherwise.
+     */
+    public boolean hasMoreAxioms() {
+        return e.hasMoreElements();
+    }
+
+    /**
+     * Returns the next axiom of this enumeration.
+     *
+     * @return the next axiom of this enumeration.
+     */
+    public Axiom nextAxiom() {
+        return (Axiom) e.nextElement();
+    }
 }

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow.definition;
 
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -35,6 +36,7 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
+
 
 /**
  * XpdlReader - Reads Process Definition objects from XPDL
@@ -58,6 +60,7 @@ public class XpdlReader {
      * datasource through the given delegator */
     public static void importXpdl(URL location, GenericDelegator delegator) throws DefinitionParserException {
         List values = readXpdl(location, delegator);
+
         try {
             delegator.storeAll(values);
         } catch (GenericEntityException e) {
@@ -72,8 +75,10 @@ public class XpdlReader {
         if (Debug.infoOn()) Debug.logInfo("Beginning XPDL File Parse: " + location.toString(), module);
 
         XpdlReader reader = new XpdlReader(delegator);
+
         try {
             Document document = UtilXml.readXmlDocument(location);
+
             return reader.readAll(document);
         } catch (ParserConfigurationException e) {
             Debug.logError(e, module);
@@ -92,7 +97,7 @@ public class XpdlReader {
         Element docElement;
 
         docElement = document.getDocumentElement();
-        //read the package element, and everything under it
+        // read the package element, and everything under it
         // puts everything in the values list for returning, etc later
         readPackage(docElement);
 
@@ -110,19 +115,23 @@ public class XpdlReader {
             throw new DefinitionParserException("Tried to make Package from element not named Package");
 
         GenericValue packageValue = delegator.makeValue("WorkflowPackage", null);
+
         values.add(packageValue);
 
         String packageId = packageElement.getAttribute("Id");
+
         packageValue.set("packageId", packageId);
         packageValue.set("packageName", packageElement.getAttribute("Name"));
 
-        //PackageHeader
+        // PackageHeader
         Element packageHeaderElement = UtilXml.firstChildElement(packageElement, "PackageHeader");
+
         if (packageHeaderElement != null) {
             packageValue.set("specificationId", "XPDL");
             packageValue.set("specificationVersion", UtilXml.childElementValue(packageHeaderElement, "XPDLVersion"));
             packageValue.set("sourceVendorInfo", UtilXml.childElementValue(packageHeaderElement, "Vendor"));
             String createdStr = UtilXml.childElementValue(packageHeaderElement, "Created");
+
             if (createdStr != null) {
                 try {
                     packageValue.set("creationDateTime", java.sql.Timestamp.valueOf(createdStr));
@@ -136,70 +145,78 @@ public class XpdlReader {
             packageValue.set("costUomId", UtilXml.childElementValue(packageHeaderElement, "CostUnit"));
         }
 
-        //RedefinableHeader?
+        // RedefinableHeader?
         Element redefinableHeaderElement = UtilXml.firstChildElement(packageElement, "RedefinableHeader");
         boolean packageOk = readRedefinableHeader(redefinableHeaderElement, packageValue, "package");
         String packageVersion = packageValue.getString("packageVersion");
 
         // Only do these if the package hasn't been imported.
         if (packageOk) {
-            //ConformanceClass?
+            // ConformanceClass?
             Element conformanceClassElement = UtilXml.firstChildElement(packageElement, "ConformanceClass");
+
             if (conformanceClassElement != null) {
                 packageValue.set("graphConformanceEnumId", "WGC_" + conformanceClassElement.getAttribute("GraphConformance"));
             }
 
-            //Participants?
+            // Participants?
             Element participantsElement = UtilXml.firstChildElement(packageElement, "Participants");
             List participants = UtilXml.childElementList(participantsElement, "Participant");
+
             readParticipants(participants, packageValue);
 
-            //ExternalPackages?
+            // ExternalPackages?
             Element externalPackagesElement = UtilXml.firstChildElement(packageElement, "ExternalPackages");
             List externalPackages = UtilXml.childElementList(externalPackagesElement, "ExternalPackage");
+
             readExternalPackages(externalPackages, packageId, packageVersion);
 
-            //TypeDeclarations?
+            // TypeDeclarations?
             Element typeDeclarationsElement = UtilXml.firstChildElement(packageElement, "TypeDeclarations");
             List typeDeclarations = UtilXml.childElementList(typeDeclarationsElement, "TypeDeclaration");
+
             readTypeDeclarations(typeDeclarations, packageId, packageVersion);
 
-            //Applications?
+            // Applications?
             Element applicationsElement = UtilXml.firstChildElement(packageElement, "Applications");
             List applications = UtilXml.childElementList(applicationsElement, "Application");
+
             readApplications(applications, packageId, packageVersion, "_NA_", "_NA_");
 
-            //DataFields?
+            // DataFields?
             Element dataFieldsElement = UtilXml.firstChildElement(packageElement, "DataFields");
             List dataFields = UtilXml.childElementList(dataFieldsElement, "DataField");
+
             readDataFields(dataFields, packageId, packageVersion, "_NA_", "_NA_");
-        }  else {
+        } else {
             values = new LinkedList();
         }
 
-        //WorkflowProcesses?
+        // WorkflowProcesses?
         Element workflowProcessesElement = UtilXml.firstChildElement(packageElement, "WorkflowProcesses");
         List workflowProcesses = UtilXml.childElementList(workflowProcessesElement, "WorkflowProcess");
+
         readWorkflowProcesses(workflowProcesses, packageId, packageVersion);
     }
 
     protected boolean readRedefinableHeader(Element redefinableHeaderElement, GenericValue valueObject, String prefix) throws DefinitionParserException {
         if (redefinableHeaderElement == null) {
-            valueObject.set(prefix+"Version", "_NA_");
+            valueObject.set(prefix + "Version", "_NA_");
             return checkVersion(valueObject, prefix);
         }
 
         valueObject.set("author", UtilXml.childElementValue(redefinableHeaderElement, "Author"));
-        valueObject.set(prefix+"Version", UtilXml.childElementValue(redefinableHeaderElement, "Version", "_NA_"));
+        valueObject.set(prefix + "Version", UtilXml.childElementValue(redefinableHeaderElement, "Version", "_NA_"));
         valueObject.set("codepage", UtilXml.childElementValue(redefinableHeaderElement, "Codepage"));
         valueObject.set("countryGeoId", UtilXml.childElementValue(redefinableHeaderElement, "Countrykey"));
         valueObject.set("publicationStatusId", "WPS_" + redefinableHeaderElement.getAttribute("PublicationStatus"));
 
         if (!checkVersion(valueObject, prefix)) return false;
 
-        //Responsibles?
+        // Responsibles?
         Element responsiblesElement = UtilXml.firstChildElement(redefinableHeaderElement, "Responsibles");
         List responsibles = UtilXml.childElementList(responsiblesElement, "Responsible");
+
         readResponsibles(responsibles, valueObject);
         return true;
     }
@@ -208,10 +225,12 @@ public class XpdlReader {
         // Test if the object already exists. If so throw an exception.
         try {
             String message = new String();
+
             if (prefix.equals("package")) {
                 GenericValue gvCheck = valueObject.getDelegator().findByPrimaryKey("WorkflowPackage",
                         UtilMisc.toMap("packageId", valueObject.getString("packageId"),
-                                "packageVersion", valueObject.getString("packageVersion")));
+                            "packageVersion", valueObject.getString("packageVersion")));
+
                 if (gvCheck != null) {
                     message = "[xpdl] Package: " + valueObject.getString("packageId") +
                             " (ver " + valueObject.getString("packageVersion") +
@@ -220,9 +239,10 @@ public class XpdlReader {
             } else if (prefix.equals("process")) {
                 GenericValue gvCheck = valueObject.getDelegator().findByPrimaryKey("WorkflowProcess",
                         UtilMisc.toMap("packageId", valueObject.getString("packageId"),
-                                "packageVersion", valueObject.getString("packageVersion"),
-                                "processId", valueObject.getString("processId"),
-                                "processVersion", valueObject.getString("processVersion")));
+                            "packageVersion", valueObject.getString("packageVersion"),
+                            "processId", valueObject.getString("processId"),
+                            "processVersion", valueObject.getString("processVersion")));
+
                 if (gvCheck != null) {
                     message = "[xpdl] Process: " + valueObject.getString("processId") +
                             " (ver " + valueObject.getString("processVersion") +
@@ -231,7 +251,10 @@ public class XpdlReader {
             }
             if (message.length() > 0) {
                 StringBuffer lines = new StringBuffer();
-                for (int i = 0; i < message.length(); i++) { lines.append("-"); }
+
+                for (int i = 0; i < message.length(); i++) {
+                    lines.append("-");
+                }
                 Debug.logWarning(lines.toString());
                 Debug.logWarning(message, module);
                 Debug.logWarning(lines.toString());
@@ -248,17 +271,21 @@ public class XpdlReader {
             return;
 
         Long nextSeqId = delegator.getNextSeqId("WorkflowParticipantList");
+
         if (nextSeqId == null)
             throw new DefinitionParserException("Could not get next sequence id from data source");
         String responsibleListId = nextSeqId.toString();
+
         valueObject.set("responsibleListId", responsibleListId);
 
         Iterator responsibleIter = responsibles.iterator();
         int responsibleIndex = 1;
+
         while (responsibleIter.hasNext()) {
             Element responsibleElement = (Element) responsibleIter.next();
             String responsibleId = UtilXml.elementValue(responsibleElement);
             GenericValue participantListValue = delegator.makeValue("WorkflowParticipantList", null);
+
             participantListValue.set("participantListId", responsibleListId);
             participantListValue.set("participantId", responsibleId);
             participantListValue.set("participantIndex", new Long(responsibleIndex));
@@ -271,9 +298,11 @@ public class XpdlReader {
         if (externalPackages == null || externalPackages.size() == 0)
             return;
         Iterator externalPackageIter = externalPackages.iterator();
+
         while (externalPackageIter.hasNext()) {
             Element externalPackageElement = (Element) externalPackageIter.next();
             GenericValue externalPackageValue = delegator.makeValue("WorkflowPackageExternal", null);
+
             values.add(externalPackageValue);
             externalPackageValue.set("packageId", packageId);
             externalPackageValue.set("packageVersion", packageVersion);
@@ -285,9 +314,11 @@ public class XpdlReader {
         if (typeDeclarations == null || typeDeclarations.size() == 0)
             return;
         Iterator typeDeclarationsIter = typeDeclarations.iterator();
+
         while (typeDeclarationsIter.hasNext()) {
             Element typeDeclarationElement = (Element) typeDeclarationsIter.next();
             GenericValue typeDeclarationValue = delegator.makeValue("WorkflowTypeDeclaration", null);
+
             values.add(typeDeclarationValue);
 
             typeDeclarationValue.set("packageId", packageId);
@@ -295,10 +326,10 @@ public class XpdlReader {
             typeDeclarationValue.set("typeId", typeDeclarationElement.getAttribute("Id"));
             typeDeclarationValue.set("typeName", typeDeclarationElement.getAttribute("Name"));
 
-            //(%Type;)
+            // (%Type;)
             readType(typeDeclarationElement, typeDeclarationValue);
 
-            //Description?
+            // Description?
             typeDeclarationValue.set("description", UtilXml.childElementValue(typeDeclarationElement, "Description"));
         }
     }
@@ -311,28 +342,34 @@ public class XpdlReader {
         if (workflowProcesses == null || workflowProcesses.size() == 0)
             return;
         Iterator workflowProcessIter = workflowProcesses.iterator();
+
         while (workflowProcessIter.hasNext()) {
             Element workflowProcessElement = (Element) workflowProcessIter.next();
+
             readWorkflowProcess(workflowProcessElement, packageId, packageVersion);
         }
     }
 
     protected void readWorkflowProcess(Element workflowProcessElement, String packageId, String packageVersion) throws DefinitionParserException {
         GenericValue workflowProcessValue = delegator.makeValue("WorkflowProcess", null);
+
         values.add(workflowProcessValue);
 
         String processId = workflowProcessElement.getAttribute("Id");
+
         workflowProcessValue.set("packageId", packageId);
         workflowProcessValue.set("packageVersion", packageVersion);
         workflowProcessValue.set("processId", processId);
         workflowProcessValue.set("objectName", workflowProcessElement.getAttribute("Name"));
 
-        //ProcessHeader
+        // ProcessHeader
         Element processHeaderElement = UtilXml.firstChildElement(workflowProcessElement, "ProcessHeader");
+
         if (processHeaderElement != null) {
-            //TODO: add prefix to duration Unit or map it to make it a real uomId
+            // TODO: add prefix to duration Unit or map it to make it a real uomId
             workflowProcessValue.set("durationUomId", processHeaderElement.getAttribute("DurationUnit"));
             String createdStr = UtilXml.childElementValue(processHeaderElement, "Created");
+
             if (createdStr != null) {
                 try {
                     workflowProcessValue.set("creationDateTime", java.sql.Timestamp.valueOf(createdStr));
@@ -343,6 +380,7 @@ public class XpdlReader {
             workflowProcessValue.set("description", UtilXml.childElementValue(processHeaderElement, "Description"));
 
             String priorityStr = UtilXml.childElementValue(processHeaderElement, "Priority");
+
             if (priorityStr != null) {
                 try {
                     workflowProcessValue.set("objectPriority", Long.valueOf(priorityStr));
@@ -351,6 +389,7 @@ public class XpdlReader {
                 }
             }
             String limitStr = UtilXml.childElementValue(processHeaderElement, "Limit");
+
             if (limitStr != null) {
                 try {
                     workflowProcessValue.set("timeLimit", Double.valueOf(limitStr));
@@ -360,6 +399,7 @@ public class XpdlReader {
             }
 
             String validFromStr = UtilXml.childElementValue(processHeaderElement, "ValidFrom");
+
             if (validFromStr != null) {
                 try {
                     workflowProcessValue.set("validFromDate", java.sql.Timestamp.valueOf(validFromStr));
@@ -368,6 +408,7 @@ public class XpdlReader {
                 }
             }
             String validToStr = UtilXml.childElementValue(processHeaderElement, "ValidTo");
+
             if (validToStr != null) {
                 try {
                     workflowProcessValue.set("validToDate", java.sql.Timestamp.valueOf(validToStr));
@@ -376,10 +417,12 @@ public class XpdlReader {
                 }
             }
 
-            //TimeEstimation?
+            // TimeEstimation?
             Element timeEstimationElement = UtilXml.firstChildElement(processHeaderElement, "TimeEstimation");
+
             if (timeEstimationElement != null) {
                 String waitingTimeStr = UtilXml.childElementValue(timeEstimationElement, "WaitingTime");
+
                 if (waitingTimeStr != null) {
                     try {
                         workflowProcessValue.set("waitingTime", Double.valueOf(waitingTimeStr));
@@ -388,6 +431,7 @@ public class XpdlReader {
                     }
                 }
                 String workingTimeStr = UtilXml.childElementValue(timeEstimationElement, "WorkingTime");
+
                 if (workingTimeStr != null) {
                     try {
                         workflowProcessValue.set("waitingTime", Double.valueOf(workingTimeStr));
@@ -396,6 +440,7 @@ public class XpdlReader {
                     }
                 }
                 String durationStr = UtilXml.childElementValue(timeEstimationElement, "Duration");
+
                 if (durationStr != null) {
                     try {
                         workflowProcessValue.set("duration", Double.valueOf(durationStr));
@@ -406,7 +451,7 @@ public class XpdlReader {
             }
         }
 
-        //RedefinableHeader?
+        // RedefinableHeader?
         Element redefinableHeaderElement = UtilXml.firstChildElement(workflowProcessElement, "RedefinableHeader");
         boolean processOk = readRedefinableHeader(redefinableHeaderElement, workflowProcessValue, "process");
         String processVersion = workflowProcessValue.getString("processVersion");
@@ -416,36 +461,42 @@ public class XpdlReader {
             return;
         }
 
-        //FormalParameters?
+        // FormalParameters?
         Element formalParametersElement = UtilXml.firstChildElement(workflowProcessElement, "FormalParameters");
         List formalParameters = UtilXml.childElementList(formalParametersElement, "FormalParameter");
+
         readFormalParameters(formalParameters, packageId, packageVersion, processId, processVersion, "_NA_");
 
-        //(%Type;)* TODO
+        // (%Type;)* TODO
 
-        //DataFields?
+        // DataFields?
         Element dataFieldsElement = UtilXml.firstChildElement(workflowProcessElement, "DataFields");
         List dataFields = UtilXml.childElementList(dataFieldsElement, "DataField");
+
         readDataFields(dataFields, packageId, packageVersion, processId, processVersion);
 
-        //Participants?
+        // Participants?
         Element participantsElement = UtilXml.firstChildElement(workflowProcessElement, "Participants");
         List participants = UtilXml.childElementList(participantsElement, "Participant");
+
         readParticipants(participants, workflowProcessValue);
 
-        //Applications?
+        // Applications?
         Element applicationsElement = UtilXml.firstChildElement(workflowProcessElement, "Applications");
         List applications = UtilXml.childElementList(applicationsElement, "Application");
+
         readApplications(applications, packageId, packageVersion, processId, processVersion);
 
-        //Activities
+        // Activities
         Element activitiesElement = UtilXml.firstChildElement(workflowProcessElement, "Activities");
         List activities = UtilXml.childElementList(activitiesElement, "Activity");
+
         readActivities(activities, packageId, packageVersion, processId, processVersion, workflowProcessValue);
 
-        //Transitions
+        // Transitions
         Element transitionsElement = UtilXml.firstChildElement(workflowProcessElement, "Transitions");
         List transitions = UtilXml.childElementList(transitionsElement, "Transition");
+
         readTransitions(transitions, packageId, packageVersion, processId, processVersion);
     }
 
@@ -454,34 +505,38 @@ public class XpdlReader {
     // ----------------------------------------------------------------
 
     protected void readActivities(List activities, String packageId, String packageVersion, String processId,
-                                  String processVersion, GenericValue processValue) throws DefinitionParserException {
+        String processVersion, GenericValue processValue) throws DefinitionParserException {
         if (activities == null || activities.size() == 0)
             return;
         Iterator activitiesIter = activities.iterator();
 
-        //do the first one differently because it will be the defaultStart activity
+        // do the first one differently because it will be the defaultStart activity
         if (activitiesIter.hasNext()) {
             Element activityElement = (Element) activitiesIter.next();
             String activityId = activityElement.getAttribute("Id");
+
             processValue.set("defaultStartActivityId", activityId);
             readActivity(activityElement, packageId, packageVersion, processId, processVersion);
         }
 
         while (activitiesIter.hasNext()) {
             Element activityElement = (Element) activitiesIter.next();
+
             readActivity(activityElement, packageId, packageVersion, processId, processVersion);
         }
     }
 
     protected void readActivity(Element activityElement, String packageId, String packageVersion, String processId,
-                                String processVersion) throws DefinitionParserException {
+        String processVersion) throws DefinitionParserException {
         if (activityElement == null)
             return;
 
         GenericValue activityValue = delegator.makeValue("WorkflowActivity", null);
+
         values.add(activityValue);
 
         String activityId = activityElement.getAttribute("Id");
+
         activityValue.set("packageId", packageId);
         activityValue.set("packageVersion", packageVersion);
         activityValue.set("processId", processId);
@@ -491,6 +546,7 @@ public class XpdlReader {
 
         activityValue.set("description", UtilXml.childElementValue(activityElement, "Description"));
         String limitStr = UtilXml.childElementValue(activityElement, "Limit");
+
         if (limitStr != null) {
             try {
                 activityValue.set("timeLimit", Double.valueOf(limitStr));
@@ -499,9 +555,10 @@ public class XpdlReader {
             }
         }
 
-        //(Route | Implementation)
+        // (Route | Implementation)
         Element routeElement = UtilXml.firstChildElement(activityElement, "Route");
         Element implementationElement = UtilXml.firstChildElement(activityElement, "Implementation");
+
         if (routeElement != null) {
             activityValue.set("activityTypeEnumId", "WAT_ROUTE");
         } else if (implementationElement != null) {
@@ -530,12 +587,12 @@ public class XpdlReader {
             throw new DefinitionParserException("Route or Implementation must exist for Activity with ID " + activityId + " in Process with ID " + processId);
         }
 
-
-        //Performer?
+        // Performer?
         activityValue.set("performerParticipantId", UtilXml.childElementValue(activityElement, "Performer"));
 
-        //StartMode?
+        // StartMode?
         Element startModeElement = UtilXml.firstChildElement(activityElement, "StartMode");
+
         if (startModeElement != null) {
             if (UtilXml.firstChildElement(startModeElement, "Automatic") != null)
                 activityValue.set("startModeEnumId", "WAM_AUTOMATIC");
@@ -545,8 +602,9 @@ public class XpdlReader {
                 throw new DefinitionParserException("Could not find Mode under StartMode");
         }
 
-        //FinishMode?
+        // FinishMode?
         Element finishModeElement = UtilXml.firstChildElement(activityElement, "FinishMode");
+
         if (finishModeElement != null) {
             if (UtilXml.firstChildElement(finishModeElement, "Automatic") != null)
                 activityValue.set("finishModeEnumId", "WAM_AUTOMATIC");
@@ -556,8 +614,9 @@ public class XpdlReader {
                 throw new DefinitionParserException("Could not find Mode under FinishMode");
         }
 
-        //Priority?
+        // Priority?
         String priorityStr = UtilXml.childElementValue(activityElement, "Priority");
+
         if (priorityStr != null) {
             try {
                 activityValue.set("objectPriority", Long.valueOf(priorityStr));
@@ -566,13 +625,14 @@ public class XpdlReader {
             }
         }
 
-
-        //SimulationInformation?
+        // SimulationInformation?
         Element simulationInformationElement = UtilXml.firstChildElement(activityElement, "SimulationInformation");
+
         if (simulationInformationElement != null) {
             if (simulationInformationElement.getAttribute("Instantiation") != null)
                 activityValue.set("instantiationLimitEnumId", "WFI_" + simulationInformationElement.getAttribute("Instantiation"));
             String costStr = UtilXml.childElementValue(simulationInformationElement, "Cost");
+
             if (costStr != null) {
                 try {
                     activityValue.set("cost", Double.valueOf(costStr));
@@ -581,10 +641,12 @@ public class XpdlReader {
                 }
             }
 
-            //TimeEstimation
+            // TimeEstimation
             Element timeEstimationElement = UtilXml.firstChildElement(simulationInformationElement, "TimeEstimation");
+
             if (timeEstimationElement != null) {
                 String waitingTimeStr = UtilXml.childElementValue(timeEstimationElement, "WaitingTime");
+
                 if (waitingTimeStr != null) {
                     try {
                         activityValue.set("waitingTime", Double.valueOf(waitingTimeStr));
@@ -593,6 +655,7 @@ public class XpdlReader {
                     }
                 }
                 String workingTimeStr = UtilXml.childElementValue(timeEstimationElement, "WorkingTime");
+
                 if (workingTimeStr != null) {
                     try {
                         activityValue.set("waitingTime", Double.valueOf(workingTimeStr));
@@ -601,6 +664,7 @@ public class XpdlReader {
                     }
                 }
                 String durationStr = UtilXml.childElementValue(timeEstimationElement, "Duration");
+
                 if (durationStr != null) {
                     try {
                         activityValue.set("duration", Double.valueOf(durationStr));
@@ -611,16 +675,16 @@ public class XpdlReader {
             }
         }
 
-
         activityValue.set("iconUrl", UtilXml.childElementValue(activityElement, "Icon"));
         activityValue.set("documentationUrl", UtilXml.childElementValue(activityElement, "Documentation"));
 
-        //TransitionRestrictions?
+        // TransitionRestrictions?
         Element transitionRestrictionsElement = UtilXml.firstChildElement(activityElement, "TransitionRestrictions");
         List transitionRestrictions = UtilXml.childElementList(transitionRestrictionsElement, "TransitionRestriction");
+
         readTransitionRestrictions(transitionRestrictions, activityValue);
 
-        //ExtendedAttributes?
+        // ExtendedAttributes?
         activityValue.set("acceptAllAssignments", getExtendedAttributeValue(activityElement, "acceptAllAssignments", "N"));
         activityValue.set("completeAllAssignments", getExtendedAttributeValue(activityElement, "completeAllAssignments", "N"));
         activityValue.set("limitService", getExtendedAttributeValue(activityElement, "limitService", null), false);
@@ -630,11 +694,12 @@ public class XpdlReader {
     }
 
     protected void readSubFlow(Element subFlowElement, String packageId, String packageVersion, String processId,
-                               String processVersion, String activityId) throws DefinitionParserException {
+        String processVersion, String activityId) throws DefinitionParserException {
         if (subFlowElement == null)
             return;
 
         GenericValue subFlowValue = delegator.makeValue("WorkflowActivitySubFlow", null);
+
         values.add(subFlowValue);
 
         subFlowValue.set("packageId", packageId);
@@ -649,18 +714,20 @@ public class XpdlReader {
         else
             subFlowValue.set("executionEnumId", "WSE_ASYNCHR");
 
-        //ActualParameters?
+        // ActualParameters?
         Element actualParametersElement = UtilXml.firstChildElement(subFlowElement, "ActualParameters");
         List actualParameters = UtilXml.childElementList(actualParametersElement, "ActualParameter");
+
         subFlowValue.set("actualParameters", readActualParameters(actualParameters), false);
     }
 
     protected void readLoop(Element loopElement, String packageId, String packageVersion, String processId,
-                            String processVersion, String activityId) throws DefinitionParserException {
+        String processVersion, String activityId) throws DefinitionParserException {
         if (loopElement == null)
             return;
 
         GenericValue loopValue = delegator.makeValue("WorkflowActivityLoop", null);
+
         values.add(loopValue);
 
         loopValue.set("packageId", packageId);
@@ -674,27 +741,30 @@ public class XpdlReader {
         else
             loopValue.set("loopKindEnumId", "WLK_WHILE");
 
-        //Condition?
+        // Condition?
         loopValue.set("conditionExpr", UtilXml.childElementValue(loopElement, "Condition"));
     }
 
     protected void readTools(List tools, String packageId, String packageVersion, String processId,
-                             String processVersion, String activityId) throws DefinitionParserException {
+        String processVersion, String activityId) throws DefinitionParserException {
         if (tools == null || tools.size() == 0)
             return;
         Iterator toolsIter = tools.iterator();
+
         while (toolsIter.hasNext()) {
             Element toolElement = (Element) toolsIter.next();
+
             readTool(toolElement, packageId, packageVersion, processId, processVersion, activityId);
         }
     }
 
     protected void readTool(Element toolElement, String packageId, String packageVersion, String processId,
-                            String processVersion, String activityId) throws DefinitionParserException {
+        String processVersion, String activityId) throws DefinitionParserException {
         if (toolElement == null)
             return;
 
         GenericValue toolValue = delegator.makeValue("WorkflowActivityTool", null);
+
         values.add(toolValue);
 
         toolValue.set("packageId", packageId);
@@ -709,14 +779,15 @@ public class XpdlReader {
         else
             toolValue.set("toolTypeEnumId", "WTT_PROCEDURE");
 
-        //Description?
+        // Description?
         toolValue.set("description", UtilXml.childElementValue(toolElement, "Description"));
 
-        //ActualParameters/ExtendedAttributes?
+        // ActualParameters/ExtendedAttributes?
         Element actualParametersElement = UtilXml.firstChildElement(toolElement, "ActualParameters");
         Element extendedAttributesElement = UtilXml.firstChildElement(toolElement, "ExtendedAttributes");
         List actualParameters = UtilXml.childElementList(actualParametersElement, "ActualParameter");
         List extendedAttributes = UtilXml.childElementList(extendedAttributesElement, "ExtendedAttribute");
+
         toolValue.set("actualParameters", readActualParameters(actualParameters), false);
         toolValue.set("extendedAttributes", readExtendedAttributes(extendedAttributes), false);
     }
@@ -725,8 +796,10 @@ public class XpdlReader {
         if (actualParameters == null || actualParameters.size() == 0) return null;
         StringBuffer actualParametersBuf = new StringBuffer();
         Iterator actualParametersIter = actualParameters.iterator();
+
         while (actualParametersIter.hasNext()) {
             Element actualParameterElement = (Element) actualParametersIter.next();
+
             actualParametersBuf.append(UtilXml.elementValue(actualParameterElement));
             if (actualParametersIter.hasNext())
                 actualParametersBuf.append(',');
@@ -738,8 +811,10 @@ public class XpdlReader {
         if (extendedAttributes == null || extendedAttributes.size() == 0) return null;
         Map ea = new HashMap();
         Iterator i = extendedAttributes.iterator();
+
         while (i.hasNext()) {
             Element e = (Element) i.next();
+
             ea.put(e.getAttribute("Name"), e.getAttribute("Value"));
         }
         return StringUtil.mapToStr(ea);
@@ -750,25 +825,29 @@ public class XpdlReader {
     // ----------------------------------------------------------------
 
     protected void readTransitions(List transitions, String packageId, String packageVersion, String processId,
-                                   String processVersion) throws DefinitionParserException {
+        String processVersion) throws DefinitionParserException {
         if (transitions == null || transitions.size() == 0)
             return;
         Iterator transitionsIter = transitions.iterator();
+
         while (transitionsIter.hasNext()) {
             Element transitionElement = (Element) transitionsIter.next();
+
             readTransition(transitionElement, packageId, packageVersion, processId, processVersion);
         }
     }
 
     protected void readTransition(Element transitionElement, String packageId, String packageVersion,
-                                  String processId, String processVersion) throws DefinitionParserException {
+        String processId, String processVersion) throws DefinitionParserException {
         if (transitionElement == null)
             return;
 
         GenericValue transitionValue = delegator.makeValue("WorkflowTransition", null);
+
         values.add(transitionValue);
 
         String transitionId = transitionElement.getAttribute("Id");
+
         transitionValue.set("packageId", packageId);
         transitionValue.set("packageVersion", packageVersion);
         transitionValue.set("processId", processId);
@@ -784,16 +863,18 @@ public class XpdlReader {
 
         transitionValue.set("transitionName", transitionElement.getAttribute("Name"));
 
-        //Condition?
+        // Condition?
         Element conditionElement = UtilXml.firstChildElement(transitionElement, "Condition");
+
         if (conditionElement != null) {
             if (conditionElement.getAttribute("Type") != null)
                 transitionValue.set("conditionTypeEnumId", "WTC_" + conditionElement.getAttribute("Type"));
             else
                 transitionValue.set("conditionTypeEnumId", "WTC_CONDITION");
 
-            //a Condition will have either a list of XPression elements, or plain PCDATA
+            // a Condition will have either a list of XPression elements, or plain PCDATA
             List xPressions = UtilXml.childElementList(conditionElement, "XPression");
+
             if (xPressions != null && xPressions.size() > 0) {
                 throw new DefinitionParserException("XPression elements under Condition not yet supported, just use text inside Condition with the expression");
             } else {
@@ -801,7 +882,7 @@ public class XpdlReader {
             }
         }
 
-        //Description?
+        // Description?
         transitionValue.set("description", UtilXml.childElementValue(transitionElement, "Description"));
     }
 
@@ -809,8 +890,10 @@ public class XpdlReader {
         if (transitionRestrictions == null || transitionRestrictions.size() == 0)
             return;
         Iterator transitionRestrictionsIter = transitionRestrictions.iterator();
+
         if (transitionRestrictionsIter.hasNext()) {
             Element transitionRestrictionElement = (Element) transitionRestrictionsIter.next();
+
             readTransitionRestriction(transitionRestrictionElement, activityValue);
         }
         if (transitionRestrictionsIter.hasNext()) {
@@ -825,8 +908,9 @@ public class XpdlReader {
         String processVersion = activityValue.getString("processVersion");
         String activityId = activityValue.getString("activityId");
 
-        //InlineBlock?
+        // InlineBlock?
         Element inlineBlockElement = UtilXml.firstChildElement(transitionRestrictionElement, "InlineBlock");
+
         if (inlineBlockElement != null) {
             activityValue.set("isInlineBlock", "Y");
             activityValue.set("blockName", UtilXml.childElementValue(inlineBlockElement, "BlockName"));
@@ -838,38 +922,45 @@ public class XpdlReader {
             activityValue.set("blockEndActivityId", inlineBlockElement.getAttribute("End"));
         }
 
-        //Join?
+        // Join?
         Element joinElement = UtilXml.firstChildElement(transitionRestrictionElement, "Join");
+
         if (joinElement != null) {
             String joinType = joinElement.getAttribute("Type");
+
             if (joinType != null && joinType.length() > 0) {
                 activityValue.set("joinTypeEnumId", "WJT_" + joinType);
             }
         }
 
-        //Split?
+        // Split?
         Element splitElement = UtilXml.firstChildElement(transitionRestrictionElement, "Split");
+
         if (splitElement != null) {
             String splitType = splitElement.getAttribute("Type");
+
             if (splitType != null && splitType.length() > 0) {
                 activityValue.set("splitTypeEnumId", "WST_" + splitType);
             }
 
-            //TransitionRefs
+            // TransitionRefs
             Element transitionRefsElement = UtilXml.firstChildElement(splitElement, "TransitionRefs");
             List transitionRefs = UtilXml.childElementList(transitionRefsElement, "TransitionRef");
+
             readTransitionRefs(transitionRefs, packageId, packageVersion, processId, processVersion, activityId);
         }
     }
 
     protected void readTransitionRefs(List transitionRefs, String packageId, String packageVersion, String processId,
-                                      String processVersion, String activityId) throws DefinitionParserException {
+        String processVersion, String activityId) throws DefinitionParserException {
         if (transitionRefs == null || transitionRefs.size() == 0)
             return;
         Iterator transitionRefsIter = transitionRefs.iterator();
+
         while (transitionRefsIter.hasNext()) {
             Element transitionRefElement = (Element) transitionRefsIter.next();
             GenericValue transitionRefValue = delegator.makeValue("WorkflowTransitionRef", null);
+
             values.add(transitionRefValue);
 
             transitionRefValue.set("packageId", packageId);
@@ -890,19 +981,23 @@ public class XpdlReader {
             return;
 
         Long nextSeqId = delegator.getNextSeqId("WorkflowParticipantList");
+
         if (nextSeqId == null)
             throw new DefinitionParserException("Could not get next sequence id from data source");
         String participantListId = nextSeqId.toString();
+
         valueObject.set("participantListId", participantListId);
 
         Iterator participantsIter = participants.iterator();
         long index = 1;
+
         while (participantsIter.hasNext()) {
             Element participantElement = (Element) participantsIter.next();
             String participantId = participantElement.getAttribute("Id");
 
-            //if participant doesn't exist, create it; don't do an update because if settings are manually changed it would be annoying as all get out
+            // if participant doesn't exist, create it; don't do an update because if settings are manually changed it would be annoying as all get out
             GenericValue testValue = null;
+
             try {
                 testValue = delegator.findByPrimaryKey("WorkflowParticipant", UtilMisc.toMap("participantId", participantId));
             } catch (GenericEntityException e) {
@@ -910,26 +1005,29 @@ public class XpdlReader {
             }
             if (testValue == null) {
                 GenericValue participantValue = delegator.makeValue("WorkflowParticipant", null);
+
                 values.add(participantValue);
                 participantValue.set("participantId", participantId);
                 participantValue.set("participantName", participantElement.getAttribute("Name"));
 
-                //ParticipantType
+                // ParticipantType
                 Element participantTypeElement = UtilXml.firstChildElement(participantElement, "ParticipantType");
+
                 if (participantTypeElement != null) {
                     participantValue.set("participantTypeId", participantTypeElement.getAttribute("Type"));
                 }
 
-                //Description?
+                // Description?
                 participantValue.set("description", UtilXml.childElementValue(participantElement, "Description"));
 
-                //ExtendedAttributes
+                // ExtendedAttributes
                 participantValue.set("partyId", getExtendedAttributeValue(participantElement, "partyId", null), false);
                 participantValue.set("roleTypeId", getExtendedAttributeValue(participantElement, "roleTypeId", null), false);
             }
 
-            //regardless of whether the participant was created, create a participant list entry
+            // regardless of whether the participant was created, create a participant list entry
             GenericValue participantListValue = delegator.makeValue("WorkflowParticipantList", null);
+
             values.add(participantListValue);
             participantListValue.set("participantListId", participantListId);
             participantListValue.set("participantId", participantId);
@@ -939,16 +1037,19 @@ public class XpdlReader {
     }
 
     protected void readApplications(List applications, String packageId, String packageVersion, String processId,
-                                    String processVersion) throws DefinitionParserException {
+        String processVersion) throws DefinitionParserException {
         if (applications == null || applications.size() == 0)
             return;
         Iterator applicationsIter = applications.iterator();
+
         while (applicationsIter.hasNext()) {
             Element applicationElement = (Element) applicationsIter.next();
             GenericValue applicationValue = delegator.makeValue("WorkflowApplication", null);
+
             values.add(applicationValue);
 
             String applicationId = applicationElement.getAttribute("Id");
+
             applicationValue.set("packageId", packageId);
             applicationValue.set("packageVersion", packageVersion);
             applicationValue.set("processId", processId);
@@ -956,27 +1057,31 @@ public class XpdlReader {
             applicationValue.set("applicationId", applicationId);
             applicationValue.set("applicationName", applicationElement.getAttribute("Name"));
 
-            //Description?
+            // Description?
             applicationValue.set("description", UtilXml.childElementValue(applicationElement, "Description"));
 
-            //FormalParameters?
+            // FormalParameters?
             Element formalParametersElement = UtilXml.firstChildElement(applicationElement, "FormalParameters");
             List formalParameters = UtilXml.childElementList(formalParametersElement, "FormalParameter");
+
             readFormalParameters(formalParameters, packageId, packageVersion, processId, processVersion, applicationId);
         }
     }
 
     protected void readDataFields(List dataFields, String packageId, String packageVersion, String processId,
-                                  String processVersion) throws DefinitionParserException {
+        String processVersion) throws DefinitionParserException {
         if (dataFields == null || dataFields.size() == 0)
             return;
         Iterator dataFieldsIter = dataFields.iterator();
+
         while (dataFieldsIter.hasNext()) {
             Element dataFieldElement = (Element) dataFieldsIter.next();
             GenericValue dataFieldValue = delegator.makeValue("WorkflowDataField", null);
+
             values.add(dataFieldValue);
 
             String dataFieldId = dataFieldElement.getAttribute("Id");
+
             dataFieldValue.set("packageId", packageId);
             dataFieldValue.set("packageVersion", packageVersion);
             dataFieldValue.set("processId", processId);
@@ -984,21 +1089,23 @@ public class XpdlReader {
             dataFieldValue.set("dataFieldId", dataFieldId);
             dataFieldValue.set("dataFieldName", dataFieldElement.getAttribute("Name"));
 
-            //IsArray attr
-            dataFieldValue.set("isArray", ("TRUE".equals(dataFieldElement.getAttribute("IsArray")) ? "Y":"N"));
+            // IsArray attr
+            dataFieldValue.set("isArray", ("TRUE".equals(dataFieldElement.getAttribute("IsArray")) ? "Y" : "N"));
 
-            //DataType
+            // DataType
             Element dataTypeElement = UtilXml.firstChildElement(dataFieldElement, "DataType");
+
             if (dataTypeElement != null) {
-                //(%Type;)
+                // (%Type;)
                 readType(dataTypeElement, dataFieldValue);
             }
 
-            //InitialValue?
+            // InitialValue?
             dataFieldValue.set("initialValue", UtilXml.childElementValue(dataFieldElement, "InitialValue"));
 
-            //Length?
+            // Length?
             String lengthStr = UtilXml.childElementValue(dataFieldElement, "Length");
+
             if (lengthStr != null && lengthStr.length() > 0) {
                 try {
                     dataFieldValue.set("lengthBytes", Long.valueOf(lengthStr));
@@ -1007,23 +1114,26 @@ public class XpdlReader {
                 }
             }
 
-            //Description?
+            // Description?
             dataFieldValue.set("description", UtilXml.childElementValue(dataFieldElement, "Description"));
         }
     }
 
     protected void readFormalParameters(List formalParameters, String packageId, String packageVersion,
-                                        String processId, String processVersion, String applicationId) throws DefinitionParserException {
+        String processId, String processVersion, String applicationId) throws DefinitionParserException {
         if (formalParameters == null || formalParameters.size() == 0)
             return;
         Iterator formalParametersIter = formalParameters.iterator();
         long index = 1;
+
         while (formalParametersIter.hasNext()) {
             Element formalParameterElement = (Element) formalParametersIter.next();
             GenericValue formalParameterValue = delegator.makeValue("WorkflowFormalParam", null);
+
             values.add(formalParameterValue);
 
             String formalParamId = formalParameterElement.getAttribute("Id");
+
             formalParameterValue.set("packageId", packageId);
             formalParameterValue.set("packageVersion", packageVersion);
             formalParameterValue.set("processId", processId);
@@ -1033,6 +1143,7 @@ public class XpdlReader {
             formalParameterValue.set("modeEnumId", "WPM_" + formalParameterElement.getAttribute("Mode"));
 
             String indexStr = formalParameterElement.getAttribute("Index");
+
             if (indexStr != null && indexStr.length() > 0) {
                 try {
                     formalParameterValue.set("indexNumber", Long.valueOf(indexStr));
@@ -1043,14 +1154,15 @@ public class XpdlReader {
                 formalParameterValue.set("indexNumber", new Long(index));
             index++;
 
-            //DataType
+            // DataType
             Element dataTypeElement = UtilXml.firstChildElement(formalParameterElement, "DataType");
+
             if (dataTypeElement != null) {
-                //(%Type;)
+                // (%Type;)
                 readType(dataTypeElement, formalParameterValue);
             }
 
-            //Description?
+            // Description?
             formalParameterValue.set("description", UtilXml.childElementValue(formalParameterElement, "Description"));
         }
     }
@@ -1060,35 +1172,32 @@ public class XpdlReader {
      * <code>dataTypeEnumId</code> and <code>complexTypeInfoId</code>.
      */
     protected void readType(Element element, GenericValue value) {
-        //(%Type;) - (RecordType | UnionType | EnumerationType | ArrayType | ListType | BasicType | PlainType | DeclaredType)
+        // (%Type;) - (RecordType | UnionType | EnumerationType | ArrayType | ListType | BasicType | PlainType | DeclaredType)
         Element typeElement = null;
-        if ((typeElement = UtilXml.firstChildElement(element, "RecordType")) != null) {
-            //TODO: write code for complex type
-        } else if ((typeElement = UtilXml.firstChildElement(element, "UnionType")) != null) {
-            //TODO: write code for complex type
-        } else if ((typeElement = UtilXml.firstChildElement(element, "EnumerationType")) != null) {
-            //TODO: write code for complex type
-        } else if ((typeElement = UtilXml.firstChildElement(element, "ArrayType")) != null) {
-            //TODO: write code for complex type
-        } else if ((typeElement = UtilXml.firstChildElement(element, "ListType")) != null) {
-            //TODO: write code for complex type
+
+        if ((typeElement = UtilXml.firstChildElement(element, "RecordType")) != null) {// TODO: write code for complex type
+        } else if ((typeElement = UtilXml.firstChildElement(element, "UnionType")) != null) {// TODO: write code for complex type
+        } else if ((typeElement = UtilXml.firstChildElement(element, "EnumerationType")) != null) {// TODO: write code for complex type
+        } else if ((typeElement = UtilXml.firstChildElement(element, "ArrayType")) != null) {// TODO: write code for complex type
+        } else if ((typeElement = UtilXml.firstChildElement(element, "ListType")) != null) {// TODO: write code for complex type
         } else if ((typeElement = UtilXml.firstChildElement(element, "BasicType")) != null) {
             value.set("dataTypeEnumId", "WDT_" + typeElement.getAttribute("Type"));
         } else if ((typeElement = UtilXml.firstChildElement(element, "PlainType")) != null) {
             value.set("dataTypeEnumId", "WDT_" + typeElement.getAttribute("Type"));
         } else if ((typeElement = UtilXml.firstChildElement(element, "DeclaredType")) != null) {
-            //For DeclaredTypes complexTypeInfoId will actually be the type id
+            // For DeclaredTypes complexTypeInfoId will actually be the type id
             value.set("dataTypeEnumId", "WDT_DECLARED");
             value.set("complexTypeInfoId", typeElement.getAttribute("Id"));
         }
+
         /*
-        <entity entity-name="WorkflowComplexTypeInfo"
-          <field name="complexTypeInfoId" type="id-ne"></field>
-          <field name="memberParentInfoId" type="id"></field>
-          <field name="dataTypeEnumId" type="id"></field>
-          <field name="subTypeEnumId" type="id"></field>
-          <field name="arrayLowerIndex" type="numeric"></field>
-          <field name="arrayUpperIndex" type="numeric"></field>
+         <entity entity-name="WorkflowComplexTypeInfo"
+         <field name="complexTypeInfoId" type="id-ne"></field>
+         <field name="memberParentInfoId" type="id"></field>
+         <field name="dataTypeEnumId" type="id"></field>
+         <field name="subTypeEnumId" type="id"></field>
+         <field name="arrayLowerIndex" type="numeric"></field>
+         <field name="arrayUpperIndex" type="numeric"></field>
          */
     }
 
@@ -1097,16 +1206,20 @@ public class XpdlReader {
             return defaultValue;
 
         Element extendedAttributesElement = UtilXml.firstChildElement(element, "ExtendedAttributes");
+
         if (extendedAttributesElement == null)
             return defaultValue;
         List extendedAttributes = UtilXml.childElementList(extendedAttributesElement, "ExtendedAttribute");
+
         if (extendedAttributes == null || extendedAttributes.size() == 0)
             return defaultValue;
 
         Iterator iter = extendedAttributes.iterator();
+
         while (iter.hasNext()) {
             Element extendedAttribute = (Element) iter.next();
             String elementName = extendedAttribute.getAttribute("Name");
+
             if (name.equals(elementName)) {
                 return extendedAttribute.getAttribute("Value");
             }
@@ -1120,10 +1233,12 @@ public class XpdlReader {
 
     public static void main(String[] args) throws Exception {
         String sampleFileName = "../../docs/examples/sample.xpdl";
+
         if (args.length > 0)
             sampleFileName = args[0];
         List values = readXpdl(UtilURL.fromFilename(sampleFileName), GenericDelegator.getGenericDelegator("default"));
         Iterator viter = values.iterator();
+
         while (viter.hasNext())
             System.out.println(viter.next().toString());
     }

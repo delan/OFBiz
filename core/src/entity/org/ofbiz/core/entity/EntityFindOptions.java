@@ -24,7 +24,9 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.sql.*;
+
 
 /**
  * Contains a number of variables used to select certain advanced finding options.
@@ -37,16 +39,19 @@ public class EntityFindOptions implements java.io.Serializable {
 
     /** Type constant from the java.sql.ResultSet object for convenience */
     public static final int TYPE_FORWARD_ONLY = ResultSet.TYPE_FORWARD_ONLY;
+
     /** Type constant from the java.sql.ResultSet object for convenience */
     public static final int TYPE_SCROLL_INSENSITIVE = ResultSet.TYPE_SCROLL_INSENSITIVE;
+
     /** Type constant from the java.sql.ResultSet object for convenience */
     public static final int TYPE_SCROLL_SENSITIVE = ResultSet.TYPE_SCROLL_SENSITIVE;
-    
+
     /** Concurrency constant from the java.sql.ResultSet object for convenience */
     public static final int CONCUR_READ_ONLY = ResultSet.CONCUR_READ_ONLY;
+
     /** Concurrency constant from the java.sql.ResultSet object for convenience */
     public static final int CONCUR_UPDATABLE = ResultSet.CONCUR_UPDATABLE;
-    
+
     protected boolean specifyTypeAndConcur = true;
     protected int resultSetType = TYPE_FORWARD_ONLY;
     protected int resultSetConcurrency = CONCUR_READ_ONLY;
@@ -58,7 +63,7 @@ public class EntityFindOptions implements java.io.Serializable {
      *      resultSetConcurrency = CONCUR_READ_ONLY
      *      distinct = false
      */
-    public EntityFindOptions() { }
+    public EntityFindOptions() {}
 
     public EntityFindOptions(boolean specifyTypeAndConcur, int resultSetType, int resultSetConcurrency, boolean distinct) {
         this.specifyTypeAndConcur = specifyTypeAndConcur;
@@ -66,13 +71,14 @@ public class EntityFindOptions implements java.io.Serializable {
         this.resultSetConcurrency = resultSetConcurrency;
         this.distinct = distinct;
     }
-    
+
     /** If true the following two parameters (resultSetType and resultSetConcurrency) will be used to specify 
      *      how the results will be used; if false the default values for the JDBC driver will be used
      */
     public boolean getSpecifyTypeAndConcur() {
         return specifyTypeAndConcur;
     }
+
     /** If true the following two parameters (resultSetType and resultSetConcurrency) will be used to specify 
      *      how the results will be used; if false the default values for the JDBC driver will be used
      */
@@ -87,6 +93,7 @@ public class EntityFindOptions implements java.io.Serializable {
     public int getResultSetType() {
         return resultSetType;
     }
+
     /** Specifies how the ResultSet will be traversed. Available values: ResultSet.TYPE_FORWARD_ONLY, 
      *      ResultSet.TYPE_SCROLL_INSENSITIVE or ResultSet.TYPE_SCROLL_SENSITIVE. See the java.sql.ResultSet JavaDoc for 
      *      more information. If you want it to be fast, use the common default: ResultSet.TYPE_FORWARD_ONLY.
@@ -102,6 +109,7 @@ public class EntityFindOptions implements java.io.Serializable {
     public int getResultSetConcurrency() {
         return resultSetConcurrency;
     }
+
     /** Specifies whether or not the ResultSet can be updated. Available values: 
      *      ResultSet.CONCUR_READ_ONLY or ResultSet.CONCUR_UPDATABLE. Should pretty much always be 
      *      ResultSet.CONCUR_READ_ONLY with the Entity Engine.
@@ -114,6 +122,7 @@ public class EntityFindOptions implements java.io.Serializable {
     public boolean getDistinct() {
         return distinct;
     }
+
     /** Specifies whether the values returned should be filtered to remove duplicate values. */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;

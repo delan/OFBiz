@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * WfException - Generic Workflow Exception
  *

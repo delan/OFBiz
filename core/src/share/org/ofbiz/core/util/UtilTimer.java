@@ -24,7 +24,9 @@
 
 package org.ofbiz.core.util;
 
+
 import java.util.*;
+
 
 /**
  * <p>Timer handling utility
@@ -63,18 +65,19 @@ public class UtilTimer {
      * @return A String with the timing information, the timer String
      */
     public String timerString(String message, String module) {
-        //time this call to avoid it interfering with the main timer
+        // time this call to avoid it interfering with the main timer
         long tsStart = System.currentTimeMillis();
 
         String retString = "[[" + message + "- total:" + secondsSinceStart() +
-                ",since last(" + ((lastMessage.length() > 20) ? (lastMessage.substring(0, 17) + "...") : lastMessage) + "):" +
-                secondsSinceLast() + "]]";
+            ",since last(" + ((lastMessage.length() > 20) ? (lastMessage.substring(0, 17) + "...") : lastMessage) + "):" +
+            secondsSinceLast() + "]]";
+
         lastMessage = message;
         if (log) Debug.log(Debug.TIMING, null, retString, module, "org.ofbiz.core.util.UtilTimer");
 
-        //have lastMessageTime come as late as possible to just time what happens between calls
+        // have lastMessageTime come as late as possible to just time what happens between calls
         lastMessageTime = System.currentTimeMillis();
-        //update startTime to disclude the time this call took
+        // update startTime to disclude the time this call took
         startTime += (lastMessageTime - tsStart);
 
         return retString;
@@ -99,6 +102,7 @@ public class UtilTimer {
      */
     public long timeSinceStart() {
         long currentTime = System.currentTimeMillis();
+
         return currentTime - startTime;
     }
 
@@ -107,6 +111,7 @@ public class UtilTimer {
      */
     public long timeSinceLast() {
         long currentTime = System.currentTimeMillis();
+
         return currentTime - lastMessageTime;
     }
 
@@ -124,45 +129,52 @@ public class UtilTimer {
         return log;
     }
 
+    /** Creates a string with information including the passed message, the time since the last call,
+     * and the time since the beginning.  This version allows an integer level to be specified to
+     * improve readability of the output.
+     * @param level Integer specifying how many levels to indent the timer string so the output can be more easily read through nested method calls.
+     * @param message A message to put into the timer String
+     * @return A String with the timing information, the timer String
+     */
+    public String timerString(int level, String message) {
+        // String retString =  "[[" + message + ": seconds since start: " + secondsSinceStart() + ",since last(" + lastMessage + "):" + secondsSinceLast() + "]]";
 
-  /** Creates a string with information including the passed message, the time since the last call,
-   * and the time since the beginning.  This version allows an integer level to be specified to
-   * improve readability of the output.
-   * @param level Integer specifying how many levels to indent the timer string so the output can be more easily read through nested method calls.
-   * @param message A message to put into the timer String
-   * @return A String with the timing information, the timer String
-   */
-  public String timerString(int level, String message)
-  {
-//    String retString =  "[[" + message + ": seconds since start: " + secondsSinceStart() + ",since last(" + lastMessage + "):" + secondsSinceLast() + "]]";
+        StringBuffer retStringBuf = new StringBuffer();
 
-    StringBuffer retStringBuf = new StringBuffer();
-    for (int i = 0; i < level; i++) { retStringBuf.append("| "); }
-    retStringBuf.append("(");
+        for (int i = 0; i < level; i++) {
+            retStringBuf.append("| ");
+        }
+        retStringBuf.append("(");
 
-    String timeSinceStartStr = String.valueOf(timeSinceStart());
-//	int spacecount = 5 - timeSinceStartStr.length();
-//    for (int i=0; i < spacecount; i++) { retStringBuf.append(' '); }
-    retStringBuf.append(timeSinceStartStr + ",");
+        String timeSinceStartStr = String.valueOf(timeSinceStart());
 
-    String timeSinceLastStr = String.valueOf(timeSinceLast());
-//	spacecount = 4 - timeSinceLastStr.length();
-//    for (int i=0; i < spacecount; i++) { retStringBuf.append(' '); }
-    retStringBuf.append(timeSinceLastStr);
+        // int spacecount = 5 - timeSinceStartStr.length();
+        // for (int i=0; i < spacecount; i++) { retStringBuf.append(' '); }
+        retStringBuf.append(timeSinceStartStr + ",");
 
-    retStringBuf.append(")");
-	int spacecount = 12 + (2*level) - retStringBuf.length();
-    for (int i=0; i < spacecount; i++) { retStringBuf.append(' '); }
-    retStringBuf.append(message);
+        String timeSinceLastStr = String.valueOf(timeSinceLast());
 
-//    lastMessageTime = (new Date()).getTime();
-    lastMessageTime = System.currentTimeMillis();
-//    lastMessage = message;
+        // spacecount = 4 - timeSinceLastStr.length();
+        // for (int i=0; i < spacecount; i++) { retStringBuf.append(' '); }
+        retStringBuf.append(timeSinceLastStr);
 
-	String retString = retStringBuf.toString();
-//    if(!quiet) Debug.logInfo(retString);
-    if (Debug.infoOn()) Debug.logInfo(retString);
-    return retString;
-  }
+        retStringBuf.append(")");
+        int spacecount = 12 + (2 * level) - retStringBuf.length();
+
+        for (int i = 0; i < spacecount; i++) {
+            retStringBuf.append(' ');
+        }
+        retStringBuf.append(message);
+
+        // lastMessageTime = (new Date()).getTime();
+        lastMessageTime = System.currentTimeMillis();
+        // lastMessage = message;
+
+        String retString = retStringBuf.toString();
+
+        // if(!quiet) Debug.logInfo(retString);
+        if (Debug.infoOn()) Debug.logInfo(retString);
+        return retString;
+    }
 
 }

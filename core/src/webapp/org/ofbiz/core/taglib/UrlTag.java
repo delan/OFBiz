@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.taglib;
 
+
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -33,6 +34,7 @@ import javax.servlet.jsp.tagext.*;
 
 import org.ofbiz.core.control.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * UrlTag - Creates a URL string prepending the current control path.
@@ -48,7 +50,7 @@ public class UrlTag extends BodyTagSupport {
     public static String httpsServer = UtilProperties.getPropertyValue("url.properties", "force.https.host");
     public static String httpPort = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
     public static String httpServer = UtilProperties.getPropertyValue("url.properties", "force.http.host");
-    
+
     public int doEndTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
@@ -70,6 +72,7 @@ public class UrlTag extends BodyTagSupport {
         if (useHttps) {
             if (rm.requiresHttps(requestUri) && !request.isSecure()) {
                 String server = httpsServer;
+
                 if (server == null || server.length() == 0) {
                     server = request.getServerName();
                 }
@@ -80,6 +83,7 @@ public class UrlTag extends BodyTagSupport {
                 }
             } else if (!rm.requiresHttps(requestUri) && request.isSecure()) {
                 String server = httpServer;
+
                 if (server == null || server.length() == 0) {
                     server = request.getServerName();
                 }
@@ -99,15 +103,16 @@ public class UrlTag extends BodyTagSupport {
 
         try {
             String encodedURL = newURL.toString();
+
             /* This doesn't work, leaving here as a painful reminder that each parameter must be encoded independently
-            //encode for character escaping, etc with the URLEncoder.encode method
-            int qmLoc = encodedURL.indexOf('?');
-            if (qmLoc > 0) {
-                String encodedQueryString = java.net.URLEncoder.encode(encodedURL.substring(qmLoc + 1));
-                encodedURL = encodedURL.subSequence(0, qmLoc) + "?" + encodedQueryString;
-            }
-            */
-            //encode for session maintenance with the response.encodeURL method
+             //encode for character escaping, etc with the URLEncoder.encode method
+             int qmLoc = encodedURL.indexOf('?');
+             if (qmLoc > 0) {
+             String encodedQueryString = java.net.URLEncoder.encode(encodedURL.substring(qmLoc + 1));
+             encodedURL = encodedURL.subSequence(0, qmLoc) + "?" + encodedQueryString;
+             }
+             */
+            // encode for session maintenance with the response.encodeURL method
             encodedURL = response.encodeURL(encodedURL);
             getPreviousOut().print(encodedURL);
         } catch (IOException e) {

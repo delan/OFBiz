@@ -23,11 +23,13 @@
 
 package org.ofbiz.commonapp.product.category;
 
+
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * CategoryServices - Category Services
@@ -44,6 +46,7 @@ public class CategoryServices {
         String categoryId = (String) context.get("categoryId");
         GenericValue productCategory = null;
         List members = null;
+
         try {
             productCategory = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", categoryId));
             members = EntityUtil.filterByDate(productCategory.getRelatedCache("ProductCategoryMember", null, UtilMisc.toList("sequenceNum")), true);
@@ -64,6 +67,7 @@ public class CategoryServices {
         String categoryId = (String) context.get("categoryId");
         String productId = (String) context.get("productId");
         Integer index = (Integer) context.get("index");
+
         if (index == null && productId == null) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Both Index and ProductID cannot be null.");
@@ -71,6 +75,7 @@ public class CategoryServices {
         }
 
         Map values = getCategoryMembers(dctx, context);
+
         if (values.containsKey(ModelService.ERROR_MESSAGE)) {
             return result;
         }
@@ -81,6 +86,7 @@ public class CategoryServices {
         }
 
         Collection memberCol = (Collection) values.get("categoryMembers");
+
         if (memberCol == null || memberCol.size() == 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problem reading category member data.");
@@ -91,8 +97,10 @@ public class CategoryServices {
 
         if (productId != null && index == null) {
             Iterator i = memberList.iterator();
+
             while (i.hasNext()) {
                 GenericValue v = (GenericValue) i.next();
+
                 if (v.getString("productId").equals(productId))
                     index = new Integer(memberList.indexOf(v));
             }
@@ -109,7 +117,7 @@ public class CategoryServices {
         String previous = null;
         String next = null;
 
-        if (index.intValue() - 1 >= 0 && index.intValue() -1 < memberList.size())  {
+        if (index.intValue() - 1 >= 0 && index.intValue() - 1 < memberList.size()) {
             previous = ((GenericValue) memberList.get(index.intValue() - 1)).getString("productId");
             result.put("previousProductId", previous);
         } else {
@@ -134,17 +142,20 @@ public class CategoryServices {
         int defaultViewSize = ((Integer) context.get("defaultViewSize")).intValue();
 
         boolean useCacheForMembers = true;
+
         if (context.get("useCacheForMembers") != null) {
             useCacheForMembers = ((Boolean) context.get("useCacheForMembers")).booleanValue();
         }
-        
+
         int viewIndex = 0;
+
         try {
             viewIndex = Integer.valueOf((String) context.get("viewIndexString")).intValue();
         } catch (Exception e) {
             viewIndex = 0;
         }
         int viewSize = defaultViewSize;
+
         try {
             viewSize = Integer.valueOf((String) context.get("viewSizeString")).intValue();
         } catch (Exception e) {
@@ -152,14 +163,16 @@ public class CategoryServices {
         }
 
         GenericValue productCategory = null;
+
         try {
-            productCategory = delegator.findByPrimaryKeyCache("ProductCategory",UtilMisc.toMap("productCategoryId",productCategoryId));
+            productCategory = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             productCategory = null;
         }
 
         List productCategoryMembers = null;
+
         if (productCategory != null) {
             try {
                 if (useCacheForMembers) {
@@ -176,6 +189,7 @@ public class CategoryServices {
         int lowIndex;
         int highIndex;
         int listSize = 0;
+
         if (productCategoryMembers != null) {
             listSize = productCategoryMembers.size();
         }
@@ -190,6 +204,7 @@ public class CategoryServices {
         }
 
         Map result = new HashMap();
+
         result.put("viewIndex", new Integer(viewIndex));
         result.put("viewSize", new Integer(viewSize));
         result.put("lowIndex", new Integer(lowIndex));

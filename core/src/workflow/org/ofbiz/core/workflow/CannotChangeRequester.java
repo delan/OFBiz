@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * CannotChangeRequester Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class CannotChangeRequester extends WfException {
 
-    public CannotChangeRequester() {
-    }
+    public CannotChangeRequester() {}
 
     public CannotChangeRequester(String msg) {
         super(msg);

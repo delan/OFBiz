@@ -1,6 +1,8 @@
 package org.ofbiz.core.rules.parse;
 
+
 import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Empty
@@ -40,37 +42,41 @@ import java.util.*;
  * @version 1.0
  */
 public class Empty extends Parser {
-  /**
-   * Accept a "visitor" and a collection of previously visited
-   * parsers.
-   *
-   * @param   pv   the visitor to accept
-   * @param   visited   a collection of previously visited parsers
-   */
-  public void accept(ParserVisitor pv, List visited) {
-    pv.visitEmpty(this, visited);
-  }
-  /**
-   * Given a set of assemblies, this method returns the set as
-   * a successful match.
-   *
-   * @return   the input set of states
-   * @param   in   a vector of assemblies to match against
-   */
-  public List match(List in) {
-    return elementClone(in);
-  }
-  /**
-   * There really is no way to expand an empty parser, so
-   * return an empty vector.
-   */
-  protected List randomExpansion(int maxDepth, int depth) {
-    return new ArrayList();
-  }
-  /**
-   * Returns a textual description of this parser.
-   */
-  protected String unvisitedString(List visited) {
-    return " empty ";
-  }
+
+    /**
+     * Accept a "visitor" and a collection of previously visited
+     * parsers.
+     *
+     * @param   pv   the visitor to accept
+     * @param   visited   a collection of previously visited parsers
+     */
+    public void accept(ParserVisitor pv, List visited) {
+        pv.visitEmpty(this, visited);
+    }
+
+    /**
+     * Given a set of assemblies, this method returns the set as
+     * a successful match.
+     *
+     * @return   the input set of states
+     * @param   in   a vector of assemblies to match against
+     */
+    public List match(List in) {
+        return elementClone(in);
+    }
+
+    /**
+     * There really is no way to expand an empty parser, so
+     * return an empty vector.
+     */
+    protected List randomExpansion(int maxDepth, int depth) {
+        return new ArrayList();
+    }
+
+    /**
+     * Returns a textual description of this parser.
+     */
+    protected String unvisitedString(List visited) {
+        return " empty ";
+    }
 }

@@ -22,11 +22,13 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.sql.*;
 import java.util.*;
 import org.ofbiz.core.entity.jdbc.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Generic Entity Cursor List Iterator for Handling Cursored DB Results
@@ -45,7 +47,7 @@ public class EntityListIterator implements ListIterator {
     protected boolean closed = false;
     protected boolean haveMadeValue = false;
     protected GenericDelegator delegator = null;
-    
+
     public EntityListIterator(SQLProcessor sqlp, ModelEntity modelEntity, List selectFields, ModelFieldTypeReader modelFieldTypeReader) {
         this.sqlp = sqlp;
         this.resultSet = sqlp.getResultSet();
@@ -53,7 +55,7 @@ public class EntityListIterator implements ListIterator {
         this.selectFields = selectFields;
         this.modelFieldTypeReader = modelFieldTypeReader;
     }
-    
+
     public void setDelegator(GenericDelegator delegator) {
         this.delegator = delegator;
     }
@@ -66,7 +68,7 @@ public class EntityListIterator implements ListIterator {
             throw new GenericEntityException("Error setting the cursor to afterLast", e);
         }
     }
-    
+
     /** Sets the cursor position to just before the first result so that next() will return the first result */
     public void beforeFirst() throws GenericEntityException {
         try {
@@ -75,7 +77,7 @@ public class EntityListIterator implements ListIterator {
             throw new GenericEntityException("Error setting the cursor to beforeFirst", e);
         }
     }
-    
+
     /** Sets the cursor position to last result; if result set is empty returns false */
     public boolean last() throws GenericEntityException {
         try {
@@ -84,7 +86,7 @@ public class EntityListIterator implements ListIterator {
             throw new GenericEntityException("Error setting the cursor to last", e);
         }
     }
-    
+
     /** Sets the cursor position to last result; if result set is empty returns false */
     public boolean first() throws GenericEntityException {
         try {
@@ -93,18 +95,18 @@ public class EntityListIterator implements ListIterator {
             throw new GenericEntityException("Error setting the cursor to first", e);
         }
     }
-    
+
     public void close() throws GenericEntityException {
         if (closed) throw new GenericResultSetClosedException("This EntityListIterator has been closed, this operation cannot be performed");
-        
+
         sqlp.close();
         closed = true;
     }
-    
+
     /** NOTE: Calling this method does return the current value, but so does calling next() or previous(), so calling one of those AND this method will cause the value to be created twice */
     public GenericValue currentGenericValue() throws GenericEntityException {
         if (closed) throw new GenericResultSetClosedException("This EntityListIterator has been closed, this operation cannot be performed");
-        
+
         GenericValue value = new GenericValue(modelEntity);
 
         for (int j = 0; j < selectFields.size(); j++) {
@@ -119,17 +121,17 @@ public class EntityListIterator implements ListIterator {
         this.haveMadeValue = true;
         return value;
     }
-    
+
     public int currentIndex() throws GenericEntityException {
         if (closed) throw new GenericResultSetClosedException("This EntityListIterator has been closed, this operation cannot be performed");
-        
+
         try {
             return resultSet.getRow();
         } catch (SQLException e) {
             throw new GenericEntityException("Error getting the current index", e);
         }
     }
-    
+
     /** performs the same function as the ResultSet.absolute method; 
      * if rowNum is positive, goes to that position relative to the beginning of the list;
      * if rowNum is negative, goes to that position relative to the end of the list;
@@ -137,21 +139,21 @@ public class EntityListIterator implements ListIterator {
      */
     public boolean absolute(int rowNum) throws GenericEntityException {
         if (closed) throw new GenericResultSetClosedException("This EntityListIterator has been closed, this operation cannot be performed");
-        
+
         try {
             return resultSet.absolute(rowNum);
         } catch (SQLException e) {
             throw new GenericEntityException("Error setting the absolute index to " + rowNum, e);
         }
     }
-    
+
     /** PLEASE NOTE: Because of the nature of the JDBC ResultSet interface this method can be very inefficient; it is much better to just use next() until it returns null */
     public boolean hasNext() {
         try {
             if (resultSet.isLast() || resultSet.isAfterLast()) {
                 return false;
             } else {
-                //do a quick game to see if the resultSet is empty:
+                // do a quick game to see if the resultSet is empty:
                 // if we are not in the first or beforeFirst positions and we haven't made any values yet, the result set is empty so return false
                 if (!haveMadeValue && !resultSet.isBeforeFirst() && !resultSet.isFirst()) {
                     return false;
@@ -163,14 +165,14 @@ public class EntityListIterator implements ListIterator {
             throw new GeneralRuntimeException("Error while checking to see if this is the last result", e);
         }
     }
-    
+
     /** PLEASE NOTE: Because of the nature of the JDBC ResultSet interface this method can be very inefficient; it is much better to just use previous() until it returns null */
     public boolean hasPrevious() {
         try {
             if (resultSet.isFirst() || resultSet.isBeforeFirst()) {
                 return false;
             } else {
-                //do a quick game to see if the resultSet is empty:
+                // do a quick game to see if the resultSet is empty:
                 // if we are not in the last or afterLast positions and we haven't made any values yet, the result set is empty so return false
                 if (!haveMadeValue && !resultSet.isAfterLast() && !resultSet.isLast()) {
                     return false;
@@ -197,7 +199,7 @@ public class EntityListIterator implements ListIterator {
             throw new GeneralRuntimeException("Error creating GenericValue", e);
         }
     }
-    
+
     /** Returns the index of the next result, but does not guarantee that there will be a next result */
     public int nextIndex() {
         try {
@@ -206,7 +208,7 @@ public class EntityListIterator implements ListIterator {
             throw new GeneralRuntimeException(e.getNonNestedMessage(), e.getNested());
         }
     }
-    
+
     /** Moves the cursor to the previous position and returns the GenericValue object for that position; if there is no previous, returns null */
     public Object previous() {
         try {
@@ -221,7 +223,7 @@ public class EntityListIterator implements ListIterator {
             throw new GeneralRuntimeException("Error creating GenericValue", e);
         }
     }
-    
+
     /** Returns the index of the previous result, but does not guarantee that there will be a previous result */
     public int previousIndex() {
         try {
@@ -230,7 +232,7 @@ public class EntityListIterator implements ListIterator {
             throw new GeneralRuntimeException("Error getting the current index", e);
         }
     }
-    
+
     public void setFetchSize(int rows) throws GenericEntityException {
         try {
             resultSet.setFetchSize(rows);
@@ -238,16 +240,17 @@ public class EntityListIterator implements ListIterator {
             throw new GenericEntityException("Error getting the next result", e);
         }
     }
-    
+
     public List getCompleteList() throws GenericEntityException {
         try {
-            //if the resultSet has been moved forward at all, move back to the beginning
+            // if the resultSet has been moved forward at all, move back to the beginning
             if (haveMadeValue && !resultSet.isBeforeFirst()) {
-                //do a quick check to see if the ResultSet is empty
+                // do a quick check to see if the ResultSet is empty
                 resultSet.beforeFirst();
             }
             List list = new LinkedList();
             Object nextValue = null;
+
             while ((nextValue = this.next()) != null) {
                 list.add(nextValue);
             }
@@ -266,18 +269,19 @@ public class EntityListIterator implements ListIterator {
         try {
             if (number == 0) return new ArrayList();
             List list = new ArrayList(number);
-            
-            //if can't reposition to desired index, throw exception
+
+            // if can't reposition to desired index, throw exception
             if (!resultSet.absolute(start)) {
                 throw new GenericEntityException("Could not move to the start position of " + start + ", there are probably not that many results for this find.");
             }
-            
-            //get the first as the current one
+
+            // get the first as the current one
             list.add(this.currentGenericValue());
-            
+
             Object nextValue = null;
-            //init numRetreived to one since we have already grabbed the initial one
+            // init numRetreived to one since we have already grabbed the initial one
             int numRetreived = 1;
+
             while ((nextValue = this.next()) != null && number > numRetreived) {
                 list.add(nextValue);
                 numRetreived++;
@@ -289,15 +293,15 @@ public class EntityListIterator implements ListIterator {
             throw new GenericEntityException(e.getNonNestedMessage(), e.getNested());
         }
     }
-    
+
     public void add(Object obj) {
         throw new GeneralRuntimeException("CursorListIterator currently only supports read-only access");
     }
-    
+
     public void remove() {
         throw new GeneralRuntimeException("CursorListIterator currently only supports read-only access");
     }
-    
+
     public void set(Object obj) {
         throw new GeneralRuntimeException("CursorListIterator currently only supports read-only access");
     }

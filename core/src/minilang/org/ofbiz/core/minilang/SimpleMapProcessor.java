@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 
 import org.ofbiz.core.minilang.operation.*;
+
 
 /**
  * SimpleMapProcessor Mini Language
@@ -55,6 +57,7 @@ public class SimpleMapProcessor {
 
         Map mapProcessors = getProcessors(xmlResource, name, loader);
         MapProcessor processor = (MapProcessor) mapProcessors.get(name);
+
         if (processor == null) {
             throw new MiniLangException("Could not find SimpleMapProcessor named " + name + " in XML document resource: " + xmlResource);
         }
@@ -69,6 +72,7 @@ public class SimpleMapProcessor {
 
         Map mapProcessors = getProcessors(xmlURL, name);
         MapProcessor processor = (MapProcessor) mapProcessors.get(name);
+
         if (processor == null) {
             throw new MiniLangException("Could not find SimpleMapProcessor named " + name + " in XML document: " + xmlURL.toString());
         }
@@ -76,19 +80,22 @@ public class SimpleMapProcessor {
         if (processor != null)
             processor.exec(inMap, results, messages, locale, loader);
     }
+
     protected static Map getProcessors(String xmlResource, String name, ClassLoader loader) throws MiniLangException {
         Map simpleMapProcessors = (Map) simpleMapProcessorsResourceCache.get(xmlResource);
+
         if (simpleMapProcessors == null) {
             synchronized (SimpleMapProcessor.class) {
                 simpleMapProcessors = (Map) simpleMapProcessorsResourceCache.get(xmlResource);
                 if (simpleMapProcessors == null) {
                     URL xmlURL = UtilURL.fromResource(xmlResource, loader);
+
                     if (xmlURL == null) {
                         throw new MiniLangException("Could not find SimpleMapProcessor XML document in resource: " + xmlResource);
                     }
                     simpleMapProcessors = getAllProcessors(xmlURL);
 
-                    //put it in the cache
+                    // put it in the cache
                     simpleMapProcessorsResourceCache.put(xmlResource, simpleMapProcessors);
                 }
             }
@@ -99,13 +106,14 @@ public class SimpleMapProcessor {
 
     protected static Map getProcessors(URL xmlURL, String name) throws MiniLangException {
         Map simpleMapProcessors = (Map) simpleMapProcessorsURLCache.get(xmlURL);
+
         if (simpleMapProcessors == null) {
             synchronized (SimpleMapProcessor.class) {
                 simpleMapProcessors = (Map) simpleMapProcessorsURLCache.get(xmlURL);
                 if (simpleMapProcessors == null) {
                     simpleMapProcessors = getAllProcessors(xmlURL);
 
-                    //put it in the cache
+                    // put it in the cache
                     simpleMapProcessorsURLCache.put(xmlURL, simpleMapProcessors);
                 }
             }
@@ -117,8 +125,9 @@ public class SimpleMapProcessor {
     protected static Map getAllProcessors(URL xmlURL) throws MiniLangException {
         Map mapProcessors = new HashMap();
 
-        //read in the file
+        // read in the file
         Document document = null;
+
         try {
             document = UtilXml.readXmlDocument(xmlURL, true);
         } catch (java.io.IOException e) {
@@ -136,12 +145,14 @@ public class SimpleMapProcessor {
         Element rootElement = document.getDocumentElement();
         List simpleMapProcessorElements = UtilXml.childElementList(rootElement, "simple-map-processor");
         Iterator strProcorIter = simpleMapProcessorElements.iterator();
+
         while (strProcorIter.hasNext()) {
             Element simpleMapProcessorElement = (Element) strProcorIter.next();
             MapProcessor processor = new MapProcessor(simpleMapProcessorElement);
+
             mapProcessors.put(simpleMapProcessorElement.getAttribute("name"), processor);
         }
-        
+
         return mapProcessors;
     }
 }

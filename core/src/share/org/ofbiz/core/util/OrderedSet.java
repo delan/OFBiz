@@ -23,7 +23,9 @@
 
 package org.ofbiz.core.util;
 
+
 import java.util.*;
+
 
 /**
  * OrderedSet - Set interface wrapper around a LinkedList
@@ -42,8 +44,7 @@ public class OrderedSet extends AbstractSet {
      * collection, in the order they are returned by the collection's
      * iterator.
      */
-    public OrderedSet() {
-    }
+    public OrderedSet() {}
 
     /**
      * Constructs a set containing the elements of the specified
@@ -54,6 +55,7 @@ public class OrderedSet extends AbstractSet {
      */
     public OrderedSet(Collection c) {
         Iterator i = c.iterator();
+
         while (i.hasNext())
             add(i.next());
     }
@@ -72,9 +74,9 @@ public class OrderedSet extends AbstractSet {
      *
      * @return the number of elements in this set.
      */
-     public int size() {
-         return backedList.size();
-     }
+    public int size() {
+        return backedList.size();
+    }
 
     /**
      * Appends the specified element to the end of this set.
@@ -85,6 +87,7 @@ public class OrderedSet extends AbstractSet {
      */
     public boolean add(Object obj) {
         int index = backedList.indexOf(obj);
+
         if (index == -1)
             return backedList.add(obj);
         else {

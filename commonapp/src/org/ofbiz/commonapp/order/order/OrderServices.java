@@ -24,6 +24,7 @@
 
 package org.ofbiz.commonapp.order.order;
 
+
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
@@ -32,6 +33,7 @@ import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
 import org.ofbiz.commonapp.product.catalog.*;
+
 
 /**
  * Order Processing Services
@@ -54,14 +56,16 @@ public class OrderServices {
         List toBeStored = new LinkedList();
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        //check security
+        // check security
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "ORDERMGR", "_CREATE");
+
         if (result.size() > 0) {
             return result;
         }
 
         // check to make sure we have something to order
         List orderItems = (List) context.get("orderItems");
+
         if (orderItems.size() < 1) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "ERROR: There are no items to order");
@@ -73,15 +77,18 @@ public class OrderServices {
         List errorMessages = new LinkedList();
         Iterator itemIter = orderItems.iterator();
         java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+
         while (itemIter.hasNext()) {
-            //if the item is out of stock, return an error to that effect
+            // if the item is out of stock, return an error to that effect
             GenericValue orderItem = (GenericValue) itemIter.next();
 
             GenericValue product = null;
+
             try {
                 product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.get("productId")));
             } catch (GenericEntityException e) {
                 String errMsg = "Could not find the product with ID [" + orderItem.get("productId") + "], cannot be purchased.";
+
                 Debug.logError(e, errMsg);
                 errorMessages.add(errMsg);
                 continue;
@@ -89,24 +96,27 @@ public class OrderServices {
 
             if (product == null) {
                 String errMsg = "Could not find the product with ID [" + orderItem.get("productId") + "], cannot be purchased.";
+
                 Debug.logError(errMsg);
                 errorMessages.add(errMsg);
                 continue;
             }
 
-            //check to see if introductionDate hasn't passed yet
+            // check to see if introductionDate hasn't passed yet
             if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
                 String excMsg = "Tried to order the Product " + product.getString("productName") +
-                        " (productId: " + product.getString("productId") + ") to the cart. This product has not yet been made available for sale.";
+                    " (productId: " + product.getString("productId") + ") to the cart. This product has not yet been made available for sale.";
+
                 Debug.logWarning(excMsg);
                 errorMessages.add(excMsg);
                 continue;
             }
 
-            //check to see if salesDiscontinuationDate has passed
+            // check to see if salesDiscontinuationDate has passed
             if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {
                 String excMsg = "Tried to order the Product " + product.getString("productName") +
-                        " (productId: " + product.getString("productId") + ") to the cart. This product is no longer available for sale.";
+                    " (productId: " + product.getString("productId") + ") to the cart. This product is no longer available for sale.";
+
                 Debug.logWarning(excMsg);
                 errorMessages.add(excMsg);
                 continue;
@@ -115,6 +125,7 @@ public class OrderServices {
             if (CatalogWorker.isCatalogInventoryRequired(prodCatalogId, product, delegator)) {
                 if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), delegator, dispatcher)) {
                     String invErrMsg = "The product ";
+
                     invErrMsg += product.getString("productName");
                     invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
                     Debug.logWarning(invErrMsg);
@@ -135,8 +146,9 @@ public class OrderServices {
         String billingAccountId = (String) context.get("billingAccountId");
         GenericValue order = delegator.makeValue("OrderHeader",
                 UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER",
-                        "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
-                        "statusId", "ORDER_ORDERED", "billingAccountId", billingAccountId));
+                    "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
+                    "statusId", "ORDER_ORDERED", "billingAccountId", billingAccountId));
+
         if (UtilValidate.isNotEmpty((String) context.get("visitId"))) order.set("visitId", context.get("visitId"));
         if (userLogin != null && userLogin.get("userLoginId") != null)
             order.set("createdBy", userLogin.getString("userLoginId"));
@@ -145,9 +157,11 @@ public class OrderServices {
         // set the orderId on all adjustments; this list will include order and item adjustments...
         List orderAdjustments = (List) context.get("orderAdjustments");
         Iterator iter = orderAdjustments.iterator();
+
         while (iter.hasNext()) {
             GenericValue orderAdjustment = (GenericValue) iter.next();
             Long adjSeqId = delegator.getNextSeqId("OrderAdjustment");
+
             if (adjSeqId == null) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
                 result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get next sequence id for OrderAdjustment, cannot create order.");
@@ -165,10 +179,13 @@ public class OrderServices {
 
         // set the order contact mechs
         List orderContactMechs = (List) context.get("orderContactMechs");
+
         if (orderContactMechs != null && orderContactMechs.size() > 0) {
             Iterator ocmi = orderContactMechs.iterator();
+
             while (ocmi.hasNext()) {
                 GenericValue ocm = (GenericValue) ocmi.next();
+
                 ocm.set("orderId", orderId);
                 toBeStored.add(ocm);
             }
@@ -176,10 +193,13 @@ public class OrderServices {
 
         // set the order item contact mechs
         List orderItemContactMechs = (List) context.get("orderItemContactMechs");
+
         if (orderItemContactMechs != null && orderItemContactMechs.size() > 0) {
             Iterator oicmi = orderItemContactMechs.iterator();
+
             while (oicmi.hasNext()) {
                 GenericValue oicm = (GenericValue) oicmi.next();
+
                 oicm.set("orderId", orderId);
                 toBeStored.add(oicm);
             }
@@ -187,10 +207,13 @@ public class OrderServices {
 
         // set the shipment preferences
         List orderShipmentPreferences = (List) context.get("orderShipmentPreferences");
+
         if (orderShipmentPreferences != null && orderShipmentPreferences.size() > 0) {
             Iterator oshprefs = orderShipmentPreferences.iterator();
+
             while (oshprefs.hasNext()) {
                 GenericValue orderShipmentPreference = (GenericValue) oshprefs.next();
+
                 orderShipmentPreference.set("orderId", orderId);
                 orderShipmentPreference.set("carrierRoleTypeId", "CARRIER");
                 if (orderShipmentPreference.get("orderItemSeqId") == null || orderShipmentPreference.getString("orderItemSeqId").length() == 0) {
@@ -202,19 +225,24 @@ public class OrderServices {
 
         // set the order items
         Iterator oi = orderItems.iterator();
+
         while (oi.hasNext()) {
             GenericValue orderItem = (GenericValue) oi.next();
+
             orderItem.set("orderId", orderId);
             toBeStored.add(orderItem);
         }
 
         // set the item price info; NOTE: this must be after the orderItems are stored for referential integrity
         List orderItemPriceInfo = (List) context.get("orderItemPriceInfos");
+
         if (orderItemPriceInfo != null && orderItemPriceInfo.size() > 0) {
             Iterator oipii = orderItemPriceInfo.iterator();
+
             while (oipii.hasNext()) {
                 GenericValue oipi = (GenericValue) oipii.next();
                 Long oipiSeqId = delegator.getNextSeqId("OrderItemPriceInfo");
+
                 if (oipiSeqId == null) {
                     result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
                     result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get next sequence id for OrderItemPriceInfo, cannot create order.");
@@ -228,77 +256,86 @@ public class OrderServices {
 
         // set the roles
         final String[] USER_ORDER_ROLE_TYPES = {"END_USER_CUSTOMER", "SHIP_TO_CUSTOMER",
-                                                "BILL_TO_CUSTOMER", "PLACING_CUSTOMER"};
+                "BILL_TO_CUSTOMER", "PLACING_CUSTOMER"};
 
         for (int i = 0; i < USER_ORDER_ROLE_TYPES.length; i++) {
-            //make sure the party is in the role before adding it...
+            // make sure the party is in the role before adding it...
             toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap(
-                    "partyId", partyId,
-                    "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
+                        "partyId", partyId,
+                        "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
             toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap(
-                    "orderId", orderId,
-                    "partyId", partyId,
-                    "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
+                        "orderId", orderId,
+                        "partyId", partyId,
+                        "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
         }
 
         // set the affiliate
         String affiliateId = (String) context.get("affiliateId");
+
         if (UtilValidate.isNotEmpty(affiliateId)) {
             toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap(
-                    "orderId", orderId, "partyId", affiliateId, "roleTypeId", "AFFILIATE")));
+                        "orderId", orderId, "partyId", affiliateId, "roleTypeId", "AFFILIATE")));
         }
 
         // set the distributor
         String distributorId = (String) context.get("distributorId");
+
         if (UtilValidate.isNotEmpty(distributorId)) {
             toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap(
-                    "orderId", orderId, "partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));
+                        "orderId", orderId, "partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));
         }
 
         // set the order status
         toBeStored.add(delegator.makeValue("OrderStatus",
                 UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
-                        "statusId", "ORDER_ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
+                    "statusId", "ORDER_ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
 
         // set the order payment preferences
         List paymentMethods = (List) context.get("paymentMethods");
+
         if (paymentMethods != null && paymentMethods.size() > 0) {
             Iterator pmsIter = paymentMethods.iterator();
+
             while (pmsIter.hasNext()) {
                 GenericValue paymentMethod = (GenericValue) pmsIter.next();
-				GenericValue paymentPreference = delegator.makeValue("OrderPaymentPreference",
+                GenericValue paymentPreference = delegator.makeValue("OrderPaymentPreference",
                         UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-                                "orderId", orderId, "paymentMethodTypeId", paymentMethod.get("paymentMethodTypeId"),
-                                "paymentMethodId", paymentMethod.get("paymentMethodId")));
-				paymentPreference.set("statusId", "PAYMENT_NOT_AUTH");
+                            "orderId", orderId, "paymentMethodTypeId", paymentMethod.get("paymentMethodTypeId"),
+                            "paymentMethodId", paymentMethod.get("paymentMethodId")));
+
+                paymentPreference.set("statusId", "PAYMENT_NOT_AUTH");
                 toBeStored.add(paymentPreference);
             }
         }
 
         // set by payment method type ids as well
         List paymentMethodTypeIds = (List) context.get("paymentMethodTypeIds");
+
         if (paymentMethodTypeIds != null && paymentMethodTypeIds.size() > 0) {
 
             Iterator pmtsIter = paymentMethodTypeIds.iterator();
+
             while (pmtsIter.hasNext()) {
                 String paymentMethodTypeId = (String) pmtsIter.next();
 
                 toBeStored.add(delegator.makeValue("OrderPaymentPreference",
                         UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-                                "orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId)));
+                            "orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId)));
             }
         }
 
         try {
             boolean beganTransaction = TransactionUtil.begin();
+
             try {
-                //store line items, etc so that they will be there for the foreign key checks
+                // store line items, etc so that they will be there for the foreign key checks
                 delegator.storeAll(toBeStored);
 
-                //START inventory reservation
-                //decrement inventory available for each item, within the same transaction
+                // START inventory reservation
+                // decrement inventory available for each item, within the same transaction
                 List resErrorMessages = new LinkedList();
                 Iterator invDecItemIter = orderItems.iterator();
+
                 while (invDecItemIter.hasNext()) {
                     GenericValue orderItem = (GenericValue) invDecItemIter.next();
 
@@ -306,15 +343,18 @@ public class OrderServices {
                             orderItem.getString("productId"), orderItem.getDouble("quantity"),
                             orderItem.getString("orderId"), orderItem.getString("orderItemSeqId"),
                             userLogin, delegator, dispatcher);
+
                     if (inventoryNotReserved != null) {
-                        //if inventoryNotReserved is not 0.0 then that is the amount that it couldn't reserve
+                        // if inventoryNotReserved is not 0.0 then that is the amount that it couldn't reserve
                         GenericValue product = null;
+
                         try {
                             product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.getString("productId")));
                         } catch (GenericEntityException e) {
                             Debug.logError(e, "Error when looking up product in createOrder service, product failed inventory reservation");
                         }
                         String invErrMsg = "The product ";
+
                         if (product != null) {
                             invErrMsg += product.getString("productName");
                         }
@@ -329,7 +369,7 @@ public class OrderServices {
                     result.put(ModelService.ERROR_MESSAGE_LIST, resErrorMessages);
                     return result;
                 }
-                //END inventory reservation
+                // END inventory reservation
 
                 TransactionUtil.commit(beganTransaction);
 
@@ -355,8 +395,10 @@ public class OrderServices {
         GenericDelegator delegator = ctx.getDelegator();
         String orderId = (String) context.get("orderId");
         String statusId = (String) context.get("statusId");
+
         try {
             GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+
             if (orderHeader == null) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
                 result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change order status; order cannot be found.");
@@ -370,6 +412,7 @@ public class OrderServices {
             try {
                 Map statusFields = UtilMisc.toMap("statusId", orderHeader.getString("statusId"), "statusIdTo", statusId);
                 GenericValue statusChange = delegator.findByPrimaryKeyCache("StatusValidChange", statusFields);
+
                 if (statusChange == null) {
                     result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
                     result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change order status; status is not a valid change.");
@@ -382,12 +425,14 @@ public class OrderServices {
             }
             orderHeader.set("statusId", statusId);
             Map fields = new HashMap();
+
             fields.put("orderStatusId", delegator.getNextSeqId("OrderStatus").toString());
             fields.put("statusId", statusId);
             fields.put("orderId", orderId);
             fields.put("statusDatetime", UtilDateTime.nowTimestamp());
             GenericValue orderStatus = delegator.makeValue("OrderStatus", fields);
             List toBeStored = new ArrayList();
+
             toBeStored.add(orderHeader);
             toBeStored.add(orderStatus);
             delegator.storeAll(toBeStored);
@@ -408,10 +453,12 @@ public class OrderServices {
         String orderId = (String) context.get("orderId");
         String orderItemSeqId = (String) context.get("orderItemSeqId");
         String trackingNumber = (String) context.get("trackingNumber");
+
         if (orderItemSeqId == null || orderItemSeqId.length() == 0)
             orderItemSeqId = DataModelConstants.SEQ_ID_NA;
         try {
             GenericValue shipPref = delegator.findByPrimaryKey("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId));
+
             if (shipPref == null) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
                 result.put(ModelService.ERROR_MESSAGE, "ERROR: No order shipment preference found!");
@@ -448,8 +495,10 @@ public class OrderServices {
         }
 
         Map fields = UtilMisc.toMap("orderId", orderId, "partyId", partyId, "roleTypeId", roleTypeId);
+
         try {
             GenericValue value = delegator.makeValue("OrderRole", fields);
+
             delegator.create(value);
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -470,6 +519,7 @@ public class OrderServices {
         Map fields = UtilMisc.toMap("orderId", orderId, "partyId", partyId, "roleTypeId", roleTypeId);
 
         GenericValue testValue = null;
+
         try {
             testValue = delegator.findByPrimaryKey("OrderRole", fields);
         } catch (GenericEntityException e) {
@@ -485,6 +535,7 @@ public class OrderServices {
 
         try {
             GenericValue value = delegator.findByPrimaryKey("OrderRole", fields);
+
             value.remove();
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -499,6 +550,7 @@ public class OrderServices {
     public static Map emailOrder(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
+
         // This may be moved to a different place - email is a common task code this generic
         // implement me
         return result;
@@ -515,6 +567,7 @@ public class OrderServices {
 
         String prefId = null;
         Long newId = delegator.getNextSeqId("OrderPaymentPreference");
+
         if (newId == null)
             return ServiceUtil.returnError("ERROR: Could not create OrderPaymentPreference (id generation failure)");
         else
@@ -522,8 +575,10 @@ public class OrderServices {
 
         Map fields = UtilMisc.toMap("orderPaymentPreferenceId", prefId, "orderId", orderId, "paymentMethodTypeId",
                 paymentMethodTypeId, "paymentMethodId", paymentMethodId, "maxAmount", maxAmount);
+
         try {
             GenericValue v = delegator.makeValue("OrderPaymentPreference", fields);
+
             delegator.create(v);
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -540,6 +595,7 @@ public class OrderServices {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         String orderId = (String) context.get("orderId");
+
         try {
             GenericValue orderHeader = delegator.findByPrimaryKeyCache("OrderHeader", UtilMisc.toMap("orderId", orderId));
             Collection orderItems = orderHeader.getRelatedCache("OrderItem");
@@ -552,6 +608,7 @@ public class OrderServices {
             GenericValue billTo = orh.getBillToPerson();
             String affilId = orh.getAffiliateId();
             String distId = orh.getDistributorId();
+
             result.put("orderId", orderId);
             result.put("orderHeader", orderHeader);
             result.put("orderItems", orderItems);
@@ -579,6 +636,7 @@ public class OrderServices {
         String purpose[] = { "BILLING_LOCATION", "SHIPPING_LOCATION" };
         String outKey[] = { "billingAddress", "shippingAddress" };
         GenericValue orderHeader = null;
+
         try {
             orderHeader = delegator.findByPrimaryKeyCache("OrderHeader", UtilMisc.toMap("orderId", orderId));
             if (orderHeader != null)
@@ -596,8 +654,9 @@ public class OrderServices {
         for (int i = 0; i < purpose.length; i++) {
             try {
                 GenericValue orderContactMech = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderContactMech",
-                        UtilMisc.toMap("contactMechPurposeTypeId", purpose[i])));
+                            UtilMisc.toMap("contactMechPurposeTypeId", purpose[i])));
                 GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
+
                 if (contactMech != null) {
                     result.put(outKey[i], contactMech.getRelatedOne("PostalAddress"));
                 }
@@ -623,10 +682,12 @@ public class OrderServices {
 
         // Store the note.
         Map noteRes = org.ofbiz.commonapp.common.CommonServices.createNote(dctx, noteCtx);
+
         if (noteRes.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))
             return noteRes;
 
         String noteId = (String) noteRes.get("noteId");
+
         if (noteId == null || noteId.length() == 0)
             ServiceUtil.returnError("Problem creating the note, no noteId returned.");
 
@@ -634,6 +695,7 @@ public class OrderServices {
         try {
             Map fields = UtilMisc.toMap("orderId", orderId, "noteId", noteId);
             GenericValue v = delegator.makeValue("OrderHeaderNote", fields);
+
             delegator.create(v);
         } catch (GenericEntityException ee) {
             Debug.logError(ee);
@@ -671,34 +733,41 @@ public class OrderServices {
             Double itemAmount = (Double) itemAmountList.get(i);
             Double shippingAmount = (Double) itemShippingList.get(i);
             Double taxAmount = getTaxAmount(delegator, product, stateCode, itemAmount.doubleValue(), shippingAmount.doubleValue());
+
             itemAdjustments.add(UtilMisc.toList(delegator.makeValue("OrderAdjustment",
-                    UtilMisc.toMap("amount", taxAmount, "orderAdjustmentTypeId", "SALES_TAX", "comments", stateCode))));
+                        UtilMisc.toMap("amount", taxAmount, "orderAdjustmentTypeId", "SALES_TAX", "comments", stateCode))));
         }
         if (orderShippingAmount.doubleValue() > 0) {
             Double taxAmount = getTaxAmount(delegator, null, stateCode, 0.00, orderShippingAmount.doubleValue());
+
             orderAdjustments.add(delegator.makeValue("OrderAdjustment",
                     UtilMisc.toMap("amount", taxAmount, "orderAdjustmentTypeId", "SALES_TAX", "comments", stateCode)));
         }
 
         Map result = UtilMisc.toMap("orderAdjustments", orderAdjustments, "itemAdjustments", itemAdjustments);
+
         return result;
 
     }
 
     private static Double getTaxAmount(GenericDelegator delegator, GenericValue item, String stateCode, double itemAmount, double shippingAmount) {
         Map lookupMap = null;
+
         if (item != null)
             lookupMap = UtilMisc.toMap("stateProvinceGeoId", stateCode, "taxCategory", item.get("taxCategory"));
         else
             lookupMap = UtilMisc.toMap("stateProvinceGeoId", stateCode, "taxCategory", "_NA_");
         List orderList = UtilMisc.toList("-fromDate");
+
         try {
             List lookupList = delegator.findByAndCache("SimpleSalesTaxLookup", lookupMap, orderList);
-            if (lookupList.size() == 0 && !"_NA_".equals((String)lookupMap.get("taxCategory"))) {
+
+            if (lookupList.size() == 0 && !"_NA_".equals((String) lookupMap.get("taxCategory"))) {
                 lookupMap.put("taxCategory", "_NA_");
                 lookupList = delegator.findByAndCache("SimpleSalesTaxLookup", lookupMap, orderList);
             }
             List filteredList = EntityUtil.filterByDate(lookupList);
+
             if (filteredList.size() == 0) {
                 Debug.logWarning("SimpleTaxCalc: No State/TaxCategory pair found (with or without taxCat).");
                 return new Double(0.00);
@@ -706,6 +775,7 @@ public class OrderServices {
             GenericValue taxLookup = (GenericValue) filteredList.get(0);
             double taxRate = taxLookup.get("salesTaxPercentage") != null ? taxLookup.getDouble("salesTaxPercentage").doubleValue() : 0;
             double taxable = 0.00;
+
             if (item != null && (item.get("taxable") == null || (item.get("taxable") != null && item.getBoolean("taxable").booleanValue())))
                 taxable += itemAmount;
             if (taxLookup != null && (taxLookup.get("taxShipping") == null || (taxLookup.get("taxShipping") != null && taxLookup.getBoolean("taxShipping").booleanValue())))

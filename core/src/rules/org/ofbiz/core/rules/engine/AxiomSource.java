@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * <p><b>Title:</b> Axiom Source
  * <p><b>Description:</b> None
@@ -37,28 +38,30 @@ package org.ofbiz.core.rules.engine;
  * @version 1.0
  */
 public interface AxiomSource {
-  /**
-   * Returns all the axioms from a source.
-   *
-   * @return all the axioms from a source
-   */
-  AxiomEnumeration axioms();
-  /**
-   * Returns an enumeration of axioms. The parameter
-   * specifies the structure that is trying to prove itself.
-   * The implementor of this method can ignore this, or
-   * use it as an index.
-   * <p>
-   * An axiom has a chance of serving to prove the
-   * structure only if the axiom begins with a structure
-   * that matches the input structure with regard to its
-   * functor and its number or terms (or "arity"). An implementor
-   * can put this point to good purpose, only returning
-   * axioms that have some chance of providing a proof.
-   *
-   * @param Structure the structure that is trying to prove itself
-   *
-   * @return a collection of axioms
-   */
-  AxiomEnumeration axioms(Structure s);
+
+    /**
+     * Returns all the axioms from a source.
+     *
+     * @return all the axioms from a source
+     */
+    AxiomEnumeration axioms();
+
+    /**
+     * Returns an enumeration of axioms. The parameter
+     * specifies the structure that is trying to prove itself.
+     * The implementor of this method can ignore this, or
+     * use it as an index.
+     * <p>
+     * An axiom has a chance of serving to prove the
+     * structure only if the axiom begins with a structure
+     * that matches the input structure with regard to its
+     * functor and its number or terms (or "arity"). An implementor
+     * can put this point to good purpose, only returning
+     * axioms that have some chance of providing a proof.
+     *
+     * @param Structure the structure that is trying to prove itself
+     *
+     * @return a collection of axioms
+     */
+    AxiomEnumeration axioms(Structure s);
 }

@@ -24,12 +24,14 @@
 
 package org.ofbiz.core.service.jms;
 
+
 import java.util.*;
 import javax.naming.*;
 import javax.jms.*;
 
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * JmsQueueListener - Queue (P2P) Message Listener.
@@ -73,6 +75,7 @@ public class JmsQueueListener extends AbstractJmsListener {
         try {
             InitialContext jndi = JNDIContextFactory.getInitialContext(jndiServer);
             QueueConnectionFactory factory = (QueueConnectionFactory) jndi.lookup(jndiName);
+
             if (factory != null) {
                 con = factory.createQueueConnection(userName, password);
                 con.setExceptionListener(this);
@@ -80,6 +83,7 @@ public class JmsQueueListener extends AbstractJmsListener {
                 queue = (Queue) jndi.lookup(queueName);
                 if (queue != null) {
                     QueueReceiver receiver = session.createReceiver(queue);
+
                     receiver.setMessageListener(this);
                     con.start();
                     this.setConnected(true);

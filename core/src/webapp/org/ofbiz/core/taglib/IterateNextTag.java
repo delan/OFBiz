@@ -25,10 +25,12 @@
 
 package org.ofbiz.core.taglib;
 
+
 import java.io.*;
 import java.util.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
+
 
 /**
  * IterateNextTag - JSP Tag to get the next element of the IteratorTag.
@@ -54,7 +56,7 @@ public class IterateNextTag extends BodyTagSupport {
     }
 
     public void setExpandMap(String expMap) {
-        //defaults to false, so if anything but true will be false:
+        // defaults to false, so if anything but true will be false:
         expandMap = "true".equals(expMap);
     }
 
@@ -63,7 +65,7 @@ public class IterateNextTag extends BodyTagSupport {
     }
 
     public String getExpandMap() {
-        return expandMap ? "true":"false";
+        return expandMap ? "true" : "false";
     }
 
     public Object getElement() {
@@ -72,7 +74,7 @@ public class IterateNextTag extends BodyTagSupport {
 
     public int doStartTag() throws JspTagException {
         IteratorTag iteratorTag =
-                (IteratorTag) findAncestorWithClass(this, IteratorTag.class);
+            (IteratorTag) findAncestorWithClass(this, IteratorTag.class);
 
         if (iteratorTag == null)
             throw new JspTagException("IterateNextTag not inside IteratorTag.");
@@ -87,15 +89,18 @@ public class IterateNextTag extends BodyTagSupport {
 
         // get the next element from the iterator
         Object element = iterator.next();
+
         pageContext.setAttribute(name, element);
 
-        //expand a map element here if requested
+        // expand a map element here if requested
         if (expandMap) {
             Map tempMap = (Map) element;
             Iterator mapEntries = tempMap.entrySet().iterator();
+
             while (mapEntries.hasNext()) {
                 Map.Entry entry = (Map.Entry) mapEntries.next();
                 Object value = entry.getValue();
+
                 if (value == null) value = new String();
                 pageContext.setAttribute((String) entry.getKey(), value);
             }
@@ -114,8 +119,10 @@ public class IterateNextTag extends BodyTagSupport {
     public int doEndTag() {
         try {
             BodyContent body = getBodyContent();
+
             if (body != null) {
                 JspWriter out = body.getEnclosingWriter();
+
                 out.print(body.getString());
             }
         } catch (IOException e) {

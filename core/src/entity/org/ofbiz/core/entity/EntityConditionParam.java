@@ -24,9 +24,11 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.io.*;
 import java.util.*;
 import org.ofbiz.core.entity.model.*;
+
 
 /**
  * Represents a single parameter to be used in the preparedStatement
@@ -39,8 +41,8 @@ public class EntityConditionParam implements Serializable {
     protected ModelField modelField;
     protected Object fieldValue;
 
-    protected EntityConditionParam() { }
-    
+    protected EntityConditionParam() {}
+
     public EntityConditionParam(ModelField modelField, Object fieldValue) {
         if (modelField == null) {
             throw new IllegalArgumentException("modelField cannot be null");
@@ -48,14 +50,15 @@ public class EntityConditionParam implements Serializable {
         this.modelField = modelField;
         this.fieldValue = fieldValue;
     }
-    
+
     public ModelField getModelField() {
         return modelField;
     }
+
     public Object getFieldValue() {
         return fieldValue;
     }
-    
+
     public String toString() {
         return modelField.getColName() + "=" + fieldValue.toString();
     }

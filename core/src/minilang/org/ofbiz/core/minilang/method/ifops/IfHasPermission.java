@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.ifops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -36,6 +37,7 @@ import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 
+
 /**
  * Iff the user has the specified permission, process the sub-operations. Otherwise
  * process else operations if specified.
@@ -45,10 +47,10 @@ import org.ofbiz.core.security.*;
  *@version    1.0
  */
 public class IfHasPermission extends MethodOperation {
-    
+
     List subOps = new LinkedList();
     List elseSubOps = null;
-    
+
     String permission;
     String action;
 
@@ -56,10 +58,11 @@ public class IfHasPermission extends MethodOperation {
         super(element, simpleMethod);
         this.permission = element.getAttribute("permission");
         this.action = element.getAttribute("action");
-        
+
         SimpleMethod.readOperations(element, subOps, simpleMethod);
-        
+
         Element elseElement = UtilXml.firstChildElement(element, "else");
+
         if (elseElement != null) {
             elseSubOps = new LinkedList();
             SimpleMethod.readOperations(elseElement, elseSubOps, simpleMethod);
@@ -67,24 +70,26 @@ public class IfHasPermission extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        //if conditions fails, always return true; if a sub-op returns false 
+        // if conditions fails, always return true; if a sub-op returns false 
         // return false and stop, otherwise return true
-        //return true;
-        
-        //only run subOps if element is empty/null
+        // return true;
+
+        // only run subOps if element is empty/null
         boolean runSubOps = false;
-        
-        //if no user is logged in, treat as if the user does not have permission: do not run subops
+
+        // if no user is logged in, treat as if the user does not have permission: do not run subops
         GenericValue userLogin = methodContext.getUserLogin();
+
         if (userLogin != null) {
             Security security = methodContext.getSecurity();
+
             if (action != null && action.length() > 0) {
-                //run hasEntityPermission
+                // run hasEntityPermission
                 if (security.hasEntityPermission(permission, action, userLogin)) {
                     runSubOps = true;
                 }
             } else {
-                //run hasPermission
+                // run hasPermission
                 if (security.hasPermission(permission, userLogin)) {
                     runSubOps = true;
                 }

@@ -24,6 +24,7 @@
 
 package org.ofbiz.commonapp.accounting.payment;
 
+
 /**
  * PaymentGatewayException.java
  *
@@ -62,6 +63,5 @@ public class PaymentGatewayException extends org.ofbiz.core.util.GeneralExceptio
         super(nested);
 
     }
-
 
 }

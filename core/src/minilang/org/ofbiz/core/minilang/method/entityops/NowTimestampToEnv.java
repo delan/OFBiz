@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.entityops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
+
 
 /**
  * Creates a java.sql.Timestamp with the current date/time in it and puts it in the env

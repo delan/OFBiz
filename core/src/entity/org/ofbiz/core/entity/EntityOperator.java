@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity;
 
+
 /**
  * Encapsulates operations between entities and entity fields. This is a immutable class.
  *
@@ -34,7 +35,7 @@ package org.ofbiz.core.entity;
  *@version    1.0
  */
 public class EntityOperator implements java.io.Serializable {
-    
+
     public static final EntityOperator EQUALS = new EntityOperator("EQUALS", "=");
     public static final EntityOperator NOT_EQUAL = new EntityOperator("NOT_EQUAL", "<>");
     public static final EntityOperator LESS_THAN = new EntityOperator("LESS_THAN", "<");
@@ -47,32 +48,33 @@ public class EntityOperator implements java.io.Serializable {
     public static final EntityOperator AND = new EntityOperator("AND", "AND");
     public static final EntityOperator OR = new EntityOperator("OR", "OR");
     public static final EntityOperator LIKE = new EntityOperator("LIKE", "LIKE");
-    
+
     private String nameString;
     private String codeString;
-    
+
     public EntityOperator(String name, String code) {
         nameString = name;
         codeString = code;
     }
-    
+
     public String getCode() {
-        if (codeString==null)
+        if (codeString == null)
             return "null";
         else
             return codeString;
     }
-    
+
     public String getName() {
         return nameString;
     }
-    
+
     public String toString() {
         return codeString;
     }
-    
+
     public boolean equals(Object obj) {
         EntityOperator otherOper = (EntityOperator) obj;
+
         return this.getName().equals(otherOper.getName());
     }
 }

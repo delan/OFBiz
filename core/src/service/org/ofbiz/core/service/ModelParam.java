@@ -26,7 +26,9 @@
 
 package org.ofbiz.core.service;
 
+
 import java.util.*;
+
 
 /**
  * Generic Service Model Parameter
@@ -36,6 +38,7 @@ import java.util.*;
  *@version    1.0
  */
 public class ModelParam {
+
     /** Parameter name */
     public String name;
 

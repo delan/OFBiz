@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * InvalidRequester Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class InvalidRequester extends WfException {
 
-    public InvalidRequester() {
-    }
+    public InvalidRequester() {}
 
     public InvalidRequester(String msg) {
         super(msg);

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * TransitionNotAllowed Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class TransitionNotAllowed extends WfException {
 
-    public TransitionNotAllowed() {
-    }
+    public TransitionNotAllowed() {}
 
     public TransitionNotAllowed(String msg) {
         super(msg);

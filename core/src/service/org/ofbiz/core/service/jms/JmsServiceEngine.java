@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.service.jms;
 
+
 import java.util.*;
 import javax.jms.*;
 import javax.naming.*;
@@ -38,6 +39,7 @@ import org.ofbiz.core.service.engine.*;
 import org.ofbiz.core.util.*;
 
 import org.w3c.dom.*;
+
 
 /**
  * AbstractJMSEngine
@@ -57,13 +59,15 @@ public class JmsServiceEngine implements GenericEngine {
     }
 
     protected Element getServiceElement(ModelService modelService) throws GenericServiceException {
-       Element rootElement = null;
+        Element rootElement = null;
+
         try {
             rootElement = ServiceConfigUtil.getXmlRootElement();
         } catch (GenericConfigException e) {
             throw new GenericServiceException("Error getting JMS Service element", e);
         }
         Element serviceElement = UtilXml.firstChildElement(rootElement, "jms-service", "name", modelService.location);
+
         if (serviceElement == null) {
             throw new GenericServiceException("Cannot find an JMS service definition for the name [" + modelService.location + "] in the serviceengine.xml file");
         }
@@ -71,11 +75,13 @@ public class JmsServiceEngine implements GenericEngine {
     }
 
     protected Message makeMessage(Session session, ModelService modelService, Map context)
-            throws GenericServiceException, JMSException {
+        throws GenericServiceException, JMSException {
         List outParams = modelService.getParameterNames(ModelService.OUT_PARAM, false);
+
         if (outParams != null && outParams.size() > 0)
             throw new GenericServiceException("JMS service cannot have required OUT parameters; no parameters will be returned.");
         String xmlContext = null;
+
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Serializing Context --> " + context, module);
             xmlContext = XmlSerializer.serialize(context);
@@ -83,6 +89,7 @@ public class JmsServiceEngine implements GenericEngine {
             throw new GenericServiceException("Cannot serialize context.", e);
         }
         MapMessage message = session.createMapMessage();
+
         message.setString("serviceName", modelService.invoke);
         message.setString("serviceContext", xmlContext);
         return message;
@@ -91,6 +98,7 @@ public class JmsServiceEngine implements GenericEngine {
     protected List serverList(Element serviceElement) throws GenericServiceException {
         String sendMode = serviceElement.getAttribute("send-mode");
         List serverList = UtilXml.childElementList(serviceElement, "server");
+
         if (sendMode.equals("none")) {
             return new ArrayList();
         } else if (sendMode.equals("all")) {
@@ -111,6 +119,7 @@ public class JmsServiceEngine implements GenericEngine {
             InitialContext jndi = JNDIContextFactory.getInitialContext(serverName);
             TopicConnectionFactory factory = (TopicConnectionFactory) jndi.lookup(jndiName);
             TopicConnection con = factory.createTopicConnection(userName, password);
+
             con.setClientID(userName);
             con.start();
 
@@ -120,6 +129,7 @@ public class JmsServiceEngine implements GenericEngine {
 
             // create/send the message
             Message message = makeMessage(session, modelService, context);
+
             publisher.publish(message);
             if (Debug.verboseOn()) Debug.logVerbose("Sent JMS Message to " + topicName, module);
 
@@ -150,6 +160,7 @@ public class JmsServiceEngine implements GenericEngine {
             InitialContext jndi = JNDIContextFactory.getInitialContext(serverName);
             QueueConnectionFactory factory = (QueueConnectionFactory) jndi.lookup(jndiName);
             QueueConnection con = factory.createQueueConnection(userName, password);
+
             con.setClientID(userName);
             con.start();
 
@@ -159,6 +170,7 @@ public class JmsServiceEngine implements GenericEngine {
 
             // create/send the message
             Message message = makeMessage(session, modelService, context);
+
             sender.send(message);
             if (Debug.verboseOn()) Debug.logVerbose("Sent JMS Message to " + queueName, module);
 
@@ -188,12 +200,14 @@ public class JmsServiceEngine implements GenericEngine {
             InitialContext jndi = JNDIContextFactory.getInitialContext(serverName);
             XAQueueConnectionFactory factory = (XAQueueConnectionFactory) jndi.lookup(jndiName);
             XAQueueConnection con = factory.createXAQueueConnection(userName, password);
+
             con.setClientID(userName);
             con.start();
 
             // enlist the XAResource
             XAQueueSession session = con.createXAQueueSession();
             XAResource resource = session.getXAResource();
+
             if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE)
                 TransactionUtil.enlistResource(resource);
 
@@ -203,6 +217,7 @@ public class JmsServiceEngine implements GenericEngine {
 
             // create/send the message
             Message message = makeMessage(session, modelService, context);
+
             sender.send(message);
 
             if (TransactionUtil.getStatus() != TransactionUtil.STATUS_ACTIVE)
@@ -237,9 +252,11 @@ public class JmsServiceEngine implements GenericEngine {
 
         Map result = new HashMap();
         Iterator i = serverList.iterator();
+
         while (i.hasNext()) {
             Element server = (Element) i.next();
             String serverType = server.getAttribute("type");
+
             if (serverType.equals("topic"))
                 result.putAll(runTopic(modelService, context, server));
             else if (serverType.equals("queue"))
@@ -280,8 +297,9 @@ public class JmsServiceEngine implements GenericEngine {
      * @throws GenericServiceException
      */
     public void runAsync(ModelService modelService, Map context, GenericRequester requester, boolean persist)
-            throws GenericServiceException {
+        throws GenericServiceException {
         Map result = run(modelService, context);
+
         requester.receiveResult(result);
     }
 

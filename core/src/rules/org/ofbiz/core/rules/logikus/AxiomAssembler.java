@@ -1,8 +1,10 @@
 package org.ofbiz.core.rules.logikus;
 
+
 import java.util.*;
 import org.ofbiz.core.rules.engine.*;
 import org.ofbiz.core.rules.parse.*;
+
 
 /**
  * <p><b>Title:</b> Axiom Assembler
@@ -36,19 +38,21 @@ import org.ofbiz.core.rules.parse.*;
  * @version 1.0
  */
 public class AxiomAssembler extends Assembler {
-  /**
-   * Pops all of the structures on the stack, builds a rule
-   * from them, and pushes it.
-   *
-   * @param  Assembly  the assembly to work on
-   */
-  public void workOn(Assembly a) {
-    Stack s = a.getStack();
-    Structure[] sa = new Structure[s.size()];
-    for (int i = 0; i < s.size(); i++) {
-      sa[i] = (Structure) s.get(i);
+
+    /**
+     * Pops all of the structures on the stack, builds a rule
+     * from them, and pushes it.
+     *
+     * @param  Assembly  the assembly to work on
+     */
+    public void workOn(Assembly a) {
+        Stack s = a.getStack();
+        Structure[] sa = new Structure[s.size()];
+
+        for (int i = 0; i < s.size(); i++) {
+            sa[i] = (Structure) s.get(i);
+        }
+        s.removeAllElements();
+        a.push(new Rule(sa));
     }
-    s.removeAllElements();
-    a.push(new Rule(sa));
-  }
 }

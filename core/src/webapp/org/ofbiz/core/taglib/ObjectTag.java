@@ -25,10 +25,12 @@
 
 package org.ofbiz.core.taglib;
 
+
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * ObjectTag - Loads an object from the PageContext.
@@ -74,6 +76,7 @@ public class ObjectTag extends TagSupport {
 
     public int doStartTag() throws JspTagException {
         String realAttrName = property;
+
         if (UtilValidate.isEmpty(realAttrName)) {
             realAttrName = name;
         }
@@ -90,7 +93,4 @@ public class ObjectTag extends TagSupport {
         return EVAL_PAGE;
     }
 }
-
-
-
 

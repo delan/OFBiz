@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 import java.util.*;
 import java.sql.Timestamp;
 
@@ -32,6 +33,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Workflow Services - 'Services' and 'Workers' for interaction with Workflow API
@@ -54,6 +56,7 @@ public class WorkflowServices {
         String workEffortId = (String) context.get("workEffortId");
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+
         if (!hasPermission(security, workEffortId, userLogin)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this workdlow");
@@ -61,6 +64,7 @@ public class WorkflowServices {
         }
         try {
             WfProcess process = WfFactory.getWfProcess(delegator, workEffortId);
+
             process.abort();
         } catch (WfException we) {
             we.printStackTrace();
@@ -79,6 +83,7 @@ public class WorkflowServices {
         String newState = (String) context.get("newState");
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+
         if (!hasPermission(security, workEffortId, userLogin)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
@@ -86,6 +91,7 @@ public class WorkflowServices {
         }
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
+
             client.setState(workEffortId, newState);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
@@ -105,6 +111,7 @@ public class WorkflowServices {
 
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
+
             result.put("activityState", client.getState(workEffortId));
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
@@ -124,6 +131,7 @@ public class WorkflowServices {
 
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
+
             result.put("activityContext", client.getContext(workEffortId));
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
@@ -148,6 +156,7 @@ public class WorkflowServices {
         }
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+
         if (!hasPermission(security, workEffortId, userLogin)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
@@ -155,6 +164,7 @@ public class WorkflowServices {
         }
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
+
             client.appendContext(workEffortId, appendContext);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
@@ -174,11 +184,13 @@ public class WorkflowServices {
         String partyId = (String) context.get("partyId");
         String roleType = (String) context.get("roleTypeId");
         boolean removeOldAssign = false;
+
         if (context.containsKey("removeOldAssignments")) {
             removeOldAssign = ((String) context.get("removeOldAssignments")).equals("true") ? true : false;
         }
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+
         if (!hasPermission(security, workEffortId, userLogin)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
@@ -186,6 +198,7 @@ public class WorkflowServices {
         }
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
+
             client.assign(workEffortId, partyId, roleType, null, removeOldAssign ? false : true);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
@@ -206,6 +219,7 @@ public class WorkflowServices {
 
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
+
             client.acceptAndStart(workEffortId, partyId, roleType, fromDate);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
@@ -227,6 +241,7 @@ public class WorkflowServices {
 
         try {
             WorkflowClient client = new WorkflowClient(ctx);
+
             client.delegateAndAccept(workEffortId, "_NA_", roleType, fromDate, partyId, roleType, fromDate, true);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
@@ -249,6 +264,7 @@ public class WorkflowServices {
         Map actResults = (Map) context.get("result");
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+
         if (!hasPermission(security, workEffortId, userLogin)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this assignment");
@@ -257,6 +273,7 @@ public class WorkflowServices {
 
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
+
             client.complete(workEffortId, partyId, roleType, fromDate, actResults);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
@@ -278,6 +295,7 @@ public class WorkflowServices {
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
             String state = client.getState(workEffortId);
+
             if (state.startsWith("open")) {
                 dispatcher.runSync(limitService, limitContext);
             }
@@ -291,7 +309,6 @@ public class WorkflowServices {
         }
         return result;
     }
-
 
     // -------------------------------------------------------------------
     // Service 'Worker' Methods
@@ -310,6 +327,7 @@ public class WorkflowServices {
         } else {
             String partyId = userLogin.getString("partyId");
             List expr = new ArrayList();
+
             expr.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
             expr.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"));
             expr.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
@@ -358,9 +376,11 @@ public class WorkflowServices {
     public static GenericValue getOwner(GenericDelegator delegator, String workEffortId) {
         try {
             GenericValue we = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
+
             if (we != null && we.getString("parentWorkEffortId") == null) {
                 Collection c = delegator.findByAnd("WorkEffortPartyAssignment",
-                                                   UtilMisc.toMap("workEffortId", workEffortId, "roleTypeId", "WF_OWNER"));
+                        UtilMisc.toMap("workEffortId", workEffortId, "roleTypeId", "WF_OWNER"));
+
                 return (GenericValue) c.iterator().next();
             } else {
                 return getOwner(delegator, we.getString("parentWorkEffortId"));
@@ -372,7 +392,4 @@ public class WorkflowServices {
     }
 
 }
-
-
-
 

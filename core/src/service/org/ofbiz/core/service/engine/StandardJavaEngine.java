@@ -25,11 +25,13 @@
 
 package org.ofbiz.core.service.engine;
 
+
 import java.util.*;
 import java.lang.reflect.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
+
 
 /**
  * Standard Java Static Method Service Engine
@@ -66,6 +68,7 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
      */
     public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
         Object result = serviceInvoker(modelService, context);
+
         if (result == null || !(result instanceof Map))
             throw new GenericServiceException("Service did not return expected result");
         return (Map) result;
@@ -75,6 +78,7 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
     private Object serviceInvoker(ModelService modelService, Map context) throws GenericServiceException {
         // static java service methods should be: public Map methodName(DispatchContext dctx, Map context)
         DispatchContext dctx = dispatcher.getLocalContext(loader);
+
         if (modelService == null)
             Debug.logError("ERROR: Null Model Service.", module);
         if (dctx == null)
@@ -82,8 +86,8 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
         if (context == null)
             Debug.logError("ERROR: Null Service Context.", module);
 
-        Class[] paramTypes = new Class[]{DispatchContext.class, Map.class};
-        Object[] params = new Object[]{dctx, context};
+        Class[] paramTypes = new Class[] {DispatchContext.class, Map.class};
+        Object[] params = new Object[] {dctx, context};
         Object result = null;
 
         // check the package and method names
@@ -92,6 +96,7 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
 
         // get the classloader to use
         ClassLoader cl = null;
+
         if (loader == null)
             cl = this.getClass().getClassLoader();
         else
@@ -100,6 +105,7 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
         try {
             Class c = cl.loadClass(modelService.location);
             Method m = c.getMethod(modelService.invoke, paramTypes);
+
             result = m.invoke(null, params);
         } catch (ClassNotFoundException cnfe) {
             throw new GenericServiceException("Cannot find service location", cnfe);

@@ -24,7 +24,9 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.io.*;
+
 
 /**
  * GenericCreateException

@@ -24,7 +24,9 @@
 
 package org.ofbiz.commonapp.accounting.payment;
 
+
 import org.ofbiz.core.entity.GenericValue;
+
 
 /**
  * EFTPaymentInfo.java

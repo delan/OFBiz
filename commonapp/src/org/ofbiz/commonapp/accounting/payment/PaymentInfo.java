@@ -24,12 +24,14 @@
 
 package org.ofbiz.commonapp.accounting.payment;
 
+
 import java.util.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.commonapp.order.order.*;
 import org.ofbiz.commonapp.party.contact.*;
+
 
 /**
  * PaymentInfo.java
@@ -62,11 +64,10 @@ public class PaymentInfo {
     private String currency;
 
     /** Creates a new instance of PaymentInfo */
-    public PaymentInfo() {
-    }
+    public PaymentInfo() {}
 
     public void fill(GenericValue address, double amount, GenericValue billToPerson,
-            String emailAddress, GenericValue orderHeader, GenericValue paymentPreference) {
+        String emailAddress, GenericValue orderHeader, GenericValue paymentPreference) {
         this.address = address;
         this.billToPerson = billToPerson;
         this.currency = currency;
@@ -174,14 +175,13 @@ public class PaymentInfo {
         this.currency = currency;
     }
 
-
     /**
      * Get all the payments for a given order that have a given status
      * @param orderHeader -- the OrderHeader of the order
      * @payam statusId -- which status to use
      */
     public static List getPaymentsForOrder(GenericValue orderHeader, String statusId)
-            throws GenericEntityException {
+        throws GenericEntityException {
         LinkedList payments = new LinkedList();
         String currency = UtilProperties.getPropertyValue("payment.properties", "defaultCurrency", "USD");
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
@@ -190,35 +190,41 @@ public class PaymentInfo {
 
         // Contact Info
         Collection emails = ContactHelper.getContactMech(billToPerson.getRelatedOne("Party"), "PRIMARY_EMAIL", "EMAIL_ADDRESS", false);
+
         if (emails != null && emails.size() > 0) {
             GenericValue em = (GenericValue) emails.iterator().next();
+
             email = em.getString("infoString");
         }
 
         Collection paymentPreferences = orderHeader.getRelatedByAnd("OrderPaymentPreference",
                 UtilMisc.toMap("statusId", statusId));
+
         for (Iterator iter = paymentPreferences.iterator(); iter.hasNext();) {
             PaymentInfo payment = null;
             GenericValue paymentPreference = (GenericValue) iter.next();
             GenericValue paymentMethod = paymentPreference.getRelatedOne("PaymentMethod");
             GenericValue address = null;
+
             if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD")) {
                 GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");
+
                 address = creditCard.getRelatedOne("PostalAddress");
                 payment = new CreditCardPaymentInfo(creditCard);
             } else if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("EFT_ACCOUNT")) {
                 GenericValue eftAcct = paymentMethod.getRelatedOne("EFT_ACCOUNT");
+
                 address = eftAcct.getRelatedOne("PostalAddress");
                 payment = new EFTPaymentInfo(eftAcct);
 
             }
             payment.setCurrency(currency);
             payment.fill(address,
-                    orh.getOrderGrandTotal(),
-                    billToPerson,
-                    email,
-                    orderHeader,
-                    paymentPreference);
+                orh.getOrderGrandTotal(),
+                billToPerson,
+                email,
+                orderHeader,
+                paymentPreference);
             payments.add(payment);
         }
         return payments;

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2002/02/14 05:16:58  jonesde
+ * Moved datafile and minilang to separate src trees and jars
+ *
  * Revision 1.2  2002/02/02 19:50:30  azeneski
  * formatting changes (120cols)
  *
@@ -12,9 +15,11 @@
 
 package org.ofbiz.core.datafile;
 
+
 import java.io.*;
 
 import org.ofbiz.core.util.GeneralException;
+
 
 /**
  * <p><b>Title:</b> DataFileException

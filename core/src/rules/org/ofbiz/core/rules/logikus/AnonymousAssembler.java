@@ -1,7 +1,9 @@
 package org.ofbiz.core.rules.logikus;
 
+
 import org.ofbiz.core.rules.engine.*;
 import org.ofbiz.core.rules.parse.*;
+
 
 /**
  * <p><b>Title:</b> Anonymous Assembler
@@ -34,12 +36,13 @@ import org.ofbiz.core.rules.parse.*;
  * @version 1.0
  */
 public class AnonymousAssembler extends Assembler {
-  /**
-   * Pushes an anonymous variable onto an assembly's stack.
-   *
-   * @param  Assembly  the assembly to work on
-   */
-  public void workOn(Assembly a) {
-    a.push(new Anonymous());
-  }
+
+    /**
+     * Pushes an anonymous variable onto an assembly's stack.
+     *
+     * @param  Assembly  the assembly to work on
+     */
+    public void workOn(Assembly a) {
+        a.push(new Anonymous());
+    }
 }

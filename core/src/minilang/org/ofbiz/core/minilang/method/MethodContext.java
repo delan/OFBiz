@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -36,6 +37,7 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
 
+
 /**
  * A single operation, does the specified operation on the given field
  *
@@ -47,9 +49,9 @@ import org.ofbiz.core.util.*;
 public class MethodContext {
     public static final int EVENT = 1;
     public static final int SERVICE = 2;
-    
+
     int methodType;
-    
+
     Map env = new HashMap();
     Map parameters;
     ClassLoader loader;
@@ -57,7 +59,7 @@ public class MethodContext {
     GenericDelegator delegator;
     Security security;
     GenericValue userLogin;
-    
+
     HttpServletRequest request = null;
     HttpServletResponse response = null;
 
@@ -93,28 +95,83 @@ public class MethodContext {
             this.loader = Thread.currentThread().getContextClassLoader();
     }
 
-    public int getMethodType() { return this.methodType; }
-    public Object getEnv(String key) { return this.env.get(key); }
-    public void putEnv(String key, Object value) { this.env.put(key, value); }
-    public void putAllEnv(Map values) { this.env.putAll(values); }
-    public Object removeEnv(String key) { return this.env.remove(key); }
-    public Iterator getEnvEntryIterator() { return this.env.entrySet().iterator(); }
+    public int getMethodType() {
+        return this.methodType;
+    }
 
-    public Object getParameter(String key) { return this.parameters.get(key); }
-    public void putParameter(String key, Object value) { this.parameters.put(key, value); }
-    public Map getParameters() { return this.parameters; }
-    
-    public ClassLoader getLoader() { return this.loader; }
-    public LocalDispatcher getDispatcher() { return this.dispatcher; }
-    public GenericDelegator getDelegator() { return this.delegator; }
-    public Security getSecurity() { return this.security; }
-    public HttpServletRequest getRequest() { return this.request; }
-    public HttpServletResponse getResponse() { return this.response; }
+    public Object getEnv(String key) {
+        return this.env.get(key);
+    }
 
-    public GenericValue getUserLogin() { return this.userLogin; }
-    public void setUserLogin(GenericValue userLogin) { this.userLogin = userLogin; }
-    
-    public Object getResult(String key) { return this.results.get(key); }
-    public void putResult(String key, Object value) { this.results.put(key, value); }
-    public Map getResults() { return this.results; }
+    public void putEnv(String key, Object value) {
+        this.env.put(key, value);
+    }
+
+    public void putAllEnv(Map values) {
+        this.env.putAll(values);
+    }
+
+    public Object removeEnv(String key) {
+        return this.env.remove(key);
+    }
+
+    public Iterator getEnvEntryIterator() {
+        return this.env.entrySet().iterator();
+    }
+
+    public Object getParameter(String key) {
+        return this.parameters.get(key);
+    }
+
+    public void putParameter(String key, Object value) {
+        this.parameters.put(key, value);
+    }
+
+    public Map getParameters() {
+        return this.parameters;
+    }
+
+    public ClassLoader getLoader() {
+        return this.loader;
+    }
+
+    public LocalDispatcher getDispatcher() {
+        return this.dispatcher;
+    }
+
+    public GenericDelegator getDelegator() {
+        return this.delegator;
+    }
+
+    public Security getSecurity() {
+        return this.security;
+    }
+
+    public HttpServletRequest getRequest() {
+        return this.request;
+    }
+
+    public HttpServletResponse getResponse() {
+        return this.response;
+    }
+
+    public GenericValue getUserLogin() {
+        return this.userLogin;
+    }
+
+    public void setUserLogin(GenericValue userLogin) {
+        this.userLogin = userLogin;
+    }
+
+    public Object getResult(String key) {
+        return this.results.get(key);
+    }
+
+    public void putResult(String key, Object value) {
+        this.results.put(key, value);
+    }
+
+    public Map getResults() {
+        return this.results;
+    }
 }

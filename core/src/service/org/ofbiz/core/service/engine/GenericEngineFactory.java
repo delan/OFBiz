@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.service.engine;
 
+
 import java.util.*;
 import java.lang.reflect.*;
 import org.w3c.dom.Element;
@@ -34,6 +35,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.config.*;
 import org.ofbiz.core.service.*;
+
 
 /**
  * Generic Engine Factory
@@ -46,21 +48,23 @@ import org.ofbiz.core.service.*;
 public class GenericEngineFactory {
 
     protected static Map engines = new HashMap();
-    
+
     /** Gets the GenericEngine instance that corresponds to given the name
      *@param engineName Name of the engine
      *@return GenericEngine that corresponds to the engineName
      */
     public static GenericEngine getGenericEngine(String engineName, ServiceDispatcher dispatcher)
-            throws GenericServiceException {
-        
+        throws GenericServiceException {
+
         Element rootElement = null;
+
         try {
             rootElement = ServiceConfigUtil.getXmlRootElement();
         } catch (GenericConfigException e) {
             throw new GenericServiceException("Error getting Service Engine XML root element", e);
         }
         Element engineElement = UtilXml.firstChildElement(rootElement, "engine", "name", engineName);
+
         if (engineElement == null) {
             throw new GenericServiceException("Cannot find an engine definition for the engine name [" + engineName + "] in the serviceengine.xml file");
         }
@@ -68,15 +72,18 @@ public class GenericEngineFactory {
         String className = engineElement.getAttribute("class");
 
         GenericEngine engine = (GenericEngine) engines.get(engineName);
+
         if (engine == null) {
             synchronized (GenericEngineFactory.class) {
                 engine = (GenericEngine) engines.get(engineName);
                 if (engine == null) {
-                    Class[] paramTypes = new Class[]{ServiceDispatcher.class};
-                    Object[] params = new Object[]{dispatcher};
+                    Class[] paramTypes = new Class[] {ServiceDispatcher.class};
+                    Object[] params = new Object[] {dispatcher};
+
                     try {
                         Class c = Class.forName(className);
                         Constructor cn = c.getConstructor(paramTypes);
+
                         engine = (GenericEngine) cn.newInstance(params);
                     } catch (Exception e) {
                         throw new GenericServiceException(e.getMessage(), e);
@@ -87,7 +94,7 @@ public class GenericEngineFactory {
                 }
             }
         }
-        
+
         return engine;
     }
 }

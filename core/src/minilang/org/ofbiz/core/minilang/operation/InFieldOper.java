@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.operation;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 
 import org.ofbiz.core.minilang.*;
+
 
 /**
  * A MakeInStringOperation that inserts the value of an in-field
@@ -51,6 +53,7 @@ public class InFieldOper extends MakeInStringOperation {
 
     public String exec(Map inMap, List messages, Locale locale, ClassLoader loader) {
         Object obj = inMap.get(fieldName);
+
         if (obj == null) {
             Debug.logWarning("[SimpleMapProcessor.InFieldOper.exec] In field " + fieldName + " not found, not appending anything");
             return null;

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity;
 
+
 /**
  * Distributed Cache Clear interface definition
  *
@@ -32,12 +33,12 @@ package org.ofbiz.core.entity;
  *@version    1.0
  */
 public interface DistributedCacheClear {
-    
+
     public void setDelegator(GenericDelegator delegator);
-    
+
     public void distributedClearCacheLine(GenericValue value);
-    
+
     public void distributedClearCacheLineFlexible(GenericEntity dummyPK);
-    
+
     public void distributedClearCacheLine(GenericPK primaryKey);
 }

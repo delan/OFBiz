@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.pseudotag;
 
+
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -31,6 +32,7 @@ import javax.servlet.jsp.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * <p>InputValue Pseudo-Tag
@@ -50,91 +52,96 @@ public class InputValue {
     public InputValue(PageContext pageContextInternal) {
         this.pageContextInternal = pageContextInternal;
     }
-    
+
     public void run(String field, String entityAttr)
-            throws IOException {
+        throws IOException {
         run(field, null, entityAttr, null, null, null, pageContextInternal);
     }
-    
+
     public void run(String field, String entityAttr, String tryEntityAttr)
-            throws IOException {
+        throws IOException {
         run(field, null, entityAttr, tryEntityAttr, null, null, pageContextInternal);
     }
-    
-    public void run(String field, String entityAttr, String tryEntityAttr, 
-            String fullattrsStr) throws IOException {
+
+    public void run(String field, String entityAttr, String tryEntityAttr,
+        String fullattrsStr) throws IOException {
         run(field, null, entityAttr, tryEntityAttr, null, fullattrsStr, pageContextInternal);
     }
-    
+
     /** Run the InputValue Pseudo-Tag, all fields except field, and entityAttr can be null */
-    public void run(String field, String param, String entityAttr, String tryEntityAttr, 
-            String defaultStr, String fullattrsStr) throws IOException {
+    public void run(String field, String param, String entityAttr, String tryEntityAttr,
+        String defaultStr, String fullattrsStr) throws IOException {
         run(field, param, entityAttr, tryEntityAttr, defaultStr, fullattrsStr, pageContextInternal);
     }
-    
+
     /* --- STATIC METHODS --- */
-    
-    public static void run(String field, String entityAttr, 
-            PageContext pageContext) throws IOException {
+
+    public static void run(String field, String entityAttr,
+        PageContext pageContext) throws IOException {
         run(field, null, entityAttr, null, null, null, pageContext);
     }
-    
-    public static void run(String field, String entityAttr, String tryEntityAttr, 
-            PageContext pageContext) throws IOException {
+
+    public static void run(String field, String entityAttr, String tryEntityAttr,
+        PageContext pageContext) throws IOException {
         run(field, null, entityAttr, tryEntityAttr, null, null, pageContext);
     }
-    
-    public static void run(String field, String entityAttr, String tryEntityAttr, 
-            String fullattrsStr, PageContext pageContext) throws IOException {
+
+    public static void run(String field, String entityAttr, String tryEntityAttr,
+        String fullattrsStr, PageContext pageContext) throws IOException {
         run(field, null, entityAttr, tryEntityAttr, null, fullattrsStr, pageContext);
     }
-    
+
     /** Run the InputValue Pseudo-Tag, all fields except field, entityAttr, and pageContext can be null */
-    public static void run(String field, String param, String entityAttr, String tryEntityAttr, 
-            String defaultStr, String fullattrsStr, PageContext pageContext) throws IOException {
+    public static void run(String field, String param, String entityAttr, String tryEntityAttr,
+        String defaultStr, String fullattrsStr, PageContext pageContext) throws IOException {
         if (field == null || entityAttr == null || pageContext == null) {
             throw new RuntimeException("Required parameter (field or entityAttr or pageContext) missing");
         }
-        
+
         if (defaultStr == null) defaultStr = "";
         String inputValue = null;
         boolean tryEntity = true;
         boolean fullattrs = false;
 
         String paramName = param;
+
         if (paramName == null || paramName.length() == 0)
             paramName = field;
 
         Boolean tempBool = null;
+
         if (tryEntityAttr != null)
             tempBool = (Boolean) pageContext.findAttribute(tryEntityAttr);
         if (tempBool != null)
             tryEntity = tempBool.booleanValue();
 
-        //if anything but true, it will be false, ie default is false
+        // if anything but true, it will be false, ie default is false
         fullattrs = "true".equals(fullattrsStr);
 
         if (tryEntity) {
             Object entTemp = pageContext.findAttribute(entityAttr);
+
             if (entTemp != null) {
                 if (entTemp instanceof GenericValue) {
                     GenericValue entity = (GenericValue) entTemp;
                     Object fieldVal = entity.get(field);
+
                     if (fieldVal != null)
                         inputValue = fieldVal.toString();
                 } else if (entTemp instanceof Map) {
                     Map map = (Map) entTemp;
                     Object fieldVal = map.get(field);
+
                     if (fieldVal != null)
                         inputValue = fieldVal.toString();
-                } //else do nothing
+                } // else do nothing
             }
         } else {
-        //Current code will only get a parameter if we are not trying to get
-        // fields from the entity/map
-        //OLD WAY:
-        //if nothing found in entity, or if not checked, try a parameter
-        //if (inputValue == null) {
+            // Current code will only get a parameter if we are not trying to get
+            // fields from the entity/map
+            // OLD WAY:
+            // if nothing found in entity, or if not checked, try a parameter
+            // if (inputValue == null) {
             inputValue = pageContext.getRequest().getParameter(paramName);
         }
 
@@ -144,7 +151,7 @@ public class InputValue {
         if (fullattrs) {
             inputValue = UtilFormatOut.replaceString(inputValue, "\"", "&quot;");
             pageContext.getOut().print("name=\"" + paramName + "\" value=\"" +
-                    inputValue + "\"");
+                inputValue + "\"");
         } else {
             pageContext.getOut().print(inputValue);
         }

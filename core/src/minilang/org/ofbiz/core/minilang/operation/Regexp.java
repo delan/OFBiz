@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.operation;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -34,6 +35,7 @@ import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+
 
 /**
  * Validates the current field using a regular expression
@@ -62,6 +64,7 @@ public class Regexp extends SimpleMapOperation {
         Object obj = inMap.get(fieldName);
 
         String fieldValue = null;
+
         try {
             fieldValue = (String) ObjectType.simpleTypeConvert(obj, "String", null, locale);
         } catch (GeneralException e) {

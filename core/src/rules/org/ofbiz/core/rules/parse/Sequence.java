@@ -1,6 +1,8 @@
 package org.ofbiz.core.rules.parse;
 
+
 import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Sequence
@@ -35,80 +37,89 @@ import java.util.*;
  * @version 1.0
  */
 public class Sequence extends CollectionParser {
-  /**
-   * Constructs a nameless sequence.
-   */
-  public Sequence() {
-  }
-  /**
-   * Constructs a sequence with the given name.
-   *
-   * @param    name    a name to be known by
-   */
-  public Sequence(String name) {
-    super(name);
-  }
-  /**
-   * Accept a "visitor" and a collection of previously visited
-   * parsers.
-   *
-   * @param   pv   the visitor to accept
-   *
-   * @param   visited   a collection of previously visited parsers
-   */
-  public void accept(ParserVisitor pv, List visited) {
-    pv.visitSequence(this, visited);
-  }
-  /**
-   * Given a set of assemblies, this method matches this
-   * sequence against all of them, and returns a new set
-   * of the assemblies that result from the matches.
-   *
-   * @return   a List of assemblies that result from
-   *           matching against a beginning set of assemblies
-   *
-   * @param   in   a vector of assemblies to match against
-   *
-   */
-  public List match(List in) {
-    List out = in;
-    Enumeration e = Collections.enumeration(subparsers);
-    while (e.hasMoreElements()) {
-      Parser p = (Parser) e.nextElement();
-      out = p.matchAndAssemble(out);
-      if (out.isEmpty()) {
+
+    /**
+     * Constructs a nameless sequence.
+     */
+    public Sequence() {}
+
+    /**
+     * Constructs a sequence with the given name.
+     *
+     * @param    name    a name to be known by
+     */
+    public Sequence(String name) {
+        super(name);
+    }
+
+    /**
+     * Accept a "visitor" and a collection of previously visited
+     * parsers.
+     *
+     * @param   pv   the visitor to accept
+     *
+     * @param   visited   a collection of previously visited parsers
+     */
+    public void accept(ParserVisitor pv, List visited) {
+        pv.visitSequence(this, visited);
+    }
+
+    /**
+     * Given a set of assemblies, this method matches this
+     * sequence against all of them, and returns a new set
+     * of the assemblies that result from the matches.
+     *
+     * @return   a List of assemblies that result from
+     *           matching against a beginning set of assemblies
+     *
+     * @param   in   a vector of assemblies to match against
+     *
+     */
+    public List match(List in) {
+        List out = in;
+        Enumeration e = Collections.enumeration(subparsers);
+
+        while (e.hasMoreElements()) {
+            Parser p = (Parser) e.nextElement();
+
+            out = p.matchAndAssemble(out);
+            if (out.isEmpty()) {
+                return out;
+            }
+        }
         return out;
-      }
     }
-    return out;
-  }
-  /**
-   * Create a random expansion for each parser in this
-   * sequence and return a collection of all these expansions.
-   */
-  protected List randomExpansion(int maxDepth, int depth) {
-    List v = new ArrayList();
-    Enumeration e = Collections.enumeration(subparsers);
-    while (e.hasMoreElements()) {
-      Parser p = (Parser) e.nextElement();
-      List w = p.randomExpansion(maxDepth, depth++);
-      Enumeration f = Collections.enumeration(w);
-      while (f.hasMoreElements()) {
-        v.add(f.nextElement());
-      }
+
+    /**
+     * Create a random expansion for each parser in this
+     * sequence and return a collection of all these expansions.
+     */
+    protected List randomExpansion(int maxDepth, int depth) {
+        List v = new ArrayList();
+        Enumeration e = Collections.enumeration(subparsers);
+
+        while (e.hasMoreElements()) {
+            Parser p = (Parser) e.nextElement();
+            List w = p.randomExpansion(maxDepth, depth++);
+            Enumeration f = Collections.enumeration(w);
+
+            while (f.hasMoreElements()) {
+                v.add(f.nextElement());
+            }
+        }
+        return v;
     }
-    return v;
-  }
-  /**
-   * Returns the string to show between the parsers this
-   * parser is a sequence of. This is an empty string,
-   * since convention indicates sequence quietly. For
-   * example, note that in the regular expression
-   * <code>(a|b)c</code>, the lack of a delimiter between
-   * the expression in parentheses and the 'c' indicates a
-   * sequence of these expressions.
-   */
-  protected String toStringSeparator() {
-    return "";
-  }
+
+    /**
+     * Returns the string to show between the parsers this
+     * parser is a sequence of. This is an empty string,
+     * since convention indicates sequence quietly. For
+     * example, note that in the regular expression
+     * <code>(a|b)c</code>, the lack of a delimiter between
+     * the expression in parentheses and the 'c' indicates a
+     * sequence of these expressions.
+     */
+    protected String toStringSeparator() {
+        return "";
+    }
 }

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow.impl;
 
+
 import java.io.*;
 import java.util.*;
 import java.sql.Timestamp;
@@ -38,6 +39,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
 import bsh.*;
+
 
 /**
  * WfExecutionObjectImpl - Workflow Execution Object implementation
@@ -100,6 +102,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         workEffortId = getDelegator().getNextSeqId("WorkEffort").toString();
         Map dataMap = new HashMap();
         String weType = activityId != null ? "ACTIVITY" : "WORK_FLOW";
+
         dataMap.put("workEffortId", workEffortId);
         dataMap.put("workEffortTypeId", weType);
         dataMap.put("workEffortParentId", parentId);
@@ -119,6 +122,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
 
         try {
             List lst = new ArrayList();
+
             dataObject = getDelegator().makeValue("WorkEffort", dataMap);
             lst.add(dataObject);
             getDelegator().storeAll(lst);
@@ -144,6 +148,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public void setName(String newValue) throws WfException {
         GenericValue dataObject = getRuntimeObject();
+
         try {
             dataObject.set("workEffortName", newValue);
             dataObject.store();
@@ -159,6 +164,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public void setPriority(long newValue) throws WfException {
         GenericValue dataObject = getRuntimeObject();
+
         try {
             dataObject.set("priority", new Long(newValue));
             dataObject.store();
@@ -186,6 +192,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public String state() throws WfException {
         GenericValue statusObj = null;
         String stateStr = null;
+
         try {
             statusObj = getRuntimeObject().getRelatedOne("CurrentStatusItem");
         } catch (GenericEntityException e) {
@@ -206,9 +213,10 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public List validStates() throws WfException {
         String statesArr[] = {"open.running", "open.not_running.not_started", "open.not_running.suspended",
-                              "closed.completed", "closed.terminated", "closed.aborted"};
+                "closed.completed", "closed.terminated", "closed.aborted"};
         ArrayList possibleStates = new ArrayList(Arrays.asList(statesArr));
         String currentState = state();
+
         if (currentState.startsWith("closed"))
             return new ArrayList();
         if (!currentState.startsWith("open"))
@@ -257,6 +265,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public void abort() throws WfException, CannotStop, NotRunning {
         String stateStr = "closed.aborted";
+
         if (!state().equals("open.running"))
             throw new NotRunning();
         if (!validStates().contains(stateStr))
@@ -270,6 +279,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public List whileOpenType() throws WfException {
         String[] list = {"running", "not_running"};
+
         return Arrays.asList(list);
     }
 
@@ -279,6 +289,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public List whyNotRunningType() throws WfException {
         String[] list = {"not_started", "suspended"};
+
         return Arrays.asList(list);
     }
 
@@ -334,6 +345,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public void setProcessContext(String contextKey) throws WfException,
             InvalidData, UpdateNotAllowed {
         GenericValue dataObject = getRuntimeObject();
+
         try {
             dataObject.set("runtimeDataId", contextKey);
             dataObject.store();
@@ -369,6 +381,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public List workflowStateType() throws WfException {
         String[] list = {"open", "closed"};
+
         return Arrays.asList(list);
     }
 
@@ -380,6 +393,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public void terminate() throws WfException, CannotStop, NotRunning {
         String stateStr = "closed.terminated";
+
         if (!state().equals("open.running"))
             throw new NotRunning();
         if (!validStates().contains(stateStr))
@@ -394,6 +408,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public void setDescription(String newValue) throws WfException {
         GenericValue valueObject = getDefinitionObject();
+
         try {
             valueObject.set("description", newValue);
             valueObject.store();
@@ -418,6 +433,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public Timestamp lastStateTime() throws WfException {
         GenericValue dataObject = getRuntimeObject();
+
         if (dataObject == null || dataObject.get("lastStatusUpdate") == null)
             throw new WfException("No runtime object or status has never been set.");
         return dataObject.getTimestamp("lastStatusUpdate");
@@ -444,7 +460,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @return Found history elements that meet the search criteria.
      */
     public Iterator getIteratorHistory(String query,
-                                       Map namesInQuery) throws WfException, HistoryNotAvailable {
+        Map namesInQuery) throws WfException, HistoryNotAvailable {
         return history.iterator();
     }
 
@@ -472,6 +488,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public List howClosedType() throws WfException {
         String[] list = {"completed", "terminated", "aborted"};
+
         return Arrays.asList(list);
     }
 
@@ -486,9 +503,11 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             TransitionNotAllowed {
         // Test is transaction is allowed???
         GenericValue dataObject = getRuntimeObject();
+
         if (validStates().contains(newState)) {
             try {
                 long now = (new Date()).getTime();
+
                 dataObject.set("currentStatusId", getEntityStatus(newState));
                 dataObject.set("lastStatusUpdate", new Timestamp(now));
                 dataObject.store();
@@ -530,6 +549,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         GenericValue value = null;
         Map fields = UtilMisc.toMap("packageId", packageId, "packageVersion", packageVersion, "processId", processId,
                 "processVersion", processVersion);
+
         if (activityId != null)
             fields.put("activityId", activityId);
         try {
@@ -546,9 +566,10 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public GenericValue getRuntimeObject() throws WfException {
         GenericValue value = null;
+
         try {
             value = getDelegator().findByPrimaryKey("WorkEffort",
-                    UtilMisc.toMap("workEffortId", workEffortId));
+                        UtilMisc.toMap("workEffortId", workEffortId));
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
@@ -570,19 +591,21 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     protected void setSerializedData(Map value) throws WfException, InvalidData {
         GenericValue runtimeData = null;
         GenericValue dataObject = getRuntimeObject();
+
         try {
             if (dataObject.get("runtimeDataId") == null) {
                 String seqId = getDelegator().getNextSeqId("RuntimeData").toString();
+
                 runtimeData = getDelegator().makeValue("RuntimeData",
-                        UtilMisc.toMap("runtimeDataId", seqId));
+                            UtilMisc.toMap("runtimeDataId", seqId));
                 getDelegator().create(runtimeData);
                 dataObject.set("runtimeDataId", seqId);
                 dataObject.store();
             } else {
                 runtimeData = dataObject.getRelatedOne("RuntimeData");
             }
-            //String serialized = XmlSerializer.serialize(value);
-            //System.out.println(serialized);
+            // String serialized = XmlSerializer.serialize(value);
+            // System.out.println(serialized);
 
             runtimeData.set("runtimeInfo", XmlSerializer.serialize(value));
             runtimeData.store();
@@ -623,6 +646,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     protected String getServiceLoader() throws WfException {
         GenericValue dataObject = getRuntimeObject();
+
         if (dataObject.get("serviceLoaderName") == null)
             throw new WfException("No service loader name defined");
         return dataObject.getString("serviceLoaderName");
@@ -635,6 +659,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public void setServiceLoader(String loader) throws WfException {
         GenericValue dataObject = getRuntimeObject();
+
         try {
             dataObject.set("serviceLoaderName", loader);
             dataObject.store();
@@ -647,9 +672,9 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
 
     protected String getEntityStatus(String state) {
         String statesArr[] = {"open.running", "open.not_running.not_started", "open.not_running.suspended",
-                              "closed.completed", "closed.terminated", "closed.aborted"};
+                "closed.completed", "closed.terminated", "closed.aborted"};
         String entityArr[] = {"WF_RUNNING", "WF_NOT_STARTED", "WF_SUSPENDED", "WF_COMPLETED",
-                              "WF_TERMINATED", "WF_ABORTED"};
+                "WF_TERMINATED", "WF_ABORTED"};
 
         for (int i = 0; i < statesArr.length; i++) {
             if (statesArr[i].equals(state))
@@ -660,9 +685,9 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
 
     protected String getOMGStatus(String state) {
         String statesArr[] = {"open.running", "open.not_running.not_started", "open.not_running.suspended",
-                              "closed.completed", "closed.terminated", "closed.aborted"};
+                "closed.completed", "closed.terminated", "closed.aborted"};
         String entityArr[] = {"WF_RUNNING", "WF_NOT_STARTED", "WF_SUSPENDED", "WF_COMPLETED",
-                              "WF_TERMINATED", "WF_ABORTED"};
+                "WF_TERMINATED", "WF_ABORTED"};
 
         for (int i = 0; i < entityArr.length; i++) {
             if (entityArr[i].equals(state))
@@ -675,10 +700,12 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         GenericValue dataObject = getRuntimeObject();
         String contextXML = null;
         Map context = null;
+
         if (dataObject.get("runtimeDataId") == null)
             return context;
         try {
             GenericValue runtimeData = dataObject.getRelatedOne("RuntimeData");
+
             contextXML = runtimeData.getString("runtimeInfo");
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
@@ -706,6 +733,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     protected boolean evalCondition(String expression) throws WfException {
         Map context = processContext();
+
         return evalCondition(expression, context);
     }
 
@@ -722,6 +750,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             return true;
         }
         Object o = eval(expression, context);
+
         if (o == null)
             return false;
         else if (o instanceof Number)
@@ -730,10 +759,10 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             return (!o.toString().equalsIgnoreCase("true")) ? false : true;
     }
 
-
     protected Object eval(String expression, Map context) throws WfException {
         Interpreter bsh = new Interpreter();
         Object o = null;
+
         if (expression == null || expression.equals(""))
             throw new WfException("Cannot evaluate empty or null expression");
 
@@ -743,9 +772,11 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             // Set the context for the condition
             Set keySet = context.keySet();
             Iterator i = keySet.iterator();
+
             while (i.hasNext()) {
                 Object key = i.next();
                 Object value = context.get(key);
+
                 bsh.set((String) key, value);
             }
             // evaluate the expression
@@ -755,6 +786,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             // read back the context info
             NameSpace ns = bsh.getNameSpace();
             String[] varNames = ns.getVariableNames();
+
             for (int x = 0; x < varNames.length; x++) {
                 context.put(varNames[x], bsh.get(varNames[x]));
             }

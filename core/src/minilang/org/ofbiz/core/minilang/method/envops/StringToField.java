@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.envops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
+
 
 /**
  * Copies the specified String to a field
@@ -55,6 +57,7 @@ public class StringToField extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         if (mapName != null && mapName.length() > 0) {
             Map toMap = (Map) methodContext.getEnv(mapName);
+
             if (toMap == null) {
                 if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapName + ", creating new map");
                 toMap = new HashMap();

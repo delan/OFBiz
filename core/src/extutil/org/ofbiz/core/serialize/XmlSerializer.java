@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.serialize;
 
+
 import java.io.*;
 import java.net.*;
 import java.text.*;
@@ -44,6 +45,7 @@ import org.w3c.dom.NodeList;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 
+
 /**
  * <p><b>Title:</b> XmlSerializer
  * <p><b>Description:</b> Simple XML serialization/deserialization routines with embedded type information
@@ -58,22 +60,25 @@ public class XmlSerializer {
     public static String serialize(Object object) throws SerializeException, FileNotFoundException, IOException {
         Document document = UtilXml.makeEmptyXmlDocument("ofbiz-ser");
         Element rootElement = document.getDocumentElement();
+
         rootElement.appendChild(serializeSingle(object, document));
         return UtilXml.writeXmlDocument(document);
     }
 
     public static Object deserialize(String content, GenericDelegator delegator)
-            throws SerializeException, SAXException, ParserConfigurationException, IOException {
-        //readXmlDocument with false second parameter to disable validation
+        throws SerializeException, SAXException, ParserConfigurationException, IOException {
+        // readXmlDocument with false second parameter to disable validation
         Document document = UtilXml.readXmlDocument(content, false);
         Element rootElement = document.getDocumentElement();
-        //find the first element below the root element, that should be the object
+        // find the first element below the root element, that should be the object
         Node curChild = rootElement.getFirstChild();
+
         while (curChild != null && curChild.getNodeType() != Node.ELEMENT_NODE) {
             curChild = curChild.getNextSibling();
         }
         if (curChild == null) return null;
         Element element = (Element) curChild;
+
         return deserializeSingle(element, delegator);
     }
 
@@ -95,7 +100,7 @@ public class XmlSerializer {
             return makeElement("std-Double", object, document);
         } else if (object instanceof Boolean) {
             return makeElement("std-Boolean", object, document);
-        // - SQL Objects -
+            // - SQL Objects -
         } else if (object instanceof java.sql.Timestamp) {
             return makeElement("sql-Timestamp", object, document);
         } else if (object instanceof java.sql.Date) {
@@ -103,18 +108,20 @@ public class XmlSerializer {
         } else if (object instanceof java.sql.Time) {
             return makeElement("sql-Time", object, document);
         } else if (object instanceof java.util.Date) {
-            //NOTE: make sure this is AFTER the java.sql date/time objects since they inherit from java.util.Date
+            // NOTE: make sure this is AFTER the java.sql date/time objects since they inherit from java.util.Date
             DateFormat formatter = getDateFormat();
             String stringValue = null;
+
             synchronized (formatter) {
                 stringValue = formatter.format((java.util.Date) object);
             }
             return makeElement("std-Date", stringValue, document);
-            //return makeElement("std-Date", object, document);
+            // return makeElement("std-Date", object, document);
         } else if (object instanceof Collection) {
             // - Collections -
             String elementName = null;
-            //these ARE order sensitive; for instance Stack extends Vector, so if Vector were first we would lose the stack part
+
+            // these ARE order sensitive; for instance Stack extends Vector, so if Vector were first we would lose the stack part
             if (object instanceof ArrayList) {
                 elementName = "col-ArrayList";
             } else if (object instanceof LinkedList) {
@@ -128,30 +135,34 @@ public class XmlSerializer {
             } else if (object instanceof HashSet) {
                 elementName = "col-HashSet";
             } else {
-                //no specific type found, do general Collection, will deserialize as LinkedList
+                // no specific type found, do general Collection, will deserialize as LinkedList
                 elementName = "col-Collection";
             }
-            
-            //if (elementName == null) return serializeCustom(object, document);
+
+            // if (elementName == null) return serializeCustom(object, document);
 
             Collection value = (Collection) object;
             Element element = document.createElement(elementName);
             Iterator iter = value.iterator();
+
             while (iter.hasNext()) {
                 element.appendChild(serializeSingle(iter.next(), document));
             }
             return element;
         } else if (object instanceof GenericPK) {
-            //Do GenericEntity objects as a special case, use std XML import/export routines
+            // Do GenericEntity objects as a special case, use std XML import/export routines
             GenericPK value = (GenericPK) object;
+
             return value.makeXmlElement(document, "eepk-");
         } else if (object instanceof GenericValue) {
             GenericValue value = (GenericValue) object;
+
             return value.makeXmlElement(document, "eeval-");
         } else if (object instanceof Map) {
             // - Maps -
             String elementName = null;
-            //these ARE order sensitive; for instance Properties extends Hashtable, so if Hashtable were first we would lose the Properties part
+
+            // these ARE order sensitive; for instance Properties extends Hashtable, so if Hashtable were first we would lose the Properties part
             if (object instanceof HashMap) {
                 elementName = "map-HashMap";
             } else if (object instanceof Properties) {
@@ -163,23 +174,27 @@ public class XmlSerializer {
             } else if (object instanceof TreeMap) {
                 elementName = "map-TreeMap";
             } else {
-                //serialize as a simple Map implementation if nothing else applies, these will deserialize as a HashMap
+                // serialize as a simple Map implementation if nothing else applies, these will deserialize as a HashMap
                 elementName = "map-Map";
             }
 
             Element element = document.createElement(elementName);
             Map value = (Map) object;
             Iterator iter = value.entrySet().iterator();
+
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
 
                 Element entryElement = document.createElement("map-Entry");
+
                 element.appendChild(entryElement);
 
                 Element key = document.createElement("map-Key");
+
                 entryElement.appendChild(key);
                 key.appendChild(serializeSingle(entry.getKey(), document));
                 Element mapValue = document.createElement("map-Value");
+
                 entryElement.appendChild(mapValue);
                 mapValue.appendChild(serializeSingle(entry.getValue(), document));
             }
@@ -190,13 +205,14 @@ public class XmlSerializer {
     }
 
     public static Element serializeCustom(Object object, Document document) throws SerializeException {
-        //TODO: if nothing else, try looking up a class for the type in the properties file, the class should implement an interface or have a certain static method on it
+        // TODO: if nothing else, try looking up a class for the type in the properties file, the class should implement an interface or have a certain static method on it
         throw new SerializeException("Cannot serialize object of class " + object.getClass().getName());
     }
 
     public static Element makeElement(String elementName, Object value, Document document) {
         if (value == null) return document.createElement("null");
         Element element = document.createElement(elementName);
+
         element.setAttribute("value", value.toString());
         return element;
     }
@@ -212,23 +228,29 @@ public class XmlSerializer {
                 return element.getAttribute("value");
             } else if ("std-Integer".equals(tagName)) {
                 String valStr = element.getAttribute("value");
+
                 return Integer.valueOf(valStr);
             } else if ("std-Long".equals(tagName)) {
                 String valStr = element.getAttribute("value");
+
                 return Long.valueOf(valStr);
             } else if ("std-Float".equals(tagName)) {
                 String valStr = element.getAttribute("value");
+
                 return Float.valueOf(valStr);
             } else if ("std-Double".equals(tagName)) {
                 String valStr = element.getAttribute("value");
+
                 return Double.valueOf(valStr);
             } else if ("std-Boolean".equals(tagName)) {
                 String valStr = element.getAttribute("value");
+
                 return Boolean.valueOf(valStr);
             } else if ("std-Date".equals(tagName)) {
                 String valStr = element.getAttribute("value");
                 DateFormat formatter = getDateFormat();
                 java.util.Date value = null;
+
                 try {
                     synchronized (formatter) {
                         value = formatter.parse(valStr);
@@ -242,17 +264,21 @@ public class XmlSerializer {
             // - SQL Objects -
             if ("sql-Timestamp".equals(tagName)) {
                 String valStr = element.getAttribute("value");
+
                 return java.sql.Timestamp.valueOf(valStr);
             } else if ("sql-Date".equals(tagName)) {
                 String valStr = element.getAttribute("value");
+
                 return java.sql.Date.valueOf(valStr);
             } else if ("sql-Time".equals(tagName)) {
                 String valStr = element.getAttribute("value");
+
                 return java.sql.Time.valueOf(valStr);
             }
         } else if (tagName.startsWith("col-")) {
             // - Collections -
             Collection value = null;
+
             if ("col-ArrayList".equals(tagName)) {
                 value = new ArrayList();
             } else if ("col-LinkedList".equals(tagName)) {
@@ -273,6 +299,7 @@ public class XmlSerializer {
                 return deserializeCustom(element);
             } else {
                 Node curChild = element.getFirstChild();
+
                 while (curChild != null) {
                     if (curChild.getNodeType() == Node.ELEMENT_NODE) {
                         value.add(deserializeSingle((Element) curChild, delegator));
@@ -284,6 +311,7 @@ public class XmlSerializer {
         } else if (tagName.startsWith("map-")) {
             // - Maps -
             Map value = null;
+
             if ("map-HashMap".equals(tagName)) {
                 value = new HashMap();
             } else if ("map-Properties".equals(tagName)) {
@@ -302,13 +330,16 @@ public class XmlSerializer {
                 return deserializeCustom(element);
             } else {
                 Node curChild = element.getFirstChild();
+
                 while (curChild != null) {
                     if (curChild.getNodeType() == Node.ELEMENT_NODE) {
                         Element curElement = (Element) curChild;
+
                         if ("map-Entry".equals(curElement.getTagName())) {
                             Element mapKeyElement = UtilXml.firstChildElement(curElement, "map-Key");
                             Element keyElement = null;
                             Node tempNode = mapKeyElement.getFirstChild();
+
                             while (tempNode != null) {
                                 if (tempNode.getNodeType() == Node.ELEMENT_NODE) {
                                     keyElement = (Element) tempNode;
@@ -320,6 +351,7 @@ public class XmlSerializer {
 
                             Element mapValueElement = UtilXml.firstChildElement(curElement, "map-Value");
                             Element valueElement = null;
+
                             tempNode = mapValueElement.getFirstChild();
                             while (tempNode != null) {
                                 if (tempNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -349,7 +381,7 @@ public class XmlSerializer {
     public static Object deserializeCustom(Element element) throws SerializeException {
         throw new SerializeException("Cannot deserialize element named " + element.getTagName());
     }
-    
+
     /**
      * Returns the DateFormat used to serialize and deserialize <code>java.util.Date</code> objects.
      * This format is NOT used to format any of the java.sql subtypes of java.util.Date.
@@ -360,6 +392,7 @@ public class XmlSerializer {
      */
     private static DateFormat getDateFormat() {
         DateFormat formatter = null;
+
         if (simpleDateFormatter != null) {
             formatter = (DateFormat) simpleDateFormatter.get();
         }
@@ -368,5 +401,5 @@ public class XmlSerializer {
             simpleDateFormatter = new WeakReference(formatter);
         }
         return formatter;
-    }    
+    }
 }

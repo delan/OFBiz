@@ -26,11 +26,13 @@
 
 package org.ofbiz.core.region;
 
+
 import java.net.*;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Tag to define a region
@@ -43,24 +45,30 @@ import org.ofbiz.core.util.*;
 public class RegionDefinitionTag extends RegionTag {
 
     protected String id = null;
-    
-    public void setId(String id) { this.id = id; }
-    public String getId() { return this.id; }
-    
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
     public int doStartTag() throws JspException {
-        if(regionObj != null && template != null)
+        if (regionObj != null && template != null)
             throw new JspException("regions can be created from a template or another region, but not both");
 
         createRegionFromRegion(getId());
-        
-        if(regionObj == null)
+
+        if (regionObj == null)
             createRegionFromTemplate(getId());
-        
+
         return EVAL_BODY_INCLUDE;
     }
-    
+
     public int doEndTag() throws JspException {
         URL regionFile = null;
+
         try {
             regionFile = pageContext.getServletContext().getResource(SiteDefs.REGIONS_CONFIG_LOCATION);
         } catch (java.net.MalformedURLException e) {
@@ -69,7 +77,7 @@ public class RegionDefinitionTag extends RegionTag {
         RegionManager.putRegion(regionFile, regionObj);
         return EVAL_PAGE;
     }
-    
+
     public void release() {
         super.release();
     }

@@ -24,8 +24,10 @@
 
 package org.ofbiz.core.util;
 
+
 import javax.servlet.http.*;
 import java.text.*;
+
 
 /**
  * General output formatting functions - mainly for helping in JSPs
@@ -36,7 +38,7 @@ import java.text.*;
  */
 public class UtilFormatOut {
 
-    //------------------- price format handlers -------------------
+    // ------------------- price format handlers -------------------
     static DecimalFormat priceDecimalFormat = new DecimalFormat("#,##0.00");
 
     /** Formats a Double representing a price into a string
@@ -56,7 +58,7 @@ public class UtilFormatOut {
         return priceDecimalFormat.format(price);
     }
 
-    //------------------- percentage format handlers -------------------
+    // ------------------- percentage format handlers -------------------
     static DecimalFormat percentageDecimalFormat = new DecimalFormat("##0.##%");
 
     /** Formats a Double representing a percentage into a string
@@ -76,7 +78,7 @@ public class UtilFormatOut {
         return percentageDecimalFormat.format(percentage);
     }
 
-    //------------------- quantity format handlers -------------------
+    // ------------------- quantity format handlers -------------------
     static DecimalFormat quantityDecimalFormat = new DecimalFormat("#,##0.###");
 
     /** Formats an Long representing a quantity into a string
@@ -155,7 +157,7 @@ public class UtilFormatOut {
         return quantityDecimalFormat.format(quantity);
     }
 
-    //------------------- null string handlers -------------------
+    // ------------------- null string handlers -------------------
     /** Checks to see if the passed Object is null, if it is returns an empty but non-null string, otherwise calls toString() on the object
      * @param obj1 The passed Object
      * @return The toString() of the passed Object if not null, otherwise an empty non-null String
@@ -273,13 +275,14 @@ public class UtilFormatOut {
             return "";
     }
 
-    //------------------- web encode handlers -------------------
+    // ------------------- web encode handlers -------------------
     /** Encodes an HTTP URL query String, replacing characters used for other things in HTTP URL query strings, but not touching the separator characters '?', '=', and '&'
      * @param query The plain query String
      * @return The encoded String
      */
     public static String encodeQuery(String query) {
         String retString;
+
         retString = replaceString(query, "%", "%25");
         retString = replaceString(retString, " ", "%20");
         return retString;
@@ -291,6 +294,7 @@ public class UtilFormatOut {
      */
     public static String encodeQueryValue(String query) {
         String retString;
+
         retString = replaceString(query, "%", "%25");
         retString = replaceString(retString, " ", "%20");
         retString = replaceString(retString, "&", "%26");
@@ -315,6 +319,7 @@ public class UtilFormatOut {
      */
     public static String decodeQueryValue(String query) {
         String retString;
+
         retString = replaceString(query, "%25", "%");
         retString = replaceString(retString, "%20", " ");
         retString = replaceString(retString, "%26", "&");
@@ -323,13 +328,14 @@ public class UtilFormatOut {
         return retString;
     }
 
-    //------------------- web encode handlers -------------------
+    // ------------------- web encode handlers -------------------
     /** Encodes an XML string replacing the characters '<', '>', '"', ''', '&'
      * @param inString The plain value String
      * @return The encoded String
      */
     public static String encodeXmlValue(String inString) {
         String retString = inString;
+
         retString = StringUtil.replaceString(retString, "&", "&amp;");
         retString = StringUtil.replaceString(retString, "<", "&lt;");
         retString = StringUtil.replaceString(retString, ">", "&gt;");

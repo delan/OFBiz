@@ -1,7 +1,9 @@
 package org.ofbiz.core.rules.parse.chars;
 
+
 import java.util.*;
 import org.ofbiz.core.rules.parse.*;
+
 
 /**
  * <p><b>Title:</b> Digit
@@ -34,34 +36,40 @@ import org.ofbiz.core.rules.parse.*;
  * @version 1.0
  */
 public class Digit extends Terminal {
-  /**
-   * Returns true if an assembly's next element is a digit.
-   *
-   * @param   object   an element from an assembly
-   * @return   true, if an assembly's next element is a digit
-   */
-  public boolean qualifies(Object o) {
-    Character c = (Character) o;
-    return Character.isDigit(c.charValue());
-  }
-  /**
-   * Create a set with one random digit.
-   */
-  public List randomExpansion(int maxDepth, int depth) {
-    char c = (char) (10 * Math.random() + '0');
-    List v = new ArrayList();
-    v.add(new String(new char[]{c}));
-    return v;
-  }
-  /**
-   * Returns a textual description of this parser.
-   *
-   * @param   vector   a list of parsers already printed in
-   *                   this description
-   * @return   string   a textual description of this parser
-   * @see Parser#toString()
-   */
-  public String unvisitedString(List visited) {
-    return "D";
-  }
+
+    /**
+     * Returns true if an assembly's next element is a digit.
+     *
+     * @param   object   an element from an assembly
+     * @return   true, if an assembly's next element is a digit
+     */
+    public boolean qualifies(Object o) {
+        Character c = (Character) o;
+
+        return Character.isDigit(c.charValue());
+    }
+
+    /**
+     * Create a set with one random digit.
+     */
+    public List randomExpansion(int maxDepth, int depth) {
+        char c = (char) (10 * Math.random() + '0');
+        List v = new ArrayList();
+
+        v.add(new String(new char[] {c}
+            ));
+        return v;
+    }
+
+    /**
+     * Returns a textual description of this parser.
+     *
+     * @param   vector   a list of parsers already printed in
+     *                   this description
+     * @return   string   a textual description of this parser
+     * @see Parser#toString()
+     */
+    public String unvisitedString(List visited) {
+        return "D";
+    }
 }

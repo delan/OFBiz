@@ -24,12 +24,14 @@
 
 package org.ofbiz.core.service.jms;
 
+
 import java.util.*;
 import javax.naming.*;
 import javax.jms.*;
 
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * JmsTopicListener - Topic (Pub/Sub) Message Listener.
@@ -73,6 +75,7 @@ public class JmsTopicListener extends AbstractJmsListener {
         try {
             InitialContext jndi = JNDIContextFactory.getInitialContext(jndiServer);
             TopicConnectionFactory factory = (TopicConnectionFactory) jndi.lookup(jndiName);
+
             if (factory != null) {
                 con = factory.createTopicConnection(userName, password);
                 con.setExceptionListener(this);
@@ -80,6 +83,7 @@ public class JmsTopicListener extends AbstractJmsListener {
                 topic = (Topic) jndi.lookup(topicName);
                 if (topic != null) {
                     TopicSubscriber subscriber = session.createSubscriber(topic);
+
                     subscriber.setMessageListener(this);
                     con.start();
                     this.setConnected(true);

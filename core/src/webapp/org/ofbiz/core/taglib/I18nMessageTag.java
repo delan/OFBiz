@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.taglib;
 
+
 import java.text.*;
 import java.util.*;
 import javax.servlet.jsp.*;
@@ -32,6 +33,7 @@ import javax.servlet.jsp.tagext.*;
 
 import org.ofbiz.core.util.UtilJ2eeCompat;
 import org.ofbiz.core.util.Debug;
+
 
 /**
  * I18nMessageTag - JSP tag to use a resource bundle to internationalize
@@ -42,52 +44,53 @@ import org.ofbiz.core.util.Debug;
  * @created April 13, 2002
  */
 public class I18nMessageTag extends BodyTagSupport {
-    
+
     private String key = null;
-    
+
     private String value = null;
-    
+
     private ResourceBundle bundle = null;
-    
+
     private final List arguments = new ArrayList();
-    
+
     public void setKey(String key) {
         this.key = key;
     }
-    
+
     public String getKey() {
         return this.key;
     }
-    
+
     public void setValue(String value) {
         this.value = value;
     }
-    
+
     public String getValue() {
         return this.value;
     }
-    
+
     public void setBundleId(String bundleId) {
         this.bundle = (ResourceBundle) pageContext.getAttribute(bundleId);
     }
-    
+
     public void addArgument(Object argument) {
         this.arguments.add(argument);
     }
-    
+
     public int doStartTag() throws JspException {
         try {
             if (this.bundle == null) {
                 I18nBundleTag bundleTag = (I18nBundleTag) this.findAncestorWithClass(this, I18nBundleTag.class);
-                
+
                 if (bundleTag != null) {
                     this.bundle = bundleTag.getBundle();
                 }
             }
-            
-            //this.value = this.bundle.getString(this.key);
+
+            // this.value = this.bundle.getString(this.key);
             String s = this.bundle.getString(this.key);
-            this.value = new String(s.getBytes ("ISO8859_1"));
+
+            this.value = new String(s.getBytes("ISO8859_1"));
         } catch (Exception e) {
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
                 throw new JspException(e.getMessage(), e);
@@ -96,18 +99,19 @@ public class I18nMessageTag extends BodyTagSupport {
                 throw new JspException(e.toString());
             }
         }
-        
+
         return EVAL_BODY_AGAIN;
     }
-    
+
     public int doEndTag() throws JspException {
         try {
             if (arguments != null) {
                 MessageFormat messageFormat = new MessageFormat(this.value);
+
                 messageFormat.setLocale(this.bundle.getLocale());
                 this.value = messageFormat.format(arguments.toArray());
             }
-            
+
             this.pageContext.getOut().print(this.value);
         } catch (Exception e) {
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
@@ -117,7 +121,7 @@ public class I18nMessageTag extends BodyTagSupport {
                 throw new JspException(e.toString());
             }
         }
-        
+
         return EVAL_PAGE;
     }
 }

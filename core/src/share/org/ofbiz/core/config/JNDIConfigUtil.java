@@ -23,6 +23,7 @@
 
 package org.ofbiz.core.config;
 
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -30,6 +31,7 @@ import java.util.*;
 import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * JNDIConfigUtil
@@ -50,6 +52,7 @@ public class JNDIConfigUtil {
             throw new GenericConfigException("Could not get JNDI XML root element", e);
         }
     }
+
     protected static Document getXmlDocument() throws GenericConfigException {
         try {
             return ResourceLoader.getXmlDocument(JNDIConfigUtil.JNDI_CONFIG_XML_FILENAME);
@@ -69,17 +72,20 @@ public class JNDIConfigUtil {
         List childElements = null;
         Iterator elementIter = null;
 
-        //jndi-server - jndiServerInfos
+        // jndi-server - jndiServerInfos
         childElements = UtilXml.childElementList(rootElement, "jndi-server");
         elementIter = childElements.iterator();
         while (elementIter.hasNext()) {
             Element curElement = (Element) elementIter.next();
             JNDIConfigUtil.JndiServerInfo jndiServerInfo = new JNDIConfigUtil.JndiServerInfo(curElement);
+
             JNDIConfigUtil.jndiServerInfos.put(jndiServerInfo.name, jndiServerInfo);
         }
     }
 
-    public static JNDIConfigUtil.JndiServerInfo getJndiServerInfo(String name) { return (JNDIConfigUtil.JndiServerInfo) jndiServerInfos.get(name); }
+    public static JNDIConfigUtil.JndiServerInfo getJndiServerInfo(String name) {
+        return (JNDIConfigUtil.JndiServerInfo) jndiServerInfos.get(name);
+    }
 
     public static class JndiServerInfo {
         public String name;

@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * <p><b>Title:</b> Axiom Enumeration
  * <p><b>Description:</b> None
@@ -32,17 +33,19 @@ package org.ofbiz.core.rules.engine;
  * @version 1.0
  */
 public interface AxiomEnumeration {
-  /**
-   * Tests if this enumeration contains more axioms.
-   *
-   * @return  <code>true</code> if this enumeration contains more
-   *          axioms, and <code>false</code> otherwise.
-   */
-  boolean hasMoreAxioms();
-  /**
-   * Returns the next axiom of this enumeration.
-   *
-   * @return the next axiom of this enumeration.
-   */
-  Axiom nextAxiom();
+
+    /**
+     * Tests if this enumeration contains more axioms.
+     *
+     * @return  <code>true</code> if this enumeration contains more
+     *          axioms, and <code>false</code> otherwise.
+     */
+    boolean hasMoreAxioms();
+
+    /**
+     * Returns the next axiom of this enumeration.
+     *
+     * @return the next axiom of this enumeration.
+     */
+    Axiom nextAxiom();
 }

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.callops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -36,6 +37,7 @@ import org.ofbiz.core.service.*;
 
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
+
 
 /**
  * Calls a service using the given parameters
@@ -62,12 +64,16 @@ public class CallService extends MethodOperation {
 
     /** A list of strings with names of new maps to create */
     List resultsToMap = new LinkedList();
+
     /** A list of ResultToFieldDef objects */
     List resultToField = new LinkedList();
+
     /** the key is the request attribute name, the value is the result name to get */
     Map resultToRequest = new HashMap();
+
     /** the key is the session attribute name, the value is the result name to get */
     Map resultToSession = new HashMap();
+
     /** the key is the result entry name, the value is the result name to get */
     Map resultToResult = new HashMap();
 
@@ -94,20 +100,26 @@ public class CallService extends MethodOperation {
         defaultMessage = new FlexibleMessage(UtilXml.firstChildElement(element, "default-message"), "service.default.message");
 
         List resultsToMapElements = UtilXml.childElementList(element, "results-to-map");
+
         if (resultsToMapElements != null && resultsToMapElements.size() > 0) {
             Iterator iter = resultsToMapElements.iterator();
+
             while (iter.hasNext()) {
                 Element resultsToMapElement = (Element) iter.next();
+
                 resultsToMap.add(resultsToMapElement.getAttribute("map-name"));
             }
         }
 
         List resultToFieldElements = UtilXml.childElementList(element, "result-to-field");
+
         if (resultToFieldElements != null && resultToFieldElements.size() > 0) {
             Iterator iter = resultToFieldElements.iterator();
+
             while (iter.hasNext()) {
                 Element resultToFieldElement = (Element) iter.next();
                 ResultToFieldDef rtfDef = new ResultToFieldDef();
+
                 rtfDef.resultName = resultToFieldElement.getAttribute("result-name");
                 rtfDef.mapName = resultToFieldElement.getAttribute("map-name");
                 rtfDef.fieldName = resultToFieldElement.getAttribute("field-name");
@@ -119,13 +131,16 @@ public class CallService extends MethodOperation {
             }
         }
 
-        //get result-to-request and result-to-session sub-ops
+        // get result-to-request and result-to-session sub-ops
         List resultToRequestElements = UtilXml.childElementList(element, "result-to-request");
+
         if (resultToRequestElements != null && resultToRequestElements.size() > 0) {
             Iterator iter = resultToRequestElements.iterator();
+
             while (iter.hasNext()) {
                 Element resultToRequestElement = (Element) iter.next();
                 String reqName = resultToRequestElement.getAttribute("request-name");
+
                 if (reqName == null || reqName.length() == 0)
                     reqName = resultToRequestElement.getAttribute("result-name");
                 resultToRequest.put(reqName, resultToRequestElement.getAttribute("result-name"));
@@ -133,11 +148,14 @@ public class CallService extends MethodOperation {
         }
 
         List resultToSessionElements = UtilXml.childElementList(element, "result-to-session");
+
         if (resultToSessionElements != null && resultToSessionElements.size() > 0) {
             Iterator iter = resultToSessionElements.iterator();
+
             while (iter.hasNext()) {
                 Element resultToSessionElement = (Element) iter.next();
                 String sesName = resultToSessionElement.getAttribute("session-name");
+
                 if (sesName == null || sesName.length() == 0)
                     sesName = resultToSessionElement.getAttribute("result-name");
                 resultToSession.put(sesName, resultToSessionElement.getAttribute("result-name"));
@@ -145,11 +163,14 @@ public class CallService extends MethodOperation {
         }
 
         List resultToResultElements = UtilXml.childElementList(element, "result-to-result");
+
         if (resultToResultElements != null && resultToResultElements.size() > 0) {
             Iterator iter = resultToResultElements.iterator();
+
             while (iter.hasNext()) {
                 Element resultToResultElement = (Element) iter.next();
                 String serResName = resultToResultElement.getAttribute("service-result-name");
+
                 if (serResName == null || serResName.length() == 0)
                     serResName = resultToResultElement.getAttribute("result-name");
                 resultToSession.put(serResName, resultToResultElement.getAttribute("result-name"));
@@ -159,6 +180,7 @@ public class CallService extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         Map inMap = null;
+
         if (UtilValidate.isEmpty(inMapName)) {
             inMap = new HashMap();
         } else {
@@ -169,7 +191,7 @@ public class CallService extends MethodOperation {
             }
         }
 
-        //before invoking the service, clear messages
+        // before invoking the service, clear messages
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             methodContext.removeEnv(simpleMethod.getEventErrorMessageName());
             methodContext.removeEnv(simpleMethod.getEventEventMessageName());
@@ -179,11 +201,13 @@ public class CallService extends MethodOperation {
             methodContext.removeEnv(simpleMethod.getServiceSuccessMessageName());
             methodContext.removeEnv(simpleMethod.getServiceResponseMessageName());
         }
-        
+
         // invoke the service
         Map result = null;
+
         if (includeUserLogin) {
             GenericValue userLogin = methodContext.getUserLogin();
+
             if (userLogin != null) {
                 inMap.put("userLogin", userLogin);
             }
@@ -193,6 +217,7 @@ public class CallService extends MethodOperation {
         } catch (GenericServiceException e) {
             Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem invoking the " + serviceName + " service: " + e.getMessage() + "]";
+
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), errorCode);
@@ -205,17 +230,21 @@ public class CallService extends MethodOperation {
 
         if (resultsToMap.size() > 0) {
             Iterator iter = resultsToMap.iterator();
+
             while (iter.hasNext()) {
                 String mapName = (String) iter.next();
+
                 methodContext.putEnv(mapName, new HashMap(result));
             }
         }
 
         if (resultToField.size() > 0) {
             Iterator iter = resultToField.iterator();
+
             while (iter.hasNext()) {
                 ResultToFieldDef rtfDef = (ResultToFieldDef) iter.next();
                 Map tempMap = (Map) methodContext.getEnv(rtfDef.mapName);
+
                 if (tempMap == null) {
                     tempMap = new HashMap();
                     methodContext.putEnv(rtfDef.mapName, tempMap);
@@ -224,34 +253,40 @@ public class CallService extends MethodOperation {
             }
         }
 
-        //only run this if it is in an EVENT context
+        // only run this if it is in an EVENT context
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             if (resultToRequest.size() > 0) {
                 Iterator iter = resultToRequest.entrySet().iterator();
+
                 while (iter.hasNext()) {
                     Map.Entry entry = (Map.Entry) iter.next();
+
                     methodContext.getRequest().setAttribute((String) entry.getKey(), result.get(entry.getValue()));
                 }
             }
         }
 
-        //only run this if it is in an EVENT context
+        // only run this if it is in an EVENT context
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             if (resultToSession.size() > 0) {
                 Iterator iter = resultToSession.entrySet().iterator();
+
                 while (iter.hasNext()) {
                     Map.Entry entry = (Map.Entry) iter.next();
+
                     methodContext.getRequest().getSession().setAttribute((String) entry.getKey(), result.get(entry.getValue()));
                 }
             }
         }
 
-        //only run this if it is in an SERVICE context
+        // only run this if it is in an SERVICE context
         if (methodContext.getMethodType() == MethodContext.SERVICE) {
             if (resultToResult.size() > 0) {
                 Iterator iter = resultToResult.entrySet().iterator();
+
                 while (iter.hasNext()) {
                     Map.Entry entry = (Map.Entry) iter.next();
+
                     methodContext.putResult((String) entry.getKey(), result.get(entry.getValue()));
                 }
             }
@@ -265,6 +300,7 @@ public class CallService extends MethodOperation {
         String messageSuffixStr = messageSuffix.getMessage(methodContext.getLoader());
 
         String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, errorPrefixStr, errorSuffixStr);
+
         if (UtilValidate.isNotEmpty(errorMessage)) {
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errorMessage);
@@ -274,6 +310,7 @@ public class CallService extends MethodOperation {
         }
 
         String successMessage = ServiceUtil.makeSuccessMessage(result, messagePrefixStr, messageSuffixStr, successPrefixStr, successSuffixStr);
+
         if (UtilValidate.isNotEmpty(successMessage)) {
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventEventMessageName(), successMessage);
@@ -283,6 +320,7 @@ public class CallService extends MethodOperation {
         }
 
         String defaultMessageStr = defaultMessage.getMessage(methodContext.getLoader());
+
         if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessageStr)) {
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventEventMessageName(), defaultMessageStr);
@@ -293,6 +331,7 @@ public class CallService extends MethodOperation {
 
         // handle the result
         String responseCode = result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String) result.get(ModelService.RESPONSE_MESSAGE) : successCode;
+
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             methodContext.putEnv(simpleMethod.getEventResponseCodeName(), responseCode);
         } else if (methodContext.getMethodType() == MethodContext.SERVICE) {

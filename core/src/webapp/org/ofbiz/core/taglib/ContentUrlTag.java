@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.taglib;
 
+
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -33,6 +34,7 @@ import javax.servlet.jsp.tagext.*;
 
 import org.ofbiz.core.control.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * ContentUrlTag - Creates a URL string prepending the content prefix from url.properties
@@ -48,17 +50,19 @@ public class ContentUrlTag extends BodyTagSupport {
     public static void appendContentPrefix(HttpServletRequest request, StringBuffer urlBuffer) {
         if (request.isSecure()) {
             String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.secure");
+
             if (prefix != null) {
                 urlBuffer.append(prefix.trim());
             }
         } else {
             String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.standard");
+
             if (prefix != null) {
                 urlBuffer.append(prefix.trim());
             }
         }
     }
-    
+
     public int doEndTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 
@@ -66,6 +70,7 @@ public class ContentUrlTag extends BodyTagSupport {
         String bodyString = body.getString();
 
         StringBuffer newURL = new StringBuffer();
+
         appendContentPrefix(request, newURL);
         newURL.append(bodyString);
         body.clearBody();

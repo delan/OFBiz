@@ -24,11 +24,13 @@
 
 package org.ofbiz.commonapp.order.order;
 
+
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
+
 
 /**
  * Utility class for easily extracting important information from orders
@@ -54,8 +56,7 @@ public class OrderReadHelper {
     protected List orderItemInventoryReses = null;
     protected Double totalPrice = null;
 
-    protected OrderReadHelper() {
-    }
+    protected OrderReadHelper() {}
 
     public OrderReadHelper(GenericValue orderHeader) {
         this.orderHeader = orderHeader;
@@ -76,6 +77,7 @@ public class OrderReadHelper {
         if (orderItem == null) return null;
         if (this.orderItemPriceInfos == null) {
             GenericDelegator delegator = orderHeader.getDelegator();
+
             try {
                 orderItemPriceInfos = delegator.findByAnd("OrderItemPriceInfo", UtilMisc.toMap("orderId", orderHeader.get("orderId")));
             } catch (GenericEntityException e) {
@@ -83,13 +85,15 @@ public class OrderReadHelper {
             }
         }
         String orderItemSeqId = orderItem.getString("orderItemSeqId");
+
         return EntityUtil.filterByAnd(this.orderItemPriceInfos, UtilMisc.toMap("orderItemSeqId", orderItemSeqId));
     }
-    
+
     public List getOrderItemInventoryReses(GenericValue orderItem) {
         if (orderItem == null) return null;
         if (this.orderItemInventoryReses == null) {
             GenericDelegator delegator = orderHeader.getDelegator();
+
             try {
                 orderItemInventoryReses = delegator.findByAnd("OrderItemInventoryRes", UtilMisc.toMap("orderId", orderHeader.get("orderId")));
             } catch (GenericEntityException e) {
@@ -97,9 +101,10 @@ public class OrderReadHelper {
             }
         }
         String orderItemSeqId = orderItem.getString("orderItemSeqId");
+
         return EntityUtil.filterByAnd(this.orderItemInventoryReses, UtilMisc.toMap("orderItemSeqId", orderItemSeqId));
     }
-    
+
     public List getAdjustments() {
         if (adjustments == null) {
             try {
@@ -139,13 +144,16 @@ public class OrderReadHelper {
         try {
             GenericValue shipmentPreference = null;
             Iterator tempIter = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
+
             if (tempIter != null && tempIter.hasNext()) {
                 shipmentPreference = (GenericValue) tempIter.next();
             }
             if (shipmentPreference != null) {
                 GenericValue carrierShipmentMethod = shipmentPreference.getRelatedOne("CarrierShipmentMethod");
+
                 if (carrierShipmentMethod != null) {
                     GenericValue shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType");
+
                     if (shipmentMethodType != null) {
                         return UtilFormatOut.checkNull(shipmentPreference.getString("carrierPartyId")) + " " + UtilFormatOut.checkNull(shipmentMethodType.getString("description"));
                     }
@@ -161,11 +169,14 @@ public class OrderReadHelper {
 
     public GenericValue getShippingAddress() {
         GenericDelegator delegator = orderHeader.getDelegator();
+
         try {
             GenericValue orderContactMech = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderContactMech", UtilMisc.toMap(
-                    "contactMechPurposeTypeId", "SHIPPING_LOCATION")));
+                            "contactMechPurposeTypeId", "SHIPPING_LOCATION")));
+
             if (orderContactMech != null) {
                 GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
+
                 if (contactMech != null) {
                     return contactMech.getRelatedOne("PostalAddress");
                 }
@@ -178,10 +189,13 @@ public class OrderReadHelper {
 
     public GenericValue getBillingAddress() {
         GenericDelegator delegator = orderHeader.getDelegator();
+
         try {
             GenericValue orderContactMech = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderContactMech", UtilMisc.toMap("contactMechPurposeTypeId", "BILLING_LOCATION")));
+
             if (orderContactMech != null) {
                 GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
+
                 if (contactMech != null) {
                     return contactMech.getRelatedOne("PostalAddress");
                 }
@@ -194,14 +208,17 @@ public class OrderReadHelper {
 
     public String getStatusString() {
         List orderStatusList = this.getOrderHeaderStatuses();
+
         if (orderStatusList == null) return "";
 
         Set orderStatusIdSet = new HashSet();
         Iterator orderStatusIter = orderStatusList.iterator();
+
         while (orderStatusIter.hasNext()) {
             try {
                 GenericValue orderStatus = (GenericValue) orderStatusIter.next();
                 GenericValue statusItem = (GenericValue) orderStatus.getRelatedOneCache("StatusItem");
+
                 if (statusItem != null) {
                     orderStatusIdSet.add(statusItem.getString("description"));
                 } else {
@@ -213,6 +230,7 @@ public class OrderReadHelper {
         }
         Iterator orderStatusIdIter = orderStatusIdSet.iterator();
         String orderStatusIds;
+
         if (orderStatusIdIter.hasNext()) {
             orderStatusIds = orderStatusIdIter.next().toString();
             while (orderStatusIdIter.hasNext()) {
@@ -226,8 +244,10 @@ public class OrderReadHelper {
 
     public GenericValue getBillToPerson() {
         GenericDelegator delegator = orderHeader.getDelegator();
+
         try {
             GenericEntity billToRole = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", "BILL_TO_CUSTOMER")));
+
             if (billToRole != null) {
                 return delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", billToRole.getString("partyId")));
             } else {
@@ -241,10 +261,13 @@ public class OrderReadHelper {
 
     public GenericValue getPlacingParty() {
         GenericDelegator delegator = orderHeader.getDelegator();
+
         try {
             GenericValue placingRole = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", "PLACING_CUSTOMER")));
+
             if (placingRole != null) {
                 GenericValue person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", placingRole.getString("partyId")));
+
                 if (person != null)
                     return person;
                 else
@@ -260,8 +283,10 @@ public class OrderReadHelper {
 
     public String getDistributorId() {
         GenericDelegator delegator = orderHeader.getDelegator();
+
         try {
             GenericEntity distributorRole = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", "DISTRIBUTOR")));
+
             return distributorRole == null ? null : distributorRole.getString("partyId");
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
@@ -271,8 +296,10 @@ public class OrderReadHelper {
 
     public String getAffiliateId() {
         GenericDelegator delegator = orderHeader.getDelegator();
+
         try {
             GenericEntity distributorRole = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", "AFFILIATE")));
+
             return distributorRole == null ? null : distributorRole.getString("partyId");
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
@@ -283,8 +310,10 @@ public class OrderReadHelper {
     public double getTotalOrderItemsQuantity() {
         List orderItems = getOrderItems();
         double totalItems = 0;
-        for (int i=0; i<orderItems.size();i++) {
+
+        for (int i = 0; i < orderItems.size(); i++) {
             GenericValue oi = (GenericValue) orderItems.get(i);
+
             totalItems += oi.getDouble("quantity").doubleValue();
         }
         return totalItems;
@@ -293,24 +322,27 @@ public class OrderReadHelper {
     public double getOrderGrandTotal() {
         if (totalPrice == null) {
             totalPrice = new Double(getOrderGrandTotal(getOrderItems(), getAdjustments()));
-        }//else already set
+        }// else already set
         return totalPrice.doubleValue();
     }
 
     public static double getOrderGrandTotal(List orderItems, List adjustments) {
         double total = getOrderItemsTotal(orderItems, adjustments);
         double adj = getOrderAdjustmentsTotal(orderItems, adjustments);
+
         return total + adj;
     }
 
     public List getOrderHeaderAdjustments() {
         return getOrderHeaderAdjustments(getAdjustments());
     }
+
     public static List getOrderHeaderAdjustments(List adjustments) {
         List contraints1 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, null));
         List contraints2 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, DataModelConstants.SEQ_ID_NA));
         List contraints3 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, ""));
         List adj = new LinkedList();
+
         adj.addAll(EntityUtil.filterByAnd(adjustments, contraints1));
         adj.addAll(EntityUtil.filterByAnd(adjustments, contraints2));
         adj.addAll(EntityUtil.filterByAnd(adjustments, contraints3));
@@ -320,11 +352,13 @@ public class OrderReadHelper {
     public List getOrderHeaderStatuses() {
         return getOrderHeaderStatuses(getOrderStatuses());
     }
+
     public static List getOrderHeaderStatuses(List orderStatuses) {
         List contraints1 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, null));
         List contraints2 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, DataModelConstants.SEQ_ID_NA));
         List contraints3 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, ""));
         List newOrderStatuses = new LinkedList();
+
         newOrderStatuses.addAll(EntityUtil.filterByAnd(orderStatuses, contraints1));
         newOrderStatuses.addAll(EntityUtil.filterByAnd(orderStatuses, contraints2));
         newOrderStatuses.addAll(EntityUtil.filterByAnd(orderStatuses, contraints3));
@@ -334,6 +368,7 @@ public class OrderReadHelper {
     public double getOrderAdjustmentsTotal() {
         return getOrderAdjustmentsTotal(getOrderItems(), getAdjustments());
     }
+
     public static double getOrderAdjustmentsTotal(List orderItems, List adjustments) {
         return calcOrderAdjustments(getOrderHeaderAdjustments(adjustments), getOrderItemsSubTotal(orderItems, adjustments), true, true, true);
     }
@@ -342,11 +377,14 @@ public class OrderReadHelper {
 
     public static double calcOrderAdjustments(List orderHeaderAdjustments, double subTotal, boolean includeOther, boolean includeTax, boolean includeShipping) {
         double adjTotal = 0.0;
+
         if (orderHeaderAdjustments != null && orderHeaderAdjustments.size() > 0) {
             List filteredAdjs = filterOrderAdjustments(orderHeaderAdjustments, includeOther, includeTax, includeShipping, false, false);
             Iterator adjIt = filteredAdjs.iterator();
+
             while (adjIt.hasNext()) {
                 GenericValue orderAdjustment = (GenericValue) adjIt.next();
+
                 adjTotal += OrderReadHelper.calcOrderAdjustment(orderAdjustment, subTotal);
             }
         }
@@ -355,6 +393,7 @@ public class OrderReadHelper {
 
     public static double calcOrderAdjustment(GenericValue orderAdjustment, double orderSubTotal) {
         double adjustment = 0.0;
+
         if (orderAdjustment.get("amount") != null) {
             adjustment += orderAdjustment.getDouble("amount").doubleValue();
         }
@@ -369,10 +408,11 @@ public class OrderReadHelper {
     public double getOrderItemsSubTotal() {
         return getOrderItemsSubTotal(getOrderItems(), getAdjustments());
     }
-    
+
     public static double getOrderItemsSubTotal(List orderItems, List adjustments) {
         double result = 0.0;
         Iterator itemIter = UtilMisc.toIterator(orderItems);
+
         while (itemIter != null && itemIter.hasNext()) {
             result += getOrderItemSubTotal((GenericValue) itemIter.next(), adjustments);
         }
@@ -393,13 +433,14 @@ public class OrderReadHelper {
         Double unitPrice = orderItem.getDouble("unitPrice");
         Double quantity = orderItem.getDouble("quantity");
         double result = 0.0;
+
         if (unitPrice == null || quantity == null) {
             Debug.logWarning("[getOrderItemTotal] unitPrice or quantity are null, using 0 for the item base price");
         } else {
             result = unitPrice.doubleValue() * quantity.doubleValue();
         }
 
-        //subtotal also includes non tax and shipping adjustments; tax and shipping will be calculated using this adjusted value
+        // subtotal also includes non tax and shipping adjustments; tax and shipping will be calculated using this adjusted value
         result += getOrderItemAdjustmentsTotal(orderItem, adjustments, true, false, false, forTax, forShipping);
 
         return result;
@@ -408,9 +449,11 @@ public class OrderReadHelper {
     public double getOrderItemsTotal() {
         return getOrderItemsTotal(getOrderItems(), getAdjustments());
     }
+
     public static double getOrderItemsTotal(List orderItems, List adjustments) {
         double result = 0.0;
         Iterator itemIter = UtilMisc.toIterator(orderItems);
+
         while (itemIter != null && itemIter.hasNext()) {
             result += getOrderItemTotal((GenericValue) itemIter.next(), adjustments);
         }
@@ -420,8 +463,9 @@ public class OrderReadHelper {
     public double getOrderItemTotal(GenericValue orderItem) {
         return getOrderItemTotal(orderItem, getAdjustments());
     }
+
     public static double getOrderItemTotal(GenericValue orderItem, List adjustments) {
-        //add tax and shipping to subtotal
+        // add tax and shipping to subtotal
         return (getOrderItemSubTotal(orderItem, adjustments) + getOrderItemAdjustmentsTotal(orderItem, adjustments, false, true, true));
     }
 
@@ -436,24 +480,29 @@ public class OrderReadHelper {
     public static double getAllOrderItemsAdjustmentsTotal(List orderItems, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
         double result = 0.0;
         Iterator itemIter = UtilMisc.toIterator(orderItems);
+
         while (itemIter != null && itemIter.hasNext()) {
             result += getOrderItemAdjustmentsTotal((GenericValue) itemIter.next(), adjustments, includeOther, includeTax, includeShipping);
         }
         return result;
     }
+
     public double getOrderItemAdjustmentsTotal(GenericValue orderItem, boolean includeOther, boolean includeTax, boolean includeShipping) {
         return getOrderItemAdjustmentsTotal(orderItem, getAdjustments(), includeOther, includeTax, includeShipping);
     }
+
     /** The passed adjustments can be all adjustments for the order, ie for all line items */
     public static double getOrderItemAdjustmentsTotal(GenericValue orderItem, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
         return getOrderItemAdjustmentsTotal(orderItem, adjustments, includeOther, includeTax, includeShipping, false, false);
     }
+
     /** The passed adjustments can be all adjustments for the order, ie for all line items */
     public static double getOrderItemAdjustmentsTotal(GenericValue orderItem, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping, boolean forTax, boolean forShipping) {
-        return calcItemAdjustments(orderItem.getDouble("quantity"), orderItem.getDouble("unitPrice"), 
+        return calcItemAdjustments(orderItem.getDouble("quantity"), orderItem.getDouble("unitPrice"),
                 getOrderItemAdjustmentList(orderItem, adjustments),
                 includeOther, includeTax, includeShipping, false, false);
     }
+
     public static List getOrderItemAdjustmentList(GenericValue orderItem, List adjustments) {
         return EntityUtil.filterByAnd(adjustments, UtilMisc.toMap("orderItemSeqId", orderItem.get("orderItemSeqId")));
     }
@@ -461,19 +510,23 @@ public class OrderReadHelper {
     public List getOrderItemStatuses(GenericValue orderItem) {
         return getOrderItemStatuses(orderItem, getOrderStatuses());
     }
+
     public static List getOrderItemStatuses(GenericValue orderItem, List orderStatuses) {
         return EntityUtil.filterByAnd(orderStatuses, UtilMisc.toMap("orderItemSeqId", orderItem.get("orderItemSeqId")));
     }
 
-    //Order Item Adjs Utility Methods
-    
+    // Order Item Adjs Utility Methods
+
     public static double calcItemAdjustments(Double quantity, Double unitPrice, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping, boolean forTax, boolean forShipping) {
         double adjTotal = 0.0;
+
         if (adjustments != null && adjustments.size() > 0) {
             List filteredAdjs = filterOrderAdjustments(adjustments, includeOther, includeTax, includeShipping, forTax, forShipping);
             Iterator adjIt = filteredAdjs.iterator();
+
             while (adjIt.hasNext()) {
                 GenericValue orderAdjustment = (GenericValue) adjIt.next();
+
                 adjTotal += OrderReadHelper.calcItemAdjustment(orderAdjustment, quantity, unitPrice);
             }
         }
@@ -486,6 +539,7 @@ public class OrderReadHelper {
 
     public static double calcItemAdjustment(GenericValue itemAdjustment, Double quantity, Double unitPrice) {
         double adjustment = 0.0;
+
         if (itemAdjustment.get("amount") != null) {
             adjustment += itemAdjustment.getDouble("amount").doubleValue();
         }
@@ -501,12 +555,15 @@ public class OrderReadHelper {
 
     public static List filterOrderAdjustments(List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping, boolean forTax, boolean forShipping) {
         List newOrderAdjustmentsList = new LinkedList();
+
         if (adjustments != null && adjustments.size() > 0) {
             Iterator adjIt = adjustments.iterator();
+
             while (adjIt.hasNext()) {
                 GenericValue orderAdjustment = (GenericValue) adjIt.next();
 
                 boolean includeAdjustment = false;
+
                 if ("SALES_TAX".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
                     if (includeTax) includeAdjustment = true;
                 } else if ("SHIPPING_CHARGES".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
@@ -515,16 +572,16 @@ public class OrderReadHelper {
                     if (includeOther) includeAdjustment = true;
                 }
 
-                //default to yes, include for shipping; so only exclude if includeInShipping is N, or false; if Y or null or anything else it will be included
+                // default to yes, include for shipping; so only exclude if includeInShipping is N, or false; if Y or null or anything else it will be included
                 if (forTax && "N".equals(orderAdjustment.getString("includeInTax"))) {
                     includeAdjustment = false;
                 }
 
-                //default to yes, include for shipping; so only exclude if includeInShipping is N, or false; if Y or null or anything else it will be included
+                // default to yes, include for shipping; so only exclude if includeInShipping is N, or false; if Y or null or anything else it will be included
                 if (forShipping && "N".equals(orderAdjustment.getString("includeInShipping"))) {
                     includeAdjustment = false;
                 }
-                
+
                 if (includeAdjustment) {
                     newOrderAdjustmentsList.add(orderAdjustment);
                 }
@@ -532,7 +589,7 @@ public class OrderReadHelper {
         }
         return newOrderAdjustmentsList;
     }
-	
+
     /** Getter for property orderHeader.
      * @return Value of property orderHeader.
      */

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * NotSuspended Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class NotSuspended extends WfException {
 
-    public NotSuspended() {
-    }
+    public NotSuspended() {}
 
     public NotSuspended(String msg) {
         super(msg);

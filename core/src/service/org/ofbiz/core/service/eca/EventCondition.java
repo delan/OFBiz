@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.service.eca;
 
+
 import java.util.*;
 import java.net.*;
 import java.io.*;
@@ -33,6 +34,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * EventCondition
@@ -50,8 +52,7 @@ public class EventCondition {
     protected String format;
     protected boolean constant = false;
 
-    protected EventCondition() {
-    }
+    protected EventCondition() {}
 
     public EventCondition(Element condition, boolean constant) {
         this.lhsValueName = condition.getAttribute("field-name");
@@ -80,12 +81,14 @@ public class EventCondition {
         if (serviceName == null || dctx == null || context == null || dctx.getClassLoader() == null)
             throw new GenericServiceException("Cannot have null Service, Context or DispatchContext!");
         Object lhsValue, rhsValue;
+
         if (Debug.verboseOn()) Debug.logVerbose(this.toString());
 
         if (lhsMapName != null && lhsMapName.length() > 0) {
             try {
                 if (context.containsKey(lhsMapName)) {
                     Map envMap = (Map) context.get(lhsMapName);
+
                     lhsValue = envMap.get(lhsValueName);
                 } else {
                     Debug.logVerbose("Map (" + lhsMapName + ") not found in context.");
@@ -110,6 +113,7 @@ public class EventCondition {
             try {
                 if (context.containsKey(rhsMapName)) {
                     Map envMap = (Map) context.get(rhsMapName);
+
                     rhsValue = envMap.get(rhsValueName);
                 } else {
                     Debug.logVerbose("Map (" + rhsMapName + ") not found in context.");
@@ -138,6 +142,7 @@ public class EventCondition {
         // if any messages were returned send them out
         if (messages.size() > 0) {
             Iterator m = messages.iterator();
+
             while (m.hasNext())
                 Debug.logWarning((String) m.next());
         }
@@ -146,6 +151,7 @@ public class EventCondition {
 
     public String toString() {
         StringBuffer buf = new StringBuffer();
+
         buf.append("[" + lhsMapName + "]");
         buf.append("[" + lhsValueName + "]");
         buf.append("[" + operator + "]");

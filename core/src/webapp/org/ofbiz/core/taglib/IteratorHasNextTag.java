@@ -25,10 +25,12 @@
 
 package org.ofbiz.core.taglib;
 
+
 import java.io.*;
 import java.util.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
+
 
 /**
  * IteratorHasNextTag - Conditional Tag.
@@ -41,7 +43,7 @@ public class IteratorHasNextTag extends BodyTagSupport {
 
     public int doStartTag() throws JspTagException {
         IteratorTag iteratorTag =
-                (IteratorTag) findAncestorWithClass(this, IteratorTag.class);
+            (IteratorTag) findAncestorWithClass(this, IteratorTag.class);
 
         if (iteratorTag == null)
             throw new JspTagException("IterateNextTag not inside IteratorTag.");
@@ -61,8 +63,10 @@ public class IteratorHasNextTag extends BodyTagSupport {
     public int doEndTag() {
         try {
             BodyContent body = getBodyContent();
+
             if (body != null) {
                 JspWriter out = body.getEnclosingWriter();
+
                 out.print(body.getString());
             }
         } catch (IOException e) {
@@ -71,7 +75,4 @@ public class IteratorHasNextTag extends BodyTagSupport {
         return EVAL_PAGE;
     }
 }
-
-
-
 

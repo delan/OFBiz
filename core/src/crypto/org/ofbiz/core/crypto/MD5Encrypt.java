@@ -4,8 +4,10 @@
 
 package org.ofbiz.core.crypto;
 
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
 
 /**
  * <p><b>Title:</b> MD5Encrypt.java
@@ -98,6 +100,7 @@ public class MD5Encrypt {
 
         byte[] val = string.getBytes();
         MessageDigest algorithm = null;
+
         try {
             algorithm = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
@@ -108,6 +111,7 @@ public class MD5Encrypt {
         algorithm.update(val);
         byte[] digest = algorithm.digest();
         String crypt = new String(digest);
+
         return crypt;
     }
 }

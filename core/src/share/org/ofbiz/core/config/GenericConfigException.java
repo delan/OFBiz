@@ -24,8 +24,10 @@
 
 package org.ofbiz.core.config;
 
+
 import java.io.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * GenericConfigException

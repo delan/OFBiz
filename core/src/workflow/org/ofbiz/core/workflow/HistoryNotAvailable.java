@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * HistoryNotAvailable Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class HistoryNotAvailable extends WfException {
 
-    public HistoryNotAvailable() {
-    }
+    public HistoryNotAvailable() {}
 
     public HistoryNotAvailable(String msg) {
         super(msg);

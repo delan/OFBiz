@@ -25,10 +25,12 @@
 
 package org.ofbiz.core.config;
 
+
 import java.util.*;
 import java.net.*;
 import java.io.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Loads resources from a URL
@@ -40,8 +42,9 @@ import org.ofbiz.core.util.*;
 public class UrlLoader extends ResourceLoader {
     public InputStream loadResource(String location) throws GenericConfigException {
         String fullLocation = fullLocation(location);
-        
+
         URL url = null;
+
         try {
             url = new URL(fullLocation);
         } catch (java.net.MalformedURLException e) {

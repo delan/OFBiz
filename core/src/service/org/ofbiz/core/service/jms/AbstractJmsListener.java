@@ -24,12 +24,14 @@
 
 package org.ofbiz.core.service.jms;
 
+
 import java.util.*;
 import javax.jms.*;
 
 import org.ofbiz.core.serialize.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * AbstractJmsListener
@@ -47,6 +49,7 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
 
     public AbstractJmsListener(ServiceDispatcher dispatcher) {
         DispatchContext dctx = new DispatchContext("JMSDispatcher", null, this.getClass().getClassLoader(), null);
+
         this.dispatcher = new LocalDispatcher(dctx, dispatcher);
     }
 
@@ -54,6 +57,7 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
         Map context = null;
         String serviceName = null;
         String xmlContext = null;
+
         try {
             serviceName = message.getString("serviceName");
             xmlContext = message.getString("serviceContext");
@@ -63,6 +67,7 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
             }
 
             Object o = XmlSerializer.deserialize(xmlContext, dispatcher.getDelegator());
+
             if (Debug.verboseOn()) Debug.logVerbose("De-Serialized Context --> " + o, module);
             if (ObjectType.instanceOf(o, "java.util.Map"))
                 context = (Map) o;
@@ -74,6 +79,7 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
 
         if (Debug.verboseOn()) Debug.logVerbose("Running service: " + serviceName, module);
         Map result = null;
+
         if (context != null) {
             try {
                 result = dispatcher.runSync(serviceName, context);
@@ -86,6 +92,7 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
 
     public void onMessage(Message message) {
         MapMessage mapMessage = null;
+
         if (Debug.infoOn()) Debug.logInfo("JMS Message Received --> " + message, module);
         if (message instanceof MapMessage) {
             mapMessage = (MapMessage) message;
@@ -105,7 +112,7 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
             } catch (GenericServiceException e) {
                 try {
                     Thread.sleep(10000);
-                } catch (InterruptedException ie) { }
+                } catch (InterruptedException ie) {}
                 continue;
             }
         }

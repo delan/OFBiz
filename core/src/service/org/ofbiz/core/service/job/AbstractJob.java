@@ -25,10 +25,12 @@
 
 package org.ofbiz.core.service.job;
 
+
 import java.util.*;
 
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Abstract Service Job - Invokes a service
@@ -60,7 +62,7 @@ public abstract class AbstractJob implements Job {
      * Returns true if this job is still valid.
      */
     public boolean isValid() {
-        if ( runtime > 0 )
+        if (runtime > 0)
             return true;
         return false;
     }

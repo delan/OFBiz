@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * CannotSuspend Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class CannotSuspend extends WfException {
 
-    public CannotSuspend() {
-    }
+    public CannotSuspend() {}
 
     public CannotSuspend(String msg) {
         super(msg);

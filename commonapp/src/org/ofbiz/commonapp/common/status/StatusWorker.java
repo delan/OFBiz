@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/02/02 12:01:46  jonesde
+ * Changed method of getting dispatcher to get from request instead of ServletContext, more control to control servlet and works with Weblogic
+ *
  * Revision 1.2  2001/12/22 03:55:14  jonesde
  * Refactored status stuff to be more general
  *
@@ -11,12 +14,14 @@
  */
 package org.ofbiz.commonapp.common.status;
 
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
 import javax.servlet.jsp.*;
 import java.sql.*;
 import java.util.*;
+
 
 /**
  * <p><b>Title:</b> StatusWorker
@@ -47,8 +52,10 @@ import java.util.*;
 public class StatusWorker {
     public static void getStatusItems(PageContext pageContext, String attributeName, String statusTypeId) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+
         try {
             Collection statusItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", statusTypeId), UtilMisc.toList("sequenceId"));
+
             if (statusItems != null)
                 pageContext.setAttribute(attributeName, statusItems);
         } catch (GenericEntityException e) {
@@ -59,8 +66,10 @@ public class StatusWorker {
     public static void getStatusItems(PageContext pageContext, String attributeName, String statusTypeIdOne, String statusTypeIdTwo) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         List statusItems = new LinkedList();
+
         try {
             Collection calItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", statusTypeIdOne), UtilMisc.toList("sequenceId"));
+
             if (calItems != null)
                 statusItems.addAll(calItems);
         } catch (GenericEntityException e) {
@@ -68,12 +77,13 @@ public class StatusWorker {
         }
         try {
             Collection taskItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", statusTypeIdTwo), UtilMisc.toList("sequenceId"));
+
             if (taskItems != null)
                 statusItems.addAll(taskItems);
         } catch (GenericEntityException e) {
             Debug.logError(e);
         }
-        
+
         if (statusItems.size() > 0)
             pageContext.setAttribute(attributeName, statusItems);
     }
@@ -81,6 +91,7 @@ public class StatusWorker {
     public static void getStatusValidChangeToDetails(PageContext pageContext, String attributeName, String statusId) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         Collection statusValidChangeToDetails = null;
+
         try {
             statusValidChangeToDetails = delegator.findByAndCache("StatusValidChangeToDetail", UtilMisc.toMap("statusId", statusId), UtilMisc.toList("sequenceId"));
         } catch (GenericEntityException e) {

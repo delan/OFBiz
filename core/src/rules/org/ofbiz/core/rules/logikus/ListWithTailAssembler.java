@@ -1,9 +1,11 @@
 package org.ofbiz.core.rules.logikus;
 
+
 import java.util.*;
 import org.ofbiz.core.rules.engine.*;
 import org.ofbiz.core.rules.parse.*;
 import org.ofbiz.core.rules.parse.tokens.*;
+
 
 /**
  * <p><b>Title:</b> List With Tail Assembler
@@ -37,21 +39,22 @@ import org.ofbiz.core.rules.parse.tokens.*;
  * @version 1.0
  */
 public class ListWithTailAssembler extends Assembler {
-  /**
-   * Pops the tail and terms of a list from an assembly's stack,
-   * builds the list, and pushes it.
-   *
-   * @param  Assembly  the assembly to work on
-   */
-  public void workOn(Assembly a) {
-    Term tail = (Term) a.pop();
-    
-    Token fence = new Token('[');
-    
-    List termVector = elementsAbove(a, fence);
-    Term[] termsToLast =
-    StructureWithTermsAssembler.vectorReversedIntoTerms(termVector);
-    
-    a.push(Structure.list(termsToLast, tail));
-  }
+
+    /**
+     * Pops the tail and terms of a list from an assembly's stack,
+     * builds the list, and pushes it.
+     *
+     * @param  Assembly  the assembly to work on
+     */
+    public void workOn(Assembly a) {
+        Term tail = (Term) a.pop();
+
+        Token fence = new Token('[');
+
+        List termVector = elementsAbove(a, fence);
+        Term[] termsToLast =
+            StructureWithTermsAssembler.vectorReversedIntoTerms(termVector);
+
+        a.push(Structure.list(termsToLast, tail));
+    }
 }

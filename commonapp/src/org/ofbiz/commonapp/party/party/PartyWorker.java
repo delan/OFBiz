@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/08/20 15:52:17  dustinsc
+ * fixed project issues
+ *
  * Revision 1.2  2002/02/02 12:01:47  jonesde
  * Changed method of getting dispatcher to get from request instead of ServletContext, more control to control servlet and works with Weblogic
  *
@@ -11,12 +14,14 @@
  */
 package org.ofbiz.commonapp.party.party;
 
+
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.jsp.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * <p><b>Title:</b> Worker methods for Party Information
@@ -50,6 +55,7 @@ public class PartyWorker {
 
         try {
             GenericValue party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+
             if (party != null)
                 pageContext.setAttribute(partyAttr, party);
         } catch (GenericEntityException e) {
@@ -58,6 +64,7 @@ public class PartyWorker {
 
         try {
             GenericValue person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
+
             if (person != null)
                 pageContext.setAttribute(personAttr, person);
         } catch (GenericEntityException e) {
@@ -66,6 +73,7 @@ public class PartyWorker {
 
         try {
             GenericValue partyGroup = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
+
             if (partyGroup != null)
                 pageContext.setAttribute(partyGroupAttr, partyGroup);
         } catch (GenericEntityException e) {

@@ -24,6 +24,7 @@
 
 package org.ofbiz.commonapp.security.login;
 
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.util.*;
@@ -35,6 +36,7 @@ import org.ofbiz.core.security.*;
 import org.ofbiz.core.stats.*;
 import org.ofbiz.commonapp.party.contact.ContactHelper;
 
+
 /**
  * LoginEvents - Events for UserLogin and Security handling.
  *
@@ -45,7 +47,7 @@ import org.ofbiz.commonapp.party.contact.ContactHelper;
  * @created    Oct 19, 2001
  */
 public class LoginEvents {
-    
+
     /**
      * Save USERNAME and PASSWORD for use by auth pages even if we start in non-auth pages.
      *
@@ -57,30 +59,29 @@ public class LoginEvents {
      * @return
      */
     public static String saveEntryParams(HttpServletRequest request, HttpServletResponse response)
-            throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
-        GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         HttpSession session = request.getSession();
 
         // save entry login parameters if we don't have a valid login object
         if (userLogin == null) {
-            
+
             String username = request.getParameter("USERNAME");
             String password = request.getParameter("PASSWORD");
-            
+
             // save parameters into the session - so they can be used later, if needed
             if (username != null) session.setAttribute("USERNAME", username);
             if (password != null) session.setAttribute("PASSWORD", password);
-            
+
         } else {
             // if the login object is valid, remove attributes
             session.removeAttribute("USERNAME");
             session.removeAttribute("PASSWORD");
         }
-        
+
         return "success";
     }
-    
-    
+
     /**
      * An HTTP WebEvent handler that checks to see is a userLogin is logged in.
      * If not, the user is forwarded to the /login.jsp page.
@@ -93,13 +94,13 @@ public class LoginEvents {
      * @return
      */
     public static String checkLogin(HttpServletRequest request, HttpServletResponse response)
-            throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
-        GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         HttpSession session = request.getSession();
 
         String username = null;
         String password = null;
-        
+
         if (userLogin == null) {
             // check parameters
             if (username == null) username = request.getParameter("USERNAME");
@@ -111,8 +112,10 @@ public class LoginEvents {
             if ((username == null) || (password == null) || ("error".equals(login(request, response)))) {
                 String queryString = null;
                 Enumeration params = request.getParameterNames();
+
                 while (params != null && params.hasMoreElements()) {
                     String paramName = (String) params.nextElement();
+
                     if (paramName != null) {
                         if (queryString == null) {
                             queryString = paramName + "=" + request.getParameter(paramName);
@@ -131,11 +134,11 @@ public class LoginEvents {
 
                 return "error";
             }
-        } 
-        
+        }
+
         return "success";
     }
-    
+
     /**
      * An HTTP WebEvent handler that logs in a userLogin. This should run before the security check.
      *
@@ -148,17 +151,18 @@ public class LoginEvents {
      * @exception java.io.IOException Standard IO Exception
      */
     public static String login(HttpServletRequest request, HttpServletResponse response)
-            throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
+        throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
         HttpSession session = request.getSession();
 
         String username = request.getParameter("USERNAME");
         String password = request.getParameter("PASSWORD");
-        
+
         if (username == null) username = (String) session.getAttribute("USERNAME");
         if (password == null) password = (String) session.getAttribute("PASSWORD");
 
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map result = null;
+
         try {
             result = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", username, "login.password", password));
         } catch (GenericServiceException e) {
@@ -166,26 +170,28 @@ public class LoginEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<b>The following error occured during login:</b><br>" + e.getMessage());
             return "error";
         }
-        
+
         if (ModelService.RESPOND_SUCCESS.equals(result.get(ModelService.RESPONSE_MESSAGE))) {
             GenericValue userLogin = (GenericValue) result.get("userLogin");
+
             if (userLogin != null) {
                 session.setAttribute(SiteDefs.USER_LOGIN, userLogin);
-                //let the visit know who the user is
+                // let the visit know who the user is
                 VisitHandler.setUserLogin(session, userLogin, false);
             }
         } else {
             String errMsg = (String) result.get(ModelService.ERROR_MESSAGE);
+
             errMsg = "<b>The following error occured during login:</b><br>" + errMsg;
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
-        
+
         request.setAttribute(SiteDefs.LOGIN_PASSED, "TRUE");
-        //make sure the autoUserLogin is set to the same and that the client cookie has the correct userLoginId
+        // make sure the autoUserLogin is set to the same and that the client cookie has the correct userLoginId
         return autoLoginSet(request, response);
     }
-    
+
     /**
      * An HTTP WebEvent handler that logs out a userLogin by clearing the session.
      *
@@ -196,33 +202,33 @@ public class LoginEvents {
      * @exception java.io.IOException Standard IO Exception
      */
     public static String logout(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException {
-        //invalidate the security group list cache
+        // invalidate the security group list cache
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        Security security = (Security)request.getAttribute("security");
-        
-        if(security != null && userLogin != null) {
+        Security security = (Security) request.getAttribute("security");
+
+        if (security != null && userLogin != null) {
             security.userLoginSecurityGroupByUserLoginId.remove(userLogin.getString("userLoginId"));
         }
-        
+
         HttpSession session = request.getSession();
-        
-        //this is a setting we don't want to lose, although it would be good to have a more general solution here...
+
+        // this is a setting we don't want to lose, although it would be good to have a more general solution here...
         String currCatalog = (String) session.getAttribute("CURRENT_CATALOG_ID");
-        //also make sure the delegatorName is preserved, especially so that a new Visit can be created
+        // also make sure the delegatorName is preserved, especially so that a new Visit can be created
         String delegatorName = (String) session.getAttribute("delegatorName");
-        
+
         session.invalidate();
         session = request.getSession(true);
-        
-        if(currCatalog != null) session.setAttribute("CURRENT_CATALOG_ID", currCatalog);
-        if(delegatorName != null) session.setAttribute("delegatorName", delegatorName);
-        
+
+        if (currCatalog != null) session.setAttribute("CURRENT_CATALOG_ID", currCatalog);
+        if (delegatorName != null) session.setAttribute("delegatorName", delegatorName);
+
         if (request.getAttribute("_AUTO_LOGIN_LOGOUT_") == null) {
             return autoLoginCheck(request, response);
         }
         return "success";
     }
-    
+
     /**
      * The user forgot his/her password.  This will either call showPasswordHint or emailPassword.
      *
@@ -231,52 +237,54 @@ public class LoginEvents {
      * @return String specifying the exit status of this event
      */
     public static String forgotPassword(HttpServletRequest request, HttpServletResponse response) {
-        if ((UtilValidate.isNotEmpty(request.getParameter("GET_PASSWORD_HINT"))) || (UtilValidate.isNotEmpty(request.getParameter("GET_PASSWORD_HINT.x")))){
+        if ((UtilValidate.isNotEmpty(request.getParameter("GET_PASSWORD_HINT"))) || (UtilValidate.isNotEmpty(request.getParameter("GET_PASSWORD_HINT.x")))) {
             return showPasswordHint(request, response);
         } else {
             return emailPassword(request, response);
         }
     }
-    
+
     /** Show the password hint for the userLoginId specified in the request object.
      *@param request The HTTPRequest object for the current request
      *@param response The HTTPResponse object for the current request
      *@return String specifying the exit status of this event
      */
     public static String showPasswordHint(HttpServletRequest request, HttpServletResponse response) {
-        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
-        
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+
         String userLoginId = request.getParameter("USERNAME");
-        
-        if(!UtilValidate.isNotEmpty(userLoginId)) {
-            //the password was incomplete
+
+        if (!UtilValidate.isNotEmpty(userLoginId)) {
+            // the password was incomplete
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The Username was empty, please re-enter.");
             return "error";
         }
-        
+
         GenericValue supposedUserLogin = null;
+
         try {
             supposedUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         } catch (GenericEntityException gee) {
             Debug.logWarning(gee);
         }
         if (supposedUserLogin == null) {
-            //the Username was not found
+            // the Username was not found
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The Username was not found, please re-enter.");
             return "error";
         }
-        
-        String passwordHint = supposedUserLogin .getString("passwordHint");
+
+        String passwordHint = supposedUserLogin.getString("passwordHint");
+
         if (!UtilValidate.isNotEmpty(passwordHint)) {
-            //the Username was not found
+            // the Username was not found
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>No password hint was specified, try having the password emailed instead.");
             return "error";
         }
-        
+
         request.setAttribute(SiteDefs.EVENT_MESSAGE, "The Password Hint is: " + passwordHint);
         return "success";
     }
-    
+
     /**
      *  Email the password for the userLoginId specified in the request object.
      *
@@ -287,9 +295,10 @@ public class LoginEvents {
     public static String emailPassword(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
+        String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
+
         try {
             ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
         } catch (java.net.MalformedURLException e) {
@@ -297,24 +306,26 @@ public class LoginEvents {
         }
 
         boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
-        
+
         String userLoginId = request.getParameter("USERNAME");
-        
+
         if (!UtilValidate.isNotEmpty(userLoginId)) {
-            //the password was incomplete
+            // the password was incomplete
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The Username was empty, please re-enter.");
             return "error";
         }
-        
+
         GenericValue supposedUserLogin = null;
         String passwordToSend = null;
+
         try {
             supposedUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
             if (useEncryption) {
-                //password encrypted, can't send, generate new password and email to user
+                // password encrypted, can't send, generate new password and email to user
                 double randNum = Math.random();
-                //multiply by 100,000 to usually make a 5 digit number
-                passwordToSend = "auto" + ((long)(randNum * 100000));
+
+                // multiply by 100,000 to usually make a 5 digit number
+                passwordToSend = "auto" + ((long) (randNum * 100000));
                 supposedUserLogin.set("currentPassword", HashEncrypt.getHash(passwordToSend));
                 supposedUserLogin.set("passwordHint", "Auto-Generated Password");
             } else {
@@ -326,13 +337,14 @@ public class LoginEvents {
             return "error";
         }
         if (supposedUserLogin == null) {
-            //the Username was not found
+            // the Username was not found
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>A user with the username \"" + userLoginId + "\" was not found, please re-enter.");
             return "error";
         }
-        
+
         StringBuffer emails = new StringBuffer();
         GenericValue party = null;
+
         try {
             party = supposedUserLogin.getRelatedOne("Party");
         } catch (GenericEntityException e) {
@@ -340,25 +352,28 @@ public class LoginEvents {
             party = null;
         }
         if (party != null) {
-            //Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false));
+            // Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false));
             Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByPurpose(party, "PRIMARY_EMAIL", false));
+
             while (emailIter != null && emailIter.hasNext()) {
                 GenericValue email = (GenericValue) emailIter.next();
+
                 emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
             }
         }
-        
+
         if (!UtilValidate.isNotEmpty(emails.toString())) {
-            //the Username was not found
+            // the Username was not found
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>No Primary Email Address has been set, please contact customer service.");
             return "error";
         }
-        
+
         String SMTP_SERVER = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");
-        //String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
+        // String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
         String PASSWORD_SENDER_EMAIL = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "password.send.email");
 
         String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
+
         if (controlPath == null) {
             Debug.logError("[CheckOutEvents.renderConfirmOrder] CONTROL_PATH is null.");
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error generating order confirmation, but it was recorded and will be processed.");
@@ -368,14 +383,16 @@ public class LoginEvents {
         StringBuffer serverRoot = new StringBuffer();
         String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
         String port = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
+
         serverRoot.append("http://");
         serverRoot.append(server);
         if (!port.equals("80")) {
             serverRoot.append(":" + port);
         }
         String bodyUrl = serverRoot + controlPath + "/passwordemail";
-        
+
         Map context = new HashMap();
+
         if (useEncryption) {
             context.put("subject", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " New Password");
         } else {
@@ -387,13 +404,15 @@ public class LoginEvents {
         context.put("sendVia", SMTP_SERVER);
 
         Map parameters = new HashMap();
+
         parameters.put("password", UtilFormatOut.checkNull(passwordToSend));
         parameters.put("useEncryption", new Boolean(useEncryption).toString());
         context.put("bodyUrlParameters", parameters);
-        
-        //String content = "Username: " + userLoginId + "\n" + (useEncryption ? "New Password: " : "Current Password: ") + ;
+
+        // String content = "Username: " + userLoginId + "\n" + (useEncryption ? "New Password: " : "Current Password: ") + ;
         try {
             Map result = dispatcher.runSync("sendMailFromUrl", context);
+
             if (ModelService.RESPOND_ERROR.equals((String) result.get(ModelService.RESPONSE_MESSAGE))) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error occurred: unable to email password.  Please try again later or contact customer service. (error was: " + result.get(ModelService.ERROR_MESSAGE) + ")");
                 return "error";
@@ -403,8 +422,8 @@ public class LoginEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error occurred: unable to email password.  Please try again later or contact customer service.");
             return "error";
         }
-        
-        //don't save password until after it has been sent
+
+        // don't save password until after it has been sent
         if (useEncryption) {
             try {
                 supposedUserLogin.store();
@@ -414,7 +433,7 @@ public class LoginEvents {
                 return "error";
             }
         }
-        
+
         if (useEncryption) {
             request.setAttribute(SiteDefs.EVENT_MESSAGE, "A new password has been created and sent to you.  Please check your Email.");
         } else {
@@ -422,14 +441,15 @@ public class LoginEvents {
         }
         return "success";
     }
-    
+
     protected static String getAutoLoginCookieName(HttpServletRequest request) {
         return UtilMisc.getApplicationName(request) + ".autoUserLoginId";
     }
-    
+
     public static String getAutoUserLoginId(HttpServletRequest request) {
         String autoUserLoginId = null;
         Cookie[] cookies = request.getCookies();
+
         if (cookies != null) {
             for (int i = 0; i < cookies.length; i++) {
                 if (cookies[i].getName().equals(getAutoLoginCookieName(request))) {
@@ -444,6 +464,7 @@ public class LoginEvents {
     public static String autoLoginCheck(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         HttpSession session = request.getSession();
+
         return autoLoginCheck(delegator, session, getAutoUserLoginId(request));
     }
 
@@ -473,7 +494,8 @@ public class LoginEvents {
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
         Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
-        autoLoginCookie.setMaxAge(60*60*24*365);
+
+        autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
         response.addCookie(autoLoginCookie);
         return autoLoginCheck(delegator, session, userLogin.getString("userLoginId"));
     }
@@ -481,9 +503,11 @@ public class LoginEvents {
     public static String autoLoginRemove(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException {
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("autoUserLogin");
+
         // remove the cookie
         if (userLogin != null) {
             Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
+
             autoLoginCookie.setMaxAge(0);
             response.addCookie(autoLoginCookie);
         }

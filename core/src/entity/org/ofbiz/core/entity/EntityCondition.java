@@ -24,9 +24,11 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.io.*;
 import java.util.*;
 import org.ofbiz.core.entity.model.*;
+
 
 /**
  * Represents the conditions to be used to constrain a query
@@ -44,5 +46,6 @@ import org.ofbiz.core.entity.model.*;
  */
 public abstract class EntityCondition implements Serializable {
     abstract public String makeWhereString(ModelEntity modelEntity, List entityConditionParams);
+
     abstract public void checkCondition(ModelEntity modelEntity) throws GenericModelException;
 }

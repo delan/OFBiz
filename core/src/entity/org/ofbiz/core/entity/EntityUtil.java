@@ -24,9 +24,11 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.util.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
+
 
 /**
  * Helper methods when dealing with Entities, especially ones that follow certain conventions
@@ -91,7 +93,7 @@ public class EntityUtil {
     public static List filterByDate(List datedValues, java.util.Date moment) {
         return filterByDate(datedValues, new java.sql.Timestamp(moment.getTime()), "fromDate", "thruDate", true);
     }
-    
+
     /**
      *returns the values that are active at the moment.
      *
@@ -102,7 +104,7 @@ public class EntityUtil {
     public static List filterByDate(List datedValues, java.sql.Timestamp moment) {
         return filterByDate(datedValues, moment, "fromDate", "thruDate", true);
     }
-    
+
     /**
      *returns the values that are active at the moment.
      *
@@ -119,40 +121,45 @@ public class EntityUtil {
 
         List result = new LinkedList();
         Iterator iter = datedValues.iterator();
-        
+
         if (allAreSame) {
             ModelField fromDateField = null;
             ModelField thruDateField = null;
+
             if (iter.hasNext()) {
                 GenericValue datedValue = (GenericValue) iter.next();
+
                 fromDateField = datedValue.getModelEntity().getField(fromDateName);
                 if (fromDateField == null) throw new IllegalArgumentException("\"" + fromDateName + "\" is not a field of " + datedValue.getEntityName());
                 thruDateField = datedValue.getModelEntity().getField(thruDateName);
                 if (fromDateField == null) throw new IllegalArgumentException("\"" + thruDateName + "\" is not a field of " + datedValue.getEntityName());
-                
+
                 java.sql.Timestamp fromDate = (java.sql.Timestamp) datedValue.dangerousGetNoCheckButFast(fromDateField);
                 java.sql.Timestamp thruDate = (java.sql.Timestamp) datedValue.dangerousGetNoCheckButFast(thruDateField);
+
                 if ((thruDate == null || thruDate.after(moment)) && (fromDate == null || fromDate.before(moment))) {
                     result.add(datedValue);
-                }//else not active at moment
+                }// else not active at moment
             }
             while (iter.hasNext()) {
                 GenericValue datedValue = (GenericValue) iter.next();
                 java.sql.Timestamp fromDate = (java.sql.Timestamp) datedValue.dangerousGetNoCheckButFast(fromDateField);
                 java.sql.Timestamp thruDate = (java.sql.Timestamp) datedValue.dangerousGetNoCheckButFast(thruDateField);
+
                 if ((thruDate == null || thruDate.after(moment)) && (fromDate == null || fromDate.before(moment))) {
                     result.add(datedValue);
-                }//else not active at moment
+                }// else not active at moment
             }
         } else {
-            //if not all values are known to be of the same entity, must check each one...
+            // if not all values are known to be of the same entity, must check each one...
             while (iter.hasNext()) {
                 GenericValue datedValue = (GenericValue) iter.next();
                 java.sql.Timestamp fromDate = datedValue.getTimestamp(fromDateName);
                 java.sql.Timestamp thruDate = datedValue.getTimestamp(thruDateName);
+
                 if ((thruDate == null || thruDate.after(moment)) && (fromDate == null || fromDate.before(moment))) {
                     result.add(datedValue);
-                }//else not active at moment
+                }// else not active at moment
             }
         }
 
@@ -170,16 +177,19 @@ public class EntityUtil {
         if (values == null) return null;
 
         List result = null;
+
         if (fields == null || fields.size() == 0) {
             result = new ArrayList(values);
         } else {
             result = new ArrayList(values.size());
             Iterator iter = values.iterator();
+
             while (iter.hasNext()) {
                 GenericValue value = (GenericValue) iter.next();
+
                 if (value.matchesFields(fields)) {
                     result.add(value);
-                }//else did not match
+                }// else did not match
             }
         }
         return result;
@@ -195,22 +205,25 @@ public class EntityUtil {
     public static List filterByAnd(List values, List exprs) {
         if (values == null) return null;
         if (exprs == null || exprs.size() == 0) {
-            //no constraints... oh well
+            // no constraints... oh well
             return values;
         }
 
         List result = new ArrayList();
         Iterator iter = values.iterator();
+
         while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();
             Iterator exprIter = exprs.iterator();
             boolean include = true;
+
             while (exprIter.hasNext()) {
                 EntityExpr expr = (EntityExpr) exprIter.next();
                 Object lhs = value.get((String) expr.getLhs());
                 Object rhs = expr.getRhs();
+
                 if (EntityOperator.EQUALS.equals(expr.getOperator())) {
-                    //if the field named by lhs is not equal to rhs value, constraint fails
+                    // if the field named by lhs is not equal to rhs value, constraint fails
                     if (lhs == null) {
                         if (rhs != null) {
                             include = false;
@@ -254,6 +267,7 @@ public class EntityUtil {
         if (values.size() == 0) return UtilMisc.toList(values);
 
         List result = new ArrayList(values);
+
         Collections.sort(result, new OrderByComparator(orderBy));
         return result;
     }
@@ -263,6 +277,7 @@ public class EntityUtil {
 
         List result = new ArrayList();
         Iterator iter = values.iterator();
+
         while (iter.hasNext()) {
             result.addAll(((GenericValue) iter.next()).getRelated(relationName));
         }
@@ -274,6 +289,7 @@ public class EntityUtil {
 
         List result = new ArrayList();
         Iterator iter = values.iterator();
+
         while (iter.hasNext()) {
             result.addAll(((GenericValue) iter.next()).getRelatedCache(relationName));
         }
@@ -285,6 +301,7 @@ public class EntityUtil {
 
         List result = new ArrayList();
         Iterator iter = values.iterator();
+
         while (iter.hasNext()) {
             result.addAll(((GenericValue) iter.next()).getRelatedByAnd(relationName, fields));
         }
@@ -307,6 +324,7 @@ public class EntityUtil {
             if (startIndex >= orderBy.size()) throw new IllegalArgumentException("startIndex may not be greater than or equal to orderBy size");
             String fieldAndDirection = (String) orderBy.get(startIndex);
             String upper = fieldAndDirection.trim().toUpperCase();
+
             if (upper.endsWith(" DESC")) {
                 this.descending = true;
                 this.field = fieldAndDirection.substring(0, fieldAndDirection.length() - 5);
@@ -319,11 +337,12 @@ public class EntityUtil {
             }
             if (startIndex + 1 < orderBy.size()) {
                 this.next = new OrderByComparator(orderBy, startIndex + 1);
-            }//else keep null
+            }// else keep null
         }
 
         public int compare(java.lang.Object obj, java.lang.Object obj1) {
             int result = compareAsc((GenericEntity) obj, (GenericEntity) obj1);
+
             if (descending && result != 0) {
                 result = -result;
             }
@@ -343,19 +362,22 @@ public class EntityUtil {
             }
             Object value = obj.dangerousGetNoCheckButFast(this.modelField);
             Object value2 = obj2.dangerousGetNoCheckButFast(this.modelField);
-            //null is defined as the largest possible value
+
+            // null is defined as the largest possible value
             if (value == null) return value2 == null ? 0 : 1;
             if (value2 == null) return value == null ? 0 : -1;
             int result = ((Comparable) value).compareTo(value2);
-            //if (Debug.infoOn()) Debug.logInfo("[OrderByComparator.compareAsc] Result is " + result + " for [" + value + "] and [" + value2 + "]");
+
+            // if (Debug.infoOn()) Debug.logInfo("[OrderByComparator.compareAsc] Result is " + result + " for [" + value + "] and [" + value2 + "]");
             return result;
         }
 
         public boolean equals(java.lang.Object obj) {
             if ((obj != null) && (obj instanceof OrderByComparator)) {
                 OrderByComparator that = (OrderByComparator) obj;
+
                 return this.field.equals(that.field) && (this.descending == that.descending)
-                        && UtilValidate.areEqual(this.next, that.next);
+                    && UtilValidate.areEqual(this.next, that.next);
             } else {
                 return false;
             }

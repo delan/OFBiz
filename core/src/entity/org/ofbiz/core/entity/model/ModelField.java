@@ -71,7 +71,7 @@ public class ModelField {
         this.type = UtilXml.checkEmpty(fieldElement.getAttribute("type"));
         this.name = UtilXml.checkEmpty(fieldElement.getAttribute("name"));
         this.colName = UtilXml.checkEmpty(fieldElement.getAttribute("col-name"), ModelUtil.javaNameToDbName(UtilXml.checkEmpty(this.name)));
-        this.isPk = false; //is set elsewhere
+        this.isPk = false; // is set elsewhere
 
         NodeList validateList = fieldElement.getElementsByTagName("validate");
 
@@ -87,11 +87,11 @@ public class ModelField {
         this.colName = ccInfo.columnName.toUpperCase();
         this.name = ModelUtil.dbNameToVarName(this.colName);
 
-        //figure out the type according to the typeName, columnSize and decimalDigits
+        // figure out the type according to the typeName, columnSize and decimalDigits
         this.type = ModelUtil.induceFieldType(ccInfo.typeName, ccInfo.columnSize, ccInfo.decimalDigits, modelFieldTypeReader);
 
-        //how do we find out if it is a primary key? for now, if not nullable, assume it is a pk
-        //this is a bad assumption, but since this output must be edited by hand later anyway, oh well
+        // how do we find out if it is a primary key? for now, if not nullable, assume it is a pk
+        // this is a bad assumption, but since this output must be edited by hand later anyway, oh well
         if ("NO".equals(ccInfo.isNullable))
             this.isPk = true;
         else

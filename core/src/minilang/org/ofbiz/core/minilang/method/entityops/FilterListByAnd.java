@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.entityops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.entity.*;
+
 
 /**
  * Uses the delegator to find entity values by anding the map fields
@@ -56,6 +58,7 @@ public class FilterListByAnd extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         Map theMap = null;
+
         if (UtilValidate.isNotEmpty(mapName)) {
             theMap = (Map) methodContext.getEnv(mapName);
         }

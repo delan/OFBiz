@@ -25,11 +25,13 @@
 
 package org.ofbiz.core.workflow.impl;
 
+
 import java.util.*;
 
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
+
 
 /**
  * WfRequesterImpl - Workflow Requester implementation
@@ -75,14 +77,14 @@ public class WfRequesterImpl implements WfRequester {
 
         // Start the process  -- moved to the WorkflowEngine
         /*
-        try {
-            process.start();
-        } catch (CannotStart cs) {
-            throw new WfException("Cannot start process", cs);
-        } catch (AlreadyRunning ar) {
-            throw new WfException("Process already running", ar);
-        }
-        */
+         try {
+         process.start();
+         } catch (CannotStart cs) {
+         throw new WfException("Cannot start process", cs);
+         } catch (AlreadyRunning ar) {
+         throw new WfException("Process already running", ar);
+         }
+         */
     }
 
     /**
@@ -133,6 +135,7 @@ public class WfRequesterImpl implements WfRequester {
     public synchronized void receiveEvent(WfEventAudit event) throws WfException, InvalidPerformer {
         // Should the source of the audit come from the process? if so use this.
         WfProcess process = null;
+
         try {
             process = (WfProcess) event.source();
         } catch (SourceNotAvailable sna) {
@@ -146,6 +149,7 @@ public class WfRequesterImpl implements WfRequester {
             throw new InvalidPerformer("Performer not assigned to this requester");
 
         GenericRequester req = null;
+
         if (performers.containsKey(process))
             req = (GenericRequester) performers.get(process);
         if (req != null)

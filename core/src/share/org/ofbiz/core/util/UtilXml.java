@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.util;
 
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -47,10 +48,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
-//needed for XML writing with Crimson
-//import org.apache.crimson.tree.*;
-//needed for XML writing with Xerces
+// needed for XML writing with Crimson
+// import org.apache.crimson.tree.*;
+// needed for XML writing with Xerces
 import org.apache.xml.serialize.*;
+
 
 /**
  * Utilities methods to simplify dealing with JAXP & DOM XML parsing
@@ -62,7 +64,7 @@ import org.apache.xml.serialize.*;
 public class UtilXml {
 
     public static final String module = UtilXml.class.getName();
-    
+
     public static String writeXmlDocument(Document document) throws java.io.IOException {
         if (document == null) {
             Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing", module);
@@ -70,14 +72,16 @@ public class UtilXml {
         }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
         writeXmlDocument(bos, document);
         String outString = bos.toString();
+
         if (bos != null) bos.close();
         return outString;
     }
 
     public static void writeXmlDocument(String filename, Document document)
-            throws java.io.FileNotFoundException, java.io.IOException {
+        throws java.io.FileNotFoundException, java.io.IOException {
         if (document == null) {
             Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing", module);
             return;
@@ -89,6 +93,7 @@ public class UtilXml {
 
         File outFile = new File(filename);
         FileOutputStream fos = null;
+
         fos = new FileOutputStream(outFile);
 
         try {
@@ -108,43 +113,46 @@ public class UtilXml {
             return;
         }
 
-        //if(document instanceof XmlDocument) {
-        //Crimson writer
-        //XmlDocument xdoc = (XmlDocument) document;
-        //xdoc.write(os);
-        //}
-        //else {
-        //Xerces writer
+        // if(document instanceof XmlDocument) {
+        // Crimson writer
+        // XmlDocument xdoc = (XmlDocument) document;
+        // xdoc.write(os);
+        // }
+        // else {
+        // Xerces writer
         OutputFormat format = new OutputFormat(document);
+
         format.setIndent(2);
         XMLSerializer serializer = new XMLSerializer(os, format);
+
         serializer.asDOMSerializer();
         serializer.serialize(document.getDocumentElement());
-        //}
+        // }
     }
 
     public static Document readXmlDocument(String content)
-            throws SAXException, ParserConfigurationException, java.io.IOException {
+        throws SAXException, ParserConfigurationException, java.io.IOException {
         return readXmlDocument(content, true);
     }
 
     public static Document readXmlDocument(String content, boolean validate)
-            throws SAXException, ParserConfigurationException, java.io.IOException {
+        throws SAXException, ParserConfigurationException, java.io.IOException {
         if (content == null) {
             Debug.logWarning("[UtilXml.readXmlDocument] content was null, doing nothing", module);
             return null;
         }
         ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes());
+
         return readXmlDocument(bis, validate, "Internal Content");
     }
 
     public static Document readXmlDocument(URL url)
-            throws SAXException, ParserConfigurationException, java.io.IOException {
+        throws SAXException, ParserConfigurationException, java.io.IOException {
         return readXmlDocument(url, true);
     }
 
     public static Document readXmlDocument(URL url, boolean validate)
-            throws SAXException, ParserConfigurationException, java.io.IOException {
+        throws SAXException, ParserConfigurationException, java.io.IOException {
         if (url == null) {
             Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing", module);
             return null;
@@ -153,12 +161,12 @@ public class UtilXml {
     }
 
     public static Document readXmlDocument(InputStream is)
-            throws SAXException, ParserConfigurationException, java.io.IOException {
+        throws SAXException, ParserConfigurationException, java.io.IOException {
         return readXmlDocument(is, true, null);
     }
 
     public static Document readXmlDocument(InputStream is, boolean validate, String docDescription)
-            throws SAXException, ParserConfigurationException, java.io.IOException {
+        throws SAXException, ParserConfigurationException, java.io.IOException {
         if (is == null) {
             Debug.logWarning("[UtilXml.readXmlDocument] InputStream was null, doing nothing", module);
             return null;
@@ -166,13 +174,15 @@ public class UtilXml {
 
         Document document = null;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
         factory.setValidating(validate);
-        //factory.setNamespaceAware(true);
+        // factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
 
         if (validate) {
             LocalResolver lr = new LocalResolver(new DefaultHandler());
             ErrorHandler eh = new LocalErrorHandler(docDescription, lr);
+
             builder.setEntityResolver(lr);
             builder.setErrorHandler(eh);
         }
@@ -189,10 +199,12 @@ public class UtilXml {
     public static Document makeEmptyXmlDocument(String rootElementName) {
         Document document = null;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
         factory.setValidating(true);
-        //factory.setNamespaceAware(true);
+        // factory.setNamespaceAware(true);
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
+
             document = builder.newDocument();
         } catch (Exception e) {
             Debug.logError(e, module);
@@ -200,6 +212,7 @@ public class UtilXml {
 
         if (rootElementName != null) {
             Element rootElement = document.createElement(rootElementName);
+
             document.appendChild(rootElement);
         }
 
@@ -210,6 +223,7 @@ public class UtilXml {
     /** Creates a child element with the given name and appends it to the element child node list. */
     public static Element addChildElement(Element element, String childElementName, Document document) {
         Element newElement = document.createElement(childElementName);
+
         element.appendChild(newElement);
         return newElement;
     }
@@ -218,8 +232,9 @@ public class UtilXml {
      *  Also creates a Text node with the given value and appends it to the new elements child node list.
      */
     public static Element addChildElementValue(Element element, String childElementName,
-                                               String childElementValue, Document document) {
+        String childElementValue, Document document) {
         Element newElement = addChildElement(element, childElementName, document);
+
         newElement.appendChild(document.createTextNode(childElementValue));
         return newElement;
     }
@@ -228,8 +243,9 @@ public class UtilXml {
      *  Also creates a CDATASection node with the given value and appends it to the new elements child node list.
      */
     public static Element addChildElementCDATAValue(Element element, String childElementName,
-                                               String childElementValue, Document document) {
+        String childElementValue, Document document) {
         Element newElement = addChildElement(element, childElementName, document);
+
         newElement.appendChild(document.createCDATASection(childElementValue));
         return newElement;
     }
@@ -242,11 +258,13 @@ public class UtilXml {
 
         List elements = new LinkedList();
         Node node = element.getFirstChild();
+
         if (node != null) {
             do {
                 if (node.getNodeType() == Node.ELEMENT_NODE && (childElementName == null ||
                         childElementName.equals(node.getNodeName()))) {
                     Element childElement = (Element) node;
+
                     elements.add(childElement);
                 }
             } while ((node = node.getNextSibling()) != null);
@@ -258,13 +276,15 @@ public class UtilXml {
      * returns the first element. */
     public static Element firstChildElement(Element element, String childElementName) {
         if (element == null) return null;
-        //get the first element with the given name
+        // get the first element with the given name
         Node node = element.getFirstChild();
+
         if (node != null) {
             do {
                 if (node.getNodeType() == Node.ELEMENT_NODE && (childElementName == null ||
                         childElementName.equals(node.getNodeName()))) {
                     Element childElement = (Element) node;
+
                     return childElement;
                 }
             } while ((node = node.getNextSibling()) != null);
@@ -276,15 +296,17 @@ public class UtilXml {
      * returns the first element. */
     public static Element firstChildElement(Element element, String childElementName, String attrName, String attrValue) {
         if (element == null) return null;
-        //get the first element with the given name
+        // get the first element with the given name
         Node node = element.getFirstChild();
+
         if (node != null) {
             do {
                 if (node.getNodeType() == Node.ELEMENT_NODE && (childElementName == null ||
                         childElementName.equals(node.getNodeName()))) {
                     Element childElement = (Element) node;
-                    
+
                     String value = childElement.getAttribute(attrName);
+
                     if (value != null && value.equals(attrValue)) {
                         return childElement;
                     }
@@ -297,17 +319,19 @@ public class UtilXml {
     /** Return the text (node value) contained by the named child node. */
     public static String childElementValue(Element element, String childElementName) {
         if (element == null) return null;
-        //get the value of the first element with the given name
+        // get the value of the first element with the given name
         Element childElement = firstChildElement(element, childElementName);
+
         return elementValue(childElement);
     }
 
     /** Return the text (node value) contained by the named child node or a default value if null. */
     public static String childElementValue(Element element, String childElementName, String defaultValue) {
         if (element == null) return defaultValue;
-        //get the value of the first element with the given name
+        // get the value of the first element with the given name
         Element childElement = firstChildElement(element, childElementName);
         String elementValue = elementValue(childElement);
+
         if (elementValue == null || elementValue.length() == 0)
             return defaultValue;
         else
@@ -317,11 +341,12 @@ public class UtilXml {
     /** Return the text (node value) of the first node under this, works best if normalized. */
     public static String elementValue(Element element) {
         if (element == null) return null;
-        //make sure we get all the text there...
+        // make sure we get all the text there...
         element.normalize();
         Node textNode = element.getFirstChild();
+
         if (textNode == null) return null;
-        //should be of type text
+        // should be of type text
         return textNode.getNodeValue();
     }
 
@@ -390,23 +415,24 @@ public class UtilXml {
             String dtd = UtilProperties.getSplitPropertyValue(UtilURL.fromResource("localdtds.properties"), publicId);
 
             if (Debug.verboseOn()) Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] resolving DTD with publicId [" + publicId +
-                             "], systemId [" + systemId + "] and the dtd file is [" + dtd + "]", module);
+                    "], systemId [" + systemId + "] and the dtd file is [" + dtd + "]", module);
             if (dtd != null && dtd.length() > 0) {
                 try {
                     URL dtdURL = UtilURL.fromResource(dtd);
                     InputStream dtdStream = dtdURL.openStream();
                     InputSource inputSource = new InputSource(dtdStream);
+
                     inputSource.setPublicId(publicId);
                     hasDTD = true;
                     if (Debug.verboseOn()) Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD input source with publicId [" +
-                                  publicId + "] and the dtd file is [" + dtd + "]", module);
+                            publicId + "] and the dtd file is [" + dtd + "]", module);
                     return inputSource;
                 } catch (Exception e) {
                     Debug.logWarning(e, module);
                 }
             }
             if (Debug.verboseOn()) Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] local resolve failed for DTD with publicId [" +
-                          publicId + "] and the dtd file is [" + dtd + "], trying defaultResolver", module);
+                    publicId + "] and the dtd file is [" + dtd + "], trying defaultResolver", module);
             return defaultResolver.resolveEntity(publicId, systemId);
         }
 
@@ -418,6 +444,7 @@ public class UtilXml {
             return hasDTD;
         }
     }
+
 
     /** Local error handler for entity resolver to DocumentBuilder parser.
      * Error is printed to output just if DTD was detected in the XML file.
@@ -435,11 +462,11 @@ public class UtilXml {
         public void error(SAXParseException exception) {
             if (localResolver.hasDTD()) {
                 Debug.logError("XmlFileLoader: File "
-                               + docDescription
-                               + " process error. Line: "
-                               + String.valueOf(exception.getLineNumber())
-                               + ". Error message: "
-                               + exception.getMessage(), module
+                    + docDescription
+                    + " process error. Line: "
+                    + String.valueOf(exception.getLineNumber())
+                    + ". Error message: "
+                    + exception.getMessage(), module
                 );
             }
         }
@@ -447,11 +474,11 @@ public class UtilXml {
         public void fatalError(SAXParseException exception) {
             if (localResolver.hasDTD()) {
                 Debug.logError("XmlFileLoader: File "
-                               + docDescription
-                               + " process fatal error. Line: "
-                               + String.valueOf(exception.getLineNumber())
-                               + ". Error message: "
-                               + exception.getMessage(), module
+                    + docDescription
+                    + " process fatal error. Line: "
+                    + String.valueOf(exception.getLineNumber())
+                    + ". Error message: "
+                    + exception.getMessage(), module
                 );
             }
         }
@@ -459,11 +486,11 @@ public class UtilXml {
         public void warning(SAXParseException exception) {
             if (localResolver.hasDTD()) {
                 Debug.logError("XmlFileLoader: File "
-                               + docDescription
-                               + " process warning. Line: "
-                               + String.valueOf(exception.getLineNumber())
-                               + ". Error message: "
-                               + exception.getMessage(), module
+                    + docDescription
+                    + " process warning. Line: "
+                    + String.valueOf(exception.getLineNumber())
+                    + ". Error message: "
+                    + exception.getMessage(), module
                 );
             }
         }

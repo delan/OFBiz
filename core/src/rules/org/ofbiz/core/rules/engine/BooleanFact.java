@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * <p><b>Title:</b> Boolean Fact
  * <p><b>Description:</b> None
@@ -32,22 +33,23 @@ package org.ofbiz.core.rules.engine;
  * @version 1.0
  */
 public class BooleanFact extends Atom {
-  
-  /**
-   * Contructs a boolean fact from the provide Boolean.
-   *
-   * @param Boolean <code>Boolan.TRUE</code> or
-   *                <code>Boolean.FALSE</code>
-   */
-  public BooleanFact(Boolean b) {
-    super(b);
-  }
-  /**
-   * Contructs a boolean fact from the boolean.
-   *
-   * @param boolean <code>true</code> or <code>false</code>
-   */
-  public BooleanFact(boolean b) {
-    this(b ? Boolean.TRUE : Boolean.FALSE);
-  }
+
+    /**
+     * Contructs a boolean fact from the provide Boolean.
+     *
+     * @param Boolean <code>Boolan.TRUE</code> or
+     *                <code>Boolean.FALSE</code>
+     */
+    public BooleanFact(Boolean b) {
+        super(b);
+    }
+
+    /**
+     * Contructs a boolean fact from the boolean.
+     *
+     * @param boolean <code>true</code> or <code>false</code>
+     */
+    public BooleanFact(boolean b) {
+        this(b ? Boolean.TRUE : Boolean.FALSE);
+    }
 }

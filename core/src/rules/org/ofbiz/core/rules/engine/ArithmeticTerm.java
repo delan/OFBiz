@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * <p><b>Title:</b> Arithmetic Term
  * <p><b>Description:</b> None
@@ -32,5 +33,4 @@ package org.ofbiz.core.rules.engine;
  * @author Steven J. Metsker
  * @version 1.0
  */
-public interface ArithmeticTerm extends ComparisonTerm {
-}
+public interface ArithmeticTerm extends ComparisonTerm {}

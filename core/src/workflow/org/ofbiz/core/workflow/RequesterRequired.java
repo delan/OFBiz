@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * RequesterRequired Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class RequesterRequired extends WfException {
 
-    public RequesterRequired() {
-    }
+    public RequesterRequired() {}
 
     public RequesterRequired(String msg) {
         super(msg);

@@ -1,7 +1,9 @@
 package org.ofbiz.core.rules.parse.chars;
 
+
 import java.util.*;
 import org.ofbiz.core.rules.parse.*;
+
 
 /**
  * <p><b>Title:</b> Letter
@@ -34,34 +36,40 @@ import org.ofbiz.core.rules.parse.*;
  * @version 1.0
  */
 public class Letter extends Terminal {
-  /**
-   * Returns true if an assembly's next element is a letter.
-   *
-   * @param   object   an element from an assembly
-   * @return   true, if an assembly's next element is a letter
-   */
-  public boolean qualifies(Object o) {
-    Character c = (Character) o;
-    return Character.isLetter(c.charValue());
-  }
-  /**
-   * Create a set with one random letter.
-   */
-  public List randomExpansion(int maxDepth, int depth) {
-    char c = (char) (26.0 * Math.random() + 'a');
-    List v = new ArrayList();
-    v.add(new String(new char[]{c}));
-    return v;
-  }
-  /**
-   * Returns a textual description of this parser.
-   *
-   * @param   vector   a list of parsers already printed in
-   *                   this description
-   * @return   string   a textual description of this parser
-   * @see Parser#toString()
-   */
-  public String unvisitedString(List visited) {
-    return "L";
-  }
+
+    /**
+     * Returns true if an assembly's next element is a letter.
+     *
+     * @param   object   an element from an assembly
+     * @return   true, if an assembly's next element is a letter
+     */
+    public boolean qualifies(Object o) {
+        Character c = (Character) o;
+
+        return Character.isLetter(c.charValue());
+    }
+
+    /**
+     * Create a set with one random letter.
+     */
+    public List randomExpansion(int maxDepth, int depth) {
+        char c = (char) (26.0 * Math.random() + 'a');
+        List v = new ArrayList();
+
+        v.add(new String(new char[] {c}
+            ));
+        return v;
+    }
+
+    /**
+     * Returns a textual description of this parser.
+     *
+     * @param   vector   a list of parsers already printed in
+     *                   this description
+     * @return   string   a textual description of this parser
+     * @see Parser#toString()
+     */
+    public String unvisitedString(List visited) {
+        return "L";
+    }
 }

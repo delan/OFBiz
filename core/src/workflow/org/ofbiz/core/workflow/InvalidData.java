@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * InvalidData Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class InvalidData extends WfException {
 
-    public InvalidData() {
-    }
+    public InvalidData() {}
 
     public InvalidData(String msg) {
         super(msg);

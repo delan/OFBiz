@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * ResultNotAvailable Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class ResultNotAvailable extends WfException {
 
-    public ResultNotAvailable() {
-    }
+    public ResultNotAvailable() {}
 
     public ResultNotAvailable(String msg) {
         super(msg);

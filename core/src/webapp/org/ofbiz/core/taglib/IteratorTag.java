@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.taglib;
 
+
 import java.io.*;
 import java.util.*;
 import java.lang.reflect.*;
@@ -32,6 +33,7 @@ import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * IterateTag - JSP Tag to iterate over a Collection or any object with an iterator() method.
@@ -75,7 +77,7 @@ public class IteratorTag extends BodyTagSupport {
     }
 
     public void setExpandMap(String expMap) {
-        //defaults to false, so if anything but true will be false:
+        // defaults to false, so if anything but true will be false:
         expandMap = "true".equals(expMap);
     }
 
@@ -112,7 +114,7 @@ public class IteratorTag extends BodyTagSupport {
     }
 
     public String getExpandMap() {
-        return expandMap ? "true":"false";
+        return expandMap ? "true" : "false";
     }
 
     public int doStartTag() throws JspTagException {
@@ -139,8 +141,10 @@ public class IteratorTag extends BodyTagSupport {
     public int doEndTag() {
         try {
             BodyContent body = getBodyContent();
+
             if (body != null) {
                 JspWriter out = body.getEnclosingWriter();
+
                 out.print(body.getString());
             }
         } catch (IOException e) {
@@ -151,22 +155,25 @@ public class IteratorTag extends BodyTagSupport {
     }
 
     private boolean defineIterator() {
-        //clear the iterator, after this it may be set directly
+        // clear the iterator, after this it may be set directly
         Iterator newIterator = null;
         Collection thisCollection = null;
+
         if (property != null) {
             if (Debug.verboseOn()) Debug.logVerbose("Getting iterator from property: " + property, module);
             Object propertyObject = pageContext.findAttribute(property);
+
             if (propertyObject instanceof Iterator) {
                 newIterator = (Iterator) propertyObject;
             } else {
-                //if ClassCastException, it should indicate looking for a Collection
+                // if ClassCastException, it should indicate looking for a Collection
                 thisCollection = (Collection) propertyObject;
             }
         } else {
-            //Debug.logInfo("No property, check for Object Tag.");
+            // Debug.logInfo("No property, check for Object Tag.");
             ObjectTag objectTag =
-                    (ObjectTag) findAncestorWithClass(this, ObjectTag.class);
+                (ObjectTag) findAncestorWithClass(this, ObjectTag.class);
+
             if (objectTag == null)
                 return false;
             if (objectTag.getType().equals("java.util.Collection")) {
@@ -174,12 +181,13 @@ public class IteratorTag extends BodyTagSupport {
             } else {
                 try {
                     Method[] m =
-                            Class.forName(objectTag.getType()).getDeclaredMethods();
+                        Class.forName(objectTag.getType()).getDeclaredMethods();
+
                     for (int i = 0; i < m.length; i++) {
                         if (m[i].getName().equals("iterator")) {
                             Debug.logVerbose("Found iterator method. Using it.", module);
                             newIterator = (Iterator) m[i].invoke(
-                                    objectTag.getObject(), null);
+                                        objectTag.getObject(), null);
                             break;
                         }
                     }
@@ -197,15 +205,17 @@ public class IteratorTag extends BodyTagSupport {
                 ArrayList colList = new ArrayList(thisCollection);
                 int startIndex = offset > 0 ? offset : 0;
                 int endIndex = limit > 0 ? offset + limit : colList.size();
+
                 endIndex = endIndex > colList.size() ? colList.size() : endIndex;
                 List subList = colList.subList(startIndex, endIndex);
+
                 newIterator = subList.iterator();
             } else {
                 newIterator = thisCollection.iterator();
             }
 
             Debug.logVerbose("Got iterator.", module);
-        } else {//already set
+        } else {// already set
             Debug.logVerbose("iterator already set.", module);
         }
         this.iterator = newIterator;
@@ -216,7 +226,7 @@ public class IteratorTag extends BodyTagSupport {
         element = null;
         pageContext.removeAttribute(name);
         boolean verboseOn = Debug.verboseOn();
-        
+
         if (this.iterator.hasNext()) {
             element = this.iterator.next();
             if (verboseOn) Debug.logVerbose("iterator has another object: " + element, module);
@@ -227,13 +237,15 @@ public class IteratorTag extends BodyTagSupport {
             if (verboseOn) Debug.logVerbose("set attribute " + name + " to be " + element + " as next value from iterator", module);
             pageContext.setAttribute(name, element);
 
-            //expand a map element here if requested
+            // expand a map element here if requested
             if (expandMap) {
                 Map tempMap = (Map) element;
                 Iterator mapEntries = tempMap.entrySet().iterator();
+
                 while (mapEntries.hasNext()) {
                     Map.Entry entry = (Map.Entry) mapEntries.next();
                     Object value = entry.getValue();
+
                     if (value == null) value = new String();
                     pageContext.setAttribute((String) entry.getKey(), value);
                 }
@@ -245,7 +257,4 @@ public class IteratorTag extends BodyTagSupport {
         return false;
     }
 }
-
-
-
 

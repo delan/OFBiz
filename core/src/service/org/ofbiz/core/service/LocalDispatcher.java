@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.service;
 
+
 import java.util.*;
 
 import org.ofbiz.core.calendar.*;
@@ -33,6 +34,7 @@ import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.jms.*;
 import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Generic Services Local Dispatcher
@@ -70,6 +72,7 @@ public class LocalDispatcher {
             }
         }
         DispatchContext dc = new DispatchContext(name, readerURLs, loader, null);
+
         init(name, delegator, dc);
     }
 
@@ -96,6 +99,7 @@ public class LocalDispatcher {
      */
     public Map runSync(String serviceName, Map context) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
+
         return dispatcher.runSync(this.name, service, context);
     }
 
@@ -107,6 +111,7 @@ public class LocalDispatcher {
      */
     public void runSyncIgnore(String serviceName, Map context) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
+
         dispatcher.runSyncIgnore(this.name, service, context);
     }
 
@@ -120,6 +125,7 @@ public class LocalDispatcher {
      */
     public void runAsync(String serviceName, Map context, GenericRequester requester, boolean persist) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
+
         dispatcher.runAsync(this.name, service, context, requester, persist);
     }
 
@@ -144,6 +150,7 @@ public class LocalDispatcher {
      */
     public void runAsync(String serviceName, Map context, boolean persist) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
+
         dispatcher.runAsync(this.name, service, context, persist);
     }
 
@@ -167,6 +174,7 @@ public class LocalDispatcher {
      */
     public GenericResultWaiter runAsyncWait(String serviceName, Map context, boolean persist) throws GenericServiceException {
         GenericResultWaiter waiter = new GenericResultWaiter();
+
         this.runAsync(serviceName, context, waiter, persist);
         return waiter;
     }
@@ -193,10 +201,10 @@ public class LocalDispatcher {
      * @throws GenericServiceException.
      */
     public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count)
-            throws GenericServiceException {
+        throws GenericServiceException {
         try {
             getJobManager().schedule(getName(), serviceName, context, startTime,
-                                     frequency, interval, count);
+                frequency, interval, count);
             if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Current time: " + (new Date()).getTime(), module);
             if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Runtime: " + startTime, module);
             if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Frequency: " + frequency, module);

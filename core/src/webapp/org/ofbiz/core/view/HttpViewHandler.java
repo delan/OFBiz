@@ -25,12 +25,14 @@
 
 package org.ofbiz.core.view;
 
+
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * ViewHandlerException - View Handler Exception
@@ -60,7 +62,8 @@ public class HttpViewHandler implements ViewHandler {
         try {
             HttpClient httpClient = new HttpClient(page);
             String pageText = httpClient.get();
-            //TODO: parse page and remove harmful tags like <HTML>, <HEAD>, <BASE>, etc - look into the OpenSymphony piece for an example
+
+            // TODO: parse page and remove harmful tags like <HTML>, <HEAD>, <BASE>, etc - look into the OpenSymphony piece for an example
             response.getWriter().print(pageText);
         } catch (IOException e) {
             throw new ViewHandlerException("IO Error in view", e);

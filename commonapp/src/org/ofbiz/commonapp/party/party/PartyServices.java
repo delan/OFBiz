@@ -25,6 +25,7 @@
 
 package org.ofbiz.commonapp.party.party;
 
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.util.*;
@@ -34,6 +35,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
+
 
 /**
  * Services for Party/Person/Group maintenance
@@ -52,6 +54,7 @@ public class PartyServices {
      * @return Map with the result of the service, the output parameters.
      */
     public static Map deleteParty(DispatchContext ctx, Map context) {
+
         /*
          * pretty serious operation, would delete:
          * - Party
@@ -84,15 +87,16 @@ public class PartyServices {
 
         String partyId = (String) context.get("partyId");
 
-        //if specified partyId starts with a number, return an error
+        // if specified partyId starts with a number, return an error
         if (partyId != null && Character.isDigit(partyId.charAt(0))) {
             return ServiceUtil.returnError("Cannot create person, specified party ID cannot start with a digit, " +
                     "numeric IDs are reserved for auto-generated IDs");
         }
 
-        //partyId might be empty, so check it and get next seq party id if empty
+        // partyId might be empty, so check it and get next seq party id if empty
         if (partyId == null || partyId.length() == 0) {
             Long newId = delegator.getNextSeqId("Party");
+
             if (newId == null) {
                 return ServiceUtil.returnError("ERROR: Could not create person (id generation failure)");
             } else {
@@ -100,8 +104,9 @@ public class PartyServices {
             }
         }
 
-        //check to see if party object exists, if so make sure it is PERSON type party
+        // check to see if party object exists, if so make sure it is PERSON type party
         GenericValue party = null;
+
         try {
             party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
@@ -114,12 +119,13 @@ public class PartyServices {
                         "exists and is not a PERSON type party");
             }
         } else {
-            //create a party if one doesn't already exist
+            // create a party if one doesn't already exist
             party = delegator.makeValue("Party", UtilMisc.toMap("partyId", partyId, "partyTypeId", "PERSON"));
             toBeStored.add(party);
         }
 
         GenericValue person = null;
+
         try {
             person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
@@ -178,10 +184,12 @@ public class PartyServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+
         if (result.size() > 0)
             return result;
 
         GenericValue person = null;
+
         try {
             person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
@@ -240,24 +248,26 @@ public class PartyServices {
 
         String partyId = (String) context.get("partyId");
 
-        //partyId might be empty, so check it and get next seq party id if empty
+        // partyId might be empty, so check it and get next seq party id if empty
         if (partyId == null || partyId.length() == 0) {
             Long newId = delegator.getNextSeqId("Party");
+
             if (newId == null) {
                 return ServiceUtil.returnError("ERROR: Could not create party group (id generation failure)");
             } else {
                 partyId = newId.toString();
             }
         } else {
-            //if specified partyId starts with a number, return an error
+            // if specified partyId starts with a number, return an error
             if (Character.isDigit(partyId.charAt(0))) {
                 return ServiceUtil.returnError("Cannot create party group, specified party ID cannot start with a digit, " +
                         "numeric IDs are reserved for auto-generated IDs");
             }
         }
 
-        //check to see if party object exists, if so make sure it is PARTY_GROUP type party
+        // check to see if party object exists, if so make sure it is PARTY_GROUP type party
         GenericValue party = null;
+
         try {
             party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
@@ -270,12 +280,13 @@ public class PartyServices {
                         "already exists and is not a PARTY_GROUP type party");
             }
         } else {
-            //create a party if one doesn't already exist
+            // create a party if one doesn't already exist
             party = delegator.makeValue("Party", UtilMisc.toMap("partyId", partyId, "partyTypeId", "PARTY_GROUP"));
             toBeStored.add(party);
         }
 
         GenericValue partyGroup = null;
+
         try {
             partyGroup = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
@@ -319,10 +330,12 @@ public class PartyServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+
         if (result.size() > 0)
             return result;
 
         GenericValue partyGroup = null;
+
         try {
             partyGroup = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
@@ -363,19 +376,21 @@ public class PartyServices {
         Timestamp now = UtilDateTime.nowTimestamp();
 
         String partyId = (String) context.get("partyId");
+
         if (partyId == null || partyId.length() == 0) {
             partyId = userLogin.getString("partyId");
         }
 
-        //if specified partyId starts with a number, return an error
+        // if specified partyId starts with a number, return an error
         if (Character.isDigit(partyId.charAt(0))) {
             return ServiceUtil.returnError("Cannot create affiliate, specified party ID cannot start with a digit, " +
                     "numeric IDs are reserved for auto-generated IDs");
         }
 
-        //partyId might be empty, so check it and get next seq party id if empty
+        // partyId might be empty, so check it and get next seq party id if empty
         if (partyId == null || partyId.length() == 0) {
             Long newId = delegator.getNextSeqId("Party");
+
             if (newId == null) {
                 return ServiceUtil.returnError("ERROR: Could not create affiliate (id generation failure)");
             } else {
@@ -383,8 +398,9 @@ public class PartyServices {
             }
         }
 
-        //check to see if party object exists, if so make sure it is AFFILIATE type party
+        // check to see if party object exists, if so make sure it is AFFILIATE type party
         GenericValue party = null;
+
         try {
             party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
@@ -396,6 +412,7 @@ public class PartyServices {
         }
 
         GenericValue affiliate = null;
+
         try {
             affiliate = delegator.findByPrimaryKey("Affiliate", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
@@ -442,10 +459,12 @@ public class PartyServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+
         if (result.size() > 0)
             return result;
 
         GenericValue affiliate = null;
+
         try {
             affiliate = delegator.findByPrimaryKey("Affiliate", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
@@ -486,6 +505,7 @@ public class PartyServices {
         String responseId = (String) context.get("responseId");
         String response = (String) context.get("response");
         Timestamp now = UtilDateTime.nowTimestamp();
+
         if (partyId == null) {
             if (userLogin != null && userLogin.get("partyId") != null)
                 partyId = userLogin.getString("partyId");
@@ -499,6 +519,7 @@ public class PartyServices {
 
         // look for existing record to update
         GenericValue getter = null;
+
         try {
             getter = delegator.findByPrimaryKey("PartySurveyResponse", gFields);
         } catch (GenericEntityException e) {
@@ -515,6 +536,7 @@ public class PartyServices {
         } else {
             try {
                 GenericValue newValue = delegator.makeValue("PartySurveyResponse", sFields);
+
                 delegator.create(newValue);
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError("Cannot create survey response (write failure): " + e.getMessage());
@@ -539,10 +561,12 @@ public class PartyServices {
 
         // Store the note.
         Map noteRes = org.ofbiz.commonapp.common.CommonServices.createNote(dctx, noteCtx);
+
         if (noteRes.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))
             return noteRes;
 
         String noteId = (String) noteRes.get("noteId");
+
         if (noteId == null || noteId.length() == 0)
             ServiceUtil.returnError("Problem creating the note, no noteId returned.");
 
@@ -550,6 +574,7 @@ public class PartyServices {
         try {
             Map fields = UtilMisc.toMap("partyId", partyId, "noteId", noteId);
             GenericValue v = delegator.makeValue("PartyNote", fields);
+
             delegator.create(v);
         } catch (GenericEntityException ee) {
             Debug.logError(ee);
@@ -571,20 +596,25 @@ public class PartyServices {
         GenericDelegator delegator = dctx.getDelegator();
         Collection parties = new LinkedList();
         String email = (String) context.get("email");
+
         if (email.length() == 0)
             return ServiceUtil.returnError("Required parameter 'email' cannot be empty.");
 
         try {
             List exprs = new LinkedList();
+
             exprs.add(new EntityExpr("infoString", true, EntityOperator.LIKE, "%" + email.toUpperCase() + "%", true));
             List c = EntityUtil.filterByDate(delegator.findByAnd("PartyAndContactMech", exprs, UtilMisc.toList("infoString")), true);
+
             if (Debug.verboseOn()) Debug.logVerbose("List: " + c);
             if (Debug.infoOn()) Debug.logInfo("PartyFromEmail number found: " + c.size());
             if (c != null) {
                 Iterator i = c.iterator();
+
                 while (i.hasNext()) {
                     GenericValue pacm = (GenericValue) i.next();
                     GenericValue party = delegator.makeValue("Party", UtilMisc.toMap("partyId", pacm.get("partyId"), "partyTypeId", pacm.get("partyTypeId")));
+
                     parties.add(UtilMisc.toMap("party", party));
                 }
             }
@@ -608,20 +638,25 @@ public class PartyServices {
         GenericDelegator delegator = dctx.getDelegator();
         Collection parties = new LinkedList();
         String userLoginId = (String) context.get("userLoginId");
+
         if (userLoginId.length() == 0)
             return ServiceUtil.returnError("Required parameter 'userLoginId' cannot be empty.");
 
         try {
             List exprs = new LinkedList();
+
             exprs.add(new EntityExpr("userLoginId", true, EntityOperator.LIKE, "%" + userLoginId.toUpperCase() + "%", true));
             Collection ulc = delegator.findByAnd("PartyAndUserLogin", exprs, UtilMisc.toList("userloginId"));
+
             if (Debug.verboseOn()) Debug.logVerbose("Collection: " + ulc);
             if (Debug.infoOn()) Debug.logInfo("PartyFromUserLogin number found: " + ulc.size());
             if (ulc != null) {
                 Iterator i = ulc.iterator();
+
                 while (i.hasNext()) {
                     GenericValue ul = (GenericValue) i.next();
                     GenericValue party = delegator.makeValue("Party", UtilMisc.toMap("partyId", ul.get("partyId"), "partyTypeId", ul.get("partyTypeId")));
+
                     parties.add(UtilMisc.toMap("party", party));
                 }
             }
@@ -646,6 +681,7 @@ public class PartyServices {
         Collection parties = new LinkedList();
         String firstName = (String) context.get("firstName");
         String lastName = (String) context.get("lastName");
+
         if (firstName == null) {
             firstName = "";
         }
@@ -657,15 +693,19 @@ public class PartyServices {
 
         try {
             List exprs = new LinkedList();
+
             exprs.add(new EntityExpr("firstName", true, EntityOperator.LIKE, "%" + firstName.toUpperCase() + "%", true));
             exprs.add(new EntityExpr("lastName", true, EntityOperator.LIKE, "%" + lastName.toUpperCase() + "%", true));
             Collection pc = delegator.findByAnd("Person", exprs, UtilMisc.toList("lastName", "firstName", "partyId"));
+
             if (Debug.infoOn()) Debug.logInfo("PartyFromPerson number found: " + pc.size());
             if (pc != null) {
                 Iterator i = pc.iterator();
+
                 while (i.hasNext()) {
                     GenericValue person = (GenericValue) i.next();
                     GenericValue party = delegator.makeValue("Party", UtilMisc.toMap("partyId", person.get("partyId"), "partyTypeId", "PERSON"));
+
                     parties.add(UtilMisc.toMap("person", person, "party", party));
                 }
             }
@@ -689,19 +729,24 @@ public class PartyServices {
         GenericDelegator delegator = dctx.getDelegator();
         Collection parties = new LinkedList();
         String groupName = (String) context.get("groupName");
+
         if (groupName.length() == 0)
             ServiceUtil.returnError("Required parameter 'groupName' cannot be empty.");
 
         try {
             List exprs = new LinkedList();
+
             exprs.add(new EntityExpr("groupName", true, EntityOperator.LIKE, "%" + groupName.toUpperCase() + "%", true));
             Collection pc = delegator.findByAnd("PartyGroup", exprs, UtilMisc.toList("groupName", "partyId"));
+
             if (Debug.infoOn()) Debug.logInfo("PartyFromGroup number found: " + pc.size());
             if (pc != null) {
                 Iterator i = pc.iterator();
+
                 while (i.hasNext()) {
                     GenericValue group = (GenericValue) i.next();
                     GenericValue party = delegator.makeValue("Party", UtilMisc.toMap("partyId", group.get("partyId"), "partyTypeId", "PARTY_GROUP"));
+
                     parties.add(UtilMisc.toMap("partyGroup", group, "party", party));
                 }
             }
@@ -719,6 +764,7 @@ public class PartyServices {
         GenericDelegator delegator = dctx.getDelegator();
         String partyId = (String) context.get("partyId");
         GenericValue person = null;
+
         try {
             person = delegator.findByPrimaryKeyCache("Person", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
@@ -736,6 +782,7 @@ public class PartyServices {
         String roleTypeId = (String) context.get("roleTypeId");
         String description = (String) context.get("description");
         GenericValue roleType = null;
+
         try {
             roleType = delegator.makeValue("RoleType", UtilMisc.toMap("roleTypeId", roleTypeId, "description", description));
             roleType = delegator.create(roleType);

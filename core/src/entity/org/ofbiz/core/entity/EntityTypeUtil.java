@@ -24,10 +24,12 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.util.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
+
 
 /**
  * Makes it easier to deal with entities that follow the
@@ -41,12 +43,14 @@ public class EntityTypeUtil {
 
     public static boolean isType(Collection thisCollection, String typeRelation, GenericValue targetType) {
         Iterator iter = thisCollection.iterator();
+
         while (iter.hasNext()) {
             try {
                 GenericValue related = ((GenericValue) iter.next()).getRelatedOne(typeRelation);
+
                 if (isType(related, targetType)) {
                     return true;
-                }//else keep looking
+                }// else keep looking
             } catch (GenericEntityException e) {
                 continue;
             }
@@ -54,28 +58,28 @@ public class EntityTypeUtil {
         return false;
     }
 
-    /*public static boolean isType(Collection thisTypeCollection, GenericValue targetType) {
-        Iterator iter = thisTypeCollection.iterator();
-        while (iter.hasNext()) {
-            if (isType((GenericValue) iter.next(), targetType)) {
-                return true;
-            }//else keep looking
-        }
-        return false;
-    }*/
+    /* public static boolean isType(Collection thisTypeCollection, GenericValue targetType) {
+     Iterator iter = thisTypeCollection.iterator();
+     while (iter.hasNext()) {
+     if (isType((GenericValue) iter.next(), targetType)) {
+     return true;
+     }//else keep looking
+     }
+     return false;
+     }*/
 
 
-/*  private static Object getTypeID(GenericValue typeValue) {
-      Collection keys = typeValue.getAllKeys();
-      if (keys.size() == 1) {
-          return keys.iterator().next();
-      } else {
-          throw new IllegalArgumentException("getTypeID expecting value with single key");
-      }
-  }*/
+    /* private static Object getTypeID(GenericValue typeValue) {
+     Collection keys = typeValue.getAllKeys();
+     if (keys.size() == 1) {
+     return keys.iterator().next();
+     } else {
+     throw new IllegalArgumentException("getTypeID expecting value with single key");
+     }
+     }*/
 
     private static GenericValue getParentType(GenericValue typeValue) {
-        //assumes Parent relation is "Parent<entityName>"
+        // assumes Parent relation is "Parent<entityName>"
         try {
             return typeValue.getRelatedOneCache("Parent" + typeValue.getEntityName());
         } catch (GenericEntityException e) {

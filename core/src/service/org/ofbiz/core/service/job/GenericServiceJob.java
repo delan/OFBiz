@@ -25,12 +25,14 @@
 
 package org.ofbiz.core.service.job;
 
+
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.engine.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Generic Service Job - A generic async-service Job.
@@ -76,6 +78,7 @@ public class GenericServiceJob extends AbstractJob {
     public void exec() {
         init();
         boolean begunTransaction = false;
+
         if (trans) {
             try {
                 begunTransaction = TransactionUtil.begin();
@@ -88,6 +91,7 @@ public class GenericServiceJob extends AbstractJob {
             // get the dispatcher and invoke the service via runSync -- will run all ECAs
             LocalDispatcher dispatcher = dctx.getDispatcher();
             Map result = dispatcher.runSync(getServiceName(), getContext());
+
             if (requester != null)
                 requester.receiveResult(result);
 

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.taglib;
 
+
 import java.util.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
@@ -32,6 +33,7 @@ import javax.servlet.jsp.tagext.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * ServiceTag - Service invocation tag.
@@ -74,6 +76,7 @@ public class ServiceTag extends AbstractParameterTag {
 
     public int doEndTag() throws JspTagException {
         LocalDispatcher dispatcher = (LocalDispatcher) pageContext.getRequest().getAttribute("dispatcher");
+
         if (dispatcher == null)
             throw new JspTagException("Cannot get dispatcher from the request object.");
 
@@ -81,25 +84,31 @@ public class ServiceTag extends AbstractParameterTag {
 
         int scope = PageContext.PAGE_SCOPE;
         char scopeChar = resultScope.toUpperCase().charAt(0);
+
         switch (scopeChar) {
-            case 'A' :
-                scope = PageContext.APPLICATION_SCOPE;
-                break;
-            case 'S' :
-                scope = PageContext.SESSION_SCOPE;
-                break;
-            case 'R' :
-                scope = PageContext.REQUEST_SCOPE;
-                break;
-            case 'P' :
-                scope = PageContext.PAGE_SCOPE;
-                break;
-            default  :
-                throw new JspTagException("Invaild result scope specified. (page, request, session, application)");
+        case 'A':
+            scope = PageContext.APPLICATION_SCOPE;
+            break;
+
+        case 'S':
+            scope = PageContext.SESSION_SCOPE;
+            break;
+
+        case 'R':
+            scope = PageContext.REQUEST_SCOPE;
+            break;
+
+        case 'P':
+            scope = PageContext.PAGE_SCOPE;
+            break;
+
+        default:
+            throw new JspTagException("Invaild result scope specified. (page, request, session, application)");
         }
 
         Map context = getInParameters();
         Map result = null;
+
         if (userLogin != null)
             context.put("userLogin", userLogin);
         try {
@@ -113,14 +122,17 @@ public class ServiceTag extends AbstractParameterTag {
         }
 
         Map aliases = getOutParameters();
+
         if (result != null) {
             // expand the result
             Iterator i = result.entrySet().iterator();
+
             while (i.hasNext()) {
                 Map.Entry entry = (Map.Entry) i.next();
                 Object key = entry.getKey();
                 Object value = entry.getValue();
                 String ctxName = (String) (aliases.containsKey(key) ? aliases.get(key) : key);
+
                 if (value == null) value = new String();
                 pageContext.setAttribute(ctxName, value, scope);
             }
@@ -130,6 +142,4 @@ public class ServiceTag extends AbstractParameterTag {
     }
 
 }
-
-
 

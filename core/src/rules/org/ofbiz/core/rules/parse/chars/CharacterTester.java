@@ -1,6 +1,8 @@
 package org.ofbiz.core.rules.parse.chars;
 
+
 import org.ofbiz.core.rules.parse.*;
+
 
 /**
  * <p><b>Title:</b> Character Tester
@@ -28,23 +30,26 @@ import org.ofbiz.core.rules.parse.*;
  *
  */
 public class CharacterTester extends ParserTester {
-  /**
-   *
-   */
-  public CharacterTester(Parser p) {
-    super(p);
-  }
-  /**
-   * assembly method comment.
-   */
-  protected Assembly assembly(String s) {
-    return new CharacterAssembly(s);
-  }
-  /**
-   *
-   * @return java.lang.String
-   */
-  protected String separator() {
-    return "";
-  }
+
+    /**
+     *
+     */
+    public CharacterTester(Parser p) {
+        super(p);
+    }
+
+    /**
+     * assembly method comment.
+     */
+    protected Assembly assembly(String s) {
+        return new CharacterAssembly(s);
+    }
+
+    /**
+     *
+     * @return java.lang.String
+     */
+    protected String separator() {
+        return "";
+    }
 }

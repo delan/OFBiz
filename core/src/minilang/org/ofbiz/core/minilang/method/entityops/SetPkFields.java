@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.entityops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.entity.*;
+
 
 /**
  * Looks for each PK field in the named map and if it exists there it will copy it into the named value object.
@@ -51,15 +53,16 @@ public class SetPkFields extends MethodOperation {
         valueName = element.getAttribute("value-name");
         mapName = element.getAttribute("map-name");
 
-        //if anything but false it will be true
+        // if anything but false it will be true
         setIfNull = !"false".equals(element.getAttribute("set-if-null"));
     }
 
     public boolean exec(MethodContext methodContext) {
         GenericValue value = (GenericValue) methodContext.getEnv(valueName);
-        
+
         if (value == null) {
             String errMsg = "In set-pk-fields a value was not found with the specified valueName: " + valueName + ", not setting fields";
+
             Debug.logWarning(errMsg);
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
@@ -72,6 +75,7 @@ public class SetPkFields extends MethodOperation {
         }
 
         Map theMap = (Map) methodContext.getEnv(mapName);
+
         if (theMap == null) {
             Debug.logWarning("In set-pk-fields could not find map with name " + mapName + ", not setting any fields");
         } else {

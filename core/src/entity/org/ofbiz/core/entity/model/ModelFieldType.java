@@ -54,6 +54,7 @@ public class ModelFieldType {
 
     /** The sql-type of the Field */
     protected String sqlType = null;
+
     /** The sql-type-alias of the Field, this is optional */
     protected String sqlTypeAlias = null;
 
@@ -93,6 +94,7 @@ public class ModelFieldType {
     public String getSqlType() {
         return this.sqlType;
     }
+
     /** The sql-type-alias of the Field */
     public String getSqlTypeAlias() {
         return this.sqlTypeAlias;

@@ -24,11 +24,13 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.io.*;
 import java.util.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.entity.jdbc.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * <p>Encapsulates SQL expressions used for where clause snippets. 
@@ -48,20 +50,19 @@ public class EntityWhereString extends EntityCondition {
 
     protected String sqlString;
 
-    protected EntityWhereString() { }
-    
+    protected EntityWhereString() {}
+
     public EntityWhereString(String sqlString) {
         this.sqlString = sqlString;
     }
-    
+
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
         return sqlString;
     }
 
-    public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
-        //no nothing, this is always assumed to be fine... could do funky SQL syntax checking, but hey this is a HACK anyway
+    public void checkCondition(ModelEntity modelEntity) throws GenericModelException {// no nothing, this is always assumed to be fine... could do funky SQL syntax checking, but hey this is a HACK anyway
     }
-    
+
     public String toString() {
         return "[WhereString::" + this.sqlString + "]";
     }

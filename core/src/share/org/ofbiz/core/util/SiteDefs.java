@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.util;
 
+
 /**
  * Holds general site wide variables.
  *
@@ -41,19 +42,22 @@ public final class SiteDefs {
 
     /** The name of the flag in the request attributes to denote that the control servlet was passed through */
     public static final String FORWARDED_FROM_CONTROL_SERVLET = "_FORWARDED_FROM_CONTROL_SERVLET_";
-    
+
     /** Required context init parameter to specify the entity delegator name as defined in entityengine.xml */
     public static final String ENTITY_DELEGATOR_NAME = "entityDelegatorName";
 
     /** Location of controller configuration XML file */
     public static final String CONTROLLER_CONFIG_LOCATION = "/WEB-INF/controller.xml";
+
     /** Location of regions configuration XML file */
     public static final String REGIONS_CONFIG_LOCATION = "/WEB-INF/regions.xml";
 
     /** Used in session object to determine if a previous request is waiting */
     public static final String PREVIOUS_REQUEST = "_PREVIOUS_REQUEST_";
+
     /** Used in session object to store previous parameters */
     public static final String PREVIOUS_PARAMS = "_PREVIOUS_PARAMS_";
+
     /** Used in request object to note that a login has passed */
     public static final String LOGIN_PASSED = "_LOGIN_PASSED_";
 
@@ -83,8 +87,10 @@ public final class SiteDefs {
 
     /** Session attribute name for UserLogin entity of current logged in user, if one is logged in */
     public static final String USER_LOGIN = "userLogin";
+
     /** Session attribute name for Person entity of current logged in user, if one is logged in and it is a Person */
     public static final String PERSON = "_PERSON_";
+
     /** Session attribute name for PartyGroup entity of current logged in user, if one is logged in and it is a PartyGroup */
     public static final String PARTY_GROUP = "_PARTY_GRUOP_";
 

@@ -22,7 +22,9 @@
  */
 package org.ofbiz.core.security;
 
+
 import org.ofbiz.core.util.GeneralException;
+
 
 /**
  * <code>SecurityConfigurationException</code>
@@ -33,7 +35,7 @@ import org.ofbiz.core.util.GeneralException;
 public class SecurityConfigurationException extends GeneralException {
 
     public SecurityConfigurationException(String str, Throwable t) {
-        super(str,t);
+        super(str, t);
     }
 
     public SecurityConfigurationException(String str) {

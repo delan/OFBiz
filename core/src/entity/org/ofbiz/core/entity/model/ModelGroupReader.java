@@ -69,6 +69,7 @@ public class ModelGroupReader {
 
     public static ModelGroupReader getModelGroupReader(String delegatorName) throws GenericEntityConfException {
         EntityConfigUtil.DelegatorInfo delegatorInfo = EntityConfigUtil.getDelegatorInfo(delegatorName);
+
         if (delegatorInfo == null) {
             throw new GenericEntityConfException("Could not find a delegator with the name " + delegatorName);
         }
@@ -76,9 +77,9 @@ public class ModelGroupReader {
         String tempModelName = delegatorInfo.entityGroupReader;
         ModelGroupReader reader = (ModelGroupReader) readers.get(tempModelName);
 
-        if (reader == null) { //don't want to block here
+        if (reader == null) { // don't want to block here
             synchronized (ModelGroupReader.class) {
-                //must check if null again as one of the blocked threads can still enter
+                // must check if null again as one of the blocked threads can still enter
                 reader = (ModelGroupReader) readers.get(tempModelName);
                 if (reader == null) {
                     reader = new ModelGroupReader(tempModelName);
@@ -92,27 +93,28 @@ public class ModelGroupReader {
     public ModelGroupReader(String modelName) throws GenericEntityConfException {
         this.modelName = modelName;
         EntityConfigUtil.EntityGroupReaderInfo entityGroupReaderInfo = EntityConfigUtil.getEntityGroupReaderInfo(modelName);
+
         if (entityGroupReaderInfo == null) {
             throw new GenericEntityConfException("Cound not find an entity-group-reader with the name " + modelName);
         }
         entityGroupResourceHandler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, entityGroupReaderInfo.resourceElement);
 
-        //preload caches...
+        // preload caches...
         getGroupCache();
     }
 
     public Map getGroupCache() {
-        if (groupCache == null) //don't want to block here
+        if (groupCache == null) // don't want to block here
         {
             synchronized (ModelGroupReader.class) {
-                //must check if null again as one of the blocked threads can still enter
-                if (groupCache == null) //now it's safe
+                // must check if null again as one of the blocked threads can still enter
+                if (groupCache == null) // now it's safe
                 {
                     groupCache = new HashMap();
                     groupNames = new TreeSet();
 
                     UtilTimer utilTimer = new UtilTimer();
-                    //utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocument");
+                    // utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocument");
 
                     Document document = null;
 
@@ -130,7 +132,7 @@ public class ModelGroupReader {
 
                     docElementValues = new Hashtable();
 
-                    //utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocumentElement");
+                    // utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocumentElement");
                     Element docElement = document.getDocumentElement();
 
                     if (docElement == null) {
@@ -153,11 +155,10 @@ public class ModelGroupReader {
                                 if (groupName == null || entityName == null) continue;
                                 groupNames.add(groupName);
                                 groupCache.put(entityName, groupName);
-                                //utilTimer.timerString("  After entityEntityName -- " + i + " --");
+                                // utilTimer.timerString("  After entityEntityName -- " + i + " --");
                                 i++;
                             }
-                        }
-                        while ((curChild = curChild.getNextSibling()) != null);
+                        } while ((curChild = curChild.getNextSibling()) != null);
                     } else
                         Debug.logWarning("[ModelGroupReader.getGroupCache] No child nodes found.");
                     utilTimer.timerString("[ModelGroupReader.getGroupCache] FINISHED - Total Entity-Groups: " + i + " FINISHED");
@@ -225,12 +226,12 @@ public class ModelGroupReader {
                 x = sxe.getException();
             }
 
-            throw new GenericEntityConfException( "Error while parsing the XML document", x );
+            throw new GenericEntityConfException("Error while parsing the XML document", x);
         } catch (ParserConfigurationException pce) {
             // Parser with specified options can't be built
-            throw new GenericEntityConfException( "XML Parser Configuration Error", pce );
+            throw new GenericEntityConfException("XML Parser Configuration Error", pce);
         } catch (IOException ioe) {
-            throw new GenericEntityConfException( "IO Exception while parsing the XML document", ioe );
+            throw new GenericEntityConfException("IO Exception while parsing the XML document", ioe);
         }
 
         return document;

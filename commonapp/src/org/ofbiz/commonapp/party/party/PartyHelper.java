@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2002/09/11 04:47:37  azeneski
+ * updates for auto-login
+ *
  * Revision 1.11  2001/10/19 16:44:42  azeneski
  * Moved Party/ContactMech/Login events to more appropiate packages.
  *
@@ -19,10 +22,12 @@
  */
 package org.ofbiz.commonapp.party.party;
 
+
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * <p><b>Title:</b> PartyHelper.java
@@ -50,23 +55,27 @@ import org.ofbiz.core.util.*;
  *@version 1.0
  *@created Sep 12, 2001
  */
-public class PartyHelper {  
+public class PartyHelper {
     public static String formatPartyId(String partyId, GenericDelegator delegator) {
         if (UtilValidate.isEmpty(partyId)) return "(none)";
         GenericValue person = null;
+
         try {
             person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
-        } catch (GenericEntityException gee) { Debug.logWarning(gee); }
+        } catch (GenericEntityException gee) {
+            Debug.logWarning(gee);
+        }
         if (person != null) {
             return getPersonName(person);
         } else {
             return partyId;
         }
     }
-    
+
     public static String getPersonName(GenericValue person) {
         StringBuffer result = new StringBuffer(20);
-        if(person!=null){
+
+        if (person != null) {
             result.append(UtilFormatOut.ifNotEmpty(person.getString("firstName"), "", " "));
             result.append(UtilFormatOut.ifNotEmpty(person.getString("middleName"), "", " "));
             result.append(UtilFormatOut.checkNull(person.getString("lastName")));
@@ -76,11 +85,14 @@ public class PartyHelper {
 
     public static String getPartyName(GenericValue userLogin) {
         StringBuffer result = new StringBuffer(20);
+
         if (userLogin != null) {
             try {
                 GenericValue person = userLogin.getDelegator().findByPrimaryKey("Person", UtilMisc.toMap("partyId", userLogin.getString("partyId")));
+
                 if (person == null) {
                     GenericValue group = userLogin.getDelegator().findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", userLogin.getString("partyId")));
+
                     if (group != null)
                         result.append(group.getString("groupName"));
                 } else {

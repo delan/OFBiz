@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.utensil;
 
+
 /**
  * <p><b>Title:</b> Publicly Cloneable
  * <p><b>Description:</b> None
@@ -31,11 +32,12 @@ package org.ofbiz.core.rules.utensil;
  * @version 1.0
  */
 public interface PubliclyCloneable extends Cloneable {
-  /**
-   * A PubliclyCloneable object is one to which any object can send
-   * <code>clone()</code>.
-   *
-   * @return   a copy of the receiving object
-   */
-  public Object clone();
+
+    /**
+     * A PubliclyCloneable object is one to which any object can send
+     * <code>clone()</code>.
+     *
+     * @return   a copy of the receiving object
+     */
+    public Object clone();
 }

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.view;
 
+
 import java.sql.*;
 import java.util.*;
 
@@ -32,6 +33,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import jimm.datavision.*;
 import jimm.datavision.sql.*;
+
 
 /**
  * Custom DataVision Database class for OFBiz connections
@@ -42,10 +44,10 @@ import jimm.datavision.sql.*;
  */
 public class DataVisionDatabase extends jimm.datavision.sql.Database {
     protected String datasourceName;
-    
+
     /** Creates a new instance of DataVisionDatabase */
     public DataVisionDatabase(String datasourceName, Report report)
-    throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException, UserCancellationException {
+        throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException, UserCancellationException {
         super("", "", report, "", "");
         this.datasourceName = datasourceName;
         if (Debug.infoOn()) Debug.logInfo("For DataVision using datasourceName: " + this.datasourceName);
@@ -55,24 +57,24 @@ public class DataVisionDatabase extends jimm.datavision.sql.Database {
             conn = null;
         }
         initializeConnection();
-        //not loading all tables, not needed for just running a report
-        //loadAllTables();
+        // not loading all tables, not needed for just running a report
+        // loadAllTables();
     }
-    
+
     public void setDatasourceName(String datasourceName) {
         this.datasourceName = datasourceName;
     }
-    
+
     /**
      * Initializes the connection to the database.
      *
      * @return a connection to the database
      */
     public void initializeConnection()
-    throws ClassNotFoundException, InstantiationException, IllegalAccessException, UserCancellationException {
-        
+        throws ClassNotFoundException, InstantiationException, IllegalAccessException, UserCancellationException {
+
         if (Debug.infoOn()) Debug.logInfo("For DataVision using datasourceName: " + this.datasourceName);
-        //very simple method for this inherited class: just call get connection with the datasourceName
+        // very simple method for this inherited class: just call get connection with the datasourceName
         try {
             this.conn = ConnectionFactory.getConnection(this.datasourceName);
         } catch (SQLException e) {
@@ -81,7 +83,7 @@ public class DataVisionDatabase extends jimm.datavision.sql.Database {
             Debug.logError(e, "Error getting database connection for DataVision report");
         }
     }
-    
+
     /**
      * Loads information about all tables in the database. If no tables are
      * found when using the database schema name, try again with a

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.util.*;
 import java.net.*;
 import java.sql.*;
@@ -38,6 +39,7 @@ import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
 
 /**
  * Generic Data Source Delegator Class
@@ -66,20 +68,21 @@ public class GenericDelegator {
     UtilCache primaryKeyCache = null;
     UtilCache allCache = null;
     UtilCache andCache = null;
-    
-    //keeps a list of field key sets used in the by and cache, a Set (of Sets of fieldNames) for each entityName
+
+    // keeps a list of field key sets used in the by and cache, a Set (of Sets of fieldNames) for each entityName
     protected static Map andCacheFieldSets = new HashMap();
 
     protected DistributedCacheClear distributedCacheClear = null;
-    
+
     SequenceUtil sequencer = null;
 
     public static GenericDelegator getGenericDelegator(String delegatorName) {
         GenericDelegator delegator = (GenericDelegator) delegatorCache.get(delegatorName);
-        if (delegator == null)//don't want to block here
+
+        if (delegator == null)// don't want to block here
         {
             synchronized (GenericDelegator.class) {
-                //must check if null again as one of the blocked threads can still enter
+                // must check if null again as one of the blocked threads can still enter
                 delegator = (GenericDelegator) delegatorCache.get(delegatorName);
                 if (delegator == null) {
                     try {
@@ -98,7 +101,7 @@ public class GenericDelegator {
 
     /** Only allow creation through the factory method */
     protected GenericDelegator() {}
-    
+
     /** Only allow creation through the factory method */
     protected GenericDelegator(String delegatorName) throws GenericEntityException {
         if (Debug.infoOn()) Debug.logInfo("Creating new Delegator with name \"" + delegatorName + "\".", module);
@@ -113,26 +116,29 @@ public class GenericDelegator {
         allCache = new UtilCache("entity.FindAll." + delegatorName, 0, 0, true);
         andCache = new UtilCache("entity.FindByAnd." + delegatorName, 0, 0, true);
 
-        //initialize helpers by group
+        // initialize helpers by group
         Iterator groups = UtilMisc.toIterator(getModelGroupReader().getGroupNames());
+
         while (groups != null && groups.hasNext()) {
             String groupName = (String) groups.next();
             String helperName = this.getGroupHelperName(groupName);
-            if (Debug.infoOn()) Debug.logInfo("Delegator \"" + delegatorName + "\" initializing helper \"" + 
+
+            if (Debug.infoOn()) Debug.logInfo("Delegator \"" + delegatorName + "\" initializing helper \"" +
                     helperName + "\" for entity group \"" + groupName + "\".", module);
             TreeSet helpersDone = new TreeSet();
+
             if (helperName != null && helperName.length() > 0) {
-                //make sure each helper is only loaded once
+                // make sure each helper is only loaded once
                 if (helpersDone.contains(helperName)) {
                     if (Debug.infoOn()) Debug.logInfo("Helper \"" + helperName + "\" already initialized, not re-initializing.", module);
                     continue;
                 }
                 helpersDone.add(helperName);
-                //pre-load field type defs, the return value is ignored
+                // pre-load field type defs, the return value is ignored
                 ModelFieldTypeReader.getModelFieldTypeReader(helperName);
-                //get the helper and if configured, do the datasource check
+                // get the helper and if configured, do the datasource check
                 GenericHelper helper = GenericHelperFactory.getHelper(helperName);
-                
+
                 EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
 
                 if (datasourceInfo.checkOnStart) {
@@ -146,14 +152,16 @@ public class GenericDelegator {
             }
         }
 
-        //if useDistributedCacheClear is false do nothing since the 
-        //  distributedCacheClear member field with a null value will cause the
-        //  dcc code to do nothing
+        // if useDistributedCacheClear is false do nothing since the 
+        // distributedCacheClear member field with a null value will cause the
+        // dcc code to do nothing
         if (getDelegatorInfo().useDistributedCacheClear) {
-            //initialize the distributedCacheClear mechanism
+            // initialize the distributedCacheClear mechanism
             String distributedCacheClearClassName = getDelegatorInfo().distributedCacheClearClassName;
+
             try {
                 Class dccClass = Class.forName(getDelegatorInfo().distributedCacheClearClassName);
+
                 this.distributedCacheClear = (DistributedCacheClear) dccClass.newInstance();
                 this.distributedCacheClear.setDelegator(this);
             } catch (ClassNotFoundException e) {
@@ -174,7 +182,7 @@ public class GenericDelegator {
     public String getDelegatorName() {
         return this.delegatorName;
     }
-    
+
     protected EntityConfigUtil.DelegatorInfo getDelegatorInfo() {
         if (delegatorInfo == null) {
             delegatorInfo = EntityConfigUtil.getDelegatorInfo(this.delegatorName);
@@ -233,6 +241,7 @@ public class GenericDelegator {
      */
     public String getEntityGroupName(String entityName) {
         String groupName = getModelGroupReader().getEntityGroupName(entityName);
+
         return groupName;
     }
 
@@ -243,11 +252,13 @@ public class GenericDelegator {
     public List getModelEntitiesByGroup(String groupName) {
         Iterator enames = UtilMisc.toIterator(getModelGroupReader().getEntityNamesByGroup(groupName));
         List entities = new LinkedList();
+
         if (enames == null || !enames.hasNext())
             return entities;
         while (enames.hasNext()) {
             String ename = (String) enames.next();
             ModelEntity entity = this.getModelEntity(ename);
+
             if (entity != null)
                 entities.add(entity);
         }
@@ -261,11 +272,13 @@ public class GenericDelegator {
     public Map getModelEntityMapByGroup(String groupName) {
         Iterator enames = UtilMisc.toIterator(getModelGroupReader().getEntityNamesByGroup(groupName));
         Map entities = new HashMap();
+
         if (enames == null || !enames.hasNext())
             return entities;
         while (enames.hasNext()) {
             String ename = (String) enames.next();
             ModelEntity entity = this.getModelEntity(ename);
+
             if (entity != null)
                 entities.put(entity.getEntityName(), entity);
         }
@@ -278,6 +291,7 @@ public class GenericDelegator {
      */
     public String getGroupHelperName(String groupName) {
         EntityConfigUtil.DelegatorInfo delegatorInfo = this.getDelegatorInfo();
+
         return (String) delegatorInfo.groupMap.get(groupName);
     }
 
@@ -287,6 +301,7 @@ public class GenericDelegator {
      */
     public String getEntityHelperName(String entityName) {
         String groupName = getModelGroupReader().getEntityGroupName(entityName);
+
         return this.getGroupHelperName(groupName);
     }
 
@@ -306,6 +321,7 @@ public class GenericDelegator {
      */
     public GenericHelper getEntityHelper(String entityName) throws GenericEntityException {
         String helperName = getEntityHelperName(entityName);
+
         if (helperName != null && helperName.length() > 0)
             return GenericHelperFactory.getHelper(helperName);
         else
@@ -327,9 +343,11 @@ public class GenericDelegator {
      */
     public ModelFieldType getEntityFieldType(ModelEntity entity, String type) throws GenericEntityException {
         String helperName = getEntityHelperName(entity);
+
         if (helperName == null || helperName.length() <= 0)
             return null;
         ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
+
         if (modelFieldTypeReader == null) {
             throw new GenericEntityException("ModelFieldTypeReader not found for entity " + entity.getEntityName() + " with helper name " + helperName);
         }
@@ -342,9 +360,11 @@ public class GenericDelegator {
      */
     public Collection getEntityFieldTypeNames(ModelEntity entity) throws GenericEntityException {
         String helperName = getEntityHelperName(entity);
+
         if (helperName == null || helperName.length() <= 0)
             return null;
         ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
+
         if (modelFieldTypeReader == null) {
             throw new GenericEntityException("ModelFieldTypeReader not found for entity " + entity.getEntityName() + " with helper name " + helperName);
         }
@@ -354,10 +374,12 @@ public class GenericDelegator {
     /** Creates a Entity in the form of a GenericValue without persisting it */
     public GenericValue makeValue(String entityName, Map fields) {
         ModelEntity entity = this.getModelEntity(entityName);
+
         if (entity == null) {
             throw new IllegalArgumentException("[GenericDelegator.makeValue] could not find entity for entityName: " + entityName);
         }
         GenericValue value = new GenericValue(entity, fields);
+
         value.setDelegator(this);
         return value;
     }
@@ -365,10 +387,12 @@ public class GenericDelegator {
     /** Creates a Primary Key in the form of a GenericPK without persisting it */
     public GenericPK makePK(String entityName, Map fields) {
         ModelEntity entity = this.getModelEntity(entityName);
+
         if (entity == null) {
             throw new IllegalArgumentException("[GenericDelegator.makePK] could not find entity for entityName: " + entityName);
         }
         GenericPK pk = new GenericPK(entity, fields);
+
         pk.setDelegator(this);
         return pk;
     }
@@ -382,15 +406,16 @@ public class GenericDelegator {
         }
         ModelEntity entity = this.getModelReader().getModelEntity(entityName);
         GenericValue genericValue = new GenericValue(entity, fields);
+
         return this.create(genericValue);
     }
-
 
     /** Creates a Entity in the form of a GenericValue and write it to the database
      * @return GenericValue instance containing the new instance
      */
     public GenericValue create(GenericValue value) throws GenericEntityException {
         GenericHelper helper = getEntityHelper(value.getEntityName());
+
         if (value != null) value.setDelegator(this);
         value = helper.create(value);
         if (value != null) value.setDelegator(this);
@@ -408,6 +433,7 @@ public class GenericDelegator {
     public GenericValue create(GenericPK primaryKey) throws GenericEntityException {
         GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
         GenericValue value = helper.create(primaryKey);
+
         if (value != null) value.setDelegator(this);
         this.clearCacheLine(value);
         return value;
@@ -420,6 +446,7 @@ public class GenericDelegator {
     public GenericValue findByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
         GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
         GenericValue value = null;
+
         if (!primaryKey.isPrimaryKey())
             throw new IllegalArgumentException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
         try {
@@ -438,6 +465,7 @@ public class GenericDelegator {
      */
     public GenericValue findByPrimaryKeyCache(GenericPK primaryKey) throws GenericEntityException {
         GenericValue value = this.getFromPrimaryKeyCache(primaryKey);
+
         if (value == null) {
             value = findByPrimaryKey(primaryKey);
             if (value != null)
@@ -472,6 +500,7 @@ public class GenericDelegator {
     public GenericValue findByPrimaryKeyPartial(GenericPK primaryKey, Set keys) throws GenericEntityException {
         GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
         GenericValue value = null;
+
         if (!primaryKey.isPrimaryKey())
             throw new IllegalArgumentException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
         try {
@@ -493,14 +522,16 @@ public class GenericDelegator {
             return null;
         List results = new LinkedList();
 
-        //from the delegator level this is complicated because different GenericPK
+        // from the delegator level this is complicated because different GenericPK
         // objects in the list may correspond to different helpers
         HashMap pksPerHelper = new HashMap();
         Iterator pkiter = primaryKeys.iterator();
+
         while (pkiter.hasNext()) {
             GenericPK curPK = (GenericPK) pkiter.next();
             String helperName = this.getEntityHelperName(curPK.getEntityName());
             List pks = (List) pksPerHelper.get(helperName);
+
             if (pks == null) {
                 pks = new LinkedList();
                 pksPerHelper.put(helperName, pks);
@@ -509,11 +540,13 @@ public class GenericDelegator {
         }
 
         Iterator helperIter = pksPerHelper.entrySet().iterator();
+
         while (helperIter.hasNext()) {
             Map.Entry curEntry = (Map.Entry) helperIter.next();
             String helperName = (String) curEntry.getKey();
             GenericHelper helper = GenericHelperFactory.getHelper(helperName);
             List values = helper.findAllByPrimaryKeys((List) curEntry.getValue());
+
             results.addAll(values);
         }
         return results;
@@ -531,21 +564,24 @@ public class GenericDelegator {
             return null;
         List results = new LinkedList();
 
-        //from the delegator level this is complicated because different GenericPK
+        // from the delegator level this is complicated because different GenericPK
         // objects in the list may correspond to different helpers
         HashMap pksPerHelper = new HashMap();
         Iterator pkiter = primaryKeys.iterator();
+
         while (pkiter.hasNext()) {
             GenericPK curPK = (GenericPK) pkiter.next();
 
             GenericValue value = this.getFromPrimaryKeyCache(curPK);
+
             if (value != null) {
-                //it is in the cache, so just put the cached value in the results
+                // it is in the cache, so just put the cached value in the results
                 results.add(value);
             } else {
-                //is not in the cache, so put in a list for a call to the helper
+                // is not in the cache, so put in a list for a call to the helper
                 String helperName = this.getEntityHelperName(curPK.getEntityName());
                 List pks = (List) pksPerHelper.get(helperName);
+
                 if (pks == null) {
                     pks = new LinkedList();
                     pksPerHelper.put(helperName, pks);
@@ -555,11 +591,13 @@ public class GenericDelegator {
         }
 
         Iterator helperIter = pksPerHelper.entrySet().iterator();
+
         while (helperIter.hasNext()) {
             Map.Entry curEntry = (Map.Entry) helperIter.next();
             String helperName = (String) curEntry.getKey();
             GenericHelper helper = GenericHelperFactory.getHelper(helperName);
             List values = helper.findAllByPrimaryKeys((List) curEntry.getValue());
+
             this.putAllInPrimaryKeyCache(values);
             results.addAll(values);
         }
@@ -572,7 +610,8 @@ public class GenericDelegator {
      */
     public int removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
         GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
-        //always clear cache before the operation
+
+        // always clear cache before the operation
         this.clearCacheLine(primaryKey);
         return helper.removeByPrimaryKey(primaryKey);
     }
@@ -583,6 +622,7 @@ public class GenericDelegator {
      */
     public int removeValue(GenericValue value) throws GenericEntityException {
         GenericHelper helper = getEntityHelper(value.getEntityName());
+
         this.clearCacheLine(value);
         return helper.removeByPrimaryKey(value.getPrimaryKey());
     }
@@ -619,6 +659,7 @@ public class GenericDelegator {
      */
     public List findAllCache(String entityName, List orderBy) throws GenericEntityException {
         List lst = this.getFromAllCache(entityName);
+
         if (lst == null) {
             lst = findAll(entityName, orderBy);
             if (lst != null)
@@ -654,6 +695,7 @@ public class GenericDelegator {
      */
     public List findByAnd(String entityName, Map fields, List orderBy) throws GenericEntityException {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+
         return findByAnd(modelEntity, fields, orderBy);
     }
 
@@ -665,6 +707,7 @@ public class GenericDelegator {
         }
 
         List list = null;
+
         list = helper.findByAnd(modelEntity, fields, orderBy);
         absorbList(list);
         return list;
@@ -685,6 +728,7 @@ public class GenericDelegator {
             throw new IllegalArgumentException("[GenericDelegator.findByOr] At least of the passed fields is not valid: " + fields.keySet().toString());
 
         List list = null;
+
         list = helper.findByOr(modelEntity, fields, orderBy);
         absorbList(list);
         return list;
@@ -707,8 +751,9 @@ public class GenericDelegator {
      */
     public List findByAndCache(String entityName, Map fields, List orderBy) throws GenericEntityException {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        
+
         List lst = this.getFromAndCache(modelEntity, fields);
+
         if (lst == null) {
             lst = findByAnd(modelEntity, fields, orderBy);
             if (lst != null) {
@@ -744,6 +789,7 @@ public class GenericDelegator {
      */
     public List findByAnd(String entityName, List expressions, List orderBy) throws GenericEntityException {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+
         return findByAnd(modelEntity, expressions, orderBy);
     }
 
@@ -751,6 +797,7 @@ public class GenericDelegator {
         GenericHelper helper = getEntityHelper(modelEntity);
 
         List list = helper.findByAnd(modelEntity, expressions, orderBy);
+
         absorbList(list);
         return list;
     }
@@ -766,6 +813,7 @@ public class GenericDelegator {
         GenericHelper helper = getEntityHelper(entityName);
 
         List list = null;
+
         list = helper.findByOr(modelEntity, expressions, orderBy);
         absorbList(list);
         return list;
@@ -780,6 +828,7 @@ public class GenericDelegator {
         GenericHelper helper = getEntityHelper(entityName);
 
         List list = null;
+
         list = helper.findByLike(modelEntity, fields, orderBy);
         absorbList(list);
         return list;
@@ -797,9 +846,11 @@ public class GenericDelegator {
 
         for (int i = 0; i < entityClauses.size(); i++) {
             EntityClause genEntityClause = (EntityClause) entityClauses.get(i);
+
             genEntityClause.setModelEntities(getModelReader());
         }
         List list = null;
+
         list = helper.findByClause(modelEntity, entityClauses, fields, orderBy);
         absorbList(list);
         return list;
@@ -814,11 +865,13 @@ public class GenericDelegator {
      */
     public List findByCondition(String entityName, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+
         if (entityCondition != null) entityCondition.checkCondition(modelEntity);
         GenericHelper helper = getEntityHelper(entityName);
+
         return helper.findByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
     }
-    
+
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
      *@param entityName The Name of the Entity as defined in the entity model XML file
      *@param entityCondition The EntityCondition object that specifies how to constrain this query before any groupings are done (if this is a view entity with group-by aliases)
@@ -827,11 +880,11 @@ public class GenericDelegator {
      *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE 
      *      DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
-    public EntityListIterator findListIteratorByCondition(String entityName, EntityCondition entityCondition, 
-            Collection fieldsToSelect, List orderBy) throws GenericEntityException {
+    public EntityListIterator findListIteratorByCondition(String entityName, EntityCondition entityCondition,
+        Collection fieldsToSelect, List orderBy) throws GenericEntityException {
         return this.findListIteratorByCondition(entityName, entityCondition, null, fieldsToSelect, orderBy, null);
     }
-    
+
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param whereEntityCondition The EntityCondition object that specifies how to constrain this query before any groupings are done (if this is a view entity with group-by aliases)
@@ -842,32 +895,34 @@ public class GenericDelegator {
      *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE 
      *      DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
-    public EntityListIterator findListIteratorByCondition(String entityName, EntityCondition whereEntityCondition, 
-            EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions) 
-            throws GenericEntityException {
+    public EntityListIterator findListIteratorByCondition(String entityName, EntityCondition whereEntityCondition,
+        EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions)
+        throws GenericEntityException {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+
         if (whereEntityCondition != null) whereEntityCondition.checkCondition(modelEntity);
         if (havingEntityCondition != null) havingEntityCondition.checkCondition(modelEntity);
         GenericHelper helper = getEntityHelper(entityName);
-        EntityListIterator eli = helper.findListIteratorByCondition(modelEntity, whereEntityCondition, 
+        EntityListIterator eli = helper.findListIteratorByCondition(modelEntity, whereEntityCondition,
                 havingEntityCondition, fieldsToSelect, orderBy, findOptions);
+
         eli.setDelegator(this);
         return eli;
     }
-    
+
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
      * @param entityName The Name of the Entity as defined in the entity XML file
      * @param fields The fields of the named entity to query by with their corresponging values
      *@return int representing number of rows effected by this operation
      */
     public int removeByAnd(String entityName, Map fields) throws GenericEntityException {
-        //always clear cache before the operation
+        // always clear cache before the operation
         this.clearCacheLine(entityName, fields);
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
         GenericHelper helper = getEntityHelper(entityName);
+
         return helper.removeByAnd(modelEntity, fields);
     }
-
 
     public List getMultiRelation(GenericValue value, String relationNameOne, String relationNameTwo) throws GenericEntityException {
         // traverse the relationships
@@ -878,6 +933,7 @@ public class GenericDelegator {
         ModelEntity modelEntityTwo = getModelEntity(modelRelationTwo.getRelEntityName());
 
         GenericHelper helper = getEntityHelper(modelEntity);
+
         return helper.findByMultiRelation(value, modelRelationOne, modelEntityOne, modelRelationTwo, modelEntityTwo);
     }
 
@@ -930,14 +986,17 @@ public class GenericDelegator {
     public List getRelated(String relationName, Map byAndFields, List orderBy, GenericValue value) throws GenericEntityException {
         ModelEntity modelEntity = value.getModelEntity();
         ModelRelation relation = modelEntity.getRelation(relationName);
+
         if (relation == null)
             throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
 
-        //put the byAndFields (if not null) into the hash map first,
-        //they will be overridden by value's fields if over-specified this is important for security and cleanliness
+        // put the byAndFields (if not null) into the hash map first,
+        // they will be overridden by value's fields if over-specified this is important for security and cleanliness
         Map fields = byAndFields == null ? new HashMap() : new HashMap(byAndFields);
+
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
             ModelKeyMap keyMap = relation.getKeyMap(i);
+
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
@@ -955,19 +1014,23 @@ public class GenericDelegator {
     public GenericPK getRelatedDummyPK(String relationName, Map byAndFields, GenericValue value) throws GenericEntityException {
         ModelEntity modelEntity = value.getModelEntity();
         ModelRelation relation = modelEntity.getRelation(relationName);
+
         if (relation == null)
             throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
         ModelEntity relatedEntity = getModelReader().getModelEntity(relation.getRelEntityName());
 
-        //put the byAndFields (if not null) into the hash map first,
-        //they will be overridden by value's fields if over-specified this is important for security and cleanliness
+        // put the byAndFields (if not null) into the hash map first,
+        // they will be overridden by value's fields if over-specified this is important for security and cleanliness
         Map fields = byAndFields == null ? new HashMap() : new HashMap(byAndFields);
+
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
             ModelKeyMap keyMap = relation.getKeyMap(i);
+
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
         GenericPK dummyPK = new GenericPK(relatedEntity, fields);
+
         dummyPK.setDelegator(this);
         return dummyPK;
     }
@@ -982,12 +1045,15 @@ public class GenericDelegator {
     public List getRelatedCache(String relationName, GenericValue value) throws GenericEntityException {
         ModelEntity modelEntity = value.getModelEntity();
         ModelRelation relation = modelEntity.getRelation(relationName);
+
         if (relation == null)
             throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
 
         Map fields = new HashMap();
+
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
             ModelKeyMap keyMap = relation.getKeyMap(i);
+
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
@@ -1000,6 +1066,7 @@ public class GenericDelegator {
     public GenericValue getRelatedOne(String relationName, GenericValue value) throws GenericEntityException {
         ModelEntity modelEntity = value.getModelEntity();
         ModelRelation relation = value.getModelEntity().getRelation(relationName);
+
         if (relation == null) {
             throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
         }
@@ -1008,8 +1075,10 @@ public class GenericDelegator {
         }
 
         Map fields = new HashMap();
+
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
             ModelKeyMap keyMap = relation.getKeyMap(i);
+
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
@@ -1022,6 +1091,7 @@ public class GenericDelegator {
     public GenericValue getRelatedOneCache(String relationName, GenericValue value) throws GenericEntityException {
         ModelEntity modelEntity = value.getModelEntity();
         ModelRelation relation = modelEntity.getRelation(relationName);
+
         if (relation == null) {
             throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
         }
@@ -1030,8 +1100,10 @@ public class GenericDelegator {
         }
 
         Map fields = new HashMap();
+
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
             ModelKeyMap keyMap = relation.getKeyMap(i);
+
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
@@ -1048,13 +1120,16 @@ public class GenericDelegator {
     public int removeRelated(String relationName, GenericValue value) throws GenericEntityException {
         ModelEntity modelEntity = value.getModelEntity();
         ModelRelation relation = modelEntity.getRelation(relationName);
+
         if (relation == null) {
             throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
         }
 
         Map fields = new HashMap();
+
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
             ModelKeyMap keyMap = relation.getKeyMap(i);
+
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
@@ -1065,10 +1140,11 @@ public class GenericDelegator {
      *@param value GenericValue instance containing the entity to refresh
      */
     public void refresh(GenericValue value) throws GenericEntityException {
-        //always clear cache before the operation
+        // always clear cache before the operation
         clearCacheLine(value);
         GenericPK pk = value.getPrimaryKey();
         GenericValue newValue = findByPrimaryKey(pk);
+
         if (newValue == null) {
             throw new IllegalArgumentException("[GenericDelegator.refresh] could not refresh value: " + value);
         }
@@ -1082,10 +1158,11 @@ public class GenericDelegator {
      *@return int representing number of rows effected by this operation
      */
     public int store(GenericValue value) throws GenericEntityException {
-        //always clear cache before the operation
+        // always clear cache before the operation
         this.clearCacheLine(value);
         GenericHelper helper = getEntityHelper(value.getEntityName());
         int retVal = helper.store(value);
+
         // refresh the valueObject to get the new version
         if (value.lockEnabled()) {
             refresh(value);
@@ -1108,14 +1185,16 @@ public class GenericDelegator {
             return 0;
         }
 
-        //from the delegator level this is complicated because different GenericValue
+        // from the delegator level this is complicated because different GenericValue
         // objects in the list may correspond to different helpers
         HashMap valuesPerHelper = new HashMap();
         Iterator viter = values.iterator();
+
         while (viter.hasNext()) {
             GenericValue value = (GenericValue) viter.next();
             String helperName = this.getEntityHelperName(value.getEntityName());
             List helperValues = (List) valuesPerHelper.get(helperName);
+
             if (helperValues == null) {
                 helperValues = new LinkedList();
                 valuesPerHelper.put(helperName, helperValues);
@@ -1125,32 +1204,35 @@ public class GenericDelegator {
 
         boolean beganTransaction = false;
         int numberChanged = 0;
+
         try {
-            //if there are multiple helpers and no transaction is active, begin one
+            // if there are multiple helpers and no transaction is active, begin one
             if (valuesPerHelper.size() > 1) {
                 beganTransaction = TransactionUtil.begin();
             }
 
             Iterator helperIter = valuesPerHelper.entrySet().iterator();
+
             while (helperIter.hasNext()) {
                 Map.Entry curEntry = (Map.Entry) helperIter.next();
                 String helperName = (String) curEntry.getKey();
                 GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+
                 this.clearAllCacheLinesByValue((List) curEntry.getValue());
                 numberChanged += helper.storeAll((List) curEntry.getValue());
             }
 
-            //only commit the transaction if we started one...
+            // only commit the transaction if we started one...
             TransactionUtil.commit(beganTransaction);
         } catch (GenericEntityException e) {
             try {
-                //only rollback the transaction if we started one...
+                // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
             } catch (GenericEntityException e2) {
                 Debug.logError("[GenericDelegator.storeAll] Could not rollback transaction: ", module);
                 Debug.logError(e2, module);
             }
-            //after rolling back, rethrow the exception
+            // after rolling back, rethrow the exception
             throw e;
         }
 
@@ -1158,11 +1240,12 @@ public class GenericDelegator {
         viter = values.iterator();
         while (viter.hasNext()) {
             GenericValue value = (GenericValue) viter.next();
+
             if (value.lockEnabled()) {
                 refresh(value);
             }
         }
-        
+
         return numberChanged;
     }
 
@@ -1182,14 +1265,16 @@ public class GenericDelegator {
             return 0;
         }
 
-        //from the delegator level this is complicated because different GenericValue
+        // from the delegator level this is complicated because different GenericValue
         // objects in the list may correspond to different helpers
         HashMap valuesPerHelper = new HashMap();
         Iterator viter = dummyPKs.iterator();
+
         while (viter.hasNext()) {
             GenericEntity entity = (GenericEntity) viter.next();
             String helperName = this.getEntityHelperName(entity.getEntityName());
             Collection helperValues = (Collection) valuesPerHelper.get(helperName);
+
             if (helperValues == null) {
                 helperValues = new LinkedList();
                 valuesPerHelper.put(helperName, helperValues);
@@ -1199,35 +1284,38 @@ public class GenericDelegator {
 
         boolean beganTransaction = false;
         int numRemoved = 0;
+
         try {
-            //if there are multiple helpers and no transaction is active, begin one
+            // if there are multiple helpers and no transaction is active, begin one
             if (valuesPerHelper.size() > 1) {
                 beganTransaction = TransactionUtil.begin();
             }
 
             Iterator helperIter = valuesPerHelper.entrySet().iterator();
+
             while (helperIter.hasNext()) {
                 Map.Entry curEntry = (Map.Entry) helperIter.next();
                 String helperName = (String) curEntry.getKey();
                 GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+
                 this.clearAllCacheLinesByDummyPK((List) curEntry.getValue());
                 numRemoved += helper.removeAll((List) curEntry.getValue());
             }
 
-            //only commit the transaction if we started one...
+            // only commit the transaction if we started one...
             TransactionUtil.commit(beganTransaction);
         } catch (GenericEntityException e) {
             try {
-                //only rollback the transaction if we started one...
+                // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
             } catch (GenericEntityException e2) {
                 Debug.logError("[GenericDelegator.removeAll] Could not rollback transaction: ", module);
                 Debug.logError(e2, module);
             }
-            //after rolling back, rethrow the exception
+            // after rolling back, rethrow the exception
             throw e;
         }
-        
+
         return numRemoved;
     }
 
@@ -1239,17 +1327,19 @@ public class GenericDelegator {
      *@param fields The fields of the named entity to query by with their corresponging values
      */
     public void clearCacheLine(String entityName, Map fields) {
-        //if no fields passed, do the all cache quickly and return
+        // if no fields passed, do the all cache quickly and return
         if (fields == null && allCache != null) {
             allCache.remove(entityName);
         }
-        
+
         ModelEntity entity = this.getModelEntity(entityName);
+
         if (entity == null) {
             throw new IllegalArgumentException("[GenericDelegator.clearCacheLine] could not find entity for entityName: " + entityName);
         }
 
         GenericPK dummyPK = new GenericPK(entity, fields);
+
         this.clearCacheLineFlexible(dummyPK);
     }
 
@@ -1263,30 +1353,30 @@ public class GenericDelegator {
     public void clearCacheLineFlexible(GenericEntity dummyPK) {
         this.clearCacheLineFlexible(dummyPK, true);
     }
-    
+
     public void clearCacheLineFlexible(GenericEntity dummyPK, boolean distribute) {
         if (dummyPK != null) {
-            //always auto clear the all cache too, since we know it's messed up in any case
+            // always auto clear the all cache too, since we know it's messed up in any case
             if (allCache != null) {
                 allCache.remove(dummyPK.getEntityName());
             }
-            
-            //check to see if passed fields names exactly make the primary key...
+
+            // check to see if passed fields names exactly make the primary key...
             if (dummyPK.isPrimaryKey()) {
-                //findByPrimaryKey
+                // findByPrimaryKey
                 if (primaryKeyCache != null) {
                     primaryKeyCache.remove(dummyPK);
                 }
             } else {
                 if (dummyPK.size() > 0) {
-                    //findByAnd
+                    // findByAnd
                     if (andCache != null) {
                         andCache.remove(dummyPK);
                     }
                 }
             }
         }
-        
+
         if (distribute && this.distributedCacheClear != null) {
             this.distributedCacheClear.distributedClearCacheLineFlexible(dummyPK);
         }
@@ -1300,19 +1390,19 @@ public class GenericDelegator {
     public void clearCacheLine(GenericPK primaryKey) {
         this.clearCacheLine(primaryKey, true);
     }
-    
+
     public void clearCacheLine(GenericPK primaryKey, boolean distribute) {
         if (primaryKey == null) return;
-        
-        //always auto clear the all cache too, since we know it's messed up in any case
+
+        // always auto clear the all cache too, since we know it's messed up in any case
         if (allCache != null) {
             allCache.remove(primaryKey.getEntityName());
         }
-            
+
         if (primaryKeyCache != null) {
             primaryKeyCache.remove(primaryKey);
         }
-        
+
         if (distribute && this.distributedCacheClear != null) {
             this.distributedCacheClear.distributedClearCacheLine(primaryKey);
         }
@@ -1327,81 +1417,88 @@ public class GenericDelegator {
     public void clearCacheLine(GenericValue value) {
         this.clearCacheLine(value, true);
     }
-    
+
     public void clearCacheLine(GenericValue value, boolean distribute) {
-        //TODO: make this a bit more intelligent by passing in the operation being done (create, update, remove) so we can not do unnecessary cache clears...
-        //  for instance: 
-        //      on create don't clear by primary cache (and won't clear original values because there won't be any)
-        //      on remove don't clear by and for new values, but do for original values
-        
-        //Debug.logInfo("running clearCacheLine for value: " + value + ", distribute: " + distribute);
+        // TODO: make this a bit more intelligent by passing in the operation being done (create, update, remove) so we can not do unnecessary cache clears...
+        // for instance: 
+        // on create don't clear by primary cache (and won't clear original values because there won't be any)
+        // on remove don't clear by and for new values, but do for original values
+
+        // Debug.logInfo("running clearCacheLine for value: " + value + ", distribute: " + distribute);
         if (value == null) return;
-        
-        //always auto clear the all cache too, since we know it's messed up in any case
+
+        // always auto clear the all cache too, since we know it's messed up in any case
         if (allCache != null) {
             allCache.remove(value.getEntityName());
         }
-            
+
         if (primaryKeyCache != null) {
             primaryKeyCache.remove(value.getPrimaryKey());
         }
-        
-        //now for the tricky part, automatically clearing from the by and cache
-        
-        //get a set of all field combination sets used in the by and cache for this entity
+
+        // now for the tricky part, automatically clearing from the by and cache
+
+        // get a set of all field combination sets used in the by and cache for this entity
         Set fieldNameSets = (Set) andCacheFieldSets.get(value.getEntityName());
+
         if (fieldNameSets != null) {
-            //note that if fieldNameSets is null then no by and caches have been
-            //  stored for this entity, so do nothing; ie only run this if not null
-            
-            //iterate through the list of field combination sets and do a cache clear 
-            //  for each one using field values from this entity value object
+            // note that if fieldNameSets is null then no by and caches have been
+            // stored for this entity, so do nothing; ie only run this if not null
+
+            // iterate through the list of field combination sets and do a cache clear 
+            // for each one using field values from this entity value object
             Iterator fieldNameSetIter = fieldNameSets.iterator();
+
             while (fieldNameSetIter.hasNext()) {
                 Set fieldNameSet = (Set) fieldNameSetIter.next();
 
-                //In this loop get the original values in addition to the 
-                //  current values and clear the cache line with those values 
-                //  too... This is necessary so that by and lists that currently
-                //  have the entity will be cleared in addition to the by and
-                //  lists that will have the entity
-                //For this we will need to have the GenericValue object keep a
-                //  map of original values in addition to the "current" values.
-                //  That may have to be done when an entity is read from the
-                //  database and not when a put/set is done because a null value
-                //  is a perfectly valid original value. NOTE: the original value
-                //  map should be clear by default to denote that there was no
-                //  original value. When a GenericValue is created from a read
-                //  from the database only THEN should the original value map
-                //  be created and set to the same values that are put in the
-                //  normal field value map.
-                
-                
+                // In this loop get the original values in addition to the 
+                // current values and clear the cache line with those values 
+                // too... This is necessary so that by and lists that currently
+                // have the entity will be cleared in addition to the by and
+                // lists that will have the entity
+                // For this we will need to have the GenericValue object keep a
+                // map of original values in addition to the "current" values.
+                // That may have to be done when an entity is read from the
+                // database and not when a put/set is done because a null value
+                // is a perfectly valid original value. NOTE: the original value
+                // map should be clear by default to denote that there was no
+                // original value. When a GenericValue is created from a read
+                // from the database only THEN should the original value map
+                // be created and set to the same values that are put in the
+                // normal field value map.
+
+
                 Map originalFieldValues = null;
+
                 if (value.isModified() && value.originalDbValuesAvailable()) {
                     originalFieldValues = new HashMap();
                 }
                 Map fieldValues = new HashMap();
                 Iterator fieldNameIter = fieldNameSet.iterator();
+
                 while (fieldNameIter.hasNext()) {
                     String fieldName = (String) fieldNameIter.next();
+
                     fieldValues.put(fieldName, value.get(fieldName));
                     if (originalFieldValues != null) {
                         originalFieldValues.put(fieldName, value.getOriginalDbValue(fieldName));
                     }
                 }
-                
-                //now we have a map of values for this field set for this entity, so clear the by and line...
+
+                // now we have a map of values for this field set for this entity, so clear the by and line...
                 GenericPK dummyPK = new GenericPK(value.getModelEntity(), fieldValues);
+
                 andCache.remove(dummyPK);
-                
+
                 if (originalFieldValues != null && !originalFieldValues.equals(fieldValues)) {
                     GenericPK dummyPKOriginal = new GenericPK(value.getModelEntity(), originalFieldValues);
+
                     andCache.remove(dummyPKOriginal);
                 }
             }
         }
-        
+
         if (distribute && this.distributedCacheClear != null) {
             this.distributedCacheClear.distributedClearCacheLine(value);
         }
@@ -1410,13 +1507,16 @@ public class GenericDelegator {
     /** Gets a Set of Sets of fieldNames used in the by and cache for the given entityName */
     public Set getFieldNameSetsCopy(String entityName) {
         Set fieldNameSets = (Set) andCacheFieldSets.get(entityName);
+
         if (fieldNameSets == null) return null;
 
-        //create a new container set and a copy of each entry set
+        // create a new container set and a copy of each entry set
         Set setsCopy = new TreeSet();
         Iterator fieldNameSetIter = fieldNameSets.iterator();
+
         while (fieldNameSetIter.hasNext()) {
             Set fieldNameSet = (Set) fieldNameSetIter.next();
+
             setsCopy.add(new TreeSet(fieldNameSet));
         }
         return setsCopy;
@@ -1425,8 +1525,10 @@ public class GenericDelegator {
     public void clearAllCacheLinesByDummyPK(Collection dummyPKs) {
         if (dummyPKs == null) return;
         Iterator iter = dummyPKs.iterator();
+
         while (iter.hasNext()) {
             GenericEntity entity = (GenericEntity) iter.next();
+
             this.clearCacheLineFlexible(entity);
         }
     }
@@ -1434,12 +1536,14 @@ public class GenericDelegator {
     public void clearAllCacheLinesByValue(Collection values) {
         if (values == null) return;
         Iterator iter = values.iterator();
+
         while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();
+
             this.clearCacheLine(value);
         }
     }
-    
+
     public GenericValue getFromPrimaryKeyCache(GenericPK primaryKey) {
         if (primaryKey == null) return null;
         return (GenericValue) primaryKeyCache.get(primaryKey);
@@ -1453,12 +1557,14 @@ public class GenericDelegator {
     public List getFromAndCache(String entityName, Map fields) {
         if (entityName == null || fields == null) return null;
         ModelEntity entity = this.getModelEntity(entityName);
+
         return getFromAndCache(entity, fields);
     }
 
     public List getFromAndCache(ModelEntity entity, Map fields) {
         if (entity == null || fields == null) return null;
         GenericPK tempPK = new GenericPK(entity, fields);
+
         if (tempPK == null) return null;
         return (List) andCache.get(tempPK);
     }
@@ -1471,45 +1577,50 @@ public class GenericDelegator {
     public void putAllInPrimaryKeyCache(List values) {
         if (values == null) return;
         Iterator iter = values.iterator();
+
         while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();
+
             this.putInPrimaryKeyCache(value.getPrimaryKey(), value);
         }
     }
 
     public void putInAllCache(String entityName, List values) {
         if (entityName == null || values == null) return;
-        //make the values immutable so that the list can be returned directly from the cache without copying and still be safe
-        //NOTE that this makes the list immutable, but not the elements in it, those will still be changeable GenericValue objects...
+        // make the values immutable so that the list can be returned directly from the cache without copying and still be safe
+        // NOTE that this makes the list immutable, but not the elements in it, those will still be changeable GenericValue objects...
         allCache.put(entityName, Collections.unmodifiableList(values));
     }
 
     public void putInAndCache(String entityName, Map fields, List values) {
         if (entityName == null || fields == null || values == null) return;
         ModelEntity entity = this.getModelEntity(entityName);
+
         putInAndCache(entity, fields, values);
     }
 
     public void putInAndCache(ModelEntity entity, Map fields, List values) {
         if (entity == null || fields == null || values == null) return;
         GenericPK tempPK = new GenericPK(entity, fields);
+
         if (tempPK == null) return;
-        //make the values immutable so that the list can be returned directly from the cache without copying and still be safe
-        //NOTE that this makes the list immutable, but not the elements in it, those will still be changeable GenericValue objects...
+        // make the values immutable so that the list can be returned directly from the cache without copying and still be safe
+        // NOTE that this makes the list immutable, but not the elements in it, those will still be changeable GenericValue objects...
         andCache.put(tempPK, Collections.unmodifiableList(values));
-        
-        //now make sure the fieldName set used for this entry is in the 
-        //  andCacheFieldSets Map which contains a Set of Sets of fieldNames for each entityName
+
+        // now make sure the fieldName set used for this entry is in the 
+        // andCacheFieldSets Map which contains a Set of Sets of fieldNames for each entityName
         Set fieldNameSets = (Set) andCacheFieldSets.get(entity.getEntityName());
+
         if (fieldNameSets == null) {
             synchronized (this) {
                 fieldNameSets = (Set) andCacheFieldSets.get(entity.getEntityName());
                 if (fieldNameSets == null) {
-                    //using a HashSet for both the individual fieldNameSets and 
-                    //  the set of fieldNameSets; this appears to be necessary 
-                    //  because TreeSet has bugs, or does not support, the compare
-                    //  operation which is necessary when inserted a TreeSet 
-                    //  into a TreeSet.
+                    // using a HashSet for both the individual fieldNameSets and 
+                    // the set of fieldNameSets; this appears to be necessary 
+                    // because TreeSet has bugs, or does not support, the compare
+                    // operation which is necessary when inserted a TreeSet 
+                    // into a TreeSet.
                     fieldNameSets = new HashSet();
                     andCacheFieldSets.put(entity.getEntityName(), fieldNameSets);
                 }
@@ -1529,6 +1640,7 @@ public class GenericDelegator {
         List values = new LinkedList();
 
         Element docElement = document.getDocumentElement();
+
         if (docElement == null)
             return null;
         if (!"entity-engine-xml".equals(docElement.getTagName())) {
@@ -1543,6 +1655,7 @@ public class GenericDelegator {
                 if (curChild.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) curChild;
                     GenericValue value = this.makeValue(element);
+
                     if (value != null)
                         values.add(value);
                 }
@@ -1556,13 +1669,15 @@ public class GenericDelegator {
 
     public GenericPK makePK(Element element) {
         GenericValue value = makeValue(element);
+
         return value.getPrimaryKey();
     }
 
     public GenericValue makeValue(Element element) {
         if (element == null) return null;
         String entityName = element.getTagName();
-        //if a dash or colon is in the tag name, grab what is after it
+
+        // if a dash or colon is in the tag name, grab what is after it
         if (entityName.indexOf('-') > 0)
             entityName = entityName.substring(entityName.indexOf('-') + 1);
         if (entityName.indexOf(':') > 0)
@@ -1572,15 +1687,18 @@ public class GenericDelegator {
         ModelEntity modelEntity = value.getModelEntity();
 
         Iterator modelFields = modelEntity.getFieldsIterator();
+
         while (modelFields.hasNext()) {
             ModelField modelField = (ModelField) modelFields.next();
             String name = modelField.getName();
             String attr = element.getAttribute(name);
+
             if (attr != null && attr.length() > 0) {
                 value.setString(name, attr);
             } else {
-                //if no attribute try a subelement
+                // if no attribute try a subelement
                 Element subElement = UtilXml.firstChildElement(element, name);
+
                 if (subElement != null) {
                     value.setString(name, UtilXml.elementValue(subElement));
                 }
@@ -1589,7 +1707,6 @@ public class GenericDelegator {
 
         return value;
     }
-
 
     // ======= Misc Methods ========
 
@@ -1604,6 +1721,7 @@ public class GenericDelegator {
                 if (sequencer == null) {
                     String helperName = this.getEntityHelperName("SequenceValueItem");
                     ModelEntity seqEntity = this.getModelEntity("SequenceValueItem");
+
                     sequencer = new SequenceUtil(helperName, seqEntity, "seqName", "seqId");
                 }
             }
@@ -1618,28 +1736,33 @@ public class GenericDelegator {
     /** Allows you to pass a SequenceUtil class (possibly one that overrides the getNextSeqId method); 
      * if null is passed will effectively refresh the sequencer. */
     public void setSequencer(SequenceUtil sequencer) {
-       this.sequencer = sequencer;
+        this.sequencer = sequencer;
     }
 
     /** Refreshes the ID sequencer clearing all cached bank values. */
     public void refreshSequencer() {
-       this.sequencer = null;
+        this.sequencer = null;
     }
 
     protected void absorbList(List lst) {
         if (lst == null) return;
         Iterator iter = lst.iterator();
+
         while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();
+
             value.setDelegator(this);
         }
     }
+
     public UtilCache getPrimaryKeyCache() {
         return primaryKeyCache;
     }
+
     public UtilCache getAndCache() {
         return andCache;
     }
+
     public UtilCache getAllCache() {
         return allCache;
     }

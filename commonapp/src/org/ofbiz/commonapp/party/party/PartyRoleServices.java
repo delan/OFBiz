@@ -24,6 +24,7 @@
 
 package org.ofbiz.commonapp.party.party;
 
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
+
 
 /**
  * <p><b>Title:</b> Services for Party Role maintenance
@@ -42,6 +44,7 @@ import org.ofbiz.core.service.*;
  * @created January 26, 2002
  */
 public class PartyRoleServices {
+
     /** Creates a PartyRole
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -54,26 +57,28 @@ public class PartyRoleServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+
         if (result.size() > 0)
             return result;
 
         GenericValue partyRole = delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", context.get("roleTypeId")));
-        try { 
+
+        try {
             if (delegator.findByPrimaryKey(partyRole.getPrimaryKey()) != null) {
                 return ServiceUtil.returnError("Could not create party role: already exists");
             }
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e);
             return ServiceUtil.returnError("Could not create party role (read failure): " + e.getMessage());
         }
 
         try {
             partyRole.create();
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could create party role (write failure): " + e.getMessage());
         }
-        
+
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
@@ -90,28 +95,30 @@ public class PartyRoleServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+
         if (result.size() > 0)
             return result;
 
         GenericValue partyRole = null;
-        try { 
+
+        try {
             partyRole = delegator.findByPrimaryKey("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", context.get("roleTypeId")));
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e);
             return ServiceUtil.returnError("Could not delete party role (read failure): " + e.getMessage());
         }
 
-        if(partyRole == null) {
+        if (partyRole == null) {
             return ServiceUtil.returnError("Could not delete party role (partyRole not found)");
         }
 
         try {
             partyRole.remove();
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could delete party role (write failure): " + e.getMessage());
         }
-        
+
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }

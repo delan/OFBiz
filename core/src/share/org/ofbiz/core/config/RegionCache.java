@@ -25,9 +25,11 @@
 
 package org.ofbiz.core.config;
 
+
 import java.util.*;
 import java.net.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * A class to manage the region cache and read a region XML file
@@ -46,7 +48,7 @@ public class RegionCache {
     public static void putRegions(URL regionFile, Map regions) {
         regionCache.put(regionFile, regions);
     }
-    
+
     public static void clearRegions(URL regionFile) {
         regionCache.remove(regionFile);
     }

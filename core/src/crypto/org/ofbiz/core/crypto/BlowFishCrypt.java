@@ -4,10 +4,12 @@
 
 package org.ofbiz.core.crypto;
 
+
 import java.security.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
 import java.io.*;
+
 
 /**
  * <p><b>Title:</b> BlowFishCrypt.java
@@ -48,14 +50,13 @@ public class BlowFishCrypt {
     }
 
     /*
-      * Creates a new BlowFishCrypt object.
-      *@param key An encoded secret key
-      */
+     * Creates a new BlowFishCrypt object.
+     *@param key An encoded secret key
+     */
     public BlowFishCrypt(byte[] key) {
         try {
             secretKeySpec = new SecretKeySpec(key, "Blowfish");
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
     }
 
     /*
@@ -67,12 +68,13 @@ public class BlowFishCrypt {
             FileInputStream is = new FileInputStream(keyFile);
             ObjectInputStream os = new ObjectInputStream(is);
             String keyString = (String) os.readObject();
+
             is.close();
 
             byte[] keyBytes = keyString.getBytes();
+
             secretKeySpec = new SecretKeySpec(keyBytes, "Blowfish");
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
     }
 
     /*
@@ -97,6 +99,7 @@ public class BlowFishCrypt {
      */
     public byte[] encrypt(byte[] bytes) {
         byte[] resp = null;
+
         try {
             resp = crypt(bytes, Cipher.ENCRYPT_MODE);
         } catch (Exception e) {
@@ -111,6 +114,7 @@ public class BlowFishCrypt {
      */
     public byte[] decrypt(byte[] bytes) {
         byte[] resp = null;
+
         try {
             resp = crypt(bytes, Cipher.DECRYPT_MODE);
         } catch (Exception e) {
@@ -123,6 +127,7 @@ public class BlowFishCrypt {
         if (secretKeySpec == null)
             throw new Exception("SecretKey cannot be null.");
         Cipher cipher = Cipher.getInstance("Blowfish");
+
         cipher.init(mode, secretKeySpec);
         return cipher.doFinal(bytes);
     }

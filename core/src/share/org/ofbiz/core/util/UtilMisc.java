@@ -24,8 +24,10 @@
 
 package org.ofbiz.core.util;
 
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+
 
 /**
  * UtilMisc - Misc Utility Functions
@@ -53,9 +55,10 @@ public class UtilMisc {
      */
     public static Map toMap(String name1, Object value1) {
         return new UtilMisc.SimpleMap(name1, value1);
-        /*Map fields = new HashMap();
-        fields.put(name1, value1);
-        return fields;*/
+
+        /* Map fields = new HashMap();
+         fields.put(name1, value1);
+         return fields;*/
     }
 
     /** Create a map from passed nameX, valueX parameters
@@ -63,10 +66,11 @@ public class UtilMisc {
      */
     public static Map toMap(String name1, Object value1, String name2, Object value2) {
         return new UtilMisc.SimpleMap(name1, value1, name2, value2);
-        /*Map fields = new HashMap();
-        fields.put(name1, value1);
-        fields.put(name2, value2);
-        return fields;*/
+
+        /* Map fields = new HashMap();
+         fields.put(name1, value1);
+         fields.put(name2, value2);
+         return fields;*/
     }
 
     /** Create a map from passed nameX, valueX parameters
@@ -74,33 +78,36 @@ public class UtilMisc {
      */
     public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3) {
         return new UtilMisc.SimpleMap(name1, value1, name2, value2, name3, value3);
-        /*Map fields = new HashMap();
-        fields.put(name1, value1);
-        fields.put(name2, value2);
-        fields.put(name3, value3);
-        return fields;*/
+
+        /* Map fields = new HashMap();
+         fields.put(name1, value1);
+         fields.put(name2, value2);
+         fields.put(name3, value3);
+         return fields;*/
     }
 
     /** Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
     public static Map toMap(String name1, Object value1, String name2, Object value2, String name3,
-                            Object value3, String name4, Object value4) {
+        Object value3, String name4, Object value4) {
         return new UtilMisc.SimpleMap(name1, value1, name2, value2, name3, value3, name4, value4);
-        /*Map fields = new HashMap();
-        fields.put(name1, value1);
-        fields.put(name2, value2);
-        fields.put(name3, value3);
-        fields.put(name4, value4);
-        return fields;*/
+
+        /* Map fields = new HashMap();
+         fields.put(name1, value1);
+         fields.put(name2, value2);
+         fields.put(name3, value3);
+         fields.put(name4, value4);
+         return fields;*/
     }
 
     /** Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
     public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3,
-                            String name4, Object value4, String name5, Object value5) {
+        String name4, Object value4, String name5, Object value5) {
         Map fields = new HashMap();
+
         fields.put(name1, value1);
         fields.put(name2, value2);
         fields.put(name3, value3);
@@ -113,8 +120,9 @@ public class UtilMisc {
      * @return The resulting Map
      */
     public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3,
-                            String name4, Object value4, String name5, Object value5, String name6, Object value6) {
+        String name4, Object value4, String name5, Object value5, String name6, Object value6) {
         Map fields = new HashMap();
+
         fields.put(name1, value1);
         fields.put(name2, value2);
         fields.put(name3, value3);
@@ -129,6 +137,7 @@ public class UtilMisc {
      */
     public static List toList(Object obj1) {
         List list = new ArrayList(1);
+
         list.add(obj1);
         return list;
     }
@@ -138,6 +147,7 @@ public class UtilMisc {
      */
     public static List toList(Object obj1, Object obj2) {
         List list = new ArrayList(2);
+
         list.add(obj1);
         list.add(obj2);
         return list;
@@ -148,6 +158,7 @@ public class UtilMisc {
      */
     public static List toList(Object obj1, Object obj2, Object obj3) {
         List list = new ArrayList(3);
+
         list.add(obj1);
         list.add(obj2);
         list.add(obj3);
@@ -159,6 +170,7 @@ public class UtilMisc {
      */
     public static List toList(Object obj1, Object obj2, Object obj3, Object obj4) {
         List list = new ArrayList(4);
+
         list.add(obj1);
         list.add(obj2);
         list.add(obj3);
@@ -171,6 +183,7 @@ public class UtilMisc {
      */
     public static List toList(Object obj1, Object obj2, Object obj3, Object obj4, Object obj5) {
         List list = new ArrayList(5);
+
         list.add(obj1);
         list.add(obj2);
         list.add(obj3);
@@ -184,6 +197,7 @@ public class UtilMisc {
      */
     public static List toList(Object obj1, Object obj2, Object obj3, Object obj4, Object obj5, Object obj6) {
         List list = new ArrayList(6);
+
         list.add(obj1);
         list.add(obj2);
         list.add(obj3);
@@ -208,8 +222,10 @@ public class UtilMisc {
     public static Map getParameterMap(HttpServletRequest request) {
         HashMap paramMap = new OrderedMap();
         java.util.Enumeration e = request.getParameterNames();
+
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
+
             paramMap.put(name, request.getParameter(name));
         }
         return (Map) paramMap;
@@ -218,14 +234,16 @@ public class UtilMisc {
     /** Given a request, returns the application name or "root" if deployed on root */
     public static String getApplicationName(HttpServletRequest request) {
         String appName = "root";
+
         if (request.getContextPath().length() > 1) {
             appName = request.getContextPath().substring(1);
-        }		
+        }
         return appName;
     }
-    
+
     public static StringBuffer getServerRootUrl(HttpServletRequest request) {
         StringBuffer requestUrl = new StringBuffer();
+
         requestUrl.append(request.getScheme());
         requestUrl.append("://" + request.getServerName());
         if (request.getServerPort() != 80 && request.getServerPort() != 443)
@@ -235,6 +253,7 @@ public class UtilMisc {
 
     public static StringBuffer getFullRequestUrl(HttpServletRequest request) {
         StringBuffer requestUrl = getServerRootUrl(request);
+
         requestUrl.append(request.getRequestURI());
         if (request.getQueryString() != null) {
             requestUrl.append("?" + request.getQueryString());
@@ -258,25 +277,38 @@ public class UtilMisc {
 
         public SimpleMap(String name1, Object value1) {
             sizeValue = 1;
-            this.name1 = name1; this.value1 = value1;
+            this.name1 = name1;
+            this.value1 = value1;
         }
+
         public SimpleMap(String name1, Object value1, String name2, Object value2) {
             sizeValue = 2;
-            this.name1 = name1; this.value1 = value1;
-            this.name2 = name2; this.value2 = value2;
+            this.name1 = name1;
+            this.value1 = value1;
+            this.name2 = name2;
+            this.value2 = value2;
         }
+
         public SimpleMap(String name1, Object value1, String name2, Object value2, String name3, Object value3) {
             sizeValue = 3;
-            this.name1 = name1; this.value1 = value1;
-            this.name2 = name2; this.value2 = value2;
-            this.name3 = name3; this.value3 = value3;
+            this.name1 = name1;
+            this.value1 = value1;
+            this.name2 = name2;
+            this.value2 = value2;
+            this.name3 = name3;
+            this.value3 = value3;
         }
+
         public SimpleMap(String name1, Object value1, String name2, Object value2, String name3, Object value3, String name4, Object value4) {
             sizeValue = 4;
-            this.name1 = name1; this.value1 = value1;
-            this.name2 = name2; this.value2 = value2;
-            this.name3 = name3; this.value3 = value3;
-            this.name4 = name4; this.value4 = value4;
+            this.name1 = name1;
+            this.value1 = value1;
+            this.name2 = name2;
+            this.value2 = value2;
+            this.name3 = name3;
+            this.value3 = value3;
+            this.name4 = name4;
+            this.value4 = value4;
         }
 
         protected void makeRealMap() {
@@ -412,20 +444,37 @@ public class UtilMisc {
 
         public String toString() {
             StringBuffer outString = new StringBuffer("{");
+
             if (name1 != null) {
-                outString.append('{'); outString.append(name1); outString.append(','); outString.append(value1); outString.append('}');
+                outString.append('{');
+                outString.append(name1);
+                outString.append(',');
+                outString.append(value1);
+                outString.append('}');
             }
             if (name2 != null) {
                 if (outString.length() > 1) outString.append(',');
-                outString.append('{'); outString.append(name2); outString.append(','); outString.append(value2); outString.append('}');
+                outString.append('{');
+                outString.append(name2);
+                outString.append(',');
+                outString.append(value2);
+                outString.append('}');
             }
             if (name3 != null) {
                 if (outString.length() > 1) outString.append(',');
-                outString.append('{'); outString.append(name3); outString.append(','); outString.append(value3); outString.append('}');
+                outString.append('{');
+                outString.append(name3);
+                outString.append(',');
+                outString.append(value3);
+                outString.append('}');
             }
             if (name4 != null) {
                 if (outString.length() > 1) outString.append(',');
-                outString.append('{'); outString.append(name4); outString.append(','); outString.append(value4); outString.append('}');
+                outString.append('{');
+                outString.append(name4);
+                outString.append(',');
+                outString.append(value4);
+                outString.append('}');
             }
             outString.append('}');
             return outString.toString();

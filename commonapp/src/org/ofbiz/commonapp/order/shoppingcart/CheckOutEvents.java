@@ -24,6 +24,7 @@
 
 package org.ofbiz.commonapp.order.shoppingcart;
 
+
 import java.net.*;
 import java.util.*;
 import javax.servlet.*;
@@ -40,6 +41,7 @@ import org.ofbiz.commonapp.order.order.*;
 import org.ofbiz.commonapp.party.contact.*;
 import org.ofbiz.commonapp.product.catalog.*;
 
+
 /**
  * Events used for processing checkout and orders.
  *
@@ -55,6 +57,7 @@ public class CheckOutEvents {
 
     public static String cartNotEmpty(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+
         if (cart != null && cart.size() > 0) {
             return "success";
         } else {
@@ -66,6 +69,7 @@ public class CheckOutEvents {
     public static String setCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
         StringBuffer errorMessage = new StringBuffer();
+
         if (cart != null && cart.size() > 0) {
             String shippingMethod = request.getParameter("shipping_method");
             String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
@@ -82,6 +86,7 @@ public class CheckOutEvents {
                 int delimiterPos = shippingMethod.indexOf('@');
                 String shipmentMethodTypeId = null;
                 String carrierPartyId = null;
+
                 if (delimiterPos > 0) {
                     shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
                     carrierPartyId = shippingMethod.substring(delimiterPos + 1);
@@ -130,7 +135,7 @@ public class CheckOutEvents {
                 cart.setPoNumber(correspondingPoId);
                 if (UtilValidate.isEmpty(cart.getPoNumber())) {
                     cart.setPoNumber("(none)");
-                }//else ok
+                }// else ok
             } else if (UtilValidate.isEmpty(checkOutPaymentId)) {
                 errorMessage.append("<li>Please Select a Method of Billing");
             }
@@ -164,6 +169,7 @@ public class CheckOutEvents {
         Map context = cart.makeCartMap(dispatcher, explodeOrderItems(request));
         String distributorId = (String) session.getAttribute("_DISTRIBUTOR_ID_");
         String affiliateId = (String) session.getAttribute("_AFFILIATE_ID_");
+
         if (distributorId != null) context.put("distributorId", distributorId);
         if (affiliateId != null) context.put("affiliateId", affiliateId);
         context.put("userLogin", userLogin);
@@ -173,6 +179,7 @@ public class CheckOutEvents {
 
         // store the order - invoke the service
         Map result = null;
+
         try {
             result = dispatcher.runSync("storeOrder", context);
             orderId = (String) result.get("orderId");
@@ -189,8 +196,8 @@ public class CheckOutEvents {
 
         // check for error message(s)
         if (ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE)) ||
-                result.containsKey(ModelService.ERROR_MESSAGE) ||
-                result.containsKey(ModelService.ERROR_MESSAGE)) {
+            result.containsKey(ModelService.ERROR_MESSAGE) ||
+            result.containsKey(ModelService.ERROR_MESSAGE)) {
 
             request.setAttribute(SiteDefs.ERROR_MESSAGE, ServiceUtil.makeErrorMessage(result, "<li>", "</li>", "Did not complete the order, the following occurred: <ul>", "</ul>"));
             return "error";
@@ -205,9 +212,10 @@ public class CheckOutEvents {
 
     public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
         String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
-        //getServletContext appears to be new on the session object for Servlet 2.3
+        // getServletContext appears to be new on the session object for Servlet 2.3
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL orderPropertiesUrl = null;
+
         try {
             orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
         } catch (MalformedURLException e) {
@@ -217,6 +225,7 @@ public class CheckOutEvents {
         final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.securityCode");
 
         String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
+
         if (controlPath == null) {
             Debug.logError("[CheckOutEvents.renderConfirmOrder] CONTROL_PATH is null.", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error generating order confirmation, but it was recorded and will be processed.");
@@ -225,36 +234,41 @@ public class CheckOutEvents {
 
         // build the server root string
         StringBuffer serverRoot = new StringBuffer();
+
         /* This is disabled for now because we don't have the stuff in place to do a secure get...
-        if (request.isSecure()) {
-            String server = UtilProperties.getPropertyValue("url.properties", "force.https.host", request.getServerName());
-            String port = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
-            serverRoot.append("https://");
-            serverRoot.append(server);
-            if (!"443".equals(port)) {
-                serverRoot.append(":");
-                serverRoot.append(port);
-            }
-        } else {
+         if (request.isSecure()) {
+         String server = UtilProperties.getPropertyValue("url.properties", "force.https.host", request.getServerName());
+         String port = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
+         serverRoot.append("https://");
+         serverRoot.append(server);
+         if (!"443".equals(port)) {
+         serverRoot.append(":");
+         serverRoot.append(port);
+         }
+         } else {
          */
         String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
         String port = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
+
         serverRoot.append("http://");
         serverRoot.append(server);
         if (!"80".equals(port)) {
             serverRoot.append(":");
             serverRoot.append(port);
         }
+
         /* } */
 
         try {
             URL url = new URL(serverRoot.toString() + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
-            //as nice as it would be to run this through localhost, we can't because the page has to have the correct host so the urls will be created for the email, etc; we could do this and pass the base url in a parameter...
-            //Debug.logInfo("Original URL: " + url, module);
-            //url = new URL(url.getProtocol(), "127.0.0.1", url.getPort(), url.getFile());
+
+            // as nice as it would be to run this through localhost, we can't because the page has to have the correct host so the urls will be created for the email, etc; we could do this and pass the base url in a parameter...
+            // Debug.logInfo("Original URL: " + url, module);
+            // url = new URL(url.getProtocol(), "127.0.0.1", url.getPort(), url.getFile());
             if (Debug.infoOn()) Debug.logInfo("About to get confirmorder page from the URL: " + url, module);
             HttpClient httpClient = new HttpClient(url);
             String content = httpClient.get();
+
             request.setAttribute("confirmorder", content);
             return "success";
         } catch (Exception e) {
@@ -266,10 +280,11 @@ public class CheckOutEvents {
 
     public static String emailOrder(HttpServletRequest request, HttpServletResponse response) {
         String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
-        //getServletContext appears to be new on the session object for Servlet 2.3
+        // getServletContext appears to be new on the session object for Servlet 2.3
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
         URL orderPropertiesUrl = null;
+
         try {
             ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
             orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
@@ -291,10 +306,12 @@ public class CheckOutEvents {
             GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
             String orderAdditionalEmails = (String) request.getAttribute("orderAdditionalEmails");
             StringBuffer emails = new StringBuffer();
+
             if (orderAdditionalEmails != null) {
                 emails.append(orderAdditionalEmails);
             }
             GenericValue party = null;
+
             try {
                 party = userLogin.getRelatedOne("Party");
             } catch (GenericEntityException e) {
@@ -303,20 +320,25 @@ public class CheckOutEvents {
             }
             if (party != null) {
                 Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
+
                 while (emailIter != null && emailIter.hasNext()) {
                     GenericValue email = (GenericValue) emailIter.next();
+
                     emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
                 }
             }
 
             String content = (String) request.getAttribute("confirmorder");
+
             try {
                 // JavaMail contribution from Chris Nelson 11/21/2001
                 Properties props = new Properties();
+
                 props.put("mail.smtp.host", SMTP_SERVER);
                 Session session = Session.getDefaultInstance(props);
 
                 MimeMessage mail = new MimeMessage(session);
+
                 mail.setFrom(new InternetAddress(ORDER_SENDER_EMAIL));
                 mail.addRecipients(Message.RecipientType.TO, emails.toString());
 
@@ -328,24 +350,27 @@ public class CheckOutEvents {
                 }
 
                 String orderId = (String) request.getAttribute("order_id");
+
                 mail.setSubject(UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Order" + UtilFormatOut.ifNotEmpty(orderId, " #", "") + " Confirmation");
-                //mail.addHeaderLine("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
+                // mail.addHeaderLine("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
                 mail.setContent(content, "text/html");
                 Transport.send(mail);
             } catch (Exception e) {
                 Debug.logError(e, module);
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
-                return "success"; //"error";
+                return "success"; // "error";
             }
 
             try {
                 // send off the notification email if defined.
                 if (UtilValidate.isNotEmpty(NOTIFY_FROM) && UtilValidate.isNotEmpty(NOTIFY_TO)) {
                     Properties props = new Properties();
+
                     props.put("mail.smtp.host", SMTP_SERVER);
                     Session session = Session.getDefaultInstance(props);
 
                     MimeMessage mail = new MimeMessage(session);
+
                     mail.setFrom(new InternetAddress(NOTIFY_FROM));
                     mail.addRecipients(Message.RecipientType.TO, NOTIFY_TO);
 
@@ -357,6 +382,7 @@ public class CheckOutEvents {
                     }
 
                     String orderId = (String) request.getAttribute("order_id");
+
                     mail.setSubject(UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Order" + UtilFormatOut.ifNotEmpty(orderId, " #", "") + " Notification");
                     mail.setContent(content, "text/html");
                     Transport.send(mail);
@@ -368,11 +394,11 @@ public class CheckOutEvents {
         } catch (RuntimeException re) {
             Debug.logError(re, module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
-            return "success"; //"error";
+            return "success"; // "error";
         } catch (Error e) {
             Debug.logError(e, module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
-            return "success"; //"error";
+            return "success"; // "error";
         }
         return "success";
     }
@@ -398,6 +424,7 @@ public class CheckOutEvents {
         List items = cart.makeOrderItems();
         List adjs = cart.makeAllAdjustments();
         GenericValue shipAddress = cart.getShippingAddress();
+
         if (shipAddress == null) {
             throw new GeneralException("Shipping address is not set in the shopping cart.");
         }
@@ -407,6 +434,7 @@ public class CheckOutEvents {
 
         // get the tax adjustments
         List taxReturn = getTaxAdjustments(dispatcher, "calcTax", items, adjs, shipAddress);
+
         if (Debug.verboseOn()) Debug.logVerbose("ReturnList: " + taxReturn);
 
         List orderAdj = (List) taxReturn.get(0);
@@ -415,6 +443,7 @@ public class CheckOutEvents {
         // pass the order adjustments back
         if (orderAdj != null && orderAdj.size() > 0) {
             Iterator oai = orderAdj.iterator();
+
             while (oai.hasNext())
                 cart.addAdjustment((GenericValue) oai.next());
         }
@@ -422,10 +451,12 @@ public class CheckOutEvents {
         // return the order item adjustments
         if (itemAdj != null && itemAdj.size() > 0) {
             List cartItems = cart.items();
+
             for (int i = 0; i < cartItems.size(); i++) {
                 ShoppingCartItem item = (ShoppingCartItem) cartItems.get(i);
                 List itemAdjustments = (List) itemAdj.get(i);
                 Iterator ida = itemAdjustments.iterator();
+
                 while (ida.hasNext())
                     item.addAdjustment((GenericValue) ida.next());
             }
@@ -434,7 +465,7 @@ public class CheckOutEvents {
 
     // Calc the tax adjustments.
     private static List getTaxAdjustments(LocalDispatcher dispatcher, String taxService, List orderItems,
-            List allAdjustments, GenericValue shipAddress) throws GeneralException {
+        List allAdjustments, GenericValue shipAddress) throws GeneralException {
         List products = new ArrayList(orderItems.size());
         List amounts = new ArrayList(orderItems.size());
         List shipAmts = new ArrayList(orderItems.size());
@@ -446,6 +477,7 @@ public class CheckOutEvents {
         // build up the list of tax calc service parameters
         for (int i = 0; i < orderItems.size(); i++) {
             GenericValue orderItem = (GenericValue) orderItems.get(i);
+
             try {
                 products.add(i, orderItem.getRelatedOne("Product"));  // get the product entity
                 amounts.add(i, new Double(OrderReadHelper.getOrderItemSubTotal(orderItem, allAdjustments, true, false))); // get the item amount
@@ -459,6 +491,7 @@ public class CheckOutEvents {
                 "itemShippingList", shipAmts, "orderShippingAmount", cartShipping, "shippingAddress", shipAddress);
 
         Map serviceResult = null;
+
         try {
             serviceResult = dispatcher.runSync(taxService, serviceContext);
         } catch (GenericServiceException e) {
@@ -477,6 +510,7 @@ public class CheckOutEvents {
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         // Load the order.properties file.
         URL orderPropertiesUrl = null;
+
         try {
             orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
         } catch (MalformedURLException e) {
@@ -507,6 +541,7 @@ public class CheckOutEvents {
 
         // Load the order.properties file.
         URL orderPropertiesUrl = null;
+
         try {
             orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
         } catch (MalformedURLException e) {
@@ -527,8 +562,10 @@ public class CheckOutEvents {
         boolean requireAuth = false;
         List paymentMethodIds = cart.getPaymentMethodIds();
         Iterator paymentMethodIter = paymentMethodIds.iterator();
+
         while (paymentMethodIter.hasNext() && !requireAuth) {
             String paymentMethodId = (String) paymentMethodIter.next();
+
             if (!paymentMethodId.equals("OFFLINE"))
                 requireAuth = true;
         }
@@ -536,6 +573,7 @@ public class CheckOutEvents {
         // Invoke payment processing.
         if (requireAuth) {
             Map paymentResult = null;
+
             try {
                 // invoke the payment gateway service.
                 paymentResult = dispatcher.runSync("processPayments", UtilMisc.toMap("orderId", orderId));
@@ -545,36 +583,43 @@ public class CheckOutEvents {
             if (Debug.verboseOn()) Debug.logVerbose("Finsished w/ Payment Service", module);
             if (paymentResult != null && paymentResult.containsKey("processResult")) {
                 String authResp = (String) paymentResult.get("processResult");
+
                 if (!authResp.equals("APPROVED")) {
                     // order was NOT approved
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth was NOT a success!", module);
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>" + DECLINE_MESSAGE);
                     Map statusResult = null;
+
                     try {
                         // set the status on the order header
                         statusResult = dispatcher.runSync("changeOrderStatus",
-                                UtilMisc.toMap("orderId", orderId, "statusId", HEADER_DECLINE_STATUS));
+                                    UtilMisc.toMap("orderId", orderId, "statusId", HEADER_DECLINE_STATUS));
                         if (statusResult.containsKey("errorMessage")) {
                             throw new GenericServiceException((String) statusResult.get("errorMessage"));
                         }
 
                         // set the status on the order item(s)
                         GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+
                         if (orderHeader != null) {
                             Collection orderItems = orderHeader.getRelated("OrderItem");
+
                             if (orderItems != null && orderItems.size() > 0) {
                                 Iterator i = orderItems.iterator();
+
                                 while (i.hasNext()) {
                                     GenericValue v = (GenericValue) i.next();
+
                                     v.set("statusId", ITEM_DECLINE_STATUS);
                                     v.store();
                                 }
                             }
                         }
-                        
+
                         // cancel inventory reservations
                         try {
                             Map cancelResult = dispatcher.runSync("cancelOrderInventoryReservation", UtilMisc.toMap("orderId", orderId));
+
                             if (ModelService.RESPOND_ERROR.equals((String) cancelResult.get(ModelService.RESPONSE_MESSAGE))) {
                                 Debug.logError("cancelOrderInventoryReservation service failed for Order with ID [" + orderId + "] - " + ServiceUtil.makeErrorMessage(cancelResult, "", "\n", "", ""), module);
                             }
@@ -597,18 +642,23 @@ public class CheckOutEvents {
                         // set the status on the order header
                         Map statusResult = dispatcher.runSync("changeOrderStatus",
                                 UtilMisc.toMap("orderId", orderId, "statusId", HEADER_APPROVE_STATUS));
+
                         if (statusResult.containsKey("errorMessage") || ModelService.RESPOND_ERROR.equals((String) statusResult.get(ModelService.RESPONSE_MESSAGE))) {
                             Debug.logError("Order status service failed: [" + orderId + "] " + ServiceUtil.makeErrorMessage(statusResult, "", "\n", "", ""), module);
                         }
 
                         // set the status on the order item(s)
                         GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+
                         if (orderHeader != null) {
                             Collection orderItems = orderHeader.getRelated("OrderItem");
+
                             if (orderItems != null && orderItems.size() > 0) {
                                 Iterator orderItemsIter = orderItems.iterator();
+
                                 while (orderItemsIter.hasNext()) {
                                     GenericValue orderItem = (GenericValue) orderItemsIter.next();
+
                                     orderItem.set("statusId", ITEM_APPROVE_STATUS);
                                     orderItem.store();
                                 }

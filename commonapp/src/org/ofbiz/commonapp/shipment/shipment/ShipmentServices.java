@@ -23,11 +23,13 @@
 
 package org.ofbiz.commonapp.shipment.shipment;
 
+
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * ShipmentServices
@@ -47,9 +49,10 @@ public class ShipmentServices {
         List shipMethodSplit = StringUtil.split(shipMethodAndParty, "|");
 
         // Create the basic entity.
-        GenericValue estimate = delegator.makeValue("ShipmentCostEstimate",null);
-        estimate.set("shipmentCostEstimateId",delegator.getNextSeqId("ShipmentCostEstimate").toString());
-        estimate.set("shipmentMethodTypeId",shipMethodSplit.get(1));
+        GenericValue estimate = delegator.makeValue("ShipmentCostEstimate", null);
+
+        estimate.set("shipmentCostEstimateId", delegator.getNextSeqId("ShipmentCostEstimate").toString());
+        estimate.set("shipmentMethodTypeId", shipMethodSplit.get(1));
         estimate.set("carrierPartyId", shipMethodSplit.get(0));
         estimate.set("carrierRoleTypeId", "CARRIER");
         estimate.set("geoIdTo", context.get("toGeo"));
@@ -66,20 +69,19 @@ public class ShipmentServices {
                 // Lets process weight.
                 try {
                     Long sequence = delegator.getNextSeqId("QuantityBreak");
-                    GenericValue weightBreak = delegator.makeValue("QuantityBreak",null);
-                    weightBreak.set("quantityBreakId",sequence.toString());
-                    weightBreak.set("quantityBreakTypeId","SHIP_WEIGHT");
-                    weightBreak.set("fromQuantity",Double.valueOf((String)context.get("wmin")));
-                    weightBreak.set("thruQuantity",Double.valueOf((String)context.get("wmax")));
-                    estimate.set("weightBreakId",sequence.toString());
-                    estimate.set("weightUnitPrice",Double.valueOf((String)context.get("wprice")));
-                    if ( context.containsKey("wuom") )
-                       estimate.set("weightUomId",(String)context.get("wuom"));
+                    GenericValue weightBreak = delegator.makeValue("QuantityBreak", null);
+
+                    weightBreak.set("quantityBreakId", sequence.toString());
+                    weightBreak.set("quantityBreakTypeId", "SHIP_WEIGHT");
+                    weightBreak.set("fromQuantity", Double.valueOf((String) context.get("wmin")));
+                    weightBreak.set("thruQuantity", Double.valueOf((String) context.get("wmax")));
+                    estimate.set("weightBreakId", sequence.toString());
+                    estimate.set("weightUnitPrice", Double.valueOf((String) context.get("wprice")));
+                    if (context.containsKey("wuom"))
+                        estimate.set("weightUomId", (String) context.get("wuom"));
                     storeAll.add(weightBreak);
-                }
-                catch ( Exception e ) { }
-            }
-            else {
+                } catch (Exception e) {}
+            } else {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
                 result.put(ModelService.ERROR_MESSAGE, "Weight Span Requires BOTH Fields.");
                 return result;
@@ -87,24 +89,23 @@ public class ShipmentServices {
         }
 
         if (context.containsKey("qmin") || context.containsKey("qmax")) {
-            if ( context.containsKey("qmax") && context.containsKey("qmin") ) {
+            if (context.containsKey("qmax") && context.containsKey("qmin")) {
                 // Lets process quantity.
                 try {
                     Long sequence = delegator.getNextSeqId("QuantityBreak");
-                    GenericValue quantityBreak = delegator.makeValue("QuantityBreak",null);
-                    quantityBreak.set("quantityBreakId",sequence.toString());
-                    quantityBreak.set("quantityBreakTypeId","SHIP_QUANTITY");
-                    quantityBreak.set("fromQuantity",Double.valueOf((String)context.get("qmin")));
-                    quantityBreak.set("thruQuantity",Double.valueOf((String)context.get("qmax")));
-                    estimate.set("quantityBreakId",sequence.toString());
-                    estimate.set("quantityUnitPrice",Double.valueOf((String)context.get("qprice")));
-                    if ( context.containsKey("quom") )
-                        estimate.set("quantityUomId",context.get("quom"));
+                    GenericValue quantityBreak = delegator.makeValue("QuantityBreak", null);
+
+                    quantityBreak.set("quantityBreakId", sequence.toString());
+                    quantityBreak.set("quantityBreakTypeId", "SHIP_QUANTITY");
+                    quantityBreak.set("fromQuantity", Double.valueOf((String) context.get("qmin")));
+                    quantityBreak.set("thruQuantity", Double.valueOf((String) context.get("qmax")));
+                    estimate.set("quantityBreakId", sequence.toString());
+                    estimate.set("quantityUnitPrice", Double.valueOf((String) context.get("qprice")));
+                    if (context.containsKey("quom"))
+                        estimate.set("quantityUomId", context.get("quom"));
                     storeAll.add(quantityBreak);
-                    }
-                catch ( Exception e ) { }
-            }
-            else {
+                } catch (Exception e) {}
+            } else {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
                 result.put(ModelService.ERROR_MESSAGE, "Quantity Span Requires BOTH Fields.");
                 return result;
@@ -112,22 +113,21 @@ public class ShipmentServices {
         }
 
         if (context.containsKey("pmin") || context.containsKey("pmax")) {
-            if ( context.containsKey("pmax") && context.containsKey("pmin") ) {
+            if (context.containsKey("pmax") && context.containsKey("pmin")) {
                 // Lets process price.
                 try {
                     Long sequence = delegator.getNextSeqId("QuantityBreak");
-                    GenericValue priceBreak = delegator.makeValue("QuantityBreak",null);
-                    priceBreak.set("quantityBreakId",sequence.toString());
-                    priceBreak.set("quantityBreakTypeId","SHIP_PRICE");
-                    priceBreak.set("fromQuantity",Double.valueOf((String)context.get("pmin")));
-                    priceBreak.set("thruQuantity",Double.valueOf((String)context.get("pmax")));
-                    estimate.set("priceBreakId",sequence.toString());
-                    estimate.set("priceUnitPrice",Double.valueOf((String)context.get("pprice")));
+                    GenericValue priceBreak = delegator.makeValue("QuantityBreak", null);
+
+                    priceBreak.set("quantityBreakId", sequence.toString());
+                    priceBreak.set("quantityBreakTypeId", "SHIP_PRICE");
+                    priceBreak.set("fromQuantity", Double.valueOf((String) context.get("pmin")));
+                    priceBreak.set("thruQuantity", Double.valueOf((String) context.get("pmax")));
+                    estimate.set("priceBreakId", sequence.toString());
+                    estimate.set("priceUnitPrice", Double.valueOf((String) context.get("pprice")));
                     storeAll.add(priceBreak);
-                }
-                catch ( Exception e ) { }
-            }
-            else {
+                } catch (Exception e) {}
+            } else {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
                 result.put(ModelService.ERROR_MESSAGE, "Price Span Requires BOTH Fields.");
                 return result;
@@ -136,8 +136,7 @@ public class ShipmentServices {
 
         try {
             delegator.storeAll(storeAll);
-        }
-        catch ( GenericEntityException e ) {
+        } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problem reading product features: " + e.toString());
             return result;
@@ -153,8 +152,9 @@ public class ShipmentServices {
         String shipmentCostEstimateId = (String) context.get("shipmentCostEstimateId");
 
         GenericValue estimate = null;
+
         try {
-            estimate = delegator.findByPrimaryKey("ShipmentCostEstimate",UtilMisc.toMap("shipmentCostEstimateId", shipmentCostEstimateId));
+            estimate = delegator.findByPrimaryKey("ShipmentCostEstimate", UtilMisc.toMap("shipmentCostEstimateId", shipmentCostEstimateId));
             if (estimate.get("weightBreakId") != null)
                 delegator.removeRelated("WeightQuantityBreak", estimate);
             if (estimate.get("quantityBreakId") != null)

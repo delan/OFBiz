@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.util.*;
 import javax.naming.*;
 import javax.transaction.*;
@@ -32,6 +33,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.entity.transaction.TransactionFactoryInterface;
+
 
 /**
  * TransactionFactory - central source for JTA objects
@@ -45,16 +47,18 @@ public class TransactionFactory {
     public static TransactionFactoryInterface transactionFactory = null;
 
     public static TransactionFactoryInterface getTransactionFactory() {
-        if (transactionFactory == null) { //don't want to block here
+        if (transactionFactory == null) { // don't want to block here
             synchronized (TransactionFactory.class) {
-                //must check if null again as one of the blocked threads can still enter
+                // must check if null again as one of the blocked threads can still enter
                 if (transactionFactory == null) {
                     try {
                         String className = EntityConfigUtil.getTxFactoryClass();
+
                         if (className == null) {
                             throw new IllegalStateException("Could not find transaction factory class name definition");
                         }
                         Class tfClass = null;
+
                         if (className != null && className.length() > 0) {
                             try {
                                 tfClass = Class.forName(className);

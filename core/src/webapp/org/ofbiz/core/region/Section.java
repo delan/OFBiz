@@ -26,6 +26,7 @@
 
 package org.ofbiz.core.region;
 
+
 import java.net.*;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -36,6 +37,7 @@ import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.view.*;
+
 
 /**
  * A section is content with a name that implements Content.render. 
@@ -52,22 +54,22 @@ import org.ofbiz.core.view.*;
  *@version    1.0
  */
 public class Section extends Content {
-    
+
     protected final String name;
     protected final String info;
     protected URL regionFile;
-    
+
     public Section(String name, String info, String content, String type, URL regionFile) {
         super(content, type);
         this.name = name;
         this.info = info;
         this.regionFile = regionFile;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void render(PageContext pageContext) throws JspException {
         try {
             if (UtilJ2eeCompat.doFlushOnRender(pageContext.getServletContext())) {
@@ -82,6 +84,7 @@ public class Section extends Content {
                 throw new JspException(e.toString());
         } catch (ServletException e) {
             Throwable throwable = e.getRootCause() != null ? e.getRootCause() : e;
+
             Debug.logError(throwable, "Error rendering section: ");
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext()))
                 throw new JspException(throwable);
@@ -89,13 +92,14 @@ public class Section extends Content {
                 throw new JspException(throwable.toString());
         }
     }
-    
+
     public void render(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException {
         ServletContext context = (ServletContext) request.getAttribute("servletContext");
         boolean verboseOn = Debug.verboseOn();
+
         if (verboseOn) Debug.logVerbose("Rendering " + this.toString());
-        
-        //long viewStartTime = System.currentTimeMillis();
+
+        // long viewStartTime = System.currentTimeMillis();
         if (content != null) {
             if ("direct".equals(type)) {
                 if (UtilJ2eeCompat.useOutputStreamNotWriter(context)) {
@@ -104,14 +108,15 @@ public class Section extends Content {
                     response.getWriter().print(content);
                 }
             } else if ("default".equals(type) || "region".equals(type) || "resource".equals(type)) {
-                //if type is resource then we won't even look up the region
-                
-                //if this is default or region, check to see if the content points to a valid region name
+                // if type is resource then we won't even look up the region
+
+                // if this is default or region, check to see if the content points to a valid region name
                 Region region = null;
+
                 if ("default".equals(type) || "region".equals(type)) {
                     region = RegionManager.getRegion(regionFile, content);
                 }
-                
+
                 if ("region".equals(type) || region != null) {
                     if (region == null) {
                         throw new IllegalArgumentException("No region definition found with name: " + content);
@@ -121,7 +126,7 @@ public class Section extends Content {
                     region.render(request, response);
                     RegionStack.pop(request);
                 } else {
-                    //default is the string that the ViewFactory expects for webapp resources
+                    // default is the string that the ViewFactory expects for webapp resources
                     viewHandlerRender("default", request, response);
                 }
             } else {
@@ -130,19 +135,21 @@ public class Section extends Content {
         }
         if (verboseOn) Debug.logVerbose("DONE Rendering " + this.toString());
     }
-    
+
     protected void viewHandlerRender(String typeToUse, HttpServletRequest request, HttpServletResponse response) throws ServletException {
         ServletContext context = (ServletContext) request.getAttribute("servletContext");
-        //see if the type is defined in the controller.xml file
+
+        // see if the type is defined in the controller.xml file
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + content + "] of type [" + typeToUse + "]");
             ViewHandler vh = ViewFactory.getViewHandler(context, typeToUse);
+
             vh.render(name, content, info, request, response);
         } catch (ViewHandlerException e) {
             throw new ServletException(e.getNonNestedMessage(), e.getNested());
         }
     }
-    
+
     public String toString() {
         return "Section: " + name + ", info=" + info + ", content=" + content + ", type=" + type;
     }

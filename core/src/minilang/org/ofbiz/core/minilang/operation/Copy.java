@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.operation;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+
 
 /**
  * Copies a field in the in-map to the out-map
@@ -52,9 +54,9 @@ public class Copy extends SimpleMapOperation {
             this.toField = this.fieldName;
         }
 
-        //if anything but false it will be true
+        // if anything but false it will be true
         replace = !"false".equals(element.getAttribute("replace"));
-        //if anything but false it will be true
+        // if anything but false it will be true
         setIfNull = !"false".equals(element.getAttribute("set-if-null"));
     }
 
@@ -71,16 +73,15 @@ public class Copy extends SimpleMapOperation {
                 return;
             }
         }
-        
+
         if (replace) {
             results.put(toField, fieldValue);
-            //if (Debug.infoOn()) Debug.logInfo("[SimpleMapProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
+            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
         } else {
-            if (results.containsKey(toField)) {
-                //do nothing
+            if (results.containsKey(toField)) {// do nothing
             } else {
                 results.put(toField, fieldValue);
-                //if (Debug.infoOn()) Debug.logInfo("[SimpleMapProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
+                // if (Debug.infoOn()) Debug.logInfo("[SimpleMapProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
             }
         }
     }

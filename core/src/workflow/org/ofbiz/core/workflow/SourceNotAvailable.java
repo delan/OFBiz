@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * SourceNotAvailable Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class SourceNotAvailable extends WfException {
 
-    public SourceNotAvailable() {
-    }
+    public SourceNotAvailable() {}
 
     public SourceNotAvailable(String msg) {
         super(msg);

@@ -25,8 +25,10 @@
 
 package org.ofbiz.core.event;
 
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 /**
  * EventHandler - Event Handler Interface
@@ -38,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 public interface EventHandler {
+
     /** Invoke the web event
      *@param eventPath The path or location of this event
      *@param eventMethod The method to invoke

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.generic;
 
+
 import java.rmi.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -33,6 +34,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Web Event for doing updates on Generic Entities
@@ -56,6 +58,7 @@ public class GenericWebEvent {
         String errMsg = "";
 
         String entityName = request.getParameter("entityName");
+
         if (entityName == null || entityName.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "The entityName was not specified, but is required.");
             Debug.logWarning("[GenericWebEvent.updateGeneric] The entityName was not specified, but is required.");
@@ -64,6 +67,7 @@ public class GenericWebEvent {
 
         Security security = (Security) request.getAttribute("security");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+
         if (security == null) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "The security object was not found in the request, please check the control servlet init.");
             Debug.logWarning("[updateGeneric] The security object was not found in the request, please check the control servlet init.");
@@ -77,6 +81,7 @@ public class GenericWebEvent {
 
         ModelReader reader = delegator.getModelReader();
         ModelEntity entity = null;
+
         try {
             entity = reader.getModelEntity(entityName);
         } catch (GenericEntityException e) {
@@ -84,26 +89,28 @@ public class GenericWebEvent {
         }
 
         String updateMode = request.getParameter("UPDATE_MODE");
+
         if (updateMode == null || updateMode.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
             Debug.logWarning("[updateGeneric] Update Mode was not specified, but is required; entityName: " + entityName);
             return "error";
         }
 
-        //check permissions before moving on...
+        // check permissions before moving on...
         if (!security.hasEntityPermission("ENTITY_DATA", "_" + updateMode, request.getSession()) &&
-                !security.hasEntityPermission(entity.getTableName(), "_" + updateMode, request.getSession())) {
+            !security.hasEntityPermission(entity.getTableName(), "_" + updateMode, request.getSession())) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to " + updateMode + " " + entity.getEntityName() + " (" + entity.getTableName() + "_" + updateMode + " or " + entity.getTableName() + "_ADMIN needed).");
-            //not really successful, but error return through ERROR_MESSAGE, so quietly fail
+            // not really successful, but error return through ERROR_MESSAGE, so quietly fail
             return "error";
         }
 
         GenericValue findByEntity = delegator.makeValue(entityName, null);
 
-        //get the primary key parameters...
+        // get the primary key parameters...
         for (int fnum = 0; fnum < entity.getPksSize(); fnum++) {
             ModelField field = entity.getPk(fnum);
             ModelFieldType type = null;
+
             try {
                 type = delegator.getEntityFieldType(entity, field.getType());
             } catch (GenericEntityException e) {
@@ -113,6 +120,7 @@ public class GenericWebEvent {
             if (type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")) {
                 String fvalDate = request.getParameter(field.getName() + "_DATE");
                 String fvalTime = request.getParameter(field.getName() + "_TIME");
+
                 if (fvalDate != null && fvalDate.length() > 0) {
                     try {
                         findByEntity.setString(field.getName(), fvalDate + " " + fvalTime);
@@ -123,6 +131,7 @@ public class GenericWebEvent {
                 }
             } else {
                 String fval = request.getParameter(field.getName());
+
                 if (fval != null && fval.length() > 0) {
                     try {
                         findByEntity.setString(field.getName(), fval);
@@ -134,10 +143,10 @@ public class GenericWebEvent {
             }
         }
 
-        //if this is a delete, do that before getting all of the non-pk parameters and validating them
+        // if this is a delete, do that before getting all of the non-pk parameters and validating them
         if (updateMode.equals("DELETE")) {
-            //Remove associated/dependent entries from other tables here
-            //Delete actual main entity last, just in case database is set up to do a cascading delete, caches won't get cleared
+            // Remove associated/dependent entries from other tables here
+            // Delete actual main entity last, just in case database is set up to do a cascading delete, caches won't get cleared
             try {
                 delegator.removeByPrimaryKey(findByEntity.getPrimaryKey());
             } catch (GenericEntityException e) {
@@ -149,10 +158,11 @@ public class GenericWebEvent {
             return "success";
         }
 
-        //get the non-primary key parameters
+        // get the non-primary key parameters
         for (int fnum = 0; fnum < entity.getNopksSize(); fnum++) {
             ModelField field = (ModelField) entity.getNopk(fnum);
             ModelFieldType type = null;
+
             try {
                 type = delegator.getEntityFieldType(entity, field.getType());
             } catch (GenericEntityException e) {
@@ -162,6 +172,7 @@ public class GenericWebEvent {
             if (type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")) {
                 String fvalDate = request.getParameter(field.getName() + "_DATE");
                 String fvalTime = request.getParameter(field.getName() + "_TIME");
+
                 if (fvalDate != null && fvalDate.length() > 0) {
                     try {
                         findByEntity.setString(field.getName(), fvalDate + " " + fvalTime);
@@ -172,6 +183,7 @@ public class GenericWebEvent {
                 }
             } else {
                 String fval = request.getParameter(field.getName());
+
                 if (fval != null && fval.length() > 0) {
                     try {
                         findByEntity.setString(field.getName(), fval);
@@ -183,9 +195,10 @@ public class GenericWebEvent {
             }
         }
 
-        //if the updateMode is CREATE, check to see if an entity with the specified primary key already exists
+        // if the updateMode is CREATE, check to see if an entity with the specified primary key already exists
         if (updateMode.equals("CREATE")) {
             GenericValue tempEntity = null;
+
             try {
                 tempEntity = delegator.findByPrimaryKey(findByEntity.getPrimaryKey());
             } catch (GenericEntityException e) {
@@ -199,22 +212,24 @@ public class GenericWebEvent {
             }
         }
 
-        //Validate parameters...
+        // Validate parameters...
         for (int fnum = 0; fnum < entity.getFieldsSize(); fnum++) {
             ModelField field = entity.getField(fnum);
 
             for (int j = 0; j < field.getValidatorsSize(); j++) {
                 String curValidate = field.getValidator(j);
-                Class[] paramTypes = new Class[]{String.class};
-                Object[] params = new Object[]{findByEntity.get(field.getName()).toString()};
+                Class[] paramTypes = new Class[] {String.class};
+                Object[] params = new Object[] {findByEntity.get(field.getName()).toString()};
 
                 String className = "org.ofbiz.core.util.UtilValidate";
                 String methodName = curValidate;
+
                 if (curValidate.indexOf('.') > 0) {
                     className = curValidate.substring(0, curValidate.lastIndexOf('.'));
                     methodName = curValidate.substring(curValidate.lastIndexOf('.') + 1);
                 }
                 Class valClass;
+
                 try {
                     valClass = Class.forName(className);
                 } catch (ClassNotFoundException cnfe) {
@@ -222,6 +237,7 @@ public class GenericWebEvent {
                     continue;
                 }
                 Method valMethod;
+
                 try {
                     valMethod = valClass.getMethod(methodName, paramTypes);
                 } catch (NoSuchMethodException cnfe) {
@@ -230,6 +246,7 @@ public class GenericWebEvent {
                 }
 
                 Boolean resultBool;
+
                 try {
                     resultBool = (Boolean) valMethod.invoke(null, params);
                 } catch (Exception e) {
@@ -240,6 +257,7 @@ public class GenericWebEvent {
                 if (!resultBool.booleanValue()) {
                     Field msgField;
                     String message;
+
                     try {
                         msgField = valClass.getField(curValidate + "Msg");
                         message = (String) msgField.get(null);
@@ -261,6 +279,7 @@ public class GenericWebEvent {
 
         if (updateMode.equals("CREATE")) {
             GenericValue value;
+
             try {
                 value = delegator.create(findByEntity.getEntityName(), findByEntity.getAllFields());
             } catch (GenericEntityException e) {
@@ -273,6 +292,7 @@ public class GenericWebEvent {
             }
         } else if (updateMode.equals("UPDATE")) {
             GenericValue value = delegator.makeValue(findByEntity.getEntityName(), findByEntity.getAllFields());
+
             try {
                 value.store();
             } catch (GenericEntityException e) {

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.operation;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 
 import org.ofbiz.core.minilang.*;
+
 
 /**
  * A single operation, does the specified operation on the given field
@@ -51,6 +53,7 @@ public abstract class SimpleMapOperation {
     public SimpleMapOperation(Element element, SimpleMapProcess simpleMapProcess) {
         Element failMessage = UtilXml.firstChildElement(element, "fail-message");
         Element failProperty = UtilXml.firstChildElement(element, "fail-property");
+
         if (failMessage != null) {
             this.message = failMessage.getAttribute("message");
             this.isProperty = false;
@@ -69,17 +72,18 @@ public abstract class SimpleMapOperation {
     public void addMessage(List messages, ClassLoader loader) {
         if (!isProperty && message != null) {
             messages.add(message);
-            //if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message);
+            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message);
         } else if (isProperty && propertyResource != null && message != null) {
             String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
+
             if (propMsg == null || propMsg.length() == 0)
                 messages.add("Simple Map Processing error occurred, but no message was found, sorry.");
             else
                 messages.add(propMsg);
-            //if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg);
+            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg);
         } else {
             messages.add("Simple Map Processing error occurred, but no message was found, sorry.");
-            //if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] ERROR: No message found");
+            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] ERROR: No message found");
         }
     }
 }

@@ -23,11 +23,13 @@
 
 package org.ofbiz.commonapp.thirdparty.taxware;
 
+
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * TaxwareServices
@@ -54,12 +56,14 @@ public class TaxwareServices {
 
         try {
             TaxwareUTL utl = new TaxwareUTL();
+
             utl.setShipping(shipping != null ? shipping.doubleValue() : 0.0);
             utl.setShipAddress(address);
             for (int i = 0; i < items.size(); i++) {
                 GenericValue p = (GenericValue) items.get(i);
                 Double amount = (Double) amnts.get(i);
                 Double ishp = ishpn != null ? (Double) ishpn.get(i) : new Double(0.0);
+
                 utl.addItem(p, amount.doubleValue(), ishp.doubleValue());
             }
 
@@ -73,7 +77,6 @@ public class TaxwareServices {
 
             result.put("orderAdjustments", utl.getOrderAdjustments());
             result.put("itemAdjustments", utl.getItemAdjustments());
-
 
         } catch (TaxwareException e) {
             e.printStackTrace();

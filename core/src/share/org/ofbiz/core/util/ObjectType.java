@@ -24,8 +24,10 @@
 
 package org.ofbiz.core.util;
 
+
 import java.text.*;
 import java.util.*;
+
 
 /**
  * Utilities for analyzing and converting Object types in Java - takes advantage of a lot of reflection and other stuff
@@ -46,7 +48,7 @@ public class ObjectType {
     public static Map classNameClassMap = new HashMap();
 
     static {
-        //setup some commonly used classes...
+        // setup some commonly used classes...
         classNameClassMap.put("Object", java.lang.Object.class);
         classNameClassMap.put("java.lang.Object", java.lang.Object.class);
 
@@ -82,7 +84,7 @@ public class ObjectType {
         classNameClassMap.put("java.util.HashMap", java.util.HashMap.class);
 
         try {
-            //note: loadClass is necessary for these since the ObjectType class doesn't know anything about the Entity Engine at compile time
+            // note: loadClass is necessary for these since the ObjectType class doesn't know anything about the Entity Engine at compile time
             classNameClassMap.put("GenericValue", loadClass("org.ofbiz.core.entity.GenericValue"));
             classNameClassMap.put("org.ofbiz.core.entity.GenericValue", loadClass("org.ofbiz.core.entity.GenericValue"));
             classNameClassMap.put("GenericPK", loadClass("org.ofbiz.core.entity.GenericPK"));
@@ -98,8 +100,9 @@ public class ObjectType {
      * @param className The name of the class to load
      */
     public static Class loadClass(String className) throws ClassNotFoundException {
-        //small block to speed things up by putting using preloaded classes for common objects, this turns out to help quite a bit...
+        // small block to speed things up by putting using preloaded classes for common objects, this turns out to help quite a bit...
         Class theClass = (Class) classNameClassMap.get(className);
+
         if (theClass != null) return theClass;
 
         return loadClass(className, null);
@@ -109,8 +112,9 @@ public class ObjectType {
      * @param className The name of the class to load
      */
     public static Class loadClass(String className, ClassLoader loader) throws ClassNotFoundException {
-        //small block to speed things up by putting using preloaded classes for common objects, this turns out to help quite a bit...
+        // small block to speed things up by putting using preloaded classes for common objects, this turns out to help quite a bit...
         Class theClass = (Class) classNameClassMap.get(className);
+
         if (theClass != null) return theClass;
 
         if (loader == null) loader = Thread.currentThread().getContextClassLoader();
@@ -143,6 +147,7 @@ public class ObjectType {
             InstantiationException, IllegalAccessException {
         Class c = loadClass(className);
         Object o = c.newInstance();
+
         if (Debug.verboseOn()) Debug.logVerbose("Instantiated object: " + o.toString(), module);
         return o;
     }
@@ -153,6 +158,7 @@ public class ObjectType {
      */
     public static boolean interfaceOf(Object obj, String interfaceName) throws ClassNotFoundException {
         Class interfaceClass = loadClass(interfaceName);
+
         return interfaceOf(obj, interfaceClass);
     }
 
@@ -162,6 +168,7 @@ public class ObjectType {
      */
     public static boolean interfaceOf(Object obj, Object interfaceObject) {
         Class interfaceClass = interfaceObject.getClass();
+
         return interfaceOf(obj, interfaceClass);
     }
 
@@ -171,8 +178,10 @@ public class ObjectType {
      */
     public static boolean interfaceOf(Object obj, Class interfaceClass) {
         Class objectClass = obj.getClass();
+
         while (objectClass != null) {
             Class[] ifaces = objectClass.getInterfaces();
+
             for (int i = 0; i < ifaces.length; i++) {
                 if (ifaces[i] == interfaceClass) return true;
             }
@@ -187,6 +196,7 @@ public class ObjectType {
      */
     public static boolean isOrSubOf(Object obj, String parentName) throws ClassNotFoundException {
         Class parentClass = loadClass(parentName);
+
         return isOrSubOf(obj, parentClass);
     }
 
@@ -196,6 +206,7 @@ public class ObjectType {
      */
     public static boolean isOrSubOf(Object obj, Object parentObject) {
         Class parentClass = parentObject.getClass();
+
         return isOrSubOf(obj, parentClass);
     }
 
@@ -205,6 +216,7 @@ public class ObjectType {
      */
     public static boolean isOrSubOf(Object obj, Class parentClass) {
         Class objectClass = obj.getClass();
+
         while (objectClass != null) {
             if (objectClass == parentClass) return true;
             objectClass = objectClass.getSuperclass();
@@ -218,6 +230,7 @@ public class ObjectType {
      */
     public static boolean instanceOf(Object obj, Object typeObject) {
         Class typeClass = typeObject.getClass();
+
         return instanceOf(obj, typeClass);
     }
 
@@ -235,6 +248,7 @@ public class ObjectType {
      */
     public static boolean instanceOf(Object obj, String typeName, ClassLoader loader) {
         Class infoClass = null;
+
         try {
             infoClass = ObjectType.loadClass(typeName, loader);
         } catch (SecurityException se1) {
@@ -273,6 +287,7 @@ public class ObjectType {
     public static boolean instanceOf(Object obj, Class typeClass) {
         if (obj == null) return true;
         Class objectClass = obj.getClass();
+
         if (typeClass.isInterface()) {
             return interfaceOf(obj, typeClass);
         } else {
@@ -300,9 +315,11 @@ public class ObjectType {
         }
 
         String fromType = null;
+
         if (obj instanceof java.lang.String) {
             fromType = "String";
             String str = (String) obj;
+
             if ("String".equals(type) || "java.lang.String".equals(type)) {
                 return obj;
             }
@@ -313,6 +330,7 @@ public class ObjectType {
 
             if ("Boolean".equals(type) || "java.lang.Boolean".equals(type)) {
                 Boolean value = null;
+
                 if (str.equalsIgnoreCase("TRUE"))
                     value = new Boolean(true);
                 else
@@ -321,11 +339,13 @@ public class ObjectType {
             } else if ("Double".equals(type) || "java.lang.Double".equals(type)) {
                 try {
                     NumberFormat nf = null;
+
                     if (locale == null)
                         nf = NumberFormat.getNumberInstance();
                     else
                         nf = NumberFormat.getNumberInstance(locale);
                     Number tempNum = nf.parse(str);
+
                     return new Double(tempNum.doubleValue());
                 } catch (ParseException e) {
                     throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
@@ -333,11 +353,13 @@ public class ObjectType {
             } else if ("Float".equals(type) || "java.lang.Float".equals(type)) {
                 try {
                     NumberFormat nf = null;
+
                     if (locale == null)
                         nf = NumberFormat.getNumberInstance();
                     else
                         nf = NumberFormat.getNumberInstance(locale);
                     Number tempNum = nf.parse(str);
+
                     return new Float(tempNum.floatValue());
                 } catch (ParseException e) {
                     throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
@@ -345,12 +367,14 @@ public class ObjectType {
             } else if ("Long".equals(type) || "java.lang.Long".equals(type)) {
                 try {
                     NumberFormat nf = null;
+
                     if (locale == null)
                         nf = NumberFormat.getNumberInstance();
                     else
                         nf = NumberFormat.getNumberInstance(locale);
                     nf.setMaximumFractionDigits(0);
                     Number tempNum = nf.parse(str);
+
                     return new Long(tempNum.longValue());
                 } catch (ParseException e) {
                     throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
@@ -358,12 +382,14 @@ public class ObjectType {
             } else if ("Integer".equals(type) || "java.lang.Integer".equals(type)) {
                 try {
                     NumberFormat nf = null;
+
                     if (locale == null)
                         nf = NumberFormat.getNumberInstance();
                     else
                         nf = NumberFormat.getNumberInstance(locale);
                     nf.setMaximumFractionDigits(0);
                     Number tempNum = nf.parse(str);
+
                     return new Integer(tempNum.intValue());
                 } catch (ParseException e) {
                     throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
@@ -379,6 +405,7 @@ public class ObjectType {
                     try {
                         SimpleDateFormat sdf = new SimpleDateFormat(format);
                         java.util.Date fieldDate = sdf.parse(str);
+
                         return new java.sql.Date(fieldDate.getTime());
                     } catch (ParseException e) {
                         throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
@@ -395,6 +422,7 @@ public class ObjectType {
                     try {
                         SimpleDateFormat sdf = new SimpleDateFormat(format);
                         java.util.Date fieldDate = sdf.parse(str);
+
                         return new java.sql.Time(fieldDate.getTime());
                     } catch (ParseException e) {
                         throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
@@ -411,6 +439,7 @@ public class ObjectType {
                     try {
                         SimpleDateFormat sdf = new SimpleDateFormat(format);
                         java.util.Date fieldDate = sdf.parse(str);
+
                         return new java.sql.Timestamp(fieldDate.getTime());
                     } catch (ParseException e) {
                         throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
@@ -422,8 +451,10 @@ public class ObjectType {
         } else if (obj instanceof java.lang.Double) {
             fromType = "Double";
             Double dbl = (Double) obj;
+
             if ("String".equals(type) || "java.lang.String".equals(type)) {
                 NumberFormat nf = null;
+
                 if (locale == null)
                     nf = NumberFormat.getNumberInstance();
                 else
@@ -443,8 +474,10 @@ public class ObjectType {
         } else if (obj instanceof java.lang.Float) {
             fromType = "Float";
             Float flt = (Float) obj;
+
             if ("String".equals(type)) {
                 NumberFormat nf = null;
+
                 if (locale == null)
                     nf = NumberFormat.getNumberInstance();
                 else
@@ -464,8 +497,10 @@ public class ObjectType {
         } else if (obj instanceof java.lang.Long) {
             fromType = "Long";
             Long lng = (Long) obj;
+
             if ("String".equals(type) || "java.lang.String".equals(type)) {
                 NumberFormat nf = null;
+
                 if (locale == null)
                     nf = NumberFormat.getNumberInstance();
                 else
@@ -485,8 +520,10 @@ public class ObjectType {
         } else if (obj instanceof java.lang.Integer) {
             fromType = "Integer";
             Integer intgr = (Integer) obj;
+
             if ("String".equals(type) || "java.lang.String".equals(type)) {
                 NumberFormat nf = null;
+
                 if (locale == null)
                     nf = NumberFormat.getNumberInstance();
                 else
@@ -506,11 +543,13 @@ public class ObjectType {
         } else if (obj instanceof java.sql.Date) {
             fromType = "Date";
             java.sql.Date dte = (java.sql.Date) obj;
+
             if ("String".equals(type) || "java.lang.String".equals(type)) {
                 if (format == null || format.length() == 0) {
                     return dte.toString();
                 } else {
                     SimpleDateFormat sdf = new SimpleDateFormat(format);
+
                     return sdf.format(new java.util.Date(dte.getTime()));
                 }
             } else if ("Date".equals(type) || "java.sql.Date".equals(type)) {
@@ -525,11 +564,13 @@ public class ObjectType {
         } else if (obj instanceof java.sql.Time) {
             fromType = "Time";
             java.sql.Time tme = (java.sql.Time) obj;
+
             if ("String".equals(type) || "java.lang.String".equals(type)) {
                 if (format == null || format.length() == 0) {
                     return tme.toString();
                 } else {
                     SimpleDateFormat sdf = new SimpleDateFormat(format);
+
                     return sdf.format(new java.util.Date(tme.getTime()));
                 }
             } else if ("Date".equals(type) || "java.sql.Date".equals(type)) {
@@ -544,11 +585,13 @@ public class ObjectType {
         } else if (obj instanceof java.sql.Timestamp) {
             fromType = "Timestamp";
             java.sql.Timestamp tme = (java.sql.Timestamp) obj;
+
             if ("String".equals(type) || "java.lang.String".equals(type)) {
                 if (format == null || format.length() == 0) {
                     return tme.toString();
                 } else {
                     SimpleDateFormat sdf = new SimpleDateFormat(format);
+
                     return sdf.format(new java.util.Date(tme.getTime()));
                 }
             } else if ("Date".equals(type) || "java.sql.Date".equals(type)) {
@@ -566,13 +609,15 @@ public class ObjectType {
     }
 
     public static Boolean doRealCompare(Object value1, Object value2, String operator, String type, String format,
-                                        List messages, Locale locale, ClassLoader loader) {
+        List messages, Locale locale, ClassLoader loader) {
         boolean verboseOn = Debug.verboseOn();
+
         if (verboseOn) Debug.logVerbose("Comparing value1: \"" + value1 + "\" " + operator + " value2:\"" + value2 + "\"");
 
         int result = 0;
 
         Object convertedValue1 = null;
+
         try {
             convertedValue1 = ObjectType.simpleTypeConvert(value1, type, format, locale);
         } catch (GeneralException e) {
@@ -581,6 +626,7 @@ public class ObjectType {
         }
 
         Object convertedValue2 = null;
+
         if (value2 != null) {
             try {
                 convertedValue2 = ObjectType.simpleTypeConvert(value2, type, format, locale);
@@ -607,6 +653,7 @@ public class ObjectType {
 
             String str1 = (String) convertedValue1;
             String str2 = (String) convertedValue2;
+
             if (str1.indexOf(str2) < 0) {
                 return Boolean.FALSE;
             }
@@ -623,6 +670,7 @@ public class ObjectType {
         if ("String".equals(type) || "PlainString".equals(type)) {
             String str1 = (String) convertedValue1;
             String str2 = (String) convertedValue2;
+
             if (str1.length() == 0 || str2.length() == 0) {
                 return null;
             }
@@ -643,14 +691,17 @@ public class ObjectType {
         } else if ("Date".equals(type)) {
             java.sql.Date value1Date = (java.sql.Date) convertedValue1;
             java.sql.Date value2Date = (java.sql.Date) convertedValue2;
+
             result = value1Date.compareTo(value2Date);
         } else if ("Time".equals(type)) {
             java.sql.Time value1Time = (java.sql.Time) convertedValue1;
             java.sql.Time value2Time = (java.sql.Time) convertedValue2;
+
             result = value1Time.compareTo(value2Time);
         } else if ("Timestamp".equals(type)) {
             java.sql.Timestamp value1Timestamp = (java.sql.Timestamp) convertedValue1;
             java.sql.Timestamp value2Timestamp = (java.sql.Timestamp) convertedValue2;
+
             result = value1Timestamp.compareTo(value2Timestamp);
         } else if ("Object".equals(type)) {
             if (convertedValue1.equals(convertedValue2)) {

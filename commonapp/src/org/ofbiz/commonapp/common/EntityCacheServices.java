@@ -25,6 +25,7 @@
 
 package org.ofbiz.commonapp.common;
 
+
 import java.net.*;
 import java.util.*;
 import java.sql.Timestamp;
@@ -32,6 +33,7 @@ import java.sql.Timestamp;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Entity Engine Services
@@ -44,49 +46,49 @@ public class EntityCacheServices implements DistributedCacheClear {
 
     protected GenericDelegator delegator = null;
     protected LocalDispatcher dispatcher = null;
-    
-    public EntityCacheServices() { }
-    
+
+    public EntityCacheServices() {}
+
     public void setDelegator(GenericDelegator delegator) {
         this.delegator = delegator;
         this.dispatcher = new LocalDispatcher("entity-cache-dispatcher", delegator, null);
     }
-    
+
     public void distributedClearCacheLine(GenericValue value) {
-        //Debug.logInfo("running distributedClearCacheLine for value: " + value);
+        // Debug.logInfo("running distributedClearCacheLine for value: " + value);
         if (this.dispatcher == null) {
             Debug.logWarning("No dispatcher is available, somehow the setDelegator (which also creates a dispatcher) was not called, not running distributed cache clear");
             return;
         }
-        
+
         try {
             this.dispatcher.runAsync("distributedClearCacheLineByValue", UtilMisc.toMap("value", value), false);
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error running the distributedClearCacheLineByValue service");
         }
     }
-    
+
     public void distributedClearCacheLineFlexible(GenericEntity dummyPK) {
-        //Debug.logInfo("running distributedClearCacheLineFlexible for dummyPK: " + dummyPK);
+        // Debug.logInfo("running distributedClearCacheLineFlexible for dummyPK: " + dummyPK);
         if (this.dispatcher == null) {
             Debug.logWarning("No dispatcher is available, somehow the setDelegator (which also creates a dispatcher) was not called, not running distributed cache clear");
             return;
         }
-        
+
         try {
             this.dispatcher.runAsync("distributedClearCacheLineByDummyPK", UtilMisc.toMap("dummyPK", dummyPK), false);
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error running the distributedClearCacheLineByDummyPK service");
         }
     }
-    
+
     public void distributedClearCacheLine(GenericPK primaryKey) {
-        //Debug.logInfo("running distributedClearCacheLine for primaryKey: " + primaryKey);
+        // Debug.logInfo("running distributedClearCacheLine for primaryKey: " + primaryKey);
         if (this.dispatcher == null) {
             Debug.logWarning("No dispatcher is available, somehow the setDelegator (which also creates a dispatcher) was not called, not running distributed cache clear");
             return;
         }
-        
+
         try {
             this.dispatcher.runAsync("distributedClearCacheLineByPrimaryKey", UtilMisc.toMap("primaryKey", primaryKey), false);
         } catch (GenericServiceException e) {
@@ -102,6 +104,7 @@ public class EntityCacheServices implements DistributedCacheClear {
      */
     public static Map clearCacheLine(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
+
         if (context.containsKey("value")) {
             delegator.clearCacheLine((GenericValue) context.get("value"), false);
         } else if (context.containsKey("dummyPK")) {

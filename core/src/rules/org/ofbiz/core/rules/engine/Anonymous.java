@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * <p><b>Title:</b> Anonymous Variable
  * <p><b>Description:</b> None
@@ -73,77 +74,82 @@ package org.ofbiz.core.rules.engine;
  */
 
 public class Anonymous extends Variable {
-  
-  
-  /**
-   * Constructs an anonymous variable.
-   */
-  public Anonymous() {
-    super("_");
-  }
-  /**
-   * Returns this anonymous variable, which does not unify
-   * with anything and thus does not need to copy itself.
-   *
-   * @return this anonymous variable
-   *
-   * @param AxiomSource ignored
-   *
-   * @param Scope ignored
-   */
-  public Term copyForProof(AxiomSource ignored, Scope ignored2) {
-    return this;
-  }
-  /**
-   * Return the value of this anonymous variable to use in
-   * functions; this is meaningless in logic programming,
-   * but the method returns the name of this variable.
-   *
-   * @return the name of the anonymous variable
-   */
-  public Object eval() {
-    return name;
-  }
-  /**
-   * Returns an empty unification.
-   * <p>
-   * The <code>unify</code> methods indicate failure by
-   * returning <code>null</code>. Anonymous variables succeed
-   * without binding, so they always return empty unifications.
-   *
-   * @param Structure ignored
-   *
-   * @return A successful, but empty, unification
-   */
-  public Unification unify(Structure ignored) {
-    return Unification.empty;
-  }
-  /**
-   * Returns an empty unification.
-   *
-   * @param Term ignored
-   *
-   * @return an empty unification
-   */
-  public Unification unify(Term ignored) {
-    return Unification.empty;
-  }
-  /**
-   * Returns an empty unification.
-   *
-   * @param Variable ignored
-   *
-   * @return an empty unification
-   */
-  public Unification unify(Variable ignored) {
-    return Unification.empty;
-  }
-  /**
-   * Returns an empty unification.
-   *
-   * @return   an empty unification
-   */
-  public Unification variables() {
-    return Unification.empty;
-  }
+
+    /**
+     * Constructs an anonymous variable.
+     */
+    public Anonymous() {
+        super("_");
+    }
+
+    /**
+     * Returns this anonymous variable, which does not unify
+     * with anything and thus does not need to copy itself.
+     *
+     * @return this anonymous variable
+     *
+     * @param AxiomSource ignored
+     *
+     * @param Scope ignored
+     */
+    public Term copyForProof(AxiomSource ignored, Scope ignored2) {
+        return this;
+    }
+
+    /**
+     * Return the value of this anonymous variable to use in
+     * functions; this is meaningless in logic programming,
+     * but the method returns the name of this variable.
+     *
+     * @return the name of the anonymous variable
+     */
+    public Object eval() {
+        return name;
+    }
+
+    /**
+     * Returns an empty unification.
+     * <p>
+     * The <code>unify</code> methods indicate failure by
+     * returning <code>null</code>. Anonymous variables succeed
+     * without binding, so they always return empty unifications.
+     *
+     * @param Structure ignored
+     *
+     * @return A successful, but empty, unification
+     */
+    public Unification unify(Structure ignored) {
+        return Unification.empty;
+    }
+
+    /**
+     * Returns an empty unification.
+     *
+     * @param Term ignored
+     *
+     * @return an empty unification
+     */
+    public Unification unify(Term ignored) {
+        return Unification.empty;
+    }
+
+    /**
+     * Returns an empty unification.
+     *
+     * @param Variable ignored
+     *
+     * @return an empty unification
+     */
+    public Unification unify(Variable ignored) {
+        return Unification.empty;
+    }
+
+    /**
+     * Returns an empty unification.
+     *
+     * @return   an empty unification
+     */
+    public Unification variables() {
+        return Unification.empty;
+    }
 }

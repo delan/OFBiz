@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * NotAssigned Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class NotAssigned extends WfException {
 
-    public NotAssigned() {
-    }
+    public NotAssigned() {}
 
     public NotAssigned(String msg) {
         super(msg);

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * WfAssignment - Workflow Assignment Interface
  *

@@ -25,9 +25,11 @@
 
 package org.ofbiz.core.service;
 
+
 import java.util.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * Generic Result Waiter Class

@@ -26,6 +26,7 @@
 
 package org.ofbiz.core.service;
 
+
 /**
  * ServiceAuthException
  *

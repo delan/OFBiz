@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * WfAssignmentEventAudit - Workflow Assignment Event Audit Interface
  *

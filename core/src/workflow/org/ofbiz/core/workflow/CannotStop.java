@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * CannotStop Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class CannotStop extends WfException {
 
-    public CannotStop() {
-    }
+    public CannotStop() {}
 
     public CannotStop(String msg) {
         super(msg);

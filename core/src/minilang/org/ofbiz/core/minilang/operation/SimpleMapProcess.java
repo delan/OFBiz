@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.operation;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+
 
 /**
  * A complete string process for a given field; contains multiple string operations
@@ -55,19 +57,24 @@ public class SimpleMapProcess {
 
     public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
         Iterator strOpsIter = simpleMapOperations.iterator();
+
         while (strOpsIter.hasNext()) {
             SimpleMapOperation simpleMapOperation = (SimpleMapOperation) strOpsIter.next();
+
             simpleMapOperation.exec(inMap, results, messages, locale, loader);
         }
     }
 
     void readOperations(Element simpleMapProcessElement) {
         List operationElements = UtilXml.childElementList(simpleMapProcessElement, null);
+
         if (operationElements != null && operationElements.size() > 0) {
             Iterator operElemIter = operationElements.iterator();
+
             while (operElemIter.hasNext()) {
                 Element curOperElem = (Element) operElemIter.next();
                 String nodeName = curOperElem.getNodeName();
+
                 if ("validate-method".equals(nodeName)) {
                     simpleMapOperations.add(new ValidateMethod(curOperElem, this));
                 } else if ("compare".equals(nodeName)) {

@@ -1,7 +1,9 @@
 package org.ofbiz.core.rules.parse.tokens;
 
+
 import java.util.*;
 import java.io.*;
+
 
 /**
  * <p><b>Title:</b> Symbol Node
@@ -68,120 +70,136 @@ import java.io.*;
  * @version 1.0
  */
 public class SymbolNode {
-  protected char myChar;
-  protected List children = new ArrayList(); // of Node
-  protected boolean valid = false;
-  protected SymbolNode parent;
-  /**
-   * Constructs a SymbolNode with the given parent, representing
-   * the given character.
-   *
-   * @param   SymbolNode   this node's parent
-   *
-   * @param   char   this node's character
-   */
-  public SymbolNode(SymbolNode parent, char myChar) {
-    this.parent = parent;
-    this.myChar = myChar;
-  }
-  /**
-   * Add a line of descendants that represent the characters
-   * in the given string.
-   */
-  protected void addDescendantLine(String s) {
-    if (s.length() > 0) {
-      char c = s.charAt(0);
-      SymbolNode n = ensureChildWithChar(c);
-      n.addDescendantLine(s.substring(1));
+    protected char myChar;
+    protected List children = new ArrayList(); // of Node
+    protected boolean valid = false;
+    protected SymbolNode parent;
+
+    /**
+     * Constructs a SymbolNode with the given parent, representing
+     * the given character.
+     *
+     * @param   SymbolNode   this node's parent
+     *
+     * @param   char   this node's character
+     */
+    public SymbolNode(SymbolNode parent, char myChar) {
+        this.parent = parent;
+        this.myChar = myChar;
     }
-  }
-  /**
-   * Show the symbol this node represents.
-   *
-   * @return the symbol this node represents
-   */
-  public String ancestry() {
-    return parent.ancestry() + myChar;
-  }
-  /**
-   * Find the descendant that takes as many characters as
-   * possible from the input.
-   */
-  protected SymbolNode deepestRead(PushbackReader r)
-  throws IOException {
-    
-    char c = (char) r.read();
-    SymbolNode n = findChildWithChar(c);
-    if (n == null) {
-      r.unread(c);
-      return this;
+
+    /**
+     * Add a line of descendants that represent the characters
+     * in the given string.
+     */
+    protected void addDescendantLine(String s) {
+        if (s.length() > 0) {
+            char c = s.charAt(0);
+            SymbolNode n = ensureChildWithChar(c);
+
+            n.addDescendantLine(s.substring(1));
+        }
     }
-    return n.deepestRead(r);
-  }
-  /**
-   * Find or create a child for the given character.
-   */
-  protected SymbolNode ensureChildWithChar(char c) {
-    SymbolNode n = findChildWithChar(c);
-    if (n == null) {
-      n = new SymbolNode(this, c);
-      children.add(n);
+
+    /**
+     * Show the symbol this node represents.
+     *
+     * @return the symbol this node represents
+     */
+    public String ancestry() {
+        return parent.ancestry() + myChar;
     }
-    return n;
-  }
-  /**
-   * Find a child with the given character.
-   */
-  protected SymbolNode findChildWithChar(char c) {
-    Enumeration e = Collections.enumeration(children);
-    while (e.hasMoreElements()) {
-      SymbolNode n = (SymbolNode) e.nextElement();
-      if (n.myChar == c) {
+
+    /**
+     * Find the descendant that takes as many characters as
+     * possible from the input.
+     */
+    protected SymbolNode deepestRead(PushbackReader r)
+        throws IOException {
+
+        char c = (char) r.read();
+        SymbolNode n = findChildWithChar(c);
+
+        if (n == null) {
+            r.unread(c);
+            return this;
+        }
+        return n.deepestRead(r);
+    }
+
+    /**
+     * Find or create a child for the given character.
+     */
+    protected SymbolNode ensureChildWithChar(char c) {
+        SymbolNode n = findChildWithChar(c);
+
+        if (n == null) {
+            n = new SymbolNode(this, c);
+            children.add(n);
+        }
         return n;
-      }
     }
-    return null;
-  }
-  /**
-   * Find a descendant which is down the path the given string
-   * indicates.
-   */
-  protected SymbolNode findDescendant(String s) {
-    char c = s.charAt(0);
-    SymbolNode n = findChildWithChar(c);
-    if (s.length() == 1) {
-      return n;
+
+    /**
+     * Find a child with the given character.
+     */
+    protected SymbolNode findChildWithChar(char c) {
+        Enumeration e = Collections.enumeration(children);
+
+        while (e.hasMoreElements()) {
+            SymbolNode n = (SymbolNode) e.nextElement();
+
+            if (n.myChar == c) {
+                return n;
+            }
+        }
+        return null;
     }
-    return n.findDescendant(s.substring(1));
-  }
-  /**
-   * Mark this node as valid, which means its ancestry is a
-   * complete symbol, not just a prefix.
-   */
-  protected void setValid(boolean b) {
-    valid = b;
-  }
-  /**
-   * Give a string representation of this node.
-   *
-   * @return a string representation of this node
-   */
-  public String toString() {
-    return "" + myChar + '(' + valid + ')';
-  }
-  /**
-   * Unwind to a valid node; this node is "valid" if its
-   * ancestry represents a complete symbol. If this node is
-   * not valid, put back the character and ask the parent to
-   * unwind.
-   */
-  protected SymbolNode unreadToValid(PushbackReader r)
-  throws IOException {
-    
-    if (valid) {
-      return this;
+
+    /**
+     * Find a descendant which is down the path the given string
+     * indicates.
+     */
+    protected SymbolNode findDescendant(String s) {
+        char c = s.charAt(0);
+        SymbolNode n = findChildWithChar(c);
+
+        if (s.length() == 1) {
+            return n;
+        }
+        return n.findDescendant(s.substring(1));
     }
-    r.unread(myChar);
-    return parent.unreadToValid(r);
-  }
+
+    /**
+     * Mark this node as valid, which means its ancestry is a
+     * complete symbol, not just a prefix.
+     */
+    protected void setValid(boolean b) {
+        valid = b;
+    }
+
+    /**
+     * Give a string representation of this node.
+     *
+     * @return a string representation of this node
+     */
+    public String toString() {
+        return "" + myChar + '(' + valid + ')';
+    }
+
+    /**
+     * Unwind to a valid node; this node is "valid" if its
+     * ancestry represents a complete symbol. If this node is
+     * not valid, put back the character and ask the parent to
+     * unwind.
+     */
+    protected SymbolNode unreadToValid(PushbackReader r)
+        throws IOException {
+
+        if (valid) {
+            return this;
+        }
+        r.unread(myChar);
+        return parent.unreadToValid(r);
+    }
 }

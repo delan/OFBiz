@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow.impl;
 
+
 import java.io.*;
 import java.util.*;
 
@@ -32,6 +33,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
+
 
 /**
  * WfActivityImpl - Workflow Activity Object implementation
@@ -70,6 +72,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     private void init() throws WfException {
         GenericValue valueObject = getDefinitionObject();
         GenericValue performer = null;
+
         if (valueObject.get("performerParticipantId") != null) {
             try {
                 performer = valueObject.getRelatedOne("PerformerWorkflowParticipant");
@@ -88,12 +91,15 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
         // check for inheritPriority attribute
         boolean inheritPriority = valueObject.getBoolean("inheritPriority").booleanValue() || false;
+
         if (inheritPriority) {
             GenericValue runTime = getRuntimeObject();
             Map context = processContext();
+
             if (context.containsKey("previousActivity")) {
                 String previousActivity = (String) context.get("previousActivity");
                 WfActivity pAct = WfFactory.getWfActivity(getDelegator(), previousActivity);
+
                 if (pAct != null) {
                     try {
                         runTime.set("priority", new Long(pAct.priority()));
@@ -106,9 +112,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
 
         boolean limitAfterStart = valueObject.getBoolean("limitAfterStart").booleanValue();
+
         if (Debug.infoOn()) Debug.logInfo("[WfActivity.init]: limitAfterStart - " + limitAfterStart, module);
         if (!limitAfterStart && valueObject.get("limitService") != null &&
-                !valueObject.getString("limitService").equals("")) {
+            !valueObject.getString("limitService").equals("")) {
             Debug.logVerbose("[WfActivity.init]: limit service is not after start, setting up now.", module);
             setLimitService();
         }
@@ -117,10 +124,12 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     private void createAssignments(GenericValue performer) throws WfException {
         GenericValue valueObject = getDefinitionObject();
         boolean assignAll = false;
+
         if (valueObject.get("acceptAllAssignments") != null)
             assignAll = valueObject.getBoolean("acceptAllAssignments").booleanValue();
 
         String performerType = performer.getString("participantTypeId");
+
         if (performerType != null && (performerType.equals("RESOURCE") || performerType.equals("ROLE"))) {
             // We are a dynamic performer
             performer = getDynamicPerformer(performer);
@@ -136,14 +145,17 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
         // check for a party group
         if (performer.get("partyId") != null &&
-                !performer.getString("partyId").equals("_NA_")) {
+            !performer.getString("partyId").equals("_NA_")) {
             GenericValue partyType = null;
             GenericValue groupType = null;
+
             try {
                 Map fields1 = UtilMisc.toMap("partyId", performer.getString("partyId"));
                 GenericValue v1 = getDelegator().findByPrimaryKey("Party", fields1);
+
                 partyType = v1.getRelatedOne("PartyType");
                 Map fields2 = UtilMisc.toMap("partyTypeId", "PARTY_GROUP");
+
                 groupType =
                         getDelegator().findByPrimaryKeyCache("PartyType", fields2);
             } catch (GenericEntityException e) {
@@ -152,8 +164,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             if (EntityTypeUtil.isType(partyType, groupType)) {
                 // party is a group
                 Collection partyRelations = null;
+
                 try {
                     Map fields = UtilMisc.toMap("partyIdFrom", performer.getString("partyId"), "partyRelationshipTypeId", "GROUP_ROLLUP");
+
                     partyRelations = getDelegator().findByAnd("PartyRelationship", fields);
                 } catch (GenericEntityException e) {
                     throw new WfException(e.getMessage(), e);
@@ -162,8 +176,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 // make assignments for these parties
                 Debug.logVerbose("[WfActivity.createAssignments] : Group assignment", module);
                 Iterator i = partyRelations.iterator();
+
                 while (i.hasNext()) {
                     GenericValue value = (GenericValue) i.next();
+
                     assign(WfFactory.getWfResource(getDelegator(), null, null, value.getString("partyIdTo"), null), true);
                 }
             } else {
@@ -171,14 +187,14 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 Debug.logVerbose("[WfActivity.createAssignments] : (G) Single assignment", module);
                 assign(WfFactory.getWfResource(performer), false);
             }
-        }
-
-        // check for role types
+        } // check for role types
         else if (performer.get("roleTypeId") != null &&
-                !performer.getString("roleTypeId").equals("_NA_")) {
+            !performer.getString("roleTypeId").equals("_NA_")) {
             Collection partyRoles = null;
+
             try {
                 Map fields = UtilMisc.toMap("roleTypeId", performer.getString("roleTypeId"));
+
                 partyRoles = getDelegator().findByAnd("PartyRole", fields);
             } catch (GenericEntityException e) {
                 throw new WfException(e.getMessage(), e);
@@ -187,8 +203,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             // loop through the roles and create assignments
             Debug.logVerbose("[WfActivity.createAssignments] : Role assignment", module);
             Iterator i = partyRoles.iterator();
+
             while (i.hasNext()) {
                 GenericValue value = (GenericValue) i.next();
+
                 assign(WfFactory.getWfResource(value.getDelegator(), null, null, value.getString("partyId"), null), true);
             }
         }
@@ -197,6 +215,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     private List getAssignments() throws WfException {
         List assignments = new ArrayList();
         Collection c = null;
+
         try {
             c = getDelegator().findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", runtimeKey()));
         } catch (GenericEntityException e) {
@@ -206,14 +225,16 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             return assignments;
 
         Iterator i = c.iterator();
+
         while (i.hasNext()) {
             GenericValue value = (GenericValue) i.next();
             String party = value.getString("partyId");
             String role = value.getString("roleTypeId");
             String status = value.getString("statusId");
             java.sql.Timestamp from = value.getTimestamp("fromDate");
+
             if (status.equals("CAL_SENT") || status.equals("CAL_ACCEPTED") ||
-                    status.equals("CAL_TENTATIVE"))
+                status.equals("CAL_TENTATIVE"))
                 assignments.add(WfFactory.getWfAssignment(getDelegator(), runtimeKey(), party, role, from));
         }
         return assignments;
@@ -223,13 +244,16 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     private WfAssignment assign(WfResource resource, boolean append) throws WfException {
         if (!append) {
             Iterator ai = getIteratorAssignment();
+
             while (ai.hasNext()) {
                 WfAssignment a = (WfAssignment) ai.next();
+
                 a.remove();
             }
         }
 
         WfAssignment assign = WfFactory.getWfAssignment(this, resource, null, true);
+
         return assign;
     }
 
@@ -240,6 +264,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         String expr = null;
         String field = null;
         Object value = null;
+
         if (newPerformer.get("partyId") != null && newPerformer.getString("partyId").length() > 0) {
             // first try partyId
             expr = newPerformer.getString("partyId");
@@ -260,6 +285,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             if (Debug.verboseOn()) Debug.logVerbose("Evaluated expression: " + expr + " Result: " + value, module);
             if (value instanceof String) {
                 String resp = (String) value;
+
                 newPerformer.set(field, resp);
             } else {
                 throw new WfException("Expression did not return a String");
@@ -281,11 +307,13 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
         // check the start mode
         String mode = getDefinitionObject().getString("startModeEnumId");
+
         if (mode == null)
             throw new WfException("Start mode cannot be null");
 
         if (mode.equals("WAM_AUTOMATIC")) {
             Iterator i = getIteratorAssignment();
+
             while (i.hasNext())
                 ((WfAssignment) i.next()).changeStatus("CAL_ACCEPTED");  // accept all assignments (AUTO)
             startActivity();
@@ -349,6 +377,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     public void setResult(Map newResult) throws WfException, InvalidData {
         if (Debug.verboseOn()) Debug.logVerbose("[WfActivity.setResult]: putting (" + newResult.size() + ") keys into context.", module);
         Map context = processContext();
+
         context.putAll(newResult);
         setSerializedData(context);
     }
@@ -373,11 +402,14 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         Map resultSig = container().manager().resultSignature();
         Map results = new HashMap();
         Map context = processContext();
+
         if (resultSig != null) {
             Set resultKeys = resultSig.keySet();
             Iterator i = resultKeys.iterator();
+
             while (i.hasNext()) {
                 Object key = i.next();
+
                 if (context.containsKey(key))
                     results.put(key, context.get(key));
             }
@@ -413,6 +445,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     // Checks to see if we can complete
     private void checkComplete() throws WfException, CannotComplete {
         String mode = getDefinitionObject().getString("finishModeEnumId");
+
         if (mode == null)
             throw new CannotComplete("Finish mode cannot be null");
 
@@ -420,6 +453,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if (mode.equals("WAM_AUTOMATIC")) {
             // set the status of the assignments
             Iterator i = getIteratorAssignment();
+
             while (i.hasNext())
                 ((WfAssignment) i.next()).changeStatus("CAL_COMPLETED");
             this.complete();
@@ -433,6 +467,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         boolean acceptAll = false;
         boolean completeAll = false;
         GenericValue valueObject = getDefinitionObject();
+
         if (valueObject.get("acceptAllAssignments") != null)
             acceptAll = valueObject.getBoolean("acceptAllAssignments").booleanValue();
         if (valueObject.get("completeAllAssignments") != null)
@@ -440,6 +475,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                     valueObject.getBoolean("completeAllAssignments").booleanValue();
 
         String statusString = null;
+
         if (type == 1)
             statusString = "CAL_ACCEPTED";
         else if (type == 2)
@@ -450,8 +486,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         boolean foundOne = false;
 
         Iterator i = getIteratorAssignment();
+
         while (i.hasNext()) {
             WfAssignment a = (WfAssignment) i.next();
+
             if (a.status().equals(statusString)) {
                 foundOne = true;
             } else {
@@ -482,20 +520,23 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
         // check the limit service
         boolean limitAfterStart = getDefinitionObject().getBoolean("limitAfterStart").booleanValue();
+
         if (limitAfterStart && getDefinitionObject().get("limitService") != null &&
-                !getDefinitionObject().getString("limitService").equals("")) {
+            !getDefinitionObject().getString("limitService").equals("")) {
             Debug.logVerbose("[WfActivity.init]: limit service is after start, setting up now.", module);
             setLimitService();
         }
 
         // set the new previousActivity
         Map context = processContext();
+
         context.put("previousActivity", workEffortId);
         this.setProcessContext(context);
 
         // set the estimatedStartDate
-         try {
+        try {
             GenericValue v = getRuntimeObject();
+
             v.set("estimatedStartDate", UtilDateTime.nowTimestamp());
             v.store();
         } catch (GenericEntityException e) {
@@ -505,6 +546,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
         // get the type of this activity
         String type = getDefinitionObject().getString("activityTypeEnumId");
+
         if (type == null)
             throw new WfException("Illegal activity type");
 
@@ -525,6 +567,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     // Runs a TOOL activity - there can be 0..n
     private void runTool() throws WfException {
         Collection tools = null;
+
         try {
             tools = getDefinitionObject().getRelated("WorkflowActivityTool");
         } catch (GenericEntityException e) {
@@ -536,13 +579,15 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if (Debug.verboseOn()) Debug.logVerbose("[WfActivity.runTool] : Running tools (" + tools.size() + ").", module);
         List waiters = new ArrayList();
         Iterator i = tools.iterator();
+
         while (i.hasNext()) {
             GenericValue thisTool = (GenericValue) i.next();
             String serviceName = null;
             String toolId = thisTool.getString("toolId");
             String params = thisTool.getString("actualParameters");
             String extend = thisTool.getString("extendedAttributes");
-            Map extendedAttr =  StringUtil.strToMap(extend);
+            Map extendedAttr = StringUtil.strToMap(extend);
+
             if (extendedAttr != null && extendedAttr.containsKey("serviceName"))
                 serviceName = (String) extendedAttr.get("serviceName");
             serviceName = serviceName != null ? serviceName : toolId;
@@ -552,13 +597,17 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         while (waiters.size() > 0) {
             Iterator wi = waiters.iterator();
             Collection remove = new ArrayList();
+
             while (wi.hasNext()) {
                 GenericResultWaiter thw = (GenericResultWaiter) wi.next();
+
                 if (thw.isCompleted()) {
                     Map thwResult = thw.getResult();
+
                     if (thwResult != null && thwResult.containsKey(ModelService.RESPONSE_MESSAGE)) {
                         if (thwResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
                             String errorMsg = (String) thwResult.remove(ModelService.ERROR_MESSAGE);
+
                             Debug.logError("Service Error: " + errorMsg, module);
                         }
                         thwResult.remove(ModelService.RESPONSE_MESSAGE);
@@ -582,13 +631,13 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
 
     // Runs a LOOP activity
-    private void runLoop() throws WfException {
-        // implement me
+    private void runLoop() throws WfException {// implement me
     }
 
     // Runs a SUBFLOW activity
     private void runSubFlow() throws WfException {
         GenericValue subFlow = null;
+
         try {
             subFlow = getDefinitionObject().getRelatedOne("WorkflowActivitySubFlow");
         } catch (GenericEntityException e) {
@@ -598,21 +647,25 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             return;
 
         String type = "WSE_SYNCHR";
+
         if (subFlow.get("executionEnumId") != null)
             type = subFlow.getString("executionEnumId");
 
         // Build a model service
         ModelService service = new ModelService();
+
         service.name = service.toString();
         service.engineName = "workflow";
         service.location = subFlow.getString("packageId");
         service.invoke = subFlow.getString("subFlowProcessId");
-        //service.contextInfo = null; // TODO FIXME
+        // service.contextInfo = null; // TODO FIXME
 
         String actualParameters = subFlow.getString("actualParameters");
         GenericResultWaiter waiter = this.runService(service, actualParameters, null);
+
         if (type.equals("WSE_SYNCHR")) {
             Map subResult = waiter.waitForResult();
+
             this.setResult(subResult);
         }
 
@@ -622,6 +675,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     // schedule the limit service to run
     private void setLimitService() throws WfException {
         String serviceLoader = null;
+
         try {
             serviceLoader = getServiceLoader();
         } catch (WfException e) {
@@ -631,12 +685,14 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new WfException("Cannot get dispatch service loader name");
 
         ServiceDispatcher ds = getDispatcher(serviceLoader);
+
         if (ds == null)
             throw new WfException("Cannot find dispatcher for the associated loader");
 
         DispatchContext dctx = ds.getLocalContext(serviceLoader);
         String limitService = getDefinitionObject().getString("limitService");
         ModelService service = null;
+
         try {
             service = dctx.getModelService(limitService);
             Debug.logVerbose("[WfActivity.setLimitService] : Found service model.", module);
@@ -653,12 +709,14 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         Map serviceContext = actualContext(params, null);
 
         Double timeLimit = null;
+
         if (getDefinitionObject().get("timeLimit") != null)
             timeLimit = getDefinitionObject().getDouble("timeLimit");
         if (timeLimit == null)
             return;
 
         String durationUOM = null;
+
         if (container().getDefinitionObject().getString("durationUomId") != null)
             durationUOM = container().getDefinitionObject().getString("durationUomId");
         if (durationUOM == null)
@@ -666,33 +724,41 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
         char durChar = durationUOM.charAt(0);
         Calendar cal = Calendar.getInstance();
+
         cal.setTime(new Date());
         switch (durChar) {
-            case 'Y':
-                cal.add(Calendar.YEAR, timeLimit.intValue());
-                break;
-            case 'M':
-                cal.add(Calendar.MONTH, timeLimit.intValue());
-                break;
-            case 'D':
-                cal.add(Calendar.DATE, timeLimit.intValue());
-                break;
-            case 'h':
-                cal.add(Calendar.HOUR, timeLimit.intValue());
-                break;
-            case 'm':
-                cal.add(Calendar.MINUTE, timeLimit.intValue());
-                break;
-            case 's':
-                cal.add(Calendar.SECOND, timeLimit.intValue());
-                break;
-            default:
-                throw new WfException("Invalid duration unit");
+        case 'Y':
+            cal.add(Calendar.YEAR, timeLimit.intValue());
+            break;
+
+        case 'M':
+            cal.add(Calendar.MONTH, timeLimit.intValue());
+            break;
+
+        case 'D':
+            cal.add(Calendar.DATE, timeLimit.intValue());
+            break;
+
+        case 'h':
+            cal.add(Calendar.HOUR, timeLimit.intValue());
+            break;
+
+        case 'm':
+            cal.add(Calendar.MINUTE, timeLimit.intValue());
+            break;
+
+        case 's':
+            cal.add(Calendar.SECOND, timeLimit.intValue());
+            break;
+
+        default:
+            throw new WfException("Invalid duration unit");
         }
 
         long startTime = cal.getTime().getTime();
 
         Map context = new HashMap();
+
         context.put("serviceName", limitService);
         context.put("serviceContext", serviceContext);
         context.put("workEffortId", runtimeKey());
@@ -709,6 +775,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     private GenericResultWaiter runService(String serviceName, String params, String extend) throws WfException {
         DispatchContext dctx = getDispatcher().getLocalContext(getServiceLoader());
         ModelService service = null;
+
         Debug.logVerbose("[WfActivity.runService] : Getting the service model.", module);
         try {
             service = dctx.getModelService(serviceName);
@@ -723,6 +790,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     private GenericResultWaiter runService(ModelService service, String params, String extend) throws WfException {
         Map ctx = this.actualContext(params, extend);
         GenericResultWaiter waiter = new GenericResultWaiter();
+
         Debug.logVerbose("[WfActivity.runService] : Invoking the service.", module);
         try {
             getDispatcher().runAsync(getServiceLoader(), service, ctx, waiter, false);
@@ -739,11 +807,13 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
         // extended attributes take priority over context attributes
         Map extendedAttributes = StringUtil.strToMap(extendedAttr);
+
         if (extendedAttributes != null && extendedAttributes.size() > 0)
             context.putAll(extendedAttributes);
 
         // setup some internal buffer parameters
         GenericValue userLogin = null;
+
         if (context.containsKey("runAsUser")) {
             userLogin = getUserLogin((String) context.get("runAsUser"));
             actualContext.put("userLogin", userLogin);
@@ -757,11 +827,13 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if (actualParameters != null) {
             List params = StringUtil.split(actualParameters, ",");
             Iterator i = params.iterator();
+
             while (i.hasNext()) {
                 Object key = i.next();
                 String keyStr = (String) key;
+
                 if (keyStr != null && keyStr.trim().toLowerCase().startsWith("expr:"))
-                   eval(keyStr.trim().substring(5).trim(), context);
+                    eval(keyStr.trim().substring(5).trim(), context);
                 else if (context.containsKey(key))
                     actualContext.put(key, context.get(key));
                 else if (!actualContext.containsKey(key))
@@ -775,6 +847,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     // This allows a workflow to invoke a service as a specific user
     private GenericValue getUserLogin(String userId) throws WfException {
         GenericValue userLogin = null;
+
         try {
             userLogin = getDelegator().findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userId));
         } catch (GenericEntityException e) {
@@ -784,7 +857,4 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
 
 }
-
-
-
 

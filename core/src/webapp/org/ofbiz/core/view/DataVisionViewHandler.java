@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.view;
 
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -35,6 +36,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
 import jimm.datavision.*;
+
 
 /**
  * Handles DataVision type view rendering
@@ -68,26 +70,29 @@ public class DataVisionViewHandler implements ViewHandler {
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+
         if (delegator == null) {
             throw new ViewHandlerException("The delegator object was null, how did that happen?");
         }
-        
+
         try {
             String datasourceName = delegator.getEntityHelperName(info);
-            
+
             Report report = new Report();
-            report.setDatabasePassword(""); //password can be bogus because we are using an OFBiz connection...
+
+            report.setDatabasePassword(""); // password can be bogus because we are using an OFBiz connection...
             Debug.logInfo("before creating database");
             DataVisionDatabase dvDb = new DataVisionDatabase(datasourceName, report);
+
             report.setDatabase(dvDb);
             Debug.logInfo("before reading file");
             report.readFile(context.getRealPath(page)); // Must be after password
 
             /* NO support for param file yet...
-            if (there_are_params_in_report) {
-                // This must come after reading the report file
-                report.setParameterXMLFile(param_xml_file_name);
-            } */
+             if (there_are_params_in_report) {
+             // This must come after reading the report file
+             report.setParameterXMLFile(param_xml_file_name);
+             } */
 
             Debug.logInfo("before set layout engine");
             report.setLayoutEngine(new jimm.datavision.layout.HTMLLE(response.getWriter()));
@@ -106,8 +111,8 @@ public class DataVisionViewHandler implements ViewHandler {
             throw new ViewHandlerException("Database error while running report", e);
         } catch (Exception e) {
             throw new ViewHandlerException("Error in report", e);
-        //} catch (ServletException se) {
-        //    throw new ViewHandlerException("Error in region", se.getRootCause());
+            // } catch (ServletException se) {
+            // throw new ViewHandlerException("Error in region", se.getRootCause());
         }
     }
 }

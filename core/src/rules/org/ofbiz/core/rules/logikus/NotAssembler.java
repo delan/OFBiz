@@ -1,7 +1,9 @@
 package org.ofbiz.core.rules.logikus;
 
+
 import org.ofbiz.core.rules.engine.*;
 import org.ofbiz.core.rules.parse.*;
+
 
 /**
  * <p><b>Title:</b> Logikus Exception
@@ -35,14 +37,16 @@ import org.ofbiz.core.rules.parse.*;
  * @version 1.0
  */
 public class NotAssembler extends Assembler {
-  /**
-   * Pops a structure from the top of the stack and pushes a Not
-   * version of it.
-   *
-   * @param  Assembly  the assembly to work on
-   */
-  public void workOn(Assembly a) {
-    Structure s = (Structure) a.pop();
-    a.push(new Not(s));
-  }
+
+    /**
+     * Pops a structure from the top of the stack and pushes a Not
+     * version of it.
+     *
+     * @param  Assembly  the assembly to work on
+     */
+    public void workOn(Assembly a) {
+        Structure s = (Structure) a.pop();
+
+        a.push(new Not(s));
+    }
 }

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -36,6 +37,7 @@ import org.ofbiz.core.service.*;
 
 import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.minilang.operation.*;
+
 
 /**
  * SimpleMethod Mini Language Core Object
@@ -51,48 +53,58 @@ public class SimpleMethod {
     protected static UtilCache simpleMethodsURLCache = new UtilCache("minilang.SimpleMethodsURL", 0, 0);
 
     // ----- Event Context Invokers -----
-    
+
     public static String runSimpleEvent(String xmlResource, String methodName, HttpServletRequest request, HttpServletResponse response) throws MiniLangException {
         return runSimpleMethod(xmlResource, methodName, new MethodContext(request, response, null));
     }
+
     public static String runSimpleEvent(String xmlResource, String methodName, HttpServletRequest request, HttpServletResponse response, ClassLoader loader) throws MiniLangException {
         return runSimpleMethod(xmlResource, methodName, new MethodContext(request, response, loader));
     }
+
     public static String runSimpleEvent(URL xmlURL, String methodName, HttpServletRequest request, HttpServletResponse response, ClassLoader loader) throws MiniLangException {
         return runSimpleMethod(xmlURL, methodName, new MethodContext(request, response, loader));
     }
-    
+
     // ----- Service Context Invokers -----
-    
+
     public static Map runSimpleService(String xmlResource, String methodName, DispatchContext ctx, Map context) throws MiniLangException {
         MethodContext methodContext = new MethodContext(ctx, context, null);
+
         runSimpleMethod(xmlResource, methodName, methodContext);
         return methodContext.getResults();
     }
+
     public static Map runSimpleService(String xmlResource, String methodName, DispatchContext ctx, Map context, ClassLoader loader) throws MiniLangException {
         MethodContext methodContext = new MethodContext(ctx, context, loader);
+
         runSimpleMethod(xmlResource, methodName, methodContext);
         return methodContext.getResults();
     }
+
     public static Map runSimpleService(URL xmlURL, String methodName, DispatchContext ctx, Map context, ClassLoader loader) throws MiniLangException {
         MethodContext methodContext = new MethodContext(ctx, context, loader);
+
         runSimpleMethod(xmlURL, methodName, methodContext);
         return methodContext.getResults();
     }
-    
+
     // ----- General Method Invokers -----
-    
+
     public static String runSimpleMethod(String xmlResource, String methodName, MethodContext methodContext) throws MiniLangException {
         Map simpleMethods = getSimpleMethods(xmlResource, methodName, methodContext.getLoader());
         SimpleMethod simpleMethod = (SimpleMethod) simpleMethods.get(methodName);
+
         if (simpleMethod == null) {
             throw new MiniLangException("Could not find SimpleMethod " + methodName + " in XML document in resource: " + xmlResource);
         }
         return simpleMethod.exec(methodContext);
     }
+
     public static String runSimpleMethod(URL xmlURL, String methodName, MethodContext methodContext) throws MiniLangException {
         Map simpleMethods = getSimpleMethods(xmlURL, methodName);
         SimpleMethod simpleMethod = (SimpleMethod) simpleMethods.get(methodName);
+
         if (simpleMethod == null) {
             throw new MiniLangException("Could not find SimpleMethod " + methodName + " in XML document from URL: " + xmlURL.toString());
         }
@@ -101,17 +113,19 @@ public class SimpleMethod {
 
     public static Map getSimpleMethods(String xmlResource, String methodName, ClassLoader loader) throws MiniLangException {
         Map simpleMethods = (Map) simpleMethodsResourceCache.get(xmlResource);
+
         if (simpleMethods == null) {
             synchronized (SimpleMethod.class) {
                 simpleMethods = (Map) simpleMethodsResourceCache.get(xmlResource);
                 if (simpleMethods == null) {
                     URL xmlURL = UtilURL.fromResource(xmlResource, loader);
+
                     if (xmlURL == null) {
                         throw new MiniLangException("Could not find SimpleMethod XML document in resource: " + xmlResource);
                     }
                     simpleMethods = getAllSimpleMethods(xmlURL);
 
-                    //put it in the cache
+                    // put it in the cache
                     simpleMethodsResourceCache.put(xmlResource, simpleMethods);
                 }
             }
@@ -122,13 +136,14 @@ public class SimpleMethod {
 
     public static Map getSimpleMethods(URL xmlURL, String methodName) throws MiniLangException {
         Map simpleMethods = (Map) simpleMethodsURLCache.get(xmlURL);
+
         if (simpleMethods == null) {
             synchronized (SimpleMethod.class) {
                 simpleMethods = (Map) simpleMethodsURLCache.get(xmlURL);
                 if (simpleMethods == null) {
                     simpleMethods = getAllSimpleMethods(xmlURL);
 
-                    //put it in the cache
+                    // put it in the cache
                     simpleMethodsURLCache.put(xmlURL, simpleMethods);
                 }
             }
@@ -140,8 +155,9 @@ public class SimpleMethod {
     protected static Map getAllSimpleMethods(URL xmlURL) throws MiniLangException {
         Map simpleMethods = new HashMap();
 
-        //read in the file
+        // read in the file
         Document document = null;
+
         try {
             document = UtilXml.readXmlDocument(xmlURL, true);
         } catch (java.io.IOException e) {
@@ -160,15 +176,17 @@ public class SimpleMethod {
         List simpleMethodElements = UtilXml.childElementList(rootElement, "simple-method");
 
         Iterator simpleMethodIter = simpleMethodElements.iterator();
+
         while (simpleMethodIter.hasNext()) {
             Element simpleMethodElement = (Element) simpleMethodIter.next();
             SimpleMethod simpleMethod = new SimpleMethod(simpleMethodElement);
+
             simpleMethods.put(simpleMethod.getMethodName(), simpleMethod);
         }
-        
+
         return simpleMethods;
     }
-    
+
     // Member fields begin here...
     List methodOperations = new LinkedList();
     String methodName;
@@ -200,11 +218,11 @@ public class SimpleMethod {
     String securityName;
     String dispatcherName;
     String userLoginName;
-    
+
     public SimpleMethod(Element simpleMethodElement) {
         methodName = simpleMethodElement.getAttribute("method-name");
         shortDescription = simpleMethodElement.getAttribute("short-description");
-        
+
         defaultErrorCode = simpleMethodElement.getAttribute("default-error-code");
         if (defaultErrorCode == null || defaultErrorCode.length() == 0)
             defaultErrorCode = "error";
@@ -244,7 +262,7 @@ public class SimpleMethod {
         serviceErrorMessageMapName = simpleMethodElement.getAttribute("service-error-message-map-name");
         if (serviceErrorMessageMapName == null || serviceErrorMessageMapName.length() == 0)
             serviceErrorMessageMapName = "errorMessageMap";
-        
+
         serviceSuccessMessageName = simpleMethodElement.getAttribute("service-success-message-name");
         if (serviceSuccessMessageName == null || serviceSuccessMessageName.length() == 0)
             serviceSuccessMessageName = "successMessage";
@@ -275,32 +293,83 @@ public class SimpleMethod {
         readOperations(simpleMethodElement, this.methodOperations, this);
     }
 
-    public String getMethodName() { return this.methodName; }
-    public String getShortDescription() { return this.shortDescription; }
-    public String getDefaultErrorCode() { return this.defaultErrorCode; }
-    public String getDefaultSuccessCode() { return this.defaultSuccessCode; }
+    public String getMethodName() {
+        return this.methodName;
+    }
 
-    public String getParameterMapName() { return this.parameterMapName; }
+    public String getShortDescription() {
+        return this.shortDescription;
+    }
+
+    public String getDefaultErrorCode() {
+        return this.defaultErrorCode;
+    }
+
+    public String getDefaultSuccessCode() {
+        return this.defaultSuccessCode;
+    }
+
+    public String getParameterMapName() {
+        return this.parameterMapName;
+    }
 
     // event fields
-    public String getEventRequestName() { return this.eventRequestName; }
-    public String getEventResponseCodeName() { return this.eventResponseCodeName; }
-    public String getEventErrorMessageName() { return this.eventErrorMessageName; }
-    public String getEventEventMessageName() { return this.eventEventMessageName; }
+    public String getEventRequestName() {
+        return this.eventRequestName;
+    }
+
+    public String getEventResponseCodeName() {
+        return this.eventResponseCodeName;
+    }
+
+    public String getEventErrorMessageName() {
+        return this.eventErrorMessageName;
+    }
+
+    public String getEventEventMessageName() {
+        return this.eventEventMessageName;
+    }
 
     // service fields
-    public String getServiceResponseMessageName() { return this.serviceResponseMessageName; }
-    public String getServiceErrorMessageName() { return this.serviceErrorMessageName; }
-    public String getServiceErrorMessageListName() { return this.serviceErrorMessageListName; }
-    public String getServiceSuccessMessageName() { return this.serviceSuccessMessageName; }
-    public String getServiceSuccessMessageListName() { return this.serviceSuccessMessageListName; }
+    public String getServiceResponseMessageName() {
+        return this.serviceResponseMessageName;
+    }
 
-    public boolean getLoginRequired() { return this.loginRequired; }
-    public boolean getUseTransaction() { return this.useTransaction; }
+    public String getServiceErrorMessageName() {
+        return this.serviceErrorMessageName;
+    }
 
-    public String getDelegatorEnvName() { return this.delegatorName; }
-    public String getSecurityEnvName() { return this.securityName; }
-    public String getDispatcherEnvName() { return this.dispatcherName; }
+    public String getServiceErrorMessageListName() {
+        return this.serviceErrorMessageListName;
+    }
+
+    public String getServiceSuccessMessageName() {
+        return this.serviceSuccessMessageName;
+    }
+
+    public String getServiceSuccessMessageListName() {
+        return this.serviceSuccessMessageListName;
+    }
+
+    public boolean getLoginRequired() {
+        return this.loginRequired;
+    }
+
+    public boolean getUseTransaction() {
+        return this.useTransaction;
+    }
+
+    public String getDelegatorEnvName() {
+        return this.delegatorName;
+    }
+
+    public String getSecurityEnvName() {
+        return this.securityName;
+    }
+
+    public String getDispatcherEnvName() {
+        return this.dispatcherName;
+    }
 
     /** Execute the Simple Method operations */
     public String exec(MethodContext methodContext) {
@@ -316,12 +385,14 @@ public class SimpleMethod {
         }
 
         GenericValue userLogin = methodContext.getUserLogin();
+
         if (userLogin != null) {
             methodContext.putEnv(userLoginName, userLogin);
         }
         if (loginRequired) {
             if (userLogin == null) {
                 String errMsg = "You must be logged in to complete the " + shortDescription + " process.";
+
                 if (methodContext.getMethodType() == MethodContext.EVENT) {
                     methodContext.getRequest().setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
                     return defaultErrorCode;
@@ -333,13 +404,15 @@ public class SimpleMethod {
             }
         }
 
-        //if using transaction, try to start here
+        // if using transaction, try to start here
         boolean beganTransaction = false;
+
         if (useTransaction) {
             try {
                 beganTransaction = TransactionUtil.begin();
             } catch (GenericTransactionException e) {
                 String errMsg = "Error trying to begin transaction, could not process method: " + e.getMessage();
+
                 Debug.logWarning(errMsg);
                 Debug.logWarning(e);
                 if (methodContext.getMethodType() == MethodContext.EVENT) {
@@ -355,25 +428,27 @@ public class SimpleMethod {
 
         boolean finished = runSubOps(methodOperations, methodContext);
 
-        //declare errorMsg here just in case transaction ops fail
+        // declare errorMsg here just in case transaction ops fail
         String errorMsg = "";
 
         if (finished) {
-            //if finished commit here passing beganTransaction to perform it properly
+            // if finished commit here passing beganTransaction to perform it properly
             try {
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericTransactionException e) {
                 String errMsg = "Error trying to commit transaction, could not process method: " + e.getMessage();
+
                 errorMsg += errMsg + "<br>";
                 Debug.logWarning(errMsg);
                 Debug.logWarning(e);
             }
         } else {
-            //if NOT finished rollback here passing beganTransaction to either rollback, or set rollback only
+            // if NOT finished rollback here passing beganTransaction to either rollback, or set rollback only
             try {
                 TransactionUtil.rollback(beganTransaction);
             } catch (GenericTransactionException e) {
                 String errMsg = "Error trying to rollback transaction, could not process method: " + e.getMessage();
+
                 errorMsg += errMsg + "<br>";
                 Debug.logWarning(errMsg);
                 Debug.logWarning(e);
@@ -382,17 +457,20 @@ public class SimpleMethod {
 
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             String tempErrorMsg = (String) methodContext.getEnv(eventErrorMessageName);
+
             if (tempErrorMsg != null && tempErrorMsg.length() > 0) {
                 errorMsg += tempErrorMsg;
                 methodContext.getRequest().setAttribute(SiteDefs.ERROR_MESSAGE, errorMsg);
-            } 
-            
+            }
+
             String eventMsg = (String) methodContext.getEnv(eventEventMessageName);
+
             if (eventMsg != null && eventMsg.length() > 0) {
                 methodContext.getRequest().setAttribute(SiteDefs.EVENT_MESSAGE, eventMsg);
             }
 
             String response = (String) methodContext.getEnv(eventResponseCodeName);
+
             if (response == null || response.length() == 0) {
                 Debug.logWarning("No response code string found, assuming success");
                 response = defaultSuccessCode;
@@ -400,32 +478,38 @@ public class SimpleMethod {
             return response;
         } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
             String tempErrorMsg = (String) methodContext.getEnv(serviceErrorMessageName);
+
             if (tempErrorMsg != null && tempErrorMsg.length() > 0) {
                 errorMsg += tempErrorMsg;
                 methodContext.putResult(ModelService.ERROR_MESSAGE, errorMsg);
             }
 
             List errorMsgList = (List) methodContext.getEnv(serviceErrorMessageListName);
+
             if (errorMsgList != null && errorMsgList.size() > 0) {
                 methodContext.putResult(ModelService.ERROR_MESSAGE_LIST, errorMsgList);
             }
 
             Map errorMsgMap = (Map) methodContext.getEnv(serviceErrorMessageMapName);
+
             if (errorMsgMap != null && errorMsgMap.size() > 0) {
                 methodContext.putResult(ModelService.ERROR_MESSAGE_MAP, errorMsgMap);
             }
 
             String successMsg = (String) methodContext.getEnv(serviceSuccessMessageName);
+
             if (successMsg != null && successMsg.length() > 0) {
                 methodContext.putResult(ModelService.SUCCESS_MESSAGE, successMsg);
             }
 
             List successMsgList = (List) methodContext.getEnv(serviceSuccessMessageListName);
+
             if (successMsgList != null && successMsgList.size() > 0) {
                 methodContext.putResult(ModelService.SUCCESS_MESSAGE_LIST, successMsgList);
             }
 
             String response = (String) methodContext.getEnv(serviceResponseMessageName);
+
             if (response == null || response.length() == 0) {
                 Debug.logVerbose("No response code string found, assuming success");
                 response = defaultSuccessCode;
@@ -439,8 +523,10 @@ public class SimpleMethod {
 
     public static void readOperations(Element simpleMethodElement, List methodOperations, SimpleMethod simpleMethod) {
         List operationElements = UtilXml.childElementList(simpleMethodElement, null);
+
         if (operationElements != null && operationElements.size() > 0) {
             Iterator operElemIter = operationElements.iterator();
+
             while (operElemIter.hasNext()) {
                 Element curOperElem = (Element) operElemIter.next();
                 String nodeName = curOperElem.getNodeName();
@@ -555,27 +641,28 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfHasPermission(curOperElem, simpleMethod));
                 } else if ("check-permission".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.ifops.CheckPermission(curOperElem, simpleMethod));
-                } else if ("else".equals(nodeName)) {
-                    //don't add anything, but don't complain either, this one is handled in the individual operations
+                } else if ("else".equals(nodeName)) {// don't add anything, but don't complain either, this one is handled in the individual operations
                 } else {
                     Debug.logWarning("Operation element \"" + nodeName + "\" no recognized");
                 }
             }
         }
     }
-    
+
     /** Execs the given operations returning true if all return true, or returning 
      *  false and stopping if any return false.
      */
     public static boolean runSubOps(List methodOperations, MethodContext methodContext) {
         Iterator methodOpsIter = methodOperations.iterator();
+
         while (methodOpsIter.hasNext()) {
             MethodOperation methodOperation = (MethodOperation) methodOpsIter.next();
+
             if (!methodOperation.exec(methodContext)) {
                 return false;
             }
         }
-        
+
         return true;
     }
 }

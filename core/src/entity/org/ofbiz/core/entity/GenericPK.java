@@ -24,10 +24,12 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.io.*;
 import java.util.*;
 
 import org.ofbiz.core.entity.model.*;
+
 
 /**
  * Generic Entity Primary Key Object
@@ -58,6 +60,7 @@ public class GenericPK extends GenericEntity {
      */
     public Object clone() {
         GenericPK newEntity = new GenericPK(this);
+
         newEntity.setDelegator(internalDelegator);
         return newEntity;
     }

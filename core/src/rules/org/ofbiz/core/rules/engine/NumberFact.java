@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * <p><b>Title:</b> Number Fact
  * <p><b>Description:</b> None
@@ -31,20 +32,22 @@ package org.ofbiz.core.rules.engine;
  * @version 1.0
  */
 public class NumberFact extends Atom implements ArithmeticTerm {
-  /**
-   * Contructs a number fact from the double.
-   *
-   * @param double a number to wrap as an atom
-   */
-  public NumberFact(double d) {
-    this(new Double(d));
-  }
-  /**
-   * Contructs a number fact from the Numer.
-   *
-   * @param Number a number to wrap as an atom
-   */
-  public NumberFact(Number functor) {
-    super(functor);
-  }
+
+    /**
+     * Contructs a number fact from the double.
+     *
+     * @param double a number to wrap as an atom
+     */
+    public NumberFact(double d) {
+        this(new Double(d));
+    }
+
+    /**
+     * Contructs a number fact from the Numer.
+     *
+     * @param Number a number to wrap as an atom
+     */
+    public NumberFact(Number functor) {
+        super(functor);
+    }
 }

@@ -1,6 +1,8 @@
 package org.ofbiz.core.rules.utensil;
 
+
 import java.io.*;
+
 
 /**
  * <p><b>Title:</b> File String
@@ -34,37 +36,37 @@ import java.io.*;
  * @version 1.0
  */
 public class FileString {
-  
-  /**
-   * Returns a string that represents the contents of a file.
-   *
-   * @param    fileName    the name of the file to read
-   * @return   string    the contents of a file as a String
-   * @exception   IOException   if the file is not found, or if there is
-   *                            any problem reading the file
-   */
-  public static String stringFromFileNamed(String fileName)
-  throws java.io.IOException {
-    
-    final int BUFLEN = 1024;
-    char buf[] = new char[BUFLEN];
-    
-    FileReader in = new FileReader(fileName);
-    StringWriter out = new StringWriter();
-    
-    try {
-      while (true) {
-        int len = in.read(buf, 0, BUFLEN);
-        if (len == -1) {
-          break;
+
+    /**
+     * Returns a string that represents the contents of a file.
+     *
+     * @param    fileName    the name of the file to read
+     * @return   string    the contents of a file as a String
+     * @exception   IOException   if the file is not found, or if there is
+     *                            any problem reading the file
+     */
+    public static String stringFromFileNamed(String fileName)
+        throws java.io.IOException {
+
+        final int BUFLEN = 1024;
+        char buf[] = new char[BUFLEN];
+
+        FileReader in = new FileReader(fileName);
+        StringWriter out = new StringWriter();
+
+        try {
+            while (true) {
+                int len = in.read(buf, 0, BUFLEN);
+
+                if (len == -1) {
+                    break;
+                }
+                out.write(buf, 0, len);
+            }
+        } finally {
+            out.close();
+            in.close();
         }
-        out.write(buf, 0, len);
-      }
+        return out.toString();
     }
-    finally {
-      out.close();
-      in.close();
-    }
-    return out.toString();
-  }
 }

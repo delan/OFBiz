@@ -24,6 +24,7 @@
 
 package org.ofbiz.catalog;
 
+
 import javax.servlet.http.*;
 import javax.servlet.*;
 import java.util.*;
@@ -35,6 +36,7 @@ import org.ofbiz.core.security.*;
 
 import org.ofbiz.commonapp.product.product.*;
 
+
 /**
  * Product Information Related Events
  *
@@ -43,6 +45,7 @@ import org.ofbiz.commonapp.product.product.*;
  *@version    1.0
  */
 public class ProductEvents {
+
     /** Updates ProductKeyword information according to UPDATE_MODE parameter, only support CREATE and DELETE, no modify becuse all fields are PKs
      *@param request The HTTPRequest object for the current request
      *@param response The HTTPResponse object for the current request
@@ -54,15 +57,16 @@ public class ProductEvents {
         Security security = (Security) request.getAttribute("security");
 
         String updateMode = request.getParameter("UPDATE_MODE");
+
         if (updateMode == null || updateMode.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
             Debug.logWarning("[ProductEvents.updateProductKeyword] Update Mode was not specified, but is required");
             return "error";
         }
 
-        //check permissions before moving on...
+        // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
             return "error";
         }
 
@@ -83,6 +87,7 @@ public class ProductEvents {
         if (updateMode.equals("CREATE")) {
             GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword, "relevancyWeight", relevancyWeight));
             GenericValue newValue = null;
+
             try {
                 newValue = delegator.findByPrimaryKey(productKeyword.getPrimaryKey());
             } catch (GenericEntityException e) {
@@ -107,6 +112,7 @@ public class ProductEvents {
             }
         } else if (updateMode.equals("DELETE")) {
             GenericValue productKeyword = null;
+
             try {
                 productKeyword = delegator.findByPrimaryKey("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword));
             } catch (GenericEntityException e) {
@@ -143,25 +149,28 @@ public class ProductEvents {
         Security security = (Security) request.getAttribute("security");
 
         String updateMode = request.getParameter("UPDATE_MODE");
+
         if (updateMode == null || updateMode.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
             Debug.logWarning("[ProductEvents.updateProductKeywords] Update Mode was not specified, but is required");
             return "error";
         }
 
-        //check permissions before moving on...
+        // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
             return "error";
         }
 
         String productId = request.getParameter("PRODUCT_ID");
+
         if (!UtilValidate.isNotEmpty(productId)) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "No Product ID specified, cannot update keywords.");
             return "error";
         }
 
         GenericValue product = null;
+
         try {
             product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
         } catch (GenericEntityException e) {
@@ -207,13 +216,15 @@ public class ProductEvents {
         Security security = (Security) request.getAttribute("security");
 
         String updateMode = "CREATE";
-        //check permissions before moving on...
+
+        // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
             return "error";
         }
 
         Iterator iterator = null;
+
         try {
             iterator = UtilMisc.toIterator(delegator.findAll("Product", null));
         } catch (GenericEntityException e) {
@@ -222,8 +233,10 @@ public class ProductEvents {
         }
 
         int numProds = 0;
+
         while (iterator != null && iterator.hasNext()) {
             GenericValue product = (GenericValue) iterator.next();
+
             if (product != null && !"n".equalsIgnoreCase(product.getString("autoCreateKeywords"))) {
                 try {
                     KeywordSearch.induceKeywords(product);
@@ -251,15 +264,16 @@ public class ProductEvents {
         Security security = (Security) request.getAttribute("security");
 
         String updateMode = request.getParameter("UPDATE_MODE");
+
         if (updateMode == null || updateMode.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
             Debug.logWarning("[ProductEvents.updateProductAssoc] Update Mode was not specified, but is required");
             return "error";
         }
 
-        //check permissions before moving on...
+        // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
             return "error";
         }
 
@@ -275,7 +289,7 @@ public class ProductEvents {
             if (delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productIdTo)) == null)
                 errMsg += "<li>Product To with id " + productIdTo + " not found.";
         } catch (GenericEntityException e) {
-            //if there is an exception for either, the other probably wont work
+            // if there is an exception for either, the other probably wont work
             Debug.logWarning(e);
         }
 
@@ -292,7 +306,7 @@ public class ProductEvents {
             errMsg += "<li>Product ID To is missing.";
         if (!UtilValidate.isNotEmpty(productAssocTypeId))
             errMsg += "<li>Association Type ID is missing.";
-        //from date is only required if update mode is not CREATE
+        // from date is only required if update mode is not CREATE
         if (!updateMode.equals("CREATE") && !UtilValidate.isNotEmpty(fromDateStr))
             errMsg += "<li>From Date is missing.";
         if (errMsg.length() > 0) {
@@ -301,7 +315,7 @@ public class ProductEvents {
             return "error";
         }
 
-        //clear some cache entries
+        // clear some cache entries
         delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productId", productId));
         delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", productAssocTypeId));
 
@@ -310,12 +324,14 @@ public class ProductEvents {
 
         delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productAssocTypeId", productAssocTypeId));
         delegator.clearCacheLine("ProductAssoc",
-                UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
+            UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
 
         GenericValue tempProductAssoc = delegator.makeValue("ProductAssoc",
                 UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
+
         if (updateMode.equals("DELETE")) {
             GenericValue productAssoc = null;
+
             try {
                 productAssoc = delegator.findByPrimaryKey(tempProductAssoc.getPrimaryKey());
             } catch (GenericEntityException e) {
@@ -379,7 +395,7 @@ public class ProductEvents {
         tempProductAssoc.set("sequenceNum", sequenceNum);
 
         if (updateMode.equals("CREATE")) {
-            //if no from date specified, set to now
+            // if no from date specified, set to now
             if (fromDate == null) {
                 fromDate = new Timestamp(new java.util.Date().getTime());
                 tempProductAssoc.set("fromDate", fromDate);
@@ -387,6 +403,7 @@ public class ProductEvents {
             }
 
             GenericValue productAssoc = null;
+
             try {
                 productAssoc = delegator.findByPrimaryKey(tempProductAssoc.getPrimaryKey());
             } catch (GenericEntityException e) {
@@ -426,15 +443,16 @@ public class ProductEvents {
         Security security = (Security) request.getAttribute("security");
 
         String updateMode = request.getParameter("UPDATE_MODE");
+
         if (updateMode == null || updateMode.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
             Debug.logWarning("[CategoryEvents.updateCategory] Update Mode was not specified, but is required");
             return "error";
         }
 
-        //check permissions before moving on...
+        // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
             return "error";
         }
 
@@ -455,6 +473,7 @@ public class ProductEvents {
 
         List toBeStored = new LinkedList();
         GenericValue attribute = delegator.makeValue("ProductAttribute", null);
+
         toBeStored.add(attribute);
         attribute.set("productId", productId);
         attribute.set("attrName", attrName);

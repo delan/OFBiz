@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.control;
 
+
 /**
  * RequestHandlerException
  *
@@ -35,9 +36,9 @@ package org.ofbiz.core.control;
 public class RequestHandlerException extends org.ofbiz.core.util.GeneralException {
 
     public RequestHandlerException(String str, Throwable t) {
-        super(str,t);
+        super(str, t);
     }
-    
+
     public RequestHandlerException(String str) {
         super(str);
     }

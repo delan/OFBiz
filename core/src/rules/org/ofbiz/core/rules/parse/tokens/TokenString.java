@@ -1,7 +1,9 @@
 package org.ofbiz.core.rules.parse.tokens;
 
+
 import java.io.*;
 import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Token String
@@ -38,11 +40,12 @@ import java.util.*;
  * @version 1.0
  */
 public class TokenString {
+
     /**
      * the tokens in this tokenString
      */
     protected Token tokens[];
-    
+
     /**
      * Constructs a tokenString from the supplied tokens.
      *
@@ -54,6 +57,7 @@ public class TokenString {
     public TokenString(Token[] tokens) {
         this.tokens = tokens;
     }
+
     /**
      * Constructs a tokenString from the supplied string.
      *
@@ -65,6 +69,7 @@ public class TokenString {
     public TokenString(String s) {
         this(new Tokenizer(s));
     }
+
     /**
      * Constructs a tokenString from the supplied reader and
      * tokenizer.
@@ -77,9 +82,11 @@ public class TokenString {
      */
     public TokenString(Tokenizer t) {
         List v = new ArrayList();
+
         try {
             while (true) {
                 Token tok = t.nextToken();
+
                 if (tok.ttype() == Token.TT_EOF) {
                     break;
                 }
@@ -87,10 +94,11 @@ public class TokenString {
             };
         } catch (IOException e) {
             throw new InternalError(
-            "Problem tokenizing string: " + e);
+                    "Problem tokenizing string: " + e);
         }
         tokens = (Token[]) v.toArray(new Token[v.size()]);
     }
+
     /**
      * Returns the number of tokens in this tokenString.
      *
@@ -99,6 +107,7 @@ public class TokenString {
     public int length() {
         return tokens.length;
     }
+
     /**
      * Returns the token at the specified index.
      *
@@ -109,6 +118,7 @@ public class TokenString {
     public Token tokenAt(int i) {
         return tokens[i];
     }
+
     /**
      * Returns a string representation of this tokenString.
      *
@@ -116,6 +126,7 @@ public class TokenString {
      */
     public String toString() {
         StringBuffer buf = new StringBuffer();
+
         for (int i = 0; i < tokens.length; i++) {
             if (i > 0) {
                 buf.append(" ");

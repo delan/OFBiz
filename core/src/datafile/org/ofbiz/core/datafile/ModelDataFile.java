@@ -1,7 +1,9 @@
 
 package org.ofbiz.core.datafile;
 
+
 import java.util.*;
+
 
 /**
  * <p><b>Title:</b>
@@ -39,18 +41,25 @@ public class ModelDataFile {
 
     /** The name of the File */
     public String name = "";
+
     /** The type code of the File, ususally contained somewhere in the file and can be used to identify it */
     public String typeCode = "";
+
     /** The party that generally sends the file */
     public String sender = "";
+
     /** The party that generally receives the file */
     public String receiver = "";
+
     /** The length in bytes of a single record, ONLY if it uses fixed length records */
     public int recordLength = -1;
+
     /** The delimiter used in the file, if delimiter separated fields are used */
     public char delimiter = '|';
+
     /** The field serparator style, either fixed-length, or delimited */
     public String separatorStyle = "";
+
     /** A free form description of the file */
     public String description = "";
 
@@ -60,6 +69,7 @@ public class ModelDataFile {
     ModelRecord getModelRecord(String recordName) {
         for (int i = 0; i < records.size(); i++) {
             ModelRecord curRecord = (ModelRecord) records.get(i);
+
             if (curRecord.name.equals(recordName)) {
                 return curRecord;
             }

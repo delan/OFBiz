@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.envops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
+
 
 /**
  * Copies an environment field to a map field
@@ -51,7 +53,7 @@ public class EnvToField extends MethodOperation {
         mapName = element.getAttribute("map-name");
         fieldName = element.getAttribute("field-name");
 
-        //set fieldName to their defualt value of envName if empty
+        // set fieldName to their defualt value of envName if empty
         if (fieldName == null || fieldName.length() == 0) {
             fieldName = envName;
         }
@@ -59,6 +61,7 @@ public class EnvToField extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         Object envVar = methodContext.getEnv(envName);
+
         if (envVar == null) {
             Debug.logWarning("Environment field not found with name " + envName + ", not copying env field");
             return true;
@@ -66,6 +69,7 @@ public class EnvToField extends MethodOperation {
 
         if (mapName != null && mapName.length() > 0) {
             Map toMap = (Map) methodContext.getEnv(mapName);
+
             if (toMap == null) {
                 if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", creating new map");
                 toMap = new HashMap();

@@ -25,9 +25,11 @@
 
 package org.ofbiz.core.workflow;
 
+
 import java.util.List;
 import java.util.Iterator;
 import java.util.Map;
+
 
 /**
  * WfActivity - Workflow Activity Interface
@@ -106,6 +108,5 @@ public interface WfActivity extends WfExecutionObject {
      * @throws AlreadyRunning
      */
     public void activate() throws WfException, CannotStart, AlreadyRunning;
-
 
 } // interface WfActivity

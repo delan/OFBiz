@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.eventops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -34,6 +35,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
+
 
 /**
  * Copies a property value from a properties file in a ServletContext resource to a field
@@ -60,16 +62,18 @@ public class WebappPropertyToField extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         String fieldVal = null;
-        //only run this if it is in an EVENT context
+
+        // only run this if it is in an EVENT context
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             ServletContext servletContext = (ServletContext) methodContext.getRequest().getAttribute("servletContext");
             URL propsUrl = null;
+
             try {
                 propsUrl = servletContext.getResource(resource);
             } catch (java.net.MalformedURLException e) {
                 Debug.logWarning(e, "Error finding webapp resource (properties file) not found with name " + resource);
             }
-            
+
             if (propsUrl == null) {
                 Debug.logWarning("Webapp resource (properties file) not found with name " + resource);
             } else {
@@ -79,19 +83,21 @@ public class WebappPropertyToField extends MethodOperation {
                 }
             }
         }
-        
-        //if fieldVal is null, or is a String and has zero length, use defaultVal
+
+        // if fieldVal is null, or is a String and has zero length, use defaultVal
         if (fieldVal == null) {
             fieldVal = defaultVal;
         } else if (fieldVal instanceof String) {
             String strVal = (String) fieldVal;
+
             if (strVal.length() == 0) {
                 fieldVal = defaultVal;
             }
         }
-        
+
         if (mapName != null && mapName.length() > 0) {
             Map fromMap = (Map) methodContext.getEnv(mapName);
+
             if (fromMap == null) {
                 Debug.logWarning("Map not found with name " + mapName + " creating a new map");
                 fromMap = new HashMap();

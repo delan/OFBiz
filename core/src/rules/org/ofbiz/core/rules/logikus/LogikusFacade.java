@@ -25,9 +25,11 @@
 
 package org.ofbiz.core.rules.logikus;
 
+
 import org.ofbiz.core.rules.parse.*;
 import org.ofbiz.core.rules.parse.tokens.*;
 import org.ofbiz.core.rules.engine.*;
+
 
 /**
  * This class provides utility methods that simplify the use of the Logikus parser.
@@ -36,13 +38,14 @@ import org.ofbiz.core.rules.engine.*;
  * @version 1.0
  */
 public class LogikusFacade {
+
     /**
      * Translate one axiom string into an Axiom object.
      */
     public static Axiom axiom(String s) {
         return axiom(new TokenString(s));
     }
-    
+
     /**
      * Parse the text of a Logikus program and return a
      * <code>Program</code> object.
@@ -54,9 +57,11 @@ public class LogikusFacade {
     public static Program program(String s) {
         Program p = new Program();
         TokenStringSource tss = new TokenStringSource(
-        new Tokenizer(s), ";");
+                new Tokenizer(s), ";");
+
         while (true) {
             TokenString ts = tss.nextTokenString();
+
             if (ts == null) { // no more token strings
                 break;
             }
@@ -64,7 +69,7 @@ public class LogikusFacade {
         }
         return p;
     }
-    
+
     /**
      * Parse the text of a Logikus query and return a
      * <code>Query</code> object.
@@ -75,13 +80,15 @@ public class LogikusFacade {
      */
     public static Query query(String s, AxiomSource as) {
         Object o = parse(new TokenString(s), LogikusParser.query(), "query");
+
         if (o instanceof Fact) {
             Fact f = (Fact) o;
+
             return new Query(as, f);
         }
         return new Query(as, (Rule) o);
     }
-    
+
     /**
      * Translate the tokens for one axiom into an Axiom
      * object (either a Fact or a Rule);
@@ -89,9 +96,10 @@ public class LogikusFacade {
     protected static Axiom axiom(TokenString ts) {
         Parser p = new LogikusParser().axiom();
         Object o = parse(ts, p, "axiom");
+
         return (Axiom) o;
     }
-    
+
     /**
      * Parse the given token string with the given parser,
      * throwing runtime exceptions if parsing fails
@@ -100,6 +108,7 @@ public class LogikusFacade {
     protected static Object parse(TokenString ts, Parser p, String type) {
         TokenAssembly ta = new TokenAssembly(ts);
         Assembly out = p.bestMatch(ta);
+
         if (out == null) {
             reportNoMatch(ts, type);
         }
@@ -111,7 +120,7 @@ public class LogikusFacade {
         }
         return out.pop();
     }
-    
+
     /**
      * Throws a runtime exception reporting an incomplete parse.
      */
@@ -119,15 +128,15 @@ public class LogikusFacade {
         throw new LogikusException("> Input for " + type +
                 " appears complete after : \n> " + out.consumed(" ") + "\n");
     }
-    
+
     /**
      * Throws a runtime exception reporting failed parse.
      */
     protected static void reportNoMatch(TokenString ts, String type) {
-        //checkForUppercase(ts, type);
+        // checkForUppercase(ts, type);
         throw new LogikusException("> Cannot parse " + type + " : " + ts + "\n");
     }
-    
+
     /**
      * Throws an informative runtime exception if the provided
      * string begins with an uppercase letter.
@@ -138,8 +147,9 @@ public class LogikusFacade {
         if (ts.length() > 0) {
             Token t = ts.tokenAt(0);
             String s = t.sval();
+
             if (s.length() > 0 &&
-            Character.isUpperCase(s.charAt(0))) {
+                Character.isUpperCase(s.charAt(0))) {
                 throw new LogikusException("> Uppercase " + s +
                         " indicates a variable and cannot begin a " + type + ".\n");
             }

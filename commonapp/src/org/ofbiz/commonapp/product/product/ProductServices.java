@@ -23,11 +23,13 @@
 
 package org.ofbiz.commonapp.product.product;
 
+
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Product Services
@@ -85,11 +87,13 @@ public class ProductServices {
         Map result = new HashMap();
         String productId = (String) context.get("productId");
         Set featureSet = new OrderedSet();
+
         try {
             Map fields = UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE");
             List order = UtilMisc.toList("sequenceNum", "productFeatureTypeId");
             Collection features = delegator.findByAndCache("ProductFeatureAndAppl", fields, order);
             Iterator i = features.iterator();
+
             while (i.hasNext())
                 featureSet.add(((GenericValue) i.next()).getString("productFeatureTypeId"));
             if (Debug.infoOn()) Debug.logInfo("" + featureSet);
@@ -121,6 +125,7 @@ public class ProductServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map result = new HashMap();
         List featureOrder = new LinkedList((Collection) context.get("featureOrder"));
+
         if (featureOrder == null || featureOrder.size() == 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Empty list of features passed");
@@ -128,6 +133,7 @@ public class ProductServices {
         }
 
         Collection variants = (Collection) prodFindAllVariants(dctx, context).get("assocProducts");
+
         if (variants == null || variants.size() == 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Empty list of products returned");
@@ -135,11 +141,13 @@ public class ProductServices {
         }
         List items = new ArrayList();
         Iterator i = variants.iterator();
+
         while (i.hasNext()) {
             String productIdTo = (String) ((GenericValue) i.next()).get("productIdTo");
-            
-            //first check to see if intro and discontinue dates are within range
+
+            // first check to see if intro and discontinue dates are within range
             GenericValue productTo = null;
+
             try {
                 productTo = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productIdTo));
             } catch (GenericEntityException e) {
@@ -152,32 +160,34 @@ public class ProductServices {
                 Debug.logWarning("Could not find associated variant with ID " + productIdTo + ", not showing in list");
                 continue;
             }
-            
+
             java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-            //check to see if introductionDate hasn't passed yet
+
+            // check to see if introductionDate hasn't passed yet
             if (productTo.get("introductionDate") != null && nowTimestamp.before(productTo.getTimestamp("introductionDate"))) {
-		if (Debug.verboseOn()) {
-	            String excMsg = "Tried to view the Product " + productTo.getString("productName") + 
-                            " (productId: " + productTo.getString("productId") + ") as a variant. This product has not yet been made available for sale, so not adding for view.";
+                if (Debug.verboseOn()) {
+                    String excMsg = "Tried to view the Product " + productTo.getString("productName") +
+                        " (productId: " + productTo.getString("productId") + ") as a variant. This product has not yet been made available for sale, so not adding for view.";
+
                     Debug.logVerbose(excMsg);
-		}
+                }
                 continue;
             }
 
-            //check to see if salesDiscontinuationDate has passed
+            // check to see if salesDiscontinuationDate has passed
             if (productTo.get("salesDiscontinuationDate") != null && nowTimestamp.after(productTo.getTimestamp("salesDiscontinuationDate"))) {
-		if (Debug.verboseOn()) {
-                    String excMsg = "Tried to view the Product " + productTo.getString("productName") + 
-                            " (productId: " + productTo.getString("productId") + ") as a variant. This product is no longer available for sale, so not adding for view.";
+                if (Debug.verboseOn()) {
+                    String excMsg = "Tried to view the Product " + productTo.getString("productName") +
+                        " (productId: " + productTo.getString("productId") + ") as a variant. This product is no longer available for sale, so not adding for view.";
+
                     Debug.logVerbose(excMsg);
-		}
+                }
                 continue;
             }
-            
-            
-            //next check inventory for each item: if inventory is not required or is available
-            if (!org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryRequired(prodCatalogId, productIdTo, delegator) || 
-                    org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, productIdTo, 1.0, delegator, dispatcher)) {
+
+            // next check inventory for each item: if inventory is not required or is available
+            if (!org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryRequired(prodCatalogId, productIdTo, delegator) ||
+                org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, productIdTo, 1.0, delegator, dispatcher)) {
                 items.add(productIdTo);
             }
         }
@@ -186,9 +196,11 @@ public class ProductServices {
 
         // Make the selectable feature list
         List selectableFeatures = null;
+
         try {
             Map fields = UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE");
             List sort = UtilMisc.toList("sequenceNum");
+
             selectableFeatures = delegator.findByAndCache("ProductFeatureAndAppl", fields, sort);
             selectableFeatures = EntityUtil.filterByDate(selectableFeatures, true);
         } catch (GenericEntityException e) {
@@ -199,22 +211,27 @@ public class ProductServices {
         }
         Map features = new HashMap();
         Iterator sFIt = selectableFeatures.iterator();
+
         while (sFIt.hasNext()) {
             GenericValue v = (GenericValue) sFIt.next();
             String featureType = v.getString("productFeatureTypeId");
             String feature = v.getString("description");
+
             if (!features.containsKey(featureType)) {
                 List featureList = new LinkedList();
+
                 featureList.add(feature);
                 features.put(featureType, featureList);
             } else {
                 List featureList = (LinkedList) features.get(featureType);
+
                 featureList.add(feature);
                 features.put(featureType, featureList);
             }
         }
 
         Map tree = null;
+
         try {
             tree = makeGroup(delegator, features, items, featureOrder, 0);
         } catch (Exception e) {
@@ -232,6 +249,7 @@ public class ProductServices {
         }
 
         Map sample = null;
+
         try {
             sample = makeVariantSample(dctx.getDelegator(), features, items, (String) featureOrder.get(0));
         } catch (Exception e) {
@@ -263,9 +281,11 @@ public class ProductServices {
         String distinct = (String) context.get("distinct");
         String type = (String) context.get("type");
         Collection features = null;
+
         try {
             Map fields = UtilMisc.toMap("productId", productId);
             List order = UtilMisc.toList("sequenceNum", "productFeatureTypeId");
+
             if (distinct != null) fields.put("productFeatureType", distinct);
             if (type != null) fields.put("productFeatureApplTypeId", type);
             features = delegator.findByAndCache("ProductFeatureAndAppl", fields, order);
@@ -286,6 +306,7 @@ public class ProductServices {
         GenericDelegator delegator = dctx.getDelegator();
         Map result = new HashMap();
         String productId = (String) context.get("productId");
+
         if (productId == null || productId.length() == 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Invalid productId passed.");
@@ -295,15 +316,18 @@ public class ProductServices {
         try {
             GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
             GenericValue mainProduct = product;
+
             if (product.get("isVariant") != null && product.getString("isVariant").equalsIgnoreCase("Y")) {
                 List c = product.getRelatedByAndCache("AssocProductAssoc",
                         UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
+
                 if (c != null) {
                     if (Debug.infoOn()) Debug.logInfo("Found related: " + c);
                     c = EntityUtil.filterByDate(c, true);
                     if (Debug.infoOn()) Debug.logInfo("Found Filtered related: " + c);
                     if (c.size() > 0) {
                         GenericValue asV = (GenericValue) c.iterator().next();
+
                         if (Debug.infoOn()) Debug.logInfo("ASV: " + asV);
                         mainProduct = asV.getRelatedOneCache("MainProduct");
                         if (Debug.infoOn()) Debug.logInfo("Main product = " + mainProduct);
@@ -347,6 +371,7 @@ public class ProductServices {
 
         productId = productId == null ? productIdTo : productId;
         GenericValue product = null;
+
         try {
             product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
         } catch (GenericEntityException e) {
@@ -363,6 +388,7 @@ public class ProductServices {
 
         try {
             List c = null;
+
             if (productIdTo == null) {
                 c = product.getRelatedCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", type), UtilMisc.toList("sequenceNum"));
             } else {
@@ -382,7 +408,7 @@ public class ProductServices {
 
     // Builds a product feature tree
     private static Map makeGroup(GenericDelegator delegator, Map featureList, List items, List order, int index)
-            throws IllegalArgumentException, IllegalStateException {
+        throws IllegalArgumentException, IllegalStateException {
         List featureKey = new ArrayList();
         Map tempGroup = new HashMap();
         Map group = new OrderedMap();
@@ -391,7 +417,7 @@ public class ProductServices {
         if (featureList == null) {
             throw new IllegalArgumentException("Cannot build feature tree: featureList is null");
         }
-        
+
         if (index < 0) {
             throw new IllegalArgumentException("Invalid index '" + index + "' min index '0'");
         }
@@ -401,16 +427,19 @@ public class ProductServices {
 
         // loop through items and make the lists
         Iterator itemIterator = items.iterator();
+
         while (itemIterator.hasNext()) {
             // -------------------------------
             // Gather the necessary data
             // -------------------------------
             String thisItem = (String) itemIterator.next();
+
             if (Debug.verboseOn()) Debug.logVerbose("ThisItem: " + thisItem);
             List features = null;
+
             try {
                 Map fields = UtilMisc.toMap("productId", thisItem, "productFeatureTypeId", orderKey,
-                                            "productFeatureApplTypeId", "STANDARD_FEATURE");
+                        "productFeatureApplTypeId", "STANDARD_FEATURE");
                 List sort = UtilMisc.toList("sequenceNum");
 
                 // get the features and filter out expired dates
@@ -423,15 +452,19 @@ public class ProductServices {
 
             // -------------------------------
             Iterator featuresIterator = features.iterator();
+
             while (featuresIterator.hasNext()) {
                 GenericValue item = (GenericValue) featuresIterator.next();
                 Object itemKey = item.get("description");
+
                 if (tempGroup.containsKey(itemKey)) {
                     List itemList = (List) tempGroup.get(itemKey);
+
                     if (!itemList.contains(thisItem))
                         itemList.add(thisItem);
                 } else {
                     List itemList = UtilMisc.toList(thisItem);
+
                     tempGroup.put(itemKey, itemList);
                 }
             }
@@ -440,13 +473,16 @@ public class ProductServices {
 
         // Loop through the feature list and order the keys in the tempGroup
         List orderFeatureList = (List) featureList.get(orderKey);
+
         if (orderFeatureList == null) {
             throw new IllegalArgumentException("Cannot build feature tree: orderFeatureList is null for orderKey=" + orderKey);
         }
-        
+
         Iterator featureListIt = orderFeatureList.iterator();
+
         while (featureListIt.hasNext()) {
             String featureStr = (String) featureListIt.next();
+
             if (tempGroup.containsKey(featureStr))
                 group.put(featureStr, tempGroup.get(featureStr));
         }
@@ -464,12 +500,15 @@ public class ProductServices {
 
         // loop through the keysets and get the sub-groups
         Iterator groupIterator = group.keySet().iterator();
+
         while (groupIterator.hasNext()) {
             Object key = groupIterator.next();
             List itemList = (List) group.get(key);
+
             if (itemList == null || itemList.size() == 0)
                 throw new IllegalStateException("Cannot create tree from an empty list; error on '" + key + "'");
             Map subGroup = makeGroup(delegator, featureList, itemList, order, index + 1);
+
             group.put(key, subGroup);
         }
         return group;
@@ -480,12 +519,14 @@ public class ProductServices {
         Map tempSample = new HashMap();
         Map sample = new OrderedMap();
         Iterator itemIt = items.iterator();
+
         while (itemIt.hasNext()) {
             String productId = (String) itemIt.next();
             List features = null;
+
             try {
                 Map fields = UtilMisc.toMap("productId", productId, "productFeatureTypeId", feature,
-                                            "productFeatureApplTypeId", "STANDARD_FEATURE");
+                        "productFeatureApplTypeId", "STANDARD_FEATURE");
                 List sort = UtilMisc.toList("sequenceNum");
 
                 // get the features and filter out expired dates
@@ -495,11 +536,14 @@ public class ProductServices {
                 throw new IllegalStateException("Problem reading relation: " + e.getMessage());
             }
             Iterator featureIt = features.iterator();
+
             while (featureIt.hasNext()) {
                 GenericValue featureAppl = (GenericValue) featureIt.next();
+
                 try {
                     GenericValue product = delegator.findByPrimaryKeyCache("Product",
                             UtilMisc.toMap("productId", productId));
+
                     tempSample.put(featureAppl.getString("description"), product);
                 } catch (GenericEntityException e) {
                     throw new RuntimeException("Cannot get product entity: " + e.getMessage());
@@ -510,8 +554,10 @@ public class ProductServices {
         // Sort the sample based on the feature list.
         List features = (LinkedList) featureList.get(feature);
         Iterator fi = features.iterator();
+
         while (fi.hasNext()) {
             String f = (String) fi.next();
+
             if (tempSample.containsKey(f))
                 sample.put(f, tempSample.get(f));
         }

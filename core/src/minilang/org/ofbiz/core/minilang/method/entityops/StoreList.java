@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.entityops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.entity.*;
+
 
 /**
  * Uses the delegator to store the specified value object list in the datasource
@@ -51,9 +53,10 @@ public class StoreList extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         List values = (List) methodContext.getEnv(listName);
-        
+
         if (values == null) {
             String errMsg = "In store-list a value list was not found with the specified listName: " + listName + ", not storing";
+
             Debug.logInfo(errMsg);
         }
 
@@ -62,6 +65,7 @@ public class StoreList extends MethodOperation {
         } catch (GenericEntityException e) {
             Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem storing the " + listName + " value list: " + e.getMessage() + "]";
+
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());

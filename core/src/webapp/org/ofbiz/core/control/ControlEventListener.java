@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.control;
 
+
 import java.net.*;
 import java.sql.*;
 import java.util.*;
@@ -43,27 +44,29 @@ import org.ofbiz.core.stats.*;
  *@version    1.0
  */
 public class ControlEventListener implements HttpSessionListener {
-    //Debug module name
+    // Debug module name
     public static final String module = ControlEventListener.class.getName();
-    
+
     protected static long totalActiveSessions = 0;
     protected static long totalPassiveSessions = 0;
-    
-    public ControlEventListener() { }
-    
+
+    public ControlEventListener() {}
+
     public void sessionCreated(HttpSessionEvent event) {
         HttpSession session = event.getSession();
-        //get/create the visit
-        //NOTE: don't create the visit here, just let the control servlet do it; GenericValue visit = VisitHandler.getVisit(session);
+
+        // get/create the visit
+        // NOTE: don't create the visit here, just let the control servlet do it; GenericValue visit = VisitHandler.getVisit(session);
 
         countCreateSession();
 
         Debug.logInfo("Creating session: " + event.getSession().toString(), module);
     }
-    
+
     public void sessionDestroyed(HttpSessionEvent event) {
         HttpSession session = event.getSession();
         GenericValue visit = VisitHandler.getVisit(session);
+
         if (visit != null) {
             visit.set("thruDate", new Timestamp(session.getLastAccessedTime()));
             try {
@@ -72,37 +75,37 @@ public class ControlEventListener implements HttpSessionListener {
                 Debug.logError(e, "Could not update visit for session destuction: ", module);
             }
         }
-        
+
         countDestroySession();
 
         Debug.logInfo("Destroying session: " + event.getSession().toString(), module);
     }
-    
+
     public static long getTotalActiveSessions() {
         return totalActiveSessions;
     }
-    
+
     public static long getTotalPassiveSessions() {
         return totalPassiveSessions;
     }
-    
+
     public static long getTotalSessions() {
         return totalActiveSessions + totalPassiveSessions;
     }
-    
+
     public static void countCreateSession() {
         totalActiveSessions++;
     }
-    
+
     public static void countDestroySession() {
         totalActiveSessions--;
     }
-    
+
     public static void countPassivateSession() {
         totalActiveSessions--;
         totalPassiveSessions++;
     }
-    
+
     public static void countActivateSession() {
         totalActiveSessions++;
         totalPassiveSessions--;

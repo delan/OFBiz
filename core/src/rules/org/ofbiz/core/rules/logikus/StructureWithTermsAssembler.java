@@ -25,10 +25,12 @@
 
 package org.ofbiz.core.rules.logikus;
 
+
 import java.util.*;
 import org.ofbiz.core.rules.engine.*;
 import org.ofbiz.core.rules.parse.*;
 import org.ofbiz.core.rules.parse.tokens.*;
+
 
 /**
  * Pops the terms and functor of a structure from an assembly's stack, builds a structure, and pushes it.
@@ -37,6 +39,7 @@ import org.ofbiz.core.rules.parse.tokens.*;
  * @version 1.0
  */
 public class StructureWithTermsAssembler extends Assembler {
+
     /**
      * Reverse a vector into an array of terms.
      *
@@ -46,11 +49,13 @@ public class StructureWithTermsAssembler extends Assembler {
     public static Term[] vectorReversedIntoTerms(List v) {
         int size = v.size();
         Term[] terms = new Term[size];
+
         for (int i = 0; i < size; i++) {
             terms[size - 1 - i] = (Term) v.get(i);
         }
         return terms;
     }
+
     /**
      * Pops the terms and functor of a structure from an assembly's
      * stack, builds a structure, and pushes it.
@@ -69,6 +74,7 @@ public class StructureWithTermsAssembler extends Assembler {
         List termVector = elementsAbove(a, new Token('('));
         Term[] termArray = vectorReversedIntoTerms(termVector);
         Token t = (Token) a.pop();
+
         a.push(new Structure(t.value(), termArray));
     }
 }

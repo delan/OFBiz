@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.service;
 
+
 import java.util.*;
 
 import org.ofbiz.core.util.*;
@@ -38,6 +39,7 @@ import org.ofbiz.core.security.*;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
 
 /**
  * Global Service Dispatcher
@@ -81,6 +83,7 @@ public class ServiceDispatcher {
      */
     public static ServiceDispatcher getInstance(String name, GenericDelegator delegator) {
         ServiceDispatcher sd = getInstance(null, null, delegator);
+
         if (!sd.containsContext(name))
             return null;
         return sd;
@@ -95,6 +98,7 @@ public class ServiceDispatcher {
      */
     public static ServiceDispatcher getInstance(String name, DispatchContext context, GenericDelegator delegator) {
         ServiceDispatcher sd = null;
+
         sd = (ServiceDispatcher) dispatchers.get(delegator.getDelegatorName());
         if (sd == null) {
             synchronized (ServiceDispatcher.class) {
@@ -133,6 +137,7 @@ public class ServiceDispatcher {
     public Map runSync(String localName, ModelService service, Map context) throws GenericServiceException {
         // start the transaction
         boolean beganTrans = false;
+
         if (service.useTransaction) {
             try {
                 beganTrans = TransactionUtil.begin();
@@ -142,18 +147,21 @@ public class ServiceDispatcher {
         }
 
         try {
-            //get eventMap once for all calls for speed, don't do event calls if it is null
+            // get eventMap once for all calls for speed, don't do event calls if it is null
             Map eventMap = ECAUtil.getServiceEventMap(service.name);
+
             // pre-auth ECA
             if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context, null, false);
 
             context = checkAuth(localName, context, service);
             Object userLogin = context.get("userLogin");
+
             if (service.auth && userLogin == null)
                 throw new ServiceAuthException("User authorization is required for this service");
 
             // setup the engine
             GenericEngine engine = getGenericEngine(service.engineName);
+
             engine.setLoader(localName);
 
             // pre-validate ECA
@@ -173,18 +181,19 @@ public class ServiceDispatcher {
 
             if (Debug.verboseOn()) {
                 Debug.logVerbose("[ServiceDispatcher.runSync] : invoking service [" + service.location +
-                        "/" + service.invoke + "] (" + service.engineName + ")", module);
+                    "/" + service.invoke + "] (" + service.engineName + ")", module);
             }
 
             // ===== invoke the service =====
             Map result = engine.runSync(service, context);
-            
-            //if anything but the error response, is not an error
+
+            // if anything but the error response, is not an error
             boolean isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
-            
-            //create a new context with the results to pass to ECA services; necessary because caller may reuse this context
+
+            // create a new context with the results to pass to ECA services; necessary because caller may reuse this context
             Map ecaContext = new HashMap(context);
-            //copy all results: don't worry parameters that aren't allowed won't be passed to the ECA services
+
+            // copy all results: don't worry parameters that aren't allowed won't be passed to the ECA services
             ecaContext.putAll(result);
 
             // validate the result
@@ -232,6 +241,7 @@ public class ServiceDispatcher {
     public void runSyncIgnore(String localName, ModelService service, Map context) throws GenericServiceException {
         // start the transaction
         boolean beganTrans = false;
+
         if (service.useTransaction) {
             try {
                 beganTrans = TransactionUtil.begin();
@@ -249,11 +259,13 @@ public class ServiceDispatcher {
 
             context = checkAuth(localName, context, service);
             Object userLogin = context.get("userLogin");
+
             if (service.auth && userLogin == null)
                 throw new ServiceAuthException("User authorization is required for this service");
 
             // setup the engine
             GenericEngine engine = getGenericEngine(service.engineName);
+
             engine.setLoader(localName);
 
             // pre-validate ECA
@@ -273,7 +285,7 @@ public class ServiceDispatcher {
 
             if (Debug.verboseOn()) {
                 Debug.logVerbose("[ServiceDispatcher.runSyncIgnore] : invoking service [" + service.location + "/" + service.invoke +
-                        "] (" + service.engineName + ")", module);
+                    "] (" + service.engineName + ")", module);
             }
 
             engine.runSyncIgnore(service, context);
@@ -319,11 +331,13 @@ public class ServiceDispatcher {
 
         context = checkAuth(localName, context, service);
         Object userLogin = context.get("userLogin");
+
         if (service.auth && userLogin == null)
             throw new ServiceAuthException("User authorization is required for this service");
 
         // setup the engine
         GenericEngine engine = getGenericEngine(service.engineName);
+
         engine.setLoader(localName);
 
         // pre-validate ECA
@@ -340,7 +354,7 @@ public class ServiceDispatcher {
 
         if (Debug.verboseOn()) {
             Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
-                    "] (" + service.engineName + ")", module);
+                "] (" + service.engineName + ")", module);
         }
 
         engine.runAsync(service, context, requester, persist);
@@ -364,11 +378,13 @@ public class ServiceDispatcher {
 
         context = checkAuth(localName, context, service);
         Object userLogin = context.get("userLogin");
+
         if (service.auth && userLogin == null)
             throw new ServiceAuthException("User authorization is required for this service");
 
         // setup the engine
         GenericEngine engine = getGenericEngine(service.engineName);
+
         engine.setLoader(localName);
 
         // pre-validate ECA
@@ -385,7 +401,7 @@ public class ServiceDispatcher {
 
         if (Debug.verboseOn()) {
             Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
-                    "] (" + service.engineName + ")", module);
+                "] (" + service.engineName + ")", module);
         }
 
         engine.runAsync(service, context, persist);
@@ -454,19 +470,22 @@ public class ServiceDispatcher {
     // checks if parameters were passed for authentication
     private Map checkAuth(String localName, Map context, ModelService origService) throws GenericServiceException {
         String service = ServiceConfigUtil.getElementAttr("authorization", "service-name");
+
         if (service == null) {
             throw new GenericServiceException("No Authentication Service Defined");
         }
         if (service.equals(origService.name)) {
-            //manually calling the auth service, don't continue...
+            // manually calling the auth service, don't continue...
             return context;
         }
 
         if (context.containsKey("login.username")) {
             // check for a username/password, if there log the user in and make the userLogin object
             String username = (String) context.get("login.username");
+
             if (context.containsKey("login.password")) {
                 String password = (String) context.get("login.password");
+
                 context.put("userLogin", getLoginObject(service, localName, username, password));
                 context.remove("login.password");
             } else {
@@ -474,13 +493,15 @@ public class ServiceDispatcher {
             }
             context.remove("login.username");
         } else {
-            //if a userLogin object is there, make sure the given username/password exists in our local database
+            // if a userLogin object is there, make sure the given username/password exists in our local database
             GenericValue userLogin = (GenericValue) context.get("userLogin");
+
             if (userLogin != null) {
                 GenericValue newUserLogin = getLoginObject(service, localName, userLogin.getString("userLoginId"), userLogin.getString("currentPassword"));
+
                 if (newUserLogin == null) {
-                    //uh oh, couldn't validate that one...
-                    //we'll have to remove it from the incoming context which will cause an auth error later if auth is required
+                    // uh oh, couldn't validate that one...
+                    // we'll have to remove it from the incoming context which will cause an auth error later if auth is required
                     context.remove("userLogin");
                 }
             }
@@ -490,18 +511,21 @@ public class ServiceDispatcher {
 
     // gets a value object from name/password pair
     private GenericValue getLoginObject(String service, String localName, String username, String password)
-            throws GenericServiceException {
+        throws GenericServiceException {
         Map context = UtilMisc.toMap("login.username", username, "login.password", password, "isServiceAuth", new Boolean(true));
+
         if (Debug.verboseOn()) Debug.logVerbose("[ServiceDispathcer.authenticate] : Invoking UserLogin Service", module);
 
         // Manually invoke the service
         DispatchContext dctx = getLocalContext(localName);
         ModelService model = dctx.getModelService(service);
         GenericEngine engine = getGenericEngine(model.engineName);
+
         engine.setLoader(localName);
         Map result = engine.runSync(model, context);
 
         GenericValue value = (GenericValue) result.get("userLogin");
+
         return value;
     }
 }

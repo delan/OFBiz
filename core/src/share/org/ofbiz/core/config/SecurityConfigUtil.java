@@ -23,9 +23,11 @@
 
 package org.ofbiz.core.config;
 
+
 import java.util.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * <code>SecurityConfigUtil</code>
@@ -40,12 +42,12 @@ import org.ofbiz.core.util.*;
  * @version    $Revision$
  */
 public class SecurityConfigUtil {
-    
+
     /** The security config filename */
     public static final String SECURITY_CONFIG_XML_FILENAME = "security.xml";
-    
+
     protected static Map securityInfos = new HashMap();
-    
+
     /**
      * Returns the XmlRootElement for the security config
      *
@@ -55,7 +57,7 @@ public class SecurityConfigUtil {
     public static Element getXmlRootElement() throws GenericConfigException {
         return ResourceLoader.getXmlRootElement(SecurityConfigUtil.SECURITY_CONFIG_XML_FILENAME);
     }
-    
+
     /**
      * Returns the XmlDocument for the security config
      *
@@ -65,7 +67,7 @@ public class SecurityConfigUtil {
     public static Document getXmlDocument() throws GenericConfigException {
         return ResourceLoader.getXmlDocument(SecurityConfigUtil.SECURITY_CONFIG_XML_FILENAME);
     }
-    
+
     static {
         try {
             initialize(getXmlRootElement());
@@ -73,7 +75,7 @@ public class SecurityConfigUtil {
             Debug.logError(e, "Error loading Security config XML file " + SECURITY_CONFIG_XML_FILENAME);
         }
     }
-    
+
     /**
      * Initializes the security configuration
      *
@@ -83,18 +85,19 @@ public class SecurityConfigUtil {
     public static void initialize(Element rootElement) throws GenericConfigException {
         List childElements = null;
         Iterator elementIter = null;
-        
+
         // security-config - securityInfos
         childElements = UtilXml.childElementList(rootElement, "security");
         elementIter = childElements.iterator();
         while (elementIter.hasNext()) {
             Element curElement = (Element) elementIter.next();
             SecurityConfigUtil.SecurityInfo securityInfo = new SecurityConfigUtil.SecurityInfo(curElement);
+
             if (Debug.verboseOn()) Debug.logVerbose("LOADED SECURITY CONFIG FROM XML -  NAME: " + securityInfo.name + " ClassName: " + securityInfo.className);
             SecurityConfigUtil.securityInfos.put(securityInfo.name, securityInfo);
         }
     }
-    
+
     /**
      * Returns the security config for a given name
      *
@@ -104,14 +107,14 @@ public class SecurityConfigUtil {
     public static SecurityConfigUtil.SecurityInfo getSecurityInfo(String name) {
         return (SecurityConfigUtil.SecurityInfo) securityInfos.get(name);
     }
-    
+
     /**
      * <code>SecurityInfo</code>
      */
     public static class SecurityInfo {
         public String name;
         public String className;
-        
+
         /**
          * Creates a SecurityInfo for a given element
          *

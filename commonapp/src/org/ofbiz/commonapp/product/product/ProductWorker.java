@@ -23,6 +23,7 @@
 
 package org.ofbiz.commonapp.product.product;
 
+
 import java.util.*;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.http.HttpSession;
@@ -31,6 +32,7 @@ import javax.servlet.ServletRequest;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.stats.*;
+
 
 /**
  * Product Worker class to reduce code in JSPs.
@@ -57,8 +59,9 @@ public class ProductWorker {
             return;
 
         GenericValue product = null;
+
         try {
-            product = delegator.findByPrimaryKey("Product",UtilMisc.toMap("productId", productId));
+            product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             product = null;
@@ -91,7 +94,7 @@ public class ProductWorker {
     public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String categoryId) {
         getKeywordSearchProducts(pageContext, attributePrefix, categoryId, false, false, "OR");
     }
-    
+
     /**
      * Puts the following into the pageContext attribute list with a prefix if specified:
      *  searchProductList, keywordString, viewIndex, viewSize, lowIndex, highIndex, listSize
@@ -108,8 +111,9 @@ public class ProductWorker {
             Debug.logWarning("intraKeywordOperator [" + intraKeywordOperator + "] was not valid, defaulting to OR");
             intraKeywordOperator = "OR";
         }
-        
+
         int viewIndex = 0;
+
         try {
             viewIndex = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_INDEX")).intValue();
         } catch (Exception e) {
@@ -117,6 +121,7 @@ public class ProductWorker {
         }
 
         int viewSize = 10;
+
         try {
             viewSize = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_SIZE")).intValue();
         } catch (Exception e) {
@@ -129,11 +134,12 @@ public class ProductWorker {
 
         ArrayList productIds = (ArrayList) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
         String resultArrayName = (String) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
+
         if (productIds == null || resultArrayName == null || !curFindString.equals(resultArrayName)) { // || viewIndex == 0
             if (Debug.infoOn()) Debug.logInfo("KeywordSearch productId Array not found in session, getting new one...");
             if (Debug.infoOn()) Debug.logInfo("curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
 
-            //productIds will be pre-sorted
+            // productIds will be pre-sorted
             productIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, VisitHandler.getVisitId(pageContext.getSession()), anyPrefix, anySuffix, intraKeywordOperator);
 
             if (productIds != null) {
@@ -148,14 +154,17 @@ public class ProductWorker {
         int lowIndex = viewIndex * viewSize + 1;
         int highIndex = (viewIndex + 1) * viewSize;
         int listSize = 0;
+
         if (productIds != null)
             listSize = productIds.size();
         if (listSize < highIndex)
             highIndex = listSize;
 
         ArrayList products = new ArrayList();
+
         for (int ind = lowIndex; ind <= highIndex; ind++) {
             GenericValue prod = null;
+
             try {
                 prod = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productIds.get(ind - 1)));
             } catch (GenericEntityException e) {
@@ -171,12 +180,13 @@ public class ProductWorker {
         pageContext.setAttribute(attributePrefix + "highIndex", new Integer(highIndex));
         pageContext.setAttribute(attributePrefix + "listSize", new Integer(listSize));
         pageContext.setAttribute(attributePrefix + "keywordString", keywordString);
-        if (products.size() > 0) pageContext.setAttribute(attributePrefix + "searchProductList",products);
+        if (products.size() > 0) pageContext.setAttribute(attributePrefix + "searchProductList", products);
     }
 
     public static void getAssociatedProducts(PageContext pageContext, String productAttributeName, String assocPrefix) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         GenericValue product = (GenericValue) pageContext.getAttribute(productAttributeName);
+
         if (product == null)
             return;
 
@@ -193,7 +203,7 @@ public class ProductWorker {
             List obsoleteByProducts = product.getRelatedByAndCache("MainProductAssoc",
                     UtilMisc.toMap("productAssocTypeId", "PRODUCT_OBSOLESCENCE"));
 
-            //since ProductAssoc records have a fromDate and thruDate, we can filter by now so that only assocs in the date range are included
+            // since ProductAssoc records have a fromDate and thruDate, we can filter by now so that only assocs in the date range are included
             upgradeProducts = EntityUtil.filterByDate(upgradeProducts, true);
             complementProducts = EntityUtil.filterByDate(complementProducts, true);
             obsolescenceProducts = EntityUtil.filterByDate(obsolescenceProducts, true);

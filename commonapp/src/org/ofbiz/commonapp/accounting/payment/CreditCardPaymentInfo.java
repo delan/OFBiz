@@ -24,7 +24,9 @@
 
 package org.ofbiz.commonapp.accounting.payment;
 
+
 import org.ofbiz.core.entity.GenericValue;
+
 
 /**
  * EFTPaymentInfo.java
@@ -38,8 +40,7 @@ public class CreditCardPaymentInfo extends PaymentInfo {
     /** Holds value of property creditCardInfo. */
     private GenericValue creditCard;
 
-    public CreditCardPaymentInfo() {
-    }
+    public CreditCardPaymentInfo() {}
 
     /** Creates a new instance of CreditCardPaymentInfo */
     public CreditCardPaymentInfo(GenericValue creditCard) {

@@ -24,7 +24,9 @@
 
 package org.ofbiz.commonapp.order.order;
 
+
 import org.ofbiz.core.util.UtilFormatOut;
+
 
 /**
  * Order Adjustment Helper Class
@@ -39,25 +41,25 @@ public class Adjustment {
     public static final String SALES_TAX_TYPE_ID = "SALES_TAX";
     private String description;
     private double amount;
-    
+
     /** Holds value of property typeId. */
     private String typeId;
-    
+
     public Adjustment(String description, double amount) {
         this.description = description;
         this.amount = amount;
     }
-    
+
     public Adjustment(String description, double amount, String typeId) {
         this(description, amount);
         this.typeId = typeId;
     }
-    
+
     public Adjustment(String description, double percentage, double basePrice) {
         this(description, percentage * basePrice);
         prependDescription(UtilFormatOut.formatPercentage(percentage) + " ");
     }
-    
+
     /** only and at least one of the amount or percentage must be specified */
     public Adjustment(String description, Double amount, Double percentage, double basePrice) {
         this.description = description;
@@ -70,31 +72,31 @@ public class Adjustment {
             }
         } else {
             throw new IllegalArgumentException(
-            "Either amount or percentage must be specified for adjustment");
+                    "Either amount or percentage must be specified for adjustment");
         }
     }
-    
+
     /** include the percentage amount, if applicable */
     public String getDescription() {
         return description;
     }
-    
+
     public void prependDescription(String prefix) {
         description = prefix + description;
     }
-    
+
     /** uses either the amount or percentage */
     public double getAmount() {
         return amount;
     }
-    
+
     /** Getter for property typeId.
      * @return Value of property typeId.
      */
     public String getTypeId() {
         return this.typeId;
     }
-    
+
     /** Setter for property typeId.
      * @param typeId New value of property typeId.
      */

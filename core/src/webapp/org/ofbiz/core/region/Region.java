@@ -26,6 +26,7 @@
 
 package org.ofbiz.core.region;
 
+
 import java.net.*;
 import java.util.*;
 import javax.servlet.jsp.PageContext;
@@ -36,6 +37,7 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * A region is content that contains a set of sections that can render in a PageContext
@@ -96,6 +98,7 @@ public class Region extends Content {
                 throw new JspException(e.toString());
         } catch (ServletException e) {
             Throwable throwable = e.getRootCause() != null ? e.getRootCause() : e;
+
             Debug.logError(throwable, "Error rendering region: ");
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext()))
                 throw new JspException(throwable);
@@ -108,6 +111,7 @@ public class Region extends Content {
         if (Debug.verboseOn()) Debug.logVerbose("Rendering " + this.toString());
 
         RequestDispatcher rd = request.getRequestDispatcher(content);
+
         if (rd == null) {
             throw new IllegalArgumentException("Source returned a null dispatcher (" + content + ")");
         }
@@ -116,17 +120,18 @@ public class Region extends Content {
 
     public String toString() {
         String s = "Region: " + content + ", type=" + type;
-        /*
-        int indent = 4;
-        Iterator iter = sections.values().iterator();
 
-        while (iter.hasNext()) {
-            Section section = (Section) iter.next();
-            for (int i = 0; i < indent; ++i) {
-                s += "&nbsp;";
-            }
-            s += section.toString() + "<br/>";
-        }
+        /*
+         int indent = 4;
+         Iterator iter = sections.values().iterator();
+
+         while (iter.hasNext()) {
+         Section section = (Section) iter.next();
+         for (int i = 0; i < indent; ++i) {
+         s += "&nbsp;";
+         }
+         s += section.toString() + "<br/>";
+         }
          */
         return s;
     }

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.event;
 
+
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
@@ -37,6 +38,7 @@ import org.apache.log4j.Category;
 import org.w3c.dom.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * SOAPEventHandler - SOAP Event Handler implementation
@@ -62,6 +64,7 @@ public class SOAPEventHandler implements EventHandler {
         HttpSession session = request.getSession();
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         AxisServer axisServer;
+
         try {
             axisServer = AxisServer.getServer(UtilMisc.toMap("name", "OFBiz/Axis Server", "provider", null));
         } catch (AxisFault e) {
@@ -72,9 +75,10 @@ public class SOAPEventHandler implements EventHandler {
 
         // get the SOAP message
         Message msg = null;
+
         try {
             msg = new Message(request.getInputStream(), false,
-                              request.getHeader("Content-Type"), request.getHeader("Content-Location"));
+                        request.getHeader("Content-Type"), request.getHeader("Content-Location"));
         } catch (IOException ioe) {
             throw new EventHandlerException("Cannot read the input stream", ioe);
         }
@@ -98,6 +102,7 @@ public class SOAPEventHandler implements EventHandler {
             throw new EventHandlerException("Cannot get the envelope", e);
         }
         List bodies = null;
+
         try {
             bodies = reqEnv.getBodyElements();
         } catch (AxisFault e) {
@@ -109,12 +114,15 @@ public class SOAPEventHandler implements EventHandler {
 
         // each is a different service call
         Iterator i = bodies.iterator();
+
         while (i.hasNext()) {
             Object o = i.next();
+
             if (o instanceof RPCElement) {
                 RPCElement body = (RPCElement) o;
                 String serviceName = body.getMethodName();
                 List params = null;
+
                 try {
                     params = body.getParams();
                 } catch (Exception e) {
@@ -123,25 +131,32 @@ public class SOAPEventHandler implements EventHandler {
                 }
                 Map serviceContext = new HashMap();
                 Iterator p = params.iterator();
+
                 while (p.hasNext()) {
                     RPCParam param = (RPCParam) p.next();
+
                     if (Debug.verboseOn()) Debug.logVerbose("[Reading Param]: " + param.getName(), module);
                     serviceContext.put(param.getName(), param.getValue());
                 }
                 try {
                     // verify the service is exported for remote execution and invoke it
                     ModelService model = dispatcher.getDispatchContext().getModelService(serviceName);
+
                     if (model != null && model.export) {
                         Map result = dispatcher.runSync(serviceName, serviceContext);
+
                         Debug.logVerbose("[EventHandler] : Service invoked", module);
                         RPCElement resBody = new RPCElement(serviceName + "Response");
+
                         resBody.setPrefix(body.getPrefix());
                         resBody.setNamespaceURI(body.getNamespaceURI());
                         Set keySet = result.keySet();
                         Iterator ri = keySet.iterator();
+
                         while (ri.hasNext()) {
                             Object key = ri.next();
                             RPCParam par = new RPCParam(((String) key), result.get(key));
+
                             resBody.addParam(par);
                         }
                         resEnv.addBodyElement(resBody);
@@ -188,6 +203,7 @@ public class SOAPEventHandler implements EventHandler {
 
     private void sendError(HttpServletResponse res, Object obj) throws EventHandlerException {
         Message msg = new Message(obj);
+
         try {
             res.setContentType(msg.getContentType());
             res.setContentLength(msg.getContentLength());

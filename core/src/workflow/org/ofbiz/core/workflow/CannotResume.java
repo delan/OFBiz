@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * CannotResume Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class CannotResume extends WfException {
 
-    public CannotResume() {
-    }
+    public CannotResume() {}
 
     public CannotResume(String msg) {
         super(msg);

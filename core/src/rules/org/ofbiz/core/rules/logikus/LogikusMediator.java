@@ -25,12 +25,14 @@
 
 package org.ofbiz.core.rules.logikus;
 
+
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import org.ofbiz.core.rules.engine.*;
 import org.ofbiz.core.rules.utensil.*;
+
 
 /**
  * This class supports a <code>LogikusIde</code> object, handling the interaction of the IDE's components.
@@ -61,19 +63,20 @@ public class LogikusMediator implements ActionListener, Runnable {
     protected JButton haltButton;
     protected JButton clearProgramButton;
     protected JButton clearResultsButton;
-    
+
     protected JTextArea programArea;
     protected JTextArea resultsArea;
     protected JTextArea queryArea;
-    
+
     protected boolean proveRemaining;
-    
+
     protected Thread computeThread;
-    
+
     protected String lastProgramText = null;
     protected String lastQueryText = null;
     protected Program program;
     protected Query query;
+
     /**
      * This method reacts, when the user presses one of the
      * IDE's buttons.
@@ -82,6 +85,7 @@ public class LogikusMediator implements ActionListener, Runnable {
      */
     public void actionPerformed(ActionEvent event) {
         Object object = event.getSource();
+
         if (object == clearResultsButton) {
             resultsArea.selectAll();
             resultsArea.copy();
@@ -93,23 +97,25 @@ public class LogikusMediator implements ActionListener, Runnable {
             programArea.setText("");
             queryArea.setText("");
         }
-        
+
         if (object == proveNextButton ||
-        object == proveRestButton) {
-            
+            object == proveRestButton) {
+
             proveRemaining = (object == proveRestButton);
             conductProof();
         }
         if (object == haltButton) {
-        /*
-      if (computeThread != null) {
-        computeThread.stop();
-      }
-         */
+
+            /*
+             if (computeThread != null) {
+             computeThread.stop();
+             }
+             */
             computeThread = null;
             setComputing(false);
         }
     }
+
     /**
      * Parse the program and query (if they have changed)
      * and proved the query in a separate thread.
@@ -120,6 +126,7 @@ public class LogikusMediator implements ActionListener, Runnable {
             parseProgramAndQuery();
         } catch (Exception e) {
             String text = e.toString();
+
             if (e.getMessage() != null) {
                 text = e.getMessage();
             }
@@ -131,6 +138,7 @@ public class LogikusMediator implements ActionListener, Runnable {
         computeThread.start();
         // this thread will setComputing(false) in due time.
     }
+
     /**
      * Appends the given line to the results text area,
      * scheduling this event with the event-dispatching thread.
@@ -141,32 +149,34 @@ public class LogikusMediator implements ActionListener, Runnable {
     protected void display(final String s) {
         // Using invokeAndWait() keeps appends from outrunning
         // the event dispatch thread.
-        
+
         Runnable r = new Runnable() {
-            public void run() {
-                resultsArea.append(s);
-            }
-        };
+                public void run() {
+                    resultsArea.append(s);
+                }
+            };
+
         try {
             SwingUtilities.invokeAndWait(r);
         } catch (Exception e) {
             resultsArea.append(e.getMessage());
         }
     }
+
     /**
      * Make the IDE's GUI components available.
      */
     public void initialize
     (
-    JButton proveNextButton,
-    JButton proveRestButton,
-    JButton haltButton,
-    JButton clearProgramButton,
-    JButton clearResultsButton,
-    JTextArea programArea,
-    JTextArea resultsArea,
-    JTextArea queryArea) {
-        
+        JButton proveNextButton,
+        JButton proveRestButton,
+        JButton haltButton,
+        JButton clearProgramButton,
+        JButton clearResultsButton,
+        JTextArea programArea,
+        JTextArea resultsArea,
+        JTextArea queryArea) {
+
         this.proveNextButton = proveNextButton;
         this.proveRestButton = proveRestButton;
         this.haltButton = haltButton;
@@ -176,39 +186,43 @@ public class LogikusMediator implements ActionListener, Runnable {
         this.resultsArea = resultsArea;
         this.queryArea = queryArea;
     }
+
     /**
      * Parses the program and query texts.
      */
     protected void parseProgramAndQuery() {
-        
+
         boolean programChanged = false;
         String programText = programArea.getText();
+
         programChanged =
-        (lastProgramText == null) ||
-        (!lastProgramText.equals(programText));
+                (lastProgramText == null) ||
+                (!lastProgramText.equals(programText));
         if (programChanged) {
             program = LogikusFacade.program(programText);
         }
         lastProgramText = programText;
-        
+
         String queryText = queryArea.getText();
-        
+
         // create a fresh query if the program changes or the
         // query text changes
-        
+
         if (programChanged ||
-        (lastQueryText == null) ||
-        (!lastQueryText.equals(queryText))) {
+            (lastQueryText == null) ||
+            (!lastQueryText.equals(queryText))) {
             query = LogikusFacade.query(queryText, program);
         }
         lastQueryText = queryText;
     }
+
     /**
      * Proves the query against the program.
      */
     protected void proveNext() {
         if (query.canFindNextProof()) {
             Unification vars = query.variables();
+
             if (vars.size() == 0) {
                 display("yes\n");
             } else {
@@ -218,12 +232,14 @@ public class LogikusMediator implements ActionListener, Runnable {
             display("no\n");
         }
     }
+
     /**
      * Proves the query against the program until no proofs
      * remain.
      */
     protected void proveRemaining() {
         Unification vars = query.variables();
+
         while (query.canFindNextProof()) {
             if (vars.size() == 0) {
                 display("yes\n");
@@ -234,6 +250,7 @@ public class LogikusMediator implements ActionListener, Runnable {
         }
         display("no\n");
     }
+
     /**
      * Proves the query against the program.
      */
@@ -250,6 +267,7 @@ public class LogikusMediator implements ActionListener, Runnable {
             setComputing(false);
         }
     }
+
     /**
      * Sets the state of the IDE to computing or not. Most of the
      * IDE's controls are grayed out during computation of a
@@ -259,9 +277,9 @@ public class LogikusMediator implements ActionListener, Runnable {
      *                   is finding one or more proofs
      */
     protected void setComputing(boolean computing) {
-        
+
         // computing means everything is disabled, except "Halt"
-        
+
         proveNextButton.setEnabled(!computing);
         proveRestButton.setEnabled(!computing);
         clearProgramButton.setEnabled(!computing);
@@ -269,7 +287,7 @@ public class LogikusMediator implements ActionListener, Runnable {
         programArea.setEnabled(!computing);
         resultsArea.setEnabled(!computing);
         queryArea.setEnabled(!computing);
-        
+
         haltButton.setEnabled(computing);
     }
 }

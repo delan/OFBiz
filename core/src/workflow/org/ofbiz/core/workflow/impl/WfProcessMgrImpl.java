@@ -25,11 +25,13 @@
 
 package org.ofbiz.core.workflow.impl;
 
+
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
+
 
 /**
  * WfProcessMgrImpl - Workflow Process Manager implementation
@@ -56,13 +58,15 @@ public class WfProcessMgrImpl implements WfProcessMgr {
      * @throws WfException
      */
     public WfProcessMgrImpl(GenericDelegator delegator, String packageId, String packageVersion,
-                            String processId, String processVersion) throws WfException {
+        String processId, String processVersion) throws WfException {
         Map finder = UtilMisc.toMap("packageId", packageId, "processId", processId);
         List order = UtilMisc.toList("-packageVersion", "-processVersion");
+
         if (packageVersion != null) finder.put("packageVersion", packageVersion);
         if (processVersion != null) finder.put("processVersion", processVersion);
         try {
             List processes = delegator.findByAnd("WorkflowProcess", finder, order);
+
             if (processes.size() == 0)
                 throw new WfException("No process definition found for the specified processId");
             else
@@ -153,6 +157,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
      */
     public List processMgrStateType() throws WfException {
         String[] list = {"enabled", "disabled"};
+
         return Arrays.asList(list);
     }
 
@@ -218,14 +223,16 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         contextSignature = new HashMap();
         resultSignature = new HashMap();
         Collection params = null;
+
         try {
             Map fields = new HashMap();
+
             fields.put("packageId", processDef.getString("packageId"));
             fields.put("packageVersion", processDef.getString("processVersion"));
             fields.put("processId", processDef.getString("processId"));
             fields.put("processVersion", processDef.getString("processVersion"));
             fields.put("applicationId", "_NA_");
-            params = processDef.getDelegator().findByAnd("WorkflowFormalParam",  fields);
+            params = processDef.getDelegator().findByAnd("WorkflowFormalParam", fields);
 
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
@@ -234,11 +241,13 @@ public class WfProcessMgrImpl implements WfProcessMgr {
             return;
 
         Iterator i = params.iterator();
+
         while (i.hasNext()) {
             GenericValue param = (GenericValue) i.next();
             String name = param.getString("formalParamId");
             String mode = param.getString("modeEnumId");
             String type = param.getString("dataTypeEnumId");
+
             if (mode.equals("WPM_IN") || mode.equals("WPM_INOUT"))
                 contextSignature.put(name, getJavaType(type));
             else if (mode.equals("WPM_OUT") || mode.equals("WPM_INOUT"))
@@ -249,6 +258,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     // Gets the Java type from a XPDL datatype
     private String getJavaType(String xpdlType) {
         Map typeMap = new HashMap();
+
         typeMap.put("WDT_BOOLEAN", "java.lang.Boolean");
         typeMap.put("WDT_STRING", "java.lang.String");
         typeMap.put("WDT_INTEGER", "java.lang.Long");

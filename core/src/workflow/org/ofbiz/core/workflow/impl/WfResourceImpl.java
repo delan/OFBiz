@@ -25,11 +25,13 @@
 
 package org.ofbiz.core.workflow.impl;
 
+
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
+
 
 /**
  * WfResourceImpl - Workflow Resource Object implementation
@@ -48,7 +50,6 @@ public class WfResourceImpl implements WfResource {
     protected String partyId;
     protected String roleTypeId;
     protected String type;
-
 
     /**
      * Creates a new WfResource
@@ -169,18 +170,20 @@ public class WfResourceImpl implements WfResource {
      * @throws NotAssigned
      */
     public void release(WfAssignment fromAssignment,
-                        String releaseInfo) throws WfException, NotAssigned {
+        String releaseInfo) throws WfException, NotAssigned {
         if (!workItems().contains(fromAssignment))
             throw new NotAssigned();
-        //workItems.remove(fromAssignment);
+        // workItems.remove(fromAssignment);
         // log the transaction
     }
 
     private List workItems() throws WfException {
         List workList = new ArrayList();
         Collection c = null;
+
         try {
             Map fields = UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId);
+
             c = delegator.findByAnd("WorkEffortPartyAssignment", fields);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
@@ -188,9 +191,11 @@ public class WfResourceImpl implements WfResource {
 
         if (c != null) {
             Iterator i = c.iterator();
+
             while (i.hasNext()) {
                 GenericValue v = (GenericValue) i.next();
                 WfActivity a = null;
+
                 try {
                     a = WfFactory.getWfActivity(delegator, v.getString("workEffortId"));
                 } catch (RuntimeException e) {
@@ -204,7 +209,4 @@ public class WfResourceImpl implements WfResource {
     }
 
 }
-
-
-
 

@@ -25,6 +25,7 @@
 
 package org.ofbiz.commonapp.thirdparty.taxware;
 
+
 import java.io.*;
 import java.util.*;
 
@@ -35,6 +36,7 @@ import org.ofbiz.core.util.*;
 // supplied by Taxware UTL 2.1 -- This is not valid Java
 // This will not compile with JDK 1.4.x+
 import taxcommon;
+
 
 /**
  * TaxwareUTL - Taxware Universal Tax Link
@@ -76,8 +78,10 @@ public class TaxwareUTL {
         processed = true;
 
         Iterator i = records.iterator();
+
         while (i.hasNext()) {
             Record rec = (Record) i.next();
+
             rec = makeItemData(rec);
             outItem.addRecord(rec);
         }
@@ -85,6 +89,7 @@ public class TaxwareUTL {
         // create a shipping item
         if (shippingAmount > 0) {
             Record shipping = outItem.makeRecord("outItem");
+
             shipping = makeItemData(shipping);
             shipping.set("FREIGHT_AMOUNT", new Double(shippingAmount));
             outItem.addRecord(shipping);
@@ -92,14 +97,17 @@ public class TaxwareUTL {
 
         // make the header file
         Record header = outHead.makeRecord("outHead");
+
         header.set("NUMBER_RECORDS", new Long(outItem.getRecords().size()));
         header.set("PROCESS_INDICATOR", "1");
         outHead.addRecord(header);
 
         int returnCode = -1;
+
         try {
             // add the header
             StringBuffer outBuffer = new StringBuffer();
+
             outBuffer.append(outHead.writeDataFile());
 
             // append the items
@@ -111,6 +119,7 @@ public class TaxwareUTL {
 
             File outFile = new File("TAXWARE-TEST.IN");
             FileOutputStream fos = null;
+
             try {
                 fos = new FileOutputStream(outFile);
             } catch (FileNotFoundException e) {
@@ -148,6 +157,7 @@ public class TaxwareUTL {
 
     public void addItem(GenericValue product, double linePrice, double itemShipping) {
         Record record = outItem.makeRecord("outItem");
+
         if (product.get("taxable") == null || product.getString("taxable").equalsIgnoreCase("Y")) {
             if (product.get("taxCategory") != null)
                 record.set("COMMODITY_PRODUCT_CODE", product.get("taxCategory"));
@@ -222,6 +232,7 @@ public class TaxwareUTL {
 
     private DataFile createDataFile(String dataFile) throws TaxwareException {
         DataFile df = null;
+
         try {
             df = DataFile.makeDataFile(UtilURL.fromResource("org/ofbiz/commonapp/thirdparty/taxware/TaxwareFiles.xml"), dataFile);
         } catch (DataFileException e) {
@@ -243,6 +254,7 @@ public class TaxwareUTL {
     private StringBuffer taxCalc(StringBuffer outBuffer) throws DataFileException, TaxwareException {
         StringBuffer inBuffer = new StringBuffer();
         int result = callTaxware(outBuffer.toString(), inBuffer);
+
         if (Debug.verboseOn()) Debug.logVerbose("Taxware Return: " + result, module);
         if (result != 1)
             throw new TaxwareException("Taxware processing failed (" + result + ")");
@@ -294,15 +306,17 @@ public class TaxwareUTL {
             // make the adjustment lists
             if (itemAdjustments.size() < records.size()) {
                 List currentItem = new ArrayList();
+
                 if (rec.getDouble("TAX_AMT_COUNTRY").doubleValue() > 0) {
                     if (Debug.verboseOn()) Debug.logVerbose("Country Tax Amount: " + rec.getDouble("TAX_AMT_COUNTRY"), module);
                     Double rate = new Double(rec.getDouble("TAX_RATE_COUNTRY").doubleValue() * 100);
                     String type = rec.getString("TAX_TYPE_COUNTRY").equals("S") ? "SALES TAX" : "USE TAX";
                     String jur = rec.get("JUR_COUNTRY") != null ? rec.getString("JUR_COUNTRY").trim() : "";
                     String comments = jur + "|" + type + "|" + rate.toString();
+
                     currentItem.add(delegator.makeValue("OrderAdjustment",
                             UtilMisc.toMap("amount", rec.getDouble("TAX_AMT_COUNTRY"),
-                                    "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
+                                "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
                 }
 
                 if (rec.getDouble("TAX_AMT_STATE").doubleValue() > 0) {
@@ -310,9 +324,10 @@ public class TaxwareUTL {
                     String type = rec.getString("TAX_TYPE_STATE").equals("S") ? "SALES TAX" : "USE TAX";
                     String jur = rec.get("JUR_STATE") != null ? rec.getString("JUR_STATE").trim() : "";
                     String comments = jur + "|" + type + "|" + rate.toString();
+
                     currentItem.add(delegator.makeValue("OrderAdjustment",
                             UtilMisc.toMap("amount", rec.getDouble("TAX_AMT_STATE"),
-                                    "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
+                                "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
                 }
 
                 if (rec.getDouble("TAX_AMT_COUNTY").doubleValue() > 0) {
@@ -320,9 +335,10 @@ public class TaxwareUTL {
                     String type = rec.getString("TAX_TYPE_COUNTY").equals("S") ? "SALES TAX" : "USE TAX";
                     String jur = rec.get("JUR_COUNTY_CODE") != null ? rec.getString("JUR_COUNTY_CODE").trim() : "";
                     String comments = jur + "|" + type + "|" + rate.toString();
+
                     currentItem.add(delegator.makeValue("OrderAdjustment",
                             UtilMisc.toMap("amount", rec.getDouble("TAX_AMT_COUNTY"),
-                                    "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
+                                "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
                 }
 
                 if (rec.getDouble("TAX_AMT_CITY").doubleValue() > 0) {
@@ -330,9 +346,10 @@ public class TaxwareUTL {
                     String type = rec.getString("TAX_TYPE_CITY").equals("S") ? "SALES TAX" : "USE TAX";
                     String jur = rec.get("JUR_CITY") != null ? rec.getString("JUR_CITY").trim() : "";
                     String comments = jur + "|" + type + "|" + rate.toString();
+
                     currentItem.add(delegator.makeValue("OrderAdjustment",
                             UtilMisc.toMap("amount", rec.getDouble("TAX_AMT_CITY"),
-                                    "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
+                                "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
                 }
 
                 if (rec.getDouble("TAX_AMT_SEC_STATE").doubleValue() > 0) {
@@ -340,9 +357,10 @@ public class TaxwareUTL {
                     String type = rec.getString("TAX_TYPE_SEC_STATE").equals("S") ? "SALES TAX" : "USE TAX";
                     String jur = rec.get("JUR_SEC_STATE") != null ? rec.getString("JUR_SEC_STATE").trim() : "";
                     String comments = jur + "|" + type + "|" + rate.toString();
+
                     currentItem.add(delegator.makeValue("OrderAdjustment",
                             UtilMisc.toMap("amount", rec.getDouble("TAX_AMT_SEC_STATE"),
-                                    "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
+                                "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
                 }
 
                 if (rec.getDouble("TAX_AMT_SEC_COUNTY").doubleValue() > 0) {
@@ -350,9 +368,10 @@ public class TaxwareUTL {
                     String type = rec.getString("TAX_TYPE_SEC_COUNTY").equals("S") ? "SALES TAX" : "USE TAX";
                     String jur = rec.get("JUR_SEC_COUNTY_CODE") != null ? rec.getString("JUR_SEC_COUNTY_CODE").trim() : "";
                     String comments = jur + "|" + type + "|" + rate.toString();
+
                     currentItem.add(delegator.makeValue("OrderAdjustment",
                             UtilMisc.toMap("amount", rec.getDouble("TAX_AMT_SEC_COUNTY"),
-                                    "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
+                                "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
                 }
 
                 if (rec.getDouble("TAX_AMT_SEC_CITY").doubleValue() > 0) {
@@ -360,9 +379,10 @@ public class TaxwareUTL {
                     String type = rec.getString("TAX_TYPE_SEC_CITY").equals("S") ? "SALES TAX" : "USE TAX";
                     String jur = rec.get("JUR_SEC_CITY") != null ? rec.getString("JUR_SEC_CITY").trim() : "";
                     String comments = jur + "|" + type + "|" + rate.toString();
+
                     currentItem.add(delegator.makeValue("OrderAdjustment",
                             UtilMisc.toMap("amount", rec.getDouble("TAX_AMT_SEC_CITY"),
-                                    "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
+                                "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
                 }
 
                 // add a list of adjustments to the adjustment list
@@ -374,9 +394,10 @@ public class TaxwareUTL {
                     String type = rec.getString("TAX_TYPE_COUNTRY").equals("S") ? "SALES TAX" : "USE TAX";
                     String jur = rec.get("JUR_COUNTRY") != null ? rec.getString("JUR_COUNTRY").trim() : "";
                     String comments = jur + "|" + type + "|" + rate.toString();
+
                     orderAdjustments.add(delegator.makeValue("OrderAdjustment",
                             UtilMisc.toMap("amount", rec.getDouble("TAX_AMT_COUNTRY"),
-                                    "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
+                                "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
                 }
 
                 if (rec.getDouble("TAX_AMT_STATE").doubleValue() > 0) {
@@ -384,9 +405,10 @@ public class TaxwareUTL {
                     String type = rec.getString("TAX_TYPE_STATE").equals("S") ? "SALES TAX" : "USE TAX";
                     String jur = rec.get("JUR_STATE") != null ? rec.getString("JUR_STATE").trim() : "";
                     String comments = jur + "|" + type + "|" + rate.toString();
+
                     orderAdjustments.add(delegator.makeValue("OrderAdjustment",
                             UtilMisc.toMap("amount", rec.getDouble("TAX_AMT_STATE"),
-                                    "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
+                                "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
                 }
 
                 if (rec.getDouble("TAX_AMT_COUNTY").doubleValue() > 0) {
@@ -394,9 +416,10 @@ public class TaxwareUTL {
                     String type = rec.getString("TAX_TYPE_COUNTY").equals("S") ? "SALES TAX" : "USE TAX";
                     String jur = rec.get("JUR_COUNTY_CODE") != null ? rec.getString("JUR_COUNTY_CODE").trim() : "";
                     String comments = jur + "|" + type + "|" + rate.toString();
+
                     orderAdjustments.add(delegator.makeValue("OrderAdjustment",
                             UtilMisc.toMap("amount", rec.getDouble("TAX_AMT_COUNTY"),
-                                    "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
+                                "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
                 }
 
                 if (rec.getDouble("TAX_AMT_CITY").doubleValue() > 0) {
@@ -404,9 +427,10 @@ public class TaxwareUTL {
                     String type = rec.getString("TAX_TYPE_CITY").equals("S") ? "SALES TAX" : "USE TAX";
                     String jur = rec.get("JUR_CITY") != null ? rec.getString("JUR_CITY").trim() : "";
                     String comments = jur + "|" + type + "|" + rate.toString();
+
                     orderAdjustments.add(delegator.makeValue("OrderAdjustment",
                             UtilMisc.toMap("amount", rec.getDouble("TAX_AMT_CITY"),
-                                    "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
+                                "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
                 }
 
                 if (rec.getDouble("TAX_AMT_SEC_STATE").doubleValue() > 0) {
@@ -414,9 +438,10 @@ public class TaxwareUTL {
                     String type = rec.getString("TAX_TYPE_SEC_STATE").equals("S") ? "SALES TAX" : "USE TAX";
                     String jur = rec.get("JUR_SEC_STATE") != null ? rec.getString("JUR_SEC_STATE").trim() : "";
                     String comments = jur + "|" + type + "|" + rate.toString();
+
                     orderAdjustments.add(delegator.makeValue("OrderAdjustment",
                             UtilMisc.toMap("amount", rec.getDouble("TAX_AMT_SEC_STATE"),
-                                    "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
+                                "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
                 }
 
                 if (rec.getDouble("TAX_AMT_SEC_COUNTY").doubleValue() > 0) {
@@ -424,9 +449,10 @@ public class TaxwareUTL {
                     String type = rec.getString("TAX_TYPE_SEC_COUNTY").equals("S") ? "SALES TAX" : "USE TAX";
                     String jur = rec.get("JUR_SEC_COUNTY_CODE") != null ? rec.getString("JUR_SEC_COUNTY_CODE").trim() : "";
                     String comments = jur + "|" + type + "|" + rate.toString();
+
                     orderAdjustments.add(delegator.makeValue("OrderAdjustment",
                             UtilMisc.toMap("amount", rec.getDouble("TAX_AMT_SEC_COUNTY"),
-                                    "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
+                                "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
                 }
 
                 if (rec.getDouble("TAX_AMT_SEC_CITY").doubleValue() > 0) {
@@ -434,9 +460,10 @@ public class TaxwareUTL {
                     String type = rec.getString("TAX_TYPE_SEC_CITY").equals("S") ? "SALES TAX" : "USE TAX";
                     String jur = rec.get("JUR_SEC_CITY") != null ? rec.getString("JUR_SEC_CITY").trim() : "";
                     String comments = jur + "|" + type + "|" + rate.toString();
+
                     orderAdjustments.add(delegator.makeValue("OrderAdjustment",
                             UtilMisc.toMap("amount", rec.getDouble("TAX_AMT_SEC_CITY"),
-                                    "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
+                                "orderAdjustmentTypeId", "SALES_TAX", "comments", comments)));
                 }
 
             } else {
@@ -447,6 +474,7 @@ public class TaxwareUTL {
                 ModelField mf = (ModelField) model.fields.get(a);
                 String name = mf.name;
                 String value = rec.getString(name);
+
                 if (Debug.verboseOn()) Debug.logVerbose("Field: " + name + " => " + value, module);
             }
         }

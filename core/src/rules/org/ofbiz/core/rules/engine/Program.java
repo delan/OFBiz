@@ -1,6 +1,9 @@
 package org.ofbiz.core.rules.engine;
 
+
 import java.util.*;
+
+
 /**
  * <p><b>Title:</b> Program
  * <p><b>Description:</b> None
@@ -34,72 +37,80 @@ import java.util.*;
  */
 
 public class Program implements AxiomSource {
-  protected List axioms = new ArrayList();
-  /**
-   * Create a new program with no axioms.
-   */
-  public Program() {
-  }
-  /**
-   * Create a new program with the given axioms.
-   */
-  public Program(Axiom[] axioms) {
-    for (int i = 0; i < axioms.length; i++) {
-      addAxiom(axioms[i]);
+    protected List axioms = new ArrayList();
+
+    /**
+     * Create a new program with no axioms.
+     */
+    public Program() {}
+
+    /**
+     * Create a new program with the given axioms.
+     */
+    public Program(Axiom[] axioms) {
+        for (int i = 0; i < axioms.length; i++) {
+            addAxiom(axioms[i]);
+        }
     }
-  }
-  /**
-   * Adds an axiom to this program.
-   *
-   * @param Axiom the axiom to add.
-   */
-  public void addAxiom(Axiom a) {
-    axioms.add(a);
-  }
-  /**
-   * Appends all the axioms of another source to this one.
-   *
-   * @param   program   the source of the new axioms
-   */
-  public void append(AxiomSource as) {
-    AxiomEnumeration e = as.axioms();
-    while (e.hasMoreAxioms()) {
-      addAxiom(e.nextAxiom());
+
+    /**
+     * Adds an axiom to this program.
+     *
+     * @param Axiom the axiom to add.
+     */
+    public void addAxiom(Axiom a) {
+        axioms.add(a);
     }
-  }
-  /**
-   * Returns an enumeration of the axioms in this program.
-   *
-   * @return an enumeration of the axioms in this program.
-   */
-  public AxiomEnumeration axioms() {
-    return new ProgramEnumerator(this);
-  }
-  /**
-   * Returns an enumeration of the axioms in this program.
-   *
-   * @return an enumeration of the axioms in this program.
-   */
-  public AxiomEnumeration axioms(Structure ignored) {
-    return axioms();
-  }
-  /**
-   * Returns a string representation of this program.
-   *
-   * @return a string representation of this program.
-   */
-  public String toString() {
-    StringBuffer buf = new StringBuffer();
-    boolean haveShownALine = false;
-    Enumeration e = Collections.enumeration(axioms);
-    while (e.hasMoreElements()) {
-      if (haveShownALine) {
-        buf.append("\n");
-      }
-      buf.append(e.nextElement().toString());
-      buf.append(";");
-      haveShownALine = true;
+
+    /**
+     * Appends all the axioms of another source to this one.
+     *
+     * @param   program   the source of the new axioms
+     */
+    public void append(AxiomSource as) {
+        AxiomEnumeration e = as.axioms();
+
+        while (e.hasMoreAxioms()) {
+            addAxiom(e.nextAxiom());
+        }
     }
-    return buf.toString();
-  }
+
+    /**
+     * Returns an enumeration of the axioms in this program.
+     *
+     * @return an enumeration of the axioms in this program.
+     */
+    public AxiomEnumeration axioms() {
+        return new ProgramEnumerator(this);
+    }
+
+    /**
+     * Returns an enumeration of the axioms in this program.
+     *
+     * @return an enumeration of the axioms in this program.
+     */
+    public AxiomEnumeration axioms(Structure ignored) {
+        return axioms();
+    }
+
+    /**
+     * Returns a string representation of this program.
+     *
+     * @return a string representation of this program.
+     */
+    public String toString() {
+        StringBuffer buf = new StringBuffer();
+        boolean haveShownALine = false;
+        Enumeration e = Collections.enumeration(axioms);
+
+        while (e.hasMoreElements()) {
+            if (haveShownALine) {
+                buf.append("\n");
+            }
+            buf.append(e.nextElement().toString());
+            buf.append(";");
+            haveShownALine = true;
+        }
+        return buf.toString();
+    }
 }

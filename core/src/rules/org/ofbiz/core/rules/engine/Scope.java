@@ -1,7 +1,9 @@
 package org.ofbiz.core.rules.engine;
 
+
 import java.util.*;
 import org.ofbiz.core.rules.utensil.*;
+
 
 /**
  * <p><b>Title:</b> Scope
@@ -61,77 +63,86 @@ import org.ofbiz.core.rules.utensil.*;
  * @version 1.0
  */
 public class Scope implements PubliclyCloneable {
-  Hashtable dictionary = new Hashtable();
-  /**
-   * Create an empty scope.
-   */
-  public Scope() {
-  }
-  /**
-   * Create a scope that uses the variables in the supplied
-   * terms.
-   *
-   * @param Term[] the terms to seed this scope with
-   */
-  public Scope(Term terms[]) {
-    for (int i = 0; i < terms.length; i++) {
-      Unification u = terms[i].variables();
-      Enumeration e = u.elements();
-      while (e.hasMoreElements()) {
-        Variable v = (Variable) e.nextElement();
-        dictionary.put(v.name, v);
-      }
+    Hashtable dictionary = new Hashtable();
+
+    /**
+     * Create an empty scope.
+     */
+    public Scope() {}
+
+    /**
+     * Create a scope that uses the variables in the supplied
+     * terms.
+     *
+     * @param Term[] the terms to seed this scope with
+     */
+    public Scope(Term terms[]) {
+        for (int i = 0; i < terms.length; i++) {
+            Unification u = terms[i].variables();
+            Enumeration e = u.elements();
+
+            while (e.hasMoreElements()) {
+                Variable v = (Variable) e.nextElement();
+
+                dictionary.put(v.name, v);
+            }
+        }
     }
-  }
-  /**
-   * Remove all variables from this scope.
-   */
-  public void clear() {
-    dictionary.clear();
-  }
-  /**
-   * Return a copy of this object.
-   *
-   * @return a copy of this object
-   */
-  public Object clone() {
-    try {
-      Scope clone = (Scope) super.clone();
-      clone.dictionary = (Hashtable) dictionary.clone();
-      return clone;
-    } catch (CloneNotSupportedException e) {
-      // this shouldn't happen, since we are Cloneable
-      throw new InternalError();
+
+    /**
+     * Remove all variables from this scope.
+     */
+    public void clear() {
+        dictionary.clear();
     }
-  }
-  /**
-   * Returns true if a variable of the given name appears
-   * in this scope.
-   *
-   * @param String the variable name
-   *
-   * @return true, if a variable of the given name appears
-   *         in this scope.
-   */
-  public boolean isDefined(String name) {
-    return dictionary.containsKey(name);
-  }
-  /**
-   * Returns a variable of the given name from this scope.
-   *
-   * If the so-named variable is not already in this scope,
-   * the scope will create it and add the variable to itself.
-   *
-   * @param String the variable name
-   *
-   * @return a variable of the given name from this scope
-   */
-  public Variable lookup(String name) {
-    Variable v = (Variable) dictionary.get(name);
-    if (v == null) {
-      v = new Variable(name);
-      dictionary.put(v.name, v);
+
+    /**
+     * Return a copy of this object.
+     *
+     * @return a copy of this object
+     */
+    public Object clone() {
+        try {
+            Scope clone = (Scope) super.clone();
+
+            clone.dictionary = (Hashtable) dictionary.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            // this shouldn't happen, since we are Cloneable
+            throw new InternalError();
+        }
     }
-    return v;
-  }
+
+    /**
+     * Returns true if a variable of the given name appears
+     * in this scope.
+     *
+     * @param String the variable name
+     *
+     * @return true, if a variable of the given name appears
+     *         in this scope.
+     */
+    public boolean isDefined(String name) {
+        return dictionary.containsKey(name);
+    }
+
+    /**
+     * Returns a variable of the given name from this scope.
+     *
+     * If the so-named variable is not already in this scope,
+     * the scope will create it and add the variable to itself.
+     *
+     * @param String the variable name
+     *
+     * @return a variable of the given name from this scope
+     */
+    public Variable lookup(String name) {
+        Variable v = (Variable) dictionary.get(name);
+
+        if (v == null) {
+            v = new Variable(name);
+            dictionary.put(v.name, v);
+        }
+        return v;
+    }
 }

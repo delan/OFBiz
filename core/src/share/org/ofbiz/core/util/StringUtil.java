@@ -24,9 +24,11 @@
 
 package org.ofbiz.core.util;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
+
 
 /**
  * Misc String Utility Functions
@@ -55,6 +57,7 @@ public class StringUtil {
         }
 
         int i = mainString.lastIndexOf(oldString);
+
         if (i < 0) return mainString;
 
         StringBuffer mainSb = new StringBuffer(mainString);
@@ -65,7 +68,7 @@ public class StringUtil {
         }
         return mainSb.toString();
     }
-    
+
     /**
      * Creates a single string from a List of strings seperated by a delimiter.
      * @param list a list of strings to join
@@ -77,6 +80,7 @@ public class StringUtil {
             return null;
         StringBuffer buf = new StringBuffer();
         Iterator i = list.iterator();
+
         while (i.hasNext()) {
             buf.append((String) i.next());
             if (i.hasNext())
@@ -118,10 +122,13 @@ public class StringUtil {
      */
     public static List quoteStrList(List list) {
         List tmpList = list;
+
         list = new ArrayList();
         Iterator i = tmpList.iterator();
+
         while (i.hasNext()) {
             String str = (String) i.next();
+
             str = "'" + str + "''";
             list.add(str);
         }
@@ -138,13 +145,16 @@ public class StringUtil {
         Map decodedMap = new HashMap();
         List elements = split(str, "|");
         Iterator i = elements.iterator();
+
         while (i.hasNext()) {
             String s = (String) i.next();
             List e = split(s, "=");
+
             if (e.size() != 2)
                 continue;
             String name = (String) e.get(0);
             String value = (String) e.get(1);
+
             decodedMap.put(URLDecoder.decode(name), URLDecoder.decode(value));
         }
         return decodedMap;
@@ -161,9 +171,11 @@ public class StringUtil {
         Set keySet = map.keySet();
         Iterator i = keySet.iterator();
         boolean first = true;
+
         while (i.hasNext()) {
             Object key = i.next();
             Object value = map.get(key);
+
             if (!(key instanceof String) || !(value instanceof String))
                 continue;
             String encodedName = URLEncoder.encode((String) key);
@@ -184,13 +196,14 @@ public class StringUtil {
     /** Make sure the string starts with a forward slash but does not end with one; converts back-slashes to forward-slashes; if in String is null or empty, returns zero length string. */
     public static String cleanUpPathPrefix(String prefix) {
         if (prefix == null || prefix.length() == 0) return "";
-        
-        StringBuffer cppBuff = new StringBuffer(prefix.replace('\\','/'));
+
+        StringBuffer cppBuff = new StringBuffer(prefix.replace('\\', '/'));
+
         if (cppBuff.charAt(0) != '/') {
             cppBuff.insert(0, '/');
         }
-        if (cppBuff.charAt(cppBuff.length()-1) == '/') {
-            cppBuff.deleteCharAt(cppBuff.length()-1);
+        if (cppBuff.charAt(cppBuff.length() - 1) == '/') {
+            cppBuff.deleteCharAt(cppBuff.length() - 1);
         }
         return cppBuff.toString();
     }

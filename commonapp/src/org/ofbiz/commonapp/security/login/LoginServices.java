@@ -24,12 +24,14 @@
 
 package org.ofbiz.commonapp.security.login;
 
+
 import java.util.*;
 import java.sql.Timestamp;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
+
 
 /**
  * <b>Title:</b> Login Services
@@ -50,45 +52,51 @@ public class LoginServices {
 
         boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
 
-        //if isServiceAuth is not specified, default to not a service auth
+        // if isServiceAuth is not specified, default to not a service auth
         boolean isServiceAuth = context.get("isServiceAuth") != null && ((Boolean) context.get("isServiceAuth")).booleanValue();
 
         String username = (String) context.get("login.username");
+
         if (username == null) username = (String) context.get("username");
         String password = (String) context.get("login.password");
+
         if (password == null) password = (String) context.get("password");
 
         String errMsg = "";
-        if(username == null || username.length() <= 0) {
+
+        if (username == null || username.length() <= 0) {
             errMsg = "Username missing.";
-        } else if(password == null || password.length() <= 0) {
+        } else if (password == null || password.length() <= 0) {
             errMsg = "Password missing";
         } else {
             String realPassword = useEncryption ? HashEncrypt.getHash(password) : password;
 
             boolean repeat = true;
-            //starts at zero but it incremented at the beggining so in the first pass passNumber will be 1
+            // starts at zero but it incremented at the beggining so in the first pass passNumber will be 1
             int passNumber = 0;
+
             while (repeat) {
                 repeat = false;
-                //pass number is incremented here because there are continues in this loop so it may never get to the end
+                // pass number is incremented here because there are continues in this loop so it may never get to the end
                 passNumber++;
 
                 GenericValue userLogin = null;
+
                 try {
-                    //only get userLogin from cache for service calls; for web and other manual logins there is less time sensitivity
+                    // only get userLogin from cache for service calls; for web and other manual logins there is less time sensitivity
                     if (isServiceAuth) {
                         userLogin = delegator.findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", username));
                     } else {
                         userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", username));
                     }
-                } catch(GenericEntityException e) {
+                } catch (GenericEntityException e) {
                     Debug.logWarning(e);
                 }
 
-                if(userLogin != null) {
+                if (userLogin != null) {
                     String ldmStr = UtilProperties.getPropertyValue("security", "login.disable.minutes");
                     long loginDisableMinutes = 30;
+
                     try {
                         loginDisableMinutes = Long.parseLong(ldmStr);
                     } catch (Exception e) {
@@ -98,28 +106,32 @@ public class LoginServices {
 
                     Timestamp disabledDateTime = userLogin.getTimestamp("disabledDateTime");
                     Timestamp reEnableTime = null;
+
                     if (loginDisableMinutes > 0 && disabledDateTime != null) {
-                        reEnableTime = new Timestamp(disabledDateTime.getTime() + loginDisableMinutes*60000);
+                        reEnableTime = new Timestamp(disabledDateTime.getTime() + loginDisableMinutes * 60000);
                     }
 
                     boolean doStore = true;
+
                     if (UtilValidate.isEmpty(userLogin.getString("enabled")) || "Y".equals(userLogin.getString("enabled")) ||
-                            (reEnableTime != null && reEnableTime.before(UtilDateTime.nowTimestamp()))) {
+                        (reEnableTime != null && reEnableTime.before(UtilDateTime.nowTimestamp()))) {
 
                         String successfulLogin;
+
                         userLogin.set("enabled", "Y");
-                        //if the password.accept.encrypted.and.plain property in security is set to true allow plain or encrypted passwords
+                        // if the password.accept.encrypted.and.plain property in security is set to true allow plain or encrypted passwords
                         if (userLogin.get("currentPassword") != null &&
-                                (realPassword.equals(userLogin.getString("currentPassword")) ||
-                                 ("true".equals(UtilProperties.getPropertyValue("security", "password.accept.encrypted.and.plain")) && password.equals(userLogin.getString("currentPassword"))))) {
+                            (realPassword.equals(userLogin.getString("currentPassword")) ||
+                                ("true".equals(UtilProperties.getPropertyValue("security", "password.accept.encrypted.and.plain")) && password.equals(userLogin.getString("currentPassword"))))) {
                             Debug.logVerbose("[LoginServices.userLogin] : Password Matched");
 
-                            //reset failed login count if necessry
+                            // reset failed login count if necessry
                             Long currentFailedLogins = userLogin.getLong("successiveFailedLogins");
+
                             if (currentFailedLogins != null && currentFailedLogins.longValue() > 0) {
                                 userLogin.set("successiveFailedLogins", new Long(0));
                             } else {
-                                //successful login, no need to change anything, so don't do the store
+                                // successful login, no need to change anything, so don't do the store
                                 doStore = false;
                             }
 
@@ -128,8 +140,8 @@ public class LoginServices {
                             result.put("userLogin", userLogin);
                             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
                         } else {
-                            //password is incorrect, but this may be the result of a stale cache entry,
-                            //  so lets clear the cache and try again if this is the first pass
+                            // password is incorrect, but this may be the result of a stale cache entry,
+                            // so lets clear the cache and try again if this is the first pass
                             if (isServiceAuth && passNumber <= 1) {
                                 delegator.clearCacheLine("UserLogin", UtilMisc.toMap("userLoginId", username));
                                 repeat = true;
@@ -140,8 +152,9 @@ public class LoginServices {
                             // password invalid...
                             errMsg = "Password incorrect.";
 
-                            //increment failed login count
+                            // increment failed login count
                             Long currentFailedLogins = userLogin.getLong("successiveFailedLogins");
+
                             if (currentFailedLogins == null) {
                                 currentFailedLogins = new Long(1);
                             } else {
@@ -149,9 +162,10 @@ public class LoginServices {
                             }
                             userLogin.set("successiveFailedLogins", currentFailedLogins);
 
-                            //if failed logins over amount in properties file, disable account
+                            // if failed logins over amount in properties file, disable account
                             String mflStr = UtilProperties.getPropertyValue("security", "max.failed.logins");
                             long maxFailedLogins = 3;
+
                             try {
                                 maxFailedLogins = Long.parseLong(mflStr);
                             } catch (Exception e) {
@@ -170,30 +184,31 @@ public class LoginServices {
                         if (doStore) {
                             try {
                                 userLogin.store();
-                            } catch(GenericEntityException e) {
+                            } catch (GenericEntityException e) {
                                 Debug.logWarning(e);
                             }
                         }
 
                         if ("true".equals(UtilProperties.getPropertyValue("security", "store.login.history"))) {
                             boolean createHistory = true;
+
                             if (isServiceAuth && !"true".equals(UtilProperties.getPropertyValue("security", "store.login.history.on.service.auth"))) {
-                                    createHistory = false;
+                                createHistory = false;
                             }
 
                             if (createHistory) {
                                 try {
                                     delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username,
-                                        "fromDate", UtilDateTime.nowTimestamp(), "passwordUsed", password,
-                                        "partyId", userLogin.get("partyId"), "referrerUrl", "NotYetImplemented", "successfulLogin", successfulLogin));
-                                } catch(GenericEntityException e) {
+                                            "fromDate", UtilDateTime.nowTimestamp(), "passwordUsed", password,
+                                            "partyId", userLogin.get("partyId"), "referrerUrl", "NotYetImplemented", "successfulLogin", successfulLogin));
+                                } catch (GenericEntityException e) {
                                     Debug.logWarning(e);
                                 }
                             }
                         }
                     } else {
-                        //account is disabled, but this may be the result of a stale cache entry,
-                        //  so lets clear the cache and try again if this is the first pass
+                        // account is disabled, but this may be the result of a stale cache entry,
+                        // so lets clear the cache and try again if this is the first pass
                         if (isServiceAuth && passNumber <= 1) {
                             delegator.clearCacheLine("UserLogin", UtilMisc.toMap("userLoginId", username));
                             repeat = true;
@@ -207,7 +222,7 @@ public class LoginServices {
                         }
                     }
                 } else {
-                    //userLogin record not found, user does not exist
+                    // userLogin record not found, user does not exist
                     errMsg = "User not found.";
                     Debug.logInfo("[LoginServices.userLogin] : Invalid User");
                 }
@@ -241,10 +256,11 @@ public class LoginServices {
         String currentPasswordVerify = (String) context.get("currentPasswordVerify");
         String passwordHint = (String) context.get("passwordHint");
 
-        //security: don't create a user login if the specified partyId (if not empty) already exists
+        // security: don't create a user login if the specified partyId (if not empty) already exists
         // unless the logged in user has permission to do so (same partyId or PARTYMGR_CREATE)
         if (partyId != null || partyId.length() > 0) {
             GenericValue party = null;
+
             try {
                 party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
             } catch (GenericEntityException e) {
@@ -253,7 +269,7 @@ public class LoginServices {
 
             if (party != null) {
                 if (loggedInUserLogin != null) {
-                    //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
+                    // <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
                     if (!partyId.equals(loggedInUserLogin.getString("partyId"))) {
                         if (!security.hasEntityPermission("PARTYMGR", "_CREATE", loggedInUserLogin)) {
                             errorMessageList.add("Party with specified party ID exists and you do not have permission to create a user login with this party ID");
@@ -268,6 +284,7 @@ public class LoginServices {
         checkNewPassword(null, null, currentPassword, currentPasswordVerify, passwordHint, errorMessageList, true);
 
         GenericValue userLoginToCreate = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+
         userLoginToCreate.set("passwordHint", passwordHint);
         userLoginToCreate.set("partyId", partyId);
         userLoginToCreate.set("currentPassword", useEncryption ? HashEncrypt.getHash(currentPassword) : currentPassword);
@@ -311,12 +328,13 @@ public class LoginServices {
         boolean adminUser = false;
 
         String userLoginId = (String) context.get("userLoginId");
+
         if (userLoginId == null || userLoginId.length() == 0) {
             userLoginId = loggedInUserLogin.getString("userLoginId");
         }
 
-        //<b>security check</b>: userLogin userLoginId must equal userLoginId, or must have PARTYMGR_UPDATE permission
-        //NOTE: must check permission first so that admin users can set own password without specifying old password
+        // <b>security check</b>: userLogin userLoginId must equal userLoginId, or must have PARTYMGR_UPDATE permission
+        // NOTE: must check permission first so that admin users can set own password without specifying old password
         if (!security.hasEntityPermission("PARTYMGR", "_UPDATE", loggedInUserLogin)) {
             if (!userLoginId.equals(loggedInUserLogin.getString("userLoginId"))) {
                 return ServiceUtil.returnError("You do not have permission to update the password for this user login");
@@ -326,9 +344,10 @@ public class LoginServices {
         }
 
         GenericValue userLoginToUpdate = null;
+
         try {
             userLoginToUpdate = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Could not change password (read failure): " + e.getMessage());
         }
 
@@ -344,7 +363,7 @@ public class LoginServices {
         List errorMessageList = new LinkedList();
 
         if (newPassword != null && newPassword.length() > 0) {
-        checkNewPassword(userLoginToUpdate, currentPassword, newPassword, newPasswordVerify,
+            checkNewPassword(userLoginToUpdate, currentPassword, newPassword, newPasswordVerify,
                 passwordHint, errorMessageList, adminUser);
         }
 
@@ -357,7 +376,7 @@ public class LoginServices {
 
         try {
             userLoginToUpdate.store();
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Could not change password (write failure): " + e.getMessage());
         }
 
@@ -391,6 +410,7 @@ public class LoginServices {
         // unless the logged in user has permission to do so (same partyId or PARTYMGR_CREATE)
         if (partyId != null || partyId.length() > 0) {
             GenericValue party = null;
+
             try {
                 party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
             } catch (GenericEntityException e) {
@@ -476,19 +496,21 @@ public class LoginServices {
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
 
         String userLoginId = (String) context.get("userLoginId");
+
         if (userLoginId == null || userLoginId.length() == 0) {
             userLoginId = loggedInUserLogin.getString("userLoginId");
         }
 
-        //<b>security check</b>: must have PARTYMGR_UPDATE permission
+        // <b>security check</b>: must have PARTYMGR_UPDATE permission
         if (!security.hasEntityPermission("PARTYMGR", "_UPDATE", loggedInUserLogin) && !security.hasEntityPermission("SECURITY", "_UPDATE", loggedInUserLogin)) {
             return ServiceUtil.returnError("You do not have permission to update the security info for this user login");
         }
 
         GenericValue userLoginToUpdate = null;
+
         try {
             userLoginToUpdate = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Could not change password (read failure): " + e.getMessage());
         }
 
@@ -497,18 +519,19 @@ public class LoginServices {
         }
 
         boolean wasEnabled = !"N".equals((String) userLoginToUpdate.get("enabled"));
+
         userLoginToUpdate.set("enabled", context.get("enabled"), false);
         userLoginToUpdate.set("disabledDateTime", context.get("disabledDateTime"), false);
         userLoginToUpdate.set("successiveFailedLogins", context.get("successiveFailedLogins"), false);
 
-        //if was enabled and we are disabling it, and no disabledDateTime was passed, set it to now
+        // if was enabled and we are disabling it, and no disabledDateTime was passed, set it to now
         if (wasEnabled && "N".equals((String) context.get("enabled")) && context.get("disabledDateTime") == null) {
             userLoginToUpdate.set("disabledDateTime", UtilDateTime.nowTimestamp());
         }
 
         try {
             userLoginToUpdate.store();
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Could not change password (write failure): " + e.getMessage());
         }
 
@@ -521,10 +544,11 @@ public class LoginServices {
 
         if (!ignoreCurrentPassword) {
             String realPassword = currentPassword;
+
             if (useEncryption && currentPassword != null) {
                 realPassword = HashEncrypt.getHash(currentPassword);
             }
-            //if the password.accept.encrypted.and.plain property in security is set to true allow plain or encrypted passwords
+            // if the password.accept.encrypted.and.plain property in security is set to true allow plain or encrypted passwords
             boolean passwordMatches = currentPassword != null && (realPassword.equals(userLogin.getString("currentPassword")) ||
                     ("true".equals(UtilProperties.getPropertyValue("security", "password.accept.encrypted.and.plain")) && currentPassword.equals(userLogin.getString("currentPassword"))));
 
@@ -540,6 +564,7 @@ public class LoginServices {
         }
 
         int minPasswordLength = 0;
+
         try {
             minPasswordLength = Integer.parseInt(UtilProperties.getPropertyValue("security", "password.length.min", "0"));
         } catch (NumberFormatException nfe) {

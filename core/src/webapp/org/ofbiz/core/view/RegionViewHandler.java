@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.view;
 
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -34,6 +35,7 @@ import javax.servlet.jsp.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.region.*;
+
 
 /**
  * Handles Region type view rendering
@@ -55,7 +57,7 @@ public class RegionViewHandler implements ViewHandler {
         } catch (java.net.MalformedURLException e) {
             throw new IllegalArgumentException("regions.xml file URL invalid: " + e.getMessage());
         }
-        
+
         if (regionFile == null) {
             Debug.logWarning("No " + SiteDefs.REGIONS_CONFIG_LOCATION + " file found in this webapp");
         } else {
@@ -76,14 +78,15 @@ public class RegionViewHandler implements ViewHandler {
         }
 
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
-        
+
         Region region = RegionManager.getRegion(regionFile, page);
+
         if (region == null) {
             throw new ViewHandlerException("Error: could not find region with name " + page);
         }
-        
+
         try {
-            //this render method does not come from a page tag so some setup needs to happen here
+            // this render method does not come from a page tag so some setup needs to happen here
             RegionStack.push(request, region);
 
             region.render(request, response);
@@ -91,8 +94,10 @@ public class RegionViewHandler implements ViewHandler {
             throw new ViewHandlerException("IO Error in region", ie);
         } catch (ServletException e) {
             Throwable throwable = e.getRootCause() != null ? e.getRootCause() : e;
+
             if (throwable instanceof JspException) {
                 JspException jspe = (JspException) throwable;
+
                 throwable = jspe.getRootCause() != null ? jspe.getRootCause() : jspe;
             }
             Debug.logError(throwable, "ServletException rendering JSP view");

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.service.job;
 
+
 import java.io.*;
 import java.sql.*;
 import java.util.*;
@@ -38,6 +39,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.serialize.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Entity Service Job - Store => Schedule => Run
@@ -65,13 +67,16 @@ public class PersistedServiceJob extends GenericServiceJob {
     protected void init() {
         GenericValue job = getJob();
         RecurrenceInfo recurrence = getRecurrence();
+
         try {
             GenericValue newJob = new GenericValue(job);
+
             job.set("startDateTime", UtilDateTime.nowTimestamp());
             job.store();
             if (recurrence != null) {
                 recurrence.incrementCurrentCount();
                 long next = recurrence.next();
+
                 if (next > runtime) {
                     newJob.set("runTime", new java.sql.Timestamp(next));
                     delegator.create(newJob);
@@ -85,6 +90,7 @@ public class PersistedServiceJob extends GenericServiceJob {
 
     protected void finish() {
         GenericValue job = getJob();
+
         job.set("finishDateTime", UtilDateTime.nowTimestamp());
         try {
             job.store();
@@ -95,6 +101,7 @@ public class PersistedServiceJob extends GenericServiceJob {
 
     protected String getServiceName() {
         GenericValue jobObj = getJob();
+
         if (jobObj == null || jobObj.get("serviceName") == null)
             return null;
         return jobObj.getString("serviceName");
@@ -102,9 +109,11 @@ public class PersistedServiceJob extends GenericServiceJob {
 
     protected Map getContext() {
         Map context = null;
+
         try {
             GenericValue jobObj = getJob();
             GenericValue contextObj = jobObj.getRelatedOne("RuntimeData");
+
             if (contextObj != null)
                 context = (Map) XmlSerializer.deserialize(contextObj.getString("runtimeInfo"), delegator);
         } catch (GenericEntityException e) {
@@ -127,6 +136,7 @@ public class PersistedServiceJob extends GenericServiceJob {
         try {
             Map fields = UtilMisc.toMap("jobName", getJobName(), "runTime", storedDate);
             GenericValue jobObj = delegator.findByPrimaryKey("JobSandbox", fields);
+
             if (jobObj == null)
                 Debug.logError("Job came back null from datasource", module);
             return jobObj;
@@ -140,8 +150,10 @@ public class PersistedServiceJob extends GenericServiceJob {
     private RecurrenceInfo getRecurrence() {
         try {
             GenericValue job = getJob();
+
             if (job != null) {
                 GenericValue ri = job.getRelatedOne("RecurrenceInfo");
+
                 if (ri != null)
                     return new RecurrenceInfo(ri);
                 else

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.entityops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.entity.*;
+
 
 /**
  * Uses the delegator to find entity values by anding the map fields
@@ -55,12 +57,12 @@ public class FilterListByDate extends MethodOperation {
         toListName = element.getAttribute("to-list-name");
         if (UtilValidate.isEmpty(toListName)) toListName = listName;
         validDateName = element.getAttribute("valid-date-name");
-        
+
         fromFieldName = element.getAttribute("from-field-name");
         if (UtilValidate.isEmpty(fromFieldName)) fromFieldName = "fromDate";
         thruFieldName = element.getAttribute("thru-field-name");
         if (UtilValidate.isEmpty(thruFieldName)) thruFieldName = "thruDate";
-        
+
         allSame = !"false".equals(element.getAttribute("all-same"));
     }
 

@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.parse.tokens;
 
+
 /**
  * <p><b>Title:</b> Token Type
  * <p><b>Description:</b> None
@@ -32,11 +33,12 @@ package org.ofbiz.core.rules.parse.tokens;
  * @version 1.0
  */
 public class TokenType {
-  protected String name;
-  /**
-   * Creates a token type of the given name.
-   */
-  public TokenType(String name) {
-    this.name = name;
-  }
+    protected String name;
+
+    /**
+     * Creates a token type of the given name.
+     */
+    public TokenType(String name) {
+        this.name = name;
+    }
 }

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.view;
 
+
 import java.io.*;
 import java.util.*;
 import java.net.*;
@@ -40,6 +41,7 @@ import org.apache.velocity.runtime.*;
 import org.apache.velocity.util.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * VelocityViewHandler - Velocity Template Engine View Handler
@@ -68,11 +70,12 @@ public class VelocityViewHandler implements ViewHandler {
             // use log4j for logging
             // use classpath template loading (file loading will not work in WAR)
             ve.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-                        "org.apache.velocity.runtime.log.Log4JLogSystem");
+                "org.apache.velocity.runtime.log.Log4JLogSystem");
             ve.setProperty("runtime.log.logsystem.log4j.category", module);
 
             Properties props = null;
             URL propsURL = null;
+
             try {
                 propsURL = context.getResource("/WEB-INF/velocity.properties");
             } catch (MalformedURLException e) {
@@ -80,13 +83,12 @@ public class VelocityViewHandler implements ViewHandler {
             }
 
             if (propsURL != null) {
-                 props = new FlexibleProperties(propsURL);
+                props = new FlexibleProperties(propsURL);
                 Debug.logWarning("[VelocityViewHandler.init] : Loaded /WEB-INF/velocity.properties");
-            }
-            else {
+            } else {
                 props = new Properties();
                 Debug.logWarning("[VelocityViewHandler.init] : Cannot load /WEB-INF/velocity.properties. " +
-                                 "Using default properties.");
+                    "Using default properties.");
             }
 
             // set the file loader path -- used to mount the webapp
@@ -102,7 +104,7 @@ public class VelocityViewHandler implements ViewHandler {
     }
 
     public void render(String name, String page, String info, HttpServletRequest request,
-                     HttpServletResponse response) throws ViewHandlerException {
+        HttpServletResponse response) throws ViewHandlerException {
         if (ve == null) {
             throw new ViewHandlerException("Velocity Template Engine has not been initialized");
         }
@@ -112,10 +114,12 @@ public class VelocityViewHandler implements ViewHandler {
         }
 
         Context context = new VelocityContext();
+
         context.put(REQUEST, request);
         context.put(RESPONSE, response);
 
         Template template = null;
+
         try {
             template = ve.getTemplate(page);
         } catch (ResourceNotFoundException rne) {
@@ -128,6 +132,7 @@ public class VelocityViewHandler implements ViewHandler {
 
         ServletOutputStream out = null;
         VelocityWriter vw = null;
+
         try {
             out = response.getOutputStream();
         } catch (IOException e) {

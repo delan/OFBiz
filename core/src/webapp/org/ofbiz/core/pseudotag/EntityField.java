@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.pseudotag;
 
+
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -31,6 +32,7 @@ import javax.servlet.jsp.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Pseudo-Tag to Print Localized Entity Fields
@@ -47,52 +49,52 @@ public class EntityField {
     public EntityField(PageContext pageContextInternal) {
         this.pageContextInternal = pageContextInternal;
     }
-    
+
     public void run(String attribute, String field)
-            throws IOException, GenericEntityException {
+        throws IOException, GenericEntityException {
         run(attribute, field, null, null, null, null, pageContextInternal);
     }
-    
+
     public void run(String attribute, String field, String defaultStr)
-            throws IOException, GenericEntityException {
+        throws IOException, GenericEntityException {
         run(attribute, field, null, null, defaultStr, null, pageContextInternal);
     }
-    
+
     public void run(String attribute, String field, String prefix, String suffix)
-            throws IOException, GenericEntityException {
+        throws IOException, GenericEntityException {
         run(attribute, field, prefix, suffix, null, null, pageContextInternal);
     }
-    
+
     /** Run the EntityField Pseudo-Tag, all fields except attribute, and field can be null */
-    public void run(String attribute, String field, String prefix, String suffix, 
-            String defaultStr, String type) throws IOException, GenericEntityException {
+    public void run(String attribute, String field, String prefix, String suffix,
+        String defaultStr, String type) throws IOException, GenericEntityException {
         run(attribute, field, prefix, suffix, defaultStr, type, pageContextInternal);
     }
-    
+
     /* --- STATIC METHODS --- */
-    
-    public static void run(String attribute, String field, 
-            PageContext pageContext) throws IOException, GenericEntityException {
+
+    public static void run(String attribute, String field,
+        PageContext pageContext) throws IOException, GenericEntityException {
         run(attribute, field, null, null, null, null, pageContext);
     }
-    
-    public static void run(String attribute, String field, String defaultStr, 
-            PageContext pageContext) throws IOException, GenericEntityException {
+
+    public static void run(String attribute, String field, String defaultStr,
+        PageContext pageContext) throws IOException, GenericEntityException {
         run(attribute, field, null, null, defaultStr, null, pageContext);
     }
-    
-    public static void run(String attribute, String field, String prefix, String suffix, 
-            PageContext pageContext) throws IOException, GenericEntityException {
+
+    public static void run(String attribute, String field, String prefix, String suffix,
+        PageContext pageContext) throws IOException, GenericEntityException {
         run(attribute, field, prefix, suffix, null, null, pageContext);
     }
-    
+
     /** Run the EntityField Pseudo-Tag, all fields except attribute, field, and pageContext can be null */
-    public static void run(String attribute, String field, String prefix, String suffix, 
-            String defaultStr, String type, PageContext pageContext) throws IOException, GenericEntityException {
+    public static void run(String attribute, String field, String prefix, String suffix,
+        String defaultStr, String type, PageContext pageContext) throws IOException, GenericEntityException {
         if (attribute == null || pageContext == null) {
             throw new IllegalArgumentException("Required parameter (attribute or pageContext) missing");
         }
-        
+
         if (defaultStr == null) defaultStr = "";
         String fieldObjectType = null;
         Object fieldObject = null;
@@ -104,7 +106,7 @@ public class EntityField {
         // We should be a ValueObject
         if (type == null) {
             Object attrObject = pageContext.findAttribute(attribute);
-            
+
             if (attrObject == null) {
                 fieldObject = defaultStr;
                 fieldObjectType = "comment"; // Default for NULL objects.
@@ -113,23 +115,26 @@ public class EntityField {
                     // Get the ValueObject from PageContext.
                     GenericValue valueObject = (GenericValue) attrObject;
                     ModelEntity entityModel = valueObject.getModelEntity();
+
                     fieldObject = valueObject.get(field);
 
                     // Get the Object Type.
                     if (fieldObject != null) {
                         ModelField fieldModel = entityModel.getField(field);
+
                         fieldObjectType = fieldModel.getType();
                     } else {
-                        //Debug.logWarning("[EntityFieldTag] : Null ValueObject passed.");
+                        // Debug.logWarning("[EntityFieldTag] : Null ValueObject passed.");
                         fieldObject = defaultStr;
                         fieldObjectType = "comment"; // Default for NULL objects.
                     }
                 } else if (attrObject instanceof Map) {
                     Map valueMap = (Map) attrObject;
+
                     fieldObject = valueMap.get(field);
                     fieldObjectType = "comment"; // Default for NULL objects.
                 } else {
-                    //handle non-composite types directly
+                    // handle non-composite types directly
                     fieldObject = attrObject;
                     fieldObjectType = "comment"; // Default for Strings.
                 }
@@ -137,17 +142,18 @@ public class EntityField {
         } else {
             // We should be either a 'currency' or a java type.
             fieldObject = pageContext.findAttribute(attribute);
-            //javaType = type;
+            // javaType = type;
             // Set a default for NULL objects.
             if (fieldObject == null) {
-                //Debug.logWarning("[EntityFieldTag] : Null Object passed.");
+                // Debug.logWarning("[EntityFieldTag] : Null Object passed.");
                 fieldObject = defaultStr;
-                //javaType = "java.lang.String";
+                // javaType = "java.lang.String";
             }
             if (type.equalsIgnoreCase("currency")) {
                 // Convert the String to a Double for standard processing.
                 if (fieldObject instanceof String) {
                     String objStr = (String) fieldObject;
+
                     try {
                         if (objStr.length() > 0) {
                             fieldObject = new Double(objStr);
@@ -157,15 +163,16 @@ public class EntityField {
                     }
                 }
                 // The default type for currency is Double.
-                //javaType = "java.lang.Double";
+                // javaType = "java.lang.Double";
                 fieldObjectType = "currency-amount";
             }
         }
 
         // Get the Locale from the Request object.
         Locale userLocale = null;
+
         if (false) {
-            //disable this until we get i18n issues addressed
+            // disable this until we get i18n issues addressed
             userLocale = pageContext.getRequest().getLocale();
         }
         if (userLocale == null) {
@@ -174,13 +181,15 @@ public class EntityField {
 
         // Format the Object based on its type.
         String fieldString = null;
+
         if (fieldObject instanceof java.lang.String) {
             fieldString = (String) fieldObject;
         } else if (fieldObject instanceof java.lang.Double) {
             Double doubleValue = (Double) fieldObject;
             NumberFormat nf = null;
+
             if ("currency-amount".equals(fieldObjectType)) {
-                //TODO: convert currency to current Locale
+                // TODO: convert currency to current Locale
                 nf = NumberFormat.getCurrencyInstance(userLocale);
             } else {
                 nf = NumberFormat.getNumberInstance(userLocale);
@@ -189,8 +198,9 @@ public class EntityField {
         } else if (fieldObject instanceof java.lang.Float) {
             Float floatValue = (Float) fieldObject;
             NumberFormat nf = null;
+
             if ("currency-amount".equals(fieldObjectType)) {
-                //TODO: convert currency to current Locale
+                // TODO: convert currency to current Locale
                 nf = NumberFormat.getCurrencyInstance(userLocale);
             } else {
                 nf = NumberFormat.getNumberInstance(userLocale);
@@ -199,13 +209,16 @@ public class EntityField {
         } else if (fieldObject instanceof java.lang.Long) {
             Long longValue = (Long) fieldObject;
             NumberFormat nf = NumberFormat.getNumberInstance(userLocale);
+
             fieldString = nf.format(longValue);
         } else if (fieldObject instanceof java.lang.Integer) {
             Integer intValue = (Integer) fieldObject;
             NumberFormat nf = NumberFormat.getNumberInstance(userLocale);
+
             fieldString = nf.format(intValue);
         } else if (fieldObject instanceof java.lang.Boolean) {
             Boolean booleanValue = (Boolean) fieldObject;
+
             if (booleanValue.booleanValue()) {
                 fieldString = "Yes";
             } else {
@@ -215,14 +228,17 @@ public class EntityField {
             Date dateValue = (Date) fieldObject;
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,
                     DateFormat.FULL, userLocale);
+
             fieldString = df.format(dateValue);
         } else if (fieldObject instanceof java.sql.Time) {
             Date dateValue = (Date) fieldObject;
             DateFormat df = DateFormat.getTimeInstance(DateFormat.FULL, userLocale);
+
             fieldString = df.format(dateValue);
         } else if (fieldObject instanceof java.sql.Date) {
             Date dateValue = (Date) fieldObject;
             DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, userLocale);
+
             fieldString = df.format(dateValue);
         } else {
             if (fieldObject != null) {
@@ -233,6 +249,7 @@ public class EntityField {
         }
 
         JspWriter out = pageContext.getOut();
+
         if (fieldString.length() > 0) {
             if (prefix != null)
                 out.print(prefix);

@@ -1,9 +1,11 @@
 package org.ofbiz.core.rules.logikus;
 
+
 import java.util.*;
 import org.ofbiz.core.rules.engine.*;
 import org.ofbiz.core.rules.parse.*;
 import org.ofbiz.core.rules.parse.tokens.*;
+
 
 /**
  * <p><b>Title:</b> List Assembler
@@ -37,28 +39,29 @@ import org.ofbiz.core.rules.parse.tokens.*;
  * @version 1.0
  */
 public class ListAssembler extends Assembler {
-  /**
-   * Pops the terms of a list from an assembly's stack, builds
-   * the list, and pushes it.
-   * <p>
-   * This method expects a series of terms to lie on top of a
-   * stack, with an open bracket token lying beneath. If there
-   * is no '[' marker, this class will throw an <code>
-   * EmptistackException</code>.
-   *
-   * @param  Assembly  the assembly to work on
-   */
-  public void workOn(Assembly a) {
-    Token fence = new Token('[');
-    List termVector = elementsAbove(a, fence);
-    Term[] termArray =
-    StructureWithTermsAssembler.vectorReversedIntoTerms(
-    termVector);
-    
-    if (termArray.length == 0) {
-      a.push(Structure.emptyList);
-    } else {
-      a.push(Structure.list(termArray));
+
+    /**
+     * Pops the terms of a list from an assembly's stack, builds
+     * the list, and pushes it.
+     * <p>
+     * This method expects a series of terms to lie on top of a
+     * stack, with an open bracket token lying beneath. If there
+     * is no '[' marker, this class will throw an <code>
+     * EmptistackException</code>.
+     *
+     * @param  Assembly  the assembly to work on
+     */
+    public void workOn(Assembly a) {
+        Token fence = new Token('[');
+        List termVector = elementsAbove(a, fence);
+        Term[] termArray =
+            StructureWithTermsAssembler.vectorReversedIntoTerms(
+                termVector);
+
+        if (termArray.length == 0) {
+            a.push(Structure.emptyList);
+        } else {
+            a.push(Structure.list(termArray));
+        }
     }
-  }
 }

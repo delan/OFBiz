@@ -1,6 +1,8 @@
 package org.ofbiz.core.rules.parse.tokens;
 
+
 import java.io.*;
+
 
 /**
  * <p><b>Title:</b> Slash Slash State
@@ -34,19 +36,20 @@ import java.io.*;
  * @version 1.0
  */
 public class SlashSlashState extends TokenizerState {
-  /**
-   * Ignore everything up to an end-of-line and return the
-   * tokenizer's next token.
-   *
-   * @return the tokenizer's next token
-   */
-  public Token nextToken(
-  PushbackReader r, int theSlash, Tokenizer t)
-  throws IOException {
-    
-    int c;
-    while ((c = r.read()) != '\n' && c != '\r' && c >= 0) {
+
+    /**
+     * Ignore everything up to an end-of-line and return the
+     * tokenizer's next token.
+     *
+     * @return the tokenizer's next token
+     */
+    public Token nextToken(
+        PushbackReader r, int theSlash, Tokenizer t)
+        throws IOException {
+
+        int c;
+
+        while ((c = r.read()) != '\n' && c != '\r' && c >= 0) {}
+        return t.nextToken();
     }
-    return t.nextToken();
-  }
 }

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.service.engine;
 
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -35,6 +36,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.ServiceDispatcher;
 import org.ofbiz.core.service.ModelService;
 import org.ofbiz.core.service.GenericServiceException;
+
 
 /**
  * BeanShell Script Service Engine
@@ -71,6 +73,7 @@ public final class BeanShellEngine extends GenericAsyncEngine {
      */
     public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
         Object result = serviceInvoker(modelService, context);
+
         if (result == null || !(result instanceof Map))
             throw new GenericServiceException("Service did not return expected result");
         return (Map) result;
@@ -83,6 +86,7 @@ public final class BeanShellEngine extends GenericAsyncEngine {
 
         // Get the classloader to use
         ClassLoader cl = null;
+
         if (loader == null)
             cl = this.getClass().getClassLoader();
         else
@@ -90,14 +94,17 @@ public final class BeanShellEngine extends GenericAsyncEngine {
 
         // source the script into a string
         String script = (String) beanShellCache.get(loader + "_" + modelService.location);
+
         if (script == null) {
             synchronized (this) {
                 script = (String) beanShellCache.get(loader + "_" + modelService.location);
                 if (script == null) {
                     URL scriptUrl = UtilURL.fromResource(modelService.location, cl);
+
                     if (scriptUrl != null) {
                         try {
                             HttpClient http = new HttpClient(scriptUrl);
+
                             script = http.get();
                         } catch (HttpClientException e) {
                             throw new GenericServiceException("Cannot read script from resource");
@@ -116,13 +123,15 @@ public final class BeanShellEngine extends GenericAsyncEngine {
         Interpreter bsh = new Interpreter();
 
         Map result = null;
+
         try {
             bsh.set("dctx", dispatcher.getLocalContext(loader)); // set the dispatch context
             bsh.set("context", context); // set the parameter context used for both IN and OUT
             bsh.eval(script);
             Object bshResult = bsh.get("result");
+
             if ((bshResult != null) && (bshResult instanceof Map))
-                context.putAll((Map)bshResult);
+                context.putAll((Map) bshResult);
             result = modelService.makeValid(context, ModelService.OUT_PARAM);
         } catch (EvalError e) {
             throw new GenericServiceException("BeanShell script threw an exception", e);
@@ -131,7 +140,4 @@ public final class BeanShellEngine extends GenericAsyncEngine {
     }
 
 }
-
-
-
 

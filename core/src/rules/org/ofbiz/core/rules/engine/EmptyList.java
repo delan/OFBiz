@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * <p><b>Title:</b> Empty List
  * <p><b>Description:</b> None
@@ -35,36 +36,40 @@ package org.ofbiz.core.rules.engine;
  * @version 1.0
  */
 public class EmptyList extends Fact {
-  /**
-   * Constructs the empty list singleton.
-   */
-  protected EmptyList() {
-    super(".");
-  }
-  /**
-   * Return true, since an empty list is a list.
-   *
-   * @return true
-   */
-  public boolean isList() {
-    return true;
-  }
-  /**
-   * Returns a string representation of this list as a part of
-   * another list. When the empty list represents itself as part
-   * of another list, it just returns "".
-   *
-   * @return an empty string
-   */
-  public String listTailString() {
-    return "";
-  }
-  /**
-   * Returns a string representation of the empty list.
-   *
-   * @return   a string representation of the empty list
-   */
-  public String toString() {
-    return "[]";
-  }
+
+    /**
+     * Constructs the empty list singleton.
+     */
+    protected EmptyList() {
+        super(".");
+    }
+
+    /**
+     * Return true, since an empty list is a list.
+     *
+     * @return true
+     */
+    public boolean isList() {
+        return true;
+    }
+
+    /**
+     * Returns a string representation of this list as a part of
+     * another list. When the empty list represents itself as part
+     * of another list, it just returns "".
+     *
+     * @return an empty string
+     */
+    public String listTailString() {
+        return "";
+    }
+
+    /**
+     * Returns a string representation of the empty list.
+     *
+     * @return   a string representation of the empty list
+     */
+    public String toString() {
+        return "[]";
+    }
 }

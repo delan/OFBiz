@@ -25,6 +25,7 @@
 
 package org.ofbiz.commonapp.common;
 
+
 import java.net.*;
 import java.util.*;
 import java.sql.Timestamp;
@@ -34,6 +35,7 @@ import javax.mail.internet.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Common Services
@@ -52,11 +54,14 @@ public class CommonServices {
      */
     public static Map testService(DispatchContext dctx, Map context) {
         Map response = new HashMap();
+
         if (context.size() > 0) {
             Iterator i = context.keySet().iterator();
+
             while (i.hasNext()) {
                 Object cKey = i.next();
                 Object value = context.get(cKey);
+
                 System.out.println("---- SVC-CONTEXT: " + cKey + " => " + value);
             }
         }
@@ -78,11 +83,12 @@ public class CommonServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map sendMailFromUrl(DispatchContext ctx, Map context) {
-        //pretty simple, get the content and then call the sendMail method below
+        // pretty simple, get the content and then call the sendMail method below
         String bodyUrl = (String) context.remove("bodyUrl");
         Map bodyUrlParameters = (Map) context.remove("bodyUrlParameters");
 
         URL url = null;
+
         try {
             url = new URL(bodyUrl);
         } catch (MalformedURLException e) {
@@ -92,6 +98,7 @@ public class CommonServices {
 
         HttpClient httpClient = new HttpClient(url, bodyUrlParameters);
         String body = null;
+
         try {
             body = httpClient.get();
         } catch (HttpClientException e) {
@@ -101,6 +108,7 @@ public class CommonServices {
 
         context.put("body", body);
         Map result = sendMail(ctx, context);
+
         result.put("body", body);
         return result;
     }
@@ -132,10 +140,12 @@ public class CommonServices {
 
         try {
             Properties props = new Properties();
+
             props.put(sendType, sendVia);
             Session session = Session.getDefaultInstance(props);
 
             MimeMessage mail = new MimeMessage(session);
+
             mail.setFrom(new InternetAddress(sendFrom));
             mail.setSubject(subject);
             mail.addRecipients(Message.RecipientType.TO, sendTo);
@@ -174,6 +184,7 @@ public class CommonServices {
 
         // create the note id
         Long newId = delegator.getNextSeqId("NoteData");
+
         if (newId == null) {
             return ServiceUtil.returnError("ERROR: Could not create note data (id generation failure)");
         } else {
@@ -188,13 +199,16 @@ public class CommonServices {
 
         Map fields = UtilMisc.toMap("noteId", noteId, "noteName", noteName, "noteInfo", note,
                 "noteParty", partyId, "noteDateTime", now);
+
         try {
             GenericValue newValue = delegator.makeValue("NoteData", fields);
+
             delegator.create(newValue);
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Could update note data (write failure): " + e.getMessage());
         }
         Map result = ServiceUtil.returnSuccess();
+
         result.put("noteId", noteId);
         return result;
     }
@@ -213,6 +227,7 @@ public class CommonServices {
         Boolean warning = (Boolean) context.get("warning");
         Boolean error = (Boolean) context.get("error");
         Boolean fatal = (Boolean) context.get("fatal");
+
         if (verbose != null)
             Debug.set(Debug.VERBOSE, verbose.booleanValue());
         else

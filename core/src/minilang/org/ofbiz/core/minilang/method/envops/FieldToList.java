@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.envops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
+
 
 /**
  * Copies an environment field to a list
@@ -55,8 +57,10 @@ public class FieldToList extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         Object fieldVal = null;
+
         if (mapName != null && mapName.length() > 0) {
             Map fromMap = (Map) methodContext.getEnv(mapName);
+
             if (fromMap == null) {
                 Debug.logWarning("Map not found with name " + mapName + ", Not copying to list");
                 return true;
@@ -64,7 +68,7 @@ public class FieldToList extends MethodOperation {
 
             fieldVal = fromMap.get(fieldName);
         } else {
-            //no map name, try the env
+            // no map name, try the env
             fieldVal = methodContext.getEnv(fieldName);
         }
 
@@ -74,6 +78,7 @@ public class FieldToList extends MethodOperation {
         }
 
         List toList = (List) methodContext.getEnv(listName);
+
         if (toList == null) {
             if (Debug.verboseOn()) Debug.logVerbose("List not found with name " + listName + ", creating new list");
             toList = new LinkedList();

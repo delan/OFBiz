@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.stats;
 
+
 import java.net.*;
 import java.sql.*;
 import java.util.*;
@@ -42,7 +43,7 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class VisitHandler {
-    //Debug module name
+    // Debug module name
     public static final String module = VisitHandler.class.getName();
 
     // this is not an event because it is required to run; as an event it could be disabled.
@@ -54,6 +55,7 @@ public class VisitHandler {
         String initialRequest = fullRequestUrl.toString();
         String initialReferrer = request.getHeader("Referer") != null ? request.getHeader("Referer") : "";
         String initialUserAgent = request.getHeader("User-Agent") != null ? request.getHeader("User-Agent") : "";
+
         session.setAttribute(SiteDefs.CLIENT_LOCALE, request.getLocale());
         session.setAttribute(SiteDefs.CLIENT_REQUEST, initialRequest);
         session.setAttribute(SiteDefs.CLIENT_USER_AGENT, initialUserAgent);
@@ -63,6 +65,7 @@ public class VisitHandler {
 
     public static void setInitials(HttpServletRequest request, HttpSession session, String initialLocale, String initialRequest, String initialReferrer, String initialUserAgent, String webappName) {
         GenericValue visit = getVisit(session);
+
         if (visit != null) {
             visit.set("initialLocale", initialLocale);
             if (initialRequest != null) visit.set("initialRequest", initialRequest.length() > 250 ? initialRequest.substring(0, 250) : initialRequest);
@@ -72,7 +75,7 @@ public class VisitHandler {
             visit.set("clientIpAddress", request.getRemoteAddr());
             visit.set("clientHostName", request.getRemoteHost());
             visit.set("clientUser", request.getRemoteUser());
-            
+
             try {
                 visit.store();
             } catch (GenericEntityException e) {
@@ -80,15 +83,16 @@ public class VisitHandler {
             }
         }
     }
-    
+
     public static void setUserLogin(HttpSession session, GenericValue userLogin, boolean userCreated) {
         if (userLogin == null) return;
         GenericValue visit = getVisit(session);
+
         if (visit != null) {
             visit.set("userLoginId", userLogin.get("userLoginId"));
             visit.set("partyId", userLogin.get("partyId"));
             visit.set("userCreated", new Boolean(userCreated));
-            
+
             try {
                 visit.store();
             } catch (GenericEntityException e) {
@@ -96,24 +100,27 @@ public class VisitHandler {
             }
         }
     }
-    
+
     public static String getVisitId(HttpSession session) {
         GenericValue visit = getVisit(session);
+
         if (visit != null) {
             return visit.getString("visitId");
         } else {
             return null;
         }
     }
-    
+
     /** Get the visit from the session, or create if missing */
     public static GenericValue getVisit(HttpSession session) {
-        //this defaults to true: ie if anything but "false" it will be true
+        // this defaults to true: ie if anything but "false" it will be true
         if (!UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist.visit", "false")) {
             GenericValue visit = (GenericValue) session.getAttribute("visit");
+
             if (visit == null) {
                 GenericDelegator delegator = null;
                 String delegatorName = (String) session.getAttribute("delegatorName");
+
                 if (UtilValidate.isNotEmpty(delegatorName)) {
                     delegator = GenericDelegator.getGenericDelegator(delegatorName);
                 }
@@ -122,6 +129,7 @@ public class VisitHandler {
                 } else {
                     visit = delegator.makeValue("Visit", null);
                     Long nextId = delegator.getNextSeqId("Visit");
+
                     if (nextId == null) {
                         Debug.logError("Not persisting visit, could not get next seq id", module);
                         visit = null;
@@ -129,9 +137,10 @@ public class VisitHandler {
                         visit.set("visitId", nextId.toString());
                         visit.set("sessionId", session.getId());
                         visit.set("fromDate", new Timestamp(session.getCreationTime()));
-                        //get localhost ip address and hostname to store
+                        // get localhost ip address and hostname to store
                         try {
                             InetAddress address = InetAddress.getLocalHost();
+
                             if (address != null) {
                                 visit.set("serverIpAddress", address.getHostAddress());
                                 visit.set("serverHostName", address.getHostName());

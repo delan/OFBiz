@@ -26,11 +26,13 @@
 
 package org.ofbiz.core.region;
 
+
 import java.net.*;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Base tag for other region tags, uses "/WEB-INF/regions.xml" file
@@ -44,7 +46,7 @@ public class RegionTag extends TagSupport {
     protected Region regionObj = null;
     protected String template = null;
     private String region = null;
-    
+
     public void setTemplate(String template) {
         this.template = template;
     }
@@ -52,45 +54,46 @@ public class RegionTag extends TagSupport {
     public void setRegion(String region) {
         this.region = region;
     }
-    
+
     protected boolean findRegionByKey() throws JspException {
         URL regionFile = null;
+
         try {
             regionFile = pageContext.getServletContext().getResource(SiteDefs.REGIONS_CONFIG_LOCATION);
         } catch (java.net.MalformedURLException e) {
             throw new IllegalArgumentException("regions.xml file URL invalid: " + e.getMessage());
         }
-        
-        if(region != null) {
+
+        if (region != null) {
             regionObj = RegionManager.getRegion(regionFile, region);
-            if(regionObj == null) {
+            if (regionObj == null) {
                 throw new JspException("can't find page definition attribute with this key: " + region);
             }
         }
         return regionObj != null;
     }
-    
+
     protected void createRegionFromTemplate(String id) throws JspException {
-        if(template == null)
+        if (template == null)
             throw new JspException("can't find template");
-        
+
         regionObj = new Region(id, template);
     }
-    
+
     protected void createRegionFromRegion(String id) throws JspException {
         findRegionByKey();
-        
-        if(regionObj == null)
+
+        if (regionObj == null)
             return;
-        
+
         // made from template and sections
         regionObj = new Region(id, regionObj.getContent(), regionObj.getSections());
     }
-    
+
     public void put(Section section) {
         regionObj.put(section);
     }
-    
+
     public void release() {
         super.release();
         regionObj = null;

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow.definition;
 
+
 /**
  * Workflow Definition Parser Exception
  *

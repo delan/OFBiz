@@ -1,6 +1,8 @@
 package org.ofbiz.core.rules.parse.tokens;
 
+
 import java.io.*;
+
 
 /**
  * <p><b>Title:</b> Tokenizer State
@@ -43,17 +45,18 @@ import java.io.*;
  * @version 1.0
  */
 public abstract class TokenizerState {
-  /**
-   * Return a token that represents a logical piece of a reader.
-   *
-   * @return  a token that represents a logical piece of the
-   *          reader
-   * @param   PushbackReader   a reader to read from
-   * @param   c   the character that a tokenizer used to
-   *              determine to use this state
-   * @param   Tokenizer   the tokenizer conducting the overall
-   *                      tokenization of the reader
-   * @exception   IOException   if there is any problem reading
-   */
-  public abstract Token nextToken(PushbackReader r, int c, Tokenizer t) throws IOException;
+
+    /**
+     * Return a token that represents a logical piece of a reader.
+     *
+     * @return  a token that represents a logical piece of the
+     *          reader
+     * @param   PushbackReader   a reader to read from
+     * @param   c   the character that a tokenizer used to
+     *              determine to use this state
+     * @param   Tokenizer   the tokenizer conducting the overall
+     *                      tokenization of the reader
+     * @exception   IOException   if there is any problem reading
+     */
+    public abstract Token nextToken(PushbackReader r, int c, Tokenizer t) throws IOException;
 }

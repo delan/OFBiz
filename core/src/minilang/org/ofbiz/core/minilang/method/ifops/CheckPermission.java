@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.ifops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -35,6 +36,7 @@ import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
+
 
 /**
  * Iff the user has the specified permission, process the sub-operations. Otherwise
@@ -48,7 +50,7 @@ public class CheckPermission extends MethodOperation {
     String message = null;
     String propertyResource = null;
     boolean isProperty = false;
-    
+
     String permission;
     String action;
     String errorListName;
@@ -65,6 +67,7 @@ public class CheckPermission extends MethodOperation {
 
         Element failMessage = UtilXml.firstChildElement(element, "fail-message");
         Element failProperty = UtilXml.firstChildElement(element, "fail-property");
+
         if (failMessage != null) {
             this.message = failMessage.getAttribute("message");
             this.isProperty = false;
@@ -77,51 +80,55 @@ public class CheckPermission extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         boolean hasPermission = false;
-        
+
         List messages = (List) methodContext.getEnv(errorListName);
+
         if (messages == null) {
             messages = new LinkedList();
             methodContext.putEnv(errorListName, messages);
         }
-        
-        //if no user is logged in, treat as if the user does not have permission: do not run subops
+
+        // if no user is logged in, treat as if the user does not have permission: do not run subops
         GenericValue userLogin = methodContext.getUserLogin();
+
         if (userLogin != null) {
             Security security = methodContext.getSecurity();
+
             if (action != null && action.length() > 0) {
-                //run hasEntityPermission
+                // run hasEntityPermission
                 if (security.hasEntityPermission(permission, action, userLogin)) {
                     hasPermission = true;
                 }
             } else {
-                //run hasPermission
+                // run hasPermission
                 if (security.hasPermission(permission, userLogin)) {
                     hasPermission = true;
                 }
             }
         }
-        
+
         if (!hasPermission) {
             this.addMessage(messages, methodContext.getLoader());
         }
-        
+
         return true;
     }
 
     public void addMessage(List messages, ClassLoader loader) {
         if (!isProperty && message != null) {
             messages.add(message);
-            //if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message);
+            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message);
         } else if (isProperty && propertyResource != null && message != null) {
             String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
+
             if (propMsg == null || propMsg.length() == 0)
                 messages.add("Simple Map Processing error occurred, but no message was found, sorry.");
             else
                 messages.add(propMsg);
-            //if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg);
+            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg);
         } else {
             messages.add("Simple Map Processing error occurred, but no message was found, sorry.");
-            //if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] ERROR: No message found");
+            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] ERROR: No message found");
         }
     }
 }

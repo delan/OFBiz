@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.ifops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -36,6 +37,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 
+
 /**
  * Iff the specified field complies with the pattern specified by the regular expression, process sub-operations
  *
@@ -44,13 +46,13 @@ import org.ofbiz.core.minilang.method.*;
  *@version    1.0
  */
 public class IfRegexp extends MethodOperation {
-    
+
     static PatternMatcher matcher = new Perl5Matcher();
     static PatternCompiler compiler = new Perl5Compiler();
 
     List subOps = new LinkedList();
     List elseSubOps = null;
-   
+
     String mapName;
     String fieldName;
 
@@ -61,7 +63,7 @@ public class IfRegexp extends MethodOperation {
         super(element, simpleMethod);
         this.mapName = element.getAttribute("map-name");
         this.fieldName = element.getAttribute("field-name");
-        
+
         this.expr = element.getAttribute("expr");
         try {
             pattern = compiler.compile(expr);
@@ -70,8 +72,9 @@ public class IfRegexp extends MethodOperation {
         }
 
         SimpleMethod.readOperations(element, subOps, simpleMethod);
-        
+
         Element elseElement = UtilXml.firstChildElement(element, "else");
+
         if (elseElement != null) {
             elseSubOps = new LinkedList();
             SimpleMethod.readOperations(elseElement, elseSubOps, simpleMethod);
@@ -79,23 +82,25 @@ public class IfRegexp extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        //if conditions fails, always return true; if a sub-op returns false 
+        // if conditions fails, always return true; if a sub-op returns false 
         // return false and stop, otherwise return true
 
         String fieldString = null;
         Object fieldVal = null;
+
         if (mapName != null && mapName.length() > 0) {
             Map fromMap = (Map) methodContext.getEnv(mapName);
+
             if (fromMap == null) {
                 if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", using empty string for comparison");
             } else {
                 fieldVal = fromMap.get(fieldName);
             }
         } else {
-            //no map name, try the env
+            // no map name, try the env
             fieldVal = methodContext.getEnv(fieldName);
         }
-        
+
         if (fieldVal != null) {
             try {
                 fieldString = (String) ObjectType.simpleTypeConvert(fieldVal, "String", null, null);
@@ -103,10 +108,9 @@ public class IfRegexp extends MethodOperation {
                 Debug.logError(e, "Could not convert object to String, using empty String");
             }
         }
-        //always use an empty string by default
+        // always use an empty string by default
         if (fieldString == null)
             fieldString = "";
-        
 
         if (matcher.matches(fieldString, pattern)) {
             return SimpleMethod.runSubOps(subOps, methodContext);

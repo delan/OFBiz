@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.operation;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 
+
 /**
  * Abstract class defining the interface to a MakeInString operation
  *
@@ -41,8 +43,7 @@ import org.ofbiz.core.minilang.*;
  *@version    1.0
  */
 public abstract class MakeInStringOperation {
-    public MakeInStringOperation(Element element) {
-    }
+    public MakeInStringOperation(Element element) {}
 
     public abstract String exec(Map inMap, List messages, Locale locale, ClassLoader loader);
 }

@@ -26,10 +26,12 @@
 
 package org.ofbiz.core.region;
 
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
 
 /**
  * Abstract base class for Section and Region
@@ -42,6 +44,7 @@ import javax.servlet.http.*;
  */
 public abstract class Content implements java.io.Serializable {
     protected final String content;
+
     /** type can be:
      * <br>- direct (for direct inline content)
      * <br>- region (for a nested region)
@@ -53,6 +56,7 @@ public abstract class Content implements java.io.Serializable {
 
     // Render this content in a JSP page
     abstract void render(PageContext pc) throws JspException;
+
     abstract void render(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException;
 
     public Content(String content, String type) {

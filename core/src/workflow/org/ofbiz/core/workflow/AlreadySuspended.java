@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * AlreadySuspended Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class AlreadySuspended extends WfException {
 
-    public AlreadySuspended() {
-    }
+    public AlreadySuspended() {}
 
     public AlreadySuspended(String msg) {
         super(msg);

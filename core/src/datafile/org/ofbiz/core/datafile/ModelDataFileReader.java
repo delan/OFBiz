@@ -4,6 +4,7 @@
 
 package org.ofbiz.core.datafile;
 
+
 import java.io.*;
 import java.util.*;
 import java.net.*;
@@ -12,6 +13,7 @@ import javax.xml.parsers.*;
 import org.xml.sax.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * <p><b>Title:</b> Flat File definition reader
@@ -50,10 +52,11 @@ public class ModelDataFileReader {
 
     public static ModelDataFileReader getModelDataFileReader(URL readerURL) {
         ModelDataFileReader reader = null;
+
         reader = (ModelDataFileReader) readers.get(readerURL);
-        if (reader == null) { //don't want to block here
+        if (reader == null) { // don't want to block here
             synchronized (ModelDataFileReader.class) {
-                //must check if null again as one of the blocked threads can still enter
+                // must check if null again as one of the blocked threads can still enter
                 reader = (ModelDataFileReader) readers.get(readerURL);
                 if (reader == null) {
                     if (Debug.infoOn()) Debug.logInfo("[ModelDataFileReader.getModelDataFileReader] : creating reader.");
@@ -73,21 +76,22 @@ public class ModelDataFileReader {
     public ModelDataFileReader(URL readerURL) {
         this.readerURL = readerURL;
 
-        //preload models...
+        // preload models...
         getModelDataFiles();
     }
 
     public Map getModelDataFiles() {
-        if (modelDataFiles == null) { //don't want to block here
+        if (modelDataFiles == null) { // don't want to block here
             synchronized (ModelDataFileReader.class) {
-                //must check if null again as one of the blocked threads can still enter
-                if (modelDataFiles == null) { //now it's safe
+                // must check if null again as one of the blocked threads can still enter
+                if (modelDataFiles == null) { // now it's safe
                     modelDataFiles = new HashMap();
 
                     UtilTimer utilTimer = new UtilTimer();
 
                     utilTimer.timerString("Before getDocument in file " + readerURL);
                     Document document = getDocument(readerURL);
+
                     if (document == null) {
                         modelDataFiles = null;
                         return null;
@@ -95,6 +99,7 @@ public class ModelDataFileReader {
 
                     utilTimer.timerString("Before getDocumentElement in file " + readerURL);
                     Element docElement = document.getDocumentElement();
+
                     if (docElement == null) {
                         modelDataFiles = null;
                         return null;
@@ -103,6 +108,7 @@ public class ModelDataFileReader {
                     Node curChild = docElement.getFirstChild();
 
                     int i = 0;
+
                     if (curChild != null) {
                         utilTimer.timerString("Before start of dataFile loop in file " + readerURL);
                         do {
@@ -111,25 +117,25 @@ public class ModelDataFileReader {
                                 Element curDataFile = (Element) curChild;
                                 String dataFileName = UtilXml.checkEmpty(curDataFile.getAttribute("name"));
 
-                                //check to see if dataFile with same name has already been read
+                                // check to see if dataFile with same name has already been read
                                 if (modelDataFiles.containsKey(dataFileName)) {
                                     Debug.logWarning("WARNING: DataFile " + dataFileName +
-                                                     " is defined more than once, most recent will over-write previous definition(s)");
+                                        " is defined more than once, most recent will over-write previous definition(s)");
                                 }
 
-                                //utilTimer.timerString("  After dataFileName -- " + i + " --");
+                                // utilTimer.timerString("  After dataFileName -- " + i + " --");
                                 ModelDataFile dataFile = createModelDataFile(curDataFile);
-                                //utilTimer.timerString("  After createModelDataFile -- " + i + " --");
+
+                                // utilTimer.timerString("  After createModelDataFile -- " + i + " --");
                                 if (dataFile != null) {
                                     modelDataFiles.put(dataFileName, dataFile);
-                                    //utilTimer.timerString("  After modelDataFiles.put -- " + i + " --");
+                                    // utilTimer.timerString("  After modelDataFiles.put -- " + i + " --");
                                     if (Debug.infoOn()) Debug.logInfo("-- getModelDataFile: #" + i + " Loaded dataFile: " + dataFileName);
                                 } else
                                     Debug.logWarning("-- -- SERVICE ERROR:getModelDataFile: Could not create dataFile for dataFileName: " + dataFileName);
 
                             }
-                        } while ((curChild = curChild.getNextSibling()) != null)
-                                ;
+                        } while ((curChild = curChild.getNextSibling()) != null);
                     } else
                         Debug.logWarning("No child nodes found.");
                     utilTimer.timerString("Finished file " + readerURL + " - Total Flat File Defs: " + i + " FINISHED");
@@ -145,6 +151,7 @@ public class ModelDataFileReader {
      */
     public ModelDataFile getModelDataFile(String dataFileName) {
         Map ec = getModelDataFiles();
+
         if (ec != null)
             return (ModelDataFile) ec.get(dataFileName);
         else
@@ -156,6 +163,7 @@ public class ModelDataFileReader {
      */
     public Iterator getDataFileNamesIterator() {
         Collection collection = getDataFileNames();
+
         if (collection != null)
             return collection.iterator();
         else
@@ -167,6 +175,7 @@ public class ModelDataFileReader {
      */
     public Collection getDataFileNames() {
         Map ec = getModelDataFiles();
+
         return ec.keySet();
     }
 
@@ -190,9 +199,11 @@ public class ModelDataFileReader {
         dataFile.description = UtilXml.checkEmpty(dataFileElement.getAttribute("description"));
 
         NodeList rList = dataFileElement.getElementsByTagName("record");
+
         for (int i = 0; i < rList.getLength(); i++) {
             Element recordElement = (Element) rList.item(i);
             ModelRecord modelRecord = createModelRecord(recordElement);
+
             if (modelRecord != null)
                 dataFile.records.add(modelRecord);
             else
@@ -201,8 +212,10 @@ public class ModelDataFileReader {
 
         for (int i = 0; i < dataFile.records.size(); i++) {
             ModelRecord modelRecord = (ModelRecord) dataFile.records.get(i);
+
             if (modelRecord.parentName.length() > 0) {
                 ModelRecord parentRecord = dataFile.getModelRecord(modelRecord.parentName);
+
                 if (parentRecord != null) {
                     parentRecord.childRecords.add(modelRecord);
                     modelRecord.parentRecord = parentRecord;
@@ -244,6 +257,7 @@ public class ModelDataFileReader {
 
         NodeList fList = recordElement.getElementsByTagName("field");
         int priorEnd = -1;
+
         for (int i = 0; i < fList.getLength(); i++) {
             Element fieldElement = (Element) fList.item(i);
             ModelField modelField = createModelField(fieldElement);
@@ -292,11 +306,13 @@ public class ModelDataFileReader {
         if (url == null)
             return null;
         Document document = null;
+
         try {
             document = UtilXml.readXmlDocument(url);
         } catch (SAXException sxe) {
             // Error generated during parsing)
             Exception x = sxe;
+
             if (sxe.getException() != null)
                 x = sxe.getException();
             x.printStackTrace();

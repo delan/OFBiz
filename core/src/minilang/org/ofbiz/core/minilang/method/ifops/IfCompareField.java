@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.ifops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -36,6 +37,7 @@ import org.ofbiz.core.minilang.method.*;
 
 import org.ofbiz.core.minilang.operation.*;
 
+
 /**
  * Iff the comparison between the specified field and the other field is true process sub-operations
  *
@@ -44,10 +46,10 @@ import org.ofbiz.core.minilang.operation.*;
  *@version    1.0
  */
 public class IfCompareField extends MethodOperation {
-    
+
     List subOps = new LinkedList();
     List elseSubOps = null;
-    
+
     String mapName;
     String fieldName;
     String toMapName;
@@ -56,7 +58,7 @@ public class IfCompareField extends MethodOperation {
     String operator;
     String type;
     String format;
-    
+
     public IfCompareField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         this.mapName = element.getAttribute("map-name");
@@ -67,10 +69,11 @@ public class IfCompareField extends MethodOperation {
         this.operator = element.getAttribute("operator");
         this.type = element.getAttribute("type");
         this.format = element.getAttribute("format");
-        
+
         SimpleMethod.readOperations(element, subOps, simpleMethod);
-        
+
         Element elseElement = UtilXml.firstChildElement(element, "else");
+
         if (elseElement != null) {
             elseSubOps = new LinkedList();
             SimpleMethod.readOperations(elseElement, elseSubOps, simpleMethod);
@@ -78,44 +81,48 @@ public class IfCompareField extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        //if conditions fails, always return true; if a sub-op returns false 
+        // if conditions fails, always return true; if a sub-op returns false 
         // return false and stop, otherwise return true
 
         Object fieldVal1 = null;
         Object fieldVal2 = null;
-        
+
         if (mapName != null && mapName.length() > 0) {
             Map fromMap = (Map) methodContext.getEnv(mapName);
+
             if (fromMap == null) {
                 if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", using null for comparison");
             } else {
                 fieldVal1 = fromMap.get(fieldName);
             }
         } else {
-            //no map name, try the env
+            // no map name, try the env
             fieldVal1 = methodContext.getEnv(fieldName);
         }
-        
+
         if (toMapName != null && toMapName.length() > 0) {
             Map toMap = (Map) methodContext.getEnv(toMapName);
+
             if (toMap == null) {
                 if (Debug.infoOn()) Debug.logInfo("To Map not found with name " + toMapName + ", using null for comparison");
             } else {
                 fieldVal2 = toMap.get(toFieldName);
             }
         } else {
-            //no map name, try the env
+            // no map name, try the env
             fieldVal2 = methodContext.getEnv(toFieldName);
         }
-                
+
         List messages = new LinkedList();
         Boolean resultBool = BaseCompare.doRealCompare(fieldVal1, fieldVal2, this.operator, this.type, this.format, messages, null, methodContext.getLoader());
 
         if (messages.size() > 0) {
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 StringBuffer fullString = new StringBuffer();
+
                 fullString.append("Error with comparison: ");
                 Iterator miter = messages.iterator();
+
                 while (miter.hasNext()) {
                     fullString.append((String) miter.next());
                 }
@@ -129,7 +136,7 @@ public class IfCompareField extends MethodOperation {
             }
             return false;
         }
-        
+
         if (resultBool != null && resultBool.booleanValue()) {
             return SimpleMethod.runSubOps(subOps, methodContext);
         } else {

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.envops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -34,6 +35,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 
+
 /**
  * Get the first entry from the list
  *
@@ -42,7 +44,7 @@ import org.ofbiz.core.minilang.method.*;
  *@version    1.0
  */
 public class FirstFromList extends MethodOperation {
-    
+
     String entryName;
     String listName;
 
@@ -54,13 +56,14 @@ public class FirstFromList extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         Object fieldVal = null;
-        
+
         if (listName == null || listName.length() == 0) {
             Debug.logWarning("No list-name specified in iterate tag, doing nothing");
             return true;
         }
-        
+
         List theList = (List) methodContext.getEnv(listName);
+
         if (theList == null) {
             if (Debug.infoOn()) Debug.logInfo("List not found with name " + listName + ", doing nothing");
             return true;

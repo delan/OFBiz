@@ -23,6 +23,7 @@
 
 package org.ofbiz.commonapp.thirdparty.verisign;
 
+
 import java.util.*;
 import java.text.*;
 import javax.servlet.http.*;
@@ -33,6 +34,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.order.order.OrderReadHelper;
 
 import com.Verisign.payment.PFProAPI;
+
 
 /**
  * PayflowPro - Verisign PayFlow Pro <=> OFBiz Service Module
@@ -59,6 +61,7 @@ public class PayflowPro {
         GenericValue ps = (GenericValue) context.get("billingAddress");
 
         Map data = UtilMisc.toMap("COMMENT1", orderId);
+
         if (UtilProperties.propertyValueEqualsIgnoreCase("payflow", "preAuth", "Y"))
             data.put("TRXTYPE", "A");
         else
@@ -67,6 +70,7 @@ public class PayflowPro {
 
         NumberFormat nf = NumberFormat.getCurrencyInstance();
         String totalStr = nf.format(processAmount);
+
         if (Debug.verboseOn()) Debug.logVerbose("Charging amount: " + totalStr, module);
         if (totalStr != null) {
             data.put("AMT", totalStr.substring(1));
@@ -78,6 +82,7 @@ public class PayflowPro {
         if (cc.get("expireDate") != null) {
             String exp = cc.getString("expireDate");
             String expDate = exp.substring(0, 2);
+
             expDate = expDate + exp.substring(exp.length() - 2);
             data.put("EXPDATE", expDate);
         }
@@ -85,8 +90,9 @@ public class PayflowPro {
         // gather the address info
         if (ps != null) {
             String street = ps.getString("address1") +
-                    (ps.get("address2") != null && ps.getString("address2").length() > 0 ? " " +
+                (ps.get("address2") != null && ps.getString("address2").length() > 0 ? " " +
                     ps.getString("address2") : "");
+
             data.put("STREET", street);
             data.put("ZIP", ps.getString("postalCode"));
         }
@@ -95,12 +101,14 @@ public class PayflowPro {
 
         // get the base params
         StringBuffer params = makeBaseParams();
+
         // parse the context parameters
         params.append("&" + parseContext(data));
 
         // transmit the request
         if (Debug.verboseOn()) Debug.logVerbose("Sending to Verisign: " + params.toString(), module);
         String resp = pn.SubmitTransaction(params.toString());
+
         if (Debug.verboseOn()) Debug.logVerbose("Response from Verisign: " + resp, module);
 
         // reset for next use
@@ -117,17 +125,21 @@ public class PayflowPro {
         Map parameters = new OrderedMap();
         List params = StringUtil.split(resp, "&");
         Iterator i = params.iterator();
+
         while (i.hasNext()) {
             String str = (String) i.next();
+
             if (str.length() > 0) {
                 List kv = StringUtil.split(str, "=");
                 Object k = kv.get(0);
                 Object v = kv.get(1);
+
                 if (k != null && v != null)
                     parameters.put(k, v);
             }
         }
         String respCode = (String) parameters.get("RESULT");
+
         if (respCode.equals("0")) {
             result.put("authResult", new Boolean(true));
             result.put("authCode", parameters.get("AUTHCODE"));
@@ -143,9 +155,11 @@ public class PayflowPro {
         StringBuffer buf = new StringBuffer();
         Set keySet = context.keySet();
         Iterator i = keySet.iterator();
+
         while (i.hasNext()) {
             Object name = i.next();
             Object value = context.get(name);
+
             if (value != null && (value instanceof String) && ((String) value).length() == 0) continue;
             buf.append(name + "=");
             buf.append(value);
@@ -157,6 +171,7 @@ public class PayflowPro {
 
     private static StringBuffer makeBaseParams() {
         StringBuffer buf = new StringBuffer();
+
         try {
             buf.append("PARTNER=");
             buf.append(UtilProperties.getPropertyValue("payflow", "partner", "VeriSign"));
@@ -199,16 +214,17 @@ public class PayflowPro {
         }
 
         PFProAPI pn = new PFProAPI();
+
         // Set the certificate path
         pn.SetCertPath(certsPath);
         // Call the client.
         pn.CreateContext(hostAddress,
-                hostPort.intValue(),
-                timeout.intValue(),
-                proxyAddress,
-                proxyPort.intValue(),
-                proxyLogon,
-                proxyPassword);
+            hostPort.intValue(),
+            timeout.intValue(),
+            proxyAddress,
+            proxyPort.intValue(),
+            proxyLogon,
+            proxyPassword);
         return pn;
     }
 }

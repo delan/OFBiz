@@ -24,7 +24,9 @@
 
 package org.ofbiz.core.util;
 
+
 import java.io.*;
+
 
 /**
  * HttpClient Exception.
@@ -49,5 +51,4 @@ public class HttpClientException extends GeneralException {
         super(str, nested);
     }
 }
-
 

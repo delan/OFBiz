@@ -24,10 +24,12 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.util.*;
 
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Generic Entity Value Object - Handles persisntence for any defined entity.
@@ -41,9 +43,10 @@ public class GenericValue extends GenericEntity {
 
     /** Hashtable to cache various related entity collections */
     public transient Map relatedCache = null;
+
     /** Hashtable to cache various related cardinality one entity collections */
     public transient Map relatedOneCache = null;
-    
+
     /** This Map will contain the original field values from the database iff
      * this GenericValue came from the database. If it was made manually it will
      * no have this Map, ie it will be null to not take up memory.
@@ -85,11 +88,11 @@ public class GenericValue extends GenericEntity {
     public void refresh() throws GenericEntityException {
         this.getDelegator().refresh(this);
     }
-    
+
     public boolean originalDbValuesAvailable() {
         return this.originalDbValues != null ? true : false;
     }
-    
+
     public Object getOriginalDbValue(String name) {
         if (getModelEntity().getField(name) == null) {
             throw new IllegalArgumentException("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName);
@@ -147,6 +150,7 @@ public class GenericValue extends GenericEntity {
      */
     public List getRelatedCache(String relationName, Map byAndFields, List orderBy) throws GenericEntityException {
         List col = getRelatedCache(relationName);
+
         if (byAndFields != null) col = EntityUtil.filterByAnd(col, byAndFields);
         if (UtilValidate.isNotEmpty(orderBy)) col = EntityUtil.orderBy(col, orderBy);
         return col;
@@ -161,6 +165,7 @@ public class GenericValue extends GenericEntity {
     public List getRelatedEmbeddedCache(String relationName) throws GenericEntityException {
         if (relatedCache == null) relatedCache = new Hashtable();
         List col = (List) relatedCache.get(relationName);
+
         if (col == null) {
             col = getRelated(relationName);
             relatedCache.put(relationName, col);
@@ -179,6 +184,7 @@ public class GenericValue extends GenericEntity {
      */
     public List getRelatedEmbeddedCache(String relationName, Map byAndFields, List orderBy) throws GenericEntityException {
         List col = getRelatedEmbeddedCache(relationName);
+
         if (byAndFields != null) col = EntityUtil.filterByAnd(col, byAndFields);
         if (UtilValidate.isNotEmpty(orderBy)) col = EntityUtil.orderBy(col, orderBy);
         return col;
@@ -210,6 +216,7 @@ public class GenericValue extends GenericEntity {
     public GenericValue getRelatedOneEmbeddedCache(String relationName) throws GenericEntityException {
         if (relatedOneCache == null) relatedOneCache = new Hashtable();
         GenericValue value = (GenericValue) relatedOneCache.get(relationName);
+
         if (value == null) {
             value = getRelatedOne(relationName);
             if (value != null) relatedOneCache.put(relationName, value);
@@ -310,6 +317,7 @@ public class GenericValue extends GenericEntity {
      */
     public Object clone() {
         GenericValue newEntity = new GenericValue(this);
+
         newEntity.setDelegator(internalDelegator);
         return newEntity;
     }

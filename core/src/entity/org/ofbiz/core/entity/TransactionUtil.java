@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.sql.*;
 import javax.sql.*;
 import java.util.*;
@@ -31,6 +32,7 @@ import javax.transaction.*;
 import javax.transaction.xa.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * <p>Transaction Utility to help with some common transaction tasks
@@ -41,7 +43,7 @@ import org.ofbiz.core.util.*;
  * @version    1.0
  */
 public class TransactionUtil implements javax.transaction.Status {
-    //Debug module name
+    // Debug module name
     public static final String module = TransactionUtil.class.getName();
 
     /** Begins a transaction in the current thread IF transactions are available; only
@@ -51,6 +53,7 @@ public class TransactionUtil implements javax.transaction.Status {
      */
     public static boolean begin() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
+
         if (ut != null) {
             try {
                 if (ut.getStatus() == TransactionUtil.STATUS_ACTIVE) {
@@ -75,6 +78,7 @@ public class TransactionUtil implements javax.transaction.Status {
      * transactions are available, otherwise returns STATUS_NO_TRANSACTION */
     public static int getStatus() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
+
         if (ut != null) {
             try {
                 return ut.getStatus();
@@ -97,9 +101,11 @@ public class TransactionUtil implements javax.transaction.Status {
     /** Commits the transaction in the current thread IF transactions are available */
     public static void commit() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
+
         if (ut != null) {
             try {
                 int status = ut.getStatus();
+
                 if (status != STATUS_NO_TRANSACTION) {
                     ut.commit();
                     Debug.logVerbose("[TransactionUtil.commit] transaction committed", module);
@@ -135,9 +141,11 @@ public class TransactionUtil implements javax.transaction.Status {
     /** Rolls back transaction in the current thread IF transactions are available */
     public static void rollback() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
+
         if (ut != null) {
             try {
                 int status = ut.getStatus();
+
                 if (status != STATUS_NO_TRANSACTION) {
                     ut.rollback();
                     Debug.logInfo("[TransactionUtil.rollback] transaction rolled back", module);
@@ -155,9 +163,11 @@ public class TransactionUtil implements javax.transaction.Status {
     /** Makes a roll back the only possible outcome of the transaction in the current thread IF transactions are available */
     public static void setRollbackOnly() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
+
         if (ut != null) {
             try {
                 int status = ut.getStatus();
+
                 if (status != STATUS_NO_TRANSACTION) {
                     ut.setRollbackOnly();
                     Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction roll back only set", module);
@@ -175,6 +185,7 @@ public class TransactionUtil implements javax.transaction.Status {
     /** Sets the timeout of the transaction in the current thread IF transactions are available */
     public static void setTransactionTimeout(int seconds) throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
+
         if (ut != null) {
             try {
                 ut.setTransactionTimeout(seconds);
@@ -190,6 +201,7 @@ public class TransactionUtil implements javax.transaction.Status {
             return null;
         try {
             XAResource resource = xacon.getXAResource();
+
             TransactionUtil.enlistResource(resource);
             return xacon.getConnection();
         } catch (SQLException e) {
@@ -203,8 +215,10 @@ public class TransactionUtil implements javax.transaction.Status {
 
         try {
             TransactionManager tm = TransactionFactory.getTransactionManager();
+
             if (tm != null && tm.getStatus() == STATUS_ACTIVE) {
                 Transaction tx = tm.getTransaction();
+
                 if (tx != null)
                     tx.enlistResource(resource);
             }

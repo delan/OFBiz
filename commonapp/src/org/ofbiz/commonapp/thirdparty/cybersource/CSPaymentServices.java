@@ -23,6 +23,7 @@
 
 package org.ofbiz.commonapp.thirdparty.cybersource;
 
+
 import java.text.*;
 import java.net.*;
 import java.util.*;
@@ -37,6 +38,7 @@ import com.cybersource.ics.base.message.*;
 import com.cybersource.ics.base.exception.*;
 import com.cybersource.ics.client.message.*;
 import com.cybersource.ics.client.*;
+
 
 /**
  * CyberSource Integration Services
@@ -123,6 +125,7 @@ public class CSPaymentServices {
         request.setDisableAVS(disableAvs);
         if (!disableAvs && avsDeclineCodes != null && avsDeclineCodes.length() > 0) {
             String delcineString = getAvsDeclineCodes(person, avsDeclineCodes);
+
             request.setField("decline_avs_flags", avsDeclineCodes);
         }
 
@@ -152,18 +155,20 @@ public class CSPaymentServices {
     }
 
     private static ICSClientRequest buildRequest(ICSClient client, Map context)
-            throws GenericEntityException, GeneralException, ICSException {
+        throws GenericEntityException, GeneralException, ICSException {
 
         // Create a new ICSClientRequest Object.
         ICSClientRequest request = new ICSClientRequest(client);
 
         // Person Info
         GenericValue person = (GenericValue) context.get("contactPerson");
+
         request.setCustomerFirstName(person.getString("firstName"));
         request.setCustomerLastName(person.getString("lastName"));
 
         // Contact Info
         GenericValue email = (GenericValue) context.get("contactEmail");
+
         request.setCustomerEmailAddress(email.getString("infoString"));
 
         // Phone number seems to not be used; possibly only for reporting.
@@ -171,17 +176,20 @@ public class CSPaymentServices {
         // Payment Info
         GenericValue creditCard = (GenericValue) context.get("creditCard");
         List expDateList = StringUtil.split(creditCard.getString("expireDate"), "/");
+
         request.setCustomerCreditCardNumber(creditCard.getString("cardNumber"));
         request.setCustomerCreditCardExpirationMonth((String) expDateList.get(0));
         request.setCustomerCreditCardExpirationYear((String) expDateList.get(1));
 
         // Payment Contact Info
         GenericValue billingAddress = (GenericValue) context.get("billingAddress");
+
         request.setBillAddress1(billingAddress.getString("address1"));
         if (billingAddress.get("address2") != null)
             request.setBillAddress2(billingAddress.getString("address2"));
         request.setBillCity(billingAddress.getString("city"));
         String bCountry = billingAddress.get("countryGeoId") != null ? billingAddress.getString("countryGeoId") : "USA";
+
         request.setBillCountry(bCountry);
         request.setBillZip(billingAddress.getString("postalCode"));
         if (billingAddress.get("stateProvinceGeoId") != null)
@@ -189,11 +197,13 @@ public class CSPaymentServices {
 
         // Order Shipping Information
         GenericValue shippingAddress = (GenericValue) context.get("shippingAddress");
+
         request.setShipToAddress1(shippingAddress.getString("address1"));
         if (shippingAddress.get("address2") != null)
             request.setShipToAddress2(shippingAddress.getString("address2"));
         request.setShipToCity(shippingAddress.getString("city"));
         String sCountry = shippingAddress.get("countryGeoId") != null ? shippingAddress.getString("countryGeoId") : "USA";
+
         request.setShipToCountry(sCountry);
         request.setShipToZip(shippingAddress.getString("postalCode"));
         if (shippingAddress.get("stateProvinceGeoId") != null)
@@ -204,12 +214,14 @@ public class CSPaymentServices {
         NumberFormat nf = NumberFormat.getCurrencyInstance();
         String totalStr = nf.format(processAmount);
         ICSClientOffer mainOffer = new ICSClientOffer();
+
         mainOffer.setAmount(totalStr);
         request.addOffer(mainOffer);
 
         // Create the offers (one for each line item)
         List orderItems = (List) context.get("orderItems");
         Iterator itemIterator = orderItems.iterator();
+
         while (itemIterator.hasNext()) {
             ICSClientOffer offer = new ICSClientOffer();
             GenericValue item = (GenericValue) itemIterator.next();
@@ -224,6 +236,7 @@ public class CSPaymentServices {
             // Test quantity if INT pass as is; if not pass as 1
             long roundQ = Math.round(quantity.doubleValue());
             Double rounded = new Double(new Long(roundQ).toString());
+
             if (rounded.doubleValue() != quantity.doubleValue())
                 offer.setQuantity(1);
             else
@@ -231,8 +244,8 @@ public class CSPaymentServices {
             // Set the amount to 0.0000 -- we will send a total too.
             offer.setAmount("0.0000");
 
-            //offer.setProductCode("electronic_software");
-            //offer.setPackerCode("portland10");
+            // offer.setProductCode("electronic_software");
+            // offer.setPackerCode("portland10");
 
             request.addOffer(offer);
         }
@@ -260,9 +273,10 @@ public class CSPaymentServices {
 
     private static String getAvsDeclineCodes(GenericValue person, String defaultString) {
         GenericValue avsOverride = null;
+
         try {
             avsOverride = person.getDelegator().findByPrimaryKey("PartyICSAVSOverride",
-                    UtilMisc.toMap("partyId", person.getString("partyId")));
+                        UtilMisc.toMap("partyId", person.getString("partyId")));
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }

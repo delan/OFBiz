@@ -23,6 +23,7 @@
 
 package org.ofbiz.commonapp.order.shoppingcart;
 
+
 import java.text.*;
 import java.util.*;
 import javax.servlet.http.*;
@@ -31,6 +32,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.order.order.OrderReadHelper;
+
 
 /**
  * <p><b>Title:</b> ShoppingCart.java
@@ -44,7 +46,7 @@ import org.ofbiz.commonapp.order.order.OrderReadHelper;
  */
 public class ShoppingCart implements java.io.Serializable {
 
-    //either paymentMethodId or poNumber must be null (use one or the other)
+    // either paymentMethodId or poNumber must be null (use one or the other)
     private List paymentMethodIds = new LinkedList();
     private List paymentMethodTypeIds = new LinkedList();
     private String poNumber = null;
@@ -89,6 +91,7 @@ public class ShoppingCart implements java.io.Serializable {
         // clone the items
         List items = cart.items();
         Iterator itIt = items.iterator();
+
         while (itIt.hasNext())
             cartLines.add(new ShoppingCartItem((ShoppingCartItem) itIt.next()));
     }
@@ -116,13 +119,15 @@ public class ShoppingCart implements java.io.Serializable {
      *  @return the new/increased item index
      */
     public int addOrIncreaseItem(String productId, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
-    //public int addOrIncreaseItem(GenericValue product, double quantity, HashMap features) {
+        // public int addOrIncreaseItem(GenericValue product, double quantity, HashMap features) {
 
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
+
             if (sci.equals(productId, features, attributes, prodCatalogId)) {
                 double newQuantity = sci.getQuantity() + quantity;
+
                 if (Debug.verboseOn()) Debug.logVerbose("Found a match for id " + productId + " on line " + i + ", updating quantity to " + newQuantity);
                 sci.setQuantity(newQuantity, dispatcher, this);
                 return i;
@@ -132,6 +137,7 @@ public class ShoppingCart implements java.io.Serializable {
         // Add the new item to the shopping cart if it wasn't found.
         return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), getDelegator(), productId, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
+
     /** Add an item to the shopping cart. */
     public int addItem(int index, ShoppingCartItem item) {
         if (!cartLines.contains(item)) {
@@ -146,6 +152,7 @@ public class ShoppingCart implements java.io.Serializable {
     public int addItemToEnd(String productId, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
         return addItemToEnd(ShoppingCartItem.makeItem(null, getDelegator(), productId, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
+
     /** Add an item to the shopping cart. */
     public int addItemToEnd(ShoppingCartItem item) {
         if (!cartLines.contains(item)) {
@@ -161,6 +168,7 @@ public class ShoppingCart implements java.io.Serializable {
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem cartItem = (ShoppingCartItem) cartLines.get(i);
+
             if (cartItem.equals(productId, features, attributes, prodCatalogId)) {
                 return cartItem;
             }
@@ -172,9 +180,11 @@ public class ShoppingCart implements java.io.Serializable {
     public List findAllCartItems(String productId) {
         if (productId == null) return new LinkedList(this.cartLines);
         List itemsToReturn = new LinkedList();
+
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem cartItem = (ShoppingCartItem) cartLines.get(i);
+
             if (productId.equals(cartItem.getProductId())) {
                 itemsToReturn.add(cartItem);
             }
@@ -185,8 +195,9 @@ public class ShoppingCart implements java.io.Serializable {
     /** Remove quantity 0 ShoppingCartItems from the cart object. */
     public void removeEmptyCartItems() {
         // Check for existing cart item.
-        for (int i = 0; i < this.cartLines.size(); ) {
+        for (int i = 0; i < this.cartLines.size();) {
             ShoppingCartItem cartItem = (ShoppingCartItem) cartLines.get(i);
+
             if (cartItem.getQuantity() == 0.0) {
                 cartLines.remove(i);
             } else {
@@ -211,7 +222,8 @@ public class ShoppingCart implements java.io.Serializable {
     public void removeCartItem(int index, LocalDispatcher dispatcher) throws CartItemModifyException {
         if (cartLines.size() <= index) return;
         ShoppingCartItem item = (ShoppingCartItem) cartLines.remove(index);
-        //set quantity to 0 to trigger necessary events
+
+        // set quantity to 0 to trigger necessary events
         item.setQuantity(0.0, dispatcher, this);
     }
 
@@ -228,10 +240,12 @@ public class ShoppingCart implements java.io.Serializable {
     public int size() {
         return cartLines.size();
     }
+
     /** Returns a Collection of items in the cart object. */
     public List items() {
         return cartLines;
     }
+
     /** Returns an iterator of cart items. */
     public Iterator iterator() {
         return cartLines.iterator();
@@ -273,6 +287,7 @@ public class ShoppingCart implements java.io.Serializable {
     public void setPoNumber(String poNumber) {
         this.poNumber = poNumber;
     }
+
     /** Returns the po number. */
     public String getPoNumber() {
         return poNumber;
@@ -282,6 +297,7 @@ public class ShoppingCart implements java.io.Serializable {
     public void addPaymentMethodId(String paymentMethodId) {
         this.paymentMethodIds.add(paymentMethodId);
     }
+
     /** Returns the Payment Method Ids. */
     public List getPaymentMethodIds() {
         return paymentMethodIds;
@@ -291,6 +307,7 @@ public class ShoppingCart implements java.io.Serializable {
     public void addPaymentMethodTypeId(String paymentMethodTypeId) {
         this.paymentMethodTypeIds.add(paymentMethodTypeId);
     }
+
     /** Returns the Payment Method Ids. */
     public List getPaymentMethodTypeIds() {
         return paymentMethodTypeIds;
@@ -310,6 +327,7 @@ public class ShoppingCart implements java.io.Serializable {
     public void setBillingAccountId(String billingAccountId) {
         this.billingAccountId = billingAccountId;
     }
+
     /** Returns the billing message string. */
     public String getBillingAccountId() {
         return billingAccountId;
@@ -320,6 +338,7 @@ public class ShoppingCart implements java.io.Serializable {
         // set the shipping address
         this.addContactMech("SHIPPING_LOCATION", shippingContactMechId);
     }
+
     /** Returns the shipping message string. */
     public String getShippingContactMechId() {
         return this.getContactMech("SHIPPING_LOCATION");
@@ -334,6 +353,7 @@ public class ShoppingCart implements java.io.Serializable {
     public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
         orderShipmentPreference.set("shipmentMethodTypeId", shipmentMethodTypeId);
     }
+
     /** Returns the shipment method type */
     public String getShipmentMethodTypeId() {
         return orderShipmentPreference.getString("shipmentMethodTypeId");
@@ -343,6 +363,7 @@ public class ShoppingCart implements java.io.Serializable {
     public void setShippingInstructions(String shippingInstructions) {
         orderShipmentPreference.set("shippingInstructions", shippingInstructions);
     }
+
     /** Returns the shipping instructions. */
     public String getShippingInstructions() {
         return orderShipmentPreference.getString("shippingInstructions");
@@ -351,6 +372,7 @@ public class ShoppingCart implements java.io.Serializable {
     public void setMaySplit(Boolean maySplit) {
         orderShipmentPreference.set("maySplit", maySplit);
     }
+
     /** Returns Boolean.TRUE if the order may be split (null if unspecified) */
     public Boolean getMaySplit() {
         return orderShipmentPreference.getBoolean("maySplit");
@@ -359,6 +381,7 @@ public class ShoppingCart implements java.io.Serializable {
     public void setGiftMessage(String giftMessage) {
         orderShipmentPreference.set("giftMessage", giftMessage);
     }
+
     public String getGiftMessage() {
         return orderShipmentPreference.getString("giftMessage");
     }
@@ -366,6 +389,7 @@ public class ShoppingCart implements java.io.Serializable {
     public void setIsGift(Boolean isGift) {
         orderShipmentPreference.set("isGift", isGift);
     }
+
     public Boolean getIsGift() {
         return orderShipmentPreference.getBoolean("isGift");
     }
@@ -373,9 +397,11 @@ public class ShoppingCart implements java.io.Serializable {
     public GenericValue getOrderShipmentPreference() {
         return this.orderShipmentPreference;
     }
+
     public void setCarrierPartyId(String carrierPartyId) {
         orderShipmentPreference.set("carrierPartyId", carrierPartyId);
     }
+
     public String getCarrierPartyId() {
         return orderShipmentPreference.getString("carrierPartyId");
     }
@@ -383,16 +409,20 @@ public class ShoppingCart implements java.io.Serializable {
     public void setOrderAdditionalEmails(String orderAdditionalEmails) {
         this.orderAdditionalEmails = orderAdditionalEmails;
     }
+
     public String getOrderAdditionalEmails() {
         return orderAdditionalEmails;
     }
 
     public List getPaymentMethods() {
         List paymentMethods = new LinkedList();
+
         if (paymentMethodIds != null && paymentMethodIds.size() > 0) {
             Iterator pmIdsIter = paymentMethodIds.iterator();
+
             while (pmIdsIter.hasNext()) {
                 String paymentMethodId = (String) pmIdsIter.next();
+
                 try {
                     paymentMethods.add(getDelegator().findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId)));
                 } catch (GenericEntityException e) {
@@ -420,6 +450,7 @@ public class ShoppingCart implements java.io.Serializable {
     public double getTotalSalesTax() {
         double tempTax = 0.0;
         Iterator i = iterator();
+
         while (i.hasNext()) {
             tempTax += ((ShoppingCartItem) i.next()).getItemTax();
         }
@@ -428,10 +459,12 @@ public class ShoppingCart implements java.io.Serializable {
 
         return tempTax;
     }
+
     /** Returns the shipping amount from the cart object. */
     public double getTotalShipping() {
         double tempShipping = 0.0;
         Iterator i = iterator();
+
         while (i.hasNext()) {
             tempShipping += ((ShoppingCartItem) i.next()).getItemShipping();
         }
@@ -445,6 +478,7 @@ public class ShoppingCart implements java.io.Serializable {
     public double getItemTotal() {
         double itemTotal = 0.00;
         Iterator i = iterator();
+
         while (i.hasNext()) {
             itemTotal += ((ShoppingCartItem) i.next()).getBasePrice();
         }
@@ -455,6 +489,7 @@ public class ShoppingCart implements java.io.Serializable {
     public double getSubTotal() {
         double itemTotal = 0.00;
         Iterator i = iterator();
+
         while (i.hasNext()) {
             itemTotal += ((ShoppingCartItem) i.next()).getItemSubTotal();
         }
@@ -466,14 +501,17 @@ public class ShoppingCart implements java.io.Serializable {
         if (contactMechPurposeTypeId == null) throw new IllegalArgumentException("You must specify a contactMechPurposeTypeId to add a ContactMech");
         contactMechIdsMap.put(contactMechPurposeTypeId, contactMechId);
     }
+
     /** Get the contactMechId for this cart given the contactMechPurposeTypeId */
     public String getContactMech(String contactMechPurposeTypeId) {
         return (String) contactMechIdsMap.get(contactMechPurposeTypeId);
     }
+
     /** Remove the contactMechId from this cart given the contactMechPurposeTypeId */
     public String removeContactMech(String contactMechPurposeTypeId) {
         return (String) contactMechIdsMap.remove(contactMechPurposeTypeId);
     }
+
     public Map getOrderContactMechIds() {
         return this.contactMechIdsMap;
     }
@@ -482,36 +520,45 @@ public class ShoppingCart implements java.io.Serializable {
     public List getAdjustments() {
         return adjustments;
     }
+
     /** Add an adjustment to the order; don't worry about setting the orderId, orderItemSeqId or orderAdjustmentId; they will be set when the order is created */
     public void addAdjustment(GenericValue adjustment) {
         adjustments.add(adjustment);
     }
+
     public void removeAdjustment(int index) {
         adjustments.remove(index);
     }
+
     /** go through the order adjustments and remove all adjustments with the given type */
     public void removeAdjustmentByType(String orderAdjustmentTypeId) {
         if (orderAdjustmentTypeId == null) return;
 
-        //make a list of adjustment lists including the cart adjustments and the cartItem adjustments for each item
+        // make a list of adjustment lists including the cart adjustments and the cartItem adjustments for each item
         List adjsLists = new LinkedList();
+
         if (this.getAdjustments() != null) {
             adjsLists.add(this.getAdjustments());
         }
         Iterator cartIterator = this.iterator();
+
         while (cartIterator.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) cartIterator.next();
+
             if (item.getAdjustments() != null) {
                 adjsLists.add(item.getAdjustments());
             }
         }
 
         Iterator adjsListsIter = adjsLists.iterator();
+
         while (adjsListsIter.hasNext()) {
             List adjs = (List) adjsListsIter.next();
+
             if (adjs != null) {
-                for (int i = 0; i < adjs.size(); ) {
+                for (int i = 0; i < adjs.size();) {
                     GenericValue orderAdjustment = (GenericValue) adjs.get(i);
+
                     if (orderAdjustmentTypeId.equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
                         adjs.remove(i);
                     } else {
@@ -521,6 +568,7 @@ public class ShoppingCart implements java.io.Serializable {
             }
         }
     }
+
     public double getOrderOtherAdjustmentTotal() {
         return OrderReadHelper.calcOrderAdjustments(this.getAdjustments(), getSubTotal(), true, false, false);
     }
@@ -534,8 +582,10 @@ public class ShoppingCart implements java.io.Serializable {
     public double getShippableTotal() {
         double itemTotal = 0.0;
         Iterator i = iterator();
+
         while (i.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) i.next();
+
             if (item.shippingApplies())
                 itemTotal += item.getItemSubTotal();
         }
@@ -546,6 +596,7 @@ public class ShoppingCart implements java.io.Serializable {
     public double getTotalQuantity() {
         double count = 0.0;
         Iterator i = iterator();
+
         while (i.hasNext()) {
             count += ((ShoppingCartItem) i.next()).getQuantity();
         }
@@ -556,8 +607,10 @@ public class ShoppingCart implements java.io.Serializable {
     public double getShippableQuantity() {
         double count = 0.0;
         Iterator i = iterator();
+
         while (i.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) i.next();
+
             if (item.shippingApplies()) {
                 count += item.getQuantity();
             }
@@ -569,8 +622,10 @@ public class ShoppingCart implements java.io.Serializable {
     public double getShippableWeight() {
         double weight = 0.0;
         Iterator i = iterator();
+
         while (i.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) i.next();
+
             if (item.shippingApplies()) {
                 weight += (item.getWeight() * item.getQuantity());
             }
@@ -578,13 +633,14 @@ public class ShoppingCart implements java.io.Serializable {
         return weight;
     }
 
-
     /** Returns the total weight in the cart. */
     public double getTotalWeight() {
         double weight = 0.0;
         Iterator i = iterator();
+
         while (i.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) i.next();
+
             weight += (item.getWeight() * item.getQuantity());
         }
         return weight;
@@ -594,6 +650,7 @@ public class ShoppingCart implements java.io.Serializable {
     public boolean viewCartOnAdd() {
         return viewCartOnAdd;
     }
+
     /** Returns true if the user wishes to view the cart everytime an item is added. */
     public void setViewCartOnAdd(boolean viewCartOnAdd) {
         this.viewCartOnAdd = viewCartOnAdd;
@@ -603,14 +660,17 @@ public class ShoppingCart implements java.io.Serializable {
     public String getOrderId() {
         return this.orderId;
     }
+
     /** Returns the first attempt order ID associated with this cart or null if no order has been created yet. */
     public String getFirstAttemptOrderId() {
         return this.firstAttemptOrderId;
     }
+
     /** Sets the orderId associated with this cart. */
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
+
     /** Sets the first attempt orderId for this cart. */
     public void setFirstAttemptOrderId(String orderId) {
         this.firstAttemptOrderId = orderId;
@@ -621,16 +681,18 @@ public class ShoppingCart implements java.io.Serializable {
         if (productPromoActionPK == null) return;
 
         Iterator fsppas = this.freeShippingProductPromoActions.iterator();
+
         while (fsppas.hasNext()) {
             if (productPromoActionPK.equals(((GenericValue) fsppas.next()).getPrimaryKey())) {
                 fsppas.remove();
             }
         }
     }
+
     /** Adds a ProductPromoAction to be used for free shipping (must be of type free shipping, or nothing will be done). */
     public void addFreeShippingProductPromoAction(GenericValue productPromoAction) {
         if (productPromoAction == null) return;
-        //is this a free shipping action?
+        // is this a free shipping action?
         if (!"PROMO_FREE_SHIPPING".equals(productPromoAction.getString("productPromoActionTypeId"))) return;
 
         // to easily make sure that no duplicate exists, do a remove first
@@ -651,8 +713,10 @@ public class ShoppingCart implements java.io.Serializable {
             if (dispatcher != null) {
                 List cartLineItems = new LinkedList(cartLines);
                 Iterator itemIter = cartLineItems.iterator();
+
                 while (itemIter.hasNext()) {
                     ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
+
                     Debug.logInfo("Item qty: " + item.getQuantity());
                     try {
                         item.explodeItem(this, dispatcher);
@@ -667,6 +731,7 @@ public class ShoppingCart implements java.io.Serializable {
     public List makeOrderItems() {
         return makeOrderItems(false, null);
     }
+
     public List makeOrderItems(boolean explodeItems, LocalDispatcher dispatcher) {
         // do the explosion
         if (explodeItems && dispatcher != null)
@@ -678,11 +743,13 @@ public class ShoppingCart implements java.io.Serializable {
             long cartLineSize = cartLines.size();
             long seqId = 1;
             Iterator itemIter = cartLines.iterator();
+
             while (itemIter.hasNext()) {
                 ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
 
-                //format the string with enough leading zeroes for the number of cartLines
+                // format the string with enough leading zeroes for the number of cartLines
                 NumberFormat nf = NumberFormat.getNumberInstance();
+
                 if (cartLineSize > 9) {
                     nf.setMinimumIntegerDigits(2);
                 } else if (cartLineSize > 99) {
@@ -690,15 +757,17 @@ public class ShoppingCart implements java.io.Serializable {
                 } else if (cartLineSize > 999) {
                     nf.setMinimumIntegerDigits(4);
                 } else if (cartLineSize > 9999) {
-                    //if it's more than 9999, something's up... hit the sky
+                    // if it's more than 9999, something's up... hit the sky
                     nf.setMinimumIntegerDigits(18);
                 }
 
                 String orderItemSeqId = nf.format(seqId);
+
                 seqId++;
                 item.setOrderItemSeqId(orderItemSeqId);
 
                 GenericValue orderItem = getDelegator().makeValue("OrderItem", null);
+
                 orderItem.set("orderItemSeqId", orderItemSeqId);
                 orderItem.set("orderItemTypeId", "SALES_ORDER_ITEM");
                 orderItem.set("productId", item.getProductId());
@@ -711,7 +780,7 @@ public class ShoppingCart implements java.io.Serializable {
                 orderItem.set("correspondingPoId", this.getPoNumber());
                 orderItem.set("statusId", "ITEM_ORDERED");
                 result.add(orderItem);
-                //don't do anything with adjustments here, those will be added below in makeAllAdjustments
+                // don't do anything with adjustments here, those will be added below in makeAllAdjustments
             }
             return result;
         }
@@ -721,68 +790,78 @@ public class ShoppingCart implements java.io.Serializable {
     public List makeAllAdjustments() {
         List allAdjs = new LinkedList();
 
-        //before returning adjustments, go through them to find all that need counter adjustments (for instance: free shipping)
+        // before returning adjustments, go through them to find all that need counter adjustments (for instance: free shipping)
         Iterator allAdjsIter = this.getAdjustments().iterator();
+
         while (allAdjsIter.hasNext()) {
             GenericValue orderAdjustment = (GenericValue) allAdjsIter.next();
+
             allAdjs.add(orderAdjustment);
 
             if ("SHIPPING_CHARGES".equals(orderAdjustment.get("orderAdjustmentTypeId"))) {
                 Iterator fsppas = this.freeShippingProductPromoActions.iterator();
+
                 while (fsppas.hasNext()) {
                     GenericValue productPromoAction = (GenericValue) fsppas.next();
 
                     if ((productPromoAction.get("productId") == null || productPromoAction.getString("productId").equals(this.getShipmentMethodTypeId())) &&
-                            (productPromoAction.get("partyId") == null || productPromoAction.getString("partyId").equals(this.getCarrierPartyId()))) {
+                        (productPromoAction.get("partyId") == null || productPromoAction.getString("partyId").equals(this.getCarrierPartyId()))) {
                         Double shippingAmount = new Double(-OrderReadHelper.calcOrderAdjustment(orderAdjustment, getSubTotal()));
-                        //always set orderAdjustmentTypeId to SHIPPING_CHARGES for free shipping adjustments
+                        // always set orderAdjustmentTypeId to SHIPPING_CHARGES for free shipping adjustments
                         GenericValue fsOrderAdjustment = getDelegator().makeValue("OrderAdjustment",
                                 UtilMisc.toMap("orderItemSeqId", orderAdjustment.get("orderItemSeqId"), "orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", shippingAmount,
-                                "productPromoId", productPromoAction.get("productPromoId"), "productPromoRuleId", productPromoAction.get("productPromoRuleId"),
-                                "productPromoActionSeqId", productPromoAction.get("productPromoActionSeqId")));
+                                    "productPromoId", productPromoAction.get("productPromoId"), "productPromoRuleId", productPromoAction.get("productPromoRuleId"),
+                                    "productPromoActionSeqId", productPromoAction.get("productPromoActionSeqId")));
+
                         allAdjs.add(fsOrderAdjustment);
 
-                        //if free shipping IS applied to this orderAdjustment, break
-                        //  out of the loop so that even if there are multiple free
-                        //  shipping adjustments that apply to this orderAdjustment it
-                        //  will only be compensated for once
+                        // if free shipping IS applied to this orderAdjustment, break
+                        // out of the loop so that even if there are multiple free
+                        // shipping adjustments that apply to this orderAdjustment it
+                        // will only be compensated for once
                         break;
                     }
                 }
             }
         }
 
-        //add all of the item adjustments to this list too
+        // add all of the item adjustments to this list too
         Iterator itemIter = cartLines.iterator();
+
         while (itemIter.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
             Collection adjs = item.getAdjustments();
+
             if (adjs != null) {
                 Iterator adjIter = adjs.iterator();
+
                 while (adjIter.hasNext()) {
                     GenericValue orderAdjustment = (GenericValue) adjIter.next();
+
                     orderAdjustment.set("orderItemSeqId", item.getOrderItemSeqId());
                     allAdjs.add(orderAdjustment);
 
                     if ("SHIPPING_CHARGES".equals(orderAdjustment.get("orderAdjustmentTypeId"))) {
                         Iterator fsppas = this.freeShippingProductPromoActions.iterator();
+
                         while (fsppas.hasNext()) {
                             GenericValue productPromoAction = (GenericValue) fsppas.next();
 
                             if ((productPromoAction.get("productId") == null || productPromoAction.getString("productId").equals(item.getShipmentMethodTypeId())) &&
-                                    (productPromoAction.get("partyId") == null || productPromoAction.getString("partyId").equals(item.getCarrierPartyId()))) {
+                                (productPromoAction.get("partyId") == null || productPromoAction.getString("partyId").equals(item.getCarrierPartyId()))) {
                                 Double shippingAmount = new Double(-OrderReadHelper.calcItemAdjustment(orderAdjustment, new Double(item.getQuantity()), new Double(item.getItemSubTotal())));
-                                //always set orderAdjustmentTypeId to SHIPPING_CHARGES for free shipping adjustments
+                                // always set orderAdjustmentTypeId to SHIPPING_CHARGES for free shipping adjustments
                                 GenericValue fsOrderAdjustment = getDelegator().makeValue("OrderAdjustment",
                                         UtilMisc.toMap("orderItemSeqId", orderAdjustment.get("orderItemSeqId"), "orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", shippingAmount,
-                                        "productPromoId", productPromoAction.get("productPromoId"), "productPromoRuleId", productPromoAction.get("productPromoRuleId"),
-                                        "productPromoActionSeqId", productPromoAction.get("productPromoActionSeqId")));
+                                            "productPromoId", productPromoAction.get("productPromoId"), "productPromoRuleId", productPromoAction.get("productPromoRuleId"),
+                                            "productPromoActionSeqId", productPromoAction.get("productPromoActionSeqId")));
+
                                 allAdjs.add(fsOrderAdjustment);
 
-                                //if free shipping IS applied to this orderAdjustment, break
-                                //  out of the loop so that even if there are multiple free
-                                //  shipping adjustments that apply to this orderAdjustment it
-                                //  will only be compensated for once
+                                // if free shipping IS applied to this orderAdjustment, break
+                                // out of the loop so that even if there are multiple free
+                                // shipping adjustments that apply to this orderAdjustment it
+                                // will only be compensated for once
                                 break;
                             }
                         }
@@ -798,17 +877,19 @@ public class ShoppingCart implements java.io.Serializable {
     public List makeAllOrderShipmentPreferences() {
         List allOshPrefs = new LinkedList();
 
-        //if nothing has been put into the value, don't set it; must at least have a carrierPartyId and a shipmentMethodTypeId
+        // if nothing has been put into the value, don't set it; must at least have a carrierPartyId and a shipmentMethodTypeId
         if (this.orderShipmentPreference.size() > 1) {
             allOshPrefs.add(this.orderShipmentPreference);
         }
 
-        //add all of the item adjustments to this list too
+        // add all of the item adjustments to this list too
         Iterator itemIter = cartLines.iterator();
+
         while (itemIter.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
-            //if nothing has been put into the value, don't set it; must at least have a carrierPartyId and a shipmentMethodTypeId
+            // if nothing has been put into the value, don't set it; must at least have a carrierPartyId and a shipmentMethodTypeId
             GenericValue itemOrderShipmentPreference = item.getOrderShipmentPreference();
+
             if (itemOrderShipmentPreference != null && itemOrderShipmentPreference.size() > 1) {
                 itemOrderShipmentPreference.set("orderItemSeqId", item.getOrderItemSeqId());
                 allOshPrefs.add(item.getOrderShipmentPreference());
@@ -822,15 +903,19 @@ public class ShoppingCart implements java.io.Serializable {
     public List makeAllOrderItemPriceInfos() {
         List allInfos = new LinkedList();
 
-        //add all of the item adjustments to this list too
+        // add all of the item adjustments to this list too
         Iterator itemIter = cartLines.iterator();
+
         while (itemIter.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
             Collection infos = item.getOrderItemPriceInfos();
+
             if (infos != null) {
                 Iterator infosIter = infos.iterator();
+
                 while (infosIter.hasNext()) {
                     GenericValue orderItemPriceInfo = (GenericValue) infosIter.next();
+
                     orderItemPriceInfo.set("orderItemSeqId", item.getOrderItemSeqId());
                     allInfos.add(orderItemPriceInfo);
                 }
@@ -845,11 +930,14 @@ public class ShoppingCart implements java.io.Serializable {
         List allOrderContactMechs = new LinkedList();
 
         Map contactMechIds = this.getOrderContactMechIds();
+
         if (contactMechIds != null) {
             Iterator cMechIdsIter = contactMechIds.entrySet().iterator();
+
             while (cMechIdsIter.hasNext()) {
                 Map.Entry entry = (Map.Entry) cMechIdsIter.next();
                 GenericValue orderContactMech = getDelegator().makeValue("OrderContactMech", null);
+
                 orderContactMech.set("contactMechPurposeTypeId", entry.getKey());
                 orderContactMech.set("contactMechId", entry.getValue());
                 allOrderContactMechs.add(orderContactMech);
@@ -864,14 +952,18 @@ public class ShoppingCart implements java.io.Serializable {
         List allOrderContactMechs = new LinkedList();
 
         Iterator itemIter = cartLines.iterator();
+
         while (itemIter.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
             Map itemContactMechIds = item.getOrderItemContactMechIds();
+
             if (itemContactMechIds != null) {
                 Iterator cMechIdsIter = itemContactMechIds.entrySet().iterator();
+
                 while (cMechIdsIter.hasNext()) {
                     Map.Entry entry = (Map.Entry) cMechIdsIter.next();
                     GenericValue orderContactMech = getDelegator().makeValue("OrderItemContactMech", null);
+
                     orderContactMech.set("contactMechPurposeTypeId", entry.getKey());
                     orderContactMech.set("contactMechId", entry.getValue());
                     orderContactMech.set("orderItemSeqId", item.getOrderItemSeqId());
@@ -886,6 +978,7 @@ public class ShoppingCart implements java.io.Serializable {
     /** Returns a Map of cart values to pass to the storeOrder service */
     public Map makeCartMap(LocalDispatcher dispatcher, boolean explodeItems) {
         Map result = new HashMap();
+
         result.put("orderItems", makeOrderItems(explodeItems, dispatcher));
         result.put("orderAdjustments", makeAllAdjustments());
         result.put("orderItemPriceInfos", makeAllOrderItemPriceInfos());

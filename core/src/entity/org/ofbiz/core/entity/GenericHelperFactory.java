@@ -24,11 +24,13 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.util.*;
 import org.w3c.dom.Element;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.config.*;
+
 
 /**
  * Generic Entity Helper Factory Class
@@ -39,24 +41,27 @@ import org.ofbiz.core.entity.config.*;
  */
 public class GenericHelperFactory {
 
-    //protected static UtilCache helperCache = new UtilCache("entity.GenericHelpers", 0, 0);
+    // protected static UtilCache helperCache = new UtilCache("entity.GenericHelpers", 0, 0);
     protected static Map helperCache = new HashMap();
 
     public static GenericHelper getHelper(String helperName) {
         GenericHelper helper = (GenericHelper) helperCache.get(helperName);
-        if (helper == null) //don't want to block here
+
+        if (helper == null) // don't want to block here
         {
             synchronized (GenericHelperFactory.class) {
-                //must check if null again as one of the blocked threads can still enter
+                // must check if null again as one of the blocked threads can still enter
                 helper = (GenericHelper) helperCache.get(helperName);
                 if (helper == null) {
                     try {
                         EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+
                         if (datasourceInfo == null) {
                             throw new IllegalStateException("Could not find datasource definition with name " + helperName);
                         }
                         String helperClassName = datasourceInfo.helperClass;
                         Class helperClass = null;
+
                         if (helperClassName != null && helperClassName.length() > 0) {
                             try {
                                 helperClass = Class.forName(helperClassName);
@@ -66,10 +71,11 @@ public class GenericHelperFactory {
                             }
                         }
 
-                        Class[] paramTypes = new Class[]{String.class};
-                        Object[] params = new Object[]{helperName};
+                        Class[] paramTypes = new Class[] {String.class};
+                        Object[] params = new Object[] {helperName};
 
                         java.lang.reflect.Constructor helperConstructor = null;
+
                         if (helperClass != null) {
                             try {
                                 helperConstructor = helperClass.getConstructor(paramTypes);

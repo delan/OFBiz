@@ -24,6 +24,7 @@
 
 package org.ofbiz.commonapp.accounting.payment;
 
+
 import java.text.*;
 import java.util.*;
 
@@ -33,6 +34,7 @@ import org.ofbiz.core.util.*;
 
 import org.ofbiz.commonapp.order.order.*;
 import org.ofbiz.commonapp.party.contact.ContactHelper;
+
 
 /**
  * PaymentGatewayServices
@@ -57,6 +59,7 @@ public class PaymentGatewayServices {
         // get the order header and payment preferences
         GenericValue orderHeader = null;
         List paymentPrefs = null;
+
         try {
             Map lookupMap = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_NOT_AUTH");
             List orderList = UtilMisc.toList("maxAmount");
@@ -72,10 +75,12 @@ public class PaymentGatewayServices {
 
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
         double amountToBill = orh.getOrderGrandTotal();
+
         if (Debug.verboseOn())
             Debug.logVerbose("Amount to charge is: " + amountToBill, module);
 
         Iterator payments = paymentPrefs.iterator();
+
         while (payments.hasNext()) {
             GenericValue paymentPref = (GenericValue) payments.next();
             GenericValue paymentMethod = null;
@@ -109,9 +114,11 @@ public class PaymentGatewayServices {
 
             // get the process amount.
             double thisAmount = amountToBill;
+
             if (paymentPref.get("maxAmount") != null)
                 thisAmount = paymentPref.getDouble("maxAmount").doubleValue();
             NumberFormat nf = NumberFormat.getCurrencyInstance();
+
             processAmount = new Double(thisAmount);
             if (Debug.verboseOn())
                 Debug.logVerbose("Charging amount: " + processAmount, module);
@@ -120,6 +127,7 @@ public class PaymentGatewayServices {
             GenericValue contactPerson = orh.getBillToPerson();
             GenericValue contactEmail = null;
             Collection emails = null;
+
             try {
                 emails = ContactHelper.getContactMech(contactPerson.getRelatedOne("Party"), "PRIMARY_EMAIL", "EMAIL_ADDRESS", false);
             } catch (GenericEntityException gee) {
@@ -130,6 +138,7 @@ public class PaymentGatewayServices {
 
             String serviceName = null;
             Map processContext = new HashMap();
+
             processContext.put("orderId", orderId);
             processContext.put("orderItems", orh.getOrderItems());
             processContext.put("processAmount", processAmount);
@@ -150,8 +159,10 @@ public class PaymentGatewayServices {
 
             // invoke the processor.
             Map processorResult = null;
+
             try {
                 LocalDispatcher dispatcher = dctx.getDispatcher();
+
                 processorResult = dispatcher.runSync(serviceName, processContext);
             } catch (GenericServiceException gse) {
                 Debug.logError(gse, "Problems invoking payment processor!" + "(" + orderId + ")", module);
@@ -193,6 +204,7 @@ public class PaymentGatewayServices {
         Boolean authResult = (Boolean) result.get("authResult");
         Boolean captureResult = (Boolean) result.get("captureResult");
         boolean resultPassed = false;
+
         if (authResult != null) {
             processAuthResult(dctx, result, paymentPreference);
             resultPassed = authResult.booleanValue();
@@ -207,6 +219,7 @@ public class PaymentGatewayServices {
 
     private static void processAuthResult(DispatchContext dctx, Map result, GenericValue paymentPreference) throws GeneralException {
         Boolean authResult = (Boolean) result.get("authResult");
+
         if (result != null && authResult.booleanValue()) {
             paymentPreference.set("authCode", result.get("authCode"));
             paymentPreference.set("statusId", "PAYMENT_AUTHORIZED");
@@ -225,6 +238,7 @@ public class PaymentGatewayServices {
     private static void processCaptureResult(DispatchContext dctx, Map result, GenericValue paymentPreference) throws GeneralException {
         Boolean captureResult = (Boolean) result.get("captureResult");
         String payTo = (String) result.get("payToPartyId");
+
         if (payTo == null)
             payTo = "Company";
 
@@ -234,14 +248,16 @@ public class PaymentGatewayServices {
         if (result != null && captureResult.booleanValue()) {
             // captured
             Long paymentId = delegator.getNextSeqId("Payment");
+
             if (paymentId == null)
                 throw new GenericEntityException("Cannot get sequence ID for Payment entity.");
             GenericValue orderRole = EntityUtil.getFirst(delegator.findByAnd("OrderRole",
-                    UtilMisc.toMap("orderId", paymentPreference.get("orderId"), "roleTypeId", "BILL_TO_CUSTOMER")));
+                        UtilMisc.toMap("orderId", paymentPreference.get("orderId"), "roleTypeId", "BILL_TO_CUSTOMER")));
+
             payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", paymentId.toString(),
-                    "paymentTypeId", "RECEIPT", "paymentMethodTypeId", paymentPreference.get("paymentMethodTypeId"),
-                    "paymentMethodId", paymentPreference.get("paymentMethodId"), "partyIdTo", payTo,
-                    "partyIdFrom", orderRole.get("partyId")));
+                            "paymentTypeId", "RECEIPT", "paymentMethodTypeId", paymentPreference.get("paymentMethodTypeId"),
+                            "paymentMethodId", paymentPreference.get("paymentMethodId"), "partyIdTo", payTo,
+                            "partyIdFrom", orderRole.get("partyId")));
             payment.set("paymentPreference", paymentPreference.get("orderPaymentPreferenceId"));
             payment.set("amount", result.get("processAmount"));
             payment.set("paymentRefNum", result.get("captureRefNum"));
@@ -252,11 +268,9 @@ public class PaymentGatewayServices {
             paymentPreference.set("statusId", "PAYMENT_SETTLED");
             paymentPreference.store();
 
-        } else if (result != null && !captureResult.booleanValue()) {
-            // declined
+        } else if (result != null && !captureResult.booleanValue()) {// declined
             // TODO re-auth the card and capture.
-        } else {
-            //error
+        } else {// error
         }
     }
 
@@ -266,6 +280,7 @@ public class PaymentGatewayServices {
     public static Map testProcessor(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         Double processAmount = (Double) context.get("processAmount");
+
         if (processAmount != null && processAmount.doubleValue() >= 100.00)
             result.put("authResult", new Boolean(true));
         if (processAmount != null && processAmount.doubleValue() < 100.00)
@@ -274,6 +289,7 @@ public class PaymentGatewayServices {
             result.put("authResult", null);
 
         long nowTime = new Date().getTime();
+
         result.put("processAmount", context.get("processAmount"));
         result.put("authCode", context.get("processResult"));
         result.put("authRefNum", new Long(nowTime).toString());

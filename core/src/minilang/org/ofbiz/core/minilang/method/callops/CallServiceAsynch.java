@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.callops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -36,6 +37,7 @@ import org.ofbiz.core.service.*;
 
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
+
 
 /**
  * Calls a service using the given parameters
@@ -58,6 +60,7 @@ public class CallServiceAsynch extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         Map inMap = null;
+
         if (UtilValidate.isEmpty(inMapName)) {
             inMap = new HashMap();
         } else {
@@ -71,6 +74,7 @@ public class CallServiceAsynch extends MethodOperation {
         // invoke the service
         if (includeUserLogin) {
             GenericValue userLogin = methodContext.getUserLogin();
+
             if (userLogin != null)
                 inMap.put("userLogin", userLogin);
         }
@@ -79,6 +83,7 @@ public class CallServiceAsynch extends MethodOperation {
         } catch (GenericServiceException e) {
             Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem invoking the " + serviceName + " service: " + e.getMessage() + "]";
+
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());

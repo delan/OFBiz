@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.util.*;
 import java.sql.*;
 import javax.sql.*;
@@ -36,8 +37,9 @@ import org.ofbiz.core.util.*;
 import tyrex.resource.jdbc.xa.*;
 import tyrex.tm.*;
 
+
 // For Tyrex 0.9.7.0
-//import tyrex.jdbc.xa.*;
+// import tyrex.jdbc.xa.*;
 
 /**
  * Tyrex ConnectionFactory - central source for JDBC connections from Tyrex
@@ -48,23 +50,23 @@ import tyrex.tm.*;
  */
 public class TyrexConnectionFactory {
 
-    //protected static UtilCache dsCache = new UtilCache("entity.TyrexDataSources", 0, 0);
+    // protected static UtilCache dsCache = new UtilCache("entity.TyrexDataSources", 0, 0);
     protected static Map dsCache = new HashMap();
-    
+
     public static Connection getConnection(String helperName, Element inlineJdbcElement) throws SQLException, GenericEntityException {
         boolean usingTyrex = true;
 
         if (usingTyrex) {
             EnabledDataSource ds;
 
-            //try once
+            // try once
             ds = (EnabledDataSource) dsCache.get(helperName);
             if (ds != null) {
                 return TransactionUtil.enlistConnection(ds.getXAConnection());
             }
 
             synchronized (TyrexConnectionFactory.class) {
-                //try again inside the synch just in case someone when through while we were waiting
+                // try again inside the synch just in case someone when through while we were waiting
                 ds = (EnabledDataSource) dsCache.get(helperName);
                 if (ds != null) {
                     return TransactionUtil.enlistConnection(ds.getXAConnection());
@@ -78,6 +80,7 @@ public class TyrexConnectionFactory {
                 ds.setDescription(helperName);
 
                 String transIso = inlineJdbcElement.getAttribute("isolation-level");
+
                 if (transIso != null && transIso.length() > 0)
                     ds.setIsolationLevel(transIso);
 
@@ -91,6 +94,4 @@ public class TyrexConnectionFactory {
         return null;
     }
 }
-
-
 

@@ -1,6 +1,8 @@
 package org.ofbiz.core.rules.parse;
 
+
 import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Parser Visitor
@@ -35,39 +37,44 @@ import java.util.*;
  * @version 1.0
  */
 public abstract class ParserVisitor {
-  /**
-   * Visit an alternation.
-   *
-   * @param   a   the parser to visit
-   * @param   visited   a collection of previously visited parsers
-   */
-  public abstract void visitAlternation(Alternation a, List visited);
-  /**
-   * Visit an empty parser.
-   *
-   * @param   e   the parser to visit
-   * @param   visited   a collection of previously visited parsers
-   */
-  public abstract void visitEmpty(Empty e, List visited);
-  /**
-   * Visit a repetition.
-   *
-   * @param   r   the parser to visit
-   * @param   visited   a collection of previously visited parsers
-   */
-  public abstract void visitRepetition(Repetition r, List visited);
-  /**
-   * Visit a sequence.
-   *
-   * @param   s   the parser to visit
-   * @param   visited   a collection of previously visited parsers
-   */
-  public abstract void visitSequence(Sequence s, List visited);
-  /**
-   * Visit a terminal.
-   *
-   * @param   t   the parser to visit
-   * @param   visited   a collection of previously visited parsers
-   */
-  public abstract void visitTerminal(Terminal t, List visited);
+
+    /**
+     * Visit an alternation.
+     *
+     * @param   a   the parser to visit
+     * @param   visited   a collection of previously visited parsers
+     */
+    public abstract void visitAlternation(Alternation a, List visited);
+
+    /**
+     * Visit an empty parser.
+     *
+     * @param   e   the parser to visit
+     * @param   visited   a collection of previously visited parsers
+     */
+    public abstract void visitEmpty(Empty e, List visited);
+
+    /**
+     * Visit a repetition.
+     *
+     * @param   r   the parser to visit
+     * @param   visited   a collection of previously visited parsers
+     */
+    public abstract void visitRepetition(Repetition r, List visited);
+
+    /**
+     * Visit a sequence.
+     *
+     * @param   s   the parser to visit
+     * @param   visited   a collection of previously visited parsers
+     */
+    public abstract void visitSequence(Sequence s, List visited);
+
+    /**
+     * Visit a terminal.
+     *
+     * @param   t   the parser to visit
+     * @param   visited   a collection of previously visited parsers
+     */
+    public abstract void visitTerminal(Terminal t, List visited);
 }

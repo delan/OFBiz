@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.service.eca;
 
+
 import java.util.*;
 import java.net.*;
 import java.io.*;
@@ -33,6 +34,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * EventConditionAction
@@ -49,21 +51,23 @@ public class EventConditionAction {
     List conditions = new LinkedList();
     List actions = new LinkedList();
 
-    protected EventConditionAction() { }
+    protected EventConditionAction() {}
 
     public EventConditionAction(Element eca) {
         this.serviceName = eca.getAttribute("service");
         this.eventName = eca.getAttribute("event");
         this.runOnError = "true".equals(eca.getAttribute("run-on-error"));
-        
+
         List condList = UtilXml.childElementList(eca, "condition");
         Iterator ci = condList.iterator();
+
         while (ci.hasNext()) {
             conditions.add(new EventCondition((Element) ci.next(), true));
         }
 
         List condFList = UtilXml.childElementList(eca, "condition-field");
         Iterator cfi = condFList.iterator();
+
         while (cfi.hasNext()) {
             conditions.add(new EventCondition((Element) cfi.next(), false));
         }
@@ -72,6 +76,7 @@ public class EventConditionAction {
 
         List actList = UtilXml.childElementList(eca, "action");
         Iterator ai = actList.iterator();
+
         while (ai.hasNext()) {
             actions.add(new EventAction((Element) ai.next()));
         }
@@ -83,11 +88,13 @@ public class EventConditionAction {
         if (isError && !this.runOnError) {
             return;
         }
-        
+
         boolean allCondTrue = true;
         Iterator c = conditions.iterator();
+
         while (c.hasNext()) {
             EventCondition ec = (EventCondition) c.next();
+
             if (!ec.eval(serviceName, dctx, context)) {
                 allCondTrue = false;
                 break;
@@ -96,8 +103,10 @@ public class EventConditionAction {
 
         if (allCondTrue) {
             Iterator a = actions.iterator();
+
             while (a.hasNext()) {
                 EventAction ea = (EventAction) a.next();
+
                 ea.runAction(serviceName, dctx, context, result);
             }
         }

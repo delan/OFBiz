@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.view;
 
+
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
@@ -32,6 +33,7 @@ import javax.servlet.http.*;
 import javax.servlet.jsp.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * ViewHandlerException - View Handler Exception
@@ -61,6 +63,7 @@ public class JspViewHandler implements ViewHandler {
 
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
         RequestDispatcher rd = request.getRequestDispatcher(page);
+
         if (rd == null)
             throw new ViewHandlerException("Source returned a null dispatcher (" + page + ")");
         try {
@@ -69,8 +72,10 @@ public class JspViewHandler implements ViewHandler {
             throw new ViewHandlerException("IO Error in view", ie);
         } catch (ServletException e) {
             Throwable throwable = e.getRootCause() != null ? e.getRootCause() : e;
+
             if (throwable instanceof JspException) {
                 JspException jspe = (JspException) throwable;
+
                 throwable = jspe.getRootCause() != null ? jspe.getRootCause() : jspe;
             }
             Debug.logError(throwable, "ServletException rendering JSP view");

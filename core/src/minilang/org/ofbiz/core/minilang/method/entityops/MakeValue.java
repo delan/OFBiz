@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.entityops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.entity.*;
+
 
 /**
  * Uses the delegator to find entity values by anding the map fields
@@ -55,6 +57,7 @@ public class MakeValue extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         Map ctxMap = (Map) (UtilValidate.isEmpty(mapName) ? null : methodContext.getEnv(mapName));
+
         methodContext.putEnv(valueName, methodContext.getDelegator().makeValue(entityName, ctxMap));
         return true;
     }

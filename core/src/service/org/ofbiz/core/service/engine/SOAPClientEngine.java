@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.service.engine;
 
+
 import java.net.*;
 import java.util.*;
 
@@ -32,6 +33,7 @@ import org.apache.axis.client.*;
 import org.apache.axis.encoding.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
+
 
 /**
  * Generic Service SOAP Interface
@@ -62,10 +64,12 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
      */
     public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
         Object result = serviceInvoker(modelService, context);
+
         if (result == null)
             throw new GenericServiceException("Service did not return expected result");
         if (!(result instanceof Map)) {
             Map newResult = new HashMap();
+
             newResult.put("result", result);
             return newResult;
         }
@@ -88,6 +92,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
         }
 
         URL endPoint = null;
+
         try {
             endPoint = new URL(modelService.location);
         } catch (MalformedURLException e) {
@@ -96,8 +101,9 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
 
         List inModelParamList = modelService.getInModelParamList();
         Object[] params = new Object[inModelParamList.size()];
+
         if (Debug.infoOn()) Debug.logInfo("[SOAPClientEngine.invoke] : Parameter length - " +
-                      params.length, module);
+                params.length, module);
 
         call.setTargetEndpointAddress(endPoint);
         call.setOperationName(modelService.invoke);
@@ -106,17 +112,20 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
 
         Iterator iter = inModelParamList.iterator();
         int i = 0;
+
         while (iter.hasNext()) {
             ModelParam p = (ModelParam) iter.next();
-            if (Debug.infoOn()) Debug.logInfo("[SOAPClientEngine.invoke} : Parameter : " + p.name + " (" +
-                          p.mode + ") - " + i, module);
 
-            //if the value is null, that's fine, it will go in null...
+            if (Debug.infoOn()) Debug.logInfo("[SOAPClientEngine.invoke} : Parameter : " + p.name + " (" +
+                    p.mode + ") - " + i, module);
+
+            // if the value is null, that's fine, it will go in null...
             params[i] = context.get(p.name);
             i++;
         }
 
         Object result = null;
+
         try {
             Debug.logInfo("[SOAPClientEngine.invoke] : Sending Call To SOAP Server", module);
             result = call.invoke(params);

@@ -25,11 +25,13 @@
 
 package org.ofbiz.core.taglib;
 
+
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
 import org.ofbiz.core.util.UtilJ2eeCompat;
 import org.ofbiz.core.util.Debug;
+
 
 /**
  * I18nMessageArgumentTag - JSP tag that used inside a MessageTag to create an
@@ -40,10 +42,11 @@ import org.ofbiz.core.util.Debug;
  * @created April 16, 2002
  */
 public class I18nMessageArgumentTag extends TagSupport {
-    public void setValue (Object argumentValue) throws JspException {
+    public void setValue(Object argumentValue) throws JspException {
         try {
             I18nMessageTag messageTag = (I18nMessageTag) this.getParent();
-            messageTag.addArgument (argumentValue);
+
+            messageTag.addArgument(argumentValue);
         } catch (Exception e) {
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
                 throw new JspException(e.getMessage(), e);

@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * <p><b>Title:</b> Not
  * <p><b>Description:</b> None
@@ -93,90 +94,98 @@ package org.ofbiz.core.rules.engine;
  * @version 1.0
  */
 public class Not extends Structure {
-  /**
-   * Contructs a Not from the specified object.
-   * <p>
-   * Such a Not will search a program for a fact that contains
-   * just the functor. For example, it might make sense to create a
-   * <code>Not("demo")</code> that would look for the fact
-   * <code>demo</code> to see if the program is in demo mode.
-   *
-   * @param   functor   the functor for this structure
-   */
-  public Not(Object functor) {
-    this(functor, new Term[0]);
-  }
-  /**
-   * Constructs a Not with the specified functor and terms.
-   *
-   * This is the normal way to define a Not. This structure will
-   * be true if there is no possible proof of it in a program.
-   *
-   * @param   functor   the functor of the structure
-   *
-   * @param   terms   the terms of the structure, which may be either
-   *                  variables or other structures
-   */
-  public Not(Object functor, Term[] terms) {
-    super(functor, terms);
-  }
-  /**
-   * Constructs a Not version of the supplied structure.
-   *
-   * @param   structure   the structure to negate
-   */
-  public Not(Structure s) {
-    this(s.functor, s.terms);
-  }
-  /**
-   * Create a <code>ConsultingNot</code> counterpart that
-   * can prove itself.
-   *
-   * @param AxiomSource where to find axioms to prove
-   *        against
-   *
-   * @param Scope the scope to use for variables in the
-   *        <code>ConsultingStructure</code>
-   *
-   * @return a <code>ConsultingNot</code> counterpart that
-   *         can prove itself
-   */
-  public Term copyForProof(AxiomSource as, Scope scope) {
-    Term[] newTerms = new Term[terms.length];
-    for (int i = 0; i < terms.length; i++) {
-      newTerms[i] = terms[i].copyForProof(as, scope);
+
+    /**
+     * Contructs a Not from the specified object.
+     * <p>
+     * Such a Not will search a program for a fact that contains
+     * just the functor. For example, it might make sense to create a
+     * <code>Not("demo")</code> that would look for the fact
+     * <code>demo</code> to see if the program is in demo mode.
+     *
+     * @param   functor   the functor for this structure
+     */
+    public Not(Object functor) {
+        this(functor, new Term[0]);
     }
-    return new ConsultingNot(new ConsultingStructure(as, functor, newTerms));
-  }
-  /**
-   * Returns true if the supplied object is an equivalent
-   * not structure.
-   *
-   * @param   object   the object to compare
-   *
-   * @return   true, if the supplied object is a Not, and
-   *           the two object's sub-structures are equal
-   */
-  public boolean equals(Object o) {
-    if (!(o instanceof Not))
-      return false;
-    Not n = (Not) o;
-    if (!functorAndArityEquals(n)) {
-      return false;
+
+    /**
+     * Constructs a Not with the specified functor and terms.
+     *
+     * This is the normal way to define a Not. This structure will
+     * be true if there is no possible proof of it in a program.
+     *
+     * @param   functor   the functor of the structure
+     *
+     * @param   terms   the terms of the structure, which may be either
+     *                  variables or other structures
+     */
+    public Not(Object functor, Term[] terms) {
+        super(functor, terms);
     }
-    for (int i = 0; i < terms.length; i++) {
-      if (!(terms[i].equals(n.terms[i]))) {
-        return false;
-      }
+
+    /**
+     * Constructs a Not version of the supplied structure.
+     *
+     * @param   structure   the structure to negate
+     */
+    public Not(Structure s) {
+        this(s.functor, s.terms);
     }
-    return true;
-  }
-  /**
-   * Returns a string description of this Not.
-   *
-   * @return    a string description of this Not
-   */
-  public String toString() {
-    return "not " + super.toString();
-  }
+
+    /**
+     * Create a <code>ConsultingNot</code> counterpart that
+     * can prove itself.
+     *
+     * @param AxiomSource where to find axioms to prove
+     *        against
+     *
+     * @param Scope the scope to use for variables in the
+     *        <code>ConsultingStructure</code>
+     *
+     * @return a <code>ConsultingNot</code> counterpart that
+     *         can prove itself
+     */
+    public Term copyForProof(AxiomSource as, Scope scope) {
+        Term[] newTerms = new Term[terms.length];
+
+        for (int i = 0; i < terms.length; i++) {
+            newTerms[i] = terms[i].copyForProof(as, scope);
+        }
+        return new ConsultingNot(new ConsultingStructure(as, functor, newTerms));
+    }
+
+    /**
+     * Returns true if the supplied object is an equivalent
+     * not structure.
+     *
+     * @param   object   the object to compare
+     *
+     * @return   true, if the supplied object is a Not, and
+     *           the two object's sub-structures are equal
+     */
+    public boolean equals(Object o) {
+        if (!(o instanceof Not))
+            return false;
+        Not n = (Not) o;
+
+        if (!functorAndArityEquals(n)) {
+            return false;
+        }
+        for (int i = 0; i < terms.length; i++) {
+            if (!(terms[i].equals(n.terms[i]))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns a string description of this Not.
+     *
+     * @return    a string description of this Not
+     */
+    public String toString() {
+        return "not " + super.toString();
+    }
 }

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.util;
 
+
 import java.util.*;
 import javax.naming.*;
 import java.net.URL;
@@ -31,6 +32,7 @@ import org.w3c.dom.*;
 
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * JNDIContextFactory - central source for JNDI Contexts by helper name
@@ -48,22 +50,24 @@ public class JNDIContextFactory {
      */
     public static InitialContext getInitialContext(String jndiServerName) throws GenericConfigException {
         InitialContext ic = (InitialContext) contexts.get(jndiServerName);
-        
+
         if (ic == null) {
             synchronized (JNDIContextFactory.class) {
                 ic = (InitialContext) contexts.get(jndiServerName);
 
                 if (ic == null) {
                     JNDIConfigUtil.JndiServerInfo jndiServerInfo = JNDIConfigUtil.getJndiServerInfo(jndiServerName);
+
                     if (jndiServerInfo == null) {
                         throw new GenericConfigException("ERROR: no jndi-server definition was found with the name " + jndiServerName + " in jndiservers.xml");
                     }
-                    
+
                     try {
                         if (UtilValidate.isEmpty(jndiServerInfo.contextProviderUrl)) {
                             ic = new InitialContext();
                         } else {
                             Hashtable h = new Hashtable();
+
                             h.put(Context.INITIAL_CONTEXT_FACTORY, jndiServerInfo.initialContextFactory);
                             h.put(Context.PROVIDER_URL, jndiServerInfo.contextProviderUrl);
                             if (jndiServerInfo.urlPkgPrefixes != null && jndiServerInfo.urlPkgPrefixes.length() > 0)
@@ -78,6 +82,7 @@ public class JNDIContextFactory {
                         }
                     } catch (Exception e) {
                         String errorMsg = "Error getting JNDI initial context for server name " + jndiServerName;
+
                         Debug.logError(e, errorMsg);
                         throw new GenericConfigException(errorMsg, e);
                     }

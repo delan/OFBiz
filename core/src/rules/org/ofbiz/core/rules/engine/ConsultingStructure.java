@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * A ConsultingStructure is structure that can prove itself against an axiom source supplied with the constructor.
  * <p>
@@ -44,6 +45,7 @@ public class ConsultingStructure extends Structure {
     protected AxiomEnumeration axioms;
     protected Unification currentUnification;
     protected DynamicRule resolvent;
+
     /**
      * Constructs a consulting structure with the specified functor
      * and terms, to consult against the supplied axiom source.
@@ -54,6 +56,7 @@ public class ConsultingStructure extends Structure {
         if (source == null) throw new IllegalArgumentException("Cannot create ConsultingStructure with a null source");
         this.source = source;
     }
+
     /**
      * Returns the axioms that a consulting structure can
      * consult. Note that after canUnify fails, this object will
@@ -66,6 +69,7 @@ public class ConsultingStructure extends Structure {
         }
         return axioms;
     }
+
     /**
      * Tests if this structure can find another proof, and, if so,
      * sets this structure's variables to the values that make the
@@ -75,48 +79,52 @@ public class ConsultingStructure extends Structure {
      *         proof.
      */
     public boolean canFindNextProof() {
-        
-    /*
-     * A consulting structure proves itself by unifying with rule
-     * in a program. When that rule has more than one structure,
-     * the proving structure takes the tail of the rule as its
-     * "resolvent". The resolvent is the remainder of the rule,
-     * which, if proven true, confirms the truth of this
-     * structure. The resolvent may have multiple different
-     * proofs, and each of these counts as a new proof of this
-     * structure.
-     */
+
+        /*
+         * A consulting structure proves itself by unifying with rule
+         * in a program. When that rule has more than one structure,
+         * the proving structure takes the tail of the rule as its
+         * "resolvent". The resolvent is the remainder of the rule,
+         * which, if proven true, confirms the truth of this
+         * structure. The resolvent may have multiple different
+         * proofs, and each of these counts as a new proof of this
+         * structure.
+         */
         if (resolvent != null) {
             if (resolvent.canFindNextProof()) {
                 return true;
             }
         }
         while (true) {
-      /*
-       * No hogging the CPU! Who knows? We might be in a tight
-       * loop that the user wants to halt. For example, with the
-       * program "loop :- loop;" and the query "loop", we need
-       * to distract the proof dog enough to let a halt button
-       * click come through.
-       */
+
+            /*
+             * No hogging the CPU! Who knows? We might be in a tight
+             * loop that the user wants to halt. For example, with the
+             * program "loop :- loop;" and the query "loop", we need
+             * to distract the proof dog enough to let a halt button
+             * click come through.
+             */
             Thread.yield();
-      /*
-       * Find a new axiom to prove.
-       */
+
+            /*
+             * Find a new axiom to prove.
+             */
             unbind();
             if (!canUnify()) {
                 axioms = null;
                 return false;
             }
-      /*
-       * Show that the unifying axiom's remainder is either
-       * empty or provable.
-       */
+
+            /*
+             * Show that the unifying axiom's remainder is either
+             * empty or provable.
+             */
             if (resolvent.canEstablish()) {
                 return true;
             }
         }
     }
+
     /**
      * Return true if this structure can unify with another rule in the
      * program.
@@ -149,11 +157,12 @@ public class ConsultingStructure extends Structure {
         while (axioms().hasMoreAxioms()) {
             Axiom a = axioms().nextAxiom();
             Structure h = a.head();
+
             if (!functorAndArityEquals(h)) {
                 continue;
             }
             DynamicAxiom aCopy = a.dynamicAxiom(source);
-            
+
             currentUnification = aCopy.head().unify(this);
             resolvent = null;
             if (currentUnification != null) {
@@ -163,6 +172,7 @@ public class ConsultingStructure extends Structure {
         }
         return false;
     }
+
     /**
      * Release the variable bindings that the last unification
      * produced.

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.entityops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.entity.*;
+
 
 /**
  * Uses the delegator to create the specified value object entity in the datasource
@@ -51,7 +53,7 @@ public class SetCurrentUserLogin extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         GenericValue userLogin = (GenericValue) methodContext.getEnv(valueName);
-        
+
         if (userLogin == null) {
             Debug.logWarning("In SetCurrentUserLogin a value was not found with the specified valueName: " + valueName + ", not setting");
             return true;
@@ -59,5 +61,5 @@ public class SetCurrentUserLogin extends MethodOperation {
 
         methodContext.setUserLogin(userLogin);
         return true;
-    }   
+    }
 }

@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
+
 /**
  * <p><b>Title:</b> Rule
  * <p><b>Description:</b> None
@@ -44,80 +45,89 @@ package org.ofbiz.core.rules.engine;
  * @version 1.0
  */
 public class Rule implements Axiom {
-  protected Structure[] structures;
-  /**
-   * Construct rule from the given structures.
-   *
-   * @param Structure[] the structures that make up this rule.
-   *
-   */
-  public Rule(Structure[] structures) {
-    this.structures = structures;
-  }
-  /**
-   * Construct a one-structure rule from the given structure.
-   *
-   * @param Structure the structure that makes up this rule.
-   *
-   */
-  public Rule(Structure s) {
-    this(new Structure[] {s});
-  }
-  /**
-   * Return a provable version of this rule.
-   *
-   * @return a provable version of this rule
-   */
-  public DynamicAxiom dynamicAxiom(AxiomSource as) {
-    return new DynamicRule(as, new Scope(), this);
-  }
-  /**
-   * Returns true if the supplied object is an equivalent
-   * rule.
-   *
-   * @param   object   the object to compare
-   *
-   * @return   true, if the supplied object's structures equal
-   *           this rule's structures
-   */
-  public boolean equals(Object o) {
-    if (!(o instanceof Rule))
-      return false;
-    Rule r = (Rule) o;
-    if (!(structures.length == r.structures.length)) {
-      return false;
+    protected Structure[] structures;
+
+    /**
+     * Construct rule from the given structures.
+     *
+     * @param Structure[] the structures that make up this rule.
+     *
+     */
+    public Rule(Structure[] structures) {
+        this.structures = structures;
     }
-    for (int i = 0; i < structures.length; i++) {
-      if (!(structures[i].equals(r.structures[i]))) {
-        return false;
-      }
+
+    /**
+     * Construct a one-structure rule from the given structure.
+     *
+     * @param Structure the structure that makes up this rule.
+     *
+     */
+    public Rule(Structure s) {
+        this(new Structure[] {s}
+        );
     }
-    return true;
-  }
-  /**
-   * Return the first structure in this rule.
-   *
-   * @return the first structure in this rule
-   */
-  public Structure head() {
-    return structures[0];
-  }
-  /**
-   * Returns a string representation of this rule.
-   *
-   * @return a string representation of this rule.
-   */
-  public String toString() {
-    StringBuffer buf = new StringBuffer();
-    for (int i = 0; i < structures.length; i++) {
-      if (i == 1) {
-        buf.append(" :- ");
-      }
-      if (i > 1) {
-        buf.append(", ");
-      }
-      buf.append(structures[i].toString());
+
+    /**
+     * Return a provable version of this rule.
+     *
+     * @return a provable version of this rule
+     */
+    public DynamicAxiom dynamicAxiom(AxiomSource as) {
+        return new DynamicRule(as, new Scope(), this);
     }
-    return buf.toString();
-  }
+
+    /**
+     * Returns true if the supplied object is an equivalent
+     * rule.
+     *
+     * @param   object   the object to compare
+     *
+     * @return   true, if the supplied object's structures equal
+     *           this rule's structures
+     */
+    public boolean equals(Object o) {
+        if (!(o instanceof Rule))
+            return false;
+        Rule r = (Rule) o;
+
+        if (!(structures.length == r.structures.length)) {
+            return false;
+        }
+        for (int i = 0; i < structures.length; i++) {
+            if (!(structures[i].equals(r.structures[i]))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Return the first structure in this rule.
+     *
+     * @return the first structure in this rule
+     */
+    public Structure head() {
+        return structures[0];
+    }
+
+    /**
+     * Returns a string representation of this rule.
+     *
+     * @return a string representation of this rule.
+     */
+    public String toString() {
+        StringBuffer buf = new StringBuffer();
+
+        for (int i = 0; i < structures.length; i++) {
+            if (i == 1) {
+                buf.append(" :- ");
+            }
+            if (i > 1) {
+                buf.append(", ");
+            }
+            buf.append(structures[i].toString());
+        }
+        return buf.toString();
+    }
 }

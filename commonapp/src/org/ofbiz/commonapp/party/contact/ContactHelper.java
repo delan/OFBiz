@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2002/09/04 17:41:19  azeneski
+ * another pass of Collection => List updates
+ *
  * Revision 1.9  2002/07/16 20:59:08  jonesde
  * Small change for speedup, specifying that all members of collection are the same entity
  *
@@ -33,10 +36,12 @@
  */
 package org.ofbiz.commonapp.party.contact;
 
+
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * <p><b>Title:</b> ContactHelper.java
@@ -64,7 +69,7 @@ import org.ofbiz.core.util.*;
  *@version 1.0
  *@created Sep 12, 2001
  */
-public class ContactHelper {  
+public class ContactHelper {
     public static Collection getContactMech(GenericValue party, boolean includeOld) {
         return getContactMech(party, null, null, includeOld);
     }
@@ -72,20 +77,21 @@ public class ContactHelper {
     public static Collection getContactMechByType(GenericValue party, String contactMechTypeId, boolean includeOld) {
         return getContactMech(party, null, contactMechTypeId, includeOld);
     }
-    
+
     public static Collection getContactMechByPurpose(GenericValue party, String contactMechPurposeTypeId, boolean includeOld) {
         return getContactMech(party, contactMechPurposeTypeId, null, includeOld);
     }
-
 
     public static Collection getContactMech(GenericValue party, String contactMechPurposeTypeId, String contactMechTypeId, boolean includeOld) {
         if (party == null) return null;
         try {
             List partyContactMechList;
+
             if (contactMechPurposeTypeId == null) {
                 partyContactMechList = party.getRelated("PartyContactMech");
             } else {
                 List list;
+
                 list = party.getRelatedByAnd("PartyContactMechPurpose", UtilMisc.toMap("contactMechPurposeTypeId", contactMechPurposeTypeId));
                 if (!includeOld) {
                     list = EntityUtil.filterByDate(list, true);
@@ -109,10 +115,12 @@ public class ContactHelper {
 
     public static String formatCreditCard(GenericValue creditCardInfo) {
         StringBuffer result = new StringBuffer(16);
+
         result.append(creditCardInfo.getString("cardType"));
         String cardNumber = creditCardInfo.getString("cardNumber");
-        if(cardNumber != null && cardNumber.length() > 4) {
-            result.append(' ').append(cardNumber.substring(cardNumber.length()-4));
+
+        if (cardNumber != null && cardNumber.length() > 4) {
+            result.append(' ').append(cardNumber.substring(cardNumber.length() - 4));
         }
         result.append(' ').append(creditCardInfo.getString("expireDate"));
         return result.toString();

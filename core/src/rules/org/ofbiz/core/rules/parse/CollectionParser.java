@@ -1,6 +1,8 @@
 package org.ofbiz.core.rules.parse;
 
+
 import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Collection Parser
@@ -34,65 +36,73 @@ import java.util.*;
  * @version 1.0
  */
 public abstract class CollectionParser extends Parser {
-  /**
-   * the parsers this parser is a collection of
-   */
-  protected List subparsers = new ArrayList();
-  /**
-   * Supports subclass constructors with no arguments.
-   */
-  public CollectionParser() {
-  }
-  /**
-   * Supports subclass constructors with a name argument
-   *
-   * @param   string   the name of this parser
-   */
-  public CollectionParser(String name) {
-    super(name);
-  }
-  /**
-   * Adds a parser to the collection.
-   *
-   * @param   Parser   the parser to add
-   *
-   * @return   this
-   */
-  public CollectionParser add(Parser e) {
-    subparsers.add(e);
-    return this;
-  }
-  /**
-   * Return this parser's subparsers.
-   *
-   * @return   List   this parser's subparsers
-   */
-  public List getSubparsers() {
-    return subparsers;
-  }
-  /**
-   * Helps to textually describe this CollectionParser.
-   *
-   * @returns   the string to place between parsers in
-   *            the collection
-   */
-  protected abstract String toStringSeparator();
-  /**
-   * Returns a textual description of this parser.
-   */
-  protected String unvisitedString(List visited) {
-    StringBuffer buf = new StringBuffer("<");
-    boolean needSeparator = false;
-    Enumeration e = Collections.enumeration(subparsers);
-    while (e.hasMoreElements()) {
-      if (needSeparator) {
-        buf.append(toStringSeparator());
-      }
-      Parser next = (Parser) e.nextElement();
-      buf.append(next.toString(visited));
-      needSeparator = true;
+
+    /**
+     * the parsers this parser is a collection of
+     */
+    protected List subparsers = new ArrayList();
+
+    /**
+     * Supports subclass constructors with no arguments.
+     */
+    public CollectionParser() {}
+
+    /**
+     * Supports subclass constructors with a name argument
+     *
+     * @param   string   the name of this parser
+     */
+    public CollectionParser(String name) {
+        super(name);
     }
-    buf.append(">");
-    return buf.toString();
-  }
+
+    /**
+     * Adds a parser to the collection.
+     *
+     * @param   Parser   the parser to add
+     *
+     * @return   this
+     */
+    public CollectionParser add(Parser e) {
+        subparsers.add(e);
+        return this;
+    }
+
+    /**
+     * Return this parser's subparsers.
+     *
+     * @return   List   this parser's subparsers
+     */
+    public List getSubparsers() {
+        return subparsers;
+    }
+
+    /**
+     * Helps to textually describe this CollectionParser.
+     *
+     * @returns   the string to place between parsers in
+     *            the collection
+     */
+    protected abstract String toStringSeparator();
+
+    /**
+     * Returns a textual description of this parser.
+     */
+    protected String unvisitedString(List visited) {
+        StringBuffer buf = new StringBuffer("<");
+        boolean needSeparator = false;
+        Enumeration e = Collections.enumeration(subparsers);
+
+        while (e.hasMoreElements()) {
+            if (needSeparator) {
+                buf.append(toStringSeparator());
+            }
+            Parser next = (Parser) e.nextElement();
+
+            buf.append(next.toString(visited));
+            needSeparator = true;
+        }
+        buf.append(">");
+        return buf.toString();
+    }
 }

@@ -24,6 +24,7 @@
 
 package org.ofbiz.catalog;
 
+
 import javax.servlet.http.*;
 import javax.servlet.*;
 import java.util.*;
@@ -31,6 +32,7 @@ import java.util.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
+
 
 /**
  * Product Variant Related Events
@@ -40,6 +42,7 @@ import org.ofbiz.core.security.*;
  *@version    1.0
  */
 public class VariantEvents {
+
     /** Creates variant products from a virtual product and a combination of selectable features
      *@param request The HTTPRequest object for the current request
      *@param response The HTTPResponse object for the current request
@@ -65,6 +68,7 @@ public class VariantEvents {
         }
 
         int featureTypeSize = 0;
+
         try {
             featureTypeSize = Integer.parseInt(featureTypeSizeStr);
         } catch (NumberFormatException e) {
@@ -74,10 +78,11 @@ public class VariantEvents {
 
         try {
             boolean beganTransacton = TransactionUtil.begin();
-            
+
             try {
-                //read the product, duplicate it with the given id
+                // read the product, duplicate it with the given id
                 GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+
                 if (product == null) {
                     TransactionUtil.rollback(beganTransacton);
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "Product not found with ID: " + productId);
@@ -85,41 +90,44 @@ public class VariantEvents {
                 }
 
                 GenericValue variantProduct = new GenericValue(product);
+
                 variantProduct.set("productId", variantProductId);
                 variantProduct.set("isVirtual", "N");
                 variantProduct.set("isVariant", "Y");
                 variantProduct.set("primaryProductCategoryId", null);
                 variantProduct.create();
 
-                //add an association from productId to variantProductId of the PRODUCT_VARIANT
-                GenericValue productAssoc = delegator.makeValue("ProductAssoc", 
-                        UtilMisc.toMap("productId", productId, "productIdTo", variantProductId, 
-                        "productAssocTypeId", "PRODUCT_VARIANT", "fromDate", UtilDateTime.nowTimestamp()));
+                // add an association from productId to variantProductId of the PRODUCT_VARIANT
+                GenericValue productAssoc = delegator.makeValue("ProductAssoc",
+                        UtilMisc.toMap("productId", productId, "productIdTo", variantProductId,
+                            "productAssocTypeId", "PRODUCT_VARIANT", "fromDate", UtilDateTime.nowTimestamp()));
+
                 productAssoc.create();
-                
-                //add the selected standard features to the new product given the productFeatureIds
+
+                // add the selected standard features to the new product given the productFeatureIds
                 for (int i = 0; i < featureTypeSize; i++) {
                     String productFeatureId = request.getParameter("feature_" + i);
+
                     if (productFeatureId == null) {
                         TransactionUtil.rollback(beganTransacton);
                         request.setAttribute(SiteDefs.ERROR_MESSAGE, "The productFeatureId for feature type number " + i + " was not found");
                         return "error";
                     }
-                    
+
                     GenericValue productFeature = delegator.findByPrimaryKey("ProductFeature", UtilMisc.toMap("productFeatureId", productFeatureId));
-                    
-                    GenericValue productFeatureAppl = delegator.makeValue("ProductFeatureAppl", 
-                            UtilMisc.toMap("productId", variantProductId, "productFeatureId", productFeatureId, 
-                            "productFeatureApplTypeId", "STANDARD_FEATURE", "fromDate", UtilDateTime.nowTimestamp()));
-                    
-                    //set the default seq num if it's there...
+
+                    GenericValue productFeatureAppl = delegator.makeValue("ProductFeatureAppl",
+                            UtilMisc.toMap("productId", variantProductId, "productFeatureId", productFeatureId,
+                                "productFeatureApplTypeId", "STANDARD_FEATURE", "fromDate", UtilDateTime.nowTimestamp()));
+
+                    // set the default seq num if it's there...
                     if (productFeature != null) {
                         productFeatureAppl.set("sequenceNum", productFeature.get("defaultSequenceNum"));
                     }
-                    
+
                     productFeatureAppl.create();
                 }
-                
+
                 TransactionUtil.commit(beganTransacton);
             } catch (GenericEntityException e) {
                 TransactionUtil.rollback(beganTransacton);
@@ -132,7 +140,7 @@ public class VariantEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Transaction error creating quick add variant data: " + e.toString());
             return "error";
         }
-        
+
         request.setAttribute(SiteDefs.EVENT_MESSAGE, "Successfully created variant product with id: " + variantProductId + " (includes association, and standard features for the variant)");
         return "success";
     }

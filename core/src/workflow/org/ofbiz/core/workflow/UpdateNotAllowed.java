@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * UpdateNotAllowed Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class UpdateNotAllowed extends WfException {
 
-    public UpdateNotAllowed() {
-    }
+    public UpdateNotAllowed() {}
 
     public UpdateNotAllowed(String msg) {
         super(msg);

@@ -24,11 +24,13 @@
 
 package org.ofbiz.core.util;
 
+
 import java.io.*;
 import java.util.*;
 import java.text.DateFormat;
 
 import org.apache.log4j.*;
+
 
 /**
  * Configurable Debug logging wrapper class
@@ -61,13 +63,13 @@ public final class Debug {
 
     protected static boolean levelOnCache[] = new boolean[8];
     protected static final boolean useLevelOnCache = true;
-    
+
     static {
-        //initialize Log4J
+        // initialize Log4J
         PropertyConfigurator.configure(FlexibleProperties.makeFlexibleProperties(UtilURL.fromResource("debug")));
-        
-        //initialize levelOnCache
-        for (int i=0; i<8; i++) {
+
+        // initialize levelOnCache
+        for (int i = 0; i < 8; i++) {
             levelOnCache[i] = (i == Debug.ALWAYS || UtilProperties.propertyValueEqualsIgnoreCase("debug", levelProps[i], "true"));
         }
     }
@@ -103,9 +105,11 @@ public final class Debug {
         if (isOn(level)) {
             if (useLog4J) {
                 Category logger = getLogger(module);
+
                 logger.log(callingClass, levelObjs[level], msg, t);
             } else {
                 StringBuffer prefixBuf = new StringBuffer();
+
                 prefixBuf.append(dateFormat.format(new java.util.Date()));
                 prefixBuf.append(" [OFBiz");
                 if (module != null) {
@@ -135,18 +139,23 @@ public final class Debug {
             return (level == Debug.ALWAYS || UtilProperties.propertyValueEqualsIgnoreCase("debug", levelProps[level], "true"));
         }
     }
+
     public static void log(String msg) {
         log(Debug.ALWAYS, null, msg, null);
     }
+
     public static void log(String msg, String module) {
         log(Debug.ALWAYS, null, msg, module);
     }
+
     public static void log(Throwable t) {
         log(Debug.ALWAYS, t, null, null);
     }
+
     public static void log(Throwable t, String msg) {
         log(Debug.ALWAYS, t, msg, null);
     }
+
     public static void log(Throwable t, String msg, String module) {
         log(Debug.ALWAYS, t, msg, module);
     }
@@ -154,18 +163,23 @@ public final class Debug {
     public static boolean verboseOn() {
         return isOn(Debug.VERBOSE);
     }
+
     public static void logVerbose(String msg) {
         log(Debug.VERBOSE, null, msg, null);
     }
+
     public static void logVerbose(String msg, String module) {
         log(Debug.VERBOSE, null, msg, module);
     }
+
     public static void logVerbose(Throwable t) {
         log(Debug.VERBOSE, t, null, null);
     }
+
     public static void logVerbose(Throwable t, String msg) {
         log(Debug.VERBOSE, t, msg, null);
     }
+
     public static void logVerbose(Throwable t, String msg, String module) {
         log(Debug.VERBOSE, t, msg, module);
     }
@@ -173,18 +187,23 @@ public final class Debug {
     public static boolean timingOn() {
         return isOn(Debug.TIMING);
     }
+
     public static void logTiming(String msg) {
         log(Debug.TIMING, null, msg, null);
     }
+
     public static void logTiming(String msg, String module) {
         log(Debug.TIMING, null, msg, module);
     }
+
     public static void logTiming(Throwable t) {
         log(Debug.TIMING, t, null, null);
     }
+
     public static void logTiming(Throwable t, String msg) {
         log(Debug.TIMING, t, msg, null);
     }
+
     public static void logTiming(Throwable t, String msg, String module) {
         log(Debug.TIMING, t, msg, module);
     }
@@ -192,18 +211,23 @@ public final class Debug {
     public static boolean infoOn() {
         return isOn(Debug.INFO);
     }
+
     public static void logInfo(String msg) {
         log(Debug.INFO, null, msg, null);
     }
+
     public static void logInfo(String msg, String module) {
         log(Debug.INFO, null, msg, module);
     }
+
     public static void logInfo(Throwable t) {
         log(Debug.INFO, t, null, null);
     }
+
     public static void logInfo(Throwable t, String msg) {
         log(Debug.INFO, t, msg, null);
     }
+
     public static void logInfo(Throwable t, String msg, String module) {
         log(Debug.INFO, t, msg, module);
     }
@@ -211,18 +235,23 @@ public final class Debug {
     public static boolean importantOn() {
         return isOn(Debug.IMPORTANT);
     }
+
     public static void logImportant(String msg) {
         log(Debug.IMPORTANT, null, msg, null);
     }
+
     public static void logImportant(String msg, String module) {
         log(Debug.IMPORTANT, null, msg, module);
     }
+
     public static void logImportant(Throwable t) {
         log(Debug.IMPORTANT, t, null, null);
     }
+
     public static void logImportant(Throwable t, String msg) {
         log(Debug.IMPORTANT, t, msg, null);
     }
+
     public static void logImportant(Throwable t, String msg, String module) {
         log(Debug.IMPORTANT, t, msg, module);
     }
@@ -230,18 +259,23 @@ public final class Debug {
     public static boolean warningOn() {
         return isOn(Debug.WARNING);
     }
+
     public static void logWarning(String msg) {
         log(Debug.WARNING, null, msg, null);
     }
+
     public static void logWarning(String msg, String module) {
         log(Debug.WARNING, null, msg, module);
     }
+
     public static void logWarning(Throwable t) {
         log(Debug.WARNING, t, null, null);
     }
+
     public static void logWarning(Throwable t, String msg) {
         log(Debug.WARNING, t, msg, null);
     }
+
     public static void logWarning(Throwable t, String msg, String module) {
         log(Debug.WARNING, t, msg, module);
     }
@@ -249,18 +283,23 @@ public final class Debug {
     public static boolean errorOn() {
         return isOn(Debug.ERROR);
     }
+
     public static void logError(String msg) {
         log(Debug.ERROR, null, msg, null);
     }
+
     public static void logError(String msg, String module) {
         log(Debug.ERROR, null, msg, module);
     }
+
     public static void logError(Throwable t) {
         log(Debug.ERROR, t, null, null);
     }
+
     public static void logError(Throwable t, String msg) {
         log(Debug.ERROR, t, msg, null);
     }
+
     public static void logError(Throwable t, String msg, String module) {
         log(Debug.ERROR, t, msg, module);
     }
@@ -268,18 +307,23 @@ public final class Debug {
     public static boolean fatalOn() {
         return isOn(Debug.FATAL);
     }
+
     public static void logFatal(String msg) {
         log(Debug.FATAL, null, msg, null);
     }
+
     public static void logFatal(String msg, String module) {
         log(Debug.FATAL, null, msg, module);
     }
+
     public static void logFatal(Throwable t) {
         log(Debug.FATAL, t, null, null);
     }
+
     public static void logFatal(Throwable t, String msg) {
         log(Debug.FATAL, t, msg, null);
     }
+
     public static void logFatal(Throwable t, String msg, String module) {
         log(Debug.FATAL, t, msg, module);
     }

@@ -1,5 +1,6 @@
 package org.ofbiz.core.rules.logikus;
 
+
 /**
  * <p><b>Title:</b> Logikus Exception
  * <p><b>Description:</b> None
@@ -32,20 +33,22 @@ package org.ofbiz.core.rules.logikus;
  * @version 1.0
  */
 public class LogikusException extends RuntimeException {
-  /**
-   * Constructs a <code>LogikusException</code> with no detail
-   * message.
-   */
-  public LogikusException() {
-    super();
-  }
-  /**
-   * Constructs a <code>LogikusException</code> with the
-   * specified detail message.
-   *
-   * @param String the detail message.
-   */
-  public LogikusException(String s) {
-    super(s);
-  }
+
+    /**
+     * Constructs a <code>LogikusException</code> with no detail
+     * message.
+     */
+    public LogikusException() {
+        super();
+    }
+
+    /**
+     * Constructs a <code>LogikusException</code> with the
+     * specified detail message.
+     *
+     * @param String the detail message.
+     */
+    public LogikusException(String s) {
+        super(s);
+    }
 }

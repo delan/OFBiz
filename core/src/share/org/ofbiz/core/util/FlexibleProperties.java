@@ -24,9 +24,11 @@
 
 package org.ofbiz.core.util;
 
+
 import java.util.*;
 import java.net.*;
 import java.io.*;
+
 
 /**
  * Simple Class for flexibly working with properties files
@@ -44,7 +46,7 @@ public class FlexibleProperties extends Properties {
     private boolean doPropertyExpansion = doPropertyExpansionDefault;
     private boolean truncateIfMissing = truncateIfMissingDefault;
 
-    //constructors
+    // constructors
     public FlexibleProperties() {
         super();
     }
@@ -64,7 +66,7 @@ public class FlexibleProperties extends Properties {
         init();
     }
 
-    //factories
+    // factories
     public static FlexibleProperties makeFlexibleProperties(Properties properties) {
         return new FlexibleProperties(properties);
     }
@@ -83,6 +85,7 @@ public class FlexibleProperties extends Properties {
             throw new IllegalArgumentException("FlexibleProperties(String[] keysAndValues) cannot accept an odd number of elements!");
         }
         Properties newProperties = new Properties();
+
         for (int i = 0; i < keysAndValues.length; i += 2) {
             newProperties.setProperty(keysAndValues[i], keysAndValues[i + 1]);
         }
@@ -174,9 +177,11 @@ public class FlexibleProperties extends Properties {
 
     public static void interpolateProperties(Properties props, boolean truncateIfMissing) {
         Enumeration keys = props.keys();
+
         while (keys.hasMoreElements()) {
             String key = keys.nextElement().toString();
             String value = props.getProperty(key);
+
             key = interpolate(key, props, truncateIfMissing);
             props.setProperty(key, interpolate(value, props, truncateIfMissing));
         }
@@ -194,16 +199,18 @@ public class FlexibleProperties extends Properties {
         if (props == null || value == null) return value;
         if (beenThere == null) {
             beenThere = new ArrayList();
-            //Debug.log("[FlexibleProperties.interpolate] starting interpolate: value=[" + value + "]");
-        } else {
-            //Debug.log("[FlexibleProperties.interpolate] starting sub-interpolate: beenThere=[" + beenThere + "], value=[" + value + "]");
+            // Debug.log("[FlexibleProperties.interpolate] starting interpolate: value=[" + value + "]");
+        } else {// Debug.log("[FlexibleProperties.interpolate] starting sub-interpolate: beenThere=[" + beenThere + "], value=[" + value + "]");
         }
         int start = value.indexOf("${");
+
         while (start > -1) {
             int end = value.indexOf("}", (start + 2));
+
             if (end > start + 2) {
                 String keyToExpand = value.substring((start + 2), end);
                 int nestedStart = keyToExpand.indexOf("${");
+
                 while (nestedStart > -1) {
                     end = value.indexOf("}", (end + 1));
                     if (end > -1) {
@@ -216,10 +223,11 @@ public class FlexibleProperties extends Properties {
                 }
                 // if this key needs to be interpolated itself
                 if (keyToExpand.indexOf("${") > -1) {
-                    //Debug.log("[FlexibleProperties.interpolate] recursing on key: keyToExpand=[" + keyToExpand + "]");
+                    // Debug.log("[FlexibleProperties.interpolate] recursing on key: keyToExpand=[" + keyToExpand + "]");
 
-                    //save current beenThere and restore after so the later interpolates don't get messed up
+                    // save current beenThere and restore after so the later interpolates don't get messed up
                     ArrayList tempBeenThere = new ArrayList(beenThere);
+
                     beenThere.add(keyToExpand);
                     keyToExpand = interpolate(keyToExpand, props, truncateIfMissing, beenThere);
                     beenThere = tempBeenThere;
@@ -231,17 +239,19 @@ public class FlexibleProperties extends Properties {
                     return value;
                 } else {
                     String expandValue = null;
+
                     if (keyToExpand.startsWith("env.")) {
                         String envValue = System.getProperty(keyToExpand.substring(4));
+
                         if (envValue == null) {
                             Debug.log("[FlexibleProperties.interpolate] ERROR: Could not find environment variable named: " + keyToExpand.substring(4));
                         } else {
                             expandValue = envValue;
-                            //Debug.log("[FlexibleProperties.interpolate] Got expandValue from environment: " + expandValue);
+                            // Debug.log("[FlexibleProperties.interpolate] Got expandValue from environment: " + expandValue);
                         }
                     } else {
                         expandValue = props.getProperty(keyToExpand);
-                        //Debug.log("[FlexibleProperties.interpolate] Got expandValue from another property: " + expandValue);
+                        // Debug.log("[FlexibleProperties.interpolate] Got expandValue from another property: " + expandValue);
                     }
 
                     if (expandValue != null) {
@@ -249,9 +259,10 @@ public class FlexibleProperties extends Properties {
 
                         // if this value needs to be interpolated itself
                         if (expandValue.indexOf("${") > -1) {
-                            //Debug.log("[FlexibleProperties] recursing on value: expandValue=[" + expandValue + "]");
-                            //save current beenThere and restore after so the later interpolates don't get messed up
+                            // Debug.log("[FlexibleProperties] recursing on value: expandValue=[" + expandValue + "]");
+                            // save current beenThere and restore after so the later interpolates don't get messed up
                             ArrayList tempBeenThere = new ArrayList(beenThere);
+
                             beenThere.add(keyToExpand);
                             expandValue = interpolate(expandValue, props, truncateIfMissing, beenThere);
                             beenThere = tempBeenThere;
@@ -278,6 +289,7 @@ public class FlexibleProperties extends Properties {
     // ==== Utility/override methods ====
     public Object clone() {
         FlexibleProperties c = (FlexibleProperties) super.clone();
+
         // avoid recursion for some reason someone used themselves as defaults
         if (defaults != null && !this.equals(defaults)) {
             c.defaults = (FlexibleProperties) getDefaultProperties().clone();
@@ -293,6 +305,7 @@ public class FlexibleProperties extends Properties {
         while (keys.hasNext()) {
             String key = keys.next().toString();
             String value = getProperty(key);
+
             retVal.append(key);
             retVal.append("=");
             retVal.append(value);

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.workflow;
 
+
 /**
  * InvalidResource Workflow Exception
  *
@@ -35,8 +36,7 @@ package org.ofbiz.core.workflow;
 
 public final class InvalidResource extends WfException {
 
-    public InvalidResource() {
-    }
+    public InvalidResource() {}
 
     public InvalidResource(String msg) {
         super(msg);

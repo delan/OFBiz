@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.eventops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
+
 
 /**
  * Copies a Servlet request attribute to a map field
@@ -61,26 +63,29 @@ public class RequestToField extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         Object fieldVal = null;
-        //only run this if it is in an EVENT context
+
+        // only run this if it is in an EVENT context
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             fieldVal = methodContext.getRequest().getAttribute(requestName);
             if (fieldVal == null) {
                 Debug.logWarning("Request attribute value not found with name " + requestName);
             }
         }
-        
-        //if fieldVal is null, or is a String and has zero length, use defaultVal
+
+        // if fieldVal is null, or is a String and has zero length, use defaultVal
         if (fieldVal == null) {
             fieldVal = defaultVal;
         } else if (fieldVal instanceof String) {
             String strVal = (String) fieldVal;
+
             if (strVal.length() == 0) {
                 fieldVal = defaultVal;
             }
         }
-        
+
         if (mapName != null && mapName.length() > 0) {
             Map fromMap = (Map) methodContext.getEnv(mapName);
+
             if (fromMap == null) {
                 Debug.logWarning("Map not found with name " + mapName + " creating a new map");
                 fromMap = new HashMap();

@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.taglib;
 
+
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -35,6 +36,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.pseudotag.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * EntityFieldTag - Tag to Print Localized Entity Fields.

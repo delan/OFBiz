@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.event;
 
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.ofbiz.core.service.job.*;
@@ -40,23 +41,22 @@ import org.ofbiz.core.util.*;
  */
 public class TestEvent {
 
-    
-    public static String test (HttpServletRequest request, HttpServletResponse response ) {
-        request.setAttribute("MESSAGE","Test Event Ran Fine.");
+    public static String test(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("MESSAGE", "Test Event Ran Fine.");
         Debug.log("Test Event Ran Fine.");
         return "success";
     }
-        
-    public static String httpClientTest(HttpServletRequest request, HttpServletResponse response ) {
-        try {            
+
+    public static String httpClientTest(HttpServletRequest request, HttpServletResponse response) {
+        try {
             HttpClient http = new HttpClient("http://www.ofbiz.org/cgi-bin/http_test.pl");
-            http.setHeader("Cookie","name=value,value=name");
+
+            http.setHeader("Cookie", "name=value,value=name");
             http.setHeader("User-Agent", "Mozilla/4.0");
-            http.setParameter("testId","testing");
+            http.setParameter("testId", "testing");
             Debug.log(http.post());
-        } 
-        catch ( Exception e ) {
-            Debug.log(e,"HttpClientException Caught.");
+        } catch (Exception e) {
+            Debug.log(e, "HttpClientException Caught.");
         }
         return "success";
     }

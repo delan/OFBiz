@@ -53,10 +53,10 @@ public class TyrexFactory implements TransactionFactoryInterface {
     static {
 
         td = TransactionDomain.getDomain(DOMAIN_NAME);
-        
+
         if (td == null) {
-            //probably because there was no tyrexdomain.xml file, try another method:
-            
+            // probably because there was no tyrexdomain.xml file, try another method:
+
             /* For Tyrex version 0.9.8.5 */
             try {
                 String resourceName = "tyrexdomain.xml";
@@ -71,14 +71,14 @@ public class TyrexFactory implements TransactionFactoryInterface {
                 Debug.logError("Could not create Tyrex Transaction Domain (configuration):");
                 Debug.logError(e);
             }
-            
+
             if (td != null) {
                 Debug.logImportant("Got TyrexDomain from classpath (NO tyrex.config file found)");
             }
         } else {
             Debug.logImportant("Got TyrexDomain from tyrex.config location");
         }
-        
+
         if (td != null) {
             try {
                 td.recover();
@@ -87,8 +87,9 @@ public class TyrexFactory implements TransactionFactoryInterface {
                 Debug.logError(e);
             }
         } else {
-            Debug.logError("Could not get Tyrex TransactionDomain for domain " +  DOMAIN_NAME);
+            Debug.logError("Could not get Tyrex TransactionDomain for domain " + DOMAIN_NAME);
         }
+
         /* For Tyrex version 0.9.7.0 * /
          tyrex.resource.ResourceLimits rls = new tyrex.resource.ResourceLimits();
          td = new TransactionDomain("ofbiztx", rls);
@@ -103,9 +104,10 @@ public class TyrexFactory implements TransactionFactoryInterface {
             return null;
         }
     }
-    
+
     public static DataSource getDataSource(String dsName) {
         Resources resources = getResources();
+
         if (resources != null) {
             try {
                 return (DataSource) resources.getResource(dsName);
@@ -117,7 +119,7 @@ public class TyrexFactory implements TransactionFactoryInterface {
             return null;
         }
     }
-    
+
     public TransactionManager getTransactionManager() {
         if (td != null) {
             return td.getTransactionManager();

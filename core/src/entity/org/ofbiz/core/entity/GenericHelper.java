@@ -22,8 +22,10 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.util.*;
 import org.ofbiz.core.entity.model.*;
+
 
 /**
  * Generic Entity Helper Class
@@ -34,45 +36,47 @@ import org.ofbiz.core.entity.model.*;
  *@version    1.0
  */
 public interface GenericHelper {
+
     /** Gets the name of the server configuration that corresponds to this helper
      *@return server configuration name
      */
     public String getHelperName();
-    
+
     /** Creates a Entity in the form of a GenericValue and write it to the database
      *@return GenericValue instance containing the new instance
      */
     public GenericValue create(GenericValue value) throws GenericEntityException;
+
     /** Creates a Entity in the form of a GenericValue and write it to the database
      *@return GenericValue instance containing the new instance
      */
     public GenericValue create(GenericPK primaryKey) throws GenericEntityException;
-    
+
     /** Find a Generic Entity by its Primary Key
      *@param primaryKey The primary key to find by.
      *@return The GenericValue corresponding to the primaryKey
      */
     public GenericValue findByPrimaryKey(GenericPK primaryKey) throws GenericEntityException;
-    
+
     /** Find a Generic Entity by its Primary Key and only returns the values requested by the passed keys (names)
      *@param primaryKey The primary key to find by.
      *@param keys The keys, or names, of the values to retrieve; only these values will be retrieved
      *@return The GenericValue corresponding to the primaryKey
      */
     public GenericValue findByPrimaryKeyPartial(GenericPK primaryKey, Set keys) throws GenericEntityException;
-    
+
     /** Find a number of Generic Value objects by their Primary Keys, all at once
      *@param primaryKeys A List of primary keys to find by.
      *@return List of GenericValue objects corresponding to the passed primaryKey objects
      */
     public List findAllByPrimaryKeys(List primaryKeys) throws GenericEntityException;
-    
+
     /** Remove a Generic Entity corresponding to the primaryKey
      *@param  primaryKey  The primary key of the entity to remove.
      *@return int representing number of rows effected by this operation
      */
     public int removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException;
-    
+
     /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
@@ -81,13 +85,13 @@ public interface GenericHelper {
      *@return List of GenericValue instances that match the query
      */
     public List findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
-    
+
     public List findByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException;
-    
+
     public List findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
-    
+
     public List findByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException;
-    
+
     /** Finds Generic Entity records by all of the specified fields (ie: combined using OR)
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
@@ -96,7 +100,7 @@ public interface GenericHelper {
      *@return List of GenericValue instances that match the query
      */
     public List findByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
-    
+
     public List findByOr(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException;
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
@@ -106,11 +110,11 @@ public interface GenericHelper {
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@return List of GenericValue objects representing the result
      */
-    public List findByCondition(ModelEntity modelEntity, EntityCondition entityCondition, 
-            Collection fieldsToSelect, List orderBy) throws GenericEntityException;
+    public List findByCondition(ModelEntity modelEntity, EntityCondition entityCondition,
+        Collection fieldsToSelect, List orderBy) throws GenericEntityException;
 
-    public List findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne, 
-            ModelRelation modelRelationTwo, ModelEntity modelEntityTwo) throws GenericEntityException ;
+    public List findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne,
+        ModelRelation modelRelationTwo, ModelEntity modelEntityTwo) throws GenericEntityException;
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
@@ -122,23 +126,23 @@ public interface GenericHelper {
      *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE 
      *      DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
-    public EntityListIterator findListIteratorByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, 
-            EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions) 
-            throws GenericEntityException;
-    
+    public EntityListIterator findListIteratorByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition,
+        EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions)
+        throws GenericEntityException;
+
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
      *@return int representing number of rows effected by this operation
      */
     public int removeByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException;
-    
+
     /** Store the Entity from the GenericValue to the persistent store
      *@param value GenericValue instance containing the entity
      *@return int representing number of rows effected by this operation
      */
     public int store(GenericValue value) throws GenericEntityException;
-    
+
     /** Store the Entities from the List GenericValue instances to the persistent store.
      *  This is different than the normal store method in that the store method only does
      *  an update, while the storeAll method checks to see if each entity exists, then
@@ -150,7 +154,7 @@ public interface GenericHelper {
      *@return int representing number of rows effected by this operation
      */
     public int storeAll(List values) throws GenericEntityException;
-    
+
     /** Remove the Entities from the List from the persistent store.
      *  <br>The List contains GenericEntity objects, can be either GenericPK or GenericValue.
      *  <br>If a certain entity contains a complete primary key, the entity in the datasource corresponding
@@ -163,7 +167,7 @@ public interface GenericHelper {
      *@return int representing number of rows effected by this operation
      */
     public int removeAll(List dummyPKs) throws GenericEntityException;
-    
+
     /** Check the datasource to make sure the entity definitions are correct, optionally adding missing entities or fields on the server
      *@param modelEntities Map of entityName names and ModelEntity values
      *@param messages Collection to put any result messages in

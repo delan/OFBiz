@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.taglib;
 
+
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
@@ -32,6 +33,7 @@ import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * IfTag - Conditional Tag.
@@ -84,6 +86,7 @@ public class IfTag extends BodyTagSupport {
 
     public int doStartTag() throws JspTagException {
         Object object = null;
+
         try {
             object = pageContext.findAttribute(name);
             if (object == null) {
@@ -110,11 +113,11 @@ public class IfTag extends BodyTagSupport {
                     if (((String) object).length() > localSize)
                         return EVAL_BODY_AGAIN;
                 } else {
-                    //use reflection to find a size() method
+                    // use reflection to find a size() method
                     try {
                         Method sizeMethod = object.getClass().getMethod("size", null);
-                        int objectSize = ((Integer) sizeMethod.invoke(object, null)).
-                                intValue();
+                        int objectSize = ((Integer) sizeMethod.invoke(object, null)).intValue();
+
                         if (objectSize > localSize)
                             return EVAL_BODY_AGAIN;
                     } catch (Exception e) {
@@ -130,8 +133,10 @@ public class IfTag extends BodyTagSupport {
             // Assume the object is a Boolean and compare to the Boolean value of value.
             try {
                 Boolean b = (Boolean) object;
+
                 if (value != null) {
                     Boolean v = new Boolean(value);
+
                     if (b.equals(v))
                         return EVAL_BODY_AGAIN;
                 } else {
@@ -147,6 +152,7 @@ public class IfTag extends BodyTagSupport {
                 // Assume the object is a string and compare to the String value of value.
                 try {
                     String s = (String) object;
+
                     if (s.equals(value))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
@@ -158,6 +164,7 @@ public class IfTag extends BodyTagSupport {
                 try {
                     Integer i = (Integer) object;
                     Integer v = Integer.valueOf(value);
+
                     if (i.equals(v))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
@@ -169,6 +176,7 @@ public class IfTag extends BodyTagSupport {
                 try {
                     Long i = (Long) object;
                     Long v = Long.valueOf(value);
+
                     if (i.equals(v))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
@@ -180,6 +188,7 @@ public class IfTag extends BodyTagSupport {
                 try {
                     Float d = (Float) object;
                     Float v = Float.valueOf(value);
+
                     if (d.equals(v))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
@@ -191,6 +200,7 @@ public class IfTag extends BodyTagSupport {
                 try {
                     Double d = (Double) object;
                     Double v = Double.valueOf(value);
+
                     if (d.equals(v))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
@@ -200,6 +210,7 @@ public class IfTag extends BodyTagSupport {
             } else {
                 // Assume the object is an Object and compare to the Object named value.
                 Object valueObject = null;
+
                 try {
                     valueObject = pageContext.findAttribute(value);
                     if (valueObject != null && valueObject.equals(object))
@@ -226,8 +237,10 @@ public class IfTag extends BodyTagSupport {
     public int doEndTag() {
         try {
             BodyContent body = getBodyContent();
+
             if (body != null) {
                 JspWriter out = body.getEnclosingWriter();
+
                 out.print(body.getString());
             }
         } catch (IOException e) {

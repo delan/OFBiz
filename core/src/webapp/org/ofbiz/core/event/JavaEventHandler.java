@@ -25,11 +25,13 @@
 
 package org.ofbiz.core.event;
 
+
 import java.util.*;
 import java.lang.reflect.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * <p><b>Title:</b> JavaEventHandler - Static Method Java Event Handler
@@ -55,7 +57,7 @@ public class JavaEventHandler implements EventHandler {
      */
     public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         Class eventClass = (Class) this.eventClassMap.get(eventPath);
-        
+
         if (eventClass == null) {
             synchronized (this) {
                 eventClass = (Class) this.eventClassMap.get(eventPath);
@@ -72,10 +74,12 @@ public class JavaEventHandler implements EventHandler {
             }
         }
         if (Debug.verboseOn()) Debug.logVerbose("[Set path/method]: " + eventPath + " / " + eventMethod, module);
-        
-        Class[] paramTypes = new Class[]{HttpServletRequest.class, HttpServletResponse.class};
+
+        Class[] paramTypes = new Class[] {HttpServletRequest.class, HttpServletResponse.class};
+
         Debug.logVerbose("*[[Event invocation]]*", module);
-        Object[] params = new Object[]{request, response};
+        Object[] params = new Object[] {request, response};
+
         return invoke(eventPath, eventMethod, eventClass, paramTypes, params);
     }
 
@@ -91,10 +95,12 @@ public class JavaEventHandler implements EventHandler {
         try {
             Method m = eventClass.getMethod(eventMethod, paramTypes);
             String eventReturn = (String) m.invoke(null, params);
+
             if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + eventReturn, module);
             return eventReturn;
         } catch (java.lang.reflect.InvocationTargetException e) {
             Throwable t = e.getTargetException();
+
             if (t != null) {
                 Debug.logError(t, "Problems Processing Event", module);
                 throw new EventHandlerException("Problems processing event: " + t.toString(), t);

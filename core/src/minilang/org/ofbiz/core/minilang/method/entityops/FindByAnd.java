@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.minilang.method.entityops;
 
+
 import java.net.*;
 import java.text.*;
 import java.util.*;
@@ -33,6 +34,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.entity.*;
+
 
 /**
  * Uses the delegator to find entity values by anding the map fields
@@ -60,10 +62,11 @@ public class FindByAnd extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         List orderByNames = null;
+
         if (orderByListName != null && orderByListName.length() > 0) {
             orderByNames = (List) methodContext.getEnv(orderByListName);
         }
-        
+
         try {
             if (this.useCache) {
                 methodContext.putEnv(listName, methodContext.getDelegator().findByAndCache(entityName, (Map) methodContext.getEnv(mapName), orderByNames));
@@ -73,6 +76,7 @@ public class FindByAnd extends MethodOperation {
         } catch (GenericEntityException e) {
             Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem finding the " + entityName + " entity: " + e.getMessage() + "]";
+
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());

@@ -24,8 +24,10 @@
 
 package org.ofbiz.core.util;
 
+
 import java.io.PrintStream;
 import java.io.PrintWriter;
+
 
 /**
  * Base OFBiz Exception, provides nested exceptions, etc
@@ -109,7 +111,4 @@ public class GeneralException extends Exception {
         if (nested != null) nested.printStackTrace(pw);
     }
 }
-
-
-
 

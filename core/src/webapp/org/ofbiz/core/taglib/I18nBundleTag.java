@@ -25,11 +25,13 @@
 
 package org.ofbiz.core.taglib;
 
+
 import java.util.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * I18nBundleTag - JSP tag that the MessageTags will use when retrieving keys
@@ -40,32 +42,32 @@ import org.ofbiz.core.util.*;
  * @created April 14, 2002
  */
 public class I18nBundleTag extends TagSupport {
-    
+
     private String baseName = null;
-    
+
     private ResourceBundle bundle = null;
-    
-    public void setBaseName (String baseName) {
+
+    public void setBaseName(String baseName) {
         this.baseName = baseName;
     }
-    
+
     public String getBaseName() {
         return this.baseName;
     }
-    
-    public void setBundle (ResourceBundle bundle) {
+
+    public void setBundle(ResourceBundle bundle) {
         this.bundle = bundle;
     }
-    
+
     public ResourceBundle getBundle() {
         return this.bundle;
     }
-    
+
     public int doStartTag() throws JspException {
         try {
-            this.bundle = ResourceBundle.getBundle (this.baseName,
-                pageContext.getRequest().getLocale());
-            
+            this.bundle = ResourceBundle.getBundle(this.baseName,
+                        pageContext.getRequest().getLocale());
+
             if (this.getId() != null) {
                 pageContext.setAttribute(this.getId(), this.bundle);
             }
@@ -77,10 +79,10 @@ public class I18nBundleTag extends TagSupport {
                 throw new JspException(e.toString());
             }
         }
-        
+
         return EVAL_BODY_INCLUDE;
     }
-    
+
     public int doEndTag() throws JspException {
         return EVAL_PAGE;
     }

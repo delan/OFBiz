@@ -1,6 +1,8 @@
 package org.ofbiz.core.rules.parse.tokens;
 
+
 import java.io.*;
+
 
 /**
  * <p><b>Title:</b> Symbol State
@@ -54,38 +56,42 @@ import java.io.*;
  * @version 1.0
  */
 public class SymbolState extends TokenizerState {
-  SymbolRootNode symbols = new SymbolRootNode();
-  /**
-   * Constructs a symbol state with a default idea of what
-   * multi-character symbols to accept (as described in the
-   * class comment).
-   *
-   * @return   a state for recognizing a symbol
-   */
-  public SymbolState() {
-    add("!=");
-    add(":-");
-    add("<=");
-    add(">=");
-  }
-  /**
-   * Add a multi-character symbol.
-   *
-   * @param   String   the symbol to add, such as "=:="
-   */
-  public void add(String s) {
-    symbols.add(s);
-  }
-  /**
-   * Return a symbol token from a reader.
-   *
-   * @return a symbol token from a reader
-   */
-  public Token nextToken(
-  PushbackReader r, int first, Tokenizer t)
-  throws IOException {
-    
-    String s = symbols.nextSymbol(r, first);
-    return new Token(Token.TT_SYMBOL, s, 0);
-  }
+    SymbolRootNode symbols = new SymbolRootNode();
+
+    /**
+     * Constructs a symbol state with a default idea of what
+     * multi-character symbols to accept (as described in the
+     * class comment).
+     *
+     * @return   a state for recognizing a symbol
+     */
+    public SymbolState() {
+        add("!=");
+        add(":-");
+        add("<=");
+        add(">=");
+    }
+
+    /**
+     * Add a multi-character symbol.
+     *
+     * @param   String   the symbol to add, such as "=:="
+     */
+    public void add(String s) {
+        symbols.add(s);
+    }
+
+    /**
+     * Return a symbol token from a reader.
+     *
+     * @return a symbol token from a reader
+     */
+    public Token nextToken(
+        PushbackReader r, int first, Tokenizer t)
+        throws IOException {
+
+        String s = symbols.nextSymbol(r, first);
+
+        return new Token(Token.TT_SYMBOL, s, 0);
+    }
 }

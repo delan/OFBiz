@@ -25,10 +25,12 @@
 
 package org.ofbiz.core.service.job;
 
+
 import java.util.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.config.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * JobInvoker
@@ -102,12 +104,13 @@ public class JobInvoker implements Runnable {
     public synchronized void run() {
         while (run) {
             Job job = jp.next();
+
             if (job == null) {
                 try {
                     wait(wait);
                 } catch (InterruptedException ie) {
-                   ie.printStackTrace();
-                   stop();
+                    ie.printStackTrace();
+                    stop();
                 }
             } else {
                 if (Debug.verboseOn()) Debug.logVerbose("Invoker: " + thread.getName() + " executing job -- " + job.getJobName(), module);
@@ -117,6 +120,7 @@ public class JobInvoker implements Runnable {
                 if (Debug.verboseOn()) Debug.logVerbose("Invoker: " + thread.getName() + " (" + count + ") total.", module);
             }
             long diff = (new Date().getTime() - this.getTime());
+
             if (getTTL() > 0 && diff > getTTL())
                 jp.removeThread(this);
         }
@@ -125,10 +129,11 @@ public class JobInvoker implements Runnable {
 
     private long getTTL() {
         long ttl = THREAD_TTL;
+
         try {
             ttl = Long.parseLong(ServiceConfigUtil.getElementAttr("thread-pool", "ttl"));
         } catch (NumberFormatException nfe) {
-           Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
+            Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
         }
         return ttl;
     }

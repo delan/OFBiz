@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.region;
 
+
 import java.util.*;
 import java.net.*;
 
@@ -32,6 +33,7 @@ import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.config.*;
+
 
 /**
  * A class to manage the region cache and read a region XML file
@@ -46,6 +48,7 @@ public class RegionManager {
         if (regionFile == null) return null;
 
         Map regions = getRegions(regionFile);
+
         return (Region) regions.get(regionName);
     }
 
@@ -53,11 +56,13 @@ public class RegionManager {
         if (regionFile == null) throw new IllegalArgumentException("regionFile cannot be null");
 
         Map regions = getRegions(regionFile);
+
         regions.put(region.getId(), region);
     }
 
     public static Map getRegions(URL regionFile) {
         Map regions = RegionCache.getRegions(regionFile);
+
         if (regions == null) {
             if (Debug.verboseOn()) Debug.logVerbose("Regions not yet loaded for " + regionFile + ", loading now");
             regions = readRegionXml(regionFile);
@@ -70,6 +75,7 @@ public class RegionManager {
         Map regions = new HashMap();
 
         Document document = null;
+
         try {
             document = UtilXml.readXmlDocument(regionXmlLocation, true);
         } catch (java.io.IOException e) {
@@ -86,8 +92,10 @@ public class RegionManager {
 
         List defineElements = UtilXml.childElementList(rootElement, "define");
         Iterator defineIter = defineElements.iterator();
+
         while (defineIter.hasNext()) {
             Element defineElement = (Element) defineIter.next();
+
             addRegion(regionXmlLocation, defineElement, regions);
         }
 
@@ -100,6 +108,7 @@ public class RegionManager {
         String idAttr = defineElement.getAttribute("id");
         String templateAttr = defineElement.getAttribute("template");
         String regionAttr = defineElement.getAttribute("region");
+
         if (UtilValidate.isNotEmpty(templateAttr) && UtilValidate.isNotEmpty(regionAttr)) {
             throw new IllegalArgumentException("Cannot use both template and region attributes");
         }
@@ -109,6 +118,7 @@ public class RegionManager {
         } else {
             if (UtilValidate.isNotEmpty(regionAttr)) {
                 Region parentRegion = (Region) regions.get(regionAttr);
+
                 if (parentRegion == null) {
                     throw new IllegalArgumentException("can't find page definition attribute with this key: " + regionAttr);
                 }
@@ -122,8 +132,10 @@ public class RegionManager {
 
         List putElements = UtilXml.childElementList(defineElement, "put");
         Iterator putIter = putElements.iterator();
+
         while (putIter.hasNext()) {
             Element putElement = (Element) putIter.next();
+
             newRegion.put(makeSection(putElement, regionFile));
         }
     }
