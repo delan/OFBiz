@@ -135,20 +135,28 @@ public class LoginServices {
                     // we might change & store this userLogin, so we should clone it here to get a mutable copy
                     userLogin = new GenericValue(userLogin);
 
+                    // get the is system flag -- system accounts can only be used for service authentication
+                    boolean isSystem = (isServiceAuth && userLogin.get("isSystem") != null) ?
+                            "Y".equalsIgnoreCase(userLogin.getString("isSystem")) : false;
+
                     // grab the hasLoggedOut flag
                     boolean hasLoggedOut = userLogin.get("hasLoggedOut") != null ?
                             "Y".equalsIgnoreCase(userLogin.getString("hasLoggedOut")) : false;
 
                     if (UtilValidate.isEmpty(userLogin.getString("enabled")) || "Y".equals(userLogin.getString("enabled")) ||
-                        (reEnableTime != null && reEnableTime.before(UtilDateTime.nowTimestamp()))) {
+                        (reEnableTime != null && reEnableTime.before(UtilDateTime.nowTimestamp())) || (isSystem)) {
 
                         String successfulLogin;
 
-                        userLogin.set("enabled", "Y");
+                        if (!isSystem) {
+                            userLogin.set("enabled", "Y");
+                        }
+
                         // if the password.accept.encrypted.and.plain property in security is set to true allow plain or encrypted passwords
-                        if (userLogin.get("currentPassword") != null &&
+                        // if this is a system account don't bother checking the passwords
+                        if ((userLogin.get("currentPassword") != null &&
                             (realPassword.equals(userLogin.getString("currentPassword")) ||
-                                ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.accept.encrypted.and.plain")) && password.equals(userLogin.getString("currentPassword"))))) {
+                                ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.accept.encrypted.and.plain")) && password.equals(userLogin.getString("currentPassword")))))) {
                             Debug.logVerbose("[LoginServices.userLogin] : Password Matched", module);
 
                             // update the hasLoggedOut flag

@@ -61,7 +61,7 @@ public class OfbizAuthenticationMgr implements AuthenticationManager {
         }
 
         LocalDispatcher dispatcher = SharkContainer.getDispatcher();
-        Map context = UtilMisc.toMap("login.username", userName, "login.password", password);
+        Map context = UtilMisc.toMap("login.username", userName, "login.password", password, "isServiceAuth", new Boolean(true));
         Map serviceResult = null;
         try {
             serviceResult = dispatcher.runSync(service, context);

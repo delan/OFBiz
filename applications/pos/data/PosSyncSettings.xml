@@ -94,7 +94,7 @@
 </ofbiz-ser>
         ]]></runtimeInfo>
     </RuntimeData>
-    <JobSandbox jobId="POSPUSH" jobName="Push POS Orders" runtimeDataId="POSPUSH" runTime="2000-01-01 00:00:00.000" serviceName="runEntitySync" poolId="pool" runAsUser="admin" recurrenceInfoId="POSPUSH"/>
+    <JobSandbox jobId="POSPUSH" jobName="Push POS Orders" runtimeDataId="POSPUSH" runTime="2000-01-01 00:00:00.000" serviceName="runEntitySync" poolId="pool" runAsUser="system" recurrenceInfoId="POSPUSH"/>
     -->
 
     <!-- POS-1 PULL Scheduled Service -->
@@ -125,7 +125,7 @@
 </ofbiz-ser>
         ]]></runtimeInfo>
     </RuntimeData>
-    <JobSandbox jobId="POS1PULL" jobName="Pull POS Catalog" runtimeDataId="POS1PULL" runTime="2000-01-01 00:00:00.000" serviceName="runPullEntitySync" poolId="pool" runAsUser="admin" recurrenceInfoId="POS1PULL"/>
+    <JobSandbox jobId="POS1PULL" jobName="Pull POS Catalog" runtimeDataId="POS1PULL" runTime="2000-01-01 00:00:00.000" serviceName="runPullEntitySync" poolId="pool" runAsUser="system" recurrenceInfoId="POS1PULL"/>
     -->
 
 </entity-engine-xml>

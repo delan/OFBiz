@@ -5,4 +5,8 @@
     <SecurityGroup description="Full Admin group, has all general permissions." groupId="FULLADMIN"/>
     <SecurityGroup description="Flexible Admin group, has all granular permissions." groupId="FLEXADMIN"/>
     <SecurityGroup description="Demo Admin group, has all view permissions." groupId="VIEWADMIN"/>
+
+    <!-- System UserLogin Account -->
+    <UserLogin userLoginId="system" currentPassword="ofbiz" passwordHint="Do Not Enable This Account" enabled="N" isSystem="Y"/>
+    <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="system" fromDate="2001-01-01 12:00:00.0"/>
 </entity-engine-xml>
