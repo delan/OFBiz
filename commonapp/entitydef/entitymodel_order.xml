@@ -878,8 +878,7 @@
         <member-entity entity-alias="OHR" entity-name="OrderRole"/>  
         <member-entity entity-alias="PS" entity-name="Person"/>                      
         <member-entity entity-alias="WE" entity-name="WorkEffort"/>
-        <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
-        <member-entity entity-alias="PR" entity-name="PartyRole"/>
+        <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>   
         <alias entity-alias="OH" name="orderId"/>
         <alias entity-alias="OH" name="orderTypeId"/>
         <alias entity-alias="OH" name="orderDate"/>
@@ -906,12 +905,11 @@
         <alias entity-alias="WE" name="actualCompletionDate"/>
         <alias entity-alias="WE" name="infoUrl"/>
         <alias entity-alias="WEPA" name="wepaPartyId" field="partyId"/>
+        <alias entity-alias="WEPA" name="roleTypeId"/>
         <alias entity-alias="WEPA" name="fromDate"/>
         <alias entity-alias="WEPA" name="thruDate"/>        
         <alias entity-alias="WEPA" name="statusId"/>
-        <alias entity-alias="WEPA" name="statusDateTime"/>
-        <alias entity-alias="PR" name="partyId"/>
-        <alias entity-alias="PR" name="roleTypeId"/>
+        <alias entity-alias="WEPA" name="statusDateTime"/> 
         <view-link entity-alias="OH" rel-entity-alias="OHR">
         	<key-map field-name="orderId"/>        	
         </view-link>  
@@ -923,10 +921,7 @@
         </view-link>
         <view-link entity-alias="WE" rel-entity-alias="WEPA">
             <key-map field-name="workEffortId"/>
-        </view-link> 
-        <view-link entity-alias="WEPA" rel-entity-alias="PR">
-            <key-map field-name="roleTypeId"/>
-        </view-link>            
+        </view-link>          
     </view-entity>    
     <entity entity-name="OrderTerm"
             package-name="org.ofbiz.commonapp.order.order"
