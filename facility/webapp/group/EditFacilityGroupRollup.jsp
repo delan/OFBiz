@@ -38,15 +38,14 @@
     boolean useValues = true;
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
-	String facilityGroupId = request.getParameter("showFacilityGroupId");
-	GenericValue facilityGroup = delegator.findByPrimaryKey("FacilityGroup", UtilMisc.toMap("facilityGroupId", facilityGroupId));
-	List parentGroupRollups = null;
-	List currentGroupRollups = null;
+    String facilityGroupId = request.getParameter("showFacilityGroupId");
+    GenericValue facilityGroup = delegator.findByPrimaryKey("FacilityGroup", UtilMisc.toMap("facilityGroupId", facilityGroupId));
+    List parentGroupRollups = null;
+    List currentGroupRollups = null;
 
-	if (facilityGroup == null) {
-		useValues = false;
-	} else {
-
+    if (facilityGroup == null) {
+        useValues = false;
+    } else {
         parentGroupRollups = facilityGroup.getRelated("ParentFacilityGroupRollup");
         if (parentGroupRollups != null) pageContext.setAttribute("parentGroupRollups", parentGroupRollups);
 
@@ -54,8 +53,8 @@
         if (currentGroupRollups != null) pageContext.setAttribute("currentGroupRollups", currentGroupRollups);
     }
 
-	List facilityGroups = delegator.findAll("FacilityGroup", UtilMisc.toList("description"));
-	if (facilityGroups != null) pageContext.setAttribute("facilityGroups", facilityGroups);
+    List facilityGroups = delegator.findAll("FacilityGroup", UtilMisc.toList("description"));
+    if (facilityGroups != null) pageContext.setAttribute("facilityGroups", facilityGroups);
 %>
 
 <%if(facilityGroupId != null && facilityGroupId.length() > 0) {%>
