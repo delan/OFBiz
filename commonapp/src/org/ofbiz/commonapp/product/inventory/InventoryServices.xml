@@ -213,6 +213,7 @@
         <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="containerId" map-name="parameters" to-map-name="lookupFieldMap"/>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
 
         <!-- before we do the find, put together the orderBy list based on which reserveOrderEnumId is specified -->
         <if-compare value="INVRO_FIFO_EXP" operator="equals" field-name="reserveOrderEnumId" map-name="parameters">
@@ -254,8 +255,12 @@
                         <field-to-field field-name="orderId" map-name="parameters" to-map-name="newOiirEntity"/>
                         <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="newOiirEntity"/>
                         <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="newOiirEntity"/>
+                        <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="newOiirEntity"/>
                         <string-to-field string="OIIR_RESERVED" field-name="statusId" map-name="newOiirEntity"/>
                         <calculate field-name="quantity" map-name="newOiirEntity"><number value="1"/></calculate>
+                        <if-empty field-name="reservedDatetime" map-name="newOiirEntity">
+                            <env-to-field env-name="nowTimestamp" field-name="reservedDatetime" map-name="newOiirEntity"/>
+                        </if-empty>
                         <create-value value-name="newOiirEntity"/>
 
                         <calculate field-name="quantityNotReserved" map-name="parameters">
@@ -385,6 +390,7 @@
         <field-to-result field-name="quantityNotReserved" map-name="parameters"/>
     </simple-method>
 
+
     <simple-method method-name="cancelOrderInventoryReservation" short-description="Cancel Inventory Reservation for an Order">
         <!--
             Iterates through each OrderItemInventoryRes on each OrderItem for the order
@@ -419,6 +425,31 @@
                 <store-value value-name="orderItemInventoryRes"/>
             </if-compare>
         </iterate>
+    </simple-method>
+    <simple-method method-name="cancelOrderItemInventoryRes" short-description="Cancel An Inventory Reservation">
+        <field-to-env field-name="orderItemInventoryRes" map-name="parameters" env-name="orderItemInventoryRes"/>
+        <if-compare value="OIIR_RESERVED" operator="equals" field-name="statusId" map-name="orderItemInventoryRes">
+            <log level="verbose" message="Found a inventory item to reverse."/>
+            <field-to-field field-name="inventoryItemId" map-name="orderItemInventoryRes" to-map-name="invItemLookupMap"/>
+            <find-by-primary-key entity-name="InventoryItem" map-name="invItemLookupMap" value-name="inventoryItem"/>
+        
+            <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
+                <log level="verbose" message="Serialized inventory re-enabled."/>
+                <string-to-field string="INV_AVAILABLE" field-name="statusId" map-name="inventoryItem"/>
+            </if-compare>
+            <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
+                <log level="verbose" message="Non-Serialized inventory item incrementing availableToPromise."/>
+                <calculate field-name="availableToPromise" map-name="inventoryItem">
+                    <calcop operator="add" field-name="availableToPromise" map-name="inventoryItem">
+                        <calcop operator="get" field-name="quantity" map-name="orderItemInventoryRes"/>
+                    </calcop>
+                </calculate>
+            </if-compare>
+            <store-value value-name="inventoryItem"/>
+                
+            <string-to-field string="OIIR_CANCELLED" field-name="statusId" map-name="orderItemInventoryRes"/>
+            <store-value value-name="orderItemInventoryRes"/>
+        </if-compare>      
     </simple-method>
     
     <!-- Inventory Transfer Services -->
