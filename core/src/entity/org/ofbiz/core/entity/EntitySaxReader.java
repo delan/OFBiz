@@ -53,10 +53,30 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     protected String currentFieldValue = null;
     protected long numberRead = 0;
     
+    protected int valuesPerWrite = 100;
+    protected int valuesPerMessage = 1000;
+    protected int transactionTimeout = 7200;
+
+    protected List valuesToWrite = new ArrayList(valuesPerWrite);
+    
     protected EntitySaxReader() { }
     
     public EntitySaxReader(GenericDelegator delegator) {
         this.delegator = delegator;
+    }
+    
+    public int getValuesPerWrite() { return this.valuesPerWrite; }
+    public void setValuesPerWrite(int valuesPerWrite) { this.valuesPerWrite = valuesPerWrite; }
+    
+    public int getValuesPerMessage() { return this.valuesPerMessage; }
+    public void setValuesPerMessage(int valuesPerMessage) { this.valuesPerMessage = valuesPerMessage; }
+    
+    public int getTransactionTimeout() { return this.transactionTimeout; }
+    public void setTransactionTimeout(int transactionTimeout) throws GenericTransactionException {
+        if (this.transactionTimeout != transactionTimeout) {
+            TransactionUtil.setTransactionTimeout(transactionTimeout);
+            this.transactionTimeout = transactionTimeout;
+        }
     }
     
     public long parse(String content) throws SAXException, java.io.IOException {
@@ -86,18 +106,20 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
         numberRead = 0;
         try {
             boolean beganTransaction = TransactionUtil.begin();
-            TransactionUtil.setTransactionTimeout(7200);
-            Debug.logImportant("Transaction Timeout set to 2 hours (7200 seconds), if you have a file that takes longer than that to load, you may want to split it up.");
+            TransactionUtil.setTransactionTimeout(transactionTimeout);
+            Debug.logImportant("Transaction Timeout set to " + transactionTimeout/3600 + " hours (" + transactionTimeout + " seconds)");
             try {
                 reader.parse(new InputSource(is));
                 TransactionUtil.commit(beganTransaction);
             } catch (Exception e) {
+                Debug.logError(e, "An error occured saving the data, rolling back transaction");
                 TransactionUtil.rollback(beganTransaction);
                 throw new SAXException("A transaction error occured reading data", e);
             }
         } catch (GenericTransactionException e) {
             throw new SAXException("A transaction error occured reading data", e);
         }
+        Debug.logImportant("Finished writing " + numberRead + " values to the database from " + docDescription);
         return numberRead;
     }
     
@@ -123,17 +145,21 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
         }
         if (currentValue != null) {
             if (currentFieldName != null) {
-                if (currentFieldValue != null) {
+                if (currentFieldValue != null && currentFieldValue.length() > 0) {
                     currentValue.setString(currentFieldName, currentFieldValue);
                     currentFieldValue = null;
                 }
                 currentFieldName = null;
             } else {
                 try {
-                    currentValue.store();
+                    valuesToWrite.add(currentValue);
+                    if (valuesToWrite.size() >= valuesPerWrite) {
+                        delegator.storeAll(valuesToWrite);
+                        valuesToWrite.clear();
+                    }
                     numberRead++;
-                    if ((numberRead % 1000) == 0) {
-                        Debug.logImportant("Another thousand values imported: now up to " + numberRead);
+                    if ((numberRead % valuesPerMessage) == 0) {
+                        Debug.logImportant("Another " + valuesPerMessage + " values imported: now up to " + numberRead);
                     }
                     currentValue = null;
                 } catch (GenericEntityException e) {
@@ -191,7 +217,10 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                     String name = attributes.getLocalName(i);
                     String value = attributes.getValue(i);
                     try {
-                        currentValue.setString(name, value);
+                        //treat empty strings as nulls
+                        if (value != null && value.length() > 0) {
+                            currentValue.setString(name, value);
+                        }
                     } catch (Exception e) {
                         Debug.logWarning("Could not set field " + name + " to the value " + value);
                     }

@@ -104,7 +104,9 @@ public class SQLProcessor {
         }
         
         try {
-            _connection.commit();
+            if (_manualTX) {
+                _connection.commit();
+            }
         } catch (SQLException sqle) {
             rollback();
             throw new GenericDataSourceException("SQL Exception occured on commit", sqle);
@@ -114,14 +116,22 @@ public class SQLProcessor {
     /**
      * Rollback all modifications
      */
-    public void rollback() {
+    public void rollback() throws GenericDataSourceException {
         if (_connection == null) {
             return;
         }
         
         try {
-            if (_manualTX)
+            if (_manualTX) {
                 _connection.rollback();
+            } else {
+                try {
+                    TransactionUtil.setRollbackOnly();
+                } catch (GenericTransactionException e) {
+                    Debug.logError(e, "Error setting rollback only");
+                    throw new GenericDataSourceException("Error setting rollback only", e);
+                }
+            }
         } catch (SQLException sqle2) {
             Debug.logWarning("[SQLProcessor.rollback]: SQL Exception while rolling back insert. Error was:" + sqle2, module);
             Debug.logWarning(sqle2, module);
