@@ -37,8 +37,6 @@ import java.util.*;
 
 import com.ibm.bsf.*;
 import com.ibm.bsf.util.*;
-//import bsh.*;
-//import bsh.util.*;
 
 import org.ofbiz.core.util.*;
 
@@ -318,7 +316,7 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
                 if (e.getNode() == null) e.setNode(node);
                 Debug.logError(e, "Outermost exception: ");
                 Debug.logError(e.getTarget(), "BSH Target Exception: ");
-                Debug.logError(e.getCause(), "BSH Cause Exception: ");
+                //Debug.logError(e.getCause(), "BSH Cause Exception: ");
                 e.reThrow("Sourced file: " + sourceFileInfo);
             } catch (EvalError e) {
                 // failsafe, set the Line as the origin of the error.
