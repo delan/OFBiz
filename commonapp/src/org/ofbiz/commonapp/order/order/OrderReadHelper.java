@@ -221,7 +221,7 @@ public class OrderReadHelper {
     public Iterator getAdjustmentIterator() {
         return getOrderAdjustmentCollection().iterator();
     }
-    
+
     public List getOrderAdjustmentCollection() {
         List contraints1 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, null));
         List contraints2 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, "_NA_"));
@@ -232,7 +232,7 @@ public class OrderReadHelper {
         adj.addAll(EntityUtil.filterByAnd(getAdjustments(), contraints3));
         return adj;
     }
-    
+
     public double getOrderAdjustments() {
         return calcOrderAdjustments(getOrderAdjustmentCollection(), getOrderItemsTotal());
     }
@@ -295,10 +295,7 @@ public class OrderReadHelper {
             Iterator adjIt = adjustments.iterator();
             while (adjIt.hasNext()) {
                 GenericValue gv = (GenericValue) adjIt.next();
-                if (gv.get("amount") != null && gv.getDouble("amount").doubleValue() > 0)
-                    adjTotal += gv.getDouble("amount").doubleValue();
-                if (gv.get("percentage") != null && gv.getDouble("percentage").doubleValue() > 0)
-                    adjTotal += (gv.getDouble("percentage").doubleValue() * subTotal);
+                adjTotal += OrderReadHelper.calcOrderAdjustment(gv, subTotal);
             }
         }
         return adjTotal;
@@ -310,13 +307,28 @@ public class OrderReadHelper {
             Iterator adjIt = adjustments.iterator();
             while (adjIt.hasNext()) {
                 GenericValue gv = (GenericValue) adjIt.next();
-                if (gv.get("amount") != null && gv.getDouble("amount").doubleValue() > 0)
-                    adjTotal += gv.getDouble("amount").doubleValue();
-                if (gv.get("percentage") != null && gv.getDouble("percentage").doubleValue() > 0)
-                    adjTotal += (gv.getDouble("percentage").doubleValue() * orderItem.getDouble("unitPrice").doubleValue());
+                adjTotal += OrderReadHelper.calcItemAdjustment(gv, orderItem);
             }
         }
         return adjTotal;
+    }
+
+    public static double calcOrderAdjustment(GenericValue orderAdjustment, double orderTotal) {
+        double adjustment = 0.0;
+        if (orderAdjustment.get("amount") != null && orderAdjustment.getDouble("amount").doubleValue() > 0)
+            adjustment += orderAdjustment.getDouble("amount").doubleValue();
+        if (orderAdjustment.get("percentage") != null && orderAdjustment.getDouble("percentage").doubleValue() > 0)
+            adjustment += (orderAdjustment.getDouble("percentage").doubleValue() * orderTotal);
+        return adjustment;
+    }
+
+    public static double calcItemAdjustment(GenericValue itemAdjustment, GenericValue item) {
+        double adjustment = 0.0;
+        if (itemAdjustment.get("amount") != null && itemAdjustment.getDouble("amount").doubleValue() > 0)
+            adjustment += itemAdjustment.getDouble("amount").doubleValue();
+        if (itemAdjustment.get("percentage") != null && itemAdjustment.getDouble("percentage").doubleValue() > 0)
+            adjustment += (itemAdjustment.getDouble("percentage").doubleValue() * item.getDouble("unitPrice").doubleValue());
+        return adjustment;
     }
 
 }
