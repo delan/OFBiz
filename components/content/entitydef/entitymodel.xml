@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  */
 -->
 
@@ -67,6 +67,7 @@
       <field name="dataResourceId" type="id"></field>
       <field name="dataSourceId" type="id"></field>
       <field name="statusId" type="id"></field>
+      <field name="serviceName" type="long-varchar"></field>
       <field name="contentName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="isTemplate" type="indicator"></field>
