@@ -57,7 +57,7 @@
         <attribute name="totalYearsWorkExperience" type="Double" mode="IN" optional="true"/>
         <attribute name="comments" type="String" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="createPartyGroup" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createPartyGroup" auth="false">
         <description>Create a PartyGroup</description>
@@ -72,8 +72,8 @@
         <attribute name="groupName" type="String" mode="IN" optional="false"/>
         <attribute name="federalTaxId" type="String" mode="IN" optional="true"/>
     </service>
-    
-    <service name="createAffiliate" engine="java" 
+
+    <service name="createAffiliate" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createAffiliate" auth="false">
         <description>Create an Affiliate</description>
         <attribute name="partyId" type="String" mode="INOUT"/>
@@ -84,7 +84,15 @@
         <attribute name="sitePageViews" type="String" mode="IN" optional="true"/>
         <attribute name="siteVisitors" type="String" mode="IN" optional="true"/>
     </service>
-    
+
+    <service name="createSurveyResponse" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createSurveyResponse" auth="true">
+        <description>Create a Survey Response record</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="surveyId" type="String" mode="IN"/>
+        <attribute name="response" type="String" mode="IN"/>
+    </service>
+
     <!-- Party Role services -->
     <service name="createPartyRole" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyRoleServices" invoke="createPartyRole" auth="true">
@@ -98,7 +106,7 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <!-- Party Relationship services -->
     <service name="createPartyRelationship" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyRelationshipServices" invoke="createPartyRelationship" auth="true">
@@ -137,7 +145,7 @@
         <attribute name="roleTypeIdTo" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <!-- ContactMech services -->
     <service name="createContactMech" engine="java"
             location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createContactMech" auth="true">
@@ -200,7 +208,7 @@
         <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
         <attribute name="newContactMechId" type="String" mode="OUT" optional="true"/>
     </service>
-    
+
     <service name="createTelecomNumber" engine="java"
             location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createTelecomNumber" auth="true">
         <description>Create a Telecommunications Number</description>
@@ -224,7 +232,7 @@
         <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
         <attribute name="newContactMechId" type="String" mode="OUT" optional="true"/>
     </service>
-    
+
     <service name="createEmailAddress" engine="java"
             location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createEmailAddress" auth="true">
         <description>Create an Email Address</description>
@@ -242,7 +250,7 @@
         <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
         <attribute name="newContactMechId" type="String" mode="OUT" optional="true"/>
     </service>
-    
+
     <!-- Party ContactMech Purpose services -->
     <service name="createPartyContactMechPurpose" engine="java"
             location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createPartyContactMechPurpose" auth="true">

@@ -10,9 +10,10 @@
     <service name="testScv" engine="java" export="true"
             location="ServiceTest" invoke="testOne">
         <description>Test service</description>
-        <attribute name="message" type="String" mode="IN" optional="true"/>	  
+        <attribute name="message" type="String" mode="IN" optional="true"/>
         <attribute name="resp" type="String" mode="OUT"/>
     </service>
+
     <service name="testSoap" engine="soap" export="true"
             location="http://nagoya.apache.org:5049/axis/servlet/AxisServlet" invoke="echoString">
         <description>Test SOAP service; calls echoString service on Axis server</description>
@@ -20,7 +21,8 @@
         <attribute name="message" type="String" mode="IN"/>
         <attribute name="result" type="String" mode="OUT"/>
     </service>
-    <service name="testBsh" engine="bsh" 
+
+    <service name="testBsh" engine="bsh"
             location="BshServiceTest.bsh" invoke="">
         <description>Test BeanShell Script Service</description>
         <attribute name="message" type="String" mode="IN" optional="true"/>
@@ -35,6 +37,7 @@
         <attribute name="login.password" type="String" mode="IN"/>
         <attribute name="userLogin" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
     </service>
+
     <service name="createUserLogin" engine="java"
             location="org.ofbiz.commonapp.security.login.LoginServices" invoke="createUserLogin" auth="false">
         <description>Create a UserLogin</description>
@@ -44,6 +47,7 @@
         <attribute name="passwordHint" type="String" mode="IN" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
+
     <service name="updatePassword" engine="java"
             location="org.ofbiz.commonapp.security.login.LoginServices" invoke="updatePassword" auth="true">
         <description>Update a UserLogin Password</description>
@@ -68,66 +72,81 @@
         <attribute name="sendType" type="String" mode="IN" optional="true"/>
         <attribute name="contentType" type="String" mode="IN" optional="true"/>
     </service>
-		
+
+    <service name="createNote" engine="java"
+            location="org.ofbiz.commonapp.common.CommonServices invoke="createNote">
+        <description>Create a new note record</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="noteName" type="String" mode="IN" optional="true"/>
+        <attribute name="note" type="String" mode="IN"/>
+    </service>
+
     <!-- Workflow services -->
     <service name="wfLimitInvoker" engine="java"
-    location="org.ofbiz.core.workflow.WorkflowServices" invoke="limitInvoker">
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="limitInvoker">
         <description>Required service used the workflow engine to invoke limitService</description>
         <attribute name="serviceName" type="String" mode="IN"/>
         <attribute name="serviceContext" type="java.util.Map" mode="IN"/>
         <attribute name="workEffortId" type="String" mode="IN"/>
     </service>
-    <service name="assignActivity" engine="java" 
-    location="org.ofbiz.core.workflow.WorkflowServices" invoke="assignActivity">
+
+    <service name="assignActivity" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="assignActivity">
         <description>Assign a new party or role to a workflow activity</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
         <attribute name="partyId" type="String" mode="IN"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="removeOldAssignments" type="String" mode="IN" optional="true"/>
-    </service>  
-    <service name="activateActivity" engine="java" 
-    location="org.ofbiz.core.workflow.WorkflowServices" invoke="activateActivity">
+    </service>
+
+    <service name="activateActivity" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="activateActivity">
         <description>Attempt to initiate a workflow activity</description>
-        <attribute name="workEffortId" type="String" mode="IN"/> 
-    </service>  
-    <service name="completeActivity" engine="java" 
-    location="org.ofbiz.core.workflow.WorkflowServices" invoke="completeActivity">
+        <attribute name="workEffortId" type="String" mode="IN"/>
+    </service>
+
+    <service name="completeActivity" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="completeActivity">
         <description>Attempt to complete a workflow activity</description>
-        <attribute name="workEffortId" type="String" mode="IN"/> 
+        <attribute name="workEffortId" type="String" mode="IN"/>
         <attribute name="result" type="Map" mode="IN" optional="true"/>
     </service>
+
     <service name="changeActivityState" engine="java"
-    location="org.ofbiz.core.workflow.WorkflowServices" invoke="changeActivityState">
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="changeActivityState">
         <description>Manually change the state of a workflow activity</description>
-        <attribute name="workEffortId" type="String" mode="IN"/> 
-        <attribute name="newState" type="String" mode="IN"/>    
+        <attribute name="workEffortId" type="String" mode="IN"/>
+        <attribute name="newState" type="String" mode="IN"/>
     </service>
+
     <service name="acceptAssignment" engine="java"
-    location="org.ofbiz.core.workflow.WorkflowServices" invoke="acceptAssignment">
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="acceptAssignment">
         <description>Accept a workflow assignment</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
         <attribute name="partyId" type="String" mode="IN"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN"/>
     </service>
+
     <service name="completeAssignment" engine="java"
-    location="org.ofbiz.core.workflow.WorkflowServices" invoke="completeAssignment">
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="completeAssignment">
         <description>Complete a workflow assignment</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
         <attribute name="partyId" type="String" mode="IN"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN"/>	  
+        <attribute name="fromDate" type="Timestamp" mode="IN"/>
         <attribute name="result" type="Map" mode="IN" optional="true"/>
-    </service>  
-    <service name="assignApprover" engine="java" 
-    location="ServiceTest" invoke="testOne" validate="false"/>    
+    </service>
+
+    <service name="assignApprover" engine="java"
+            location="ServiceTest" invoke="testOne" validate="false"/>
 
     <!-- Order processing services -->
     <service name="processOrder" engine="workflow" location="TEST" invoke="ProcessOrder">
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="orderStatusId" type="String" mode="OUT"/>
     </service>
-    <service name="storeOrder" engine="java" validate="false" 
+    <service name="storeOrder" engine="java" validate="false"
     location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createOrder">
         <description>Creates order entities</description>
         <attribute name="partyId" type="String" mode="IN"/>
