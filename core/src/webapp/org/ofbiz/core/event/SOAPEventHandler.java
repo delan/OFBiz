@@ -2,7 +2,7 @@
  * $Id$
  */
 
-package org.ofbiz.core.service;
+package org.ofbiz.core.event;
 
 import java.io.*;
 import java.util.*;
@@ -12,11 +12,12 @@ import org.apache.axis.*;
 import org.apache.axis.message.*;
 import org.apache.axis.server.*;
 import org.w3c.dom.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> Generic Service SOAP Interface
- * <p><b>Description:</b> None
+ * <p><b>Title:</b> SOAPEventHandler.java
+ * <p><b>Description:</b> SOAP Event Handler implementation
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a 
@@ -41,9 +42,27 @@ import org.ofbiz.core.util.*;
  *@created    December 7, 2001
  *@version    1.0
  */
-public class SOAPServiceEvents {
+public class SOAPEventHandler implements EventHandler {
     
-    public static String serviceSOAP(HttpServletRequest request, HttpServletResponse response) {             
+    private String eventPath = null;  
+    private String eventMethod = null;
+    
+    /** Initialize the required parameters
+     *@param eventPath The path or location of this event
+     *@param eventMethod The method to invoke
+     */
+    public void initialize(String eventPath, String eventMethod) {
+        this.eventPath = null;
+        this.eventMethod = null;
+    }
+    
+    /** Invoke the web event
+     *@param request The servlet request object
+     *@param response The servlet response object
+     *@return String Result code
+     *@throws EventHandlerException
+     */
+    public String invoke(HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {            
         HttpSession session = request.getSession();
         ServletContext context = session.getServletContext();
         LocalDispatcher dispatcher = (LocalDispatcher) context.getAttribute("dispatcher");
@@ -52,8 +71,8 @@ public class SOAPServiceEvents {
             axisServer = AxisServerFactory.getServer("OFBiz/Axis Server",null);
         }
         catch ( AxisFault e ) {
-            // set messages
-            return "error";
+            // TODO create a soap message w/ the error(s).
+            throw new EventHandlerException("Problems with the AXIS server",e);
         }
         MessageContext mctx = new MessageContext(axisServer);
                         
@@ -64,13 +83,12 @@ public class SOAPServiceEvents {
               request.getHeader("Content-Type"), request.getHeader("Content-Location"));
         }
         catch ( IOException ioe ) {
-            // set messages
-            return "error";
+            throw new EventHandlerException(ioe.getMessage(),ioe);            
         }
         
         if ( msg == null ) {
-            // set some messages
-            return "error";
+            // TODO create a soap message w/ the error(s).
+            throw new EventHandlerException("SOAP Message is null");            
         }
         
         mctx.setRequestMessage(msg);
@@ -84,7 +102,7 @@ public class SOAPServiceEvents {
             reqEnv = msg.getSOAPPart().getAsSOAPEnvelope();            
         }
         catch ( AxisFault e ) {
-            // set messages            
+            // TODO create a soap message w/ the error(s).
             Debug.logError(e,"[SOAP EVENT] : Error w/ SOAPEnvelope : ");            
         }
         Vector bodies = null;
@@ -178,6 +196,6 @@ public class SOAPServiceEvents {
             return "error";
         }
                                 
-        return "noDispatch";
+        return "";
     }    
 }

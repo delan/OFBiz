@@ -37,7 +37,7 @@ import org.ofbiz.core.util.*;
  *@created    December 7, 2001
  *@version    1.0
  */
-public class ServiceEventHandler {
+public class ServiceEventHandler implements EventHandler {
     
     private String serviceName = null;
     
