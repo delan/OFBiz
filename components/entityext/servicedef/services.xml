@@ -87,7 +87,7 @@
         <attribute name="rootDirectory" type="String" mode="IN" optional="false"/>
         <attribute name="delimiter" type="String" mode="IN" optional="true"/>
     </service>
-    <service name="importDelimitedEntityFile" engine="java" auth="true" transaction-timout="7200" require-new-transaction="true"
+    <service name="importDelimitedEntityFile" engine="java" auth="true" transaction-timout="14400" require-new-transaction="true"
             location="org.ofbiz.entityext.data.EntityDataServices" invoke="importDelimitedFile">
         <description>Import delimited file</description>
         <attribute name="file" type="java.io.File" mode="IN" optional="false"/>
