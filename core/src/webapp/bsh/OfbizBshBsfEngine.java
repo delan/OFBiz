@@ -210,7 +210,7 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
         } catch (InterpreterError e) {
             throw new BSFException("BeanShell interpreter internal error: "+ e + sourceInfo(source,lineNo,columnNo));
         } catch (TargetError e2) {
-            throw new BSFException("The application script threw an exception: " + e2.getTarget() + sourceInfo(source,lineNo,columnNo));
+            throw new BSFException("The application script threw an exception: " + e2.getTarget() + " " + sourceInfo(source,lineNo,columnNo));
         } catch (EvalError e3) {
             throw new BSFException("BeanShell script error: " + e3 + sourceInfo(source,lineNo,columnNo));
         }
@@ -316,7 +316,9 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
             } catch (TargetError e) {
                 // failsafe, set the Line as the origin of the error.
                 if (e.getNode() == null) e.setNode(node);
-                Debug.logError(e);
+                Debug.logError(e, "Outermost exception: ");
+                Debug.logError(e.getTarget(), "BSH Target Exception: ");
+                Debug.logError(e.getCause(), "BSH Cause Exception: ");
                 e.reThrow("Sourced file: " + sourceFileInfo);
             } catch (EvalError e) {
                 // failsafe, set the Line as the origin of the error.
