@@ -401,7 +401,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         
         int otherFieldSize = dropDownField.getOtherFieldSize();
-        String otherFieldName = modelFormField.getName() + "_OTHER";
+        String otherFieldName = dropDownField.getParameterNameOther(context);
         if (otherFieldSize > 0) {
             //buffer.append(" onchange=\"alert('ONCHANGE, process_choice:' + process_choice)\"");
             //buffer.append(" onchange='test_js()' ");
@@ -470,6 +470,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         // Adapted from work by Yucca Korpela
         // http://www.cs.tut.fi/~jkorpela/forms/combo.html
         if (otherFieldSize > 0) {
+        
+            String fieldName = modelFormField.getParameterName(context);
             
             buffer.append("<noscript>");
             buffer.append("<input type='text' name='");
@@ -481,7 +483,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append("\nif(other_choice(document.");
             buffer.append(modelForm.getName());
             buffer.append(".");
-            buffer.append(modelFormField.getName());
+            buffer.append(fieldName);
             buffer.append(")) disa = '';");
             buffer.append("\ndocument.write(\"<input type=");
             buffer.append("'text' name='");
@@ -492,7 +494,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append("\" +disa+ \" onfocus='check_choice(document.");
             buffer.append(modelForm.getName());
             buffer.append(".");
-            buffer.append(modelFormField.getName());
+            buffer.append(fieldName);
             buffer.append(")'/>\");");
             buffer.append("\nif(disa && document.styleSheets)");
             buffer.append(" document.");

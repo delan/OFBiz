@@ -2301,6 +2301,30 @@ public class ModelFormField {
         public int getOtherFieldSize() {
             return this.otherFieldSize;   
         }
+        
+        /**
+         * Get the name to use for the parameter for this field in the form interpreter.
+         * For HTML forms this is the request parameter name.
+         *
+         * @return
+         */
+        public String getParameterNameOther(Map context) {
+            String baseName;
+            if (UtilValidate.isNotEmpty(this.modelFormField.parameterName)) {
+                baseName = this.modelFormField.parameterName;
+            } else {
+                baseName = this.modelFormField.name;
+            }
+    
+            baseName += "_OTHER";
+            Integer itemIndex = (Integer) context.get("itemIndex");
+            if (itemIndex != null && "multi".equals(this.modelFormField.modelForm.getType())) {
+                return baseName + this.modelFormField.modelForm.getItemIndexSeparator() + itemIndex.intValue();
+            } else {
+                return baseName;
+            }
+        }
+
     }
 
     public static class RadioField extends FieldInfoWithOptions {
