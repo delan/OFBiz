@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.10 2003/12/25 00:24:35 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.11 2003/12/25 19:03:55 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.w3c.dom.NodeList;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class ModelEntity implements Comparable {
@@ -199,7 +199,7 @@ public class ModelEntity implements Comparable {
     }
 
     /** DB Names Constructor */
-    public ModelEntity(String tableName, List colList, ModelFieldTypeReader modelFieldTypeReader) {
+    public ModelEntity(String tableName, List colList, ModelFieldTypeReader modelFieldTypeReader, boolean isCaseSensitive) {
         // if there is a dot in the name, remove it and everything before it, should be the schema name
         this.tableName = tableName;
         int dotIndex = this.tableName.indexOf(".");
@@ -208,7 +208,6 @@ public class ModelEntity implements Comparable {
         }
         this.entityName = ModelUtil.dbNameToClassName(this.tableName);
         Iterator columns = colList.iterator();
-
         while (columns.hasNext()) {
             DatabaseUtil.ColumnCheckInfo ccInfo = (DatabaseUtil.ColumnCheckInfo) columns.next();
             ModelField newField = new ModelField(ccInfo, modelFieldTypeReader);
