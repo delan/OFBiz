@@ -106,7 +106,7 @@ public class GenericValue extends GenericEntity {
     GenericValue value = (GenericValue)relatedOneCache.get(relationName);
     if(value == null) {
       value = getRelatedOne(relationName);
-      relatedOneCache.put(relationName, value);
+      if(value != null) relatedOneCache.put(relationName, value);
     }
     return value;
   }
