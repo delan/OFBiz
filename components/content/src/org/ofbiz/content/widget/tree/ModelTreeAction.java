@@ -183,7 +183,15 @@ public abstract class ModelTreeAction {
         public void runAction(Map context) {
             if (location.endsWith(".bsh")) {
                 try {
+                    context.put("_LIST_ITERATOR_", null);
                     BshUtil.runBshAtLocation(location, context);
+                	Object obj = context.get("_LIST_ITERATOR_");
+                	if (obj != null && obj instanceof EntityListIterator) {
+                    	this.modelSubNode.setListIterator((ListIterator)obj);
+                	} else {
+                		if (obj instanceof List)
+                        	this.modelSubNode.setListIterator(((List)obj).listIterator());
+                	}
                 } catch (GeneralException e) {
                     String errMsg = "Error running BSH script at location [" + location + "]: " + e.toString();
                     Debug.logError(e, errMsg, module);
