@@ -133,9 +133,9 @@
     <entity entity-name="WorkflowActivity" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Activity Entity">
-      <field name="packageId" type="id-ne"></field>
-      <field name="processId" type="id-ne"></field>
-      <field name="activityId" type="id-ne"></field>
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="processId" type="id-long-ne"></field>
+      <field name="activityId" type="id-long-ne"></field>
       <field name="objectName" type="name"></field>
       <field name="objectPriority" type="numeric"></field>
       <field name="objectState" type="name"></field>
@@ -151,7 +151,8 @@
       <field name="duration" type="floating-point"></field>
       <field name="workingTime" type="floating-point"></field>
       <field name="waitingTime" type="floating-point"></field>
-      <field name="activityTypeEnumId" type="id"></field>	
+      <field name="activityTypeEnumId" type="id"></field>
+      <field name="canStart" type="indicator"></field>	
       <prim-key field="packageId" />	
       <prim-key field="processId" />	
       <prim-key field="activityId" />
@@ -220,9 +221,9 @@
     <entity entity-name="WorkflowActivityLoop" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Activity Loop Entity">
-      <field name="packageId" type="id-ne"></field>
-      <field name="processId" type="id-ne"></field>
-      <field name="activityId" type="id-ne"></field>
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="processId" type="id-long-ne"></field>
+      <field name="activityId" type="id-long-ne"></field>
       <field name="conditionExpr" type="very-long"></field>
       <field name="loopKindEnumId" type="id"></field>	
       <prim-key field="packageId" />	
@@ -237,11 +238,11 @@
     <entity entity-name="WorkflowActivitySubFlow" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Activity SubFlow Entity">
-      <field name="packageId" type="id-ne"></field>
-      <field name="processId" type="id-ne"></field>
-      <field name="activityId" type="id-ne"></field>
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="processId" type="id-long-ne"></field>
+      <field name="activityId" type="id-long-ne"></field>
       <field name="actualParameters" type="very-long"></field>
-      <field name="subFlowProcessId" type="id"></field>
+      <field name="subFlowProcessId" type="id-long"></field>
       <field name="executionEnumId" type="id"></field>	
       <prim-key field="packageId" />	
       <prim-key field="processId" />	
@@ -259,10 +260,10 @@
     <entity entity-name="WorkflowActivityTool" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Activity Tool Entity">
-      <field name="packageId" type="id-ne"></field>
-      <field name="processId" type="id-ne"></field>
-      <field name="activityId" type="id-ne"></field>
-      <field name="toolId" type="id-ne"></field>
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="processId" type="id-long-ne"></field>
+      <field name="activityId" type="id-long-ne"></field>
+      <field name="toolId" type="id-long-ne"></field>
       <field name="toolTypeEnumId" type="id"></field>
       <field name="actualParameters" type="very-long"></field>
       <field name="description" type="description"></field>	
@@ -406,8 +407,8 @@
     <view-entity entity-name="WorkflowDataFieldsView" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Data Fields View Entity">	
-      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />	
-      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />
+      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />	
+      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />
       <alias entity-alias="WDF" name="dataFieldId" prim-key="true" />
       <alias entity-alias="WDF" name="dataFieldName" />
       <alias entity-alias="WDF" name="description" />
@@ -525,7 +526,7 @@
     <entity entity-name="WorkflowPackage" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Package Entity">
-      <field name="packageId" type="id-ne"></field>
+      <field name="packageId" type="id-long-ne"></field>
       <field name="packageName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="specificationVersion" type="very-short"></field>
@@ -602,8 +603,8 @@
     <entity entity-name="WorkflowPackageExternal" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Package External Entity">
-      <field name="packageId" type="id-ne"></field>
-      <field name="externalPackageId" type="id-ne"></field>	
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="externalPackageId" type="id-long-ne"></field>	
       <prim-key field="packageId" />	
       <prim-key field="externalPackageId" />
       <relation type="one" title="Main" rel-entity-name="WorkflowPackage">
@@ -728,8 +729,8 @@
     <entity entity-name="WorkflowProcess" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Process Entity">
-      <field name="packageId" type="id-ne"></field>
-      <field name="processId" type="id-ne"></field>
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="processId" type="id-long-ne"></field>
       <field name="objectName" type="name"></field>
       <field name="objectPriority" type="numeric"></field>
       <field name="objectState" type="name"></field>
@@ -752,7 +753,8 @@
       <field name="durationUomId" type="id"></field>
       <field name="duration" type="floating-point"></field>
       <field name="workingTime" type="floating-point"></field>
-      <field name="waitingTime" type="floating-point"></field>	
+      <field name="waitingTime" type="floating-point"></field>
+      <field name="defaultStartActivityId" type="id-long"></field>	
       <prim-key field="packageId" />	
       <prim-key field="processId" />
       <relation type="one" rel-entity-name="WorkflowPackage">
@@ -761,6 +763,11 @@
       <relation type="many" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId" />
         <key-map field-name="processId" />
+      </relation>
+      <relation type="one" title="DefaultStart" rel-entity-name="WorkflowActivity">
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
+        <key-map field-name="defaultStartActivityId" rel-field-name="activityId" />
       </relation>
       <relation type="many" rel-entity-name="WorkflowTransition">
         <key-map field-name="packageId" />
@@ -821,17 +828,17 @@
     <entity entity-name="WorkflowTransRestriction" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Transition Restriction Entity">
-      <field name="packageId" type="id-ne"></field>
-      <field name="processId" type="id-ne"></field>
-      <field name="activityId" type="id-ne"></field>
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="processId" type="id-long-ne"></field>
+      <field name="activityId" type="id-long-ne"></field>
       <field name="restrictionSeqId" type="id-ne"></field>
       <field name="isInlineBlock" type="indicator"></field>
       <field name="blockName" type="name"></field>
       <field name="blockDocumentationUrl" type="url"></field>
       <field name="blockIconUrl" type="url"></field>
       <field name="blockDescription" type="description"></field>
-      <field name="blockBeginActivityId" type="id"></field>
-      <field name="blockEndActivityId" type="id"></field>
+      <field name="blockBeginActivityId" type="id-long"></field>
+      <field name="blockEndActivityId" type="id-long"></field>
       <field name="joinTypeEnumId" type="id"></field>
       <field name="splitTypeEnumId" type="id"></field>	
       <prim-key field="packageId" />	
@@ -863,15 +870,15 @@
     <entity entity-name="WorkflowTransition" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Transition Entity">
-      <field name="packageId" type="id-ne"></field>
-      <field name="processId" type="id-ne"></field>
-      <field name="transitionId" type="id-ne"></field>
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="processId" type="id-long-ne"></field>
+      <field name="transitionId" type="id-long-ne"></field>
       <field name="transitionName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="conditionExpr" type="very-long"></field>
       <field name="conditionTypeEnumId" type="id"></field>
-      <field name="fromActivityId" type="id"></field>
-      <field name="toActivityId" type="id"></field>
+      <field name="fromActivityId" type="id-long"></field>
+      <field name="toActivityId" type="id-long"></field>
       <field name="loopTypeEnumId" type="id"></field>	
       <prim-key field="packageId" />	
       <prim-key field="processId" />	
@@ -905,11 +912,11 @@
     <entity entity-name="WorkflowTransitionRef" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Transition Reference Entity">
-      <field name="packageId" type="id-ne"></field>
-      <field name="processId" type="id-ne"></field>
-      <field name="activityId" type="id-ne"></field>
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="processId" type="id-long-ne"></field>
+      <field name="activityId" type="id-long-ne"></field>
       <field name="restrictionSeqId" type="id-ne"></field>
-      <field name="transitionId" type="id-ne"></field>	
+      <field name="transitionId" type="id-long-ne"></field>	
       <prim-key field="packageId" />	
       <prim-key field="processId" />	
       <prim-key field="activityId" />	
@@ -935,7 +942,7 @@
     <entity entity-name="WorkflowTypeDeclaration" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Type Declaration Entity">
-      <field name="packageId" type="id-ne"></field>
+      <field name="packageId" type="id-long-ne"></field>
       <field name="typeId" type="id-ne"></field>
       <field name="typeName" type="name"></field>
       <field name="description" type="description"></field>
