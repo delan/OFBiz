@@ -57,7 +57,7 @@
       <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
       <event-invoke>addToCart</event-invoke>
       <success>view:showcart</success>
-      <error>view:error</error>
+      <error>view:showcart</error>
     </request-map>
     <request-map>
       <uri>addordertocart</uri>
@@ -65,7 +65,7 @@
       <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
       <event-invoke>addToCartFromOrder</event-invoke>
       <success>view:showcart</success>
-      <error>view:error</error>
+      <error>view:orderstatus</error>
     </request-map>
     <request-map>
       <uri>addseparator</uri>
@@ -73,7 +73,7 @@
       <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
       <event-invoke>addSeparator</event-invoke>
       <success>view:showcart</success>
-      <error>view:error</error>
+      <error>view:showcart</error>
     </request-map>
     <request-map>
       <uri>modifycart</uri>
@@ -81,7 +81,7 @@
       <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
       <event-invoke>modifyCart</event-invoke>
       <success>view:showcart</success>
-      <error>view:error</error>
+      <error>view:showcart</error>
     </request-map>		
     <request-map>
       <uri>emptycart</uri>

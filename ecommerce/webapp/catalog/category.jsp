@@ -47,7 +47,7 @@
 </ofbiz:if>
 --%>
 
-<ofbiz:if name="productList">
+<ofbiz:if name="productList" size="0">
 <table border="0" width="100%" cellpadding="2">
     <tr>
       <td align=right>
@@ -82,7 +82,7 @@
   </table>
 </center>
 
-<ofbiz:if name="productList">
+<ofbiz:if name="productList" size="0">
 <table border="0" width="100%" cellpadding="2">
     <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
     <tr>
@@ -102,6 +102,10 @@
     </tr>
 </table>
 </ofbiz:if>
+
+<ofbiz:unless name="productList" size="0">
+  <DIV class='tabletext'>There are no products in this category.</DIV>
+</ofbiz:unless>
 
 <!--
 <%

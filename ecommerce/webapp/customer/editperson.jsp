@@ -45,11 +45,11 @@
     <%if(person == null){%>
       <%useValues = false;%>
       <p class="head1">Add New Personal Information</p>
-+ donePage%></ofbiz:url>" name="editpersonform">
+        <FORM method=POST action='<ofbiz:url>/updateperson/<%=donePage%></ofbiz:url>' name="editpersonform">
         <input type=hidden name="UPDATE_MODE" value="CREATE">
     <%}else{%>
       <p class="head1">Edit Personal Information</p>
-+ donePage%></ofbiz:url>" name="editpersonform">
+        <FORM method=POST action='<ofbiz:url>/updateperson/<%=donePage%></ofbiz:url>' name="editpersonform">
         <input type=hidden name="UPDATE_MODE" value="UPDATE">
     <%}%>
 
@@ -167,7 +167,7 @@
   </form>
   </table>
 
-+ donePage%></ofbiz:url>" class="buttontext">[Done]</a>
+    &nbsp;<a href="<ofbiz:url>/<%=donePage%></ofbiz:url>" class="buttontext">[Done]</a>
     &nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[Save]</a>
     <%--  <input type="image" value="[Save]" border="0" src="/commerce/images/btn_save.gif"> --%>
 
