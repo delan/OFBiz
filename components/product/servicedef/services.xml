@@ -674,5 +674,41 @@
         <attribute name="textDataResourceId" type="String" mode="IN" optional="true"/>
         <attribute name="text" type="String" mode="IN" optional="true"/>
     </service>
+	<service name="getProductFeaturesByType" engine="java" 
+		location="org.ofbiz.product.feature.ProductFeatureServices"	invoke="getProductFeaturesByType">
+		<description>
+			Returns a map of productFeatureTypeId -> List of ProductFeatures.  If supplied with a productFeatureCategoryId,
+			the returned result is that of all product features in that category.  Otherwise, if supplied with a productId,
+			the returned result is that of all features applied to that particular product.
+			If the optional productFeatureApplTypeId is specified, only features with application of that type will be returned
+			(this would only make sense along with a productId parameter.)
+		</description>
+		<attribute type="String" mode="IN" name="productFeatureCategoryId" optional="true"/>
+		<attribute type="String" mode="IN" name="productId" optional="true"/>
+        <attribute type="String" mode="IN" name="productFeatureApplTypeId" optional="true"/>
+		<attribute type="Map" mode="OUT" name="productFeaturesByType" optional="false"/>
+	</service>
+	<service name="getAllExistingVariants" engine="java" 
+		location="org.ofbiz.product.feature.ProductFeatureServices"	invoke="getAllExistingVariants">
+		<description>
+			Takes a productId and a List of ProductFeatureAndAppl entities and returns a List of productIds which are
+			existing varaints with those features applied.
+		</description>
+		<attribute type="String" mode="IN" name="productId" optional="false"/>
+		<attribute type="List" mode="IN" name="productFeatureAppls" optional="false"/>
+		<attribute type="List" mode="OUT" name="variantProductIds" optional="false"/>
+	</service>
+	<service name="getVariantCombinations" engine="java" 
+		location="org.ofbiz.product.feature.ProductFeatureServices"	invoke="getVariantCombinations">
+		<description>
+			For a product, returns a List of all possible product feature combinations, based on all SELECTABLE features which
+			are applied to the product.  featureCombinations is a List of Maps with the following fields:
+				defaultVariantProductId -> default productId for the variant, based on idCodes of the features
+				curProductFeatureAndAppls -> List of product features to be applied to this variant
+				existingVariantProductIds -> List of productIds of variants which already have these features
+		</description>
+		<attribute type="String" mode="IN" name="productId" optional="false"/>
+		<attribute type="List" mode="OUT" name="featureCombinations" optional="false"/>
+	</service>
 
 </services>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -21,6 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
+ *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
  *@version    $Rev$
  *@since      2.2
@@ -77,7 +78,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
     </div>
     
     <br>
-    <#if (productFeatureAndAppls.size() > 0)>
+    <#if (featureTypes.size() > 0)>
         <table border="1" cellpadding="2" cellspacing="0">
                 <#assign rowCount = 0>
                 <FORM method=POST action="<@ofbizUrl>/QuickAddChosenVariants</@ofbizUrl>" name="selectAllForm">
@@ -126,7 +127,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                     <#assign rowCount = rowCount + 1>
 		</#list>
 <tr>
-<#assign columns = featureTypeSize + 3>
+<#assign columns = featureTypes.size() + 3>
 <td colspan="${columns}" align="center">
 <input type="hidden" name="_rowCount" value="${rowCount}">
 <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonCreate}"/>

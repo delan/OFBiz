@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -21,6 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
+ *@author     Jacopo Cappellato
  *@version    $Rev$
  *@since      2.2
  */
@@ -33,9 +34,11 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.content.widget.html.*;
+import org.ofbiz.service.GenericDispatcher;
 
 security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
+dispatcher = request.getAttribute("dispatcher");
 
 if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
     context.put("hasPermission", Boolean.TRUE);
@@ -45,146 +48,15 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
 
 productId = request.getParameter("productId");
 product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-featureTypes = new ArrayList();
 
-//just get the selectable features
-productFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", 
-        UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE"), 
-        UtilMisc.toList("sequenceNum", "productFeatureApplTypeId", "productFeatureTypeId", "description")), true);
+result = dispatcher.runSync("getProductFeaturesByType", UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE"));
+featureTypes = result.get("productFeaturesByType").keySet();
 
-if (productFeatureAndAppls != null) {
-    //get the list of unique feature types in the order they came from the db
-    productFeatureAndApplIter = productFeatureAndAppls.iterator();
-    while (productFeatureAndApplIter.hasNext()) {
-        productFeatureAndAppl = productFeatureAndApplIter.next();
-        featureType = productFeatureAndAppl.getString("productFeatureTypeId");
-        if (!featureTypes.contains(featureType)) {
-            featureTypes.add(featureType);
-        }
-    }
-}
-
-featureTypeSize = featureTypes.size();
-int[] indices = new int[featureTypeSize];
-
-//this will contain a list of ProductFeatureAndAppls for each feature type
-featureTypeValues = new ArrayList();
-
-//for each feature type get the list of features
-for (int i = 0; i < featureTypes.size(); i++) {
-    String featureType = (String) featureTypes.get(i);
-    featureTypeValues.add(i, EntityUtil.filterByAnd(productFeatureAndAppls, UtilMisc.toMap("productFeatureTypeId", featureType)));
-    indices[i] = 0;
-}
+result = dispatcher.runSync("getVariantCombinations", UtilMisc.toMap("productId", productId));
+featureCombinationInfos = result.get("featureCombinations");
 
 context.put("productId", productId);
 context.put("product", product);
-context.put("productFeatureAndAppls", productFeatureAndAppls);
 context.put("featureTypes", featureTypes);
-context.put("featureTypeSize", featureTypeSize);
-context.put("featureTypeValues", featureTypeValues);
-
-
-featureCombinationInfos = new LinkedList();
 context.put("featureCombinationInfos", featureCombinationInfos);
-
-HashMap defaultVariantProductIds = new HashMap();
-
-boolean carryIncrement = false;
-while (true) {
-    featureCombinationInfo = new HashMap();
-    featureCombinationInfos.add(featureCombinationInfo);
-	
-    curProductFeatureAndAppls = new ArrayList();
-    existingVariantProductIds = new ArrayList();
-    defaultVariantProductId = productId;
-    featureCombinationInfo.put("curProductFeatureAndAppls", curProductFeatureAndAppls);
-    featureCombinationInfo.put("existingVariantProductIds", existingVariantProductIds);
-    
-    if (featureTypeSize == 0) break;
-    
-    for (int featureTypeIndex = 0; featureTypeIndex < featureTypeSize; featureTypeIndex++) {
-        featureValues = featureTypeValues.get(featureTypeIndex);
-        productFeatureAndAppl = featureValues.get(indices[featureTypeIndex]);
-        idCode = productFeatureAndAppl.getString("idCode");
-        if (idCode != null) {
-            // Uncomment the following lines if you want to shorten the idCodes in the productId
-            //if (idCode.length() > 2) {
-            //    idCode = idCode.substring(0, 2);
-            //}
-            defaultVariantProductId += idCode;
-        }
-        // add to list of features for this combination: productFeatureAndAppl
-        curProductFeatureAndAppls.add(productFeatureAndAppl);
-        // remember featureTypeIndex too? no, use list index for that...
-
-        //Use the cascading index method for recursion to iteration conversion
-        //here's the fun part: go through the types to increment and overflow
-        if (featureTypeIndex == 0) {
-            //always increment the 0 position
-            indices[featureTypeIndex]++;
-            if (indices[featureTypeIndex] >= featureValues.size()) {
-                indices[featureTypeIndex] = 0;
-                carryIncrement = true;
-            }
-        } else if (carryIncrement) {
-            //increment this position if the flag is set
-            indices[featureTypeIndex]++;
-            carryIncrement = false;
-
-            if (indices[featureTypeIndex] >= featureValues.size()) {
-                indices[featureTypeIndex] = 0;
-                carryIncrement = true;
-            }
-        }
-    }
-    if (defaultVariantProductId.length() > 18) {
-        defaultVariantProductId = defaultVariantProductId.substring(0, 18);
-    }
-    int counter = 0;
-    tmpDefaultVariantProductId = defaultVariantProductId;
-    while (defaultVariantProductIds.containsKey(tmpDefaultVariantProductId) && counter < 100) {
-        tmpDefaultVariantProductId = defaultVariantProductId + (counter < 10? "0": "") + counter;
-        counter++;
-    }
-    defaultVariantProductIds.put(tmpDefaultVariantProductId, null);
-    featureCombinationInfo.put("defaultVariantProductId", tmpDefaultVariantProductId);
-
-    // find PRODUCT_VARIANT associations that have these features as STANDARD_FEATUREs
-    productAssocs = EntityUtil.filterByDate(delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT")), true);
-    if (productAssocs != null && productAssocs.size() > 0) {
-        Iterator productAssocIter = productAssocs.iterator();
-        while (productAssocIter.hasNext()) {
-            productAssoc = productAssocIter.next();
-            
-            //for each associated product, if it has all standard features, display it's productId
-            boolean hasAllFeatures = true;
-            Iterator curProductFeatureAndApplIter = curProductFeatureAndAppls.iterator();
-            while (curProductFeatureAndApplIter.hasNext()) {
-                productFeatureAndAppl = curProductFeatureAndApplIter.next();
-                findByMap = UtilMisc.toMap("productId", productAssoc.getString("productIdTo"), 
-                        "productFeatureTypeId", productFeatureAndAppl.get("productFeatureTypeId"),
-                        "description", productFeatureAndAppl.get("description"),
-                        "productFeatureApplTypeId", "STANDARD_FEATURE");
-                //Debug.log("Using findByMap: " + findByMap);
-
-                standardProductFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", findByMap), true);
-                if (standardProductFeatureAndAppls == null || standardProductFeatureAndAppls.size() == 0) {
-                    //Debug.log("Does NOT have this standard feature");
-                    hasAllFeatures = false;
-                    break;
-                } else {
-                    //Debug.log("DOES have this standard feature");
-                }
-            }
-
-            if (hasAllFeatures) {
-            	// add to list of existing variants: productId=productAssoc.productIdTo
-            	existingVariantProductIds.add(productAssoc.get("productIdTo"));
-            }
-        }
-    }
-    // if carryIncrement is still set then the last value turned over, so we quit...
-    if (carryIncrement) { break; }
-}
 
