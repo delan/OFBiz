@@ -271,15 +271,15 @@
   <!-- org.ofbiz.commonapp.humanres.ability -->
   <!-- ========================================================= -->
 	
-    <entity-group group="org.ofbiz.commonapp" entity="EmployeePerformanceReview" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyQual" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyQualType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyResume" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartySkill" />	
     <entity-group group="org.ofbiz.commonapp" entity="PerfRatingType" />	
+    <entity-group group="org.ofbiz.commonapp" entity="PerfReview" />	
+    <entity-group group="org.ofbiz.commonapp" entity="PerfReviewItem" />	
     <entity-group group="org.ofbiz.commonapp" entity="PerfReviewItemType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PerformanceNote" />	
-    <entity-group group="org.ofbiz.commonapp" entity="PerformanceReviewItem" />	
     <entity-group group="org.ofbiz.commonapp" entity="PersonTraining" />	
     <entity-group group="org.ofbiz.commonapp" entity="ResponsibilityType" />	
     <entity-group group="org.ofbiz.commonapp" entity="SkillType" />	

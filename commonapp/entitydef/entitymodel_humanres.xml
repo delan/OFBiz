@@ -53,28 +53,6 @@
   <!-- org.ofbiz.commonapp.humanres.ability -->
   <!-- ========================================================= -->
 
-    <entity entity-name="EmployeePerformanceReview"
-            package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Employee Performance Review Entity">
-      <field name="employeePartyId" type="id-ne"></field>
-      <field name="employeeRoleTypeId" type="id-ne"></field>
-      <field name="perfReviewId" type="id-ne"></field>
-      <field name="managerPartyId" type="id"></field>
-      <field name="managerRoleTypeId" type="id"></field>
-      <field name="paymentId" type="id"></field>
-      <field name="positionId" type="id"></field>
-      <field name="payHistoryRoleTypeIdFrom" type="id"></field>
-      <field name="payHistoryRoleTypeIdTo" type="id"></field>
-      <field name="payHistoryPartyIdFrom" type="id"></field>
-      <field name="payHistoryPartyIdTo" type="id"></field>
-      <field name="payHistoryFromDate" type="date-time"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="comments" type="comment"></field>
-      <prim-key field="employeePartyId"/>
-      <prim-key field="employeeRoleTypeId"/>
-      <prim-key field="perfReviewId"/>
-    </entity>
     <entity entity-name="PartyQual"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Party Qualification Entity">
@@ -85,6 +63,9 @@
       <prim-key field="partyId"/>
       <prim-key field="partyQualTypeId"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PARTY_QUAL_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
       <relation type="one" fk-name="PARTY_QUAL_PQTYP" rel-entity-name="PartyQualType">
         <key-map field-name="partyQualTypeId"/>
       </relation>
@@ -115,7 +96,9 @@
       <field name="resumeDate" type="date-time"></field>
       <field name="resumeText" type="long-varchar"></field>
       <prim-key field="resumeId"/>
-      <prim-key field="partyId"/>
+      <relation type="one" fk-name="PARTY_RSME_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
     </entity>
     <entity entity-name="PartySkill"
             package-name="org.ofbiz.commonapp.humanres.ability"
@@ -128,6 +111,12 @@
       <field name="startedUsingDate" type="date-time"></field>
       <prim-key field="partyId"/>
       <prim-key field="skillTypeId"/>
+      <relation type="one" fk-name="PARTY_SKLL_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_SKLL_SKTP" rel-entity-name="SkillType">
+        <key-map field-name="skillTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="PerfRatingType"
             package-name="org.ofbiz.commonapp.humanres.ability"
@@ -156,20 +145,94 @@
       <prim-key field="roleTypeId"/>
       <prim-key field="fromDate"/>
     </entity>
-    <entity entity-name="PerformanceReviewItem"
+    <entity entity-name="PerfReview"
             package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Performance Review Item Entity">
+            title="Employee Performance Review Entity">
       <field name="employeePartyId" type="id-ne"></field>
       <field name="employeeRoleTypeId" type="id-ne"></field>
       <field name="perfReviewId" type="id-ne"></field>
-      <field name="perfReviewSeqId" type="id-ne"></field>
+      <field name="managerPartyId" type="id"></field>
+      <field name="managerRoleTypeId" type="id"></field>
+      <field name="paymentId" type="id"></field>
+      <field name="emplPositionId" type="id"></field>
+      <field name="payHistoryRoleTypeIdFrom" type="id"></field>
+      <field name="payHistoryRoleTypeIdTo" type="id"></field>
+      <field name="payHistoryPartyIdFrom" type="id"></field>
+      <field name="payHistoryPartyIdTo" type="id"></field>
+      <field name="payHistoryFromDate" type="date-time"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="comments" type="comment"></field>
+      <prim-key field="employeePartyId"/>
+      <prim-key field="employeeRoleTypeId"/>
+      <prim-key field="perfReviewId"/>
+      <relation type="one" fk-name="PERF_REV_EPTY" title="Employee" rel-entity-name="Party">
+        <key-map field-name="employeePartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_REV_EPTRL" title="Employee" rel-entity-name="PartyRole">
+        <key-map field-name="employeePartyId" rel-field-name="partyId"/>
+        <key-map field-name="employeeRoleTypeId" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_REV_MPTY" title="Manager" rel-entity-name="Party">
+        <key-map field-name="managerPartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_REV_MPTRL" title="Manager" rel-entity-name="PartyRole">
+        <key-map field-name="managerPartyId" rel-field-name="partyId"/>
+        <key-map field-name="managerRoleTypeId" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_REV_PMNT" rel-entity-name="Payment">
+        <key-map field-name="paymentId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_REV_PSTN" rel-entity-name="EmplPosition">
+        <key-map field-name="emplPositionId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_REV_PHFPTY" title="PayHistoryFrom" rel-entity-name="Party">
+        <key-map field-name="payHistoryPartyIdFrom" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_REV_PHFPRL" title="PayHistoryFrom" rel-entity-name="PartyRole">
+        <key-map field-name="payHistoryPartyIdFrom" rel-field-name="partyId"/>
+        <key-map field-name="payHistoryRoleTypeIdFrom" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_REV_PHTPTY" title="PayHistoryTo" rel-entity-name="Party">
+        <key-map field-name="payHistoryPartyIdTo" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_REV_PHTPRL" title="PayHistoryTo" rel-entity-name="PartyRole">
+        <key-map field-name="payHistoryPartyIdTo" rel-field-name="partyId"/>
+        <key-map field-name="payHistoryRoleTypeIdTo" rel-field-name="roleTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="PerfReviewItem"
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Performance Review Item Entity">
+      <field name="employeePartyId" type="id-ne"></field>
+      <field name="employeeRoleTypeId" type="id"></field>
+      <field name="perfReviewId" type="id-ne"></field>
+      <field name="perfReviewItemSeqId" type="id-ne"></field>
       <field name="perfRatingTypeId" type="id"></field>
       <field name="perfReviewItemTypeId" type="id"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="employeePartyId"/>
       <prim-key field="employeeRoleTypeId"/>
       <prim-key field="perfReviewId"/>
-      <prim-key field="perfReviewSeqId"/>
+      <prim-key field="perfReviewItemSeqId"/>
+      <relation type="one" fk-name="PERF_RVITM_PFRV" rel-entity-name="PerfReview">
+        <key-map field-name="employeePartyId"/>
+        <key-map field-name="employeeRoleTypeId"/>
+        <key-map field-name="perfReviewId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_RVITM_EPTY" title="Employee" rel-entity-name="Party">
+        <key-map field-name="employeePartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_RVITM_EPTRL" title="Employee" rel-entity-name="PartyRole">
+        <key-map field-name="employeePartyId" rel-field-name="partyId"/>
+        <key-map field-name="employeeRoleTypeId" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_RVITM_PRTTP" rel-entity-name="PerfRatingType">
+        <key-map field-name="perfRatingTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_RVITM_PRITTP" rel-entity-name="PerfReviewItemType">
+        <key-map field-name="perfReviewItemTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="PersonTraining"
             package-name="org.ofbiz.commonapp.humanres.ability"
@@ -181,6 +244,12 @@
       <prim-key field="partyId"/>
       <prim-key field="trainingClassTypeId"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PERS_TRNG_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PERS_TRNG_TCTP" rel-entity-name="TrainingClassType">
+        <key-map field-name="trainingClassTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="ResponsibilityType"
             package-name="org.ofbiz.commonapp.humanres.ability"
@@ -233,18 +302,53 @@
       <prim-key field="partyIdFrom"/>
       <prim-key field="partyIdTo"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="EMPLMNT_TPTY" title="To" rel-entity-name="Party">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="EMPLMNT_TPTRL" title="To" rel-entity-name="PartyRole">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+        <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="EMPLMNT_FPTY" title="From" rel-entity-name="Party">
+        <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="EMPLMNT_FPTRL" title="From" rel-entity-name="PartyRole">
+        <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
+        <key-map field-name="roleTypeIdFrom" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="EMPLMNT_TNRN" rel-entity-name="TerminationReason">
+        <key-map field-name="terminationReasonId"/>
+      </relation>
+      <relation type="one" fk-name="EMPLMNT_TNTP" rel-entity-name="TerminationType">
+        <key-map field-name="terminationTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="EmploymentApp"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Employment Application Entity">
       <field name="applicationId" type="id-ne"></field>
-      <field name="positionId" type="id"></field>
+      <field name="emplPositionId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="employmentAppSourceTypeId" type="id"></field>
       <field name="applyingPartyId" type="id"></field>
       <field name="referredByPartyId" type="id"></field>
       <field name="applicationDate" type="date-time"></field>
       <prim-key field="applicationId"/>
+      <relation type="one" fk-name="EMPLMNT_APP_POS" rel-entity-name="EmplPosition">
+        <key-map field-name="emplPositionId"/>
+      </relation>
+      <relation type="one" fk-name="EMPLMNT_APP_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="EMPLMNT_APP_EAST" rel-entity-name="EmploymentAppSourceType">
+        <key-map field-name="employmentAppSourceTypeId"/>
+      </relation>
+      <relation type="one" fk-name="EMPLMNT_APP_APTY" title="Applying" rel-entity-name="Party">
+        <key-map field-name="applyingPartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="EMPLMNT_APP_RBPTY" title="ReferredBy" rel-entity-name="Party">
+        <key-map field-name="referredByPartyId" rel-field-name="partyId"/>
+      </relation>
     </entity>
     <entity entity-name="EmploymentAppSourceType"
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -260,8 +364,8 @@
       <field name="roleTypeIdTo" type="id-ne"></field>
       <field name="partyIdFrom" type="id-ne"></field>
       <field name="partyIdTo" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
       <field name="benefitTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="periodTypeId" type="id"></field>
       <field name="cost" type="currency-amount"></field>
@@ -273,6 +377,26 @@
       <prim-key field="partyIdTo"/>
       <prim-key field="benefitTypeId"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PTY_BNFT_TPTY" title="To" rel-entity-name="Party">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PTY_BNFT_TPTRL" title="To" rel-entity-name="PartyRole">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+        <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PTY_BNFT_FPTY" title="From" rel-entity-name="Party">
+        <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PTY_BNFT_FPTRL" title="From" rel-entity-name="PartyRole">
+        <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
+        <key-map field-name="roleTypeIdFrom" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PTY_BNFT_BNFTTP" rel-entity-name="BenefitType">
+        <key-map field-name="benefitTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PTY_BNFT_PRDTYP" rel-entity-name="PeriodType">
+        <key-map field-name="periodTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="PayGrade"
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -301,6 +425,23 @@
       <prim-key field="partyIdFrom"/>
       <prim-key field="partyIdTo"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PAY_HIST_EMPLMNT" rel-entity-name="Employment">
+        <key-map field-name="roleTypeIdFrom"/>
+        <key-map field-name="roleTypeIdTo"/>
+        <key-map field-name="partyIdFrom"/>
+        <key-map field-name="partyIdTo"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+      <relation type="one" fk-name="PAY_HIST_PGRD" rel-entity-name="PayGrade">
+        <key-map field-name="payGradeId"/>
+      </relation>
+      <relation type="one" fk-name="PAY_HIST_SSTP" rel-entity-name="SalaryStep">
+        <key-map field-name="salaryStepSeqId"/>
+        <key-map field-name="payGradeId"/>
+      </relation>
+      <relation type="one" fk-name="PAY_HIST_PDTP" rel-entity-name="PeriodType">
+        <key-map field-name="periodTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="PayrollPreference"
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -321,6 +462,22 @@
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
       <prim-key field="payrollPreferenceSeqId"/>
+      <relation type="one" fk-name="PRL_PREF_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PRL_PREF_PTRL" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PRL_PREF_DNTP" rel-entity-name="DeductionType">
+        <key-map field-name="deductionTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PRL_PREF_PMTP" rel-entity-name="PaymentMethodType">
+        <key-map field-name="paymentMethodTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PRL_PREF_PDTP" rel-entity-name="PeriodType">
+        <key-map field-name="periodTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="RejectionReason"
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -338,6 +495,9 @@
       <field name="amount" type="currency-amount"></field>
       <prim-key field="salaryStepSeqId"/>
       <prim-key field="payGradeId"/>
+      <relation type="one" fk-name="SLRY_STP_PGRD" rel-entity-name="PayGrade">
+        <key-map field-name="payGradeId"/>
+      </relation>
     </entity>
     <entity entity-name="TerminationReason"
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -366,6 +526,16 @@
       <field name="roleTypeIdTo" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <prim-key field="unemploymentClaimId"/>
+      <relation type="one" fk-name="UNMPL_CLM_EMPLMNT" rel-entity-name="Employment">
+        <key-map field-name="roleTypeIdFrom"/>
+        <key-map field-name="roleTypeIdTo"/>
+        <key-map field-name="partyIdFrom"/>
+        <key-map field-name="partyIdTo"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+      <relation type="one" fk-name="UNMPL_CLM_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -375,12 +545,12 @@
     <entity entity-name="EmplPosition"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="EmplPosition Entity">
-      <field name="positionId" type="id-ne"></field>
+      <field name="emplPositionId" type="id-ne"></field>
       <field name="statusId" type="id"></field>
       <field name="partyId" type="id"></field>
       <field name="budgetId" type="id"></field>
       <field name="budgetItemSeqId" type="id"></field>
-      <field name="positionTypeId" type="id"></field>
+      <field name="emplPositionTypeId" type="id"></field>
       <field name="estimatedFromDate" type="date-time"></field>
       <field name="estimatedThruDate" type="date-time"></field>
       <field name="salaryFlag" type="indicator"></field>
@@ -389,84 +559,140 @@
       <field name="temporaryFlag" type="indicator"></field>
       <field name="actualFromDate" type="date-time"></field>
       <field name="actualThruDate" type="date-time"></field>
-      <prim-key field="positionId"/>
+      <prim-key field="emplPositionId"/>
+      <relation type="one" fk-name="EMPL_POS_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="EMPL_POS_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="EMPL_POS_BGTITM" rel-entity-name="BudgetItem">
+        <key-map field-name="budgetId"/>
+        <key-map field-name="budgetItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="EMPL_POS_EPSTP" rel-entity-name="EmplPositionType">
+        <key-map field-name="emplPositionTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="EmplPositionClassType"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="EmplPosition Classification Type Entity">
-      <field name="positionClassTypeId" type="id-ne"></field>
+      <field name="emplPositionClassTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
-      <prim-key field="positionClassTypeId"/>
+      <prim-key field="emplPositionClassTypeId"/>
     </entity>
     <entity entity-name="EmplPositionFulfillment"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="EmplPosition Fulfillment Entity">
-      <field name="positionId" type="id-ne"></field>
+      <field name="emplPositionId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
-      <prim-key field="positionId"/>
+      <prim-key field="emplPositionId"/>
       <prim-key field="partyId"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="EMPL_PSFLMT_EMPS" rel-entity-name="EmplPosition">
+        <key-map field-name="emplPositionId"/>
+      </relation>
+      <relation type="one" fk-name="EMPL_PSFLMT_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
     </entity>
     <entity entity-name="EmplPositionReportingStruct"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="EmplPosition Reporting Structure Entity">
-      <field name="positionIdReportingTo" type="id-ne"></field>
-      <field name="positionIdManagedBy" type="id-ne"></field>
+      <field name="emplPositionIdReportingTo" type="id-ne"></field>
+      <field name="emplPositionIdManagedBy" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
       <field name="primaryFlag" type="indicator"></field>
-      <prim-key field="positionIdReportingTo"/>
-      <prim-key field="positionIdManagedBy"/>
+      <prim-key field="emplPositionIdReportingTo"/>
+      <prim-key field="emplPositionIdManagedBy"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="EMPL_PSRPS_EMPSR" title="ReportingTo" rel-entity-name="EmplPosition">
+        <key-map field-name="emplPositionIdReportingTo" rel-field-name="emplPositionId"/>
+      </relation>
+      <relation type="one" fk-name="EMPL_PSRPS_EMPSM" title="ManagedBy" rel-entity-name="EmplPosition">
+        <key-map field-name="emplPositionIdManagedBy" rel-field-name="emplPositionId"/>
+      </relation>
     </entity>
     <entity entity-name="EmplPositionResponsibility"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="EmplPosition Responsibility Entity">
-      <field name="positionId" type="id-ne"></field>
+      <field name="emplPositionId" type="id-ne"></field>
       <field name="responsibilityTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
-      <prim-key field="positionId"/>
+      <prim-key field="emplPositionId"/>
       <prim-key field="responsibilityTypeId"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="EMPL_PSRTY_EMPS" rel-entity-name="EmplPosition">
+        <key-map field-name="emplPositionId"/>
+      </relation>
+      <relation type="one" fk-name="EMPL_PSRTY_RYTP" rel-entity-name="ResponsibilityType">
+        <key-map field-name="responsibilityTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="EmplPositionType"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="EmplPosition Type Entity">
-      <field name="positionTypeId" type="id-ne"></field>
+      <field name="emplPositionTypeId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
       <field name="description" type="description"></field>
-      <prim-key field="positionTypeId"/>
+      <prim-key field="emplPositionTypeId"/>
+      <relation type="one" fk-name="EMPL_PSTP_EPTP" rel-entity-name="EmplPositionType">
+        <key-map field-name="emplPositionTypeId"/>
+      </relation>
+      <relation type="one" fk-name="EMPL_PSTP_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="EMPL_PSTP_PRLE" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="EmplPositionTypeClass"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="EmplPosition Type Class Entity">
-      <field name="positionTypeId" type="id-ne"></field>
-      <field name="positionClassTypeId" type="id-ne"></field>
+      <field name="emplPositionTypeId" type="id-ne"></field>
+      <field name="emplPositionClassTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="standardHoursPerWeek" type="floating-point"></field>
-      <prim-key field="positionTypeId"/>
-      <prim-key field="positionClassTypeId"/>
+      <prim-key field="emplPositionTypeId"/>
+      <prim-key field="emplPositionClassTypeId"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="EMPL_PSTPCS_EPTP" rel-entity-name="EmplPositionType">
+        <key-map field-name="emplPositionTypeId"/>
+      </relation>
+      <relation type="one" fk-name="EMPL_PSTPCS_EPCTP" rel-entity-name="EmplPositionClassType">
+        <key-map field-name="emplPositionClassTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="ValidResponsibility"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="Valid Responsibility Entity">
-      <field name="positionTypeId" type="id-ne"></field>
+      <field name="emplPositionTypeId" type="id-ne"></field>
       <field name="responsibilityTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
-      <prim-key field="positionTypeId"/>
+      <prim-key field="emplPositionTypeId"/>
       <prim-key field="responsibilityTypeId"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="VALID_RTY_EPSTP" rel-entity-name="EmplPositionType">
+        <key-map field-name="emplPositionTypeId"/>
+      </relation>
+      <relation type="one" fk-name="VALID_RTY_RYTP" rel-entity-name="ResponsibilityType">
+        <key-map field-name="responsibilityTypeId"/>
+      </relation>
     </entity>
 </entitymodel>
 
