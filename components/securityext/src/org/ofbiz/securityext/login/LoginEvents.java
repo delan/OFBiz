@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.2 2003/08/20 18:13:59 ajzeneski Exp $
+ * $Id: LoginEvents.java,v 1.3 2003/09/03 02:39:40 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,6 +43,7 @@ import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
@@ -57,7 +58,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -283,12 +284,15 @@ public class LoginEvents {
         String currCatalog = (String) session.getAttribute("CURRENT_CATALOG_ID");
         // also make sure the delegatorName is preserved, especially so that a new Visit can be created
         String delegatorName = (String) session.getAttribute("delegatorName");
+        // also save the shopping cart if we have one
+        ShoppingCart shoppingCart = (ShoppingCart) session.getAttribute("shoppingCart");
 
         session.invalidate();
         session = request.getSession(true);
 
         if (currCatalog != null) session.setAttribute("CURRENT_CATALOG_ID", currCatalog);
         if (delegatorName != null) session.setAttribute("delegatorName", delegatorName);
+        if (shoppingCart != null) session.setAttribute("shoppingCart", shoppingCart);
     }
 
     /**
