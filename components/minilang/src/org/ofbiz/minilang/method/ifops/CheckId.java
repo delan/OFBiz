@@ -1,5 +1,5 @@
 /*
- * $Id: CheckId.java,v 1.1 2003/08/17 06:06:13 ajzeneski Exp $
+ * $Id: CheckId.java,v 1.2 2003/10/10 09:55:53 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.minilang.method.*;
  * or fail-property sub-elements are used to add a message to the error-list.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class CheckId extends MethodOperation {
@@ -150,7 +150,8 @@ public class CheckId extends MethodOperation {
         if (!isProperty && message != null) {
             messages.add(message + errorDetails);
         } else if (isProperty && propertyResource != null && message != null) {
-            String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
+            //String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
+            String propMsg = UtilProperties.getMessage(propertyResource, message, methodContext.getEnvMap(), methodContext.getLocale());
 
             if (propMsg == null || propMsg.length() == 0) {
                 messages.add(defaultMessage + errorDetails);
