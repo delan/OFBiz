@@ -90,7 +90,17 @@ public class UrlTag extends BodyTagSupport {
         body.clearBody();
 
         try {
-            String encodedURL = response.encodeURL(newURL.toString());
+            String encodedURL = newURL.toString();
+            /* This doesn't work, leaving here as a painful reminder that each parameter must be encoded independently
+            //encode for character escaping, etc with the URLEncoder.encode method
+            int qmLoc = encodedURL.indexOf('?');
+            if (qmLoc > 0) {
+                String encodedQueryString = java.net.URLEncoder.encode(encodedURL.substring(qmLoc + 1));
+                encodedURL = encodedURL.subSequence(0, qmLoc) + "?" + encodedQueryString;
+            }
+            */
+            //encode for session maintenance with the response.encodeURL method
+            encodedURL = response.encodeURL(encodedURL);
             getPreviousOut().print(encodedURL);
         } catch (IOException e) {
             throw new JspException(e.getMessage());
@@ -98,7 +108,3 @@ public class UrlTag extends BodyTagSupport {
         return SKIP_BODY;
     }
 }
-
-
-
-
