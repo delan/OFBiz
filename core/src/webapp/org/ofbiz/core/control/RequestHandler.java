@@ -37,6 +37,7 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.stats.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.view.*;
+import org.ofbiz.core.util.UtilMisc;
 
 
 /**
@@ -68,7 +69,8 @@ public class RequestHandler implements Serializable {
         String eventPath = null;
         String eventMethod = null;
 
-        String cname = request.getContextPath().substring(1);
+		// workaraound if we are in the root webapp
+		String cname = UtilMisc.getApplicationName(request);
 
         /* Grab data from request object to process. */
         String requestUri = RequestHandler.getRequestUri(request.getPathInfo());
@@ -288,7 +290,8 @@ public class RequestHandler implements Serializable {
             throws RequestHandlerException {
         GenericValue userLogin = (GenericValue) req.getSession().getAttribute("userLogin");
         GenericDelegator delegator = (GenericDelegator) req.getAttribute("delegator");
-        String cname = req.getContextPath().substring(1);
+        // workaraound if we are in the root webapp
+		String cname = UtilMisc.getApplicationName(req);
         String oldView = view;
 
         if (view != null && view.length() > 0 && view.charAt(0) == '/') view = view.substring(1);

@@ -87,7 +87,10 @@ public class ControlServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         long requestStartTime = System.currentTimeMillis();
-        String cname = request.getContextPath().substring(1);
+        
+		// workaraound if we are in the root webapp
+		String cname = UtilMisc.getApplicationName(request);
+		
         String rname = request.getPathInfo().substring(1);
         if (rname.indexOf('/') > 0) {
             rname = rname.substring(0, rname.indexOf('/'));
