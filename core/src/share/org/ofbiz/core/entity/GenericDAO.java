@@ -683,7 +683,9 @@ public class GenericDAO {
       if(field.isPk) sql = sql + " NOT NULL, ";
       else sql = sql + ", ";
     }
-    sql = sql + "PRIMARY KEY (" + entity.colNameString(entity.pks) + "))";
+    String pkName = "PK_" + entity.tableName;
+    if(pkName.length() > 30) pkName = pkName.substring(0,30);
+    sql = sql + "CONSTRAINT " + pkName + " PRIMARY KEY (" + entity.colNameString(entity.pks) + "))";
     
     //Debug.logInfo(" create: sql=" + sql);
     try {
@@ -749,7 +751,7 @@ public class GenericDAO {
     timer.timerString("[GenericDAO.checkDb] After Get All Table Names");
 
     //get ALL column info, put into hashmap by table name
-    Map colInfo = this.getColumnInfo(messages);
+    Map colInfo = this.getColumnInfo(tableNames, messages);
     timer.timerString("[GenericDAO.checkDb] After Get All Column Info");
     
     //-make sure all entities have a corresponding table
@@ -917,7 +919,7 @@ public class GenericDAO {
     TreeSet tableNames = this.getTableNames(messages);
 
     //get ALL column info, put into hashmap by table name
-    Map colInfo = this.getColumnInfo(messages);
+    Map colInfo = this.getColumnInfo(tableNames, messages);
 
     //go through each table and make a ModelEntity object, add to list
     //for each entity make corresponding ModelField objects
@@ -994,7 +996,7 @@ public class GenericDAO {
     //get ALL tables from this database
     TreeSet tableNames = new TreeSet();
     ResultSet tableSet = null;
-    try { tableSet = dbData.getTables(null, null, null, null); }
+    try { tableSet = dbData.getTables(null, dbData.getUserName(), null, null); }
     catch(SQLException sqle) {
       String message = "Unable to get list of table information... Error was:" + sqle.toString();
       Debug.logError("[GenericDAO.getTableNames] " + message);
@@ -1013,9 +1015,14 @@ public class GenericDAO {
       while(tableSet.next()) {
         try {
           String tableName = tableSet.getString("TABLE_NAME");
+          tableName = (tableName == null)?null:tableName.toUpperCase();
           String tableType = tableSet.getString("TABLE_TYPE");
+          tableType = (tableType == null)?null:tableType.toUpperCase();
+          //only allow certain table types
+          if(tableType != null && !"TABLE".equals(tableType) && !"VIEW".equals(tableType) && !"ALIAS".equals(tableType) && !"SYNONYM".equals(tableType)) continue;
+          
           //String remarks = tableSet.getString("REMARKS");
-          tableNames.add(tableName.toUpperCase());
+          tableNames.add(tableName);
           //Debug.logInfo("[GenericDAO.checkDb] Found table named \"" + tableName + "\" of type \"" + tableType + "\" with remarks: " + remarks);
         }
         catch(SQLException sqle) {
@@ -1051,7 +1058,7 @@ public class GenericDAO {
     return tableNames;
   }
     
-  public Map getColumnInfo(Collection messages) {
+  public Map getColumnInfo(Set tableNames, Collection messages) {
     Connection connection = null;
     try { connection = getConnection(); }
     catch(SQLException sqle) {
@@ -1094,12 +1101,15 @@ public class GenericDAO {
     
     Map colInfo = new HashMap();
     try {
-      ResultSet rsCols = dbData.getColumns(null, null, null, null);
+      ResultSet rsCols = dbData.getColumns(null, dbData.getUserName(), null, null);
       while(rsCols.next()) {
         try {
           ColumnCheckInfo ccInfo = new ColumnCheckInfo();
           ccInfo.tableName = rsCols.getString("TABLE_NAME");
           ccInfo.tableName = (ccInfo.tableName == null)?null:ccInfo.tableName.toUpperCase();
+          //ignore the column info if the table name is not in the list we are concerned with
+          if(!tableNames.contains(ccInfo.tableName)) continue;
+            
           ccInfo.columnName = rsCols.getString("COLUMN_NAME");
           ccInfo.columnName = (ccInfo.columnName == null)?null:ccInfo.columnName.toUpperCase();
 
