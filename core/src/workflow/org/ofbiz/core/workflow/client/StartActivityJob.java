@@ -54,6 +54,7 @@ public class StartActivityJob extends AbstractJob {
         this.activity = activity;
         this.requester = requester;
         runtime = new Date().getTime();
+        if (Debug.verboseOn()) Debug.logVerbose("Created new StartActivityJob : " + activity, module);
     }
 
     protected void finish() {
@@ -63,16 +64,15 @@ public class StartActivityJob extends AbstractJob {
     /**
      * @see org.ofbiz.core.service.job.Job#exec()
      */
-    public void exec() {
+    public void exec() {        
         String activityIds = null;
         try {
-            activityIds = activity.getDefinitionObject().getString("activityId") + " / " + 
-                    activity.getRuntimeObject().getString("workEffortId");
+            Debug.logVerbose("Executing job now : " + activity, module);                                      
             activity.activate();
             if (requester != null)
                 requester.receiveResult(new HashMap());
         } catch (Exception e) {            
-            Debug.logError(e, "Start Activity [" + activityIds + "] Failed", module);
+            Debug.logError(e, "Start Activity [" + activity + "] Failed", module);
             if (requester != null)
                 requester.receiveException(e);
         }       

@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.core.workflow;
+package org.ofbiz.core.workflow.client;
 
 import java.sql.*;
 import java.util.*;
@@ -30,7 +30,7 @@ import java.util.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.workflow.client.*;
+import org.ofbiz.core.workflow.*;
 
 /**
  * Workflow Client - Client API to the Workflow Engine.
@@ -99,6 +99,7 @@ public class WorkflowClient {
      * @param partyId The assigned / to be assigned users party ID.
      * @param roleTypeId The assigned / to be assigned role type ID.
      * @param fromDate The assignment's from date.
+     * @return GenericResultWaiter of the start job.
      * @throws WfException
      */
     public void acceptAndStart(String workEffortId, String partyId, String roleTypeId, Timestamp fromDate) throws WfException {        
@@ -171,11 +172,12 @@ public class WorkflowClient {
      * @param roleTypeId The assigned / to be assigned role type ID.
      * @param fromDate The assignment's from date.
      * @param start True to attempt to start the activity.
+     * @return GenericResultWaiter of the start job.
      * @throws WfException
      */
     public void delegateAndAccept(String workEffortId, String fromPartyId, String fromRoleTypeId, Timestamp fromFromDate, String toPartyId, String toRoleTypeId, Timestamp toFromDate, boolean start) throws WfException {                                 
         WfAssignment assign = delegate(workEffortId, fromPartyId, fromRoleTypeId, fromFromDate, toPartyId, toRoleTypeId, toFromDate);
-                
+                      
         assign.accept();
         Debug.logVerbose("Delegated assignment.", module);
         if (start) {
@@ -186,15 +188,16 @@ public class WorkflowClient {
                 Debug.logWarning("Activity already running; not starting.", module);
         } else {
             Debug.logVerbose("Not starting assignment.", module);
-        }
+        }              
     }
 
     /**
      * Start the activity.
      * @param workEffortId The WorkEffort entity ID for the activitiy.
+     * @return GenericResultWaiter of the start job.
      * @throws WfException
      */
-    public void start(String workEffortId) throws WfException {
+    public void start(String workEffortId) throws WfException {        
         WfActivity activity = WfFactory.getWfActivity(context.getDelegator(), workEffortId);
 
         if (Debug.verboseOn()) Debug.logVerbose("Starting activity: " + activity.name(), module);
@@ -209,6 +212,7 @@ public class WorkflowClient {
         } catch (JobManagerException e) {
             throw new WfException(e.getMessage(), e);
         }
+               
     }
 
     /**
@@ -217,19 +221,14 @@ public class WorkflowClient {
      * @param partyId The assigned / to be assigned users party ID.
      * @param roleTypeId The assigned / to be assigned role type ID.
      * @param fromDate The assignment's from date.
+     * @return GenericResultWaiter for the complete job.
      * @throws WfException
      */
     public void complete(String workEffortId, String partyId, String roleTypeId, Timestamp fromDate, Map result) throws WfException {                    
         WfAssignment assign = WfFactory.getWfAssignment(context.getDelegator(), workEffortId, partyId, roleTypeId, fromDate);
-                
-        Job job = new CompleteAssignmentJob(assign, result);
-        
-        if (Debug.verboseOn()) Debug.logVerbose("Job: " + job, module);
-        try {
-            context.getDispatcher().getJobManager().runJob(job);
-        } catch (JobManagerException e) {
-            throw new WfException(e.getMessage(), e);
-        }
+        if (result != null && result.size() > 0)
+            assign.setResult(result);
+        assign.complete();        
     }
     
     /**

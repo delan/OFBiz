@@ -304,11 +304,14 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new WfException("Start mode cannot be null");
 
         if (mode.equals("WAM_AUTOMATIC")) {
+            Debug.logVerbose("Activity start mode is AUTO", module);
             Iterator i = getIteratorAssignment();
             while (i.hasNext())
                  ((WfAssignment) i.next()).changeStatus("CAL_ACCEPTED"); // accept all assignments (AUTO)
+            Debug.logVerbose("All assignments accepted, starting activity: " + this.runtimeKey(), module);
             startActivity();
         } else if (howManyAssignment() > 0 && checkAssignStatus(1)) {
+            Debug.logVerbose("Starting activity: " + this.runtimeKey(), module);
             startActivity();
         } else {
             throw new CannotStart();

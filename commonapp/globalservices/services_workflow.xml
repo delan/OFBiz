@@ -8,7 +8,7 @@
 
     <!-- Workflow services -->
     <service name="wfLimitInvoker" engine="java"
-            location="org.ofbiz.core.workflow.WorkflowServices" invoke="limitInvoker">
+            location="org.ofbiz.core.workflow.client.WorkflowServices" invoke="limitInvoker">
         <description>Required service used the workflow engine to invoke limitService</description>
         <attribute name="serviceName" type="String" mode="IN"/>
         <attribute name="serviceContext" type="java.util.Map" mode="IN"/>
@@ -16,45 +16,45 @@
     </service>
 
     <service name="wfGetActivityContext" engine="java"
-            location="org.ofbiz.core.workflow.WorkflowServices" invoke="getActivityContext">
+            location="org.ofbiz.core.workflow.client.WorkflowServices" invoke="getActivityContext">
         <description>Returns the current context of the requested activity</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
         <attribute name="activityContext" type="java.util.Map" mode="OUT"/>
     </service>
 
     <service name="wfAppendActivityContext" engine="java"
-            location="org.ofbiz.core.workflow.WorkflowServices" invoke="appendActivityContext">
+            location="org.ofbiz.core.workflow.client.WorkflowServices" invoke="appendActivityContext">
         <description>Appends the current context to the activity context</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
         <attribute name="currentContext" type="java.util.Map" mode="IN"/>
     </service>
 
     <service name="wfActivateActivity" engine="java"
-            location="org.ofbiz.core.workflow.WorkflowServices" invoke="activateActivity">
+            location="org.ofbiz.core.workflow.client.WorkflowServices" invoke="activateActivity">
         <description>Attempt to initiate a workflow activity</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
     </service>
     
     <service name="wfCancelWorkflow" engine="java"
-    		location="org.ofbiz.core.workflow.WorkflowServices" invoke="cancelWorkflow">
+    		location="org.ofbiz.core.workflow.client.WorkflowServices" invoke="cancelWorkflow">
     	<description>Abort a workflow process</description>
     	<attribute name="workEffortId" type="String" mode="IN"/>
     </service>
     
     <service name="wfSuspendActivity" engine="java"
-    		location="org.ofbiz.core.workflow.WorkflowServices" invoke="suspendActivity">
+    		location="org.ofbiz.core.workflow.client.WorkflowServices" invoke="suspendActivity">
     	<description>Suspend a workflow activity</description>
     	<attribute name="workEffortId" type="String" mode="IN"/>
     </service>
     
     <service name="wfResumeActivity" engine="java"
-    		location="org.ofbiz.core.workflow.WorkflowServices" invoke="resumeActivity">
+    		location="org.ofbiz.core.workflow.client.WorkflowServices" invoke="resumeActivity">
     	<description>Resume a suspended activity</description>
     	<attribute name="workEffortId" type="String" mode="IN"/>
     </service>        
 
     <service name="wfChangeActivityState" engine="java"
-            location="org.ofbiz.core.workflow.WorkflowServices" invoke="changeActivityState">
+            location="org.ofbiz.core.workflow.client.WorkflowServices" invoke="changeActivityState">
         <description>Manually change the state of a workflow activity</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
         <attribute name="newState" type="String" mode="IN"/>
@@ -69,26 +69,26 @@
     </service>
     
     <service name="wfAssignActivity" engine="java"
-            location="org.ofbiz.core.workflow.WorkflowServices" invoke="assignActivity">
+            location="org.ofbiz.core.workflow.client.WorkflowServices" invoke="assignActivity">
         <description>Assign a new party or role to a workflow activity</description>
         <implements service="wfAssignmentInterface"/>
         <attribute name="removeOldAssignments" type="String" mode="IN" optional="true"/>
     </service>
         
     <service name="wfAcceptAssignment" engine="java"
-            location="org.ofbiz.core.workflow.WorkflowServices" invoke="acceptAssignment">
+            location="org.ofbiz.core.workflow.client.WorkflowServices" invoke="acceptAssignment">
         <description>Accept a workflow user assignment</description>
         <implements service="wfAssignmentInterface"/>       
     </service>
 
     <service name="wfAcceptRoleAssignment" engine="java"
-            location="org.ofbiz.core.workflow.WorkflowServices" invoke="acceptRoleAssignment">
+            location="org.ofbiz.core.workflow.client.WorkflowServices" invoke="acceptRoleAssignment">
         <description>Accept a workflow role assignment</description>
         <implements service="wfAssignmentInterface"/>      
     </service>
 
     <service name="wfCompleteAssignment" engine="java"
-            location="org.ofbiz.core.workflow.WorkflowServices" invoke="completeAssignment">
+            location="org.ofbiz.core.workflow.client.WorkflowServices" invoke="completeAssignment">
         <description>Complete a workflow assignment</description>
         <implements service="wfAssignmentInterface"/>      
         <attribute name="result" type="java.util.Map" mode="IN" optional="true"/>
@@ -106,13 +106,13 @@
     </service>
     
     <service name="wfDelegateAssignment" engine="java"
-    		location="org.ofbiz.core.workflow.WorkflowServices" invoke="delegateAssignment">
+    		location="org.ofbiz.core.workflow.client.WorkflowServices" invoke="delegateAssignment">
     	<description>Delegate an assigned assignment to another party</description>
     	<implements service="wfDelegateAssignmentInterface"/>
     </service>
     
     <service name="wfDelegateAndAcceptAssignmet" engine="java"
-    		location="org.ofbiz.core.workflow.WorkflowServices" invoke="delegateAcceptAssignment">
+    		location="org.ofbiz.core.workflow.client.WorkflowServices" invoke="delegateAcceptAssignment">
     	<description>Delegate an assigned assignment and accept</description>
     	<implements service="wfDelegateAssignmentInterface"/>
     	<attribute name="startActivity" type="Boolean" mode="IN" optional="true"/>

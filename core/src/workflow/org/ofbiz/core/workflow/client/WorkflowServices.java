@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.core.workflow;
+package org.ofbiz.core.workflow.client;
 
 import java.util.*;
 import java.sql.Timestamp;
@@ -31,6 +31,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.workflow.*;
 
 /**
  * Workflow Services - 'Services' and 'Workers' for interaction with Workflow API
@@ -282,11 +283,11 @@ public class WorkflowServices {
         String partyId = (String) context.get("partyId");
         String roleType = (String) context.get("roleTypeId");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
-
-        try {
+ 
+        try {            
             WorkflowClient client = WfFactory.getClient(ctx);
-            client.acceptAndStart(workEffortId, partyId, roleType, fromDate);
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            client.acceptAndStart(workEffortId, partyId, roleType, fromDate);            
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);            
         } catch (WfException we) {
             we.printStackTrace();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -333,7 +334,7 @@ public class WorkflowServices {
         String toParty = (String) context.get("toPartyId");
         String toRole = (String) context.get("toRoleTypeId");
         Timestamp toFromDate = (Timestamp) context.get("toFromDate");
-        Boolean startObj = (Boolean) context.get("startActivity");
+        Boolean startObj = (Boolean) context.get("startActivity");            
         
         // optional start activity (default false)
         boolean start = false;
@@ -343,10 +344,10 @@ public class WorkflowServices {
         // optional fromDate (default now)
         if (toFromDate == null)
             toFromDate = UtilDateTime.nowTimestamp();
-            
+                  
         try {
             WorkflowClient client = new WorkflowClient(ctx);
-            client.delegateAndAccept(workEffortId, fromParty, fromRole, fromFromDate, toParty, toRole, toFromDate, start);
+            client.delegateAndAccept(workEffortId, fromParty, fromRole, fromFromDate, toParty, toRole, toFromDate, start);          
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
              we.printStackTrace();
@@ -363,10 +364,10 @@ public class WorkflowServices {
         String partyId = (String) context.get("partyId");
         String roleType = (String) context.get("roleTypeId");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
-
+        
         try {
             WorkflowClient client = new WorkflowClient(ctx);
-            client.delegateAndAccept(workEffortId, "_NA_", roleType, fromDate, partyId, roleType, fromDate, true);
+            client.delegateAndAccept(workEffortId, "_NA_", roleType, fromDate, partyId, roleType, fromDate, true);            
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
             we.printStackTrace();
@@ -385,7 +386,7 @@ public class WorkflowServices {
         String partyId = (String) context.get("partyId");
         String roleType = (String) context.get("roleTypeId");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
-        Map actResults = (Map) context.get("result");
+        Map actResults = (Map) context.get("result");            
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
@@ -394,11 +395,10 @@ public class WorkflowServices {
             result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this assignment");
             return result;
         }
-
+     
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
-
-            client.complete(workEffortId, partyId, roleType, fromDate, actResults);
+            client.complete(workEffortId, partyId, roleType, fromDate, actResults);            
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
             we.printStackTrace();
