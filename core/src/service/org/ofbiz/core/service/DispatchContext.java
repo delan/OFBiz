@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.core.config.GenericConfigException;
+import org.ofbiz.core.config.MainResourceHandler;
 import org.ofbiz.core.config.ResourceHandler;
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.security.Security;
@@ -344,7 +345,7 @@ public class DispatchContext implements Serializable {
 
         while (gseIter.hasNext()) {
             Element globalServicesElement = (Element) gseIter.next();
-            ResourceHandler handler = new ResourceHandler(
+            ResourceHandler handler = new MainResourceHandler(
                     ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME, globalServicesElement);
 
             Map servicesMap = addReader(handler);

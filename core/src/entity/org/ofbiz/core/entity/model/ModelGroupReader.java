@@ -23,13 +23,28 @@
  */
 package org.ofbiz.core.entity.model;
 
-import java.util.*;
-import org.w3c.dom.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
-import org.ofbiz.core.config.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.entity.config.*;
+import org.ofbiz.core.config.GenericConfigException;
+import org.ofbiz.core.config.MainResourceHandler;
+import org.ofbiz.core.config.ResourceHandler;
+import org.ofbiz.core.entity.GenericEntityConfException;
+import org.ofbiz.core.entity.config.EntityConfigUtil;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilCache;
+import org.ofbiz.core.util.UtilTimer;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Generic Entity - Entity Group Definition Reader
@@ -82,7 +97,7 @@ public class ModelGroupReader {
         Iterator resourceElementIter = entityGroupReaderInfo.resourceElements.iterator();
         while (resourceElementIter.hasNext()) {
             Element resourceElement = (Element) resourceElementIter.next();
-            entityGroupResourceHandlers.add(new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, resourceElement));
+            entityGroupResourceHandlers.add(new MainResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, resourceElement));
         }
 
         // preload caches...

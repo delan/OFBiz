@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ofbiz.core.config.GenericConfigException;
+import org.ofbiz.core.config.MainResourceHandler;
 import org.ofbiz.core.config.ResourceHandler;
 import org.ofbiz.core.service.config.ServiceConfigUtil;
 import org.ofbiz.core.util.Debug;
@@ -62,7 +63,7 @@ public class ServiceGroupReader {
 
         while (groupsIter.hasNext()) {
             Element serviceGroupElement = (Element) groupsIter.next();
-            ResourceHandler handler = new ResourceHandler(ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME, serviceGroupElement);
+            ResourceHandler handler = new MainResourceHandler(ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME, serviceGroupElement);
             addGroupDefinitions(handler);
         }
     }    

@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.ofbiz.core.config.GenericConfigException;
+import org.ofbiz.core.config.MainResourceHandler;
 import org.ofbiz.core.config.ResourceHandler;
 import org.ofbiz.core.service.DispatchContext;
 import org.ofbiz.core.service.GenericServiceException;
@@ -80,7 +81,7 @@ public class ServiceEcaUtil {
         Iterator secasIter = serviceEcasElements.iterator();
         while (secasIter.hasNext()) {
             Element serviceEcasElement = (Element) secasIter.next();
-            ResourceHandler handler = new ResourceHandler(ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME, serviceEcasElement);
+            ResourceHandler handler = new MainResourceHandler(ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME, serviceEcasElement);
             addEcaDefinitions(handler);
         }
     }

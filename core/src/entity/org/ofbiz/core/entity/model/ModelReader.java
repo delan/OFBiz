@@ -23,13 +23,28 @@
  */
 package org.ofbiz.core.entity.model;
 
-import java.util.*;
-import org.w3c.dom.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import org.ofbiz.core.config.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.entity.config.*;
+import org.ofbiz.core.config.GenericConfigException;
+import org.ofbiz.core.config.MainResourceHandler;
+import org.ofbiz.core.config.ResourceHandler;
+import org.ofbiz.core.entity.GenericEntityConfException;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericModelException;
+import org.ofbiz.core.entity.config.EntityConfigUtil;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilCache;
+import org.ofbiz.core.util.UtilTimer;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Generic Entity - Entity Definition Reader
@@ -101,11 +116,9 @@ public class ModelReader {
 
         List resourceElements = entityModelReaderInfo.resourceElements;
         Iterator resIter = resourceElements.iterator();
-
         while (resIter.hasNext()) {
             Element resourceElement = (Element) resIter.next();
-            ResourceHandler handler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, resourceElement);
-
+            ResourceHandler handler = new MainResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, resourceElement);
             entityResourceHandlers.add(handler);
         }
     }
@@ -124,9 +137,8 @@ public class ModelReader {
                     List tempViewEntityList = new LinkedList();
 
                     UtilTimer utilTimer = new UtilTimer();
-
+                    
                     Iterator rhIter = entityResourceHandlers.iterator();
-
                     while (rhIter.hasNext()) {
                         ResourceHandler entityResourceHandler = (ResourceHandler) rhIter.next();
 
@@ -139,13 +151,10 @@ public class ModelReader {
                             throw new GenericEntityConfException("Error getting document from resource handler", e);
                         }
                         if (document == null) {
-                            Debug.logError("Could not get document for " + entityResourceHandler.toString(), module);
-                            entityCache = null;
-                            return null;
+                            throw new GenericEntityConfException("Could not get document for " + entityResourceHandler.toString());
                         }
 
                         Hashtable docElementValues = null;
-
                         docElementValues = new Hashtable();
 
                         // utilTimer.timerString("Before getDocumentElement in " + entityResourceHandler.toString());
@@ -276,7 +285,7 @@ public class ModelReader {
     }
 
     public void addEntityToResourceHandler(String entityName, String loaderName, String location) {
-        entityResourceHandlerMap.put(entityName, new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, loaderName, location));
+        entityResourceHandlerMap.put(entityName, new MainResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, loaderName, location));
     }
 
     public ResourceHandler getEntityResourceHandler(String entityName) {

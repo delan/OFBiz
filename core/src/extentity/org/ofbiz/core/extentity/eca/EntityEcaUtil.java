@@ -24,12 +24,20 @@
  */
 package org.ofbiz.core.extentity.eca;
 
-import java.util.*;
-import org.w3c.dom.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import org.ofbiz.core.config.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.config.*;
+import org.ofbiz.core.config.GenericConfigException;
+import org.ofbiz.core.config.MainResourceHandler;
+import org.ofbiz.core.config.ResourceHandler;
+import org.ofbiz.core.entity.config.EntityConfigUtil;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilCache;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Element;
 
 /**
  * EntityEcaUtil
@@ -79,7 +87,7 @@ public class EntityEcaUtil {
         Iterator eecaResourceIter = entityEcaReaderInfo.resourceElements.iterator();
         while (eecaResourceIter.hasNext()) {
             Element eecaResourceElement = (Element) eecaResourceIter.next();
-            ResourceHandler handler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, eecaResourceElement);
+            ResourceHandler handler = new MainResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, eecaResourceElement);
             addEcaDefinitions(handler, ecaCache);
         }
     }

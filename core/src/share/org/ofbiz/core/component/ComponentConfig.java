@@ -27,14 +27,23 @@ package org.ofbiz.core.component;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.*;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.OrderedMap;
+import org.ofbiz.core.util.UtilURL;
+import org.ofbiz.core.util.UtilValidate;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-
-import org.ofbiz.core.util.*;
 
 /**
  * ComponentConfig - Component configuration class for ofbiz-container.xml
@@ -53,6 +62,7 @@ public class ComponentConfig {
     protected static Map componentConfigs = new OrderedMap();
 
     public static ComponentConfig getComponentConfig(String globalName) throws ComponentException {
+        // TODO: we need to look up the rootLocation from the container config, or this will blow up
         return getComponentConfig(globalName, null);
     }
     
@@ -89,25 +99,46 @@ public class ComponentConfig {
         return classpaths;
     } 
     
-    public static List getAllEntityResourceInfos() {
+    public static List getAllEntityResourceInfos(String type) {
         List entityInfos = new LinkedList();
         Iterator i = getAllComponents().iterator();
         while (i.hasNext()) {
             ComponentConfig cc = (ComponentConfig) i.next();
-            entityInfos.addAll(cc.getEntityResourceInfos());
+            List ccEntityInfoList = cc.getEntityResourceInfos();
+            if (UtilValidate.isEmpty(type)) {
+                entityInfos.addAll(ccEntityInfoList);
+            } else {
+                Iterator ccEntityInfoIter = ccEntityInfoList.iterator();
+                while (ccEntityInfoIter.hasNext()) {
+                    EntityResourceInfo entityResourceInfo = (EntityResourceInfo) ccEntityInfoIter.next();
+                    if (type.equals(entityResourceInfo.type)) {
+                        entityInfos.add(entityResourceInfo);
+                    }
+                }
+            }
         }
         return entityInfos;
     }
     
-    public static List getAllServiceResourceInfos() {
+    public static List getAllServiceResourceInfos(String type) {
         List serviceInfos = new LinkedList();
         Iterator i = getAllComponents().iterator();
         while (i.hasNext()) {
             ComponentConfig cc = (ComponentConfig) i.next();
-            serviceInfos.addAll(cc.getServiceResourceInfos());
+            List ccServiceInfoList = cc.getServiceResourceInfos();
+            if (UtilValidate.isEmpty(type)) {
+                serviceInfos.addAll(ccServiceInfoList);
+            } else {
+                Iterator ccServiceInfoIter = ccServiceInfoList.iterator();
+                while (ccServiceInfoIter.hasNext()) {
+                    ServiceResourceInfo serviceResourceInfo = (ServiceResourceInfo) ccServiceInfoIter.next();
+                    if (type.equals(serviceResourceInfo.type)) {
+                        serviceInfos.add(serviceResourceInfo);
+                    }
+                }
+            }
         }
         return serviceInfos;        
-        
     }
     
     public static List getAllWebappResourceInfos() {
@@ -119,7 +150,15 @@ public class ComponentConfig {
         }
         return webappInfos;        
         
-    }    
+    }
+    
+    public static boolean isFileResourceLoader(String componentName, String resourceLoaderName) throws ComponentException {
+        ComponentConfig cc = ComponentConfig.getComponentConfig(componentName);
+        if (cc == null) {
+            throw new ComponentException("Could not find component with name: " + componentName);
+        }
+        return cc.isFileResourceLoader(resourceLoaderName);
+    }
 
     // ========== component info fields ==========
     protected String globalName = null;
@@ -211,9 +250,12 @@ public class ComponentConfig {
     }
     
     public boolean isFileResource(ResourceInfo resourceInfo) throws ComponentException {
-        ResourceLoaderInfo resourceLoaderInfo = (ResourceLoaderInfo) resourceLoaderInfos.get(resourceInfo.loader);
+        return isFileResourceLoader(resourceInfo.loader);
+    }
+    public boolean isFileResourceLoader(String resourceLoaderName) throws ComponentException {
+        ResourceLoaderInfo resourceLoaderInfo = (ResourceLoaderInfo) resourceLoaderInfos.get(resourceLoaderName);
         if (resourceLoaderInfo == null) {
-            throw new ComponentException("Could not find resource-loader named: " + resourceInfo.loader);
+            throw new ComponentException("Could not find resource-loader named: " + resourceLoaderName);
         }
         return "file".equals(resourceLoaderInfo.type) || "component".equals(resourceLoaderInfo.type);
     }

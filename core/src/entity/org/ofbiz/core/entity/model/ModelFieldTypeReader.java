@@ -23,12 +23,21 @@
  */
 package org.ofbiz.core.entity.model;
 
-import java.util.*;
-import org.w3c.dom.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.ofbiz.core.config.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.config.*;
+import org.ofbiz.core.config.GenericConfigException;
+import org.ofbiz.core.config.MainResourceHandler;
+import org.ofbiz.core.config.ResourceHandler;
+import org.ofbiz.core.entity.config.EntityConfigUtil;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilCache;
+import org.ofbiz.core.util.UtilTimer;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Generic Entity - Field Type Definition Reader
@@ -82,7 +91,7 @@ public class ModelFieldTypeReader {
         if (fieldTypeInfo == null) {
             throw new IllegalStateException("Could not find a field-type definition with name \"" + modelName + "\"");
         }
-        fieldTypeResourceHandler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, fieldTypeInfo.resourceElement);
+        fieldTypeResourceHandler = new MainResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, fieldTypeInfo.resourceElement);
 
         // preload caches...
         getFieldTypeCache();

@@ -24,7 +24,7 @@
  */
 package org.ofbiz.core.component;
 
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.config.*;
 
 /**
  * ComponentException
@@ -33,7 +33,7 @@ import org.ofbiz.core.util.*;
  * @version    $Revision$
  * @since      2.2
  */
-public class ComponentException extends GeneralException {
+public class ComponentException extends GenericConfigException {
 
     public ComponentException() {
         super();
