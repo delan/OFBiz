@@ -336,6 +336,7 @@
       <field name="subscriptionId" type="id"></field>
       <field name="deploymentId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
+      <field name="unitListPrice" type="currency-amount"></field>
       <field name="unitPrice" type="currency-amount"></field>
       <field name="estimatedDeliveryDate" type="date-time"></field>
       <field name="itemDescription" type="description"></field>
@@ -531,6 +532,32 @@
       </relation>
       <relation type="one" fk-name="ORDER_ITCM_INVITM" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
+      </relation>
+    </entity>
+    <entity entity-name="OrderItemPriceInfo"
+            package-name="org.ofbiz.commonapp.order.order"
+            title="Order Item Price Info Entity">
+      <field name="orderItemPriceInfoId" type="id-ne"></field>
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="productPriceRuleId" type="id-ne"></field>
+      <field name="productPriceActionSeqId" type="id-ne"></field>
+      <field name="modifiedAmount" type="floating-point"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="orderItemPriceInfoId"/>
+      <relation type="one" fk-name="ORDER_OIPI_OHDR" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_OIPI_OITM" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_OIPI_PRPR" rel-entity-name="ProductPriceRule">
+        <key-map field-name="productPriceRuleId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_OIPI_PRAI" rel-entity-name="ProductPriceAction">
+        <key-map field-name="productPriceRuleId"/>
+        <key-map field-name="productPriceActionSeqId"/>
       </relation>
     </entity>
     <entity entity-name="OrderItemRole"

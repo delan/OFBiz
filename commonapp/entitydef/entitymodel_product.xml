@@ -895,6 +895,9 @@
             title="Product Pice Rule Entity">
       <field name="productPriceRuleId" type="id-ne"></field>
       <field name="ruleName" type="name"></field>
+      <field name="isSale" type="indicator"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
       <prim-key field="productPriceRuleId"/>
       <relation type="many" rel-entity-name="ProductPriceAction">
         <key-map field-name="productPriceRuleId"/>
@@ -993,8 +996,12 @@
       <field name="listPriceUomId" type="id"></field>
       <field name="defaultPrice" type="currency-amount"></field>
       <field name="defaultPriceUomId" type="id"></field>
-      <field name="averageCost" type="currency-amount"></field>
-      <field name="averageCostUomId" type="id"></field>
+      <field name="averageCostPrice" type="currency-amount"></field>
+      <field name="averageCostPriceUomId" type="id"></field>
+      <field name="minSellPrice" type="currency-amount"></field>
+      <field name="minSellPriceUomId" type="id"></field>
+      <field name="maxSellPrice" type="currency-amount"></field>
+      <field name="maxSellPriceUomId" type="id"></field>
       <field name="quantityUomId" type="id"></field>
       <field name="quantityIncluded" type="floating-point"></field>
       <field name="piecesIncluded" type="numeric"></field>
