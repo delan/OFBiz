@@ -47,15 +47,20 @@ public class WorkflowClient {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         
-        String workEffortId = (String) context.get("workEffortId");        
-        WfActivity activity = getActivity(delegator,workEffortId);
-        
+        String workEffortId = (String) context.get("workEffortId");
         try {
-            activity.complete();
+            WfActivity activity = getActivity(delegator,workEffortId);
+            try {
+                activity.complete();
+            }
+            catch ( WfException e) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE,e.getMessage());
+            }
         }
-        catch ( WfException e) {
-            result.put("responseMessage","error");
-            result.put("errorMessage",e.getMessage());
+        catch ( RuntimeException e ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,e.getMessage());
         }
         
         return result;
@@ -66,17 +71,23 @@ public class WorkflowClient {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         
-        String workEffortId = (String) context.get("workEffortId");        
-        WfActivity activity = getActivity(delegator,workEffortId);
-        
-        String newState = (String) context.get("newStatus");
+        String workEffortId = (String) context.get("workEffortId");
         try {
-            activity.changeState(newState);
+            WfActivity activity = getActivity(delegator,workEffortId);
+            String newState = (String) context.get("newStatus");
+            try {
+                activity.changeState(newState);
+            }
+            catch ( WfException e ) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE,e.getMessage());
+            }
         }
-        catch ( WfException e ) {
-            result.put("responseMessage","error");
-            result.put("errorMessage",e.getMessage());
+        catch ( RuntimeException e ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,e.getMessage());
         }
+        
         
         return result;
     }
@@ -86,15 +97,22 @@ public class WorkflowClient {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         
-        String workEffortId = (String) context.get("workEffortId");  
-        WfActivity activity = getActivity(delegator,workEffortId);
+        String workEffortId = (String) context.get("workEffortId");
         try {
-            activity.activate(true);
+            WfActivity activity = getActivity(delegator,workEffortId);
+            try {
+                activity.activate(true);
+            }
+            catch ( WfException e ) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE,e.getMessage());
+            }
         }
-        catch ( WfException e ) {
-            result.put("responseMessage","error");
-            result.put("errorMessage",e.getMessage());
+        catch ( RuntimeException e ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,e.getMessage());
         }
+        
         
         return result;
     }
@@ -108,17 +126,23 @@ public class WorkflowClient {
         String partyId = (String) context.get("partyId");
         boolean removeOldAssign = context.get("removeOldAssignements").equals("true") ? true : false;
         
-        WfActivity activity = getActivity(delegator,workEffortId);
         try {
-            WfResource resource = WfFactory.getWfResource(delegator,null,null,partyId,null);
-            activity.assign(resource,removeOldAssign ? false : true);
+            WfActivity activity = getActivity(delegator,workEffortId);
+            try {
+                WfResource resource = WfFactory.getWfResource(delegator,null,null,partyId,null);
+                activity.assign(resource,removeOldAssign ? false : true);
+            }
+            catch ( WfException e ) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE,e.getMessage());
+            }
         }
-        catch ( WfException e ) {
-            result.put("responseMessage","error");
-            result.put("errorMessage",e.getMessage());
+        catch ( RuntimeException e ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,e.getMessage());
         }
         
-        return result;        
+        return result;
     }
     
     
@@ -152,7 +176,7 @@ public class WorkflowClient {
     /**
      * Gets a WfProcessMgr object from using the package and process id's
      *@param delegator GenericDelegator used to find this process
-     *@param pkg The PackageID 
+     *@param pkg The PackageID
      *@param pid The ProcessID
      *@return WfProcessMgr associated with this package and process
      */
@@ -193,13 +217,13 @@ public class WorkflowClient {
             throw new RuntimeException("Cannot get the WfProcess from the manager");
         return process;
     }
-
+    
     /**
      * Gets a WfProcess object from a specific process workeffort id
      *@param delegator The GenericDelegator to use to locate this activity
      *@param workEffortId The workeffort id associated with this process
      *@return WfProcess associated with the defined workeffort id
-     */    
+     */
     public static WfProcess getProcess(GenericDelegator delegator, String workEffortId) {
         GenericValue workEffort = getWorkEffort(delegator,workEffortId);
         String packageId = workEffort.getString("workflowPackageId");
