@@ -90,7 +90,7 @@
                             <form name="statusUpdate<%=orderItem.getString("orderItemSeqId")%>" method="post" action="<ofbiz:url>/changeOrderItemStatus?<%=qString%></ofbiz:url>">
                                <input type="hidden" name="orderId" value="<%=orderItem.getString("orderId")%>"> 
                                <input type="hidden" name="orderItemSeqId" value="<%=orderItem.getString("orderItemSeqId")%>">     
-                               <select name="statusId" style="font-size: x-small;">
+                               <select name="statusId" class="selectBox">
                                  <option value="<%=orderItem.getString("statusId")%>"><%=currentItemStatus == null ? orderItem.getString("statusId") : currentItemStatus.getString("description")%></option>
                                  <option value="<%=orderItem.getString("statusId")%>">----</option>
                                  <ofbiz:iterator name="status" property="itemStatusChange">
@@ -208,14 +208,14 @@
                     <input type="hidden" name="orderId" value="<%=orderId%>">
                     <input type="hidden" name="comments" value="Added manually by '<%=userLogin.getString("userLoginId")%>'">
                     <td align="right" colspan="4">
-                      <select name="orderAdjustmentTypeId" style="font-size: x-small;">
+                      <select name="orderAdjustmentTypeId" class="selectBox">
                         <ofbiz:iterator name="type" property="adjustmentTypes">
                           <option value="<%=UtilFormatOut.checkNull(type.getString("orderAdjustmentTypeId"))%>"><%=UtilFormatOut.checkNull(type.getString("description"))%></option>
                         </ofbiz:iterator>
                       </select>
                     </td>
                     <td align="right">
-                      <input type="text" name="amount" size="6" value="0.00" style="font-size: x-small;">
+                      <input type="text" name="amount" size="6" value="0.00" class="inputBox">
                     </td>
                     <td align="right">
                       <a href="javascript:document.addAdjustmentForm.submit();" class="buttontext">[Add]</a>

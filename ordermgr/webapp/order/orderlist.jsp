@@ -180,7 +180,7 @@
                 <tr>
                   <td width="25%" align=right><div class="tabletext">Order ID</div></td>
                   <td width="40%">
-                    <input type="text" name="order_id" size="20" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("order_id"))%>'>
+                    <input type="text" name="order_id" size="20" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("order_id"))%>'>
                   </td>
                   <td width="35%"><a href="javascript:document.lookupordero.submit()" class="buttontext">[Lookup Order]</a></td>
                 </tr>
@@ -190,7 +190,7 @@
                 <tr>
                   <td width="25%" align=right><div class="tabletext">Party ID</div></td>
                   <td width="40%">
-                    <input type="text" name="partyId" size="20" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("partyId"))%>'>
+                    <input type="text" name="partyId" size="20" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("partyId"))%>'>
                   </td>
                   <td width="35%"><a href="javascript:document.lookuporderp.submit()" class="buttontext">[Lookup Orders]</a></td>
                 </tr>
@@ -202,14 +202,14 @@
                 <tr>
                   <td width="25%" align=right><div class="tabletext">First Name</div></td>
                   <td width="40%">
-                    <input type="text" name="first_name" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("first_name"))%>'>
+                    <input type="text" name="first_name" size="30" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("first_name"))%>'>
                   </td>
                   <td width="35%">&nbsp;</td>
                 </tr>
                 <tr>
                   <td width="25%" align=right><div class="tabletext">Last Name</div></td>
                   <td width="40%">
-                    <input type="text" name="last_name" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("last_name"))%>'>
+                    <input type="text" name="last_name" size="30" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("last_name"))%>'>
                   </td>
                   <td width="35%"><a href="javascript:document.findnameform.submit()" class="buttontext">[Lookup Party]</a></td>
                 </tr>
@@ -222,7 +222,7 @@
                 <tr>
                   <td width="25%" align=right><div class="tabletext">Date&nbsp;Span:&nbsp;Min</div></td>
                   <td width="40%">
-                    <input type="text" name="minDate" size="22" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("minDate"))%>'>
+                    <input type="text" name="minDate" size="22" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("minDate"))%>'>
                     <a href="javascript:call_cal(document.lookuporderd.minDate, '<%=fromStr%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
                   </td>
                   <td width="35%">&nbsp</td>
@@ -230,7 +230,7 @@
                 <tr>
                   <td width="25%" align=right><div class="tabletext">Date&nbsp;Span:&nbsp;Max</div></td>
                   <td width="40%">
-                    <input type="text" name="maxDate" size="22" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("maxDate"))%>'>
+                    <input type="text" name="maxDate" size="22" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("maxDate"))%>'>
                     <a href="javascript:call_cal(document.lookuporderd.maxDate, '<%=toStr%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
                   </td>
                   <td width="35%"><a href="javascript:document.lookuporderd.submit()" class="buttontext">[Lookup Orders]</a></td>
@@ -241,7 +241,7 @@
                 <tr>
                   <td width="25%" align=right><div class="tabletext">Current Status</div></td>
                   <td width="40%">
-                    <select name="listStatusId" style="font-size: x-small;">
+                    <select name="listStatusId" class="selectBox">
                       <option><%=listStatusId == null ? "Choose a status:" : (listStatusItem == null ? listStatusId : listStatusItem.getString("description"))%></option>
                       <option value="<%=listStatusId == null?"":listStatusId%>">----</option>
                       <ofbiz:iterator name="statusItem" property="statusItems">
@@ -259,7 +259,7 @@
                 <tr>
                   <td width="25%" align=right><div class="tabletext">E-Mail Address</div></td>
                   <td width="40%">
-                    <input type="text" name="email" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("email"))%>'>
+                    <input type="text" name="email" size="30" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("email"))%>'>
                   </td>
                   <td width="35%"><a href="javascript:document.findemailform.submit()" class="buttontext">[Lookup Party]</a></td>
                 </tr>
@@ -271,7 +271,7 @@
                 <tr>
                   <td width="25%" align=right><div class="tabletext">User Login ID</div></td>
                   <td width="40%">
-                    <input type="text" name="userlogin_id" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("userlogin_id"))%>'>
+                    <input type="text" name="userlogin_id" size="30" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("userlogin_id"))%>'>
                   </td>
                   <td width="35%"><a href="javascript:document.findloginform.submit()" class="buttontext">[Lookup Party]</a></td>
                 </tr>

@@ -80,7 +80,7 @@
                         <ofbiz:if name="orderHeader">
                             <form name="statusUpdate" method="get" action="<ofbiz:url>/changeOrderStatus</ofbiz:url>">
                                <input type="hidden" name="orderId" value="<%=orderHeader.getString("orderId")%>">        
-                               <select name="statusId" style="font-size: x-small;">
+                               <select name="statusId" class="selectBox">
                                  <option value="<%=orderHeader.getString("statusId")%>"><%=currentStatus == null ? orderHeader.getString("statusId") : currentStatus.getString("description")%></option>
                                  <option value="<%=orderHeader.getString("statusId")%>">----</option>
                                  <ofbiz:iterator name="status" property="statusChange">
@@ -576,7 +576,7 @@
                       <td align="left" valign="top" width="80%">
                         <form name="trackingNumberUpdate" method="post" action="<ofbiz:url>/updateTrackingNumber?<%=qString%></ofbiz:url>">
                            <input type="hidden" name="orderId" value="<%=orderHeader.getString("orderId")%>">
-                           <input type="text" style="font-size: x-small;" name="trackingNumber" value="<%=UtilFormatOut.checkNull(trackingNumber)%>">
+                           <input type="text" class="inputBox" name="trackingNumber" value="<%=UtilFormatOut.checkNull(trackingNumber)%>">
                            <a href="javascript:document.trackingNumberUpdate.submit();" class="buttontext">[Save]</a>
                         </form>
                       </td>

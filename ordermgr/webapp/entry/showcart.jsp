@@ -44,8 +44,8 @@
         <tr>
           <td>
             <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="quickaddform" style='margin: 0;'>
-              <input type='text' name="add_product_id" value="<%=UtilFormatOut.checkNull(request.getParameter("add_product_id"))%>">
-              <input type='text' size="5" name="quantity" value="<%=UtilFormatOut.checkNull(request.getParameter("quantity"), "1")%>">
+              <input type='text' class="inputBox" name="add_product_id" value="<%=UtilFormatOut.checkNull(request.getParameter("add_product_id"))%>">
+              <input type='text' class="inputBox" size="5" name="quantity" value="<%=UtilFormatOut.checkNull(request.getParameter("quantity"), "1")%>">
               <input type='submit' value="Add To Order">
               <%-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a> --%>
             </form>
@@ -113,13 +113,13 @@
                 <%if (!item.getIsPromo()) {%>
                     <ofbiz:format><%=item.getQuantity()%></ofbiz:format>
                 <%} else {%>
-                    <input size="6" type="text" name="update_<%=cart.getItemIndex(item)%>" value="<ofbiz:format><%=item.getQuantity()%></ofbiz:format>" style="font-size: x-small;">
+                    <input size="6" type="text" name="update_<%=cart.getItemIndex(item)%>" value="<ofbiz:format><%=item.getQuantity()%></ofbiz:format>" class="inputBox">
                 <%}%>
               </div>
             </td>
             <td nowrap align="right">
             <%if (!item.getIsPromo()) {%>
-                <input size="6" type="text" name="price_<%=cart.getItemIndex(item)%>" value="<%=UtilFormatOut.formatPrice(item.getBasePrice())%>" style="font-size: x-small;">
+                <input size="6" type="text" name="price_<%=cart.getItemIndex(item)%>" value="<%=UtilFormatOut.formatPrice(item.getBasePrice())%>" class="inputBox">
             <%} else {%>
                 <div class="tabletext"><%=UtilFormatOut.formatPrice(item.getBasePrice())%></div>
             <%}%>

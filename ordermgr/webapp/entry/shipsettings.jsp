@@ -139,42 +139,42 @@
       <td width="26%" align=right valign=top><div class="tabletext">To Name</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="toName" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="toName" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Attention Name</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="attnName" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="attnName" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Address Line 1</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="address1" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="30" <ofbiz:inputvalue field="address1" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Address Line 2</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-          <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="address2" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+          <input type="text" class="inputBox" size="30" maxlength="30" <ofbiz:inputvalue field="address2" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">City</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-          <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="city" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+          <input type="text" class="inputBox" size="30" maxlength="30" <ofbiz:inputvalue field="city" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">State/Province</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <select name="stateProvinceGeoId">
+        <select name="stateProvinceGeoId" class="selectBox">
           <option><ofbiz:inputvalue field="stateProvinceGeoId" entityAttr="postalAddress" tryEntityAttr="tryEntity"/></option>
           <option></option>
           <%@ include file="/includes/states.jsp" %>
@@ -185,14 +185,14 @@
       <td width="26%" align=right valign=top><div class="tabletext">Zip/Postal Code</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="12" maxlength="10" <ofbiz:inputvalue field="postalCode" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="12" maxlength="10" <ofbiz:inputvalue field="postalCode" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Country</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <select name="countryGeoId" >
+        <select name="countryGeoId" class="selectBox">
           <option><ofbiz:inputvalue field="countryGeoId" entityAttr="postalAddress" tryEntityAttr="tryEntity"/></option>
           <option></option>
           <%@ include file="/includes/countries.jsp" %>

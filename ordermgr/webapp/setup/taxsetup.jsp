@@ -86,22 +86,22 @@
     <form name="addrate" action="<ofbiz:url>/createtaxrate</ofbiz:url>">
     <tr bgcolor="#CCCCCC">
       <td>
-        <select name="stateProvinceGeoId" style="font-size: small;">
+        <select name="stateProvinceGeoId" class="selectBox">
         <ofbiz:iterator name="geo" property="stateGeos">
           <option value="<ofbiz:entityfield attribute="geo" field="geoId"/>"><ofbiz:entityfield attribute="geo" field="geoId"/></option>
         </ofbiz:iterator>
         </select>
       </td>
-      <td><input type="text" size="20" name="taxCategory" style="font-size: small;"></td>
+      <td><input type="text" size="20" name="taxCategory" class="inputBox"></td>
       <td>
-        <select name="taxShipping" style="font-size: small;">
+        <select name="taxShipping" class="selectBox">
           <option value="N">No</option>
           <option value="Y">Yes</option>
         </select>
       </td>
-      <td><input type="text" size="10" name="salesTaxPercentage" style="font-size: small;"></td>
-      <td><input type="text" name="fromDate" style="font-size: small;"></td>
-      <!--<td><input type="text" name="thruDate" style="font-size: small;"></td>-->
+      <td><input type="text" size="10" name="salesTaxPercentage" class="inputBox"></td>
+      <td><input type="text" name="fromDate" class="inputBox"></td>
+      <!--<td><input type="text" name="thruDate" class="inputBox"></td>-->
       <td><div class="tabletext"><a href="javascript:document.addrate.submit();" class="buttontext">[Add]</a></div></td>
     </tr>
     </form>

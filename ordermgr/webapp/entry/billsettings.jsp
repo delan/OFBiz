@@ -128,7 +128,7 @@
       <tr>
         <td width="30%" align="right"><div class="tabletext"><%=UtilFormatOut.checkNull(payType.getString("description"))%></div></td>
         <td width="5">&nbsp;</td>
-        <td width="70%"><input type="text" size="6" name="<%=payType.getString("paymentMethodTypeId")%>" style="font-size: x-small;"></td>
+        <td width="70%"><input type="text" size="6" name="<%=payType.getString("paymentMethodTypeId")%>" class="inputBox"></td>
       </tr>
       </ofbiz:iterator>
     </table>
@@ -276,42 +276,42 @@
           <td width="26%" align=right valign=top><div class="tabletext">To Name</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="toName" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+            <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="toName" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
           </td>
         </tr>
         <tr>
           <td width="26%" align=right valign=top><div class="tabletext">Attention Name</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="attnName" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+            <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="attnName" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
           </td>
         </tr>
         <tr>
           <td width="26%" align=right valign=top><div class="tabletext">Address Line 1</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="address1" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+            <input type="text" class="inputBox" size="30" maxlength="30" <ofbiz:inputvalue field="address1" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
           *</td>
         </tr>
         <tr>
           <td width="26%" align=right valign=top><div class="tabletext">Address Line 2</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="address2" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+            <input type="text" class="inputBox" size="30" maxlength="30" <ofbiz:inputvalue field="address2" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
           </td>
         </tr>
         <tr>
           <td width="26%" align=right valign=top><div class="tabletext">City</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="city" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+            <input type="text" class="inputBox" size="30" maxlength="30" <ofbiz:inputvalue field="city" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
           *</td>
         </tr>
         <tr>
           <td width="26%" align=right valign=top><div class="tabletext">State/Province</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <select name="stateProvinceGeoId">
+            <select name="stateProvinceGeoId" class="selectBox">
               <option><ofbiz:inputvalue field="stateProvinceGeoId" entityAttr="postalAddress" tryEntityAttr="tryEntity"/></option>
               <option></option>
               <%@ include file="/includes/states.jsp" %>
@@ -322,14 +322,14 @@
           <td width="26%" align=right valign=top><div class="tabletext">Zip/Postal Code</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="text" size="12" maxlength="10" <ofbiz:inputvalue field="postalCode" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+            <input type="text" class="inputBox" size="12" maxlength="10" <ofbiz:inputvalue field="postalCode" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
           *</td>
         </tr>
         <tr>
           <td width="26%" align=right valign=top><div class="tabletext">Country</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <select name="countryGeoId" >
+            <select name="countryGeoId" class="selectBox">
               <option><ofbiz:inputvalue field="countryGeoId" entityAttr="postalAddress" tryEntityAttr="tryEntity"/></option>
               <option></option>
               <%@ include file="/includes/countries.jsp" %>
@@ -345,21 +345,21 @@
           <td width="26%" align=right valign=top><div class="tabletext">Name on Card</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="nameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
+            <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="nameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
           *</td>
         </tr>
         <tr>
           <td width="26%" align=right valign=top><div class="tabletext">Company Name on Card</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="companyNameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
+            <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="companyNameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
           </td>
         </tr>
         <tr>
           <td width="26%" align=right valign=top><div class="tabletext">Card Type</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <select name="cardType">
+            <select name="cardType" class="selectBox">
               <option><ofbiz:inputvalue field="cardType" entityAttr="creditCard" tryEntityAttr="tryEntity"/></option>
               <option></option>
               <option>Visa</option>
@@ -376,7 +376,7 @@
           <td width="26%" align=right valign=top><div class="tabletext">Card Number</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="text" size="20" maxlength="30" <ofbiz:inputvalue field="cardNumber" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
+            <input type="text" class="inputBox" size="20" maxlength="30" <ofbiz:inputvalue field="cardNumber" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
           *</td>
         </tr>
         <%--<tr>
@@ -401,7 +401,7 @@
                 <%Debug.logError("M: " + expMonth + "  Y: " + expYear);%>
               <%}%>
             <%}%>
-            <select name="expMonth">
+            <select name="expMonth" class="selectBox">
               <option><ofbiz:if name="creditCard"><%=UtilFormatOut.checkNull(expMonth)%></ofbiz:if><ofbiz:unless name="tryEntity"><%=UtilFormatOut.checkNull(request.getParameter("expMonth"))%></ofbiz:unless></option>
               <option></option>
               <option>01</option>
@@ -417,7 +417,7 @@
               <option>11</option>
               <option>12</option>
             </select>
-            <select name="expYear">
+            <select name="expYear" class="selectBox">
               <option><ofbiz:if name="creditCard"><%=UtilFormatOut.checkNull(expYear)%></ofbiz:if><ofbiz:unless name="tryEntity"><%=UtilFormatOut.checkNull(request.getParameter("expYear"))%></ofbiz:unless></option>
               <option></option>          
               <option>2003</option>
@@ -441,35 +441,35 @@
           <td width="26%" align=right valign=top><div class="tabletext">Name on Account</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="nameOnAccount" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
+            <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="nameOnAccount" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
           *</td>
         </tr>
         <tr>
           <td width="26%" align=right valign=top><div class="tabletext">Company Name on Account</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="companyNameOnAccount" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
+            <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="companyNameOnAccount" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
           </td>
         </tr>
         <tr>
           <td width="26%" align=right valign=top><div class="tabletext">Bank Name</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="bankName" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
+            <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="bankName" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
           *</td>
         </tr>
         <tr>
           <td width="26%" align=right valign=top><div class="tabletext">Routing Number</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="text" size="10" maxlength="30" <ofbiz:inputvalue field="routingNumber" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
+            <input type="text" class="inputBox" size="10" maxlength="30" <ofbiz:inputvalue field="routingNumber" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
           *</td>
         </tr>
         <tr>
           <td width="26%" align=right valign=top><div class="tabletext">Account Type</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <select name="accountType">
+            <select name="accountType" class="selectBox">
               <option><ofbiz:inputvalue field="accountType" entityAttr="eftAccount" tryEntityAttr="tryEntity"/></option>
               <option></option>
               <option>Checking</option>
@@ -481,7 +481,7 @@
           <td width="26%" align=right valign=top><div class="tabletext">Account Number</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="text" size="20" maxlength="40" <ofbiz:inputvalue field="accountNumber" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
+            <input type="text" class="inputBox" size="20" maxlength="40" <ofbiz:inputvalue field="accountNumber" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
           *</td>
         </tr>
         </ofbiz:if>

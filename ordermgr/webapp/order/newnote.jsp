@@ -46,7 +46,7 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Note</div></td>
         <td width="74%">
-          <textarea name="note" rows="5" cols="70"></textarea>
+          <textarea name="note" class="textAreaBox" rows="5" cols="70"></textarea>
         </td>
         <td>*</td>
       </tr>

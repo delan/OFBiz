@@ -79,9 +79,9 @@
       <tr>
         <td width="30%" align="right"><div class="tabletext"><%=UtilFormatOut.checkNull(payType.getString("description"))%></div></td>
         <td width="1">&nbsp;&nbsp;&nbsp;</td>
-        <td width="1"><input type="text" size="7" name="<%=payType.getString("paymentMethodTypeId")%>_amount" style="font-size: x-small;"></td>
+        <td width="1"><input type="text" size="7" name="<%=payType.getString("paymentMethodTypeId")%>_amount" class="inputBox"></td>
         <td width="1">&nbsp;&nbsp;&nbsp;</td>
-        <td width="70%"><input type="text" size="15" name="<%=payType.getString("paymentMethodTypeId")%>_reference" style="font-size: x-small;"></td>
+        <td width="70%"><input type="text" size="15" name="<%=payType.getString("paymentMethodTypeId")%>_reference" class="inputBox"></td>
       </tr>
       </ofbiz:iterator>
     </table>

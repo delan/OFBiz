@@ -146,11 +146,11 @@
               <td nowrap><div class="tabletext"><b>RoleTypeID</b></div></td>
             </tr>
             <tr class="viewManyTR1">
-              <td><div class="tabletext"><select name="shipMethod"><%= getShipMethodList(delegator) %></select></div></td>
-              <td><div class="tabletext"><select name="fromGeo"><option value="">None</option><%= getGeoList(delegator) %></select></div></td>
-              <td><div class="tabletext"><select name="toGeo"><option value="">None</option><%= getGeoList(delegator) %></select></div></td>
-              <td><div class="tabletext"><input type="text" name="partyId" size="6"></div></td>
-              <td><div class="tabletext"><input type="text" name="roleTyeId" size="6"></div></td>
+              <td><div class="tabletext"><select name="shipMethod" class="selctBox"><%= getShipMethodList(delegator) %></select></div></td>
+              <td><div class="tabletext"><select name="fromGeo" class="selectBox"><option value="">None</option><%= getGeoList(delegator) %></select></div></td>
+              <td><div class="tabletext"><select name="toGeo" class="selectBox"><option value="">None</option><%= getGeoList(delegator) %></select></div></td>
+              <td><div class="tabletext"><input type="text" class="inputBox" name="partyId" size="6"></div></td>
+              <td><div class="tabletext"><input type="text" class="inputBox" name="roleTyeId" size="6"></div></td>
             </tr>
           </table>
         </td>
@@ -174,9 +174,9 @@
               <td nowrap><div class="tabletext"><b>FlatItemPrice</b></div></td>
             </tr>
             <tr class="viewManyTR1">
-              <td><div class="tabletext"><input type="text" name="flatPercent" value="0" size="5">&nbsp;%</div></td>
-              <td><div class="tabletext"><input type="text" name="flatPrice" value="0.00" size="5"></div></td>
-              <td><div class="tabletext"><input type="text" name="flatItemPrice" value="0.00" size="5"></div></td>
+              <td><div class="tabletext"><input type="text" class="inputBox" name="flatPercent" value="0" size="5">&nbsp;%</div></td>
+              <td><div class="tabletext"><input type="text" class="inputBox" name="flatPrice" value="0.00" size="5"></div></td>
+              <td><div class="tabletext"><input type="text" class="inputBox" name="flatItemPrice" value="0.00" size="5"></div></td>
             </tr>
           </table>
         </td>
@@ -196,8 +196,8 @@
               <td nowrap><div class="tabletext"><b>UnitWeightAmt</b></div></td>
             </tr>
             <tr class="viewManyTR1">
-              <td><div class="tabletext"><input type="text" name="wmin" size="4"> - <input type="text" name="wmax" size="4"></div></td>
-              <td><div class="tabletext"><select name="wuom"><%= getUOMList(delegator, "WEIGHT_MEASURE") %></select></div></td>
+              <td><div class="tabletext"><input type="text" class="inputBox" name="wmin" size="4"> - <input type="text" class="inputBox" name="wmax" size="4"></div></td>
+              <td><div class="tabletext"><select name="wuom" class="selectBox"><%= getUOMList(delegator, "WEIGHT_MEASURE") %></select></div></td>
               <td><div class="tabletext"><input type="text" name="wprice" size="5"></div></td>
             </tr>
             <tr class="viewOneTR1">
@@ -206,8 +206,8 @@
               <td nowrap><div class="tabletext"><b>UnitQtyAmt</b></div></td>
             </tr>
             <tr class="viewManyTR1">
-              <td><div class="tabletext"><input type="text" name="qmin" size="4"> - <input type="text" name="qmax" size="4"></div></td>
-              <td><div class="tabletext"><select name="quom"><%= getUOMList(delegator, "QUANTITY_MEASURE") %></select></div></td>
+              <td><div class="tabletext"><input type="text" class="inputBox" name="qmin" size="4"> - <input type="text" class="inputBox" name="qmax" size="4"></div></td>
+              <td><div class="tabletext"><select name="quom" class="selectBox"><%= getUOMList(delegator, "QUANTITY_MEASURE") %></select></div></td>
               <td><div class="tabletext"><input type="text" name="qprice" size="5"></div></td>
             </tr>
             <tr class="viewOneTR1">
@@ -216,9 +216,9 @@
               <td nowrap><div class="tabletext"><b>UnitPriceAmt</b></div></td>
             </tr>
             <tr class="viewManyTR1">
-              <td><div class="tabletext"><input type="text" name="pmin" size="4"> - <input type="text" name="pmax" size="4"></div></td>
+              <td><div class="tabletext"><input type="text" class="inputBox" name="pmin" size="4"> - <input type="text" class="inputBox" name="pmax" size="4"></div></td>
               <td><div class="tabletext">&nbsp;</div></td>
-              <td><div class="tabletext"><input type="text" name="pprice" size="5"></div></td>
+              <td><div class="tabletext"><input type="text" class="inputBox" name="pprice" size="5"></div></td>
             </tr>
           </table>
         </td>

@@ -150,7 +150,7 @@
                   <td>&nbsp;</td>
                   <td width="74%">
                     <ofbiz:unless name="webSitePayment">
-                    <select name="webSiteId">                                            
+                    <select name="webSiteId" class="selectBox">                                            
                       <ofbiz:iterator name="nextWebSite" property="webSites">
                         <option value='<ofbiz:inputvalue entityAttr="nextWebSite" field="webSiteId"/>'><ofbiz:inputvalue entityAttr="nextWebSite" field="siteName"/></option>
                       </ofbiz:iterator>
@@ -169,7 +169,7 @@
                   <td>&nbsp;</td>
                   <td width="74%">
                     <ofbiz:unless name="webSitePayment">
-                    <select name="paymentMethodTypeId">
+                    <select name="paymentMethodTypeId" class="selectBox">
                       <ofbiz:iterator name="nextPayType" property="paymentMethodTypes">
                         <option value='<ofbiz:inputvalue entityAttr="nextPayType" field="paymentMethodTypeId"/>'><ofbiz:inputvalue entityAttr="nextPayType" field="description"/></option>
                       </ofbiz:iterator>
@@ -186,17 +186,17 @@
                 <tr>
                   <td width="26%" align=right><div class="tabletext">Processor Auth Service</div></td>
                   <td>&nbsp;</td>
-                  <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="webSitePayment" field="paymentAuthService" fullattrs="true"/> size="30" maxlength="60"></td>                
+                  <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="webSitePayment" field="paymentAuthService" fullattrs="true"/> size="30" maxlength="60"></td>                
                 </tr>    
                 <tr>
                   <td width="26%" align=right><div class="tabletext">Processor Capture Service</div></td>
                   <td>&nbsp;</td>
-                  <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="webSitePayment" field="paymentCaptureService" fullattrs="true"/> size="30" maxlength="60"></td>                
+                  <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="webSitePayment" field="paymentCaptureService" fullattrs="true"/> size="30" maxlength="60"></td>                
                 </tr>                         
                 <tr>
                   <td width="26%" align=right><div class="tabletext">Processor Properties URL</div></td>
                   <td>&nbsp;</td>
-                  <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="webSitePayment" field="paymentConfiguration" fullattrs="true"/> size="30" maxlength="60"></td>                
+                  <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="webSitePayment" field="paymentConfiguration" fullattrs="true"/> size="30" maxlength="60"></td>                
                 </tr>  
                 <tr>
                   <td colspan='2'>&nbsp;</td>
