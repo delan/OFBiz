@@ -143,7 +143,7 @@
                     <td>&nbsp;</td>
                     <td width='74%'><div class='tabletext'>
                       <ofbiz:entityfield field="createdDate" attribute="workEffort"/>
-                      by <ofbiz:entityfield field="createdByPartyId" attribute="workEffort"/>
+                      by <ofbiz:entityfield field="createdByUserLogin" attribute="workEffort"/>
                     </div></td>
                   </tr>
                   <tr>
@@ -151,7 +151,7 @@
                     <td>&nbsp;</td>
                     <td width='74%'><div class='tabletext'>
                       <ofbiz:entityfield field="lastModifiedDate" attribute="workEffort"/>
-                      by <ofbiz:entityfield field="lastModifiedByPartyId" attribute="workEffort"/>
+                      by <ofbiz:entityfield field="lastModifiedByUserLogin" attribute="workEffort"/>
                     </div></td>
                   </tr>
                 </ofbiz:if>

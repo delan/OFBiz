@@ -897,9 +897,9 @@
         <alias entity-alias="WE" name="workEffortName"/>
         <alias entity-alias="WE" name="description"/>  
         <alias entity-alias="WE" name="createdDate"/>
-        <alias entity-alias="WE" name="createdByPartyId"/>
+        <alias entity-alias="WE" name="createdByUserLogin"/>
         <alias entity-alias="WE" name="lastModifiedDate"/>
-        <alias entity-alias="WE" name="lastModifiedByPartyId"/>
+        <alias entity-alias="WE" name="lastModifiedByUserLogin"/>
         <alias entity-alias="WE" name="estimatedStartDate"/>
         <alias entity-alias="WE" name="estimatedCompletionDate"/>              
         <alias entity-alias="WE" name="actualStartDate"/>

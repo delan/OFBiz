@@ -412,9 +412,9 @@
       <field name="fixedAssetId" type="id"></field>
       <field name="facilityId" type="id"></field>
       <field name="createdDate" type="date-time"></field>
-      <field name="createdByPartyId" type="id"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
-      <field name="lastModifiedByPartyId" type="id"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <field name="estimatedStartDate" type="date-time"></field>
       <field name="estimatedCompletionDate" type="date-time"></field>
       <field name="estimatedMilliSeconds" type="floating-point"></field>
@@ -577,9 +577,9 @@
       <alias entity-alias="WEF" name="workEffortFixedAssetId" field="fixedAssetId"/>
       <alias entity-alias="WEF" name="workEffortFacilityId" field="facilityId"/>
       <alias entity-alias="WEF" name="createdDate"/>
-      <alias entity-alias="WEF" name="createdByPartyId"/>
+      <alias entity-alias="WEF" name="createdByUserLogin"/>
       <alias entity-alias="WEF" name="lastModifiedDate"/>
-      <alias entity-alias="WEF" name="lastModifiedByPartyId"/>
+      <alias entity-alias="WEF" name="lastModifiedByUserLogin"/>
       <alias entity-alias="WEF" name="estimatedStartDate"/>
       <alias entity-alias="WEF" name="estimatedCompletionDate"/>
       <alias entity-alias="WEF" name="estimatedMilliSeconds"/>
@@ -739,9 +739,9 @@
       <alias entity-alias="WE" name="fixedAssetId"/>
       <alias entity-alias="WE" name="facilityId"/>
       <alias entity-alias="WE" name="createdDate"/>
-      <alias entity-alias="WE" name="createdByPartyId"/>
+      <alias entity-alias="WE" name="createdByUserLogin"/>
       <alias entity-alias="WE" name="lastModifiedDate"/>
-      <alias entity-alias="WE" name="lastModifiedByPartyId"/>
+      <alias entity-alias="WE" name="lastModifiedByUserLogin"/>
       <alias entity-alias="WE" name="estimatedStartDate"/>
       <alias entity-alias="WE" name="estimatedCompletionDate"/>
       <alias entity-alias="WE" name="estimatedMilliSeconds"/>
@@ -1072,9 +1072,9 @@
       <alias entity-alias="WE" name="fixedAssetId"/>
       <alias entity-alias="WE" name="facilityId"/>
       <alias entity-alias="WE" name="createdDate"/>
-      <alias entity-alias="WE" name="createdByPartyId"/>
+      <alias entity-alias="WE" name="createdByUserLogin"/>
       <alias entity-alias="WE" name="lastModifiedDate"/>
-      <alias entity-alias="WE" name="lastModifiedByPartyId"/>
+      <alias entity-alias="WE" name="lastModifiedByUserLogin"/>
       <alias entity-alias="WE" name="estimatedStartDate"/>
       <alias entity-alias="WE" name="estimatedCompletionDate"/>
       <alias entity-alias="WE" name="estimatedMilliSeconds"/>
@@ -1152,9 +1152,9 @@
       <alias entity-alias="WE" name="fixedAssetId"/>
       <alias entity-alias="WE" name="facilityId"/>
       <alias entity-alias="WE" name="createdDate"/>
-      <alias entity-alias="WE" name="createdByPartyId"/>
+      <alias entity-alias="WE" name="createdByUserLogin"/>
       <alias entity-alias="WE" name="lastModifiedDate"/>
-      <alias entity-alias="WE" name="lastModifiedByPartyId"/>
+      <alias entity-alias="WE" name="lastModifiedByUserLogin"/>
       <alias entity-alias="WE" name="estimatedStartDate"/>
       <alias entity-alias="WE" name="estimatedCompletionDate"/>
       <alias entity-alias="WE" name="estimatedMilliSeconds"/>
@@ -1288,7 +1288,7 @@
       <field name="workEffortId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="statusDatetime" type="date-time"></field>
-      <field name="setByPartyId" type="id"></field>
+      <field name="setByUserLogin" type="id-vlong"></field>
       <prim-key field="workEffortId"/>
       <prim-key field="statusId"/>
       <prim-key field="statusDatetime"/>
@@ -1298,8 +1298,8 @@
       <relation type="one" fk-name="WKEFF_STTS_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
-      <relation type="one" fk-name="WKEFF_STTS_SB_PTY" title="SetBy" rel-entity-name="Party">
-        <key-map field-name="setByPartyId" rel-field-name="partyId"/>
+      <relation type="one" fk-name="WKEFF_STTS_SB_UL" title="SetBy" rel-entity-name="UserLogin">
+        <key-map field-name="setByUserLogin" rel-field-name="userLoginId"/>
       </relation>
     </entity>
     <entity entity-name="WorkEffortTransBox"

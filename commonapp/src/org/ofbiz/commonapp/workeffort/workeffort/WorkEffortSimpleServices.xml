@@ -41,8 +41,8 @@
         <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/>
         <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/>
         <calculate field-name="revisionNumber" map-name="newEntity" type="Long"><number value="1"/></calculate>
-        <field-to-field field-name="partyId" map-name="userLogin" to-field-name="lastModifiedByPartyId" to-map-name="newEntity"/>
-        <field-to-field field-name="partyId" map-name="userLogin" to-field-name="createdByPartyId" to-map-name="newEntity"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/>
         <create-value value-name="newEntity"/>
         
         <!-- create new status entry, and set lastStatusUpdate date -->
@@ -50,7 +50,7 @@
         <field-to-field field-name="workEffortId" map-name="newEntity" to-map-name="newWorkEffortStatus"/>
         <field-to-field field-name="currentStatusId" map-name="newEntity" to-field-name="statusId" to-map-name="newWorkEffortStatus"/>
         <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newWorkEffortStatus"/>
-        <field-to-field field-name="partyId" map-name="userLogin" to-field-name="setByPartyId" to-map-name="newWorkEffortStatus"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="setByUserLogin" to-map-name="newWorkEffortStatus"/>
         <create-value value-name="newWorkEffortStatus"/>
     </simple-method>
     <simple-method method-name="updateWorkEffort" short-description="Update Work Effort">
@@ -81,7 +81,7 @@
             <field-to-field field-name="workEffortId" map-name="lookedUpValue" to-map-name="newWorkEffortStatus"/>
             <field-to-field field-name="currentStatusId" map-name="lookedUpValue" to-field-name="statusId" to-map-name="newWorkEffortStatus"/>
             <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newWorkEffortStatus"/>
-            <field-to-field field-name="partyId" map-name="userLogin" to-field-name="setByPartyId" to-map-name="newWorkEffortStatus"/>
+            <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="setByUserLogin" to-map-name="newWorkEffortStatus"/>
             <create-value value-name="newWorkEffortStatus"/>
         </if-compare-field>
 
@@ -92,7 +92,7 @@
         <if-compare-field field-name="lookedUpValue" operator="not-equals" to-field-name="savedValue" type="Object">
             <!-- only set lastModifiedDate after comparing new & old to see if anything has changed -->
             <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="lookedUpValue"/>
-            <field-to-field field-name="partyId" map-name="userLogin" to-field-name="lastModifiedByPartyId" to-map-name="lookedUpValue"/>
+            <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpValue"/>
             <if-not-empty field-name="revisionNumber" map-name="lookedUpValue">
                 <calculate field-name="revisionNumber" map-name="lookedUpValue" type="Long">
                     <calcop operator="get" field-name="revisionNumber" map-name="lookedUpValue"/>
