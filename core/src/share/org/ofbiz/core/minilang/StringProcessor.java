@@ -121,12 +121,10 @@ public class StringProcessor {
         }
         
         public void exec(Map strings, Map results, List messages, Class contextClass) {
-            String fieldValue = (java.lang.String) strings.get(field);
-            
             Iterator strOpsIter = stringOperations.iterator();
             while (strOpsIter.hasNext()) {
                 StringOperation stringOperation = (StringOperation) strOpsIter.next();
-                stringOperation.exec(fieldValue, results, messages, contextClass);
+                stringOperation.exec(strings, results, messages, contextClass);
             }
         }
         
@@ -141,6 +139,8 @@ public class StringProcessor {
                         stringOperations.add(new StringProcessor.ValidateMethod(curOperElem, this));
                     } else if ("compare".equals(nodeName)) {
                         stringOperations.add(new StringProcessor.Compare(curOperElem, this));
+                    } else if ("compare-field".equals(nodeName)) {
+                        stringOperations.add(new StringProcessor.CompareField(curOperElem, this));
                     } else if ("regexp".equals(nodeName)) {
                         stringOperations.add(new StringProcessor.Regexp(curOperElem, this));
                     } else if ("not-empty".equals(nodeName)) {
@@ -182,13 +182,19 @@ public class StringProcessor {
             this.fieldName = stringProcess.getFieldName();
         }
         
-        public abstract void exec(String fieldValue, Map results, List messages, Class contextClass);
+        public abstract void exec(Map strings, Map results, List messages, Class contextClass);
         
         public void addMessage(List messages, Class contextClass) {
-            if (isProperty && message != null) {
+            if (!isProperty && message != null) {
                 messages.add(message);
-            } else if (propertyResource != null && message != null) {
+                //Debug.logInfo("[StringOperation.addMessage] Adding message: " + message);
+            } else if (isProperty && propertyResource != null && message != null) {
                 String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(contextClass, propertyResource), message);
+                messages.add(propMsg);
+                //Debug.logInfo("[StringOperation.addMessage] Adding property message: " + propMsg);
+            } else {
+                messages.add("String Processing error occurred, but no message was found, sorry.");
+                //Debug.logInfo("[StringOperation.addMessage] ERROR: No message found");
             }
         }
     }
@@ -208,7 +214,9 @@ public class StringProcessor {
             this.className = element.getAttribute("class");
         }
         
-        public void exec(String fieldValue, Map results, List messages, Class contextClass) {
+        public void exec(Map strings, Map results, List messages, Class contextClass) {
+            String fieldValue = (java.lang.String) strings.get(fieldName);
+            
             Class[] paramTypes = new Class[] {String.class};
             Object[] params = new Object[] {fieldValue};
 
@@ -248,15 +256,13 @@ public class StringProcessor {
         }
     }
 
-    public static class Compare extends StringOperation {
+    public static abstract class BaseCompare extends StringOperation {
         String operator;
-        String value;
         String type;
         String format;
-        
-        public Compare(Element element, StringProcess stringProcess) {
+
+        public BaseCompare(Element element, StringProcess stringProcess) {
             super(element, stringProcess);
-            this.value = element.getAttribute("value");
             this.operator = element.getAttribute("operator");
             this.type = element.getAttribute("type");
             this.format = element.getAttribute("format");
@@ -271,70 +277,70 @@ public class StringProcessor {
             }
         }
         
-        public void exec(String fieldValue, Map results, List messages, Class contextClass) {
-            if (value == null)
-                return;
+        public void doCompare(String value1, String value2, List messages, Class contextClass) {
+            //Debug.logInfo("[BaseCompare.doCompare] Comparing value1: \"" + value1 + "\", value2:\"" + value2 + "\"");
             
             if ("contains".equals(operator)) {
-                if ("String".equals(type)) {
+                if (!"String".equals(type)) {
                     messages.add("Error in string-processor file: cannot do a contains compare with a non-String type");
                     return;
                 }
                 
-                if (value.indexOf(fieldValue) < 0)
+                if (value1.indexOf(value2) < 0)
                     addMessage(messages, contextClass);
             }
             
             int result = 0;            
             if ("String".equals(type)) {
-                result = value.compareTo(fieldValue);
+                result = value1.compareTo(value2);
             } else if ("Number".equals(type)) {
                 NumberFormat nf = NumberFormat.getNumberInstance();
                 Number tempNum = null;
                 try {
-                    tempNum = nf.parse(value);
+                    tempNum = nf.parse(value1);
                 } catch (ParseException e) {
-                    messages.add("Could not parse comparison value \"" + value + "\" for validation: " + e.getMessage());
+                    messages.add("Could not parse comparison value1 \"" + value1 + "\" for validation: " + e.getMessage());
                     return;
                 }
-                double valueDouble = tempNum.doubleValue();
+                double value1Double = tempNum.doubleValue();
 
                 try {
-                    tempNum = nf.parse(fieldValue);
+                    tempNum = nf.parse(value2);
                 } catch (ParseException e) {
-                    messages.add("Could not parse field value \"" + fieldValue + "\" for validation: " + e.getMessage());
+                    messages.add("Could not parse value2 \"" + value2 + "\" for validation: " + e.getMessage());
                     return;
                 }
                 double fieldDouble = tempNum.doubleValue();
 
-                if (valueDouble < fieldDouble)
+                if (value1Double < fieldDouble)
                     result = -1;
-                else if (valueDouble < fieldDouble)
+                else if (value1Double < fieldDouble)
                     result = 1;
                 else
                     result = 0;
             } else if ("Date".equals(type) || "Time".equals(type) || "Timestamp".equals(type)) {
                 SimpleDateFormat sdf = new SimpleDateFormat(format);
-                java.util.Date valueDate = null;
+                java.util.Date value1Date = null;
                 try {
-                    valueDate = sdf.parse(value);
+                    value1Date = sdf.parse(value1);
                 } catch (ParseException e) {
-                    messages.add("Could not parse comparison value \"" + value + "\" for validation: " + e.getMessage());
+                    messages.add("Could not parse comparison value1 \"" + value1 + "\" for validation: " + e.getMessage());
                     return;
                 }
                 
                 java.util.Date fieldDate = null;
                 try {
-                    fieldDate = sdf.parse(fieldValue);
+                    fieldDate = sdf.parse(value2);
                 } catch (ParseException e) {
-                    messages.add("Could not parse field value \"" + fieldValue + "\" for validation: " + e.getMessage());
+                    messages.add("Could not parse value2 \"" + value2 + "\" for validation: " + e.getMessage());
                     return;
                 }
-                result = valueDate.compareTo(fieldDate);
+                result = value1Date.compareTo(fieldDate);
             } else {
                 messages.add("Specified compare conversion type \"" + type + "\" not known.");
             }
             
+            //Debug.logInfo("[BaseCompare.doCompare] Got Compare result: " + result + ", operator: " + operator);
             if ("less".equals(operator)) {
                 if (result >= 0)
                     addMessage(messages, contextClass);
@@ -358,6 +364,43 @@ public class StringProcessor {
             }
         }
     }
+    
+    public static class Compare extends BaseCompare {
+        String value;
+        
+        public Compare(Element element, StringProcess stringProcess) {
+            super(element, stringProcess);
+            this.value = element.getAttribute("value");
+        }
+        
+        public void exec(Map strings, Map results, List messages, Class contextClass) {
+            String fieldValue = (java.lang.String) strings.get(fieldName);
+            
+            if (UtilValidate.isEmpty(value) || UtilValidate.isEmpty(fieldValue))
+                return;
+
+            doCompare(value, fieldValue, messages, contextClass);
+        }
+    }
+
+    public static class CompareField extends BaseCompare {
+        String compareName;
+        
+        public CompareField(Element element, StringProcess stringProcess) {
+            super(element, stringProcess);
+            this.compareName = element.getAttribute("field");
+        }
+        
+        public void exec(Map strings, Map results, List messages, Class contextClass) {
+            String compareValue = (java.lang.String) strings.get(compareName);
+            String fieldValue = (java.lang.String) strings.get(fieldName);
+            
+            if (UtilValidate.isEmpty(compareValue) || UtilValidate.isEmpty(fieldValue))
+                return;
+
+            doCompare(compareValue, fieldValue, messages, contextClass);
+        }
+    }
 
     public static class Regexp extends StringOperation {
         static PatternMatcher matcher = new Perl5Matcher();
@@ -375,7 +418,9 @@ public class StringProcessor {
             }
         }
         
-        public void exec(String fieldValue, Map results, List messages, Class contextClass) {
+        public void exec(Map strings, Map results, List messages, Class contextClass) {
+            String fieldValue = (java.lang.String) strings.get(fieldName);
+            
             if (pattern == null) {
                 messages.add("Could not compile regular expression \"" + expr + "\" for validation");
                 return;
@@ -392,7 +437,9 @@ public class StringProcessor {
             super(element, stringProcess);
         }
         
-        public void exec(String fieldValue, Map results, List messages, Class contextClass) {
+        public void exec(Map strings, Map results, List messages, Class contextClass) {
+            String fieldValue = (java.lang.String) strings.get(fieldName);
+            
             if (!UtilValidate.isNotEmpty(fieldValue)) {
                 addMessage(messages, contextClass);
             }
@@ -413,7 +460,9 @@ public class StringProcessor {
             replace = "true".equals(element.getAttribute("replace"));
         }
         
-        public void exec(String fieldValue, Map results, List messages, Class contextClass) {
+        public void exec(Map strings, Map results, List messages, Class contextClass) {
+            String fieldValue = (java.lang.String) strings.get(fieldName);
+            
             if (fieldValue == null)
                 return;
             
@@ -459,7 +508,9 @@ public class StringProcessor {
             }
         }
         
-        public void exec(String fieldValue, Map results, List messages, Class contextClass) {
+        public void exec(Map strings, Map results, List messages, Class contextClass) {
+            String fieldValue = (java.lang.String) strings.get(fieldName);
+            
             Object fieldObject = null;
             
             if (fieldValue == null || fieldValue.length() == 0) {

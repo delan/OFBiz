@@ -29,7 +29,7 @@
 -->
 
 <!ELEMENT string-processor ( string-process* )>
-<!ELEMENT string-process ( ( validate-method | compare | regexp | not-empty | equals | copy | convert )* )>
+<!ELEMENT string-process ( ( validate-method | compare | compare-field | regexp | not-empty | equals | copy | convert )* )>
 <!ATTLIST string-process
     field CDATA #REQUIRED
 >
@@ -48,6 +48,14 @@
 <!ELEMENT compare ( fail-message | fail-property )>
 <!ATTLIST compare
     value CDATA #REQUIRED
+    operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
+    type ( String | Number | Date | Time | Timestamp ) "String"
+    format CDATA #IMPLIED
+>
+
+<!ELEMENT compare-field ( fail-message | fail-property )>
+<!ATTLIST compare-field
+    field CDATA #REQUIRED
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
     type ( String | Number | Date | Time | Timestamp ) "String"
     format CDATA #IMPLIED
