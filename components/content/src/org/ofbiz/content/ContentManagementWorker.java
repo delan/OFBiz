@@ -758,23 +758,28 @@ public class ContentManagementWorker {
            condList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, type));
        }
        
-       EntityCondition conditionType = new EntityConditionList(condList, EntityOperator.OR);
-       EntityCondition conditionMain = new EntityConditionList(UtilMisc.toList( new EntityExpr("contentIdTo", EntityOperator.EQUALS, contentId), conditionType), EntityOperator.AND);
-            List listAll = delegator.findByConditionCache("ContentAssoc", conditionMain, null, null);
-            List listFiltered = EntityUtil.filterByDate(listAll);
-            Iterator iter = listFiltered.iterator();
-            while (iter.hasNext()) {
-                GenericValue contentAssoc = (GenericValue)iter.next();
-                String subContentId = contentAssoc.getString("contentId");
-                subLeafCount += updateStatsTopDown(delegator, subContentId, typeList);
-            }
-            
-            // If no children, count this as a leaf
-            if (subLeafCount == 0)
-                subLeafCount = 1;
-            thisContent.put("childBranchCount", new Long(listFiltered.size()));
-            thisContent.put("childLeafCount", new Long(subLeafCount));
-            thisContent.store();
+       EntityCondition conditionMain = null;
+       if (condList.size() > 0 ) {
+           EntityCondition conditionType = new EntityConditionList(condList, EntityOperator.OR);
+           conditionMain = new EntityConditionList(UtilMisc.toList( new EntityExpr("contentIdTo", EntityOperator.EQUALS, contentId), conditionType), EntityOperator.AND);
+       } else {
+           conditionMain = new EntityExpr("contentIdTo", EntityOperator.EQUALS, contentId);
+       }
+        List listAll = delegator.findByConditionCache("ContentAssoc", conditionMain, null, null);
+        List listFiltered = EntityUtil.filterByDate(listAll);
+        Iterator iter = listFiltered.iterator();
+        while (iter.hasNext()) {
+            GenericValue contentAssoc = (GenericValue)iter.next();
+            String subContentId = contentAssoc.getString("contentId");
+            subLeafCount += updateStatsTopDown(delegator, subContentId, typeList);
+        }
+        
+        // If no children, count this as a leaf
+        if (subLeafCount == 0)
+            subLeafCount = 1;
+        thisContent.put("childBranchCount", new Long(listFiltered.size()));
+        thisContent.put("childLeafCount", new Long(subLeafCount));
+        thisContent.store();
         
         return subLeafCount;
     }

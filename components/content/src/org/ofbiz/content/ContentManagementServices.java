@@ -1341,16 +1341,21 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
     public static Map updateContentChildStats(DispatchContext dctx, Map context) throws GenericServiceException{
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
+    
+        String contentId = (String)context.get("contentId");
+        String contentAssocTypeId = (String)context.get("contentAssocTypeId");
+        List typeList = new ArrayList();
+        if (UtilValidate.isNotEmpty(contentAssocTypeId)) {
+            typeList.add(contentAssocTypeId);
+        } else {
+            typeList = UtilMisc.toList("PUBLISH_LINK", "SUB_CONTENT");
+        }
         
-            String contentId = (String)context.get("contentId");
-            String contentAssocTypeId = (String)context.get("contentAssocTypeId");
-            
-            try {
-                
-                ContentManagementWorker.updateStatsTopDown(delegator, contentId, UtilMisc.toList(contentAssocTypeId));
-            } catch(GenericEntityException e) {
-                    return ServiceUtil.returnError(e.getMessage());
-            }
+        try {
+            ContentManagementWorker.updateStatsTopDown(delegator, contentId, typeList);
+        } catch(GenericEntityException e) {
+                return ServiceUtil.returnError(e.getMessage());
+        }
         return result;
     }
     
