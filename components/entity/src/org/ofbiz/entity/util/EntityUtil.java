@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.15 2004/07/21 06:37:22 doogie Exp $
+ * $Id: EntityUtil.java,v 1.16 2004/08/09 23:52:25 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -25,29 +25,26 @@
 package org.ofbiz.entity.util;
 
 import java.sql.Timestamp;
-import java.util.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityComparisonOperator;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityDateFilterCondition;
-import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityFieldMap;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.condition.OrderByList;

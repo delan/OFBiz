@@ -1,14 +1,11 @@
 package org.ofbiz.content.content;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,31 +15,31 @@ import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.minilang.MiniLangException;
+import org.ofbiz.minilang.SimpleMapProcessor;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.minilang.SimpleMapProcessor;
-import org.ofbiz.minilang.MiniLangException;
 
 
 /**
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.

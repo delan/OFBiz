@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTree.java,v 1.3 2004/07/18 10:09:35 jonesde Exp $
+ * $Id: ModelTree.java,v 1.4 2004/08/09 23:52:21 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,21 +24,23 @@
 package org.ofbiz.content.widget.screen;
 
 import java.io.Writer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericPK;
-import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.entity.GenericValue;
 import org.w3c.dom.Element;
 
 /**
  * Widget Library - Tree model class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class ModelTree extends ModelScreenWidget {

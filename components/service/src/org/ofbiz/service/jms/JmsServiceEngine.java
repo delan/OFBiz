@@ -1,5 +1,5 @@
 /*
- * $Id: JmsServiceEngine.java,v 1.2 2004/07/01 15:27:15 ajzeneski Exp $
+ * $Id: JmsServiceEngine.java,v 1.3 2004/08/09 23:52:26 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,16 +64,14 @@ import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.config.ServiceConfigUtil;
-import org.ofbiz.service.engine.GenericEngine;
 import org.ofbiz.service.engine.AbstractEngine;
-
 import org.w3c.dom.Element;
 
 /**
  * AbstractJMSEngine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class JmsServiceEngine extends AbstractEngine {

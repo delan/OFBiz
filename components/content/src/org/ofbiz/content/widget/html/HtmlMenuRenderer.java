@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.17 2004/07/29 04:42:36 byersa Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.18 2004/08/09 23:52:21 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,16 +26,11 @@ package org.ofbiz.content.widget.html;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.io.IOException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.ofbiz.content.webapp.taglib.ContentUrlTag;
-import org.ofbiz.content.webapp.control.RequestHandler;
-
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
@@ -49,10 +44,10 @@ import org.ofbiz.content.widget.WidgetWorker;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenu;
 import org.ofbiz.content.widget.menu.ModelMenuItem;
+import org.ofbiz.content.widget.menu.ModelMenuItem.Image;
+import org.ofbiz.content.widget.menu.ModelMenuItem.Link;
 import org.ofbiz.content.widget.menu.ModelMenuItem.MenuImage;
 import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
-import org.ofbiz.content.widget.menu.ModelMenuItem.Link;
-import org.ofbiz.content.widget.menu.ModelMenuItem.Image;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -63,7 +58,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {

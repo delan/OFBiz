@@ -1,5 +1,5 @@
 /*
- * $Id: UtilXml.java,v 1.7 2004/07/31 00:23:55 ajzeneski Exp $
+ * $Id: UtilXml.java,v 1.8 2004/08/09 23:52:20 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Utilities methods to simplify dealing with JAXP & DOM XML parsing
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class UtilXml {
@@ -522,12 +522,12 @@ public class UtilXml {
          * @return InputSource of DTD
          */
         public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+            Debug.logInfo("resolving XML entity with publicId [" + publicId + "], systemId [" + systemId + "]", module);
             hasDTD = false;
             String dtd = UtilProperties.getSplitPropertyValue(UtilURL.fromResource("localdtds.properties"), publicId);
-
-            if (Debug.verboseOn()) Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] resolving DTD with publicId [" + publicId +
-                    "], systemId [" + systemId + "] and the dtd file is [" + dtd + "]", module);
-            if (dtd != null && dtd.length() > 0) {
+            if (UtilValidate.isNotEmpty(dtd)) {
+                if (Debug.verboseOn()) Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] resolving DTD with publicId [" + publicId +
+                        "], systemId [" + systemId + "] and the dtd file is [" + dtd + "]", module);
                 try {
                     URL dtdURL = UtilURL.fromResource(dtd);
                     if (dtdURL == null) {
@@ -538,14 +538,35 @@ public class UtilXml {
 
                     inputSource.setPublicId(publicId);
                     hasDTD = true;
-                    if (Debug.verboseOn()) Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD input source with publicId [" +
+                    Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD input source with publicId [" +
                             publicId + "] and the dtd file is [" + dtd + "]", module);
                     return inputSource;
                 } catch (Exception e) {
                     Debug.logWarning(e, module);
                 }
+            } else {
+                // nothing found by the public ID, try looking at the systemId, or at least the filename part of it and look for that on the classpath
+                int lastSlash = systemId.lastIndexOf("/");
+                String filename = null;
+                if (lastSlash == -1) {
+                    filename = systemId;
+                } else {
+                    filename = systemId.substring(lastSlash);
+                }
+                URL resourceUrl = UtilURL.fromResource(filename);
+                
+                InputStream resStream = resourceUrl.openStream();
+                InputSource inputSource = new InputSource(resStream);
+
+                if (UtilValidate.isNotEmpty(publicId)) {
+                    inputSource.setPublicId(publicId);
+                }
+                hasDTD = true;
+                Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD/Schema input source with publicId [" +
+                        publicId + "] and the file/resource is [" + filename + "]", module);
+                return inputSource;
             }
-            if (Debug.verboseOn()) Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] local resolve failed for DTD with publicId [" +
+            Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] local resolve failed for DTD with publicId [" +
                     publicId + "] and the dtd file is [" + dtd + "], trying defaultResolver", module);
             return defaultResolver.resolveEntity(publicId, systemId);
         }

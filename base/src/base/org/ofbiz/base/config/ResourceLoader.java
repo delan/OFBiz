@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceLoader.java,v 1.6 2004/05/11 12:56:43 jonesde Exp $
+ * $Id: ResourceLoader.java,v 1.7 2004/08/09 23:52:19 jonesde Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  * Loads resources using dynamically specified resource loader classes
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.0
  */
 public abstract class ResourceLoader {
@@ -100,7 +100,7 @@ public abstract class ResourceLoader {
     }
 
     public static void invalidateDocument(String xmlFilename) throws GenericConfigException {
-        loaderCache.clearCachesThatStartWith(xmlFilename);
+        UtilCache.clearCachesThatStartWith(xmlFilename);
     }
 
     public static Document getXmlDocument(String xmlFilename) throws GenericConfigException {

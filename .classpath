@@ -97,15 +97,12 @@
 	<classpathentry kind="lib" path="base/lib/jmxri.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-vfs-providers.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-vfs.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-pool-1.1.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-pool.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-modeler.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-logging.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-fileupload-1.0.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-el.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-discovery.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-digester.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-dbcp-1.1.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-dbcp.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-collections.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-cli.jar"/>
@@ -157,5 +154,15 @@
 	<classpathentry kind="lib" path="base/lib/xml-apis.jar"/>
 	<classpathentry kind="lib" path="base/lib/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="base/lib/resolver.jar"/>
+	<classpathentry kind="lib" path="base/lib/commons/commons-fileupload.jar"/>
+	<classpathentry kind="lib" path="components/accounting/lib/cybersource/cybssecurity.jar"/>
+	<classpathentry kind="lib" path="components/accounting/lib/cybersource/cybsclients.jar"/>
+	<classpathentry kind="lib" path="components/catalina/lib/common/ant-launcher.jar"/>
+	<classpathentry kind="lib" path="components/pos/lib/jpos18-controls.jar"/>
+	<classpathentry kind="lib" path="components/pos/lib/jcl.jar"/>
+	<classpathentry kind="lib" path="components/pos/lib/gtkswing.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkrepositorypersistence-filesystem.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkassignment-historyrelated.jar"/>
+	<classpathentry kind="lib" path="components/content/lib/XuiCoreSwing.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,5 +1,5 @@
 /*
- * $Id: DatasourceInfo.java,v 1.1 2004/07/17 07:05:04 doogie Exp $
+ * $Id: DatasourceInfo.java,v 1.2 2004/08/09 23:52:23 jonesde Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,20 +24,11 @@
  */
 package org.ofbiz.entity.config;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import org.ofbiz.base.config.GenericConfigException;
-import org.ofbiz.base.config.ResourceLoader;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.entity.GenericEntityConfException;
-import org.ofbiz.entity.GenericEntityException;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -45,7 +36,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class DatasourceInfo {

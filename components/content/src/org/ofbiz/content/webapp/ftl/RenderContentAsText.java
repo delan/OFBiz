@@ -1,5 +1,5 @@
 /*
- * $Id: RenderContentAsText.java,v 1.1 2004/07/10 16:24:09 byersa Exp $
+ * $Id: RenderContentAsText.java,v 1.2 2004/08/09 23:52:21 jonesde Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -23,24 +23,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.lang.StringBuffer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.content.ContentWorker;
-import org.ofbiz.content.ContentManagementWorker;
+import org.ofbiz.content.widget.WidgetWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.model.ModelEntity;
-import org.ofbiz.content.widget.WidgetWorker;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateTransformModel;
@@ -49,7 +44,7 @@ import freemarker.template.TemplateTransformModel;
  * RenderContentAsText - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).

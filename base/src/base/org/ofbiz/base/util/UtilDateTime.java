@@ -1,5 +1,5 @@
 /*
- * $Id: UtilDateTime.java,v 1.3 2004/05/01 12:17:55 jonesde Exp $
+ * $Id: UtilDateTime.java,v 1.4 2004/08/09 23:52:19 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,16 +24,13 @@
 package org.ofbiz.base.util;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.Debug;
 
 /**
  * Utility class for handling java.util.Date, the java.sql data/time classes and related
@@ -41,7 +38,7 @@ import org.ofbiz.base.util.Debug;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:johan@ibibi.com">Johan Isacsson</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class UtilDateTime {

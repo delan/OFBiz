@@ -1,5 +1,5 @@
 /*
- * $Id: EntityJoinOperator.java,v 1.8 2004/07/21 03:05:40 doogie Exp $
+ * $Id: EntityJoinOperator.java,v 1.9 2004/08/09 23:52:23 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,6 @@ import java.util.Map;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
-import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.model.ModelEntity;
 
 /**
@@ -41,7 +40,7 @@ import org.ofbiz.entity.model.ModelEntity;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  */
 public class EntityJoinOperator extends EntityOperator {
 
