@@ -78,7 +78,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             helper-class="org.ofbiz.core.entity.GenericHelperDAO"
             field-type-name="hsql"
             check-on-start="true"
-            add-missing-on-start="true">
+            add-missing-on-start="true"
+            use-foreign-keys="false">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
         <inline-jdbc
@@ -110,7 +111,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             helper-class="org.ofbiz.core.entity.GenericHelperDAO"
             field-type-name="mysql"
             check-on-start="true"
-            add-missing-on-start="true">
+            add-missing-on-start="true"
+            use-foreign-keys="false">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
         <inline-jdbc
