@@ -75,8 +75,11 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
              Object[] keys = context.getKeys(); 
              for (int i = 0; i < keys.length; i++) {
                  String key = (String) keys[i];
-                 contextMap.put(key, context.get(key));
-                 root.put(key, wrapper.wrap(context.get(key)));
+                 Object value = context.get(key);
+                 if (value != null) {
+                     contextMap.put(key, value);
+                     root.put(key, wrapper.wrap(value));
+                 }
                  //Debug.logInfo("Key: " + key + " Value: " + context.get(key), module);
              }
              root.put("context", wrapper.wrap(contextMap));                          
