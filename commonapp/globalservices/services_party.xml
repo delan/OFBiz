@@ -64,6 +64,7 @@
         <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
         <attribute name="groupName" type="String" mode="IN" optional="false"/>
         <attribute name="federalTaxId" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
     </service>
     <service name="updatePartyGroup" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyServices" invoke="updatePartyGroup" auth="true">
@@ -71,6 +72,7 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="groupName" type="String" mode="IN" optional="false"/>
         <attribute name="federalTaxId" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="createAffiliate" engine="java"
@@ -317,9 +319,16 @@
 
     <service name="getPartyFromName" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyServices" invoke="getPartyFromPerson">
-        <description>Gets a collection of parties from an first/last name</description>
+        <description>Gets a collection of parties from a first/last name</description>
         <attribute name="firstName" type="String" mode="IN" optional="true"/>
         <attribute name="lastName" type="String" mode="IN" optional="true"/>
+        <attribute name="parties" type="java.util.Collection" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="getPartyFromGroupName" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="getPartyFromPartyGroup">
+        <description>Gets a collection of parties from a party group namee</description>
+        <attribute name="groupName" type="String" mode="IN" optional="false"/>
         <attribute name="parties" type="java.util.Collection" mode="OUT" optional="true"/>
     </service>
 
