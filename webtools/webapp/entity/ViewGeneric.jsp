@@ -87,6 +87,11 @@
   if(value == null) useValue = false;
 %>
 <br>
+<STYLE>
+  .topouter { overflow: visible; border-style: none; }
+  .topcontainer { POSITION: absolute; VISIBILITY: visible; width: 90%; border-style: none; }
+  .topcontainerhidden { POSITION: absolute; VISIBILITY: hidden; }
+</STYLE>
 <SCRIPT language='JavaScript'>  
 var numTabs=<%=entity.getRelationsSize()+2%>;
 function ShowTab(lname) 
@@ -131,11 +136,11 @@ function ShowTab(lname)
     <%ModelEntity relatedEntity = reader.getModelEntity(relation.getRelEntityName());%>
     <%if (hasAllView || security.hasEntityPermission(relatedEntity.getTableName(), "_VIEW", session)) {%>
       <td id='tab<%=tabIndex+3%>' class='offtab'>
-        <a href='javascript:ShowTab("tab<%=tabIndex+3%>")' id='lnk<%=tabIndex+3%>' class='offlnk'>
-          <%=relation.getTitle()%><%=relation.getRelEntityName()%></a>
+        <a href='javascript:ShowTab("tab<%=tabIndex+3%>")' id='lnk<%=tabIndex+3%>' class='offlnk' style='FONT-SIZE: xx-small;'>
+          <%=relation.getTitle()%><%=relation.getRelEntityName()%></a><SPAN class='tabletext' style='FONT-SIZE: xx-small;'>(<%=relation.getType()%>)</SPAN>
       </td>
     <%}%>
-    <%if ((tabIndex+1)%5 == 0) {%></tr><tr><%}%>
+    <%if ((tabIndex+1)%4 == 0) {%></tr><tr><%}%>
   <%}%>
 </tr>
 <%}%>
