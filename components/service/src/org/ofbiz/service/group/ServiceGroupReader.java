@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceGroupReader.java,v 1.2 2003/08/17 08:42:35 jonesde Exp $
+ * $Id: ServiceGroupReader.java,v 1.3 2003/09/02 04:30:00 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,6 +23,7 @@
  */
 package org.ofbiz.service.group;
 
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,7 +41,7 @@ import org.w3c.dom.Element;
  * ServiceGroupReader.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ServiceGroupReader {
@@ -95,7 +96,15 @@ public class ServiceGroupReader {
             groupsCache.put(groupName, new GroupModel(group));        
             numDefs++;
         }
-        Debug.logImportant("Loaded " + numDefs + " Group definitions from " + handler.getLocation() + " in loader " + handler.getLoaderName(), module);
+        if (Debug.importantOn()) {
+        	String resourceLocation = handler.getLocation();
+        	try {
+				resourceLocation = handler.getURL().toExternalForm();
+        	} catch (GenericConfigException e) {
+        		Debug.logError(e, "Could not get resource URL", module);
+        	}
+			Debug.logImportant("Loaded " + numDefs + " Group definitions from " + resourceLocation, module);
+        }
     }
 
     public static GroupModel getGroupModel(String serviceName) {

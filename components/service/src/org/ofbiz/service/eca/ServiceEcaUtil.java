@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEcaUtil.java,v 1.2 2003/08/17 08:42:35 jonesde Exp $
+ * $Id: ServiceEcaUtil.java,v 1.3 2003/09/02 04:29:28 jonesde Exp $
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ServiceEcaUtil {
@@ -129,7 +129,15 @@ public class ServiceEcaUtil {
             rules.add(new ServiceEcaRule(e));
             numDefs++;
         }
-        Debug.logImportant("Loaded " + numDefs + " Service ECA definitions from " + handler.getLocation() + " in loader " + handler.getLoaderName(), module);
+        if (Debug.importantOn()) {
+			String resourceLocation = handler.getLocation();
+			try {
+				resourceLocation = handler.getURL().toExternalForm();
+			} catch (GenericConfigException e) {
+				Debug.logError(e, "Could not get resource URL", module);
+			}
+			Debug.logImportant("Loaded " + numDefs + " Service ECA definitions from " + resourceLocation, module);
+        }
     }
 
     public static Map getServiceEventMap(String serviceName) {
