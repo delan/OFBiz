@@ -858,7 +858,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         try {
             return this.get((String) key);
         } catch (IllegalArgumentException e) {
-            Debug.logError(e, "The field name (or key) [" + key + "] is not valid, printing IllegalArgumentException instead of throwing it because Map interface specification does not allow throwing that exception.");
+            Debug.logWarning(e, "The field name (or key) [" + key + "] is not valid, printing IllegalArgumentException instead of throwing it because Map interface specification does not allow throwing that exception.");
             return null;
         }
     }
