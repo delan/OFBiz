@@ -68,6 +68,7 @@
     </request-map>
 
     <request-map uri="autoLogout">
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="autoLoginRemove"/>
         <response name="success" type="request" value="checkLogin"/>
         <response name="error" type="view" value="main"/>
@@ -345,6 +346,7 @@
       <response name="success" type="view" value="checkoutshippingaddress"/>
       <response name="error" type="request" value="checkouterror"/>
     </request-map>
+    
     <request-map uri="checkouterror">
       <security https="true" auth="true"/>
       <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutError"/>
@@ -367,8 +369,15 @@
     <request-map uri="checkout">
       <security https="true" auth="true"/>
       <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
-      <response name="success" type="request" value="setOptions"/>
+      <response name="success" type="request" value="updatecartlogin"/>
       <response name="error" type="view" value="showcart"/>
+    </request-map>
+
+    <request-map uri="updatecartlogin">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setCartUserLogin"/>
+        <response name="success" type="request" value="setOptions"/>
+        <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="updateCheckoutOptions">
