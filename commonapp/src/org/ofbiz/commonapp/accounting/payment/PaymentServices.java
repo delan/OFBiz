@@ -492,4 +492,55 @@ public class PaymentServices {
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
+
+    /** Creates a Payment entity according to the parameters passed in the context
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map createPayment(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        
+        Timestamp now = UtilDateTime.nowTimestamp();
+
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+        if (result.size() > 0)
+            return result;
+        
+        if (partyId != context.get("partyIdFrom") && partyId != context.get("partyIdTo")) {
+            return ServiceUtil.returnError("ERROR: You must be either the to or from party to Create a Payment");
+        }
+
+        Long newPmId = delegator.getNextSeqId("Payment");
+        if(newPmId == null) {
+            return ServiceUtil.returnError("ERROR: Could not Create Payment (id generation failure)");
+        }
+        
+        GenericValue payment = delegator.makeValue("Payment", null);
+        payment.set("paymentId", newPmId.toString());
+        payment.set("paymentTypeId", context.get("paymentTypeId"));
+        payment.set("paymentMethodTypeId", context.get("paymentMethodTypeId"));
+        payment.set("paymentMethodId", context.get("paymentMethodId"));
+        payment.set("partyIdFrom", context.get("partyIdFrom"));
+        payment.set("partyIdTo", context.get("partyIdTo"));
+        payment.set("effectiveDate", context.get("effectiveDate") != null ? context.get("effectiveDate") : now);
+        payment.set("paymentRefNum", context.get("paymentRefNum"));
+        payment.set("amount", context.get("amount"));
+        payment.set("comments", context.get("comments"));
+
+        try {
+            payment.store();
+        } catch(GenericEntityException e) {
+            Debug.logWarning(e.getMessage());
+            return ServiceUtil.returnError("ERROR: Could not Create Payment (write failure): " + e.getMessage());
+        }
+
+        result.put("paymentId", payment.getString("paymentId"));
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
+    }
 }

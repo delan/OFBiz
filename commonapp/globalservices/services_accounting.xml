@@ -76,4 +76,19 @@
         <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
         <attribute name="newPaymentMethodId" type="String" mode="OUT" optional="true"/>
     </service>
+
+    <service name="createPayment" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="createPayment" auth="true">
+        <description>Create Payment</description>
+        <attribute name="paymentTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyIdFrom" type="String" mode="IN" optional="false"/>
+        <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="paymentRefNum" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="Double" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
+    </service>
 </services>
