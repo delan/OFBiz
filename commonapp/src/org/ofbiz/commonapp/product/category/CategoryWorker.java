@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/10/05 02:32:39  jonesde
+ * Refactored CatalogHelper: split into CatalogWorker and in commonapp CategoryWorker and ProductWorker
+ *
  *
  */
 
@@ -128,6 +131,44 @@ public class CategoryWorker {
     pageContext.setAttribute(attributePrefix + "listSize", new Integer(listSize));
     pageContext.setAttribute(attributePrefix + "categoryId", parentId);
     if(someProducts.size() > 0) pageContext.setAttribute(attributePrefix + "productList",someProducts);
+  }
+  
+  public static String getCatalogTopCategory(PageContext pageContext, String defaultTopCategory) {
+    String topCatName;
+    boolean fromSession = false;
+    //first see if a new category was specified as a parameter
+    topCatName = pageContext.getRequest().getParameter("CATALOG_TOP_CATEGORY");
+    //if no parameter, try from session
+    if(topCatName == null) {
+      topCatName = (String)pageContext.getSession().getAttribute("CATALOG_TOP_CATEGORY");
+      if(topCatName != null) fromSession = true;
+    }
+    //if nothing else, just use a default top category name
+    if(topCatName == null) topCatName = defaultTopCategory;
+    if(topCatName == null) topCatName = "CATALOG1";
+    
+    if(!fromSession) {
+      Debug.logInfo("[CategoryWorker.getCatalogTopCategory] Setting new top category: " + topCatName);
+      pageContext.getSession().setAttribute("CATALOG_TOP_CATEGORY", topCatName);
+    }
+    return topCatName;
+  }
+  
+  public static void getCategoriesWithNoParent(PageContext pageContext, String attributeName) {
+    GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
+    Collection results = new LinkedList();
+    try {
+      Collection allCategories = delegator.findAll("ProductCategory");
+      if(allCategories == null) return;
+      Iterator aciter = allCategories.iterator();
+      while(aciter.hasNext()) {
+        GenericValue curCat = (GenericValue)aciter.next();
+        Collection parentCats = curCat.getRelatedCache("CurrentProductCategoryRollup");
+        if(parentCats == null || parentCats.size() <= 0) results.add(curCat);
+      }
+    }
+    catch(GenericEntityException e) { Debug.logWarning(e); }
+    pageContext.setAttribute(attributeName, results);
   }
   
   public static void getRelatedCategories(PageContext pageContext, String attributeName) {
