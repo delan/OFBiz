@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.47 2004/08/15 04:25:17 jonesde Exp $
+ * $Id: OrderServices.java,v 1.48 2004/08/16 16:56:54 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -44,6 +44,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.DataModelConstants;
 import org.ofbiz.entity.GenericDelegator;
@@ -68,6 +69,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.GenericResultWaiter;
 import org.ofbiz.workflow.WfUtil;
 
 /**
@@ -76,7 +78,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.47 $
+ * @version    $Revision: 1.48 $
  * @since      2.0
  */
 
@@ -622,18 +624,22 @@ public class OrderServices {
         if (orderHeader != null) {
             OrderReadHelper orh = new OrderReadHelper(orderHeader);
             Double currentTotal = orderHeader.getDouble("grandTotal");
+            Double currentSubTotal = orderHeader.getDouble("remainingSubTotal");
+
+            // get the new grand total
             double updatedTotal = orh.getOrderGrandTotal();
-            
+
             // calculate subTotal as grandTotal - returnsTotal - (tax + shipping of items not returned)
-            double remainingSubTotal = updatedTotal - orh.getOrderReturnedTotal() - orh.getOrderNonReturnedTaxAndShipping();
-            
-            if (updatedTotal != currentTotal.doubleValue()) {
-                orderHeader.set("grandTotal", new Double(updatedTotal));
-                orderHeader.set("remainingSubTotal", new Double(remainingSubTotal));
+            double remainingSubTotal = updatedTotal - orh.getOrderReturnedTotal() - orh.getOrderNonReturnedTaxAndShipping();            
+
+            if (currentTotal == null || currentSubTotal == null || updatedTotal != currentTotal.doubleValue() ||
+                    remainingSubTotal != currentSubTotal.doubleValue()) {
+                orderHeader.set("grandTotal", UtilFormatOut.formatPriceNumber(updatedTotal));
+                orderHeader.set("remainingSubTotal", UtilFormatOut.formatPriceNumber(remainingSubTotal));
                 try {
                     orderHeader.store();
                 } catch (GenericEntityException e) {
-                    String errMsg = "ERROR: Could not set grantTotal on OrderHeader entity: " + e.toString();
+                    String errMsg = "ERROR: Could not set grandTotal on OrderHeader entity: " + e.toString();
                     Debug.logError(e, errMsg, module);
                     return ServiceUtil.returnError(errMsg);
                 }
@@ -648,32 +654,52 @@ public class OrderServices {
         GenericDelegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Boolean forceAll = (Boolean) context.get("forceAll");
+        if (forceAll == null) {
+            forceAll = new Boolean(false);
+        }
 
+        EntityCondition cond = null;
+        if (!forceAll.booleanValue()) {
+            List exprs = UtilMisc.toList(new EntityExpr("grandTotal", EntityOperator.EQUALS, null),
+                    new EntityExpr("remainingSubTotal", EntityOperator.EQUALS, null));
+            cond = new EntityConditionList(exprs, EntityOperator.OR);
+        }
+        List fields = UtilMisc.toList("orderId");
+
+        EntityListIterator eli = null;
         try {
-            EntityListIterator eli = delegator.findListIteratorByCondition("OrderHeader", new EntityExpr("grandTotal", EntityOperator.EQUALS, null), UtilMisc.toList("orderId"), null);
+            eli = delegator.findListIteratorByCondition("OrderHeader", cond, fields, null);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        if (eli != null) {
+            // reset each order
             GenericValue orderHeader = null;
-            List orderIdList = new LinkedList();
             while ((orderHeader = (GenericValue) eli.next()) != null) {
-                orderIdList.add(orderHeader.get("orderId"));
-            }
-            eli.close();
-            
-            Iterator orderIdIter = orderIdList.iterator();
-            while (orderIdIter.hasNext()) {
-                String orderId = (String) orderIdIter.next();
-                Map results = dispatcher.runSync("resetGrandTotal", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
-                if (ServiceUtil.isError(results)) {
-                    return ServiceUtil.returnError(null, null, null, results);
+                String orderId = orderHeader.getString("orderId");
+                Map resetResult = null;
+                try {
+                    resetResult = dispatcher.runSync("resetGrandTotal", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "ERROR: Cannot reset order totals - " + orderId, module);
+                }
+
+                if (resetResult != null && ServiceUtil.isError(resetResult)) {
+                    Debug.logWarning("ERROR: Cannot reset order totals - " + orderId + " : " + ServiceUtil.getErrorMessage(resetResult), module);
                 }
             }
-        } catch (GenericServiceException e) {
-            String errMsg = "ERROR: Could not set grantTotal on OrderHeader entity: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            return ServiceUtil.returnError(errMsg);
-        } catch (GenericEntityException e) {
-            String errMsg = "ERROR: Could not set grantTotal on OrderHeader entity: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            return ServiceUtil.returnError(errMsg);
+
+            // close the ELI
+            try {
+                eli.close();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+        } else {
+            Debug.logInfo("No orders found for reset processing", module);
         }
 
         return ServiceUtil.returnSuccess();
