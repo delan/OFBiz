@@ -210,28 +210,22 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
                 
         // send the email confirmation
         String email = CheckOutEvents.emailOrderConfirm(request, response);   
-
-        // convert confirm string to url
-        URL confirmUrl = null;
-        if (!confirmTemplate.equals("")) {
-            confirmUrl = new URL(confirmTemplate);
-        }
-                                                       
+        Debug.logInfo("Email notification sent.", module);
+                                                              
         // set up the output stream for the response
         response.setContentType("text/html");
         ServletOutputStream out = response.getOutputStream();  
+        String content = "Error getting confirm content";
         if (confirmTemplate != null) {                                    
-            // render the thank-you / confirm page
-            String content = null;
+            // render the thank-you / confirm page            
             try {
                 content = jp.render(confirmTemplate, request, response);
-            } catch (GeneralException e) {
+            } catch (GeneralException e) {                
                 Debug.logError(e, "Trouble rendering confirm page", module);
-            }            
-            out.println(content); 
-        } else {
-            out.println("Error getting content");
-        }                                                 
+            }                         
+        }
+        out.println(content);
+        out.flush();                                             
     }
                
     private boolean setPaymentPreferences(GenericDelegator delegator, String orderId, ServletRequest request) {
