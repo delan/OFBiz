@@ -31,6 +31,9 @@
     <load-component component-location="${ofbiz.home}/framework/jotm"/>
     <load-component component-location="${ofbiz.home}/framework/entity"/>
     <load-component component-location="${ofbiz.home}/framework/catalina"/>
+    <!--
+    <load-component component-location="${ofbiz.home}/framework/jetty"/>
+    -->
     <load-component component-location="${ofbiz.home}/framework/security"/>
     <load-component component-location="${ofbiz.home}/framework/datafile"/>
     <load-component component-location="${ofbiz.home}/framework/rules"/>

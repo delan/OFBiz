@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml 3801 2004-10-27 20:53:04Z jaz $
+ *  $Id: ofbiz-containers.xml 4595 2005-03-02 00:08:43Z jaz $
 -->
 
 <ofbiz-containers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -73,6 +73,53 @@
         <property name="iiop-port" value="2000"/>
     </container>
 
+    <!-- load jetty and all web applications -->
+    <container name="jetty-container" class="org.ofbiz.jetty.container.JettyContainer">
+        <property name="default-server">
+            <property name="https-listener" value="listener">
+                <property name="type" value="sun-jsse"/>
+                <property name="host" value="0.0.0.0"/>
+                <property name="port" value="8443"/>
+                <property name="min-threads" value="5"/>
+                <property name="max-threads" value="100"/>
+                <property name="max-idle-time" value="30000"/>
+                <property name="keystore" value="base/config/ofbizssl.jks"/>
+                <property name="password" value="changeit"/>
+                <property name="key-password" value="changeit"/>
+                <property name="identify-listener" value="true"/>
+                <property name="low-resource-persist-time" value="5000"/>
+             </property>
+            <property name="http-listener" value="listener">
+                <property name="type" value="default"/>
+                <property name="host" value="0.0.0.0"/>
+                <property name="port" value="8080"/>
+                <property name="min-threads" value="5"/>
+                <property name="max-threads" value="100"/>
+                <property name="max-idle-time" value="30000"/>
+                <property name="identify-listener" value="true"/>
+                <property name="low-resource-persist-time" value="5000"/>
+            </property>
+            <property name="ajp13-listener" value="listener">
+                <property name="type" value="ajp13"/>
+                <property name="host" value="0.0.0.0"/>
+                <property name="port" value="8009"/>
+                <property name="min-threads" value="5"/>
+                <property name="max-threads" value="100"/>
+                <property name="max-idle-time" value="30000"/>
+                <property name="buffer-size" value="8192"/>
+                <property name="identify-listener" value="true"/>
+            </property>
+            <property name="request-log" value="request-log">
+                <property name="filename" value="logs/yyyy_mm_dd.request.log"/>
+                <property name="buffered" value="false"/>
+                <property name="append" value="true"/>
+                <property name="extended" value="true"/>
+                <property name="timezone" value="GMT"/>
+                <property name="retain-days" value="90"/>
+            </property>
+        </property>
+    </container>
+   
     <!-- load BeanShell remote telnet server -->
     <container name="beanshell-container" class="org.ofbiz.base.container.BeanShellContainer">
         <!-- the port below and port-1 will be opened by beanshell -->
