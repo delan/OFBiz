@@ -57,6 +57,23 @@
         <implements service="interfaceMarketingCampaignPromo"/>
     </service>
 
+    <!-- MarketingCampaignRole Services -->
+    <service name="interfaceMarketingCampaignRole" engine="interface" location="" invoke="">
+        <attribute name="marketingCampaignId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="addRoleToMarketingCampaign" engine="simple"
+            location="org/ofbiz/commonapp/marketing/campaign/CampaignServices.xml" invoke="addRoleToMarketingCampaign" auth="true">
+        <description>Add Role to MarketingCampaign</description>
+        <implements service="interfaceMarketingCampaignRole"/>
+    </service>
+    <service name="removeRoleFromMarketingCampaign" engine="simple"
+            location="org/ofbiz/commonapp/marketing/campaign/CampaignServices.xml" invoke="removeRoleFromMarketingCampaign" auth="true">
+        <description>Remove Role from MarketingCampaign</description>
+        <implements service="interfaceMarketingCampaignRole"/>
+    </service>
+
     <!-- ContactList Services -->
     <service name="interfaceContactList" engine="interface" location="" invoke="">
         <attribute name="contactListTypeId" type="String" mode="IN" optional="false"/>
