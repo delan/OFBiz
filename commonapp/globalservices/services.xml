@@ -117,7 +117,7 @@
             location="org.ofbiz.core.workflow.WorkflowServices" invoke="completeActivity">
         <description>Attempt to complete a workflow activity</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
-        <attribute name="result" type="Map" mode="IN" optional="true"/>
+        <attribute name="result" type="java.util.Map" mode="IN" optional="true"/>
     </service>
 
     <service name="changeActivityState" engine="java"
@@ -143,7 +143,7 @@
         <attribute name="partyId" type="String" mode="IN"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN"/>
-        <attribute name="result" type="Map" mode="IN" optional="true"/>
+        <attribute name="result" type="java.util.Map" mode="IN" optional="true"/>
     </service>
 
     <service name="assignApprover" engine="java"
