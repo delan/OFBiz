@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.18 2003/11/24 20:39:49 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.19 2003/11/25 00:17:19 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -322,16 +322,29 @@ public class CheckOutEvents {
             }
         }
 
-        Map callResult = null;
-
+        // get a request map of parameters
+        Map params = UtilHttp.getParameterMap(request);
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
-        callResult = checkOutHelper.setCheckOutOptions(shippingMethod, shippingContactMechId, selectedPaymentMethods,
+
+        // check for gift card not on file
+        Map gcResult = checkOutHelper.checkGiftCard(params, selectedPaymentMethods);
+        ServiceUtil.getMessages(request, gcResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
+        if (gcResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+            return "error";
+        } else {
+            String gcPaymentMethodId = (String) gcResult.get("paymentMethodId");
+            Double gcAmount = (Double) gcResult.get("amount");
+            if (gcPaymentMethodId != null) {
+                selectedPaymentMethods.put(gcPaymentMethodId, gcAmount);
+            }
+        }
+
+        Map optResult = checkOutHelper.setCheckOutOptions(shippingMethod, shippingContactMechId, selectedPaymentMethods,
             billingAccountId, billingAccountAmt, correspondingPoId, shippingInstructions, orderAdditionalEmails,
             maySplit, giftMessage, isGift);
 
-       ServiceUtil.getMessages(request, callResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
-
-        if (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+       ServiceUtil.getMessages(request, optResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
+        if (optResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
             return "error";
         } else {
             return "success";
