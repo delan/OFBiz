@@ -163,14 +163,14 @@ function insertImageName(size,ext) {
     <td>&nbsp;</td>
     <td width="74%" colspan='5'>
       <select name="productTypeId" size=1>
-        <%if(productType != null) {%>
-          <option selected value='<%=productType.getString("productTypeId")%>'><%=productType.getString("description")%> [<%=productType.getString("productTypeId")%>]</option>
+        <%if (productType != null) {%>
+          <option selected value='<%=productType.getString("productTypeId")%>'><%=productType.getString("description")%><%-- [<%=productType.getString("productTypeId")%>]--%></option>
+          <option value='<%=productType.getString("productTypeId")%>'>----</option>
         <%}%>
-        <option value=''>&nbsp;</option>
         <%Iterator productTypeIter = UtilMisc.toIterator(productTypeCol);%>
-        <%while(productTypeIter != null && productTypeIter.hasNext()) {%>
+        <%while (productTypeIter != null && productTypeIter.hasNext()) {%>
           <%GenericValue nextProductType = (GenericValue) productTypeIter.next();%>
-          <option value='<%=nextProductType.getString("productTypeId")%>'><%=nextProductType.getString("description")%> [<%=nextProductType.getString("productTypeId")%>]</option>
+          <option value='<%=nextProductType.getString("productTypeId")%>'><%=nextProductType.getString("description")%><%-- [<%=nextProductType.getString("productTypeId")%>]--%></option>
         <%}%>
       </select>
     </td>
