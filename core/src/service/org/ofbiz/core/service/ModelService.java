@@ -318,7 +318,8 @@ public class ModelService {
     }
 
     /**
-     * Creates a new Map based from an existing map with just valid parameters
+     * Creates a new Map based from an existing map with just valid parameters. 
+     * Tries to convert parameters to required type.
      * @param source The source map
      * @param mode The mode which to build the new map
      * @returns Map a new Map of only valid parameters
@@ -334,12 +335,22 @@ public class ModelService {
         if (contextInfo.size() == 0) {
             return target;
         }
-        List names = getParameterNames(mode, true);
-        Iterator i = names.iterator();
+        Iterator i = contextParamList.iterator();
         while (i.hasNext()) {
-            Object key = i.next();
-            if (source.containsKey(key)) {
-                target.put(key, source.get(key));
+            ModelParam param = (ModelParam) i.next();
+            if (param.mode.equals("INOUT") || param.mode.equals(mode)) {
+                Object key = param.name;
+                if (source.containsKey(key)) {
+                    Object value = source.get(key);
+                    try {
+                        value = ObjectType.simpleTypeConvert(value, param.type, null, null);
+                    } catch (GeneralException e) {
+                            Debug.logWarning("[ModelService.makeValid] : Simple type conversion of param " + 
+                                    key + " failed: " + e.toString(), module);
+                        // let this go. service invokation will catch it
+                    }
+                    target.put(key, value);
+                }
             }
         }
         return target;
