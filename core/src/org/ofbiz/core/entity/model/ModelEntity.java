@@ -67,6 +67,18 @@ public class ModelEntity
   /** Default Constructor */  
   public ModelEntity() { }
 
+  public void updatePkLists()
+  {
+    pks = new Vector();
+    nopks = new Vector();
+    for(int i=0; i<fields.size(); i++)
+    {
+      ModelField field = (ModelField)fields.get(i);
+      if(field.isPk) pks.add(field);
+      else nopks.add(field);
+    }
+  }
+  
   public ModelField getField(String fieldName)
   {
     if(fieldName == null) return null;

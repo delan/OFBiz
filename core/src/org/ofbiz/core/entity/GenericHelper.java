@@ -32,6 +32,11 @@ import org.ofbiz.core.entity.model.*;
  */
 public interface GenericHelper
 {
+  /** Gets the name of the server configuration that corresponds to this helper
+   *@return server configuration name
+   */
+  public String getServerName();
+
   /** Gets the instance of ModelReader that corresponds to this helper
    *@return ModelReader that corresponds to this helper
    */

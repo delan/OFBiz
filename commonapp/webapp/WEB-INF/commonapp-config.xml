@@ -98,6 +98,7 @@
     <view-map><view>dataMySql</view><mapped-page>/entity/dataMySql.jsp</mapped-page></view-map>
     <view-map><view>ModelWriter</view><mapped-page>/entity/ModelWriter.jsp</mapped-page></view-map>
     <view-map><view>EditEntity</view><mapped-page>/entity/EditEntity.jsp</mapped-page></view-map>
+    <view-map><view>checkdb</view><mapped-page>/entity/checkdb.jsp</mapped-page></view-map>
 
     <view-map><view>EditUtilCache</view><mapped-page>/cache/EditUtilCache.jsp</mapped-page></view-map>
     <view-map><view>FindUtilCache</view><mapped-page>/cache/FindUtilCache.jsp</mapped-page></view-map>

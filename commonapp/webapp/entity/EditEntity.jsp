@@ -43,7 +43,27 @@
   String errorMsg = "";
 
   String event = request.getParameter("event");
-  if("removeField".equals(event))
+  if("addEntity".equals(event))
+  {
+    if(entity == null)
+    {
+      entity = new ModelEntity();
+      entity.tableName = request.getParameter("tableName");
+      entity.entityName = ModelUtil.dbNameToClassName(entity.tableName);
+      reader.entityCache.put(entity.entityName, entity);
+      entityName = entity.entityName;
+    }
+  }
+  else if("updateEntity".equals(event))
+  {
+    entity.packageName = request.getParameter("packageName");
+    entity.title = request.getParameter("title");
+    entity.description = request.getParameter("description");
+    entity.copyright = request.getParameter("copyright");
+    entity.author = request.getParameter("author");
+    entity.version = request.getParameter("version");
+  }
+  else if("removeField".equals(event))
   {
     String fieldName = request.getParameter("fieldName");
     entity.removeField(fieldName);
@@ -57,6 +77,7 @@
     field.type = fieldType;
     if(primaryKey != null) field.isPk = true;
     else field.isPk = false;
+    entity.updatePkLists();
   }
   else if("addField".equals(event))
   {
@@ -177,15 +198,37 @@ The following errors occurred:
   </SELECT>
   <INPUT type=SUBMIT value='Edit Specified Entity'>
 </FORM>
+<FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?event=addEntity")%>' style='margin: 0;'>
+  Table Name: <INPUT type=TEXT size='60' name='tableName'>
+  <INPUT type=SUBMIT value='Create Entity'>
+</FORM>
 
 <%if(entity == null){%>
   <H4>Entity not found with name "<%=entityName%>"</H4>
 <%}else{%>
 
+<BR>
 <A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName)%>'>Reload Current Entity: <%=entityName%></A><BR>
 <BR>
 Entity Name: <%=entityName%><br>
 Column Name: <%=entity.tableName%><br>
+
+<FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateEntity")%>' style='margin: 0;'>
+  <INPUT type=text size='80' name='packageName' value='<%=entity.packageName%>'> (Package Name)
+  <BR>
+  <INPUT type=text size='80' name='title' value='<%=entity.title%>'> (Title)
+  <BR>
+  <INPUT type=text size='80' name='description' value='<%=entity.description%>'> (Description)
+  <BR>
+  <INPUT type=text size='80' name='copyright' value='<%=entity.copyright%>'> (Copyright)
+  <BR>
+  <INPUT type=text size='80' name='author' value='<%=entity.author%>'> (Author)
+  <BR>
+  <INPUT type=text size='80' name='version' value='<%=entity.version%>'> (Version)
+  <BR>
+  <INPUT type=submit value='Update Entity'>
+</FORM>
+<BR>
 <B>FIELDS</B>
   <TABLE border='1' cellpadding='2' cellspacing='0'>
     <TR><TD>Field Name</TD><TD>Column Name (Length)</TD><TD>Field Type</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>

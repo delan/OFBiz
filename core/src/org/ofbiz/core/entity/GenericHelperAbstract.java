@@ -38,7 +38,14 @@ public abstract class GenericHelperAbstract implements GenericHelper
   UtilCache primaryKeyCache = null;
   UtilCache allCache = null;
   UtilCache andCache = null;
+
+  String serverName;
   
+  /** Gets the name of the server configuration that corresponds to this helper
+   *@return server configuration name
+   */
+  public String getServerName() { return serverName; }
+
   /** Gets the instance of ModelReader that corresponds to this helper
    *@return ModelReader that corresponds to this helper
    */

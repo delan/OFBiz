@@ -37,7 +37,9 @@ public class GenericHelperDAO extends GenericHelperAbstract
   
   public GenericHelperDAO(String serverName)
   { 
-    genericDAO = new GenericDAO(serverName);
+    this.serverName = serverName;
+    
+    genericDAO = GenericDAO.getGenericDAO(serverName);
     primaryKeyCache = new UtilCache("FindByPrimaryKeyDAO-" + serverName);
     allCache = new UtilCache("FindAllDAO-" + serverName);
     andCache = new UtilCache("FindByAndDAO-" + serverName);

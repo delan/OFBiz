@@ -40,6 +40,8 @@ public class GenericHelperEJB extends GenericHelperAbstract
 
   public GenericHelperEJB(String serverName) 
   { 
+    this.serverName = serverName;
+
     getGenericHome(serverName);
     primaryKeyCache = new UtilCache("FindByPrimaryKeyEJB-" + serverName);
     allCache = new UtilCache("FindAllEJB-" + serverName);

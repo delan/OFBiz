@@ -780,7 +780,7 @@ public class GenericDAO
     catch (SQLException sqle) { Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
     
     ModelFieldType type = modelReader.getModelFieldType(field.type);
-    String sql = "ALTER TABLE " + entity.tableName + " ADD " + field.name + " " + type.sqlType; 
+    String sql = "ALTER TABLE " + entity.tableName + " ADD " + field.colName + " " + type.sqlType; 
 
     //Debug.logInfo(" create: sql=" + sql);
     try {
