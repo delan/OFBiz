@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
   <ContentAssocType contentAssocTypeId="TEMPLATE_MEMBER" description="Template Member"/>
+  <ContentAssocType contentAssocTypeId="STRUCTURE_DEF" description="Document Structure Definition"/>
   <ContentAssocType contentAssocTypeId="LIST_ENTRY" description="List Entry"/>
   <ContentAssocType contentAssocTypeId="TREE_CHILD" description="Tree Child"/>
   <ContentAssocType contentAssocTypeId="GRAPH_LINK" description="Graph Link"/>
   <ContentAssocType contentAssocTypeId="ALTERNATE_LOCALE" description="Alternate Locale"/>
+  <ContentAssocType contentAssocTypeId="RESPONSE" description="Response"/>
 
   <ContentAssocPredicate contentAssocPredicateId="member-of" description="The object is a member of the subject."/>
   <ContentAssocPredicate contentAssocPredicateId="defines" description="The object defines the subject."/>
@@ -20,6 +22,7 @@
 
   <!-- These ContentTypes are primarily for structuring documents or content -->  
   <ContentType contentTypeId="ARTICLE" description="Article" hasTable="N" parentTypeId=""/>
+  <ContentType contentTypeId="MESSAGE" description="Message" hasTable="N" parentTypeId=""/>
   <ContentType contentTypeId="PRODUCT_INFO" description="Product Info" hasTable="N" parentTypeId=""/>
   <ContentType contentTypeId="COMPANY_INFO" description="Company Info" hasTable="N" parentTypeId=""/>
   <ContentType contentTypeId="ADVERTISEMENT" description="Advertisement" hasTable="N" parentTypeId=""/>
