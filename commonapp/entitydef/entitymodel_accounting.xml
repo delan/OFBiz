@@ -195,7 +195,7 @@
       <relation type="many" rel-entity-name="BudgetScenarioRule">
         <key-map field-name="budgetItemTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="GeneralLedgerBudgetXref">
+      <relation type="many" rel-entity-name="GlBudgetXref">
         <key-map field-name="budgetItemTypeId"/>
       </relation>
     </entity>
@@ -565,14 +565,13 @@
             title="Party Fixed Asset Assignment Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="fixedAssetId" type="id-ne"></field>
-      <field name="statusId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="allocatedDate" type="date-time"></field>
+      <field name="statusId" type="id-ne"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="partyId"/>
       <prim-key field="fixedAssetId"/>
-      <prim-key field="statusId"/>
       <prim-key field="fromDate"/>
       <relation type="one" fk-name="PTY_FASTAS_PTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -848,6 +847,7 @@
       <field name="invoiceId" type="id"></field>
       <field name="invoiceItemSeqId" type="id"></field>
       <field name="termValue" type="numeric"></field>
+      <field name="uomId" type="id"></field>
       <prim-key field="invoiceTermId"/>
       <relation type="one" fk-name="INVCE_TRM_TRM" rel-entity-name="TermType">
         <key-map field-name="termTypeId"/>
@@ -950,17 +950,32 @@
       <field name="acctgTransTypeId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="transactionDate" type="date-time"></field>
-      <field name="entryDate" type="date-time"></field>
+      <field name="isPosted" type="indicator"></field>
+      <field name="glJournalId" type="id"></field>
+      <field name="voucherRef" type="short-varchar"></field>
+      <field name="voucherDate" type="date-time"></field>
+      <field name="groupStatusId" type="id"></field>
       <field name="fixedAssetId" type="id"></field>
       <field name="inventoryItemId" type="id"></field>
       <field name="physicalInventoryId" type="id"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
       <field name="invoiceId" type="id"></field>
-      <field name="paymentId" type="id-ne"></field>
+      <field name="paymentId" type="id"></field>
+      <field name="theirAcctgTransId" type="id-long"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="acctgTransId"/>
       <relation type="one" fk-name="ACCTTX_TYPE" rel-entity-name="AcctgTransType">
         <key-map field-name="acctgTransTypeId"/>
+      </relation>
+      <relation type="one" fk-name="ACCTTX_GLJRNL" rel-entity-name="GlJournal">
+        <key-map field-name="glJournalId"/>
+      </relation>
+      <relation type="one" fk-name="ACCTTX_GRPSTTS" rel-entity-name="StatusItem">
+        <key-map field-name="groupStatusId" rel-field-name="statusId"/>
       </relation>
       <relation type="one" fk-name="ACCTTX_FASSET" rel-entity-name="FixedAsset">
         <key-map field-name="fixedAssetId"/>
@@ -997,7 +1012,7 @@
       <relation type="many" rel-entity-name="AcctgTransAttribute">
         <key-map field-name="acctgTransId"/>
       </relation>
-      <relation type="many" rel-entity-name="AcctgTransDetail">
+      <relation type="many" rel-entity-name="AcctgTransEntry">
         <key-map field-name="acctgTransId"/>
       </relation>
     </entity>
@@ -1016,33 +1031,72 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="AcctgTransDetail"
+    <entity entity-name="AcctgTransEntry"
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="Transaction Detail Entity">
+            title="Transaction Entry Entity">
       <field name="acctgTransId" type="id-ne"></field>
-      <field name="acctgTransDetailSeqId" type="id-ne"></field>
+      <field name="acctgTransEntrySeqId" type="id-ne"></field>
+      <field name="acctgTransEntryTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <field name="voucherRef" type="short-varchar"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
-      <field name="generalLedgerAccountId" type="id"></field>
+      <field name="theirPartyId" type="id"></field>
+      <field name="productId" type="id"></field>
+      <field name="theirProductId" type="id"></field>
+      <field name="glAccountId" type="id"></field>
       <field name="amount" type="currency-amount"></field>
+      <field name="origAmount" type="currency-amount"></field>
       <field name="debitCreditFlag" type="indicator"></field>
+      <field name="dueDate" type="date"></field>
+      <field name="groupId" type="id"></field>
+      <field name="taxId" type="id"></field>
+      <field name="reconcileStatusId" type="id"></field>
+      <field name="settlementTermId" type="id"></field>
       <prim-key field="acctgTransId"/>
-      <prim-key field="acctgTransDetailSeqId"/>
-      <relation type="one" fk-name="ACCTTX_DET_ACTX" rel-entity-name="AcctgTrans">
+      <prim-key field="acctgTransEntrySeqId"/>
+      <relation type="one" fk-name="ACCTTXENT_ATET" rel-entity-name="AcctgTransEntryType">
+        <key-map field-name="acctgTransEntryTypeId"/>
+      </relation>
+      <relation type="one" fk-name="ACCTTXENT_ACTX" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId"/>
       </relation>
-      <relation type="one" fk-name="ACCTTX_DET_PARTY" rel-entity-name="Party">
+      <relation type="one" fk-name="ACCTTXENT_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="ACCTTX_DET_RLTYP" rel-entity-name="RoleType">
+      <relation type="one" fk-name="ACCTTXENT_RLTYP" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" fk-name="ACCTTX_DET_GLACT" rel-entity-name="GeneralLedgerAccount">
-        <key-map field-name="generalLedgerAccountId"/>
+      <relation type="one" fk-name="ACCTTXENT_GLACT" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
+      <relation type="one" fk-name="ACCTTXENT_RCSTS" rel-entity-name="StatusItem">
+        <key-map field-name="reconcileStatusId" rel-field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="ACCTTXENT_STLEN" rel-entity-name="SettlementTerm">
+        <key-map field-name="settlementTermId"/>
+      </relation>
+    </entity>
+    <entity entity-name="AcctgTransEntryType"
+            package-name="org.ofbiz.commonapp.accounting.ledger"
+            title="Accounting Transaction Entry Type Entity">
+      <field name="acctgTransEntryTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="acctgTransEntryTypeId"/>
+      <relation type="one" fk-name="ACCTTXE_TYPE_PAR" title="Parent" rel-entity-name="AcctgTransEntryType">
+        <key-map field-name="parentTypeId" rel-field-name="acctgTransEntryTypeId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="AcctgTransEntryType">
+        <key-map field-name="acctgTransEntryTypeId" rel-field-name="parentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AcctgTransEntry">
+        <key-map field-name="acctgTransEntryTypeId"/>
       </relation>
     </entity>
     <entity entity-name="AcctgTransType"
@@ -1083,71 +1137,45 @@
         <key-map field-name="acctgTransTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="GeneralLedgerAccount"
+    <entity entity-name="GlAccount"
             package-name="org.ofbiz.commonapp.accounting.ledger"
             title="General Ledger Account Entity">
-      <field name="generalLedgerAccountId" type="id-ne"></field>
-      <field name="generalLedgerAccountTypeId" type="id"></field>
+      <field name="glAccountId" type="id-ne"></field>
+      <field name="glAccountTypeId" type="id"></field>
       <field name="accountName" type="name"></field>
       <field name="description" type="description"></field>
-      <prim-key field="generalLedgerAccountId"/>
-      <relation type="one" fk-name="GLACCT_TYPE" rel-entity-name="GeneralLedgerAccountType">
-        <key-map field-name="generalLedgerAccountTypeId"/>
+      <field name="productId" type="id"></field>
+      <field name="xbrlType" type="short-varchar"></field>
+      <prim-key field="glAccountId"/>
+      <relation type="one" fk-name="GLACCT_TYPE" rel-entity-name="GlAccountType">
+        <key-map field-name="glAccountTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="AcctgTransDetail">
-        <key-map field-name="generalLedgerAccountId"/>
+      <relation type="many" rel-entity-name="AcctgTransEntry">
+        <key-map field-name="glAccountId"/>
       </relation>
-      <relation type="many" rel-entity-name="GeneralLedgerBudgetXref">
-        <key-map field-name="generalLedgerAccountId"/>
+      <relation type="many" rel-entity-name="GlBudgetXref">
+        <key-map field-name="glAccountId"/>
       </relation>
-      <relation type="many" rel-entity-name="PartyGlAccount">
-        <key-map field-name="generalLedgerAccountId"/>
-      </relation>
-    </entity>
-    <entity entity-name="GeneralLedgerAccountType"
-            package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="General Ledger Account Type Entity">
-      <field name="generalLedgerAccountTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="generalLedgerAccountTypeId"/>
-      <relation type="many" rel-entity-name="GeneralLedgerAccount">
-        <key-map field-name="generalLedgerAccountTypeId"/>
+      <relation type="many" rel-entity-name="GlAccountRole">
+        <key-map field-name="glAccountId"/>
       </relation>
     </entity>
-    <entity entity-name="GeneralLedgerBudgetXref"
+    <entity entity-name="GlAccountRole"
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="General Ledger Budget XREF Entity">
-      <field name="generalLedgerAccountId" type="id-ne"></field>
-      <field name="budgetItemTypeId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="allocationPercentage" type="floating-point"></field>
-      <prim-key field="generalLedgerAccountId"/>
-      <prim-key field="budgetItemTypeId"/>
-      <prim-key field="fromDate"/>
-      <relation type="one" fk-name="GL_BDGT_XRF_GLA" rel-entity-name="GeneralLedgerAccount">
-        <key-map field-name="generalLedgerAccountId"/>
-      </relation>
-      <relation type="one" fk-name="GL_BDGT_XRF_BIT" rel-entity-name="BudgetItemType">
-        <key-map field-name="budgetItemTypeId"/>
-      </relation>
-    </entity>
-    <entity entity-name="PartyGlAccount"
-            package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="Party GL Account Entity">
-      <field name="generalLedgerAccountId" type="id-ne"></field>
+            title="GL Account Role Entity">
+      <field name="glAccountId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
       <field name="productId" type="id"></field>
       <field name="productCategoryId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <prim-key field="generalLedgerAccountId"/>
+      <prim-key field="glAccountId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" fk-name="PTY_GLACCT_GLA" rel-entity-name="GeneralLedgerAccount">
-        <key-map field-name="generalLedgerAccountId"/>
+      <relation type="one" fk-name="PTY_GLACCT_GLA" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
       </relation>
       <relation type="one" fk-name="PTY_GLACCT_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -1166,6 +1194,58 @@
         <key-map field-name="productCategoryId"/>
       </relation>
     </entity>
+    <entity entity-name="GlAccountType"
+            package-name="org.ofbiz.commonapp.accounting.ledger"
+            title="General Ledger Account Type Entity">
+      <field name="glAccountTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="glAccountTypeId"/>
+      <relation type="many" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="GlBudgetXref"
+            package-name="org.ofbiz.commonapp.accounting.ledger"
+            title="General Ledger Budget Cross Reference Entity">
+      <field name="glAccountId" type="id-ne"></field>
+      <field name="budgetItemTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="allocationPercentage" type="floating-point"></field>
+      <prim-key field="glAccountId"/>
+      <prim-key field="budgetItemTypeId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="GL_BDGT_XRF_GLA" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
+      <relation type="one" fk-name="GL_BDGT_XRF_BIT" rel-entity-name="BudgetItemType">
+        <key-map field-name="budgetItemTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="GlJournal"
+            package-name="org.ofbiz.commonapp.accounting.ledger"
+            title="General Ledger Journal Entity">
+      <field name="glJournalId" type="id-ne"></field>
+      <field name="glJournalName" type="name"></field>
+      <prim-key field="glJournalId"/>
+      <relation type="many" rel-entity-name="AcctgTrans">
+        <key-map field-name="glJournalId"/>
+      </relation>
+    </entity>
+    <entity entity-name="SettlementTerm"
+            package-name="org.ofbiz.commonapp.accounting.ledger"
+            title="Settlement Term Entity">
+      <field name="settlementTermId" type="id-ne"></field>
+      <field name="termName" type="name"></field>
+      <field name="termValue" type="numeric"></field>
+      <field name="uomId" type="id"></field>
+      <prim-key field="settlementTermId"/>
+      <relation type="many" rel-entity-name="AcctgTransEntry">
+        <key-map field-name="settlementTermId"/>
+      </relation>
+    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.accounting.payment -->
@@ -1174,6 +1254,7 @@
     <entity entity-name="BillingAccount"
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Billing Account Entity">
+      <description>A BillingAccount is like a PaymentMethod but is used to track </description>
       <field name="billingAccountId" type="id-ne"></field>
       <field name="contactMechId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
@@ -1362,7 +1443,7 @@
       <relation type="one" fk-name="FIN_ACT_RL_FNACT" rel-entity-name="FinAccount">
         <key-map field-name="finAccountId"/>
       </relation>
-      <relation type="one" fk-name="FIN_ACT_RL_PARTY" rel-entity-name="Party">
+      <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="RoleType">

@@ -90,13 +90,16 @@
     <entity-group group="org.ofbiz.commonapp" entity="AccoutingPeriod" />
     <entity-group group="org.ofbiz.commonapp" entity="AcctgTrans" />
     <entity-group group="org.ofbiz.commonapp" entity="AcctgTransAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="AcctgTransDetail" />
+    <entity-group group="org.ofbiz.commonapp" entity="AcctgTransEntry" />
+    <entity-group group="org.ofbiz.commonapp" entity="AcctgTransEntryType" />
     <entity-group group="org.ofbiz.commonapp" entity="AcctgTransType" />
     <entity-group group="org.ofbiz.commonapp" entity="AcctgTransTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="GeneralLedgerAccount" />
-    <entity-group group="org.ofbiz.commonapp" entity="GeneralLedgerAccountType" />
-    <entity-group group="org.ofbiz.commonapp" entity="GeneralLedgerBudgetXref" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyGlAccount" />
+    <entity-group group="org.ofbiz.commonapp" entity="GlAccount" />
+    <entity-group group="org.ofbiz.commonapp" entity="GlAccountRole" />
+    <entity-group group="org.ofbiz.commonapp" entity="GlAccountType" />
+    <entity-group group="org.ofbiz.commonapp" entity="GlBudgetXref" />
+    <entity-group group="org.ofbiz.commonapp" entity="GlJournal" />
+    <entity-group group="org.ofbiz.commonapp" entity="SettlementTerm" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.accounting.payment -->

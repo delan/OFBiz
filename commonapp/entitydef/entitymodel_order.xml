@@ -884,9 +884,6 @@
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="many" rel-entity-name="TermTypeAttr">
-        <key-map field-name="attrName"/>
-      </relation>
     </entity>
     <entity entity-name="OrderType"
             package-name="org.ofbiz.commonapp.order.order"
@@ -1162,6 +1159,7 @@
       <field name="quoteId" type="id-ne"></field>
       <field name="quoteItemSeqId" type="id-ne"></field>
       <field name="termValue" type="numeric"></field>
+      <field name="uomId" type="id"></field>
       <prim-key field="termTypeId"/>
       <prim-key field="quoteId"/>
       <prim-key field="quoteItemSeqId"/>
@@ -1197,9 +1195,6 @@
         <key-map field-name="termTypeId"/>
         <key-map field-name="quoteId"/>
         <key-map field-name="quoteItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="TermTypeAttr">
-        <key-map field-name="attrName"/>
       </relation>
     </entity>
     <entity entity-name="QuoteType"

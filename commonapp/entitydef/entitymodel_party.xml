@@ -373,9 +373,6 @@
       <relation type="one" fk-name="AGRMNT_TERM_ATTR" rel-entity-name="AgreementTerm">
         <key-map field-name="agreementTermId"/>
       </relation>
-      <relation type="many" rel-entity-name="TermTypeAttr">
-        <key-map field-name="attrName"/>
-      </relation>
     </entity>
     <entity entity-name="AgreementType"
             package-name="org.ofbiz.commonapp.party.agreement"
@@ -1097,7 +1094,7 @@
       <relation type="many" rel-entity-name="AcctgTrans">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="many" rel-entity-name="AcctgTransDetail">
+      <relation type="many" rel-entity-name="AcctgTransEntry">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="many" rel-entity-name="FixedAsset">
@@ -1121,7 +1118,7 @@
       <relation type="many" rel-entity-name="FinAccountTrans">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="many" rel-entity-name="PartyGlAccount">
+      <relation type="many" rel-entity-name="GlAccountRole">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementPartyApplic">
@@ -1649,7 +1646,7 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="AcctgTransDetail">
+      <relation type="many" rel-entity-name="AcctgTransEntry">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
@@ -1673,7 +1670,7 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="PartyGlAccount">
+      <relation type="many" rel-entity-name="GlAccountRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
