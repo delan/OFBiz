@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.20 2004/01/28 01:04:51 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.21 2004/04/01 08:37:50 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.20 $
+ *@version    $Revision: 1.21 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -860,7 +860,8 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
                 }
                 
                 if (needsCdata) {
-                    cdataMap.put(name, value.toString());
+                	// use valueStr instead of the escaped value, not needed or wanted in a CDATA block
+                    cdataMap.put(name, valueStr);
                 } else {
                     writer.print(' ');
                     writer.print(name);
