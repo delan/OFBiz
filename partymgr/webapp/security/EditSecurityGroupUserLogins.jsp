@@ -103,18 +103,28 @@
     <td><div class="tabletext"><b>UserLogin&nbsp;ID</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
     <td><div class="tabletext"><b>Thru&nbsp;Date</b></div></td>
-    <td width='1%'><div class="tabletext">&nbsp;</div></td>
+    <td><div class="tabletext"><b>Party&nbsp;ID</b></div></td>
     <td width='1%'><div class="tabletext">&nbsp;</div></td>
   </tr>
 <ofbiz:iterator name="userLoginSecurityGroup" property="userLoginSecurityGroups" offset="<%=lowIndex%>" limit="<%=viewSize%>">
+  <%GenericValue userLogin = userLoginSecurityGroup.getRelatedOne("UserLogin");%>
+  <%if (userLogin != null) pageContext.setAttribute("userLogin", userLogin);%>
   <tr valign="middle">
     <td><a href='<ofbiz:url>/editlogin?userLoginId=<ofbiz:entityfield attribute="userLoginSecurityGroup" field="userLoginId"/></ofbiz:url>' class='buttontext'>
-        <ofbiz:entityfield attribute="userLoginSecurityGroup" field="userLoginId"/></a></td>
+        <ofbiz:entityfield attribute="userLoginSecurityGroup" field="userLoginId"/></a>
+    </td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="fromDate"/></div></td>
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="thruDate"/></div></td>
     <td>
-      <a href='<ofbiz:url>/editlogin?userLoginId=<ofbiz:entityfield attribute="userLoginSecurityGroup" field="userLoginId"/></ofbiz:url>' class="buttontext">
-      [Edit]</a>
+        <form action='<ofbiz:url>/updateUserLoginToSecurityGroup</ofbiz:url>' method=POST style='margin: 0;'>
+            <input type=hidden name='userLoginId' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="userLoginId"/>'>
+            <input type=hidden name='groupId' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="groupId"/>'>
+            <input type=hidden name='fromDate' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="fromDate"/>'>
+            <input type=text <ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="thruDate" fullattrs="true"/>>
+            <input type=submit value='Update'>
+        </form>
+    </td>
+    <td><a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="userLogin" field="partyId"/></ofbiz:url>' class='buttontext'>
+        <ofbiz:entityfield attribute="userLogin" field="partyId"/></a>
     </td>
     <td>
       <a href='<ofbiz:url>/removeUserLoginFromSecurityGroup?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></ofbiz:url>' class="buttontext">

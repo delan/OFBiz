@@ -103,7 +103,7 @@
     <td width='1%'><div class="tabletext">&nbsp;</div></td>
   </tr>
 <ofbiz:iterator name="securityGroupPermission" property="securityGroupPermissions" offset="<%=lowIndex%>" limit="<%=viewSize%>">
-  <%GenericValue securityPermission = delegator.findByPrimaryKeyCache("SecurityPermission", UtilMisc.toMap("permissionId", securityGroupPermission.get("permissionId")));%>
+  <%GenericValue securityPermission = securityGroupPermission.getRelatedOneCache("SecurityPermission");%>
   <%if (securityPermission != null) pageContext.setAttribute("securityPermission", securityPermission);%>
   <tr valign="middle">
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="securityGroupPermission" field="permissionId"/></div></td>
