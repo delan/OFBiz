@@ -153,4 +153,30 @@
         <description>Delete a DataSource record</description>
         <attribute name="dataSourceId" type="String" mode="IN" optional="false"/>
     </service>
+    
+    <!-- CustomTimePeriod Services -->
+    <service name="interfaceCustomTimePeriod" engine="interface" location="" invoke="">
+        <attribute name="customTimePeriodId" type="String" mode="IN" optional="false"/>
+        <attribute name="parentPeriodId" type="String" mode="IN" optional="true"/>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="periodTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="periodNum" type="Long" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="createCustomTimePeriod" engine="simple"
+            location="org/ofbiz/commonapp/common/period/PeriodServices.xml" invoke="createCustomTimePeriod" auth="true">
+        <description>Create a CustomTimePeriod record</description>
+        <implements service="interfaceCustomTimePeriod"/>
+    </service>
+    <service name="updateCustomTimePeriod" engine="simple"
+            location="org/ofbiz/commonapp/common/period/PeriodServices.xml" invoke="updateCustomTimePeriod" auth="true">
+        <description>Update a CustomTimePeriod record</description>
+        <implements service="interfaceCustomTimePeriod"/>
+    </service>
+    <service name="deleteCustomTimePeriod" engine="simple"
+            location="org/ofbiz/commonapp/common/period/PeriodServices.xml" invoke="deleteCustomTimePeriod" auth="true">
+        <description>Delete a CustomTimePeriod record</description>
+        <attribute name="customTimePeriodId" type="String" mode="IN" optional="false"/>
+    </service>
 </services>
