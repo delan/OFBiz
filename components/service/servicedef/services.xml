@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
+<services>
+	<description>OFBiz Service Engine Services</description>
+	<vendor>OFBiz</vendor>
+	<version>1.0</version>	
+	<service name="purgeOldJobs" engine="java" location="org.ofbiz.service.ServiceUtil" invoke="purgeOldJobs" auth="false">
+		<description>Cleans out old jobs which have been around longer then what is defined in serviceengine.xml</description>
+        <!-- this service has no attributes -->
+	</service>
+</services>
