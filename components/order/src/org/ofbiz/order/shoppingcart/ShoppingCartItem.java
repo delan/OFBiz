@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.27 2004/01/12 17:18:19 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.28 2004/05/23 07:57:26 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.27 $
+ * @version    $Revision: 1.28 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -98,6 +98,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Map quantityUsedPerPromoFailed = new HashMap();
     private Map quantityUsedPerPromoActual = new HashMap();
     private Map additionalProductFeatureAndAppls = new HashMap();
+    private List alternativeOptionProductIds = null;
 
 
     /**
@@ -992,6 +993,14 @@ public class ShoppingCartItem implements java.io.Serializable {
         return this.isPromo;
     }
 
+    public List getAlternativeOptionProductIds() {
+        return this.alternativeOptionProductIds;
+    }
+    
+    public void setAlternativeOptionProductIds(List alternativeOptionProductIds) {
+        this.alternativeOptionProductIds = alternativeOptionProductIds;
+    }
+    
     public GenericValue getOrderShipmentPreference() {
         return orderShipmentPreference;
     }

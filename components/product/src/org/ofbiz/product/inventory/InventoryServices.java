@@ -1,5 +1,5 @@
 /*
- * $Id: InventoryServices.java,v 1.5 2004/04/13 23:47:07 jonesde Exp $
+ * $Id: InventoryServices.java,v 1.6 2004/05/23 07:57:28 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class InventoryServices {
@@ -235,7 +235,8 @@ public class InventoryServices {
         
         return ServiceUtil.returnSuccess();
     }
-    
+
+    /** In spite of the generic name this does the very specific task of checking availability of all back-ordered items and sends notices, etc */
     public static Map checkInventoryAvailability(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();

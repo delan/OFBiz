@@ -1,5 +1,5 @@
 /*
- * $Id: ProductWorker.java,v 1.14 2004/05/11 17:06:09 ajzeneski Exp $
+ * $Id: ProductWorker.java,v 1.15 2004/05/23 07:57:29 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class ProductWorker {
@@ -348,6 +348,10 @@ public class ProductWorker {
         return newOrderAdjustmentsList;
     }
 
+    public static double getAverageProductRating(GenericDelegator delegator, String productId) {
+        return getAverageProductRating(delegator, productId, null);
+    }
+    
     public static double getAverageProductRating(GenericDelegator delegator, String productId, String productStoreId) {
         GenericValue product = null;
         try {
