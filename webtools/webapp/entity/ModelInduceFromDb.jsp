@@ -59,7 +59,7 @@ ERRORS:
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org) <%-- *@created    <%=(new Date()).toString()%> --%>
+ *@author David E. Jones (jonesde@ofbiz.org)
  *@version    1.0
  */
 -->
