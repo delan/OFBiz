@@ -329,7 +329,7 @@
             <div class="tabletext">${uiLabelMap.CommonPassword}</div>
         </td>
         <td>
-           <div class="commentary">${uiLabelMap.PartyRecievePasswordByEmail}You will receive a password by email when your new account is approved.</div>
+           <div class="commentary">${uiLabelMap.PartyRecievePasswordByEmail}.</div>
         </td>
       </tr>
     </#if>

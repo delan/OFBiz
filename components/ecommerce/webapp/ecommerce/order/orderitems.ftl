@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 -->
 
@@ -123,7 +123,7 @@
                     <#if maySelectItems?default(false)>
                       <td>&nbsp;</td>
                       <#if orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED">
-                        <td><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}</@ofbizUrl>" class="buttontext">Cancel</a></td>
+                        <td><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}</@ofbizUrl>" class="buttontext">${requestAttributes.uiLabelMap.CommonCancel}</a></td>
                       <#else>
                         <td>&nbsp;</td>
                       </#if>
@@ -140,7 +140,7 @@
                   <tr>
                     <td align="right" colspan="4">
                       <div class="tabletext" style='font-size: xx-small;'>
-                        <b><i>Adjustment</i>:</b> <b>${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}</b>&nbsp;
+                        <b><i>${requestAttributes.uiLabelMap.EcommerceAdjustment}</i>:</b> <b>${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}</b>&nbsp;
                         <#if orderItemAdjustment.description?has_content>: ${orderItemAdjustment.description}</#if>
                       </div>
                     </td>                    

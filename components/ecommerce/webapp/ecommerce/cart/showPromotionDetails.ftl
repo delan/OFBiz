@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -32,7 +32,7 @@
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
           <tr>
             <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;Promotion Details:</div>
+              <div class="boxhead">&nbsp;${uiLabelMap.EcommercePromotionDetails}:</div>
             </td>
           </tr>
         </table>
@@ -61,7 +61,7 @@
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
           <tr>
             <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;Products For Promotion:</div>
+              <div class="boxhead">&nbsp;${uiLabelMap.EcommerceProductsForPromotion}:</div>
             </td>
           </tr>
         </table>
@@ -71,8 +71,8 @@
       <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
-            <td><div class="tableheadtext">Qualifier</div></td>
-            <td><div class="tableheadtext">Benefit</div></td>
+            <td><div class="tableheadtext">${uiLabelMap.CommonQualifier}</div></td>
+            <td><div class="tableheadtext">${uiLabelMap.CommonBenefit}</div></td>
             <td><div class="tableheadtext">&nbsp;</div></td>
           </tr>
           <#list productIds as productId>
@@ -92,5 +92,5 @@
   </table>
 </#if>
 <#else>
-    <div class="head2">ERROR: No promotion found with ID [${productPromoId?if_exists}]</div>
+    <div class="head2">${uiLabelMap.EcommerceErrorNoPromotionFoundWithID} [${productPromoId?if_exists}]</div>
 </#if>

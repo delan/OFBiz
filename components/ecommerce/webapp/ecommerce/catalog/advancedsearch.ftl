@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -78,13 +78,13 @@
     </#list>
     <tr>
       <td align="right" valign="middle">
-        <div class="tabletext">Sort Order:</div>
+        <div class="tabletext">${uiLabelMap.ProductSortOrder}:</div>
       </td>
       <td valign="middle">
         <div class="tabletext">
           <select name="sortOrder" class="selectBox">
-            <option value="SortKeywordRelevancy">Keyword Relevancy</option>
-            <option value="SortProductField:productName">Product Name</option>
+            <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevency}</option>
+            <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
           </select>
         </div>
       </td>
@@ -92,16 +92,16 @@
     <#if searchConstraintStrings?has_content>
       <tr>
         <td align="right" valign="top">
-          <div class="tabletext">Last Search:</div>
+          <div class="tabletext">${uiLabelMap.ProductLastSearch}:</div>
         </td>
         <td valign="top">
             <#list searchConstraintStrings as searchConstraintString>
                 <div class="tabletext">&nbsp;-&nbsp;${searchConstraintString}</div>
             </#list>
-            <div class="tabletext">Sorted by: ${searchSortOrderString}</div>
+            <div class="tabletext">${uiLabelMap.ProductSortedby}: ${searchSortOrderString}</div>
             <div class="tabletext">
-              New Search<input type="RADIO" name="clearSearch" value="Y" checked>
-              Refine Search<input type="RADIO" name="clearSearch" value="N">
+              ${uiLabelMap.ProductNewSearch}<input type="RADIO" name="clearSearch" value="Y" checked>
+              ${uiLabelMap.ProductRefineSearch}<input type="RADIO" name="clearSearch" value="N">
             </div>
         </td>
       </tr>
