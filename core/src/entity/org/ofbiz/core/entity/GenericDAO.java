@@ -95,7 +95,7 @@ public class GenericDAO {
     
     private int singleInsert(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave, Connection connection) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
-            throw new GenericNotImplementedException("Operation insert not supported yet for view entities");
+            return singleUpdateView(entity, (ModelViewEntity) modelEntity, fieldsToSave, connection);
         }
         
         // if we have a STAMP_FIELD then set it with NOW.
@@ -167,7 +167,7 @@ public class GenericDAO {
     
     private int singleUpdate(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave, Connection connection) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
-            throw new GenericNotImplementedException("Operation update not supported yet for view entities");
+            return singleUpdateView(entity, (ModelViewEntity) modelEntity, fieldsToSave, connection);
         }
         
         //no non-primaryKey fields, update doesn't make sense, so don't do it
@@ -246,10 +246,6 @@ public class GenericDAO {
         return singleUpdate(entity, modelEntity, partialFields, connection);
     }
     
-    /* ====================================================================== */
-    
-    /* ====================================================================== */
-    
     public int storeAll(Collection entities) throws GenericEntityException {
         if (entities == null || entities.size() <= 0) {
             return 0;
@@ -275,7 +271,146 @@ public class GenericDAO {
     }
     
     /* ====================================================================== */
+    /* ====================================================================== */
     
+    /**
+     * Try to update the given ModelViewEntity by trying to insert/update on the entities of which the view is composed.
+     *
+     * Works fine with standard O/R mapped models, but has some restrictions meeting more complicated view entities.
+     * <li>A direct link is required, which means that one of the ModelViewLink field entries must have a value found
+     * in the given view entity, for each ModelViewLink</li>
+     * <li>For now, each member entity is updated iteratively, so if eg. the second member entity fails to update,
+     * the first is written although. See code for details. Try to use "clean" views, until code is more robust ...</li>
+     * <li>For now, aliased field names in views are not processed correctly, I guess. To be honest, I did not
+     * find out how to construct such a view - so view fieldnames must have same named fields in member entities.</li>
+     * <li>A new exception, e.g. GenericViewNotUpdatable, should be defined and thrown if the update fails</li>
+     *
+     */
+    private int singleUpdateView(GenericEntity entity, ModelViewEntity modelViewEntity, List fieldsToSave, Connection connection) throws GenericEntityException {
+        GenericDelegator delegator = entity.getDelegator();
+
+        int retVal = 0;
+        ModelEntity memberModelEntity = null;
+
+        // Construct insert/update for each model entity
+        Iterator meIter = modelViewEntity.getMemberEntityNames().entrySet().iterator();
+        while (meIter != null && meIter.hasNext()) {
+            Map.Entry meMapEntry = (Map.Entry) meIter.next();
+            String meName = (String) meMapEntry.getValue();
+            String meAlias = (String) meMapEntry.getKey();
+
+            Debug.logInfo("[singleUpdateView]: Processing MemberEntity " + meName + " with Alias " + meAlias);
+            try {
+                memberModelEntity = delegator.getModelReader().getModelEntity(meName);
+            } catch (GenericEntityException e) {
+                throw new GenericEntityException("Failed to get model entity for " + meName, e);
+            }
+
+            Map findByMap = new Hashtable();
+
+            // Now iterate the ModelViewLinks to construct the "WHERE" part for update/insert
+            Iterator linkIter = modelViewEntity.getViewLinksIterator();
+            while (linkIter != null && linkIter.hasNext()) {
+                ModelViewEntity.ModelViewLink modelViewLink = (ModelViewEntity.ModelViewLink) linkIter.next();
+
+                if (modelViewLink.getEntityAlias().equals(meAlias) || modelViewLink.getRelEntityAlias().equals(meAlias)) {
+
+                    Iterator kmIter = modelViewLink.getKeyMapsIterator();
+                    while (kmIter != null && kmIter.hasNext()) {
+                        ModelKeyMap keyMap = (ModelKeyMap) kmIter.next();
+
+                        String fieldName = "";
+                        if (modelViewLink.getEntityAlias().equals(meAlias)) {
+                            fieldName = keyMap.getFieldName();
+                        } else {
+                            fieldName = keyMap.getRelFieldName();
+                        }
+
+                        Debug.logInfo("[singleUpdateView]: --- Found field to set: " + meAlias + "." + fieldName);
+                        Object value = null;
+                        if (modelViewEntity.isField(keyMap.getFieldName())) {
+                            value = entity.get(keyMap.getFieldName());
+                            Debug.logInfo("[singleUpdateView]: --- Found map value: " + value.toString());
+                        } else if (modelViewEntity.isField(keyMap.getRelFieldName())) {
+                            value = entity.get(keyMap.getRelFieldName());
+                            Debug.logInfo("[singleUpdateView]: --- Found map value: " + value.toString());
+                        } else {
+                            throw new GenericNotImplementedException("Update on view entities: no direct link found, unable to update");
+                        }
+
+                        findByMap.put(fieldName, value);
+                    }
+                }
+            }
+
+            // Look what there already is in the database
+            Collection meResult = null;
+            try {
+                meResult = delegator.findByAnd(meName, findByMap);
+            } catch (GenericEntityException e) {
+                throw new GenericEntityException("Error while retrieving partial results for entity member: " + meName, e);
+            }
+            Debug.logInfo("[singleUpdateView]: --- Found " + meResult.size() + " results for entity member " + meName);
+
+            // Got results 0 -> INSERT, 1 -> UPDATE, >1 -> View is nor updatable
+            GenericValue meGenericValue = null;
+            if (meResult.size() == 0) {
+                // Create new value to insert
+                try {
+                    // Create new value to store
+                    meGenericValue = delegator.makeValue(meName, findByMap);
+                } catch (Exception e) {
+                    throw new GenericEntityException("Could not create new value for member entity" + meName + " of view " + modelViewEntity.getEntityName(), e);
+                }
+            } else if (meResult.size() == 1) {
+                // Update existing value
+                meGenericValue = (GenericValue) meResult.iterator().next();
+            } else {
+                throw new GenericEntityException("Found more than one result for member entity " + meName + " in view " + modelViewEntity.getEntityName() + " - this is no updatable view");
+            }
+
+            // Construct fieldsToSave list for this member entity
+            List meFieldsToSave = new Vector();
+            Iterator fieldIter = fieldsToSave.iterator();
+            while (fieldIter != null && fieldIter.hasNext()) {
+                ModelField modelField = (ModelField) fieldIter.next();
+
+                if (memberModelEntity.isField(modelField.getName())) {
+                    ModelField meModelField = memberModelEntity.getField(modelField.getName());
+
+                    if (meModelField != null) {
+                        meGenericValue.set(meModelField.getName(), entity.get(modelField.getName()));
+                        meFieldsToSave.add(meModelField);
+                        Debug.logInfo("[singleUpdateView]: --- Added field to save: " + meModelField.getName() + " with value " + meGenericValue.get(meModelField.getName()));
+                    } else {
+                        throw new GenericEntityException("Could not get field " + modelField.getName() + " from model entity " + memberModelEntity.getEntityName());
+                    }
+                }
+            }
+
+                /*
+                 * Finally, do the insert/update
+                 * TODO:
+                 * Do the real inserts/updates outside the memberEntity-loop,
+                 * only if all of the found member entities are updatable.
+                 * This avoids partial creation of member entities, which would mean data inconsistency:
+                 * If not all member entities can be updated, then none should be updated
+                 */
+            if (meResult.size() == 0) {
+                retVal += singleInsert(meGenericValue, memberModelEntity, memberModelEntity.getFieldsCopy(), connection);
+            } else {
+                if (meFieldsToSave.size() > 0) {
+                    retVal += singleUpdate(meGenericValue, memberModelEntity, meFieldsToSave, connection);
+                } else {
+                    Debug.logInfo("[singleUpdateView]: No update on member entity " + memberModelEntity.getEntityName() + " needed");
+                }
+            }
+        }
+
+        return retVal;
+    }
+
+    /* ====================================================================== */
     /* ====================================================================== */
     
     public void select(GenericEntity entity) throws GenericEntityException {
