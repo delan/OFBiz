@@ -1,38 +1,38 @@
 <#--
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
 <script language="javascript" type="text/javascript">
 <!--
-function submitForm(form, mode, value) {	
-    if (mode == "DN") {	
+function submitForm(form, mode, value) {
+    if (mode == "DN") {
         // done action; checkout
         form.action="<@ofbizUrl>/checkoutoptions</@ofbizUrl>";
         form.submit();
-    } else if (mode == "CS") {	
-        // continue shopping	
+    } else if (mode == "CS") {
+        // continue shopping
         form.action="<@ofbizUrl>/updateCheckoutOptions/showcart</@ofbizUrl>";
         form.submit();
     } else if (mode == "NA") {
@@ -64,16 +64,16 @@ function submitForm(form, mode, value) {
 
 function toggleBillingAccount(box) {
     var amountName = box.value + "_amount";
-    box.checked = true;   
+    box.checked = true;
     box.form.elements[amountName].disabled = false;
-    
+
     for (var i = 0; i < box.form.elements[box.name].length; i++) {
-        if (!box.form.elements[box.name][i].checked) {           
+        if (!box.form.elements[box.name][i].checked) {
             box.form.elements[box.form.elements[box.name][i].value + "_amount"].disabled = true;
         }
     }
 }
-        
+
 // -->
 </script>
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -105,10 +105,10 @@ function toggleBillingAccount(box) {
                       <#list context.carrierShipmentMethodList as carrierShipmentMethod>
                         <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
                         <tr>
-                          <td width='1%' valign="top" >                            
-                            <input type='radio' name='shipping_method' value='${shippingMethod}' <#if shippingMethod == context.chosenShippingMethod?default("N@A")>checked</#if>>       
+                          <td width='1%' valign="top" >
+                            <input type='radio' name='shipping_method' value='${shippingMethod}' <#if shippingMethod == context.chosenShippingMethod?default("N@A")>checked</#if>>
                           </td>
-                          <td valign="top">                            
+                          <td valign="top">
                             <div class='tabletext'>
                               <#if cart.getShippingContactMechId()?exists>
                                 <#assign shippingEstMap = Static["org.ofbiz.order.shoppingcart.shipping.ShippingEvents"].getShipEstimate(delegator, cart, shippingMethod)>
@@ -116,14 +116,14 @@ function toggleBillingAccount(box) {
                                   <#assign shippingEstimate = " - " + shippingEstMap.shippingTotal?string.currency>
                                 <#else>
                                   <#assign shippingEstimate = " - Calculated Offline">
-                                </#if>                              
+                                </#if>
                               </#if>
                               <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${carrierShipmentMethod.description?if_exists}${shippingEstimate?if_exists}
-                            </div>                           
+                            </div>
                           </td>
-                        </tr>                        
+                        </tr>
                       </#list>
-                      <#if !carrierShipmentMethodList?exists || carrierShipmentMethodList?size == 0>                     
+                      <#if !carrierShipmentMethodList?exists || carrierShipmentMethodList?size == 0>
                         <tr>
                           <td width='1%' valign="top">
                             <input type='radio' name='shipping_method' value="Default" checked>
@@ -166,7 +166,7 @@ function toggleBillingAccount(box) {
                           <textarea class='textAreaBox' cols="30" rows="3" name="shipping_instructions">${cart.getShippingInstructions()?if_exists}</textarea>
                         </td>
                       </tr>
-                      <tr><td colspan="2"><hr class='sepbar'></td></tr>       
+                      <tr><td colspan="2"><hr class='sepbar'></td></tr>
                       <tr>
                         <td colspan="2">
                           <span class="head2"><b>${uiLabelMap.OrderPoNumber}</b></span>&nbsp;
@@ -175,8 +175,8 @@ function toggleBillingAccount(box) {
                           </#if>
                           <input type="text" class='inputBox' name="corresponding_po_id" size="15" value='${currentPoNumber?if_exists}'>
                         </td>
-                      </tr>                                                           
-                      <tr><td colspan="2"><hr class='sepbar'></td></tr>                      
+                      </tr>
+                      <tr><td colspan="2"><hr class='sepbar'></td></tr>
                       <tr>
                         <td colspan="2">
                           <div>
@@ -216,7 +216,7 @@ function toggleBillingAccount(box) {
                           <div class="tabletext">${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>/viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyProfile}</a>.</div>
                           <br>
                           <div class="tabletext">${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
-                          <input type="text" class='inputBox' size="30" name="order_additional_emails" value='${cart.getCommonAdditionalEmails()?if_exists}'>
+                          <input type="text" class='inputBox' size="30" name="order_additional_emails" value='${cart.getOrderAdditionalEmails()?if_exists}'>
                         </td>
                       </tr>
                     </table>
@@ -227,8 +227,6 @@ function toggleBillingAccount(box) {
           </tr>
         </table>
       </td>
-
-
     </tr>
   </table>
 </form>

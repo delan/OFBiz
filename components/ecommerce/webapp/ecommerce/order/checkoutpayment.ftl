@@ -1,38 +1,38 @@
 <#--
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
 <script language="javascript" type="text/javascript">
 <!--
-function submitForm(form, mode, value) {	
-    if (mode == "DN") {	
+function submitForm(form, mode, value) {
+    if (mode == "DN") {
         // done action; checkout
         form.action="<@ofbizUrl>/checkoutoptions</@ofbizUrl>";
         form.submit();
-    } else if (mode == "CS") {	
-        // continue shopping	
+    } else if (mode == "CS") {
+        // continue shopping
         form.action="<@ofbizUrl>/updateCheckoutOptions/showcart</@ofbizUrl>";
         form.submit();
     } else if (mode == "NA") {
@@ -64,16 +64,16 @@ function submitForm(form, mode, value) {
 
 function toggleBillingAccount(box) {
     var amountName = box.value + "_amount";
-    box.checked = true;   
+    box.checked = true;
     box.form.elements[amountName].disabled = false;
-    
+
     for (var i = 0; i < box.form.elements[box.name].length; i++) {
-        if (!box.form.elements[box.name][i].checked) {           
+        if (!box.form.elements[box.name][i].checked) {
             box.form.elements[box.form.elements[box.name][i].value + "_amount"].disabled = true;
         }
     }
 }
-        
+
 // -->
 </script>
 
@@ -83,9 +83,10 @@ function toggleBillingAccount(box) {
 
 <form method="post" name="checkoutInfoForm" style='margin:0;'>
   <input type="hidden" name="checkoutpage" value="payment">
+  <input type="hidden" name="BACK_PAGE" value="checkoutoptions">
   <table width="100%" border="0" cellpadding='0' cellspacing='0'>
     <tr valign="top" align="left">
-      
+
       <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
       <td height='100%'>
         <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
@@ -100,13 +101,13 @@ function toggleBillingAccount(box) {
               </table>
             </td>
           </tr>
-          
+
           <#-- Payment Method Selection -->
           <tr style='height: 100%;'>
             <td width='100%' valign=top height='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
                 <tr>
-                  <td valign=top>                
+                  <td valign=top>
                     <table width="100%" cellpadding="1" cellspacing="0" border="0">
                       <tr><td colspan="2">
                         <span class='tabletext'>${uiLabelMap.CommonAdd}:</span>
@@ -129,7 +130,7 @@ function toggleBillingAccount(box) {
                         <td width="50%" nowrap>
                           <span class="tabletext">${uiLabelMap.OrderCOD}</span>
                         </td>
-                      </tr>                       
+                      </tr>
                       <tr>
                         <td width="1%" nowrap>
                           <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == context.checkOutPaymentId>checked</#if>>
@@ -137,7 +138,7 @@ function toggleBillingAccount(box) {
                         <td width="50%" nowrap>
                           <span class="tabletext">${uiLabelMap.AccountingPayWithWorldPay}</span>
                         </td>
-                      </tr>    
+                      </tr>
                       <tr>
                         <td width="1%" nowrap>
                           <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == context.checkOutPaymentId>checked</#if>>
@@ -145,13 +146,13 @@ function toggleBillingAccount(box) {
                         <td width="50%" nowrap>
                           <span class="tabletext">${uiLabelMap.AccountingPayWithPayPal}</span>
                         </td>
-                      </tr>    
+                      </tr>
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                                            
+
                       <#list context.paymentMethodList as paymentMethod>
                         <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                           <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
-                          <tr>                 
+                          <tr>
                             <td width="1%" nowrap>
                               <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if paymentMethod.paymentMethodId == checkOutPaymentId>checked</#if>>
                             </td>
@@ -163,7 +164,7 @@ function toggleBillingAccount(box) {
                         <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                           <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
                           <tr>
-                            <td width="1%" nowrap>             
+                            <td width="1%" nowrap>
                               <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if paymentMethod.paymentMethodId == checkOutPaymentId>checked</#if>>
                             </td>
                             <td width="50%" nowrap>
@@ -175,22 +176,22 @@ function toggleBillingAccount(box) {
                         </#if>
                       </#list>
 
-                      <#-- special billing account functionality to allow use w/ a payment method -->                     
-                      <#if billingAccountList?has_content>                        
+                      <#-- special billing account functionality to allow use w/ a payment method -->
+                      <#if billingAccountList?has_content>
                         <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                        <tr>                          
-                          <td width="1%" nowrap>             
+                        <tr>
+                          <td width="1%" nowrap>
                             <input type="radio" name="checkOutPaymentId" value="EXT_BILLACT" <#if "EXT_BILLACT" == checkOutPaymentId>checked</#if>></hr>
                           </td>
                           <td width="50%" nowrap>
-                            <span class="tabletext">${uiLabelMap.AccountingPayOnlyWithBillingAccount}</span>                             
+                            <span class="tabletext">${uiLabelMap.AccountingPayOnlyWithBillingAccount}</span>
                           </td>
                         </tr>
                         <tr><td colspan="2"><hr class='sepbar'></td></tr>
                         <#list billingAccountList as billingAccount>
-                          <#assign availableAmount = billingAccount.accountLimit?double - billingAccount.accountBalance?double>                       
+                          <#assign availableAmount = billingAccount.accountLimit?double - billingAccount.accountBalance?double>
                           <tr>
-                            <td align="left" valign="top" width="1%" nowrap>                             
+                            <td align="left" valign="top" width="1%" nowrap>
                               <input type="radio" onClick="javascript:toggleBillingAccount(this);" name="billingAccountId" value="${billingAccount.billingAccountId}" <#if (billingAccount.billingAccountId == selectedBillingAccount?default(""))>checked</#if>>
                             </td>
                             <td align="left" valign="top" width="99%" nowrap>
@@ -199,22 +200,22 @@ function toggleBillingAccount(box) {
                                <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="${billingAccount.billingAccountId}_amount" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
                               </div>
                             </td>
-                          </tr>                          
+                          </tr>
                         </#list>
                         <tr>
-                          <td align="left" valign="top" width="1%" nowrap>                             
+                          <td align="left" valign="top" width="1%" nowrap>
                             <input type="radio" onClick="javascript:toggleBillingAccount(this);" name="billingAccountId" value="_NA" <#if (selectedBillingAccount?default("") == "N")>checked</#if>>
                             <input type="hidden" name="_NA_amount" value="0.00">
                           </td>
                           <td align="left" valign="top" width="99%" nowrap>
                             <div class="tabletext">${uiLabelMap.AccountingNoBillingAccount}</div>
                            </td>
-                        </tr>                        
+                        </tr>
                       </#if>
                       <#-- end of special billing account functionality -->
-                                            
-                    </table>                    
-                    <#if !paymentMethodList?has_content>                 
+
+                    </table>
+                    <#if !paymentMethodList?has_content>
                       <div class='tabletext'><b>${uiLabelMap.AccountingNoPaymentMethodsOnFile}.</b></div>
                     </#if>
                   </td>
@@ -223,7 +224,7 @@ function toggleBillingAccount(box) {
             </td>
           </tr>
           <#-- End Payment Method Selection -->
-          
+
         </table>
       </td>
     </tr>
