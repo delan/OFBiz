@@ -262,7 +262,7 @@
         <div class="head2"><%EntityField.run("product", "productName", pageContext);%></div>
         <div class="tabletext"><%EntityField.run("product", "description", pageContext);%></div>
         <div class="tabletext"><b><%EntityField.run("product", "productId", pageContext);%></b></div>
-        <div class="tabletext"><b>Your price: <font color="#126544"><ofbiz:field attribute="price" type="currency"/><%--EntityField.run("product", "defaultPrice", pageContext);--%></font></b>
+        <div class="tabletext"><b>Your price: <font color="#126544"><ofbiz:field attribute="price" type="currency"/></font></b>
            (Reg. <%EntityField.run("product", "listPrice", pageContext);%>)</div>
             <%if (product.get("quantityIncluded") != null && product.getDouble("quantityIncluded").doubleValue() != 0) {%>
                 <div class="tabletext">Size:

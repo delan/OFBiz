@@ -517,15 +517,18 @@ public class CatalogWorker {
         String controlPath = (String) pageContext.getRequest().getAttribute(SiteDefs.CONTROL_PATH);
         JspWriter out = pageContext.getOut();
 
+        HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
+        String pstr = "";
+        if (pcategory != null) pstr = "&pcategory=" + pcategory.getString("productCategoryId");
+        
         if (curcatid != null && curcatid.equals(category.getString("productCategoryId"))) {
-            out.print("<div class='tabletext' style='text-indent: -10px;'><b>-&nbsp;");
-            out.print(category.getString("description"));
-            out.print("</b></div>");
-        } else {
-            String pstr = "";
-            if (pcategory != null) pstr = "&pcategory=" + pcategory.getString("productCategoryId");
             out.print("<div style='text-indent: -10px;'><a href='");
-            HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
+            out.print(response.encodeURL(controlPath + "/category?category_id=" + category.getString("productCategoryId") + pstr));
+            out.print("' class='buttontextdisabled'>-&nbsp;");
+            out.print(category.getString("description"));
+            out.println("</a></div>");
+        } else {
+            out.print("<div style='text-indent: -10px;'><a href='");
             out.print(response.encodeURL(controlPath + "/category?category_id=" + category.getString("productCategoryId") + pstr));
             out.print("' class='buttontext'>-&nbsp;");
             out.print(category.getString("description"));

@@ -1,13 +1,21 @@
+<%@ page import="org.ofbiz.ecommerce.catalog.*"%>
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <ofbiz:if name="miniProduct">
+    <%-- calculate the "your" price --%>
+    <ofbiz:service name='calculateProductPrice'>
+        <ofbiz:param name='product' attribute='miniProduct'/>
+        <ofbiz:param name='prodCatalogId' value='<%=CatalogWorker.getCurrentCatalogId(pageContext)%>'/>
+        <%-- don't need to pass the partyId because it will use the one from the currently logged in user, if there user logged in --%>
+        <%-- returns: isSale, price, orderItemPriceInfos --%>
+    </ofbiz:service>
   <a href='<ofbiz:url>/product?product_id=<%EntityField.run("miniProduct", "productId", pageContext);%></ofbiz:url>' class='buttontext'>
     <%EntityField.run("miniProduct", "productName", pageContext);%>
   </a>
   <div class='tabletext'>
     <b>
       <%EntityField.run("miniProduct", "productId", pageContext);%>,
-      <font color="#006633"><%EntityField.run("miniProduct", "defaultPrice", pageContext);%></font>
+      <font color="#006633"><ofbiz:field attribute="price" type="currency"/></font>
     </b>
   </div>
   <%GenericValue miniProd = (GenericValue) pageContext.getAttribute("miniProduct");%>

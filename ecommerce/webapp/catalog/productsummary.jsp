@@ -1,4 +1,12 @@
+<%@ page import="org.ofbiz.ecommerce.catalog.*"%>
 <ofbiz:if name="product">
+    <%-- calculate the "your" price --%>
+    <ofbiz:service name='calculateProductPrice'>
+        <ofbiz:param name='product' attribute='product'/>
+        <ofbiz:param name='prodCatalogId' value='<%=CatalogWorker.getCurrentCatalogId(pageContext)%>'/>
+        <%-- don't need to pass the partyId because it will use the one from the currently logged in user, if there user logged in --%>
+        <%-- returns: isSale, price, orderItemPriceInfos --%>
+    </ofbiz:service>
   <table border="0" width='100%' cellpadding='0' cellspacing='0'>
     <tr>
       <td valign="top">
@@ -18,8 +26,8 @@
           <div class="tabletext">
             <nobr>
               <b><%EntityField.run("product", "productId", pageContext);%></b>,
-              <b><font color="#006633"><%EntityField.run("product", "defaultPrice", pageContext);%></font>,</b>
-              Reg. <%EntityField.run("product", "listPrice", pageContext);%>
+              <b>Your price: <font color="#006633"><ofbiz:field attribute="price" type="currency"/></font></b>
+              (Reg. <%EntityField.run("product", "listPrice", pageContext);%>)
             </nobr>
           </div>
       </td>
