@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Quick Return</property>
+    <property name="headerItem">return</property>
+    <page-action name="/return/quickReturn.bsh"/>
+</page>
