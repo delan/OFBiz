@@ -43,6 +43,7 @@ public class ServiceTag extends AbstractParameterTag {
 
     protected String serviceName;
     protected String resultScope = "page";
+    protected String mode = "sync";
 
     public static final String module = ServiceTag.class.getName();
 
@@ -52,6 +53,14 @@ public class ServiceTag extends AbstractParameterTag {
 
     public String getName() {
         return serviceName;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public String getMode() {
+        return mode;
     }
 
     public void setResultTo(String resultScope) {
@@ -93,7 +102,10 @@ public class ServiceTag extends AbstractParameterTag {
         Map context = getParameters();
         Map result = null;
         try {
-            result = dispatcher.runSync(serviceName, context);
+            if (mode.equalsIgnoreCase("async"))
+                dispatcher.runAsync(serviceName, context);
+            else
+                result = dispatcher.runSync(serviceName, context);
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
             throw new JspTagException("Problems invoking the requested service.");
