@@ -60,6 +60,7 @@
 	form-label CDATA #IMPLIED
 	entity-name CDATA #IMPLIED
 	field-name CDATA #IMPLIED
+    string-map-prefix CDATA #IMPLIED
 	form-display (true|false) "true"
 	optional (true|false) "false"
 >

@@ -28,6 +28,7 @@ package org.ofbiz.core.service;
  * Generic Service Model Parameter
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jon</a>
  * @version    $Revision$
  * @since      2.0
  */
@@ -51,6 +52,9 @@ public class ModelParam {
     /** The entity field name */
     public String fieldName;
 
+    /** A prefix to look for in String parameter Maps when converting to a service call Map */    
+    public String stringMapPrefix;
+
     /** Is this Parameter required or optional? Default to false, or required. */
     public boolean optional = false;
     public boolean overrideOptional = false;
@@ -70,6 +74,7 @@ public class ModelParam {
         buf.append(formLabel + "::");
         buf.append(entityName + "::");
         buf.append(fieldName + "::");
+        buf.append(stringMapPrefix + "::");
         buf.append(optional + "::");
         buf.append(formDisplay + "::");
         buf.append(internal);

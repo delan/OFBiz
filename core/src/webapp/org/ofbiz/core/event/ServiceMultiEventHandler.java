@@ -42,6 +42,7 @@ import org.ofbiz.core.service.DispatchContext;
 import org.ofbiz.core.service.GenericServiceException;
 import org.ofbiz.core.service.LocalDispatcher;
 import org.ofbiz.core.service.ModelService;
+import org.ofbiz.core.service.ModelParam;
 import org.ofbiz.core.service.ServiceUtil;
 import org.ofbiz.core.util.Debug;
 import org.ofbiz.core.util.SiteDefs;
@@ -174,35 +175,40 @@ public class ServiceMultiEventHandler implements EventHandler {
             
             // build the context
             Map serviceContext = new HashMap();
-            Iterator ci = model.getInParamNames().iterator();
-            
-            while (ci.hasNext()) {
-                String name = (String) ci.next();
+            Iterator modelParmInIter = model.getInModelParamList().iterator();
+            while (modelParmInIter.hasNext()) {
+                ModelParam modelParam = (ModelParam) modelParmInIter.next();
+                String name = (String) modelParam.name;
 
                 // don't include userLogin, that's taken care of below
                 if ("userLogin".equals(name)) continue;
                 // don't include locale, that is also taken care of below
                 if ("locale".equals(name)) continue;
-            
-                Object value = request.getParameter(name + thisSuffix);
 
-                // if the parameter wasn't passed and no other value found, don't pass on the null
-                if (value == null) {
-                    value = request.getAttribute(name + thisSuffix);
-                } 
-                if (value == null) {
-                    value = request.getSession().getAttribute(name + thisSuffix);
+                Object value = null;
+                if (modelParam.stringMapPrefix != null && modelParam.stringMapPrefix.length() > 0) {
+                    Map paramMap = UtilHttp.makeParamMapWithPrefix(request, modelParam.stringMapPrefix, thisSuffix);
+                    value = paramMap;
+                } else {
+                    value = request.getParameter(name + thisSuffix);
+    
+                    // if the parameter wasn't passed and no other value found, don't pass on the null
+                    if (value == null) {
+                        value = request.getAttribute(name + thisSuffix);
+                    } 
+                    if (value == null) {
+                        value = request.getSession().getAttribute(name + thisSuffix);
+                    }
+                    if (value == null) {
+                        // still null, give up for this one
+                        continue;
+                    }
+                
+                    if (value instanceof String && ((String) value).length() == 0) {
+                        // interpreting empty fields as null values for each in back end handling...
+                        value = null;
+                    }
                 }
-                if (value == null) {
-                    // still null, give up for this one
-                    continue;
-                }
-            
-                if (value instanceof String && ((String) value).length() == 0) {
-                    // interpreting empty fields as null values for each in back end handling...
-                    value = null;
-                }
-
                 // set even if null so that values will get nulled in the db later on
                 serviceContext.put(name, value);
             }  
