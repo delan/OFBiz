@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: services.xml,v 1.43 2004/07/23 02:18:43 jonesde Exp $
+ *  $Id$
 -->
 
 <services>
@@ -566,6 +566,11 @@
     </service>
     <service name="alwaysApproveCCProcessor" engine="java"
              location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="alwaysApproveProcessor">
+        <description>Credit Card Processing</description>
+        <implements service="ccAuthInterface"/>
+    </service>
+    <service name="alwaysApproveWithCaptureCCProcessor" engine="java"
+             location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="alwaysApproveWithCapture">
         <description>Credit Card Processing</description>
         <implements service="ccAuthInterface"/>
     </service>
