@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
     <template>/templates/main_left.ftl</template>
-    <property name="title">Shopping Cart</property>
-
     <generator name="ofbiz-freemarker"/>
+    <property name="title">Shopping Cart</property>
+    <page-action>/cart/showcart.js</page-action>
     <pageEditor>OfbizOrderEditor</pageEditor>
 </page>

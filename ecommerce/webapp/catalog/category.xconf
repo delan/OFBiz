@@ -3,7 +3,7 @@
     <template>/templates/main_lr.ftl</template>
     <generator name="ofbiz-freemarker"/>
     <property name="title">Category Page</property>
-    <page-action>catalog/category.js</page-action>
+    <page-action>/catalog/category.js</page-action>
     <pageEditor>OfbizOrderEditor</pageEditor>
 </page>
 

@@ -3,6 +3,6 @@
     <template/>
     <generator name="ofbiz-freemarker"/>
     <property name="title">Welcome</property>
-    <page-action>catalog/productsummary.js</page-action>
+    <page-action>/catalog/productsummary.js</page-action>
     <pageEditor>OfbizOrderEditor</pageEditor>
 </page>

@@ -3,6 +3,6 @@
     <template>/templates/main_lr.ftl</template>
     <generator name="ofbiz-freemarker"/>
     <property name="title">Search Results</property>
-    <page-action>catalog/keywordsearch.js</page-action>
+    <page-action>/catalog/keywordsearch.js</page-action>
     <pageEditor>OfbizOrderEditor</pageEditor>
 </page>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>  
-	<template/>
+    <template/>
     <generator name="ofbiz-freemarker"/>
     <pageEditor>OfbizOrderEditor</pageEditor>     
-    <page-action>catalog/categorylisting.js</page-action>
+    <page-action>/catalog/categorylisting.js</page-action>
 </page>

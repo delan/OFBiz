@@ -2,6 +2,6 @@
 <page>
     <template/>
     <generator name="ofbiz-freemarker"/>
-    <page-action>catalog/miniproductsummary.js</page-action>
+    <page-action>/catalog/miniproductsummary.js</page-action>
     <pageEditor>OfbizOrderEditor</pageEditor>
 </page>

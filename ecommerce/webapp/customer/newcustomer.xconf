@@ -3,7 +3,7 @@
     <template>/templates/main.ftl</template>
     <generator name="ofbiz-freemarker"/>
     <property name="title">New Customer</property>
-    <page-action>customer/newcustomer.js</page-action>
+    <page-action>/customer/newcustomer.js</page-action>
     <pageEditor>OfbizOrderEditor</pageEditor>
 </page>
 

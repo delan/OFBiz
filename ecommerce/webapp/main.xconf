@@ -3,6 +3,6 @@
     <template>/templates/main_lr.ftl</template>
     <generator name="ofbiz-freemarker"/>
     <property name="title">Main Page</property>
-    <page-action>main.js</page-action>
+    <page-action>/main.js</page-action>
     <pageEditor>OfbizOrderEditor</pageEditor>
 </page>

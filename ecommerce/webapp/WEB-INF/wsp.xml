@@ -252,14 +252,6 @@
         <write-allowed>true</write-allowed>
     </repository>
 
-    <!--
-            used in JSP Pages 
-    -->
-    <repository name="chain_repository" classname="org.jpublish.repository.filesystem.ChainRepository">
-        <root>.</root>
-        <write-allowed>false</write-allowed>
-    </repository>
-
     <!-- MIME Type Map configuration -->
     <mime-type-map>
         <mime-type type="text/plain" extensions="txt"/>
