@@ -1,5 +1,5 @@
 /*
- * $Id: editsubcontentprep.bsh,v 1.5 2003/12/23 15:03:23 jonesde Exp $
+ * $Id: editsubcontentprep.bsh,v 1.6 2004/01/17 03:49:29 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
 
  */
@@ -98,6 +98,7 @@ if (currentValue == null || (mode != null && mode.equalsIgnoreCase("add"))) {
         // webSiteId and https need to go here, too
         templateRoot.put("context", ctx);
         out = new StringWriter();
+        currentValue.set("drDataTemplateTypeId", "NONE");
         DataResourceWorker.renderDataResourceAsText(delegator, dataResourceId, out, templateRoot, currentValue, locale, mimeTypeId);
         textData = out.toString();
         //Debug.logInfo("in editsubcontentprep, textData:" + textData, "");
