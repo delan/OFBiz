@@ -38,11 +38,11 @@
 	  </td>
           <td nowrap align="right">
             <div class="tabletext">
-              <#--<a href="/ordermgr/control/setAdditionalParty" class="submenutext">${uiLabelMapRefresh</a>-->
-              <a href="/ordermgr/control/orderentry" class="submenutext">${uiLabelMap.OrderOrderItems}</a>
-              <a href="/ordermgr/control/setShipping" class="submenutext">${uiLabelMap.FacilityShipping}</a>
-              <a href="/ordermgr/control/setOptions" class="submenutext">${uiLabelMap.CommonOptions}</a>
-              <a href="/ordermgr/control/setBilling" class="submenutext">${uiLabelMap.AccountingPayment}</a>
+              <#--<a href="<@ofbizUrl>/setAdditionalParty</@ofbizUrl>" class="submenutext">${uiLabelMapRefresh</a>-->
+              <a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderOrderItems}</a>
+              <a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">${uiLabelMap.FacilityShipping}</a>
+              <a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonOptions}</a>
+              <a href="<@ofbizUrl>/setBilling</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingPayment}</a>
               <a href="<@ofbizUrl>/finalizeOrder?finalizeReqAdditionalParty=false</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonContinue}</a>
             </div>
           </td>

@@ -31,9 +31,9 @@
 <!-- //
 function shipBillAddr() {
     if (document.billsetupform.useShipAddr.checked) {
-        window.location.replace("/ordermgr/control/setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}&useShipAddr=Y");
+        window.location = "<@ofbizUrl>/setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}&useShipAddr=Y</@ofbizUrl>";
     } else { 
-        window.location.replace("/ordermgr/control/setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}");
+        window.location = "<@ofbizUrl>/setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}</@ofbizUrl>";
     }
 }
 
