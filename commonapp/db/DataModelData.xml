@@ -376,12 +376,24 @@
   <StatusItem description="Sent" sequenceId="02" statusCode="SENT" statusId="CAL_SENT" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Declined" sequenceId="03" statusCode="DECLINED" statusId="CAL_DECLINED" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Delegated" sequenceId="04" statusCode="DELEGATED" statusId="CAL_DELEGATED" statusTypeId="CALENDAR_STATUS"/>
+  <StatusItem description="Cancelled" sequenceId="05" statusCode="CANCELLED" statusId="CAL_CANCELLED" statusTypeId="CALENDAR_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="CALENDAR_STATUS" statusTypeId="TASK_STATUS"/>
   <StatusItem description="Accepted" sequenceId="01" statusCode="ACCEPTED" statusId="CAL_ACCEPTED" statusTypeId="TASK_STATUS"/>
   <StatusItem description="Completed" sequenceId="02" statusCode="COMPLETED" statusId="CAL_COMPLETED" statusTypeId="TASK_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="CALENDAR_STATUS" statusTypeId="EVENT_STATUS"/>
   <StatusItem description="Tentative" sequenceId="01" statusCode="TENTATIVE" statusId="CAL_TENTATIVE" statusTypeId="EVENT_STATUS"/>
   <StatusItem description="Confirmed" sequenceId="02" statusCode="CONFIRMED" statusId="CAL_CONFIRMED" statusTypeId="EVENT_STATUS"/>
+  <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_SENT" transitionName="Send"/>
+  <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_CANCELLED" transitionName="Cancel"/>
+  <StatusValidChange condition="" statusId="CAL_SENT" statusIdTo="CAL_ACCEPTED" transitionName="Accept"/>
+  <StatusValidChange condition="" statusId="CAL_SENT" statusIdTo="CAL_DECLINED" transitionName="Decline"/>
+  <StatusValidChange condition="" statusId="CAL_SENT" statusIdTo="CAL_DELEGATED" transitionName="Delegate"/>
+  <StatusValidChange condition="" statusId="CAL_SENT" statusIdTo="CAL_CANCELLED" transitionName="Cancel"/>
+  <StatusValidChange condition="" statusId="CAL_ACCEPTED" statusIdTo="CAL_COMPLETED" transitionName="Complete"/>
+  <StatusValidChange condition="" statusId="CAL_ACCEPTED" statusIdTo="CAL_CANCELLED" transitionName="Cancel"/>
+  <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_TENTATIVE" transitionName="Tentatively Plan"/>
+  <StatusValidChange condition="" statusId="CAL_TENTATIVE" statusIdTo="CAL_CANCELLED" transitionName="Cancel"/>
+  <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_CONFIRMED" transitionName="Confirm"/>
   <StatusType description="" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="WORKFLOW_STATUS"/>
   <StatusItem description="Not Started" sequenceId="01" statusCode="open.not_running.not_started" statusId="WF_NOT_STARTED" statusTypeId="WORKFLOW_STATUS"/>
   <StatusItem description="Suspended" sequenceId="02" statusCode="open.not_running.suspended" statusId="WF_SUSPENDED" statusTypeId="WORKFLOW_STATUS"/>
