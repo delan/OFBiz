@@ -116,14 +116,21 @@ as can be expected.</p>
 
 <h3><a name="OFBiz Setup">OFBiz Setup</a></h3>
 
+<p>The easiest way to install OFBiz is to put everything in the default path of <b>/ofbiz/work</b>,
+which will be referred to as the <b>&lt;main&gt;</b> directory in this section.
+There is really only one file that has hard paths in it, and everything else is
+relative. That file in the distribution is <b>ofbiz/commonapp/etc/servers.properties</b>.
+When you are done with this section just replace all instances of &quot;<b>/ofbiz/work</b>&quot;
+with whatever root, or <b>&lt;main&gt;</b>,&nbsp; path you use.</p>
 <p><b>USING JBoss/Tomcat</b>: In the JBoss/Tomcat zip file there are two main directories: <b>jboss</b> and
-<b>tomcat</b>. Unzip the JBoss/Tomcat ZIP file to some directory, I usually use
-a directory called <b> /ofbiz/work</b>, but anywhere will work. I'll refer to
-this directory as <b>&lt;main&gt;</b>.</p>
+<b>tomcat</b>. Unzip the JBoss/Tomcat ZIP file to the <b>&lt;main&gt;</b>
+directory. With the default path you will have a <b>/ofbiz/work/jboss</b>
+directory and a <b>/ofbiz/work/tomcat</b> directory.</p>
 <p><b>USING Tomcat 4 (catalina)</b>: The Tomcat 4 archive contains a folder
 called something like &quot;jakarta-tomcat-4.0&quot;. Move that folder to the
 above mentioned <b>&lt;main&gt;</b> directory, and rename it from &quot;jakarta-tomcat-4.0&quot;
-to &quot;catalina&quot;.</p>
+to &quot;catalina&quot;. With the default path you will have a <b>/ofbiz/work/catalina</b>
+directory.</p>
 <p>Unzip the ofbiz zip file and move the <b>ofbiz</b> directory to the <b>&lt;main&gt;</b>
 directory, so that it is a
 sibling of the <b>catalina</b> or <b>jboss</b> and <b>tomcat</b>
