@@ -29,7 +29,7 @@
 *.gif -k 'b'
 *.GIF -k 'b'
 *.jpg -k 'b'
-*.jpg -k 'b'
+*.JPG -k 'b'
 *.doc -k 'b'
 *.DOC -k 'b'
 *.jar -k 'b'
