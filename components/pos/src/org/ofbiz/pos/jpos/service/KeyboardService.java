@@ -40,14 +40,15 @@ import jpos.services.EventCallbacks;
 import org.ofbiz.pos.adaptor.KeyboardReceiver;
 import org.ofbiz.pos.adaptor.KeyboardAdaptor;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
-public class KeyboardService extends BaseKybService implements jpos.services.POSKeyboardService17, KeyboardReceiver, KeyListener {
+public class KeyboardService extends BaseService implements jpos.services.POSKeyboardService17, KeyboardReceiver, KeyListener {
 
     public static final String module = KeyboardService.class.getName();
 
@@ -58,6 +59,7 @@ public class KeyboardService extends BaseKybService implements jpos.services.POS
     protected int keyEvent = -1;
     protected int keyData = -1;
 
+    protected KeyEvent lastEvent = null;
     protected Map keyMapping = null;
 
     public KeyboardService() {
@@ -77,15 +79,15 @@ public class KeyboardService extends BaseKybService implements jpos.services.POS
                 propName = propName.substring(4);
 
                 PosKey key = new PosKey(propName, propValue);
-                keyMapping.put(key.getKeyName(), key);
+                keyMapping.put(new Integer(key.hashCode()), key);
             }
         }
     }
 
     // POSKeyboardService12
     public boolean getCapKeyUp() throws JposException {
-        // we support both up/down events
-        return true;
+        // we only support key down events
+        return false;
     }
 
     public boolean getAutoDisable() throws JposException {
@@ -101,7 +103,8 @@ public class KeyboardService extends BaseKybService implements jpos.services.POS
     }
 
     public void setEventTypes(int i) throws JposException {
-        this.eventTypes = i;
+        if (i == POSKeyboardConst.KBD_ET_DOWN)
+            this.eventTypes = i;
     }
 
     public int getPOSKeyData() throws JposException {
@@ -141,39 +144,42 @@ public class KeyboardService extends BaseKybService implements jpos.services.POS
     }
 
     // KeyboardReceiver
-    public void receiveData(int[] codes, char[] chars) {
-        this.received = true;
+    public synchronized void receiveData(int[] codes, char[] chars) {
+        Debug.log("Receive Data Invoked - " + new String(chars), module);
+        if (lastEvent != null) {
+            KeyEvent thisEvent = lastEvent;
+            PosKey thisKey = new PosKey(thisEvent);
+            PosKey mappedKey = (PosKey) keyMapping.get(new Integer(thisKey.hashCode()));
+            if (mappedKey != null && mappedKey.checkModifiers(thisEvent.getModifiersEx())) {
+                this.received = true;
+                this.keyData = mappedKey.getMappedCode();
 
-        // fire off the event notification
-        DataEvent event = new DataEvent(this, 0);
-        this.fireEvent(event);
+                // fire off the event notification
+                DataEvent event = new DataEvent(this, 0);
+                this.fireEvent(event);
+            } else {
+                Debug.log("No Key Mapping [" + thisKey.getKeyCode() + " / " + thisKey.hashCode() + "] in jpos.xml", module);
+            }
+        } else {
+            Debug.log("Last Event is null??", module);
+        }
     }
 
     // KeyListener
     public void keyPressed(KeyEvent event) {
-        if (keyMapping != null) {
-            PosKey thisKey = new PosKey(event);
-            PosKey mappedKey = (PosKey) keyMapping.get(thisKey.getKeyName());
-            if (mappedKey != null) {
-                this.keyEvent = POSKeyboardConst.KBD_KET_KEYDOWN;
-                this.keyData = mappedKey.getMappedCode();
-            }
-        }
+        this.keyEvent = POSKeyboardConst.KBD_KET_KEYDOWN;
+        this.lastEvent = event;
+        Debug.log("Last Event Set : " + this.lastEvent.getKeyCode(), module);
     }
 
     public void keyTyped(KeyEvent event) {
     }
 
     public void keyReleased(KeyEvent event) {
+        // currently this is not enabled
         if (this.eventTypes == POSKeyboardConst.KBD_ET_DOWN_UP) {
-            if (keyMapping != null) {
-                PosKey thisKey = new PosKey(event);
-                PosKey mappedKey = (PosKey) keyMapping.get(thisKey.getKeyName());
-                if (mappedKey != null) {
-                    this.keyEvent = POSKeyboardConst.KBD_KET_KEYDOWN;
-                    this.keyData = mappedKey.getMappedCode();
-                }
-            }
+            this.keyEvent = POSKeyboardConst.KBD_KET_KEYDOWN;
+            this.lastEvent = event;
         }
     }
 
@@ -186,10 +192,10 @@ public class KeyboardService extends BaseKybService implements jpos.services.POS
             this.keyCode = event.getKeyCode();
             this.mappedCode = -1;
 
-            // the follow method of checking for button pressed was recommended by JavaDoc 1.4
-            this.shift = (event.getModifiersEx() & KeyEvent.SHIFT_DOWN_MASK) > 0 ? true : false;
-            this.ctrl = (event.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) > 0 ? true : false;
-            this.alt = (event.getModifiersEx() & KeyEvent.ALT_DOWN_MASK) > 0 ? true : false;
+            int modifiersEx = event.getModifiersEx();
+            this.shift = this.checkShift(modifiersEx);
+            this.ctrl = this.checkCtrl(modifiersEx);
+            this.alt = this.checkAlt(modifiersEx);
         }
 
         public PosKey(String keyName, String mappedValue) throws JposException {
@@ -255,24 +261,57 @@ public class KeyboardService extends BaseKybService implements jpos.services.POS
             }
 
             // set the mapped value
-            try {
-                this.mappedCode = Integer.parseInt(mappedValue);
-            } catch (Throwable t) {
-                Debug.logError(t, module);
-                throw new JposException(JposConst.JPOS_E_ILLEGAL, "Illegal key code mapping [" + mappedValue + "]");
+            if (UtilValidate.isNotEmpty(mappedValue)) {
+                try {
+                    this.mappedCode = Integer.parseInt(mappedValue);
+                } catch (Throwable t) {
+                    Debug.logError(t, module);
+                    throw new JposException(JposConst.JPOS_E_ILLEGAL, "Illegal key code mapping [" + mappedValue + "]");
+                }
+            } else {
+                this.mappedCode = keyCode;
             }
+        }
+
+        public int getKeyCode() {
+            return keyCode;
         }
 
         public int getMappedCode() {
             return mappedCode;
         }
 
-        public String getKeyName() {
-            String name = new String();
-            if (shift) name = name + "S";
-            if (ctrl) name = name + "C";
-            if (alt) name = name + "A";
-            return name + "_" + keyCode;
+        public int hashCode() {
+            int code = this.keyCode;
+            if (shift) code += KeyEvent.SHIFT_DOWN_MASK;
+            if (ctrl) code += KeyEvent.CTRL_DOWN_MASK;
+            if (alt) code += KeyEvent.ALT_DOWN_MASK;
+            return code;
+        }
+
+        public boolean checkModifiers(int mod) {
+            if (shift && !checkShift(mod)) {
+                return false;
+            }
+            if (ctrl && !checkCtrl(mod)) {
+                return false;
+            }
+            if (alt && !checkAlt(mod)) {
+                return false;
+            }
+            return true;
+        }
+
+        public boolean checkShift(int mod) {
+            return ((mod & KeyEvent.SHIFT_DOWN_MASK) > 0);
+        }
+
+        public boolean checkCtrl(int mod) {
+            return ((mod & KeyEvent.CTRL_DOWN_MASK) > 0);
+        }
+
+        public boolean checkAlt(int mod) {
+            return ((mod & KeyEvent.ALT_DOWN_MASK) > 0);
         }
     }
 }

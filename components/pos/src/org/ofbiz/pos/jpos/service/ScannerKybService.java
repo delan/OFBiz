@@ -42,7 +42,7 @@ import org.ofbiz.pos.adaptor.KeyboardReceiver;
  * @version    $Rev$
  * @since      3.2
  */
-public class ScannerKybService extends BaseKybService implements jpos.services.ScannerService17, KeyboardReceiver {
+public class ScannerKybService extends BaseService implements jpos.services.ScannerService17, KeyboardReceiver {
 
     public static final String module = ScannerKybService.class.getName();
     private static final int TYPELOC_PREFIX = 50;
@@ -138,7 +138,7 @@ public class ScannerKybService extends BaseKybService implements jpos.services.S
     }    
 
     // KeyboardReceiver
-    public void receiveData(int[] codes, char[] chars) {
+    public synchronized void receiveData(int[] codes, char[] chars) {
         String dataStr = new String(chars);
         this.parseScannedString(dataStr);
 

@@ -18,9 +18,9 @@ $Id$
     <event button-name="numDZero" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerDZero" disable-lock="true"/>
 
     <!-- extended numeric events -->
-    <event button-name="numClear" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerClear" disable-lock="true"/>
+    <event button-name="numClear" key-code="501" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerClear" disable-lock="true"/>
     <event button-name="numQty" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerQty" disable-lock="true"/>
-    <event button-name="numEnter" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerEnter" disable-lock="true"/>
+    <event button-name="numEnter" key-code="500" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerEnter" disable-lock="true"/>
 
     <!-- sales menu events -->
     <event button-name="menuTotal" class-name="org.ofbiz.pos.event.MenuEvents" method-name="calcTotal" disable-lock="false"/>

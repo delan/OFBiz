@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
-import jpos.services.BaseService;
 import jpos.services.EventCallbacks;
 import jpos.JposException;
 import jpos.JposConst;
@@ -38,7 +37,6 @@ import jpos.events.DirectIOEvent;
 import jpos.events.OutputCompleteEvent;
 import jpos.events.StatusUpdateEvent;
 import jpos.config.JposEntry;
-import jpos.loader.JposServiceInstance;
 
 /**
  * JPOS BaseService Implementation for Keyboard Wedge Services
@@ -47,9 +45,9 @@ import jpos.loader.JposServiceInstance;
  * @version    $Rev$
  * @since      3.2
  */
-public class BaseKybService implements BaseService, JposServiceInstance {
+public class BaseService implements jpos.services.BaseService, jpos.loader.JposServiceInstance {
 
-    public static final String module = BaseKybService.class.getName();
+    public static final String module = BaseService.class.getName();
     protected static boolean claimed = false;
 
     protected List eventQueue = new ArrayList();
@@ -82,15 +80,15 @@ public class BaseKybService implements BaseService, JposServiceInstance {
     }
 
     public void claim(int i) throws JposException {
-        BaseKybService.claimed = true;
+        BaseService.claimed = true;
     }
 
     public void release() throws JposException {
-        BaseKybService.claimed = false;
+        BaseService.claimed = false;
     }
 
     public void close() throws JposException {
-        BaseKybService.claimed = false;
+        BaseService.claimed = false;
         this.freezeEvents = false;
         this.deviceEnabled = false;
         this.ecb = null;
@@ -104,7 +102,7 @@ public class BaseKybService implements BaseService, JposServiceInstance {
     }
 
     public boolean getClaimed() throws JposException {
-        return BaseKybService.claimed;
+        return BaseService.claimed;
     }
 
     public int getDataCount() throws JposException {

@@ -26,13 +26,14 @@ package org.ofbiz.pos.component;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 import java.util.EmptyStackException;
 import java.util.Iterator;
 
 import net.xoetrope.swing.XEdit;
 import net.xoetrope.xui.XPage;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.collections.LifoSet;
 import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.pos.adaptor.KeyboardAdaptor;
@@ -44,7 +45,7 @@ import org.ofbiz.pos.adaptor.KeyboardReceiver;
  * @version    $Rev$
  * @since      3.1
  */
-public class Input implements KeyboardReceiver {
+public class Input implements KeyboardReceiver, KeyListener {
 
     public static final String module = Input.class.getName();
     private static final String[] validFunc = { "LOGIN", "UNLOCK", "MGRLOGIN", "PAID", "TOTAL", "CREDIT", "MSRINFO", "CHECK", "CHECKINFO", "QTY" };
@@ -57,17 +58,13 @@ public class Input implements KeyboardReceiver {
     protected boolean isLocked = false;
 
     public Input(XPage page) {
-        this.pageComs = page.getComponents();
         this.pos = (PosScreen) page;
         this.input = (XEdit) page.findComponent("pos_input");
+        this.input.setVisible(true);
         this.input.setFocusable(false);
 
         // initialize the KeyboardAdaptor
-        KeyboardAdaptor.getInstance(this, KeyboardAdaptor.KEYBOARD_DATA, page.getComponents());
-    }
-
-    public Component[] getComponents() {
-        return pageComs;
+        KeyboardAdaptor.getInstance(this, KeyboardAdaptor.KEYBOARD_DATA);
     }
 
     public void setLock(boolean lock) {
@@ -162,7 +159,6 @@ public class Input implements KeyboardReceiver {
     public void clear() {
         input.setText("");
         functionStack.clear();
-        Debug.log("Stack Size : " + functionStack.size(), module);
     }
 
     public String value() {
@@ -177,8 +173,25 @@ public class Input implements KeyboardReceiver {
         input.setText(this.input.getText() + str);
     }
 
-    public void receiveData(int[] codes, char[] chars) {
-        this.appendString(new String(chars));
+    // KeyboardReceiver
+    public synchronized void receiveData(int[] codes, char[] chars) {
+        if (chars.length > 0)
+            this.appendString(new String(chars));
     }
 
+    // KeyListener
+    public void keyPressed(KeyEvent event) {
+        // implements to handle backspacing only
+        if (event.getKeyCode() == 8 && this.value().length() > 0) {
+            this.input.setText(this.value().substring(0, this.value().length() - 1));
+        } else if (event.getKeyCode() == 27 && this.value().length() > 0) {
+            this.input.setText("");
+        }
+    }
+
+    public void keyTyped(KeyEvent event) {
+    }
+
+    public void keyReleased(KeyEvent event) {
+    }
 }

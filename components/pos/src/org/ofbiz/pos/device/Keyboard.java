@@ -24,16 +24,25 @@
  */
 package org.ofbiz.pos.device;
 
+import java.util.List;
+
 import jpos.JposException;
-import jpos.JposConst;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.pos.adaptor.DataEventAdaptor;
+import org.ofbiz.pos.config.ButtonEventConfig;
+import org.ofbiz.pos.screen.PosScreen;
 
 /**
+ * Keyboard Key -> Button Mapping Tool
+ *
+ * This class will invoke button events based on a key press.
+ * The key -> code mapping is handled in the jpos.xml file.
+ * The code -> button mapping is handled in the buttonconfig.xml file.
+ * It is advised to map to key codes > 200.
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
 public class Keyboard extends GenericDevice {
@@ -51,7 +60,33 @@ public class Keyboard extends GenericDevice {
 
         keyboard.addDataListener(new DataEventAdaptor() {
             public void dataOccurred(jpos.events.DataEvent event) {
-                Debug.log("Event Source - " + event.getSource().getClass().getName(), module);    
+                Debug.log("POSKeyboard DataEvent - " + event.getWhen(), module);
+                try {
+                    int keyCode = keyboard.getPOSKeyData();
+                    Debug.log("Received KeyCode From POSKeyboard DataEvent : " + keyCode, module);
+
+                    // -1 is not valid
+                    if (keyCode == -1) {
+                        return;
+                    }
+
+                    // check for button mapping
+                    List buttonEvents = ButtonEventConfig.findButtonKeyAssign(keyboard.getPOSKeyData());
+                    if (buttonEvents != null && buttonEvents.size() > 0) {
+                        Debug.log("Key -> Button Mapping(s) Found [" + keyCode + "]", module);
+                        try {
+                            ButtonEventConfig.invokeButtonEvents(buttonEvents, PosScreen.currentScreen);
+                        } catch (ButtonEventConfig.ButtonEventNotFound e) {
+                            Debug.logError(e, module);
+                        } catch (ButtonEventConfig.ButtonEventException e) {
+                            Debug.logError(e, module);
+                        }
+                    } else {
+                        Debug.logWarning("No key-code button mappings found for key-code [" + keyCode + "]", module);
+                    }
+                } catch (JposException e) {
+                    Debug.logError(e, module);
+                }
             }
         });
     }

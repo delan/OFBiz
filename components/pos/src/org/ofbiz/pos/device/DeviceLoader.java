@@ -58,7 +58,7 @@ public class DeviceLoader {
         // load the keyboard
         if (devices.get("Keyboard") != null) {
             String keyboardDevice = ((ContainerConfig.Container.Property) devices.get("Keyboard")).value;
-            if (UtilValidate.isNotEmpty(keyboardDevice)) {
+            if (UtilValidate.isNotEmpty(keyboardDevice) && !"[NOT IMPLEMENTED]".equals(keyboardDevice)) {
                 keyboard = new Keyboard(keyboardDevice, -1);
                 try {
                     keyboard.open();
@@ -72,7 +72,7 @@ public class DeviceLoader {
         // load the scanner
         if (devices.get("Scanner") != null) {
             String scannerDevice = ((ContainerConfig.Container.Property) devices.get("Scanner")).value;
-            if (UtilValidate.isNotEmpty(scannerDevice)) {
+            if (UtilValidate.isNotEmpty(scannerDevice) && !"[NOT IMPLEMENTED]".equals(scannerDevice)) {
                 scanner = new Scanner(scannerDevice, -1);
                 try {
                     scanner.open();
@@ -86,7 +86,7 @@ public class DeviceLoader {
         // load the check reader
         if (devices.get("CheckScanner") != null) {
             String checkScannerDevice = ((ContainerConfig.Container.Property) devices.get("CheckScanner")).value;
-            if (UtilValidate.isNotEmpty(checkScannerDevice)) {
+            if (UtilValidate.isNotEmpty(checkScannerDevice) && !"[NOT IMPLEMENTED]".equals(checkScannerDevice)) {
                 check = new CheckScanner(checkScannerDevice, -1);
                 try {
                     check.open();
@@ -100,7 +100,7 @@ public class DeviceLoader {
         // load the msr
         if (devices.get("Msr") != null) {
             String msrDevice = ((ContainerConfig.Container.Property) devices.get("Msr")).value;
-            if (UtilValidate.isNotEmpty(msrDevice)) {
+            if (UtilValidate.isNotEmpty(msrDevice) && !"[NOT IMPLEMENTED]".equals(msrDevice)) {
                 msr = new Msr(msrDevice, -1);
                 try {
                     msr.open();
@@ -114,7 +114,7 @@ public class DeviceLoader {
         // load the receipt printer
         if (devices.get("Receipt") != null) {
             String receiptDevice = ((ContainerConfig.Container.Property) devices.get("Receipt")).value;
-            if (UtilValidate.isNotEmpty(receiptDevice)) {
+            if (UtilValidate.isNotEmpty(receiptDevice) && !"[NOT IMPLEMENTED]".equals(receiptDevice)) {
                 receipt = new Receipt(receiptDevice, -1);
                 try {
                     receipt.open();
@@ -128,10 +128,10 @@ public class DeviceLoader {
         // load the journal printer
         if (devices.get("Journal") != null) {
             String journalDevice = ((ContainerConfig.Container.Property) devices.get("Journal")).value;
-            if (UtilValidate.isNotEmpty(journalDevice)) {
+            if (UtilValidate.isNotEmpty(journalDevice) && !"[NOT IMPLEMENTED]".equals(journalDevice)) {
                 journal = new Journal(journalDevice, -1);
                 try {
-                    receipt.open();
+                    journal.open();
                 } catch (jpos.JposException jpe) {
                     Debug.logError(jpe, "JPOS Exception", module);
                     throw new GeneralException(jpe.getOrigException());
@@ -142,7 +142,7 @@ public class DeviceLoader {
         // load the line display
         if (devices.get("LineDisplay") != null) {
             String lineDisplayDevice = ((ContainerConfig.Container.Property) devices.get("LineDisplay")).value;
-            if (UtilValidate.isNotEmpty(lineDisplayDevice)) {
+            if (UtilValidate.isNotEmpty(lineDisplayDevice) && !"[NOT IMPLEMENTED]".equals(lineDisplayDevice)) {
                 ldisplay = new LineDisplay(lineDisplayDevice, -1);
                 try {
                     ldisplay.open();
@@ -156,7 +156,7 @@ public class DeviceLoader {
         // load the cash drawer(s) -- Currently only supports one drawer per terminal
         if (devices.get("CashDrawer.1") != null) {
             String cashDrawerDevice = ((ContainerConfig.Container.Property) devices.get("CashDrawer.1")).value;
-            if (UtilValidate.isNotEmpty(cashDrawerDevice)) {
+            if (UtilValidate.isNotEmpty(cashDrawerDevice) && !"[NOT IMPLEMENTED]".equals(cashDrawerDevice)) {
                 drawer = new CashDrawer[1];
                 drawer[0] = new CashDrawer(cashDrawerDevice, -1);
                 try {
