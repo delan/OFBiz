@@ -120,6 +120,7 @@
         <copy file="${etc.dir}/taglib.tld"
             tofile="${build.dir}/jar/webapp/META-INF/taglib.tld" />
     </target>
+
     <target name="classes" depends="tld">
     	<javac destdir="${build.dir}/jar/share" classpath="${classpath}">
     		<src path="${src.dir}" />
@@ -128,9 +129,10 @@
     		<exclude name="org/ofbiz/core/taglib/*" />
     		<exclude name="org/ofbiz/core/scheduler/*" />
     	</javac>
-    	<javac destdir="${build.dir}/jar/webapp" classpath="${classpath}">
+    	<javac destdir="${build.dir}/jar/webapp" classpath="${classpath}:${build.dir}/jar/share">
     		<src path="${src.dir}" />
     		<exclude name="org/ofbiz/core/entity/*" />
+    		<exclude name="org/ofbiz/core/entity/model/*" />
     		<exclude name="org/ofbiz/core/util/*" />
     		<exclude name="org/ofbiz/core/security/*" />
     	</javac>
