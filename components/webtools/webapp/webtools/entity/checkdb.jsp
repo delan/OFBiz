@@ -50,28 +50,42 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     Set modelEntityNames = new TreeSet(modelEntities.keySet());
 
     if ("checkupdatetables".equals(option)) {
-      dbUtil.checkDb(modelEntities, messages, addMissing);
+        dbUtil.checkDb(modelEntities, messages, addMissing);
     } else if ("removetables".equals(option)) {
-      Iterator modelEntityNameIter = modelEntityNames.iterator();
-      while (modelEntityNameIter.hasNext()) {
-      	String modelEntityName = (String) modelEntityNameIter.next();
-      	ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
-        dbUtil.deleteTable(modelEntity, messages);
-      }
+        Iterator modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+      	    String modelEntityName = (String) modelEntityNameIter.next();
+      	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.deleteTable(modelEntity, messages);
+        }
+    } else if ("removepks".equals(option)) {
+        Iterator modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+            String modelEntityName = (String) modelEntityNameIter.next();
+            ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.deletePrimaryKey(modelEntity, messages);
+        }
+    } else if ("createpks".equals(option)) {
+        Iterator modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+            String modelEntityName = (String) modelEntityNameIter.next();
+            ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.createPrimaryKey(modelEntity, messages);
+        }
     } else if ("createfks".equals(option)) {
-      Iterator modelEntityNameIter = modelEntityNames.iterator();
-      while (modelEntityNameIter.hasNext()) {
-      	String modelEntityName = (String) modelEntityNameIter.next();
-      	ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
-        dbUtil.createForeignKeys(modelEntity, modelEntities, messages);
-      }
+        Iterator modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+      	    String modelEntityName = (String) modelEntityNameIter.next();
+      	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.createForeignKeys(modelEntity, modelEntities, messages);
+        }
     } else if ("removefks".equals(option)) {
-      Iterator modelEntityNameIter = modelEntityNames.iterator();
-      while (modelEntityNameIter.hasNext()) {
-      	String modelEntityName = (String) modelEntityNameIter.next();
-      	ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
-        dbUtil.deleteForeignKeys(modelEntity, modelEntities, messages);
-      }
+        Iterator modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+      	    String modelEntityName = (String) modelEntityNameIter.next();
+      	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.deleteForeignKeys(modelEntity, modelEntities, messages);
+        }
     }
     miter = messages.iterator();
   }
@@ -96,6 +110,18 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <H3>Remove All Tables</H3>
 <form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="removetables"/>
+  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  <input type="submit" value="Remove"/>
+</form>
+
+<H3>Create/Remove All Primary Keys</H3>
+<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+  <input type="hidden" name="option" value="createpks"/>
+  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  <input type="submit" value="Create"/>
+</form>
+<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+  <input type="hidden" name="option" value="removepks"/>
   Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
   <input type="submit" value="Remove"/>
 </form>

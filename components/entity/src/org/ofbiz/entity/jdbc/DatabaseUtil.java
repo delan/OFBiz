@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.15 2004/04/29 23:00:39 doogie Exp $
+ * $Id: DatabaseUtil.java,v 1.16 2004/05/17 19:03:29 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -1275,11 +1275,8 @@ public class DatabaseUtil {
                 sqlBuf.append(", ");
             }
         }
-        String pkName = "PK_" + entity.getPlainTableName();
 
-        if (pkName.length() > constraintNameClipLength) {
-            pkName = pkName.substring(0, constraintNameClipLength);
-        }
+        String pkName = makePkConstraintName(entity, constraintNameClipLength);
 
         if (usePkConstraintNames) {
             sqlBuf.append("CONSTRAINT ");
@@ -1470,6 +1467,16 @@ public class DatabaseUtil {
     /* ====================================================================== */
 
     /* ====================================================================== */
+    public String makePkConstraintName(ModelEntity entity, int constraintNameClipLength) {
+        String pkName = "PK_" + entity.getPlainTableName();
+
+        if (pkName.length() > constraintNameClipLength) {
+            pkName = pkName.substring(0, constraintNameClipLength);
+        }
+
+        return pkName;
+    }
+
     public String makeFkConstraintName(ModelRelation modelRelation, int constraintNameClipLength) {
         String relConstraintName = modelRelation.getFkName();
 
@@ -1671,7 +1678,7 @@ public class DatabaseUtil {
     }
     
     public void deleteForeignKeys(ModelEntity entity, Map modelEntities, int constraintNameClipLength, List messages) {
-            if (entity == null) {
+        if (entity == null) {
             String errMsg = "ModelEntity was null and is required to delete foreign keys for a table";
             if (messages != null) messages.add(errMsg);
             Debug.logError(errMsg, module);
@@ -1759,6 +1766,165 @@ public class DatabaseUtil {
             }
         }
         return null;
+    }
+
+    /* ====================================================================== */
+    /* ====================================================================== */
+    public void createPrimaryKey(ModelEntity entity, boolean usePkConstraintNames, int constraintNameClipLength, List messages) {
+        if (messages == null) messages = new ArrayList();
+        messages.add(createPrimaryKey(entity, usePkConstraintNames, constraintNameClipLength));
+    }
+
+    public void createPrimaryKey(ModelEntity entity, boolean usePkConstraintNames, List messages) {
+        createPrimaryKey(entity, usePkConstraintNames, datasourceInfo.constraintNameClipLength, messages);
+    }
+
+    public void createPrimaryKey(ModelEntity entity, List messages) {
+        createPrimaryKey(entity, datasourceInfo.usePkConstraintNames, messages);
+    }
+
+    public String createPrimaryKey(ModelEntity entity, boolean usePkConstraintNames, int constraintNameClipLength) {
+        if (entity == null) {
+            return "ModelEntity was null and is required to create the primary key for a table";
+        }
+        if (entity instanceof ModelViewEntity) {
+            return "Ignoring view entity \"" + entity.getEntityName() + "\"";
+        }
+
+        String message;
+        if (entity.getPksSize() > 0) {
+            message = "Creating primary key for entity \"" + entity.getEntityName() + "\"";
+            Connection connection = null;
+            Statement stmt = null;
+
+            try {
+                connection = getConnection();
+            } catch (SQLException sqle) {
+                return "Unable to esablish a connection with the database... Error was: " + sqle.toString();
+            } catch (GenericEntityException e) {
+                return "Unable to esablish a connection with the database... Error was: " + e.toString();
+            }
+
+            // now add constraint clause
+            StringBuffer sqlBuf = new StringBuffer("ALTER TABLE ");
+            sqlBuf.append(entity.getTableName(datasourceInfo));
+            sqlBuf.append(" ADD ");
+
+            String pkName = makePkConstraintName(entity, constraintNameClipLength);
+
+            if (usePkConstraintNames) {
+                sqlBuf.append("CONSTRAINT ");
+                sqlBuf.append(pkName);
+            }
+            sqlBuf.append(" PRIMARY KEY (");
+            sqlBuf.append(entity.colNameString(entity.getPksCopy()));
+            sqlBuf.append(")");
+
+            if (Debug.verboseOn()) Debug.logVerbose("[createPrimaryKey] sql=" + sqlBuf.toString(), module);
+            try {
+                stmt = connection.createStatement();
+                stmt.executeUpdate(sqlBuf.toString());
+            } catch (SQLException sqle) {
+                return "SQL Exception while executing the following:\n" + sqlBuf.toString() + "\nError was: " + sqle.toString();
+            } finally {
+                try {
+                    if (stmt != null) {
+                        stmt.close();
+                    }
+                } catch (SQLException sqle) {
+                    Debug.logError(sqle, module);
+                }
+                try {
+                    if (connection != null) {
+                        connection.close();
+                    }
+                } catch (SQLException sqle) {
+                    Debug.logError(sqle, module);
+                }
+            }
+        } else {
+            message = "No primary-key defined for table \"" + entity.getEntityName() + "\"";
+        }
+
+        Debug.logImportant(message, module);
+        return message;
+    }
+
+    public void deletePrimaryKey(ModelEntity entity, boolean usePkConstraintNames, int constraintNameClipLength, List messages) {
+        if (messages == null) messages = new ArrayList();
+        messages.add(deletePrimaryKey(entity, usePkConstraintNames, constraintNameClipLength));
+    }
+
+    public void deletePrimaryKey(ModelEntity entity, boolean usePkConstraintNames,  List messages) {
+        deletePrimaryKey(entity, usePkConstraintNames, datasourceInfo.constraintNameClipLength, messages);
+    }
+
+    public void deletePrimaryKey(ModelEntity entity, List messages) {
+        deletePrimaryKey(entity, datasourceInfo.usePkConstraintNames, messages);
+    }
+
+    public String deletePrimaryKey(ModelEntity entity, boolean usePkConstraintNames, int constraintNameClipLength) {
+        if (entity == null) {
+            return "ModelEntity was null and is required to delete the primary key for a table";
+        }
+        if (entity instanceof ModelViewEntity) {
+            return "Ignoring view entity \"" + entity.getEntityName() + "\"";
+        }
+
+        String message;
+        if (entity.getPksSize() > 0) {
+            message = "Deleting primary key for entity \"" + entity.getEntityName() + "\"";
+            Connection connection = null;
+            Statement stmt = null;
+            try {
+                connection = getConnection();
+            } catch (SQLException sqle) {
+                return "Unable to esablish a connection with the database... Error was: " + sqle.toString();
+            } catch (GenericEntityException e) {
+                return "Unable to esablish a connection with the database... Error was: " + e.toString();
+            }
+
+            // now add constraint clause
+            StringBuffer sqlBuf = new StringBuffer("ALTER TABLE ");
+            sqlBuf.append(entity.getTableName(datasourceInfo));
+            sqlBuf.append(" DROP ");
+
+            String pkName = makePkConstraintName(entity, constraintNameClipLength);
+
+            if (usePkConstraintNames) {
+                sqlBuf.append("CONSTRAINT ");
+                sqlBuf.append(pkName);
+            } else {
+                sqlBuf.append(" PRIMARY KEY");
+            }
+            sqlBuf.append(" CASCADE");
+
+            if (Debug.verboseOn()) Debug.logVerbose("[deletePrimaryKey] sql=" + sqlBuf.toString(), module);
+            try {
+                stmt = connection.createStatement();
+                stmt.executeUpdate(sqlBuf.toString());
+            } catch (SQLException sqle) {
+                return "SQL Exception while executing the following:\n" + sqlBuf.toString() + "\nError was: " + sqle.toString();
+            } finally {
+                try {
+                    if (stmt != null)
+                        stmt.close();
+                } catch (SQLException sqle) {
+                    Debug.logError(sqle, module);
+                }
+                try {
+                    if (connection != null)
+                        connection.close();
+                } catch (SQLException sqle) {
+                    Debug.logError(sqle, module);
+                }
+            }
+        } else {
+            message = "No primary-key defined for table \"" + entity.getEntityName() + "\"";
+        }
+
+        Debug.logImportant(message, module);
+        return message;
     }
 
     /* ====================================================================== */
