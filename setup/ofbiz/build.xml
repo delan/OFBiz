@@ -202,10 +202,14 @@
     <!-- Removes all created files and directories                          -->
     <!-- ================================================================== -->
 
-    <target name="clean" depends="catalina-clean">
+    <target name="clean" depends="sub-clean,catalina-clean">
+        <delete>
+            <fileset dir="logs" includes="*"/>
+            <fileset dir="." includes="ofbiz.log*"/>
+        </delete>
     </target>
 
-    <target name="catalina-clean" depends="catalina41-init,sub-clean">
+    <target name="catalina-clean" depends="catalina41-init">
         <delete file="${classes.dir}/serverstats.properties" />
         <delete file="${classes.dir}/entityengine.xml" />
         <delete file="${classes.dir}/security.properties" />
