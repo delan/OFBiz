@@ -23,9 +23,14 @@ $Id$ <br>
 <ul>
   <li><a href="#Related_Documents">Related Documents</a>
   <li><a href="#Introduction">Introduction</a>
+  <li><a href="#Authorization">Authorization</a>
+  <li><a href="#ThreadPool">Thread Pool</a>
+  <li><a href="#Engines">Engine Definitions</a>
   <li><a href="#Resource">Resource Loaders</a>
-</ul>
-
+  <li><a href="#Global">Global Services</a>
+  <li><a href="#Groups">Service Groups</a>
+  <li><a href="#ECAs">ECAs</a>
+  <li><a href="#JMS">JMS</a>
 <hr>
 
 <h3><a name="Related_Documents">Related Documents:</a></h3>
@@ -48,6 +53,77 @@ examples of a number of different options and is located in <b><code>ofbiz/commo
 
 <p>The configuration of the Service Engine is done through a simple XML
 file called <b><code>serviceengine.xml</code></b> that must exist somewhere on the classpath.</p>
+
+<hr>
+<h3><a name="Authorization">Authorization</a></h3>
+<p>The <b><code>authorization</code></b> tag is used to configured the service called for 
+service authentication. This tag has a single required attribute <code>service-name</code>; the value 
+of this attribute should be the name of the service to use for authorization. By default this
+is defined to use the general OFBiz <code>userLogin</code> service.</p>
+
+<hr>
+<h3><a name="ThreadPool">Thread Pool</a></h3>
+<p>The job scheduler is used for asynchronous and scheduled jobs/services. It contains a <i>poller</i>
+thread and several <i>invoker</i> threads. The <b><code>thread-pool</code></b> tag is used to configure 
+how each thread operates. The following attributes are available:</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>ttl</td><td>Y</td>
+    <td>The time to live for each invoker thread. Once this time is reached the thread is destroyed.</td>
+</tr>
+<tr>
+    <td>wait-millis</td><td>Y</td>
+    <td>Each invoker thread will sleep for this amount of time before checking for jobs to run.</td>
+</tr>
+<tr>
+    <td>jobs</td><td>Y</td>
+    <td>The maximum number of jobs each invoker thread will run before being destroyed.</td>
+</tr>
+<tr>
+    <td>min-threads</td><td>Y</td>
+    <td>The minimum number of invoker threads to keep around.</td>
+</tr>
+<tr>
+    <td>max-threads</td><td>Y</td>
+    <td>The maximum number of invoker thread to create.</td>
+</tr>
+<tr>
+    <td>poll-enabled</td><td>Y</td>
+    <td>When 'true' the scheduler will poll the database for scheduled jobs.</td>
+</tr>
+<tr>
+    <td>poll-db-millis</td><td>Y</td>
+    <td>If polling is enabled this defined how often the poller thread runs.</td>
+</tr>
+</table>
+
+<hr>
+<h3><a name="Engines">Engine Definitions</a></h3>
+<hr>
+<p>Each implementation of the <code>GenericEngine</code> interface needs to be defined in order to
+be used in the service definitions. The <b><code>engine</code></b> has the following attributes:</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td>
+    <td>The name of the service engine. This must be unique.</td>
+</tr>
+<tr>
+    <td>class</td><td>Y</td>
+    <td>The class which implements <code>GenericEngine</code></td>
+</tr>
+</table>
 
 <hr>
 <h3><a name="Resource">Resource Loaders</a></h3>
@@ -81,6 +157,133 @@ attributes.</p>
     <td>A string to put before the location when making the full location. This is optional.
     If used will go after the prepended environment property and before the location
     specified for each resource.</td>
+</tr>
+</table>
+
+<hr>
+<h3><a name="Global">Global Services</a></h3>
+<hr>
+<p>The <b><code>global-services</code></b> tag is used to define the location of service definition files. 
+This tag has the following two attributes:</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>loader</td><td>Y</td>
+    <td>The <code>loader</code> referenced from the resource loader definitions.</td>
+</tr>
+<tr>
+    <td>location</td><td>Y</td>
+    <td>Specifies the location that the resource-loader will use inside itself to load the resource.</td>
+</tr>
+</table>
+
+<hr>
+<h3><a name="Groups">Service Groups</a></h3>
+<hr>
+<p>The <b><code>service-groups</code></b> tag is used to define the location of the service group
+definition files. This tag has the following two attributes:</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>loader</td><td>Y</td>
+    <td>The <code>loader</code> referenced from the resource loader definitions.</td>
+</tr>
+<tr>
+    <td>location</td><td>Y</td>
+    <td>Specifies the location that the resource-loader will use inside itself to load the resource.</td>
+</tr>
+</table>
+
+<hr>
+<h3><a name="ECAs">ECAs</a></h3>
+<hr>
+<p>This <b><code>service-ecas</code></b> tag is used to define the location of the service event condition
+action definition files. This tag has the following two attributes:</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>loader</td><td>Y</td>
+    <td>The <code>loader</code> referenced from the resource loader definitions.</td>
+</tr>
+<tr>
+    <td>location</td><td>Y</td>
+    <td>Specifies the location that the resource-loader will use inside itself to load the resource.</td>
+</tr>
+</table>
+
+<hr>
+<h3><a name="JMS">JMS</a></h3>
+<hr>
+<p>The tag <b><code>jms-service</code></b> defines service locations for JMS services.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td>
+    <td>The name of the JMS service, used as the location in service definitions.</td>
+</tr>
+<tr>
+    <td>send-mode</td><td>Y</td>
+    <td>The mode which to send the the defined servers (below) can be: 
+    <code>none, all, first-available, random, round-robin, or least-load</code>.</td>
+</tr>
+</table>
+
+<p>The <b><code>jms-service</code></b> tag includes one or more <b><code>server</code></b> tags
+which contain the following attributes:</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>jndi-server-name</td><td>Y</td>
+    <td>The name of the JNDI server defined in the jndiservers.xml.</td>
+</tr>
+<tr>
+    <td>jndi-name</td><td>Y</td>
+    <td>The name in JNDI for the JMS Factory.</td>
+</tr>
+<tr>
+    <td>topic-queue</td><td>Y</td>
+    <td>The name of the topic or queue.</td>
+</tr>
+<tr>
+    <td>type</td><td>Y</td>
+    <td>The JMS type can be either <code>topic</code> or <code>queue</code>.</td>
+</tr>
+<tr>
+    <td>username</td><td>Y</td>
+    <td>user name used to connect to the topic/queue.</td>
+</tr>
+<tr>
+    <td>password</td><td>Y</td>
+    <td>password used to connect to the topic/queue.</td>
+</tr>
+<tr>
+    <td>listen</td><td>Y</td>
+    <td><code>true/false</code> to enable listening on this queue/topic.</td>
 </tr>
 </table>
 
@@ -122,6 +325,6 @@ Valid engine-names include: <b><code>java</code></b>, <b><code>workflow</code></
 <b><code>bsh</code></b>, and <b><code>soap</code></b>.</p>
 -->
 
-
+<br>
 </body>
 </html>
