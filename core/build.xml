@@ -61,7 +61,8 @@
             <fileset dir="${extlib.dir}/datavision" includes="*.jar"/>
             <fileset dir="${extlib.dir}/jasperreports" includes="*.jar"/>
             <fileset dir="${extlib.dir}/weka" includes="*.jar"/>            
-            <fileset dir="${extlib.dir}/jotm" includes="*.jar"/>            
+            <fileset dir="${extlib.dir}/jotm" includes="*.jar"/>
+            <fileset dir="${extlib.dir}/jetty/lib" includes="*.jar"/>           
             <fileset dir="${extlib.dir}/tyrex" includes="*.jar"/>            
         </path>
     </target>
@@ -127,9 +128,20 @@
     </target>
 
     <target name="classes" depends="tld">
-    	<javac debug="on" deprecation="on" destdir="${build.dir}/share" classpathref="local.class.path">
-            <src path="${src.dir}/share"/>
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/start">            
+            <src path="${src.dir}/start" />
         </javac>
+        <copy todir="${build.dir}/start">
+          <fileset dir="${src.dir}/start" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
+        </copy>
+            
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/share">
+            <classpath>
+                <path refid="local.class.path"/>
+                <pathelement path="${build.dir}/start"/>
+            </classpath>
+            <src path="${src.dir}/share" />
+        </javac>                	
         <!-- also put the DTDs in this jar file... -->
         <copy todir="${build.dir}/share">
             <fileset dir="${doc.dir}/xmldefs/ofbiz" includes="*.dtd" />
