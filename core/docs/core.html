@@ -1,8 +1,107 @@
 <html>
 <head>
-<title>Documentation for the ofbiz Core Module</title>
+<title>The Open For Business Project: Core Overview</title>
 </head>
 <body>
-<h2>Documentation for the ofbiz Core Module</h2>
+
+<h2 align="center">The Open For Business Project: Core Overview</h2>
+
+<br>Written By: David E. Jones
+<br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
+<br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
+<br>
+<A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
+<br>
+Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
+Last Updated: February 15, 2002<br>
+$Id$ <br>
+<hr>
+<br>
+<h3>Table of Contents</h3>
+
+<ul>
+  <li><a href="#Related_Documents">Related Documents</a>
+  <li><a href="#Dependencies">Module Dependencies</a>
+</ul>
+
+<hr>
+
+<h3><a name="Related_Documents">Related Documents:</a></h3>
+<hr>
+<ul>
+  <li><a href="api/index.html">Core JavaDoc</a></li>
+  <li><a href="coreconfig.html">Core Configuration Guide</a></li>
+  <li><a href="entity.html">Entity Engine Guide</a></li>
+  <li><a href="entityconfig.html">Entity Engine Configuration Guide</a></li>
+  <li><a href="services.html">Service Engine Guide</a></li>
+  <li><a href="/dtds/entitymodel.dtd">Entity Model DTD</a></li>
+  <li><a href="/dtds/entitygroup.dtd">Entity Group DTD</a></li>
+  <li><a href="/dtds/fieldtypemodel.dtd">Field Type Model DTD</a></li>
+</ul>
+
+<hr>
+<h3><a name="Dependencies">Module Dependencies</a></h3>
+<hr>
+<p>Here is a list of the core modules and their dependencies on other modules.
+Note that most of the dependencies are compile-time dependencies, but some are
+run-time dependencies handled through configured dynamic class loading. An 
+example of this is how the Service Engine invokes Workflows. All dependencies
+are compile-time unless specified as run-time. Run-time dependencies are 
+considered optional and are only required if used.</p>
+
+<UL>
+<LI><B>share</B></LI>
+    <UL>
+    <LI>no dependencies</LI>
+    </UL>
+<LI><B>entity</B></LI>
+    <UL>
+    <LI>share</LI>
+    </UL>
+<LI><B>extutil</B></LI>
+    <UL>
+    <LI>share</LI>
+    <LI>entity</LI>
+    </UL>
+<LI><B>service</B></LI>
+    <UL>
+    <LI>share</LI>
+    <LI>entity</LI>
+    <LI>extutil</LI>
+    <LI>workflow (run-time)</LI>
+    <LI>rules (run-time)</LI>
+    </UL>
+<LI><B>minilang</B></LI>
+    <UL>
+    <LI>share</LI>
+    <LI>entity</LI>
+    <LI>service</LI>
+    </UL>
+<LI><B>webapp</B></LI>
+    <UL>
+    <LI>share</LI>
+    <LI>entity</LI>
+    <LI>extutil</LI>
+    <LI>service</LI>
+    <LI>minilang</LI>
+    </UL>
+<LI><B>workflow</B></LI>
+    <UL>
+    <LI>share</LI>
+    <LI>entity</LI>
+    <LI>extutil</LI>
+    <LI>service</LI>
+    </UL>
+<LI><B>rules</B></LI>
+    <UL>
+    <LI>share</LI>
+    <LI>entity</LI>
+    </UL>
+<LI><B>datafile</B></LI>
+    <UL>
+    <LI>share</LI>
+    </UL>
+</UL>
+
 </body>
 </html>
