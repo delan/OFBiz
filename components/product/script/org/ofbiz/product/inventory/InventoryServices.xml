@@ -2,7 +2,7 @@
 <!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
-  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -94,6 +94,31 @@
         <env-to-env env-name="inventoryItemDetailSummary.availableToPromiseTotal" to-env-name="inventoryItem.availableToPromiseTotal"/>
         <env-to-env env-name="inventoryItemDetailSummary.quantityOnHandTotal" to-env-name="inventoryItem.quantityOnHandTotal"/>
         <store-value value-name="inventoryItem"/>
+    </simple-method>
+    <simple-method method-name="updateOldInventoryToDetailAll" short-description="Update Old Inventory To Detail All">
+        <!-- find all InventoryItem records where oldQuantityOnHand or oldAvailableToPromise are not null -->
+        <entity-condition entity-name="InventoryItem" list-name="inventoryItemList">
+            <condition-list combine="or">
+                <condition-expr field-name="oldQuantityOnHand" operator="not-equals" value=""/>
+                <condition-expr field-name="oldAvailableToPromise" operator="not-equals" value=""/>
+            </condition-list>
+        </entity-condition>
+        <iterate list-name="inventoryItemList" entry-name="inventoryItem">
+            <env-to-env env-name="inventoryItem" to-env-name="callServiceMap.inventoryItem"/>
+            <call-service service-name="updateOldInventoryToDetailSingle" in-map-name="callServiceMap"/>
+            <clear-field field-name="callServiceMap.inventoryItem"/>
+        </iterate>
+    </simple-method>
+    <simple-method method-name="updateOldInventoryToDetailSingle" short-description="Update Old Inventory To Detail Single">
+        <!-- for each create an InventoryItemDetail representing the old QOH or ATP value, then null those fields -->
+        <env-to-env env-name="parameters.inventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
+        <env-to-env env-name="parameters.inventoryItem.oldAvailableToPromise" to-env-name="createDetailMap.availableToPromiseDiff"/>
+        <env-to-env env-name="parameters.inventoryItem.oldQuantityOnHand" to-env-name="createDetailMap.quantityOnHandDiff"/>
+        <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
+
+        <clear-field field-name="parameters.inventoryItem.oldAvailableToPromise"/>
+        <clear-field field-name="parameters.inventoryItem.oldQuantityOnHand"/>
+        <store-value value-name="parameters.inventoryItem"/>
     </simple-method>
 
     <simple-method method-name="checkProductInventoryDiscontinuation" short-description="Check Product Inventory Discontinuation" login-required="false">
