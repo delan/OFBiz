@@ -90,8 +90,11 @@ public class OrderReadHelper {
                 this.orderHeader = orderHeader.getDelegator().findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId",
                         orderHeader.getString("orderId")));
             } catch (GenericEntityException e) {
-                throw new IllegalArgumentException("Order header is not valid");
+                this.orderHeader = null;
             }
+        }
+        if (this.orderHeader == null) {
+            throw new IllegalArgumentException("Order header is not valid");
         }
     }
 
