@@ -113,7 +113,8 @@ public class CheckOutHelper {
         // set the shipping address
         if (UtilValidate.isNotEmpty(shippingContactMechId)) {
             this.cart.setShippingContactMechId(shippingContactMechId);
-        } else {
+        } else if (cart.shippingApplies()) {
+            // only return an error if shipping is required for this purchase
             errMsg = UtilProperties.getMessage(resource,"checkhelper.select_shipping_destination", (cart != null ? cart.getLocale() : Locale.getDefault()));
             errorMessages.add(errMsg);
         }
@@ -164,18 +165,25 @@ public class CheckOutHelper {
 
             this.cart.setShipmentMethodTypeId(shipmentMethodTypeId);
             this.cart.setCarrierPartyId(carrierPartyId);
-        } else {
+        } else if (cart.shippingApplies()) {
+            // only return an error if shipping is required for this purchase
             errMsg = UtilProperties.getMessage(resource,"checkhelper.select_shipping_method", (cart != null ? cart.getLocale() : Locale.getDefault()));
             errorMessages.add(errMsg);
         }
+
+        // set the shipping instructions
         this.cart.setShippingInstructions(shippingInstructions);
+
         if (UtilValidate.isNotEmpty(maySplit)) {
             cart.setMaySplit(Boolean.valueOf(maySplit));
         } else {
             errMsg = UtilProperties.getMessage(resource,"checkhelper.select_splitting_preference", (cart != null ? cart.getLocale() : Locale.getDefault()));
             errorMessages.add(errMsg);
         }
+
+        // set the gift message
         this.cart.setGiftMessage(giftMessage);
+
         if (UtilValidate.isNotEmpty(isGift)) {
             cart.setIsGift(Boolean.valueOf(isGift));
         } else {
@@ -183,6 +191,7 @@ public class CheckOutHelper {
             errorMessages.add(errMsg);
         }
 
+        // set any additional notification emails
         this.cart.setOrderAdditionalEmails(orderAdditionalEmails);
 
         // set the PO number
@@ -263,7 +272,8 @@ public class CheckOutHelper {
                 boolean singleUse = singleUsePayments.contains(checkOutPaymentId);
                 cart.addPaymentAmount(checkOutPaymentId, paymentAmount, singleUse);                
             }
-        } else {
+        } else if (cart.getGrandTotal() != 0.00) {
+            // only return an error if the order total is not 0.00
             errMsg = UtilProperties.getMessage(resource,"checkhelper.select_method_of_payment",
                     (cart != null ? cart.getLocale() : Locale.getDefault()));
             errorMessages.add(errMsg);
@@ -629,8 +639,18 @@ public class CheckOutHelper {
         if (shipAddress == null) {
             shipAddress = cart.getShippingAddress(shipGroup);
         }
+
+        // no shipping address; try the billing address
         if (shipAddress == null) {
-            throw new GeneralException("Shipping address is not set in the shopping cart.");
+            for (int i = 0; i < cart.selectedPayments(); i++) {
+                ShoppingCart.CartPaymentInfo cpi = cart.getPaymentInfo(i);
+                GenericValue billAddr = cpi.getBillingAddress(delegator);
+                if (billAddr != null) {
+                    shipAddress = billAddr;
+                    Debug.logInfo("Found address from payment method.", module);
+                }
+                break;
+            }
         }
 
         Map serviceContext = UtilMisc.toMap("productStoreId", productStoreId, "itemProductList", product, "itemAmountList", amount,

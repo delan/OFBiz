@@ -408,7 +408,7 @@
         <attribute name="itemAmountList" type="java.util.List" mode="IN"/>
         <attribute name="itemShippingList" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderShippingAmount" type="Double" mode="IN" optional="true"/>
-        <attribute name="shippingAddress" type="org.ofbiz.entity.GenericValue" mode="IN"/>
+        <attribute name="shippingAddress" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
         <attribute name="orderAdjustments" type="java.util.List" mode="OUT"/>
         <attribute name="itemAdjustments" type="java.util.List" mode="OUT"/>
     </service>

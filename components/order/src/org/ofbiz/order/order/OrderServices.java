@@ -2141,8 +2141,14 @@ public class OrderServices {
         GenericValue shippingAddress = (GenericValue) context.get("shippingAddress");
 
         // Simple Tax Calc only uses the state from the address and the SalesTaxLookup entity.
-        String countryCode = shippingAddress.getString("countryGeoId");
-        String stateCode = shippingAddress.getString("stateProvinceGeoId");
+
+        String countryCode = null;
+        String stateCode = null;
+
+        if (shippingAddress != null) {
+            countryCode = shippingAddress.getString("countryGeoId");
+            stateCode = shippingAddress.getString("stateProvinceGeoId");
+        }
 
         // Setup the return lists.
         List orderAdjustments = new ArrayList();
@@ -2153,7 +2159,10 @@ public class OrderServices {
             GenericValue product = (GenericValue) itemProductList.get(i);
             Double itemAmount = (Double) itemAmountList.get(i);
             Double shippingAmount = (Double) itemShippingList.get(i);
-            List taxList = getTaxAmount(delegator, product, productStoreId, countryCode, stateCode, itemAmount.doubleValue(), shippingAmount.doubleValue());
+            List taxList = null;
+            if (shippingAddress != null) {
+                taxList = getTaxAmount(delegator, product, productStoreId, countryCode, stateCode, itemAmount.doubleValue(), shippingAmount.doubleValue());
+            }
             itemAdjustments.add(taxList);
         }
         if (orderShippingAmount.doubleValue() > 0) {

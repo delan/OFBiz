@@ -136,7 +136,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      *
      * @param cartLocation The location to place this item; null will place at the end
      * @param productId The primary key of the product being added
-     * @param selected amount ?
+     * @param selectedAmount ?
      * @param quantity The quantity to add
      * @param additionalProductFeatureAndAppls Product feature/appls map
      * @param attributes All unique attributes for this item (NOT features)
@@ -156,7 +156,7 @@ public class ShoppingCartItem implements java.io.Serializable {
          *
          * @param cartLocation The location to place this item; null will place at the end
          * @param productId The primary key of the product being added
-         * @param selected amount ?
+         * @param selectedAmount ?
          * @param quantity The quantity to add
          * @param reservStart start of the reservation
          * @param reservLength length of the reservation
@@ -388,7 +388,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @param itemDescription The optional description of the item
      * @param productCategoryId The optional category the product *will* go in
      * @param basePrice The price for this item
-     * @param selected amount
+     * @param selectedAmount
      * @param quantity The quantity to add
      * @param attributes All unique attributes for this item (NOT features)
      * @param prodCatalogId The catalog this item was added from
@@ -551,13 +551,13 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     /** returns "OK" when the product can be booked or returns a string with the dates the related fixed Asset is not available */
-    public static String checkAvailability(String productId, double quantity, Timestamp reservStart, double reservLength, ShoppingCart cart )    {
+    public static String checkAvailability(String productId, double quantity, Timestamp reservStart, double reservLength, ShoppingCart cart) {
         GenericDelegator delegator = cart.getDelegator();
         // find related fixedAsset
         List selFixedAssetProduct = null;
         GenericValue fixedAssetProduct = null;
         try {
-            List allFixedAssetProduct = delegator.findByAnd("FixedAssetProduct",UtilMisc.toMap("productId",productId,"fixedAssetProductTypeId", "FAPT_USE "));
+            List allFixedAssetProduct = delegator.findByAnd("FixedAssetProduct", UtilMisc.toMap("productId", productId, "fixedAssetProductTypeId", "FAPT_USE "));
             selFixedAssetProduct = EntityUtil.filterByDate(allFixedAssetProduct, UtilDateTime.nowTimestamp(), "fromDate", "thruDate", true);
         } catch (GenericEntityException e) {
             return "Could not find a related Fixed Asset for the product: " + productId;
@@ -565,67 +565,69 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (selFixedAssetProduct != null && selFixedAssetProduct.size() > 0) {
             Iterator firstOne = selFixedAssetProduct.iterator();
             fixedAssetProduct = (GenericValue) firstOne.next();
-        }
-        else
+        } else {
             return "Could not find a related Fixed Asset for the product: " + productId;
+        }
+
         // find the fixed asset itself
         GenericValue fixedAsset = null;
-        try { fixedAsset = fixedAssetProduct.getRelatedOne("FixedAsset"); 
-        } 
-        catch (GenericEntityException e) {
+        try {
+            fixedAsset = fixedAssetProduct.getRelatedOne("FixedAsset");
+        } catch (GenericEntityException e) {
             return "fixed_Asset_not_found. Fixed AssetId: " + fixedAssetProduct.getString("fixedAssetId");
         }
         if (fixedAsset == null) {
             return "fixed_Asset_not_found. Fixed AssetId: " + fixedAssetProduct.getString("fixedAssetId");
         }
-//        Debug.logInfo("Checking availability for product: " + productId.toString() + " and related FixedAsset: " + fixedAssetProduct.getString("fixedAssetId"),module);
+        //Debug.logInfo("Checking availability for product: " + productId.toString() + " and related FixedAsset: " + fixedAssetProduct.getString("fixedAssetId"),module);
 
         // see if this fixed asset has a calendar, when no create one and attach to fixed asset
         GenericValue techDataCalendar = null;
-        try { techDataCalendar = fixedAsset.getRelatedOne("TechDataCalendar"); 
-        } 
-        catch (GenericEntityException e) {
+        try {
+            techDataCalendar = fixedAsset.getRelatedOne("TechDataCalendar");
+        } catch (GenericEntityException e) {
             // no calendar ok, when not more that total capacity
-            if (fixedAsset.getDouble("productionCapacity").doubleValue() >= quantity)
+            if (fixedAsset.getDouble("productionCapacity").doubleValue() >= quantity) {
                 return "OK";
-            else
-                return "Quantity requested: " + quantity + " Quantity available: " + fixedAsset.getString("productionCapacity"); 
+            } else {
+                return "Quantity requested: " + quantity + " Quantity available: " + fixedAsset.getString("productionCapacity");
+            }
         }
         // now find all the dates and check the availabilty for each date
         // please note that calendarId is the same for (TechData)Calendar, CalendarExcDay and CalendarExWeek
         long dayCount = 0;
-        String resultMessage =  "";
-        while (dayCount < (long) reservLength)    {
+        String resultMessage = "";
+        while (dayCount < (long) reservLength) {
             GenericValue techDataCalendarExcDay = null;
             // find an existing Day exception record
-            Timestamp exceptionDateStartTime = new Timestamp((long)(reservStart.getTime() + (dayCount++ * 86400000)));
-            try {     techDataCalendarExcDay = delegator.findByPrimaryKey("TechDataCalendarExcDay",
-                    UtilMisc.toMap("calendarId", fixedAsset.get("calendarId"), "exceptionDateStartTime", exceptionDateStartTime)); 
-            }
-            catch (GenericEntityException e) {
-                if (fixedAsset.get("productionCapacity") != null)    {
-//                    Debug.logInfo(" No exception day record found, available: " + fixedAsset.getString("productionCapacity") + " Requested now: " + quantity, module);
+            Timestamp exceptionDateStartTime = new Timestamp((long) (reservStart.getTime() + (dayCount++ * 86400000)));
+            try {
+                techDataCalendarExcDay = delegator.findByPrimaryKey("TechDataCalendarExcDay",
+                        UtilMisc.toMap("calendarId", fixedAsset.get("calendarId"), "exceptionDateStartTime", exceptionDateStartTime));
+            } catch (GenericEntityException e) {
+                if (fixedAsset.get("productionCapacity") != null) {
+                    //Debug.logInfo(" No exception day record found, available: " + fixedAsset.getString("productionCapacity") + " Requested now: " + quantity, module);
                     if (fixedAsset.getDouble("productionCapacity").doubleValue() < quantity)
-                        resultMessage = resultMessage.concat(exceptionDateStartTime.toString().substring(0,10) + ", ");
+                        resultMessage = resultMessage.concat(exceptionDateStartTime.toString().substring(0, 10) + ", ");
                 }
             }
             if (techDataCalendarExcDay != null) {
                 // see if we can get the number of assets available
                 // first try techDataCalendarExcDay(exceptionCapacity) and then FixedAsset(productionCapacity)
                 // if still zero, do not check availability
-                double exceptionCapacity = 0.00;  
+                double exceptionCapacity = 0.00;
                 if (techDataCalendarExcDay.get("exceptionCapacity") != null)
                     exceptionCapacity = techDataCalendarExcDay.getDouble("exceptionCapacity").doubleValue();
                 if (exceptionCapacity == 0.00 && fixedAsset.get("productionCapacity") != null)
                     exceptionCapacity = fixedAsset.getDouble("productionCapacity").doubleValue();
-                if (exceptionCapacity != 0.00)     {
+                if (exceptionCapacity != 0.00) {
                     double usedCapacity = 0.00;
                     if (techDataCalendarExcDay.get("usedCapacity") != null)
                         usedCapacity = techDataCalendarExcDay.getDouble("usedCapacity").doubleValue();
-                    if (exceptionCapacity < (quantity + usedCapacity))    {
-                        resultMessage = resultMessage.concat(exceptionDateStartTime.toString().substring(0,10) + ", ");
-                        Debug.logInfo("No rental fixed Asset available: " + exceptionCapacity + 
-                                " already used: " + usedCapacity + 
+                    if (exceptionCapacity < (quantity + usedCapacity)) {
+                        resultMessage = resultMessage.concat(exceptionDateStartTime.toString().substring(0, 10) + ", ");
+                        Debug.logInfo("No rental fixed Asset available: " + exceptionCapacity +
+                                " already used: " + usedCapacity +
                                 " Requested now: " + quantity, module);
                     }
                 }
@@ -633,7 +635,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
         if (resultMessage.compareTo("") == 0)
             return "OK";
-        else 
+        else
             return "I am sorry, not available at these dates: " + resultMessage + "item not added to the shopping cart.....";
     }
     

@@ -307,6 +307,40 @@ public class ShoppingCart implements Serializable {
             return null;
         }
 
+        public GenericValue getBillingAddress(GenericDelegator delegator) {
+            GenericValue valueObj = this.getValueObject(delegator);
+            GenericValue postalAddress = null;
+
+            if ("PaymentMethod".equals(valueObj.getEntityName())) {
+                String paymentMethodTypeId = valueObj.getString("paymentMethodTypeId");
+                String paymentMethodId = valueObj.getString("paymentMethodId");
+                Map lookupFields = UtilMisc.toMap("paymentMethodId", paymentMethodId);
+
+                // billing account, credit card, gift card, eft account all have postal address
+                try {
+                    GenericValue pmObj = null;
+                    if ("CREDIT_CARD".equals(paymentMethodTypeId)) {
+                        pmObj = delegator.findByPrimaryKey("CreditCard", lookupFields);
+                    } else if ("GIFT_CARD".equals(paymentMethodTypeId)) {
+                        pmObj = delegator.findByPrimaryKey("GiftCard", lookupFields);
+                    } else if ("EFT_ACCOUNT".equals(paymentMethodTypeId)) {
+                        pmObj = delegator.findByPrimaryKey("BillingAccount", lookupFields);
+                    } else if ("EXT_BILLACT".equals(paymentMethodTypeId)) {
+                        pmObj = delegator.findByPrimaryKey("BillingAccount", lookupFields);
+                    }
+                    if (pmObj != null) {
+                        postalAddress = pmObj.getRelatedOne("PostalAddress");
+                    } else {
+                        Debug.logInfo("No PaymentMethod Object Found - " + paymentMethodId, module);
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+            }
+
+            return postalAddress;
+        }
+
         public List makeOrderPaymentInfos(GenericDelegator delegator) {
             GenericValue valueObj = this.getValueObject(delegator);
             List values = new LinkedList();
@@ -318,26 +352,11 @@ public class ShoppingCart implements Serializable {
                     Map lookupFields = UtilMisc.toMap("paymentMethodId", paymentMethodId);
                     String billingAddressId = null;
 
-                    // billing account, credit card, gift card, eft account all have postal address
-                    try {
-                        GenericValue pmObj = null;
-                        if ("CREDIT_CARD".equals(paymentMethodTypeId)) {
-                            pmObj = delegator.findByPrimaryKey("CreditCard", lookupFields);
-                        } else if ("GIFT_CARD".equals(paymentMethodTypeId)) {
-                            pmObj = delegator.findByPrimaryKey("GiftCard", lookupFields);
-                        } else if ("EFT_ACCOUNT".equals(paymentMethodTypeId)) {
-                            pmObj = delegator.findByPrimaryKey("BillingAccount", lookupFields);
-                        } else if ("EXT_BILLACT".equals(paymentMethodTypeId)) {
-                            pmObj = delegator.findByPrimaryKey("BillingAccount", lookupFields);
-                        }
-                        if (pmObj != null) {
-                            billingAddressId = pmObj.getString("contactMechId");
-                        } else {
-                            Debug.logInfo("No PaymentMethod Object Found - " + paymentMethodId, module);
-                        }
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e ,module);
+                    GenericValue billingAddress = this.getBillingAddress(delegator);
+                    if (billingAddress != null) {
+                        billingAddressId = billingAddress.getString("contactMechId");
                     }
+                                        
                     if (UtilValidate.isNotEmpty(billingAddressId)) {
                         GenericValue orderCm = delegator.makeValue("OrderContactMech", null);
                         orderCm.set("contactMechPurposeTypeId", "BILLING_LOCATION");
@@ -922,7 +941,7 @@ public class ShoppingCart implements Serializable {
         this.additionalPartyRole.clear();        
         
         // clear the auto-save info
-        if (org.ofbiz.product.store.ProductStoreWorker.autoSaveCart(delegator, productStoreId)) {
+        if (org.ofbiz.product.store.ProductStoreWorker.autoSaveCart(this.getDelegator(), productStoreId)) {
             GenericValue ul = this.getUserLogin();
             if (ul == null) {
                 ul = this.getAutoUserLogin();
@@ -931,7 +950,7 @@ public class ShoppingCart implements Serializable {
             // load the auto-save list ID
             if (autoSaveListId == null) {
                 try {
-                    autoSaveListId = org.ofbiz.order.shoppinglist.ShoppingListEvents.getAutoSaveListId(delegator, null, ul);
+                    autoSaveListId = org.ofbiz.order.shoppinglist.ShoppingListEvents.getAutoSaveListId(this.getDelegator(), null, ul);
                 } catch (GeneralException e) {
                     Debug.logError(e, module);
                 }
@@ -940,7 +959,7 @@ public class ShoppingCart implements Serializable {
             // clear the list
             if (autoSaveListId != null) {
                 try {
-                    org.ofbiz.order.shoppinglist.ShoppingListEvents.clearListInfo(delegator, autoSaveListId);
+                    org.ofbiz.order.shoppinglist.ShoppingListEvents.clearListInfo(this.getDelegator(), autoSaveListId);
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
                 }
@@ -1008,7 +1027,7 @@ public class ShoppingCart implements Serializable {
 
     public String getPaymentMethodTypeId(String paymentMethodId) {
         try {
-            GenericValue pm = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+            GenericValue pm = this.getDelegator().findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
             if (pm != null) {
                 return pm.getString("paymentMethodTypeId");
             }
@@ -1195,7 +1214,7 @@ public class ShoppingCart implements Serializable {
 
             GenericValue paymentMethod = null;
             try {
-                paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", inf.paymentMethodId));
+                paymentMethod = this.getDelegator().findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", inf.paymentMethodId));
             } catch (GenericEntityException e) {
                 Debug.logError(e, "ERROR: Unable to get payment method record to expire : " + inf.paymentMethodId, module);
             }
@@ -1317,20 +1336,18 @@ public class ShoppingCart implements Serializable {
     }
 
     /* determines if the id supplied is a payment method or not by searching in the entity engine */
-    public boolean isPaymentMethodType(String id){
+    public boolean isPaymentMethodType(String id) {
         GenericValue paymentMethodType = null;
-        try{
-            paymentMethodType = delegator.findByPrimaryKeyCache("PaymentMethodType",UtilMisc.toMap("paymentMethodTypeId", id));
+        try {
+            paymentMethodType = this.getDelegator().findByPrimaryKeyCache("PaymentMethodType", UtilMisc.toMap("paymentMethodTypeId", id));
+        } catch (GenericEntityException e) {
+            Debug.logInfo(e, "Problems getting PaymentMethodType", module);
         }
-        catch(GenericEntityException e) {
-            Debug.logInfo(e,"Problems getting PaymentMethodType", module);
+        if (paymentMethodType == null) {
+            return false;
+        } else {
+            return true;
         }
-            if (paymentMethodType == null){
-                return false;
-            }
-            else{
-                return true;
-            }
     }
 
     // =======================================================================
@@ -1588,7 +1605,7 @@ public class ShoppingCart implements Serializable {
         String shipmentMethodTypeId = this.getShipmentMethodTypeId(idx);
         if (UtilValidate.isNotEmpty(shipmentMethodTypeId)) {
             try {
-                return delegator.findByPrimaryKey("ShipmentMethodType",
+                return this.getDelegator().findByPrimaryKey("ShipmentMethodType",
                         UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
@@ -1988,6 +2005,34 @@ public class ShoppingCart implements Serializable {
         }
 
         return itemInfos;
+    }
+
+    /** Returns true when there are shippable items in the cart */
+    public boolean shippingApplies() {
+        boolean shippingApplies = false;
+        Iterator i = this.iterator();
+        while (i.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) i.next();
+            if (item.shippingApplies()) {
+                shippingApplies = true;
+                break;
+            }
+        }
+        return shippingApplies;
+    }
+
+    /** Returns true when there are taxable items in the cart */
+    public boolean taxApplies() {
+        boolean taxApplies = false;
+        Iterator i = this.iterator();
+        while (i.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) i.next();
+            if (item.taxApplies()) {
+                taxApplies = true;
+                break;
+            }
+        }
+        return taxApplies;
     }
 
     /** Returns a Map of all features applied to products in the cart with quantities for a specific ship group. */
@@ -2568,7 +2613,7 @@ public class ShoppingCart implements Serializable {
                     String responseId = (String) ri.next();
                     GenericValue response = null;
                     try {
-                        response = delegator.findByPrimaryKey("SurveyResponse", UtilMisc.toMap("surveyResponseId", responseId));
+                        response = this.getDelegator().findByPrimaryKey("SurveyResponse", UtilMisc.toMap("surveyResponseId", responseId));
                     } catch (GenericEntityException e) {
                         Debug.logError(e, "Unable to obtain SurveyResponse record for ID : " + responseId, module);
                     }
@@ -2638,7 +2683,7 @@ public class ShoppingCart implements Serializable {
         long seqId = 1;
         while (grpIterator.hasNext()) {
             CartShipInfo csi = (CartShipInfo) grpIterator.next();
-            groups.addAll(csi.makeItemShipGroupAndAssoc(delegator, this, seqId));
+            groups.addAll(csi.makeItemShipGroupAndAssoc(this.getDelegator(), this, seqId));
             seqId++;
         }
         return groups;
