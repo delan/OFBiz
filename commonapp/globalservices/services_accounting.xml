@@ -60,7 +60,13 @@
         <attribute name="termValue" type="Long" mode="IN" optional="false"/>
         <attribute name="uomId" type="String" mode="IN" optional="true"/> 
         <attribute name="invoiceTermId" type="String" mode="OUT" optional="false"/>       
-    </service>    
+    </service>   
+    <service name="createInvoiceFromOrder" engine="java"
+            location="org.ofbiz.commonapp.accounting.invoice.InvoiceServices" invoke="createInvoiceFromOrder">
+        <description>Create an invoice from existing order</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>
+    </service> 
     
     <!-- Payment Method services -->
     <service name="deletePaymentMethod" engine="java"
