@@ -33,7 +33,7 @@
 		<auto-fields-service service-name="updateProductStore" map-name=""/>
 		
 		<field use-when="productStore!=null" name="productStoreId" tooltip="This cannot be changed without re-creating the Product Store"><display/></field>
-		<field use-when="productStore==null&amp;&amp;productStoreId!=null" name="productStoreId" tooltip="Could not find ProductStore with ID [${productStoreId}]"><text size="20" maxlength="20"/></field>	
+		<field name="productStoreId"><ignored/></field>		
 
 		<field name="storeName"><text size="30" maxlength="60"/></field>
 		<field name="title"><text size="30" maxlength="60"/></field>
