@@ -11,7 +11,9 @@
     <property name="priKeyName">contentId</property>    
     <property name="entityOperation">_UPDATE</property>    
     <property name="permissionType">simple</property>    
+    <property name="primaryHTMLField">textData</property>    
     <page-action name="/includes/permprep.bsh"/>
+    <content-action name="/layout/layoutprep.bsh"/>
     <content-action name="/includes/currentvalprep.bsh"/>
     <content-action name="/includes/formprep.bsh"/>
     <content-action name="/layout/editlayoutprep.bsh"/>
