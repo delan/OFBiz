@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.31 $
+ * @version    $Revision: 1.32 $
  */
 -->
 
@@ -333,10 +333,10 @@
             package-name="org.ofbiz.order.order"
             never-cache="true"
             title="Order Header And Roles View Entity">
-      <member-entity entity-alias="OR" entity-name="OrderRole"/>
+      <member-entity entity-alias="ORLE" entity-name="OrderRole"/>
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
-      <alias entity-alias="OR" name="partyId" group-by="true"/>
-      <alias entity-alias="OR" name="roleTypeId" group-by="true"/>
+      <alias entity-alias="ORLE" name="partyId" group-by="true"/>
+      <alias entity-alias="ORLE" name="roleTypeId" group-by="true"/>
       <alias entity-alias="OH" name="orderId"/>
       <alias entity-alias="OH" name="orderTypeId"/>
       <alias entity-alias="OH" name="orderDate"/>
@@ -344,7 +344,7 @@
       <alias entity-alias="OH" name="totalGrandAmount" field="grandTotal" function="sum"/>
       <alias entity-alias="OH" name="totalSubRemainingAmount" field="remainingSubTotal" function="sum"/>
       <alias entity-alias="OH" name="totalOrders" field="orderId" function="count"/>
-      <view-link entity-alias="OR" rel-entity-alias="OH">
+      <view-link entity-alias="ORLE" rel-entity-alias="OH">
         <key-map field-name="orderId"/>
       </view-link>
     </view-entity>
@@ -352,11 +352,11 @@
             package-name="org.ofbiz.order.order"
             never-cache="true"
             title="Order Header And Roles View Entity">
-      <member-entity entity-alias="OR" entity-name="OrderRole"/>
+      <member-entity entity-alias="ORLE" entity-name="OrderRole"/>
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
-      <alias-all entity-alias="OR"/>
+      <alias-all entity-alias="ORLE"/>
       <alias-all entity-alias="OH"/>
-      <view-link entity-alias="OR" rel-entity-alias="OH">
+      <view-link entity-alias="ORLE" rel-entity-alias="OH">
         <key-map field-name="orderId"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="OrderType">
