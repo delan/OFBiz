@@ -1,5 +1,5 @@
 /*
- * $Id: JobManager.java,v 1.10 2003/12/18 02:13:03 ajzeneski Exp $
+ * $Id: JobManager.java,v 1.11 2004/01/24 18:44:25 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * JobManager
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class JobManager {
@@ -332,6 +332,14 @@ public class JobManager {
         } catch (GenericEntityException e) {
             throw new JobManagerException(e.getMessage(), e);
         }
+    }
+
+    /**
+     * Kill a JobInvoker Thread.
+     * @param threadName Name of the JobInvoker Thread to kill.
+     */
+    public void killThread(String threadName) {
+        jp.killThread(threadName);
     }
 
     /** Close out the scheduler thread. */

@@ -1,5 +1,5 @@
 /*
- * $Id: JobInvoker.java,v 1.2 2003/11/25 23:56:08 ajzeneski Exp $ 
+ * $Id: JobInvoker.java,v 1.3 2004/01/24 18:44:25 ajzeneski Exp $ 
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.base.util.UtilDateTime;
  * JobInvoker
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class JobInvoker implements Runnable {
@@ -46,9 +46,14 @@ public class JobInvoker implements Runnable {
     private JobPoller jp = null;
     private Thread thread = null;
     private Date created = null;
+    private String name = null;
     private int count = 0;
     private int wait = 0;
     private boolean run = false;
+
+    private Job currentJob = null;
+    private int statusCode = 0;
+    private long jobStart = 0;
 
     public JobInvoker(JobPoller jp) {
         this(jp, WAIT_TIME);
@@ -62,10 +67,12 @@ public class JobInvoker implements Runnable {
         this.wait = wait;
 
         // get a new thread
-        thread = new Thread(this);
-        thread.setDaemon(false);
+        this.thread = new Thread(this);
+        this.thread.setDaemon(false);
+        this.name = this.thread.getName();
+
         if (Debug.verboseOn()) Debug.logVerbose("JobInoker: Starting Invoker Thread -- " + thread.getName(), module);
-        thread.start();
+        this.thread.start();
     }
     
     protected JobInvoker() {}
@@ -100,6 +107,60 @@ public class JobInvoker implements Runnable {
         return created.getTime();
     }
 
+    /**
+     * Gets the name of this JobInvoker.
+     * @return Name of the invoker.
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Gets the status code for this thread (0 = sleeping, 1 = running job)
+     * @return 0 for sleeping or 1 when running a job.
+     */
+    public int getCurrentStatus() {
+        return this.statusCode;
+    }
+
+    /**
+     * Gets the total time the current job has been running or 0 when sleeping.
+     * @return Total time the curent job has been running.
+     */
+    public long getCurrentRuntime() {
+        if (this.jobStart > 0) {
+            long now = System.currentTimeMillis();
+            return now - this.jobStart;
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Get the current running job's name.
+     * @return String name of the current running job.
+     */
+    public String getJobName() {
+        if (this.statusCode == 1) {
+            if (this.currentJob != null) {
+                return this.currentJob.getJobName();
+            } else {
+                return "Invalid Job!";
+            }
+        } else {
+            return "<Sleeping>";
+        }
+    }
+
+    /**
+     * Kill this invoker thread.s
+     */
+    public void kill() {
+        this.stop();
+        this.thread.interrupt();
+        this.thread = null;
+    }
+
     public synchronized void run() {
         while (run) {
             Job job = jp.next();
@@ -112,9 +173,21 @@ public class JobInvoker implements Runnable {
                     stop();
                 }
             } else {
+                // setup the current job settings
+                this.currentJob = job;
+                this.statusCode = 1;
+                this.jobStart = System.currentTimeMillis();
+
+                // execute the job
                 if (Debug.verboseOn()) Debug.logVerbose("Invoker: " + thread.getName() + " executing job -- " + job.getJobName(), module);
                 job.exec();
                 if (Debug.verboseOn()) Debug.logVerbose("Invoker: " + thread.getName() + " finished executing job -- " + job.getJobName(), module);
+
+                // clear the current job settings
+                this.currentJob = null;
+                this.statusCode = 0;
+                this.jobStart = 0;
+
                 count++;
                 if (Debug.verboseOn()) Debug.logVerbose("Invoker: " + thread.getName() + " (" + count + ") total.", module);
             }
