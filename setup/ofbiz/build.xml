@@ -36,6 +36,13 @@
     </target>
 
     <target name="install-catalina">
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+        
+        <property name="ofbiz.version" value=""/>
+        
         <property environment="env" />
         <property name="catalina.dir" value="${env.CATALINA_HOME}" />
 
@@ -81,6 +88,11 @@
     <!-- ================================================================== -->
 
     <target name="ofbiz-init">
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+        
         <property environment="env" />
         <property name="home.dir"       value="${env.OFBIZ_HOME}" />
         <property name="classes.dir"    value="${home.dir}/classes" />
@@ -89,6 +101,11 @@
     </target>
 
     <target name="catalina-init">
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+        
         <property environment="env" />
         <property name="catalina.dir"    value="${env.CATALINA_HOME}" />
         <property name="home.dir"        value="${env.OFBIZ_HOME}" />
@@ -123,18 +140,18 @@
 
         <delete dir="${classes.dir}/org/ofbiz/commonapp" />
 
-        <delete file="${lib.dir}/ofbcore-share.jar" />
-        <delete file="${lib.dir}/ofbcore-entity.jar" />
-        <delete file="${lib.dir}/ofbcore-service.jar" />
-        <delete file="${lib.dir}/ofbcore-extutil.jar" />
-        <delete file="${lib.dir}/ofbcore-workflow.jar" />
-        <delete file="${lib.dir}/ofbcore-rules.jar" />
-        <delete file="${lib.dir}/ofbcore-datafile.jar" />
-        <delete file="${lib.dir}/ofbcore-minilang.jar" />
+        <delete file="${lib.dir}/ofbcore-share${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-entity${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-service${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-extutil${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-workflow${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-rules${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-datafile${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-minilang${ofbiz.version}.jar" />
 
         <delete file="${lib.dir}/commonapp.jar" />
 
-        <delete file="${j2eedeploy.dir}/ofbcore-ejb.jar" />
+        <delete file="${j2eedeploy.dir}/ofbcore-ejb${ofbiz.version}.jar" />
     </target>
 
     <target name="ofbiz-clean" depends="ofbiz-init,sub-clean">
@@ -325,21 +342,21 @@
         <copy file="commonapp/etc/serviceengine.xml" toDir="${classes.dir}" />
         <copy file="commonapp/etc/tyrexdomain.xml" toDir="${classes.dir}" />
 
-        <copy file="core/lib/ofbcore-share.jar" toFile="${lib.dir}/ofbcore-share.jar" />
-        <copy file="core/lib/ofbcore-entity.jar" toFile="${lib.dir}/ofbcore-entity.jar" />
-        <copy file="core/lib/ofbcore-service.jar" toFile="${lib.dir}/ofbcore-service.jar" />
-        <copy file="core/lib/ofbcore-extutil.jar" toFile="${lib.dir}/ofbcore-extutil.jar" />
-        <copy file="core/lib/ofbcore-workflow.jar" toFile="${lib.dir}/ofbcore-workflow.jar" />
-        <copy file="core/lib/ofbcore-rules.jar" toFile="${lib.dir}/ofbcore-rules.jar" />
-        <copy file="core/lib/ofbcore-datafile.jar" toFile="${lib.dir}/ofbcore-datafile.jar" />
-        <copy file="core/lib/ofbcore-minilang.jar" toFile="${lib.dir}/ofbcore-minilang.jar" />
+        <copy file="core/lib/ofbcore-share${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-entity${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-service${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-extutil${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-workflow${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-rules${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-datafile${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-minilang${ofbiz.version}.jar" toDir="${lib.dir}" />
 
         <copy file="commonapp/lib/commonapp.jar" toFile="${lib.dir}/commonapp.jar" />
     </target>
 
     <target name="ejbdeploy" depends="deploy">
-        <copy file="core/lib/ofbcore-ejb.jar"
-            toFile="${j2eedeploy.dir}/ofbcore-ejb.jar" />
+        <copy file="core/lib/ofbcore-ejb${ofbiz.version}.jar"
+            toDir="${j2eedeploy.dir}" />
     </target>
 
     <!-- Copy all files necessary for EXTERNAL running -->
@@ -396,15 +413,15 @@
         <copy file="lib/compile/mail.jar"                    toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/compile/xerces.jar"                  toDir="${ext.dir}/lib/ext"/>
 
-        <copy file="core/lib/ofbcore-share.jar"              toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-entity.jar"             toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-service.jar"            toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-extutil.jar"            toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-workflow.jar"           toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-rules.jar"              toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-datafile.jar"           toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-minilang.jar"           toDir="${ext.dir}/lib"/>
-        <copy file="commonapp/lib/commonapp.jar"             toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-share${ofbiz.version}.jar"              toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-entity${ofbiz.version}.jar"             toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-service${ofbiz.version}.jar"            toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-extutil${ofbiz.version}.jar"            toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-workflow${ofbiz.version}.jar"           toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-rules${ofbiz.version}.jar"              toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-datafile${ofbiz.version}.jar"           toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-minilang${ofbiz.version}.jar"           toDir="${ext.dir}/lib"/>
+        <copy file="commonapp/lib/commonapp${ofbiz.version}.jar"             toDir="${ext.dir}/lib"/>
 
         <copy file="webtools/lib/webtools.war"               toDir="${ext.dir}/webapps"/>
         <copy file="commonapp/lib/commonapp.war"             toDir="${ext.dir}/webapps"/>

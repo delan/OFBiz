@@ -40,6 +40,8 @@
         <!-- Allow module-level defaults for this build -->
         <property file="build.properties"/>
         
+        <property name="ofbiz.version" value=""/>
+        
         <property environment="env" />
         <property name="name"           value="ofbcore" />
         <property name="src.dir"        value="src" />
@@ -194,15 +196,15 @@
     </target>
 
     <target name="jar" depends="classes">
-        <jar jarfile="${lib.dir}/${name}-share.jar" basedir="${build.dir}/share" />
-        <jar jarfile="${lib.dir}/${name}-entity.jar" basedir="${build.dir}/entity" />
-        <jar jarfile="${lib.dir}/${name}-service.jar" basedir="${build.dir}/service" />
-        <jar jarfile="${lib.dir}/${name}-extutil.jar" basedir="${build.dir}/extutil" />
-        <jar jarfile="${lib.dir}/${name}-webapp.jar" basedir="${build.dir}/webapp" />
-        <jar jarfile="${lib.dir}/${name}-workflow.jar" basedir="${build.dir}/workflow" />
-        <jar jarfile="${lib.dir}/${name}-rules.jar" basedir="${build.dir}/rules" />
-        <jar jarfile="${lib.dir}/${name}-datafile.jar" basedir="${build.dir}/datafile" />
-        <jar jarfile="${lib.dir}/${name}-minilang.jar" basedir="${build.dir}/minilang" />
+        <jar jarfile="${lib.dir}/${name}-share${ofbiz.version}.jar" basedir="${build.dir}/share" />
+        <jar jarfile="${lib.dir}/${name}-entity${ofbiz.version}.jar" basedir="${build.dir}/entity" />
+        <jar jarfile="${lib.dir}/${name}-service${ofbiz.version}.jar" basedir="${build.dir}/service" />
+        <jar jarfile="${lib.dir}/${name}-extutil${ofbiz.version}.jar" basedir="${build.dir}/extutil" />
+        <jar jarfile="${lib.dir}/${name}-webapp${ofbiz.version}.jar" basedir="${build.dir}/webapp" />
+        <jar jarfile="${lib.dir}/${name}-workflow${ofbiz.version}.jar" basedir="${build.dir}/workflow" />
+        <jar jarfile="${lib.dir}/${name}-rules${ofbiz.version}.jar" basedir="${build.dir}/rules" />
+        <jar jarfile="${lib.dir}/${name}-datafile${ofbiz.version}.jar" basedir="${build.dir}/datafile" />
+        <jar jarfile="${lib.dir}/${name}-minilang${ofbiz.version}.jar" basedir="${build.dir}/minilang" />
 
 <!--
         <jar jarfile="${lib.dir}/${name}-crypto.jar" basedir="${build.dir}/crypto" />

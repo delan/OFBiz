@@ -33,7 +33,16 @@
     <!-- ================================================================== -->
 
     <target name="init">
-	<property environment="env"                                 />
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow project-level defaults for this build -->
+        <property file="../build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+        
+        <property name="ofbiz.version" value=""/>
+        
+	    <property environment="env"                                 />
         <property name="name"           value="workeffort"          />
         <property name="src.dir"        value="src"                 />
         <property name="etc.dir"        value="etc"                 />
@@ -41,7 +50,7 @@
         <property name="webapp.dir"     value="./webapp"            />
         <property name="walib.dir"      value="${webapp.dir}/WEB-INF/lib" />
         <property name="waclasses.dir"  value="${webapp.dir}/WEB-INF/classes" />
-	<property name="doc.dir"        value="docs"                />
+	    <property name="doc.dir"        value="docs"                />
         <property name="build.dir"      value="build"               />
         <property name="pkg-dist.name"  value="${name}-pkg"         />
         <property name="commonapp.etc.dir" value="../commonapp/etc" />
@@ -51,15 +60,15 @@
         <property name="commonapplib.dir"  value="../commonapp/lib" />
         <property name="extlib.dir"        value="../lib" />
 
-        <property name="ofbcore-share.jar"    value="${corelib.dir}/ofbcore-share.jar" />
-        <property name="ofbcore-entity.jar"    value="${corelib.dir}/ofbcore-entity.jar" />
-        <property name="ofbcore-service.jar"    value="${corelib.dir}/ofbcore-service.jar" />
-        <property name="ofbcore-extutil.jar"    value="${corelib.dir}/ofbcore-extutil.jar" />
-        <property name="ofbcore-webapp.jar"   value="${corelib.dir}/ofbcore-webapp.jar" />
-        <property name="ofbcore-workflow.jar" value="${corelib.dir}/ofbcore-workflow.jar" />
-        <property name="ofbcore-rules.jar"    value="${corelib.dir}/ofbcore-rules.jar" />
-        <property name="ofbcore-datafile.jar"    value="${corelib.dir}/ofbcore-datafile.jar" />
-        <property name="ofbcore-minilang.jar"    value="${corelib.dir}/ofbcore-minilang.jar" />
+        <property name="ofbcore-share.jar"    value="${corelib.dir}/ofbcore-share${ofbiz.version}.jar" />
+        <property name="ofbcore-entity.jar"   value="${corelib.dir}/ofbcore-entity${ofbiz.version}.jar" />
+        <property name="ofbcore-service.jar"  value="${corelib.dir}/ofbcore-service${ofbiz.version}.jar" />
+        <property name="ofbcore-extutil.jar"  value="${corelib.dir}/ofbcore-extutil${ofbiz.version}.jar" />
+        <property name="ofbcore-webapp.jar"   value="${corelib.dir}/ofbcore-webapp${ofbiz.version}.jar" />
+        <property name="ofbcore-workflow.jar" value="${corelib.dir}/ofbcore-workflow${ofbiz.version}.jar" />
+        <property name="ofbcore-rules.jar"    value="${corelib.dir}/ofbcore-rules${ofbiz.version}.jar" />
+        <property name="ofbcore-datafile.jar" value="${corelib.dir}/ofbcore-datafile${ofbiz.version}.jar" />
+        <property name="ofbcore-minilang.jar" value="${corelib.dir}/ofbcore-minilang${ofbiz.version}.jar" />
         <property name="ofb-jars1"    value="${ofbcore-share.jar}:${ofbcore-entity.jar}:${ofbcore-service.jar}:${ofbcore-extutil.jar}" />
         <property name="ofb-jars2"    value="${ofbcore-webapp.jar}:${ofbcore-workflow.jar}:${ofbcore-rules.jar}:${ofbcore-datafile.jar}:${ofbcore-minilang.jar}" />
 
@@ -147,7 +156,7 @@
 
     <target name="jar-deploy" depends="jar">
     	<copy file="${lib.dir}/${name}.jar" tofile="${walib.dir}/${name}.jar" />
-    	<copy file="${ofbcore-webapp.jar}" tofile="${walib.dir}/ofbcore-webapp.jar" />
+    	<copy file="${ofbcore-webapp.jar}" toDir="${walib.dir}" />
     </target>
 
     <!-- ================================================================== -->
