@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/27 17:29:31  epabst
+ * simplified
+ *
  * Revision 1.1.1.1  2001/08/24 01:01:42  azeneski
  * Initial Import
  * 
@@ -11,6 +14,8 @@ package org.ofbiz.ecommerce.shoppingcart;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
+
+import org.ofbiz.core.entity.GenericValue;
 
 /**
  * <p><b>Title:</b> ShoppingCartItem.java
@@ -40,32 +45,30 @@ import java.util.HashMap;
  */
 public class ShoppingCartItem implements Serializable {
 
-    private String productId;
-    private String description;
-    private String itemComment;
-    private double basePrice;
-    private double discountAmount;
-    private double quantity;
-    private int type;
+    private GenericValue product;
     private HashMap attributes;
+    private String itemComment;
+    private double discountAmount;
+    private double quantity;            
+    private boolean shippingApplies;
+    private int type;
     
     /** Creates new ShoppingCartItem object. */
-    public ShoppingCartItem(String productId, String description, double basePrice, double quantity) {
-        this(productId, description, basePrice, quantity, null);
+    public ShoppingCartItem(GenericValue product, double quantity) {
+        this(product,quantity,null);
     }
-    
+       
     /** Creates new ShoppingCartItem object. */
-    public ShoppingCartItem(String productId, String description, double basePrice, double quantity, HashMap attributes) {
-        this.productId = productId;
-        this.description = description;
-        this.basePrice = basePrice;
+    public ShoppingCartItem(GenericValue product, double quantity, HashMap attributes) {
+        this.product = product;
         this.quantity = quantity;
         this.attributes = attributes;
         this.discountAmount = 0.00;
         this.itemComment = null;
+        this.shippingApplies = true;
         this.type = 0;
-    }        
-    
+    }
+        
     /** Sets the quantity for the item. */
     public void setQuantity(double quantity) {
         this.quantity = quantity;
@@ -81,14 +84,24 @@ public class ShoppingCartItem implements Serializable {
         this.itemComment = itemComment;
     }
     
+    /** Specifies if shipping applies to this item. */
+    public void setShippingApplies(boolean shippingApplies) {
+        this.shippingApplies = shippingApplies;
+    }
+    
+    /** Returns true if shipping charges apply to this item. */
+    public boolean shippingApplies() {
+        return shippingApplies;
+    }
+    
     /** Returns the item's productId. */
     public String getProductId() {
-        return productId;
+        return product.getString("productId");
     }
     
     /** Returns the item's description. */
     public String getDescription() {
-        return description;
+        return product.getString("description");
     }
     
     /** Returns the item's comment. */
@@ -103,7 +116,8 @@ public class ShoppingCartItem implements Serializable {
     
     /** Returns the base price. */
     public double getBasePrice() {
-        return basePrice;
+        // todo calculate the price using price component.
+        return product.getDouble("defaultPrice").doubleValue();
     }
     
     /** Returns the discount dollar amount. */
@@ -113,12 +127,12 @@ public class ShoppingCartItem implements Serializable {
     
     /** Returns the adjusted price amount. */
     public double getPrice() {
-        return (basePrice - discountAmount);
+        return (getBasePrice() - discountAmount);
     }
     
     /** Returns the total line price. */
     public double getTotalPrice() {
-        return (basePrice - discountAmount) * quantity;
+        return (getBasePrice() - discountAmount) * quantity;
     }
     
     /** Returns the attributes for the item. */
@@ -142,14 +156,18 @@ public class ShoppingCartItem implements Serializable {
     
     /** Compares the specified object with this cart item. */
     public boolean equals(ShoppingCartItem item) {
-        if ( item == null || !item.getProductId().equals(productId) )
+        if ( item == null ) 
             return false;
-        //XXX if one has attributes and the other doesn't, they may
-        //be considered equal.  Is this desired behavior?
-        if ( item.getAttributes() != null && getAttributes() != null ) {
-            if ( !item.getAttributes().equals(getAttributes()) )
-                return false;
+        if ( item.getProductId().equals(getProductId()) ) {
+            if ( getAttributes() != null ) {
+                if ( item.getAttributes() != null ) {
+                    if ( item.getAttributes().equals(getAttributes()) )
+                        return true;
+                }
+            } 
+            else if (item.getAttributes() == null ) 
+                return true;
         }
-        return true;
-    }
+        return false;
+    }                                    
 }

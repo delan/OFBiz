@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1.1.1  2001/08/24 01:01:42  azeneski
+ * Initial Import
+ *
  */
 
 package org.ofbiz.ecommerce.shoppingcart;
@@ -60,8 +63,8 @@ public class ShoppingCart {
     }
     
     /** Add an item to the shopping cart. */
-    public int addItem(String productId, String description, double price, double quantity, HashMap attributes) {
-        cartLines.add(new ShoppingCartItem(productId,description,price,quantity,attributes));
+    public int addItem(org.ofbiz.core.entity.GenericValue product, double quantity, HashMap attributes) {
+        cartLines.add(new ShoppingCartItem(product,quantity,attributes));
         return cartLines.size()-1;
     }
     

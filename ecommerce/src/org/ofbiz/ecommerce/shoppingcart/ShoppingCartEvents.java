@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/27 17:29:31  epabst
+ * simplified
+ *
  * Revision 1.1.1.1  2001/08/24 01:01:43  azeneski
  * Initial Import
  *
@@ -63,10 +66,8 @@ public class ShoppingCartEvents {
     /** Event to add an item to the shopping cart. */
     public static String addToCart(HttpServletRequest request, HttpServletResponse response) {
         String productId = null;
-        String quantityStr = null;        
-        String description = null;
-        double quantity = 0;
-        double price = 0.00;
+        String quantityStr = null;           
+        double quantity = 0;   
         HashMap attributes = null;
                 
         ShoppingCart cart = getCartObject(request);
@@ -104,24 +105,17 @@ public class ShoppingCartEvents {
             attributes = new HashMap(paramMap);
         
         // Get the product 
-        GenericHelper helper = GenericHelperFactory.getDefaultHelper();
-        GenericEntity product = helper.findByPrimaryKey("Product", 
+        GenericHelper helper = (GenericHelper) request.getAttribute("helper");
+        GenericValue product = helper.findByPrimaryKey("Product", 
                 UtilMisc.toMap("productId", productId));
         
         if ( product == null ) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,"No product found.");
             return "error";
         }
-        
-        // Here is where more detailed price finding will go.
-        try {
-            description = product.getString("description");
-            price = product.getDouble("defaultPrice").doubleValue();
-        }
-        catch ( Exception e ) { }
-         
+                    
         // create a new shopping cart item.
-        ShoppingCartItem newItem = new ShoppingCartItem(productId,description,price,quantity,attributes);
+        ShoppingCartItem newItem = new ShoppingCartItem(product,quantity,attributes);
         Debug.log("New item created: " + newItem.getProductId());
         
         // Check for existing cart item.
