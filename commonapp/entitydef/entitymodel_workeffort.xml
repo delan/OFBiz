@@ -163,6 +163,15 @@
       <field name="rateTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="rateTypeId"/>
+      <relation type="many" rel-entity-name="PartyRate">
+        <key-map field-name="rateTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="TimeEntry">
+        <key-map field-name="rateTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortAssignmentRate">
+        <key-map field-name="rateTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="TimeEntry"
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
@@ -200,6 +209,9 @@
       </relation>
       <relation type="one" fk-name="TIME_ENT_TSHT" rel-entity-name="Timesheet">
         <key-map field-name="timesheetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="TimeEntryBilling">
+        <key-map field-name="timeEntryId"/>
       </relation>
     </entity>
     <entity entity-name="TimeEntryBilling"
@@ -241,6 +253,12 @@
       <relation type="one-nofk" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="TimeEntry">
+        <key-map field-name="timesheetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="TimesheetRole">
+        <key-map field-name="timesheetId"/>
       </relation>
     </entity>
     <entity entity-name="TimesheetRole"
@@ -329,6 +347,12 @@
       <relation type="one" fk-name="DELIVERABLE_DLTYP" rel-entity-name="DeliverableType">
         <key-map field-name="deliverableTypeId"/>
       </relation>
+      <relation type="many" rel-entity-name="Requirement">
+        <key-map field-name="deliverableId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortDeliverableProd">
+        <key-map field-name="deliverableId"/>
+      </relation>
     </entity>
     <entity entity-name="DeliverableType"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -337,6 +361,9 @@
       <field name="description" type="description"></field>
       <prim-key field="deliverableTypeId"/>
       <relation type="many" rel-entity-name="Deliverable">
+        <key-map field-name="deliverableTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="QuoteItem">
         <key-map field-name="deliverableTypeId"/>
       </relation>
     </entity>
@@ -446,6 +473,45 @@
         <key-map field-name="workflowPackageId" rel-field-name="packageId"/>
         <key-map field-name="workflowProcessId" rel-field-name="processId"/>
         <key-map field-name="workflowActivityId" rel-field-name="activityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="QuoteItem">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkRequirementFulfillment">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="TimeEntry">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortDeliverableProd">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortBilling">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortAssignmentRate">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CommunicationEventWorkEff">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortGoodStandard">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortFixedAssetStd">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortFixedAssetAssign">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortInventoryProduced">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortInventoryAssign">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortSkillStandard">
+        <key-map field-name="workEffortId"/>
       </relation>
     </entity>
     <view-entity entity-name="WorkEffortAndPartyAssign"

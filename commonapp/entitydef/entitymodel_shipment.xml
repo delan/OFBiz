@@ -75,6 +75,9 @@
         <key-map field-name="shipmentId"/>
         <key-map field-name="shipmentItemSeqId"/>
       </relation>
+      <relation type="many" rel-entity-name="ItemIssuanceRole">
+        <key-map field-name="itemIssuanceId"/>
+      </relation>
     </entity>
     <entity entity-name="ItemIssuanceRole"
             package-name="org.ofbiz.commonapp.shipment.issuance"
@@ -131,6 +134,9 @@
       <relation type="one" fk-name="SHP_RCPT_ORDITM" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentReceiptRole">
+        <key-map field-name="receiptId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentReceiptRole"
@@ -291,6 +297,24 @@
       <relation type="one" fk-name="SHPMNT_PRTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
+      <relation type="many" rel-entity-name="PackagingContent">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentRouteSegment">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentItemFeature">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentItemBilling">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentItem">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentStatus">
+        <key-map field-name="shipmentId"/>
+      </relation>
     </entity>
     <entity entity-name="ShipmentAttribute"
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -391,6 +415,26 @@
       <relation type="one" fk-name="SHPMNT_ITM_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
+      <relation type="many" rel-entity-name="ItemIssuance">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PackagingContent">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentItemFeature">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentItemBilling">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShippingDocument">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentItemSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="ShipmentItemBilling"
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -447,6 +491,9 @@
       <relation type="many" rel-entity-name="OrderShipmentPreference">
         <key-map field-name="shipmentMethodTypeId"/>
       </relation>
+      <relation type="many" rel-entity-name="ShipmentRouteSegment">
+        <key-map field-name="shipmentMethodTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="ShipmentPackage"
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -454,6 +501,15 @@
       <field name="shipmentPackageId" type="id-ne"></field>
       <field name="dateCreated" type="date-time"></field>
       <prim-key field="shipmentPackageId"/>
+      <relation type="many" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="shipmentPackageId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PackagingContent">
+        <key-map field-name="shipmentPackageId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShippingDocument">
+        <key-map field-name="shipmentPackageId"/>
+      </relation>
     </entity>
     <entity entity-name="ShipmentStatus"
             package-name="org.ofbiz.commonapp.shipment.shipment"

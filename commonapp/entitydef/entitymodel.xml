@@ -319,6 +319,18 @@
       <relation type="many" rel-entity-name="InvoiceStatus">
         <key-map field-name="statusId"/>
       </relation>
+      <relation type="many" rel-entity-name="IssueCase">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="RequirementStatus">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortFixedAssetAssign">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentStatus">
+        <key-map field-name="statusId"/>
+      </relation>
     </entity>
     <entity entity-name="StatusType"
             package-name="org.ofbiz.commonapp.common.status"
@@ -404,6 +416,9 @@
         <key-map field-name="uomId"/>
       </relation>
       <relation type="many" rel-entity-name="InvoiceItem">
+        <key-map field-name="uomId"/>
+      </relation>
+      <relation type="many" rel-entity-name="QuoteItem">
         <key-map field-name="uomId"/>
       </relation>
     </entity>
@@ -855,6 +870,9 @@
       <relation type="many" rel-entity-name="DocumentAttribute">
         <key-map field-name="documentId"/>
       </relation>
+      <relation type="many" rel-entity-name="ShippingDocument">
+        <key-map field-name="documentId"/>
+      </relation>
     </entity>
     <entity entity-name="DocumentAttribute"
             package-name="org.ofbiz.commonapp.content.document"
@@ -1290,6 +1308,9 @@
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ServerHit">
+        <key-map field-name="visitId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyNeed">
         <key-map field-name="visitId"/>
       </relation>
     </entity>

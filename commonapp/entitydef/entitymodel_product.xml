@@ -236,6 +236,9 @@
       <relation type="many" rel-entity-name="OrganizationGlAccount">
         <key-map field-name="productCategoryId"/>
       </relation>
+      <relation type="many" rel-entity-name="PartyNeed">
+        <key-map field-name="productCategoryId"/>
+      </relation>
     </entity>
     <entity entity-name="ProductCategoryAttribute"
             package-name="org.ofbiz.commonapp.product.category"
@@ -486,6 +489,15 @@
       <relation type="many" rel-entity-name="InvoiceItem">
         <key-map field-name="productFeatureId"/>
       </relation>
+      <relation type="many" rel-entity-name="QuoteItem">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="many" rel-entity-name="DesiredFeature">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentItemFeature">
+        <key-map field-name="productFeatureId"/>
+      </relation>
     </entity>
     <view-entity entity-name="ProductFeatureAndAppl"
             package-name="org.ofbiz.commonapp.product.feature"
@@ -707,6 +719,18 @@
         <key-map field-name="inventoryItemId"/>
       </relation>
       <relation type="many" rel-entity-name="InvoiceItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortInventoryProduced">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortInventoryAssign">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ItemIssuance">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentReceipt">
         <key-map field-name="inventoryItemId"/>
       </relation>
     </entity>
@@ -1121,6 +1145,27 @@
       <relation type="many" rel-entity-name="OrganizationGlAccount">
         <key-map field-name="productId"/>
       </relation>
+      <relation type="many" rel-entity-name="AgreementProductApplic">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyNeed">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="QuoteItem">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Requirement">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortGoodStandard">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentItem">
+        <key-map field-name="productId"/>
+      </relation>
     </entity>
     <entity entity-name="ProductAssoc"
             package-name="org.ofbiz.commonapp.product.product"
@@ -1452,6 +1497,12 @@
         <key-map field-name="facilityId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Requirement">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentRouteSegment">
         <key-map field-name="facilityId"/>
       </relation>
     </entity>

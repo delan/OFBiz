@@ -271,6 +271,12 @@
       <field name="skillTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="skillTypeId"/>
+      <relation type="many" rel-entity-name="QuoteItem">
+        <key-map field-name="skillTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortSkillStandard">
+        <key-map field-name="skillTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="TrainingClassType"
             package-name="org.ofbiz.commonapp.humanres.ability"

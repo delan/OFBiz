@@ -265,6 +265,15 @@
       <relation type="one" fk-name="ORDER_HDR_SYST" title="Sync" rel-entity-name="StatusItem">
         <key-map field-name="syncStatusId" rel-field-name="statusId"/>
       </relation>
+      <relation type="many" rel-entity-name="Picklist">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderRequirementCommitment">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="orderId"/>
+      </relation>
     </entity>
     <view-entity entity-name="OrderHeaderAndPaymentPref"
             package-name="org.ofbiz.commonapp.order.order"
@@ -415,6 +424,14 @@
       </relation>
       <relation type="one" fk-name="ORDER_ITEM_SYST" title="Sync" rel-entity-name="StatusItem">
         <key-map field-name="syncStatusId" rel-field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderRequirementCommitment">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
       </relation>
     </entity>
     <entity entity-name="OrderItemAssociation"
@@ -868,6 +885,9 @@
       <relation type="many" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
       </relation>
+      <relation type="many" rel-entity-name="ItemIssuance">
+        <key-map field-name="picklistId"/>
+      </relation>
     </entity>
     <entity entity-name="PicklistItem"
             package-name="org.ofbiz.commonapp.order.order"
@@ -977,6 +997,15 @@
       <relation type="one" fk-name="QUOTE_PRTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
+      <relation type="many" rel-entity-name="QuoteItem">
+        <key-map field-name="quoteId"/>
+      </relation>
+      <relation type="many" rel-entity-name="QuoteTerm">
+        <key-map field-name="quoteId"/>
+      </relation>
+      <relation type="many" rel-entity-name="QuoteRole">
+        <key-map field-name="quoteId"/>
+      </relation>
     </entity>
     <entity entity-name="QuoteAttribute"
             package-name="org.ofbiz.commonapp.order.quote"
@@ -1040,6 +1069,10 @@
         <key-map field-name="custRequestId"/>
         <key-map field-name="custRequestItemSeqId"/>
       </relation>
+      <relation type="many" rel-entity-name="QuoteTerm">
+        <key-map field-name="quoteId"/>
+        <key-map field-name="quoteItemSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="QuoteRole"
             package-name="org.ofbiz.commonapp.order.quote"
@@ -1083,6 +1116,11 @@
       </relation>
       <relation type="one" fk-name="QUOTE_TERM_TTYPE" rel-entity-name="TermType">
         <key-map field-name="termTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="QuoteTermAttribute">
+        <key-map field-name="termTypeId"/>
+        <key-map field-name="quoteId"/>
+        <key-map field-name="quoteItemSeqId"/>
       </relation>
     </entity>
     <entity entity-name="QuoteTermAttribute"
@@ -1167,6 +1205,18 @@
       <relation type="many" rel-entity-name="CustRequestAttribute">
         <key-map field-name="custRequestId"/>
       </relation>
+      <relation type="many" rel-entity-name="QuoteItem">
+        <key-map field-name="custRequestId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CustRequestRole">
+        <key-map field-name="custRequestId"/>
+      </relation>
+      <relation type="many" rel-entity-name="RequirementCustRequest">
+        <key-map field-name="custRequestId"/>
+      </relation>
+      <relation type="many" rel-entity-name="RespondingParty">
+        <key-map field-name="custRequestId"/>
+      </relation>
     </entity>
     <entity entity-name="CustRequestAttribute"
             package-name="org.ofbiz.commonapp.order.request"
@@ -1194,6 +1244,14 @@
       <field name="description" type="description"></field>
       <prim-key field="custRequestId"/>
       <prim-key field="custRequestItemSeqId"/>
+      <relation type="many" rel-entity-name="QuoteItem">
+        <key-map field-name="custRequestId"/>
+        <key-map field-name="custRequestItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="RequirementCustRequest">
+        <key-map field-name="custRequestId"/>
+        <key-map field-name="custRequestItemSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="CustRequestRole"
             package-name="org.ofbiz.commonapp.order.request"
@@ -1330,6 +1388,27 @@
       <relation type="one" fk-name="REQ_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
+      <relation type="many" rel-entity-name="OrderRequirementCommitment">
+        <key-map field-name="requirementId"/>
+      </relation>
+      <relation type="many" rel-entity-name="DesiredFeature">
+        <key-map field-name="requirementId"/>
+      </relation>
+      <relation type="many" rel-entity-name="RequirementBudgetAllocation">
+        <key-map field-name="requirementId"/>
+      </relation>
+      <relation type="many" rel-entity-name="RequirementStatus">
+        <key-map field-name="requirementId"/>
+      </relation>
+      <relation type="many" rel-entity-name="RequirementRole">
+        <key-map field-name="requirementId"/>
+      </relation>
+      <relation type="many" rel-entity-name="RequirementCustRequest">
+        <key-map field-name="requirementId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkRequirementFulfillment">
+        <key-map field-name="requirementId"/>
+      </relation>
     </entity>
     <entity entity-name="RequirementAttribute"
             package-name="org.ofbiz.commonapp.order.request"
@@ -1356,7 +1435,7 @@
       <prim-key field="budgetId"/>
       <prim-key field="budgetItemSeqId"/>
       <prim-key field="requirementId"/>
-      <relation type="one" fk-name="REQ_BDGTAL_BDGT" rel-entity-name="Budget">
+      <relation type="one-nofk" rel-entity-name="Budget">
         <key-map field-name="budgetId"/>
       </relation>
       <relation type="one" fk-name="REQ_BDGTAL_BITM" rel-entity-name="BudgetItem">
@@ -1376,7 +1455,7 @@
       <prim-key field="custRequestId"/>
       <prim-key field="custRequestItemSeqId"/>
       <prim-key field="requirementId"/>
-      <relation type="one" fk-name="REQ_CSREQ_CSRQ" rel-entity-name="CustRequest">
+      <relation type="one-nofk" rel-entity-name="CustRequest">
         <key-map field-name="custRequestId"/>
       </relation>
       <relation type="one" fk-name="REQ_CSREQ_CRITM" rel-entity-name="CustRequestItem">
@@ -1402,7 +1481,7 @@
       <relation type="one" fk-name="REQ_ROLE_REQ" rel-entity-name="Requirement">
         <key-map field-name="requirementId"/>
       </relation>
-      <relation type="one" fk-name="REQ_ROLE_PTY" rel-entity-name="Party">
+      <relation type="one" fk-name="REQ_ROLE_PRTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="REQ_ROLE_PROLE" rel-entity-name="PartyRole">

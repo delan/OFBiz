@@ -93,6 +93,9 @@
       <relation type="many" rel-entity-name="PaymentBudgetAllocation">
         <key-map field-name="budgetId"/>
       </relation>
+      <relation type="many" rel-entity-name="RequirementBudgetAllocation">
+        <key-map field-name="budgetId"/>
+      </relation>
     </entity>
     <entity entity-name="BudgetAttribute"
             package-name="org.ofbiz.commonapp.accounting.budget"
@@ -139,6 +142,10 @@
         <key-map field-name="budgetItemSeqId"/>
       </relation>
       <relation type="many" rel-entity-name="PaymentBudgetAllocation">
+        <key-map field-name="budgetId"/>
+        <key-map field-name="budgetItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="RequirementBudgetAllocation">
         <key-map field-name="budgetId"/>
         <key-map field-name="budgetItemSeqId"/>
       </relation>
@@ -467,6 +474,15 @@
       <relation type="many" rel-entity-name="PartyFixedAssetAssignment">
         <key-map field-name="fixedAssetId"/>
       </relation>
+      <relation type="many" rel-entity-name="Requirement">
+        <key-map field-name="fixedAssetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortFixedAssetAssign">
+        <key-map field-name="fixedAssetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentRouteSegment">
+        <key-map field-name="fixedAssetId"/>
+      </relation>
     </entity>
     <entity entity-name="FixedAssetAttribute"
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
@@ -517,6 +533,9 @@
         <key-map field-name="fixedAssetTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="FixedAsset">
+        <key-map field-name="fixedAssetTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortFixedAssetStd">
         <key-map field-name="fixedAssetTypeId"/>
       </relation>
     </entity>
@@ -629,6 +648,15 @@
       <relation type="many" rel-entity-name="InvoiceTerm">
         <key-map field-name="invoiceId"/>
       </relation>
+      <relation type="many" rel-entity-name="TimeEntryBilling">
+        <key-map field-name="invoiceId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortBilling">
+        <key-map field-name="invoiceId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentItemBilling">
+        <key-map field-name="invoiceId"/>
+      </relation>
     </entity>
     <entity entity-name="InvoiceAttribute"
             package-name="org.ofbiz.commonapp.accounting.invoice"
@@ -695,6 +723,18 @@
         <key-map field-name="invoiceItemSeqId"/>
       </relation>
       <relation type="many" rel-entity-name="InvoiceTerm">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="TimeEntryBilling">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortBilling">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentItemBilling">
         <key-map field-name="invoiceId"/>
         <key-map field-name="invoiceItemSeqId"/>
       </relation>

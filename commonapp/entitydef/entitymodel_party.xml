@@ -130,6 +130,18 @@
       <relation type="many" rel-entity-name="AgreementAttribute">
         <key-map field-name="agreementId"/>
       </relation>
+      <relation type="many" rel-entity-name="AgreementProductApplic">
+        <key-map field-name="agreementId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AgreementOrganizationApplic">
+        <key-map field-name="agreementId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AgreementRole">
+        <key-map field-name="agreementId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AgreementTerm">
+        <key-map field-name="agreementId"/>
+      </relation>
     </entity>
     <entity entity-name="AgreementAttribute"
             package-name="org.ofbiz.commonapp.party.agreement"
@@ -176,6 +188,18 @@
         <key-map field-name="agreementItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementItemAttribute">
+        <key-map field-name="agreementId"/>
+        <key-map field-name="agreementItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AgreementProductApplic">
+        <key-map field-name="agreementId"/>
+        <key-map field-name="agreementItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AgreementOrganizationApplic">
+        <key-map field-name="agreementId"/>
+        <key-map field-name="agreementItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AgreementTerm">
         <key-map field-name="agreementId"/>
         <key-map field-name="agreementItemSeqId"/>
       </relation>
@@ -291,10 +315,10 @@
       <relation type="one" fk-name="AGRMNT_ROLE_PTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="AGRMNT_ROLE_RTYP" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="AGRMNT_ROLE_PRLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
@@ -496,6 +520,15 @@
       <relation type="one" fk-name="COM_EVNT_CMTP" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId"/>
       </relation>
+      <relation type="many" rel-entity-name="CommunicationEventRole">
+        <key-map field-name="communicationEventId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyNeed">
+        <key-map field-name="communicationEventId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CommunicationEventWorkEff">
+        <key-map field-name="communicationEventId"/>
+      </relation>
     </entity>
     <entity entity-name="CommunicationEventPrpTyp"
             package-name="org.ofbiz.commonapp.party.communication"
@@ -545,10 +578,10 @@
       <relation type="one" fk-name="COM_EVRL_PTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="COM_EVRL_RTYP" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="COM_EVRL_PRLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
@@ -582,6 +615,12 @@
       <relation type="one" fk-name="ISSUE_CAS_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
+      <relation type="many" rel-entity-name="CommunicationEvent">
+        <key-map field-name="issueCaseId"/>
+      </relation>
+      <relation type="many" rel-entity-name="IssueCaseRole">
+        <key-map field-name="issueCaseId"/>
+      </relation>
     </entity>
     <entity entity-name="IssueCaseRole"
             package-name="org.ofbiz.commonapp.party.communication"
@@ -598,10 +637,10 @@
       <relation type="one" fk-name="ISSUE_CSRL_PTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="ISSUE_CSRL_RTYP" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="ISSUE_CSRL_PRLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
@@ -652,6 +691,12 @@
         <key-map field-name="contactMechId"/>
       </relation>
       <relation type="many" rel-entity-name="Invoice">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="many" rel-entity-name="RespondingParty">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Shipment">
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>
@@ -727,6 +772,9 @@
         <key-map field-name="contactMechTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ContactMechTypePurpose">
+        <key-map field-name="contactMechTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CommunicationEvent">
         <key-map field-name="contactMechTypeId"/>
       </relation>
     </entity>
@@ -908,6 +956,9 @@
       <field name="needTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="needTypeId"/>
+      <relation type="many" rel-entity-name="PartyNeed">
+        <key-map field-name="needTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="PartyNeed"
             package-name="org.ofbiz.commonapp.party.need"
@@ -1092,6 +1143,69 @@
         <key-map field-name="partyId"/>
       </relation>
       <relation type="many" rel-entity-name="OrganizationGlAccount">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AgreementOrganizationApplic">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AgreementRole">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CommunicationEventRole">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" title="To" rel-entity-name="CommunicationEvent">
+        <key-map field-name="partyId" rel-field-name="partyIdTo"/>
+      </relation>
+      <relation type="many" title="From" rel-entity-name="CommunicationEvent">
+        <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
+      </relation>
+      <relation type="many" rel-entity-name="IssueCaseRole">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyNeed">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Quote">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="QuoteRole">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CustRequestRole">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="RequirementRole">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyRate">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="RespondingParty">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="TimeEntry">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="TimesheetRole">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Timesheet">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortAssignmentRate">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ItemIssuanceRole">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentReceiptRole">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentRouteSegment">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Shipment">
         <key-map field-name="partyId"/>
       </relation>
     </entity>
@@ -1491,6 +1605,70 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
+      <relation type="many" rel-entity-name="AgreementRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CommunicationEventRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" title="To" rel-entity-name="CommunicationEvent">
+        <key-map field-name="partyId" rel-field-name="partyIdTo"/>
+        <key-map field-name="roleTypeId" rel-field-name="roleTypeIdTo"/>
+      </relation>
+      <relation type="many" title="From" rel-entity-name="CommunicationEvent">
+        <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
+        <key-map field-name="roleTypeId" rel-field-name="roleTypeIdFrom"/>
+      </relation>
+      <relation type="many" rel-entity-name="IssueCaseRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyNeed">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="QuoteRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CustRequestRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="RequirementRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="TimeEntry">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="TimesheetRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Timesheet">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortAssignmentRate">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ItemIssuanceRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentReceiptRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentRouteSegment">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="PartySurveyResponse"
             package-name="org.ofbiz.commonapp.party.party"
@@ -1528,6 +1706,9 @@
         <key-map field-name="partyTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyTypeAttr">
+        <key-map field-name="partyTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyNeed">
         <key-map field-name="partyTypeId"/>
       </relation>
     </entity>
@@ -1638,6 +1819,9 @@
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentRouteSegment">
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
