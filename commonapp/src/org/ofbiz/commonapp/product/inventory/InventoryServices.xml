@@ -139,6 +139,55 @@
 
         <field-to-result field-name="availableToPromise" map-name="parameters"/>
     </simple-method>
+    
+    <simple-method method-name="getInventoryAlerts" short-description="getInventoryAlerts" login-required="false">
+        <field-to-field field-name="catalogId" map-name="parameters" to-map-name="lookupFieldMap"/>
+        <find-by-and entity-name="InventoryAlert" map-name="lookupFieldMap" list-name="inventoryAlerts" />
+        <iterate entry-name="inventoryAlert" list-name="inventoryAlerts">
+            <field-to-field map-name="inventoryAlert" field-name="productId" to-map-name="inventoryLookup" />
+            <call-service service-name="getProductInventoryAvailable" in-map-name="inventoryLookup">
+                <result-to-field result-name="availableToPromise" map-name="getInventoryResults" />
+            </call-service>
+            <if-compare-field field-name="availableToPromise" map-name="getInventoryResults" operator="less" to-map-name="inventoryAlert" to-field-name="inventoryLevel" type="Double" >
+                <field-to-field map-name="inventoryAlert" field-name="productId" to-map-name="alertResult" />
+                <field-to-field map-name="getInventoryResults" field-name="availableToPromise" to-map-name="alertResult" />
+                <field-to-list field-name="alertResult" list-name="alertResults" />
+            </if-compare-field>
+        </iterate>
+        <field-to-result result-name="alertResults" field-name="alertResults" />
+        <field-to-request field-name="alertResults" request-name="alertResults" />
+        
+    </simple-method>
+    
+    <simple-method method-name="emailInventoryAlerts" short-description="Email Inventory Alerts" login-required="false">
+        <field-to-field map-name="parameters" field-name="catalogId" to-map-name="urlParams" />
+        <field-to-field field-name="urlParams" to-map-name="emailParams" to-field-name="bodyUrlParameters" />
+        <string-to-field string="mail.smtp.host" field-name="sendType" map-name="emailParams" />
+        
+        <call-bsh><![CDATA[
+        emailParams.put("sendVia", org.ofbiz.core.util.UtilProperties.getPropertyValue("inventoryalerts.properties", "mailhost"));
+        ]]></call-bsh>
+        <call-bsh><![CDATA[
+        emailParams.put("sendTo", org.ofbiz.core.util.UtilProperties.getPropertyValue("inventoryalerts.properties", "sendTo"));
+        ]]></call-bsh>  
+        <call-bsh><![CDATA[
+        emailParams.put("sendFrom", org.ofbiz.core.util.UtilProperties.getPropertyValue("inventoryalerts.properties", "sendFrom"));
+        ]]></call-bsh> 
+        <call-bsh><![CDATA[
+        emailParams.put("subject", org.ofbiz.core.util.UtilProperties.getPropertyValue("inventoryalerts.properties", "subject"));        
+        ]]></call-bsh>               
+        <call-bsh><![CDATA[
+        emailParams.put("bodyUrl", org.ofbiz.core.util.UtilProperties.getPropertyValue("inventoryalerts.properties", "bodyUrl"));
+        ]]></call-bsh>      
+        <call-service service-name="getInventoryAlerts" in-map-name="parameters" >
+            <result-to-field result-name="alertResults" map-name="getInventoryResults" />
+        </call-service>
+        <if-not-empty map-name="getInventoryResults" field-name="alertResults">
+            <call-service service-name="sendMailFromUrl" in-map-name="emailParams"/>
+        </if-not-empty>
+        
+    </simple-method>
+        
     <simple-method method-name="reserveProductInventory" short-description="Reserve Inventory for a Product">
         <!--
             this method can be called with some optional parameters:
