@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.20 2004/06/26 23:16:23 ajzeneski Exp $
+ * $Id: Start.java,v 1.21 2004/07/12 17:44:11 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.20 $
+  *@version    $Revision: 1.21 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -154,16 +154,24 @@ public class Start implements Runnable {
 
     private void startServer() throws Exception {
         // load tools.jar
-        classPath.addComponent(config.toolsJar);
+        if (config.toolsJar != null) {
+            classPath.addComponent(config.toolsJar);
+        }
 
         // load the lib directory
-        loadLibs(config.baseLib);
+        if (config.baseLib != null) {
+            loadLibs(config.baseLib);
+        }
 
         // load the ofbiz-base.jar
-        classPath.addComponent(config.baseJar);
+        if (config.baseJar != null) {
+            classPath.addComponent(config.baseJar);
+        }
 
         // load the config directory
-        classPath.addComponent(config.baseConfig);
+        if (config.baseConfig != null) {
+            classPath.addComponent(config.baseConfig);
+        }
 
         // set the classpath/classloader
         System.setProperty("java.class.path", classPath.toString());
@@ -360,7 +368,6 @@ public class Start implements Runnable {
         public String awtHeadless;
         public boolean shutdownAfterLoad = false;
         public boolean useShutdownHook = true;
-        private boolean configLoaded = false;
 
         private Properties getPropertiesFile(String config) throws IOException {
             InputStream propsStream = null;
@@ -532,33 +539,68 @@ public class Start implements Runnable {
                     currentPosition++;
                 }
             }
-
-            configLoaded = true;
         }
 
-        private String findToolsJar(Properties props) throws IOException {
-            // hack java.home
-            String javaHome = props.getProperty("java.home", null);
-            if (javaHome == null) {
-                String jreExt = System.getProperty("file.separator") + "jre";
-                javaHome = System.getProperty("java.home");
-                if (javaHome.toLowerCase().endsWith(jreExt)) {
-                    javaHome = javaHome.substring(0, javaHome.lastIndexOf(System.getProperty("file.separator")));
-                }
-                File jh = new File(javaHome);
-                if (!jh.exists() || !jh.isDirectory()) {
-                    throw new IOException("Cannot locate java.home [" + javaHome + "] not found!");
+        private String findToolsJar(Properties props) {
+            String javaVersion = System.getProperty("java.version");
+            String javaVendor = System.getProperty("java.vendor");
+            String fileSep = System.getProperty("file.separator");
+            String javaHome = System.getProperty("java.home");
+            String errorMsg = "Unable to locate tools.jar - ";
+            String toolLoc = "lib" + fileSep + "tools.jar";
+            File tj = null;
+
+            if (javaVendor.startsWith("Apple")) {
+                // tools.jar is always available in Apple's JDK implementation
+                return null;
+            }
+
+            // try to locate tools.jar from the properties file
+            String toolsProp = props.getProperty("java.tools.jar", null);
+            if (toolsProp != null) {
+                tj = new File(toolsProp);
+                if (!tj.exists()) {
+                    System.out.println(errorMsg + tj.getAbsolutePath());
+                } else {
+                    return toolsProp;
                 }
             }
 
-            String javaLib = javaHome + System.getProperty("file.separator") + "lib";
-            String tools = javaLib + System.getProperty("file.separator") + "tools.jar";
-            File toolsFile = new File(tools);
-            if (!toolsFile.exists()) {
-                //throw new IOException("Cannot location tool.jar [" + tools + "]");
+            // next check the JAVA_HOME lib dir
+            tj = new File(javaHome + fileSep + toolLoc);
+            if (!tj.exists()) {
+                System.out.println(errorMsg + tj.getAbsolutePath());
+            } else {
+                return tj.getAbsolutePath();
             }
 
-            return tools;
+            // next if we are a JRE dir check the parent dir
+            String jreExt = fileSep + "jre";
+            if (javaHome.toLowerCase().endsWith(jreExt)) {
+                javaHome = javaHome.substring(0, javaHome.lastIndexOf(fileSep));
+                tj = new File(javaHome + fileSep + toolLoc);
+                if (!tj.exists()) {
+                    System.out.println(errorMsg + tj.getAbsolutePath());
+                } else {
+                    return tj.getAbsolutePath();
+                }
+            }
+
+            // special windows checking
+            if (javaHome.toLowerCase().charAt(1) == ':') {
+                String driveLetter = javaHome.substring(0, 2);
+                String windowsPath = driveLetter + fileSep + "j2sdk" + javaVersion;
+                tj = new File(windowsPath + fileSep + toolLoc);
+                if (!tj.exists()) {
+                    System.out.println(errorMsg + tj.getAbsolutePath());
+                } else {
+                    return tj.getAbsolutePath();
+                }
+            }
+
+            System.out.println("Required library tools.jar could not be located; make sure you using Java SDK and NOT the JRE!");
+            System.out.println("You may need to copy tools.jar into a loadable lib directory (i.e. base/lib)");
+            return null;
         }
     }
 }
