@@ -356,14 +356,14 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     /** Sets an item attribute. */
-    public void setAttribute(String name, String value) {
+    public void setAttribute(String name, Object value) {
         if (attributes == null) attributes = new HashMap();
         attributes.put(name,value);
     }
     /** Return a specific attribute. */
-    public String getAttribute(String name) {
+    public Object getAttribute(String name) {
         if (attributes == null) return null;
-        return (String) attributes.get(name);
+        return attributes.get(name);
     }
     /** Returns the attributes for the item. */
     public Map getAttributes() {
@@ -531,13 +531,5 @@ public class ShoppingCartItem implements java.io.Serializable {
             delegator = GenericDelegator.getGenericDelegator(delegatorName);
         }
         return delegator;
-    }
-
-    public Object getAttribute(String name) {
-        return attributes.get(name);
-    }
-
-    public void setAttribute(String name, Object object) {
-        this.attributes.put(name, object);
     }
 }
