@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.10 2004/04/19 20:58:43 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.11 2004/04/20 21:01:20 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -50,7 +50,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -89,7 +89,6 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, subContentDataResourceView contentId/drDataResourceId:" + view.get("contentId")  + " / " + view.get("drDataResourceId") + " entityIndex:" + entityIndex, module);
 
         String dataResourceId = (String) view.get("drDataResourceId");
-        //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache(0), dataResourceId ." + dataResourceId, module);
         String subContentIdSub = (String) view.get("contentId");
         //String contentAssocTypeId = (String) view.get("caContentAssocTypeId");
         //String mapKey = (String) view.get("caMapKey");
@@ -104,8 +103,6 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         }
 
         String mimeTypeId = FreeMarkerWorker.getMimeTypeId(delegator, view, ctx);
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache(2), mimeTypeId." + mimeTypeId, module);
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, subContentId/Sub." + subContentIdSub, module);
 
 
         Map trailNode = FreeMarkerWorker.makeNode(view);
@@ -152,7 +149,6 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
 //            ctx.put("drDataResourceId", dataResourceId);
 //            ctx.put("dataResourceId", dataResourceId);
 //            ctx.put("subContentIdSub", subContentIdSub);
-            if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)end of prepCtx", ctx, 0),module);
             return true;
         } else {
             return false;
@@ -165,7 +161,6 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 int entityIndex = ((Integer)templateCtx.get("entityIndex")).intValue(); 
                 int outputIndex = ((Integer)templateCtx.get("outputIndex")).intValue(); 
                 int listSize = ((Integer)templateCtx.get("listSize")).intValue(); 
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, getNext...", module);
                 boolean matchFound = false;
  
                 while (!matchFound && entityIndex < listSize) {
@@ -200,13 +195,10 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         final HttpServletRequest request = (HttpServletRequest) FreeMarkerWorker.getWrappedObject("request", env);
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
         //templateCtx.put("buf", buf);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)before save", templateCtx, 0),module);
         final Map savedValuesUp = new HashMap();
         FreeMarkerWorker.saveContextValues(templateCtx, upSaveKeyNames, savedValuesUp);
         final Map savedValues = new HashMap();
-        // if (Debug.verboseOn()) Debug.logVerbose("(L-0)savedValues: " + savedValues,module);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after overrride", templateCtx, 0),module);
         String contentAssocTypeId = (String)templateCtx.get("contentAssocTypeId");
         //if (UtilValidate.isEmpty(contentAssocTypeId)) {
             //throw new RuntimeException("contentAssocTypeId is empty");
@@ -278,21 +270,16 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         if (UtilValidate.isEmpty(viewSizeStr))
             viewSizeStr = "10";
         int viewSize = Integer.parseInt(viewSizeStr); 
-        if (Debug.verboseOn()) Debug.logVerbose("viewSize:" + viewSize, "");
         String viewIndexStr = (String)templateCtx.get("viewIndex");
         //if (Debug.infoOn()) Debug.logInfo("viewIndexStr:" + viewIndexStr, "");
         if (UtilValidate.isEmpty(viewIndexStr))
             viewIndexStr = "0";
         int viewIndex = Integer.parseInt(viewIndexStr); 
-        if (Debug.verboseOn()) Debug.logVerbose("viewIndex:" + viewIndex, "");
         int lowIndex = viewIndex * viewSize;
-        if (Debug.verboseOn()) Debug.logVerbose("lowIndex:" + lowIndex, "");
         int listSize = longList.size();
-        if (Debug.verboseOn()) Debug.logVerbose("listSize:" + listSize, "");
         int highIndex = (viewIndex + 1) * viewSize;
         if (highIndex > listSize)
             highIndex = listSize;
-        if (Debug.verboseOn()) Debug.logVerbose("highIndex:" + highIndex, "");
         Iterator it = longList.iterator();
         //List entityList = longList.subList(lowIndex, highIndex);
         List entityList = longList;
@@ -309,7 +296,6 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 buf.append(cbuf, off, len);
                 //StringBuffer ctxBuf = (StringBuffer) templateCtx.get("buf");
                 //ctxBuf.append(cbuf, off, len);
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, buf:"+buf.toString(),module);
             }
 
             public void flush() throws IOException {
@@ -323,13 +309,10 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 int viewIndex = ((Integer)templateCtx.get("viewIndex")).intValue(); 
                 int viewSize = ((Integer)templateCtx.get("viewSize")).intValue(); 
                 int listSize = ((Integer)templateCtx.get("listSize")).intValue(); 
-                if (Debug.verboseOn()) Debug.logVerbose("listSize:" + listSize, "");
                 int lowIndex = viewIndex * viewSize;
-                if (Debug.verboseOn()) Debug.logVerbose("lowIndex:" + lowIndex, "");
                 int highIndex = (viewIndex + 1) * viewSize;
                 if (highIndex > listSize)
                     highIndex = listSize;
-                if (Debug.verboseOn()) Debug.logVerbose("highIndex:" + highIndex, "");
                 int outputIndex = 0;
                 templateCtx.put("lowIndex", new Integer(lowIndex));
                 templateCtx.put("highIndex", new Integer(highIndex));
@@ -339,7 +322,6 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 if (outputIndex < highIndex) {
                     inProgress = getNextMatchingEntity(templateCtx, delegator);
                 }
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, onStart, inProgress:" + inProgress, module);
                 FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
                 if (inProgress) {
                     return TransformControl.EVALUATE_BODY;
@@ -362,7 +344,6 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                     inProgress = getNextMatchingEntity(templateCtx, delegator);
                 }
 
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, afterBody, inProgress:" + inProgress + " inProgress:" + inProgress, module);
                 FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
                 if (inProgress)
                     return TransformControl.REPEAT_EVALUATION;

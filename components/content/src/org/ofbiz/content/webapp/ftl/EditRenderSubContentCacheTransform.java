@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentCacheTransform.java,v 1.7 2004/04/11 08:28:14 jonesde Exp $
+ * $Id: EditRenderSubContentCacheTransform.java,v 1.8 2004/04/20 21:01:19 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import freemarker.template.TemplateTransformModel;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since 3.0
  */
 public class EditRenderSubContentCacheTransform implements TemplateTransformModel {
@@ -82,7 +82,6 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
         final HttpServletRequest request = (HttpServletRequest) FreeMarkerWorker.getWrappedObject("request", env);
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(E)after overrride", templateCtx, 0),module);
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         List trail = (List)templateCtx.get("globalNodeTrail");
         String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
@@ -103,7 +102,6 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
             dataResourceId = (String) view.get("dataResourceId");
         }
         String subContentIdSub = (String) view.get("contentId");
-        if (Debug.verboseOn()) Debug.logVerbose("in EditSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
         String subDataResourceTypeId = (String)templateCtx.get("subDataResourceTypeId");
         if (UtilValidate.isEmpty(subDataResourceTypeId)) {
@@ -130,7 +128,6 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
 
             public void write(char cbuf[], int off, int len) {
                 buf.append(cbuf, off, len);
-                if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, buf:" + buf.toString(), module);
             }
 
             public void flush() throws IOException {
@@ -140,7 +137,6 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
             public void close() throws IOException {
                 FreeMarkerWorker.reloadValues(templateCtx, savedValues);
                 String wrappedContent = buf.toString();
-                if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrappedContent:" + wrappedContent, module);
                 String editTemplate = (String)templateCtx.get("editTemplate");
 //                if (editTemplate != null && editTemplate.equalsIgnoreCase("true")) {
                     String wrapTemplateId = (String)templateCtx.get("wrapTemplateId");
@@ -160,14 +156,11 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
                         
                         templateRoot.put("context", templateCtx);
         if (Debug.verboseOn()) {
-            Debug.logVerbose("in EditRenderSubContent, templateCtx.keySet()" + templateCtx.keySet(), "");
             Set kySet = templateCtx.keySet();
             Iterator it = kySet.iterator();
             while (it.hasNext()) {
                 Object ky = it.next();
-            Debug.logVerbose("in EditRenderSubContent, ky:" + ky, "");
                 Object val = templateCtx.get(ky);
-                    Debug.logVerbose("in EditRenderSubContent, val:" + val, "");
             }
         }
                         
@@ -184,7 +177,6 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
                             Debug.logError(e2, "Error rendering content" + e2.getMessage(), module);
                             throw new IOException("Error rendering content" + e2.toString());
                         }
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, after renderContentAsText", module);
                         
                 } else {
                     out.write(wrappedContent);

@@ -1,5 +1,5 @@
 /*
- * $Id: DataServices.java,v 1.13 2004/04/11 02:54:40 byersa Exp $
+ * $Id: DataServices.java,v 1.14 2004/04/20 21:01:19 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.content.content.ContentWorker;
  * DataServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  * @since 3.0
  * 
  *  
@@ -181,10 +181,8 @@ public class DataServices {
         HashMap result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        //Debug.logVerbose("in create ETextMethod context:" + context, null);
         Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
         String permissionStatus = (String)permResults.get("permissionStatus");
-        //Debug.logVerbose("in create ETextMethod permissionStatus:" + permissionStatus, null);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             String dataResourceId = (String) context.get("dataResourceId");
             String textData = (String) context.get("textData");
@@ -227,10 +225,8 @@ public class DataServices {
         HashMap result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        //Debug.logVerbose("in create FileMethod context:" + context, module);
         Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
         String permissionStatus = (String)permResults.get("permissionStatus");
-        //Debug.logVerbose("in create FileMethod permissionStatus:" + permissionStatus, module);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             GenericValue dataResource = (GenericValue) context.get("dataResource");
             //String dataResourceId = (String) dataResource.get("dataResourceId");
@@ -245,7 +241,6 @@ public class DataServices {
                 try {
                     if (UtilValidate.isEmpty(dataResourceTypeId) || dataResourceTypeId.equals("LOCAL_FILE")) {
                         file = new File(objectInfo);
-                        //Debug.logVerbose("in create FileMethod file:" + file, module);
                         if (!file.isAbsolute()) {
                             throw new GenericServiceException("File: " + file + " is not absolute");
                         }
@@ -625,10 +620,8 @@ public class DataServices {
         HashMap result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        //Debug.logVerbose("in create FileMethod context:" + context, module);
         Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
         String permissionStatus = (String)permResults.get("permissionStatus");
-        //Debug.logVerbose("in create FileMethod permissionStatus:" + permissionStatus, module);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             GenericValue dataResource = (GenericValue) context.get("dataResource");
             //String dataResourceId = (String) dataResource.get("dataResourceId");

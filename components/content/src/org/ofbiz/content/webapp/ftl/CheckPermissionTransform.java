@@ -1,5 +1,5 @@
 /*
- * $Id: CheckPermissionTransform.java,v 1.8 2004/04/17 08:00:14 byersa Exp $
+ * $Id: CheckPermissionTransform.java,v 1.9 2004/04/20 21:01:19 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -45,7 +45,7 @@ import freemarker.template.TransformControl;
  * CheckPermissionTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @since 3.0
  */
 public class CheckPermissionTransform implements TemplateTransformModel {
@@ -81,7 +81,6 @@ public class CheckPermissionTransform implements TemplateTransformModel {
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)after overrride", templateCtx, 0),module);
         final String mode = (String)templateCtx.get("mode");
         final Map savedValues = new HashMap();
                     //Debug.logInfo("in CheckPermission, contentId(1):" + templateCtx.get("contentId"),"");
@@ -91,7 +90,6 @@ public class CheckPermissionTransform implements TemplateTransformModel {
 
             public void write(char cbuf[], int off, int len) {
                 buf.append(cbuf, off, len);
-                if (Debug.verboseOn()) Debug.logVerbose("in CheckPerm, buf:"+buf.toString(),module);
             }
 
             public void flush() throws IOException {
@@ -156,12 +154,8 @@ public class CheckPermissionTransform implements TemplateTransformModel {
                 }
                 List roleList = new ArrayList();
         
-                if (Debug.verboseOn()) Debug.logVerbose("in CheckPermission, currentContent:" + currentContent,module);
-                if (Debug.verboseOn()) Debug.logVerbose("in CheckPermission, targetOperationList:" + targetOperationList,module);
-                if (Debug.verboseOn()) Debug.logVerbose("in CheckPermission, statusId:" + statusId,module);
                 String privilegeEnumId = (String)currentContent.get("privilegeEnumId");
                 Map results = ContentPermissionServices.checkPermission(currentContent, statusList, userLogin, purposeList, targetOperationList, roleList, delegator, security, entityOperation, privilegeEnumId); 
-                if (Debug.verboseOn()) Debug.logVerbose("in CheckPermission, results" + results, module);
 
                 boolean isError = ModelService.RESPOND_ERROR.equals(results.get(ModelService.RESPONSE_MESSAGE));
                 if (isError) {
@@ -185,7 +179,6 @@ public class CheckPermissionTransform implements TemplateTransformModel {
 
 
                 if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
-                    if (Debug.verboseOn()) Debug.logVerbose("in CheckPermission, permissionStatus" + permissionStatus, module);
                     FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
                     if (mode == null || !mode.equalsIgnoreCase("not-equals"))
                         return TransformControl.EVALUATE_BODY;
@@ -203,7 +196,6 @@ public class CheckPermissionTransform implements TemplateTransformModel {
             public void close() throws IOException {
                 FreeMarkerWorker.reloadValues(templateCtx, savedValues);
                 String wrappedContent = buf.toString();
-                if (Debug.verboseOn()) Debug.logVerbose("in CheckPerm, wrappedContent:"+wrappedContent,module);
                 out.write(wrappedContent);
             }
         };

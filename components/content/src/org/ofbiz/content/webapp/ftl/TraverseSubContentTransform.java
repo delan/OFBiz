@@ -1,5 +1,5 @@
 /*
- * $Id: TraverseSubContentTransform.java,v 1.3 2004/04/11 08:28:16 jonesde Exp $
+ * $Id: TraverseSubContentTransform.java,v 1.4 2004/04/20 21:01:30 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -44,7 +44,7 @@ import freemarker.template.TransformControl;
  * TraverseSubContentTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since 3.0
  */
 public class TraverseSubContentTransform implements TemplateTransformModel {
@@ -73,29 +73,20 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
         final Environment env = Environment.getCurrentEnvironment();
         final Map templateCtx = (Map) FreeMarkerWorker.getWrappedObject("context", env);
         //FreeMarkerWorker.convertContext(templateCtx);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(T)before save", templateCtx, 0),module);
         final Map savedValues = FreeMarkerWorker.saveValues(templateCtx, saveKeyNames);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(T)after save", templateCtx, 0),module);
-        if (Debug.verboseOn()) Debug.logVerbose("args:" + args,module);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(T)after overrride", templateCtx, 0),module);
         final GenericDelegator delegator = (GenericDelegator) FreeMarkerWorker.getWrappedObject("delegator", env);
 /*
         final String editTemplate = getArg(args, "editTemplate", ctx);
-        if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, editTemplate:" + editTemplate, module);
         final String wrapTemplateId = getArg(args, "wrapTemplateId", ctx);
         //final String mapKey = getArg(args, "mapKey", ctx);
-        //if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, mapKey:" + mapKey, module);
         final String templateContentId = getArg(args, "templateContentId", ctx);
-        if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, templateContentId:" + templateContentId, module);
         final String subDataResourceTypeId = getArg(args, "subDataResourceTypeId", ctx);
         final String contentId = getArg(args, "contentId", ctx);
         final String subContentId = getArg(args, "subContentId", ctx);
         final String rootDir = getArg(args, "rootDir", ctx);
         final String webSiteId = getArg(args, "webSiteId", ctx);
         final String https = getArg(args, "https", ctx);
-        if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, contentId:" + contentId, module);
-        if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, subContentId:" + subContentId, module);
         final String viewSize = getArg(args, "viewSize", ctx);
         final String viewIndex = getArg(args, "viewIndex", ctx);
         final String listSize = getArg(args, "listSize", ctx);
@@ -188,19 +179,16 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                 }
 */
                 Map rootNode = FreeMarkerWorker.makeNode(subContentDataResourceView);
-                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, onStart, rootNode:" + rootNode, module);
                 FreeMarkerWorker.traceNodeTrail("1",nodeTrail);
                 ContentWorker.selectKids(rootNode, traverseContext);
                 FreeMarkerWorker.traceNodeTrail("2",nodeTrail);
                 nodeTrail.add(rootNode);
                 boolean isPick = checkWhen(subContentDataResourceView, (String)traverseContext.get("contentAssocTypeId"));
                 rootNode.put("isPick", new Boolean(isPick));
-                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, onStart, isPick(1):" + isPick, module);
                 if (!isPick) {
                 FreeMarkerWorker.traceNodeTrail("3",nodeTrail);
                     isPick = ContentWorker.traverseSubContent(traverseContext);
                 FreeMarkerWorker.traceNodeTrail("4",nodeTrail);
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, onStart, isPick(2):" + isPick, module);
                 }
                 if (isPick) {
                     populateContext(traverseContext, templateCtx);
@@ -215,12 +203,9 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                 //out.write(buf.toString());
                 //buf.setLength(0);
                 //templateContext.put("buf", new StringBuffer());
-                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, buf(w):" + buf.toString(), module);
-                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, pickWhen(w):" + templateCtx.get("pickWhen"), module);
                 List nodeTrail = (List)traverseContext.get("nodeTrail");
                 FreeMarkerWorker.traceNodeTrail("6",nodeTrail);
                 boolean inProgress = ContentWorker.traverseSubContent(traverseContext);
-                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, inProgress:"+inProgress,module);
                 FreeMarkerWorker.traceNodeTrail("7",nodeTrail);
                 if (inProgress) {
                     populateContext(traverseContext, templateCtx);
@@ -233,7 +218,6 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
             public void close() throws IOException {
 
                 String wrappedFTL = buf.toString();
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrappedFTL:"+wrappedFTL,module);
                 String encloseWrappedText = (String)templateCtx.get("encloseWrappedText");
                 if (UtilValidate.isEmpty(encloseWrappedText) || encloseWrappedText.equalsIgnoreCase("false")) {
 
@@ -242,13 +226,11 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                 }
                 String wrapTemplateId = (String)templateCtx.get("wrapTemplateId");
                 if (UtilValidate.isNotEmpty(wrapTemplateId)) {
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, wrappedFTL(0):" + wrappedFTL, module);
                     templateCtx.put("wrappedFTL", wrappedFTL);
                     
                     Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
                     
 /*
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, rootDir:" + rootDir, module);
                     templateRoot.put("viewSize", viewSize);
                     templateRoot.put("viewIndex", viewIndex);
                     templateRoot.put("listSize", listSize);
@@ -260,11 +242,6 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                     templateRoot.put("wrapMimeTypeId", mimeTypeId);
                     //templateRoot.put("wrapMapKey", mapKey);
                     
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, wrapDataResourceTypeId:" + subDataResourceTypeId, module);
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, wrapContentIdTo:" + contentId, module);
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, wrapMimeTypeId:" + mimeTypeId, module);
-                    //if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, wrapMapKey:" + mapKey,module);
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, calling renderContentAsText, wrapTemplateId:" + wrapTemplateId, module);
 */
                     templateRoot.put("context", templateCtx);
                     String mimeTypeId = (String) templateCtx.get("mimeTypeId");
@@ -277,10 +254,8 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                         Debug.logError(e, "Error rendering content", module);
                         throw new IOException("Error rendering content" + e.toString());
                     }
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, after renderContentAsText", module);
 /*
                     Map resultsCtx = (Map) FreeMarkerWorker.getWrappedObject("context", env);
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, contentId:" + resultsCtx.get("contentId"), module);
                     templateContext.put("contentId", contentId);
                     templateContext.put("locale", locale);
                     templateContext.put("mapKey", null);
@@ -288,26 +263,15 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                     templateContext.put("templateContentId", null);
                     templateContext.put("subDataResourceTypeId", null);
                     templateContext.put("mimeTypeId", null);
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, after.", module);
-                    //if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, mapKey:" + mapKey, module);
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, subDataResourceTypeId:" + subDataResourceTypeId, module);
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, contentId:" + contentId, module);
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, mimeTypeId:" + mimeTypeId, module);
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, locale:" + locale, module);
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, contentId2." + resultsCtx.get("contentId"), module);
 */
 
 
                 } else {
-                    if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, wrappedFTL(1):" + wrappedFTL, module);
                     if (UtilValidate.isNotEmpty(wrappedFTL))
                         out.write(wrappedFTL);
                 }
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(T)before remove", templateCtx, 0),module);
                     FreeMarkerWorker.removeValues(templateCtx, removeKeyNames);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(T)after remove", templateCtx, 0),module);
                     FreeMarkerWorker.reloadValues(templateCtx, savedValues);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(T)after reload", templateCtx, 0),module);
             }
 
             private boolean checkWhen (GenericValue thisContent, String contentAssocTypeId) {
@@ -339,21 +303,15 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                 try {
                     ContentWorker.getContentTypeAncestry(delegator, contentTypeId, contentTypeAncestry);
                 } catch(GenericEntityException e) {
-                    if (Debug.verboseOn()) Debug.logVerbose("Error getting contentTypeAncestry:" + e.getMessage(),null);
                     return false;
                 }
-                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, checkWhen, contentTypeAncestry(1):" + contentTypeAncestry, module);
                 assocContext.put("typeAncestry", contentTypeAncestry);
                 Map whenMap = (Map)traverseContext.get("whenMap");
-                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, checkWhen, whenMap(1):" + whenMap, module);
                 String pickWhen = (String)whenMap.get("pickWhen");
-                if (Debug.verboseOn()) Debug.logVerbose("pickWhen(checkWhen):" + pickWhen,null);
-                if (Debug.verboseOn()) Debug.logVerbose("assocContext(checkWhen):" + assocContext,null);
                 List nodeTrail = (List)traverseContext.get("nodeTrail");
                 int indentSz = indent.intValue() + nodeTrail.size();
                 assocContext.put("indentObj", new Integer(indentSz));
                 isPick = ContentWorker.checkWhen(assocContext, (String)whenMap.get("pickWhen"));
-                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, checkWhen, isPick(1):" + isPick, module);
                 return isPick;
            }
 
@@ -365,9 +323,7 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                 Map node = (Map)nodeTrail.get(sz - 1);
                 GenericValue content = (GenericValue)node.get("value");
                 String contentId = (String)node.get("contentId");
-                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, populateContext, contentId(1):" + contentId, module);
                 String subContentId = (String)node.get("subContentId");
-                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContent, populateContext, subContentId(1):" + subContentId, module);
                 templateContext.put("subContentId", contentId);
                 templateContext.put("subContentDataResourceView", null);
                 int indentSz = indent.intValue() + nodeTrail.size();

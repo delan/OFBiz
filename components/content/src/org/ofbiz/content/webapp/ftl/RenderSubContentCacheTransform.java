@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentCacheTransform.java,v 1.11 2004/04/19 20:58:44 byersa Exp $
+ * $Id: RenderSubContentCacheTransform.java,v 1.12 2004/04/20 21:01:29 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -44,7 +44,7 @@ import freemarker.template.TemplateTransformModel;
  * RenderSubContentCacheTransform - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).
@@ -77,15 +77,12 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         final GenericDelegator delegator = (GenericDelegator) FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = (HttpServletRequest) FreeMarkerWorker.getWrappedObject("request", env);
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(R)before save", templateCtx, 0),module);
         final Map savedValuesUp = new HashMap();
         FreeMarkerWorker.saveContextValues(templateCtx, upSaveKeyNames, savedValuesUp);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(R)after overrride", templateCtx, 0),module);
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         List trail = (List)templateCtx.get("globalNodeTrail");
         //if (Debug.infoOn()) Debug.logInfo("in Render(0), globalNodeTrail ." + trail , module);
-        if (Debug.verboseOn()) Debug.logVerbose("Render, globalNodeTrail csv(0):" + FreeMarkerWorker.nodeTrailToCsv((List)trail), "");
         String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
         String strNullThruDatesOnly = (String)templateCtx.get("nullThruDatesOnly");
         Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
@@ -96,7 +93,6 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
             throw new RuntimeException("Error getting current content. " + e.toString());
         }
         final GenericValue view = val;
-        if (Debug.verboseOn()) Debug.logVerbose("renderEditSubContentCache, view:" + view, "");
 
         String dataResourceId = null;
         if (view != null) {
@@ -106,9 +102,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                 dataResourceId = (String) view.get("dataResourceId");
             }
         }
-        if (Debug.verboseOn()) Debug.logVerbose("in renderSubContentCache(0), dataResourceId ." + dataResourceId, module);
         String subContentIdSub = (String) view.get("contentId");
-        if (Debug.verboseOn()) Debug.logVerbose("in renderSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
         String subDataResourceTypeId = (String)templateCtx.get("subDataResourceTypeId");
         if (UtilValidate.isEmpty(subDataResourceTypeId)) {
@@ -144,7 +138,6 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                 List globalNodeTrail = (List)templateCtx.get("globalNodeTrail");
                 //if (Debug.infoOn()) Debug.logInfo("Render close, globalNodeTrail(2a):" + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), "");
                 try {
-                    if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, close:", module);
                     renderSubContent();
                 FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
                  //if (Debug.infoOn()) Debug.logInfo("in Render(2), globalNodeTrail ." + templateCtx.get("globalNodeTrail") , module);
@@ -162,7 +155,6 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                 if (passedGlobalNodeTrail.size() > 0) {
                     thisView = (GenericValue)((Map)passedGlobalNodeTrail.get(passedGlobalNodeTrail.size() - 1)).get("value");
                 }
-                if (thisView != null && Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, thisView:" + thisView.get("contentId"), module);
                 ServletContext servletContext = request.getSession().getServletContext();
                 String rootDir = servletContext.getRealPath("/");
                 String webSiteId = (String) servletContext.getAttribute("webSiteId");
@@ -185,14 +177,11 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                     }
                 templateRoot.put("context", templateCtx);
         if (Debug.verboseOn()) {
-            Debug.logVerbose("in RenderSubContent, templateCtx.keySet()" + templateCtx.keySet(), "");
             Set kySet = templateCtx.keySet();
             Iterator it = kySet.iterator();
             while (it.hasNext()) {
                 Object ky = it.next();
-            Debug.logVerbose("in RednerSubContent, ky:" + ky, "");
                 Object val = templateCtx.get(ky);
-                    Debug.logVerbose("in RednerSubContent, val:" + val, "");
             }
         }
 

@@ -32,7 +32,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      3.0
  *
  * 
@@ -61,9 +61,6 @@ public class ContentManagementServices {
         GenericValue content = null;
         GenericValue view = null;
 
-        //Debug.logVerbose("in getSubContent(svc), contentId:" + contentId, "");
-        //Debug.logVerbose("in getSubContent(svc), subContentId:" + subContentId, "");
-        //Debug.logVerbose("in getSubContent(svc), mapKey:" + mapKey, "");
         try {
             view = ContentWorker.getSubContent( delegator, 
                           contentId, mapKey, subContentId, userLogin, assocTypes, fromDate);
@@ -92,7 +89,6 @@ public class ContentManagementServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         HttpServletRequest request = (HttpServletRequest)context.get("request");  
-    Debug.logVerbose("in addMostRecentEntity(svc2), request:" +request, "");
         String suffix = (String) context.get("suffix"); 
         GenericValue val = (GenericValue)context.get("pk");
         GenericPK pk = val.getPrimaryKey();
@@ -114,7 +110,6 @@ public class ContentManagementServices {
      */
     public static Map persistContentAndAssoc(DispatchContext dctx, Map context) throws GenericServiceException{
 
-        //Debug.logVerbose("CREATING CONTENTANDASSOC:" + context, null);
         HashMap result = new HashMap();
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
@@ -190,7 +185,6 @@ public class ContentManagementServices {
                         try {
                             thisResult = DataServices.createBinaryFileMethod(dctx, context);
                         } catch(GenericServiceException e) {
-                            Debug.logVerbose("in persistContentAndAssoc. " + e.getMessage(),"");
                             return ServiceUtil.returnError(e.getMessage());
                         }
                     } else if (dataResourceTypeId.indexOf("_FILE") >=0) {
@@ -199,7 +193,6 @@ public class ContentManagementServices {
                         try {
                             thisResult = DataServices.createFileMethod(dctx, context);
                         } catch(GenericServiceException e) {
-                            Debug.logVerbose("in persistContentAndAssoc. " + e.getMessage(),"");
                             return ServiceUtil.returnError(e.getMessage());
                         }
                     } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
@@ -219,7 +212,6 @@ public class ContentManagementServices {
                             return ServiceUtil.returnError("'textData' empty when trying to create database text.");
                         }
                     }
-                //Debug.logVerbose("dataResourceId(create):" + dataResourceId, null);
                 } else {
                     Map thisResult = DataServices.updateDataResourceMethod(dctx, context);
                     if (Debug.infoOn()) Debug.logInfo("in persist... thisResult.permissionStatus(0):" + thisResult.get("permissionStatus"), null);
@@ -314,7 +306,6 @@ public class ContentManagementServices {
             if (Debug.infoOn()) Debug.logInfo("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
         if (contentAssocTypeId != null && contentAssocTypeId.length() > 0 ) {
             context.put("deactivateExisting", deactivateExisting);
-            Debug.logVerbose("CREATING contentASSOC context:" +  context, null);
             Map thisResult = null;
             try {
                 thisResult = ContentServices.createContentAssocMethod(dctx, context);
@@ -332,7 +323,6 @@ public class ContentManagementServices {
             result.put("contentAssocTypeId", thisResult.get("contentAssocTypeId"));
             result.put("fromDate", thisResult.get("fromDate"));
        }
-            //Debug.logVerbose("return from CREATING CONTENTASSOC result:" +  result, null);
        context.remove("skipPermissionCheck");
        context.put("contentId", origContentId);
        context.put("dataResourceId", origDataResourceId);

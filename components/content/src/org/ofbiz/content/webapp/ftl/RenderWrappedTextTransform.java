@@ -1,5 +1,5 @@
 /*
- * $Id: RenderWrappedTextTransform.java,v 1.5 2004/04/11 08:28:16 jonesde Exp $
+ * $Id: RenderWrappedTextTransform.java,v 1.6 2004/04/20 21:01:29 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import freemarker.template.TemplateTransformModel;
  * RenderWrappedTextTransform - Freemarker Transform for URLs (links)
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class RenderWrappedTextTransform implements  TemplateTransformModel {
@@ -49,7 +49,6 @@ public class RenderWrappedTextTransform implements  TemplateTransformModel {
         final Environment env = Environment.getCurrentEnvironment();
         Map ctx = (Map)FreeMarkerWorker.getWrappedObject("context", env);
         final String wrappedFTL = FreeMarkerWorker.getArg(args, "wrappedFTL", ctx);
-        Debug.logVerbose("in RenderWrappedText, wrappedFTL:"+wrappedFTL,"");
 
         return new Writer(out) {
 

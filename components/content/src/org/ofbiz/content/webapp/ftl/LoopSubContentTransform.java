@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentTransform.java,v 1.6 2004/04/11 08:28:15 jonesde Exp $
+ * $Id: LoopSubContentTransform.java,v 1.7 2004/04/20 21:01:20 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -43,7 +43,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since 3.0
  */
 public class LoopSubContentTransform implements TemplateTransformModel {
@@ -73,13 +73,10 @@ public class LoopSubContentTransform implements TemplateTransformModel {
         //String contentId = (String)ctx.get("contentId");
         //String mimeTypeId = (String)ctx.get("mimeTypeId");
         List lst = (List) ctx.get("entityList");
-        //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, prepCtx, lst :" + lst, module);
         Integer idx = (Integer) ctx.get("entityIndex");
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, prepCtx, idx :" + idx, module);
         if (idx == null)
             idx = new Integer(0);
         int i = idx.intValue();
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, prepCtx, i :" + i, module);
         if (i >= lst.size()) {
             return false;
         }
@@ -91,12 +88,9 @@ public class LoopSubContentTransform implements TemplateTransformModel {
         } catch (GenericEntityException e) {
             throw new RuntimeException(e.getMessage());
         }
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, subContentDataResourceView contentId/drDataResourceId:" + subContentDataResourceView.get("contentId")  + " / " + subContentDataResourceView.get("drDataResourceId"), module);
 
         String dataResourceId = (String) subContentDataResourceView.get("drDataResourceId");
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent(0), dataResourceId ." + dataResourceId, module);
         String subContentIdSub = (String) subContentDataResourceView.get("contentId");
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent(0), subContentIdSub ." + subContentIdSub, module);
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
         String subDataResourceTypeId = (String)ctx.get("subDataResourceTypeId");
         if (UtilValidate.isEmpty(subDataResourceTypeId)) {
@@ -116,7 +110,6 @@ public class LoopSubContentTransform implements TemplateTransformModel {
                     if (parentContent != null) {
                         mimeTypeId = (String) parentContent.get("mimeTypeId");
                         ctx.put("parentContent", parentContent);
-                        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, parentContentId: " + parentContent.get("contentId"), module);
                     }
                 } catch (GenericEntityException e) {
                     throw new RuntimeException(e.getMessage());
@@ -124,8 +117,6 @@ public class LoopSubContentTransform implements TemplateTransformModel {
             }
 
         }
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent(2), mimeTypeId." + mimeTypeId, module);
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, subContentId/Sub." + subContentIdSub, module);
 
         // This is what the FM template will see.
         ctx.put("subContentDataResourceView", subContentDataResourceView);
@@ -140,7 +131,6 @@ public class LoopSubContentTransform implements TemplateTransformModel {
         ctx.put("dataResourceId", dataResourceId);
         ctx.put("subContentIdSub", subContentIdSub);
         ctx.put("subDataResourceTypeId", subDataResourceTypeId);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)end of prepCtx", ctx, 0),module);
         return true;
     }
 
@@ -151,10 +141,8 @@ public class LoopSubContentTransform implements TemplateTransformModel {
         //FreeMarkerWorker.convertContext(templateCtx);
         final GenericDelegator delegator = (GenericDelegator) FreeMarkerWorker.getWrappedObject("delegator", env);
         //templateCtx.put("buf", buf);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)before save", templateCtx, 0),module);
         final Map savedValues = FreeMarkerWorker.saveValues(templateCtx, saveKeyNames);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after overrride", templateCtx, 0),module);
         String contentAssocTypeId = (String)templateCtx.get("contentAssocTypeId");
         if (UtilValidate.isEmpty(contentAssocTypeId)) {
             contentAssocTypeId = "SUB_CONTENT";
@@ -170,18 +158,14 @@ public class LoopSubContentTransform implements TemplateTransformModel {
 
 /*
         final String editTemplate = getArg(args, "editTemplate", ctx);
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, editTemplate:" + editTemplate, module);
         final String wrapTemplateId = getArg(args, "wrapTemplateId", ctx);
         final String mapKey = getArg(args, "mapKey", ctx);
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, mapKey:" + mapKey, module);
         final String templateContentId = getArg(args, "templateContentId", ctx);
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, templateContentId:" + templateContentId, module);
         final String subDataResourceTypeId = getArg(args, "subDataResourceTypeId", ctx);
         final String contentId = getArg(args, "contentId", ctx);
         final String rootDir = getArg(args, "rootDir", ctx);
         final String webSiteId = getArg(args, "webSiteId", ctx);
         final String https = getArg(args, "https", ctx);
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, contentId:" + contentId, module);
         final String viewSize = getArg(args, "viewSize", ctx);
         final String viewIndex = getArg(args, "viewIndex", ctx);
         final String listSize = getArg(args, "listSize", ctx);
@@ -230,7 +214,6 @@ public class LoopSubContentTransform implements TemplateTransformModel {
                 buf.append(cbuf, off, len);
                 //StringBuffer ctxBuf = (StringBuffer) templateCtx.get("buf");
                 //ctxBuf.append(cbuf, off, len);
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, buf:"+buf.toString(),module);
             }
 
             public void flush() throws IOException {
@@ -239,9 +222,7 @@ public class LoopSubContentTransform implements TemplateTransformModel {
 
             public int onStart() throws TemplateModelException, IOException {
                 templateCtx.put("entityIndex", new Integer(0));
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, onStart", module);
                 boolean inProgress = prepCtx(delegator, templateCtx);
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, onStart, inProgress:" + inProgress, module);
                 if (inProgress) {
                     return TransformControl.EVALUATE_BODY;
                 } else {
@@ -250,15 +231,9 @@ public class LoopSubContentTransform implements TemplateTransformModel {
             }
 
             public int afterBody() throws TemplateModelException, IOException {
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, afterBody, start", module);
                 Integer idx = (Integer) templateCtx.get("entityIndex");
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, prepCtx, idx :" + idx, module);
                 int i = idx.intValue();
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, afterBody, i:" + i, module);
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, afterBody, templateCtx.entityIndex:" + templateCtx.get("entityIndex"), module);
-                if (Debug.verboseOn()) Debug.logVerbose("buf:" + buf.toString(),module);
                 boolean inProgress = prepCtx(delegator, templateCtx);
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, afterBody, inProgress:" + inProgress + " inProgress:" + inProgress, module);
                 //out.write(buf.toString());
                 //buf.setLength(0);
                 if (inProgress)
@@ -270,17 +245,14 @@ public class LoopSubContentTransform implements TemplateTransformModel {
             public void close() throws IOException {
 
                 String wrappedFTL = buf.toString();
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrappedFTL:"+wrappedFTL,module);
                 String encloseWrappedText = (String)templateCtx.get("encloseWrappedText");
                 if (UtilValidate.isEmpty(encloseWrappedText) || encloseWrappedText.equalsIgnoreCase("false")) {
                     out.write(wrappedFTL);
                     wrappedFTL = ""; // So it won't get written again below.
                 }
                 String wrapTemplateId = (String)templateCtx.get("wrapTemplateId");
-                    if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrapTemplateId:" + wrapTemplateId, module);
                 if (UtilValidate.isNotEmpty(wrapTemplateId)) {
                     templateCtx.put("wrappedFTL", wrappedFTL);
-                    //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, rootDir:" + rootDir, module);
                     
                     Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
                     
@@ -298,11 +270,6 @@ public class LoopSubContentTransform implements TemplateTransformModel {
                     templateRoot.put("wrapMimeTypeId", templateCtx.get("mimeTypeId"));
                     templateRoot.put("context", templateCtx);
                     
-                    //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrapDataResourceTypeId:" + subDataResourceTypeId, module);
-                    //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrapContentIdTo:" + contentId, module);
-                    //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrapMimeTypeId:" + mimeTypeId, module);
-                    //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrapMapKey:" + mapKey,module);
-                    //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, calling renderContentAsText, wrapTemplateId:" + wrapTemplateId, module);
 
                     Locale locale = (Locale) templateCtx.get("locale");
                     if (locale == null)
@@ -318,11 +285,8 @@ public class LoopSubContentTransform implements TemplateTransformModel {
                     if (UtilValidate.isNotEmpty(wrappedFTL))
                         out.write(wrappedFTL);
                 }
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)before remove", templateCtx, 0),module);
                     FreeMarkerWorker.removeValues(templateCtx, removeKeyNames);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after remove", templateCtx, 0),module);
                     FreeMarkerWorker.reloadValues(templateCtx, savedValues);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after reload", templateCtx, 0),module);
             }
         };
     }

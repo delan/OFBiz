@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.26 2004/04/13 04:56:13 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.27 2004/04/20 21:01:18 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import freemarker.template.Template;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -174,7 +174,6 @@ public class DataResourceWorker {
     public static String uploadAndStoreImage(HttpServletRequest request, String idField, String uploadField) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
-        if (Debug.verboseOn()) Debug.logVerbose("in uploadAndStoreImage, idField:" + idField, "");
         String idFieldValue = null;
         DiskFileUpload fu = new DiskFileUpload();
         java.util.List lst = null;
@@ -199,7 +198,6 @@ public class DataResourceWorker {
             //String fn = fi.getName();
             String fieldName = fi.getFieldName();
             String fieldStr = fi.getString();
-            if (Debug.verboseOn()) Debug.logVerbose("in uploadAndStoreImage, fieldName:" + fieldName, "");
             if (fieldName.equals(idField)) {
                 idFieldValue = fieldStr;
             }
@@ -213,7 +211,6 @@ public class DataResourceWorker {
             return "error";
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("in uploadAndStoreImage, idFieldValue:" + idFieldValue, "");
 
         byte[] imageBytes = imageFi.get();
 
@@ -372,7 +369,6 @@ public class DataResourceWorker {
             context = new HashMap();
         }
 
-        //if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml, mimeTypeId:" + mimeTypeId, module);
         if (UtilValidate.isEmpty(mimeTypeId)) {
             mimeTypeId = "text/html";
         }
@@ -391,9 +387,6 @@ public class DataResourceWorker {
             } else {
                 dataResource.setAllFields(view, true, "dr", null);
             }
-            //if (Debug.verboseOn()) Debug.logVerbose("in renderDAtaResource(work), view:" + view, "");
-            //if (Debug.verboseOn()) Debug.logVerbose("in renderDAtaResource(work), dataResource:" + dataResource, "");
-            //if (Debug.verboseOn()) Debug.logVerbose("in renderDAtaResource(work), dataResourceMap:" + dataResourceMap, "");
             dataResourceId = dataResource.getString("dataResourceId");
             if (UtilValidate.isEmpty(dataResourceId)) {
                 throw new GeneralException("The dataResourceId [" + dataResourceId + "] is empty.");
@@ -422,7 +415,6 @@ public class DataResourceWorker {
             writeDataResourceText(dataResource, mimeTypeId, locale, templateContext, delegator, out);
         } else {
             String subContentId = (String)context.get("subContentId");
-            if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml, subContentId:" + subContentId, module);
             // TODO: the reason why I did this (and I can't remember) may not be valid or it can be done better
             if (UtilValidate.isNotEmpty(subContentId)) {
                 context.put("contentId", subContentId);
@@ -467,7 +459,6 @@ public class DataResourceWorker {
         if (disableCache == null || !disableCache.equalsIgnoreCase("true")) {
             Template cachedTemplate = FreeMarkerWorker.getTemplateCached(dataResourceId);
             if (cachedTemplate != null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Template:" + dataResourceId + ":FOUND","");
                 try {
                     String subContentId = (String)context.get("subContentId");
                     if (UtilValidate.isNotEmpty(subContentId)) {
@@ -482,11 +473,8 @@ public class DataResourceWorker {
                 }
                 return;
             }
-            else
-                if (Debug.verboseOn()) Debug.logVerbose("Template:" + dataResourceId + ":NOT_FOUND","");
         }
 
-        //if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml, mimeTypeId:" + mimeTypeId, module);
         if (UtilValidate.isEmpty(mimeTypeId)) {
             mimeTypeId = "text/html";
         }
@@ -511,9 +499,6 @@ public class DataResourceWorker {
             } catch (Exception e) {
                 thisDataResourceId = (String) view.get("dataResourceId");
             }
-            if (Debug.verboseOn()) Debug.logVerbose("in renderDAtaResource(work), view:" + view, "");
-            if (Debug.verboseOn()) Debug.logVerbose("in renderDAtaResource(work), dataResource:" + dataResource, "");
-            if (Debug.verboseOn()) Debug.logVerbose("in renderDAtaResource(work), thisDataResourceId:" + thisDataResourceId, "");
             if (UtilValidate.isEmpty(thisDataResourceId)) {
                 if (UtilValidate.isNotEmpty(dataResourceId)) 
                     view = null; // causes lookup of DataResource
@@ -544,7 +529,6 @@ public class DataResourceWorker {
             writeDataResourceTextCache(dataResource, mimeTypeId, locale, templateRoot, delegator, out);
         } else {
             String subContentId = (String)context.get("subContentId");
-            if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml, subContentId:" + subContentId, module);
             if (UtilValidate.isNotEmpty(subContentId)) {
                 context.put("contentId", subContentId);
                 context.put("subContentId", null);
@@ -606,8 +590,6 @@ public class DataResourceWorker {
         if (UtilValidate.isEmpty(dataResourceTypeId)) {
             dataResourceTypeId = "SHORT_TEXT";
         }
-        if (Debug.verboseOn()) Debug.logVerbose(" in writeDataResourceAsHtml, dataResourceId:" + dataResourceId, module);
-        if (Debug.verboseOn()) Debug.logVerbose(" in writeDataResourceAsHtml, dataResourceTypeId:" + dataResourceTypeId, module);
         
         if (dataResourceTypeId.equals("SHORT_TEXT")) {
             String text = dataResource.getString("objectInfo");
@@ -615,7 +597,6 @@ public class DataResourceWorker {
         } else if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
             GenericValue electronicText = delegator.findByPrimaryKey("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
             String text = electronicText.getString("textData");
-            if (Debug.verboseOn()) Debug.logVerbose(" in writeDataResourceAsHtml, text:" + text, module);
             outWriter.write(text);
         } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
             // TODO: Is this where the image (or any binary) object URL is created? looks like it is just returning 
@@ -631,7 +612,6 @@ public class DataResourceWorker {
             }
             */
             
-            if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(IMAGE), mimeTypeId:" + mimeTypeId, module);
             String text = (String) dataResource.get("dataResourceId");
             outWriter.write(text);
         } else if (dataResourceTypeId.equals("LINK")) {
@@ -649,7 +629,6 @@ public class DataResourceWorker {
                 }
                 sw.close();
                 text = sw.toString();
-                if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(URL-ABS), text:" + text, module);
             } else {
                 String prefix = buildRequestPrefix(delegator, locale, webSiteId, https);
                 String sep = "";
@@ -659,9 +638,7 @@ public class DataResourceWorker {
                 }
                 String s2 = prefix + sep + url.toString();
                 URL url2 = new URL(s2);
-                if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(URL-REL), s2:" + s2, module);
                 text = (String) url2.getContent();
-                if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(URL-REL), text:" + text, module);
             }
             outWriter.write(text);
         } else if (dataResourceTypeId.indexOf("_FILE") >= 0) {
@@ -691,8 +668,6 @@ public class DataResourceWorker {
         if (UtilValidate.isEmpty(dataResourceTypeId)) {
             dataResourceTypeId = "SHORT_TEXT";
         }
-        if (Debug.verboseOn()) Debug.logVerbose(" in writeDataResourceAsHtml, dataResourceId:" + dataResourceId, module);
-        if (Debug.verboseOn()) Debug.logVerbose(" in writeDataResourceAsHtml, dataResourceTypeId:" + dataResourceTypeId, module);
         
         if (dataResourceTypeId.equals("SHORT_TEXT")) {
             String text = dataResource.getString("objectInfo");
@@ -701,7 +676,6 @@ public class DataResourceWorker {
         } else if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
             GenericValue electronicText = delegator.findByPrimaryKeyCache("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
             String text = electronicText.getString("textData");
-            if (Debug.verboseOn()) Debug.logVerbose(" in writeDataResourceAsHtml, text:" + text, module);
             if (UtilValidate.isNotEmpty(text)) 
                 outWriter.write(text);
         } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
@@ -718,7 +692,6 @@ public class DataResourceWorker {
             }
             */
             
-            if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(IMAGE), mimeTypeId:" + mimeTypeId, module);
             String text = (String) dataResource.get("dataResourceId");
             outWriter.write(text);
         } else if (dataResourceTypeId.equals("LINK")) {
@@ -736,7 +709,6 @@ public class DataResourceWorker {
                 }
                 sw.close();
                 text = sw.toString();
-                if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(URL-ABS), text:" + text, module);
             } else {
                 String prefix = buildRequestPrefix(delegator, locale, webSiteId, https);
                 String sep = "";
@@ -746,9 +718,7 @@ public class DataResourceWorker {
                 }
                 String s2 = prefix + sep + url.toString();
                 URL url2 = new URL(s2);
-                if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(URL-REL), s2:" + s2, module);
                 text = (String) url2.getContent();
-                if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(URL-REL), text:" + text, module);
             }
             outWriter.write(text);
         } else if (dataResourceTypeId.indexOf("_FILE") >= 0) {
@@ -768,7 +738,6 @@ public class DataResourceWorker {
                 throw new GeneralException("File (" + objectInfo + ") is not absolute");
             }
             int c;
-            if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(LOCAL), file:" + file, module);
             FileReader in = new FileReader(file);
             while ((c = in.read()) != -1) {
                 out.write(c);
@@ -780,7 +749,6 @@ public class DataResourceWorker {
                 sep = "/";
             }
             File file = new File(prefix + sep + objectInfo);
-            if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(OFBIZ_FILE), file:" + file, module);
             int c;
             FileReader in = new FileReader(file);
             while ((c = in.read()) != -1)
@@ -805,7 +773,6 @@ public class DataResourceWorker {
             } catch (Exception e) {
                 Debug.logError(" in renderDataResourceAsHtml(CONTEXT_FILE), got exception:" + e.getMessage(), module);
             }
-            if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(CONTEXT_FILE), after FileReader:", module);
             while ((c = in.read()) != -1) {
                 out.write(c);
             }
@@ -830,7 +797,6 @@ public class DataResourceWorker {
                 prefix = UtilProperties.getMessage("content", "baseUrl", locale);
             }
         }
-        if (Debug.verboseOn()) Debug.logVerbose("in buildRequestPrefix, prefix:" + prefix, "");
 
         return prefix;
     }
@@ -844,7 +810,6 @@ public class DataResourceWorker {
                 throw new GeneralException("File (" + objectInfo + ") is not absolute");
             }
             int c;
-            if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(LOCAL), file:" + file, module);
         } else if (dataResourceTypeId.equals("OFBIZ_FILE")) {
             String prefix = System.getProperty("ofbiz.home");
             String sep = "";
@@ -852,7 +817,6 @@ public class DataResourceWorker {
                 sep = "/";
             }
             file = new File(prefix + sep + objectInfo);
-            if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(OFBIZ_FILE), file:" + file, module);
         } else if (dataResourceTypeId.equals("CONTEXT_FILE")) {
             String prefix = rootDir;
             String sep = "";

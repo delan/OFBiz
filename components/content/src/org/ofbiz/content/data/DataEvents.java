@@ -28,7 +28,7 @@ import org.ofbiz.service.LocalDispatcher;
  * DataEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      3.0
  *
  * 
@@ -75,7 +75,6 @@ public class DataEvents {
                 b = DataResourceWorker.acquireImage(delegator, dataResource);
                 if (imageType == null || b == null || b.length == 0) {
                         String errorMsg = "image(" + b + ") or type(" + imageType + ") is null or empty.";
-                        Debug.logVerbose(errorMsg, module);
                         request.setAttribute("_ERROR_MESSAGE_", errorMsg);
                         return "error";
                 } else {

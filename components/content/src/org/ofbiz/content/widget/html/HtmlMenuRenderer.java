@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.8 2004/04/19 20:58:44 byersa Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.9 2004/04/20 21:01:30 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {
@@ -162,7 +162,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
 
     public void renderMenuItem(StringBuffer buffer, Map context, ModelMenuItem menuItem) {
         
-            Debug.logInfo("in renderMenuItem, menuItem:" + menuItem.getName() + " context:" + context ,"");
+            //Debug.logInfo("in renderMenuItem, menuItem:" + menuItem.getName() + " context:" + context ,"");
         boolean hideThisItem = isHideIfSelected(menuItem);
             //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, hideThisItem:" + hideThisItem,"");
         if (hideThisItem)
@@ -440,10 +440,10 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         List passedRoles = null;
 
         //Debug.logInfo("in doPermissionCheck, content:" + content,"");
-        Debug.logInfo("in doPermissionCheck, targetOperations:" + targetOperations,"");
+        //Debug.logInfo("in doPermissionCheck, targetOperations:" + targetOperations,"");
         Map results = ContentPermissionServices.checkPermission(content, permissionStatusId, userLogin, passedPurposes, targetOperations, passedRoles, delegator , security, entityAction, privilegeEnumId );
         String permissionStatus = (String)results.get("permissionStatus");
-                Debug.logInfo("in doPermissionCheck, permissionStatus:" + permissionStatus,"");
+                //Debug.logInfo("in doPermissionCheck, permissionStatus:" + permissionStatus,"");
                 //Debug.logInfo("in HtmlMenuRenderer, results:" + results,"");
         String errorMessage = null;
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
