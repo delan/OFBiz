@@ -82,6 +82,7 @@ public class OrderServices {
 
         // get the order type
         String orderTypeId = (String) context.get("orderTypeId");
+        result.put("orderTypeId", orderTypeId);
         
         // lookup the order type entity
         GenericValue orderType = null;
@@ -202,7 +203,8 @@ public class OrderServices {
         }
         
         // the inital status for ALL order types
-        String initialStatus = "ORDER_CREATED";       
+        String initialStatus = "ORDER_CREATED";
+        result.put("statusId", initialStatus);      
 
         // create the order object
         String orderId = delegator.getNextSeqId("OrderHeader").toString();
