@@ -472,7 +472,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
         if (otherFieldSize > 0) {
         
             String fieldName = modelFormField.getParameterName(context);
-            Object otherValueObj = context.get(otherFieldName);
+            Map dataMap = modelFormField.getMap(context);
+            if (dataMap == null) {
+                dataMap = context;
+            }
+            Object otherValueObj = dataMap.get(otherFieldName);
             String otherValue = (otherValueObj == null) ? "" : otherValueObj.toString();
             
             buffer.append("<noscript>");
@@ -492,7 +496,6 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(otherFieldName);
             buffer.append("' value='");
             buffer.append(otherValue);
-            buffer.append("' ");
             buffer.append("' size='");
             buffer.append(otherFieldSize);
             buffer.append("' ");
