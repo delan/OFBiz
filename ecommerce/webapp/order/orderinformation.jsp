@@ -159,7 +159,7 @@
                   <td colspan="2" valign="top">
                   <div class="tabletext" align="center"><b>Offline Payment</b></div>
                   <ofbiz:if name="orderHeader">
-                    <div class="tabletext" align="center">Please Remit Payment To:</div>
+                    <div class="tabletext" align="center">Please Send Payment To:</div>
                     <div class="tabletext" align="center">Company XYZ Inc.</div>
                     <div class="tabletext" align="center">99 Open Ave</div>
                     <div class="tabletext" align="center">Somewhere, OS 11111</div>
