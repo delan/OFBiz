@@ -88,6 +88,9 @@ public class ModelEntity implements Comparable {
     /** relations defining relationships between this entity and other entities */
     protected List relations = new ArrayList();
 
+    /** indexes on fields/columns in this entity */
+    protected List indexes = new ArrayList();
+
     /** An indicator to specify if this entity requires locking for updates */
     protected boolean doLock = false;
 
@@ -142,6 +145,7 @@ public class ModelEntity implements Comparable {
 
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before relations");
         this.populateRelated(reader, entityElement);
+        this.populateIndexes(entityElement);
     }
 
     /** DB Names Constructor */
@@ -189,14 +193,22 @@ public class ModelEntity implements Comparable {
 
     protected void populateRelated(ModelReader reader, Element entityElement) {
         NodeList relationList = entityElement.getElementsByTagName("relation");
-
         for (int i = 0; i < relationList.getLength(); i++) {
             Element relationElement = (Element) relationList.item(i);
-
             if (relationElement.getParentNode() == entityElement) {
                 ModelRelation relation = reader.createRelation(this, relationElement);
-
                 if (relation != null) this.relations.add(relation);
+            }
+        }
+    }
+
+    protected void populateIndexes(Element entityElement) {
+        NodeList indexList = entityElement.getElementsByTagName("index");
+        for (int i = 0; i < indexList.getLength(); i++) {
+            Element indexElement = (Element) indexList.item(i);
+            if (indexElement.getParentNode() == entityElement) {
+                ModelIndex index = new ModelIndex(this, indexElement);
+                this.indexes.add(index);
             }
         }
     }
