@@ -6,7 +6,7 @@
 
 <!-- EntitySync example, with Job demo -->
 <!--
-    <EntitySync entitySyncId="1500" runStatusId="ESR_NOT_STARTED" syncSplitMillis="10000" targetServiceName="remoteStoreEntitySyncDataRmi" keepRemoveInfoHours="24"/>
+    <EntitySync entitySyncId="1500" runStatusId="ESR_NOT_STARTED" syncSplitMillis="600000" targetServiceName="remoteStoreEntitySyncDataRmi" keepRemoveInfoHours="24"/>
     <EntitySyncInclude entitySyncId="1500" entityOrPackage="org.ofbiz." applEnumId="ESIA_INCLUDE"/>
     <RecurrenceRule recurrenceRuleId="1500" untilDateTime="1969-12-31 19:00:00.000" frequency="MINUTELY" intervalNumber="1" countNumber="-1"/>
     <RecurrenceInfo recurrenceInfoId="1500" startDateTime="2000-01-01 00:00:00.000" recurrenceRuleId="1500" recurrenceCount="0"/>
