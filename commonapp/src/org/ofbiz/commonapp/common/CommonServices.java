@@ -25,6 +25,7 @@
 
 package org.ofbiz.commonapp.common;
 
+import java.net.*;
 import java.util.*;
 import java.sql.Timestamp;
 import javax.mail.*;
@@ -69,6 +70,39 @@ public class CommonServices {
         return response;
     }
 
+    /** JavaMail Service that gets body content from a URL
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map sendMailFromUrl(DispatchContext ctx, Map context) {
+        //pretty simple, get the content and then call the sendMail method below
+        String bodyUrl = (String) context.remove("bodyUrl");
+        Map bodyUrlParameters = (Map) context.remove("bodyUrlParameters");
+
+        URL url = null;
+        try {
+            url = new URL(bodyUrl);
+        } catch (MalformedURLException e) {
+            Debug.logWarning(e);
+            ServiceUtil.returnError("Malformed URL: " + bodyUrl + "; error was: " + e.toString());
+        }
+
+        HttpClient httpClient = new HttpClient(url, bodyUrlParameters);
+        String body = null;
+        try {
+            body = httpClient.get();
+        } catch (HttpClientException e) {
+            Debug.logWarning(e);
+            return ServiceUtil.returnError("Error getting content: " + e.toString());
+        }
+
+        context.put("body", body);
+        Map result = sendMail(ctx, context);
+        result.put("body", body);
+        return result;
+    }
+    
     /** Basic JavaMail Service
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -86,10 +120,12 @@ public class CommonServices {
         String sendVia = (String) context.get("sendVia");
         String contentType = (String) context.get("contentType");
 
-        if (sendType == null)
+        if (sendType == null) {
             sendType = "mail.smtp.host";
-        if (contentType == null)
+        }
+        if (contentType == null) {
             contentType = "text/html";
+        }
 
         try {
             Properties props = new Properties();
@@ -101,10 +137,12 @@ public class CommonServices {
             mail.setSubject(subject);
             mail.addRecipients(Message.RecipientType.TO, sendTo);
 
-            if (UtilValidate.isNotEmpty(sendCc))
+            if (UtilValidate.isNotEmpty(sendCc)) {
                 mail.addRecipients(Message.RecipientType.CC, sendCc);
-            if (UtilValidate.isNotEmpty(sendBcc))
+            }
+            if (UtilValidate.isNotEmpty(sendBcc)) {
                 mail.addRecipients(Message.RecipientType.BCC, sendBcc);
+            }
 
             mail.setContent(body, contentType);
 

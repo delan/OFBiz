@@ -75,6 +75,10 @@
         <response name="success" type="view" value="main"/>
     </request-map>
 
+    <request-map uri="passwordemail">
+        <response name="success" type="view" value="passwordemail"/>
+    </request-map>
+
     <request-map uri="additem">
         <event type="java" path="org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
         <response name="success" type="view" value="showcart"/>
@@ -405,6 +409,7 @@
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="region"/>
     <view-map name="login" type="region"/>
+    <view-map name="passwordemail" page="/customer/passwordemail.jsp"/>
 
     <view-map name="showcart" type="region"/>
 

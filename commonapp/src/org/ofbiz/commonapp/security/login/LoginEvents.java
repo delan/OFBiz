@@ -268,7 +268,8 @@ public class LoginEvents {
      * @return String specifying the exit status of this event
      */
     public static String emailPassword(HttpServletRequest request, HttpServletResponse response) {
-        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
@@ -299,7 +300,6 @@ public class LoginEvents {
                 passwordToSend = "auto" + ((long)(randNum * 100000));
                 supposedUserLogin.set("currentPassword", HashEncrypt.getHash(passwordToSend));
                 supposedUserLogin.set("passwordHint", "Auto-Generated Password");
-                supposedUserLogin.store();
             } else {
                 passwordToSend = supposedUserLogin.getString("currentPassword");
             }
@@ -310,7 +310,7 @@ public class LoginEvents {
         }
         if (supposedUserLogin == null) {
             //the Username was not found
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The Username was not found, please re-enter.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>A user with the username \"" + userLoginId + "\" was not found, please re-enter.");
             return "error";
         }
         
@@ -333,26 +333,65 @@ public class LoginEvents {
         
         if (!UtilValidate.isNotEmpty(emails.toString())) {
             //the Username was not found
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>No Primary Email Address has been set, please contact ustomer service.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>No Primary Email Address has been set, please contact customer service.");
             return "error";
         }
         
         String SMTP_SERVER = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");
-        String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
+        //String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
         String PASSWORD_SENDER_EMAIL = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "password.send.email");
-        
-        String content = "Username: " + userLoginId + "\n" + (useEncryption ? "New Password: " : "Current Password: ") + UtilFormatOut.checkNull(passwordToSend);
-        try {
-            SendMailSMTP mail = new SendMailSMTP(SMTP_SERVER, PASSWORD_SENDER_EMAIL, emails.toString(), content);
-            mail.setLocalMachine(LOCAL_MACHINE);
-            mail.setSubject(UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Password Reminder");
-            //mail.setExtraHeader("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
-            mail.setMessage(content);
-            mail.send();
-        } catch (java.io.IOException e) {
-            Debug.logWarning(e);
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "error occurred: unable to email password.  Please try again later or contact customer service.");
+
+        String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
+        if (controlPath == null) {
+            Debug.logError("[CheckOutEvents.renderConfirmOrder] CONTROL_PATH is null.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error generating order confirmation, but it was recorded and will be processed.");
             return "error";
+        }
+        // build the server root string
+        StringBuffer serverRoot = new StringBuffer();
+        String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
+        String port = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
+        serverRoot.append("http://");
+        serverRoot.append(server);
+        if (!port.equals("80")) {
+            serverRoot.append(":" + port);
+        }
+        String bodyUrl = serverRoot + controlPath + "/passwordemail";
+        
+        Map context = new HashMap();
+        context.put("subject", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Password Reminder");
+        context.put("bodyUrl", bodyUrl);
+        context.put("sendTo", emails.toString());
+        context.put("sendFrom", PASSWORD_SENDER_EMAIL);
+        context.put("sendVia", SMTP_SERVER);
+
+        Map parameters = new HashMap();
+        parameters.put("password", UtilFormatOut.checkNull(passwordToSend));
+        parameters.put("useEncryption", Boolean.toString(useEncryption));
+        context.put("bodyUrlParameters", parameters);
+        
+        //String content = "Username: " + userLoginId + "\n" + (useEncryption ? "New Password: " : "Current Password: ") + ;
+        try {
+            Map result = dispatcher.runSync("sendMailFromUrl", context);
+            if (ModelService.RESPOND_ERROR.equals((String) result.get(ModelService.RESPONSE_MESSAGE))) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error occurred: unable to email password.  Please try again later or contact customer service. (error was: " + result.get(ModelService.ERROR_MESSAGE) + ")");
+                return "error";
+            }
+        } catch (GenericServiceException e) {
+            Debug.logWarning(e);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error occurred: unable to email password.  Please try again later or contact customer service.");
+            return "error";
+        }
+        
+        //don't save password until after it has been sent
+        if (useEncryption) {
+            try {
+                supposedUserLogin.store();
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Error saving new password, the email that you receive will not have the correct password in it, your old password is still being used: " + e.toString());
+                return "error";
+            }
         }
         
         if (useEncryption) {

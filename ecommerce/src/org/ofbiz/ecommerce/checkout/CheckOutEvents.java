@@ -360,10 +360,12 @@ public class CheckOutEvents {
                 mail.setFrom(new InternetAddress(ORDER_SENDER_EMAIL));
                 mail.addRecipients(Message.RecipientType.TO, emails.toString());
 
-                if (UtilValidate.isNotEmpty(ORDER_CC))
+                if (UtilValidate.isNotEmpty(ORDER_CC)) {
                     mail.addRecipients(Message.RecipientType.CC, ORDER_CC);
-                if (UtilValidate.isNotEmpty(ORDER_BCC))
+                }
+                if (UtilValidate.isNotEmpty(ORDER_BCC)) {
                     mail.addRecipients(Message.RecipientType.BCC, ORDER_BCC);
+                }
 
                 String orderId = (String) request.getAttribute("order_id");
                 mail.setSubject(UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Order" + UtilFormatOut.ifNotEmpty(orderId, " #", "") + " Confirmation");
