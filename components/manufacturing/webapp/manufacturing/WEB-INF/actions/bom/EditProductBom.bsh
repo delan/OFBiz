@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
  */
 
@@ -54,6 +54,8 @@ String productId = request.getParameter("PRODUCT_ID");
 if (productId != null) context.put("productId", productId);
 
 String productIdTo = request.getParameter("PRODUCT_ID_TO");
+String updateMode = request.getParameter("UPDATE_MODE");
+
 if (productIdTo != null) context.put("productIdTo", productIdTo);
 
 String productAssocTypeId = request.getParameter("PRODUCT_ASSOC_TYPE_ID");
@@ -70,7 +72,13 @@ GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("pro
 if (product != null) context.put("product", product);
 
 GenericValue productAssoc = delegator.findByPrimaryKey("ProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
-if (productAssoc != null) context.put("productAssoc", productAssoc);
+if (updateMode != null) {
+    productAssoc = null;
+    context.remove("productIdTo");
+}
+if (productAssoc != null) {
+    context.put("productAssoc", productAssoc);
+}
 
 if("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 if(productAssoc == null) useValues = false;
