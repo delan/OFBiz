@@ -30,8 +30,8 @@
     		Parameters:
     			orderHeaderList: List of OrderHeaders to create a picklist for
     		Returns:
-    			inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, product, quantity
-    			orderHeaderInfoList: List of Maps with orderHeader and orderItemInfo which is a Map with orderItem and orderItemInventoryResList
+    			inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, product, statusItem, quantity
+    			orderHeaderInfoList: List of Maps with orderHeader and orderItemInfoList which is List of Maps with orderItem, product and orderItemInventoryResList
     			wrongQuantityReservedList: List of Maps with reservedQuantity and orderItem
     			insufficientQohList: List of Maps with inventoryItem and quantityNeeded
     	-->
@@ -53,7 +53,8 @@
 			
             <!-- get the order items and the order item inventory res entries -->
 			<get-related value-name="orderHeader" relation-name="OrderItemInventoryRes" list-name="orderItemInventoryResList"/>
-			<get-related value-name="orderHeader" relation-name="OrderItem" list-name="orderItemList"/>
+			<string-to-list string="+orderItemSeqId" list-name="orderItemOrdLst"/>
+			<get-related value-name="orderHeader" relation-name="OrderItem" list-name="orderItemList" order-by-list-name="orderItemOrdLst"/>
 			
 			<iterate entry-name="orderItem" list-name="orderItemList">
 				<if-compare value="ITEM_APPROVED" operator="equals" field-name="orderItem.statusId">
@@ -92,6 +93,7 @@
 					
 					<env-to-field env-name="orderItem" map-name="orderItemInfo"/>
 					<env-to-field env-name="perItemResList" field-name="orderItemInventoryResList" map-name="orderItemInfo"/>
+					<get-related-one value-name="orderItem" relation-name="Product" to-value-name="orderItemInfo.product"/>
 					<field-to-list field-name="orderItemInfo" list-name="orderItemInfoList"/>
 					<clear-field field-name="orderItemInfo"/>
 				</if-compare>
@@ -176,8 +178,8 @@
 				<field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
 				<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" to-field-name="orderItems" to-map-name="inventoryItemInfo"/>
 				<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemQuantities" to-field-name="quantity" to-map-name="inventoryItemInfo"/>
-				<env-to-field env-name="inventoryItemInfo.inventoryItem.productId" field-name="productId" map-name="productLkUpMap"/>
-				<find-by-primary-key entity-name="Product" map-name="productLkUpMap" value-name="inventoryItemInfo.product"/>
+				<get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="Product" to-value-name="inventoryItemInfo.product"/>
+				<get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="StatusItem" to-value-name="inventoryItemInfo.statusItem"/>
 
 				<field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
 				<clear-field field-name="inventoryItemInfo"/>
@@ -189,17 +191,17 @@
 	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
 	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" to-field-name="orderItems" to-map-name="inventoryItemInfo"/>
 	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemQuantities" to-field-name="quantity" to-map-name="inventoryItemInfo"/>
-			<env-to-field env-name="inventoryItemInfo.inventoryItem.productId" field-name="productId" map-name="productLkUpMap"/>
-			<find-by-primary-key entity-name="Product" map-name="productLkUpMap" value-name="inventoryItemInfo.product"/>
+			<get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="Product" to-value-name="inventoryItemInfo.product"/>
+			<get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="StatusItem" to-value-name="inventoryItemInfo.statusItem"/>
 
 			<field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
 	    	<clear-field field-name="inventoryItemInfo"/>
     	</iterate>
 		
 		<field-to-result field-name="inventoryItemInfoList"/>
+		<field-to-result field-name="orderHeaderInfoList"/>
 		<field-to-result field-name="wrongQuantityReservedList"/>
 		<field-to-result field-name="insufficientQohList"/>
-		<field-to-result field-name="orderHeaderInfoList"/>
     </simple-method>    
 </simple-methods>
      
