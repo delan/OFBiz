@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -69,6 +69,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 <INPUT type=hidden name='piecesIncluded' value='product.piecesIncluded'>
                 <INPUT type=hidden name='weightUomId' value='product.weightUomId'>
                 <INPUT type=hidden name='weight' value='product.weight'>
+                <INPUT type=hidden name="returnable" value='product.returnable'>
                 <INPUT type=hidden name='taxable' value='product.taxable'>
                 <INPUT type=hidden name='taxCategory' value='product.taxCategory'>
                 <INPUT type=hidden name='taxVatCode' value='product.taxVatCode'>

@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.16 2003/10/26 05:44:02 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.17 2003/11/07 04:34:39 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 
@@ -1623,15 +1623,26 @@ public class OrderServices {
     
     // get the returnable quantiy for an order item
     public static Map getReturnableQuantity(DispatchContext ctx, Map context) {
-        LocalDispatcher dispatcher = ctx.getDispatcher(); 
-        GenericDelegator delegator = ctx.getDelegator();
         GenericValue orderItem = (GenericValue) context.get("orderItem");
-                
+        GenericValue product = null;
+        if (orderItem.get("productId") != null) {
+            try {
+                product = orderItem.getRelatedOne("Product");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "ERROR: Unable to get Product from OrderItem", module);
+            }
+        }
+        boolean returnable = true;
+        if (product != null && product.get("returnable") != null &&
+                "N".equalsIgnoreCase(product.getString("returnable"))) {
+            returnable = false;
+        }
+
         String itemStatus = orderItem.getString("statusId");
         double orderQty = orderItem.getDouble("quantity").doubleValue();
         
         double returnableAmount = 0.00;
-        if (itemStatus.equals("ITEM_COMPLETED")) {
+        if (returnable && itemStatus.equals("ITEM_COMPLETED")) {
             List returnedItems = null;
             try {
                 returnedItems = orderItem.getRelated("ReturnItem");
