@@ -37,8 +37,18 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     </div>
 </form>
 
-<div class="head2">Add Items to Shipment [${shipmentId}] from Order [${orderId}]</div>
-<div class="head3">Origin Facility is: <#if originFacility?exists>${originFacility.facilityName?if_exists} [${originFacility.facilityId}]<#else><span style="font-color: red;">Not Set</span></#if></div>
+<div class="head2">Add Items to Shipment [${shipmentId?if_exists}] from Order [${orderId?if_exists}]</div>
+<div class="head3">Origin Facility is: <#if originFacility?exists>${originFacility.facilityName?if_exists} [${originFacility.facilityId}]<#else><span style="color: red;">Not Set</span></#if></div>
+<#if orderId?has_content && !orderHeader?exists>
+    <div class="head3" style="color: red;">ERROR: Order with ID [${orderId}] not found.</div>
+</#if>
+<#if orderHeader?exists>
+    <#if "ORDER_APPROVED" == orderHeader.statusId || "ORDER_BACKORDERED" == orderHeader.statusId>
+        <div class="head3">NOTE: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}.</div>
+    <#else>
+        <div class="head3" style="color: red;">WARNING: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}; should generally be Approved or Backordered before shipping.</div>
+    </#if>
+</#if>
 <table width="100%" cellpadding="2" cellspacing="0" border="1">
     <tr>
         <td><div class="tableheadtext">OrderItem</div></td>
@@ -50,9 +60,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <td><div class="tableheadtext">Issued</div></td>
         <td><div class="tableheadtext">ShipmentItems</div></td>
         <td><div class="tableheadtext">Issue</div></td>
-        <td><div class="tableheadtext">&nbsp;</div></td>
     </tr>
-    <#list orderItemDatas as orderItemData>
+    <#list orderItemDatas?if_exists as orderItemData>
         <#assign orderItem = orderItemData.orderItem>
         <#assign orderItemInventoryResDatas = orderItemData.orderItemInventoryResDatas>
         <#assign product = orderItemData.product>
@@ -70,9 +79,9 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                 <td><div class="tabletext">${(product.productName)?if_exists} [${orderItem.productId?if_exists}]</div></td>
                 <td>
                     <#if inventoryItem.facilityId?has_content>
-                        <div class="tabletext"<#if originFacility?exists && originFacility.facilityId != inventoryItem.facilityId> style="font-color: red;"</#if>>${inventoryItem.facilityId}</div>
+                        <div class="tabletext"<#if originFacility?exists && originFacility.facilityId != inventoryItem.facilityId> style="color: red;"</#if>>${inventoryItem.facilityId}</div>
                     <#else>
-                        <div class="tabletext" style="font-color: red;">No Facility</div>
+                        <div class="tabletext" style="color: red;">No Facility</div>
                     </#if>
                 </td>
                 <td><div class="tabletext">${resStatus.description?default(orderItemInventoryRes.statusId?default("&nbsp;"))}</div></td>
@@ -90,7 +99,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                 <td>
                     <#if (quantityLeftToIssue > 0)>
                         <#if "OIIR_CANCELLED" != orderItemInventoryRes.statusId>
-                            <#if originFacility?exists && originFacility.facilityId == inventoryItem.facilityId>
+                            <#if originFacility?exists && originFacility.facilityId == inventoryItem.facilityId?if_exists>
                                 <form action="<@ofbizUrl>/issueOrderItemInventoryResToShipment</@ofbizUrl>" name="addOrderItemToShipmentForm${orderItemData_index}${orderItemInventoryResData_index}">
                                     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                                     <input type="hidden" name="orderId" value="${orderItemInventoryRes.orderId}"/>

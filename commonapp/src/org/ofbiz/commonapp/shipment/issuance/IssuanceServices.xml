@@ -36,8 +36,10 @@
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ItemIssuance"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <sequenced-id-to-env sequence-name="ItemIssuance" env-name="newEntity.itemIssuanceId" to-string="true"/>
+        <field-to-result field-name="itemIssuanceId" map-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <now-timestamp-to-env env-name="newEntity.issuedDateTime"/>
         
         <create-value value-name="newEntity"/>
     </simple-method>

@@ -209,11 +209,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             <span class="tabletext">${(destFacility.facilityName)?if_exists} [${destFacility.facilityId?if_exists}]</span>
         </td>
         <td>
-            <span class="tabletext">${(shipmentRouteSegment.estimatedStartDate.toString())?if_exists}</span>
-            <span class="tabletext">${(shipmentRouteSegment.estimatedArrivalDate.toString())?if_exists}</span>
-            <br/>
-            <span class="tabletext">${(shipmentRouteSegment.actualStartDate.toString())?if_exists}</span>
-            <span class="tabletext">${(shipmentRouteSegment.actualArrivalDate.toString())?if_exists}</span>
+            <div class="tabletext">[${(shipmentRouteSegment.estimatedStartDate.toString())?if_exists} - ${(shipmentRouteSegment.estimatedArrivalDate.toString())?if_exists}]</span>
+            <div class="tabletext">[${(shipmentRouteSegment.actualStartDate.toString())?if_exists} - ${(shipmentRouteSegment.actualArrivalDate.toString())?if_exists}]</span>
         </td>
         <td><div class="tabletext">${(shipmentRouteSegment.actualCost?string.currency)?default("&nbsp;")}</div></td>
     </tr>

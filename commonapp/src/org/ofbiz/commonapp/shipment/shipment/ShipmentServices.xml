@@ -93,17 +93,43 @@
         </check-permission>
         <check-errors/>
 
+        <!-- get shipment -->
         <make-value entity-name="Shipment" value-name="shipmentLookupPk"/>
         <set-pk-fields value-name="shipmentLookupPk" map-name="parameters"/>
         <find-by-primary-key entity-name="Shipment" map-name="shipmentLookupPk" value-name="shipment"/>
+        <!-- get orderItemInventoryRes -->
         <make-value entity-name="OrderItemInventoryRes" value-name="orderItemInventoryResLookupPk"/>
         <set-pk-fields value-name="orderItemInventoryResLookupPk" map-name="parameters"/>
         <find-by-primary-key entity-name="OrderItemInventoryRes" map-name="orderItemInventoryResLookupPk" value-name="orderItemInventoryRes"/>
-        <get-related-one relation-name="OrderItem" value-name="orderItemInventoryRes" to-value-name="orderItem"/>
+        <!-- get orderItem -->
+        <make-value entity-name="OrderItem" value-name="orderItemLookupPk"/>
+        <set-pk-fields value-name="orderItemLookupPk" map-name="parameters"/>
+        <find-by-primary-key entity-name="OrderItem" map-name="orderItemLookupPk" value-name="orderItem"/>
         
-        <!-- TODO: make sure OrderItemInventoryRes is not in the OIIR_CANCELLED status -->
-
-        <!-- TODO: make sure specified quantity is not greater than reserved quantity that needs to be issued, ie orderItemInventoryRes.quantity - (total of existing itemIssuance.quantity) -->
+        <!-- make sure OrderItemInventoryRes is not in the OIIR_CANCELLED status -->
+        <if-compare value="OIIR_CANCELLED" operator="equals" field-name="statusId" map-name="orderItemInventoryRes">
+            <string-to-list string="Not issuing Order Item Inventory Reservation to shipment [${parameters.shipmentId}] because the status is [${orderItemInventoryRes.statusId}] for order [${orderItemInventoryRes.orderId}] order item [${orderItemInventoryRes.orderItemSeqId}] inventoryItem [${orderItemInventoryRes.inventoryItemId}]" list-name="error_list"/>
+        </if-compare>
+        <!-- make sure specified quantity is not greater than reserved quantity left to be issued, ie orderItemInventoryRes.quantity - (total of existing itemIssuance.quantity) -->
+        <get-related list-name="currentItemIssuances" relation-name="ItemIssuance" value-name="orderItemInventoryRes"/>
+        <calculate field-name="totalQuantityIssued"><number value="0"/></calculate>
+        <iterate entry-name="currentItemIssuance" list-name="currentItemIssuances">
+            <calculate field-name="totalQuantityIssued">
+                <calcop operator="add" field-name="totalQuantityIssued">
+                    <calcop operator="get" field-name="quantity" map-name="currentItemIssuance"/>
+                </calcop>
+            </calculate>
+        </iterate>
+        <calculate field-name="quantityLeftToIssue">
+            <calcop operator="subtract">
+                <calcop operator="get" field-name="quantity" map-name="orderItemInventoryRes"/>
+                <calcop operator="get" field-name="totalQuantityIssued"/>
+            </calcop>
+        </calculate>
+        <if-compare-field field-name="parameters.quantity" operator="greater" to-field-name="quantityLeftToIssue" type="Double">
+            <string-to-list string="Not issuing Order Item Inventory Reservation to shipment [${parameters.shipmentId}] because the quantity to issue [${parameters.quantity}] is greater than the quantity left to issue [${quantityLeftToIssue}] for order [${orderItemInventoryRes.orderId}] order item [${orderItemInventoryRes.orderItemSeqId}] inventoryItem [${orderItemInventoryRes.inventoryItemId}]" list-name="error_list"/>
+        </if-compare-field>
+        <check-errors error-list-name="error_list"/>
         
         <!-- try to find an existing shipmentItem and attach to it, if none found create a new shipmentItem -->
         <field-to-field field-name="productId" map-name="orderItem" to-map-name="shipmentItemLookup"/>
@@ -127,10 +153,27 @@
                     <calcop operator="get" field-name="quantity" map-name="parameters"/>
                 </calcop>
             </calculate>
+            <store-value value-name="shipmentItem"/>
         </else>
         </if-empty>
+        <field-to-result field-name="shipmentItemSeqId" map-name="shipmentItem" result-name="shipmentItemSeqId"/>
         
-        <!-- TODO: create the ItemIssuance -->
+        <!-- create the ItemIssuance -->
+        <field-to-field field-name="quantity" map-name="parameters" to-map-name="itemIssuanceCreate"/>
+        <field-to-field field-name="shipmentId" map-name="shipmentItem" to-map-name="itemIssuanceCreate"/>
+        <field-to-field field-name="shipmentItemSeqId" map-name="shipmentItem" to-map-name="itemIssuanceCreate"/>
+        <field-to-field field-name="orderId" map-name="orderItemInventoryRes" to-map-name="itemIssuanceCreate"/>
+        <field-to-field field-name="orderItemSeqId" map-name="orderItemInventoryRes" to-map-name="itemIssuanceCreate"/>
+        <field-to-field field-name="inventoryItemId" map-name="orderItemInventoryRes" to-map-name="itemIssuanceCreate"/>
+        <call-service service-name="createItemIssuance" in-map-name="itemIssuanceCreate">
+            <result-to-result result-name="itemIssuanceId"/>
+        </call-service>
+        
+        <!-- TODO: Add ItemIssuanceRole for party that issues this... -->
+        
+        <!-- TODO: If we have not issued the full reservation, mark it as picked -->
+        
+        <!-- TODO: Decrement InventoryItem quantityOnHand -->
         
     </simple-method>
     

@@ -40,7 +40,7 @@ roleTypes = delegator.findAll("RoleType", UtilMisc.toList("description"));
 context.put("roleTypes", roleTypes);
 
 // get the order statuses
-orderStatuses = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "ORDER_STATUS"), UtilMisc.toList("description"));
+orderStatuses = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "ORDER_STATUS"), UtilMisc.toList("sequenceId", "description"));
 context.put("orderStatuses", orderStatuses);
 
 // get websites
