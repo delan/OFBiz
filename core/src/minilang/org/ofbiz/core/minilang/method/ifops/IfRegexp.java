@@ -49,7 +49,8 @@ public class IfRegexp extends MethodOperation {
     static PatternCompiler compiler = new Perl5Compiler();
 
     List subOps = new LinkedList();
-    
+    List elseSubOps = null;
+   
     String mapName;
     String fieldName;
 
@@ -69,6 +70,12 @@ public class IfRegexp extends MethodOperation {
         }
 
         SimpleMethod.readOperations(element, subOps, simpleMethod);
+        
+        Element elseElement = UtilXml.firstChildElement(element, "else");
+        if (elseElement != null) {
+            elseSubOps = new LinkedList();
+            SimpleMethod.readOperations(elseElement, elseSubOps, simpleMethod);
+        }
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -104,7 +111,11 @@ public class IfRegexp extends MethodOperation {
         if (matcher.matches(fieldString, pattern)) {
             return SimpleMethod.runSubOps(subOps, methodContext);
         } else {
-            return true;
+            if (elseSubOps != null) {
+                return SimpleMethod.runSubOps(elseSubOps, methodContext);
+            } else {
+                return true;
+            }
         }
     }
 }

@@ -46,6 +46,7 @@ import org.ofbiz.core.minilang.operation.*;
 public class IfCompareField extends MethodOperation {
     
     List subOps = new LinkedList();
+    List elseSubOps = null;
     
     String mapName;
     String fieldName;
@@ -68,6 +69,12 @@ public class IfCompareField extends MethodOperation {
         this.format = element.getAttribute("format");
         
         SimpleMethod.readOperations(element, subOps, simpleMethod);
+        
+        Element elseElement = UtilXml.firstChildElement(element, "else");
+        if (elseElement != null) {
+            elseSubOps = new LinkedList();
+            SimpleMethod.readOperations(elseElement, elseSubOps, simpleMethod);
+        }
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -114,7 +121,11 @@ public class IfCompareField extends MethodOperation {
         if (resultBool != null && resultBool.booleanValue()) {
             return SimpleMethod.runSubOps(subOps, methodContext);
         } else {
-            return true;
+            if (elseSubOps != null) {
+                return SimpleMethod.runSubOps(elseSubOps, methodContext);
+            } else {
+                return true;
+            }
         }
     }
 }

@@ -1264,6 +1264,25 @@ removed from the datasource that match the constraint of the field map.</p>
     specified defaults to "org.ofbiz.core.util.UtilValidate".</td>
 </tr>
 </table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>Any Operation</td><td>0 to many</td>
+    <td>Any simple-method operation can be nested under an if-* tag.</td>
+</tr>
+<tr>
+    <td>else</td><td>0 or 1</td>
+    <td>The else tag can be used to contain operations that will run if the
+    condition fails, or in other words if the operations under the if tag do
+    not run. It can also contain any simple-method operation. The else tag
+    must be placed as the last tag under the if-* tag.</td>
+</tr>
+</table>
 <p>The operations contained by the if-validate-method tag will only be executed
 if the validate method returns true. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
@@ -1305,6 +1324,25 @@ operations, including the conditional/if operations.</p>
     <td>format</td><td>N</td>
     <td>A format specifier to use when converting String objects to other data
     types, mainly Date, Time and Timestamp.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>Any Operation</td><td>0 to many</td>
+    <td>Any simple-method operation can be nested under an if-* tag.</td>
+</tr>
+<tr>
+    <td>else</td><td>0 or 1</td>
+    <td>The else tag can be used to contain operations that will run if the
+    condition fails, or in other words if the operations under the if tag do
+    not run. It can also contain any simple-method operation. The else tag
+    must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
 <p>The operations contained by the if-compare tag will only be executed
@@ -1356,6 +1394,25 @@ operations, including the conditional/if operations.</p>
     types, mainly Date, Time and Timestamp.</td>
 </tr>
 </table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>Any Operation</td><td>0 to many</td>
+    <td>Any simple-method operation can be nested under an if-* tag.</td>
+</tr>
+<tr>
+    <td>else</td><td>0 or 1</td>
+    <td>The else tag can be used to contain operations that will run if the
+    condition fails, or in other words if the operations under the if tag do
+    not run. It can also contain any simple-method operation. The else tag
+    must be placed as the last tag under the if-* tag.</td>
+</tr>
+</table>
 <p>The operations contained by the if-compare-field tag will only be executed
 if the comparison returns true. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
@@ -1382,6 +1439,25 @@ operations, including the conditional/if operations.</p>
     <td>A regular expression that the map value must comply with.</td>
 </tr>
 </table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>Any Operation</td><td>0 to many</td>
+    <td>Any simple-method operation can be nested under an if-* tag.</td>
+</tr>
+<tr>
+    <td>else</td><td>0 or 1</td>
+    <td>The else tag can be used to contain operations that will run if the
+    condition fails, or in other words if the operations under the if tag do
+    not run. It can also contain any simple-method operation. The else tag
+    must be placed as the last tag under the if-* tag.</td>
+</tr>
+</table>
 <p>The operations contained by the if-regexp tag will only be executed
 if the value complies with the regular expression. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
@@ -1404,6 +1480,25 @@ operations, including the conditional/if operations.</p>
     <td>The name of the map field that will be compared.</td>
 </tr>
 </table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>Any Operation</td><td>0 to many</td>
+    <td>Any simple-method operation can be nested under an if-* tag.</td>
+</tr>
+<tr>
+    <td>else</td><td>0 or 1</td>
+    <td>The else tag can be used to contain operations that will run if the
+    condition fails, or in other words if the operations under the if tag do
+    not run. It can also contain any simple-method operation. The else tag
+    must be placed as the last tag under the if-* tag.</td>
+</tr>
+</table>
 <p>The operations contained by the if-empty tag will only be executed
 if the map field is empty. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
@@ -1424,6 +1519,25 @@ operations, including the conditional/if operations.</p>
 <tr>
     <td>field-name</td><td>Y</td>
     <td>The name of the map field that will be compared.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>Any Operation</td><td>0 to many</td>
+    <td>Any simple-method operation can be nested under an if-* tag.</td>
+</tr>
+<tr>
+    <td>else</td><td>0 or 1</td>
+    <td>The else tag can be used to contain operations that will run if the
+    condition fails, or in other words if the operations under the if tag do
+    not run. It can also contain any simple-method operation. The else tag
+    must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
 <p>The operations contained by the if-not-empty tag will only be executed

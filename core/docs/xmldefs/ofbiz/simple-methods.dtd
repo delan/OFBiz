@@ -389,7 +389,7 @@ simple-map-processor process operations that validate incoming data
 -->
 
 <!-- if-validate-method calls a static Java method that takes a String and returns a boolean -->
-<!ELEMENT if-validate-method ( (%SimpleMethodOperations;)* )>
+<!ELEMENT if-validate-method ( (%SimpleMethodOperations;)*, else? )>
 <!ATTLIST if-validate-method
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
@@ -397,7 +397,7 @@ simple-map-processor process operations that validate incoming data
     class CDATA "org.ofbiz.core.util.UtilValidate"
 >
 
-<!ELEMENT if-compare ( (%SimpleMethodOperations;)* )>
+<!ELEMENT if-compare ( (%SimpleMethodOperations;)*, else? )>
 <!ATTLIST if-compare
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
@@ -407,7 +407,7 @@ simple-map-processor process operations that validate incoming data
     format CDATA #IMPLIED
 >
 
-<!ELEMENT if-compare-field ( (%SimpleMethodOperations;)* )>
+<!ELEMENT if-compare-field ( (%SimpleMethodOperations;)*, else? )>
 <!ATTLIST if-compare-field
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
@@ -418,23 +418,25 @@ simple-map-processor process operations that validate incoming data
     format CDATA #IMPLIED
 >
 
-<!ELEMENT if-regexp ( (%SimpleMethodOperations;)* )>
+<!ELEMENT if-regexp ( (%SimpleMethodOperations;)*, else? )>
 <!ATTLIST if-regexp
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
     expr CDATA #REQUIRED
 >
 
-<!ELEMENT if-empty ( (%SimpleMethodOperations;)* )>
+<!ELEMENT if-empty ( (%SimpleMethodOperations;)*, else? )>
 <!ATTLIST if-empty
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
 >
-<!ELEMENT if-not-empty ( (%SimpleMethodOperations;)* )>
+<!ELEMENT if-not-empty ( (%SimpleMethodOperations;)*, else? )>
 <!ATTLIST if-not-empty
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
 >
+
+<!ELEMENT else ( (%SimpleMethodOperations;)* )>
 
 
 <!-- 

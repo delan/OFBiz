@@ -45,6 +45,7 @@ import org.ofbiz.core.minilang.method.*;
 public class IfValidateMethod extends MethodOperation {
     
     List subOps = new LinkedList();
+    List elseSubOps = null;
     
     String mapName;
     String fieldName;
@@ -59,6 +60,12 @@ public class IfValidateMethod extends MethodOperation {
         this.className = element.getAttribute("class");
         
         SimpleMethod.readOperations(element, subOps, simpleMethod);
+        
+        Element elseElement = UtilXml.firstChildElement(element, "else");
+        if (elseElement != null) {
+            elseSubOps = new LinkedList();
+            SimpleMethod.readOperations(elseElement, elseSubOps, simpleMethod);
+        }
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -120,7 +127,11 @@ public class IfValidateMethod extends MethodOperation {
         if (resultBool.booleanValue()) {
             return SimpleMethod.runSubOps(subOps, methodContext);
         } else {
-            return true;
+            if (elseSubOps != null) {
+                return SimpleMethod.runSubOps(elseSubOps, methodContext);
+            } else {
+                return true;
+            }
         }
     }
 }

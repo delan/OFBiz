@@ -44,6 +44,7 @@ import org.ofbiz.core.minilang.method.*;
 public class IfNotEmpty extends MethodOperation {
     
     List subOps = new LinkedList();
+    List elseSubOps = null;
     
     String mapName;
     String fieldName;
@@ -54,6 +55,12 @@ public class IfNotEmpty extends MethodOperation {
         this.fieldName = element.getAttribute("field-name");
         
         SimpleMethod.readOperations(element, subOps, simpleMethod);
+        
+        Element elseElement = UtilXml.firstChildElement(element, "else");
+        if (elseElement != null) {
+            elseSubOps = new LinkedList();
+            SimpleMethod.readOperations(elseElement, elseSubOps, simpleMethod);
+        }
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -96,7 +103,11 @@ public class IfNotEmpty extends MethodOperation {
         if (runSubOps) {
             return SimpleMethod.runSubOps(subOps, methodContext);
         } else {
-            return true;
+            if (elseSubOps != null) {
+                return SimpleMethod.runSubOps(elseSubOps, methodContext);
+            } else {
+                return true;
+            }
         }
     }
 }
