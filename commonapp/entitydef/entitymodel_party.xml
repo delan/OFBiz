@@ -721,9 +721,6 @@
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="TelecomNumber">
-        <key-map field-name="contactMechId"/>
-      </relation>
     </entity>
     <view-entity entity-name="PartyContactWithPurpose"
             package-name="org.ofbiz.commonapp.party.party"
@@ -764,6 +761,9 @@
         <key-map field-name="partyId"/>
       </relation>
       <relation type="one" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="TelecomNumber">
         <key-map field-name="contactMechId"/>
       </relation>
     </view-entity>
