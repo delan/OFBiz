@@ -76,6 +76,9 @@
 
 <div class="head1">Location <span class='head2'>for&nbsp;<%=UtilFormatOut.ifNotEmpty(facility==null?null:facility.getString("facilityName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityId)%>]</span></div>
 <a href="<ofbiz:url>/EditFacilityLocation</ofbiz:url>" class="buttontext">[New Facility Location]</a>
+<%if (facilityId != null && locationSeqId != null) {%>
+<a href="<ofbiz:url>/EditInventoryItem?facilityId=<%=facilityId%>&locationSeqId=<%=locationSeqId%></ofbiz:url>" class="buttontext">[New Inventory Item]</a>
+<%}%>
 
 <%if (facilityId != null && facilityLocation == null) {%> 
     <form action="<ofbiz:url>/CreateFacilityLocation</ofbiz:url>" method=POST style='margin: 0;'>
