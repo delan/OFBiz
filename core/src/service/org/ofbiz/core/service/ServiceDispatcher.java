@@ -545,12 +545,7 @@ public class ServiceDispatcher {
                 return;
             } else if (locale instanceof String) {
                 // en_US = lang_COUNTRY
-                List localeSplit = StringUtil.split((String) locale, "_");
-                if (localeSplit.size() == 2) {
-                    String language = (String) localeSplit.get(0);
-                    String country = (String) localeSplit.get(1);
-                    newLocale = new Locale(language, country);                    
-                }
+                newLocale = UtilMisc.parseLocale((String) locale);
             } 
         }
         
