@@ -125,14 +125,6 @@
         jdbc-username CDATA #REQUIRED
         jdbc-password CDATA #REQUIRED
         isolation-level ( None | ReadCommitted | ReadUncommitted | RepeatableRead | Serializable ) "ReadCommitted"
-    >
-    <!ELEMENT jotm-jdbc EMPTY>
-    <!ATTLIST jotm-jdbc
-        jdbc-driver CDATA #REQUIRED
-        jdbc-uri CDATA #REQUIRED
-        jdbc-username CDATA #REQUIRED
-        jdbc-password CDATA #REQUIRED
-        isolation-level ( None | ReadCommitted | ReadUncommitted | RepeatableRead | Serializable ) "ReadCommitted"
         pool-maxsize CDATA "50"
         pool-minsize CDATA "2"
         pool-sleeptime CDATA "300000"
