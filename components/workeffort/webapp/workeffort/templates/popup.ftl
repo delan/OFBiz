@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -36,7 +36,7 @@
 </head>
 
 <body>
-${common.get("/includes/errormsg.ftl")}
+${common.get("/includes/messages.ftl")}
 ${pages.get(page.path)}
 </body>
 </html>

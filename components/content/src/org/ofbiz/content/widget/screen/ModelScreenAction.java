@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenAction.java,v 1.6 2004/07/22 05:26:57 jonesde Exp $
+ * $Id: ModelScreenAction.java,v 1.7 2004/07/28 03:40:39 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.1
  */
 public abstract class ModelScreenAction {
@@ -91,6 +91,8 @@ public abstract class ModelScreenAction {
     }
     
     public static void runSubActions(List actions, Map context) {
+        if (actions == null) return;
+        
         Iterator actionIter = actions.iterator();
         while (actionIter.hasNext()) {
             ModelScreenAction action = (ModelScreenAction) actionIter.next();
@@ -124,9 +126,11 @@ public abstract class ModelScreenAction {
             Object newValue = null;
             if (this.fromField != null) {
                 newValue = this.fromField.get(context);
+                Debug.logInfo("In screen getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
             } else if (this.valueExdr != null) {
                 newValue = this.valueExdr.expandString(context);
             }
+            Debug.logInfo("In screen setting field [" + this.field.getOriginalName() + "] to value: " + newValue, module);
             this.field.put(context, newValue);
             
             if (global) {

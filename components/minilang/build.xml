@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business MiniLang Build Script.
- *  $Id: build.xml,v 1.9 2004/03/18 19:11:49 ajzeneski Exp $
+ *  $Id: build.xml,v 1.10 2004/07/28 03:40:42 jonesde Exp $
 -->
 
 <project name="OFBiz - MiniLang Component" default="jar" basedir=".">
@@ -89,9 +89,8 @@
             </classpath>
             <src path="${src.dir}"/>
         </javac>
-        <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes">
-            <fileset dir="${dtd.dir}" includes="*.dtd"/>
+            <!-- don't put the DTDs in the jar file... -->
             <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>                	
     </target>

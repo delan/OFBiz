@@ -1,5 +1,5 @@
 /*
- * $Id: RequestHandler.java,v 1.14 2004/07/10 06:04:09 ajzeneski Exp $
+ * $Id: RequestHandler.java,v 1.15 2004/07/28 03:40:38 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class RequestHandler implements Serializable {
@@ -403,6 +403,10 @@ public class RequestHandler implements Serializable {
 
     public static String getRequestUri(String path) {
         List pathInfo = StringUtil.split(path, "/");
+        if (pathInfo == null || pathInfo.size() == 0) {
+            Debug.logWarning("Got nothing when splitting URI: " + path, module);
+            return null;
+        }
         if (((String)pathInfo.get(0)).indexOf('?') > -1) {        
             return ((String) pathInfo.get(0)).substring(0, ((String)pathInfo.get(0)).indexOf('?'));
         } else {               

@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlWidget.java,v 1.2 2004/07/18 10:09:35 jonesde Exp $
+ * $Id: HtmlWidget.java,v 1.3 2004/07/28 03:40:38 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,6 @@ import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
-import org.ofbiz.content.widget.screen.ModelScreenWidget.SectionsRenderer;
 import org.w3c.dom.Element;
 
 import freemarker.template.TemplateException;
@@ -46,7 +45,7 @@ import freemarker.template.TemplateException;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class HtmlWidget extends ModelScreenWidget {
@@ -76,6 +75,7 @@ public class HtmlWidget extends ModelScreenWidget {
     
     public static void renderHtmlTemplate(Writer writer, FlexibleStringExpander locationExdr, Map context) {
         String location = locationExdr.expandString(context);
+        //Debug.logInfo("Rendering template at location [" + location + "] with context: \n" + context, module);
         
         if (location.endsWith(".ftl")) {
             try {

@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleMapAccessor.java,v 1.2 2004/07/15 02:11:58 jonesde Exp $
+ * $Id: FlexibleMapAccessor.java,v 1.3 2004/07/28 03:40:35 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,10 +37,11 @@ import org.ofbiz.base.util.UtilMisc;
  * list elements. See individual Map operations for more information.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class FlexibleMapAccessor {
+    public static final String module = FlexibleMapAccessor.class.getName();
 
     protected String original;
     protected String extName;
@@ -115,10 +116,11 @@ public class FlexibleMapAccessor {
         }
         
         // so we can keep the passed context
-        Map newBase = new HashMap(base);
-        
+        Map newBase = null;
         if (this.subMapAccessor != null) {
             newBase = this.subMapAccessor.getSubMap(base);
+        } else {
+            newBase = new HashMap(base);
         }
         
         Object ret = null;
@@ -148,7 +150,8 @@ public class FlexibleMapAccessor {
                 return locMap.get(name, Locale.getDefault());
             }
         } else {
-            return sub.get(name);
+            Object getReturn = sub.get(name);
+            return getReturn;
         }
     }
     

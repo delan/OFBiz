@@ -21,14 +21,15 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.4 2004/06/17 00:52:10 ajzeneski Exp $
+ *  $Id: ofbiz-component.xml,v 1.5 2004/07/28 03:40:45 jonesde Exp $
 -->
 
 <ofbiz-component name="service">
     <resource-loader name="main" type="component"/>    
+    <classpath type="dir" location="config"/>
+    <classpath type="dir" location="dtd"/>
     <classpath type="jar" location="lib/*"/>
     <classpath type="jar" location="build/lib/*"/>
-    <classpath type="dir" location="config"/>          
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/ScheduledServiceData.xml"/>

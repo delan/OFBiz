@@ -22,7 +22,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -32,7 +32,7 @@ ${pages.get("/includes/header.ftl")}
  <tr>
   ${pages.get("/templates/leftbar.ftl")}
   <td width='100%' valign='top' align='left'>
-    ${common.get("/includes/errormsg.ftl")}
+    ${common.get("/includes/messages.ftl")}
     ${pages.get(page.path)}
   </td>
   ${pages.get("/templates/rightbar.ftl")}

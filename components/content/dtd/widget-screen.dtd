@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-screen.dtd,v 1.14 2004/07/28 00:02:12 byersa Exp $
+ *  $Id: widget-screen.dtd,v 1.15 2004/07/28 03:40:37 jonesde Exp $
 -->
 
 <!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section-include | label | form | menu | tree | content | sub-content | platform-specific | link | image">
@@ -143,7 +143,7 @@
     <!ELEMENT include-screen EMPTY>
     <!ATTLIST include-screen
         name CDATA #REQUIRED
-        location CDATA #REQUIRED
+        location CDATA #IMPLIED
         share-scope ( true | false ) "false"
     >
     

@@ -1,5 +1,5 @@
 /*
- * $Id: MapStack.java,v 1.5 2004/07/18 09:35:06 jonesde Exp $
+ * $Id: MapStack.java,v 1.6 2004/07/28 03:40:35 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.Set;
  * Map Stack
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.1
  */
 public class MapStack implements Map {
@@ -279,5 +279,33 @@ public class MapStack implements Map {
             }
         }
         return Collections.unmodifiableSet(resultEntrySet);
+    }
+    
+    public String toString() {
+        StringBuffer fullMapString = new StringBuffer();
+        int curLevel = 0;
+        Iterator stackIter = this.stackList.iterator();
+        while (stackIter.hasNext()) {
+            Map curMap = (Map) stackIter.next();
+            fullMapString.append("============================== Start stack level " + curLevel + "\n");
+            Iterator curEntrySetIter = curMap.entrySet().iterator();
+            while (curEntrySetIter.hasNext()) {
+                Map.Entry curEntry = (Map.Entry) curEntrySetIter.next();
+                
+                fullMapString.append("==>[");
+                fullMapString.append(curEntry.getKey());
+                fullMapString.append("]:");
+                // skip the instances of MapStack to avoid infinite loop
+                if (curEntry.getValue() instanceof MapStack) {
+                    fullMapString.append("<Instance of MapStack, not printing to avoid infinite recursion>");
+                } else {
+                    fullMapString.append(curEntry.getValue());
+                }
+                fullMapString.append("\n");
+            }
+            fullMapString.append("============================== End stack level " + curLevel + "\n");
+            curLevel++;
+        }
+        return fullMapString.toString();
     }
 }
