@@ -1,0 +1,125 @@
+
+<html>
+<head>
+</head>
+<body>
+
+<h2>Workflow & Calendar Entity-Spec Reference</h2>
+<hr>
+Comparison chart:
+<TABLE cellpadding='2' cellspacing='0' border='1'>
+  <TR>
+    <TH>Entity</TH><TH>Work Effort</TH><TH>WfMC/OMG</TH><TH>vCalendar</TH>
+  </TR>
+  <TR><TD>WorkEffort</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>workEffortId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>workEffortDefId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>workEffortTypeId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>assetId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>fixedAssetId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>facilityId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>estimatedStartDate</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>estimatedCompletionDate</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>estimatedHours</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>totalHoursAllowed</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>totalMoneyAllowed</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>moneyUomId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>actualStartDate</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>actualCompletionDate</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>actualHours</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>specialTerms</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+</TABLE>
+<hr>
+<pre>
+=== vEvent & vTodo
+
+Attachment* opt
+-Attendee* opt
+  -Role (ATTENDEE | ORGANIZER | OWNER | DELEGATE) (roles done)
+  -Status (NEEDS ACTION | ACCEPTED | SENT | TENTATIVE | CONFIRMED | DECLINED | COMPLETED | DELEGATED) (statuses done)
+  -RSVP (NO | YES)
+  -Expect (FYI | REQUIRE | REQUEST | IMMEDIATE) (expects done)
+  -- VALUE=URL;TYPE=VCARD;http://dname/~mycard.vcf
+Audio Reminder (AALARM) opt
+  Type (PCM | WAVE | AIFF)
+  Value
+  RunTime
+  SnoozeTime
+  RepeatCount
+  AudioContent
+DisplayReminder (DALARM) opt
+  RunTime
+  SnoozeTime
+  RepeatCount
+  DisplayString
+MailReminder (MALARM) opt
+  RunTime
+  SnoozeTime
+  RepeatCount
+  EmailAddress
+  Note
+ProcedureReminder (PALARM) opt
+  RunTime
+  SnoozeTime
+  RepeatCount
+  ProcedureName
+**TODO: Categories mand - CategoryName list
+RelatedTo* opt
+Resources opt - Resource Name/Id list
+
+UniqueIdentifier opt
+Classification - AccessClass opt - (PUBLIC | PRIVATE | CONFIDENTIAL)
+Priority mand
+Summary mand
+Description mand
+Location opt
+Status mand -
+  (NEEDS ACTION (et) |
+   ACCEPTED (t) |
+   SENT (et) |
+   TENTATIVE (e) |
+   CONFIRMED (e) |
+   DECLINED (et) |
+   COMPLETED (t) |
+   DELEGATED (et)) (statuses done)
+
+DateTimeCreated opt
+DateTimeCompleted mand - todo
+DateTimeDue mand - todo
+DateTimeEnd mand - event
+DateTimeStart mand - event
+LastModified opt
+SequenceNumber opt - revision number
+
+ExceptionDateTimes opt - DateTime list
+ExceptionRule opt
+NumberRecurrences opt
+RecurrenceDateTimes opt - DateTime list
+RecurrenceRule opt
+
+TimeTransparency opt - event
+URL*(?) opt
+
+=== Activity & Assignment State
+Status: (statuses done)
+  open.not_running.not_started
+  open.not_running.suspended
+  open.running
+  closed.completed
+  closed.terminated
+  closed.aborted
+
+ExecutionObject:
+  name
+  key
+  description
+  priority
+  last_state_time
+  process_context
+  result
+
+=== Work Effort
+</pre>
+
+</body>
+</html>
