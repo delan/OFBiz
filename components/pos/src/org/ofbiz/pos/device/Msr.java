@@ -1,5 +1,5 @@
 /*
- * $Id: Msr.java,v 1.3 2004/08/07 06:03:43 ajzeneski Exp $
+ * $Id: Msr.java,v 1.4 2004/08/10 18:58:56 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.2
  */
 public class Msr extends GenericDevice {
@@ -88,8 +88,7 @@ public class Msr extends GenericDevice {
 
             public void errorOccurred(jpos.events.ErrorEvent event) {
                 Debug.log("Error Occurred : " + event.getErrorCodeExtended(), module);
-                // add in code to alert the user there was a card read error
-
+                screen.showDialog("main/dialog/error/cardreaderror.xml");
                 try {
                     msr.clearInput();
                 } catch (jpos.JposException e) {

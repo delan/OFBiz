@@ -38,28 +38,5 @@
             <Button x="152" y="207" w="75" h="68" style="posButton" content="OTHER" alignment="Center"/>
             <Button x="228" y="207" w="75" h="68" style="posButton" content="DISCV" alignment="Center"/>
         </Panel>
-    </Components>
-    <Events>
-        <Event method="buttonPressed" target="numOne" type="ActionHandler"/>
-        <Event method="buttonPressed" target="numTwo" type="ActionHandler"/>
-        <Event method="buttonPressed" target="numThree" type="ActionHandler"/>
-        <Event method="buttonPressed" target="numFour" type="ActionHandler"/>
-        <Event method="buttonPressed" target="numFive" type="ActionHandler"/>
-        <Event method="buttonPressed" target="numSix" type="ActionHandler"/>
-        <Event method="buttonPressed" target="numSeven" type="ActionHandler"/>
-        <Event method="buttonPressed" target="numEight" type="ActionHandler"/>
-        <Event method="buttonPressed" target="numNine" type="ActionHandler"/>
-        <Event method="buttonPressed" target="numZero" type="ActionHandler"/>
-        <Event method="buttonPressed" target="numDZero" type="ActionHandler"/>
-        <Event method="buttonPressed" target="numClear" type="ActionHandler"/>
-        <Event method="buttonPressed" target="numQty" type="ActionHandler"/>
-        <Event method="buttonPressed" target="numEnter" type="ActionHandler"/>
-
-        <Event method="buttonPressed" target="menuTotal" type="ActionHandler"/>
-        <Event method="buttonPressed" target="menuChgQty" type="ActionHandler"/>
-        <Event method="buttonPressed" target="menuVoidItem" type="ActionHandler"/>
-        <Event method="buttonPressed" target="menuVoidAll" type="ActionHandler"/>
-
-        <Event method="buttonPressed" target="menuCash" type="ActionHandler"/>
-    </Events>
+    </Components>    
 </XPage>

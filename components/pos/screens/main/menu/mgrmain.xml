@@ -42,15 +42,11 @@
         <Button name="" x="510" y="248" w="100" h="60" style="posButton" content="" alignment="Center"/>
 
         <!-- col 6 -->
-        <Button name="mgrMain" x="0" y="310" w="100" h="60" style="posButton" content="Main" alignment="Center"/>
-        <Button name="mgrLogOut" x="102" y="310" w="100" h="60" style="posButton" content="Logoff" alignment="Center"/>
+        <Button name="mgrMain" x="0" y="310" w="100" h="60" style="posButton" content="MAIN" alignment="Center"/>
+        <Button name="mgrLogOut" x="102" y="310" w="100" h="60" style="posButton" content="LOGOFF" alignment="Center"/>
         <Button name="" x="204" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="306" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="408" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="510" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
-    </Components>
-    <Events>
-        <Event method="buttonPressed" target="mgrMain" type="ActionHandler"/>
-        <Event method="buttonPressed" target="mgrLogOut" type="ActionHandler"/>
-    </Events>
+    </Components>    
 </XPage>

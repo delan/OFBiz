@@ -1,5 +1,5 @@
 /*
- * $Id: Scanner.java,v 1.3 2004/08/07 01:23:07 ajzeneski Exp $
+ * $Id: Scanner.java,v 1.4 2004/08/10 18:58:56 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,6 @@ import jpos.JposException;
 import jpos.ScannerConst;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.pos.adaptor.DataEventAdaptor;
 import org.ofbiz.pos.config.ButtonEventConfig;
 import org.ofbiz.pos.screen.PosScreen;
@@ -36,7 +35,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.2
  */
 public class Scanner extends GenericDevice {
@@ -98,6 +97,8 @@ public class Scanner extends GenericDevice {
             try {
                 ButtonEventConfig.invokeButtonEvent("menuPlu", screen);
             } catch (ButtonEventConfig.ButtonEventException e) {
+                Debug.logError(e, module);
+            } catch (ButtonEventConfig.ButtonEventNotFound e) {
                 Debug.logError(e, module);
             }
         }

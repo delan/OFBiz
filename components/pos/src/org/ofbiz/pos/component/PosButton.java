@@ -1,5 +1,5 @@
 /*
- * $Id: PosButton.java,v 1.1 2004/07/27 18:37:37 ajzeneski Exp $
+ * $Id: PosButton.java,v 1.2 2004/08/10 18:58:55 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class PosButton {
@@ -70,6 +70,7 @@ public class PosButton {
                 if (UtilValidate.isEmpty(button.getName())) {
                     wrapper.setEnabled(false);
                 } else {
+                    pos.addActionHandler(button, PosScreen.BUTTON_ACTION_METHOD);
                     loadedXButtons.put(button.getName(), wrapper);
                 }
             }
@@ -104,6 +105,8 @@ public class PosButton {
         if (buttonName != null) {
             try {
                 ButtonEventConfig.invokeButtonEvent(buttonName, pos);
+            } catch (ButtonEventConfig.ButtonEventNotFound e) {
+                Debug.logWarning(e.getMessage(), module);
             } catch (ButtonEventConfig.ButtonEventException e) {
                 Debug.logError(e, module);
             }
