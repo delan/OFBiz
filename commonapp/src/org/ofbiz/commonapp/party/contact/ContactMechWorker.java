@@ -298,4 +298,57 @@ public class ContactMechWorker {
             pageContext.setAttribute(postalAddressInfosAttr, postalAddressInfos);
         }
     }
+    
+    public static void getCurrentPostalAddress(PageContext pageContext, String partyId, 
+            String curContactMechId,
+            String curPartyContactMechAttr, String curContactMechAttr, String curPostalAddressAttr, 
+            String curPartyContactMechPurposesAttr) {
+
+        ServletRequest request = pageContext.getRequest();
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+
+        if (curContactMechId != null) {
+            Collection partyContactMechs = null;
+            try {
+                partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", curContactMechId)));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+            GenericValue curPartyContactMech = EntityUtil.getFirst(partyContactMechs);
+
+            GenericValue curContactMech = null;
+            if (curPartyContactMech != null) {
+                pageContext.setAttribute(curPartyContactMechAttr, curPartyContactMech);
+                try {
+                    curContactMech = curPartyContactMech.getRelatedOne("ContactMech");
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+
+                Collection curPartyContactMechPurposes = null;
+                try {
+                    curPartyContactMechPurposes = EntityUtil.filterByDate(curPartyContactMech.getRelated("PartyContactMechPurpose"));
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+                if (curPartyContactMechPurposes != null && curPartyContactMechPurposes.size() > 0) {
+                    pageContext.setAttribute(curPartyContactMechPurposesAttr, curPartyContactMechPurposes);
+                }
+            }
+
+            GenericValue curPostalAddress = null;
+            if (curContactMech != null) {
+                pageContext.setAttribute(curContactMechAttr, curContactMech);
+                try {
+                    curPostalAddress = curContactMech.getRelatedOne("PostalAddress");
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+            }
+
+            if (curPostalAddress != null) {
+                pageContext.setAttribute(curPostalAddressAttr, curPostalAddress);
+            }
+        }
+    }
 }

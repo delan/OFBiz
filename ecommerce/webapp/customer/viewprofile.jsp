@@ -272,7 +272,9 @@
           </td>
           <td valign="middle" align="right">
             <a href="<ofbiz:url>/editcreditcard</ofbiz:url>" class="lightbuttontext">
-            [Create New Credit Card]</a>&nbsp;&nbsp;
+            [Create New Credit Card]</a>&nbsp;
+            <a href="<ofbiz:url>/editeftaccount</ofbiz:url>" class="lightbuttontext">
+            [Create New EFT Account]</a>&nbsp;&nbsp;
           </td>
         </tr>
       </table>
@@ -318,7 +320,7 @@
                                   </td>
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
-                                    <div><a href='<ofbiz:url>/editeftaccount?paymentMethodId=<%entityField.run("creditCardInfo", "paymentMethodId");%></ofbiz:url>' class="buttontext">
+                                    <div><a href='<ofbiz:url>/editeftaccount?paymentMethodId=<%entityField.run("paymentMethod", "paymentMethodId");%></ofbiz:url>' class="buttontext">
                                     [Update]</a></div>
                                   </td>
                               <%}%>

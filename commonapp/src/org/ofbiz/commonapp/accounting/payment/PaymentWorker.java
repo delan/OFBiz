@@ -66,10 +66,9 @@ public class PaymentWorker {
         }
     }
     
-    public static void getCreditCardAndRelated(PageContext pageContext, String partyId, 
-            String paymentMethodAttr, String creditCardAttr, String paymentMethodIdAttr, String curContactMechIdAttr, 
-            String curPartyContactMechAttr, String curContactMechAttr, String curPostalAddressAttr, 
-            String curPartyContactMechPurposesAttr, String donePageAttr, String tryEntityAttr) {
+    public static void getPaymentMethodAndRelated(PageContext pageContext, String partyId, 
+            String paymentMethodAttr, String creditCardAttr, String eftAccountAttr, String paymentMethodIdAttr, String curContactMechIdAttr, 
+            String donePageAttr, String tryEntityAttr) {
 
         ServletRequest request = pageContext.getRequest();
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
@@ -91,67 +90,37 @@ public class PaymentWorker {
 
         GenericValue paymentMethod = null;
         GenericValue creditCard = null;
+        GenericValue eftAccount = null;
         if (UtilValidate.isNotEmpty(paymentMethodId)) {
             try {
                 paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
                 creditCard = delegator.findByPrimaryKey("CreditCard", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+                eftAccount = delegator.findByPrimaryKey("EftAccount", UtilMisc.toMap("paymentMethodId", paymentMethodId));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
             }
         }
-        if (paymentMethod != null && creditCard != null) {
+        if (paymentMethod != null) {
             pageContext.setAttribute(paymentMethodAttr, paymentMethod);
-            pageContext.setAttribute(creditCardAttr, creditCard);
         } else {
             tryEntity = false;
         }
 
+        if (creditCard != null) {
+            pageContext.setAttribute(creditCardAttr, creditCard);
+        }
+        if (eftAccount != null) {
+            pageContext.setAttribute(eftAccountAttr, eftAccount);
+        }
 
-        String curContactMechId = UtilFormatOut.checkNull(tryEntity?creditCard.getString("contactMechId"):request.getParameter("contactMechId"));
+        String curContactMechId = null;
+        if (creditCard != null) {
+            curContactMechId = UtilFormatOut.checkNull(tryEntity?creditCard.getString("contactMechId"):request.getParameter("contactMechId"));
+        } else if (eftAccount != null) {
+            curContactMechId = UtilFormatOut.checkNull(tryEntity?eftAccount.getString("contactMechId"):request.getParameter("contactMechId"));
+        }
         if (curContactMechId != null) {
             pageContext.setAttribute(curContactMechIdAttr, curContactMechId);
-            
-            Collection partyContactMechs = null;
-            try {
-                partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", curContactMechId)));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e);
-            }
-            GenericValue curPartyContactMech = EntityUtil.getFirst(partyContactMechs);
-
-            GenericValue curContactMech = null;
-            if (curPartyContactMech != null) {
-                pageContext.setAttribute(curPartyContactMechAttr, curPartyContactMech);
-                try {
-                    curContactMech = curPartyContactMech.getRelatedOne("ContactMech");
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
-                }
-
-                Collection curPartyContactMechPurposes = null;
-                try {
-                    curPartyContactMechPurposes = EntityUtil.filterByDate(curPartyContactMech.getRelated("PartyContactMechPurpose"));
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
-                }
-                if (curPartyContactMechPurposes != null && curPartyContactMechPurposes.size() > 0) {
-                    pageContext.setAttribute(curPartyContactMechPurposesAttr, curPartyContactMechPurposes);
-                }
-            }
-
-            GenericValue curPostalAddress = null;
-            if (curContactMech != null) {
-                pageContext.setAttribute(curContactMechAttr, curContactMech);
-                try {
-                    curPostalAddress = curContactMech.getRelatedOne("PostalAddress");
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
-                }
-            }
-
-            if (curPostalAddress != null) {
-                pageContext.setAttribute(curPostalAddressAttr, curPostalAddress);
-            }
         }
 
         pageContext.setAttribute(tryEntityAttr, new Boolean(tryEntity));

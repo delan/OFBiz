@@ -313,7 +313,6 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editcreditcard"/>
     </request-map>
-
     <request-map uri="createCreditCard">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="createCreditCard"/>
@@ -327,6 +326,10 @@
         <response name="error" type="view" value="editcreditcard"/>
     </request-map>
 
+    <request-map uri="editeftaccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editeftaccount"/>
+    </request-map>
     <request-map uri="createEftAccount">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="createEftAccount"/>

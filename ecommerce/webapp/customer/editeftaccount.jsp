@@ -1,6 +1,6 @@
 <%
 /**
- *  Title: Edit Credit Card Page
+ *  Title: Edit EFT Account Page
  *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -40,119 +40,87 @@
 <%PaymentWorker.getPaymentMethodAndRelated(pageContext, userLogin.getString("partyId"), 
     "paymentMethod", "creditCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity");%>
 
+<%
+    GenericValue efta = (GenericValue) pageContext.getAttribute("eftAccount");
+    System.out.println("EFT Account: " + efta);
+    System.out.println("Try Entity: " + pageContext.getAttribute("tryEntity"));
+%>
+
 <%ContactMechWorker.getCurrentPostalAddress(pageContext, userLogin.getString("partyId"), 
     (String) pageContext.getAttribute("curContactMechId"), "curPartyContactMech", "curContactMech", 
     "curPostalAddress", "curPartyContactMechPurposes");%>
 
 <%ContactMechWorker.getPartyPostalAddresses(pageContext, userLogin.getString("partyId"), (String) pageContext.getAttribute("curContactMechId"), "postalAddressInfos");%>
 
-<%if (!security.hasPermission("USER_ADMIN", session) && pageContext.getAttribute("creditCard") != null && pageContext.getAttribute("paymentMethod") != null && 
+<%if (!security.hasPermission("USER_ADMIN", session) && pageContext.getAttribute("eftAccount") != null && pageContext.getAttribute("paymentMethod") != null && 
       !userLogin.getString("partyId").equals(((GenericValue) pageContext.getAttribute("paymentMethod")).getString("partyId"))) {%>
-  <p><h3>The credit card specified does not belong to you, you may not view or edit it.</h3></p>
+  <p><h3>The EFT Account specified does not belong to you, you may not view or edit it.</h3></p>
 &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Back]</a>
 <%} else {%>
-    <ofbiz:unless name="creditCard">
-      <p class="head1">Add New Credit Card</p>
+    <ofbiz:unless name="eftAccount">
+      <p class="head1">Add New EFT Account</p>
       &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
-      &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
-      <form method="post" action='<ofbiz:url>/createCreditCard?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
+      &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[Save]</a>
+      <form method="post" action='<ofbiz:url>/createEftAccount?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editeftaccountform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
     </ofbiz:unless>
-    <ofbiz:if name="creditCard">
-      <p class="head1">Edit Credit Card</p>
+    <ofbiz:if name="eftAccount">
+      <p class="head1">Edit EFT Account</p>
       &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
-      &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
-      <form method="post" action='<ofbiz:url>/updateCreditCard?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
+      &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[Save]</a>
+      <form method="post" action='<ofbiz:url>/updateEftAccount?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editeftaccountform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <input type=hidden name='paymentMethodId' value='<ofbiz:print attribute="paymentMethodId"/>'>
     </ofbiz:if>
 
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Name on Card</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Name on Account</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="nameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="nameOnAccount" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Company Name on Card</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Company Name on Account</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="companyNameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="companyNameOnAccount" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Card Type</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Bank Name</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <select name="cardType">
-          <option><ofbiz:inputvalue field="cardType" entityAttr="creditCard" tryEntityAttr="tryEntity"/></option>
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="bankName" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
+      *</td>
+    </tr>
+    <tr>
+      <td width="26%" align=right valign=top><div class="tabletext">Routing Number</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <input type="text" size="10" maxlength="30" <ofbiz:inputvalue field="routingNumber" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
+      *</td>
+    </tr>
+    <tr>
+      <td width="26%" align=right valign=top><div class="tabletext">Account Type</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <select name="accountType">
+          <option><ofbiz:inputvalue field="accountType" entityAttr="eftAccount" tryEntityAttr="tryEntity"/></option>
           <option></option>
-          <option>Visa</option>
-          <option value='MasterCard'>Master Card</option>
-          <option value='AmericanExpress'>American Express</option>
-          <option value='DinersClub'>Diners Club</option>
-          <option>Discover</option>
-          <option>EnRoute</option>
-          <option>JCB</option>
+          <option>Checking</option>
+          <option>Savings</option>
         </select>
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Card Number</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Account Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="20" maxlength="30" <ofbiz:inputvalue field="cardNumber" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" size="20" maxlength="40" <ofbiz:inputvalue field="accountNumber" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
-    <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Card Security Code</div></td>
-      <td width="5">&nbsp;</td>
-      <td width="74%">
-        <input type="text" size="5" maxlength="10" <ofbiz:inputvalue field="cardSecurityCode" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
-      </td>
-    </tr>
-    <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Expiration Date</div></td>        
-      <td width="5">&nbsp;</td>
-      <td width="74%">
-        <%String expMonth = "";%>
-        <%String expYear = "";%>
-        <%if (pageContext.getAttribute("creditCard") != null) {%>
-          <%String expDate = ((GenericValue) pageContext.getAttribute("creditCard")).getString("expireDate");%>
-          <%if (expDate != null && expDate.indexOf('/') > 0){%>
-            <%expMonth = expDate.substring(0,expDate.indexOf('/'));%>
-            <%expYear = expDate.substring(expDate.indexOf('/')+1);%>
-          <%}%>
-        <%}%>
-        <select name="expMonth">
-          <option><ofbiz:if name="tryEntity"><%=UtilFormatOut.checkNull(expMonth)%></ofbiz:if><ofbiz:unless name="tryEntity"><%=UtilFormatOut.checkNull(request.getParameter("expMonth"))%></ofbiz:unless></option>
-          <option></option>
-          <option>01</option>
-          <option>02</option>
-          <option>03</option>
-          <option>04</option>
-          <option>05</option>
-          <option>06</option>
-          <option>07</option>
-          <option>08</option>
-          <option>09</option>
-          <option>10</option>
-          <option>11</option>
-          <option>12</option>
-        </select>
-        <select name="expYear">
-          <option><ofbiz:if name="tryEntity"><%=UtilFormatOut.checkNull(expYear)%></ofbiz:if><ofbiz:unless name="tryEntity"><%=UtilFormatOut.checkNull(request.getParameter("expYear"))%></ofbiz:unless></option>
-          <option></option>
-          <option>2001</option>
-          <option>2002</option>
-          <option>2003</option>
-          <option>2004</option>
-          <option>2005</option>
-          <option>2006</option>
-        </select>
-      *</td>
-    </tr>
+
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Billing Address</div></td>
       <td width="5">&nbsp;</td>
@@ -247,5 +215,5 @@
   </form>
 
   &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
-  &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
+  &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[Save]</a>
 <%}%>
