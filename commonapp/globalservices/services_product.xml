@@ -67,6 +67,12 @@
         <attribute name="listPriceUomId" type="String" mode="IN" optional="true"/>
         <attribute name="defaultPrice" type="Double" mode="IN" optional="true"/>
         <attribute name="defaultPriceUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="averageCostPrice" type="Double" mode="IN" optional="true"/>
+        <attribute name="averageCostPriceUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="minSellPrice" type="Double" mode="IN" optional="true"/>
+        <attribute name="minSellPriceUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="maxSellPrice" type="Double" mode="IN" optional="true"/>
+        <attribute name="maxSellPriceUomId" type="String" mode="IN" optional="true"/>
         <attribute name="quantityIncluded" type="Double" mode="IN" optional="true"/>
         <attribute name="quantityUomId" type="String" mode="IN" optional="true"/>
         <attribute name="piecesIncluded" type="Long" mode="IN" optional="true"/>
@@ -306,12 +312,18 @@
         <description>Create an ProductPrice</description>
         <attribute name="productPriceRuleId" type="String" mode="IN" optional="false"/>
         <attribute name="ruleName" type="String" mode="IN" optional="false"/>
+        <attribute name="isSale" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
     <service name="updateProductPriceRule" engine="simple"
                 location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="updateProductPriceRule" auth="true">
         <description>Update an ProductPrice</description>
         <attribute name="productPriceRuleId" type="String" mode="IN" optional="false"/>
         <attribute name="ruleName" type="String" mode="IN" optional="false"/>
+         <attribute name="isSale" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
     <service name="deleteProductPriceRule" engine="simple"
                 location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="deleteProductPriceRule" auth="true">
