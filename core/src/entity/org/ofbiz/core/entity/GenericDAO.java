@@ -860,6 +860,8 @@ public class GenericDAO {
                     EntityExpr expr = (EntityExpr) expressions.get(i);
                     if (expr.getRhs() != null) {
                         ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
+                        //set the field in the dummyValue so that the setValue method can get it out
+                        dummyValue.set(field.getName(), expr.getRhs());
                         setValue(ps, i + 1, field, dummyValue);
                     }
                 }
@@ -995,6 +997,8 @@ public class GenericDAO {
                     EntityExpr expr = (EntityExpr) expressions.get(i);
                     if (expr.getRhs() != null) {
                         ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
+                        //set the field in the dummyValue so that the setValue method can get it out
+                        dummyValue.set(field.getName(), expr.getRhs());
                         setValue(ps, i + 1, field, dummyValue);
                     }
                 }
