@@ -90,8 +90,8 @@ public class LoginServices {
 
         String userLoginId = (String) context.get("userLoginId");
         String partyId = (String) context.get("partyId");
-        String newPassword = (String) context.get("newPassword");
-        String newPasswordVerify = (String) context.get("newPasswordVerify");
+        String newPassword = (String) context.get("currentPassword");
+        String newPasswordVerify = (String) context.get("currentPasswordVerify");
         String passwordHint = (String) context.get("passwordHint");
         
         //security: don't create a user login if the specified partyId (if not empty) already exists
