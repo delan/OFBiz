@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -37,16 +37,15 @@ userLogin = session.getAttribute("userLogin");
 
 facilityId = request.getParameter("facilityId");
 context.put("facilityId", facilityId);
+shipmentMethodTypeId = request.getParameter("shipmentMethodTypeId");
+context.put("shipmentMethodTypeId", shipmentMethodTypeId);
+maxNumberOfOrders = Long.valueOf(request.getParameter("maxNumberOfOrders"));
+context.put("maxNumberOfOrders", maxNumberOfOrders);
+
 
 // if orderHeaderList is null or empty the service will get all approved orders
-inMap = UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId);
-outMap = null;
-try {
+inMap = UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId, "shipmentMethodTypeId", shipmentMethodTypeId, "maxNumberOfOrders", maxNumberOfOrders);
 outMap = dispatcher.runSync("getPicklistData", inMap);
-} catch (Exception e) {
-Debug.logError(e, "bsh-script");
-outMap = new HashMap();
-}
 
 context.put("inventoryItemInfoList", outMap.get("inventoryItemInfoList"));
 context.put("orderHeaderInfoList", outMap.get("orderHeaderInfoList"));
