@@ -15,7 +15,9 @@ OFBiz webapps. Because of this you will either have to change to
 application.xml file or put orion and ofbiz as sibling directories.
 
 By the way, be sure to copy the tools.jar file from your JDK lib directory to
-the Orion root directory, it needs it there for compilation.
+the Orion root directory, it needs it there for compilation. Also, be sure to
+copy the xerces.jar file from the orion directory to the orion/lib directory
+so that your applications can use it.
 
 NOTE: If Tyrex is on your classpath it will mess up the UserTransction JNDI 
 lookup. So, make sure it is not there.
