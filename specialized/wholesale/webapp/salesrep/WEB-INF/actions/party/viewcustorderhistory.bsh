@@ -44,7 +44,8 @@ if ((filter != null) && (filter.equals("partyId")) && (partyId != null)) {
 	GenericValue party = delegator.makeValue("Party", UtilMisc.toMap("partyId", partyId));
 	parties.add(UtilMisc.toMap("party", party));
 } else {
-    result = dispatcher.runSync("getPartyFromRepId", UtilMisc.toMap("repPartyId", userLogin.getString("partyId")));
+    result = dispatcher.runSync("getPartiesFromRelationship", UtilMisc.toMap("partyId", partyId, "roleTypeIdFrom", "AGENT", "roleTypeIdTo", "CUSTOMER",
+            "partyRelationshipTypeId", "CUSTOMER_REL"));
     if (result.get("parties") != null) {    
        parties = result.get("parties");
     }

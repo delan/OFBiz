@@ -48,20 +48,16 @@ if (productStore != null) {
   session.setAttribute("productStoreId", productStoreId);
 }
 
-Collection parties = null;
-
-    Iterator partyIter = null;
-
-    String serviceName = "getPartyFromRepId";
-    Map serviceCtx = UtilMisc.toMap("repId", userLogin.getString("partyId"));    
-    Map result = dispatcher.runSync(serviceName, serviceCtx);
-        
-    parties = (Collection) result.get("parties");
-    if (parties != null)
-      partyIter = parties.iterator();
+    result = dispatcher.runSync("getPartiesFromRelationship", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "roleTypeIdFrom", "AGENT", 
+            "roleTypeIdTo", "CUSTOMER", "partyRelationshipTypeId", "CUSTOMER_REL"));
+ 
+    parties = result.get("parties");
+    if (parties != null) {
+       partyIter = parties.iterator();
+    }
     
     List partyList = new LinkedList();
-    if(partyIter != null) { 
+    if (partyIter != null) { 
         GenericValue party = null; 
         while (partyIter.hasNext()) {
             Map serviceMap = null;
