@@ -280,6 +280,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         paymentPreference.set("authDate", authDate);
         paymentPreference.set("authFlag", transStatus);
         paymentPreference.set("authMessage", rawAuthMessage);
+        paymentPreference.set("maxAmount", new Double(authAmount));
         
         try {
             paymentPreference.store();
