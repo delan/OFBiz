@@ -56,10 +56,11 @@ public class Region extends Content {
     }
 
     public Region(String id, String content, Map sections) {
-        super(content);
+        super(content, "region");
         this.id = id;
-        if (sections != null)
+        if (sections != null) {
             this.sections.putAll(sections);
+        }
     }
 
     public String getId() {
@@ -96,12 +97,10 @@ public class Region extends Content {
     public void render(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException {
         Debug.logVerbose("Rendering " + this.toString());
 
-        //this render method does not come from a page tag so some setup needs to happen here
-        RegionStack.push(request, this);
-
         RequestDispatcher rd = request.getRequestDispatcher(content);
-        if (rd == null)
+        if (rd == null) {
             throw new IllegalArgumentException("Source returned a null dispatcher (" + content + ")");
+        }
         rd.include(request, response);
     }
 

@@ -142,8 +142,8 @@ public class DatabaseUtil {
         
         //get ALL tables from this database
         TreeSet tableNames = this.getTableNames(messages);
-        TreeSet fkTableNames = new TreeSet(tableNames);
-        TreeSet indexTableNames = new TreeSet(tableNames);
+        TreeSet fkTableNames = tableNames == null ? null : new TreeSet(tableNames);
+        TreeSet indexTableNames = tableNames == null ? null : new TreeSet(tableNames);
 
         if (tableNames == null) {
             String message = "Could not get table name information from the database, aborting.";

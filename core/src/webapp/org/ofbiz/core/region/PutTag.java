@@ -43,21 +43,23 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class PutTag extends BodyTagSupport {
-    private String section, role, permission, action, content, direct = null;
+    private String section, info, role, permission, action, content, type = null;
     
     public void setSection(String section) { this.section = section; }
+    public void setInfo(String info) { this.info = info; }
     public void setRole(String role) { this.role = role; }
     public void setPermission(String permission) { this.permission = permission; }
     public void setAction(String action) { this.action = action; }
-    public void setDirect(String direct) { this.direct = direct; }
+    public void setType(String type) { this.type = type; }
     public void setContent(String cntnt) { this.content = cntnt; }
     
     public String getSection() { return section; }
+    public String getInfo() { return info; }
     public String getRole() { return role; }
     public String getPermission() { return permission; }
     public String getAction() { return action; }
     public String getContent() { return content; }
-    public String getDirect() { return direct; }
+    public String getType() { return type; }
     
     public int doAfterBody() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
@@ -75,20 +77,22 @@ public class PutTag extends BodyTagSupport {
         if(regionTag == null)
             throw new JspException("No RegionTag ancestor");
         
-        regionTag.put(new Section(section, getActualContent(), isDirect(), regionFile));
+        regionTag.put(new Section(section, info, getActualContent(), getRealType(), regionFile));
         return SKIP_BODY;
     }
     
-    public String isDirect() {
-        if(hasBody())
-            return "true";
-        else
-            return direct == null ? "false" : "true";
+    public String getRealType() {
+        if(hasBody()) {
+            return "direct";
+        } else {
+            if (type == null) return "default";
+            else return type;
+        }
     }
     
     public void release() {
         super.release();
-        section = content = direct = role = null;
+        section = info = content = type = permission = role = action = null;
     }
     
     private String getActualContent() throws JspException {
@@ -105,7 +109,7 @@ public class PutTag extends BodyTagSupport {
         if((hasBody && contentSpecified) || (!hasBody && !contentSpecified))
             throw new JspException(bodyAndContentMismatchError);
         
-        if(hasBody && direct != null && direct.equalsIgnoreCase("false"))
+        if(hasBody && type != null && type.equalsIgnoreCase("false"))
             throw new JspException(bodyAndDirectMismatchError);
         
         return hasBody ? bodyContent.getString() : content;

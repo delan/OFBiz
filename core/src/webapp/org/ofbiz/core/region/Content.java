@@ -28,6 +28,8 @@ package org.ofbiz.core.region;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
 /**
  * Abstract base class for Section and Region
@@ -39,34 +41,34 @@ import javax.servlet.jsp.PageContext;
  *@version    1.0
  */
 public abstract class Content implements java.io.Serializable {
-
-    protected final String content, direct;
+    protected final String content;
+    /** type can be:
+     * <br>- direct (for direct inline content)
+     * <br>- region (for a nested region)
+     * <br>- default (for region if matches region name OR JSP/Servlet resource otherwise)
+     * <br>- resource (for JSP/Servlet resource)
+     * <br>- or any ViewHandler defined in the corresponding controller.xml file 
+     */
+    protected final String type;
 
     // Render this content in a JSP page
     abstract void render(PageContext pc) throws JspException;
+    abstract void render(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException;
 
-    public Content(String content) {
-        this(content, "false");
-    }
-
-    public Content(String content, String direct) {
+    public Content(String content, String type) {
         this.content = content;
-        this.direct = direct;
+        this.type = type;
     }
 
     public String getContent() {
         return content;
     }
 
-    public String getDirect() {
-        return direct;
-    }
-
-    public boolean isDirect() {
-        return Boolean.valueOf(direct).booleanValue();
+    public String getType() {
+        return type;
     }
 
     public String toString() {
-        return "Content: " + content;
+        return "Content: " + content + ", type: " + type;
     }
 }

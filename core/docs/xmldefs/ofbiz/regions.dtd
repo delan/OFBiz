@@ -36,12 +36,17 @@
 	template CDATA #IMPLIED
 	region CDATA #IMPLIED
 >
+<!-- 
+    NOTE: type can be direct (for direct inline content), region (for a nested region), 
+        default (for JSP/Servlet resource), or any ViewHandler defined in the corresponding controller.xml file 
+-->
 <!ELEMENT put (#PCDATA)>
 <!ATTLIST put
 	section CDATA #REQUIRED
+	info CDATA #IMPLIED
 	role CDATA #IMPLIED
 	permission CDATA #IMPLIED
 	action CDATA #IMPLIED
 	content CDATA #IMPLIED
-	direct ( true | false ) "false"
+	type CDATA "default"
 >

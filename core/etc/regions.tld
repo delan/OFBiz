@@ -69,6 +69,11 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
+            <name>info</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>role</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -89,7 +94,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>direct</name>
+            <name>type</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>

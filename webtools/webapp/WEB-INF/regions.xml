@@ -20,16 +20,16 @@
     </define>
 
     <define id='LEFT_ONLY_REGION' region='MAIN_REGION'>
-        <put section='leftbar' content='LEFTBAR_REGION'/>
+        <put section='leftbar' content='LEFTBAR_REGION' type="region"/>
     </define>
 
     <define id='RIGHT_ONLY_REGION' region='MAIN_REGION'>
-        <put section='rightbar' content='RIGHTBAR_REGION'/>
+        <put section='rightbar' content='RIGHTBAR_REGION' type="region"/>
     </define>
 
     <define id='LEFT_RIGHT_REGION' region='MAIN_REGION'>
-        <put section='leftbar' content='LEFTBAR_REGION'/>
-        <put section='rightbar' content='RIGHTBAR_REGION'/>
+        <put section='leftbar' content='LEFTBAR_REGION' type="region"/>
+        <put section='rightbar' content='RIGHTBAR_REGION' type="region"/>
         <!-- <put section='right'><![CDATA[<font size='4'>Direct Content</font>]]></put> -->
     </define>
 

@@ -29,9 +29,13 @@ package org.ofbiz.core.region;
 import java.net.*;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
 import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.view.*;
 
 /**
  * A section is content with a name that implements Content.render. 
@@ -49,11 +53,13 @@ import org.ofbiz.core.util.*;
  */
 public class Section extends Content {
     protected final String name;
+    protected final String info;
     protected URL regionFile;
     
-    public Section(String name, String content, String direct, URL regionFile) {
-        super(content, direct);
+    public Section(String name, String info, String content, String type, URL regionFile) {
+        super(content, type);
         this.name = name;
+        this.info = info;
         this.regionFile = regionFile;
     }
     
@@ -62,39 +68,65 @@ public class Section extends Content {
     }
     
     public void render(PageContext pageContext) throws JspException {
+        try {
+            render((HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
+        } catch (java.io.IOException e) {
+            Debug.logError(e, "Error rendering section: ");
+            throw new JspException(e);
+        } catch (ServletException e) {
+            Debug.logError(e, "Error rendering section: ");
+            throw new JspException(e);
+        }
+    }
+    
+    public void render(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException {
         Debug.logVerbose("Rendering " + this.toString());
         
-        if(content != null) {
-            if (isDirect()) {
-                try {
-                    pageContext.getOut().print(content.toString());
-                } catch (java.io.IOException ex) {
-                    Debug.logError(ex, "Error writing direct content: ");
-                    throw new JspException("Error writing direct content: " + ex.getMessage());
+        //long viewStartTime = System.currentTimeMillis();
+        if (content != null) {
+            if ("direct".equals(type)) {
+                response.getWriter().print(content);
+            } else if ("default".equals(type) || "region".equals(type) || "resource".equals(type)) {
+                //if type is resource then we won't even look up the region
+                
+                //if this is default or region, check to see if the content points to a valid region name
+                Region region = null;
+                if ("default".equals(type) || "region".equals(type)) {
+                    region = RegionManager.getRegion(regionFile, content);
+                }
+                
+                if ("region".equals(type) || region != null) {
+                    if (region == null) {
+                        throw new IllegalArgumentException("No region definition found with name: " + content);
+                    }
+                    // render the content as a region
+                    RegionStack.push(request, region);
+                    region.render(request, response);
+                    RegionStack.pop(request);
+                } else {
+                    //default is the string that the ViewFactory expects for webapp resources
+                    viewHandlerRender("default", request, response);
                 }
             } else {
-                // see if this section's content is a region
-                Region region = RegionManager.getRegion(regionFile, content);
-                if (region != null) {
-                    // render the content as a region
-                    RegionStack.push(pageContext.getRequest(), region);
-                    region.render(pageContext);
-                    RegionStack.pop(pageContext.getRequest());
-                } else {
-                    try {
-                        pageContext.include(content.toString());
-                    } catch (java.io.IOException ie) {
-                        throw new JspException("IO Error in [" + content + "]: ", ie);
-                    } catch (javax.servlet.ServletException se) {
-                        Debug.logError(se.getRootCause());
-                        throw new JspException("Error in [" + content + "]: " + se.getRootCause(), se.getRootCause());
-                    }
-                }
+                viewHandlerRender(type, request, response);
             }
+        }
+        Debug.logVerbose("DONE Rendering " + this.toString());
+    }
+    
+    protected void viewHandlerRender(String typeToUse, HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        ServletContext context = (ServletContext) request.getAttribute("servletContext");
+        //see if the type is defined in the controller.xml file
+        try {
+            Debug.logVerbose("Rendering view [" + content + "] of type [" + typeToUse + "]");
+            ViewHandler vh = ViewFactory.getViewHandler(context, typeToUse);
+            vh.render(name, content, info, request, response);
+        } catch (ViewHandlerException e) {
+            throw new ServletException(e.getNonNestedMessage(), e.getNested());
         }
     }
     
     public String toString() {
-        return "Section: " + name + ", content=" + content + ", direct=" + direct;
+        return "Section: " + name + ", content=" + content + ", type=" + type;
     }
 }

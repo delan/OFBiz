@@ -131,10 +131,11 @@ public class RegionManager {
     protected static Section makeSection(Element putElement, URL readerFile) {
         String bodyContent = UtilXml.elementValue(putElement);
         String section = putElement.getAttribute("section");
+        String info = putElement.getAttribute("info");
         String content = putElement.getAttribute("content");
-        String direct = putElement.getAttribute("direct");
+        String type = putElement.getAttribute("type");
 
-        if (UtilValidate.isEmpty(direct)) direct = "false";
+        if (UtilValidate.isEmpty(type)) type = "default";
 
         if (UtilValidate.isNotEmpty(bodyContent) && UtilValidate.isNotEmpty(content)) {
             throw new IllegalArgumentException("Cannot use both content attribute and tag body text");
@@ -142,9 +143,9 @@ public class RegionManager {
 
         if (UtilValidate.isNotEmpty(bodyContent)) {
             content = bodyContent;
-            direct = "true";
+            type = "direct";
         }
 
-        return new Section(section, content, direct, readerFile);
+        return new Section(section, info, content, type, readerFile);
     }
 }

@@ -82,6 +82,9 @@ public class RegionViewHandler implements ViewHandler {
         }
         
         try {
+            //this render method does not come from a page tag so some setup needs to happen here
+            RegionStack.push(request, region);
+
             region.render(request, response);
         } catch (IOException ie) {
             throw new ViewHandlerException("IO Error in region", ie);

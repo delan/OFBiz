@@ -70,6 +70,16 @@ public class GeneralException extends Exception {
             return super.getMessage();
     }
 
+    /** Returns the detail message, NOT including the message from the nested exception. */
+    public String getNonNestedMessage() {
+        return super.getMessage();
+    }
+
+    /** Returns the nested exception if there is one, null if there is not. */
+    public Throwable getNested() {
+        return nested;
+    }
+
     /** Prints the composite message to System.err. */
     public void printStackTrace() {
         super.printStackTrace();

@@ -61,7 +61,7 @@ public class JspViewHandler implements ViewHandler {
         if (rd == null)
             throw new ViewHandlerException("Source returned a null dispatcher (" + page + ")");
         try {
-            rd.forward(request, response);
+            rd.include(request, response);
         } catch (IOException ie) {
             throw new ViewHandlerException("IO Error in view", ie);
         } catch (ServletException se) {
