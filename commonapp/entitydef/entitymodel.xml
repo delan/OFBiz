@@ -1345,6 +1345,15 @@
       <relation type="many" rel-entity-name="PartyNeed">
         <key-map field-name="visitId"/>
       </relation>
+      <relation type="many" rel-entity-name="InventoryItemTempRes">
+        <key-map field-name="visitId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductKeywordResult">
+        <key-map field-name="visitId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CartAbandonedLine">
+        <key-map field-name="visitId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->

@@ -1248,8 +1248,8 @@
     <view-entity entity-name="PartyAndContactMech"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party and Contact Mech View Entity">
-      <member-entity entity-alias="PTY" entity-name="Party"/>
       <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
+      <member-entity entity-alias="PTY" entity-name="Party"/>
       <member-entity entity-alias="CM" entity-name="ContactMech"/>
       <alias entity-alias="CM" name="contactMechId"/>
       <alias entity-alias="PTY" name="partyId"/>

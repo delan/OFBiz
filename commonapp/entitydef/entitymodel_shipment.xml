@@ -254,6 +254,11 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
+      <relation type="many" rel-entity-name="FacilityCarrierShipment">
+        <key-map field-name="shipmentMethodTypeId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="PackagingContent"
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -533,6 +538,9 @@
         <key-map field-name="shipmentMethodTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentRouteSegment">
+        <key-map field-name="shipmentMethodTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityCarrierShipment">
         <key-map field-name="shipmentMethodTypeId"/>
       </relation>
     </entity>

@@ -92,6 +92,9 @@
       <relation type="many" rel-entity-name="WebSiteCatalog">
         <key-map field-name="prodCatalogId"/>
       </relation>
+      <relation type="many" rel-entity-name="InventoryItemTempRes">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
     </entity>
     <entity entity-name="ProdCatalogCategory"
             package-name="org.ofbiz.commonapp.product.catalog"
@@ -240,6 +243,9 @@
         <key-map field-name="productCategoryId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyNeed">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductKeywordResult">
         <key-map field-name="productCategoryId"/>
       </relation>
     </entity>
@@ -1202,6 +1208,12 @@
       <relation type="many" rel-entity-name="ShipmentItem">
         <key-map field-name="productId"/>
       </relation>
+      <relation type="many" rel-entity-name="InventoryItemTempRes">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CartAbandonedLine">
+        <key-map field-name="productId"/>
+      </relation>
     </entity>
     <entity entity-name="ProductAssoc"
             package-name="org.ofbiz.commonapp.product.product"
@@ -1561,6 +1573,9 @@
         <key-map field-name="facilityId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentRouteSegment">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityCarrierShipment">
         <key-map field-name="facilityId"/>
       </relation>
     </entity>
