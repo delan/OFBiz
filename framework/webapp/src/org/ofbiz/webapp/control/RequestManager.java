@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import javax.servlet.ServletContext;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 
 /**
  * RequestManager - Manages request, config and view mappings.
@@ -106,7 +107,11 @@ public class RequestManager implements Serializable {
     }
 
     public Map getRequestMapMap(String uriStr) {
-        return (Map) ConfigXMLReader.getRequestMap(configFileUrl).get(uriStr);
+        if (UtilValidate.isNotEmpty(uriStr)) {
+            return (Map) ConfigXMLReader.getRequestMap(configFileUrl).get(uriStr);
+        } else {
+            return null;
+        }
     }
 
     public String getRequestAttribute(String uriStr, String attribute) {
