@@ -24,6 +24,8 @@
 package org.ofbiz.core.util;
 
 import java.net.URLEncoder;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -37,6 +39,7 @@ import javax.servlet.http.HttpSession;
  * HttpUtil - Misc TTP Utility Functions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @version    $Revision$
  * @since      2.1
  */
@@ -73,6 +76,28 @@ public class UtilHttp {
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
             paramMap.put(name, request.getParameter(name));
+        }
+        return paramMap;
+    }
+
+    public static Map makeParamMapWithPrefix(HttpServletRequest request, String prefix, String suffix) {
+        Map paramMap = new HashMap();
+        Enumeration parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String parameterName = (String) parameterNames.nextElement();
+            if (parameterName.startsWith(prefix)) {
+                if (suffix != null && suffix.length() > 0) {
+                    if (parameterName.endsWith(suffix)) {
+                        String key = parameterName.substring(prefix.length(), parameterName.length() - (suffix.length() - 1));
+                        String value = request.getParameter(parameterName);
+                        paramMap.put(key, value);
+                    }
+                } else {
+                    String key = parameterName.substring(prefix.length());
+                    String value = request.getParameter(parameterName);
+                    paramMap.put(key, value);
+                }
+            }
         }
         return paramMap;
     }
