@@ -40,6 +40,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.ContentManagementWorker;
 import org.ofbiz.content.webapp.control.RequestHandler;
@@ -58,7 +59,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
     
     protected ModelScreenWidget childWidget;
     protected List sectionList;
-    protected FlexibleStringExpander listNameExdr;
+    protected FlexibleMapAccessor listNameExdr;
     protected FlexibleStringExpander entryNameExdr;
     protected FlexibleStringExpander keyNameExdr;
     protected FlexibleStringExpander paginateTarget;
@@ -75,7 +76,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
 
     public IterateSectionWidget(ModelScreen modelScreen, Element iterateSectionElement) {
         super(modelScreen, iterateSectionElement);
-        listNameExdr = new FlexibleStringExpander(iterateSectionElement.getAttribute("list-name"));
+        listNameExdr = new FlexibleMapAccessor(iterateSectionElement.getAttribute("list-name"));
         entryNameExdr = new FlexibleStringExpander(iterateSectionElement.getAttribute("entry-name"));
         keyNameExdr = new FlexibleStringExpander(iterateSectionElement.getAttribute("key-name"));
         if (this.paginateTarget == null || iterateSectionElement.hasAttribute("paginate-target"))
@@ -105,12 +106,11 @@ public class IterateSectionWidget extends ModelScreenWidget {
             contextMs.push();
 
             // create a standAloneStack, basically a "save point" for this SectionsRenderer, and make a new "screens" object just for it so it is isolated and doesn't follow the stack down
-        String listName = this.listNameExdr.expandString(context);
         String entryName = this.entryNameExdr.expandString(context);
         String keyName = this.keyNameExdr.expandString(context);
-        Object obj = context.get(listName);
+        Object obj = listNameExdr.get(context);
         if (obj == null) {
-            Debug.logError("No object found for listName:" + listName, module);
+            Debug.logError("No object found for listName:" + listNameExdr.toString(), module);
             return;
         }
         List theList = null;
@@ -120,7 +120,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
             theList = Arrays.asList(a);
             isEntrySet = true;
         } else if (obj instanceof List ) {
-            theList = (List)context.get(listName);
+            theList = (List)obj;
         } else {
             Debug.logError("Object not list or map type", module);
             return;
