@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -49,7 +49,7 @@
     </td>
   </tr>
 </table>
-<br>
+<br/>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -114,7 +114,7 @@
 
 <#-- ============================================================= -->
 <#if monthsToInclude?exists && totalSubRemainingAmount?exists && totalOrders?exists>
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -142,7 +142,7 @@
 </#if>
 
 <#-- ============================================================= -->
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -205,12 +205,12 @@
                   <#assign postalAddress = partyContactMechValueMap.postalAddress?if_exists>
                   <div class="tabletext">
                   <#if postalAddress?exists>
-                    <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br></#if>
-                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName}<br></#if>
-                    ${postalAddress.address1}<br>
-                    <#if postalAddress.address2?has_content>${postalAddress.address2}<br></#if>
+                    <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br/></#if>
+                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName}<br/></#if>
+                    ${postalAddress.address1}<br/>
+                    <#if postalAddress.address2?has_content>${postalAddress.address2}<br/></#if>
                     ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId}</#if>&nbsp;${postalAddress.postalCode?if_exists}
-                    <#if postalAddress.countryGeoId?has_content><br>${postalAddress.countryGeoId}</#if>
+                    <#if postalAddress.countryGeoId?has_content><br/>${postalAddress.countryGeoId}</#if>
                     <#if (!postalAddress.countryGeoId?has_content || postalAddress.countryGeoId?if_exists = "USA")>
                       <#assign addr1 = postalAddress.address1?if_exists>
                       <#if (addr1.indexOf(" ") > 0)>
@@ -270,7 +270,7 @@
       </#list>
     </table>
   <#else>
-    <p>${uiLabelMap.PartyNoContactInformation}.</p><br>
+    <p>${uiLabelMap.PartyNoContactInformation}.</p><br/>
   </#if>
           </td>
         </tr>
@@ -279,7 +279,7 @@
   </TR>
 </TABLE>
 <#-- ============================================================= -->
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -404,7 +404,7 @@
   </TR>
 </TABLE>
 
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -439,11 +439,11 @@
   </TR>
 </TABLE>
 
-<br>
+<br/>
 <#-- only 5 messages will show; edit the viewprofile.bsh to change this number -->
 ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-include")}
 
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <form name="setdefaultshipmeth" action="<@ofbizUrl>/setprofiledefault/viewprofile</@ofbizUrl>" method="post">
   <input type="hidden" name="productStoreId" value="${productStoreId}">
@@ -490,7 +490,7 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
   </form>
 </TABLE>
 
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -553,7 +553,7 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
 </TABLE>
 
 <#if surveys?has_content>
-  <br>
+  <br/>
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
