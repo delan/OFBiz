@@ -42,10 +42,6 @@
         <now-timestamp-to-env env-name="newEntity.issuedDateTime"/>
         
         <create-value value-name="newEntity"/>
-        <make-value value-name="checkNewEntityPk" entity-name="ItemIssuance"/>
-        <set-pk-fields value-name="checkNewEntityPk" map-name="newEntity"/>
-        <find-by-primary-key map-name="checkNewEntityPk" value-name="checkNewEntity"/>
-        <log level="info" message="Created ItemIssuance: ${checkNewEntity}"/>
     </simple-method>
     <simple-method method-name="updateItemIssuance" short-description="Update ItemIssuance">
         <check-permission permission="FACILITY" action="_UPDATE">
