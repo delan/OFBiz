@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.5 2003/11/12 23:45:27 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.6 2003/11/14 18:28:20 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -120,6 +120,8 @@ public class ProductPromoWorker {
     }
 
     public static void doPromotions(ShoppingCart cart, GenericDelegator delegator, LocalDispatcher dispatcher) {
+        // TODO: make sure this is called when a user logs in so that per customer limits are honored
+        String partyId = cart.getPartyId();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
         // start out by clearing all existing promotions, then we can just add all that apply
@@ -145,23 +147,10 @@ public class ProductPromoWorker {
         try {
             // loop through promotions and get a list of all of the rules...
             Collection productStorePromoApplsCol = productStore.getRelatedCache("ProductStorePromoAppl", null, UtilMisc.toList("sequenceNum"));
-            productStorePromoApplsCol = EntityUtil.filterByDate((List) productStorePromoApplsCol, true);
+            productStorePromoApplsCol = EntityUtil.filterByDate((List) productStorePromoApplsCol, nowTimestamp);
 
             if (productStorePromoApplsCol == null || productStorePromoApplsCol.size() == 0) {
                 if (Debug.infoOn()) Debug.logInfo("Not doing promotions, none applied to store with ID " + productStoreId, module);
-            }
-
-            List allPromoRules = new LinkedList();
-            Iterator prodCatalogPromoAppls = UtilMisc.toIterator(productStorePromoApplsCol);
-
-            while (prodCatalogPromoAppls != null && prodCatalogPromoAppls.hasNext()) {
-                GenericValue prodCatalogPromoAppl = (GenericValue) prodCatalogPromoAppls.next();
-                GenericValue productPromo = prodCatalogPromoAppl.getRelatedOneCache("ProductPromo");
-
-                Collection productPromoRules = productPromo.getRelatedCache("ProductPromoRule", null, null);
-                if (productPromoRules != null) {
-                    allPromoRules.addAll(productPromoRules);
-                }
             }
 
             // This isn't necessary, just removing run rules from list: Set firedRules = new HashSet();
@@ -170,64 +159,140 @@ public class ProductPromoWorker {
             int numberOfIterations = 0;
             // repeat until no more rules to run: either all rules are run, or no changes to the cart in a loop
             boolean cartChanged = true;
-
             while (cartChanged) {
                 cartChanged = false;
-
                 numberOfIterations++;
                 if (numberOfIterations > maxIterations) {
                     Debug.logError("ERROR: While calculating promotions the promotion rules where run more than " + maxIterations + " times, so the calculation has been ended. This should generally never happen unless you have bad rule definitions (or LOTS of promos/rules).", module);
                     break;
                 }
 
-                Iterator allPromoRulesIter = allPromoRules.iterator();
+                Iterator prodCatalogPromoAppls = UtilMisc.toIterator(productStorePromoApplsCol);
+                while (prodCatalogPromoAppls != null && prodCatalogPromoAppls.hasNext()) {
+                    GenericValue prodCatalogPromoAppl = (GenericValue) prodCatalogPromoAppls.next();
+                    GenericValue productPromo = prodCatalogPromoAppl.getRelatedOneCache("ProductPromo");
+                    String productPromoId = productPromo.getString("productPromoId");
 
-                while (allPromoRulesIter != null && allPromoRulesIter.hasNext()) {
-                    GenericValue productPromoRule = (GenericValue) allPromoRulesIter.next();
+                    // calculate low use limit for this "order", check per order, customer, promo
+                    // always have a useLimit to avoid unlimited looping, default to 1 if no other is specified
+                    long useLimit = 1;
+                    Long candidateUseLimit = null;
 
-                    // if apply then performActions when no conditions are false, so default to true
-                    boolean performActions = true;
-
-                    // loop through conditions for rule, if any false, set allConditionsTrue to false
-                    Iterator productPromoConds = UtilMisc.toIterator(productPromoRule.getRelatedCache("ProductPromoCond", null, UtilMisc.toList("productPromoCondSeqId")));
-                    while (productPromoConds != null && productPromoConds.hasNext()) {
-                        GenericValue productPromoCond = (GenericValue) productPromoConds.next();
-
-                        boolean condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp);
-
-                        // any false condition will cause it to NOT perform the action
-                        if (condResult == false) {
-                            performActions = false;
-                            break;
+                    Long useLimitPerOrder = productPromo.getLong("useLimitPerOrder");
+                    if (useLimitPerOrder != null) {
+                        if (candidateUseLimit == null || candidateUseLimit.longValue() > useLimitPerOrder.longValue()) {
+                            candidateUseLimit = useLimitPerOrder;
                         }
                     }
 
-                    if (performActions) {
-                        // perform all actions, either apply or unapply
-                        if (Debug.verboseOn()) Debug.logVerbose("Performing" + " actions for rule " + productPromoRule, module);
+                    // using this field to avoid doing two queries on the ProductPromoUse entity
+                    List productPromoUses = null;
 
-                        /* This isn't necessary, just removing run rules from list:
-                         //rule done, add to list so it won't get done again
-                         firedRules.add(productPromoRulePK);*/
+                    Long useLimitPerCustomer = productPromo.getLong("useLimitPerCustomer");
+                    if (useLimitPerCustomer != null && UtilValidate.isNotEmpty(partyId)) {
+                        // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
+                        if (productPromoUses == null) {
+                            // TODO: replace this query with a view-entity that does a count in the database
+                            productPromoUses = delegator.findByAnd("ProductPromoUse", UtilMisc.toMap("productPromoId", productPromoId));
+                        }
+                        List productPromoCustomerUses = EntityUtil.filterByAnd(productPromoUses, UtilMisc.toMap("partyId", partyId));
+                        long perCustomerThisOrder = useLimitPerCustomer.longValue() - productPromoCustomerUses.size();
 
-                        // rule done, remove from list so it won't get done again
-                        allPromoRulesIter.remove();
+                        if (candidateUseLimit == null || candidateUseLimit.longValue() > perCustomerThisOrder) {
+                            candidateUseLimit = new Long(perCustomerThisOrder);
+                        }
+                    }
 
-                        Iterator productPromoActions = UtilMisc.toIterator(productPromoRule.getRelatedCache("ProductPromoAction", null, UtilMisc.toList("productPromoActionSeqId")));
-                        while (productPromoActions != null && productPromoActions.hasNext()) {
-                            GenericValue productPromoAction = (GenericValue) productPromoActions.next();
+                    Long useLimitPerPromotion = productPromo.getLong("useLimitPerPromotion");
+                    if (useLimitPerPromotion != null) {
+                        // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
+                        if (productPromoUses == null) {
+                            // TODO: replace this query with a view-entity that does a count in the database
+                            productPromoUses = delegator.findByAnd("ProductPromoUse", UtilMisc.toMap("productPromoId", productPromoId));
+                        }
+                        long perPromotionThisOrder = useLimitPerPromotion.longValue() - productPromoUses.size();
 
-                            // Debug.logInfo("Doing action: " + productPromoAction, module);
+                        if (candidateUseLimit == null || candidateUseLimit.longValue() > perPromotionThisOrder) {
+                            candidateUseLimit = new Long(perPromotionThisOrder);
+                        }
+                    }
 
-                            try {
-                                boolean actionChangedCart = performAction(productPromoAction, cart, delegator, dispatcher);
+                    if (candidateUseLimit != null) {
+                        useLimit = candidateUseLimit.longValue();
+                    }
 
-                                // if cartChanged is already true then don't set it again: implements OR logic (ie if ANY actions change content, redo loop)
-                                if (!cartChanged) {
-                                    cartChanged = actionChangedCart;
+                    // TODO: check if promo code required
+                    Integer codeUseLimit = null;
+                    String productPromoCodeId = null;
+                    // TODO: check promo code use limits, per customer, code
+
+                    // TODO: support multiple promo codes for a single promo, ie if we run into a use limit for one code see if we can find another for this promo
+
+                    List productPromoRules = productPromo.getRelatedCache("ProductPromoRule", null, null);
+
+                    if (Debug.infoOn()) Debug.logInfo("Checking promotion [" + productPromoId + "], useLimit=" + useLimit + ", # of rules=" + productPromoRules.size(), module);
+
+                    if (productPromoRules != null && productPromoRules.size() > 0) {
+                        while ((useLimit > cart.getProductPromoUseCount(productPromoId)) && (codeUseLimit == null || codeUseLimit.intValue() > cart.getProductPromoCodeUse(productPromoCodeId))) {
+                            boolean promoUsed = false;
+
+                            Iterator promoRulesIter = productPromoRules.iterator();
+                            while (promoRulesIter != null && promoRulesIter.hasNext()) {
+                                GenericValue productPromoRule = (GenericValue) promoRulesIter.next();
+
+                                // if apply then performActions when no conditions are false, so default to true
+                                boolean performActions = true;
+
+                                // loop through conditions for rule, if any false, set allConditionsTrue to false
+                                List productPromoConds = productPromoRule.getRelatedCache("ProductPromoCond", null, UtilMisc.toList("productPromoCondSeqId"));
+                                if (Debug.infoOn()) Debug.logInfo("Checking " + productPromoConds.size() + " conditions for rule " + productPromoRule, module);
+
+                                Iterator productPromoCondIter = UtilMisc.toIterator(productPromoConds);
+                                while (productPromoCondIter != null && productPromoCondIter.hasNext()) {
+                                    GenericValue productPromoCond = (GenericValue) productPromoCondIter.next();
+
+                                    boolean condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp);
+
+                                    // any false condition will cause it to NOT perform the action
+                                    if (condResult == false) {
+                                        performActions = false;
+                                        break;
+                                    }
                                 }
-                            } catch (CartItemModifyException e) {
-                                Debug.logError("Error modifying the cart in perform promotion action: " + e.toString(), module);
+
+                                if (performActions) {
+                                    // perform all actions, either apply or unapply
+
+                                    // rule performed, avoid running again through use limits
+                                    promoUsed = true;
+
+                                    List productPromoActions = productPromoRule.getRelatedCache("ProductPromoAction", null, UtilMisc.toList("productPromoActionSeqId"));
+                                    if (Debug.infoOn()) Debug.logInfo("Performing " + productPromoActions.size() + " actions for rule " + productPromoRule, module);
+                                    Iterator productPromoActionIter = UtilMisc.toIterator(productPromoActions);
+                                    while (productPromoActionIter != null && productPromoActionIter.hasNext()) {
+                                        GenericValue productPromoAction = (GenericValue) productPromoActionIter.next();
+
+                                        // Debug.logInfo("Doing action: " + productPromoAction, module);
+
+                                        try {
+                                            boolean actionChangedCart = performAction(productPromoAction, cart, delegator, dispatcher);
+
+                                            // if cartChanged is already true then don't set it again: implements OR logic (ie if ANY actions change content, redo loop)
+                                            if (!cartChanged) {
+                                                cartChanged = actionChangedCart;
+                                            }
+                                        } catch (CartItemModifyException e) {
+                                            Debug.logError("Error modifying the cart in perform promotion action: " + e.toString(), module);
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (promoUsed) {
+                                cart.addProductPromoUse(productPromo.getString("productPromoId"), productPromoCodeId);
+                            } else {
+                                // the promotion was not used, don't try again until we finish a full pass and come back to see the promo conditions are now satisfied based on changes to the cart
+                                break;
                             }
                         }
                     }
@@ -495,7 +560,6 @@ public class ProductPromoWorker {
 
         // clear promo uses & reset promo code uses
         cart.clearProductPromoUses();
-        cart.resetProductPromoCodeUses();
     }
 
     protected static boolean doItemPromoAction(GenericValue productPromoAction, ShoppingCartItem cartItem, String quantityField, GenericDelegator delegator) {

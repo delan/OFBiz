@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.38 $
+ * @version    $Revision: 1.39 $
  */
 -->
 
@@ -2190,6 +2190,29 @@
       <relation type="many" rel-entity-name="ProductPromoCond">
         <key-map field-name="productPromoId"/>
         <key-map field-name="productPromoRuleId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoUse"
+            package-name="org.ofbiz.product.promo"
+            title="Product Promotion Use Entity">
+      <field name="orderId" type="id-ne"></field>
+      <field name="promoSequenceId" type="id-ne"></field>
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="productPromoCodeId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <prim-key field="orderId"/>
+      <prim-key field="promoSequenceId"/>
+      <relation type="one" fk-name="PROD_PRUSE_PROMO" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRUSE_CODE" rel-entity-name="ProductPromoCode">
+        <key-map field-name="productPromoCodeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRUSE_CODE" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRUSE_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
       </relation>
     </entity>
 
