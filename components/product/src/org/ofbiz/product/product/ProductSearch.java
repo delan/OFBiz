@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.2 2003/10/17 11:09:54 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.3 2003/10/17 11:34:07 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -20,7 +20,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package components.product.src.org.ofbiz.product.product;
+package org.ofbiz.product.product;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,7 +57,7 @@ import org.ofbiz.product.product.KeywordSearch;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -81,9 +81,8 @@ public class ProductSearch {
         List fieldsToSelect = null;
         DynamicViewEntity dynamicViewEntity = new DynamicViewEntity();
         dynamicViewEntity.addMemberEntity("PROD", "Product");
-        boolean productIdGroupBy = false;
-        dynamicViewEntity.addAlias("PROD", "productId");
         dynamicViewEntity.addAlias("PROD", "productName");
+        boolean productIdGroupBy = false;
         
         // Category
         if (productCategoryId != null && productCategoryId.length() > 0) {
@@ -215,16 +214,31 @@ public class ProductSearch {
     
     public static ArrayList searchProducts(ProductSearchConstraint productSearchConstraint, GenericDelegator delegator) {
         // TODO: implement this for the new features
-        EntityCondition entityCondition = productSearchConstraint.makeEntityCondition(delegator);
+        ProductSearchContext productSearchContext = new ProductSearchContext();
+        productSearchConstraint.addConstraint(productSearchContext, delegator);
         
         return null;
+    }
+    
+    public static class ProductSearchContext {
+        public int index = 1;
+        public List entityConditionList = new LinkedList();
+        public List orderByList = new LinkedList();
+        public List fieldsToSelect = null;
+        public DynamicViewEntity dynamicViewEntity = new DynamicViewEntity();
+        public boolean productIdGroupBy = false;
+        
+        public ProductSearchContext() {
+            dynamicViewEntity.addMemberEntity("PROD", "Product");
+            dynamicViewEntity.addAlias("PROD", "productName");
+        }
     }
     
     public static abstract class ProductSearchConstraint {
         public ProductSearchConstraint() {
         }
         
-        public abstract EntityCondition makeEntityCondition(GenericDelegator delegator);
+        public abstract void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator);
     }
     
     public static class ProductSearchConstraintList extends ProductSearchConstraint {
@@ -238,9 +252,8 @@ public class ProductSearch {
             this.productSearchConstraints.add(productSearchConstraint);
         }
         
-        public EntityCondition makeEntityCondition(GenericDelegator delegator) {
+        public void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator) {
             // TODO: implement ProductSearchConstraintList makeEntityCondition
-            return null;
         }
     }
     
@@ -253,9 +266,8 @@ public class ProductSearch {
             this.includeSubCategories = includeSubCategories;
         }
         
-        public EntityCondition makeEntityCondition(GenericDelegator delegator) {
+        public void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator) {
             // TODO: implement CategoryConstraint makeEntityCondition
-            return null;
         }
     }
     
@@ -266,9 +278,8 @@ public class ProductSearch {
             this.productFeatureId = productFeatureId;
         }
         
-        public EntityCondition makeEntityCondition(GenericDelegator delegator) {
+        public void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator) {
             // TODO: implement FeatureConstraint makeEntityCondition
-            return null;
         }
     }
     
@@ -289,9 +300,8 @@ public class ProductSearch {
             }
         }
         
-        public EntityCondition makeEntityCondition(GenericDelegator delegator) {
+        public void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator) {
             // TODO: implement KeywordConstraint makeEntityCondition
-            return null;
         }
     }
     
@@ -304,9 +314,8 @@ public class ProductSearch {
             this.thruDate = thruDate;
         }
         
-        public EntityCondition makeEntityCondition(GenericDelegator delegator) {
+        public void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator) {
             // TODO: implement FeatureConstraint makeEntityCondition
-            return null;
         }
     }
 }
