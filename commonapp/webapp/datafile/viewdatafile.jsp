@@ -51,7 +51,7 @@
   DataFile dataFile = null;
   if(dataFileUrl != null && definitionUrl != null && definitionName != null && definitionName.length() > 0) {
     try { dataFile = DataFile.readFile(dataFileUrl, definitionUrl, definitionName); }
-    catch(Exception e) { messages.add(e.getMessage()); }
+    catch(Exception e) { messages.add(e.toString()); Debug.logWarning(e); }
   }
 
   ModelDataFile modelDataFile = null;
