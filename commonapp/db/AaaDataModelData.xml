@@ -379,6 +379,7 @@
   <ProdCatalogCategoryType description="Quick Add Category (Many)" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
   <ProdCatalogCategoryType description="Promotions Category (One)" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
   <ProdCatalogCategoryType description="Most Popular Category (One)" prodCatalogCategoryTypeId="PCCT_MOST_POPULAR"/>
+  <ProdCatalogCategoryType description="What's New Category (One)" prodCatalogCategoryTypeId="PCCT_WHATS_NEW"/>
 
   <ProductAssocType description="Upgrade or Up-Sell" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_UPGRADE"/>
   <ProductAssocType description="Complementary or Cross-Sell" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_COMPLEMENT"/>
@@ -404,6 +405,7 @@
   <ProductFeatureIactnType description="Dependencies" hasTable="N" parentTypeId="" productFeatureIactnTypeId="FEATURE_IACTN_DEPEND"/>
   <ProductFeatureIactnType description="Incompatibility" hasTable="N" parentTypeId="" productFeatureIactnTypeId="FEATURE_IACTN_INCOMP"/>
 
+  <ProductFeatureType description="Amount" hasTable="N" parentTypeId="" productFeatureTypeId="AMOUNT"/>
   <ProductFeatureType description="Billing Feature" hasTable="N" parentTypeId="" productFeatureTypeId="BILLING_FEATURE"/>
   <ProductFeatureType description="Brand" hasTable="N" parentTypeId="" productFeatureTypeId="BRAND"/>
   <ProductFeatureType description="Color" hasTable="N" parentTypeId="" productFeatureTypeId="COLOR"/>
@@ -460,6 +462,12 @@
   <ShipmentType description="" hasTable="N" parentTypeId="" shipmentTypeId="DROP_SHIPMENT"/>
   <ShipmentType description="" hasTable="N" parentTypeId="" shipmentTypeId="TRANSFER"/>
 
+  <ShoppingListType description="Public Wish List" shoppingListTypeId="SLT_PUB_WISH_LIST"/>
+  <ShoppingListType description="Private Wish List" shoppingListTypeId="SLT_PRIV_WISH_LIST"/>
+  <ShoppingListType description="Baby Registry" shoppingListTypeId="SLT_BABY_REG"/>
+  <ShoppingListType description="Wedding Registry" shoppingListTypeId="SLT_WEDDING_REG"/>
+  <ShoppingListType description="Frequent Purchases" shoppingListTypeId="SLT_FREQ_PURCHASES"/>
+  
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="ORDER_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="CALENDAR_STATUS"/>
