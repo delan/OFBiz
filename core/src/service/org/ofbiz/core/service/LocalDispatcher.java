@@ -29,8 +29,8 @@ import java.util.*;
 
 import org.ofbiz.core.calendar.*;
 import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.scheduler.*;
 import org.ofbiz.core.security.*;
+import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -76,7 +76,6 @@ public class LocalDispatcher {
         ctx.setDispatcher(this);
         dispatcher = ServiceDispatcher.getInstance(name, ctx, delegator);
         Debug.logInfo("[LocalDispatcher] : Created Dispatcher for: " + name);
-        getJobManager().loadJobs(name);
     }
 
     /**
@@ -195,7 +194,7 @@ public class LocalDispatcher {
             Debug.logVerbose("[LocalDispatcher.schedule] : Frequency: " + frequency);
             Debug.logVerbose("[LocalDispatcher.schedule] : Interval: " + interval);
             Debug.logVerbose("[LocalDispatcher.schedule] : Count: " + count);
-        } catch (JobSchedulerException e) {
+        } catch (JobManagerException e) {
             throw new GenericServiceException(e.getMessage(), e);
         }
     }

@@ -35,7 +35,7 @@ import org.ofbiz.core.calendar.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
-import org.ofbiz.core.service.scheduler.*;
+import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 
 /**

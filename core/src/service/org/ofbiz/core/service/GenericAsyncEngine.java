@@ -33,7 +33,7 @@ import javax.transaction.*;
 import org.ofbiz.core.calendar.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.serialize.*;
-import org.ofbiz.core.service.scheduler.*;
+import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -133,8 +133,10 @@ public abstract class GenericAsyncEngine implements GenericEngine {
 
                 // Create the job info
                 String jobName = new String(new Long((new Date().getTime())).toString());
-                Map jFields = UtilMisc.toMap("jobName", jobName, "serviceName", modelService.name, "loaderName", loader,
-                        "runtimeDataId", dataId);
+                Map jFields = UtilMisc.toMap("jobName", jobName, "runTime", UtilDateTime.nowTimestamp(),
+                                             "serviceName", modelService.name, "loaderName", loader,
+                                             "runtimeDataId", dataId);
+
                 jobV = dispatcher.getDelegator().makeValue("JobSandbox", jFields);
                 toBeStored.add(jobV);
                 dispatcher.getDelegator().storeAll(toBeStored);
@@ -166,7 +168,7 @@ public abstract class GenericAsyncEngine implements GenericEngine {
         // Schedule the job.
         try {
             dispatcher.getJobManager().runJob(job);
-        } catch (JobSchedulerException jse) {
+        } catch (JobManagerException jse) {
             throw new GenericServiceException("Cannot run job.", jse);
         }
     }

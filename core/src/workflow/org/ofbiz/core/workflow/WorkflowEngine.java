@@ -31,7 +31,7 @@ import javax.transaction.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
-import org.ofbiz.core.service.scheduler.*;
+import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.impl.*;
 
@@ -184,7 +184,7 @@ public class WorkflowEngine implements GenericEngine {
             Job job = new WorkflowRunner(process, requester);
             Debug.logVerbose("Created WorkflowRunner: " + job, module);
             dispatcher.getJobManager().runJob(job);
-        } catch (JobSchedulerException je) {
+        } catch (JobManagerException je) {
             throw new GenericServiceException(je.getMessage(), je);
         }
 

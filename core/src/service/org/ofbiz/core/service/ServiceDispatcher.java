@@ -29,7 +29,7 @@ import java.util.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.scheduler.*;
+import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.security.*;
 
 /**

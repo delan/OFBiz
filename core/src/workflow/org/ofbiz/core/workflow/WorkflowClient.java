@@ -32,7 +32,7 @@ import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
-import org.ofbiz.core.service.scheduler.*;
+import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.client.*;
 
@@ -195,7 +195,7 @@ public class WorkflowClient {
         Debug.logVerbose("Job: " + job, module);
         try {
             context.getDispatcher().getJobManager().runJob(job);
-        } catch (JobSchedulerException e) {
+        } catch (JobManagerException e) {
             throw new WfException(e.getMessage(), e);
         }
     }
@@ -216,7 +216,7 @@ public class WorkflowClient {
         Job job = new CompleteAssignmentJob(assign, result);
         try {
             context.getDispatcher().getJobManager().runJob(job);
-        } catch (JobSchedulerException e) {
+        } catch (JobManagerException e) {
             throw new WfException(e.getMessage(), e);
         }
     }
