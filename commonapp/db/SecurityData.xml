@@ -9,7 +9,7 @@
   <PartyRole partyId="admin" roleTypeId="MANAGER"/>   
   <PartyRole partyId="admin" roleTypeId="ORDER_CLERK"/>
   <PartyRole partyId="admin" roleTypeId="SHIPMENT_CLERK"/>
-  <PartyRole partyId="admin" roleTypeId="SALES_REP" />
+  <PartyRole partyId="admin" roleTypeId="SALES_REP"/>
   <ContactMech contactMechId="5000" contactMechTypeId="EMAIL_ADDRESS" infoString="ofbiztest@yahoo.com"/>
   <PartyContactMech partyId="admin" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
 
