@@ -247,6 +247,15 @@ public class UtilHttp {
         return mime.getContentTypeFor(fileName);
     }
     
+    /**
+     * Stream an array of bytes to the browser
+     * This method will close the ServletOutputStream when finished
+     * 
+     * @param response HttpServletResponse object to get OutputStream from
+     * @param bytes Byte array of content to stream
+     * @param fileName Used for looking up content type
+     * @throws IOException
+     */
     public static void streamContentToBrowser(HttpServletResponse response, byte[] bytes, String fileName) throws IOException {
         // tell the browser not the cache
         setResponseBrowserProxyNoCache(response);
@@ -279,6 +288,17 @@ public class UtilHttp {
         out.close();
     }
     
+    /**
+     * Streams content from InputStream to the ServletOutputStream
+     * This method will close the ServletOutputStream when finished
+     * This method does not close the InputSteam passed
+     * 
+     * @param response HttpServletResponse object to get OutputStream from
+     * @param in InputStream of the actual content
+     * @param length Size (in bytes) of the content
+     * @param fileName Used for looking up content type
+     * @throws IOException
+     */
     public static void streamContentToBrowser(HttpServletResponse response, InputStream in, int length, String fileName) throws IOException {
         // tell the browser not the cache
         setResponseBrowserProxyNoCache(response);
@@ -304,6 +324,15 @@ public class UtilHttp {
         out.close();
     }    
             
+    /**
+     * Stream binary content from InputStream to OutputStream
+     * This method does not close the streams passed
+     * 
+     * @param out OutputStream content should go to
+     * @param in InputStream of the actual content
+     * @param length Size (in bytes) of the content
+     * @throws IOException
+     */
     public static void streamContent(OutputStream out, InputStream in, int length) throws IOException {
         int bufferSize = 512; // same as the default buffer size; change as needed
         BufferedOutputStream bos = new BufferedOutputStream(out, bufferSize);
