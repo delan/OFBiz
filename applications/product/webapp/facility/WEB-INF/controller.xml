@@ -494,16 +494,34 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PicklistOptions"/>
     </request-map>
-    <request-map uri="PicklistManage">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="PicklistManage"/>
-    </request-map>
-
     <request-map uri="createPicklistFromOrders">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createPicklistFromOrders"/>
         <response name="success" type="view" value="PicklistOptions"/>
         <response name="error" type="view" value="PicklistOptions"/>
+    </request-map>
+
+    <request-map uri="PicklistManage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PicklistManage"/>
+    </request-map>
+    <request-map uri="updatePicklist">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePicklist"/>
+        <response name="success" type="view" value="PicklistManage"/>
+        <response name="error" type="view" value="PicklistManage"/>
+    </request-map>
+    <request-map uri="createPicklistRole">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPicklistRole"/>
+        <response name="success" type="view" value="PicklistManage"/>
+        <response name="error" type="view" value="PicklistManage"/>
+    </request-map>
+    <request-map uri="updatePicklistBin">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePicklistBin"/>
+        <response name="success" type="view" value="PicklistManage"/>
+        <response name="error" type="view" value="PicklistManage"/>
     </request-map>
 
     <request-map uri="Picklist">

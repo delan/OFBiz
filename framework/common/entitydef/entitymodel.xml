@@ -346,14 +346,8 @@
             title="Status Valid Change To Detail View Entity">
       <member-entity entity-alias="SVC" entity-name="StatusValidChange"/>
       <member-entity entity-alias="SI" entity-name="StatusItem"/>
-      <alias entity-alias="SVC" name="statusId"/>
-      <alias entity-alias="SVC" name="statusIdTo"/>
-      <alias entity-alias="SVC" name="conditionExpression"/>
-      <alias entity-alias="SVC" name="transitionName"/>
-      <alias entity-alias="SI" name="statusTypeId"/>
-      <alias entity-alias="SI" name="statusCode"/>
-      <alias entity-alias="SI" name="sequenceId"/>
-      <alias entity-alias="SI" name="description"/>
+      <alias-all entity-alias="SVC"/>
+      <alias-all entity-alias="SI"/>
       <view-link entity-alias="SVC" rel-entity-alias="SI">
         <key-map field-name="statusIdTo" rel-field-name="statusId"/>
       </view-link>
