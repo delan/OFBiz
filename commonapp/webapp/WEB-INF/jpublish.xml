@@ -13,7 +13,7 @@
     <page-renderer name="freemarker" classname="org.ofbiz.core.ftl.FreeMarkerViewRenderer"/>
     	
     <!-- Define the default filesystem repository as the Extended repo -->			
-    <repository name="fs_repository" classname="org.jpublish.repository.filesystem.ExtendedFileSystemRepository">        
+    <repository name="pages" classname="org.jpublish.repository.filesystem.ExtendedFileSystemRepository">        
         <config-dir>WEB-INF/pagedefs</config-dir>
         <root>.</root>
     </repository>
