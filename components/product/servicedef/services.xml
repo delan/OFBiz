@@ -494,14 +494,13 @@
         <description>Create an ProductPromo</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="productPromoActionTypeId" optional="false"/>
+        <override name="productPromoActionEnumId" optional="false"/>
     </service>
     <service name="updateProductPromoAction" default-entity-name="ProductPromoAction" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoAction" auth="true">
         <description>Update an ProductPromo</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="productPromoActionTypeId" optional="false"/>
     </service>
     <service name="deleteProductPromoAction" default-entity-name="ProductPromoAction" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromoAction" auth="true">
