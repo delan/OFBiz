@@ -112,6 +112,10 @@ public class ModelFieldTypeReader {
         }
         Element fieldTypeElement = UtilXml.firstChildElement(rootElement, "field-type", "name", modelName);
 
+        if (fieldTypeElement == null) {
+            throw new IllegalStateException("Could not find a field-type definition with name \"" + modelName + "\"");
+        }
+        
         fieldTypeResourceHandler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, fieldTypeElement);
 
         //preload caches...
