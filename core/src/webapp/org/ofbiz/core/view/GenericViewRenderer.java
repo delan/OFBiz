@@ -37,17 +37,20 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.jpublish.JPublishContext;
 import org.jpublish.Page;
 import org.jpublish.Repository;
 import org.jpublish.SiteContext;
+import org.jpublish.Template;
 import org.jpublish.page.PageInstance;
 import org.jpublish.view.ViewRenderException;
 import org.jpublish.view.ViewRenderer;
 import org.ofbiz.core.entity.GenericValue;
 import org.ofbiz.core.ftl.FreeMarkerViewRenderer;
+import org.ofbiz.core.security.Security;
 import org.ofbiz.core.util.Debug;
 
 import com.anthonyeden.lib.config.Configuration;
@@ -93,22 +96,75 @@ public class GenericViewRenderer implements ViewRenderer {
      * @see org.jpublish.view.ViewRenderer#render(org.jpublish.JPublishContext, java.io.Reader, java.io.Writer)
      */
     public void render(JPublishContext context, String path, Reader in, Writer out) throws IOException, ViewRenderException {
+        HttpServletRequest request = context.getRequest();
         HttpSession session = context.getSession();
+        Security security = (Security) request.getAttribute("security");
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         
-        if (Debug.verboseOn()) Debug.logVerbose("Getting renderer for: " + path, module);
-        // locate the page renderer from page.getProperty("page-renderer");        
-        ViewRenderer renderer = getPathRenderer(path);        
-        
-        Debug.logVerbose("Checking security", module);
-        // do some user/security checking for page edits -- this test just checks for admin
-        if (userLogin != null && userLogin.getString("userLoginId").equals("admin")) {    
+        Page parent = (Page) context.get("page");                       
+        Page page = getPage(path);
+            
+        // decorate the content w/ edit images if we have permission              
+        if (userLogin != null && security.hasEntityPermission("CONTENTMGR", "_UPDATE", userLogin)) {    
             out.write("<a href='/content/control/editContent?filePath=" + path + "'>*</a>");
         }
         
-        Debug.logVerbose("Calling render");
+        /* this loops -- not good
+        // if this page has a template, lets render the template                
+        if (page != null && parent != null && page.getPath() != parent.getPath()) {
+            Debug.logInfo("Parent: " + parent.getPath(), module);
+            Debug.logInfo("Page: " + page.getPath(), module);
+            Debug.logInfo("Template: " + page.getFullTemplateName(), module);
+            if (!page.getTemplateName().equals("basic")) {                
+                renderTemplate(cloneContext(context), page, out);
+                return;
+            }
+        } 
+        */       
+        
+        // get the view renderer for this page
+        if (Debug.verboseOn()) Debug.logVerbose("Getting renderer for: " + path, module);
+        String rendererName = DEFAULT_RENDERER;
+        if (page != null) {            
+            rendererName = page.getProperty("page-renderer");               
+            if (rendererName == null)
+                rendererName = DEFAULT_RENDERER;
+        }
+                                                        
+        ViewRenderer renderer = (ViewRenderer) renderers.get(rendererName);
+        if (renderer == null)
+            renderer = (ViewRenderer) renderers.get(DEFAULT_RENDERER);   
+                            
         // call the renderer to render the rest of the page.
+        Debug.logVerbose("Calling render", module);
         renderer.render(context, path, in, out);                   
+    }
+    
+    private void renderTemplate(JPublishContext context, Page page, Writer out) throws IOException, ViewRenderException {
+        context.disableCheckReservedNames(this);
+        context.put("page", page);
+        if (siteContext.isProtectReservedNames()) {
+            context.enableCheckReservedNames(this);
+        }                
+        try {        
+            Debug.logInfo("Merging template", module);
+            Template template = siteContext.getTemplateManager().getTemplate(page.getFullTemplateName());
+            template.merge(context, page, out);
+        } catch (Exception e) {
+            throw new ViewRenderException(e);     
+        }
+    }    
+    
+    private JPublishContext cloneContext(JPublishContext context) {
+        JPublishContext newContext = new JPublishContext(this);
+        context.disableCheckReservedNames(this);
+        Object keys[] = context.getKeys();
+        for (int i = 0; i < keys.length; i++) 
+            newContext.put((String) keys[i], context.get((String) keys[i]));
+        if (siteContext.isProtectReservedNames()) {
+            context.enableCheckReservedNames(this);
+        }            
+        return newContext;
     }
 
     /**
@@ -124,18 +180,14 @@ public class GenericViewRenderer implements ViewRenderer {
     public void loadConfiguration(Configuration config) throws ConfigurationException {               
     }
     
-    private ViewRenderer getPathRenderer(String path) throws ViewRenderException {
-        String rendererName = DEFAULT_RENDERER;
+    private Page getPage(String path) {
+        Page page = null;      
         try {        
-            PageInstance page = siteContext.getPageManager().getPage(path.substring(path.lastIndexOf(":")));
-            rendererName = page.getProperty("page-renderer");
-        } catch (Exception e) {}
-        //Debug.logInfo("Using renderer: " + rendererName, module);
-        if (rendererName == null) {
-            return (ViewRenderer) renderers.get(DEFAULT_RENDERER);
-        } else {
-            return (ViewRenderer) renderers.get(rendererName);
-        }       
+            PageInstance pi = siteContext.getPageManager().getPage(path.substring(path.lastIndexOf(":")+1));
+            if (pi != null)
+                page = new Page(pi);            
+        } catch (Exception e) {}      
+        return page;
     }
     
     private void loadCustom() throws Exception {
