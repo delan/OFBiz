@@ -58,8 +58,9 @@
   <EnumerationType description="Product Store Payment Service Type" enumTypeId="PRDS_PAYSVC" hasTable="N" parentTypeId=""/>
   <Enumeration description="Payment Authorization Service" enumCode="PAY_AUTH" enumId="PRDS_PAY_AUTH" sequenceId="01" enumTypeId="PRDS_PAYSVC"/>
   <Enumeration description="Payment Re-Authorization Service" enumCode="PAY_REAUTH" enumId="PRDS_PAY_REAUTH" sequenceId="02" enumTypeId="PRDS_PAYSVC"/>
-  <Enumeration description="Payment Capture Service" enumCode="PAY_CAPTURE" enumId="PRDS_PAY_CAPTURE" sequenceId="03" enumTypeId="PRDS_PAYSVC"/>
-  <Enumeration description="Payment Refund Service" enumCode="PAY_REFUND" enumId="PRDS_PAY_REFUND" sequenceId="04" enumTypeId="PRDS_PAYSVC"/>
+  <Enumeration description="Payment Release Authorization Service" enumCode="PAY_RELEASE" enumId="PRDS_PAY_RELEASE" sequenceId="03" enumTypeId="PRDS_PAYSVC"/>
+  <Enumeration description="Payment Capture Service" enumCode="PAY_CAPTURE" enumId="PRDS_PAY_CAPTURE" sequenceId="04" enumTypeId="PRDS_PAYSVC"/>
+  <Enumeration description="Payment Refund Service" enumCode="PAY_REFUND" enumId="PRDS_PAY_REFUND" sequenceId="05" enumTypeId="PRDS_PAYSVC"/>
   
   <FacilityType description="Building" facilityTypeId="BUILDING" hasTable="N" parentTypeId=""/>
   <FacilityType description="Floor" facilityTypeId="FLOOR" hasTable="N" parentTypeId=""/>
