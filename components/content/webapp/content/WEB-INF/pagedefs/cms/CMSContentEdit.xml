@@ -15,7 +15,7 @@
     <property name="permissionType">complex</property>    
     <property name="entityOperation">_ADMIN</property>
     <property name="targetOperation">CONTENT_UPDATE</property>    
-    <property name="requiredRoles">_OWNER_|BLOG_EDITOR|BLOG_ADMIN</property>    
+    <property name="requiredRoles">OWNER|BLOG_EDITOR|BLOG_ADMIN</property>    
     <property name="menuDefFile">/cms/CMSMenus.xml</property>    
     <property name="menuName">cms</property>
     <property name="menuItemName">content</property>

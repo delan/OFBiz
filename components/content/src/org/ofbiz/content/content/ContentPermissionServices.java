@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -447,13 +447,13 @@ public class ContentPermissionServices {
             roles = new ArrayList( passedRoles );
         }
 
-        roles.remove("_OWNER_"); // always test with the owner of the current content
+        roles.remove("OWNER"); // always test with the owner of the current content
         if ( content.get("createdByUserLogin") != null && userLogin != null) {
             String userLoginId = (String)userLogin.get("userLoginId");
             String userLoginIdCB = (String)content.get("createdByUserLogin");
             //if (Debug.infoOn()) Debug.logInfo("userLoginId:" + userLoginId + ": userLoginIdCB:" + userLoginIdCB + ":", null);
             if (userLoginIdCB.equals(userLoginId)) {
-                roles.add("_OWNER_");
+                roles.add("OWNER");
                 //if (Debug.infoOn()) Debug.logInfo("in getUserRoles, passedRoles(0):" + passedRoles, null);
             }
         }
@@ -681,7 +681,7 @@ public class ContentPermissionServices {
         String creatorLoginFrom = (String)contentFrom.get("createdByUserLogin");
         if(creatorLoginTo != null && creatorLoginFrom != null 
            && creatorLoginTo.equals(creatorLoginFrom) ) {
-            roleList.add("_OWNER_");
+            roleList.add("OWNER");
         }
     
         Map resultsMap = checkPermission( null, statusId, userLogin, purposeList, targetOperations, roleList, delegator, security, entityAction, privilegeEnumId, null);

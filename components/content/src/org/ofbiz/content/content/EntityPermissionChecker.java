@@ -475,13 +475,13 @@ public class EntityPermissionChecker {
             // TODO: Need to use ContentManagementWorker.getAuthorContent first
 
  
-        roles.remove("_OWNER_"); // always test with the owner of the current content
+        roles.remove("OWNER"); // always test with the owner of the current content
         if ( entity.get("createdByUserLogin") != null && userLogin != null) {
             String userLoginId = (String)userLogin.get("userLoginId");
             String userLoginIdCB = (String)entity.get("createdByUserLogin");
             //if (Debug.infoOn()) Debug.logInfo("userLoginId:" + userLoginId + ": userLoginIdCB:" + userLoginIdCB + ":", null);
             if (userLoginIdCB.equals(userLoginId)) {
-                roles.add("_OWNER_");
+                roles.add("OWNER");
                 //if (Debug.infoOn()) Debug.logInfo("in getUserRoles, passedRoles(0):" + passedRoles, null);
             }
         }
