@@ -138,13 +138,14 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             field-type-name="postgres72"
             check-on-start="true"
             add-missing-on-start="true"
+            use-fk-initially-deferred="false"
             join-style="ansi">
         <read-data reader-name="main"/>
         <inline-jdbc
                 jdbc-driver="org.postgresql.Driver"
                 jdbc-uri="jdbc:postgresql://127.0.0.1/ofbiz"
                 jdbc-username="ofbiz"
-                jdbc-password=""
+                jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="20"/>                          
