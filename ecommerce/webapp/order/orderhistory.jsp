@@ -42,7 +42,7 @@
 
   List orderRoleCollection = delegator.findByAnd("OrderRole",
           UtilMisc.toMap("partyId", userLogin.get("partyId"), "roleTypeId", "PLACING_CUSTOMER"), null);
-  Collection orderHeaderList = EntityUtil.orderBy(EntityUtil.getRelated("OrderHeader", orderRoleCollection), UtilMisc.toList("orderDate DESC"));
+  Collection orderHeaderList = EntityUtil.orderBy(EntityUtil.filterByAnd(EntityUtil.getRelated("OrderHeader", orderRoleCollection), UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"))), UtilMisc.toList("orderDate DESC"));
   pageContext.setAttribute("orderHeaderList", orderHeaderList);
 %>
 <br>
