@@ -80,12 +80,12 @@
                         <td width="1">&nbsp;&nbsp;</td>
                       </tr>
                       <tr><td colspan='8'><hr class='sepbar'></td></tr>
-                      <#list poList as orderHeader>
-                        <#assign orh = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getHelper(orderHeader)>
-                        <#assign statusItem = orderHeader.getRelatedOneCache("StatusItem")>
+                      <#list poList as orderHeaderAndRole>
+                        <#assign orh = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getHelper(orderHeaderAndRole)>
+                        <#assign statusItem = orderHeaderAndRole.getRelatedOneCache("StatusItem")>
                         <#assign placingParty = orh.getPlacingParty()?if_exists>
                         <tr>
-                          <td><a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a></td>                          
+                          <td><a href="<@ofbizUrl>/orderview?order_id=${orderHeaderAndRole.orderId}</@ofbizUrl>" class='buttontext'>${orderHeaderAndRole.orderId}</a></td>                          
                           <td>
                             <div class='tabletext'>
                               <#assign partyId = "_NA_">
@@ -109,13 +109,13 @@
                               </#if>
                             </div>
                           </td>
-                          <td><div class="tabletext"><nobr>${orderHeader.getString("orderDate")}</nobr></div></td>
+                          <td><div class="tabletext"><nobr>${orderHeaderAndRole.getString("orderDate")}</nobr></div></td>
                           <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
                           <td align="right"><div class="tabletext">${orh.getTotalOrderItemsQuantity()?string.number}</div></td>
                           <td align="right"><div class="tabletext">${orh.getOrderGrandTotal()?string.currency}</div></td>
                           <td width="1">&nbsp;&nbsp;</td>
                           <td align='right'>
-                            <a href="<@ofbizUrl>/schedulepo?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>Schedule&nbsp;Delivery</a>
+                            <a href="<@ofbizUrl>/schedulepo?order_id=${orderHeaderAndRole.orderId}</@ofbizUrl>" class='buttontext'>Schedule&nbsp;Delivery</a>
                           </td>                       
                         </tr>
                       </#list>

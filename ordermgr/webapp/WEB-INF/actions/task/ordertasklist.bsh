@@ -75,8 +75,7 @@ context.put("roleTasks", roleTasks);
 context.put("now", UtilDateTime.nowTimestamp());
 
 // purchase order schedule
-//poList = delegator.findByAnd("OrderHeaderAndRoles", UtilMisc.toMap("partyId", userLogin.get("partyId"), "orderTypeId", "PURCHASE_ORDER"));
-poList = delegator.findByAnd("OrderHeader", UtilMisc.toMap("orderTypeId", "PURCHASE_ORDER"));
+poList = delegator.findByAnd("OrderHeaderAndRoles", UtilMisc.toMap("partyId", userLogin.get("partyId"), "orderTypeId", "PURCHASE_ORDER"));
 context.put("poList", poList);
 
 
