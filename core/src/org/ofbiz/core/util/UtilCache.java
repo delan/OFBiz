@@ -1,6 +1,11 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/07/18 22:22:53  jonesde
+ * A few small changes to use the Debug class for logging instead of straight
+ * System.out. Also added conditional logging for info, warning, and error messages
+ * which are controlled through the debug.properties file.
+ *
  * Revision 1.2  2001/07/16 21:33:27  jonesde
  * Updated events in UtilCache for new sevlet controller.
  *
@@ -90,6 +95,21 @@ public class UtilCache
    * If set to 0, elements will never expire.
    */  
   protected long expireTime = 0;
+
+  /** Constructor which specifies the maxSize and expireTime.
+   * @param maxSize The maxSize member is set to this value
+   * @param expireTime The expireTime member is set to this value
+   * @param cacheName The name of the cache.
+   */  
+  public UtilCache(String cacheName, long maxSize, long expireTime)
+  {
+    this.maxSize = maxSize;
+    this.expireTime = expireTime;
+
+    name = cacheName;
+    if(utilCacheTable.containsKey(cacheName)) name = name + (defaultIndex++);
+    utilCacheTable.put(name,this);
+  }
 
   /** Constructor which specifies the maxSize and expireTime.
    * @param maxSize The maxSize member is set to this value
