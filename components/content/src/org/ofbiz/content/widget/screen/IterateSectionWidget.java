@@ -87,6 +87,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
         while (childElementIter.hasNext()) {
             Element sectionElement = (Element) childElementIter.next();
             ModelScreenWidget.Section section = new ModelScreenWidget.Section(modelScreen, sectionElement);
+            sectionList.add(section);
         }
     }
 
@@ -148,11 +149,11 @@ public class IterateSectionWidget extends ModelScreenWidget {
                 ModelScreenWidget.Section section = (ModelScreenWidget.Section)sectionIter.next();
                 section.renderWidgetString(writer, contextMs, screenStringRenderer);
             }
-            if (itemIndex < highIndex) {
-                setHighIndex(itemIndex);
-            }
-            setActualPageSize(highIndex - lowIndex);
         }
+        if (itemIndex < highIndex) {
+            setHighIndex(itemIndex);
+        }
+        setActualPageSize(highIndex - lowIndex);
         contextMs.pop();
 
     }

@@ -314,6 +314,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
     public void renderContentEnd(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException {
 
                 //Debug.logInfo("renderContentEnd, context:" + context, module);
+        String expandedContentId = content.getContentId(context);
         String editMode = "Edit";
         String editRequest = content.getEditRequest(context);
         String editContainerStyle = content.getEditContainerStyle(context);
@@ -328,6 +329,9 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             HttpServletResponse response = (HttpServletResponse) context.get("response");
             HttpServletRequest request = (HttpServletRequest) context.get("request");
             if (request != null && response != null) {
+                if (editRequest.indexOf("?") < 0)  editRequest += "?";
+                else editRequest += "&amp;";
+                editRequest += "contentId=" + expandedContentId;
                 ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                 String urlString = rh.makeLink(request, response, editRequest, false, false, false);
@@ -350,7 +354,6 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             writer.write("<div");
             writer.write(" class=\"" + editContainerStyle + "\"> ");
     
-            writer.write(">");
             appendWhitespace(writer);
         }
     }
@@ -401,6 +404,8 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
         String editMode = "Edit";
         String editRequest = content.getEditRequest(context);
         String editContainerStyle = content.getEditContainerStyle(context);
+        String expandedContentId = content.getContentId(context);
+        String expandedAssocName = content.getAssocName(context);
     	Map params = (Map)context.get("parameters");
         if (editRequest != null && editRequest.toUpperCase().indexOf("IMAGE") > 0) {
             editMode += " Image";
@@ -409,6 +414,12 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             HttpServletResponse response = (HttpServletResponse) context.get("response");
             HttpServletRequest request = (HttpServletRequest) context.get("request");
             if (request != null && response != null) {
+                if (editRequest.indexOf("?") < 0)  editRequest += "?";
+                else editRequest += "&amp;";
+                editRequest += "contentId=" + expandedContentId;
+                if (UtilValidate.isNotEmpty(expandedAssocName)) {
+                    editRequest += "&amp;assocName=" + expandedAssocName;
+                }
                 HttpSession session = request.getSession();
                 GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
                 /* don't know why this is here. might come to me later. -amb
