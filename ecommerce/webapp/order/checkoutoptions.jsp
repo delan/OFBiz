@@ -49,7 +49,7 @@
 <%GenericValue party = userLogin.getRelatedOne("Party");%>
 <%pageContext.setAttribute("carrierShipmentMethodList", delegator.findAllCache("CarrierShipmentMethod", UtilMisc.toList("sequenceNumber"))); %>
 <%pageContext.setAttribute("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false)); %>  
-<%pageContext.setAttribute("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod"))); %>
+<%pageContext.setAttribute("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod"), true)); %>
 <%pageContext.setAttribute("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));%>
 <%pageContext.setAttribute("billingAccountRoleList", delegator.findByAnd("BillingAccountRole", UtilMisc.toMap(
         "partyId", userLogin.getString("partyId"),

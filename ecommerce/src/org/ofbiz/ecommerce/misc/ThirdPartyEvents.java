@@ -213,7 +213,7 @@ public class ThirdPartyEvents {
     
     private static GenericValue getPartyRelationship(GenericValue party, String roleTypeTo) {
         try {
-            return EntityUtil.getFirst(EntityUtil.filterByDate(party.getRelatedByAnd("FromPartyRelationship", UtilMisc.toMap("roleTypeIdTo", roleTypeTo))));
+            return EntityUtil.getFirst(EntityUtil.filterByDate(party.getRelatedByAnd("FromPartyRelationship", UtilMisc.toMap("roleTypeIdTo", roleTypeTo)), true));
         }
         catch (GenericEntityException gee) {
             Debug.logWarning(gee);

@@ -47,7 +47,7 @@
     //just get the selectable features
     Collection productFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", 
             UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE"), 
-            UtilMisc.toList("sequenceNum", "productFeatureApplTypeId", "productFeatureTypeId", "description")));
+            UtilMisc.toList("sequenceNum", "productFeatureApplTypeId", "productFeatureTypeId", "description")), true);
     if (productFeatureAndAppls != null) {
         pageContext.setAttribute("productFeatureAndAppls", productFeatureAndAppls);
 
@@ -144,7 +144,7 @@
                 <div class='tabletext'>&nbsp;
                 <%-- find PRODUCT_VARIANT associations that have these features as STANDARD_FEATUREs --%>
                 <%
-                    Collection productAssocs = EntityUtil.filterByDate(delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT")));
+                    Collection productAssocs = EntityUtil.filterByDate(delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT")), true);
                     if (productAssocs != null && productAssocs.size() > 0) {
                         Iterator productAssocIter = productAssocs.iterator();
                         while (productAssocIter.hasNext()) {
@@ -161,7 +161,7 @@
                                         "productFeatureApplTypeId", "STANDARD_FEATURE");
                                 //Debug.logInfo("Using findByMap: " + findByMap);
 
-                                Collection standardProductFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", findByMap));
+                                Collection standardProductFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", findByMap), true);
                                 if (standardProductFeatureAndAppls == null || standardProductFeatureAndAppls.size() == 0) {
                                     //Debug.logInfo("Does NOT have this standard feature");
                                     hasAllFeatures = false;

@@ -153,7 +153,7 @@ public class PaymentServices {
 
             GenericValue tempVal = null;
             try {
-                Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null));
+                Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null), true);
                 tempVal = EntityUtil.getFirst(allPCMPs);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage());
@@ -269,7 +269,7 @@ public class PaymentServices {
 
             GenericValue tempVal = null;
             try {
-                Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null));
+                Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null), true);
                 tempVal = EntityUtil.getFirst(allPCMPs);
             } catch(GenericEntityException e) {
                 Debug.logWarning(e.getMessage());
@@ -362,7 +362,7 @@ public class PaymentServices {
 
             GenericValue tempVal = null;
             try {
-                Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null));
+                Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null), true);
                 tempVal = EntityUtil.getFirst(allPCMPs);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage());
@@ -466,7 +466,7 @@ public class PaymentServices {
 
             GenericValue tempVal = null;
             try {
-                Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null));
+                Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null), true);
                 tempVal = EntityUtil.getFirst(allPCMPs);
             } catch(GenericEntityException e) {
                 Debug.logWarning(e.getMessage());

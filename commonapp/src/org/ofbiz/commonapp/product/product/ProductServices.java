@@ -186,7 +186,7 @@ public class ProductServices {
             Map fields = UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE");
             List sort = UtilMisc.toList("sequenceNum");
             selectableFeatures = delegator.findByAndCache("ProductFeatureAndAppl", fields, sort);
-            selectableFeatures = EntityUtil.filterByDate(selectableFeatures);
+            selectableFeatures = EntityUtil.filterByDate(selectableFeatures, true);
         } catch (GenericEntityException e) {
             Debug.logError(e);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -296,7 +296,7 @@ public class ProductServices {
                         UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
                 if (c != null) {
                     Debug.logInfo("Found related: " + c);
-                    c = EntityUtil.filterByDate(c);
+                    c = EntityUtil.filterByDate(c, true);
                     Debug.logInfo("Found Filtered related: " + c);
                     if (c.size() > 0) {
                         GenericValue asV = (GenericValue) c.iterator().next();
@@ -364,7 +364,7 @@ public class ProductServices {
             } else {
                 c = product.getRelatedCache("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", type), UtilMisc.toList("sequenceNum"));
             }
-            c = EntityUtil.filterByDate(c);
+            c = EntityUtil.filterByDate(c, true);
             result.put("assocProducts", c);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (GenericEntityException e) {
@@ -411,7 +411,7 @@ public class ProductServices {
 
                 // get the features and filter out expired dates
                 features = delegator.findByAndCache("ProductFeatureAndAppl", fields, sort);
-                features = EntityUtil.filterByDate(features);
+                features = EntityUtil.filterByDate(features, true);
             } catch (GenericEntityException e) {
                 throw new IllegalStateException("Problem reading relation: " + e.getMessage());
             }
@@ -483,7 +483,7 @@ public class ProductServices {
 
                 // get the features and filter out expired dates
                 features = delegator.findByAndCache("ProductFeatureAndAppl", fields, sort);
-                features = EntityUtil.filterByDate(features);
+                features = EntityUtil.filterByDate(features, true);
             } catch (GenericEntityException e) {
                 throw new IllegalStateException("Problem reading relation: " + e.getMessage());
             }

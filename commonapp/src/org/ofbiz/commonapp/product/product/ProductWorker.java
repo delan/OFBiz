@@ -205,10 +205,10 @@ public class ProductWorker {
                                                                                         "PRODUCT_OBSOLESCENCE"));
 
             //since ProductAssoc records have a fromDate and thruDate, we can filter by now so that only assocs in the date range are included
-            upgradeProducts = EntityUtil.filterByDate(upgradeProducts);
-            complementProducts = EntityUtil.filterByDate(complementProducts);
-            obsolescenceProducts = EntityUtil.filterByDate(obsolescenceProducts);
-            obsoleteByProducts = EntityUtil.filterByDate(obsoleteByProducts);
+            upgradeProducts = EntityUtil.filterByDate(upgradeProducts, true);
+            complementProducts = EntityUtil.filterByDate(complementProducts, true);
+            obsolescenceProducts = EntityUtil.filterByDate(obsolescenceProducts, true);
+            obsoleteByProducts = EntityUtil.filterByDate(obsoleteByProducts, true);
 
             if (upgradeProducts != null && upgradeProducts.size() > 0)
                 pageContext.setAttribute(assocPrefix + "upgrade", upgradeProducts);

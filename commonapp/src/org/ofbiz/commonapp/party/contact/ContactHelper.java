@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2002/05/24 18:00:23  jonesde
+ * Added orderBy to get the most recent contact mech first
+ *
  * Revision 1.7  2001/09/28 21:51:21  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -82,12 +85,12 @@ public class ContactHelper {
                 Collection list;
                 list = party.getRelatedByAnd("PartyContactMechPurpose", UtilMisc.toMap("contactMechPurposeTypeId", contactMechPurposeTypeId));
                 if (!includeOld) {
-                    list = EntityUtil.filterByDate(list);
+                    list = EntityUtil.filterByDate(list, true);
                 }
                 partyContactMechList = EntityUtil.getRelated("PartyContactMech", list);
             }
             if (!includeOld) {
-                partyContactMechList = EntityUtil.filterByDate(partyContactMechList);
+                partyContactMechList = EntityUtil.filterByDate(partyContactMechList, true);
             }
             partyContactMechList = EntityUtil.orderBy(partyContactMechList, UtilMisc.toList("fromDate DESC"));
             if (contactMechTypeId == null) {

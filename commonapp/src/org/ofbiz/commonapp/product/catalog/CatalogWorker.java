@@ -273,7 +273,7 @@ public class CatalogWorker {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
         try {
-            return EntityUtil.filterByDate(delegator.findByAndCache("WebSiteCatalog", UtilMisc.toMap("webSiteId", webSiteId), UtilMisc.toList("sequenceNum", "prodCatalogId")));
+            return EntityUtil.filterByDate(delegator.findByAndCache("WebSiteCatalog", UtilMisc.toMap("webSiteId", webSiteId), UtilMisc.toList("sequenceNum", "prodCatalogId")), true);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error looking up website catalogs for website with id " + webSiteId);
         }
@@ -286,7 +286,7 @@ public class CatalogWorker {
         try {
             Collection prodCatalogCategories = EntityUtil.filterByDate(delegator.findByAndCache("ProdCatalogCategory",
                     UtilMisc.toMap("prodCatalogId", prodCatalogId),
-                    UtilMisc.toList("sequenceNum", "productCategoryId")));
+                    UtilMisc.toList("sequenceNum", "productCategoryId")), true);
             if (UtilValidate.isNotEmpty(prodCatalogCategoryTypeId) && prodCatalogCategories != null) {
                 prodCatalogCategories = EntityUtil.filterByAnd(prodCatalogCategories,
                         UtilMisc.toMap("prodCatalogCategoryTypeId", prodCatalogCategoryTypeId));
@@ -506,7 +506,7 @@ public class CatalogWorker {
                 //Collection upgradeProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", item.getProductId(), "productAssocTypeId", "PRODUCT_UPGRADE"), null);
                 Collection complementProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", item.getProductId(), "productAssocTypeId", "PRODUCT_COMPLEMENT"), null);
                 //since ProductAssoc records have a fromDate and thruDate, we can filter by now so that only assocs in the date range are included
-                complementProducts = EntityUtil.filterByDate(complementProducts);
+                complementProducts = EntityUtil.filterByDate(complementProducts, true);
 
                 //if (upgradeProducts != null && upgradeProducts.size() > 0) pageContext.setAttribute(assocPrefix + "upgrade", upgradeProducts);
                 if (complementProducts != null && complementProducts.size() > 0) {

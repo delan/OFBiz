@@ -45,7 +45,7 @@ public class ContactMechWorker {
         Iterator allPartyContactMechs = null;
         try {
             Collection tempCol = delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId));
-            if (!showOld) tempCol = EntityUtil.filterByDate(tempCol);
+            if (!showOld) tempCol = EntityUtil.filterByDate(tempCol, true);
             allPartyContactMechs = UtilMisc.toIterator(tempCol);
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
@@ -73,7 +73,7 @@ public class ContactMechWorker {
 
                 try {
                     Collection partyContactMechPurposes = partyContactMech.getRelated("PartyContactMechPurpose");
-                    if (!showOld) partyContactMechPurposes = EntityUtil.filterByDate(partyContactMechPurposes);
+                    if (!showOld) partyContactMechPurposes = EntityUtil.filterByDate(partyContactMechPurposes, true);
                     partyContactMechValueMap.put("partyContactMechPurposes", partyContactMechPurposes);
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e);
@@ -184,7 +184,7 @@ public class ContactMechWorker {
             //try to find a PartyContactMech with a valid date range
             Collection partyContactMechs = null;
             try {
-                partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId)));
+                partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId)), true);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
             }
@@ -195,7 +195,7 @@ public class ContactMechWorker {
 
                 Collection partyContactMechPurposes = null;
                 try {
-                    partyContactMechPurposes = EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose"));
+                    partyContactMechPurposes = EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose"), true);
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e);
                 }
@@ -316,7 +316,7 @@ public class ContactMechWorker {
 
         Iterator allPartyContactMechs = null;
         try {
-            allPartyContactMechs = UtilMisc.toIterator(EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId))));
+            allPartyContactMechs = UtilMisc.toIterator(EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId)), true));
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
         }
@@ -342,7 +342,7 @@ public class ContactMechWorker {
                 }
 
                 try {
-                    Collection partyContactMechPurposes = EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose"));
+                    Collection partyContactMechPurposes = EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose"), true);
                     postalAddressInfo.put("partyContactMechPurposes", partyContactMechPurposes);
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e);
@@ -366,7 +366,7 @@ public class ContactMechWorker {
         if (curContactMechId != null) {
             Collection partyContactMechs = null;
             try {
-                partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", curContactMechId)));
+                partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", curContactMechId)), true);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
             }
@@ -383,7 +383,7 @@ public class ContactMechWorker {
 
                 Collection curPartyContactMechPurposes = null;
                 try {
-                    curPartyContactMechPurposes = EntityUtil.filterByDate(curPartyContactMech.getRelated("PartyContactMechPurpose"));
+                    curPartyContactMechPurposes = EntityUtil.filterByDate(curPartyContactMech.getRelated("PartyContactMechPurpose"), true);
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e);
                 }

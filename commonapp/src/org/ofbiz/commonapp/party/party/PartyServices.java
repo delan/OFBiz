@@ -574,7 +574,7 @@ public class PartyServices {
         try {
             List exprs = new LinkedList();
             exprs.add(new EntityExpr("infoString", true, EntityOperator.LIKE, "%" + email.toUpperCase() + "%", true));
-            Collection c = EntityUtil.filterByDate(delegator.findByAnd("PartyAndContactMech", exprs, UtilMisc.toList("infoString")));
+            Collection c = EntityUtil.filterByDate(delegator.findByAnd("PartyAndContactMech", exprs, UtilMisc.toList("infoString")), true);
             Debug.logVerbose("Collection: " + c);
             Debug.logInfo("PartyFromEmail number found: " + c.size());
             if (c != null) {

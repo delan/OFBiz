@@ -44,6 +44,8 @@ import org.ofbiz.core.entity.*;
 public class FilterListByDate extends MethodOperation {
     String listName;
     String validDateName;
+    String fromDateName = "fromDate";
+    String thruDateName = "thruDate";
 
     public FilterListByDate(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
@@ -53,10 +55,11 @@ public class FilterListByDate extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         if (UtilValidate.isNotEmpty(validDateName)) {
-            methodContext.putEnv(listName, EntityUtil.filterByDate((Collection) methodContext.getEnv(listName), (java.sql.Timestamp) methodContext.getEnv(validDateName)));
+            methodContext.putEnv(listName, EntityUtil.filterByDate((Collection) methodContext.getEnv(listName), (java.sql.Timestamp) methodContext.getEnv(validDateName), fromDateName, thruDateName, true));
         } else {
-            methodContext.putEnv(listName, EntityUtil.filterByDate((Collection) methodContext.getEnv(listName)));
+            methodContext.putEnv(listName, EntityUtil.filterByDate((Collection) methodContext.getEnv(listName), UtilDateTime.nowTimestamp(), fromDateName, thruDateName, true));
         }
         return true;
     }
 }
+

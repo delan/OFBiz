@@ -82,7 +82,7 @@ public class Security {
             userLoginSecurityGroupByUserLoginId.put(userLoginId, collection);
         }
         //filter each time after cache retreival, ie cache will contain entire list
-        collection = EntityUtil.filterByDate(collection);
+        collection = EntityUtil.filterByDate(collection, true);
         return collection.iterator();
     }
 

@@ -43,7 +43,7 @@ public class PaymentWorker {
         try {
             List paymentMethodValueMaps = new LinkedList();
             Collection paymentMethods = delegator.findByAnd("PaymentMethod", UtilMisc.toMap("partyId", partyId));
-            if (!showOld) paymentMethods = EntityUtil.filterByDate(paymentMethods);
+            if (!showOld) paymentMethods = EntityUtil.filterByDate(paymentMethods, true);
             if (paymentMethods != null) {
                 Iterator pmIter = paymentMethods.iterator();
                 while (pmIter.hasNext()) {

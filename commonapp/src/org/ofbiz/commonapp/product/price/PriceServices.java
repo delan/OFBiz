@@ -81,7 +81,7 @@ public class PriceServices {
         if ("Y".equals(product.getString("isVariant"))) {
             try {
                 Collection productAssocs = EntityUtil.filterByDate(delegator.findByAndCache("ProductAssoc", 
-                        UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT")));
+                        UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT")), true);
                 GenericValue productAssoc = EntityUtil.getFirst(productAssocs);
                 if (productAssoc != null) {
                     virtualProductId = productAssoc.getString("productId");
@@ -110,7 +110,7 @@ public class PriceServices {
         } catch (GenericEntityException e) {
             Debug.logError(e, "An error occurred while getting the product prices", module);
         }
-        productPrices = EntityUtil.filterByDate(productPrices);
+        productPrices = EntityUtil.filterByDate(productPrices, true);
        
         //get the prices we need: list, default, average cost, min, max
         Collection listPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "LIST_PRICE"));
@@ -304,11 +304,13 @@ public class PriceServices {
                     if (productPriceRule == null) continue;
 
                     //check from/thru dates
-                    if (productPriceRule.get("fromDate") != null && productPriceRule.getTimestamp("fromDate").after(nowTimestamp)) {
+		    java.sql.Timestamp fromDate = productPriceRule.getTimestamp("fromDate");
+		    java.sql.Timestamp thruDate = productPriceRule.getTimestamp("thruDate");
+                    if (fromDate != null && fromDate.after(nowTimestamp)) {
                         //hasn't started yet
                         continue;
                     }
-                    if (productPriceRule.get("thruDate") != null && productPriceRule.getTimestamp("thruDate").before(nowTimestamp)) {
+                    if (thruDate != null && thruDate.before(nowTimestamp)) {
                         //already expired
                         continue;
                     }
@@ -490,7 +492,7 @@ public class PriceServices {
             Collection productCategoryMembers = delegator.findByAndCache("ProductCategoryMember", 
                     UtilMisc.toMap("productId", productId, "productCategoryId", productPriceCond.getString("condValue")));
             // and from/thru date within range
-            productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers);
+            productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
             // then 0 (equals), otherwise 1 (not equals)
             if (productCategoryMembers != null && productCategoryMembers.size() > 0) {
                 compare = 0;

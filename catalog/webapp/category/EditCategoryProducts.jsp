@@ -46,7 +46,7 @@
 
     Collection productCategoryMembers = productCategory.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum", "productId"));
     if (activeOnly) {
-        productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers);
+        productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
     }
     if (productCategoryMembers != null) {
         pageContext.setAttribute("productCategoryMembers", productCategoryMembers);

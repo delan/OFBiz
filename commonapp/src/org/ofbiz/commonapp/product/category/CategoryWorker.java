@@ -161,7 +161,7 @@ public class CategoryWorker {
                 Collection prodCatMemberCol = null;
                 try {
                     prodCatMemberCol = EntityUtil.filterByDate(category.getRelatedCache("ProductCategoryMember", null,
-                                                                                        UtilMisc.toList("sequenceNum")));
+                                                                                        UtilMisc.toList("sequenceNum")), true);
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
                     prodCatMemberCol = null;
@@ -280,7 +280,7 @@ public class CategoryWorker {
                                                UtilMisc.toMap("parentProductCategoryId",parentId),
                                                UtilMisc.toList("sequenceNum"));
             if (limitView) {
-                rollups = EntityUtil.filterByDate(rollups);
+                rollups = EntityUtil.filterByDate(rollups, true);
             }
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());

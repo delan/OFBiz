@@ -50,7 +50,7 @@ public class ProductPromoWorker {
         List productPromos = new LinkedList();
         try {
             GenericValue prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", CatalogWorker.getCurrentCatalogId(request)));
-            Iterator prodCatalogPromoAppls = UtilMisc.toIterator(EntityUtil.filterByDate(prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum"))));
+            Iterator prodCatalogPromoAppls = UtilMisc.toIterator(EntityUtil.filterByDate(prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum")), true));
             while (prodCatalogPromoAppls != null && prodCatalogPromoAppls.hasNext()) {
                 GenericValue prodCatalogPromoAppl = (GenericValue) prodCatalogPromoAppls.next();
                 GenericValue productPromo = prodCatalogPromoAppl.getRelatedOneCache("ProductPromo");
@@ -87,7 +87,7 @@ public class ProductPromoWorker {
         //there will be a ton of db access, so just do a big catch entity exception block
         try {
             //loop through promotions
-            Iterator prodCatalogPromoAppls = UtilMisc.toIterator(EntityUtil.filterByDate(prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum"))));
+            Iterator prodCatalogPromoAppls = UtilMisc.toIterator(EntityUtil.filterByDate(prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum")), true));
             if (prodCatalogPromoAppls == null || !prodCatalogPromoAppls.hasNext()) {
                 Debug.logInfo("Not doing promotions, none applied to prodCatalog with ID " + prodCatalogId);
             }
@@ -151,7 +151,7 @@ public class ProductPromoWorker {
             Collection productCategoryMembers = delegator.findByAndCache("ProductCategoryMember", 
                     UtilMisc.toMap("productId", cartItem.getProductId(), "productCategoryId", productPromoCond.getString("condValue")));
             // and from/thru date within range
-            productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers);
+            productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
             // then 0 (equals), otherwise 1 (not equals)
             if (productCategoryMembers != null && productCategoryMembers.size() > 0) {
                 compare = 0;
