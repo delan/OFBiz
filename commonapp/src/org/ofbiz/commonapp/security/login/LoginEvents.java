@@ -58,6 +58,9 @@ public class LoginEvents {
         
     public static final String module = LoginEvents.class.getName();
 
+    public static Map externalLoginKeys = new HashMap();
+    public static String EXTERNAL_LOGIN_KEY_ATTR = "externalLoginKey";
+    
     /**
      * Save USERNAME and PASSWORD for use by auth pages even if we start in non-auth pages.
      *
@@ -579,5 +582,68 @@ public class LoginEvents {
             return logout(request, response);
         }
         return "success";
+    }
+
+    /**
+     * Gets (and creates if necessary) a key to be used for an external login parameter
+     */
+    public static String getExternalLoginKey(HttpServletRequest request) {
+        Debug.logInfo("Running getExternalLoginKey, externalLoginKeys.size=" + externalLoginKeys.size());
+        GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
+        
+        HttpSession session = request.getSession();
+        synchronized (session) {
+            // if the session has a previous key in place, remove it from the master list
+            String sesExtKey = (String) session.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
+            if (sesExtKey != null) {
+                externalLoginKeys.remove(sesExtKey);
+            }
+
+            //check the userLogin here, after the old session setting is set so that it will always be cleared
+            if (userLogin == null) return "";
+            
+            String externalKey = (String) request.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
+            if (externalKey != null) return externalKey;
+
+            //no key made yet for this request, create one
+            while (externalKey == null || externalLoginKeys.containsKey(externalKey)) {
+                externalKey = "EL" + Long.toString(Math.round(Math.random() * 100000000));
+            }
+
+            request.setAttribute(EXTERNAL_LOGIN_KEY_ATTR, externalKey);
+            session.setAttribute(EXTERNAL_LOGIN_KEY_ATTR, externalKey);
+            externalLoginKeys.put(externalKey, userLogin);
+            return externalKey;
+        }
+    }
+
+    public static String checkExternalLoginKey(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        if (session.getAttribute(SiteDefs.USER_LOGIN) != null) {
+            //already logged in, do nothing
+            return "success";
+        }
+        
+        String externalKey = request.getParameter(EXTERNAL_LOGIN_KEY_ATTR);
+        if (externalKey == null) return "success";
+        
+        GenericValue userLogin = (GenericValue) externalLoginKeys.get(externalKey);
+        if (userLogin != null) {
+            //found userLogin, do the external login...
+            session.setAttribute(SiteDefs.USER_LOGIN, userLogin);
+            // let the visit know who the user is
+            VisitHandler.setUserLogin(session, userLogin, false);
+        } else {
+            Debug.logWarning("Could not find userLogin for external login key: " + externalKey);
+        }
+        
+        return "success";
+    }
+    
+    public static void cleanupExternalLoginKey(HttpSession session) {
+        String sesExtKey = (String) session.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
+        if (sesExtKey != null) {
+            externalLoginKeys.remove(sesExtKey);
+        }
     }
 }

@@ -61,8 +61,9 @@ public class ControlEventListener implements HttpSessionListener {
 
     public void sessionDestroyed(HttpSessionEvent event) {
         HttpSession session = event.getSession();
+        
+        // Finalize the Visit
         GenericValue visit = VisitHandler.getVisit(session);
-
         if (visit != null) {
             visit.set("thruDate", new Timestamp(session.getLastAccessedTime()));
             try {
@@ -72,7 +73,7 @@ public class ControlEventListener implements HttpSessionListener {
             }
         }
 
-        // store the UserLoginSession
+        // Store the UserLoginSession
         String userLoginSessionString = getUserLoginSession(session);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         if (userLogin != null && userLoginSessionString != null) {

@@ -11,16 +11,23 @@
     <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.core.event.SimpleEventHandler"/>
 
+    <handler name="jpublish" type="view" class="org.ofbiz.core.view.JPublishViewHandler"/>
     <handler name="region" type="view" class="org.ofbiz.core.view.RegionViewHandler"/>
+    <handler name="wsp" type="view" class="org.ofbiz.core.view.WspViewHandler"/>
+
     <handler name="ftl" type="view" class="org.ofbiz.core.ftl.FreeMarkerViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
+    <handler name="jsp" type="view" class="org.ofbiz.core.view.JspViewHandler"/>
+    
     <handler name="http" type="view" class="org.ofbiz.core.view.HttpViewHandler"/>
-    <handler name="jpublish" type="view" class="org.ofbiz.core.view.JPublishViewHandler"/>
-    <handler name="jasperpdf" type="view" class="org.ofbiz.core.view.JasperReportsPdfViewHandler"/>
+    <handler name="datavision" type="view" class="org.ofbiz.core.view.DataVisionViewHandler"/>
+    <handler name="jasperreportspdf" type="view" class="org.ofbiz.core.view.JasperReportsPdfViewHandler"/>
+    <handler name="jasperreportsxml" type="view" class="org.ofbiz.core.view.JasperReportsXmlViewHandler"/>
         
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
     	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
+    	<event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="checkExternalLoginKey"/>
     </preprocessor>
     <postprocessor>
     	<!-- Events to run on every request after all other processing (chains exempt) -->
@@ -408,7 +415,7 @@
     
     <view-map name="orderreportlist" type="region"/>
     <view-map name="orderreport" page="/reports/orderreport.jsp" content-type="application/pdf" encoding="none"/>
-    <view-map name="orderreportjasper" page="/reports/orderreport.jasper" type="jasperpdf" content-type="application/pdf" encoding="none"/>
-    <view-map name="orderitemreportjasper" page="/reports/orderitemreport.jasper" type="jasperpdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="orderreportjasper" page="/reports/orderreport.jasper" type="jasperreportspdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="orderitemreportjasper" page="/reports/orderitemreport.jasper" type="jasperreportspdf" content-type="application/pdf" encoding="none"/>
     <!-- end of view mappings -->
 </site-conf>
