@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.8 2003/11/15 08:53:36 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.9 2003/11/15 09:08:09 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -124,6 +124,9 @@ public class ProductPromoWorker {
 
     public static void doPromotions(ShoppingCart cart, GenericDelegator delegator, LocalDispatcher dispatcher) {
         // TODO: make sure this is called when a user logs in so that per customer limits are honored
+        // TODO: add code to store ProductPromoUse information when an order is placed
+        // TODO: add code to remove ProductPromoUse if an order is cancelled
+        // TODO: add code to check ProductPromoUse limits per promo (customer, promo), and per code (customer, code) to avoid use of promos or codes getting through due to multiple carts getting promos applied at the same time, possibly on totally different servers
         String partyId = cart.getPartyId();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
@@ -338,6 +341,15 @@ public class ProductPromoWorker {
     }
 
     protected static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
+        /* TODO: implement these
+        <Enumeration description="Order Total" enumCode="ORDER_TOTAL" enumId="PPIP_ORDER_TOTAL" sequenceId="01" enumTypeId="PROD_PROMO_IN_PARAM"/>
+        <Enumeration description="X Quantity of Product" enumCode="PRODUCT_QUANT" enumId="PPIP_PRODUCT_QUANT" sequenceId="02" enumTypeId="PROD_PROMO_IN_PARAM"/>
+        <Enumeration description="New Account" enumCode="NEW_ACCT" enumId="PPIP_NEW_ACCT" sequenceId="05" enumTypeId="PROD_PROMO_IN_PARAM"/>
+        <Enumeration description="Party" enumCode="PARTY_ID" enumId="PPIP_PARTY_ID" sequenceId="06" enumTypeId="PROD_PROMO_IN_PARAM"/>
+        <Enumeration description="Party Group Member" enumCode="PARTY_GROUP_MEMBER" enumId="PPIP_PARTY_GRP_MEM" sequenceId="07" enumTypeId="PROD_PROMO_IN_PARAM"/>
+        <Enumeration description="Party Classification" enumCode="PARTY_CLASS" enumId="PPIP_PARTY_CLASS" sequenceId="08" enumTypeId="PROD_PROMO_IN_PARAM"/>
+        <Enumeration description="Role Type" enumCode="ROLE_TYPE" enumId="PPIP_ROLE_TYPE" sequenceId="09" enumTypeId="PROD_PROMO_IN_PARAM"/>
+        */
         GenericValue userLogin = null;
         String partyId = null;
 
@@ -463,6 +475,15 @@ public class ProductPromoWorker {
 
     /** returns true if the cart was changed and rules need to be re-evaluted */
     protected static boolean performAction(GenericValue productPromoAction, ShoppingCart cart, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException, CartItemModifyException {
+        /* TODO: implement these
+        <Enumeration description="Gift With Purchase" enumCode="GWP" enumId="PROMO_GWP" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
+        <Enumeration description="Free Shipping" enumCode="FREE_SHIPPING" enumId="PROMO_FREE_SHIPPING" sequenceId="02" enumTypeId="PROD_PROMO_ACTION"/>
+        <Enumeration description="X Product for Y% Discount" enumCode="PROD_DISC" enumId="PROMO_PROD_DISC" sequenceId="03" enumTypeId="PROD_PROMO_ACTION"/>
+        <Enumeration description="X Product for Y Discount" enumCode="PROD_AMDISC" enumId="PROMO_PROD_AMDISC" sequenceId="04" enumTypeId="PROD_PROMO_ACTION"/>
+        <Enumeration description="X Product for Y Price" enumCode="PROD_PRICE" enumId="PROMO_PROD_PRICE" sequenceId="05" enumTypeId="PROD_PROMO_ACTION"/>
+        <Enumeration description="Order Percent Discount" enumCode="ORDER_PERCENT" enumId="PROMO_ORDER_PERCENT" sequenceId="06" enumTypeId="PROD_PROMO_ACTION"/>
+        <Enumeration description="Order Amount Flat" enumCode="ORDER_AMOUNT" enumId="PROMO_ORDER_AMOUNT" sequenceId="07" enumTypeId="PROD_PROMO_ACTION"/>
+        */
         if ("PROMO_GWP".equals(productPromoAction.getString("productPromoActionEnumId"))) {
             Integer itemLoc = findPromoItem(productPromoAction, cart);
 
