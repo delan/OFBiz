@@ -133,7 +133,7 @@
     <td><a href="<ofbiz:url>/showvisits?sort=thruDate&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">Thru Date</a></td>
   </tr>
   <tr>
-    <td colspan="7"><hr class="sepbar"></td>
+    <td colspan="<%=partyId == null ? 8 : 7%>"><hr class="sepbar"></td>
   </tr>
   
   <ofbiz:iterator name="visit" property="visitList" limit="<%=viewSize%>">
