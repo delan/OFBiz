@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.21 2004/07/07 21:42:50 jonesde Exp $
+ * $Id: GenericDelegator.java,v 1.22 2004/07/09 16:11:16 ajzeneski Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -82,7 +82,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -1537,6 +1537,15 @@ public class GenericDelegator implements DelegatorInterface {
         }
         GenericPK pk = value.getPrimaryKey();
         GenericValue newValue = findByPrimaryKey(pk);
+        value.refreshFromValue(newValue);
+    }
+
+    /** Refresh the Entity for the GenericValue from the cache
+     *@param value GenericValue instance containing the entity to refresh
+     */
+    public void refreshFromCache(GenericValue value) throws GenericEntityException {
+        GenericPK pk = value.getPrimaryKey();
+        GenericValue newValue = findByPrimaryKeyCache(pk);
         value.refreshFromValue(newValue);
     }
 

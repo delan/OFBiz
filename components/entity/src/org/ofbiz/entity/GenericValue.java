@@ -1,5 +1,5 @@
 /*
- * $Id: GenericValue.java,v 1.6 2004/07/07 05:56:52 doogie Exp $
+ * $Id: GenericValue.java,v 1.7 2004/07/09 16:11:16 ajzeneski Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     Eric Pabst
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      1.0
  */
 public class GenericValue extends GenericEntity {
@@ -101,6 +101,10 @@ public class GenericValue extends GenericEntity {
 
     public void refresh() throws GenericEntityException {
         this.getDelegator().refresh(this);
+    }
+
+    public void refreshFromCache() throws GenericEntityException {
+        this.getDelegator().refreshFromCache(this);
     }
 
     public boolean originalDbValuesAvailable() {
