@@ -6,9 +6,62 @@
 <br>Last Updated: May 28, 2001
 <h3>Table of Contents</h3>
 <ul>
+  <li><a href="#Release 2001.06.01">Release 2001.06.01</a>
   <li><a href="#Release 2001.05.28">Release 2001.05.28</a>
   <li><a href="#Release 2001.05.24">Release 2001.05.24</a>
 </ul>
+
+<hr>
+<h3><a name="Release 2001.06.01">Release 2001.06.01</a></h3>
+<hr>
+<h4>New Versions of JBoss and Tomcat</h4>
+<p>This release includes updates for the new versions of JBoss and Tomcat. JBoss
+version 2.2.2 and Tomcat version 3.2.2 are now being used.</p>
+<h4>Input Validation</h4>
+<p>All EditEntity.jsp files from the Entity Code Generator (including the
+current entity admin pages) now support server-side input validation. The
+validation routines can be found in commonapp/src/org/ofbiz/common/UtilValidate.java.
+Many of these validation routines are based on the Netscape JavaScript
+validation package (FormChek.js). They have all been converted to Java and
+modified to work in the server-side validation context. Some additional
+validation routines have also been added. The current library of validators
+includes everything from not being empty to algorithmic verification of credit
+card numbers to a validator for email addresses.<p>The Entity Code Generator
+automatically uses the validators specified in the XML entity descriptor file.
+This file for commonapp can be found in /commonapp/entitydef/commonapp.xml. Any
+number of validators can be specified for each field of an entity.<p>In the JSP
+when the user has an error, all of the data on the page is maintained and a full
+list of all current errors is displayed in a red list at the top.<h4>Field Type
+Shorthand in XML Entity Descriptor</h4>
+<p>Field types can be defined in each XML entity descriptor file. Each field
+type definition specifies a field-type name, and a java-type, a sql-type, and
+any number of validate elements. Once a field-type is defined it can be used by
+any field definition of an entity definition in the descriptor file. The
+field-type is used in place of the sql-type, the java-type, and may specify some
+validators. If a sql-type or java-type is used in the cmp-field definition, they
+will override the field-type defaults. If validators are specified in the cmp-field
+definition they are added to the validators from the field-type.</p>
+
+<p>A first attempt at a list of common field types has been added to the
+beginning of /commonapp/entitydef/commonapp.xml. Some version of these field
+types will be used in every entity definition file in the project. This makes
+the XML descriptor code more concise and provides for more consistency in data
+type definitions.</p>
+
+<h4>Data Layout for Entity Relation</h4>
+
+<p>The data layout of the XML Entity Descriptor file for specifying entity
+relations has been defined. the /commonapp/entitydef/commonapp.xml has a number
+of examples of how this feature might be used. It supports nested relations and
+relations where one or many instances of the related entity may be returned
+depending on how the relation is defined.</p>
+
+<p>Entity relation definitions will be used in two main places: the JSP
+ViewEntity.jsp file to show information related to the current entity and
+provide for easy access to viewing and editing related entities; and in the
+Entity.java file to provide convenient methods of looking up related entities.
+NOTE: These have NOT been implemented yet. The relation data model is in place
+in the current release of ofbiz, but it is not used in any of the templates.</p>
 
 <hr>
 <h3><a name="Release 2001.05.28">Release 2001.05.28</a></h3>
