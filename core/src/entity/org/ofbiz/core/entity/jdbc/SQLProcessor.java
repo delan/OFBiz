@@ -528,7 +528,7 @@ public class SQLProcessor {
         if (field != null)
             _ps.setBoolean(_ind, field.booleanValue());
         else
-            _ps.setNull(_ind, Types.NULL);
+            _ps.setNull(_ind, Types.NULL); //TODO: really should be Types.BOOLEAN, but that wasn't introduced until Java 1.4... hmmm what to do?
         
         _ind ++;
     }
