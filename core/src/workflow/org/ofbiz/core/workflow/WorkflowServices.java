@@ -11,7 +11,7 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> Workflow Client
+ * <p><b>Title:</b> Workflow Services
  * <p><b>Description:</b> 'Services' and 'Workers' for interaction with Workflow API
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.core.util.*;
  *@created    December 5, 2001
  *@version    1.0
  */
-public class WorkflowClient {
+public class WorkflowServices {
     
     // -------------------------------------------------------------------
     // Client 'Service' Methods
@@ -72,6 +72,22 @@ public class WorkflowClient {
         try {
             WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
             activity.changeState(newState);
+        }
+        catch ( WfException e ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,e.getMessage());
+        }
+        return result;
+    }
+    
+    /** Check the state of an activity */
+    public static Map checkActivityState(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        String workEffortId = (String) context.get("workEffortId");        
+        try {
+            WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
+            result.put("activityState",activity.state());
         }
         catch ( WfException e ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -166,7 +182,17 @@ public class WorkflowClient {
         return result;
     }
     
-    
+    public static Map activityScheduleLimit(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        
+        Integer limit = (Integer) context.get("limit");
+        String workEffortId = (String) context.get("workEffortId");
+        // todo - schedule a job to run after the limit expires to check status
+        return result;
+    }
+            
     // -------------------------------------------------------------------
     // Client 'Worker' Methods
     // -------------------------------------------------------------------
