@@ -1,6 +1,6 @@
 // ========================================================================
 // Copyright (c) 2002 Mort Bay Consulting (Australia) Pty. Ltd.
-// $Id: Classpath.java,v 1.2 2003/12/02 01:01:58 ajzeneski Exp $
+// $Id: Classpath.java,v 1.3 2004/03/30 23:38:28 ajzeneski Exp $
 // ========================================================================
 
 //package org.mortbay.start;
@@ -13,14 +13,16 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Class to handle CLASSPATH construction
- * @author Jan Hlavatý
+ * @author Jan Hlavat
  */
 public class Classpath {
 
-    Vector _elements = new Vector();
+    private List _elements = new ArrayList();
 
     public Classpath() {}
 
@@ -74,11 +76,11 @@ public class Classpath {
         StringBuffer cp = new StringBuffer(1024);
         int cnt = _elements.size();
         if (cnt >= 1) {
-            cp.append(((File) (_elements.elementAt(0))).getPath());
+            cp.append(((File) (_elements.get(0))).getPath());
         }
         for (int i = 1; i < cnt; i++) {
             cp.append(File.pathSeparatorChar);
-            cp.append(((File) (_elements.elementAt(i))).getPath());
+            cp.append(((File) (_elements.get(i))).getPath());
         }
         return cp.toString();
     }
@@ -88,7 +90,7 @@ public class Classpath {
         URL[] urls = new URL[cnt];
         for (int i = 0; i < cnt; i++) {
             try {
-                urls[i] = ((File) (_elements.elementAt(i))).toURL();
+                urls[i] = ((File) (_elements.get(i))).toURL();
             } catch (MalformedURLException e) {}
         }
         return urls;
@@ -105,5 +107,9 @@ public class Classpath {
             parent = ClassLoader.getSystemClassLoader();
         }
         return new URLClassLoader(urls, parent);
+    }
+
+    public List getElements() {
+        return _elements;
     }
 }

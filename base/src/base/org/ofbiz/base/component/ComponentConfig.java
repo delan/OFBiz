@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.17 2003/12/07 18:50:34 ajzeneski Exp $
+ * $Id: ComponentConfig.java,v 1.18 2004/03/30 23:38:28 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      3.0
  */
 public class ComponentConfig {
@@ -607,6 +607,14 @@ public class ComponentConfig {
                 return this.basePermission.substring(0, this.basePermission.indexOf('_'));
             }
             return this.basePermission;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getLocation() {
+            return componentConfig.getRootLocation() + location;    
         }
 
         public String getTitle() {
