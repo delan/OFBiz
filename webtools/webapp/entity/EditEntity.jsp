@@ -46,6 +46,7 @@ if (security.hasPermission("ENTITY_MAINT", session)) {
   String errorMsg = "";
 
   String event = request.getParameter("event");
+  Debug.logInfo("running EditEntity event [" + event + "]");
   if ("addEntity".equals(event)) {
     if (entity == null) {
       entity = new ModelEntity();
@@ -187,6 +188,28 @@ if (security.hasPermission("ENTITY_MAINT", session)) {
     } else {
       errorMsg = errorMsg + "<li> Could not find related entity " + relation.getRelEntityName() + ", no reverse relation added.";
     }
+  } else if ("addMemberEntity".equals(event)) {
+    String alias = request.getParameter("alias");
+    String aliasedEntityName = request.getParameter("aliasedEntityName");
+
+    if (UtilValidate.isEmpty(alias) || UtilValidate.isEmpty(alias)) {
+      errorMsg = errorMsg + "<li> You must specify an Entity Alias and an Entity Name for addMemberEntity.";
+    }
+
+    if (modelViewEntity != null) {
+      modelViewEntity.addMemberEntityName(alias, aliasedEntityName);
+    } else {
+      errorMsg = errorMsg + "<li> Cannot run addMemberEntity on a non view-entity.";
+    }
+  } else if ("removeMemberEntity".equals(event)) {
+    String alias = request.getParameter("alias");
+    if (modelViewEntity != null) {
+      modelViewEntity.removeMemberEntityAlias(alias);
+    } else {
+      errorMsg = errorMsg + "<li> Cannot run removeMemberEntity on a non view-entity.";
+    }
+  } else if (event != null) {
+    errorMsg = errorMsg + "<li> The operation specified is not valid: [" + event + "]";
   }
 
   Collection typesCol = delegator.getEntityFieldTypeNames(entity);
@@ -201,8 +224,10 @@ A.listtext:hover {color:red;}
 <H3>Entity Editor</H3>
 
 <%if (errorMsg.length() > 0) {%>
-The following errors occurred:
+<span style='color: red;'>The following errors occurred:
 <ul><%=errorMsg%></ul>
+</span>
+<br>
 <%}%>
 
 <FORM method=POST action='<ofbiz:url>/view/EditEntity</ofbiz:url>' style='margin: 0;'>
@@ -348,11 +373,65 @@ The following errors occurred:
   <INPUT type=submit value='Create'>
 </FORM>
 <%} else {%>
-<div>ERROR: Alias editing not yet implemented for view entities, try again later (or just edit the XML by hand, and not at the same time you are editing here...)</div>
+
+<B>VIEW MEMBER ENTITIES</B>
+  <TABLE border='1' cellpadding='2' cellspacing='0'>
+    <TR><TD>Entity Alias</TD><TD>Entity Name</TD><TD>&nbsp;</TD></TR>
+    <%Iterator memberEntityNamesIter = UtilMisc.toIterator(modelViewEntity.getMemberEntityNames().entrySet());%>
+    <%while (memberEntityNamesIter != null && memberEntityNamesIter.hasNext()) {%>
+      <%Map.Entry aliasEntry = (Map.Entry) memberEntityNamesIter.next();%>
+      <TR>
+        <TD><%=(String) aliasEntry.getKey()%></TD>
+        <TD><%=(String) aliasEntry.getValue()%></TD>
+        <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&alias=<%=(String) aliasEntry.getKey()%>&event=removeMemberEntity</ofbiz:url>'>Remove</A></TD>
+      </TR>
+    <%}%>
+  </TABLE>
+
+<FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addMemberEntity</ofbiz:url>'>
+  Add new member entity with <u>Entity Alias*</u> and <u>Entity Name*</u>.<BR>
+  <INPUT type=text size='10' name='alias'>
+  <SELECT name='aliasedEntityName'>
+    <OPTION selected>&nbsp;</OPTION>
+    <%Iterator entIter = entSet.iterator();%>
+    <%while (entIter.hasNext()) {%>
+      <OPTION><%=(String)entIter.next()%></OPTION>
+    <%}%>
+  </SELECT>
+  <INPUT type=submit value='Add'>
+</FORM>
+
+<HR>
+<B>VIEW ALIASES</B>
+
+<HR>
+<B>VIEW LINKS</B>
+
+<div>NOTE: Editing not yet completed for view entities, try again later (or just edit the XML by hand, and not at the same time you are editing here...)</div>
+<%--
+    <!ELEMENT view-entity ( description?, member-entity+, alias+, view-link+, relation* )>
+    <!ELEMENT member-entity EMPTY>
+    <!ATTLIST member-entity
+	entity-alias CDATA #REQUIRED
+	entity-name CDATA #REQUIRED >
+    <!ELEMENT alias EMPTY>
+    <!ATTLIST alias
+	entity-alias CDATA #REQUIRED
+	name CDATA #REQUIRED
+	field CDATA #IMPLIED
+	prim-key CDATA #IMPLIED
+	group-by ( true | false ) "false"
+	function ( min | max | sum | avg | count | count-distinct | upper | lower ) #IMPLIED>
+    <!ELEMENT view-link ( key-map+ )>
+    <!ATTLIST view-link
+	entity-alias CDATA #REQUIRED
+	rel-entity-alias CDATA #REQUIRED >
+--%>
+
 <%}%>
 <HR>
 
-<B>RELATIONS</B>
+<B>RELATIONSHIPS</B>
   <TABLE border='1' cellpadding='2' cellspacing='0'>
   <%for (int r = 0; r < entity.getRelationsSize(); r++) {%>
     <%ModelRelation relation = entity.getRelation(r);%>
@@ -411,8 +490,8 @@ The following errors occurred:
   <%}%>
   </TABLE>
 
-<FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addRelation"%></ofbiz:url>'>
-  Add new relation with <u>Title</u>, <u>Related Entity Name</u> and relation type.<BR>
+<FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addRelation</ofbiz:url>'>
+  Add new relation with <u>Title</u>, <u>FK Name</u>, <u>Related Entity Name*</u> and <u>Relation Type*</u>.<BR>
   <INPUT type=text size='30' maxlength='30' name='title'>
   <INPUT type=text size='20' maxlength='18' name='fkName'>
   <%-- <INPUT type=text size='40' maxlength='30' name='relEntityName'> --%>
