@@ -95,7 +95,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             use-foreign-keys="true"
             use-foreign-key-indices="true"
             use-fk-initially-deferred="false"
-            join-style="ansi-no-parenthesis">
+            join-style="ansi-no-parenthesis"
+            alias-view-columns="false">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
         <inline-jdbc
@@ -192,7 +193,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             add-missing-on-start="true"
             fk-style="name_fk"
             use-fk-initially-deferred="false"
-            join-style="theta-oracle">
+            join-style="ansi-no-parenthesis">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
         <inline-jdbc

@@ -121,6 +121,7 @@
     use-indices ( true | false ) "true"
     check-indices-on-start ( true | false ) "false"
     join-style ( ansi | ansi-no-parenthesis | theta-oracle | theta-mssql ) "ansi"
+    alias-view-columns ( true | false ) "true"
 >
     <!ELEMENT sql-load-path EMPTY>
     <!ATTLIST sql-load-path

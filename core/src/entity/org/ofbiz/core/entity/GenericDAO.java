@@ -471,7 +471,7 @@ public class GenericDAO {
         StringBuffer sqlBuffer = new StringBuffer("SELECT ");
 
         if (modelEntity.getNopksSize() > 0) {
-            sqlBuffer.append(modelEntity.colNameString(modelEntity.getNopksCopy(), ", ", "", true));
+            sqlBuffer.append(modelEntity.colNameString(modelEntity.getNopksCopy(), ", ", "", datasourceInfo.aliasViews));
         } else {
             sqlBuffer.append("*");
         }
@@ -544,7 +544,7 @@ public class GenericDAO {
         StringBuffer sqlBuffer = new StringBuffer("SELECT ");
 
         if (partialFields.size() > 0) {
-            sqlBuffer.append(modelEntity.colNameString(partialFields, ", ", "", true));
+            sqlBuffer.append(modelEntity.colNameString(partialFields, ", ", "", datasourceInfo.aliasViews));
         } else {
             sqlBuffer.append("*");
         }
@@ -955,8 +955,8 @@ public class GenericDAO {
             sqlBuffer.append("DISTINCT ");
         }
 
-        if (selectFields.size() > 0) {
-            sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", "", true));
+        if (selectFields.size() > 0) {            
+            sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", "", datasourceInfo.aliasViews));
         } else {
             sqlBuffer.append("*");
         }

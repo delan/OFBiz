@@ -357,6 +357,7 @@ public class EntityConfigUtil {
         public boolean useIndices = true;
         public boolean checkIndicesOnStart = false;
         public String joinStyle = null;
+        public boolean aliasViews = true;
 
         public DatasourceInfo(Element element) {
             this.name = element.getAttribute("name");
@@ -410,6 +411,7 @@ public class EntityConfigUtil {
                 // anything but true is false
                 checkIndicesOnStart = "true".equals(datasourceElement.getAttribute("check-indices-on-start"));
                 joinStyle = datasourceElement.getAttribute("join-style");
+                aliasViews = !"false".equals(datasourceElement.getAttribute("alias-view-columns"));
             }
             if (fkStyle == null || fkStyle.length() == 0) fkStyle = "name_constraint";
             if (joinStyle == null || joinStyle.length() == 0) joinStyle = "ansi";
