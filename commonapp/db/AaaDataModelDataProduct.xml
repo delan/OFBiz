@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-  <CostComponentType costComponentTypeId="ESTIMATED_LABOR_COST" description="" hasTable="N" parentTypeId=""/>
-  <CostComponentType costComponentTypeId="ESTIMATED_MATERIALS_" description="" hasTable="N" parentTypeId=""/>
-  <CostComponentType costComponentTypeId="ESTIMATED_OTHER_COST" description="" hasTable="N" parentTypeId=""/>
+  <CostComponentType costComponentTypeId="ESTIMATED_LABOR_COST" description="Estimated Labor" hasTable="N" parentTypeId=""/>
+  <CostComponentType costComponentTypeId="ESTIMATED_MATERIALS_" description="Estimated Materials" hasTable="N" parentTypeId=""/>
+  <CostComponentType costComponentTypeId="ESTIMATED_OTHER_COST" description="Estimated Other" hasTable="N" parentTypeId=""/>
 
   <EnumerationType description="Product Promotion Parent Enum Type" enumTypeId="PROD_PROMO" hasTable="N" parentTypeId=""/>
   <EnumerationType description="Product Promotion Input Parameter" enumTypeId="PROD_PROMO_IN_PARAM" hasTable="N" parentTypeId="PROD_PROMO"/>
