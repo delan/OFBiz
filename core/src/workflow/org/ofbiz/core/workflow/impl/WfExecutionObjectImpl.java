@@ -87,6 +87,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
                 dataMap.put("actualStartDate",dataMap.get("createdDate"));
                 dataMap.put("lastModifiedDate",dataMap.get("createdDate"));
                 dataMap.put("priority",valueObject.getLong("objectPriority"));
+                dataMap.put("currentStatusId",getEntityStatus("open.not_running.not_started"));
                 if ( valueObject.getEntityName().equals("WorkflowActivity") )
                     dataMap.put("workflowActivityId",valueObject.getString("activityId"));
                 dataObject = getDelegator().makeValue("WorkEffort",dataMap);
@@ -95,9 +96,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             }
             catch ( GenericEntityException e ) {
                 throw new WfException(e.getMessage(),e);
-            }
-            // Set the initial state
-            changeState("open.not_running.not_started");
+            }                      
         }
         // we have a dataObject, load the context
         else {
@@ -213,8 +212,8 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         String statesArr[] = { "open.running",  "open.not_running.not_started",
         "open.not_running.suspended",  "closed.completed", "closed.terminated",
         "closed.aborted" };
-        List possibleStates = Arrays.asList(statesArr);
-        String currentState = state();
+        ArrayList possibleStates = new ArrayList(Arrays.asList(statesArr));
+        String currentState = state();                    
         if ( currentState.startsWith("closed") )
             return new ArrayList();
         if ( !currentState.startsWith("open") )
@@ -239,7 +238,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             possibleStates.remove("closed.terminated");
             possibleStates.remove("closed.aborted");
             return possibleStates;
-        }
+        }        
         return new ArrayList();
     }
     
@@ -315,8 +314,8 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public void setProcessContext(Map newValue)
     throws WfException, InvalidData, UpdateNotAllowed {
-        this.context = context;
-        setSerializedData("contextDataId",newValue);
+        this.context = newValue;
+        setSerializedData("contextDataId",newValue);        
     }
     
     /**

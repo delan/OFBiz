@@ -43,8 +43,8 @@ public class GenericEngineFactory {
      *@param engineName Name of the engine
      *@return GenericEngine that corresponds to the engineName
      */
-    public static GenericEngine getGenericEngine(String engineName, ServiceDispatcher dispatcher) throws GenericServiceException {
-        String className = UtilProperties.getPropertyValue("org.ofbiz.core.service.engine.properties",engineName + ".engine","org.ofbiz.core.service.StandardJavaEngine");
+    public static GenericEngine getGenericEngine(String engineName, ServiceDispatcher dispatcher) throws GenericServiceException {                
+        String className = UtilProperties.getPropertyValue("servicesengine",engineName + ".engine","org.ofbiz.core.service.StandardJavaEngine");
         Class[] paramTypes = new Class[] { ServiceDispatcher.class };
         Object[] params = new Object[] { dispatcher };
         GenericEngine engine = null;

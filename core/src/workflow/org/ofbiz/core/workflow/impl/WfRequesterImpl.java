@@ -6,6 +6,7 @@ package org.ofbiz.core.workflow.impl;
 
 import java.util.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
 /**
@@ -76,7 +77,7 @@ public class WfRequesterImpl implements WfRequester {
         }
         catch ( AlreadyRunning ar ) {
             throw new WfException("Process already running",ar);
-        }
+        }        
     }
     
     /** 

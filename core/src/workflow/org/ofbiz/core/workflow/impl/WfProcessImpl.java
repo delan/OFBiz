@@ -57,7 +57,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         this.manager = manager;
         this.requester = null;
         this.result = new HashMap();
-        this.activeSteps = new ArrayList();
+        this.activeSteps = new ArrayList();        
     }
     
     /**
@@ -101,14 +101,14 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         // start the first activity (using the defaultStartActivityId of this definition)
         GenericValue start = null;
         try {
-            start = valueObject.getRelatedOne("StartWorkflowActivity");
+            start = valueObject.getRelatedOne("DefaultStartWorkflowActivity");
         }
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);
         }
         if ( start == null )
             throw new CannotStart("No initial activity set");
-        
+               
         startActivity(start);
     }
     
@@ -364,26 +364,26 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
     
     // Evaluate the transition condition
-    private boolean evalCondition(String condition) {
-        Interpreter bsh = new Interpreter();
+    private boolean evalCondition(String condition) {       
+        Interpreter bsh = new Interpreter();        
         Object o = null;
         if ( condition == null || condition.equals("") )
-            return true;
+            return true;        
         try {
             // Set the context for the condition
-            Set keySet = context.keySet();
-            Iterator i = keySet.iterator();
+            Set keySet = context.keySet();            
+            Iterator i = keySet.iterator();            
             while ( i.hasNext() ) {
                 Object key = i.next();
-                Object value = context.get(key);
-                bsh.set((String)key,value);
-            }
+                Object value = context.get(key);                
+                bsh.set((String)key,value);            
+            }            
             // evaluate the condition
             o = bsh.eval(condition);
         }
         catch ( EvalError e ) {
             return false;
-        }
+        }        
         if ( o instanceof Number )
             return ( ((Number)o).doubleValue()  == 0 ) ? false : true;
         else

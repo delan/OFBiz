@@ -67,7 +67,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
                 
         buildSignatures();        
         processList = new ArrayList();
-        state = "enabled";
+        state = "enabled";     
     }
     
     /**
@@ -210,7 +210,11 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         resultSignature = new HashMap();
         Collection params = null;
         try {
-            params = processDef.getRelated("WorkflowFormalParamsView");
+            Map fields = new HashMap();
+            fields.put("packageId",processDef.getString("packageId"));
+            fields.put("processId",processDef.getString("processId"));
+            fields.put("applicationId","_NA_");
+            params = processDef.getDelegator().findByAnd("WorkflowFormalParam",fields);
         }
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);

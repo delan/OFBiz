@@ -56,6 +56,9 @@ public class ModelService {
    * @returns true if validation is successful
    */
   public static boolean validate(Map info, Map test) {
+      if ( info == null || test == null )
+          throw new RuntimeException("Cannot validate NULL maps");
+      
       // * Validate keys first
       Set testSet = test.keySet();
       Set keySet = info.keySet();

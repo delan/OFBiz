@@ -309,7 +309,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new CannotComplete("Invalid result data was passed",e);
         }
         try {
-            changeState("closed.complete");
+            changeState("closed.completed");
         }
         catch ( InvalidState is ) {
             throw new CannotComplete(is.getMessage(),is);
