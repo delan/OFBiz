@@ -60,5 +60,5 @@
    
 <br>
 <#else>
-  <h3>You do not have permission to view this page. ("ORDERMGR_CREATE" or "ORDERMGR_ADMIN" needed)</h3>
+  <h3>You do not have permission to view this page. ("ORDERMGR_UPDATE" or "ORDERMGR_ADMIN" needed)</h3>
 </#if>
