@@ -37,9 +37,9 @@ import org.ofbiz.core.workflow.impl.*;
 /**
  * WorkflowEngine - Workflow Service Engine
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    November 16, 2001
- *@version    $Revision$
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class WorkflowEngine implements GenericEngine {
 
@@ -152,6 +152,9 @@ public class WorkflowEngine implements GenericEngine {
                 throw new GenericServiceException("Cannot get the workflow process runtime key");
             }
         }
+        
+        // Grab the locale from the context
+        Locale locale = (Locale) context.remove("locale");
 
         // Register the process and set the workflow owner
         try {
@@ -164,7 +167,18 @@ public class WorkflowEngine implements GenericEngine {
         } catch (WfException wfe) {
             throw new GenericServiceException(wfe.getMessage(), wfe);
         }
-
+        
+        // Set the initial locale - (in context)
+        if (locale != null) {
+            try {
+                Map pContext = process.processContext();
+                pContext.put("initialLocale", locale);
+                process.setProcessContext(pContext);
+            } catch (WfException wfe) {
+                throw new GenericServiceException(wfe.getMessage(), wfe);
+            }
+        }
+                        
         try {
             Job job = new WorkflowRunner(process, requester);
             if (Debug.verboseOn()) 
