@@ -123,9 +123,70 @@ here, please let us know.</p>
 <ul>
   <li class='contenttext'>Product Finding
   <ul>
+    <li class='contenttext'>Keyword search
+    <ul>
+      <li class='contenttext'>Indexed product keyword search
+      <li class='contenttext'>Can restrict search to products in a given category; this makes it possible to only have the products for the active catalog show up in keyword search results
+      <li class='contenttext'>Can search for all keywords specified or any keyword specified
+      <li class='contenttext'>Search results are ordered based on keyword weights determined during indexing
+      <li class='contenttext'>Configurable stop words are removed during indexing and searching so they won't affect search results
+      <li class='contenttext'>Configurable suffixes (such as -y, -ies, etc) are removed during indexing so they won't affect search results
+      <li class='contenttext'>Different product fields can be weighted differently when indexing
+    </ul>
+    <li class='contenttext'>Product category browse
+    <ul>
+      <li class='contenttext'>Expandable browse tree shows current category context in the left column on relevent pages (by default)
+      <li class='contenttext'>Products in a category can be layed out with different templates assigned to different categories, and different sub-templates assigned to different products
+      <li class='contenttext'>By default 10 products are shown at a time and you can go to previous and next pages (these settings are easily changed)
+      <li class='contenttext'>Products can belong to multiple categories
+      <li class='contenttext'>Sub-categories can belong to multiple parent categories
+      <li class='contenttext'>Root browse category will change automatically based on the settings associated with the active catalog
+      <li class='contenttext'>All product, category and catalog associations are effective dated with from and thru dates
+    </ul>
+    <li class='contenttext'>Product detail view
+    <ul>
+      <li class='contenttext'>Displays large product image (if one is specified), with a link to the detail image (if one is specified)
+      <li class='contenttext'>Displays all relevant product information including name, short &amp; long descriptions, price, whether or not inventory is available, etc
+      <li class='contenttext'>Displays all cross-sells, up-sells, products deprecated by this product, products that deprecate this product, and any other desired associated product through simple template changes
+      <li class='contenttext'>For products with variants (aka "virtual" products) shows drop downs for each feature type that is associated as a selectable feature; to handle available feature combinations shows all avilable in the first drop down, and each additional one is populated when a selection in a previous drop-down has been chosen
+      <li class='contenttext'>For products with variants can display small images for each of the features of the first selectable feature type; a useful application of this is having the color be the first selectable feature type and having small images for each different color; when large images are associated with the variant products the large image will change as corresponding features are selected in the drop-down(s)
+      <li class='contenttext'>Displays links to previous and next products in the current category for easy browsing through the details of a given category
+    </ul>
+    <li class='contenttext'>Special categories
+    <ul>
+      <li class='contenttext'>Shown on special pages like the main page
+      <li class='contenttext'>Examples include top 10 most popular, promoted items, new items, etc.
+      <li class='contenttext'>These categories are attached to the active catalog
+    </ul>
+    <li class='contenttext'>Cross-sells and up-sells
+    <ul>
+      <li class='contenttext'>Modeled as special types of product associations
+      <li class='contenttext'>Can also include product deprecations, marketing packages, etc
+      <li class='contenttext'>Shown on the product detail page for each product
+    </ul>
+    <li class='contenttext'>Shopping cart random cross-sells
+    <ul>
+      <li class='contenttext'>Random cross-sells are chosen from all items currently in the shopping cart
+      <li class='contenttext'>Shown three at a time; when more than three unique products are avilable a different set is chosen on each new page
+      <li class='contenttext'>As a product is added to the shopping cart it is no longer shown
+      <li class='contenttext'>Displayed on the shopping cart detail page
+      <li class='contenttext'>Displayed in a small box in the right column underneath the mini shopping cart on relevant pages (by default)
+    </ul>
+    <li class='contenttext'>Quick re-order
+    <ul>
+      <li class='contenttext'>Re-order list built from products previously ordered
+      <li class='contenttext'>List is weighted by quantity ordered and frequency of ordering
+      <li class='contenttext'>Default re-order quantity is an average of all quantities previous ordered for a given product
+      <li class='contenttext'>Only the top five are shown at any given time
+      <li class='contenttext'>As a product is added to the shopping cart it is no longer shown
+      <li class='contenttext'>Displayed in a small box at the bottom of the right column on relevant pages (by default)
+    </ul>
+  </ul>
+  <li class='contenttext'>Rule Based Promotions
+  <ul>
     <li class='contenttext'>
   </ul>
-  <li class='contenttext'>Promotions & Pricing
+  <li class='contenttext'>Rule Based Pricing
   <ul>
     <li class='contenttext'>
   </ul>
