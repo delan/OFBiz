@@ -152,6 +152,7 @@
                     if (currentOrderIndex < 0 || value == "")
                         return;
                     if (currentOrderIndex < (OPT.length - 1)) {
+                        alert("current index is less then max");
                         if (IMG[value] != null) {
                             document.images['mainImage'].src = IMG[value];
                             document.addform.<%=topLevelName%>.selectedIndex = (value*1)+1;
