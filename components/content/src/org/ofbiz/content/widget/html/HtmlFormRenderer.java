@@ -723,14 +723,19 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderMultiFormClose(StringBuffer buffer, Map context, ModelForm modelForm) {
-        String rowCount = modelForm.getRowCount(context);
+        String rowCount = modelForm.getPassedRowCount(context);
         if (UtilValidate.isEmpty(rowCount)) {
-            Integer itemIdx = (Integer)context.get("itemIndex");   
-            rowCount = Integer.toString(itemIdx.intValue() + 1);
+            int rCount = modelForm.getRowCount();
+            rowCount = Integer.toString(rCount);
         }
         if (UtilValidate.isNotEmpty(rowCount)) {
         	buffer.append("<input type=\"hidden\" name=\"_rowCount\" value=\"" + rowCount + "\"/>");
         }
+        boolean useRowSubmit = modelForm.getUseRowSubmit();
+        if (useRowSubmit) {
+        	buffer.append("<input type=\"hidden\" name=\"_useRowSubmit\" value=\"Y\"/>");
+        }
+        
         ModelFormField submitField = modelForm.getMultiSubmitField();
         if (submitField != null) {
 
