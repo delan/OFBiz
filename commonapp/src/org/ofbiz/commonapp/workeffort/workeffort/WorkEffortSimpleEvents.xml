@@ -30,7 +30,6 @@
  -->
 <simple-events>
     <simple-event event-name="createWorkEffort" short-description="Create Work Effort">
-        <parameter-map map-name="parameters"/>
         <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
                 processor-name="update" in-map-name="parameters" out-map-name="context"/>
         <check-errors>
@@ -44,7 +43,6 @@
             <result-to-request result-name="workEffortId"/></service>
     </simple-event>
     <simple-event event-name="updateWorkEffort" short-description="Update Work Effort">
-        <parameter-map map-name="parameters"/>
         <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
                 processor-name="update" in-map-name="parameters" out-map-name="context"/>
         <check-errors>
@@ -57,7 +55,6 @@
             <default-message>Work Effort successfully updated.</default-message></service>
     </simple-event>
     <simple-event event-name="deleteWorkEffort" short-description="Update Work Effort">
-        <parameter-map map-name="parameters"/>
         <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
                 processor-name="delete" in-map-name="parameters" out-map-name="context"/>
         <check-errors>
