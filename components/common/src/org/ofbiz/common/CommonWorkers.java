@@ -1,5 +1,5 @@
 /*
- * $Id: CommonWorkers.java,v 1.1 2003/08/17 10:12:40 jonesde Exp $
+ * $Id: CommonWorkers.java,v 1.2 2003/11/27 17:42:42 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.entity.GenericValue;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class CommonWorkers {
@@ -118,5 +118,25 @@ public class CommonWorkers {
             Debug.logError(e, "Cannot lookup Geo", module);
         }                        
         return geoList;            
+    }    
+
+    /**
+     * Returns a list of regional geo associations.
+     */
+    public static List getAssociatedStateList(GenericDelegator delegator, String country) {
+      if ( country == null || country.length() == 0 ) {
+        // Load the system default country
+        country = UtilProperties.getPropertyValue("general.properties", "country.uom.id.default");
+      }
+      List geoList = new ArrayList();
+      Map geoAssocFindMap = UtilMisc.toMap("geoId", country, "geoAssocTypeId","REGIONS");
+      List sortList = UtilMisc.toList("geoIdTo");
+      try {
+          geoList = delegator.findByAndCache("GeoAssoc", geoAssocFindMap, sortList);
+      } catch (GenericEntityException e) {
+          Debug.logError(e, "Cannot lookup Geo", module);
+      }                        
+      return geoList;            
+
     }    
 }
