@@ -71,9 +71,10 @@ import org.apache.commons.collections.map.LRUMap;
 public class ServiceDispatcher {
 
     public static final String module = ServiceDispatcher.class.getName();
+    public static final int lruLogSize = 2;
 
+    protected static Map runLog = new LRUMap(lruLogSize);
     protected static Map dispatchers = new HashMap();
-    protected static Map runLog = new LRUMap(200);
     protected static boolean enableJM = true;
     protected static boolean enableJMS = true;
     protected static boolean enableSvcs = true;
@@ -250,8 +251,7 @@ public class ServiceDispatcher {
         boolean isError = false;
 
         // set up the running service log
-        RunningService rs = new RunningService(localName, modelService, GenericEngine.SYNC_MODE);
-        runLog.put(rs, this);
+        RunningService rs = this.logService(localName, modelService, GenericEngine.SYNC_MODE);
 
         // check the locale
         Locale locale = this.checkLocale(context);
@@ -472,8 +472,7 @@ public class ServiceDispatcher {
         boolean isError = false;
 
         // set up the running service log
-        RunningService rs = new RunningService(localName, service, GenericEngine.ASYNC_MODE);
-        runLog.put(rs, this);
+        this.logService(localName, service, GenericEngine.ASYNC_MODE);
 
         // check the locale
         Locale locale = this.checkLocale(context);
@@ -859,6 +858,26 @@ public class ServiceDispatcher {
         }
 
         return servicesScheduled;
+    }
+
+    private RunningService logService(String localName, ModelService modelService, int mode) {
+        // set up the running service log
+        RunningService rs = new RunningService(localName, modelService, mode);
+        if (runLog == null) {
+            runLog = new LRUMap(lruLogSize);
+        }
+        try {
+            runLog.put(rs, this);
+        } catch (Throwable t) {
+            Debug.logWarning("LRUMap problem; resetting LRU [" + runLog.size() + "]", module);
+            runLog = new LRUMap(lruLogSize);
+            try {
+                runLog.put(rs, this);
+            } catch (Throwable t2) {
+                Debug.logError(t2, "Unable to put() in reset LRU map!", module);
+            }
+        }
+        return rs;
     }
 
     /**
