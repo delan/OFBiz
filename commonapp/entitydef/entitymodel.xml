@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Mon Sep 10 16:27:55 PDT 2001
+ *@created    Mon Sep 10 16:43:38 PDT 2001
  *@version    1.0
  */
 -->
@@ -7519,9 +7519,9 @@
       <field><col-name>PRODUCT_ID</col-name><type>id-ne</type></field>
       <field><col-name>PRIMARY_PRODUCT_CATEGORY_ID</col-name><type>id</type></field>
       <field><col-name>MANUFACTURER_PARTY_ID</col-name><type>id</type></field>
-      <field><col-name>INTRODUCTION_DATE</col-name><type>date-time</type></field>
-      <field><col-name>SALES_DISCONTINUATION_DATE</col-name><type>date-time</type></field>
-      <field><col-name>SUPPORT_DISCONTINUATION_DATE</col-name><type>date-time</type></field>
+      <field><col-name>INTRODUCTION_DATE</col-name><type>date</type></field>
+      <field><col-name>SALES_DISCONTINUATION_DATE</col-name><type>date</type></field>
+      <field><col-name>SUPPORT_DISCONTINUATION_DATE</col-name><type>date</type></field>
       <field><col-name>NAME</col-name><type>name</type></field>
       <field><col-name>COMMENT</col-name><type>comment</type></field>
       <field><col-name>DESCRIPTION</col-name><type>description</type></field>
