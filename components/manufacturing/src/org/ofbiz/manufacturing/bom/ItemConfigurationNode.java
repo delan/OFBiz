@@ -38,6 +38,7 @@ public class ItemConfigurationNode {
     private ArrayList children; // current node's children (ProductAssocs)
     private ArrayList childrenNodes; // current node's children nodes (ItemConfigurationNode)
     private float quantityMultiplier; // the necessary quantity as declared in the bom (from ProductAssocs or ProductManufacturingRule)
+    private float scrapFactor; // the scrap factor as declared in the bom (from ProductAssocs)
     // Runtime fields
     private int depth; // the depth of this node in the current tree
     private float quantity; // the quantity of this node in the current tree
@@ -51,6 +52,7 @@ public class ItemConfigurationNode {
         productForRules = null;
         bomTypeId = null;
         quantityMultiplier = 1;
+        scrapFactor = 1;
         // Now we initialize the fields used in breakdowns
         depth = 0;
         quantity = 0;
@@ -158,6 +160,17 @@ public class ItemConfigurationNode {
             oneChildNode.setQuantityMultiplier(node.getDouble("quantity").floatValue());
         } catch(NumberFormatException nfe) {
             oneChildNode.setQuantityMultiplier(1);
+        }
+        try {
+            float percScrapFactor = node.getDouble("scrapFactor").floatValue();
+            if (percScrapFactor != 0) {
+                percScrapFactor = percScrapFactor / 100;
+            } else {
+                percScrapFactor = 1;
+            }
+            oneChildNode.setScrapFactor(percScrapFactor);
+        } catch(NumberFormatException nfe) {
+            oneChildNode.setScrapFactor(1);
         }
         ItemConfigurationNode newNode = oneChildNode;
         // CONFIGURATOR
@@ -341,7 +354,7 @@ public class ItemConfigurationNode {
         // Now we set the depth and quantity of the current node
         // in this breakdown.
         this.depth = depth;
-        this.quantity = quantity * quantityMultiplier;
+        this.quantity = quantity * quantityMultiplier * scrapFactor;
         // First of all we visit the corrent node.
         arr.add(this);
         // Now (recursively) we visit the children.
@@ -507,6 +520,22 @@ public class ItemConfigurationNode {
      */
     public void setRuleApplied(org.ofbiz.entity.GenericValue ruleApplied) {
         this.ruleApplied = ruleApplied;
+    }
+    
+    /** Getter for property scrapFactor.
+     * @return Value of property scrapFactor.
+     *
+     */
+    public float getScrapFactor() {
+        return scrapFactor;
+    }
+    
+    /** Setter for property scrapFactor.
+     * @param scrapFactor New value of property scrapFactor.
+     *
+     */
+    public void setScrapFactor(float scrapFactor) {
+        this.scrapFactor = scrapFactor;
     }
     
 }
