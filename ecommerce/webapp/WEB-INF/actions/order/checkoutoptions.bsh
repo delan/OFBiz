@@ -47,7 +47,7 @@ if (cart != null) {
 context.put("shoppingCart", cart);
 context.put("userLogin", userLogin);
 context.put("checkOutPaymentId", checkOutPaymentId);
-context.put("carrierShipmentMethodList", delegator.findAllCache("CarrierShipmentMethod", UtilMisc.toList("sequenceNumber")));
+context.put("carrierShipmentMethodList", delegator.findByAndCache("CarrierShipmentMethod", UtilMisc.toMap("display", "Y"), UtilMisc.toList("sequenceNumber")));
 context.put("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));   
 context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod"), true)); 
 context.put("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
