@@ -474,9 +474,8 @@ public class PosTransaction {
             Debug.logError(e, module);
             throw e;
         }
-        Debug.log("Process Payment Resp : " + payRes, module);
 
-        if (payRes != null && ServiceUtil.isError(payRes)) {
+        if (payRes != null && ServiceUtil.isError(payRes)) {         
             throw new GeneralException(ServiceUtil.getErrorMessage(payRes));
         }
 
