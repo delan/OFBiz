@@ -8,6 +8,7 @@
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
 <%
+    boolean findAll = false;
     String searchString = "";
     if (request.getParameter("first_name") != null || request.getParameter("last_name") != null) {
         searchString += "first_name=" + request.getParameter("first_name") + "&last_name=" + request.getParameter("last_name");
@@ -24,6 +25,13 @@
         if (searchString.length() > 0) searchString += "&";
         searchString += "userlogin_id=" + request.getParameter("userlogin_id");
     }
+    if (request.getParameter("findAll") != null) {
+    	String findAllParties = request.getParameter("findAll");
+    	if (findAllParties != null && findAllParties.equalsIgnoreCase("true"))
+    		findAll = true;
+        if (searchString.length() > 0) searchString += "&";
+        searchString += "findAll=" + request.getParameter("findAll");
+    }
 
     Collection parties = null;
 
@@ -35,6 +43,15 @@
         parties = lastParties;
         pageContext.setAttribute("parties", parties);
         Debug.logInfo("Got parties from cache, size is " + parties.size());
+    } else if (findAll) {
+        List allparties = delegator.findAll("Party");
+        Iterator partyIter = allparties.iterator();
+        List partyList = new LinkedList();
+        while (partyIter.hasNext()) {
+            GenericValue p = (GenericValue) partyIter.next();
+            partyList.add(UtilMisc.toMap("party", p));
+        }            
+        pageContext.setAttribute("parties", partyList);
     } else {
 %>
         <ofbiz:if name="first_name">
@@ -122,7 +139,11 @@
               <td width="40%">
                 <input type="text" name="party_id" size="20" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("party_id"))%>'>
               </td>
-              <td width="35%"><a href="javascript:document.viewprofileform.submit()" class="buttontext">[Lookup]</a></td>
+              <td width="35%">
+                <a href="javascript:document.viewprofileform.submit()" class="buttontext">[Lookup]</a>
+                &nbsp;
+                <a href="<ofbiz:url>/findparty?findAll=true</ofbiz:url>" class="buttontext">[Find All]</a>
+              </td>
             </tr>
           </form>
 
