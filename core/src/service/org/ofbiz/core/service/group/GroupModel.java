@@ -44,6 +44,8 @@ public class GroupModel {
     private List services;
     private int lastServiceRan;
     
+    /**
+     * Constructor using DOM Element     * @param group DOM element for the group     */
     public GroupModel(Element group) {
         this.lastServiceRan = -1;
         this.services = new LinkedList();
@@ -58,6 +60,8 @@ public class GroupModel {
         if (Debug.verboseOn()) Debug.logVerbose("Created Service Group Model --> " + this, module);       
     }
     
+    /**
+     * Basic Constructor     * @param groupName Name of the group     * @param sendMode Mode used (see DTD)     * @param services List of GroupServiceModel objects     */
     public GroupModel(String groupName, String sendMode, List services) {
         this.lastServiceRan = -1;
         this.groupName = groupName;
@@ -65,18 +69,26 @@ public class GroupModel {
         this.services = services;
     }
     
+    /**
+     * Getter for group name     * @return String     */
     public String getGroupName() {
         return this.groupName;
     }
     
+    /**
+     * Getter for send mode     * @return String     */
     public String getSendMode() {
         return this.sendMode;
     }
     
+    /**
+     * Returns a list of services in this group     * @return List     */
     public List getServices() {
         return this.services;
     }
     
+    /**
+     * Invokes the group of services in order defined     * @param dispatcher ServiceDispatcher used for invocation     * @param localName Name of the LocalDispatcher (namespace)     * @param context Full parameter context (combined for all services)     * @return Map Result Map     * @throws GenericServiceException     */
     public Map run(ServiceDispatcher dispatcher, String localName, Map context) throws GenericServiceException {
         if (this.getSendMode().equals("all")) {
             return runAll(dispatcher, localName, context);
@@ -92,6 +104,7 @@ public class GroupModel {
         }
     }
     
+    /**          * @see java.lang.Object#toString()     */
     public String toString() {
         StringBuffer str = new StringBuffer();
         str.append(getGroupName());

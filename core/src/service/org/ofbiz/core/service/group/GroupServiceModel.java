@@ -27,6 +27,7 @@ import java.util.*;
 import org.w3c.dom.*;
 
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.util.*;
 
 /**
  * GroupServiceModel.java
@@ -36,39 +37,58 @@ import org.ofbiz.core.service.*;
  * @version    $Revision$
  */
 public class GroupServiceModel {
+    
+    public static final String module = GroupServiceModel.class.getName();
 
     private String serviceName, serviceMode;
     
+    /**
+     * Constructor using DOM element     * @param service DOM element for the service     */
     public GroupServiceModel(Element service) {
         this.serviceName = service.getAttribute("name");
         this.serviceMode = service.getAttribute("mode");
     }  
     
+    /**
+     * Basic constructor     * @param serviceName name of the service     * @param serviceMode service invocation mode (sync|async)     */
     public GroupServiceModel(String serviceName, String serviceMode) {
         this.serviceName = serviceName;
         this.serviceMode = serviceMode;
     }  
     
+    /**
+     * Getter for the service mode     * @return String     */
     public String getMode() {
         return this.serviceMode;
     }
     
+    /**
+     * Getter for the service name     * @return String     */
     public String getName() {
         return this.serviceName;
     }  
     
+    /**
+     * Invoker method to invoke this service     * @param dispatcher ServiceDispatcher used for this invocation     * @param localName Name of the LocalDispatcher used     * @param context Context for this service (will use only valid parameters)     * @return Map result Map     * @throws GenericServiceException     */
     public Map invoke(ServiceDispatcher dispatcher, String localName, Map context) throws GenericServiceException {
         DispatchContext dctx = dispatcher.getLocalContext(localName);
         ModelService model = dctx.getModelService(getName());
         Map thisContext = model.makeValid(context, ModelService.IN_PARAM);
         if (getMode().equals("async")) {
-            dispatcher.runAsync(localName, model, thisContext, false);
-            return new HashMap();
+            List requiredOut = model.getParameterNames(ModelService.OUT_PARAM, false);
+            if (requiredOut.size() > 0) {
+                Debug.logWarning("Grouped service (" + getName() + ") requested 'async' invocation; running sync because of required OUT parameters.", module);
+                return dispatcher.runSync(localName, model, thisContext);
+            } else {
+                dispatcher.runAsync(localName, model, thisContext, false);
+                return new HashMap();
+            }
         } else {
             return dispatcher.runSync(localName, model, thisContext);
         }
     }
            
+    /**          * @see java.lang.Object#toString()     */           
     public String toString() {
         StringBuffer str = new StringBuffer();
         str.append(getName());
