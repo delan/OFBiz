@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 
@@ -163,6 +163,7 @@ function removeSelected() {
 <#else>                            
 <form name="returnItems" method="post" action="<@ofbizUrl>/createReturnItems</@ofbizUrl>">
   <input type="hidden" name="returnId" value="${requestParameters.returnId}">
+  <input type="hidden" name="_useRowSubmit" value="Y">
   <table border='0' width='100%' cellpadding='2' cellspacing='0'>
     <tr>
       <td colspan="8"><div class="head3">Return Item(s) From Order #${requestParameters.orderId}</div></td>
