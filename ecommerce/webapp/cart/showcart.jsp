@@ -1,11 +1,15 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*, org.ofbiz.core.entity.*" %>
+<%@ page import="java.util.*, org.ofbiz.ecommerce.catalog.*" %>
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <ofbiz:object name="cart" property="_SHOPPING_CART_" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCart" />  
 <%if(cart != null && cart.size() > 0) {%>
   <%pageContext.setAttribute("cartIter", cart.iterator());%>
   <%org.ofbiz.ecommerce.catalog.CatalogWorker.getRandomCartProductAssoc(pageContext, "associatedProducts");%>
 <%}%>
+<%-- get these for the promoText --%>
+<%pageContext.setAttribute("productPromos", ProductPromoWorker.getCatalogProductPromos(delegator, request));%>
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -181,6 +185,49 @@
   </TR>
 --%>
 </TABLE>
+
+ <ofbiz:if name="productPromos" size="0">
+  <BR>
+  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+    <TR>
+      <TD width='100%'>
+        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+          <tr>
+            <td valign="middle" align="left">
+              <div class="boxhead">&nbsp;Special Offers:</div>
+            </td>
+            <td valign="middle" align="right">&nbsp;</td>
+          </tr>
+        </table>
+      </TD>
+    </TR>
+    <TR>
+      <TD width='100%'>
+        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+          <tr>
+            <td>
+    <table width='100%' cellspacing="0" cellpadding="1" border="0">
+      <%int listIndex = 1;%>
+      <!-- random complementary products -->
+      <ofbiz:iterator name="productPromo" property="productPromos">
+        <%if(listIndex > 1) {%>
+          <tr><td><hr class='sepbar'></td></tr>
+        <%}%>
+        <tr>
+          <td>
+            <div class='tabletext'><%=UtilFormatOut.checkNull(productPromo.getString("promoText"))%></div>
+          </td>
+        </tr>
+        <%listIndex++;%>
+      </ofbiz:iterator>
+    </table>
+            </td>
+          </tr>
+        </table>
+      </TD>
+    </TR>
+  </TABLE>
+ </ofbiz:if>
 
  <ofbiz:if name="associatedProducts" size="0">
   <BR>

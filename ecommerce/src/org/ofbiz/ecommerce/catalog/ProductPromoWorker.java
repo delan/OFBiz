@@ -45,6 +45,22 @@ import org.ofbiz.ecommerce.shoppingcart.*;
  */
 public class ProductPromoWorker {
 
+    public static List getCatalogProductPromos(GenericDelegator delegator, ServletRequest request) {
+        List productPromos = new LinkedList();
+        try {
+            GenericValue prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", CatalogWorker.getCurrentCatalogId(request)));
+            Iterator prodCatalogPromoAppls = UtilMisc.toIterator(EntityUtil.filterByDate(prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum"))));
+            while (prodCatalogPromoAppls != null && prodCatalogPromoAppls.hasNext()) {
+                GenericValue prodCatalogPromoAppl = (GenericValue) prodCatalogPromoAppls.next();
+                GenericValue productPromo = prodCatalogPromoAppl.getRelatedOneCache("ProductPromo");
+                if (productPromo != null) productPromos.add(productPromo);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+        }
+        return productPromos;
+    }
+    
     public static void doPromotions(String prodCatalogId, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator, LocalDispatcher dispatcher) {
         if (cartItem.getQuantity() == oldQuantity) {
             //no change, just return
