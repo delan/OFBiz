@@ -232,8 +232,8 @@ public class CheckOutEvents {
         if (affiliateId != null) context.put("affiliateId", affiliateId);
         
         // check for an order via order mgr
-        String partyId = session.getAttribute("orderPartyId") != null ? (String) session.getAttribute("orderPartyId") :
-        		userLogin.getString("partyId");
+        String partyId = session.getAttribute("orderPartyId") != null ? 
+            (String) session.getAttribute("orderPartyId") : userLogin.getString("partyId");
                
         context.put("grandTotal", grandTotal);
         context.put("userLogin", userLogin);

@@ -299,17 +299,23 @@ public class OrderServices {
             }
         }
 
-        // set the roles
-        final String[] USER_ORDER_ROLE_TYPES = {"END_USER_CUSTOMER", "SHIP_TO_CUSTOMER",
-                "BILL_TO_CUSTOMER", "PLACING_CUSTOMER"};
-
-        for (int i = 0; i < USER_ORDER_ROLE_TYPES.length; i++) {
-            // make sure the party is in the role before adding it...
-            toBeStored.add(delegator.makeValue("PartyRole", 
-            		UtilMisc.toMap("partyId", partyId, "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
-                                                
-            toBeStored.add(delegator.makeValue("OrderRole", 
-            		UtilMisc.toMap("orderId", orderId, "partyId", partyId, "roleTypeId", USER_ORDER_ROLE_TYPES[i])));                                                                        
+        // set the roles for a sales order
+        if (order.getString("orderTypeId").equals("SALES_ORDER")) {        
+            final String[] USER_ORDER_ROLE_TYPES = {"END_USER_CUSTOMER", "SHIP_TO_CUSTOMER",
+                    "BILL_TO_CUSTOMER", "PLACING_CUSTOMER"};
+    
+            for (int i = 0; i < USER_ORDER_ROLE_TYPES.length; i++) {
+                // make sure the party is in the role before adding it...
+                toBeStored.add(delegator.makeValue("PartyRole", 
+                		UtilMisc.toMap("partyId", partyId, "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
+                                                    
+                toBeStored.add(delegator.makeValue("OrderRole", 
+                		UtilMisc.toMap("orderId", orderId, "partyId", partyId, "roleTypeId", USER_ORDER_ROLE_TYPES[i])));                                                                        
+            }
+            
+            // TODO: set some BILL_FROM roles
+        } else {
+            // TODO: set the purchase order roles
         }
 
         // set the affiliate -- This is going to be removed...
