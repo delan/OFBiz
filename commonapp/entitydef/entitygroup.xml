@@ -723,7 +723,6 @@
   <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz.commonapp" entity="CarrierShipmentMethod" />
-    <entity-group group="org.ofbiz.commonapp" entity="PackagingContent" />
     <entity-group group="org.ofbiz.commonapp" entity="Shipment" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentContactMech" />
@@ -734,6 +733,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentItemFeature" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentMethodType" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentPackage" />
+    <entity-group group="org.ofbiz.commonapp" entity="ShipmentPackageContent" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentStatus" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentType" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentTypeAttr" />
