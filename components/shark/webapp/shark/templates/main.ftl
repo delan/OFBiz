@@ -23,7 +23,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier.Heintz@nereide.biz (migration to UiLabelMap)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -87,7 +87,7 @@ ${pages.get("/includes/appbar.ftl")}
         <tr>
           <#if page.leftbar?exists>${pages.get(page.leftbar)}</#if>
           <td width="100%" valign="top" align="left">
-            ${common.get("/includes/errormsg.ftl")}
+            ${common.get("/includes/messages.ftl")}
             ${pages.get(page.path)}
           </td>
           <#if page.rightbar?exists>${pages.get(page.rightbar)}</#if>

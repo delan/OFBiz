@@ -21,15 +21,16 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.14 2004/06/07 23:13:05 byersa Exp $
+ *  $Id: ofbiz-component.xml,v 1.15 2004/07/28 03:40:37 jonesde Exp $
 -->
 
 <ofbiz-component name="content">
     <resource-loader name="main" type="component"/>
-    <classpath type="jar" location="lib/*"/>       
-    <classpath type="jar" location="build/lib/*"/>
+    <classpath type="dir" location="dtd"/>
     <classpath type="dir" location="config"/>
     <classpath type="dir" location="script"/>
+    <classpath type="jar" location="lib/*"/>       
+    <classpath type="jar" location="build/lib/*"/>
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/ContentTypeData.xml"/>
@@ -41,10 +42,10 @@
     <entity-resource type="data" reader-name="main" loader="main" location="data/UsersData.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
-	<webapp name="content"
-    	    title="Content" 
-    	    server="default-server" 
-    	    location="webapp/content"
+    <webapp name="content"
+            title="Content" 
+            server="default-server" 
+            location="webapp/content"
             base-permission="CONTENTMGR"
-    	    mount-point="/content"/>
+            mount-point="/content"/>
 </ofbiz-component>

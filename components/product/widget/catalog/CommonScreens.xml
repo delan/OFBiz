@@ -3,19 +3,85 @@
 
 
 <screens>
-	<screen name="main">
-		<actions>
-			<script location="component://product/widget/catalog/catalogsetup.bsh"/>
-			<set field="layoutSettings.companyName" from-field="uiLabelMap.CatalogCompanyName" global="true"/>
-			<set field="layoutSettings.companySubtitle" from-field="uiLabelMap.ProductCompanySubtitle" global="true"/>
-			<set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.jpg" global="true"/>
-			<!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
-			<!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
+    <screen name="main">
+        <actions>
+            <script location="component://product/widget/catalog/catalogsetup.bsh"/>
+            <set field="layoutSettings.companyName" from-field="uiLabelMap.CatalogCompanyName" global="true"/>
+            <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.ProductCompanySubtitle" global="true"/>
+            <set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.jpg" global="true"/>
+            <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
+            <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
             <set field="activeApp" value="catalogmgr" global="true"/>
-		</actions>
-		<section>
-			<decorator-section-include name="body"/>
-		</section>
-	</screen>
+        </actions>
+        <section>
+            <!-- render header -->
+            <platform-specific><html><html-template location="component://common/webcommon/includes/header.ftl"/></html></platform-specific>
+            <!-- render appbar -->
+            <platform-specific><html><html-template location="component://common/webcommon/includes/appbar.ftl"/></html></platform-specific>
+            
+            <container style="centerarea">
+                <!-- render appheader -->
+                <platform-specific><html><html-template location="component://product/webapp/catalog/includes/appheader.ftl"/></html></platform-specific>
+                
+                <container style="contentarea">
+                    <!-- TODO: render left-bar only if leftbarScreen value defined -->
+                    <include-screen name="${leftbarScreen}"/>
+                
+                	   <container style="columncenter">
+                        <!-- render messages -->
+                        <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
+                        <decorator-section-include name="body"/>
+                    </container>
+                </container>
+            </container>
+            
+            <!-- render footer -->
+            <platform-specific><html><html-template location="component://common/webcommon/includes/footer.ftl"/></html></platform-specific>
+        </section>
+    </screen>
+
+    <screen name="leftbar">
+        <section>
+            <container style="columnleft">
+                <include-screen name="keywordsearchbox"/>
+                <container style="spacer"/>
+                <include-screen name="sidecatalogs"/>
+                <include-screen name="sidedeepcategory"/>
+                <include-screen name="miniproductlist"/>
+            </container>
+        </section>
+    </screen>
+    <screen name="keywordsearchbox">
+        <actions>
+            <script location="component://product/webapp/catalog/WEB-INF/actions/find/keywordsearchbox.bsh"/>
+        </actions>
+        <section>
+            <platform-specific><html><html-template location="component://product/webapp/catalog/find/keywordsearchbox.ftl"/></html></platform-specific>
+        </section>
+    </screen>
+    <screen name="sidecatalogs">
+        <actions>
+            <script location="component://product/webapp/catalog/WEB-INF/actions/find/sidecatalogs.bsh"/>
+        </actions>
+        <section>
+            <platform-specific><html><html-template location="component://product/webapp/catalog/find/sidecatalogs.ftl"/></html></platform-specific>
+        </section>
+    </screen>
+    <screen name="sidedeepcategory">
+        <actions>
+            <script location="component://product/webapp/catalog/WEB-INF/actions/find/sidedeepcategory.bsh"/>
+        </actions>
+        <section>
+            <platform-specific><html><html-template location="component://product/webapp/catalog/find/sidedeepcategory.ftl"/></html></platform-specific>
+        </section>
+    </screen>
+    <screen name="miniproductlist">
+        <actions>
+            <script location="component://product/webapp/catalog/WEB-INF/actions/find/miniproductlist.bsh"/>
+        </actions>
+        <section>
+            <platform-specific><html><html-template location="component://product/webapp/catalog/find/miniproductlist.ftl"/></html></platform-specific>
+        </section>
+    </screen>
 </screens>
 

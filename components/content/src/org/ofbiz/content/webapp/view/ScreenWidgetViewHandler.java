@@ -1,5 +1,5 @@
 /*
- * $Id: ScreenWidgetViewHandler.java,v 1.2 2004/07/22 05:26:57 jonesde Exp $
+ * $Id: ScreenWidgetViewHandler.java,v 1.3 2004/07/28 03:40:38 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,7 @@ package org.ofbiz.content.webapp.view;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilJ2eeCompat;
@@ -60,7 +62,7 @@ import freemarker.ext.servlet.HttpSessionHashModel;
  * Handles view rendering for the Screen Widget
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class ScreenWidgetViewHandler implements ViewHandler {
@@ -107,6 +109,21 @@ public class ScreenWidgetViewHandler implements ViewHandler {
             context.put("globalContext", context.standAloneStack());
 
             Map parameterMap = UtilHttp.getParameterMap(request);
+            // go through all request attributes and for each name that is not already in the parameters Map add the attribute value
+            Enumeration attrNames = request.getAttributeNames();
+            while (attrNames.hasMoreElements()) {
+                String attrName = (String) attrNames.nextElement();
+                Object param = (String) parameterMap.get(attrName);
+                if (param == null) {
+                    parameterMap.put(attrName, request.getAttribute(attrName));
+                } else if (param instanceof String && ((String) param).length() == 0) {
+                    // also put the attribute value in if the parameter is empty
+                    parameterMap.put(attrName, request.getAttribute(attrName));
+                } else {
+                    // do nothing, just log something
+                    Debug.logInfo("Found request attribute that conflicts with parameter name, leaving request parameter in place for name: " + attrName, module);
+                }
+            }
             context.put("parameters", parameterMap);
 
             context.put("delegator", request.getAttribute("delegator"));
@@ -131,6 +148,7 @@ public class ScreenWidgetViewHandler implements ViewHandler {
             context.put("requestAttributes", new HttpRequestHashModel(request, wrapper));
             TaglibFactory JspTaglibs = new TaglibFactory(servletContext);
             context.put("JspTaglibs", JspTaglibs);
+            context.put("requestParameters", parameterMap);
             
             // this is a dummy object to stand-in for the JPublish page object for backward compatibility
             context.put("page", new HashMap());

@@ -21,19 +21,20 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component-example.xml,v 1.3 2004/07/23 02:08:02 jonesde Exp $
+ *  $Id: ofbiz-component-example.xml,v 1.4 2004/07/28 03:40:41 jonesde Exp $
 -->
 
 <ofbiz-component name="example">
 	<!-- define resource loaders; most common is to use the component resource loader -->
     <resource-loader name="main" type="component"/>
     
-    <!-- load single or multiple external libraries -->
-    <classpath type="jar" location="build/lib/*"/>
-    
     <!-- place the config directory on the classpath to access configuration files -->
     <classpath type="dir" location="config"/>
+    <classpath type="dir" location="dtd"/>
     <classpath type="dir" location="script"/>
+    
+    <!-- load single or multiple external libraries -->
+    <classpath type="jar" location="build/lib/*"/>
     
     <!-- entity resources: model(s), eca(s), group, and data definitions -->
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>

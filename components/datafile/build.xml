@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Datafile Build Script.
- *  $Id: build.xml,v 1.2 2003/08/22 18:21:08 ajzeneski Exp $
+ *  $Id: build.xml,v 1.3 2004/07/28 03:40:39 jonesde Exp $
 -->
 
 <project name="OFBiz - Datafile" default="jar" basedir=".">
@@ -86,9 +86,8 @@
             </classpath>
             <src path="${src.dir}"/>
         </javac>
-        <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes">
-            <fileset dir="${dtd.dir}" includes="*.dtd"/>
+            <!-- don't put the DTDs in the jar file... -->
             <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>                	
     </target>
