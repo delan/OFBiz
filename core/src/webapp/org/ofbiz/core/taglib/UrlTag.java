@@ -44,7 +44,11 @@ import org.ofbiz.core.util.*;
 public class UrlTag extends BodyTagSupport {
 
     public static final String module = UrlTag.class.getName();
-
+    public static String httpsPort = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
+    public static String httpsServer = UtilProperties.getPropertyValue("url.properties", "force.https.host");
+    public static String httpPort = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
+    public static String httpServer = UtilProperties.getPropertyValue("url.properties", "force.http.host");
+    
     public int doEndTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
@@ -65,21 +69,25 @@ public class UrlTag extends BodyTagSupport {
 
         if (useHttps) {
             if (rm.requiresHttps(requestUri) && !request.isSecure()) {
-                String port = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
-                String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
+                String server = httpsServer;
+                if (server == null || server.length() == 0) {
+                    server = request.getServerName();
+                }
                 newURL.append("https://");
                 newURL.append(server);
-                if (!port.equals("443"))
-                    newURL.append(":" + port.trim());
-            }
-
-            else if (!rm.requiresHttps(requestUri) && request.isSecure()) {
-                String port = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
-                String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
+                if (!httpsPort.equals("443")) {
+                    newURL.append(":" + httpsPort);
+                }
+            } else if (!rm.requiresHttps(requestUri) && request.isSecure()) {
+                String server = httpServer;
+                if (server == null || server.length() == 0) {
+                    server = request.getServerName();
+                }
                 newURL.append("http://");
                 newURL.append(server);
-                if (!port.equals("80"))
-                    newURL.append(":" + port.trim());
+                if (!httpPort.equals("80")) {
+                    newURL.append(":" + httpPort);
+                }
             }
         }
 

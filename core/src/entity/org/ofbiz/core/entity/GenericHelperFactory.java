@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity;
 
+import java.util.*;
 import org.w3c.dom.Element;
 
 import org.ofbiz.core.util.*;
@@ -38,7 +39,8 @@ import org.ofbiz.core.entity.config.*;
  */
 public class GenericHelperFactory {
 
-    static UtilCache helperCache = new UtilCache("entity.GenericHelpers", 0, 0);
+    //protected static UtilCache helperCache = new UtilCache("entity.GenericHelpers", 0, 0);
+    protected static Map helperCache = new HashMap();
 
     public static GenericHelper getHelper(String helperName) {
         GenericHelper helper = (GenericHelper) helperCache.get(helperName);
