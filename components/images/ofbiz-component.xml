@@ -21,10 +21,10 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.2 2003/08/20 19:39:53 ajzeneski Exp $
+ *  $Id: ofbiz-component.xml,v 1.3 2003/08/27 18:12:56 jonesde Exp $
 -->
 
-<ofbiz-component name="example">	
+<ofbiz-component name="images">	
     <resource-loader name="main" type="component"/>              
     <webapp name="images" 
     	    title="Images" 
