@@ -1,9 +1,30 @@
 package org.ofbiz.core.entity;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
+
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+//needed for XML writing with Crimson
+import org.apache.crimson.tree.*;
+//needed for XML writing with Xerces
+//import org.apache.xml.serialize.*;
 
 /**
  * <p><b>Title:</b> Generic Entity Value Object
@@ -181,8 +202,13 @@ public class GenericEntity implements Serializable {
     return result;
   }
   
-  //might be nice to add some ClassCastException handling...
-  public String getString(String name) { return (String)get(name); }
+  //might be nice to add some ClassCastException handling... and auto conversion? hmmm...
+  public String getString(String name) { 
+    Object object = get(name);
+    if(object == null) return null;
+    if(object instanceof java.lang.String) return (String)object;
+    else return object.toString();
+  }
   public java.sql.Timestamp getTimestamp(String name) { return (java.sql.Timestamp)get(name); }
   public java.sql.Time getTime(String name) { return (java.sql.Time)get(name); }
   public java.sql.Date getDate(String name) { return (java.sql.Date)get(name); }
@@ -259,6 +285,87 @@ public class GenericEntity implements Serializable {
       }
     }
     return true;
+  }
+
+  public static void writeXmlDocument(String filename, Collection values) {
+    if(values == null) return;
+
+    Document document = GenericEntity.makeXmlDocument(values);
+    if(document == null) {
+      Debug.logWarning("[GenericEntity.writeXmlDocument] Could not create document, makeXmlDocument return null; aborting.");
+      return;
+    }
+    
+    File outFile = new File(filename);
+    FileOutputStream fos = null;
+    try { 
+      fos = new FileOutputStream(outFile);
+    
+      //Crimson writer
+      XmlDocument xdoc = (XmlDocument) document;
+      xdoc.write(fos);
+
+      //Xerces writer
+      //OutputFormat format = new OutputFormat(document);
+      //format.setIndent(2);
+      //XMLSerializer serializer = new XMLSerializer(fos, format);
+      //serializer.asDOMSerializer();
+      //serializer.serialize(document.getDocumentElement());
+    }
+    catch(java.io.FileNotFoundException e) { Debug.logError(e); }
+    catch(java.io.IOException e) { Debug.logError(e); }
+    finally {
+      try { if(fos != null) fos.close(); }
+      catch(java.io.IOException e) { Debug.logError(e); }
+    }
+  }
+  
+  public static Document makeXmlDocument(Collection values) {
+    if(values == null) return null;
+
+    Document document = null;
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setValidating(true);
+    //factory.setNamespaceAware(true);
+    try {
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      document = builder.newDocument();
+    }
+    catch(Exception e) { Debug.logError(e); }
+    
+    if(document == null) return null;
+    
+    Iterator iter = values.iterator();
+    while(iter.hasNext()) {
+      GenericValue value = (GenericValue)iter.next();
+      value.makeXmlElement(document);
+    }
+    
+    return document;
+  }
+
+  /** Makes an XML Element object with an attribute for each field of the entity
+   *@param document The XML Document that the new Element will be part of
+   *@return org.w3c.dom.Element object representing this generic entity
+   */
+  public Element makeXmlElement(Document document) {
+    Element element = null;
+    if(document != null) element = document.createElement(this.getEntityName());
+    //else element = new ElementImpl(null, this.getEntityName());
+    if(element == null) return null;
+    
+    ModelEntity modelEntity = this.getModelEntity();
+    
+    Iterator modelFields = modelEntity.fields.iterator();
+    while(modelFields.hasNext()) {
+      ModelField modelField = (ModelField)modelFields.next();
+      String name = modelField.name;
+      String value = this.getString(name);
+      if(value == null) value = "";
+      element.setAttribute(name, value);
+    }
+    
+    return element;
   }
   
   /** Determines the equality of two GenericEntity objects, overrides the default equals

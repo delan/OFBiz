@@ -1,9 +1,24 @@
 package org.ofbiz.core.entity;
 
 import java.util.*;
+import java.net.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * <p><b>Title:</b> Server Delegator Class
@@ -694,6 +709,10 @@ public class GenericDelegator {
     }
   }
 
+
+// ======= Cache Related Methods ========  
+
+
   /** Remove a CACHED Generic Entity (Collection) from the cache, either a PK, ByAnd, or All
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param fields The fields of the named entity to query by with their corresponging values
@@ -801,6 +820,79 @@ public class GenericDelegator {
     andCache.put(tempPK, values);
   }
   
+
+// ======= XML Related Methods ========  
+  public Collection readXmlDocument(URL url) {
+    if(url == null) return null;
+    
+    Document document = null;
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setValidating(true);
+    //factory.setNamespaceAware(true);
+    try {
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      document = builder.parse(url.openStream());
+    }
+    catch (SAXException sxe) {
+      // Error generated during parsing)
+      Exception  x = sxe;
+      if(sxe.getException() != null) x = sxe.getException();
+      Debug.logError(x);
+    }
+    catch(ParserConfigurationException pce) {
+      // Parser with specified options can't be built
+      Debug.logError(pce);
+    }
+    catch(java.io.IOException ioe) { Debug.logError(ioe); }
+    
+    return this.makeValues(document);
+  }
+
+  public Collection makeValues(Document document) {
+    if(document == null) return null;
+    Collection values = new LinkedList();
+    
+    Element docElement = document.getDocumentElement();
+    if(docElement == null) return null;
+    docElement.normalize();
+    Node curChild = docElement.getFirstChild();
+
+    if(curChild != null) {
+      do {
+        if(curChild.getNodeType() == Node.ELEMENT_NODE) {
+          Element element = (Element)curChild;
+          GenericValue value = this.makeValue(element);
+          if(value != null) values.add(value);
+        }
+      } while((curChild = curChild.getNextSibling()) != null);
+    }
+    else Debug.logWarning("[GenericDelegator.makeValues] No child nodes found in document.");
+
+    return values;
+  }
+
+  public GenericValue makeValue(Element element) {
+    if(element == null) return null;
+    String entityName = element.getTagName();
+    GenericValue value = this.makeValue(entityName, null);
+
+    ModelEntity modelEntity = value.getModelEntity();
+    
+    Iterator modelFields = modelEntity.fields.iterator();
+    while(modelFields.hasNext()) {
+      ModelField modelField = (ModelField)modelFields.next();
+      String name = modelField.name;
+      String attr = element.getAttribute(name);
+      if(attr != null && attr.length() > 0) value.setString(name, attr);
+    }
+    
+    return value;
+  }
+
+
+// ======= Misc Methods ========  
+
+
   /** Get the next guaranteed unique seq id from the sequence with the given sequence name; if the named sequence doesn't exist, it will be created
    *@param seqName The name of the sequence to get the next seq id from
    *@return Long with the next seq id for the given sequence name
