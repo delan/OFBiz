@@ -136,7 +136,7 @@
                         <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="roleTypeId"/></DIV></TD>
                         <TD><A class='buttontext' href='<ofbiz:url>/activity?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
                             <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
-                        <TD align=right><A class='buttontext' href="<ofbiz:url>/acceptassignment?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>&partyId=<ofbiz:entityfield field="partyId" attribute="workEffort"/>&roleTypeId=<ofbiz:entityfield field="roleTypeId" attribute="workEffort"/>&fromDate=<ofbiz:inputvalue field="fromDate" param="fromDate" entityAttr="workEffort" tryEntityAttr="assignTryEntity"/></ofbiz:url>">
+                        <TD align=right><A class='buttontext' href='<ofbiz:url>/acceptassignment?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>&partyId=<ofbiz:entityfield field="partyId" attribute="workEffort"/>&roleTypeId=<ofbiz:entityfield field="roleTypeId" attribute="workEffort"/>&fromDate=<ofbiz:inputvalue field="fromDate" entityAttr="workEffort"/></ofbiz:url>'>
                             Accept&nbsp;Assignment&nbsp;[<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>]</a></DIV></TD>
                       </TR>
                     </ofbiz:iterator>
@@ -180,11 +180,7 @@
                         <%-- <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="roleTypeId"/></DIV></TD> --%>
                         <TD><A class='buttontext' href='<ofbiz:url>/activity?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
                             <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
-                        <TD align=right><A class='buttontext' href='<ofbiz:url>/acceptassignment?
-                                workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>&
-                                partyId=<ofbiz:entityfield field="partyId" attribute="workEffort"/>&
-                                roleTypeId=<ofbiz:entityfield field="roleTypeId" attribute="workEffort"/>&
-                                fromDate=<ofbiz:inputvalue field="fromDate" param="fromDate" entityAttr="workEffort" tryEntityAttr="assignTryEntity"/></ofbiz:url>'>
+                        <TD align=right><A class='buttontext' href='<ofbiz:url>/acceptassignment?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>&partyId=<ofbiz:entityfield field="partyId" attribute="workEffort"/>&roleTypeId=<ofbiz:entityfield field="roleTypeId" attribute="workEffort"/>&fromDate=<ofbiz:inputvalue field="fromDate" entityAttr="workEffort"/></ofbiz:url>'>
                             Accept&nbsp;Assignment&nbsp;[<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>]</a></DIV></TD>
                       </TR>
                     </ofbiz:iterator>
