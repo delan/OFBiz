@@ -418,10 +418,12 @@ public class LoginEvents {
         HttpSession session = request.getSession();
         String autoUserLoginId = null;
         Cookie[] cookie = request.getCookies();
-        for (int i = 0; i < cookie.length; i++) {
-            if (cookie[i].getName().equals("autoUserLoginId")) {
-                autoUserLoginId = cookie[i].getValue();
-                break;
+        if (cookie != null) {
+            for (int i = 0; i < cookie.length; i++) {
+                if (cookie[i].getName().equals("autoUserLoginId")) {
+                    autoUserLoginId = cookie[i].getValue();
+                    break;
+                }
             }
         }
         return autoLoginCheck(delegator, session, autoUserLoginId);
