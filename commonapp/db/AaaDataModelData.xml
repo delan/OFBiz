@@ -219,7 +219,7 @@
   <Enumeration description="Party" enumCode="PARTY_ID" enumId="PRIP_PARTY_ID" sequenceId="04" enumTypeId="PROD_PRICE_IN_PARAM"/>
   <Enumeration description="Party Group Member" enumCode="PARTY_GROUP_MEMBER" enumId="PRIP_PARTY_GRP_MEM" sequenceId="05" enumTypeId="PROD_PRICE_IN_PARAM"/>
   <Enumeration description="Party Classification" enumCode="PARTY_CLASS" enumId="PRIP_PARTY_CLASS" sequenceId="06" enumTypeId="PROD_PRICE_IN_PARAM"/>
-  <Enumeration description="Role Type" enumCode="PRODUCT_ID" enumId="PRIP_PRODUCT_ID" sequenceId="07" enumTypeId="PROD_PRICE_IN_PARAM"/>
+  <Enumeration description="Role Type" enumCode="ROLE_TYPE" enumId="PRIP_ROLE_TYPE" sequenceId="07" enumTypeId="PROD_PRICE_IN_PARAM"/>
 
   <Enumeration description="Equals" enumCode="EQ" enumId="PRC_EQ" sequenceId="01" enumTypeId="PROD_PRICE_COND"/>
   <Enumeration description="Not Equals" enumCode="NEQ" enumId="PRC_NEQ" sequenceId="02" enumTypeId="PROD_PRICE_COND"/>
