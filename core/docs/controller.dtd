@@ -33,7 +33,8 @@
 	name CDATA #REQUIRED
 	class CDATA #REQUIRED
 >
-<!ELEMENT preprocessor (event+)>
+<!ELEMENT preprocessor (event*)>
+<!ELEMENT postprocessor (event*)>
 <!ELEMENT request-map (description, security, event, response+)>
 <!ATTLIST request-map
 	uri CDATA #REQUIRED
