@@ -44,6 +44,7 @@ public class OrderServices {
     public static Map createOrder(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
+        Collection toBeStored = new LinkedList();
         
         // check to make sure we have something to order
         List orderItems = (List) context.get("orderItems");
@@ -58,37 +59,39 @@ public class OrderServices {
         String shippingInstructions = (String) context.get("shippingInstructions");
         String billingAccountId = (String) context.get("billingAccountId");
         GenericValue order = delegator.makeValue("OrderHeader",
-        UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER",
-        "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
-        "statusId", "ORDERED", "billingAccountId", billingAccountId));
+                UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER",
+                "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
+                "statusId", "ORDERED", "billingAccountId", billingAccountId));
+        toBeStored.add(order);
+        
         
         // add in discount adjustment
         Double cartDiscount = (Double) context.get("cartDiscount");
         if (cartDiscount.doubleValue() != 0.0) {
-            order.preStoreOther(delegator.makeValue("OrderAdjustment",
-            UtilMisc.toMap( "orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(),
-            "orderAdjustmentTypeId", "DISCOUNT_ADJUSTMENT", "orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA,
-            "percentage", cartDiscount)));
+            toBeStored.add(delegator.makeValue("OrderAdjustment",
+                    UtilMisc.toMap( "orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(),
+                    "orderAdjustmentTypeId", "DISCOUNT_ADJUSTMENT", "orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA,
+                    "percentage", cartDiscount)));
         }
         
         // add in shipping adjustment
         Double shipping = (Double) context.get("shippingAmount");
-        order.preStoreOther(delegator.makeValue("OrderAdjustment",
-        UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(),
-        "orderAdjustmentTypeId", "SHIPPING_CHARGES", "orderId", orderId, "orderItemSeqId", null,
-        "amount", shipping)));
+        toBeStored.add(delegator.makeValue("OrderAdjustment",
+                UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(),
+                "orderAdjustmentTypeId", "SHIPPING_CHARGES", "orderId", orderId, "orderItemSeqId", null,
+                "amount", shipping)));
         
         // add in tax adjustment
         Double tax = (Double) context.get("taxAmount");
-        order.preStoreOther(delegator.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId",
-        delegator.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "SALES_TAX",
-        "orderId", orderId, "orderItemSeqId", null, "amount", tax)));
+        toBeStored.add(delegator.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId",
+                delegator.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "SALES_TAX",
+                "orderId", orderId, "orderItemSeqId", null, "amount", tax)));
         
         // set the shipping address
         String shippingContactMechId = (String) context.get("shippingContactMechId");
-        order.preStoreOther(delegator.makeValue("OrderContactMech",
-        UtilMisc.toMap( "contactMechId", shippingContactMechId,
-        "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
+        toBeStored.add(delegator.makeValue("OrderContactMech",
+                UtilMisc.toMap( "contactMechId", shippingContactMechId,
+                "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
         
         // set the shipment preference
         String shipmentMethodTypeId = (String) context.get("shipmentMethodTypeId");
@@ -100,7 +103,7 @@ public class OrderServices {
         "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER" /* XXX */,
         "shippingInstructions", shippingInstructions));
         orderShipmentPreference.set("maySplit", maySplit);
-        order.preStoreOther(orderShipmentPreference);
+        toBeStored.add(orderShipmentPreference);
         
         // set the order items
         // productId|productName|price|quantity|comment|poNumber
@@ -120,7 +123,7 @@ public class OrderServices {
             orderItem.set("comments", element.get(4));
             orderItem.set("correspondingPoId", element.get(5));
             orderItem.set("statusId", "Ordered");
-            order.preStoreOther(orderItem);
+            toBeStored.add(orderItem);
         }
         
         // set the roles
@@ -129,7 +132,7 @@ public class OrderServices {
         "BILL_TO_CUSTOMER", "PLACING_CUSTOMER"};
         
         for (int i = 0; i < USER_ORDER_ROLE_TYPES.length; i++) {
-            order.preStoreOther(delegator.makeValue("OrderRole", UtilMisc.toMap(
+            toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap(
             "orderId", orderId,
             "partyId", partyId,
             "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
@@ -138,29 +141,27 @@ public class OrderServices {
         // set the distributor
         String distributorId = (String) context.get("distributorId");
         if (UtilValidate.isNotEmpty(distributorId)) {
-            order.preStoreOther(delegator.makeValue("OrderRole", UtilMisc.toMap(
-            "orderId", orderId,
-            "partyId", distributorId,
-            "roleTypeId", "DISTRIBUTOR")));
+            toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap(
+                    "orderId", orderId, "partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));
         }
         
         // ------- TODO Make this so if we pass credit card info a new ID is created -------
         // set the order status
-        order.preStoreOther(delegator.makeValue("OrderStatus",
-        UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
-        "statusId", "ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
+        toBeStored.add(delegator.makeValue("OrderStatus",
+                UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
+                "statusId", "ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
         
         String creditCardId = (String) context.get("creditCardId");
         if (creditCardId != null) {
-            order.preStoreOther(delegator.makeValue("OrderPaymentPreference",
-            UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-            "orderId", orderId, "paymentMethodTypeId", "CREDIT_CARD", "paymentInfoId", creditCardId)));
+            toBeStored.add(delegator.makeValue("OrderPaymentPreference",
+                    UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
+                    "orderId", orderId, "paymentMethodTypeId", "CREDIT_CARD", "paymentInfoId", creditCardId)));
         }
         else {
             //XXX CASH should not be assumed!!
-            order.preStoreOther(delegator.makeValue("OrderPaymentPreference",
-            UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-            "orderId", orderId, "paymentMethodTypeId", "CASH", "paymentInfoId", creditCardId)));
+            toBeStored.add(delegator.makeValue("OrderPaymentPreference",
+                    UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
+                    "orderId", orderId, "paymentMethodTypeId", "CASH", "paymentInfoId", creditCardId)));
         }
         
         try {
@@ -192,7 +193,7 @@ public class OrderServices {
         // implement me
         return result;
     }
-
+    
     /** Service to remove a role type from an order */
     public static Map removeRoleType(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -200,9 +201,9 @@ public class OrderServices {
         // This would be for removing a party/role to an order after it has been created
         // implement me
         return result;
-    }    
+    }
     
-    /** Service to email a customer with order status */    
+    /** Service to email a customer with order status */
     public static Map emailOrder(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();

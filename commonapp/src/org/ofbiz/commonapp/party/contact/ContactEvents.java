@@ -1,6 +1,9 @@
 /*
  * $Id$
- * $Log$ 
+ * $Log$
+ * Revision 1.1  2001/10/19 16:44:42  azeneski
+ * Moved Party/ContactMech/Login events to more appropiate packages.
+ * 
  */
 
 package org.ofbiz.commonapp.party.contact;
@@ -62,19 +65,22 @@ public class ContactEvents {
         
         Timestamp now = UtilDateTime.nowTimestamp();
         if("CREATE".equals(updateMode)) {
+            Collection toBeStored = new LinkedList();
+            
             String contactMechTypeId = request.getParameter("CONTACT_MECH_TYPE_ID");
             if(contactMechTypeId == null) { errMsg = "<li>ERROR: Could not create new contact info, type not specified. Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
             
             Long newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new contact info (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
             GenericValue tempContactMech = delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", contactMechTypeId));
+            toBeStored.add(tempContactMech);
             
             String allowSolicitation = request.getParameter("CM_ALLOW_SOL");
             String extension = request.getParameter("CM_EXTENSION");
-            tempContactMech.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", allowSolicitation, "extension", extension)));
+            toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", allowSolicitation, "extension", extension)));
             
             String newCmPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");
             if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0)
-                tempContactMech.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", now)));
+                toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", now)));
             
             if("POSTAL_ADDRESS".equals(contactMechTypeId)) {
                 String toName = request.getParameter("CM_TO_NAME");
@@ -109,13 +115,13 @@ public class ContactEvents {
                 newAddr.set("stateProvinceGeoId", state);
                 newAddr.set("countryGeoId", country);
                 //newAddr.set("postalCodeGeoId", postalCodeGeoId);
-                tempContactMech.preStoreOther(newAddr);
+                toBeStored.add(newAddr);
             }
             else if("TELECOM_NUMBER".equals(contactMechTypeId)) {
                 String countryCode = request.getParameter("CM_COUNTRY_CODE");
                 String areaCode = request.getParameter("CM_AREA_CODE");
                 String contactNumber = request.getParameter("CM_CONTACT_NUMBER");
-                tempContactMech.preStoreOther(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", countryCode, "areaCode", areaCode, "contactNumber", contactNumber)));
+                toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", countryCode, "areaCode", areaCode, "contactNumber", contactNumber)));
             }
             else if("EMAIL_ADDRESS".equals(contactMechTypeId)) {
                 String infoString = request.getParameter("CM_INFO_STRING");
@@ -135,7 +141,7 @@ public class ContactEvents {
                     } else {
                         cmPurposeTypeId = "OTHER_EMAIL";
                     }
-                    tempContactMech.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", cmPurposeTypeId, "fromDate", now)));
+                    toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", cmPurposeTypeId, "fromDate", now)));
                 } catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); }
             }
             else {
@@ -143,10 +149,10 @@ public class ContactEvents {
                 tempContactMech.set("infoString", infoString);
             }
             
-            GenericValue dummyValue = null;
-            try { dummyValue = delegator.create(tempContactMech); }
-            catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); dummyValue = null; }
-            if(dummyValue == null) {
+            try { 
+                delegator.storeAll(toBeStored);
+            }
+            catch(GenericEntityException e) {
                 errMsg = "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.";
                 request.setAttribute("ERROR_MESSAGE", errMsg);
                 return "error";
@@ -176,6 +182,8 @@ public class ContactEvents {
             }
         }
         else if("UPDATE".equals(updateMode)) {
+            Collection toBeStored = new LinkedList();
+            
             boolean isModified = false;
             Long newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not change contact info (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
             
@@ -198,6 +206,7 @@ public class ContactEvents {
                 request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Logged in user cannot update specified contact info because it does not belong to the user. Please contact customer service.");
                 return "error";
             }
+            toBeStored.add(partyContactMech);
             
             //never change a contact mech, just create a new one with the changes
             GenericValue newContactMech = new GenericValue(contactMech);
@@ -285,11 +294,11 @@ public class ContactEvents {
             if(!newContactMech.equals(contactMech)) isModified = true;
             if(!newPartyContactMech.equals(partyContactMech)) isModified = true;
             
-            partyContactMech.preStoreOther(newContactMech);
-            partyContactMech.preStoreOther(newPartyContactMech);
+            toBeStored.add(newContactMech);
+            toBeStored.add(newPartyContactMech);
             
             if(isModified) {
-                if(relatedEntityToSet != null) partyContactMech.preStoreOther(relatedEntityToSet);
+                if(relatedEntityToSet != null) toBeStored.add(relatedEntityToSet);
                 
                 newContactMech.set("contactMechId", newCmId.toString());
                 newPartyContactMech.set("contactMechId", newCmId.toString());
@@ -301,7 +310,7 @@ public class ContactEvents {
                     while(partyContactMechPurposes != null && partyContactMechPurposes.hasNext()) {
                         GenericValue tempVal = new GenericValue((GenericValue)partyContactMechPurposes.next());
                         tempVal.set("contactMechId", newCmId.toString());
-                        partyContactMech.preStoreOther(tempVal);
+                        toBeStored.add(tempVal);
                     }
                 }
                 catch(GenericEntityException e) {
@@ -312,11 +321,13 @@ public class ContactEvents {
                 
                 String newCmPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");
                 if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0) {
-                    partyContactMech.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", now)));
+                    toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", now)));
                 }
                 
                 partyContactMech.set("thruDate", now);
-                try { partyContactMech.store(); }
+                try { 
+                    delegator.storeAll(toBeStored);
+                }
                 catch(GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
                     request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
@@ -469,6 +480,7 @@ public class ContactEvents {
         
         Timestamp now = UtilDateTime.nowTimestamp();
         if("CREATE".equals(updateMode) || "UPDATE".equals(updateMode)) {
+            Collection toBeStored = new LinkedList();
             boolean isModified = false;
             
             String nameOnCard = request.getParameter("CC_NAME_ON_CARD");
@@ -504,6 +516,7 @@ public class ContactEvents {
             }
             if(creditCardInfo != null) newCc = new GenericValue(creditCardInfo);
             else newCc = delegator.makeValue("CreditCardInfo", null);
+            toBeStored.add(newCc);
             
             Long newCcId = delegator.getNextSeqId("CreditCardInfo"); if(newCcId == null) { errMsg = "<li>ERROR: Could not create new contact info (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
             newCc.set("partyId", partyId);
@@ -549,20 +562,16 @@ public class ContactEvents {
             
             if(isModified) {
                 Debug.logInfo("yes, is modified");
-                if(newPartyContactMechPurpose != null) newCc.preStoreOther(newPartyContactMechPurpose);
+                if(newPartyContactMechPurpose != null) toBeStored.add(newPartyContactMechPurpose);
                 if("UPDATE".equals(updateMode)) {
                     //if it is an update, set thru date on old card
                     creditCardInfo.set("thruDate", now);
-                    newCc.preStoreOther(creditCardInfo);
+                    toBeStored.add(creditCardInfo);
                 }
                 
                 try {
-                    if(delegator.create(newCc) == null) {
-                        request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not add credit card (write failure). Please contact customer service.");
-                        return "error";
-                    }
-                }
-                catch(GenericEntityException e) {
+                    delegator.storeAll(toBeStored);
+                } catch(GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
                     request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not add credit card (write failure). Please contact customer service.");
                     return "error";

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/12/16 13:08:31  jonesde
+ * Finished first pass of party assignment stuff
+ *
  * Revision 1.5  2001/11/13 02:18:27  jonesde
  * Added some stuff, fixed problems
  *
@@ -336,11 +339,13 @@ public class WorkEffortEvents {
             newWorkEffort = (GenericValue) workEffort.clone();
         else
             newWorkEffort = delegator.makeValue("WorkEffort", null);
+        Collection toBeStored = new LinkedList();
+        toBeStored.add(newWorkEffort);
         Timestamp nowStamp = UtilDateTime.nowTimestamp();
 
         //if necessary create new status entry, and set lastStatusUpdate date
         if (workEffort == null || (currentStatusId != null && !currentStatusId.equals(workEffort.getString("currentStatusId")))) {
-            newWorkEffort.preStoreOther( delegator.makeValue("WorkEffortStatus",
+            toBeStored.add(delegator.makeValue("WorkEffortStatus",
                     UtilMisc.toMap("workEffortId", workEffortId, "statusId", currentStatusId, "statusDatetime", nowStamp, "setByPartyId", userLogin.get("partyId"))));
             newWorkEffort.set("currentStatusId", currentStatusId);
             newWorkEffort.set("lastStatusUpdate", nowStamp);
@@ -389,14 +394,14 @@ public class WorkEffortEvents {
             if (userLogin.get("partyId") != null) {
                 newWorkEffort.set("createdByPartyId", userLogin.get("partyId"));
                 //add a party assignment for the creator of the event
-                newWorkEffort.preStoreOther( delegator.makeValue("WorkEffortPartyAssignment",
+                toBeStored.add(delegator.makeValue("WorkEffortPartyAssignment",
                         UtilMisc.toMap("workEffortId", workEffortId, "partyId", userLogin.get("partyId"), "roleTypeId", "CAL_OWNER", "fromDate", nowStamp, "statusId",
                         "CAL_ASN_ACCEPTED")));
             }
 
             GenericValue createWorkEffort = null;
             try {
-                createWorkEffort = delegator.create(newWorkEffort);
+                delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage());
                 createWorkEffort = null;
@@ -408,7 +413,7 @@ public class WorkEffortEvents {
             request.setAttribute("WORK_EFFORT_ID", workEffortId);
         } else if (updateMode.equals("UPDATE")) {
             try {
-                newWorkEffort.store();
+                delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
                 request.setAttribute("ERROR_MESSAGE", "Could not update WorkEffort (write error)");
                 Debug.logWarning("[WorkEffortEvents.updateWorkEffort] Could not update WorkEffort (write error); message: " + e.getMessage());
