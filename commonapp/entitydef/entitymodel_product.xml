@@ -354,7 +354,7 @@
     </entity>
     <view-entity entity-name="ProductFeatureAndAppl"
             package-name="org.ofbiz.commonapp.product.feature"
-            title="Work Effort And Party Assignment Entity">
+            title="ProductFeature And ProductFeatureAppl View Entity">
       <member-entity entity-alias="PFA" entity-name="ProductFeatureAppl"/>
       <member-entity entity-alias="PF" entity-name="ProductFeature"/>
       <alias entity-alias="PF" name="productFeatureId" prim-key="true"/>
