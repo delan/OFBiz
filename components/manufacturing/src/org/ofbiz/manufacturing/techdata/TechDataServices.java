@@ -1,5 +1,5 @@
 /*
- * $Id: TechDataServices.java,v 1.4 2003/12/09 20:55:19 holivier Exp $
+ * $Id: TechDataServices.java,v 1.5 2004/03/28 21:35:46 holivier Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,8 +25,11 @@
 package org.ofbiz.manufacturing.techdata;
 
 import java.sql.Timestamp;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -53,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * TechDataServices - TechData related Services
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class TechDataServices {
@@ -64,7 +67,6 @@ public class TechDataServices {
  * 
  * Used to retreive some RoutingTasks (WorkEffort) selected by Name or MachineGroup ordered by Name
  * 
- * @author holivier
  * @param ctx
  * @param context: a map containing workEffortName (routingTaskName) and fixedAssetId (MachineGroup or ANY) 
  * @return result: a map containing lookupResult (list of RoutingTask <=> workEffortId with currentStatusId = "ROU_ACTIVE" and workEffortTypeId = "ROU_TASK"
@@ -104,10 +106,9 @@ public class TechDataServices {
 	 * 
 	 * Used to check if there is not two routing task with the same SeqId valid at the same period
 	 * 
-	 * @author holivier
-	 * @param ctx
-	 * @param context: a map containing workEffortIdFrom (routing) and SeqId, fromDate thruDate
-	 * @return result: a map containing sequenceNumNotOk which is equal to "Y" if it's not Ok
+	 * @param ctx            The DispatchContext that this service is operating in.
+	 * @param context    a map containing workEffortIdFrom (routing) and SeqId, fromDate thruDate
+	 * @return result      a map containing sequenceNumNotOk which is equal to "Y" if it's not Ok
 	 */
 		public static Map checkRoutingTaskAssoc(DispatchContext ctx, Map context) {
 			GenericDelegator delegator = ctx.getDelegator();
@@ -164,15 +165,13 @@ public class TechDataServices {
 			return result;
 		}
 	/**
-	 * 
 	 * Used to check if the routingtaskAssoc is valid for the testDate
 	 * 
-	 * @author holivier
-	 * @param routingTaskAssoc: the routingTaskAssoc to test  
-	 * @param testDate: a date
-	 * @return true if the routingTAskAssoc is valid
+	 * @param routingTaskAssoc     the routingTaskAssoc to test  
+	 * @param testDate                       a date
+	 * @return true                               if the routingTAskAssoc is valid
 	 */
-		public static boolean routingTaskAssocIsValid(GenericValue routingTaskAssoc,  java.sql.Timestamp  testDate) {
+		public static boolean routingTaskAssocIsValid(GenericValue routingTaskAssoc, Timestamp  testDate) {
 			if (routingTaskAssoc.getTimestamp("fromDate") != null)
 				if (routingTaskAssoc.getTimestamp("thruDate") != null) 
 					if (testDate.after(routingTaskAssoc.getTimestamp("fromDate")) && testDate.before(routingTaskAssoc.getTimestamp("thruDate"))) return true;
@@ -187,15 +186,13 @@ public class TechDataServices {
 				else return true;
 		}
 	/**
-	 * 
 	 * Used to check if the productBom is valid for the testDate, currently only tested on date but in futur, maybe there will be the option {valid until stock=0>}
 	 * 
-	 * @author holivier
-	 * @param productBom: the productBom to test  
-	 * @param testDate: a date
+	 * @param productBom    the productBom to test  
+	 * @param testDate          a date
 	 * @return true if the productBom is valid
 	 */
-		public static boolean productBomIsValid(GenericValue productBom,  java.sql.Timestamp  testDate) {
+		public static boolean productBomIsValid(GenericValue productBom,  Timestamp  testDate) {
 			if (productBom.getTimestamp("fromDate") != null)
 				if (productBom.getTimestamp("thruDate") != null) 
 					if (testDate.after(productBom.getTimestamp("fromDate")) && testDate.before(productBom.getTimestamp("thruDate"))) return true;
@@ -209,5 +206,141 @@ public class TechDataServices {
 					else return false;
 				else return true;
 		}
+    /** Used to find the fisrt day in the TechDataCalendarWeek where capacity != 0, beginning at dayStart, dayStart included.
+     * This method update the fromDate and retrun the capacity.
+     * 
+     * @param techDataCalendarWeek        The TechDataCalendarWeek cover  
+     * @param dayStart                        
+     * @return a map with the  capacity (Double) available and moveDay (int): the number of day it's necessary to move to have capacity available
+     */
+        public static Map dayStartCapacityAvailable(GenericValue techDataCalendarWeek,  int  dayStart) {
+            Map result = new HashMap();
+            int moveDay = 0;
+            Double capacity = null;
+            Time startTime = null;
+            while (capacity == null) {
+                switch( dayStart){
+                    case Calendar.MONDAY:
+                        capacity =  techDataCalendarWeek.getDouble("mondayCapacity");
+                        startTime =  techDataCalendarWeek.getTime("mondayStartTime");
+                    break;
+                    case Calendar.TUESDAY:
+                        capacity =  techDataCalendarWeek.getDouble("tuesdayCapacity");
+                        startTime =  techDataCalendarWeek.getTime("tuesdayStartTime");
+                    break;
+                    case Calendar.WEDNESDAY:
+                        capacity =  techDataCalendarWeek.getDouble("wednesdayCapacity");
+                        startTime =  techDataCalendarWeek.getTime("wednesdayStartTime");
+                    break;
+                    case Calendar.THURSDAY:
+                        capacity =  techDataCalendarWeek.getDouble("thursdayCapacity");
+                        startTime =  techDataCalendarWeek.getTime("thursdayStartTime");
+                    break;
+                    case Calendar.FRIDAY:
+                        capacity =  techDataCalendarWeek.getDouble("fridayCapacity");
+                        startTime =  techDataCalendarWeek.getTime("fridayStartTime");
+                    break;
+                    case Calendar.SATURDAY:
+                        capacity =  techDataCalendarWeek.getDouble("saturdayCapacity");
+                        startTime =  techDataCalendarWeek.getTime("saturdayStartTime");
+                    break;
+                    case Calendar.SUNDAY:
+                        capacity =  techDataCalendarWeek.getDouble("sundayCapacity");
+                        startTime =  techDataCalendarWeek.getTime("sundayStartTime");
+                    break;
+                }
+                if (capacity == null || capacity.doubleValue() == 0) {
+                    moveDay +=1;
+                    dayStart = (dayStart==7) ? 1 : dayStart +1;
+                }    
+                Debug.logInfo("capacity loop: " + capacity+ " moveDay=" +moveDay, module);
+            }
+            result.put("capacity",capacity);
+            result.put("startTime",startTime);
+            result.put("moveDay",new Integer(moveDay));
+            return result;
+        }
+	/** Used to move in a TechDataCalenda, produce the Timestamp for the begining of the next day available and its associated capacity.
+	 * If the dateFrom (param in) is not  in an available TechDataCalendar period, the return value is the next day available
+	 * 
+	 * @param techDataCalendar        The TechDataCalendar cover  
+	 * @param dateFrom                        the date
+	 * @return a map with Timestamp dateTo, Double nextCapacity
+	 */
+		public static Map startNextDay(GenericValue techDataCalendar,  Timestamp  dateFrom) {
+            Map result = new HashMap();
+            Timestamp dateTo = null;
+            GenericValue techDataCalendarWeek = null;
+            // TODO read TechDataCalendarExcWeek to manage execption week (maybe it's needed to refactor the entity definition
+            try{
+                techDataCalendarWeek = techDataCalendar.getRelatedOneCache("TechDataCalendarWeek");
+            } catch (GenericEntityException e) {
+                Debug.logError("Pb reading Calendar Week associated with calendar"+e.getMessage(), module);
+//                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "PbReadingTechDataCalendarWeekAssociated", locale));
+               return ServiceUtil.returnError("Pb reading Calendar Week associated with calendar");
+            }
+            // TODO read TechDataCalendarExcDay to manage execption day
+            Calendar cDateTrav =  Calendar.getInstance();
+            cDateTrav.setTime((Date) dateFrom);
+            Map position = dayStartCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
+            Time startTime = (Time) position.get("startTime");
+            int moveDay = ((Integer) position.get("moveDay")).intValue();
+            dateTo = (moveDay == 0) ? dateFrom : UtilDateTime.getDayStart(dateFrom,moveDay);
+// TODO after test (01:00:00).getTime() = 0 and not 3600000 so currently we add this value to be correct but it's needed to find why (maybe GMT pb)
+            Timestamp startAvailablePeriod = new Timestamp(UtilDateTime.getDayStart(dateTo).getTime() + startTime.getTime() + 3600000);
+            if (dateTo.before(startAvailablePeriod) ) {
+                dateTo = startAvailablePeriod;
+            } 
+             else {
+                dateTo = UtilDateTime.getNextDayStart(dateTo);
+                cDateTrav.setTime((Date) dateTo);
+                position = dayStartCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
+                startTime = (Time) position.get("startTime");
+                moveDay = ((Integer) position.get("moveDay")).intValue();
+                if (moveDay != 0) dateTo = UtilDateTime.getDayStart(dateTo,moveDay);
+                dateTo.setTime(dateTo.getTime() + startTime.getTime() + 3600000);
+            }
+            result.put("dateTo",dateTo);
+            result.put("nextCapacity",position.get("capacity"));
+			return result;
+		}
+    /** Used to move in a TechDataCalenda, produce the Timestamp for the end of the previous day available and its associated capacity.
+     * If the dateFrom (param in) is not  a available TechDataCalendar period, the return value is the previous day available.
+     * 
+     * @param techDataCalendar        The TechDataCalendar cover  
+     * @param dateFrom                        the date
+     * @return a map with Timestamp dateTo, Double nextCapacity
+     */
+        public static Map endPreviousDay(GenericValue techDataCalendar,  Timestamp  dateFrom) {
+            Map result = null;
+    
+            return result;
+        }
+    /** Used to move forward in a TechDataCalenda, start from the dateFrom and move forward only on available period.
+     * If the dateFrom (param in) is not  a available TechDataCalendar period, the startDate is the begining of the next  day available
+     * 
+     * @param techDataCalendar        The TechDataCalendar cover  
+     * @param dateFrom                        the start date
+     * @param amount                           the amount of millisecond to move forward
+     * @return the dateTo
+     */
+        public static Timestamp addForward(GenericValue techDataCalendar,  Timestamp  dateFrom, int amount) {
+            Timestamp dateTo = null;
+    
+            return dateTo;
+        }
+    /** Used to move backward in a TechDataCalenda, start from the dateFrom and move backward only on available period.
+     * If the dateFrom (param in) is not  a available TechDataCalendar period, the startDate is the end of the previous  day available
+     * 
+     * @param techDataCalendar        The TechDataCalendar cover  
+     * @param dateFrom                        the start date
+     * @param amount                           the amount of millisecond to move backward
+     * @return the dateTo
+     */
+        public static Timestamp addBackward(GenericValue techDataCalendar,  Timestamp  dateFrom, int amount) {
+            Timestamp dateTo = null;
+    
+            return dateTo;
+        }
 
 }
