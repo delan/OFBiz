@@ -82,6 +82,20 @@ public class EntityConfigUtil {
             Debug.logError(e, "Error loading entity config XML file " + ENTITY_ENGINE_XML_FILENAME);
         }
     }
+	
+	public static synchronized void reinitialize() throws GenericEntityException
+	{
+		try
+		{
+			ResourceLoader.invalidateDocument(ENTITY_ENGINE_XML_FILENAME);
+			initialize(getXmlRootElement());
+		}
+		catch (Exception e)
+		{
+			throw new GenericEntityException("Error reloading entity config XML file " + ENTITY_ENGINE_XML_FILENAME, e);
+		}
+	}
+	
     public static void initialize(Element rootElement) throws GenericEntityException {
         Element transactionFactoryElement = UtilXml.firstChildElement(rootElement, "transaction-factory");
         if (transactionFactoryElement == null) {
