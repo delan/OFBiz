@@ -182,7 +182,7 @@ public class PayPalEvents {
         HttpClient hclient = new HttpClient(confirmUrl, parametersMap);
         String confirmResp = null;
         try {
-            confirmResp = hclient.get();
+            confirmResp = hclient.post();
         } catch (HttpClientException e) {
             Debug.logError(e, "Problems connection to PayPal confirm URL", module);
             return "error";
