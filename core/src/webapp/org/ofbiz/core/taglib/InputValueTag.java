@@ -1,26 +1,25 @@
+/*
+ * $Id$
+ */
+
 package org.ofbiz.core.taglib;
 
-import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.DateFormat;
+import java.io.*;
+import java.text.*;
 import java.util.*;
-
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
-
-import org.ofbiz.core.entity.GenericDelegator;
-import org.ofbiz.core.entity.GenericEntityException;
-import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.model.*;
-import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> InputValueTag
- * <p><b>Description:</b> Outputs a string for an input box from either an entity field or a request parameter.
- *   Decides which to use by checking to see if the entityattr exist and using the specified field if it does.
- *   If the Boolean object referred to by the tryentityattr attribute is false, always tries to use the request parameter and ignores the entity field.
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
- *
+ * <p><b>Description:</b> Outputs a string for an input box from either an entity field or 
+ *     a request parameter. Decides which to use by checking to see if the entityattr exist and 
+ *     using the specified field if it does. If the Boolean object referred to by the tryentityattr 
+ *     attribute is false, always tries to use the request parameter and ignores the entity field.
+ * <p>Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -39,9 +38,9 @@ import org.ofbiz.core.util.Debug;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    Mon Nov 5, 2001
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @created    November 5, 2001
+ * @version    1.0
  */
 public class InputValueTag extends TagSupport {
     private String field = null;
@@ -134,13 +133,7 @@ public class InputValueTag extends TagSupport {
         
         if (inputValue == null || inputValue.length() == 0)
             inputValue = defaultStr;
-        
-        //reset optionals so tag instance can be reused
-        defaultStr = "";
-        tryEntityAttr = null;
-        param = null;
-        fullattrsStr = null;
-
+                
         try {
             if (fullattrs) {
                 pageContext.getOut().print("name='" + paramName + "' value='" + inputValue + "'");

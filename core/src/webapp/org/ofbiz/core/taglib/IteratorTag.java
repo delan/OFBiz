@@ -1,53 +1,20 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.1  2001/09/28 22:56:44  jonesde
- * Big update for fromDate PK use, organization stuff
- *
- * Revision 1.8  2001/09/21 19:38:50  jonesde
- * Updated settings to work with PoolMan & Tomcat 4, the current default config
- * Includes updated JNDIContextFactory and default datasource get through JNDI
- *
- * Revision 1.7  2001/09/21 11:15:17  jonesde
- * Updates related to Tomcat 4 update, bug fixes.
- *
- * Revision 1.6  2001/09/20 17:55:11  jonesde
- * Removed some long info messages that were starting to get annoying.
- *
- * Revision 1.5  2001/09/16 11:32:05  jonesde
- * Changed Debug.log message to Debug.logInfo
- *
- * Revision 1.4  2001/09/11 17:25:20  epabst
- * debugging info added/minor changes
- *
- * Revision 1.3  2001/09/10 21:41:29  epabst
- * made the iterator tag check for the property object being an Iterator already
- *
- * Revision 1.2  2001/08/06 00:45:09  azeneski
- * minor adjustments to tag files. added new format tag.
- *
- * Revision 1.1  2001/08/05 00:48:47  azeneski
- * Added new core JSP tag library. Non-application specific taglibs.
- *
  */
 
 package org.ofbiz.core.taglib;
 
+import java.io.*;
 import java.util.*;
-import java.io.IOException;
 import java.lang.reflect.*;
-
-import javax.servlet.jsp.tagext.BodyTagSupport;
-import javax.servlet.jsp.tagext.BodyContent;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.JspTagException;
-
-import org.ofbiz.core.util.Debug;
+import javax.servlet.jsp.*;
+import javax.servlet.jsp.tagext.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> Custom JSP Tag to iterate over a collection.
  * <p><b>Description:</b> None
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+ * <p>Copyright (c) 2002 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -66,10 +33,10 @@ import org.ofbiz.core.util.Debug;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on August 4, 2001, 8:21 PM
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    1.0
+ * @created    August 4, 2001
  */
 public class IteratorTag extends BodyTagSupport {
     

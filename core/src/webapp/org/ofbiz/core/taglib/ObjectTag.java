@@ -1,29 +1,17 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.3  2001/09/21 19:38:50  jonesde
- * Updated settings to work with PoolMan & Tomcat 4, the current default config
- * Includes updated JNDIContextFactory and default datasource get through JNDI
- *
- * Revision 1.2  2001/08/06 00:45:09  azeneski
- * minor adjustments to tag files. added new format tag.
- *
- * Revision 1.1  2001/08/05 00:48:47  azeneski
- * Added new core JSP tag library. Non-application specific taglibs.
- *
  */
 
 package org.ofbiz.core.taglib;
 
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
-
-import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> ObjectTag.java
  * <p><b>Description:</b> Custom JSP Tag to give page context to a stored object.
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+ * <p>Copyright (c) 2002 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -42,9 +30,9 @@ import org.ofbiz.core.util.Debug;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on August 4, 2001, 8:21 PM
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @version    1.0
+ * @created    August 4, 2001
  */
 public  class ObjectTag extends TagSupport {
     

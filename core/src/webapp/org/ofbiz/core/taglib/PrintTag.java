@@ -1,22 +1,20 @@
+/*
+ * $Id$
+ */
+
 package org.ofbiz.core.taglib;
 
-import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.JspTagException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
-
-import org.ofbiz.core.util.Debug;
+import java.io.*;
+import java.text.*;
+import java.util.*;
+import javax.servlet.jsp.*;
+import javax.servlet.jsp.tagext.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> PrintTag.java
  * <p><b>Description:</b> Prints an attribute from the pageContext
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+ * <p>Copyright (c) 2002 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -35,42 +33,43 @@ import org.ofbiz.core.util.Debug;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on November 7, 2001
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    1.0
+ * @created    November 7, 2001
  */
 public class PrintTag extends TagSupport {
+    
     private String attribute = null;
     private String defaultStr = "";
-
+    
     public String getAttribute() {
         return attribute;
     }
     public void setAttribute(String attribute) {
         this.attribute = attribute;
     }
-
+    
     public String getDefault() {
         return defaultStr;
     }
     public void setDefault(String defaultStr) {
         this.defaultStr = defaultStr;
     }
-
+    
     public int doStartTag() throws JspTagException {
         if (attribute == null)
             return SKIP_BODY;
         Object obj = pageContext.getAttribute(attribute);
         if (obj == null)
             obj = defaultStr;
-
+        
         try {
             JspWriter out = pageContext.getOut();
             out.print(obj.toString());
         } catch (IOException e) {
             throw new JspTagException(e.getMessage());
         }
-
+        
         return SKIP_BODY;
     }
 }

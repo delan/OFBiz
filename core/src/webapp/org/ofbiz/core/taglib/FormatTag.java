@@ -1,29 +1,19 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.1  2001/09/28 22:56:44  jonesde
- * Big update for fromDate PK use, organization stuff
- *
- * Revision 1.1  2001/08/06 00:45:09  azeneski
- * minor adjustments to tag files. added new format tag.
- *
  */
 
 package org.ofbiz.core.taglib;
 
-import java.text.NumberFormat;
-import java.text.DateFormat;
-import java.util.Date;
-
-import javax.servlet.jsp.tagext.BodyTagSupport;
-import javax.servlet.jsp.tagext.BodyContent;
-import javax.servlet.jsp.JspException;
-import java.io.IOException;
+import java.io.*;
+import java.text.*;
+import java.util.*;
+import javax.servlet.jsp.*;
+import javax.servlet.jsp.tagext.*;
 
 /**
  * <p><b>Title:</b> FormatTag.java
  * <p><b>Description:</b> Custom JSP Tag to format numbers and dates.
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+ * <p>Copyright (c) 2002 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -42,9 +32,9 @@ import java.io.IOException;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on August 4, 2001, 8:21 PM
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @version    1.0
+ * @created    August 4, 2001
  */
 public class FormatTag extends BodyTagSupport {
 

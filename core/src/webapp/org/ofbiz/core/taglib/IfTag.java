@@ -1,53 +1,20 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.5  2002/01/22 22:48:35  jonesde
- * Added default EVAL_BODY_AGAIN when not null if no other constraints apply
- *
- * Revision 1.4  2002/01/21 23:40:26  jonesde
- * Expanded if tag, no longer requires type (uses instanceof), supports Long, Float
- *
- * Revision 1.3  2001/11/11 14:48:51  jonesde
- * Added inputvalue tag
- *
- * Revision 1.2  2001/11/06 22:18:00  jonesde
- * The getSize method now returns a String; Eric Pabst reported this problem, hopefully this will fix it for him.
- *
- * Revision 1.1  2001/09/28 22:56:44  jonesde
- * Big update for fromDate PK use, organization stuff
- *
- * Revision 1.4  2001/09/21 19:38:50  jonesde
- * Updated settings to work with PoolMan & Tomcat 4, the current default config
- * Includes updated JNDIContextFactory and default datasource get through JNDI
- *
- * Revision 1.3  2001/09/21 11:15:17  jonesde
- * Updates related to Tomcat 4 update, bug fixes.
- *
- * Revision 1.2  2001/09/07 21:55:40  epabst
- * catch RuntimeException instead of Exception (better compile checking)
- * added size() checking using Reflection API
- *
- * Revision 1.1  2001/09/01 01:59:06  azeneski
- * Added two new JSP tags.
- *
  */
 
 package org.ofbiz.core.taglib;
 
-import javax.servlet.jsp.tagext.BodyTagSupport;
-import javax.servlet.jsp.tagext.BodyContent;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.JspTagException;
-import java.util.Collection;
-import java.io.IOException;
-import java.lang.reflect.Method;
-
-import org.ofbiz.core.util.Debug;
+import java.io.*;
+import java.lang.reflect.*;
+import java.util.*;
+import javax.servlet.jsp.*;
+import javax.servlet.jsp.tagext.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> IfTag.java
  * <p><b>Description:</b> Custom JSP tag to test page context attributes.
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+ * <p>Copyright (c) 2002 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -66,10 +33,10 @@ import org.ofbiz.core.util.Debug;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    1.0
- *@created    August 31, 2001, 7:57 PM
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    1.0
+ * @created    August 31, 2001
  */
 public class IfTag extends BodyTagSupport {
     

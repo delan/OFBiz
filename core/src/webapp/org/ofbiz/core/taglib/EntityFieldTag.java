@@ -1,34 +1,22 @@
 /*
- * EntityFieldTag.java
- *
- * Created on October 2, 2001, 12:15 PM
+ * $Id$
  */
 
 package org.ofbiz.core.taglib;
 
-import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.JspTagException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
-
-import org.ofbiz.core.entity.GenericDelegator;
-import org.ofbiz.core.entity.GenericEntityException;
-import org.ofbiz.core.entity.GenericValue;
-import org.ofbiz.core.entity.model.ModelEntity;
-import org.ofbiz.core.entity.model.ModelField;
-import org.ofbiz.core.entity.model.ModelFieldType;
-import org.ofbiz.core.util.Debug;
+import java.io.*;
+import java.text.*;
+import java.util.*;
+import javax.servlet.jsp.*;
+import javax.servlet.jsp.tagext.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.entity.model.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> Tag to Print Localized Entity Fields
  * <p><b>Description:</b> None
- * <p>Copyright (c) 2001 The Open For Business Project (www.ofbiz.org) and repected authors.
+ * <p>Copyright (c) 2002 The Open For Business Project (www.ofbiz.org) and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -47,10 +35,10 @@ import org.ofbiz.core.util.Debug;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version 1.0
- *@created 
+ * @author <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version 1.0
+ * @created October 2, 2001
  */
 public class EntityFieldTag extends TagSupport {
 
@@ -184,7 +172,7 @@ public class EntityFieldTag extends TagSupport {
             }
         }
 
-        // Get the Locale from the Request object.
+        // Get the Locale from the Request object. 
         Locale userLocale = pageContext.getRequest().getLocale();
         if (userLocale == null)
             userLocale = Locale.getDefault();
@@ -253,10 +241,7 @@ public class EntityFieldTag extends TagSupport {
         } catch (IOException e) {
             throw new JspTagException(e.getMessage());
         }
-
-        defaultStr = "";
-        prefix = "";
-        suffix = "";
+        
         return (SKIP_BODY);
     }
 }
