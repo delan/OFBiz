@@ -43,16 +43,15 @@
 %>
 
 <br>
-<div class="head1">Find Price Rule</div>
-
+<div class="head1">Global Price Rules</div>
 <a href="<ofbiz:url>/EditProductPriceRules</ofbiz:url>" class="buttontext">[Create Rule]</a>
-<br>
-<br>
 <%if (activeOnly) {%>
     <a href="<ofbiz:url>/FindProductPriceRules?activeOnly=false</ofbiz:url>" class="buttontext">[Active and Inactive]</a>
 <%} else {%>
     <a href="<ofbiz:url>/FindProductPriceRules</ofbiz:url>" class="buttontext">[Active Only]</a>
 <%}%>
+<br>
+<br>
 <ofbiz:if name="productPriceRules">
   <table border="1" cellpadding='2' cellspacing='0'>
     <tr>

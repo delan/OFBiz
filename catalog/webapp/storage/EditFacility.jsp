@@ -31,7 +31,7 @@
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
-<table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
+<%-- <table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td> --%>
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
@@ -58,14 +58,16 @@
     if (facilityTypes != null) pageContext.setAttribute("facilityTypes", facilityTypes);
 %>
 
-<br>
-<a href="<ofbiz:url>/EditFacility</ofbiz:url>" class="buttontext">[New Facility]</a>
 <%if(facilityId != null && facilityId.length() > 0){%>
+  <hr class='sepbar'>
   <a href="<ofbiz:url>/EditFacility?facilityId=<%=facilityId%></ofbiz:url>" class="buttontextdisabled">[Facility]</a>
   <a href="<ofbiz:url>/EditFacilityInventoryItems?facilityId=<%=facilityId%></ofbiz:url>" class="buttontext">[InventoryItems]</a>
+  <hr class='sepbar'>
 <%}%>
 
-<div class="head1">Edit Facility with ID "<%=UtilFormatOut.checkNull(facilityId)%>"</div>
+<div class="head1">Facility <span class='head2'><%=UtilFormatOut.ifNotEmpty(facility==null?null:facility.getString("facilityName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityId)%>]</span></div>
+<a href="<ofbiz:url>/EditFacility</ofbiz:url>" class="buttontext">[New Facility]</a>
+
 <%if (facility == null) {%>
   <%if (facilityId != null) {%>
     <form action="<ofbiz:url>/CreateFacility</ofbiz:url>" method=POST style='margin: 0;'>
@@ -127,4 +129,4 @@
 <%} else {%>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
-</td><td>&nbsp;&nbsp;</td></tr></table>
+<%-- </td><td>&nbsp;&nbsp;</td></tr></table> --%>

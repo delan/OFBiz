@@ -82,8 +82,8 @@ try {
 <form action="<ofbiz:url>/UpdateProductAssoc</ofbiz:url>" method=POST style='margin: 0;'>
 <table border='0' cellpadding='2' cellspacing='0'>
 
-<%if(productAssoc == null){%>
-  <%if(productId != null || productIdTo != null || productAssocTypeId != null || fromDate != null){%>
+<%if (productAssoc == null) {%>
+  <%if (productId != null || productIdTo != null || productAssocTypeId != null || fromDate != null){%>
     <b>Could not find association with Product Id=<%=UtilFormatOut.checkNull(productId)%>, Product Id To=<%=UtilFormatOut.checkNull(productIdTo)%>, Association Type Id=<%=UtilFormatOut.checkNull(productAssocTypeId)%>, From Date=<%=UtilFormatOut.makeString(fromDate)%>.</b>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
     <tr>
@@ -102,17 +102,18 @@ try {
       <td>
         <%-- <input type="text" name="PRODUCT_ASSOC_TYPE_ID" size="20" maxlength="40" value="<%=UtilFormatOut.checkNull(productAssocTypeId)%>"> --%>
         <select name="PRODUCT_ASSOC_TYPE_ID" size=1>
-          <%if(productAssocTypeId != null && productAssocTypeId.length() > 0) {%>
+          <%if (productAssocTypeId != null && productAssocTypeId.length() > 0) {%>
             <%GenericValue curAssocType = delegator.findByPrimaryKey("ProductAssocType", UtilMisc.toMap("productAssocTypeId", productAssocTypeId));%>
-            <%if(curAssocType != null) {%>
-              <option selected value='<%=curAssocType.getString("productAssocTypeId")%>'><%=curAssocType.getString("description")%> [<%=curAssocType.getString("productAssocTypeId")%>]</option>
+            <%if (curAssocType != null) {%>
+              <option selected value='<%=curAssocType.getString("productAssocTypeId")%>'><%=curAssocType.getString("description")%><%-- [<%=curAssocType.getString("productAssocTypeId")%>]--%></option>
+              <option value='<%=curAssocType.getString("productAssocTypeId")%>'>----</option>
             <%}%>
           <%}%>
-          <option value=''>&nbsp;</option>
+          <%-- <option value=''>&nbsp;</option> --%>
           <%Iterator assocTypeIter = UtilMisc.toIterator(assocTypes);%>
-          <%while(assocTypeIter != null && assocTypeIter.hasNext()) {%>
+          <%while (assocTypeIter != null && assocTypeIter.hasNext()) {%>
             <%GenericValue nextAssocType=(GenericValue)assocTypeIter.next();%>
-            <option value='<%=nextAssocType.getString("productAssocTypeId")%>'><%=nextAssocType.getString("description")%> [<%=nextAssocType.getString("productAssocTypeId")%>]</option>
+            <option value='<%=nextAssocType.getString("productAssocTypeId")%>'><%=nextAssocType.getString("description")%><%-- [<%=nextAssocType.getString("productAssocTypeId")%>]--%></option>
           <%}%>
         </select>
       </td>
@@ -121,8 +122,7 @@ try {
       <td align=right><div class="tabletext">From Date</div></td>
       <td>&nbsp;</td>
       <td>
-        <div class='tabletext'><input type="text" name="FROM_DATE" size="30" maxlength="40" value="<%=UtilFormatOut.makeString(fromDate)%>">(YYYY-MM-DD HH:mm:SS.sss)</div>
-        <div class='tabletext'>(Will be set to now if empty)</div>
+        <div class='tabletext'><input type="text" name="FROM_DATE" size="30" maxlength="40" value="<%=UtilFormatOut.makeString(fromDate)%>">(Will be set to now if empty)</div>
       </td>
     </tr>
   <%}else{%>
@@ -143,11 +143,11 @@ try {
       <td>
         <%-- <input type="text" name="PRODUCT_ASSOC_TYPE_ID" size="20" maxlength="40" value=""> --%>
         <select name="PRODUCT_ASSOC_TYPE_ID" size=1>
-          <option value=''>&nbsp;</option>
+          <%-- <option value=''>&nbsp;</option> --%>
           <%Iterator assocTypeIter = UtilMisc.toIterator(assocTypes);%>
           <%while(assocTypeIter != null && assocTypeIter.hasNext()) {%>
             <%GenericValue nextAssocType=(GenericValue)assocTypeIter.next();%>
-            <option value='<%=nextAssocType.getString("productAssocTypeId")%>'><%=nextAssocType.getString("description")%> [<%=nextAssocType.getString("productAssocTypeId")%>]</option>
+            <option value='<%=nextAssocType.getString("productAssocTypeId")%>'><%=nextAssocType.getString("description")%><%-- [<%=nextAssocType.getString("productAssocTypeId")%>]--%></option>
           <%}%>
         </select>
       </td>
@@ -156,13 +156,13 @@ try {
       <td align=right><div class="tabletext">From Date</div></td>
       <td>&nbsp;</td>
       <td>
-        <div class='tabletext'><input type="text" name="FROM_DATE" size="30" maxlength="40" value="">(YYYY-MM-DD HH:mm:SS.sss)</div>
-        <div class='tabletext'>(Will be set to now if empty)</div>
+        <div class='tabletext'><input type="text" name="FROM_DATE" size="30" maxlength="40" value="">(Will be set to now if empty)</div>
       </td>
     </tr>
   <%}%>
-<%}else{%>
+<%} else {%>
   <%isCreate = false;%>
+  <%GenericValue curProductAssocType = productAssoc.getRelatedOneCache("ProductAssocType");%>
   <input type=hidden name="UPDATE_MODE" value="UPDATE">
   <input type=hidden name="PRODUCT_ID" value="<%=productId%>">
   <input type=hidden name="PRODUCT_ID_TO" value="<%=productIdTo%>">
@@ -179,9 +179,9 @@ try {
     <td><b><%=productIdTo%></b> (You must re-create the association to change this.)</td>
   </tr>
   <tr>
-    <td align=right><div class="tabletext">Association Type ID</div></td>
+    <td align=right><div class="tabletext">Association Type</div></td>
     <td>&nbsp;</td>
-    <td><b><%=productAssocTypeId%></b> (You must re-create the association to change this.)</td>
+    <td><b><%=curProductAssocType != null ? curProductAssocType.getString("description") : productAssocTypeId%></b> (You must re-create the association to change this.)</td>
   </tr>
   <tr>
     <td align=right><div class="tabletext">From Date</div></td>
@@ -196,7 +196,7 @@ try {
     <td width="26%" align=right><div class="tabletext">Thru Date</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-      <div class='tabletext'><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.makeString(productAssoc.getTimestamp(fieldName)):request.getParameter(paramName))%>" size="30" maxlength="30">(yyyy-MM-dd hh:mm:ss.SSS)</div>
+      <div class='tabletext'><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.makeString(productAssoc.getTimestamp(fieldName)):request.getParameter(paramName))%>" size="30" maxlength="30"></div>
     </td>
   </tr>
   <tr>
@@ -235,7 +235,7 @@ try {
 <%if(productId != null && product != null){%>
 <%java.util.Date nowDate = new java.util.Date();%>
 <hr>
-<p class="head2">Product Associations FROM this Product to...</p>
+<p class="head2">Associations FROM this Product to...</p>
 
   <table border="1" cellpadding='2' cellspacing='0'>
     <tr>
@@ -252,6 +252,7 @@ try {
     <%while(pcIterator != null && pcIterator.hasNext()) {%>
       <%GenericValue listProductAssoc = (GenericValue)pcIterator.next();%>
       <%GenericValue listToProduct = listProductAssoc.getRelatedOneCache("AssocProduct");%>
+      <%GenericValue curProductAssocType = listProductAssoc.getRelatedOneCache("ProductAssocType");%>
       <tr valign="middle">
         <td><a href="<ofbiz:url>/EditProduct?productId=<%=listProductAssoc.getString("productIdTo")%></ofbiz:url>" class="buttontext"><%=listProductAssoc.getString("productIdTo")%></a></td>
         <td><%if(listToProduct!=null){%><a href="<ofbiz:url>/EditProduct?productId=<%=listProductAssoc.getString("productIdTo")%></ofbiz:url>" class="buttontext"><%=listToProduct.getString("productName")%></a><%}%>&nbsp;</td>
@@ -260,7 +261,7 @@ try {
         <td><div class='tabletext' <%=(listProductAssoc.getTimestamp("thruDate") != null && nowDate.after(listProductAssoc.getTimestamp("thruDate")))?"style='color: red;'":""%>>
           <%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("thruDate"))%>&nbsp;</div></td>
         <td><div class='tabletext'>&nbsp;<%=UtilFormatOut.formatQuantity(listProductAssoc.getLong("sequenceNum"))%></div></td>
-        <td><div class='tabletext'><%=listProductAssoc.getString("productAssocTypeId")%></div></td>
+        <td><div class='tabletext'><%=curProductAssocType != null ? curProductAssocType.getString("description") : listProductAssoc.getString("productAssocTypeId")%></div></td>
         <td>
           <a href="<ofbiz:url>/UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=<%=productId%>&PRODUCT_ID_TO=<%=listProductAssoc.getString("productIdTo")%>&PRODUCT_ASSOC_TYPE_ID=<%=listProductAssoc.getString("productAssocTypeId")%>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(listProductAssoc.getTimestamp("fromDate").toString())%>&useValues=true</ofbiz:url>" class="buttontext">
           [Delete]</a>
@@ -274,7 +275,7 @@ try {
   </table>
 
 <hr>
-<p class="head2">Product Associations TO this Product from...</p>
+<p class="head2">Associations TO this Product from...</p>
 
   <table border="1" cellpadding='2' cellspacing='0'>
     <tr>
@@ -289,12 +290,13 @@ try {
     <%while(tfIterator != null && tfIterator.hasNext()) {%>
       <%GenericValue listProductAssoc = (GenericValue)tfIterator.next();%>
       <%GenericValue listToProduct = listProductAssoc.getRelatedOneCache("MainProduct");%>
+      <%GenericValue curProductAssocType = listProductAssoc.getRelatedOneCache("ProductAssocType");%>
       <tr valign="middle">
         <td><a href="<ofbiz:url>/EditProduct?productId=<%=listProductAssoc.getString("productId")%></ofbiz:url>" class="buttontext"><%=listProductAssoc.getString("productId")%></a></td>
         <td><%if(listToProduct!=null){%><a href="<ofbiz:url>/EditProduct?productId=<%=listProductAssoc.getString("productId")%></ofbiz:url>" class="buttontext"><%=listToProduct.getString("productName")%></a><%}%>&nbsp;</td>
         <td><div class='tabletext'><%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("fromDate"))%>&nbsp;</div></td>
         <td><div class='tabletext'><%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("thruDate"))%>&nbsp;</div></td>
-        <td><div class='tabletext'><%=listProductAssoc.getString("productAssocTypeId")%></div></td>
+        <td><div class='tabletext'><%=curProductAssocType != null ? curProductAssocType.getString("description") : listProductAssoc.getString("productAssocTypeId")%></div></td>
         <td>
           <a href="<ofbiz:url>/UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=<%=listProductAssoc.getString("productId")%>&PRODUCT_ID_TO=<%=listProductAssoc.getString("productIdTo")%>&PRODUCT_ASSOC_TYPE_ID=<%=listProductAssoc.getString("productAssocTypeId")%>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(listProductAssoc.getTimestamp("fromDate").toString())%>&useValues=true</ofbiz:url>" class="buttontext">
           [Delete]</a>

@@ -54,19 +54,17 @@
     if (orderAdjustmentTypes != null) pageContext.setAttribute("orderAdjustmentTypes", orderAdjustmentTypes);
 
 %>
-<br>
 
-<a href="<ofbiz:url>/EditProductPromo</ofbiz:url>" class="buttontext">[New ProductPromo]</a>
 <%if(productPromoId != null && productPromoId.length() > 0){%>
+  <hr class='sepbar'>
   <a href="<ofbiz:url>/EditProductPromo?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontext">[Promo]</a>
   <a href="<ofbiz:url>/EditProductPromoRules?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontextdisabled">[Rules]</a>
   <a href="<ofbiz:url>/EditProductPromoCatalogs?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontext">[Catalogs]</a>
+  <hr class='sepbar'>
 <%}%>
 
-<div class="head1">Rules for Promotion
-  <%=UtilFormatOut.ifNotEmpty(productPromo==null?null:productPromo.getString("promoName"),"\"","\"")%> 
-  with ID "<%=UtilFormatOut.checkNull(productPromoId)%>"</div>
-
+<div class="head1">Rules <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(productPromo==null?null:productPromo.getString("promoName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productPromoId)%>]</span></div>
+<a href="<ofbiz:url>/EditProductPromo</ofbiz:url>" class="buttontext">[New ProductPromo]</a>
 <br>
 <br>
 <%if (productPromoId != null && productPromo != null) {%>

@@ -87,26 +87,28 @@
 %>
 <br>
 
-<a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[New Category]</a>
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
-  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[Category Page]</a>
+  <hr class='sepbar'>
   <a href="<ofbiz:url>/EditCategory?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Category]</a>
   <a href="<ofbiz:url>/EditCategoryRollup?showProductCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Rollup]</a>
   <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontextdisabled">[Products]</a>
   <a href="<ofbiz:url>/EditCategoryProdCatalogs?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Catalogs]</a>
+  <hr class='sepbar'>
 <%}%>
 
-<div class="head1">Edit Category Members for Category
-  <%=UtilFormatOut.ifNotEmpty(productCategory==null?null:productCategory.getString("description"),"\"","\"")%>
-  with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>"</div>
+<div class="head1">Products <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(productCategory==null?null:productCategory.getString("description"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productCategoryId)%>]</span></div>
 
-<br>
+<a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[New Category]</a>
+<%if(productCategoryId != null && productCategoryId.length() > 0) {%>
+  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[Category Page]</a>
+<%}%>
 <%if (activeOnly) {%>
   <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%>&activeOnly=false</ofbiz:url>" class="buttontext">[Active and Inactive]</a>
 <%} else {%>
   <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%>&activeOnly=true</ofbiz:url>" class="buttontext">[Active Only]</a>
 <%}%>
 
+<br>
 <br>
 <%-- Edit 'ProductCategoryMember's --%>
 <%if(productCategoryId!=null && productCategory!=null){%>

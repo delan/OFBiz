@@ -1,5 +1,4 @@
-<%
-/**
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -23,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 20 2002
  *@version    1.0
- */
-%>
+--%>
 
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
@@ -54,19 +52,21 @@
 %>
 <br>
 
-<a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[New Category]</a>
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
-  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[Category Page]</a>
+  <hr class='sepbar'>
   <a href="<ofbiz:url>/EditCategory?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Category]</a>
   <a href="<ofbiz:url>/EditCategoryRollup?showProductCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Rollup]</a>
   <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Products]</a>
   <a href="<ofbiz:url>/EditCategoryProdCatalogs?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontextdisabled">[Catalogs]</a>
+  <hr class='sepbar'>
 <%}%>
 
-<div class="head1">Product Catalogs for Product Category
-  <%=UtilFormatOut.ifNotEmpty(productCategory==null?null:productCategory.getString("description"),"\"","\"")%> 
-  with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>"</div>
+<div class="head1">Catalogs <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(productCategory==null?null:productCategory.getString("description"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productCategoryId)%>]</span></div>
 
+<a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[New Category]</a>
+<%if(productCategoryId != null && productCategoryId.length() > 0) {%>
+  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[Category Page]</a>
+<%}%>
 <br>
 <br>
 <%if(productCategoryId!=null && productCategory!=null){%>
@@ -81,6 +81,7 @@
   </tr>
 <ofbiz:iterator name="prodCatalogCategory" property="prodCatalogCategories">
   <%GenericValue prodCatalog = prodCatalogCategory.getRelatedOne("ProdCatalog");%>
+  <%GenericValue curProdCatalogCategoryType = prodCatalogCategory.getRelatedOneCache("ProdCatalogCategoryType");%>
   <tr valign="middle">
     <td><a href='<ofbiz:url>/EditProdCatalog?prodCatalogId=<ofbiz:inputvalue entityAttr="prodCatalogCategory" field="prodCatalogId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="prodCatalogCategory" field="prodCatalogId"/></a></td>
     <td><%if (prodCatalog!=null) {%><a href='<ofbiz:url>/EditProdCatalog?prodCatalogId=<ofbiz:inputvalue entityAttr="prodCatalogCategory" field="prodCatalogId"/></ofbiz:url>' class="buttontext"><%=prodCatalog.getString("catalogName")%></a><%}%>&nbsp;</td>
@@ -94,13 +95,13 @@
             <input type=text size='5' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="sequenceNum" fullattrs="true"/>>
             <select name='prodCatalogCategoryTypeId' size=1>
                 <%if (prodCatalogCategory.get("prodCatalogCategoryTypeId") != null) {%>
-                  <option value='<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>'> [<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>]</option>
-                  <option value='<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>'>&nbsp;</option>
+                  <option value='<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>'><%if (curProdCatalogCategoryType != null) {%><%=UtilFormatOut.checkNull(curProdCatalogCategoryType.getString("description"))%><%} else {%> [<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>]<%}%></option>
+                  <option value='<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>'>----</option>
                 <%} else {%>
                   <option value=''>&nbsp;</option>
                 <%}%>
                 <ofbiz:iterator name="prodCatalogCategoryType" property="prodCatalogCategoryTypes">
-                  <option value='<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>'><%=prodCatalogCategoryType.getString("description")%> [<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>]</option>
+                  <option value='<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>'><%=prodCatalogCategoryType.getString("description")%><%-- [<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>]--%></option>
                 </ofbiz:iterator>
             </select>
             <INPUT type=submit value='Update'>
@@ -126,9 +127,9 @@
   </ofbiz:iterator>
   </select>
     <select name='prodCatalogCategoryTypeId' size=1>
-        <option value=''>&nbsp;</option>
+        <%-- <option value=''>&nbsp;</option> --%>
         <ofbiz:iterator name="prodCatalogCategoryType" property="prodCatalogCategoryTypes">
-          <option value='<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>'><%=prodCatalogCategoryType.getString("description")%> [<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>]</option>
+          <option value='<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>'><%=prodCatalogCategoryType.getString("description")%><%-- [<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>]--%></option>
         </ofbiz:iterator>
     </select>
   <input type=text size='20' name='fromDate'>

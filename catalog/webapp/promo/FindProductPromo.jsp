@@ -1,5 +1,4 @@
-<%
-/**
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -23,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 13, 2002
  *@version    1.0
- */
-%>
+--%>
 
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
@@ -41,8 +39,6 @@
 <br>
 
 <div class="head1">Product Promotions List</div>
-
-<br>
 <div><a href='<ofbiz:url>/EditProductPromo</ofbiz:url>' class="buttontext">[Create New ProductPromo]</a></div>
 <br>
 <table border="1" cellpadding='2' cellspacing='0'>

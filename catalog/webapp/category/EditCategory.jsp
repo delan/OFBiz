@@ -1,5 +1,4 @@
-<%
-/**
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -23,8 +22,7 @@
  *@author     David E. Jones
  *@created    Sep 10 2001
  *@version    1.0
- */
-%>
+--%>
 
 <%@ page import="java.util.*, java.io.*, java.net.URL" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
@@ -67,15 +65,22 @@
     if (productCategoryTypes != null) pageContext.setAttribute("productCategoryTypes", productCategoryTypes);
 %>
 <br>
-<a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[New Category]</a>
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
-  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[Category Page]</a>
+  <hr class='sepbar'>
   <a href="<ofbiz:url>/EditCategory?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontextdisabled">[Category]</a>
   <a href="<ofbiz:url>/EditCategoryRollup?showProductCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Rollup]</a>
   <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Products]</a>
   <a href="<ofbiz:url>/EditCategoryProdCatalogs?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Catalogs]</a>
+  <hr class='sepbar'>
 <%}%>
-<div class="head1">Edit Product Category with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>"</div>
+<div class="head1">Category <span class='head2'><%=UtilFormatOut.ifNotEmpty(productCategory==null?null:productCategory.getString("description"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productCategoryId)%>]</span></div>
+<a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[New Category]</a>
+<%if(productCategoryId != null && productCategoryId.length() > 0) {%>
+  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[Category Page]</a>
+<%}%>
+<br>
+<br>
+
 <%if(productCategory == null){%>
   <%if(productCategoryId != null){%>
     <h3>Could not find Product Category with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>".</h3>
@@ -117,10 +122,10 @@
         <td>&nbsp;</td>
         <td width="74%">
           <select name="productCategoryTypeId" size=1>
-            <option selected value='<ofbiz:inputvalue entityAttr="productCategory" field="productCategoryTypeId"/>'><ofbiz:inputvalue entityAttr="productCategoryType" field="description"/> <ofbiz:entityfield attribute="productCategory" field="productCategoryTypeId" prefix="[" suffix="]"/></option>
+            <option selected value='<ofbiz:inputvalue entityAttr="productCategory" field="productCategoryTypeId"/>'><ofbiz:inputvalue entityAttr="productCategoryType" field="description"/><%-- <ofbiz:entityfield attribute="productCategory" field="productCategoryTypeId" prefix="[" suffix="]"/>--%></option>
             <option value='<ofbiz:inputvalue entityAttr="productCategory" field="productCategoryTypeId"/>'>----</option>
             <ofbiz:iterator name="nextProductCategoryType" property="productCategoryTypes">
-              <option value='<ofbiz:inputvalue entityAttr="nextProductCategoryType" field="productCategoryTypeId"/>'><ofbiz:inputvalue entityAttr="nextProductCategoryType" field="description"/> <ofbiz:entityfield attribute="nextProductCategoryType" field="productCategoryTypeId" prefix="[" suffix="]"/></option>
+              <option value='<ofbiz:inputvalue entityAttr="nextProductCategoryType" field="productCategoryTypeId"/>'><ofbiz:inputvalue entityAttr="nextProductCategoryType" field="description"/><%-- <ofbiz:entityfield attribute="nextProductCategoryType" field="productCategoryTypeId" prefix="[" suffix="]"/>--%></option>
             </ofbiz:iterator>
           </select>
         </td>

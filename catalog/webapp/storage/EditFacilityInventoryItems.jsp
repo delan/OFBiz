@@ -34,6 +34,7 @@
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
     String facilityId = request.getParameter("facilityId");
+    GenericValue facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
     Collection facilityInventoryItems = delegator.findByAnd("InventoryItem", 
             UtilMisc.toMap("facilityId", facilityId), 
             UtilMisc.toList("statusId", "quantityOnHand", "serialNumber"));
@@ -64,15 +65,17 @@
         highIndex = listSize;
     }
 %>
-<br>
 
-<a href="<ofbiz:url>/EditFacility</ofbiz:url>" class="buttontext">[New Facility]</a>
 <%if(facilityId != null && facilityId.length() > 0){%>
+  <hr class='sepbar'>
   <a href="<ofbiz:url>/EditFacility?facilityId=<%=facilityId%></ofbiz:url>" class="buttontext">[Facility]</a>
   <a href="<ofbiz:url>/EditFacilityInventoryItems?facilityId=<%=facilityId%></ofbiz:url>" class="buttontextdisabled">[InventoryItems]</a>
+  <hr class='sepbar'>
 <%}%>
 
-<div class="head1">Inventory Items for Facility with ID "<%=UtilFormatOut.checkNull(facilityId)%>"</div>
+<div class="head1">Inventory Items <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(facility==null?null:facility.getString("facilityName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityId)%>]</span></div>
+
+<a href="<ofbiz:url>/EditFacility</ofbiz:url>" class="buttontext">[New Facility]</a>
 <a href='<ofbiz:url>/EditInventoryItem?facilityId=<%=facilityId%></ofbiz:url>' class="buttontext">
 [Create New Inventory Item for this Facility]</a>
 

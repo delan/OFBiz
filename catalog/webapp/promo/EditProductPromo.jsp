@@ -23,15 +23,12 @@
  *@created    May 13 2002
  *@version    1.0
 --%>
-<%try {%>
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
-
-<table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
@@ -47,14 +44,15 @@
     }
 %>
 
-<br>
-<a href="<ofbiz:url>/EditProductPromo</ofbiz:url>" class="buttontext">[New ProductPromo]</a>
 <%if(productPromoId != null && productPromoId.length() > 0){%>
+  <hr class='sepbar'>
   <a href="<ofbiz:url>/EditProductPromo?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontextdisabled">[Promo]</a>
   <a href="<ofbiz:url>/EditProductPromoRules?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontext">[Rules]</a>
   <a href="<ofbiz:url>/EditProductPromoCatalogs?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontext">[Catalogs]</a>
+  <hr class='sepbar'>
 <%}%>
-<div class="head1">Edit ProductPromo with ID "<%=UtilFormatOut.checkNull(productPromoId)%>"</div>
+<div class="head1">Promotion <span class='head2'><%=UtilFormatOut.ifNotEmpty(productPromo==null?null:productPromo.getString("promoName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productPromoId)%>]</span></div>
+<a href="<ofbiz:url>/EditProductPromo</ofbiz:url>" class="buttontext">[New ProductPromo]</a>
 <%if (productPromo == null) {%>
   <%if (productPromoId != null) {%>
     <form action="<ofbiz:url>/CreateProductPromo</ofbiz:url>" method=POST style='margin: 0;'>
@@ -121,5 +119,3 @@
 <%} else {%>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
-</td><td>&nbsp;&nbsp;</td></tr></table>
-<%} catch (Exception e) { Debug.logError(e); } %>

@@ -56,18 +56,18 @@
 %>
 <br>
 
-<a href="<ofbiz:url>/EditProdCatalog</ofbiz:url>" class="buttontext">[New ProdCatalog]</a>
 <%if(prodCatalogId != null && prodCatalogId.length() > 0){%>
+  <hr class='sepbar'>
   <a href="<ofbiz:url>/EditProdCatalog?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontext">[Catalog]</a>
   <a href="<ofbiz:url>/EditProdCatalogWebSites?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontext">[WebSites]</a>
   <a href="<ofbiz:url>/EditProdCatalogCategories?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontextdisabled">[Categories]</a>
   <a href="<ofbiz:url>/EditProdCatalogPromos?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontext">[Promotions]</a>
+  <hr class='sepbar'>
 <%}%>
 
-<div class="head1">Product Categories for Product Catalog
-  <%=UtilFormatOut.ifNotEmpty(prodCatalog==null?null:prodCatalog.getString("catalogName"),"\"","\"")%> 
-  with ID "<%=UtilFormatOut.checkNull(prodCatalogId)%>"</div>
+<div class="head1">Categories <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(prodCatalog==null?null:prodCatalog.getString("catalogName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(prodCatalogId)%>]</span></div>
 
+<a href="<ofbiz:url>/EditProdCatalog</ofbiz:url>" class="buttontext">[New ProdCatalog]</a>
 <br>
 <br>
 <%if(prodCatalogId!=null && prodCatalog!=null){%>

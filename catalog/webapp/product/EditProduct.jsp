@@ -101,8 +101,8 @@ function insertImageName(size,ext) {
 <br>
 <br>
 
-<%if(product == null){%>
-  <%if(productId != null){%>
+<%if (product == null) {%>
+  <%if (productId != null) {%>
     <h3>Could not find product with ID "<%=productId%>".</h3>
     <form action="<ofbiz:url>/createProduct</ofbiz:url>" method=POST style='margin: 0;' name="productForm">
     <input type=HIDDEN name='isCreate' value='true'>
@@ -114,7 +114,7 @@ function insertImageName(size,ext) {
         <input type="text" name="productId" size="20" maxlength="20" value="<%=productId%>">
       </td>
     </tr>
-  <%}else{%>
+  <%} else {%>
     <form action="<ofbiz:url>/createProduct</ofbiz:url>" method=POST style='margin: 0;' name="productForm">
     <input type=HIDDEN name='isCreate' value='true'>
     <table border='0' cellpadding='2' cellspacing='0'>
