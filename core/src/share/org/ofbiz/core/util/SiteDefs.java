@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/10/19 22:17:32  jonesde
+ * Changed servers.properties to entityengine.properties
+ *
  * Revision 1.1  2001/09/28 22:56:44  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -125,6 +128,9 @@ public final class SiteDefs {
     
     /** Used in request/session object to denote error messages */
     public static final String ERROR_MESSAGE = "_ERROR_MESSAGE_";
+    
+    /** Used in request/session object to denote event non error messages */
+    public static final String EVENT_MESSAGE = "_EVENT_MESSAGE_";
     
     /** Used in servlet context to store the request handler */
     public static final String REQUEST_HANDLER = "_REQUEST_HANDLER_";   
