@@ -80,7 +80,7 @@ public class CategoryServices {
             return result;
         }
 
-        Collection memberCol = (Collection) result.get("categoryMembers");
+        Collection memberCol = (Collection) values.get("categoryMembers");
         if (memberCol == null || memberCol.size() == 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problem reading category member data.");
