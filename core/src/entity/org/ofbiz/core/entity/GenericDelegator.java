@@ -146,18 +146,14 @@ public class GenericDelegator {
             }
         }
 
-        //TODO: change to true for testing, or read from entityengine.xml file
-        //  along with the class-name for distributed-cache-clear; default to false
-        boolean useDistributedCacheClear = false;
-        
         //if useDistributedCacheClear is false do nothing since the 
         //  distributedCacheClear member field with a null value will cause the
         //  dcc code to do nothing
-        if (useDistributedCacheClear) {
+        if (getDelegatorInfo().useDistributedCacheClear) {
             //initialize the distributedCacheClear mechanism
-            String distributedCacheClearClassName = "org.ofbiz.commonapp.common.EntityCacheServices";
+            String distributedCacheClearClassName = getDelegatorInfo().distributedCacheClearClassName;
             try {
-                Class dccClass = Class.forName(distributedCacheClearClassName);
+                Class dccClass = Class.forName(getDelegatorInfo().distributedCacheClearClassName);
                 this.distributedCacheClear = (DistributedCacheClear) dccClass.newInstance();
                 this.distributedCacheClear.setDelegator(this);
             } catch (ClassNotFoundException e) {
@@ -1333,6 +1329,12 @@ public class GenericDelegator {
     }
     
     public void clearCacheLine(GenericValue value, boolean distribute) {
+        //TODO: make this a bit more intelligent by passing in the operation being done (create, update, remove) so we can not do unnecessary cache clears...
+        //  for instance: 
+        //      on create don't clear by primary cache (and won't clear original values because there won't be any)
+        //      on remove don't clear by and for new values, but do for original values
+        
+        //Debug.logInfo("running clearCacheLine for value: " + value + ", distribute: " + distribute);
         if (value == null) return;
         
         //always auto clear the all cache too, since we know it's messed up in any case

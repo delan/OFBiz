@@ -207,12 +207,17 @@ public class EntityConfigUtil {
         public String name;
         public String entityModelReader;
         public String entityGroupReader;
+        public boolean useDistributedCacheClear;
+        public String distributedCacheClearClassName;
         public Map groupMap = new HashMap();
 
         public DelegatorInfo(Element element) {
             this.name = element.getAttribute("name");
             this.entityModelReader = element.getAttribute("entity-model-reader");
             this.entityGroupReader = element.getAttribute("entity-group-reader");
+            //this defaults to false, ie anything but true is false
+            this.useDistributedCacheClear = "true".equals(element.getAttribute("distributed-cache-clear-enabled"));
+            this.distributedCacheClearClassName = element.getAttribute("distributed-cache-clear-class-name");
             
             List groupMapList = UtilXml.childElementList(element, "group-map");
             Iterator groupMapIter = groupMapList.iterator();
