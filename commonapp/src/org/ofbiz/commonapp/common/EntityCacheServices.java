@@ -53,6 +53,7 @@ public class EntityCacheServices implements DistributedCacheClear {
     }
     
     public void distributedClearCacheLine(GenericValue value) {
+        //Debug.logInfo("running distributedClearCacheLine for value: " + value);
         if (this.dispatcher == null) {
             Debug.logWarning("No dispatcher is available, somehow the setDelegator (which also creates a dispatcher) was not called, not running distributed cache clear");
             return;
@@ -66,6 +67,7 @@ public class EntityCacheServices implements DistributedCacheClear {
     }
     
     public void distributedClearCacheLineFlexible(GenericEntity dummyPK) {
+        //Debug.logInfo("running distributedClearCacheLineFlexible for dummyPK: " + dummyPK);
         if (this.dispatcher == null) {
             Debug.logWarning("No dispatcher is available, somehow the setDelegator (which also creates a dispatcher) was not called, not running distributed cache clear");
             return;
@@ -79,6 +81,7 @@ public class EntityCacheServices implements DistributedCacheClear {
     }
     
     public void distributedClearCacheLine(GenericPK primaryKey) {
+        //Debug.logInfo("running distributedClearCacheLine for primaryKey: " + primaryKey);
         if (this.dispatcher == null) {
             Debug.logWarning("No dispatcher is available, somehow the setDelegator (which also creates a dispatcher) was not called, not running distributed cache clear");
             return;
