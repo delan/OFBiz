@@ -50,7 +50,7 @@
 	keystore CDATA #IMPLIED
 	password CDATA #IMPLIED
 	key-password CDATA #IMPLIED
-	need-client-cert ( true | false ) "false"	
+	require-client-cert ( true | false ) "false"	
 >
 <!ELEMENT component-container (component+)>
 <!ATTLIST component-container

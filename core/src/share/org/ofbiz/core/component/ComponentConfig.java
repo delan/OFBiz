@@ -164,8 +164,7 @@ public class ComponentConfig {
         }
         
         Element ofbizComponentElement = ofbizComponentDocument.getDocumentElement();
-        this.componentName = ofbizComponentElement.getAttribute("name");
-        
+        this.componentName = ofbizComponentElement.getAttribute("name");        
         Iterator elementIter = null;
         
         // resource-loader - resourceLoaderInfos

@@ -22,28 +22,29 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.core.component;
+package org.ofbiz.core.container;
 
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.util.GeneralException;
 
 /**
- * ComponentException
+ * ContainerException
  *
- * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.2
  */
-public class ComponentException extends GeneralException {
-
-    public ComponentException() {
+public class ContainerException extends GeneralException {
+    
+    public ContainerException() {
         super();
     }
 
-    public ComponentException(String str) {
+    public ContainerException(String str) {
         super(str);
     }
 
-    public ComponentException(String str, Throwable nested) {
+    public ContainerException(String str, Throwable nested) {
         super(str, nested);
-    }
+    }    
+
 }
