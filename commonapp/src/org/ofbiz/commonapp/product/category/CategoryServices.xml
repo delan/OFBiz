@@ -403,7 +403,7 @@
             <log level="info" message="Applying feature [${productFeatureId}] of type [${productFeatureTypeId}] to product [${productId}]"/>
             <env-to-field env-name="productId" map-name="createPfaMap"/>
             <env-to-field env-name="productFeatureId" map-name="createPfaMap"/>
-            <if-compare field-name="${productFeatureTypeId}" map-name="productFeatureSelectableByType" operator="equals" value="Y">
+            <if-compare field-name="${productFeatureTypeId}" map-name="parameters.productFeatureSelectableByType" operator="equals" value="Y">
                 <string-to-field string="SELECTABLE_FEATURE" field-name="productFeatureApplTypeId" map-name="createPfaMap"/>
                 <string-to-field string="Y" field-name="hasSelectableFeatures"/>
             <else>
