@@ -352,11 +352,12 @@ public class CatalogWorker {
 
     public static String getCurrentCatalogId(ServletRequest request) {
         HttpSession session = ((HttpServletRequest) request).getSession();
-        String prodCatalogId;
+        Map requestParameters = UtilHttp.getParameterMap((HttpServletRequest) request);
+        String prodCatalogId = null;
         boolean fromSession = false;
 
         // first see if a new catalog was specified as a parameter
-        prodCatalogId = request.getParameter("CURRENT_CATALOG_ID");
+        prodCatalogId = (String) requestParameters.get("CURRENT_CATALOG_ID");
         // if no parameter, try from session
         if (prodCatalogId == null) {
             prodCatalogId = (String) session.getAttribute("CURRENT_CATALOG_ID");

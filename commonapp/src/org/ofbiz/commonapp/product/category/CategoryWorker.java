@@ -48,11 +48,12 @@ public class CategoryWorker {
     
     public static String getCatalogTopCategory(ServletRequest request, String defaultTopCategory) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+        Map requestParameters = UtilHttp.getParameterMap(httpRequest);
         String topCatName = null;
         boolean fromSession = false;
 
         // first see if a new category was specified as a parameter
-        topCatName = request.getParameter("CATALOG_TOP_CATEGORY");
+        topCatName = (String) requestParameters.get("CATALOG_TOP_CATEGORY");
         // if no parameter, try from session
         if (topCatName == null) {
             topCatName = (String) httpRequest.getSession().getAttribute("CATALOG_TOP_CATEGORY");
@@ -104,12 +105,13 @@ public class CategoryWorker {
             getRelatedCategories(pageContext.getRequest(), attributeName, limitView);
     }
         
-    public static void getRelatedCategories(ServletRequest request, String attributeName, boolean limitView) {        
+    public static void getRelatedCategories(ServletRequest request, String attributeName, boolean limitView) {  
+        Map requestParameters = UtilHttp.getParameterMap((HttpServletRequest) request);      
         String requestId = null;
 
-        requestId = UtilFormatOut.checkNull(request.getParameter("catalog_id"), request.getParameter("CATALOG_ID"),
-                    request.getParameter("category_id"),
-                    request.getParameter("CATEGORY_ID"));
+        requestId = UtilFormatOut.checkNull((String)requestParameters.get("catalog_id"), (String)requestParameters.get("CATALOG_ID"),
+                (String)requestParameters.get("category_id"), (String)requestParameters.get("CATEGORY_ID"));
+                
         if (requestId.equals(""))
             return;
         if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.getRelatedCategories] RequestID: " + requestId);
@@ -177,7 +179,8 @@ public class CategoryWorker {
     }
 
     public static void setTrail(ServletRequest request, String currentCategory) {
-        String previousCategory = request.getParameter("pcategory");
+        Map requestParameters = UtilHttp.getParameterMap((HttpServletRequest) request);
+        String previousCategory = (String) requestParameters.get("pcategory");
 
         if (Debug.verboseOn()) Debug.logVerbose("[CatalogHelper.setTrail] Start: previousCategory=" + previousCategory +
                 " currentCategory=" + currentCategory);
