@@ -49,11 +49,11 @@
 		    <set field="subScreens.FindContent" value="FindContent" />
 		    <set field="subScreens.EditContent" value="EditContent" />
 		    <set field="subScreens.AddContent" value="AddContent" />
-		    <set field="subScreens.EditContentAssoc" value="contentassoc" />
-		    <set field="subScreens.EditContentRole" value="role" />
-		    <set field="subScreens.EditContentPurpose" value="purpose" />
-		    <set field="subScreens.EditContentAttribute" value="attribute" />
-		    <set field="subScreens.EditContentMetaData" value="metadata" />
+		    <set field="subScreens.contentassoc" value="EditContentAssoc" />
+		    <set field="subScreens.role" value="EditContentRole" />
+		    <set field="subScreens.purpose" value="EditContentPurpose" />
+		    <set field="subScreens.attribute" value="EditContentAttribute" />
+		    <set field="subScreens.metadata" value="EditContentMetaData" />
 		</actions>
                   <widgets>
                            <include-screen name="${subScreens.${currentContentMenuItemName}}" />
