@@ -662,7 +662,9 @@
       <field name="fixedAssetId" type="id"></field>
       <field name="facilityId" type="id"></field>
       <field name="createdDate" type="date-time"></field>
+      <field name="createdByPartyId" type="id"></field>
       <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByPartyId" type="id"></field>
       <field name="estimatedStartDate" type="date-time"></field>
       <field name="estimatedCompletionDate" type="date-time"></field>
       <field name="estimatedMilliSeconds" type="floating-point"></field>
