@@ -28,6 +28,7 @@ import java.text.*;
 
 import javax.servlet.http.*;
 
+import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
@@ -357,8 +358,12 @@ public class ShoppingCartEvents {
 
     /** Update the items in the shopping cart. */
     public static String modifyCart(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = getCartObject(request);
+        HttpSession session = request.getSession();
+        ShoppingCart cart = getCartObject(request);        
+        GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        Security security = (Security) request.getAttribute("security");
+        
         ArrayList deleteList = new ArrayList();
         Map paramMap = UtilMisc.getParameterMap(request);
         String errMsg = "";
@@ -381,19 +386,15 @@ public class ShoppingCartEvents {
         				request.setAttribute(SiteDefs.ERROR_MESSAGE, "Quantity must be a positive number.");
         				return "error";
         			}
-
-                    if (Debug.infoOn()) Debug.logInfo("Got index: " + index + "  AND  quantity: " + quantity);
-
+                    
                     if (o.toUpperCase().startsWith("UPDATE")) {
                         if (quantity == 0.0) {
-                            deleteList.add(cart.findCartItem(index));
-                            if (Debug.infoOn()) Debug.logInfo("Added index: " + index + " to delete list.");
+                            deleteList.add(cart.findCartItem(index));                            
                         } else {
                             ShoppingCartItem item = cart.findCartItem(index);
 
                             if (item != null) {
-                                try {
-                                    Debug.logInfo("Setting quantity.");
+                                try {                                   
                                     item.setQuantity(quantity, dispatcher, cart);
                                 } catch (CartItemModifyException e) {
                                     errMsg += "<li>" + e.getMessage();
@@ -401,10 +402,16 @@ public class ShoppingCartEvents {
                             }
                         }
                     }
+                    
+                    if (o.toUpperCase().startsWith("PRICE")) {
+                        if (security.hasEntityPermission("ORDERMGR", "_CREATE", userLogin)) {
+                            ShoppingCartItem item = cart.findCartItem(index);
+                            item.setBasePrice(quantity);
+                        }                       
+                    }
 
                     if (o.toUpperCase().startsWith("DELETE")) {
-                        deleteList.add(cart.findCartItem(index));
-                        if (Debug.infoOn()) Debug.logInfo("Added index: " + index + " to delete list.");
+                        deleteList.add(cart.findCartItem(index));                       
                     }
                 } catch (NumberFormatException nfe) {
                     Debug.logWarning(nfe, "Caught number format exception on cart update.");

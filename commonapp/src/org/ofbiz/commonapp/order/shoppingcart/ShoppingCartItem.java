@@ -186,6 +186,11 @@ public class ShoppingCartItem implements java.io.Serializable {
         return this.prodCatalogId;
     }
 
+    /** Sets the base price for the item; use with caution */
+    public void setBasePrice(double basePrice) {
+        this.basePrice = basePrice; 
+    }
+     
     /** Sets the quantity for the item and validates the change in quantity, etc */
     public void setQuantity(double quantity, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
         setQuantity(quantity, dispatcher, cart, true);
@@ -248,7 +253,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             org.ofbiz.commonapp.product.promo.ProductPromoWorker.doPromotions(prodCatalogId, cart, this, oldQuantity, getDelegator(), dispatcher);
         }
     }
-
+           
     /** Returns the quantity. */
     public double getQuantity() {
         return quantity;
