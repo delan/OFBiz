@@ -53,7 +53,7 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
 /**
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -73,9 +73,9 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author David E. Jones (jonesde@ofbiz.org)
- * @author Andy Zeneski (jaz@ofbiz.org)
- * @version    1.0
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Revision$
  */
 -->
 <% 

@@ -4,7 +4,7 @@
 /**
  *  Title: Entity Generator Group Definitions for the General Data Model
  *  Description: None
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,9 +24,9 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org)
- *@author Andy Zeneski (jaz@zsolv.com)
- *@version    1.0
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Revision$
  */
 -->
 
@@ -162,7 +162,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="GeoAssocType" />
     <entity-group group="org.ofbiz.commonapp" entity="GeoType" />
 
-
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.language -->
   <!-- ========================================================= -->
@@ -226,9 +225,9 @@
 
     <entity-group group="org.ofbiz.commonapp" entity="CharacterSet" />
     <entity-group group="org.ofbiz.commonapp" entity="DataCategory" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataResourceMetaData" />
     <entity-group group="org.ofbiz.commonapp" entity="DataResource" />
     <entity-group group="org.ofbiz.commonapp" entity="DataResourceAttribute" />
+    <entity-group group="org.ofbiz.commonapp" entity="DataResourceMetaData" />
     <entity-group group="org.ofbiz.commonapp" entity="DataResourcePurpose" />
     <entity-group group="org.ofbiz.commonapp" entity="DataResourcePurposeType" />
     <entity-group group="org.ofbiz.commonapp" entity="DataResourceRole" />

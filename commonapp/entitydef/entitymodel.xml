@@ -4,7 +4,7 @@
 /**
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,9 +24,9 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author David E. Jones (jonesde@ofbiz.org)
- * @author Andy Zeneski (jaz@jflow.net)
- * @version    1.0
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Revision$
  */
 -->
 
@@ -46,6 +46,7 @@
   <!--  - org.ofbiz.commonapp.common.datasource -->
   <!--  - org.ofbiz.commonapp.common.enum -->
   <!--  - org.ofbiz.commonapp.common.geo -->
+  <!--  - org.ofbiz.commonapp.common.language -->
   <!--  - org.ofbiz.commonapp.common.note -->
   <!--  - org.ofbiz.commonapp.common.period -->
   <!--  - org.ofbiz.commonapp.common.sequence -->
@@ -241,14 +242,14 @@
 
     <entity entity-name="StandardLanguage"
             package-name="org.ofbiz.commonapp.common.language">
-      <field name="standardLanguageId" type="id-ne" />
-      <field name="langCode3t" type="very-short" />
-      <field name="langCode3b" type="very-short" />
-      <field name="langCode2" type="very-short" />
-      <field name="langName" type="short-varchar" />
-      <field name="langFamily" type="short-varchar" />
-      <field name="langCharset" type="short-varchar" />
-      <prim-key field="standardLanguageId" />
+      <field name="standardLanguageId" type="id-ne"></field>
+      <field name="langCode3t" type="very-short"></field>
+      <field name="langCode3b" type="very-short"></field>
+      <field name="langCode2" type="very-short"></field>
+      <field name="langName" type="short-varchar"></field>
+      <field name="langFamily" type="short-varchar"></field>
+      <field name="langCharset" type="short-varchar"></field>
+      <prim-key field="standardLanguageId"/>
     </entity>
 
   <!-- ========================================================= -->
@@ -575,7 +576,7 @@
       <field name="visitId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="partyId" type="id"></field>    
+      <field name="partyId" type="id"></field>
       <field name="passwordUsed" type="short-varchar"></field>
       <field name="successfulLogin" type="indicator"></field>
       <prim-key field="userLoginId"/>
@@ -591,13 +592,13 @@
             package-name="org.ofbiz.commonapp.security.login"
             never-cache="true"
             title="User Login History Entity">
-      <field name="userLoginId" type="id-vlong-ne"></field>      
-      <field name="savedDate" type="date-time"></field>    
-      <field name="sessionData" type="very-long"></field>   
-      <prim-key field="userLoginId"/>     
+      <field name="userLoginId" type="id-vlong-ne"></field>
+      <field name="savedDate" type="date-time"></field>
+      <field name="sessionData" type="very-long"></field>
+      <prim-key field="userLoginId"/>
       <relation type="one" fk-name="USER_SESSION_USER" rel-entity-name="UserLogin">
         <key-map field-name="userLoginId"/>
-      </relation>     
+      </relation>
     </entity>
 
   <!-- ========================================================= -->

@@ -4,7 +4,7 @@
 /**
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,9 +24,9 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author David E. Jones (jonesde@ofbiz.org)
- * @author Andy Zeneski (jaz@jflow.net)
- * @version    1.0
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Revision$
  */
 -->
 
@@ -103,10 +103,10 @@
         <key-map field-name="finishModeEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="one-nofk" title="Performer" rel-entity-name="WorkflowParticipant">
-      	<key-map field-name="packageId"/>
-      	<key-map field-name="packageVersion"/>
-      	<key-map field-name="processId"/>
-      	<key-map field-name="processVersion"/>
+        <key-map field-name="packageId"/>
+        <key-map field-name="packageVersion"/>
+        <key-map field-name="processId"/>
+        <key-map field-name="processVersion"/>
         <key-map field-name="performerParticipantId" rel-field-name="participantId"/>
       </relation>
       <relation type="many" title="From" rel-entity-name="WorkflowTransition">
@@ -505,7 +505,7 @@
       <field name="packageId" type="id-long-ne"></field>
       <field name="packageVersion" type="very-short"></field>
       <field name="processId" type="id-long-ne"></field>
-      <field name="processVersion" type="very-short"></field>      
+      <field name="processVersion" type="very-short"></field>
       <field name="participantId" type="id-ne"></field>
       <field name="participantName" type="name"></field>
       <field name="partyId" type="id-long"></field>
@@ -515,25 +515,25 @@
       <prim-key field="packageId"/>
       <prim-key field="packageVersion"/>
       <prim-key field="processId"/>
-      <prim-key field="processVersion"/>      
+      <prim-key field="processVersion"/>
       <prim-key field="participantId"/>
       <relation type="many" title="Performer" rel-entity-name="WorkflowActivity">
-      	<key-map field-name="packageId"/>
-      	<key-map field-name="packageVersion"/>
-      	<key-map field-name="processId"/>
-      	<key-map field-name="processVersion"/>
+        <key-map field-name="packageId"/>
+        <key-map field-name="packageVersion"/>
+        <key-map field-name="processId"/>
+        <key-map field-name="processVersion"/>
         <key-map field-name="participantId" rel-field-name="performerParticipantId"/>
       </relation>
       <relation type="one" fk-name="WFLW_PART_TYPE" rel-entity-name="WorkflowParticipantType">
         <key-map field-name="participantTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowParticipantList">
-      	<key-map field-name="packageId"/>
-      	<key-map field-name="packageVersion"/>
-      	<key-map field-name="processId"/>
-      	<key-map field-name="processVersion"/>
+        <key-map field-name="packageId"/>
+        <key-map field-name="packageVersion"/>
+        <key-map field-name="processId"/>
+        <key-map field-name="processVersion"/>
         <key-map field-name="participantId"/>
-      </relation>      
+      </relation>
     </entity>
     <entity entity-name="WorkflowParticipantList"
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -542,20 +542,20 @@
       <field name="packageId" type="id-long-ne"></field>
       <field name="packageVersion" type="very-short"></field>
       <field name="processId" type="id-long-ne"></field>
-      <field name="processVersion" type="very-short"></field>      
+      <field name="processVersion" type="very-short"></field>
       <field name="participantId" type="id"></field>
       <field name="participantIndex" type="numeric"></field>
       <prim-key field="participantListId"/>
       <prim-key field="packageId"/>
       <prim-key field="packageVersion"/>
       <prim-key field="processId"/>
-      <prim-key field="processVersion"/>      
+      <prim-key field="processVersion"/>
       <prim-key field="participantId"/>
       <relation type="one-nofk" rel-entity-name="WorkflowParticipant">
-      	<key-map field-name="packageId"/>
-      	<key-map field-name="packageVersion"/>
-      	<key-map field-name="processId"/>
-      	<key-map field-name="processVersion"/>
+        <key-map field-name="packageId"/>
+        <key-map field-name="packageVersion"/>
+        <key-map field-name="processId"/>
+        <key-map field-name="processVersion"/>
         <key-map field-name="participantId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowProcess">
@@ -609,8 +609,8 @@
       <field name="duration" type="floating-point"></field>
       <field name="workingTime" type="floating-point"></field>
       <field name="waitingTime" type="floating-point"></field>
-      <field name="defaultStartActivityId" type="id-long"></field>      
-      <field name="sourceReferenceField" type="name"></field>               
+      <field name="defaultStartActivityId" type="id-long"></field>
+      <field name="sourceReferenceField" type="name"></field>
       <prim-key field="packageId"/>
       <prim-key field="packageVersion"/>
       <prim-key field="processId"/>
