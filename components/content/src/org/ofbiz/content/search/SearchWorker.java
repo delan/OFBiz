@@ -1,5 +1,5 @@
 /*
- * $Id: SearchWorker.java,v 1.9 2004/08/11 21:05:13 byersa Exp $
+ * $Id: SearchWorker.java,v 1.10 2004/08/11 21:36:55 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.content.ContentWorker;
  * SearchWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since 3.1
  * 
  *  
@@ -65,23 +65,28 @@ public class SearchWorker {
             GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("contentId", siteId));
                 if (Debug.infoOn()) Debug.logInfo("in indexTree, siteId:" + siteId + " content:" + content, module);
             List siteList = ContentWorker.getAssociatedContent(content, "From", UtilMisc.toList("SUBSITE"), null, UtilDateTime.nowTimestamp().toString(), null);
-	  	//if (Debug.infoOn()) Debug.logInfo("in indexTree, siteList:" + siteList, module);
-            Iterator iter = siteList.iterator();
-            while (iter.hasNext()) {
-                GenericValue siteContent = (GenericValue)iter.next();
-                List subContentList = ContentWorker.getAssociatedContent(siteContent, "From", UtilMisc.toList("PUBLISH_LINK"), null, UtilDateTime.nowTimestamp().toString(), null);
-	  	//if (Debug.infoOn()) Debug.logInfo("in indexTree, subContentList:" + subContentList, module);
-                List contentIdList = new ArrayList();
-                Iterator iter2 = subContentList.iterator();
-                while (iter2.hasNext()) {
-                    GenericValue subContent = (GenericValue)iter2.next();
-                    contentIdList.add(subContent.getString("contentId")); 
+	    if (Debug.infoOn()) Debug.logInfo("in indexTree, siteList:" + siteList, module);
+            if (siteList != null) {
+                Iterator iter = siteList.iterator();
+                while (iter.hasNext()) {
+                    GenericValue siteContent = (GenericValue)iter.next();
+                    List subContentList = ContentWorker.getAssociatedContent(siteContent, "From", UtilMisc.toList("PUBLISH_LINK"), null, UtilDateTime.nowTimestamp().toString(), null);
+    	  	//if (Debug.infoOn()) Debug.logInfo("in indexTree, subContentList:" + subContentList, module);
+                    List contentIdList = new ArrayList();
+                    Iterator iter2 = subContentList.iterator();
+                    while (iter2.hasNext()) {
+                        GenericValue subContent = (GenericValue)iter2.next();
+                        contentIdList.add(subContent.getString("contentId")); 
+                    }
+    	  	//if (Debug.infoOn()) Debug.logInfo("in indexTree, contentIdList:" + contentIdList, module);
+                    indexContentList(contentIdList, delegator, context);
+    
+                    String subSiteId = siteContent.getString("contentId");
+                    indexTree(delegator, subSiteId, context, path);
                 }
-	  	//if (Debug.infoOn()) Debug.logInfo("in indexTree, contentIdList:" + contentIdList, module);
-                indexContentList(contentIdList, delegator, context);
-
-                String subSiteId = siteContent.getString("contentId");
-                indexTree(delegator, subSiteId, context, path);
+            } else {
+                List badIndexList = (List)context.get("badIndexList");
+                badIndexList.add(siteId + " had no sub-entities.");
             }
             results.put("badIndexList", context.get("badIndexList"));
             results.put("goodIndexCount", context.get("goodIndexCount"));
