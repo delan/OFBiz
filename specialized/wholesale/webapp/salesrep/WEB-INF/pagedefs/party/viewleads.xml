@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">View Leads</property>
+    <property name="title.property">PageTitleViewLeads</property>
+    <content-action name="/party/viewprofile.bsh"/>
+    <property name="headerItem">leads</property>
+</page>

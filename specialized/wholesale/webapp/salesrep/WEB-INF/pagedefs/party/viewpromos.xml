@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">View Promotions	</property>
+    <property name="title.property">PageTitleViewPromos</property>
+    <property name="headerItem">promos</property>
+    <content-action name="/party/viewpromos.bsh"/>
+</page>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <property name="title">Mini Featured Product Page</property>
+    <property name="title.property">PageTitleFeaturedProductPage</property>
+    <page-action name="/catalog/minifeatured.bsh"/>
+</page>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_lr</template>
+    <property name="title">Show Promotion Details</property>
+    <!-- <property name="title.property">PageTitleShowAllPromotions</property> -->
+    <page-action name="/cart/showPromotionDetails.bsh"/>
+</page>

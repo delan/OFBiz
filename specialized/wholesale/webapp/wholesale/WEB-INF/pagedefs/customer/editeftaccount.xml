@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Edit EFT Account</property>
+    <property name="title.property">PageTitleEditEFTAccount</property>
+    <page-action name="/customer/editpaymentmethod.bsh"/>
+</page>
+

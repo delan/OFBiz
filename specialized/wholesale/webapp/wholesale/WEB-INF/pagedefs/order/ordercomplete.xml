@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Order Summary - Thank you for your order!</property>
+    <property name="title.property">PageTitleOrderSummary</property>
+    <page-action name="/order/orderstatus.bsh"/>
+</page>

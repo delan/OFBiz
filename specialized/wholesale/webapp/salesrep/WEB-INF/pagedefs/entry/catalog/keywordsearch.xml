@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Search Results</property>
+    <property name="leftbar">/includes/entry_left.ftl</property>
+    <property name="rightbar">/includes/entry_right.ftl</property>
+    <content-action name="/entry/catalog/keywordsearch.bsh"/>
+</page>
