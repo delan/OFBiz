@@ -879,6 +879,10 @@
     </request-map>
     
     <!-- ================ Product Store Requests ============= -->
+    <request-map uri="FindProductStore">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindProductStore"/>
+    </request-map>    
     <request-map uri="EditProductStore">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductStore"/>
@@ -953,6 +957,7 @@
     <view-map name="FindPriceRules" type="region"/>
     <view-map name="EditProductPriceRules" type="region"/>
     
+    <view-map name="FindProductStore" type="jpublish" page="/store/FindProductStore.ftl"/>
     <view-map name="EditProductStore" type="jpublish" page="/store/EditProductStore.ftl"/>
     <!-- end of view mappings -->
 </site-conf>

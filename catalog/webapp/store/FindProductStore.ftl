@@ -1,4 +1,4 @@
-/*
+<#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -22,31 +22,27 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Revision$
  *@since      2.2
- */
+-->
 
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.widgetimpl.*;
-
-security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
-
-if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}
-
-productStoreId = request.getParameter("productStoreId");
-if (productStoreId == null) {
-    productStoreId = request.getAttribute("productStoreId");
-}
-
-productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
-HtmlFormWrapper editStoreForm = new HtmlFormWrapper("/store/ProductStoreForms.xml", "EditProductStore", request, response);
-editStoreForm.putInContext("productStore", productStore);
-editStoreForm.putInContext("productStoreId", productStoreId);
-
-context.put("productStoreId", productStoreId);
-context.put("productStore", productStore);
-context.put("editProductStoreForm", editStoreForm);
+<div class="head1">Product Store List</div>
+<div><a href='<@ofbizUrl>/EditProductStore</@ofbizUrl>' class="buttontext">[Create New ProductStore]</a></div>
+<br>
+<table border="1" cellpadding='2' cellspacing='0'>
+  <tr>
+    <td><div class="tabletext"><b>Store&nbsp;Name&nbsp;[ID]</b></div></td>
+    <td><div class="tabletext"><b>Title</b></div></td>
+    <td><div class="tabletext"><b>Sub-Title</b></div></td>
+    <td><div class="tabletext">&nbsp;</div></td>
+  </tr>
+  <#list productStores as productStore>
+    <tr valign="middle">
+      <td><div class='tabletext'>&nbsp;<a href='<@ofbizUrl>/EditProductStore?productStoreId=${productStore.productStoreId}</@ofbizUrl>' class="buttontext">${productStore.storeName} [${productStore.productStoreId}]</a></div></td>
+      <td><div class='tabletext'>&nbsp;${productStore.title?if_exists}</div></td>
+      <td><div class='tabletext'>&nbsp;${productStore.subtitle?if_exists}</div></td>
+      <td>
+        <a href='<@ofbizUrl>/EditProductStore?productStoreId=${productStore.productStoreId}</@ofbizUrl>' class="buttontext">[Edit]</a>
+      </td>
+    </tr>
+  </#list>
+</table>
+<br>

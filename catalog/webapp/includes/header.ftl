@@ -35,7 +35,8 @@
   <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}"">Main</a></div>  
   <div class="col"><a href="<@ofbizUrl>/EditFeatureCategories</@ofbizUrl>" class="${selectedLeftClassMap.featurecats?default(unselectedLeftClassName)}"">FeatureCats</a></div>
   <div class="col"><a href="<@ofbizUrl>/FindProductPromo</@ofbizUrl>" class="${selectedLeftClassMap.promos?default(unselectedLeftClassName)}"">Promos</a></div>
-  <div class="col"><a href="<@ofbizUrl>/FindProductPriceRules</@ofbizUrl>" class="${selectedLeftClassMap.pricerules?default(unselectedLeftClassName)}"">PriceRules</a></div>    
+  <div class="col"><a href="<@ofbizUrl>/FindProductPriceRules</@ofbizUrl>" class="${selectedLeftClassMap.pricerules?default(unselectedLeftClassName)}"">PriceRules</a></div>
+  <div class="col"><a href="<@ofbizUrl>/FindProductStore</@ofbizUrl>" class="${selectedLeftClassMap.store?default(unselectedLeftClassName)}"">Stores</a></div>
 
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">Logout</a></div>
