@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
  */
 
@@ -90,9 +90,6 @@ String buildNext(Map map, List order, String current, String prefix, Map feature
     return buf.toString();
 }
 
-dispatcher = request.getAttribute("dispatcher");
-delegator = request.getAttribute("delegator");
-userLogin = session.getAttribute("userLogin");
 requestParams = UtilHttp.getParameterMap(request);
 
 // get the shopping lists for the user (if logged in)
@@ -106,13 +103,12 @@ if (userLogin != null) {
 
 // set the content path prefix
 contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
-request.setAttribute("contentPathPrefix", contentPathPrefix);
+context.put("contentPathPrefix", contentPathPrefix);
 
 // get the product detail information
-product = request.getAttribute("product");
 if (product != null) {
     productId = product.getString("productId");
-    request.setAttribute("product_id", productId);
+    context.put("product_id", productId);
     productTypeId = product.getString("productTypeId");
     featureTypes = new HashMap();
     featureOrder = new LinkedList();
@@ -132,7 +128,7 @@ if (product != null) {
 
     // make the productContentWrapper
     ProductContentWrapper productContentWrapper = new ProductContentWrapper(product, request);
-    request.setAttribute("productContentWrapper", productContentWrapper);
+    context.put("productContentWrapper", productContentWrapper);
 
     // get the main detail image (virtual or single product)
     mainDetailImage = productContentWrapper.get("DETAIL_IMAGE_URL");
@@ -145,15 +141,15 @@ if (product != null) {
     // get next/previous information for category
     categoryId = requestParams.get("category_id");
     if (categoryId == null) categoryId = product.getString("primaryProductCategoryId");
-    if (categoryId != null) request.setAttribute("categoryId", categoryId);
+    if (categoryId != null) context.put("categoryId", categoryId);
 
     Map catNextPreviousResult = null;
     if (!UtilValidate.isEmpty(categoryId)) {
         catNextPreviousResult = dispatcher.runSync("getPreviousNextProducts", UtilMisc.toMap("categoryId", categoryId, "productId", productId));
         if (catNextPreviousResult != null && catNextPreviousResult.get("category") != null) {
-            request.setAttribute("category", catNextPreviousResult.get("category"));
-            request.setAttribute("previousProductId", catNextPreviousResult.get("previousProductId"));
-            request.setAttribute("nextProductId", catNextPreviousResult.get("nextProductId"));
+            context.put("category", catNextPreviousResult.get("category"));
+            context.put("previousProductId", catNextPreviousResult.get("previousProductId"));
+            context.put("nextProductId", catNextPreviousResult.get("nextProductId"));
         }
     }
 
@@ -172,7 +168,7 @@ if (product != null) {
             surveyPartyId = userLogin.getString("partyId");
         }
         ProductStoreSurveyWrapper wrapper = new ProductStoreSurveyWrapper(survey, surveyPartyId, surveyContext);
-        request.setAttribute("surveyWrapper", wrapper);
+        context.put("surveyWrapper", wrapper);
     }
 
     // get the product price
@@ -183,7 +179,7 @@ if (product != null) {
     fieldMap = UtilMisc.toMap("product", product, "prodCatalogId", catalogId, "webSiteId", webSiteId,
         "currencyUomId", UtilHttp.getCurrencyUom(session), "autoUserLogin", autoUserLogin);
     priceMap = dispatcher.runSync("calculateProductPrice", fieldMap);
-    request.setAttribute("priceMap", priceMap);
+    context.put("priceMap", priceMap);
 
     // get the product review(s)
     reviewByAnd = UtilMisc.toMap("statusId", "PRR_APPROVED", "productStoreId", productStoreId);
@@ -209,7 +205,7 @@ if (product != null) {
     // get the product distinguishing features
     disFeatureMap = dispatcher.runSync("getProductFeatures", UtilMisc.toMap("productId", productId, "type", "DISTINGUISHING_FEAT"));
     disFeatureList = disFeatureMap.get("productFeatures");
-    request.setAttribute("disFeatureList", disFeatureList);
+    context.put("disFeatureList", disFeatureList);
     
     // an example of getting features of a certain type to show
     sizeProductFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId, "productFeatureTypeId", "SIZE"), UtilMisc.toList("sequenceNum", "defaultSequenceNum"));
@@ -224,17 +220,17 @@ if (product != null) {
             variantTree = variantTreeMap.get("variantTree");
             imageMap = variantTreeMap.get("variantSample");
             virtualVariant = variantTreeMap.get("virtualVariant");
-            request.setAttribute("virtualVariant", virtualVariant);
+            context.put("virtualVariant", virtualVariant);
             if (variantTree != null) {
-                request.setAttribute("variantTree", variantTree);
-                request.setAttribute("variantTreeSize", new Integer(variantTree.size()));
+                context.put("variantTree", variantTree);
+                context.put("variantTreeSize", new Integer(variantTree.size()));
             }
             if (imageMap != null) {
-                request.setAttribute("variantSample", imageMap);
-                request.setAttribute("variantSampleKeys", imageMap.keySet());
-                request.setAttribute("variantSampleSize", new Integer(imageMap.size()));
+                context.put("variantSample", imageMap);
+                context.put("variantSampleKeys", imageMap.keySet());
+                context.put("variantSampleSize", new Integer(imageMap.size()));
             }
-            request.setAttribute("featureSet", featureSet);
+            context.put("featureSet", featureSet);
 
             if (variantTree != null && variantTree.size() > 0) {
                 featureOrder = new LinkedList(featureSet);
@@ -246,10 +242,10 @@ if (product != null) {
                     featureTypes.put(featureKey, fValue);
                 }
             }
-            request.setAttribute("featureTypes", featureTypes);
-            request.setAttribute("featureOrder", featureOrder);
+            context.put("featureTypes", featureTypes);
+            context.put("featureOrder", featureOrder);
             if (featureOrder.size() > 0) {
-                request.setAttribute("featureOrderFirst", featureOrder.get(0));
+                context.put("featureOrderFirst", featureOrder.get(0));
             }
 
             if (variantTree != null && imageMap != null) {
@@ -368,7 +364,7 @@ if (product != null) {
                 jsBuf.append(amt.toString());
 	            jsBuf.append("</script>");
 
-	            request.setAttribute("virtualJavaScript", jsBuf.toString());
+	            context.put("virtualJavaScript", jsBuf.toString());
 	        }
         }
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -28,18 +28,20 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.product.catalog.*;
 
-detailTemplate = "/catalog/categorydetail.ftl";
+detailScreen = "categorydetail";
 catalogName = CatalogWorker.getCatalogName(request);
 delegator = request.getAttribute("delegator");
 requestParameters = UtilHttp.getParameterMap(request);
 productCategoryId = request.getAttribute("productCategoryId");
-if (productCategoryId == null) 
+if (productCategoryId == null) {
     productCategoryId = requestParameters.get("category_id");
+}
+context.put("productCategoryId", productCategoryId);
 
 category = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
 if (category != null) {
-    if (category.get("detailTemplate") != null) 
-        detailTemplate = category.getString("detailTemplate");
+    if (category.get("detailScreen") != null) 
+        detailScreen = category.getString("detailScreen");
     pageContext = context.get("page");
     if (pageContext instanceof Map) {
         pageContext.put("title", category.getString("description"));
@@ -54,12 +56,10 @@ if (category != null) {
 // check the catalogs template path and update
 templatePathPrefix = CatalogWorker.getTemplatePathPrefix(request);
 if (templatePathPrefix != null) {
-    detailTemplate = templatePathPrefix + detailTemplate;
+    detailScreen = templatePathPrefix + detailScreen;
 }
-context.put("detailTemplate", detailTemplate);
+context.put("detailScreen", detailScreen);
 
 request.setAttribute("productCategoryId", productCategoryId);
 request.setAttribute("defaultViewSize", new Integer(10));
 request.setAttribute("limitView", new Boolean(true));
-
-

@@ -537,6 +537,14 @@ public class ProductStoreWorker {
         }
     }
 
+    public static boolean isStoreInventoryRequired(ServletRequest request, GenericValue product) {
+        return isStoreInventoryRequiredAndAvailable(request, product, null, Boolean.TRUE, null);
+    }
+
+    public static boolean isStoreInventoryAvailable(ServletRequest request, GenericValue product, Double quantity) {
+        return isStoreInventoryRequiredAndAvailable(request, product, quantity, null, Boolean.TRUE);
+    }
+
     /** 
      * This method is used in the showcart pages to determine whether or not to show the inventory message and 
      * in the productdetail pages to determine whether or not to show the item as out of stock.
@@ -548,12 +556,18 @@ public class ProductStoreWorker {
      * @param wantAvailable If true then inventory avilable must be true for the result to be true, if false must be false; if null don't care
      * @return
      */
-    public static boolean isStoreInventoryRequiredAndAvailable(ServletRequest request, GenericValue product, double quantity, Boolean wantRequired, Boolean wantAvailable) {
+    public static boolean isStoreInventoryRequiredAndAvailable(ServletRequest request, GenericValue product, Double quantity, Boolean wantRequired, Boolean wantAvailable) {
         GenericValue productStore = getProductStore(request);
         if (productStore == null) {
             Debug.logWarning("No ProductStore found, return false for inventory check", module);
             return false;
         }
+        if (product == null) {
+            Debug.logWarning("No Product passed, return false for inventory check", module);
+            return false;
+        }
+        
+        if (quantity == null) quantity = new Double(1);
 
         String productStoreId = productStore.getString("productStoreId");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -571,7 +585,7 @@ public class ProductStoreWorker {
 
             Boolean availableOkay = null;
             if (wantAvailable != null) {
-                Map invAvailResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.toMap("productStoreId", productStoreId, "productId", product.get("productId"), "product", product, "productStore", productStore, "quantity", new Double(quantity)));
+                Map invAvailResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.toMap("productStoreId", productStoreId, "productId", product.get("productId"), "product", product, "productStore", productStore, "quantity", quantity));
                 if (ServiceUtil.isError(invAvailResult)) {
                     Debug.logError("Error calling isStoreInventoryAvailable service, result is: " + invAvailResult, module);
                     return false;

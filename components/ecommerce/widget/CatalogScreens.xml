@@ -124,18 +124,23 @@
         </section>
     </screen>
     
-    <!-- Top-Level and Stand-Alone Screens -->
+    <!-- =========== Top-Level and Stand-Alone Screens =========== -->
+
+    <!-- Category Screens -->
     <screen name="category">
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
 
-                <set field="title" value="Category Page"/>
                 <set field="title-property" value="PageTitleCategoryPage"/>
             </actions>
             <widgets>
-                <include-screen name="category-include"/>
+                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-screen name="category-include"/>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -145,7 +150,17 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/category.bsh"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/category.ftl"/></html></platform-specific>
+                <section>
+                    <condition>
+                        <not><if-empty field-name="productCategory"/></not>
+                    </condition>
+                    <widgets>
+                        <include-screen name="${detailScreen}"/>
+                    </widgets>
+                    <fail-widgets>
+                        <label style="head2">${uiLabelMap.ProductCategoryNotFoundforCategoryID} ${productCategoryId}!</label>
+                    </fail-widgets>
+                </section>
             </widgets>
         </section>
     </screen>
@@ -156,6 +171,74 @@
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/categorydetail.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="product">
+        <section>
+            <actions>
+                <set field="leftbarScreenName" value="leftbar"/>
+                <set field="rightbarScreenName" value="rightbar"/>
+
+                <set field="title-property" value="PageTitleProductPage"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/product.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field-name="product"/></not>
+                            </condition>
+                            <widgets>
+                                <include-screen name="${detailScreen}"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head2">${uiLabelMap.ProductProductNotFound} ${productId}!</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="productdetail">
+        <section>
+            <actions>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productdetail.bsh"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/productdetail.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="configproductdetail">
+        <section>
+            <actions>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productdetail.bsh"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/prepareconfigform.bsh"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/configproductdetail.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="productreview">
+        <section>
+            <actions>
+                <set field="leftbarScreenName" value="leftbar"/>
+                <set field="rightbarScreenName" value="rightbar"/>
+
+                <set field="title-property" value="PageTitleProductReview"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/productreview.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

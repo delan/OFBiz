@@ -2,7 +2,7 @@
 <page>
     <template>main_lr</template>
     <property name="title">Advanced Search</property>
-      <property name="title-property">PageTitleAdvancedSearch</property>
+    <property name="title-property">PageTitleAdvancedSearch</property>
     <property name="headerItem">Advanced Search</property>
     <content-action name="/catalog/advancedsearchoptions.bsh"/>
 </page>
