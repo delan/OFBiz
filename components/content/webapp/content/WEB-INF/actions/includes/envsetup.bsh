@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
  */
 
@@ -74,29 +74,27 @@ externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + extern
 request.setAttribute("externalKeyParam", externalKeyParam);
 request.setAttribute("activeApp", "contentmgr");
 
-eventMsgReq = request.getAttribute("_EVENT_MESSAGE_");
-eventMsgListReq = request.getAttribute("_EVENT_MESSAGE_LIST_");
-errorMsgReq = request.getAttribute("_ERROR_MESSAGE_");
-errorMsgListReq = request.getAttribute("_ERROR_MESSAGE_LIST_");
-errorMsgSes = session.getAttribute("_ERROR_MESSAGE_");
-
-if (eventMsgReq != null) {
-    request.setAttribute("eventMsgReq", UtilFormatOut.replaceString(eventMsgReq, "\n", "<br>"));
+eventMessageList = new LinkedList();
+errorMessageList = new LinkedList();
+if (request.getAttribute("_EVENT_MESSAGE_") != null) {
+    eventMessageList.add(UtilFormatOut.replaceString(request.getAttribute("_EVENT_MESSAGE_"), "\n", "<br>"));
     request.removeAttribute("_EVENT_MESSAGE_");
 }
-if (eventMsgListReq != null) {
-    request.setAttribute("eventMsgListReq", eventMsgListReq);
+if (request.getAttribute("_EVENT_MESSAGE_LIST_") != null) {
+    eventMessageList.addAll(request.getAttribute("_EVENT_MESSAGE_LIST_"));
     request.removeAttribute("_EVENT_MESSAGE_LIST_");
 }
-if (errorMsgReq != null) {
-    request.setAttribute("errorMsgReq", UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>"));
+if (request.getAttribute("_ERROR_MESSAGE_") != null) {
+    errorMessageList.add(UtilFormatOut.replaceString(request.getAttribute("_ERROR_MESSAGE_"), "\n", "<br>"));
     request.removeAttribute("_ERROR_MESSAGE_");
 }
-if (errorMsgListReq != null) {
-    request.setAttribute("errorMsgListReq", errorMsgListReq);
-    request.removeAttribute("_ERROR_MESSAGE_LIST_");
-}
-if (errorMsgSes != null) {
-    request.setAttribute("errorMsgSes", UtilFormatOut.replaceString(errorMsgSes, "\n", "<br>"));
+if (session.getAttribute("_ERROR_MESSAGE_") != null) {
+    errorMessageList.add(UtilFormatOut.replaceString(session.getAttribute("_ERROR_MESSAGE_"), "\n", "<br>"));
     session.removeAttribute("_ERROR_MESSAGE_");
 }
+if (request.getAttribute("_ERROR_MESSAGE_LIST_") != null) {
+    errorMessageList.addAll(request.getAttribute("_ERROR_MESSAGE_LIST_"));
+    request.removeAttribute("_ERROR_MESSAGE_LIST_");
+}
+request.setAttribute("eventMessageList", eventMessageList);
+request.setAttribute("errorMessageList", errorMessageList);

@@ -31,7 +31,21 @@
 <#macro fieldErrors fieldName>
   <#if requestAttributes.errorMsgListReq?has_content>
     <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField(fieldName, true, requestAttributes.errorMsgListReq)>
-    <ul><#list fieldMessages as errorMsg><li class="errorMessage">${errorMsg}</li></#list></ul>
+    <ul>
+      <#list fieldMessages as errorMsg>
+        <li class="errorMessage">${errorMsg}</li>
+      </#list>
+    </ul>
+  </#if>
+</#macro>
+<#macro fieldErrorsMulti fieldName1 fieldName2 fieldName3 fieldName4>
+  <#if requestAttributes.errorMsgListReq?has_content>
+    <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField(fieldName1, fieldName2, fieldName3, fieldName4, true, requestAttributes.errorMsgListReq)>
+    <ul>
+      <#list fieldMessages as errorMsg>
+        <li class="errorMessage">${errorMsg}</li>
+      </#list>
+    </ul>
   </#if>
 </#macro>
 
@@ -183,10 +197,7 @@
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyHomePhone}<BR>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
     <td width="74%">
-      <#if requestAttributes.errorMsgListReq?has_content>
-        <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField("CUSTOMER_HOME_COUNTRY", "CUSTOMER_HOME_AREA", "CUSTOMER_HOME_CONTACT", "CUSTOMER_HOME_EXT", true, requestAttributes.errorMsgListReq)>
-        <ul><#list fieldMessages as errorMsg><li class="errorMessage">${errorMsg}</li></#list></ul>
-      </#if>
+      <@fieldErrorsMulti fieldName1="CUSTOMER_HOME_COUNTRY" fieldName2="CUSTOMER_HOME_AREA" fieldName3="CUSTOMER_HOME_CONTACT" fieldName4="CUSTOMER_HOME_EXT"/>
         <input type="text" class='inputBox' name="CUSTOMER_HOME_COUNTRY" value="${requestParameters.CUSTOMER_HOME_COUNTRY?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_HOME_AREA" value="${requestParameters.CUSTOMER_HOME_AREA?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_HOME_CONTACT" value="${requestParameters.CUSTOMER_HOME_CONTACT?if_exists}" size="15" maxlength="15">
@@ -201,10 +212,7 @@
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyBusinessPhone}<BR>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
     <td width="74%">
-      <#if requestAttributes.errorMsgListReq?has_content>
-        <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField("CUSTOMER_WORK_COUNTRY", "CUSTOMER_WORK_AREA", "CUSTOMER_WORK_CONTACT", "CUSTOMER_WORK_EXT", true, requestAttributes.errorMsgListReq)>
-        <ul><#list fieldMessages as errorMsg><li class="errorMessage">${errorMsg}</li></#list></ul>
-      </#if>
+      <@fieldErrorsMulti fieldName1="CUSTOMER_WORK_COUNTRY" fieldName2="CUSTOMER_WORK_AREA" fieldName3="CUSTOMER_WORK_CONTACT" fieldName4="CUSTOMER_WORK_EXT"/>
         <input type="text" class='inputBox' name="CUSTOMER_WORK_COUNTRY" value="${requestParameters.CUSTOMER_WORK_COUNTRY?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_WORK_AREA" value="${requestParameters.CUSTOMER_WORK_AREA?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_WORK_CONTACT" value="${requestParameters.CUSTOMER_WORK_CONTACT?if_exists}" size="15" maxlength="15">
@@ -219,10 +227,7 @@
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyFaxNumber}<BR>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
     <td width="74%">
-      <#if requestAttributes.errorMsgListReq?has_content>
-        <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField("CUSTOMER_FAX_COUNTRY", "CUSTOMER_FAX_AREA", "CUSTOMER_FAX_CONTACT", "", true, requestAttributes.errorMsgListReq)>
-        <ul><#list fieldMessages as errorMsg><li class="errorMessage">${errorMsg}</li></#list></ul>
-      </#if>
+      <@fieldErrorsMulti fieldName1="CUSTOMER_FAX_COUNTRY" fieldName2="CUSTOMER_FAX_AREA" fieldName3="CUSTOMER_FAX_CONTACT" fieldName4=""/>
         <input type="text" class='inputBox' name="CUSTOMER_FAX_COUNTRY" value="${requestParameters.CUSTOMER_FAX_COUNTRY?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_FAX_AREA" value="${requestParameters.CUSTOMER_FAX_AREA?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_FAX_CONTACT" value="${requestParameters.CUSTOMER_FAX_CONTACT?if_exists}" size="15" maxlength="15">
@@ -236,10 +241,7 @@
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyMobilePhone}<BR>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
     <td width="74%">
-      <#if requestAttributes.errorMsgListReq?has_content>
-        <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField("CUSTOMER_MOBILE_COUNTRY", "CUSTOMER_MOBILE_AREA", "CUSTOMER_MOBILE_CONTACT", "", true, requestAttributes.errorMsgListReq)>
-        <ul><#list fieldMessages as errorMsg><li class="errorMessage">${errorMsg}</li></#list></ul>
-      </#if>
+      <@fieldErrorsMulti fieldName1="CUSTOMER_MOBILE_COUNTRY" fieldName2="CUSTOMER_MOBILE_AREA" fieldName3="CUSTOMER_MOBILE_CONTACT" fieldName4=""/>
         <input type="text" class='inputBox' name="CUSTOMER_MOBILE_COUNTRY" value="${requestParameters.CUSTOMER_MOBILE_COUNTRY?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_MOBILE_AREA" value="${requestParameters.CUSTOMER_MOBILE_AREA?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_MOBILE_CONTACT" value="${requestParameters.CUSTOMER_MOBILE_CONTACT?if_exists}" size="15" maxlength="15">

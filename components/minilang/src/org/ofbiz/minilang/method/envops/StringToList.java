@@ -1,5 +1,5 @@
 /*
- * $Id: StringToList.java,v 1.1 2003/08/17 06:06:12 ajzeneski Exp $
+ * $Id: StringToList.java,v 1.2 2004/05/15 23:06:02 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.minilang.method.*;
  * Appends the specified String to a List
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class StringToList extends MethodOperation {
@@ -46,26 +46,33 @@ public class StringToList extends MethodOperation {
     String string;
     ContextAccessor listAcsr;
     ContextAccessor argListAcsr;
+    String messageFieldName;
 
     public StringToList(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         string = element.getAttribute("string");
         listAcsr = new ContextAccessor(element.getAttribute("list-name"));
         argListAcsr = new ContextAccessor(element.getAttribute("arg-list-name"));
+        messageFieldName = element.getAttribute("message-field-name");
     }
 
     public boolean exec(MethodContext methodContext) {
-        String value = methodContext.expandString(string);
-        
+        String valueStr = methodContext.expandString(string);
         if (!argListAcsr.isEmpty()) {
             List argList = (List) argListAcsr.get(methodContext);
             if (argList != null && argList.size() > 0) {
-                value = MessageFormat.format(value, argList.toArray());
+                valueStr = MessageFormat.format(valueStr, argList.toArray());
             }
         }
 
-        List toList = (List) listAcsr.get(methodContext);
+        Object value;
+        if (this.messageFieldName != null && this.messageFieldName.length() > 0) {
+            value = new MessageString(valueStr, this.messageFieldName, true);
+        } else {
+            value = valueStr;
+        }
 
+        List toList = (List) listAcsr.get(methodContext);
         if (toList == null) {
             if (Debug.verboseOn()) Debug.logVerbose("List not found with name " + listAcsr + ", creating new List", module);
             toList = new LinkedList();
