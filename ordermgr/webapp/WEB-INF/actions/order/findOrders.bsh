@@ -43,6 +43,10 @@ context.put("roleTypes", roleTypes);
 orderStatuses = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "ORDER_STATUS"), UtilMisc.toList("description"));
 context.put("orderStatuses", orderStatuses);
 
+// get websites
+websites = delegator.findAll("WebSite", UtilMisc.toList("siteName"));
+context.put("webSites", websites);
+
 // current role type
 currentRoleTypeId = request.getParameter("roleTypeId");
 if (currentRoleTypeId != null && currentRoleTypeId.length() > 0) {
@@ -61,6 +65,13 @@ currentStatusId = request.getParameter("orderStatusId");
 if (currentStatusId != null && currentStatusId.length() > 0) {
     currentStatus = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", currentStatusId));
     context.put("currentStatus", currentStatus);
+}
+
+// current website
+currentWebSiteId = request.getParameter("webSiteId");
+if (currentWebSiteId != null && currentWebSiteId.length() > 0) {
+    currentWebSite = delegator.findByPrimaryKeyCache("WebSite", UtilMisc.toMap("webSiteId", currentWebSiteId));
+    context.put("currentWebSite", currentWebSite);
 }
 
 // create the fromDate for calendar

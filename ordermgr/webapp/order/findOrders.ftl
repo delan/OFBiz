@@ -121,10 +121,21 @@ function lookupOrders() {
                 <td><input type='text' class='inputBox' name='createdBy' value='${requestParameters.createdBy?if_exists}'></td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>WebSite:</div>
+                <td width='25%' align='right'><div class='tableheadtext'>Web Site:</div></td>
                 <td width='5%'>&nbsp;</td>
-                <td><input type='text' class='inputBox' name='webSiteId' value='${requestParameters.webSiteId?if_exists}'></td>
-              </tr> 
+                <td>
+                  <select name='webSiteId' class='selectBox'>
+                    <#if currentWebSite?has_content>
+                    <option value="${currentWebSite.webSiteId}">${currentWebSite.siteName}</option>
+                    <option value="${currentWebSite.webSiteId}">---</option>
+                    </#if>
+                    <option value="ANY">Any Web Site</option>                
+                    <#list webSites as webSite>
+                      <option value="${webSite.webSiteId}">${webSite.siteName}</option>
+                    </#list>
+                  </select>
+                </td>
+              </tr>                              
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Status:</div></td>
                 <td width='5%'>&nbsp;</td>
