@@ -293,10 +293,11 @@ public class WorldPayEvents {
         }
         
         // now set some send-back parameters
+        linkParms.setValue("M_controlPath", (String)request.getAttribute(SiteDefs.CONTROL_PATH));
         linkParms.setValue("M_orderProperties", orderPropertiesString);
         linkParms.setValue("M_ecommerceProperties", ecommercePropertiesString);
         linkParms.setValue("M_dispatchName", dispatcher.getName());
-        linkParms.setValue("M_delegatorName", delegator.getDelegatorName());
+        linkParms.setValue("M_delegatorName", delegator.getDelegatorName());        
         linkParms.setValue("M_webSiteId", webSiteId);
                     
         // redirect to worldpay
