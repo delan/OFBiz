@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.16 2004/06/11 00:32:55 byersa Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.17 2004/07/29 04:42:36 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,11 +26,16 @@ package org.ofbiz.content.widget.html;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.io.IOException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.ofbiz.content.webapp.taglib.ContentUrlTag;
+import org.ofbiz.content.webapp.control.RequestHandler;
+
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
@@ -46,6 +51,8 @@ import org.ofbiz.content.widget.menu.ModelMenu;
 import org.ofbiz.content.widget.menu.ModelMenuItem;
 import org.ofbiz.content.widget.menu.ModelMenuItem.MenuImage;
 import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
+import org.ofbiz.content.widget.menu.ModelMenuItem.Link;
+import org.ofbiz.content.widget.menu.ModelMenuItem.Image;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -56,7 +63,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {
@@ -191,53 +198,59 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             widthStr = " width=\"" + cellWidth + "\" ";
         
         buffer.append("<td " + widthStr + ">");
-        MenuTarget target = selectMenuTarget(menuItem, context);
-        //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target.getMenuTargetName(),"");
-            //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target,"");
-        if (target != null) {
-            String titleStyle = null;
-            boolean isSelected = isSelected(menuItem);
-            if (isSelected)
-                titleStyle = menuItem.getSelectedStyle();
-            else
-                titleStyle = menuItem.getTitleStyle();
-            String requestName = target.getRequestName();
-            String description = target.getMenuTargetTitle(context);
-            String targetType = target.getTargetType();
-            MenuImage menuImage = target.getMenuImage();
-            //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, requestName(0):" + requestName,"");
-            //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, menuImage(0):" + menuImage,"");
-            if (isDisableIfEmpty(menuItem, context) ) 
-                    target = null;
-            //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(1):" + target,"");
-            if (menuImage == null) {
-               //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, description(0):" + description,"");
-                if (target != null) {
-                    List paramList = target.getParamList();
-                    WidgetWorker.makeHyperlinkString(buffer, titleStyle, targetType, requestName, description, this.request, this.response, context, paramList);
-                } else {
-                    buffer.append("<div ");
-                    String disabledStyle = menuItem.getDisabledTitleStyle();
-                    if (UtilValidate.isNotEmpty(disabledStyle)) {
-                        buffer.append(" class=\"");
-                        buffer.append(disabledStyle);
-                        buffer.append("\"");
-                        buffer.append(">");
-                        buffer.append(description);
+        Link link = menuItem.getLink();
+        if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, link(0):" + link,"");
+        if (link != null) {
+            renderLink(buffer, context, link);
+        } else {
+            MenuTarget target = selectMenuTarget(menuItem, context);
+            //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target.getMenuTargetName(),"");
+                //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target,"");
+            if (target != null) {
+                String titleStyle = null;
+                boolean isSelected = isSelected(menuItem);
+                if (isSelected)
+                    titleStyle = menuItem.getSelectedStyle();
+                else
+                    titleStyle = menuItem.getTitleStyle();
+                String requestName = target.getRequestName();
+                String description = getTitle(menuItem, target, context);
+                String targetType = target.getTargetType();
+                MenuImage menuImage = target.getMenuImage();
+                //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, requestName(0):" + requestName,"");
+                //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, menuImage(0):" + menuImage,"");
+                if (isDisableIfEmpty(menuItem, context) ) 
+                        target = null;
+                //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(1):" + target,"");
+                if (menuImage == null) {
+                   //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, description(0):" + description,"");
+                    if (target != null) {
+                        List paramList = target.getParamList();
+                        WidgetWorker.makeHyperlinkString(buffer, titleStyle, targetType, requestName, description, this.request, this.response, context, paramList);
                     } else {
-                        buffer.append(">");
-                        buffer.append("</div>");
+                        buffer.append("<div ");
+                        String disabledStyle = menuItem.getDisabledTitleStyle();
+                        if (UtilValidate.isNotEmpty(disabledStyle)) {
+                            buffer.append(" class=\"");
+                            buffer.append(disabledStyle);
+                            buffer.append("\"");
+                            buffer.append(">");
+                            buffer.append(description);
+                        } else {
+                            buffer.append(">");
+                            buffer.append("</div>");
+                        }
                     }
+                } else { // is an image link
+                    // Note that target could be null is disabling is required
+                    String imgLink = buildImgLink(menuItem, menuImage, context, target);
+                    buffer.append(imgLink);
                 }
-            } else { // is an image link
-                // Note that target could be null is disabling is required
-                String imgLink = buildImgLink(menuItem, menuImage, context, target);
-                buffer.append(imgLink);
+                buffer.append("</td>");
+                if (orientation.equalsIgnoreCase("vertical"))
+                    buffer.append("</tr>");
+                this.appendWhitespace(buffer);
             }
-            buffer.append("</td>");
-            if (orientation.equalsIgnoreCase("vertical"))
-                buffer.append("</tr>");
-            this.appendWhitespace(buffer);
         }
         return;
     }
@@ -569,6 +582,148 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             if (Debug.infoOn()) Debug.logInfo("in buildImgLink, imgLinkStr:" + imgLinkStr, module);
         }
         return imgLinkStr;
+    }
+
+    public String getTitle(ModelMenuItem menuItem, MenuTarget target, Map context) {
+
+        String title = null;
+        title = menuItem.getTitle(context);
+        if (UtilValidate.isEmpty(title)) {
+            title = target.getMenuTargetTitle(context);
+        }
+        return title;
+    }
+
+    public void renderLink(StringBuffer buffer, Map context, ModelMenuItem.Link link) {
+        // open tag
+        buffer.append("<a");
+        String id = link.getId(context);
+        if (UtilValidate.isNotEmpty(id)) {
+            buffer.append(" id=\"");
+            buffer.append(id);
+            buffer.append("\"");
+        }
+        String style = link.getStyle(context);
+        if (UtilValidate.isNotEmpty(style)) {
+            buffer.append(" class=\"");
+            buffer.append(style);
+            buffer.append("\"");
+        }
+        String target = link.getTarget(context);
+        if (UtilValidate.isNotEmpty(target)) {
+            buffer.append(" href=\"");
+            String urlMode = link.getUrlMode();
+            String prefix = link.getPrefix(context);
+            boolean fullPath = link.getFullPath();
+            boolean secure = link.getSecure();
+            boolean encode = link.getEncode();
+            HttpServletResponse res = (HttpServletResponse) context.get("response");
+            HttpServletRequest req = (HttpServletRequest) context.get("request");
+            if (urlMode != null && urlMode.equalsIgnoreCase("ofbiz")) {
+                if (req != null && res != null) {
+                    ServletContext ctx = (ServletContext) req.getAttribute("servletContext");
+                    RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+                    String urlString = rh.makeLink(req, res, target, fullPath, secure, encode);
+                    buffer.append(urlString);
+                } else if (prefix != null) {
+                    buffer.append(prefix + target);
+                } else {
+                    buffer.append(target);
+                }
+            } else  if (urlMode != null && urlMode.equalsIgnoreCase("content")) {
+                StringBuffer newURL = new StringBuffer();
+                ContentUrlTag.appendContentPrefix(req, newURL);
+                newURL.append(target);
+                buffer.append(newURL.toString());
+            } else {
+                buffer.append(target);
+            }
+
+            buffer.append("\"");
+        }
+        buffer.append(">");
+        
+        // the text
+        Image img = link.getImage();
+        if (img == null)
+            buffer.append(link.getText(context));
+        else
+            renderImage(buffer, context, img);
+        
+        // close tag
+        buffer.append("</a>");
+        
+        appendWhitespace(buffer);
+    }
+
+    public void renderImage(StringBuffer buffer, Map context, ModelMenuItem.Image image) {
+        // open tag
+        buffer.append("<img ");
+        String id = image.getId(context);
+        if (UtilValidate.isNotEmpty(id)) {
+            buffer.append(" id=\"");
+            buffer.append(id);
+            buffer.append("\"");
+        }
+        String style = image.getStyle(context);
+        if (UtilValidate.isNotEmpty(style)) {
+            buffer.append(" class=\"");
+            buffer.append(style);
+            buffer.append("\"");
+        }
+        String wid = image.getWidth(context);
+        if (UtilValidate.isNotEmpty(wid)) {
+            buffer.append(" width=\"");
+            buffer.append(wid);
+            buffer.append("\"");
+        }
+        String hgt = image.getHeight(context);
+        if (UtilValidate.isNotEmpty(hgt)) {
+            buffer.append(" height=\"");
+            buffer.append(hgt);
+            buffer.append("\"");
+        }
+        String border = image.getBorder(context);
+        if (UtilValidate.isNotEmpty(border)) {
+            buffer.append(" border=\"");
+            buffer.append(border);
+            buffer.append("\"");
+        }
+        String src = image.getSrc(context);
+        if (UtilValidate.isNotEmpty(src)) {
+            buffer.append(" src=\"");
+            String urlMode = image.getUrlMode();
+            boolean fullPath = false;
+            boolean secure = false;
+            boolean encode = false;
+            HttpServletResponse response = (HttpServletResponse) context.get("response");
+            HttpServletRequest request = (HttpServletRequest) context.get("request");
+            if (urlMode != null && urlMode.equalsIgnoreCase("ofbiz")) {
+                if (request != null && response != null) {
+                    ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                    RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+                    String urlString = rh.makeLink(request, response, src, fullPath, secure, encode);
+                    buffer.append(urlString);
+                } else {
+                    buffer.append(src);
+                }
+            } else  if (urlMode != null && urlMode.equalsIgnoreCase("content")) {
+                if (request != null && response != null) {
+                    StringBuffer newURL = new StringBuffer();
+                    ContentUrlTag.appendContentPrefix(request, newURL);
+                    newURL.append(src);
+                    buffer.append(newURL.toString());
+                }
+            } else {
+                buffer.append(src);
+            }
+
+            buffer.append("\"");
+        }
+        buffer.append("/>");
+        
+        
+        appendWhitespace(buffer);
     }
 
 }

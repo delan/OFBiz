@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTree.java,v 1.3 2004/07/28 00:03:50 byersa Exp $
+ * $Id: ModelTree.java,v 1.4 2004/07/29 04:42:37 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -47,6 +47,7 @@ import org.ofbiz.content.widget.screen.ModelScreen;
 import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
 import org.ofbiz.content.widget.screen.ModelScreenWidget;
 import org.ofbiz.content.widget.screen.ScreenStringRenderer;
+import org.ofbiz.content.widget.screen.ScreenFactory;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -57,7 +58,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * Widget Library - Tree model class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class ModelTree {
@@ -238,8 +239,10 @@ public class ModelTree {
          
             try {
                 if ( screenName != null && screenLocation != null) {
-                    ScreenRenderer screenRenderer = (ScreenRenderer)context.get("screens"); 
-                    screenRenderer.render(this.screenLocation, this.screenName);
+                    ScreenStringRenderer screenStringRenderer = treeStringRenderer.getScreenStringRenderer(context);
+                    ModelScreen modelScreen = ScreenFactory.getScreenFromLocation(screenLocation, screenName);
+                    modelScreen.renderScreenString(writer, context, screenStringRenderer);
+
                 }
                 if ( label != null) {
                     label.renderLabelString(writer, context, treeStringRenderer);

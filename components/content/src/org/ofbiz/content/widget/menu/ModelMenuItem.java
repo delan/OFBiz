@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenuItem.java,v 1.12 2004/07/01 08:37:51 jonesde Exp $
+ * $Id: ModelMenuItem.java,v 1.13 2004/07/29 04:42:37 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -28,10 +28,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.io.IOException;
+import org.xml.sax.SAXException;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.w3c.dom.Element;
 
@@ -40,7 +44,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.2
  */
 public class ModelMenuItem {
@@ -75,6 +79,8 @@ public class ModelMenuItem {
     protected Boolean hasPermission;
     protected MenuImage menuImage;
     protected String disableIfEmpty;
+    protected ModelMenu subMenu;
+    protected Link link;
 
     public static String DEFAULT_TARGET_TYPE = "intra-app";
     // ===== CONSTRUCTORS =====
@@ -136,6 +142,31 @@ public class ModelMenuItem {
             Element imgElement = (Element) imgElementIter.next();
             menuImage = new MenuImage(imgElement);
             if (Debug.infoOn()) Debug.logInfo("in new ModelMenuItem, menuImage:" + menuImage, module);
+        }
+        Element subMenuElement = UtilXml.firstChildElement(fieldElement, "sub-menu");
+        if (subMenuElement != null) {
+            String subMenuLocation = subMenuElement.getAttribute("location");
+            String subMenuName = subMenuElement.getAttribute("name");
+            try {
+                this.subMenu = MenuFactory.getMenuFromLocation(subMenuLocation, subMenuName, modelMenu.getDelegator(), modelMenu.getDispacher());
+            } catch (IOException e) {
+                String errMsg = "Error getting subMenu in menu named [" + this.modelMenu.getName() + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            } catch (SAXException e2) {
+                String errMsg = "Error getting subMenu in menu named [" + this.modelMenu.getName() + "]: " + e2.toString();
+                Debug.logError(e2, errMsg, module);
+                throw new RuntimeException(errMsg);
+            } catch (ParserConfigurationException e3) {
+                String errMsg = "Error getting subMenu in menu named [" + this.modelMenu.getName() + "]: " + e3.toString();
+                Debug.logError(e3, errMsg, module);
+                throw new RuntimeException(errMsg);
+            }
+        }
+        Element linkElement = UtilXml.firstChildElement(fieldElement, "link");
+        if (Debug.infoOn()) Debug.logInfo("in ModelMenuItem, linkElement:" + linkElement, module);
+        if (linkElement != null) {
+            link = new Link(linkElement, this);
         }
 
     }
@@ -397,16 +428,23 @@ public class ModelMenuItem {
      * @return
      */
     public MenuTarget getCurrentMenuTarget() {
-        MenuTarget target = (MenuTarget)targetMap.get(currentMenuTargetName);
-        //if (Debug.infoOn()) Debug.logInfo("in getCurrentMenuTarget, target: " + target + " targetMap:" + targetMap, module);
-        if (target == null) {
-            target = (MenuTarget)targetMap.get(defaultMenuTargetName);
-        //if (Debug.infoOn()) Debug.logInfo("in getCurrentMenuTarget, target(2): " + target + " defaultMenuTargetName:" + defaultMenuTargetName, module);
+        
+        MenuTarget target = null;
+        if (subMenu != null ) {
+            ModelMenuItem subMenuItem = subMenu.getCurrentMenuItem();
+            target = subMenuItem.getCurrentMenuTarget();
+        } else {
+            target = (MenuTarget)targetMap.get(currentMenuTargetName);
+            //if (Debug.infoOn()) Debug.logInfo("in getCurrentMenuTarget, target: " + target + " targetMap:" + targetMap, module);
             if (target == null) {
-               if (targetList.size() > 0) {
-                   target = (MenuTarget)targetList.get(0);
-        //if (Debug.infoOn()) Debug.logInfo("in getCurrentMenuTarget, target(3): " + target + " targetList:" + targetList, module);
-               } 
+                target = (MenuTarget)targetMap.get(defaultMenuTargetName);
+            //if (Debug.infoOn()) Debug.logInfo("in getCurrentMenuTarget, target(2): " + target + " defaultMenuTargetName:" + defaultMenuTargetName, module);
+                if (target == null) {
+                   if (targetList.size() > 0) {
+                       target = (MenuTarget)targetList.get(0);
+            //if (Debug.infoOn()) Debug.logInfo("in getCurrentMenuTarget, target(3): " + target + " targetList:" + targetList, module);
+                   } 
+                }
             }
         }
         return target;
@@ -593,6 +631,10 @@ public class ModelMenuItem {
     }
     public MenuImage getMenuImage() {
        return this.menuImage;
+    }
+
+    public Link getLink() {
+       return this.link;
     }
 
     public class MenuTarget {
@@ -979,5 +1021,227 @@ public class ModelMenuItem {
 
     }
 
+        public static class Link {
 
+            protected ModelMenuItem parentMenuItem;
+            protected FlexibleStringExpander textExdr;
+            protected FlexibleStringExpander idExdr;
+            protected FlexibleStringExpander styleExdr;
+            protected FlexibleStringExpander targetExdr;
+            protected FlexibleStringExpander targetWindowExdr;
+            protected FlexibleStringExpander prefixExdr;
+            protected Image image;
+            protected String urlMode = "ofbiz";
+            protected boolean fullPath = false;
+            protected boolean secure = false;
+            protected boolean encode = false;
+            
+            public Link( Element linkElement, ModelMenuItem parentMenuItem) {
+    
+                this.parentMenuItem = parentMenuItem;
+                setText(linkElement.getAttribute("text"));
+                setId(linkElement.getAttribute("id"));
+                setStyle(linkElement.getAttribute("style"));
+                setTarget(linkElement.getAttribute("target"));
+                setTargetWindow(linkElement.getAttribute("target-window"));
+                setPrefix(linkElement.getAttribute("prefix"));
+                setUrlMode(linkElement.getAttribute("url-mode"));
+                setFullPath(linkElement.getAttribute("full-path"));
+                setSecure(linkElement.getAttribute("secure"));
+                setEncode(linkElement.getAttribute("encode"));
+                Element imageElement = UtilXml.firstChildElement(linkElement, "image");
+                if (imageElement != null) {
+                    this.image = new Image(imageElement);
+                }
+    
+            }
+    
+            public void renderLinkString(StringBuffer buffer, Map context, MenuStringRenderer menuStringRenderer) {
+                menuStringRenderer.renderLink(buffer, context, this);
+            }
+            
+            public String getText(Map context) {
+                String txt =  this.textExdr.expandString(context);
+                if (UtilValidate.isEmpty(txt))
+                    txt = parentMenuItem.getTitle(context);
+                return txt;
+            }
+            
+            public String getId(Map context) {
+                return this.idExdr.expandString(context);
+            }
+            
+            public String getStyle(Map context) {
+                return this.styleExdr.expandString(context);
+            }
+            
+            public String getTarget(Map context) {
+                return this.targetExdr.expandString(context);
+            }
+            
+            public String getTargetWindow(Map context) {
+                return this.targetWindowExdr.expandString(context);
+            }
+            
+            public String getUrlMode() {
+                return this.urlMode;
+            }
+            
+            public String getPrefix(Map context) {
+                return this.prefixExdr.expandString(context);
+            }
+            
+            public boolean getFullPath() {
+                return this.fullPath;
+            }
+            
+            public boolean getSecure() {
+                return this.secure;
+            }
+            
+            public boolean getEncode() {
+                return this.encode;
+            }
+            
+            public Image getImage() {
+                return this.image;
+            }
+
+            public void setText( String val ) {
+                String textAttr = UtilFormatOut.checkNull(val);
+                this.textExdr = new FlexibleStringExpander(textAttr);
+            }
+            public void setId( String val ) {
+                this.idExdr = new FlexibleStringExpander(val);
+            }
+            public void setStyle( String val ) {
+                this.styleExdr = new FlexibleStringExpander(val);
+            }
+            public void setTarget( String val ) {
+                this.targetExdr = new FlexibleStringExpander(val);
+            }
+            public void setTargetWindow( String val ) {
+                this.targetWindowExdr = new FlexibleStringExpander(val);
+            }
+            public void setPrefix( String val ) {
+                this.prefixExdr = new FlexibleStringExpander(val);
+            }
+            public void setUrlMode( String val ) {
+                if (UtilValidate.isEmpty(val))
+                    this.urlMode = "ofbiz";
+                else
+                    this.urlMode = val;
+            }
+            public void setFullPath( String val ) {
+                String sFullPath = val;
+                if (sFullPath != null && sFullPath.equalsIgnoreCase("true"))
+                    this.fullPath = true;
+                else
+                    this.fullPath = false;
+            }
+
+            public void setSecure( String val ) {
+                String sSecure = val;
+                if (sSecure != null && sSecure.equalsIgnoreCase("true"))
+                    this.secure = true;
+                else
+                    this.secure = false;
+            }
+
+            public void setEncode( String val ) {
+                String sEncode = val;
+                if (sEncode != null && sEncode.equalsIgnoreCase("true"))
+                    this.encode = true;
+                else
+                    this.encode = false;
+            }
+            public void setImage( Image img ) {
+                this.image = img;
+            }
+                
+        }
+
+        public static class Image {
+
+            protected FlexibleStringExpander srcExdr;
+            protected FlexibleStringExpander idExdr;
+            protected FlexibleStringExpander styleExdr;
+            protected FlexibleStringExpander widthExdr;
+            protected FlexibleStringExpander heightExdr;
+            protected FlexibleStringExpander borderExdr;
+            protected String urlMode;
+            
+            public Image( Element imageElement) {
+    
+                setSrc(imageElement.getAttribute("src"));
+                setId(imageElement.getAttribute("id"));
+                setStyle(imageElement.getAttribute("style"));
+                setWidth(imageElement.getAttribute("width"));
+                setHeight(imageElement.getAttribute("height"));
+                setBorder(UtilFormatOut.checkEmpty(imageElement.getAttribute("border"), "0"));
+                setUrlMode(UtilFormatOut.checkEmpty(imageElement.getAttribute("url-mode"), "content"));
+    
+            }
+    
+            public void renderImageString(StringBuffer buffer, Map context, MenuStringRenderer menuStringRenderer) {
+                menuStringRenderer.renderImage(buffer, context, this);
+            }
+            
+            public String getSrc(Map context) {
+                return this.srcExdr.expandString(context);
+            }
+            
+            public String getId(Map context) {
+                return this.idExdr.expandString(context);
+            }
+            
+            public String getStyle(Map context) {
+                return this.styleExdr.expandString(context);
+            }
+
+            public String getWidth(Map context) {
+                return this.widthExdr.expandString(context);
+            }
+
+            public String getHeight(Map context) {
+                return this.heightExdr.expandString(context);
+            }
+
+            public String getBorder(Map context) {
+                return this.borderExdr.expandString(context);
+            }
+            
+            public String getUrlMode() {
+                return this.urlMode;
+            }
+            
+            public void setSrc( String val ) {
+                String textAttr = UtilFormatOut.checkNull(val);
+                this.srcExdr = new FlexibleStringExpander(textAttr);
+            }
+            public void setId( String val ) {
+                this.idExdr = new FlexibleStringExpander(val);
+            }
+            public void setStyle( String val ) {
+                this.styleExdr = new FlexibleStringExpander(val);
+            }
+            public void setWidth( String val ) {
+                this.widthExdr = new FlexibleStringExpander(val);
+            }
+            public void setHeight( String val ) {
+                this.heightExdr = new FlexibleStringExpander(val);
+            }
+            public void setBorder( String val ) {
+                this.borderExdr = new FlexibleStringExpander(val);
+            }
+            public void setUrlMode( String val ) {
+                if (UtilValidate.isEmpty(val))
+                    this.urlMode = "content";
+                else
+                    this.urlMode = val;
+            }
+                
+        }
+
+    
 }

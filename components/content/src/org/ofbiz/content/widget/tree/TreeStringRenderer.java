@@ -1,5 +1,5 @@
 /*
- * $Id: TreeStringRenderer.java,v 1.2 2004/07/27 20:29:40 byersa Exp $
+ * $Id: TreeStringRenderer.java,v 1.3 2004/07/29 04:42:37 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -27,11 +27,13 @@ import java.util.Map;
 import java.io.Writer;
 import java.io.IOException;
 
+import org.ofbiz.content.widget.screen.ScreenStringRenderer;
+
 /**
  * Widget Library - Tree String Renderer interface
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public interface TreeStringRenderer {
@@ -41,4 +43,5 @@ public interface TreeStringRenderer {
     public void renderLabel(Writer writer, Map context, ModelTree.ModelNode.Label label) throws IOException;
     public void renderLink(Writer writer, Map context, ModelTree.ModelNode.Link link) throws IOException;
     public void renderImage(Writer writer, Map context, ModelTree.ModelNode.Image image) throws IOException;
+    public ScreenStringRenderer getScreenStringRenderer( Map context);
 }
