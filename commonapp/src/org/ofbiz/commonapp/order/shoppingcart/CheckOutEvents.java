@@ -441,7 +441,7 @@ public class CheckOutEvents {
             try {
                 URL templateUrl = null;
                 if (application != null) {
-                    application.getResource(CONFIRM_TEMPLATE);
+                    templateUrl = application.getResource(CONFIRM_TEMPLATE);
                 } else {
                     // if no application is passed check for a string in the request
                     String templateStr = (String) request.getAttribute("confirmEmail");
