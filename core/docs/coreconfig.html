@@ -14,7 +14,7 @@
 <A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: February 9, 2002<br>
+Last Updated: Januray 8, 2003<br>
 $Id$ <br>
 <hr>
 <br>
@@ -29,7 +29,6 @@ $Id$ <br>
   <li><a href="#localdtds">localdtds.properties</a>
   <li><a href="#security">security.properties</a>
   <li><a href="#serverstats">serverstats.properties</a>
-  <li><a href="#servicesengine">servicesengine.properties</a>
 </ul>
 
 <hr>
@@ -39,6 +38,7 @@ $Id$ <br>
 <ul>
   <li><a href="api/index.html">Core JavaDoc</a></li>
   <li><a href="entityconfig.html">Entity Engine Configuration Guide</a></li>
+  <li><a href="serviceconfig.html">Service Engine Configuration Guide</a></li>
 </ul>
 
 <hr>
@@ -59,7 +59,9 @@ a changed copy of the desired file in the webapp/WEB-INF/classes directory.</p>
 <p>The entityengine.xml file is not described in this document, it is described 
 in the Entity Engine Configuration Guide as a separate document because of the 
 large number of options in the file. See the Related Documents section for a link to
-the Entity Engine Configuration Guide.</p>
+the Entity Engine Configuration Guide. The same is true for the Service Engine
+Configuration Guide and the serviceengine.xml file, including a link in the
+Related Documents section above.</p>
 
 <hr>
 <h3><a name="Properties">Properties File Extensions</a></h3>
@@ -86,14 +88,24 @@ Default cache parameters can be passed in when a cache is created but if cache
 parameters exist in this file for the given cache name then they will be
 loaded from the cache.properties file.</p>
 
-<p>There are only two properties in this file for each named cache: 
-<b><code>{cache-name}.maxSize</code></b> and <b><code>{cache-name}.expireTime</code></b>. The maxSize
+<p>There are three optional properties in this file for each named cache: 
+<b><code>{cache-name}.maxSize</code></b> (whole number), <b><code>{cache-name}.expireTime</code></b>
+(whole number)
+and <b><code>{cache-name}.useSoftReference</code></b> (true or false). The maxSize
 property specifies the maximum number of entries in the cache, but does nothing
 with respect to the size of each cache entry. The expireTime property specifies
 how long in milliseconds each cache entry will be valid. If either value is 0 the
-feature will be disabled, ie unlimited cache size or no expire time. If the values
+feature will be disabled, ie unlimited cache size or no expire time.</p>
+
+<p>The useSoftReference property is used to specify, true or false, whether soft
+references should be used for cache entries. Soft references help keep large
+caches from taking too much memory by allowing the garbage collector to clear
+these entries when more memory is needed.</p>
+
+<p>If the values
 are not specified and are not passed to the UtilCache constructor, the values in
-the <b><code>default.maxSize</code></b> and <b><code>default.expireTime</code></b> properties will
+the <b><code>default.maxSize</code></b>, <b><code>default.expireTime</code></b> 
+and <b><code>default.useSoftReference</code></b> properties will
 be used.</p>
 
 <hr>
@@ -105,7 +117,8 @@ documentation on Log4J).</p>
 
 <p>In addition to the Log4J properties there are properties that turn OFBiz logging
 levels on and off. These are formatted like <b><code>print.{level-name}</code></b> where level-name
-is <b><code>verbose</code></b>, <b><code>timing</code></b>, <b><code>info</code></b>, <b><code>warning</code></b>, <b><code>error</code></b>, or <b><code>fatal</code></b>.</p>
+is <b><code>verbose</code></b>, <b><code>timing</code></b>, <b><code>info</code></b>,
+<b><code>important</code></b>, <b><code>warning</code></b>, <b><code>error</code></b>, or <b><code>fatal</code></b>.</p>
 
 <hr>
 <h3><a name="localdtds">localdtds.properties</a></h3>
@@ -160,6 +173,10 @@ resource-name is <b><code>REQUEST</code></b> for Control Servlet requests,
 <b><code>EVENT</code></b> for Control Servlet Events, or <b><code>VIEW</code></b> 
 for Control Servlet Views (JSPs mostly).</p>
 
+<!-- 
+  - Just commenting this out for now, this is now in an XML file and is much
+  - more complex, so a separate document should probably be used to describe that 
+
 <hr>
 <h3><a name="servicesengine">servicesengine.properties</a></h3>
 <hr>
@@ -192,6 +209,7 @@ XML file and class-name is the fully-qualified class name for a class that
 implements the <b><code>org.ofbiz.core.service.GenericEngine</code></b> interface.
 Valid entity-names include: <b><code>java</code></b>, <b><code>workflow</code></b>,
 <b><code>bsh</code></b>, and <b><code>soap</code></b>.</p>
+-->
 
 </body>
 </html>
