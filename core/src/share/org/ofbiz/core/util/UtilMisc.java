@@ -33,13 +33,14 @@ import java.util.*;
  * UtilMisc - Misc Utility Functions
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @created    July 26, 2001
  * @version    1.0
  */
 public class UtilMisc {
 
-    /** Get an iterator from a collection, returning null if collection is null
+    /** 
+     * Get an iterator from a collection, returning null if collection is null
      * @param col The collection to be turned in to an iterator
      * @return The resulting Iterator
      */
@@ -50,7 +51,8 @@ public class UtilMisc {
             return col.iterator();
     }
 
-    /** Create a map from passed nameX, valueX parameters
+    /** 
+     * Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
     public static Map toMap(String name1, Object value1) {
@@ -61,7 +63,8 @@ public class UtilMisc {
          return fields;*/
     }
 
-    /** Create a map from passed nameX, valueX parameters
+    /** 
+     * Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
     public static Map toMap(String name1, Object value1, String name2, Object value2) {
@@ -73,7 +76,8 @@ public class UtilMisc {
          return fields;*/
     }
 
-    /** Create a map from passed nameX, valueX parameters
+    /** 
+     * Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
     public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3) {
@@ -86,7 +90,8 @@ public class UtilMisc {
          return fields;*/
     }
 
-    /** Create a map from passed nameX, valueX parameters
+    /** 
+     * Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
     public static Map toMap(String name1, Object value1, String name2, Object value2, String name3,
@@ -101,7 +106,8 @@ public class UtilMisc {
          return fields;*/
     }
 
-    /** Create a map from passed nameX, valueX parameters
+    /** 
+     * Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
     public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3,
@@ -116,7 +122,8 @@ public class UtilMisc {
         return fields;
     }
 
-    /** Create a map from passed nameX, valueX parameters
+    /** 
+     * Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
     public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3,
@@ -131,8 +138,29 @@ public class UtilMisc {
         fields.put(name6, value6);
         return fields;
     }
+    
+    /**
+     * Sort a List of Maps by specified consistent keys.
+     * @param listOfMaps List of Map objects to sort.
+     * @param sortKeys List of Map keys to sort by.
+     * @return a new List of sorted Maps.
+     */
+    public static List sortMaps(List listOfMaps, List sortKeys) {
+        if (listOfMaps == null || sortKeys == null)
+            return null;
+        List toSort = new LinkedList(listOfMaps);
+        try {
+            MapComparator mc = new MapComparator(sortKeys);
+            Collections.sort(toSort, mc);
+        } catch (Exception e) {
+            Debug.logError(e, "Problems sorting list of maps; returning null.");
+            return null;
+        }
+        return toSort;
+    }
 
-    /** Create a list from passed objX parameters
+    /** 
+     * Create a list from passed objX parameters
      * @return The resulting List
      */
     public static List toList(Object obj1) {
@@ -142,7 +170,8 @@ public class UtilMisc {
         return list;
     }
 
-    /** Create a list from passed objX parameters
+    /** 
+     * Create a list from passed objX parameters
      * @return The resulting List
      */
     public static List toList(Object obj1, Object obj2) {
@@ -153,7 +182,8 @@ public class UtilMisc {
         return list;
     }
 
-    /** Create a list from passed objX parameters
+    /** 
+     * Create a list from passed objX parameters
      * @return The resulting List
      */
     public static List toList(Object obj1, Object obj2, Object obj3) {
@@ -165,7 +195,8 @@ public class UtilMisc {
         return list;
     }
 
-    /** Create a list from passed objX parameters
+    /** 
+     * Create a list from passed objX parameters
      * @return The resulting List
      */
     public static List toList(Object obj1, Object obj2, Object obj3, Object obj4) {
@@ -178,7 +209,8 @@ public class UtilMisc {
         return list;
     }
 
-    /** Create a list from passed objX parameters
+    /** 
+     * Create a list from passed objX parameters
      * @return The resulting List
      */
     public static List toList(Object obj1, Object obj2, Object obj3, Object obj4, Object obj5) {
@@ -192,7 +224,8 @@ public class UtilMisc {
         return list;
     }
 
-    /** Create a list from passed objX parameters
+    /** 
+     * Create a list from passed objX parameters
      * @return The resulting List
      */
     public static List toList(Object obj1, Object obj2, Object obj3, Object obj4, Object obj5, Object obj6) {
@@ -216,7 +249,8 @@ public class UtilMisc {
         }
     }
 
-    /** Create a map from an HttpServletRequest object
+    /** 
+     * Create a map from an HttpServletRequest object
      * @return The resulting Map
      */
     public static Map getParameterMap(HttpServletRequest request) {
@@ -231,7 +265,8 @@ public class UtilMisc {
         return (Map) paramMap;
     }
 
-    /** Given a request, returns the application name or "root" if deployed on root */
+    /** 
+     * Given a request, returns the application name or "root" if deployed on root      * @param request     * @return String     */
     public static String getApplicationName(HttpServletRequest request) {
         String appName = "root";
 
@@ -260,6 +295,7 @@ public class UtilMisc {
         }
         return requestUrl;
     }
+
 
     /** This is meant to be very quick to create and use for small sized maps, perfect for how we usually use UtilMisc.toMap */
     protected static class SimpleMap implements Map, java.io.Serializable {
