@@ -89,6 +89,8 @@
     <entity-group group="org.ofbiz" entity="ZipSalesRuleLookup" />
     <entity-group group="org.ofbiz" entity="ZipSalesTaxLookup" />
 
+    <entity-group group="org.ofbiz" entity="OrderHeaderAndShipGroups" />
+
   <!-- ========================================================= -->
   <!-- org.ofbiz.order.picklist -->
   <!-- ========================================================= -->

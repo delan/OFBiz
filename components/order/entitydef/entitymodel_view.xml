@@ -625,7 +625,33 @@
         <key-map field-name="workEffortId"/>
       </view-link>
     </view-entity>
+    
+    
+    <view-entity entity-name="OrderHeaderAndShipGroups"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header And Ship Groups">
+      <member-entity entity-alias="OISG" entity-name="OrderItemShipGroup"/>
+      <member-entity entity-alias="PA" entity-name="PostalAddress"/>
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="ORR" entity-name="OrderRole"/>
+      <alias-all entity-alias="OISG"/>
+      <alias-all entity-alias="PA"/>
+      <alias-all entity-alias="ORR"/>
+      <alias-all entity-alias="OH"/>
+      <view-link entity-alias="OH" rel-entity-alias="OISG">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OISG" rel-entity-alias="PA">
+        <key-map field-name="contactMechId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="ORR">
+        <key-map field-name="orderId"/>
+      </view-link>
+    </view-entity>
 
+    
+    
   <!-- ========================================================= -->
   <!-- org.ofbiz.order.request -->
   <!-- ========================================================= -->
