@@ -60,40 +60,71 @@
         <TD></TD>
       </TR>
 
-      <%Iterator iter = utilCache.keyLRUList.iterator();%>
-      <%if(iter!=null && iter.hasNext()){%>
-        <%while(iter.hasNext()){%>
-          <%Object key = iter.next();%>
-          <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-          <tr bgcolor="<%=rowColor%>">
-            <TD><%=key.toString()%></TD>
-            <%Long createTime = (Long)utilCache.expireTable.get(key);%>
-            <%--
-            <TD>
-              <%if(createTime!=null){%>
-                <%=(new Date(createTime.longValue())).toString()%>
-              <%}%>
-              &nbsp;
-            </TD>
-            --%>
-            <TD>
-              <%long expireTime = utilCache.getExpireTime();%>
-              <%if(createTime!=null){%>
-                <%=(new Date(createTime.longValue()+expireTime)).toString()%>
-              <%}%>
-              &nbsp;
-            </TD>
-            <TD>
-              <%if(hasUtilCacheEdit){%>
-                <a href="<%=response.encodeURL(controlPath + "/FindUtilCacheElementsRemoveElement?UTIL_CACHE_NAME=" + cacheName + "&UTIL_CACHE_ELEMENT_NUMBER=" + utilCache.keyLRUList.indexOf(key))%>" class="buttontext">Remove</a>
-              <%}%>
-            </TD>
-          </TR>
-        <%}%>
-      <%}else{%>
-          <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-            <TD colspan="5">No UtilCache instances found.</TD>
-          </TR>
+      <%if(utilCache.getMaxSize() > 0) {%>
+          <%Iterator iter = utilCache.keyLRUList.iterator();%>
+          <%if(iter!=null && iter.hasNext()){%>
+            <%while(iter.hasNext()){%>
+              <%Object key = iter.next();%>
+              <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
+              <tr bgcolor="<%=rowColor%>">
+                <TD><%=key.toString()%></TD>
+                <%Long createTime = (Long)utilCache.expireTable.get(key);%>
+                <%--
+                <TD>
+                  <%if(createTime!=null){%>
+                    <%=(new Date(createTime.longValue())).toString()%>
+                  <%}%>
+                  &nbsp;
+                </TD>
+                --%>
+                <TD>
+                  <%long expireTime = utilCache.getExpireTime();%>
+                  <%if(createTime!=null){%>
+                    <%=(new Date(createTime.longValue()+expireTime)).toString()%>
+                  <%}%>
+                  &nbsp;
+                </TD>
+                <TD>
+                  <%if(hasUtilCacheEdit){%>
+                    <a href="<%=response.encodeURL(controlPath + "/FindUtilCacheElementsRemoveElement?UTIL_CACHE_NAME=" + cacheName + "&UTIL_CACHE_ELEMENT_NUMBER=" + utilCache.keyLRUList.indexOf(key))%>" class="buttontext">Remove</a>
+                  <%}%>
+                </TD>
+              </TR>
+            <%}%>
+          <%}else{%>
+              <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+                <TD colspan="5">No UtilCache elements found.</TD>
+              </TR>
+          <%}%>
+      <%} else {%>
+          <%Iterator iter = utilCache.valueTable.entrySet().iterator();%>
+          <%if(iter!=null && iter.hasNext()){%>
+            <%while(iter.hasNext()){%>
+              <%Map.Entry entry = (Map.Entry)iter.next();%>
+              <%Object key = entry.getKey();%>
+              <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
+              <tr bgcolor="<%=rowColor%>">
+                <TD><%=key.toString()%></TD>
+                <%Long createTime = (Long)utilCache.expireTable.get(key);%>
+                <TD>
+                  <%long expireTime = utilCache.getExpireTime();%>
+                  <%if(createTime!=null){%>
+                    <%=(new Date(createTime.longValue()+expireTime)).toString()%>
+                  <%}%>
+                  &nbsp;
+                </TD>
+                <TD>
+                  <%if(hasUtilCacheEdit){%>
+                    <a href="<%=response.encodeURL(controlPath + "/FindUtilCacheElementsRemoveElement?UTIL_CACHE_NAME=" + cacheName + "&UTIL_CACHE_ELEMENT_NUMBER=" + utilCache.keyLRUList.indexOf(key))%>" class="buttontext">Remove</a>
+                  <%}%>
+                </TD>
+              </TR>
+            <%}%>
+          <%}else{%>
+              <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+                <TD colspan="5">No UtilCache elements found.</TD>
+              </TR>
+          <%}%>
       <%}%>
     </TABLE>
    <%}else{%>
