@@ -244,6 +244,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
 
     <datasource name="localmssql"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
+            schema-name="dbo"
             field-type-name="mssql"
             check-on-start="true"
             add-missing-on-start="true"
