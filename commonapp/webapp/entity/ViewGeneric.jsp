@@ -51,6 +51,8 @@
 <%if(hasViewPermission){%>
 
 <%
+  boolean useValue = true;
+
   String rowClass1 = "viewOneTR1";
   String rowClass2 = "viewOneTR2";
   String rowClass = "";
@@ -84,6 +86,7 @@
   curFindString = UtilFormatOut.encodeQuery(curFindString);
 
   GenericValue value = helper.findByPrimaryKey(findByPK);
+  if(value == null) useValue = false;
 %>
 
 <br>
@@ -177,7 +180,7 @@ function ShowViewTab(lname)
       lastUpdateMode != null && !lastUpdateMode.equals("DELETE"))
   {
     //if we are updating and there is an error, don't use the entity data for the fields, use parameters to get the old value
-    value = null;
+    useValue = false;
   }
 %>
 <form action="<%=response.encodeURL(controlPath + "/UpdateGeneric?entityName=" + entityName)%>" method="POST" name="updateForm" style="margin:0;">
@@ -316,7 +319,7 @@ function ShowViewTab(lname)
         <%
           String dateString = null;
           String timeString = null;
-          if(value != null){
+          if(value != null && useValue){
             dateString = UtilDateTime.toDateString((java.sql.Timestamp)value.get(field.name));
             timeString = UtilDateTime.toTimeString((java.sql.Timestamp)value.get(field.name));
           } else {
@@ -330,7 +333,7 @@ function ShowViewTab(lname)
       <%} else if(type.javaType.equals("Date") || type.javaType.equals("java.sql.Date")){%>
         <%
           String dateString = null;
-          if(value != null){
+          if(value != null && useValue){
             dateString = UtilDateTime.toDateString((java.sql.Date)value.get(field.name));
           } else {
             dateString = request.getParameter(field.name);
@@ -341,7 +344,7 @@ function ShowViewTab(lname)
       <%} else if(type.javaType.equals("Time") || type.javaType.equals("java.sql.Time")){%>
         <%
           String timeString = null;
-          if(value != null){
+          if(value != null && useValue){
             timeString = UtilDateTime.toTimeString((java.sql.Timestamp)value.get(field.name));
           } else {
             timeString = request.getParameter(field.name);
@@ -349,20 +352,20 @@ function ShowViewTab(lname)
         %>
         Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.name%>" value="<%=UtilFormatOut.checkNull(timeString)%>">
       <%}else if(type.javaType.indexOf("Integer") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=value!=null?UtilFormatOut.formatQuantity((Integer)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
+        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=(value!=null&&useValue)?UtilFormatOut.formatQuantity((Integer)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
       <%}else if(type.javaType.indexOf("Long") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=value!=null?UtilFormatOut.formatQuantity((Long)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
+        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=(value!=null&&useValue)?UtilFormatOut.formatQuantity((Long)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
       <%}else if(type.javaType.indexOf("Double") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=value!=null?UtilFormatOut.formatQuantity((Double)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
+        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=(value!=null&&useValue)?UtilFormatOut.formatQuantity((Double)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
       <%}else if(type.javaType.indexOf("Float") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=value!=null?UtilFormatOut.formatQuantity((Float)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
+        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=(value!=null&&useValue)?UtilFormatOut.formatQuantity((Float)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
       <%}else if(type.javaType.indexOf("String") >= 0){%>
         <%if(type.stringLength() <= 80){%>
-        <input class='editInputBox' type="text" size="<%=type.stringLength()%>" maxlength="<%=type.stringLength()%>" name="<%=field.name%>" value="<%=value!=null?UtilFormatOut.checkNull((String)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
+        <input class='editInputBox' type="text" size="<%=type.stringLength()%>" maxlength="<%=type.stringLength()%>" name="<%=field.name%>" value="<%=(value!=null&&useValue)?UtilFormatOut.checkNull((String)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
         <%} else if(type.stringLength() <= 255){%>
-          <input class='editInputBox' type="text" size="80" maxlength="<%=type.stringLength()%>" name="<%=field.name%>" value="<%=value!=null?UtilFormatOut.checkNull((String)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
+          <input class='editInputBox' type="text" size="80" maxlength="<%=type.stringLength()%>" name="<%=field.name%>" value="<%=(value!=null&&useValue)?UtilFormatOut.checkNull((String)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
         <%} else {%>
-          <textarea cols="60" rows="3" maxlength="<%=type.stringLength()%>" name="<%=field.name%>"><%=value!=null?UtilFormatOut.checkNull((String)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%></textarea>
+          <textarea cols="60" rows="3" maxlength="<%=type.stringLength()%>" name="<%=field.name%>"><%=(value!=null&&useValue)?UtilFormatOut.checkNull((String)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%></textarea>
         <%}%>
       <%}%>
         &nbsp;</div>
@@ -379,13 +382,11 @@ function ShowViewTab(lname)
   </div>
 <%}%>
 </div>
-<%if((hasUpdatePermission || hasCreatePermission) && value == null){%>
+<%if((hasUpdatePermission || hasCreatePermission) && !useValue){%>
   <SCRIPT language='JavaScript'>  
     ShowViewTab("edit");
   </SCRIPT>
 <%}%>
-<%-- Restore the value for cases when removed to retain passed form values --%>
-<%value = valueSave;%>
 
 <br>
 <SCRIPT language='JavaScript'>  
