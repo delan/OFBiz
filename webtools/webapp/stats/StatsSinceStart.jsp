@@ -59,6 +59,7 @@
     <TD>Avg</TD>
     <TD>Max</TD>
     <TD>Hits/Minute</TD>
+    <TD>View&nbsp;Bins</TD>
   </TR>
 
   <%TreeSet requestIds = new TreeSet(ServerHitBin.requestSinceStarted.keySet());%>
@@ -78,7 +79,7 @@
         <TD><%=UtilFormatOut.formatQuantity(bin.getAvgTimeSeconds())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(bin.getMaxTimeSeconds())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(bin.getHitsPerMinute())%></TD>
-        <%-- <TD><%=UtilFormatOut.formatQuantity(utilCache.getExpireTime())%></TD> --%>
+        <TD><a href='<ofbiz:url>/StatBinsHistory?statsId=<%=bin.getId()%>&type=<%=bin.getType()%></ofbiz:url>' class='buttontext'>View&nbsp;Bins</a></TD>
       </TR>
     <%}%>
   <%}else{%>
@@ -101,6 +102,7 @@
     <TD>Avg</TD>
     <TD>Max</TD>
     <TD>Hits/Minute</TD>
+    <TD>View&nbsp;Bins</TD>
   </TR>
 
   <%TreeSet eventIds = new TreeSet(ServerHitBin.eventSinceStarted.keySet());%>
@@ -120,7 +122,7 @@
         <TD><%=UtilFormatOut.formatQuantity(bin.getAvgTimeSeconds())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(bin.getMaxTimeSeconds())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(bin.getHitsPerMinute())%></TD>
-        <%-- <TD><%=UtilFormatOut.formatQuantity(utilCache.getExpireTime())%></TD> --%>
+        <TD><a href='<ofbiz:url>/StatBinsHistory?statsId=<%=bin.getId()%>&type=<%=bin.getType()%></ofbiz:url>' class='buttontext'>View&nbsp;Bins</a></TD>
       </TR>
     <%}%>
   <%}else{%>
@@ -143,6 +145,7 @@
     <TD>Avg</TD>
     <TD>Max</TD>
     <TD>Hits/Minute</TD>
+    <TD>View&nbsp;Bins</TD>
   </TR>
 
   <%TreeSet viewIds = new TreeSet(ServerHitBin.viewSinceStarted.keySet());%>
@@ -162,7 +165,7 @@
         <TD><%=UtilFormatOut.formatQuantity(bin.getAvgTimeSeconds())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(bin.getMaxTimeSeconds())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(bin.getHitsPerMinute())%></TD>
-        <%-- <TD><%=UtilFormatOut.formatQuantity(utilCache.getExpireTime())%></TD> --%>
+        <TD><a href='<ofbiz:url>/StatBinsHistory?statsId=<%=bin.getId()%>&type=<%=bin.getType()%></ofbiz:url>' class='buttontext'>View&nbsp;Bins</a></TD>
       </TR>
     <%}%>
   <%}else{%>

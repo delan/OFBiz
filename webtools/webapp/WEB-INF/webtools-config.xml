@@ -186,6 +186,10 @@
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="StatsSinceStart"/>
     </request-map>
+    <request-map uri="StatBinsHistory">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="StatBinsHistory"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -223,6 +227,7 @@
     <view-map name="readxpdl" page="/workflow/readxpdl.jsp"/>
 
     <view-map name="StatsSinceStart" page="/stats/StatsSinceStart.jsp"/>
+    <view-map name="StatBinsHistory" page="/stats/StatBinsHistory.jsp"/>
     <!-- end of view mappings -->
     
 </site-conf>
