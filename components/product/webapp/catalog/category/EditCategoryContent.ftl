@@ -127,10 +127,10 @@ ${pages.get("/category/CategoryTabBar.ftl")}
     </td>
   </tr>
   <tr>
-    <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductDetailTemplate}</div></td>
+    <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductDetailScreen}</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-        <input type="text" <#if productCategory?has_content>value="${productCategory.detailTemplate?if_exists}"</#if> name="detailTemplate" size="60" maxlength="250" class="inputBox">
+        <input type="text" <#if productCategory?has_content>value="${productCategory.detailScreen?if_exists}"</#if> name="detailScreen" size="60" maxlength="250" class="inputBox">
         <br><span class="tabletext">Defaults to &quot;categorydetail&quot;, for screens in other files use something like: &quot;component://ecommerce/widget/CatalogScreens.xml#categorydetail&quot;</span>
     </td>
   </tr>
