@@ -56,6 +56,7 @@ public abstract class XuiContainer implements Container {
 
     public void init(String[] args, String configFile) throws ContainerException {
         this.configFile = configFile;
+        this.splash();
     }
 
     public boolean start() throws ContainerException {
@@ -111,6 +112,9 @@ public abstract class XuiContainer implements Container {
         this.initialScreen.setup(this.startupFile);
 
         return true;
+    }
+
+    public void splash() throws ContainerException {
     }
 
     public void stop() throws ContainerException {
