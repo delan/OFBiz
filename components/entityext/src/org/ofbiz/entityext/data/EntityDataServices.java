@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataServices.java,v 1.4 2003/12/17 21:30:45 ajzeneski Exp $
+ * $Id: EntityDataServices.java,v 1.5 2003/12/20 20:26:21 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import java.net.URISyntaxException;
  * Entity Data Import/Export Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.1
  */
 public class EntityDataServices {
@@ -158,13 +158,13 @@ public class EntityDataServices {
 
         GeneralException exception = null;
         String line = null;
-        int lineNumber = 0;
+        int lineNumber = 1;
         while ((line = reader.readLine()) != null) {
             // process the record
             String fields[] = line.split(delimiter);
-            if (fields.length != header.length) {
-                // wait till after we close the reader to throw this
-                exception = new GeneralException("Number of fields on line #" + lineNumber + " from file " + file.getName() + " does not match the header.");
+
+            if (fields.length < 1) {
+                exception = new GeneralException("Illegal number of fields [" + file.getName() + " / " + lineNumber);
                 break;
             }
 
@@ -172,11 +172,12 @@ public class EntityDataServices {
             GenericValue newValue = delegator.makeValue(entityName, fieldMap);
             newValue = delegator.createOrStore(newValue);
 
-            lineNumber++;
-
-            if (lineNumber % 500 == 0) {
+            if (lineNumber % 500 == 0 || lineNumber == 1) {
                 Debug.log("Records Stored [" + file.getName() + "]: " + lineNumber, module);
+                //Debug.log("Last record : " + newValue, module);
             }
+
+            lineNumber++;
         }
         reader.close();
 
@@ -192,17 +193,25 @@ public class EntityDataServices {
         Map newMap = new HashMap();
         for (int i = 0; i < header.length; i++) {
             String name = header[i].trim();
-            String value = line[i];
 
-            // check for null values
-            char first = value.charAt(0);
-            if (first == 0x00) {
-                value = null;
+            String value = null;
+            if (i < line.length) {
+                value = line[i];
             }
 
-            // trim non-null values
-            if (value != null) {
-                line[i] = line[i].trim();
+            // check for null values
+            if (value != null && value.length() > 0) {
+                char first = value.charAt(0);
+                if (first == 0x00) {
+                    value = null;
+                }
+
+                // trim non-null values
+                if (value != null) {
+                    value = value.trim();
+                }
+            } else {
+                value = null;
             }
 
             // insert into map
