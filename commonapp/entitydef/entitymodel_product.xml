@@ -68,6 +68,7 @@
       <field name="title" type="name"></field>
       <field name="subtitle" type="description"></field>
       <field name="inventoryFacilityId" type="id"></field>
+      <field name="oneInventoryFacility" type="indicator"></field>
       <field name="useQuickAdd" type="indicator"></field>
       <prim-key field="prodCatalogId"/>
       <relation type="one" rel-entity-name="Facility">
@@ -113,6 +114,24 @@
       <prim-key field="prodCatalogCategoryTypeId"/>
       <relation type="many" rel-entity-name="ProdCatalogCategory">
         <key-map field-name="prodCatalogCategoryTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProdCatalogInvFacility"
+            package-name="org.ofbiz.commonapp.product.catalog"
+            title="Product Catalog Inventory Facility Applicability Entity">
+      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="facilityId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="prodCatalogId"/>
+      <prim-key field="facilityId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" rel-entity-name="ProdCatalog">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
+      <relation type="one" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
       </relation>
     </entity>
     <entity entity-name="ProdCatalogPromoAppl"

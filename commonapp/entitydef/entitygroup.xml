@@ -500,6 +500,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="ProdCatalog" />
     <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogCategory" />
     <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogCategoryType" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogInvFacility" />
     <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogPromoAppl" />
     <entity-group group="org.ofbiz.commonapp" entity="WebSiteCatalog" />
 
