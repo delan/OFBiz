@@ -44,6 +44,7 @@
   String creditCardId = request.getParameter("CREDIT_CARD_ID");
   if(creditCardId == null) creditCardId = (String)request.getAttribute("CREDIT_CARD_ID");
 
+  Iterator partyContactMechIterator = UtilMisc.toIterator(helper.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId")), null));
   GenericValue creditCard = helper.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
 %>
 
@@ -55,30 +56,34 @@
     <%if(creditCard == null){%>
       <%useValues = false;%>
       <p class="head1">Add New Credit Card</p>
+      <form method="post" action="<%=response.encodeURL(controlPath + "/updatecreditcard/" + donePage)%>" name="editcreditcardform">
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <form method="post" action="<%=response.encodeURL(controlPath + "/updatecreditcard/" + donePage)%>" name="editcreditcardform">
         <input type=hidden name="UPDATE_MODE" value="CREATE">
     <%}else{%>
       <p class="head1">Edit Credit Card</p>
-        <form method="post" action="<%=response.encodeURL(controlPath + "/updatecreditcard/" + donePage)%>" name="editcreditcardform">
+      <form method="post" action="<%=response.encodeURL(controlPath + "/updatecreditcard/" + donePage)%>" name="editcreditcardform">
+      <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <input type=hidden name="CREDIT_CARD_ID" value="<%=creditCardId%>">
         <input type=hidden name="UPDATE_MODE" value="UPDATE">
     <%}%>
 
     <tr>
-      <td width="26%"><div class="tabletext">Name on Card</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Name on Card</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" name="CC_NAME_ON_CARD" value="<%=UtilFormatOut.checkNull(useValues?creditCard.getString("nameOnCard"):request.getParameter("CC_NAME_ON_CARD"))%>" size="30" maxlength="60">
       *</td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">Company Name on Card</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Company Name on Card</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" name="CC_COMPANY_NAME_ON_CARD" value="<%=UtilFormatOut.checkNull(useValues?creditCard.getString("companyNameOnCard"):request.getParameter("CC_COMPANY_NAME_ON_CARD"))%>" size="30" maxlength="60">
       </td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">Card Type</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Card Type</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="CC_CARD_TYPE">
           <option><%=UtilFormatOut.checkNull(useValues?creditCard.getString("cardType"):request.getParameter("CC_CARD_TYPE"))%></option>
@@ -94,19 +99,22 @@
       *</td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">Card Number</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Card Number</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" name="CC_CARD_NUMBER" value="<%=UtilFormatOut.checkNull(useValues?creditCard.getString("cardNumber"):request.getParameter("CC_CARD_NUMBER"))%>" size="20" maxlength="30">
       *</td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">Card Security Code</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Card Security Code</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" name="CC_CARD_SECURITY_CODE" value="<%=UtilFormatOut.checkNull(useValues?creditCard.getString("cardSecurityCode"):request.getParameter("CC_CARD_SECURITY_CODE"))%>" size="5" maxlength="10">
       </td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">Expiration Date</div></td>        
+      <td width="26%" align=right valign=top><div class="tabletext">Expiration Date</div></td>        
+      <td width="5">&nbsp;</td>
       <td width="74%">
         <%String expMonth = "";%>
         <%String expYear = "";%>
@@ -146,17 +154,120 @@
       *</td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">Billing Contact Mech</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Billing Address</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" name="CC_CONTACT_MECH_ID" value="<%=UtilFormatOut.checkNull(useValues?creditCard.getString("contactMechId"):request.getParameter("CC_CONTACT_MECH_ID"))%>" size="20" maxlength="20">
+        <%-- Removed because is confusing, can add but would have to come back here with all data populated as before...
+        <a href="<%=response.encodeURL(controlPath + "/editcontactmech")%>" class="buttontext">
+          [Create New Address]</a>&nbsp;&nbsp;
+        --%>
+        <table width="100%" border="0" cellpadding="1">
+        <%String curContactMechId = UtilFormatOut.checkNull(useValues?creditCard.getString("contactMechId"):request.getParameter("CC_CONTACT_MECH_ID"));%>
+        <%GenericValue curPartyContactMech = helper.findByPrimaryKey("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", curContactMechId));%>
+        <%GenericValue curContactMech = curPartyContactMech!=null?curPartyContactMech.getRelatedOne("ContactMech"):null;%>
+        <%GenericValue curPostalAddress = curContactMech!=null?curContactMech.getRelatedOne("PostalAddress"):null;%>
+        <%if(curPostalAddress != null){%>
+          <%Iterator curPartyContactMechPurposesIter = UtilMisc.toIterator(curPartyContactMech.getRelated("PartyContactMechPurpose"));%>
+          <tr>
+            <td align="right" valign="top" width="1%">
+              <INPUT type=radio name='CC_CONTACT_MECH_ID' value='<%=curContactMech.getString("contactMechId")%>' checked>
+            </td>
+            <td align="left" valign="top" width="80%">
+              <div class="tabletext"><b>Use Current Address:</b></div>
+              <%while(curPartyContactMechPurposesIter != null && curPartyContactMechPurposesIter.hasNext()){%>
+                <%GenericValue curPartyContactMechPurpose = (GenericValue)curPartyContactMechPurposesIter.next();%>
+                <%GenericValue curContactMechPurposeType = curPartyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
+                <%if(curPartyContactMechPurpose.get("thruDate") == null || curPartyContactMechPurpose.getTimestamp("thruDate").after(new java.util.Date())){%>
+                  <div class="tabletext">
+                    <b><%=curContactMechPurposeType.getString("description")%></b>
+                    <%if(curPartyContactMechPurpose.get("thruDate") != null){%>
+                      (Expire:<%=UtilDateTime.toDateTimeString(curPartyContactMechPurpose.getTimestamp("thruDate"))%>)
+                    <%}%>
+                  </div>
+                <%}%>
+              <%}%>
+              <div class="tabletext">
+                <%=UtilFormatOut.ifNotEmpty(curPostalAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
+                <%=UtilFormatOut.ifNotEmpty(curPostalAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
+                <%=UtilFormatOut.checkNull(curPostalAddress.getString("address1"))%><br>
+                <%=UtilFormatOut.ifNotEmpty(curPostalAddress.getString("address2"), "", "<br>")%>
+                <%=UtilFormatOut.checkNull(curPostalAddress.getString("city"))%>, 
+                <%=UtilFormatOut.checkNull(curPostalAddress.getString("stateProvinceGeoId"))%> 
+                <%=UtilFormatOut.checkNull(curPostalAddress.getString("postalCode"))%>
+                <%=UtilFormatOut.ifNotEmpty(curPostalAddress.getString("countryGeoId"),"<br>","")%>
+              </div>
+              <div class="tabletext">(Updated:&nbsp;<%=UtilDateTime.toDateTimeString(curPartyContactMech.getTimestamp("fromDate"))%>)</div>
+              <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(curPartyContactMech.getTimestamp("thruDate")), "<div class=\"tabletext\"><b>Delete:&nbsp;", "</b></div>")%>
+            </td>
+          </tr>
+        <%}else{%>
+           <%-- <tr>
+            <td align="left" valign="top" colspan='2'>
+              <div class="tabletext">No Billing Address Selected</div>
+            </td>
+          </tr> --%>
+        <%}%>
+          <%-- is confusing
+          <tr>
+            <td align="left" valign="top" colspan='2'>
+              <div class="tabletext"><b>Select a New Billing Address:</b></div>
+            </td>
+          </tr>
+          --%>
+          <%if(partyContactMechIterator != null && partyContactMechIterator.hasNext()){%>
+            <%while(partyContactMechIterator.hasNext()) {%>
+              <%GenericValue partyContactMech = (GenericValue)partyContactMechIterator.next();%>
+              <%GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");%>
+              <%Iterator partyContactMechPurposesIter = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));%>
+              <%if(partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(new java.util.Date())) {%>
+                <%if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId")) && !contactMech.getString("contactMechId").equals(curContactMechId)){%>
+                  <%GenericValue postalAddress = contactMech.getRelatedOne("PostalAddress");%>
+                <tr>
+                  <td align="right" valign="top" width="1%">
+                    <INPUT type=radio name='CC_CONTACT_MECH_ID' value='<%=contactMech.getString("contactMechId")%>'>
+                  </td>
+                  <td align="left" valign="top" width="80%">
+                    <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
+                      <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
+                      <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
+                      <%if(partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(new java.util.Date())){%>
+                        <div class="tabletext">
+                          <b><%=contactMechPurposeType.getString("description")%></b>
+                          <%if(partyContactMechPurpose.get("thruDate") != null){%>
+                            (Expire:<%=UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate"))%>)
+                          <%}%>
+                        </div>
+                      <%}%>
+                    <%}%>
+                    <div class="tabletext">
+                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
+                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
+                      <%=UtilFormatOut.checkNull(postalAddress.getString("address1"))%><br>
+                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("address2"), "", "<br>")%>
+                      <%=UtilFormatOut.checkNull(postalAddress.getString("city"))%>, 
+                      <%=UtilFormatOut.checkNull(postalAddress.getString("stateProvinceGeoId"))%> 
+                      <%=UtilFormatOut.checkNull(postalAddress.getString("postalCode"))%>
+                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("countryGeoId"),"<br>","")%>
+                    </div>
+                    <div class="tabletext">(Updated:&nbsp;<%=UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("fromDate"))%>)</div>
+                    <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("thruDate")), "<div class=\"tabletext\"><b>Delete:&nbsp;", "</b></div>")%>
+                  </td>
+                </tr>
+                <%}%>
+              <%}%>
+            <%}%>
+          <%}else{%>
+            <p>No contact information on file.</p><br>
+          <%}%>
+        </table>
       </td>
     </tr>
-  </form>
   </table>
+  </form>
 
-    &nbsp;<a href="<%=response.encodeURL(controlPath + "/authview/" + donePage)%>" class="buttontext">[Done]</a>
-    &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
-    <%--  <input type="image" value="[Save]" border="0" src="/commerce/images/btn_save.gif"> --%>
+  &nbsp;<a href="<%=response.encodeURL(controlPath + "/authview/" + donePage)%>" class="buttontext">[Done]</a>
+  &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
+  <%--  <input type="image" value="[Save]" border="0" src="/commerce/images/btn_save.gif"> --%>
 <%}%>
 
 

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2001/09/03 16:37:18  jonesde
+ * Finished person Date field inputs; Added some better null handling
+ *
  * Revision 1.14  2001/09/03 07:32:46  jonesde
  * Small changes to take advantage of the new set semantics.
  *
@@ -565,6 +568,26 @@ public class CustomerEvents {
       newCc.set("cardSecurityCode", cardSecurityCode);
       newCc.set("expireDate", expireDate);
       newCc.set("contactMechId", contactMechId);
+      
+      if(contactMechId != null && contactMechId.length() > 0)
+      {
+        String contactMechPurposeTypeId = "BILLING_LOCATION";
+        GenericValue newVal = helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp()));
+        GenericValue tempVal = helper.findByPrimaryKey(newVal.getPrimaryKey());
+        if(tempVal != null) {
+          //if exists already, and has a thruDate, reset it to "undelete"
+          if(tempVal.get("thruDate") != null) {
+            tempVal.set("fromDate", UtilDateTime.nowTimestamp());
+            tempVal.set("thruDate", null);
+            newVal = tempVal;
+          }
+          else {
+            newVal = null;
+          }
+        }
+        if(newVal != null) newCc.preStoreOther(newVal);
+      }
+      
       if(helper.create(newCc) == null) {
         errMsg = "<li>ERROR: Could not add credit card (write failure). Please contact customer service.";
         request.setAttribute("ERROR_MESSAGE", errMsg);
