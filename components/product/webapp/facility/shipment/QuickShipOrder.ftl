@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -49,41 +49,45 @@ function setWeight(weight) {
         <#assign shipmentPackage = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentPackages))?if_exists>
         <#if shipmentPackage?has_content>
           <#assign weight = (shipmentPackage.weight)?if_exists>
-          <#assign weightUom = shipmentPackage.getRelatedOne("WeightUom")?if_exists>
-          <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
-          <input type="hidden" name="shipmentId" value="${shipmentPackage.shipmentId}">
-          <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}">
-          <table border="0" cellpadding="2" cellspacing="0">
-            <tr>
-              <td width="20%" align="right"><span class="tableheadtext">Package #${shipmentPackage.shipmentPackageSeqId} Weight</span></td>
-              <td><span class="tabletext">&nbsp;</span></td>
-              <td width="80%" align="left">
-                <input type="text" class="inputBox" name="weight" value="${(shipmentPackage.weight)?if_exists}" onfocus="javascript:document.weightForm.weight.value=''">&nbsp;
-                <select name="weightUomId" class="selectBox">
-                  <#if weightUom?has_content>
-                    <option value="${weightUom.uomId}">${weightUom.description}</option>
-                    <option value="${weightUom.uomId}">---</option>
-                  </#if>                              
-                  <#list weightUoms as weightUomOption>
-                    <option value="${weightUomOption.uomId}">${weightUomOption.description} [${weightUomOption.abbreviation}]</option>
-                  </#list>
-                </select>    
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2">&nbsp;</td>
-              <td width="80%" align="left">
-                <input type="image" src="/images/spacer.gif" onClick="javascript:document.weightForm.submit();">
-                <a href="javascript:document.weightForm.submit();" class="buttontext">Set Weight</a>
-              </td>
-            </tr>
-          </table>
-          <script language="javascript">
-          <!-- // 
-            document.weightForm.weight.focus();
-          // -->
-          </script>           
-          <#-- todo embed the applet -->
+          <#if weight?exists>
+            <#-- todo call UPS/USPS -->
+          <#else>
+            <#assign weightUom = shipmentPackage.getRelatedOne("WeightUom")?if_exists>
+            <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
+            <input type="hidden" name="shipmentId" value="${shipmentPackage.shipmentId}">
+            <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}">
+            <table border="0" cellpadding="2" cellspacing="0">
+              <tr>
+                <td width="20%" align="right"><span class="tableheadtext">Package #${shipmentPackage.shipmentPackageSeqId} Weight</span></td>
+                <td><span class="tabletext">&nbsp;</span></td>
+                <td width="80%" align="left">
+                  <input type="text" class="inputBox" name="weight" value="${(shipmentPackage.weight)?if_exists}" onfocus="javascript:document.weightForm.weight.value=''">&nbsp;
+                  <select name="weightUomId" class="selectBox">
+                    <#if weightUom?has_content>
+                      <option value="${weightUom.uomId}">${weightUom.description}</option>
+                      <option value="${weightUom.uomId}">---</option>
+                    </#if>                              
+                    <#list weightUoms as weightUomOption>
+                      <option value="${weightUomOption.uomId}">${weightUomOption.description} [${weightUomOption.abbreviation}]</option>
+                    </#list>
+                  </select>    
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">&nbsp;</td>
+                <td width="80%" align="left">
+                  <input type="image" src="/images/spacer.gif" onClick="javascript:document.weightForm.submit();">
+                  <a href="javascript:document.weightForm.submit();" class="buttontext">Set Weight</a>
+                </td>
+              </tr>
+            </table>
+            <script language="javascript">
+            <!-- // 
+              document.weightForm.weight.focus();
+            // -->
+            </script>           
+            <#-- todo embed the applet -->
+          </#if>
         <#else>
           <div class="tabletext"><font color="red">ERROR: No packages found for this shipment!</font></div>
         </#if>
