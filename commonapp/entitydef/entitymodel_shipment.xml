@@ -941,6 +941,8 @@
       <field name="destTelecomNumberId" type="id"></field>
       <field name="carrierPartyId" type="id"></field>
       <field name="shipmentMethodTypeId" type="id"></field>
+      <field name="billingWeight" type="floating-point"></field>
+      <field name="billingWeightUomId" type="id"></field>
       <field name="actualTransportCost" type="currency-amount"></field>
       <field name="actualServiceCost" type="currency-amount"></field>
       <field name="actualOtherCost" type="currency-amount"></field>
@@ -1003,6 +1005,9 @@
       </relation>
       <relation type="one" fk-name="SHPMT_RTSEG_CUOM" title="Currency" rel-entity-name="Uom">
         <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="SHPKRTSG_BWUOM" title="BillingWeight" rel-entity-name="Uom">
+        <key-map field-name="billingWeightUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentStatus"
