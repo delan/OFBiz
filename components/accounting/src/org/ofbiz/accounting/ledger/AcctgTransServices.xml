@@ -36,19 +36,13 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <!-- AcctgTrans uses a sequenced id, so get the next one now and set it... -->        
-        <sequenced-id-to-env sequence-name="AcctgTrans" env-name="newSequencedId"/>
-        <to-string field-name="newSequencedId"/>
-        <env-to-field env-name="newSequencedId" field-name="acctgTransId" map-name="newEntity"/>
+        <sequenced-id-to-env sequence-name="AcctgTrans" env-name="newEntity.acctgTransId" to-string="true"/>
+        <field-to-result field-name="newEntity.acctgTransId" result-name="acctgTransId"/>
         
-        <now-timestamp-to-env env-name="nowTimestamp"/>
-        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/>
-        <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/>
         
         <create-value value-name="newEntity"/>
-        
-        <field-to-result field-name="newSequencedId" result-name="acctgTransId"/>
     </simple-method>
     <simple-method method-name="updateAcctgTrans" short-description="Update an AcctgTrans">
         <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateAcctgTrans you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
@@ -56,11 +50,9 @@
 
         <make-value entity-name="AcctgTrans" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="AcctgTrans" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         
-        <now-timestamp-to-env env-name="nowTimestamp"/>
-        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="lookedUpValue"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpValue"/>
 
         <store-value value-name="lookedUpValue"/>
@@ -71,31 +63,42 @@
 
         <make-value entity-name="AcctgTrans" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="AcctgTrans" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="updateAcctgTransLastModified" short-description="Update AcctgTrans LastModified Info">
+    	<!-- this is just a little method that is meant to be called as an inline call-simple-method target with the context already setup -->
+        <make-value entity-name="AcctgTrans" value-name="lookupACTXMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupACTXMap"/>
+        <find-by-primary-key map-name="lookupACTXMap" value-name="lookedUpACTX"/>
+        
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpACTX"/>
+        <store-value value-name="lookedUpValue"/>
     </simple-method>
     
     <!-- ========= AcctgTransEntry methods ========= -->
-    <simple-method method-name="addEntryToAcctgTrans" short-description="Add Entry To AcctgTrans">
-        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run addEntryToAcctgTrans you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+    <simple-method method-name="createAcctgTransEntry" short-description="Add Entry To AcctgTrans">
+        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run createAcctgTransEntry you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="AcctgTransEntry" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <make-next-seq-id value-name="newEntity" seq-field-name="acctgTransEntrySeqId" numeric-padding="5"/>
+        <field-to-result field-name="newEntity.acctgTransEntrySeqId" result-name="acctgTransEntrySeqId"/>
 
         <create-value value-name="newEntity"/>
 
 		<!-- when changing entries, also update the last modified info for the AcctgTrans -->
 		<call-simple-method method-name="updateAcctgTransLastModified"/>
     </simple-method>
-    <simple-method method-name="updateEntryToAcctgTrans" short-description="Update Entry To AcctgTrans">
-        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateEntryToAcctgTrans you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+    <simple-method method-name="updateAcctgTransEntry" short-description="Update Entry To AcctgTrans">
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateAcctgTransEntry you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="AcctgTransEntry" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="AcctgTransEntry" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <store-value value-name="newEntity"/>
@@ -103,29 +106,28 @@
 		<!-- when changing entries, also update the last modified info for the AcctgTrans -->
 		<call-simple-method method-name="updateAcctgTransLastModified"/>
     </simple-method>
-    <simple-method method-name="removeEntryFromAcctgTrans" short-description="Remove Entry From AcctgTrans">
-        <check-permission permission="ACCOUNTING" action="_DELETE"><fail-message message="Security Error: to run removeEntryFromAcctgTrans you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission"/></check-permission>
+    <simple-method method-name="deleteAcctgTransEntry" short-description="Remove Entry From AcctgTrans">
+        <check-permission permission="ACCOUNTING" action="_DELETE"><fail-message message="Security Error: to run deleteAcctgTransEntry you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="AcctgTransEntry" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="AcctgTransEntry" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
 
 		<!-- when changing entries, also update the last modified info for the AcctgTrans -->
 		<call-simple-method method-name="updateAcctgTransLastModified"/>
     </simple-method>
 
-    <simple-method method-name="updateAcctgTransLastModified" short-description="Update AcctgTrans LastModified Info">
-    	<!-- this is just a little method that is meant to be called as an inline call-simple-method target with the context already setup -->
-        <make-value entity-name="AcctgTrans" value-name="lookupACTXMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupACTXMap"/>
-        <find-by-primary-key entity-name="AcctgTrans" map-name="lookupACTXMap" value-name="lookedUpACTX"/>
-        
-        <now-timestamp-to-env env-name="nowTimestamp"/>
-        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="lookedUpACTX"/>
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpACTX"/>
-
-        <store-value value-name="lookedUpValue"/>
+    <!-- AcctgTrans Trial Balance and Post routines -->
+    <simple-method method-name="calculateAcctgTransTrialBalance" short-description="Calculate Trial Balance for a AcctgTrans">
+        <check-permission permission="ACCOUNTING" action="_VIEW"><fail-message message="Security Error: to run calculateAcctgTransTrialBalance you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+        <!-- TODO: implement this -->
+    </simple-method>
+    <simple-method method-name="postAcctgTrans" short-description="Post a AcctgTrans">
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run postAcctgTrans you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+        <!-- TODO: implement this -->
     </simple-method>
 </simple-methods>
