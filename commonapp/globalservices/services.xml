@@ -47,7 +47,7 @@
 		
     <!-- Workflow services -->
     <service name="assignActivity" engine="java" 
-    location="org.ofbiz.core.workflow.WorkflowClient" invoke="assignActivity">
+    location="org.ofbiz.core.workflow.WorkflowServices" invoke="assignActivity">
         <description>Assign a new party or role to a workflow activity</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
         <attribute name="partyId" type="String" mode="IN"/>
@@ -55,23 +55,23 @@
         <attribute name="removeOldAssignments" type="String" mode="IN" optional="true"/>
     </service>  
     <service name="activateActivity" engine="java" 
-    location="org.ofbiz.core.workflow.WorkflowClient" invoke="activateActivity">
+    location="org.ofbiz.core.workflow.WorkflowServices" invoke="activateActivity">
         <description>Attempt to initiate a workflow activity</description>
         <attribute name="workEffortId" type="String" mode="IN"/> 
     </service>  
     <service name="completeActivity" engine="java" 
-    location="org.ofbiz.core.workflow.WorkflowClient" invoke="completeActivity">
+    location="org.ofbiz.core.workflow.WorkflowServices" invoke="completeActivity">
         <description>Attempt to complete a workflow activity</description>
         <attribute name="workEffortId" type="String" mode="IN"/> 
         <attribute name="result" type="Map" mode="IN" optional="true"/>
     </service>
     <service name="changeActivityState" engine="java"
-    location="org.ofbiz.core.workflow.WorkflowClient" invoke="changeActivityState">
+    location="org.ofbiz.core.workflow.WorkflowServices" invoke="changeActivityState">
         <description>Manually change the state of a workflow activity</description>
         <attribute name="workEffortId" type="String" mode="IN"/>     
     </service>
     <service name="acceptAssignment" engine="java"
-    location="org.ofbiz.core.workflow.WorkflowClient" invoke="acceptAssignment">
+    location="org.ofbiz.core.workflow.WorkflowServices" invoke="acceptAssignment">
         <description>Accept a workflow assignment</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
         <attribute name="partyId" type="String" mode="IN"/>
@@ -79,7 +79,7 @@
         <attribute name="fromDate" type="Timestamp" mode="IN"/>
     </service>
     <service name="completeAssignment" engine="java"
-    location="org.ofbiz.core.workflow.WorkflowClient" invoke="completeAssignment">
+    location="org.ofbiz.core.workflow.WorkflowServices" invoke="completeAssignment">
         <description>Complete a workflow assignment</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
         <attribute name="partyId" type="String" mode="IN"/>
