@@ -84,7 +84,7 @@
             <widgets>
                 <decorator-screen name="CommonProductDecorator">
                     <decorator-section name="body">
-                        <form name="EditProduct" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="EditProduct" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                         
                         <!-- include the duplicate product form template -->
                         <platform-specific>
@@ -118,8 +118,8 @@
             <widgets>
                 <decorator-screen name="CommonProductDecorator">
                     <decorator-section name="body">
-                        <form name="UpdateProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
-                        <form name="AddProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="UpdateProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="AddProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -144,8 +144,8 @@
             <widgets>
                 <decorator-screen name="CommonProductDecorator">
                     <decorator-section name="body">
-                        <form name="UpdateProductConfig" location="component://product/webapp/catalog/product/ProductForms.xml"/>
-                        <form name="AddProductConfig" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="UpdateProductConfig" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="AddProductConfig" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
