@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -286,7 +286,11 @@ ${requestAttributes.virtualJavaScript?if_exists}
 </table>
 
 <#-- Upgrades/Up-Sell/Cross-Sell -->
-<#macro associated assocProducts beforeName showName afterName formNamePrefix>
+  <#macro associated assocProducts beforeName showName afterName formNamePrefix targetRequestName>
+  <#assign targetRequest = "product">
+  <#if targetRequestName?has_content>
+    <#assign targetRequest = targetRequestName>
+  </#if>
   <#if assocProducts?has_content>
     <tr><td>&nbsp;</td></tr> 
     <tr><td colspan="2"><div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName}</#if>${afterName?if_exists}</div></td></tr>
@@ -294,7 +298,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
     <#list assocProducts as productAssoc>
       <tr><td>
         <div class="tabletext">
-          <a href='<@ofbizUrl>/product/~product_id=${productAssoc.productIdTo?if_exists}</@ofbizUrl>' class="buttontext">
+          <a href='<@ofbizUrl>/${targetRequest}/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${productAssoc.productIdTo?if_exists}</@ofbizUrl>' class="buttontext">
             ${productAssoc.productIdTo?if_exists}
           </a>
           - <b>${productAssoc.reason?if_exists}</b>
@@ -303,6 +307,9 @@ ${requestAttributes.virtualJavaScript?if_exists}
       ${setRequestAttribute("optProductId", productAssoc.productIdTo)}
       ${setRequestAttribute("listIndex", listIndex)}
       ${setRequestAttribute("formNamePrefix", formNamePrefix)}
+      <#if targetRequestName?has_content>
+        ${setRequestAttribute("targetRequestName", targetRequestName)}
+      </#if>
       <tr>
         <td>
           ${pages.get("/catalog/productsummary.ftl")}
@@ -312,6 +319,8 @@ ${requestAttributes.virtualJavaScript?if_exists}
       <tr><td><hr class='sepbar'></td></tr>
     </#list>           
     ${setRequestAttribute("optProductId", "")}
+    ${setRequestAttribute("formNamePrefix", "")}
+    ${setRequestAttribute("targetRequestName", "")}
   </#if>      
 </#macro>
 <#assign productValue = product>
@@ -320,12 +329,12 @@ ${setRequestAttribute("productValue", productValue)}
 
 <table width='100%'>
   <#-- obsolete -->
-  <@associated assocProducts=requestAttributes.obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs"/>
+  <@associated assocProducts=requestAttributes.obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
   <#-- cross sell -->
-  <@associated assocProducts=requestAttributes.crossSellProducts beforeName="" showName="N" afterName="You might be interested in these as well:" formNamePrefix="cssl"/>
+  <@associated assocProducts=requestAttributes.crossSellProducts beforeName="" showName="N" afterName="You might be interested in these as well:" formNamePrefix="cssl" targetRequestName="crosssell"/>
   <#-- up sell -->
-  <@associated assocProducts=requestAttributes.upSellProducts beforeName="Try these instead of " showName="Y" afterName=":" formNamePrefix="upsl"/>
+  <@associated assocProducts=requestAttributes.upSellProducts beforeName="Try these instead of " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell"/>
   <#-- obsolescence -->
-  <@associated assocProducts=requestAttributes.obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:" formNamePrefix="obce"/>
+  <@associated assocProducts=requestAttributes.obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:" formNamePrefix="obce" targetRequestName=""/>
 </table>
 
