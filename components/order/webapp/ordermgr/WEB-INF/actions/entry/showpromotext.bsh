@@ -27,6 +27,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.order.shoppingcart.*;
 
+dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
 
@@ -37,7 +38,7 @@ promoShowLimit = 3;
 
 if (mode != null && mode.equals("SALES_ORDER")) {
     //Get Promo Text Data
-    productPromosAll = ProductPromoWorker.getStoreProductPromos(delegator, request);
+    productPromosAll = ProductPromoWorker.getStoreProductPromos(delegator, dispatcher, request);
     //Make sure that at least one promo has non-empty promoText
     showPromoText = false;
     promoToShow = 0;

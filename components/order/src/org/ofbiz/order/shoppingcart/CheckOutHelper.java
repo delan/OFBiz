@@ -715,7 +715,8 @@ public class CheckOutHelper {
             Map paymentResult = null;
             try {
                 // invoke the payment gateway service.
-                paymentResult = dispatcher.runSync("authOrderPayments", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
+                paymentResult = dispatcher.runSync("authOrderPayments",
+                        UtilMisc.toMap("orderId", orderId, "userLogin", userLogin), 180, true);
             } catch (GenericServiceException e) {
                 Debug.logWarning(e, module);
             }
