@@ -41,7 +41,6 @@
       <response name="success" type="view" value="main"/>
       <response name="error" type="view" value="main"/>
     </request-map>
-    <view-map name="login" page="/login.jsp"/>
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
@@ -96,9 +95,9 @@
     
     <request-map uri="UpdateProduct">
     	<security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProduct"/>
         <response name="success" type="view" value="EditProduct"/>
         <response name="error" type="view" value="EditProduct"/>
-        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProduct"/>
     </request-map>
     
     <request-map uri="EditProductCategories">
@@ -107,9 +106,9 @@
     </request-map>
     
     <request-map uri="UpdateProductCategoryMember"><security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.catalog.CategoryEvents" invoke="updateProductCategoryMember"/>
         <response name="success" type="view" value="EditProductCategories"/>
         <response name="error" type="view" value="EditProductCategories"/>
-        <event type="java" path="org.ofbiz.catalog.CategoryEvents" invoke="updateProductCategoryMember"/>
     </request-map>
 
     <request-map uri="EditProductKeyword"><security https="true" auth="true"/>
@@ -118,23 +117,23 @@
     
     <request-map uri="UpdateProductKeyword">
     	<security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductKeyword"/>
         <response name="success" type="view" value="EditProductKeyword"/>
         <response name="error" type="view" value="EditProductKeyword"/>
-        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductKeyword"/>
     </request-map>
     
     <request-map uri="UpdateProductKeywords">
     	<security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductKeywords"/>
         <response name="success" type="view" value="EditProductKeyword"/>
         <response name="error" type="view" value="EditProductKeyword"/>
-        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductKeywords"/>
     </request-map>
 
     <request-map uri="UpdateAllKeywords">
     	<security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateAllKeywords"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
-        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateAllKeywords"/>
     </request-map>
 
     <request-map uri="UploadImage">
@@ -147,14 +146,15 @@
     </request-map>
     
     <request-map uri="UpdateProductAssoc"><security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductAssoc"/>
     	<response name="success" type="view" value="EditProductAssoc"/>
         <response name="error" type="view" value="EditProductAssoc"/>
-        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductAssoc"/>
     </request-map>
     
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
+    <view-map name="login" page="/login.jsp"/>
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" page="/main.jsp"/>
 
@@ -168,3 +168,4 @@
     <view-map name="UploadImage" page="/UploadImage.jsp"/>
     <!-- end of view mappings -->
 </site-conf>
+

@@ -41,7 +41,6 @@
       <response name="success" type="view" value="main"/>
       <response name="error" type="view" value="main"/>
     </request-map>
-    <view-map name="login" page="/login.jsp"/>
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
@@ -273,24 +272,29 @@
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
+    <view-map name="login" page="/login.jsp"/>
     <view-map name="error" page="/error/error.jsp">
     	<description>Error View</description>
     </view-map>
-    <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" page="/main.jsp"/>
+
     <view-map name="showcart" page="/cart/showcart.jsp"/>
+
     <view-map name="catalog" page="/catalog/catalog.jsp"/>
     <view-map name="quickadd" page="/catalog/quickadd.jsp"/>
     <view-map name="category" page="/catalog/category.jsp"/>
     <view-map name="product" page="/catalog/product.jsp"/>
     <view-map name="keywordsearch" page="/catalog/keywordsearch.jsp"/>
+
     <view-map name="shippingAddress" page="/shipping/shipping.jsp"/>
+
     <view-map name="checkoutoptions" page="/order/checkoutoptions.jsp"/>
     <view-map name="checkout" page="/order/checkout.jsp"/>
     <view-map name="confirmorder" page="/order/confirmorder.jsp"/>
     <view-map name="showconfirmorder" page="/order/showconfirmorder.jsp"/>
     <view-map name="orderhistory" page="/order/orderhistory.jsp"/>
     <view-map name="orderstatus" page="/order/orderstatus.jsp"/>
+
     <view-map name="viewprofile" page="/customer/viewprofile.jsp"/>
     <view-map name="newcustomer" page="/customer/newcustomer.jsp"/>
     <view-map name="editcontactmech" page="/customer/editcontactmech.jsp"/>
@@ -299,3 +303,4 @@
     <view-map name="editperson" page="/customer/editperson.jsp"/>
     <!-- end of view mappings -->
 </site-conf>
+

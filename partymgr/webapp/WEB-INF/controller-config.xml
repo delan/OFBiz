@@ -41,7 +41,6 @@
       <response name="success" type="view" value="main"/>
       <response name="error" type="view" value="main"/>
     </request-map>
-    <view-map name="login" page="/login.jsp"/>
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
@@ -63,7 +62,9 @@
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
+    <view-map name="login" page="/login.jsp"/>
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" page="/main.jsp"/>
     <!-- end of view mappings -->
 </site-conf>
+
