@@ -47,7 +47,7 @@ import org.ofbiz.core.serialize.*;
  */
 public class LoginServices {
 	
-	public static final String module = LoginServices.class.getName();
+    public static final String module = LoginServices.class.getName();
 
     /** Login service to authenticate username and password
      * @return Map of results including (userLogin) GenericValue object

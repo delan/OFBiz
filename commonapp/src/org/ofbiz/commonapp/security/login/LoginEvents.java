@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.commonapp.party.contact.ContactHelper;
+import org.ofbiz.commonapp.product.catalog.CatalogWorker;
 import org.ofbiz.core.control.JPublishWrapper;
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericEntityException;
@@ -363,17 +364,9 @@ public class LoginEvents {
      */
     public static String emailPassword(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
-        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-        URL ecommercePropertiesUrl = null;
-
-        try {
-            ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
-        } catch (java.net.MalformedURLException e) {
-            Debug.logWarning(e);
-        }
-
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");                      
+        String webSiteId = CatalogWorker.getWebSiteId(request);
+      
         boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
 
         String userLoginId = request.getParameter("USERNAME");
@@ -429,8 +422,7 @@ public class LoginEvents {
             Debug.logWarning(e.getMessage());
             party = null;
         }
-        if (party != null) {
-            // Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false));
+        if (party != null) {         
             Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByPurpose(party, "PRIMARY_EMAIL", false));
 
             while (emailIter != null && emailIter.hasNext()) {
@@ -446,48 +438,38 @@ public class LoginEvents {
             return "error";
         }
         
-        // set the needed variables in the request
-        request.setAttribute("useEncryption", new Boolean(useEncryption));
-        request.setAttribute("password", UtilFormatOut.checkNull(passwordToSend));
-        
-        // get the JPublishWrapper
-        ServletContext servletContext = (ServletContext) request.getAttribute("servletContext");
-        JPublishWrapper jp = (JPublishWrapper) servletContext.getAttribute("jpublishWrapper");       
-        
-        // get the FTL Page
-        String templatePath = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "password.send.template");
-        if (templatePath == null || templatePath.length() == 0) {
-            Debug.logError("Empty password template in ecommerce.properties; fix this!", module);
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Email password configuration error, please contact customer service.");
-            return "error";    
-        }
-               
-        // process the email content
-        String content = null;
+        // get the WebSite settings
+        GenericValue webSiteEmail = null;
         try {
-            content = jp.render(templatePath, request, response);
-        } catch (GeneralException e) {
-            Debug.logError(e, "Problems rendering email template", module);
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Email password configuration error, please contact customer service.");
+            webSiteEmail = delegator.findByPrimaryKey("WebSiteEmailSetting", UtilMisc.toMap("webSiteId", webSiteId, "emailType", "WES_PWD_RETRIEVE"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting WebSiteEmailSetting", module);
+        }
+        
+        if (webSiteEmail == null) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems with configuration; please contact customer service.");
             return "error";
         }
-                               
-        Map context = new HashMap();       
-        String mailHost = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");        
-        String sendFrom = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "password.send.email");
-               
-        if (useEncryption) {
-            context.put("subject", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " New Password");
-        } else {
-            context.put("subject", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Password Reminder");
-        }
-        context.put("body", content);
-        context.put("sendTo", emails.toString());
-        context.put("sendFrom", sendFrom);
-        context.put("sendVia", mailHost);
-               
+        
+        // need OFBIZ_HOME for processing
+        String ofbizHome = System.getProperty("ofbiz.home");
+        
+        // set the needed variables in new context
+        Map templateData = new HashMap();
+        templateData.put("useEncryption", new Boolean(useEncryption));
+        templateData.put("password", UtilFormatOut.checkNull(passwordToSend));
+        
+        Map serviceContext = new HashMap();                        
+        serviceContext.put("templateName", ofbizHome + webSiteEmail.get("templatePath"));
+        serviceContext.put("templateData", templateData);
+        serviceContext.put("subject", webSiteEmail.get("subject"));
+        serviceContext.put("sendFrom", webSiteEmail.get("fromAddress"));        
+        serviceContext.put("sendCc", webSiteEmail.get("ccAddress"));
+        serviceContext.put("sendBcc", webSiteEmail.get("ccAddress"));
+        serviceContext.put("sendTo", emails.toString());              
+                                              
         try {
-            Map result = dispatcher.runSync("sendMail", context);
+            Map result = dispatcher.runSync("sendGenericNotificationEmail", serviceContext);
 
             if (ModelService.RESPOND_ERROR.equals((String) result.get(ModelService.RESPONSE_MESSAGE))) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error occurred: unable to email password.  Please try again later or contact customer service. (error was: " + result.get(ModelService.ERROR_MESSAGE) + ")");
