@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataServices.java,v 1.3 2003/12/17 16:09:51 ajzeneski Exp $
+ * $Id: EntityDataServices.java,v 1.4 2003/12/17 21:30:45 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import java.net.URISyntaxException;
  * Entity Data Import/Export Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.1
  */
 public class EntityDataServices {
@@ -191,7 +191,22 @@ public class EntityDataServices {
     private static Map makeMap(String[] header, String[] line) {
         Map newMap = new HashMap();
         for (int i = 0; i < header.length; i++) {
-            newMap.put(header[i].trim(), line[i].trim());
+            String name = header[i].trim();
+            String value = line[i];
+
+            // check for null values
+            char first = value.charAt(0);
+            if (first == 0x00) {
+                value = null;
+            }
+
+            // trim non-null values
+            if (value != null) {
+                line[i] = line[i].trim();
+            }
+
+            // insert into map
+            newMap.put(name, value);
         }
         return newMap;
     }
