@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionValue.java,v 1.5 2004/07/17 07:05:03 doogie Exp $
+ * $Id: EntityConditionValue.java,v 1.6 2004/07/21 03:03:33 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.config.DatasourceInfo;
@@ -40,7 +41,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  */
 public abstract class EntityConditionValue extends EntityConditionBase {
 
@@ -57,10 +58,10 @@ public abstract class EntityConditionValue extends EntityConditionBase {
     public abstract void validateSql(ModelEntity modelEntity) throws GenericModelException;
 
     public Object getValue(GenericEntity entity) {
-        return getValue((Map) entity);
+        return getValue(entity.getDelegator(), entity);
     }
 
-    public abstract Object getValue(Map map);
+    public abstract Object getValue(GenericDelegator delegator, Map map);
 
     public abstract EntityConditionValue freeze();
 

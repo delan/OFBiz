@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFieldValue.java,v 1.5 2004/07/17 07:05:03 doogie Exp $
+ * $Id: EntityFieldValue.java,v 1.6 2004/07/21 03:03:33 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,7 @@ package org.ofbiz.entity.condition;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.model.ModelEntity;
@@ -39,7 +40,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  */
 public class EntityFieldValue extends EntityConditionValue {
 
@@ -78,7 +79,7 @@ public class EntityFieldValue extends EntityConditionValue {
             throw new GenericModelException("Field with name " + fieldName + " not found in the " + modelEntity.getEntityName() + " Entity");
     }
 
-    public Object getValue(Map map) {
+    public Object getValue(GenericDelegator delegator, Map map) {
         return map.get(fieldName);
     }
 
