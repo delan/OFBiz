@@ -1,5 +1,5 @@
 /*
- * $Id: MapStack.java,v 1.1 2004/07/01 07:57:54 jonesde Exp $
+ * $Id: MapStack.java,v 1.2 2004/07/01 08:05:39 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import java.util.Set;
  * Map Stack
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class MapStack implements Map {
@@ -48,6 +48,12 @@ public class MapStack implements Map {
         super();
         // initialize with a single entry
         push();
+    }
+    
+    /** Does a shallow copy of the internal stack of the passed MapStack; enables simultaneous stacks that share common parent Maps */
+    public MapStack(MapStack source) {
+        super();
+        this.stackList.addAll(source.stackList);
     }
     
     /** Puts a new Map on the top of the stack */
@@ -63,6 +69,18 @@ public class MapStack implements Map {
         } else {
             return null;
         }
+    }
+    
+    /** 
+     * Creates a MapStack object that has the same Map objects on its stack, 
+     * but with a new Map pushed on the top; meant to be used to enable a 
+     * situation where a parent and child context are operating simultaneously 
+     * using two different MapStack objects, but sharing the Maps in common  
+     */
+    public MapStack standAloneChildStack() {
+        MapStack standAloneChild = new MapStack(this);
+        standAloneChild.push();
+        return standAloneChild;
     }
 
     /* (non-Javadoc)
