@@ -34,7 +34,8 @@
 		
 		<field use-when="prodCatalog!=null" name="prodCatalogId" tooltip="This cannot be changed without re-creating the Product Catalog."><display/></field>
 		<field use-when="prodCatalog==null&amp;&amp;prodCatalogId!=null" name="prodCatalogId" tooltip="Could not find ProdCatalog with ID [${prodCatalogId}]"><text size="20" maxlength="20"/></field>
-		<!-- this taken care of with auto-fields-service: <field use-when="prodCatalog==null&amp;&amp;prodCatalogId==null" name="prodCatalogId"><text size="20" maxlength="20"/></field> -->
+		<!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
+		<field use-when="prodCatalog==null&amp;&amp;prodCatalogId==null" name="prodCatalogId"><text size="20" maxlength="20"/></field>
 
 		<field name="catalogName"><text size="30" maxlength="60"/></field>
 		<field name="title"><text size="30" maxlength="60"/></field>
