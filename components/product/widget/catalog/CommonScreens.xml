@@ -22,7 +22,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id: CommonScreens.xml,v 1.4 2004/08/02 14:09:15 jonesde Exp $
+ *  $Id: CommonScreens.xml,v 1.5 2004/08/03 16:33:32 jonesde Exp $
 -->
 
 <screens>
@@ -51,7 +51,7 @@
                         <!-- by default will render left-bar only if leftbarScreen value not empty -->
                         <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
                     
-                        <container style="columncenter">
+                        <container style="column-main">
                             <!-- render messages -->
                             <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
                             <decorator-section-include name="body"/>
@@ -68,13 +68,10 @@
     <screen name="leftbar">
         <section>
             <widgets>
-                <container style="columnleft">
+                <container style="column-left">
                     <include-screen name="keywordsearchbox"/>
-                    <container style="verticalspacer"/>
                     <include-screen name="sidecatalogs"/>
-                    <container style="verticalspacer"/>
                     <include-screen name="sidedeepcategory"/>
-                    <container style="verticalspacer"/>
                     <include-screen name="miniproductlist"/>
                 </container>
             </widgets>

@@ -5,7 +5,7 @@ margin-right: 10px;
 margin-top: 10px;
 }
 
-.contentarea,.whitearea {
+.whitearea {
 background-color: #FFFFFF;
 }
 
@@ -117,5 +117,47 @@ padding: 10px;
 
 div.spacer {
   clear: both;
-  }  
+}  
+
+DIV.simple-right-small {
+float: right;
+width: 20px;
+text-align: right;
+}
+
+DIV.screenlet {
+background-color: #FFFFFF;
+border: 1px solid #999999;
+margin-bottom: 10px;
+}
+DIV.screenlet-header {
+background-color: #000099;
+padding-top: 1px;
+padding-bottom: 1px;
+padding-right: 4px;
+padding-left: 4px;
+}
+DIV.screenlet-body {
+background-color: #FFFFFF;
+padding: 4px;
+}
+
+DIV.column-container {
+background-color: #FFFFFF;
+margin: auto;
+width: auto;
+}
+DIV.column-left {
+float: left;
+margin-right: 10px;
+width: 220px;
+}
+DIV.column-main {
+width: auto;
+}
+DIV.column-right {
+float: right;
+margin-left: 10px;
+width: 220px;
+}
 
