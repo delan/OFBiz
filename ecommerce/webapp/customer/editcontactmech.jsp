@@ -84,11 +84,19 @@
   <%if(contactMechTypeId != null){%>
     <%if(contactMech == null){%>
       <p class="head1">Create New Contact Information</p>
+      <%String cmNewPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");%>
+      <%if(cmNewPurposeTypeId != null){%>
+        <%GenericValue contactMechPurposeType = helper.findByPrimaryKey("ContactMechPurposeType", UtilMisc.toMap("contactMechPurposeTypeId", cmNewPurposeTypeId));%>
+        <%if(contactMechPurposeType != null){%>
+        (Note: this new contact information will have the purpose <b>"<%=UtilFormatOut.checkNull(contactMechPurposeType.getString("description"))%>"</b>)
+        <%}else{ cmNewPurposeTypeId = null; }%>
+      <%}%>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <%-- <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform"> --%>
         <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech?DONE_PAGE=" + donePage)%>" name="editcontactmechform">
         <input type=hidden name="CONTACT_MECH_TYPE_ID" value="<%=contactMechTypeId%>">
         <input type=hidden name="UPDATE_MODE" value="CREATE">
+        <%=UtilFormatOut.ifNotEmpty(cmNewPurposeTypeId, "<input type='hidden' name='CM_NEW_PURPOSE_TYPE_ID' value='", "'>")%>
     <%}else{%>
       <p class="head1">Edit Contact Information</p>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">

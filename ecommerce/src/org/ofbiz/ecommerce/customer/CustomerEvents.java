@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2001/09/03 21:15:38  jonesde
+ * Added select address from existing addresses in contact mech list; adds BILLING_LOCATION purpose if not already set.
+ *
  * Revision 1.15  2001/09/03 16:37:18  jonesde
  * Finished person Date field inputs; Added some better null handling
  *
@@ -279,6 +282,10 @@ public class CustomerEvents {
       String allowSolicitation = request.getParameter("CM_ALLOW_SOL");
       String extension = request.getParameter("CM_EXTENSION");
       tempContactMech.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCmId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", allowSolicitation, "extension", extension)));
+
+      String newCmPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");
+      if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0)        
+        tempContactMech.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp())));
       
       if("POSTAL_ADDRESS".equals(contactMechTypeId)) {
         String toName = request.getParameter("CM_TO_NAME");
@@ -426,6 +433,10 @@ public class CustomerEvents {
       String allowSolicitation = request.getParameter("CM_ALLOW_SOL");
       newPartyContactMech.set("allowSolicitation", allowSolicitation);
       
+      String newCmPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");
+      if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0)        
+        partyContactMech.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp())));
+
       partyContactMech.preStoreOther(newContactMech);
       partyContactMech.preStoreOther(newPartyContactMech);
       
