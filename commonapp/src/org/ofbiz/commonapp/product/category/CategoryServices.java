@@ -43,7 +43,7 @@ public class CategoryServices {
         GenericDelegator delegator = dctx.getDelegator();
         String categoryId = (String) context.get("categoryId");
         GenericValue productCategory = null;
-        Collection members = null;
+        List members = null;
         try {
             productCategory = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", categoryId));
             members = EntityUtil.filterByDate(productCategory.getRelatedCache("ProductCategoryMember", null, UtilMisc.toList("sequenceNum")), true);
@@ -159,7 +159,7 @@ public class CategoryServices {
             productCategory = null;
         }
 
-        Collection productCategoryMembers = null;
+        List productCategoryMembers = null;
         if (productCategory != null) {
             try {
                 if (useCacheForMembers) {

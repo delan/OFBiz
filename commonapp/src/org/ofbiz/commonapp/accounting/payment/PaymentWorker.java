@@ -42,7 +42,7 @@ public class PaymentWorker {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         try {
             List paymentMethodValueMaps = new LinkedList();
-            Collection paymentMethods = delegator.findByAnd("PaymentMethod", UtilMisc.toMap("partyId", partyId));
+            List paymentMethods = delegator.findByAnd("PaymentMethod", UtilMisc.toMap("partyId", partyId));
             if (!showOld) paymentMethods = EntityUtil.filterByDate(paymentMethods, true);
             if (paymentMethods != null) {
                 Iterator pmIter = paymentMethods.iterator();

@@ -185,7 +185,7 @@ public class ProductServices {
         String productId = (String) context.get("productId");
 
         // Make the selectable feature list
-        Collection selectableFeatures = null;
+        List selectableFeatures = null;
         try {
             Map fields = UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE");
             List sort = UtilMisc.toList("sequenceNum");
@@ -296,7 +296,7 @@ public class ProductServices {
             GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
             GenericValue mainProduct = product;
             if (product.get("isVariant") != null && product.getString("isVariant").equalsIgnoreCase("Y")) {
-                Collection c = product.getRelatedByAndCache("AssocProductAssoc",
+                List c = product.getRelatedByAndCache("AssocProductAssoc",
                         UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
                 if (c != null) {
                     if (Debug.infoOn()) Debug.logInfo("Found related: " + c);
@@ -362,7 +362,7 @@ public class ProductServices {
         }
 
         try {
-            Collection c = null;
+            List c = null;
             if (productIdTo == null) {
                 c = product.getRelatedCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", type), UtilMisc.toList("sequenceNum"));
             } else {
@@ -407,7 +407,7 @@ public class ProductServices {
             // -------------------------------
             String thisItem = (String) itemIterator.next();
             if (Debug.verboseOn()) Debug.logVerbose("ThisItem: " + thisItem);
-            Collection features = null;
+            List features = null;
             try {
                 Map fields = UtilMisc.toMap("productId", thisItem, "productFeatureTypeId", orderKey,
                                             "productFeatureApplTypeId", "STANDARD_FEATURE");
@@ -482,7 +482,7 @@ public class ProductServices {
         Iterator itemIt = items.iterator();
         while (itemIt.hasNext()) {
             String productId = (String) itemIt.next();
-            Collection features = null;
+            List features = null;
             try {
                 Map fields = UtilMisc.toMap("productId", productId, "productFeatureTypeId", feature,
                                             "productFeatureApplTypeId", "STANDARD_FEATURE");

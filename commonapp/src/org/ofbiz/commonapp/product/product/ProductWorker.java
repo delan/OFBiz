@@ -181,16 +181,16 @@ public class ProductWorker {
             return;
 
         try {
-            Collection upgradeProducts = product.getRelatedByAndCache("MainProductAssoc",
+            List upgradeProducts = product.getRelatedByAndCache("MainProductAssoc",
                     UtilMisc.toMap("productAssocTypeId", "PRODUCT_UPGRADE"));
 
-            Collection complementProducts = product.getRelatedByAndCache("MainProductAssoc",
+            List complementProducts = product.getRelatedByAndCache("MainProductAssoc",
                     UtilMisc.toMap("productAssocTypeId", "PRODUCT_COMPLEMENT"));
 
-            Collection obsolescenceProducts = product.getRelatedByAndCache("AssocProductAssoc",
+            List obsolescenceProducts = product.getRelatedByAndCache("AssocProductAssoc",
                     UtilMisc.toMap("productAssocTypeId", "PRODUCT_OBSOLESCENCE"));
 
-            Collection obsoleteByProducts = product.getRelatedByAndCache("MainProductAssoc",
+            List obsoleteByProducts = product.getRelatedByAndCache("MainProductAssoc",
                     UtilMisc.toMap("productAssocTypeId", "PRODUCT_OBSOLESCENCE"));
 
             //since ProductAssoc records have a fromDate and thruDate, we can filter by now so that only assocs in the date range are included

@@ -44,7 +44,7 @@ public class ContactMechWorker {
 
         Iterator allPartyContactMechs = null;
         try {
-            Collection tempCol = delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId));
+            List tempCol = delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId));
             if (!showOld) tempCol = EntityUtil.filterByDate(tempCol, true);
             allPartyContactMechs = UtilMisc.toIterator(tempCol);
         } catch (GenericEntityException e) {
@@ -72,7 +72,7 @@ public class ContactMechWorker {
                 }
 
                 try {
-                    Collection partyContactMechPurposes = partyContactMech.getRelated("PartyContactMechPurpose");
+                    List partyContactMechPurposes = partyContactMech.getRelated("PartyContactMechPurpose");
                     if (!showOld) partyContactMechPurposes = EntityUtil.filterByDate(partyContactMechPurposes, true);
                     partyContactMechValueMap.put("partyContactMechPurposes", partyContactMechPurposes);
                 } catch (GenericEntityException e) {
@@ -182,7 +182,7 @@ public class ContactMechWorker {
             pageContext.setAttribute(contactMechIdAttr, contactMechId);
 
             //try to find a PartyContactMech with a valid date range
-            Collection partyContactMechs = null;
+            List partyContactMechs = null;
             try {
                 partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId)), true);
             } catch (GenericEntityException e) {
@@ -364,7 +364,7 @@ public class ContactMechWorker {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
 
         if (curContactMechId != null) {
-            Collection partyContactMechs = null;
+            List partyContactMechs = null;
             try {
                 partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", curContactMechId)), true);
             } catch (GenericEntityException e) {

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2002/07/16 20:59:08  jonesde
+ * Small change for speedup, specifying that all members of collection are the same entity
+ *
  * Revision 1.8  2002/05/24 18:00:23  jonesde
  * Added orderBy to get the most recent contact mech first
  *
@@ -78,11 +81,11 @@ public class ContactHelper {
     public static Collection getContactMech(GenericValue party, String contactMechPurposeTypeId, String contactMechTypeId, boolean includeOld) {
         if (party == null) return null;
         try {
-            Collection partyContactMechList;
+            List partyContactMechList;
             if (contactMechPurposeTypeId == null) {
                 partyContactMechList = party.getRelated("PartyContactMech");
             } else {
-                Collection list;
+                List list;
                 list = party.getRelatedByAnd("PartyContactMechPurpose", UtilMisc.toMap("contactMechPurposeTypeId", contactMechPurposeTypeId));
                 if (!includeOld) {
                     list = EntityUtil.filterByDate(list, true);

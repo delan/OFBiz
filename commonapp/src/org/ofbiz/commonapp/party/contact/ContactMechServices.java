@@ -121,7 +121,7 @@ public class ContactMechServices {
         try {
             contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
             //try to find a PartyContactMech with a valid date range
-            Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), UtilMisc.toList("fromDate")), true);
+            List partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), UtilMisc.toList("fromDate")), true);
             partyContactMech = EntityUtil.getFirst(partyContactMechs);
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
@@ -221,7 +221,7 @@ public class ContactMechServices {
         GenericValue partyContactMech = null;
         try {
             //try to find a PartyContactMech with a valid date range
-            Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), UtilMisc.toList("fromDate")), true);
+            List partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), UtilMisc.toList("fromDate")), true);
             partyContactMech = EntityUtil.getFirst(partyContactMechs);
         } catch(GenericEntityException e) {
             Debug.logWarning(e.toString());
@@ -335,7 +335,7 @@ public class ContactMechServices {
         try {
             contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
             //try to find a PartyContactMech with a valid date range
-            Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), UtilMisc.toList("fromDate")), true);
+            List partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), UtilMisc.toList("fromDate")), true);
             partyContactMech = EntityUtil.getFirst(partyContactMechs);
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
@@ -509,7 +509,7 @@ public class ContactMechServices {
         try {
             contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
             //try to find a PartyContactMech with a valid date range
-            Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), UtilMisc.toList("fromDate")), true);
+            List partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), UtilMisc.toList("fromDate")), true);
             partyContactMech = EntityUtil.getFirst(partyContactMechs);
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
@@ -655,7 +655,7 @@ public class ContactMechServices {
 
         GenericValue tempVal = null;
         try {
-            Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null), true);
+            List allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null), true);
             tempVal = EntityUtil.getFirst(allPCMPs);
         } catch(GenericEntityException e) {
             Debug.logWarning(e.getMessage());

@@ -42,12 +42,12 @@ import org.ofbiz.commonapp.common.*;
 public class OrderReadHelper {
 
     protected GenericValue orderHeader = null;
-    protected Collection orderItems = null;
-    protected Collection adjustments = null;
-    protected Collection paymentPrefs = null;
-    protected Collection orderStatuses = null;
-    protected Collection orderItemPriceInfos = null;
-    protected Collection orderItemInventoryReses = null;
+    protected List orderItems = null;
+    protected List adjustments = null;
+    protected List paymentPrefs = null;
+    protected List orderStatuses = null;
+    protected List orderItemPriceInfos = null;
+    protected List orderItemInventoryReses = null;
     protected Double totalPrice = null;
 
     protected OrderReadHelper() {
@@ -68,7 +68,7 @@ public class OrderReadHelper {
         return (List) orderItems;
     }
 
-    public Collection getOrderItemPriceInfos(GenericValue orderItem) {
+    public List getOrderItemPriceInfos(GenericValue orderItem) {
         if (orderItem == null) return null;
         if (this.orderItemPriceInfos == null) {
             GenericDelegator delegator = orderHeader.getDelegator();
@@ -82,7 +82,7 @@ public class OrderReadHelper {
         return EntityUtil.filterByAnd(this.orderItemPriceInfos, UtilMisc.toMap("orderItemSeqId", orderItemSeqId));
     }
     
-    public Collection getOrderItemInventoryReses(GenericValue orderItem) {
+    public List getOrderItemInventoryReses(GenericValue orderItem) {
         if (orderItem == null) return null;
         if (this.orderItemInventoryReses == null) {
             GenericDelegator delegator = orderHeader.getDelegator();
@@ -109,7 +109,7 @@ public class OrderReadHelper {
         return (List) adjustments;
     }
 
-    public Collection getPaymentPreferences() {
+    public List getPaymentPreferences() {
         if (paymentPrefs == null) {
             try {
                 paymentPrefs = orderHeader.getRelated("OrderPaymentPreference");
@@ -189,7 +189,7 @@ public class OrderReadHelper {
     }
 
     public String getStatusString() {
-        Collection orderStatusList = this.getOrderHeaderStatuses();
+        List orderStatusList = this.getOrderHeaderStatuses();
         if (orderStatusList == null) return "";
 
         Set orderStatusIdSet = new HashSet();
@@ -336,7 +336,7 @@ public class OrderReadHelper {
 
     // ================= Order Adjustments =================
 
-    public static double calcOrderAdjustments(Collection orderHeaderAdjustments, double subTotal, boolean includeOther, boolean includeTax, boolean includeShipping) {
+    public static double calcOrderAdjustments(List orderHeaderAdjustments, double subTotal, boolean includeOther, boolean includeTax, boolean includeShipping) {
         double adjTotal = 0.0;
         if (orderHeaderAdjustments != null && orderHeaderAdjustments.size() > 0) {
             List filteredAdjs = filterOrderAdjustments(orderHeaderAdjustments, includeOther, includeTax, includeShipping);
@@ -380,7 +380,7 @@ public class OrderReadHelper {
     }
 
     /** The passed adjustments can be all adjustments for the order, ie for all line items */
-    public static double getOrderItemSubTotal(GenericValue orderItem, Collection adjustments) {
+    public static double getOrderItemSubTotal(GenericValue orderItem, List adjustments) {
         Double unitPrice = orderItem.getDouble("unitPrice");
         Double quantity = orderItem.getDouble("quantity");
         double result = 0.0;
@@ -436,27 +436,27 @@ public class OrderReadHelper {
         return getOrderItemAdjustments(orderItem, getAdjustments(), includeOther, includeTax, includeShipping);
     }
     /** The passed adjustments can be all adjustments for the order, ie for all line items */
-    public static double getOrderItemAdjustments(GenericValue orderItem, Collection adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
+    public static double getOrderItemAdjustments(GenericValue orderItem, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
         return calcItemAdjustments(orderItem, getOrderItemAdjustmentList(orderItem, adjustments), includeOther, includeTax, includeShipping);
     }
-    public static Collection getOrderItemAdjustmentList(GenericValue orderItem, Collection adjustments) {
+    public static List getOrderItemAdjustmentList(GenericValue orderItem, List adjustments) {
         return EntityUtil.filterByAnd(adjustments, UtilMisc.toMap("orderItemSeqId", orderItem.get("orderItemSeqId")));
     }
 
-    public Collection getOrderItemStatuses(GenericValue orderItem) {
+    public List getOrderItemStatuses(GenericValue orderItem) {
         return getOrderItemStatuses(orderItem, getOrderStatuses());
     }
-    public static Collection getOrderItemStatuses(GenericValue orderItem, Collection orderStatuses) {
+    public static List getOrderItemStatuses(GenericValue orderItem, List orderStatuses) {
         return EntityUtil.filterByAnd(orderStatuses, UtilMisc.toMap("orderItemSeqId", orderItem.get("orderItemSeqId")));
     }
 
     //Order Item Adjs Utility Methods
 
-    public static double calcItemAdjustments(GenericValue orderItem, Collection adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
+    public static double calcItemAdjustments(GenericValue orderItem, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
         return calcItemAdjustments(orderItem.getDouble("quantity"), orderItem.getDouble("unitPrice"), adjustments, includeOther, includeTax, includeShipping);
     }
 
-    public static double calcItemAdjustments(Double quantity, Double unitPrice, Collection adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
+    public static double calcItemAdjustments(Double quantity, Double unitPrice, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
         double adjTotal = 0.0;
         if (adjustments != null && adjustments.size() > 0) {
             List filteredAdjs = filterOrderAdjustments(adjustments, includeOther, includeTax, includeShipping);
@@ -488,7 +488,7 @@ public class OrderReadHelper {
         return adjustment;
     }
 
-    public static List filterOrderAdjustments(Collection adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
+    public static List filterOrderAdjustments(List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
         List newOrderAdjustmentsList = new LinkedList();
         if (adjustments != null && adjustments.size() > 0) {
             Iterator adjIt = adjustments.iterator();

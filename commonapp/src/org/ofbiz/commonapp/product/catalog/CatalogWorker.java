@@ -264,11 +264,11 @@ public class CatalogWorker {
         return null;
     }
 
-    public static Collection getWebSiteCatalogs(PageContext pageContext) {
+    public static List getWebSiteCatalogs(PageContext pageContext) {
         return getWebSiteCatalogs(pageContext.getRequest());
     }
 
-    public static Collection getWebSiteCatalogs(ServletRequest request) {
+    public static List getWebSiteCatalogs(ServletRequest request) {
         String webSiteId = getWebSiteId(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
@@ -280,11 +280,11 @@ public class CatalogWorker {
         return null;
     }
 
-    public static Collection getProdCatalogCategories(PageContext pageContext, String prodCatalogId, String prodCatalogCategoryTypeId) {
+    public static List getProdCatalogCategories(PageContext pageContext, String prodCatalogId, String prodCatalogCategoryTypeId) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
 
         try {
-            Collection prodCatalogCategories = EntityUtil.filterByDate(delegator.findByAndCache("ProdCatalogCategory",
+            List prodCatalogCategories = EntityUtil.filterByDate(delegator.findByAndCache("ProdCatalogCategory",
                     UtilMisc.toMap("prodCatalogId", prodCatalogId),
                     UtilMisc.toList("sequenceNum", "productCategoryId")), true);
             if (UtilValidate.isNotEmpty(prodCatalogCategoryTypeId) && prodCatalogCategories != null) {
@@ -315,7 +315,7 @@ public class CatalogWorker {
         }
         //get it from the database
         if (prodCatalogId == null) {
-            Collection webSiteCatalogs = getWebSiteCatalogs(request);
+            List webSiteCatalogs = getWebSiteCatalogs(request);
             if (webSiteCatalogs != null && webSiteCatalogs.size() > 0) {
                 GenericValue webSiteCatalog = EntityUtil.getFirst(webSiteCatalogs);
                 prodCatalogId = webSiteCatalog.getString("prodCatalogId");
@@ -398,7 +398,7 @@ public class CatalogWorker {
     public static String getCatalogTopCategoryId(PageContext pageContext, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
 
-        Collection prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_BROWSE_ROOT");
+        List prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_BROWSE_ROOT");
         if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
             GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
             return prodCatalogCategory.getString("productCategoryId");
@@ -414,7 +414,7 @@ public class CatalogWorker {
     public static String getCatalogSearchCategoryId(PageContext pageContext, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
 
-        Collection prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_SEARCH");
+        List prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_SEARCH");
         if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
             GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
             return prodCatalogCategory.getString("productCategoryId");
@@ -430,7 +430,7 @@ public class CatalogWorker {
     public static String getCatalogPromotionsCategoryId(PageContext pageContext, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
 
-        Collection prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_PROMOTIONS");
+        List prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_PROMOTIONS");
         if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
             GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
             return prodCatalogCategory.getString("productCategoryId");
@@ -464,7 +464,7 @@ public class CatalogWorker {
     public static String getCatalogQuickaddCategoryPrimary(PageContext pageContext, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
 
-        Collection prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_QUICK_ADD");
+        List prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_QUICK_ADD");
         if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
             GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
             return prodCatalogCategory.getString("productCategoryId");
@@ -533,7 +533,7 @@ public class CatalogWorker {
             while (cartiter != null && cartiter.hasNext()) {
                 ShoppingCartItem item = (ShoppingCartItem)cartiter.next();
                 //Collection upgradeProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", item.getProductId(), "productAssocTypeId", "PRODUCT_UPGRADE"), null);
-                Collection complementProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", item.getProductId(), "productAssocTypeId", "PRODUCT_COMPLEMENT"), null);
+                List complementProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", item.getProductId(), "productAssocTypeId", "PRODUCT_COMPLEMENT"), null);
                 //since ProductAssoc records have a fromDate and thruDate, we can filter by now so that only assocs in the date range are included
                 complementProducts = EntityUtil.filterByDate(complementProducts, true);
 

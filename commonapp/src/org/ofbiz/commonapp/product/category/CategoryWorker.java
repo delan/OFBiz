@@ -111,7 +111,7 @@ public class CategoryWorker {
         if (Debug.verboseOn()) Debug.logVerbose("[CatalogHelper.getRelatedCategories] ParentID: " + parentId);
 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        Collection rollups = null;
+        List rollups = null;
         try {
             rollups = delegator.findByAndCache("ProductCategoryRollup",
                                                UtilMisc.toMap("parentProductCategoryId",parentId),

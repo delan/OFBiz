@@ -82,7 +82,7 @@ public class PriceServices {
         String virtualProductId = null;
         if ("Y".equals(product.getString("isVariant"))) {
             try {
-                Collection productAssocs = EntityUtil.filterByDate(delegator.findByAndCache("ProductAssoc", 
+                List productAssocs = EntityUtil.filterByDate(delegator.findByAndCache("ProductAssoc",
                         UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT")), true);
                 GenericValue productAssoc = EntityUtil.getFirst(productAssocs);
                 if (productAssoc != null) {
@@ -95,7 +95,7 @@ public class PriceServices {
         }
 
         //get prices for virtual product if one is found; get all ProductPrice entities for this productId and currencyUomId
-        Collection virtualProductPrices = null;
+        List virtualProductPrices = null;
         if (virtualProductId != null) {
             try {
                 virtualProductPrices = delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", virtualProductId, "currencyUomId", currencyUomId), UtilMisc.toList("-fromDate"));
@@ -117,7 +117,7 @@ public class PriceServices {
         double quantity = quantityDbl.doubleValue();
         
         //for prices, get all ProductPrice entities for this productId and currencyUomId
-        Collection productPrices = null;
+        List productPrices = null;
         try {
             productPrices = delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", productId, "currencyUomId", currencyUomId), UtilMisc.toList("-fromDate"));
         } catch (GenericEntityException e) {
@@ -126,31 +126,31 @@ public class PriceServices {
         productPrices = EntityUtil.filterByDate(productPrices, true);
        
         // ===== get the prices we need: list, default, average cost, min, max =====
-        Collection listPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "LIST_PRICE"));
+        List listPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "LIST_PRICE"));
         GenericValue listPriceValue = EntityUtil.getFirst(listPrices);
         if (listPrices != null && listPrices.size() > 1) {
             Debug.logWarning("There is more than one LIST_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + listPriceValue.getDouble("price"));
         }
         
-        Collection defaultPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
+        List defaultPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
         GenericValue defaultPriceValue = EntityUtil.getFirst(defaultPrices);
         if (defaultPrices != null && defaultPrices.size() > 1) {
             Debug.logWarning("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"));
         }
         
-        Collection averageCosts = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "AVERAGE_COST"));
+        List averageCosts = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "AVERAGE_COST"));
         GenericValue averageCostValue = EntityUtil.getFirst(averageCosts);
         if (averageCosts != null && averageCosts.size() > 1) {
             Debug.logWarning("There is more than one AVERAGE_COST with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + averageCostValue.getDouble("price"));
         }
         
-        Collection minimumPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "MINIMUM_PRICE"));
+        List minimumPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "MINIMUM_PRICE"));
         GenericValue minimumPriceValue = EntityUtil.getFirst(minimumPrices);
         if (minimumPrices != null && minimumPrices.size() > 1) {
             Debug.logWarning("There is more than one MINIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + minimumPriceValue.getDouble("price"));
         }
         
-        Collection maximumPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "MAXIMUM_PRICE"));
+        List maximumPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "MAXIMUM_PRICE"));
         GenericValue maximumPriceValue = EntityUtil.getFirst(maximumPrices);
         if (maximumPrices != null && maximumPrices.size() > 1) {
             Debug.logWarning("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"));
@@ -159,35 +159,35 @@ public class PriceServices {
         // if any of these prices is missing and this product is a variant, default to the corresponding price on the virtual product
         if (virtualProductPrices != null && virtualProductPrices.size() > 0) {
             if (listPriceValue == null) {
-                Collection virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "LIST_PRICE"));
+                List virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "LIST_PRICE"));
                 listPriceValue = EntityUtil.getFirst(virtualTempPrices);
                 if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
                     Debug.logWarning("There is more than one LIST_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + listPriceValue.getDouble("price"));
                 }
             }
             if (defaultPriceValue == null) {
-                Collection virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
+                List virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
                 defaultPriceValue = EntityUtil.getFirst(virtualTempPrices);
                 if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
                     Debug.logWarning("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"));
                 }
             }
             if (averageCostValue == null) {
-                Collection virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "AVERAGE_COST"));
+                List virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "AVERAGE_COST"));
                 averageCostValue = EntityUtil.getFirst(virtualTempPrices);
                 if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
                     Debug.logWarning("There is more than one AVERAGE_COST with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + averageCostValue.getDouble("price"));
                 }
             }
             if (minimumPriceValue == null) {
-                Collection virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "MINIMUM_PRICE"));
+                List virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "MINIMUM_PRICE"));
                 minimumPriceValue = EntityUtil.getFirst(virtualTempPrices);
                 if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
                     Debug.logWarning("There is more than one MINIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + minimumPriceValue.getDouble("price"));
                 }
             }
             if (maximumPriceValue == null) {
-                Collection virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "MAXIMUM_PRICE"));
+                List virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "MAXIMUM_PRICE"));
                 maximumPriceValue = EntityUtil.getFirst(virtualTempPrices);
                 if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
                     Debug.logWarning("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"));
@@ -566,7 +566,7 @@ public class PriceServices {
             compare = productId.compareTo(productPriceCond.getString("condValue"));
         } else if ("PRIP_PROD_CAT_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
             //if a ProductCategoryMember exists for this productId and the specified productCategoryId
-            Collection productCategoryMembers = delegator.findByAndCache("ProductCategoryMember", 
+            List productCategoryMembers = delegator.findByAndCache("ProductCategoryMember",
                     UtilMisc.toMap("productId", productId, "productCategoryId", productPriceCond.getString("condValue")));
             // and from/thru date within range
             productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);

@@ -219,7 +219,7 @@ public class ProductPromoWorker {
             }
         } else if ("PPIP_CATEGORY_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
             //if a ProductCategoryMember exists for this productId and the specified productCategoryId
-            Collection productCategoryMembers = delegator.findByAndCache("ProductCategoryMember", 
+            List productCategoryMembers = delegator.findByAndCache("ProductCategoryMember",
                     UtilMisc.toMap("productId", cartItem.getProductId(), "productCategoryId", productPromoCond.getString("condValue")));
             // and from/thru date within range
             productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);

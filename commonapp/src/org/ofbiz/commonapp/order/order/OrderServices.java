@@ -639,4 +639,69 @@ public class OrderServices {
 
         return result;
     }
+
+    /** Simple tax calc service. */
+    public static Map simpleTaxCalc(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        List itemProductList = (List) context.get("itemProductList");
+        List itemAmountList = (List) context.get("itemAmountList");
+        List itemShippingList = (List) context.get("itemShippingList");
+        Double orderShippingAmount = (Double) context.get("orderShippingAmount");
+        GenericValue shippingAddress = (GenericValue) context.get("shippingAddress");
+
+        // Simple Tax Calc only uses the state from the address and the SalesTaxLookup entity.
+        String stateCode = shippingAddress.getString("stateProvinceGeoId");
+
+        // Setup the return lists.
+        List orderAdjustments = new ArrayList();
+        List itemAdjustments = new ArrayList();
+
+        // Loop through the products; get the taxCategory; and lookup each in the cache.
+        for (int i = 0; i < itemProductList.size(); i++) {
+            GenericValue product = (GenericValue) itemProductList.get(i);
+            Double itemAmount = (Double) itemAmountList.get(i);
+            Double shippingAmount = (Double) itemShippingList.get(i);
+            Double taxAmount = getTaxAmount(product, stateCode, itemAmount.doubleValue(), shippingAmount.doubleValue());
+            itemAdjustments.add(i, taxAmount);
+        }
+        if (orderShippingAmount.doubleValue() > 0)
+            orderAdjustments.add(getTaxAmount(null, stateCode, 0.00, orderShippingAmount.doubleValue()));
+
+        Map result = UtilMisc.toMap("orderAdjustments", orderAdjustments, "itemAdjustments", itemAdjustments);
+        return result;
+
+    }
+
+    private static Double getTaxAmount(GenericValue item, String stateCode, double itemAmount, double shippingAmount) {
+        GenericDelegator delegator = item.getDelegator();
+        Map lookupMap = null;
+        if (item != null)
+            lookupMap = UtilMisc.toMap("stateProvinceGeoId", stateCode, "taxCategory", item.get("taxCategory"));
+        else
+            lookupMap = UtilMisc.toMap("stateProvinceGeoId", stateCode, "taxCategory", "_NA_");
+        List orderList = UtilMisc.toList("-fromDate");
+        try {
+            List lookupList = delegator.findByAndCache("SimpleSalesTaxLookup", lookupMap, orderList);
+            if (lookupList.size() == 0 && !"_NA_".equals((String)lookupMap.get("taxCategory"))) {
+                lookupMap.put("taxCategory", "_NA_");
+                lookupList = delegator.findByAndCache("SimpleSalesTaxLookup", lookupMap, orderList);
+            }
+            List filteredList = EntityUtil.filterByDate(lookupList);
+            if (filteredList.size() == 0) {
+                Debug.logWarning("SimpleTaxCalc: No State/TaxCategory pair found (with or without taxCat).");
+                return new Double(0.00);
+            }
+            GenericValue taxLookup = (GenericValue) filteredList.get(0);
+            double taxRate = taxLookup.getDouble("salesTaxPercentage").doubleValue();
+            double taxable = 0.00;
+            if (item.getBoolean("taxable").booleanValue())
+                taxable += itemAmount;
+            if (taxLookup.getBoolean("taxShipping").booleanValue())
+                taxable += shippingAmount;
+            return new Double(taxable * taxRate);
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+            return new Double(0.00);
+        }
+    }
 }
