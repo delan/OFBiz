@@ -42,72 +42,66 @@
         <success>request:/view</success>
         <error>view:error</error>
     </request-map>
-	<request-map>
-		<uri>additem</uri>
-		<event-type>java</event-type>
-		<event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
-		<event-invoke>addToCart</event-invoke>
-		<success>view:showcart</success>
-		<error>view:error</error>
-	</request-map>
-	<request-map>
-		<uri>modifycart</uri>
-		<event-type>java</event-type>
-		<event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
-		<event-invoke>modifyCart</event-invoke>
-		<success>view:showcart</success>
-		<error>view:error</error>
-	</request-map>		
-	<request-map>
-		<uri>catalog</uri>
-		<success>view:catalog</success>
-	</request-map>
-	<request-map>
-		<uri>category</uri>
-		<success>view:category</success>
-	</request-map>
-	<request-map>
-		<uri>product</uri>
-		<success>view:product</success>
-	</request-map>	
-	<request-map>
-		<uri>shippingAddress</uri>
-		<success>view:shippingAddress</success>
-	</request-map>
-	<request-map>
-		<uri>setShippingAddress</uri>
-		<event-type>java</event-type>
-		<event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
-		<event-invoke>setAddressInfo</event-invoke>
-		<success>view:main</success>
-		<error>view:shippingAddress</error>
-	</request-map>
-	<request-map>
-		<uri>orderhistory</uri>
-            <secure>true</secure><auth>true</auth>
-		<success>view:orderhistory</success>
-	</request-map>
-	<request-map>
-		<uri>orderstatus</uri>
-            <secure>true</secure><auth>true</auth>
-		<success>view:orderstatus</success>
-	</request-map>
+    <request-map>
+      <uri>additem</uri>
+      <event-type>java</event-type>
+      <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
+      <event-invoke>addToCart</event-invoke>
+      <success>view:showcart</success>
+      <error>view:error</error>
+    </request-map>
+    <request-map>
+      <uri>modifycart</uri>
+      <event-type>java</event-type>
+      <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
+      <event-invoke>modifyCart</event-invoke>
+      <success>view:showcart</success>
+      <error>view:error</error>
+    </request-map>		
+    <request-map><uri>catalog</uri><success>view:catalog</success></request-map>
+    <request-map><uri>category</uri><success>view:category</success></request-map>
+    <request-map><uri>product</uri><success>view:product</success></request-map>	
+    <request-map><uri>shippingAddress</uri><success>view:shippingAddress</success></request-map>
+
+    <request-map>
+      <uri>setShippingAddress</uri>
+      <event-type>java</event-type>
+      <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
+      <event-invoke>setAddressInfo</event-invoke>
+      <success>view:main</success>
+      <error>view:shippingAddress</error>
+    </request-map>
+
+    <request-map><uri>orderhistory</uri><secure>true</secure><auth>true</auth><success>view:orderhistory</success></request-map>
+    <request-map><uri>orderstatus</uri><secure>true</secure><auth>true</auth><success>view:orderstatus</success></request-map>
 
 
     <request-map><uri>main</uri><secure>false</secure><auth>false</auth><success>view:main</success></request-map>
+
+    <request-map><uri>viewprofile</uri><secure>true</secure><auth>true</auth><success>view:viewprofile</success></request-map>
+    <request-map><uri>newcustomer</uri><secure>true</secure><auth>false</auth><success>view:newcustomer</success></request-map>
+    <request-map>
+        <uri>createcustomer</uri><secure>true</secure><auth>false</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>login</event-invoke>
+        <success>view:main</success><error>view:newcustomer</error>
+    </request-map>
 
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
     <view-map><view>error</view><mapped-page>/error/error.jsp</mapped-page></view-map>
     <view-map><view>main</view><mapped-page>/main.jsp</mapped-page></view-map>
-	<view-map><view>showcart</view><mapped-page>/cart/showcart.jsp</mapped-page></view-map>
-	<view-map><view>catalog</view><mapped-page>/catalog/catalog.jsp</mapped-page></view-map>	
-	<view-map><view>category</view><mapped-page>/catalog/category.jsp</mapped-page></view-map>		
-	<view-map><view>product</view><mapped-page>/catalog/product.jsp</mapped-page></view-map>			
-	<view-map><view>shippingAddress</view><mapped-page>/shipping/shipping.jsp</mapped-page></view-map>
-	<view-map><view>orderhistory</view><mapped-page>/order/orderhistory.jsp</mapped-page></view-map>			
-	<view-map><view>orderstatus</view><mapped-page>/order/orderstatus.jsp</mapped-page></view-map>			
-    <!-- end of view mappings -->
+    <view-map><view>showcart</view><mapped-page>/cart/showcart.jsp</mapped-page></view-map>
+    <view-map><view>catalog</view><mapped-page>/catalog/catalog.jsp</mapped-page></view-map>
+    <view-map><view>category</view><mapped-page>/catalog/category.jsp</mapped-page></view-map>
+    <view-map><view>product</view><mapped-page>/catalog/product.jsp</mapped-page></view-map>
 
+    <view-map><view>shippingAddress</view><mapped-page>/shipping/shipping.jsp</mapped-page></view-map>
+
+    <view-map><view>orderhistory</view><mapped-page>/order/orderhistory.jsp</mapped-page></view-map>
+    <view-map><view>orderstatus</view><mapped-page>/order/orderstatus.jsp</mapped-page></view-map>
+
+    <view-map><view>viewprofile</view><mapped-page>/customer/viewprofile.jsp</mapped-page></view-map>
+    <view-map><view>newcustomer</view><mapped-page>/customer/newcustomer.jsp</mapped-page></view-map>
+    <!-- end of view mappings -->
 </site-conf>

@@ -1,3 +1,32 @@
+<%
+/**
+ *  Title: Login Page
+ *  Description: None
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     David E. Jones
+ *@created    May 22 2001
+ *@version    1.0
+ */
+%>
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
@@ -6,14 +35,16 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%
-  GenericValue userLogin = (GenericValue)session.getAttribute(SiteDefs.USER_LOGIN);
   GenericValue party = userLogin.getRelatedOne("Party");
-  GenericValue person = party.getRelatedOne("Person");
+  
+  if(party != null)
+  {
+    GenericValue person = party.getRelatedOne("Person");
 
-  Collection partyContactMechs = party.getRelated("PartyContactMech");
-  Iterator partyContactMechIterator = partyContactMechs.iterator();
-  Collection creditCards = party.getRelated("CreditCardInfo");
-  Iterator creditCardInfoIterator = creditCards.iterator();
+    Collection partyContactMechs = party.getRelated("PartyContactMech");
+    Iterator partyContactMechIterator = partyContactMechs.iterator();
+    Collection creditCards = party.getRelated("CreditCardInfo");
+    Iterator creditCardInfoIterator = creditCards.iterator();
 %>
 
 <%-- Main Heading --%>
@@ -34,16 +65,16 @@
 <table width="80%" border="0" cellpadding="1">
     <tr>
         <td align="right" valign="top" width="5%"><div class="tabletext"><b>Name</b></div></td>
-        <td width="5"><img src="/commerce/images/shim.gif" width="5" height="5"></td>
+        <td width="5">&nbsp;</td>
         <td align="left">
           <div class="tabletext">
-            <%=CommonUtil.checkNull(person.getString("firstName"))%> <%=CommonUtil.checkNull(person.getString("middleName"))%> <%=CommonUtil.checkNull(person.getString("lastName"))%>
+            <%=UtilFormatOut.checkNull(person.getString("firstName"))%> <%=UtilFormatOut.checkNull(person.getString("middleName"))%> <%=UtilFormatOut.checkNull(person.getString("lastName"))%>
           </div>
         </td>
     </tr>
 <%-- ============================================================= --%>
     <tr>
-      <td colspan="4" height="1" bgcolor="#899ABC"><img src="/commerce/images/shim.gif" width="200" height="1"></td>
+      <td colspan="4" height="1" bgcolor="#899ABC">&nbsp;</td>
     </tr>
     <tr>
       <td align="right" valign="top" width="5%" nowrap>
@@ -53,7 +84,7 @@
           [Add Contact Information]&nbsp;&nbsp;</a>
         </div>
       </td>
-      <td width="5"><img src="/commerce/images/shim.gif" width="5" height="5"></td>
+      <td width="5">&nbsp;</td>
       <td align="left">
         <%if(partyContactMechIterator != null && partyContactMechIterator.hasNext()){%>
           <table width="100%" border="0" cellpadding="1">
@@ -69,24 +100,20 @@
                 <tr>
                   <td align="left" valign="top" width="60%">
                     <div class="tabletext">
-                      <%=postalAddress.getString("address1")%><br>
+                      <%=UtilFormatOut.checkNull(postalAddress.getString("address1"))%><br>
                       <%if(postalAddress.getString("address2") != null && postalAddress.getString("address2").length() != 0){%> <%= postalAddress.getString("address2") %><br> <%}%>
-                      <%=postalAddress.getString("city")%><br>
-                      <%=postalAddress.getString("stateProvinceGeoId")%> <%=postalAddress.getString("postalCode")%> <%=postalAddress.getString("countryGeoId")%><br>
+                      <%=UtilFormatOut.checkNull(postalAddress.getString("city"))%><br>
+                      <%=UtilFormatOut.checkNull(postalAddress.getString("stateProvinceGeoId"))%> <%=UtilFormatOut.checkNull(postalAddress.getString("postalCode"))%> <%=UtilFormatOut.checkNull(postalAddress.getString("countryGeoId"))%><br>
                     </div>
                   </td>
-                  <td width="5"><img src="/commerce/images/shim.gif" width="5" height="5"></td>
+                  <td width="5">&nbsp;</td>
                   <td align="right" valign="top" nowrap width="1%">
-                    <div><a href="profileeditaddress.jsp?<%=HttpRequestConstants.ADDRESS_KEY%>=<%=postalAddress.getAddressId()%>" class="buttonlink">
+                    <div><a href="editaddress.jsp?CONTACT_MECH_ID=<%=postalAddress.getString("contactMechId")%>" class="buttonlink">
                     [Update]</a></div>&nbsp;
                   </td>
                   <td align="right" valign="top" width="1%">
-                    <%if(postalAddress.getAddressId().intValue() != custAddress.getAddressId().intValue()){%>
-                      <div><a href="viewprofile.jsp?<%=HttpRequestConstants.EVENT%>=<%=EventConstants.DELETE_SHIPPING_ADDRESS%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=postalAddress.getAddressId()%>" class="buttonlink">
-                      [Delete]</a></div>
-                    <%}else{%>
-                      <div class="tabletext"><b>Primary Address</b></div>
-                    <%}%>
+                    <div><a href="/delete_postal_address/viewprofile?CONTACT_MECH_ID=<%=postalAddress.getString("contactMechId")%>" class="buttonlink">
+                    [Delete]</a></div>
                   </td>
                 </tr>
                   <%
@@ -94,13 +121,30 @@
                 else if("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId")))
                 {
                   GenericValue telecomNumber = contactMech.getRelatedOne("TelecomNumber");
+                  %>
+                <tr>
+                  <td align="left" valign="top" width="60%">
+                    <div class="tabletext">
+                      <%=UtilFormatOut.checkNull(telecomNumber.getString("countryCode"))%> <%=UtilFormatOut.checkNull(telecomNumber.getString("areaCode"))%>-<%=UtilFormatOut.checkNull(telecomNumber.getString("contactNumber"))%><br>
+                    </div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="right" valign="top" nowrap width="1%">
+                    <div><a href="editaddress.jsp?CONTACT_MECH_ID=<%=telecomNumber.getString("contactMechId")%>" class="buttonlink">
+                    [Update]</a></div>&nbsp;
+                  </td>
+                  <td align="right" valign="top" width="1%">
+                    <div><a href="/delete_telecom_number/viewprofile?CONTACT_MECH_ID=<%=telecomNumber.getString("contactMechId")%>" class="buttonlink">
+                    [Delete]</a></div>
+                  </td>
+                </tr>
+                  <%
                 }
             %>
                 <%if(partyContactMechIterator.hasNext()){%>
-                  <tr><td colspan="4" height="1" bgcolor="#899ABC"><img src="/commerce/images/shim.gif" width="200" height="1"></td></tr>
+                  <tr><td colspan="4" height="1" bgcolor="#899ABC">&nbsp;</td></tr>
                 <%}%>
               <%}%>
-            <%}%>
           </table>
         <%}else{%>
           <p>No contact information on file.</p><br>
@@ -109,7 +153,7 @@
     </tr>
 <%-- ============================================================= --%>
     <tr>
-      <td colspan="4" height="1" bgcolor="#899ABC"><img src="/commerce/images/shim.gif" width="200" height="1"></td>
+      <td colspan="4" height="1" bgcolor="#899ABC">&nbsp;</td>
     </tr>
     <tr>
       <td align="right" valign="top" width="5%" nowrap>
@@ -119,31 +163,31 @@
           [Add Card]&nbsp;&nbsp;</a>
         </div>
       </td>
-      <td width="5"><img src="/commerce/images/shim.gif" width="5" height="5"></td>
+      <td width="5">&nbsp;</td>
       <td align="left">
-        <%if(paymentIterator != null && paymentIterator.hasNext()){%>
+        <%if(creditCardInfoIterator != null && creditCardInfoIterator.hasNext()){%>
           <p>Select an account on file to update or delete.</p>
           <table width="100%" cellpadding="2" cellspacing="0" border="0">
-            <%while(paymentIterator.hasNext()){%>
-              <%CustomerPayment customerPayment = (CustomerPayment)paymentIterator.next();%>
+            <%while(creditCardInfoIterator.hasNext()){%>
+              <%GenericValue creditCardInfo = (GenericValue)creditCardInfoIterator.next();%>
               <tr>
                 <td width="55%">
                   <div class="tabletext">
                     <b>
-                      <%=customerPayment.getCardType()%>
-                      <%if(customerPayment.getCardNumber() != null && customerPayment.getCardNumber().length() > 4) {%>
-                        <%=customerPayment.getCardNumber().substring(customerPayment.getCardNumber().length()-4)%>
+                      <%=creditCardInfo.getString("nameOnCard")%> <%=creditCardInfo.getString("cardType")%>
+                      <%if(creditCardInfo.getString("cardNumber") != null && creditCardInfo.getString("cardNumber").length() > 4) {%>
+                        <%=creditCardInfo.getString("cardNumber").substring(creditCardInfo.getString("cardNumber").length()-4)%>
                       <%}%>
-                      <%=customerPayment.getExpireDate()%>
+                      <%=creditCardInfo.getString("expireDate")%>
                     </b>
                   </div>
                 <td>
                 <td align="center">
-                  <a href="profileeditcc.jsp?<%=HttpRequestConstants.CUSTOMER_PAYMENT_ID%>=<%=customerPayment.getPaymentId()%>" class="buttonlink">
+                  <a href="editcc.jsp?CREDIT_CARD_ID=<%=creditCardInfo.getString("creditCardId")%>" class="buttonlink">
                   [Update Card]</a>
                 </td>
                 <td align="right">
-                  <a href="viewprofile.jsp?<%=HttpRequestConstants.EVENT%>=<%=EventConstants.DELETE_CUSTOMER_PAYMENT%>&<%=HttpRequestConstants.CUSTOMER_PAYMENT_ID%>=<%=customerPayment.getPaymentId()%>" class="buttonlink">
+                  <a href="/delete_credit_card_info/viewprofile?CREDIT_CARD_ID=<%=creditCardInfo.getString("creditCardId")%>" class="buttonlink">
                   [Delete]</a>
                 </td>
               </tr>
@@ -172,12 +216,14 @@
 <table width="80%" border="0" cellpadding="1">
   <tr>
     <td align="right" valign="top" width="15%" nowrap><div class="tabletext"><b>User Name</b></div></td>
-    <td width="5"><img src="/commerce/images/shim.gif" width="5" height="5"></td>
+    <td width="5">&nbsp;</td>
     <td align="left" valign="top"><div class="tabletext"><%=userLogin.getString("userLoginId")%></div></td>
   </tr>
 </table>
+  <%}else{%>
+No party found for current user with user name: <%=userLogin.getString("userLoginId")%>
+  <%}%>
+
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
-
-

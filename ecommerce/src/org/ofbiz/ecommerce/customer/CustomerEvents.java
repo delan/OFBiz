@@ -1,0 +1,1327 @@
+/*
+ * $Id$
+ * $Log$
+ *
+ */
+package org.ofbiz.ecommerce.customer;
+
+import javax.servlet.http.*;
+import javax.servlet.*;
+import java.util.*;
+import java.sql.*;
+
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
+
+/**
+ * <p><b>Title:</b> CustomerEvents.java
+ * <p><b>Description:</b> Events for customer information maintenance.
+ * <p>Copyright (c) 2001 The Open For Business Project (www.ofbiz.org) and repected authors.
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * <p>The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version 1.0
+ * Created on August 29, 2001
+ */
+public class CustomerEvents
+{
+  public static String createCustomer(HttpServletRequest request, HttpServletResponse response)
+  {
+    GenericValue newUserLogin = null;
+
+    String errMsg = "";
+
+    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    
+    String username = request.getParameter("USERNAME");
+    String password = request.getParameter("PASSWORD");
+    String confirm_password = request.getParameter("CONFIRM_PASSWORD");
+
+    //get all parameters:
+    String firstName = request.getParameter("USER_FIRST_NAME");
+    String middleName = request.getParameter("USER_MIDDLE_NAME");
+    String lastName = request.getParameter("USER_LAST_NAME");
+    String salutation = "";
+    String suffix = "";
+    String homePhone = request.getParameter("CUSTOMER_HOME_PHONE");
+    String workPhone = request.getParameter("CUSTOMER_WORK_PHONE");
+    String faxPhone = request.getParameter("CUSTOMER_FAX_PHONE");
+    String mobilePhone = request.getParameter("CUSTOMER_MOBILE_PHONE");
+    String email = request.getParameter("CUSTOMER_EMAIL");
+
+    String street1 = request.getParameter("CUSTOMER_ADDRESS1");
+    String street2 = request.getParameter("CUSTOMER_ADDRESS2");
+    String city = request.getParameter("CUSTOMER_CITY");
+    String county = ""; //request.getParameter(HttpRequestConstants);
+    String state = request.getParameter("CUSTOMER_STATE");
+    String postalCode = request.getParameter("CUSTOMER_ZIPCODE");
+    String directions = ""; //request.getParameter(HttpRequestConstants);
+
+    if(firstName == null || firstName.length() <= 0)
+    {
+      errMsg = errMsg + "<li>First name missing.";
+    }
+    if(lastName == null || lastName.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Last name missing.";
+    }
+    if(street1 == null || street1.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Address line 1 missing.";
+    }
+    if(city == null || city.length() <= 0)
+    {
+      errMsg = errMsg + "<li>City missing.";
+    }
+    if(state == null || state.length() <= 0)
+    {
+      errMsg = errMsg + "<li>State missing.";
+    }
+    if(postalCode == null || postalCode.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Zip/Postal Code missing.";
+    }
+    if(email == null || email.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Email missing.";
+    }
+    else
+    {
+      //validate email address format
+      int atindex = email.indexOf("@");
+      int dotindex = email.lastIndexOf(".");
+      int length = email.length();
+      if(atindex < 0)
+        errMsg = errMsg + "<li>Email format invalid: \"@\" missing. Need full \"user@hostname.ext\".";
+      if(dotindex < 0 || atindex > dotindex)
+        errMsg = errMsg + "<li>Email format invalid: \".\" missing in hostname. Need full \"user@hostname.ext\".";
+      if(length <= dotindex+1)
+        errMsg = errMsg + "<li>Email format invalid: no extension in hostname. Need full \"user@hostname.ext\".";
+    }
+    if(username == null || username.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Username missing.";
+    }
+    if((password == null || password.length() <= 0 ||
+            confirm_password == null || confirm_password.length() <= 0)  && UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true"))
+    {
+      errMsg = errMsg + "<li>Password(s) missing.";
+    }
+    else if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true") && password.compareTo(confirm_password) != 0)
+    {
+      errMsg = errMsg + "<li>Passwords did not match.";
+    }
+
+    if(username != null && username.length() > 0)
+    {
+      GenericValue userLogin = helper.findByPrimaryKey(helper.makePK("UserLogin", UtilMisc.toMap("userLoginId", username)));
+      if(userLogin != null)
+      {
+        //UserLogin record found, user does exist: go back to new user page...
+        errMsg = errMsg + "<li>Username in use, please choose another.";
+      }
+    }
+
+    if(errMsg.length() > 0)
+    {
+      errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+      request.setAttribute("ERROR_MESSAGE", errMsg);
+      return "error";
+    }
+
+    //UserLogin with username does not exist: create new user...
+    if(!UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) password = UtilProperties.getPropertyValue("ecommerce", "default.customer.password", "ungssblepswd");
+
+    GenericValue tempUserLogin = helper.makeValue("UserLogin", UtilMisc.toMap("userLoginId", username, "currentPassword", password, "partyId", username));
+    // create Party, PartyClass, Person, ContactMechs for Address, phones
+    tempUserLogin.preStoreOther(helper.makeValue("Party", UtilMisc.toMap("partyId", username)));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyClassification", UtilMisc.toMap("partyId", username, "partyTypeId", "PERSON", "partyClassificationTypeId", "PERSON_CLASSIFICATION")));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyRole", UtilMisc.toMap("partyId", username, "roleTypeId", "CUSTOMER")));
+    tempUserLogin.preStoreOther(helper.makeValue("Person", UtilMisc.toMap("partyId", username, "firstName", firstName, "middleName", middleName, "lastName", lastName)));
+    
+    //need to make a sequencer tool...
+    //tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", "0", "firstName", firstName, "middleName", middleName, "lastName", lastName)));
+
+    //newPerson = PersonHelper.create(username, password, firstName, middleName, lastName, salutation, suffix, homePhone, workPhone, faxPhone, mobilePhone, email, companyPromoEmail, partnerPromoEmail, null);
+    //newAddress = AddressHelper.create(street1, street2, city, county, state, postalCode, directions, geoCode, mapUrl);
+    //customerPerson = CustomerPersonHelper.create(customer.getCustomerId(), newPerson.getUsername());
+    //postalAddress = postalAddressHelper.create(customer.getCustomerId(), newAddress.getAddressId());
+
+    newUserLogin = helper.create(tempUserLogin);
+    if(newUserLogin == null) { errMsg = "<li>ERROR: Could not create new customer. Please contact customer service."; return "error"; }
+
+    if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) request.getSession().setAttribute("USER_LOGIN", newUserLogin);
+    return "success";
+  }
+  
+/*  
+  public static boolean handleUpdateCustomer(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
+  {
+    // a little check to avoid an endless loop in error cases...
+    if(request.getAttribute("ERROR_MESSAGE) != null)
+    {
+      return true;
+    }
+
+    String errMsg = "";
+    String customerId = request.getParameter("CUSTOMER_ID);
+    Person person = null;
+    Customer customer = null;
+    person = (Person)request.getSession().getAttribute(HttpSessionConstants.LOGIN_PERSON);
+    customer = (Customer)request.getSession().getAttribute(HttpSessionConstants.LOGIN_CUSTOMER);
+
+    boolean hasPermission = Security.hasPermission(Security.USER_ADMIN, request.getSession());
+    if(hasPermission)
+    {
+      Person tempPerson = (Person)request.getSession().getAttribute(HttpSessionConstants.ACTING_AS_PERSON);
+      if(tempPerson != null)
+      {
+        person = tempPerson;
+      }
+      Customer tempCustomer = (Customer)request.getSession().getAttribute(HttpSessionConstants.ACTING_AS_CUSTOMER);
+      if(tempCustomer != null)
+      {
+        customer = tempCustomer;
+      }
+    }
+
+    if(customerId != null && customerId.length() > 0)
+    {
+      //if a customer Id is passed, edit that customer record
+
+      //check to see if it belongs to person...
+      CustomerPerson customerPerson = CustomerPersonHelper.findByPrimaryKey(customerId, person.getUsername());
+      if(customerPerson != null)
+      {
+        Customer tempCustomer = CustomerHelper.findByPrimaryKey(customerId);
+        if(tempCustomer != null)
+        {
+          customer = tempCustomer;
+        }
+      }
+    }
+
+    //Customer's primary address record
+    Address address = AddressHelper.findByPrimaryKey(customer.getAddressId());
+
+    String updateMode = request.getParameter("UPDATE_MODE);
+    if(updateMode != null && updateMode.compareTo("UPDATE_DELETE) == 0)
+    {
+      //delete customer, with addresses, payments, etc.
+
+    }
+
+    //get all parameters:
+    String companyName = request.getParameter(HttpRequestConstants.CUSTOMER_COMPANY_NAME);
+    String street1 = request.getParameter(HttpRequestConstants.CUSTOMER_ADDRESS1);
+    String street2 = request.getParameter(HttpRequestConstants.CUSTOMER_ADDRESS2);
+    String city = request.getParameter(HttpRequestConstants.CUSTOMER_CITY);
+    String county = "";
+    //request.getParameter(HttpRequestConstants);
+    String state = request.getParameter(HttpRequestConstants.CUSTOMER_STATE);
+    String postalCode = request.getParameter(HttpRequestConstants.CUSTOMER_ZIPCODE);
+    String directions = "";
+    //request.getParameter(HttpRequestConstants);
+    String geoCode = "";
+    //request.getParameter(HttpRequestConstants);
+    String mapUrl = "";
+    //request.getParameter(HttpRequestConstants);
+
+    String customer_email = request.getParameter(HttpRequestConstants.CUSTOMER_EMAIL);
+    String orderEmail = request.getParameter(HttpRequestConstants.CUSTOMER_ORDER_EMAIL);
+    String priceLevelString = request.getParameter(HttpRequestConstants.CUSTOMER_PRICE_LEVEL);
+    String legacyId = request.getParameter(HttpRequestConstants.CUSTOMER_LEGACY_ID);
+    String storeId = request.getParameter(HttpRequestConstants.CUSTOMER_STORE_ID);
+    int priceLevel = 0;
+    try
+    {
+      priceLevel = Integer.parseInt(priceLevelString);
+    }
+    catch(NumberFormatException nfe)
+    {
+      priceLevel = 0;
+    }
+
+    if(street1 == null || street1.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Address line 1 missing.";
+    }
+    if(city == null || city.length() <= 0)
+    {
+      errMsg = errMsg + "<li>City missing.";
+    }
+    if(state == null || state.length() <= 0)
+    {
+      errMsg = errMsg + "<li>State missing.";
+    }
+    if(postalCode == null || postalCode.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Zip/Postal Code missing.";
+    }
+    / *
+     * if(email == null || email.length() <= 0)
+     * {
+     * errMsg = errMsg + "<li>Email missing.";
+     * }
+     * else
+     * {
+     * validate email address format
+     * int atindex = email.indexOf("@");
+     * int dotindex = email.lastIndexOf(".");
+     * int length = email.length();
+     * if(atindex < 0)
+     * {
+     * errMsg = errMsg + "<li>Email format invalid: \"@\" missing. Need full \"user@hostname.ext\".";
+     * }
+     * if(dotindex < 0 || atindex > dotindex)
+     * {
+     * errMsg = errMsg + "<li>Email format invalid: \".\" missing in hostname. Need full \"user@hostname.ext\".";
+     * }
+     * if(length <= dotindex + 1)
+     * {
+     * errMsg = errMsg + "<li>Email format invalid: no extension in hostname. Need full \"user@hostname.ext\".";
+     * }
+     * }
+     * /
+    if(errMsg.length() > 0)
+    {
+      errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, errMsg);
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/editcustomer.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    address.setStreet1(street1);
+    address.setStreet2(street2);
+    address.setCity(city);
+    address.setCounty(county);
+    address.setState(state);
+    address.setPostalCode(postalCode);
+    address.setDirections(directions);
+    address.setGeoCode(geoCode);
+    address.setMapUrl(mapUrl);
+
+    customer.setCompanyName(companyName);
+    customer.setEmail(customer_email);
+    customer.setOrderEmail(orderEmail);
+    if(hasPermission)
+    {
+      customer.setLegacyId(legacyId);
+      customer.setStoreId(storeId);
+      customer.setPriceLevel(new Integer(priceLevel));
+    }
+
+    return true;
+  }
+
+  / **
+   *  Description of the Method
+   *
+   *@param  request                             Description of Parameter
+   *@param  response                            Description of Parameter
+   *@return                                     Description of the Returned
+   *      Value
+   *@exception  java.rmi.RemoteException        Description of Exception
+   *@exception  java.io.IOException             Description of Exception
+   *@exception  javax.servlet.ServletException  Description of Exception
+   * /
+  public static boolean handleUpdateProfile(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
+  {
+    // a little check to avoid an endless loop in error cases...
+    if(request.getAttribute(HttpRequestConstants.ERROR_MESSAGE) != null)
+    {
+      return true;
+    }
+
+    String errMsg = "";
+    Person person = null;
+    person = (Person)request.getSession().getAttribute(HttpSessionConstants.LOGIN_PERSON);
+
+    boolean hasPermission = Security.hasPermission(Security.USER_ADMIN, request.getSession());
+    if(hasPermission)
+    {
+      Person tempPerson = (Person)request.getSession().getAttribute(HttpSessionConstants.ACTING_AS_PERSON);
+      if(tempPerson != null)
+      {
+        person = tempPerson;
+      }
+    }
+
+    Address address = AddressHelper.findByPrimaryKey(person.getHomeAddressId());
+
+    //get all parameters:
+    String firstName = request.getParameter(HttpRequestConstants.USER_FIRST_NAME);
+    String middleName = request.getParameter(HttpRequestConstants.USER_MIDDLE_NAME);
+    String lastName = request.getParameter(HttpRequestConstants.USER_LAST_NAME);
+    String salutation = "";
+    String suffix = "";
+    String homePhone = request.getParameter(HttpRequestConstants.CUSTOMER_HOME_PHONE);
+    String workPhone = request.getParameter(HttpRequestConstants.CUSTOMER_WORK_PHONE);
+    String faxPhone = request.getParameter(HttpRequestConstants.CUSTOMER_FAX_PHONE);
+    String mobilePhone = request.getParameter(HttpRequestConstants.CUSTOMER_MOBILE_PHONE);
+    String email = request.getParameter(HttpRequestConstants.USER_EMAIL);
+    String companyPromoEmail = request.getParameter(HttpRequestConstants.COMPANY_PROMO_EMAIL);
+    String partnerPromoEmail = request.getParameter(HttpRequestConstants.PARTNER_PROMO_EMAIL);
+
+    String street1 = request.getParameter(HttpRequestConstants.USER_HOME_ADDRESS1);
+    String street2 = request.getParameter(HttpRequestConstants.USER_HOME_ADDRESS2);
+    String city = request.getParameter(HttpRequestConstants.USER_HOME_CITY);
+    String county = "";
+    //request.getParameter(HttpRequestConstants);
+    String state = request.getParameter(HttpRequestConstants.USER_HOME_STATE);
+    String postalCode = request.getParameter(HttpRequestConstants.USER_HOME_ZIPCODE);
+    //Integer homeAddressId;
+
+    String directions = "";
+    //request.getParameter(HttpRequestConstants);
+    String geoCode = "";
+    //request.getParameter(HttpRequestConstants);
+    String mapUrl = "";
+    //request.getParameter(HttpRequestConstants);
+
+
+    if(firstName == null || firstName.length() <= 0)
+    {
+      errMsg = errMsg + "<li>First name missing.";
+    }
+    if(lastName == null || lastName.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Last name missing.";
+    }
+    if(email == null || email.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Email missing.";
+    }
+    else
+    {
+      //validate email address format
+      int atindex = email.indexOf("@");
+      int dotindex = email.lastIndexOf(".");
+      int length = email.length();
+      if(atindex < 0)
+      {
+        errMsg = errMsg + "<li>Email format invalid: \"@\" missing. Need full \"user@hostname.ext\".";
+      }
+      if(dotindex < 0 || atindex > dotindex)
+      {
+        errMsg = errMsg + "<li>Email format invalid: \".\" missing in hostname. Need full \"user@hostname.ext\".";
+      }
+      if(length <= dotindex + 1)
+      {
+        errMsg = errMsg + "<li>Email format invalid: no extension in hostname. Need full \"user@hostname.ext\".";
+      }
+    }
+
+    if(errMsg.length() > 0)
+    {
+      errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, errMsg);
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/editprofile.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    person.setFirstName(firstName);
+    person.setMiddleName(middleName);
+    person.setLastName(lastName);
+    person.setSalutation(salutation);
+    person.setSuffix(suffix);
+    person.setHomePhone(homePhone);
+    person.setWorkPhone(workPhone);
+    person.setFaxPhone(faxPhone);
+    person.setMobilePhone(mobilePhone);
+    person.setEmail(email);
+    person.setCompanyPromoEmail(companyPromoEmail);
+    person.setPartnerPromoEmail(partnerPromoEmail);
+
+    if(address != null)
+    {
+      address.setStreet1(street1);
+      address.setStreet2(street2);
+      address.setCity(city);
+      address.setCounty(county);
+      address.setState(state);
+      address.setPostalCode(postalCode);
+      address.setDirections(directions);
+      address.setGeoCode(geoCode);
+      address.setMapUrl(mapUrl);
+    }
+    else
+    {
+      address = AddressHelper.create(street1, street2, city, county, state, postalCode, directions, geoCode, mapUrl);
+      if(address == null)
+      {
+        //uh oh, failed...
+        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Could not create address.");
+        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/editprofile.jsp");
+        rd.forward(request, response);
+        return false;
+      }
+      else
+      {
+        person.setHomeAddressId(address.getAddressId());
+      }
+    }
+
+    return true;
+  }
+
+  public static boolean deletePostalAddress(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, javax.ejb.RemoveException, java.io.IOException, javax.servlet.ServletException
+  {
+    String addressIdString = request.getParameter(HttpRequestConstants.ADDRESS_KEY);
+    int addressId = 0;
+
+    Customer customer = (Customer)request.getSession().getAttribute(HttpSessionConstants.LOGIN_CUSTOMER);
+    CustomerShipAddress customerShipAddress = null;
+
+    if(addressIdString == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address id was not specified, cannot remove.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    try
+    {
+      addressId = Integer.parseInt(addressIdString);
+    }
+    catch(java.lang.NumberFormatException nfe)
+    {
+      //do nothing if number is not properly formatted...
+      addressId = 0;
+    }
+
+    if(addressId == 0)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address id specified was not valid, cannot remove.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    customerShipAddress = CustomerShipAddressHelper.findByPrimaryKey(customer.getCustomerId(), new Integer(addressId));
+
+    Address address = AddressHelper.findByPrimaryKey(new Integer(addressId));
+    if(address == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address specified was not found, cannot remove.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    if(!Security.hasPermission(Security.USER_ADMIN, request.getSession()) &&
+      customer.getAddressId().intValue() != addressId &&
+      customerShipAddress == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address specified does not belong to your account, you may not delete it.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    address.remove();
+
+    Iterator csaIterator = CustomerShipAddressHelper.findByAddressIdIterator(new Integer(addressId));
+    while(csaIterator.hasNext())
+    {
+      customerShipAddress = (CustomerShipAddress)csaIterator.next();
+      customerShipAddress.remove();
+    }
+
+    return true;
+  }
+
+  public static boolean handleSaveNewAddress(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
+  {
+    // a little check to avoid an endless loop in error cases...
+    if(request.getAttribute(HttpRequestConstants.ERROR_MESSAGE) != null)
+    {
+      return true;
+    }
+
+    String errMsg = "";
+    Customer customer = null;
+    customer = (Customer)request.getSession().getAttribute(HttpSessionConstants.LOGIN_CUSTOMER);
+
+    boolean hasPermission = Security.hasPermission(Security.USER_ADMIN, request.getSession());
+    if(hasPermission)
+    {
+      Customer tempCustomer = (Customer)request.getSession().getAttribute(HttpSessionConstants.ACTING_AS_CUSTOMER);
+      if(tempCustomer != null)
+      {
+        customer = tempCustomer;
+      }
+    }
+
+    String street1 = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_ADDRESS1);
+    String street2 = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_ADDRESS2);
+    String city = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_CITY);
+    String county = "";
+    //request.getParameter(HttpRequestConstants);
+    String state = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_STATE);
+    String postalCode = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_ZIPCODE);
+    String directions = "";
+    //request.getParameter(HttpRequestConstants);
+    String geoCode = "";
+    //request.getParameter(HttpRequestConstants);
+    String mapUrl = "";
+    //request.getParameter(HttpRequestConstants);
+
+    if(street1 == null || street1.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Address line 1 missing.";
+    }
+    if(city == null || city.length() <= 0)
+    {
+      errMsg = errMsg + "<li>City missing.";
+    }
+    if(state == null || state.length() <= 0)
+    {
+      errMsg = errMsg + "<li>State missing.";
+    }
+    if(postalCode == null || postalCode.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Zip/Postal Code missing.";
+    }
+
+    if(errMsg.length() > 0)
+    {
+      errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, errMsg);
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profilenewaddress.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    Address newShippingAddress = AddressHelper.create(street1, street2, city, county, state, postalCode, directions, geoCode, mapUrl);
+    if(newShippingAddress == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Could not create address record.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profilenewaddress.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+    if(CommonConstants.DEBUG_PRINT_INFO)
+    {
+      System.out.println("In handleSaveNewAddress, newShippingAddress.addressId=" + newShippingAddress.getAddressId().intValue());
+    }
+
+    CustomerShipAddress customerShipAddress = CustomerShipAddressHelper.create(customer.getCustomerId(), newShippingAddress.getAddressId());
+    if(customerShipAddress == null)
+    {
+      try
+      {
+        newShippingAddress.remove();
+      }
+      catch(javax.ejb.RemoveException re)
+      {
+      }
+      //this isn't good, but what to do? Probably not something the user can resolve...
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Could not create customer shipping address record.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profilenewaddress.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+    return true;
+  }
+
+  public static boolean handleUpdateShippingAddress(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, javax.ejb.RemoveException, java.io.IOException, javax.servlet.ServletException
+  {
+    // a little check to avoid an endless loop in error cases...
+    if(request.getAttribute(HttpRequestConstants.ERROR_MESSAGE) != null)
+    {
+      return true;
+    }
+
+    String errMsg = "";
+    String addressIdString = request.getParameter(HttpRequestConstants.ADDRESS_KEY);
+    int addressId = 0;
+
+    Customer customer = (Customer)request.getSession().getAttribute(HttpSessionConstants.LOGIN_CUSTOMER);
+    CustomerShipAddress customerShipAddress = null;
+
+    if(addressIdString == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address id was not specified, cannot update.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    try
+    {
+      addressId = Integer.parseInt(addressIdString);
+    }
+    catch(java.lang.NumberFormatException nfe)
+    {
+      //do nothing if number is not properly formatted...
+      addressId = 0;
+    }
+
+    if(addressId == 0)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address id specified was not valid, cannot update.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    customerShipAddress = CustomerShipAddressHelper.findByPrimaryKey(customer.getCustomerId(), new Integer(addressId));
+    Address address = AddressHelper.findByPrimaryKey(new Integer(addressId));
+    if(address == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address specified was not found, cannot change.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    if(!Security.hasPermission(Security.USER_ADMIN, request.getSession()) &&
+      customer.getAddressId().intValue() != addressId &&
+      customerShipAddress == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address specified does not belong to your account, you may not change it.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    String street1 = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_ADDRESS1);
+    String street2 = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_ADDRESS2);
+    String city = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_CITY);
+    String county = "";
+    //request.getParameter(HttpRequestConstants);
+    String state = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_STATE);
+    String postalCode = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_ZIPCODE);
+    String directions = "";
+    //request.getParameter(HttpRequestConstants);
+    String geoCode = "";
+    //request.getParameter(HttpRequestConstants);
+    String mapUrl = "";
+    //request.getParameter(HttpRequestConstants);
+
+    if(street1 == null || street1.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Address line 1 missing.";
+    }
+    if(city == null || city.length() <= 0)
+    {
+      errMsg = errMsg + "<li>City missing.";
+    }
+    if(state == null || state.length() <= 0)
+    {
+      errMsg = errMsg + "<li>State missing.";
+    }
+    if(postalCode == null || postalCode.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Zip/Postal Code missing.";
+    }
+
+    if(errMsg.length() > 0)
+    {
+      errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, errMsg);
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profileeditaddress.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    address.setStreet1(street1);
+    address.setStreet2(street2);
+    address.setCity(city);
+    address.setCounty(county);
+    address.setState(state);
+    address.setPostalCode(postalCode);
+    address.setDirections(directions);
+    address.setGeoCode(geoCode);
+    address.setMapUrl(mapUrl);
+
+    return true;
+  }
+
+  public static boolean changePassword(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
+  {
+    String errorMsg = (String)request.getAttribute(HttpRequestConstants.ERROR_MESSAGE);
+    if(errorMsg == null || errorMsg.length() <= 0)
+    {
+      Person person = null;
+      person = (Person)request.getSession().getAttribute(HttpSessionConstants.LOGIN_PERSON);
+
+      boolean hasPermission = Security.hasPermission(Security.USER_ADMIN, request.getSession());
+      if(hasPermission)
+      {
+        Person tempPerson = (Person)request.getSession().getAttribute(HttpSessionConstants.ACTING_AS_PERSON);
+        if(tempPerson != null)
+        {
+          person = tempPerson;
+        }
+      }
+
+      String password = request.getParameter(HttpRequestConstants.LOGIN_PASSWORD);
+      if(hasPermission)
+      {
+        password = person.getPassword();
+      }
+
+      String newPassword = request.getParameter(HttpRequestConstants.LOGIN_NEW_PASSWORD);
+      String confirmPassword = request.getParameter(HttpRequestConstants.LOGIN_CONFIRM_PASSWORD);
+
+      if(person == null)
+      {
+        //person not found, return error
+        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Person not found: critical error.  Please login.");
+        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
+        rd.forward(request, response);
+        return false;
+      }
+
+      if(password == null || password.length() <= 0 ||
+        newPassword == null || newPassword.length() <= 0 ||
+        confirmPassword == null || confirmPassword.length() <= 0)
+      {
+        //one or more of the passwords was incomplete
+        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "One or more of the passwords was empty, please re-enter.");
+        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
+        rd.forward(request, response);
+        return false;
+      }
+
+      if(person.getPassword().compareTo(password) != 0)
+      {
+        //password was NOT correct, send back to changepassword page with an error
+        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Old Password was not correct, please re-enter.");
+        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
+        rd.forward(request, response);
+        return false;
+      }
+
+      //password was correct, check new password
+      if(newPassword.compareTo(confirmPassword) != 0)
+      {
+        //passwords did not match
+        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "New Passwords did not match, please re-enter.");
+        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
+        rd.forward(request, response);
+        return false;
+      }
+
+      //all is well, update password
+      person.setPassword(newPassword);
+    }
+    return true;
+  }
+
+  / **
+   *  Description of the Method
+   *
+   *@param  request                             Description of Parameter
+   *@param  response                            Description of Parameter
+   *@return                                     Description of the Returned
+   *      Value
+   *@exception  java.rmi.RemoteException        Description of Exception
+   *@exception  java.io.IOException             Description of Exception
+   *@exception  javax.servlet.ServletException  Description of Exception
+   * /
+  public static boolean handleCreateCustomerPayment(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
+  {
+    // a little check to avoid an endless loop in error cases...
+    if(request.getAttribute(HttpRequestConstants.ERROR_MESSAGE) != null)
+    {
+      return true;
+    }
+
+    String errMsg = "";
+    Customer customer = null;
+    customer = (Customer)request.getSession().getAttribute(HttpSessionConstants.LOGIN_CUSTOMER);
+
+    boolean hasPermission = Security.hasPermission(Security.USER_ADMIN, request.getSession());
+    if(hasPermission)
+    {
+      Customer tempCustomer = (Customer)request.getSession().getAttribute(HttpSessionConstants.ACTING_AS_CUSTOMER);
+      if(tempCustomer != null)
+      {
+        customer = tempCustomer;
+      }
+    }
+
+    String ccType = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_TYPE);
+    String ccHolder = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_HOLDER);
+    String ccCompany = "";
+    String ccNumber = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_NUMBER);
+    String ccMonth = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_MONTH);
+    String ccYear = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_YEAR);
+    long longCCNumber = 0;
+
+    String street1 = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_ADDRESS1);
+    String street2 = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_ADDRESS2);
+    String city = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_CITY);
+    String county = "";
+    //request.getParameter(HttpRequestConstants);
+    String state = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_STATE);
+    String postalCode = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_ZIPCODE);
+    String directions = "";
+    //request.getParameter(HttpRequestConstants);
+    String geoCode = "";
+    //request.getParameter(HttpRequestConstants);
+    String mapUrl = "";
+    //request.getParameter(HttpRequestConstants);
+
+    if(ccType == null || ccType.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Card type missing.";
+    }
+    if(ccHolder == null || ccHolder.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Name on card missing.";
+    }
+    if(ccNumber == null || ccNumber.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Card number missing.";
+    }
+    else
+    {
+      longCCNumber = CreditCard.parseDirtyLong(ccNumber);
+      if(!CreditCard.isValid(longCCNumber))
+      {
+        //Credit Card number invalid
+        errMsg = errMsg + "<li>Credit card number " + longCCNumber + " was not valid.";
+      }
+      else
+      {
+        String recVendor = CreditCard.vendorToString(CreditCard.recognizeVendor(longCCNumber));
+        if(ccType != null && recVendor.compareToIgnoreCase(ccType) != 0)
+        {
+          //Credit Card type (vendor) invalid
+          errMsg = errMsg + "<li>Credit card number " + longCCNumber + " was not valid for the vendor " + ccType + ", it appears to be a number from " + recVendor + ".";
+        }
+      }
+    }
+    if(ccMonth == null || ccMonth.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Expiration month missing.";
+    }
+    if(ccYear == null || ccYear.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Expiration year missing.";
+    }
+    else if(ccMonth != null && ccMonth.length() > 0)
+    {
+      java.util.Date dateNow = new java.util.Date();
+      Calendar calendarNow = Calendar.getInstance();
+      calendarNow.setTime(dateNow);
+      Calendar calendarCC = Calendar.getInstance();
+      try
+      {
+        calendarCC.set(Integer.parseInt(ccYear), Integer.parseInt(ccMonth), 28);
+      }
+      catch(Exception e)
+      {
+        errMsg = errMsg + "<li>Specified month(" + ccMonth + ") or year(" + ccYear + ") were not valid numbers.";
+      }
+      finally
+      {
+        if(calendarNow.after(calendarCC))
+        {
+          //Expiration date specified is after the current date
+          errMsg = errMsg + "<li>Credit card expiration date " + calendarCC.getTime() + " is BEFORE todays date " + calendarNow.getTime() + ".";
+        }
+      }
+    }
+
+    if(street1 == null || street1.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Address line 1 missing.";
+    }
+    if(city == null || city.length() <= 0)
+    {
+      errMsg = errMsg + "<li>City missing.";
+    }
+    if(state == null || state.length() <= 0)
+    {
+      errMsg = errMsg + "<li>State missing.";
+    }
+    if(postalCode == null || postalCode.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Zip/Postal Code missing.";
+    }
+
+    if(errMsg.length() > 0)
+    {
+      errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, errMsg);
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profilenewcc.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    Address newCCAddress = AddressHelper.create(street1, street2, city, county, state, postalCode, directions, geoCode, mapUrl);
+    if(newCCAddress == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Could not create address record.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profilenewcc.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+    System.out.println("In handleCreateCustomerPayment, newCCAddress.addressId=" + newCCAddress.getAddressId());
+
+    CustomerPayment customerPayment = CustomerPaymentHelper.create(customer.getCustomerId(), ccType, ccNumber, ccMonth + "/" + ccYear, ccHolder, ccCompany, newCCAddress.getAddressId());
+    if(customerPayment == null)
+    {
+      try
+      {
+        newCCAddress.remove();
+      }
+      catch(javax.ejb.RemoveException re)
+      {
+      }
+      //this isn't good, but what to do? Probably not something the user can resolve...
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Could not create payment record.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profilenewcc.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    return true;
+  }
+
+  / **
+   *  Description of the Method
+   *
+   *@param  request                             Description of Parameter
+   *@param  response                            Description of Parameter
+   *@return                                     Description of the Returned
+   *      Value
+   *@exception  java.rmi.RemoteException        Description of Exception
+   *@exception  javax.ejb.RemoveException       Description of Exception
+   *@exception  java.io.IOException             Description of Exception
+   *@exception  javax.servlet.ServletException  Description of Exception
+   * /
+  public static boolean handleDeleteCustomerPayment(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, javax.ejb.RemoveException, java.io.IOException, javax.servlet.ServletException
+  {
+    Person person = (Person)request.getSession().getAttribute(HttpSessionConstants.LOGIN_PERSON);
+    Customer customer = (Customer)request.getSession().getAttribute(HttpSessionConstants.LOGIN_CUSTOMER);
+
+    String paymentIdString = (String)request.getParameter(HttpRequestConstants.CUSTOMER_PAYMENT_ID);
+    Integer paymentId = null;
+
+    if(paymentIdString == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The payment id was not specified, cannot delete.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    try
+    {
+      paymentId = Integer.valueOf(paymentIdString);
+    }
+    catch(Exception e)
+    {
+    }
+    if(paymentId == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The payment id specified (" + paymentIdString + ") was not a valid id, cannot delete.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    CustomerPayment customerPayment = CustomerPaymentHelper.findByPaymentId(paymentId);
+    if(customerPayment == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The payment id specified (" + paymentId.intValue() + ") was not found, cannot delete.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    if(customerPayment.getCustomerId().compareTo(customer.getCustomerId()) != 0 && !Security.hasPermission(Security.USER_ADMIN, request.getSession()))
+    {
+      //customer id's do not match, do not allow view or edit...
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The credit card specified does not belong to your account, you may not delete it.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    customerPayment.remove();
+    return true;
+  }
+
+  / **
+   *  Description of the Method
+   *
+   *@param  request                             Description of Parameter
+   *@param  response                            Description of Parameter
+   *@return                                     Description of the Returned
+   *      Value
+   *@exception  java.rmi.RemoteException        Description of Exception
+   *@exception  java.io.IOException             Description of Exception
+   *@exception  javax.servlet.ServletException  Description of Exception
+   * /
+  public static boolean handleUpdateCustomerPayment(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
+  {
+    // a little check to avoid an endless loop in error cases...
+    if(request.getAttribute(HttpRequestConstants.ERROR_MESSAGE) != null)
+    {
+      return true;
+    }
+
+    boolean hasPermission = Security.hasPermission(Security.USER_ADMIN, request.getSession());
+    String errMsg = "";
+    Person person = (Person)request.getSession().getAttribute(HttpSessionConstants.LOGIN_PERSON);
+    Customer customer = (Customer)request.getSession().getAttribute(HttpSessionConstants.LOGIN_CUSTOMER);
+
+    String paymentIdString = (String)request.getParameter(HttpRequestConstants.CUSTOMER_PAYMENT_ID);
+    Integer paymentId = null;
+
+    if(paymentIdString == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The payment id was not specified, cannot update.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    paymentId = Integer.valueOf(paymentIdString);
+    if(paymentId == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The payment id specified was not a valid id, cannot update.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    CustomerPayment customerPayment = CustomerPaymentHelper.findByPaymentId(paymentId);
+    if(customerPayment == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The payment id specified was not found, cannot update.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    if(customerPayment.getCustomerId().compareTo(customer.getCustomerId()) != 0 && !hasPermission)
+    {
+      //customer id's do not match, do not allow view or edit...
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The credit card specified does not belong to your account, you may not change it.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    String ccType = CommonUtil.checkNull(request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_TYPE));
+    String ccHolder = CommonUtil.checkNull(request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_HOLDER));
+    String ccCompany = "";
+    String ccNumber = CommonUtil.checkNull(request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_NUMBER));
+    String ccMonth = CommonUtil.checkNull(request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_MONTH));
+    String ccYear = CommonUtil.checkNull(request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_YEAR));
+    long longCCNumber = 0;
+
+    String street1 = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_ADDRESS1);
+    String street2 = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_ADDRESS2);
+    String city = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_CITY);
+    String county = "";
+    //request.getParameter(HttpRequestConstants);
+    String state = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_STATE);
+    String postalCode = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_ZIPCODE);
+    String directions = "";
+    //request.getParameter(HttpRequestConstants);
+    String geoCode = "";
+    //request.getParameter(HttpRequestConstants);
+    String mapUrl = "";
+    //request.getParameter(HttpRequestConstants);
+
+    if(ccType == null || ccType.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Card type missing.";
+    }
+    if(ccHolder == null || ccHolder.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Name on card missing.";
+    }
+    if(ccNumber == null || ccNumber.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Card number missing.";
+    }
+    else
+    {
+      longCCNumber = CreditCard.parseDirtyLong(ccNumber);
+      if(!CreditCard.isValid(longCCNumber))
+      {
+        //Credit Card number invalid
+        errMsg = errMsg + "<li>Credit card number " + longCCNumber + " was not valid.";
+      }
+      else
+      {
+        String recVendor = CreditCard.vendorToString(CreditCard.recognizeVendor(longCCNumber));
+        if(ccType != null && recVendor.compareToIgnoreCase(ccType) != 0)
+        {
+          //Credit Card type (vendor) invalid
+          errMsg = errMsg + "<li>Credit card number " + longCCNumber + " was not valid for the vendor " + ccType + ", it appears to be a number from " + recVendor + ".";
+        }
+      }
+    }
+    if(ccMonth == null || ccMonth.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Expiration month missing.";
+    }
+    if(ccYear == null || ccYear.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Expiration year missing.";
+    }
+    else if(ccMonth != null && ccMonth.length() > 0)
+    {
+      java.util.Date dateNow = new java.util.Date();
+      Calendar calendarNow = Calendar.getInstance();
+      calendarNow.setTime(dateNow);
+      Calendar calendarCC = Calendar.getInstance();
+      try
+      {
+        calendarCC.set(Integer.parseInt(ccYear), Integer.parseInt(ccMonth), 28);
+      }
+      catch(Exception e)
+      {
+        errMsg = errMsg + "<li>Specified month(" + ccMonth + ") or year(" + ccYear + ") were not valid numbers.";
+      }
+      finally
+      {
+        if(calendarNow.after(calendarCC))
+        {
+          //Expiration date specified is after the current date
+          errMsg = errMsg + "<li>Credit card expiration date " + calendarCC.getTime() + " is BEFORE todays date " + calendarNow.getTime() + ".";
+        }
+      }
+    }
+
+    if(street1 == null || street1.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Address line 1 missing.";
+    }
+    if(city == null || city.length() <= 0)
+    {
+      errMsg = errMsg + "<li>City missing.";
+    }
+    if(state == null || state.length() <= 0)
+    {
+      errMsg = errMsg + "<li>State missing.";
+    }
+    if(postalCode == null || postalCode.length() <= 0)
+    {
+      errMsg = errMsg + "<li>Zip/Postal Code missing.";
+    }
+
+    if(errMsg.length() > 0)
+    {
+      errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, errMsg);
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profileeditcc.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    if(hasPermission)
+    {
+      customerPayment.setCardType(ccType);
+    }
+    customerPayment.setNameOnCard(ccHolder);
+    customerPayment.setCompany(ccCompany);
+    if(hasPermission)
+    {
+      customerPayment.setCardNumber(ccNumber);
+    }
+    customerPayment.setExpireDate(ccMonth + "/" + ccYear);
+
+    Address address = AddressHelper.findByPrimaryKey(customerPayment.getBillingAddress());
+    if(address == null)
+    {
+      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address record associated with the payment information could not be found and was not updated, but the rest of the information has been updated.");
+      RequestDispatcher rd = request.getRequestDispatcher("/commerce/profileeditcc.jsp");
+      rd.forward(request, response);
+      return false;
+    }
+
+    address.setStreet1(street1);
+    address.setStreet2(street2);
+    address.setCity(city);
+    address.setCounty(county);
+    address.setState(state);
+    address.setPostalCode(postalCode);
+    address.setDirections(directions);
+    address.setGeoCode(geoCode);
+    address.setMapUrl(mapUrl);
+
+    return true;
+  }
+
+  / **
+   *  Description of the Method
+   *
+   *@param  request                             Description of Parameter
+   *@param  response                            Description of Parameter
+   *@return                                     Description of the Returned
+   *      Value
+   *@exception  java.rmi.RemoteException        Description of Exception
+   *@exception  java.io.IOException             Description of Exception
+   *@exception  javax.servlet.ServletException  Description of Exception
+   * /
+  public static boolean handleUpdateActingAs(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
+  {
+    boolean hasUserPermission = Security.hasPermission(Security.USER_ADMIN, request.getSession());
+    if(hasUserPermission)
+    {
+      String personId = request.getParameter(HttpRequestConstants.PERSON_ID);
+      String customerId = request.getParameter(HttpRequestConstants.CUSTOMER_ID);
+      Person person = null;
+      Customer customer = null;
+
+      if(personId != null && personId.length() > 0)
+      {
+        person = PersonHelper.findByPrimaryKey(personId);
+      }
+      if(customerId != null && customerId.length() > 0)
+      {
+        customer = CustomerHelper.findByPrimaryKey(customerId);
+      }
+
+      if(person != null)
+      {
+        request.getSession().setAttribute(HttpSessionConstants.ACTING_AS_PERSON, person);
+      }
+      else
+      {
+        request.getSession().removeAttribute(HttpSessionConstants.ACTING_AS_PERSON);
+      }
+      if(customer != null)
+      {
+        request.getSession().setAttribute(HttpSessionConstants.ACTING_AS_CUSTOMER, customer);
+      }
+      else
+      {
+        request.getSession().removeAttribute(HttpSessionConstants.ACTING_AS_CUSTOMER);
+      }
+    }
+
+    return true;
+  } */
+}
