@@ -490,6 +490,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.ClearField(curOperElem, simpleMethod));
                 } else if ("iterate".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.Iterate(curOperElem, simpleMethod));
+                } else if ("first-from-list".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.envops.FirstFromList(curOperElem, simpleMethod));
                 } else if ("calculate".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.Calculate(curOperElem, simpleMethod));
 
