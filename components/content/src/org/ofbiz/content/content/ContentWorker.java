@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.36 2004/07/24 20:34:34 ajzeneski Exp $
+ * $Id: ContentWorker.java,v 1.37 2004/07/24 23:08:51 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  * @since 2.2
  * 
  *  
@@ -834,7 +834,7 @@ public class ContentWorker {
         if (UtilValidate.isEmpty(subContentId)) {
             view = getSubContent(delegator, contentId, mapKey, userLogin, assocTypes, fromDate, nullThruDatesOnly, contentAssocPredicateId);
         } else {
-            view = getContent(delegator, subContentId);
+            view = getContentCache(delegator, subContentId);
         }
         return view;
     }
@@ -857,14 +857,14 @@ public class ContentWorker {
         return view;
     }
 
-    public static GenericValue getContent(GenericDelegator delegator, String contentId) throws GenericEntityException, MiniLangException, GeneralException {
+    public static GenericValue getContentCache(GenericDelegator delegator, String contentId) throws GenericEntityException {
 
         GenericValue view = null;
         List lst = delegator.findByAndCache("ContentDataResourceView", UtilMisc.toMap("contentId", contentId));
-        if (lst == null || lst.size() == 0) {
-            throw new GeneralException("No content found for contentId=." + contentId);
+            //if (Debug.infoOn()) Debug.logInfo("getContentCache, lst(2):" + lst, "");
+        if (lst != null || lst.size() > 0) {
+            view = (GenericValue) lst.get(0);
         }
-        view = (GenericValue) lst.get(0);
         return view;
     }
 
