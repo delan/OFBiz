@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fieldtypemodel PUBLIC "-//OFBiz//DTD Field Type Model//EN" "http://www.ofbiz.org/dtds/fieldtypemodel.dtd">
 
 <!--
 /**
@@ -30,22 +31,6 @@
  *@version    1.0
  */
 -->
-
-<!DOCTYPE fieldtypemodel [
-  <!-- ====================== Root Element ======================= -->
-  <!ELEMENT fieldtypemodel (field-type-def*)>
-
-  <!-- ================= Children of fieldtypemodel =================== -->
-  <!ELEMENT field-type-def (validate*)>
-
-  <!-- ================= Children of field-type-def =================== -->
-  <!ATTLIST field-type-def type CDATA #REQUIRED>
-  <!ATTLIST field-type-def sql-type CDATA #REQUIRED>
-  <!ATTLIST field-type-def java-type CDATA #REQUIRED>
-
-  <!ELEMENT validate EMPTY>
-  <!ATTLIST validate name CDATA #REQUIRED>
-]>
 
 <fieldtypemodel>
   <!-- ===================== field-type-def ==================== -->
