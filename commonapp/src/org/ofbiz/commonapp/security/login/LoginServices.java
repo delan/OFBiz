@@ -60,7 +60,7 @@ public class LoginServices {
         } else {
             GenericValue userLogin = null;
             try {
-                userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", username));
+                userLogin = delegator.findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", username));
             } catch(GenericEntityException e) {
                 Debug.logWarning(e);
             }
@@ -81,6 +81,7 @@ public class LoginServices {
                     reEnableTime = new Timestamp(disabledDateTime.getTime() + loginDisableMinutes*60000);
                 }
                 
+                boolean doStore = true;
                 if (UtilValidate.isEmpty(userLogin.getString("enabled")) || "Y".equals(userLogin.getString("enabled")) ||
                         (reEnableTime != null && reEnableTime.before(UtilDateTime.nowTimestamp()))) {
                 
@@ -88,8 +89,15 @@ public class LoginServices {
                     userLogin.set("enabled", "Y");
                     if (userLogin.get("currentPassword") != null && password.equals(userLogin.getString("currentPassword"))) {
                         Debug.logInfo("[LoginServices.userLogin] : Password Matched");
-                        //reset failed login count
-                        userLogin.set("successiveFailedLogins", new Long(0));
+                        
+                        //reset failed login count if necessry
+                        Long currentFailedLogins = userLogin.getLong("successiveFailedLogins");
+                        if (currentFailedLogins != null && currentFailedLogins.longValue() > 0) {
+                            userLogin.set("successiveFailedLogins", new Long(0));
+                        } else {
+                            //successful login, no need to change anything, so don't do the store
+                            doStore = false;
+                        }
                         
                         successfulLogin = "Y";
 
@@ -127,10 +135,12 @@ public class LoginServices {
                         successfulLogin = "N";
                     }
                     
-                    try {
-                        userLogin.store();
-                    } catch(GenericEntityException e) {
-                        Debug.logWarning(e);
+                    if (doStore) {
+                        try {
+                            userLogin.store();
+                        } catch(GenericEntityException e) {
+                            Debug.logWarning(e);
+                        }
                     }
 
                     if ("true".equals(UtilProperties.getPropertyValue("security", "store.login.history"))) {
