@@ -70,9 +70,8 @@ if (security.hasPermission("ENTITY_MAINT", session)) {
     String entityGroup = request.getParameter("entityGroup");
     delegator.getModelGroupReader().getGroupCache().put(entityName, entityGroup);
 
-    String filename = request.getParameter("filename");
-    delegator.getModelReader().addEntityToFile(entityName, filename);
-    delegator.getModelReader().rebuildFileNameEntities();
+    delegator.getModelReader().addEntityToResourceHandler(entityName, request.getParameter("loaderName"), request.getParameter("location"));
+    delegator.getModelReader().rebuildResourceHandlerEntities();
   } else if ("removeField".equals(event)) {
     String fieldName = request.getParameter("fieldName");
     entity.removeField(fieldName);
@@ -236,43 +235,77 @@ The following errors occurred:
 <BR>
 <A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName)%>'>Reload Current Entity: <%=entityName%></A><BR>
 <BR>
-Entity Name: <%=entityName%><br>
-Column Name: <%=(modelViewEntity == null)?entity.getTableName():"What column name? This is a VIEW Entity."%><br>
 
 <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateEntity")%>' style='margin: 0;'>
+  <TABLE>
+  <TR>
+    <TD>Entity Name</TD>
+    <TD><%=entityName%></TD>
+  </TR>
+  <TR>
+    <TD>Table Name</TD>
+    <TD><%=(modelViewEntity == null)?entity.getTableName():"What table name? This is a VIEW Entity."%></TD>
+  </TR>
   <%if (modelViewEntity == null) {%>
-    <INPUT type=text size='60' name='tableName' value='<%=UtilFormatOut.checkNull(entity.getTableName())%>'> (Table Name)
-    <BR>
+    <TR>
+      <TD>Table Name</TD>
+      <TD><INPUT type=text size='60' name='tableName' value='<%=UtilFormatOut.checkNull(entity.getTableName())%>'></TD>
+    </TR>
   <%}%>
-  <INPUT type=text size='60' name='packageName' value='<%=entity.getPackageName()%>'> (Package Name)
-  <BR>
-  <SELECT name='dependentOn'>
-    <OPTION selected><%=entity.getDependentOn()%></OPTION>
-    <OPTION></OPTION>
-    <%Iterator depIter = entSet.iterator();%>
-    <%while (depIter.hasNext()) {%>
-      <OPTION><%=(String)depIter.next()%></OPTION>
-    <%}%>
-  </SELECT>
-  (Dependent On Entity)
-  <BR>
-  <INPUT type=text size='60' name='title' value='<%=entity.getTitle()%>'> (Title)
-  <BR>
-  <TEXTAREA cols='60' rows='5' name='description'><%=entity.getDescription()%></TEXTAREA> (Description)
-  <BR>
-  <INPUT type=text size='60' name='copyright' value='<%=entity.getCopyright()%>'> (Copyright)
-  <BR>
-  <INPUT type=text size='60' name='author' value='<%=entity.getAuthor()%>'> (Author)
-  <BR>
-  <INPUT type=text size='60' name='version' value='<%=entity.getVersion()%>'> (Version)
-  <BR>
-  <BR>
-  <INPUT type=text size='60' name='entityGroup' value='<%=UtilFormatOut.checkNull(delegator.getModelGroupReader().getEntityGroupName(entityName))%>'> (Group)
-  <BR>(This group is for the "<%=delegator.getDelegatorName()%>" delegator)
-  <BR>
-  <BR>
-  <INPUT type=text size='60' name='filename' value='<%=UtilFormatOut.checkNull((String) delegator.getModelReader().getEntityFileName(entityName))%>'> (Filename)
-  <BR>
+  <TR>
+    <TD>Package Name</TD>
+    <TD><INPUT type=text size='60' name='packageName' value='<%=entity.getPackageName()%>'></TD>
+  </TR>
+  <TR>
+    <TD>Dependent On Entity</TD>
+    <TD>
+      <SELECT name='dependentOn'>
+        <OPTION selected><%=entity.getDependentOn()%></OPTION>
+        <OPTION></OPTION>
+        <%Iterator depIter = entSet.iterator();%>
+        <%while (depIter.hasNext()) {%>
+          <OPTION><%=(String)depIter.next()%></OPTION>
+        <%}%>
+      </SELECT>
+    </TD>
+  </TR>
+  <TR>
+    <TD>Title</TD>
+    <TD><INPUT type=text size='60' name='title' value='<%=entity.getTitle()%>'></TD>
+  </TR>
+  <TR>
+    <TD>Description</TD>
+    <TD><TEXTAREA cols='60' rows='5' name='description'><%=entity.getDescription()%></TEXTAREA></TD>
+  </TR>
+  <TR>
+    <TD>Copyright</TD>
+    <TD><INPUT type=text size='60' name='copyright' value='<%=entity.getCopyright()%>'></TD>
+  </TR>
+  <TR>
+    <TD>Author</TD>
+    <TD><INPUT type=text size='60' name='author' value='<%=entity.getAuthor()%>'></TD>
+  </TR>
+  <TR>
+    <TD>Version</TD>
+    <TD><INPUT type=text size='60' name='version' value='<%=entity.getVersion()%>'></TD>
+  </TR>
+  <TR>
+    <TD>Group</TD>
+    <TD>
+      <INPUT type=text size='60' name='entityGroup' value='<%=UtilFormatOut.checkNull(delegator.getModelGroupReader().getEntityGroupName(entityName))%>'>
+      <BR>(This group is for the "<%=delegator.getDelegatorName()%>" delegator)
+    </TD>
+  </TR>
+  <%boolean isFile = delegator.getModelReader().getEntityResourceHandler(entityName).isFileResource();%>
+  <TR>
+    <TD>Resource Loader</TD>
+    <TD><INPUT type=text size='20' name='loaderName' value='<%=UtilFormatOut.checkNull((String) delegator.getModelReader().getEntityResourceHandler(entityName).getLoaderName())%>'<%if(!isFile){%> disabled<%}%>></TD>
+  </TR>
+  <TR>
+    <TD>Location</TD>
+    <TD><INPUT type=text size='60' name='location' value='<%=UtilFormatOut.checkNull((String) delegator.getModelReader().getEntityResourceHandler(entityName).getLocation())%>'<%if(!isFile){%> disabled<%}%>></TD>
+  </TR>
+  </TABLE>
   <INPUT type=submit value='Update Entity'>
 </FORM>
 
