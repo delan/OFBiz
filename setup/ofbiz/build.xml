@@ -125,12 +125,12 @@
         <copy file="lib/common/tyrex-1.0.jar" toDir="${catalina.dir}/shared/lib"/>
 
         <!--
-        <copy file="lib/common/commons-beanutils.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/common/commons-collections.jar" toDir="${catalina.dir}/shared/lib"/>
-        <copy file="lib/common/commons-digester.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/common/commons-logging.jar" toDir="${catalina.dir}/shared/lib"/>
         -->
         <copy file="lib/common/commons-httpclient.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/commons-digester.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/commons-beanutils.jar" toDir="${catalina.dir}/shared/lib"/>
 
         <copy file="lib/share/axis.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/share/bsh-1.2b7.jar" toDir="${catalina.dir}/shared/lib"/>
