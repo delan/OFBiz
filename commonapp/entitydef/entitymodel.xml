@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Wed Oct 10 13:29:48 MDT 2001
+ *@created    Wed Oct 17 12:53:37 EDT 2001
  *@version    1.0
  */
 -->
@@ -128,6 +128,19 @@
   <!-- org.ofbiz.commonapp.common.geo -->
   <!-- ========================================================= -->
 	
+    <entity entity-name="CountryCode" 
+            package-name="org.ofbiz.commonapp.common.geo"
+            title="Country Code Mapping Entity"
+            author="Andy Zeneski (jaz@zsolv.com)">
+      <description>Maps Country Names to Country Codes and Abbreviations</description>
+      <field name="CountryCode" col-name="COUNTRY_CODE" type="id-ne"></field>
+      <field name="PartyId" col-name="PARTY_ID" type="id-ne"></field>
+      <field name="CountryName" col-name="COUNTRY_NAME" type="description"></field>
+      <field name="CountryAbbr1" col-name="COUNTRY_ABBR1" type="short-varchar"></field>
+      <field name="CountryAbbr2" col-name="COUNTRY_ABBR2" type="short-varchar"></field>	
+      <prim-key field="CountryCode" />	
+      <prim-key field="PartyId" />
+    </entity>	
     <entity entity-name="Geo" 
             package-name="org.ofbiz.commonapp.common.geo"
             title="Geographic Boundary Entity">

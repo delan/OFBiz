@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Wed Oct 10 13:29:48 MDT 2001
+ *@created    Wed Oct 17 12:53:37 EDT 2001
  *@version    1.0
  */
 -->
@@ -173,6 +173,16 @@
         <key-map field-name="partyQualTypeId" />
       </relation>
     </entity>	
+    <entity entity-name="PartyResume" 
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Resume Entity">
+      <field name="resumeId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="resumeDate" type="date-time"></field>
+      <field name="resumeText" type="long-varchar"></field>	
+      <prim-key field="resumeId" />	
+      <prim-key field="partyId" />
+    </entity>	
     <entity entity-name="PartySkill" 
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Party Skill Entity">
@@ -244,16 +254,6 @@
       <field name="responsibilityTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="responsibilityTypeId" />
-    </entity>	
-    <entity entity-name="PartyResume" 
-            package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Resume Entity">
-      <field name="resumeId" type="id-ne"></field>
-      <field name="partyId" type="id-ne"></field>
-      <field name="resumeDate" type="date-time"></field>
-      <field name="resumeText" type="long-varchar"></field>	
-      <prim-key field="resumeId" />	
-      <prim-key field="partyId" />
     </entity>	
     <entity entity-name="SkillType" 
             package-name="org.ofbiz.commonapp.humanres.ability"
