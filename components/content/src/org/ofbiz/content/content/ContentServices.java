@@ -328,6 +328,7 @@ public class ContentServices {
                 contentIdFrom = contentId;
         }
 
+        /*
         String deactivateExisting = (String) context.get("deactivateExisting");
         if (deactivateExisting != null && deactivateExisting.equalsIgnoreCase("true")) {
             Map andMap = new HashMap();
@@ -350,6 +351,7 @@ public class ContentServices {
                 val.store();
             }
         }
+        */
 
         GenericValue contentAssoc = delegator.makeValue("ContentAssoc", new HashMap());
         contentAssoc.put("contentId", contentIdFrom);

@@ -481,7 +481,9 @@ public class ContentManagementServices {
         if (Debug.infoOn()) Debug.logInfo("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
         if (contentAssocTypeId != null && contentAssocTypeId.length() > 0 ) {
             if (Debug.infoOn()) Debug.logInfo("in persistContentAndAssoc, deactivateExistin:" +  deactivateExisting, null);
-            context.put("deactivateExisting", deactivateExisting);
+            Map contentAssocContext = new HashMap();
+            contentAssocContext.put("userLogin", userLogin);
+            contentAssocContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
             Map thisResult = null;
             try {
                 GenericValue contentAssoc = delegator.makeValue("ContentAssoc", null);
@@ -492,9 +494,6 @@ public class ContentManagementServices {
                 contentAssocPK.setAllFields(context, false, "ca", new Boolean(true));
                 context.putAll(contentAssoc);
                 GenericValue contentAssocExisting = null;
-                Map contentAssocContext = new HashMap();
-                contentAssocContext.put("userLogin", userLogin);
-                contentAssocContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
                 if (contentAssocPK.isPrimaryKey())
                     contentAssocExisting = delegator.findByPrimaryKeyCache("ContentAssoc", contentAssocPK);
                     
@@ -504,6 +503,9 @@ public class ContentManagementServices {
                     contentAssocContext.putAll(ctx);
                     thisResult = dispatcher.runSync("createContentAssoc", contentAssocContext);
                 } else {
+                	if ("true".equalsIgnoreCase(deactivateExisting)) {
+                		Map deactivateContext = UtilMisc.toMap("contentId", contentId, "contentAssocTypeId", contentAssocTypeId );
+                    }
                 	ModelService contentAssocModel = dispatcher.getDispatchContext().getModelService("updateContentAssoc");
                 	Map ctx = contentAssocModel.makeValid(contentAssoc, "IN");
                     contentAssocContext.putAll(ctx);
