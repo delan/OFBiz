@@ -31,9 +31,9 @@
 
 <simple-methods>
     <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">
-    	<call-class-method class-name="org.ofbiz.product.store.ProductStoreWorker" method-name="getProductStore" ret-field-name="productStore">
-    	    <field field-name="request" type="javax.servlet.ServletRequest"/>
-    	</call-class-method>
+        <call-class-method class-name="org.ofbiz.product.store.ProductStoreWorker" method-name="getProductStore" ret-field-name="productStore">
+            <field field-name="request" type="javax.servlet.ServletRequest"/>
+        </call-class-method>
 
         <env-to-env env-name="productStore.allowPassword" to-env-name="allowPassword"/>
         <env-to-env env-name="productStore.defaultPassword" to-env-name="defaultPassword"/>
@@ -242,37 +242,29 @@
         </if-compare>
 
         <!-- Create the email address -->
-        <call-map-processor in-map-name="parameters" out-map-name="emailContext">
-            <simple-map-processor name="newEmail">
-                <process field="roleTypeId"><copy/></process>
-                <process field="CUSTOMER_EMAIL"><copy to-field="emailAddress"/></process>
-                <process field="CUSTOMER_EMAIL_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
-            </simple-map-processor>
-        </call-map-processor>
 
         <!-- Check for required E-Mail -->
         <if-compare field-name="REQUIRE_EMAIL" map-name="parameters" operator="not-equals" value="false">
-            <if-empty field-name="emailAddress" map-name="emailContext">
-                <call-map-processor in-map-name="emailContext" out-map-name="dummymap">
-                    <simple-map-processor name="checkRequiredEmail">
-                        <process field="emailAddress">
-                            <not-empty>
-                            <fail-property resource="EcommerceUiLabels" property="PartyEmailAddressMissingError"/></not-empty>
-                        </process>
-                    </simple-map-processor>
-               </call-map-processor>
-           </if-empty>
-           <if-not-empty field-name="emailAddress" map-name="emailContext">
-                <call-map-processor in-map-name="emailContext" out-map-name="dummymap">
-                    <simple-map-processor name="checkRequiredEmailFormat">
-                        <process field="emailAddress">
-                            <validate-method method="isEmail">
-                            <fail-property resource="EcommerceUiLabels" property="PartyEmailAddressNotFormattedCorrectly"/>
-                            </validate-method>
-                        </process>
-                    </simple-map-processor>
-               </call-map-processor>
-           </if-not-empty>
+            <call-map-processor in-map-name="parameters" out-map-name="emailContext">
+                <simple-map-processor name="newEmail">
+                    <process field="roleTypeId"><copy/></process>
+                    <process field="CUSTOMER_EMAIL">
+                        <copy to-field="emailAddress"/>
+                        <not-empty><fail-property resource="EcommerceUiLabels" property="PartyEmailAddressMissingError"/></not-empty>
+                        <validate-method method="isEmail"><fail-property resource="EcommerceUiLabels" property="PartyEmailAddressNotFormattedCorrectly"/></validate-method>
+                    </process>
+                    <process field="CUSTOMER_EMAIL_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+                </simple-map-processor>
+            </call-map-processor>
+        <else>
+            <call-map-processor in-map-name="parameters" out-map-name="emailContext">
+                <simple-map-processor name="newEmail">
+                    <process field="roleTypeId"><copy/></process>
+                    <process field="CUSTOMER_EMAIL"><copy to-field="emailAddress"/></process>
+                    <process field="CUSTOMER_EMAIL_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+                </simple-map-processor>
+            </call-map-processor>
+        </else>
         </if-compare>
 
         <!-- create the PartyDataSource entry to track where this info came from... -->

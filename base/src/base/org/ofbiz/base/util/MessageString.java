@@ -1,5 +1,5 @@
 /*
- * $Id: MessageString.java,v 1.1 2004/05/14 23:37:32 jonesde Exp $
+ * $Id: MessageString.java,v 1.2 2004/05/15 13:55:43 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,15 +24,18 @@
 package org.ofbiz.base.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Contains extra information about Messages
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class MessageString {
@@ -48,14 +51,33 @@ public class MessageString {
     protected String propertyName;
     protected boolean isError = true;
     
-    public static List getMessagesForField(List messageStringList, String fieldName, boolean convertToStrings) {
+    public static List getMessagesForField(String fieldName, boolean convertToStrings, List messageStringList) {
+        if (fieldName == null) {
+            return Collections.EMPTY_LIST;
+        }
+        Set fieldSet = new TreeSet();
+        fieldSet.add(fieldName);
+        return getMessagesForField(fieldSet, convertToStrings, messageStringList);
+    }
+    public static List getMessagesForField(String fieldName1, String fieldName2, String fieldName3, String fieldName4, boolean convertToStrings, List messageStringList) {
+        Set fieldSet = new TreeSet();
+        if (fieldName1 != null && fieldName1.length() > 0) fieldSet.add(fieldName1);
+        if (fieldName2 != null && fieldName2.length() > 0) fieldSet.add(fieldName2);
+        if (fieldName3 != null && fieldName3.length() > 0) fieldSet.add(fieldName3);
+        if (fieldName4 != null && fieldName4.length() > 0) fieldSet.add(fieldName4);
+        return getMessagesForField(fieldSet, convertToStrings, messageStringList);
+    }
+    public static List getMessagesForField(Set fieldNameSet, boolean convertToStrings, List messageStringList) {
+        if (messageStringList == null || fieldNameSet == null || fieldNameSet.size() == 0) {
+            return Collections.EMPTY_LIST;
+        }
         List outList = new ArrayList(messageStringList.size());
         Iterator messageStringIter = messageStringList.iterator();
         while (messageStringIter.hasNext()) {
             Object messageStringCur = messageStringIter.next();
             if (messageStringCur instanceof MessageString) {
                 MessageString messageString = (MessageString) messageStringCur;
-                if (messageString.isForField(fieldName)) {
+                if (messageString.isForField(fieldNameSet)) {
                     if (convertToStrings) {
                         outList.add(messageString.toString());
                     } else {
@@ -129,6 +151,12 @@ public class MessageString {
     public void setFieldName(String fieldName) {
         this.fieldName = fieldName;
     }
+    public boolean isForField(Set fieldNameSet) {
+        if (fieldNameSet == null) {
+            return true;
+        }
+        return fieldNameSet.contains(this.fieldName);
+    }
     public boolean isForField(String fieldName) {
         if (this.fieldName == null) {
             if (fieldName == null) {
@@ -140,6 +168,7 @@ public class MessageString {
             return this.fieldName.equals(fieldName);
         }
     }
+    
     /**
      * @return Returns the message.
      */
@@ -177,9 +206,6 @@ public class MessageString {
         this.toFieldName = toFieldName;
     }
 
-    public String toString() {
-        return this.message;
-    }
     /**
      * @return Returns the locale.
      */
@@ -228,5 +254,9 @@ public class MessageString {
      */
     public void setError(boolean isError) {
         this.isError = isError;
+    }
+
+    public String toString() {
+        return this.message;
     }
 }
