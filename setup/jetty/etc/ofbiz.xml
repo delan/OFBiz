@@ -134,6 +134,12 @@
     <Arg><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Arg>
     <Arg type="boolean">false</Arg> <!-- dont expand war -->
   </Call>
+  <Call name="addWebApplication">
+    <Arg>/content/*</Arg>
+    <Arg><SystemProperty name="ofbiz.home" default="../ofbiz"/>/content/webapp</Arg>
+    <Arg><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Arg>
+    <Arg type="boolean">false</Arg> <!-- dont expand war -->
+  </Call>
 
   <Set name="RequestLog">
     <New class="org.mortbay.http.NCSARequestLog">

@@ -39,6 +39,9 @@
     <module>
       <web><web-uri>../../../../../marketing/webapp</web-uri><context-root>/marketing</context-root></web>
     </module>
+    <module>
+      <web><web-uri>../../../../../content/webapp</web-uri><context-root>/content</context-root></web>
+    </module>
 
 </application>
 

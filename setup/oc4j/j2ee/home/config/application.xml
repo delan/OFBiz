@@ -10,7 +10,7 @@
 	<web-module id="dms0" path="../../home/applications/dms0.war" />
 	<web-module id="dms" path="../../home/applications/dms.war" />
 
-        <!-- OFBiz web modules -->
+    <!-- OFBiz web modules -->
 	<web-module id="webtools" path="../../../../ofbiz/webtools/webapp" />
 	<web-module id="commonapp" path="../../../../ofbiz/commonapp/webapp" />
 	<web-module id="ecommerce" path="../../../../ofbiz/ecommerce/webapp" />
@@ -22,20 +22,21 @@
 	<web-module id="accounting" path="../../../../ofbiz/accounting/webapp" />
 	<web-module id="facility" path="../../../../ofbiz/facility/webapp" />
 	<web-module id="marketing" path="../../../../ofbiz/marketing/webapp" />
+	<web-module id="content" path="../../../../ofbiz/content/webapp" />
 
-        <connectors path="./oc4j-connectors.xml"/>
+    <connectors path="./oc4j-connectors.xml"/>
 	<persistence path="../persistence" />
 	
-        <!-- Path to the libraries that are installed on this server.
+    <!-- Path to the libraries that are installed on this server.
 	These will accesible for the servlets, EJBs etc -->
 	<library path="../../home/lib" />
 	<library path="../../../sqlj/lib" />
 	<library path="../../../rdbms/jlib/xsu12.jar" />
 	<!-- Path to the taglib directory that is shared
         among different applications. -->
-        <library path="../../home/jsp/lib/taglib" />
+    <library path="../../home/jsp/lib/taglib" />
 
-        <!-- OFBiz class load paths -->
+    <!-- OFBiz class load paths -->
 	<library path="../../../../ofbiz/lib/common"/>
 	<library path="../../../../ofbiz/lib/share"/>
 	<library path="../../../../ofbiz/core/lib"/>

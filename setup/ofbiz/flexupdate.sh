@@ -94,6 +94,7 @@ ofbiz workeffort
 ofbiz accounting
 ofbiz facility
 ofbiz marketing
+ofbiz content
 EOF
 
 CVSBASE="$METHOD$USER@$SERVER:$CVSDIR"

@@ -9,7 +9,7 @@
 -->
 
 <web-site port="8080" display-name="Oracle9iAS Containers for J2EE HTTP Web Site">
-        <!-- Uncomment the following line when using clustering -->
+    <!-- Uncomment the following line when using clustering -->
 	<!-- <frontend host="your_host_name" port="80" /> -->
 	<!-- The default web-app for this site, bound to the root -->
 	<default-web-app application="default" name="defaultWebApp" />
@@ -17,24 +17,25 @@
 	<web-app application="default" name="dms" root="/dmsoc4j" />
 
 	<web-app load-on-startup="true" application="default" name="commonapp" root="/commonapp" /> 
-        <web-app load-on-startup="true" application="default" name="webtools" root="/webtools" /> 
-        <web-app load-on-startup="true" application="default" name="ecommerce" root="/ecommerce" /> 
-        <web-app load-on-startup="true" application="default" name="images" root="/images" />
-        <web-app load-on-startup="true" application="default" name="catalog" root="/catalog" /> 
-        <web-app load-on-startup="true" application="default" name="ordermgr" root="/ordermgr" /> 
-        <web-app load-on-startup="true" application="default" name="partymgr" root="/partymgr" /> 
-        <web-app load-on-startup="true" application="default" name="workeffort" root="/workeffort" /> 
-        <web-app load-on-startup="true" application="default" name="accounting" root="/accounting" /> 
-        <web-app load-on-startup="true" application="default" name="facility" root="/facility" /> 
-        <web-app load-on-startup="true" application="default" name="marketing" root="/marketing" /> 
-        
-        <!-- Uncomment the following to access these apps.
+    <web-app load-on-startup="true" application="default" name="webtools" root="/webtools" /> 
+    <web-app load-on-startup="true" application="default" name="ecommerce" root="/ecommerce" /> 
+    <web-app load-on-startup="true" application="default" name="images" root="/images" />
+    <web-app load-on-startup="true" application="default" name="catalog" root="/catalog" /> 
+    <web-app load-on-startup="true" application="default" name="ordermgr" root="/ordermgr" /> 
+    <web-app load-on-startup="true" application="default" name="partymgr" root="/partymgr" /> 
+    <web-app load-on-startup="true" application="default" name="workeffort" root="/workeffort" /> 
+    <web-app load-on-startup="true" application="default" name="accounting" root="/accounting" /> 
+    <web-app load-on-startup="true" application="default" name="facility" root="/facility" /> 
+    <web-app load-on-startup="true" application="default" name="marketing" root="/marketing" /> 
+    <web-app load-on-startup="true" application="default" name="content" root="/content" /> 
+    
+    <!-- Uncomment the following to access these apps.
 	<web-app application="callerInfo" name="callerInfo-web" root="/jazn" /> 
 	<web-app application="news" name="news-web" root="/news" /> 
 	<web-app application="logger" name="messagelogger-web" root="/messagelogger" /> 
 	<web-app application="ws_example" name="ws_example" root="/webservices" /> 
-        <web-app application="ojspdemos" name="ojspdemos-web" root="/ojspdemos" />
-        -->
+    <web-app application="ojspdemos" name="ojspdemos-web" root="/ojspdemos" />
+    -->
 	<!-- Access Log, where requests are logged to -->
 	<access-log path="../log/http-web-access.log" />
 </web-site>

@@ -67,6 +67,9 @@
     <Application Deployed="true" Name="OFBiz Marketing Mgr" Path="/ofbiz/work/ofbiz/marketing/webapp">
         <WebAppComponent Name="marketing" Targets="myserver" URI="."/>
     </Application>
+    <Application Deployed="true" Name="OFBiz Content Mgr" Path="/ofbiz/work/ofbiz/content/webapp">
+        <WebAppComponent Name="content" Targets="myserver" URI="."/>
+    </Application>
     <CustomRealm
         ConfigurationData="user.filter=(&amp;(cn=%u)(objectclass=person));user.dn=ou=people, o=example.com;server.principal=cn=admin, o=example.com;membership.filter=(&amp;(member=%M)(objectclass=groupofuniquenames));group.filter=(&amp;(cn=%g)(objectclass=groupofuniquenames));server.host=ldapserver.example.com;server.ssl=true;group.dn=ou=groups, o=example.com"
         Name="defaultLDAPRealmForNovellDirectoryServices"

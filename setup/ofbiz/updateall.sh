@@ -34,6 +34,9 @@ cvs update -P -d
 cd ../marketing
 echo "--- marketing ---"
 cvs update -P -d
+cd ../content
+echo "--- content ---"
+cvs update -P -d
 cd ../setup
 echo "--- setup ---"
 cvs update -P -d

@@ -287,6 +287,8 @@
         </Context>
         <Context path="/marketing" docBase="../ofbiz/marketing/webapp" debug="2" reloadable="true" trusted="false">
         </Context>
+        <Context path="/content" docBase="../ofbiz/content/webapp" debug="2" reloadable="true" trusted="false">
+        </Context>
         <!-- Admin context will use tomcat.core to add/remove/get info about
              the webapplications and tomcat internals. 
              By default it is not trusted - i.e. it is not allowed access to 

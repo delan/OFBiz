@@ -19,6 +19,7 @@
     <web-app load-on-startup="true" application="default" shared="true" name="accounting" root="/accounting" />
     <web-app load-on-startup="true" application="default" shared="true" name="facility" root="/facility" />
     <web-app load-on-startup="true" application="default" shared="true" name="marketing" root="/marketing" />
+    <web-app load-on-startup="true" application="default" shared="true" name="content" root="/content" />
     
     <!-- Access Log, where requests are logged to -->
     <access-log path="../log/default-web-access.log" />

@@ -17,6 +17,7 @@
     <web-module id="accounting" path="../../ofbiz/accounting/webapp" />
     <web-module id="facility" path="../../ofbiz/facility/webapp" />
     <web-module id="marketing" path="../../ofbiz/marketing/webapp" />
+    <web-module id="content" path="../../ofbiz/content/webapp" />
 
     <persistence path="../persistence" />
     

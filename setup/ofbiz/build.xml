@@ -262,6 +262,8 @@
         <ant dir="facility" target="clean" inheritAll="false" />
         <echo message="[clean] ===== Cleaning marketing =====" />
         <ant dir="marketing" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning content =====" />
+        <ant dir="content" target="clean" inheritAll="false" />
 
         <echo message="[clean] ===== Done Cleaning =====" />
     </target>
@@ -337,6 +339,12 @@
         <echo message="[build] ========================================" />
         <ant dir="marketing" inheritAll="false" />
 
+        <echo message="[build]" />
+        <echo message="[build] =======================================" />
+        <echo message="[build] ========== Building content ==========" />
+        <echo message="[build] =======================================" />
+        <ant dir="content" inheritAll="false" />
+        
     	<delete file="${ofbcore-webapp.jar}" />
         <echo message="[build] ===== Done Building (Compile) =====" />
     </target>
@@ -366,6 +374,8 @@
         <ant dir="facility" inheritAll="false" />
         <echo message="[build] ===== Building marketing =====" />
         <ant dir="marketing" inheritAll="false" />
+        <echo message="[build] ===== Building content =====" />
+        <ant dir="content" inheritAll="false" />
 
         <echo message="[build] ===== Done Building (Compile), Ignored Core =====" />
     </target>
@@ -391,6 +401,8 @@
         <ant dir="facility" target="war" inheritAll="false" />
         <echo message="[war] ===== Building marketing =====" />
         <ant dir="marketing" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building content =====" />
+        <ant dir="content" target="war" inheritAll="false" />
 
         <echo message="[build] ===== Done Building (WAR) =====" />
     </target>
@@ -420,6 +432,8 @@
         <ant dir="facility" target="docs" />
         <echo message="[docs] ===== Javadoc marketing =====" />
         <ant dir="marketing" target="docs" />
+        <echo message="[docs] ===== Javadoc content =====" />
+        <ant dir="content" target="docs" />
 
         <echo message="[docs] ===== Done Building (Docs) =====" />
     </target>
@@ -441,6 +455,7 @@
         <copy file="core/etc/ofbiz.tld" toDir="accounting/webapp/WEB-INF"/>
         <copy file="core/etc/ofbiz.tld" toDir="facility/webapp/WEB-INF"/>
         <copy file="core/etc/ofbiz.tld" toDir="marketing/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="content/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="webtools/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="commonapp/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="commonapp/empty_webapp/WEB-INF"/>
@@ -452,6 +467,7 @@
         <copy file="core/etc/regions.tld" toDir="accounting/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="facility/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="marketing/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="content/webapp/WEB-INF"/>
         <echo message="[tld] ===== Done Copying ====="/>
     </target>
     <target name="update-apps" depends="copy-tld"/>
@@ -560,6 +576,7 @@
         <copy file="accounting/lib/accounting-ext.war" toDir="${j2eedeploy.dir}" />
         <copy file="facility/lib/facility-ext.war" toDir="${j2eedeploy.dir}" />
         <copy file="marketing/lib/marketing-ext.war" toDir="${j2eedeploy.dir}" />
+        <copy file="content/lib/content-ext.war" toDir="${j2eedeploy.dir}" />
     </target>
 
     <!-- ================================================================== -->
@@ -616,6 +633,7 @@
         <copy file="accounting/lib/accounting.war"  toDir="${ext.dir}/webapps"/>
         <copy file="facility/lib/facility.war"      toDir="${ext.dir}/webapps"/>
         <copy file="marketing/lib/marketing.war"    toDir="${ext.dir}/webapps"/>
+        <copy file="content/lib/content.war"        toDir="${ext.dir}/webapps"/>
 
         <copy file="commonapp/etc/serverstats.properties"    toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/serverstats.xml"           toDir="${ext.dir}/etc"/>
@@ -669,6 +687,7 @@
         <copy file="accounting/lib/accounting.war" toDir="${eartemp.dir}" />
         <copy file="facility/lib/facility.war" toDir="${eartemp.dir}" />
         <copy file="marketing/lib/marketing.war" toDir="${eartemp.dir}" />
+        <copy file="content/lib/content.war" toDir="${eartemp.dir}" />
 
         <jar jarfile="./ofbiz.ear" basedir="${eartemp.dir}" />
         <delete dir="${eartemp.dir}" />

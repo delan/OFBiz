@@ -300,6 +300,9 @@
         <Context path="/marketing" docBase="../../ofbiz/marketing/webapp" debug="0" reloadable="true">
           <Logger className="org.apache.catalina.logger.FileLogger" prefix="marketing_log." suffix=".txt" timestamp="true"/>
         </Context>
+        <Context path="/content" docBase="../../ofbiz/content/webapp" debug="0" reloadable="true">
+          <Logger className="org.apache.catalina.logger.FileLogger" prefix="content_log." suffix=".txt" timestamp="true"/>
+        </Context>
       </Host>
     </Engine>
   </Service>

@@ -35,6 +35,9 @@
     <webapp name="marketing" uri="/marketing" path="../../../../ofbiz/marketing/webapp/">
         <server name="defaultServer"></server>
     </webapp>
+    <webapp name="content" uri="/content" path="../../../../ofbiz/content/webapp/">
+        <server name="defaultServer"></server>
+    </webapp>
     <webapp name="ecommerce" uri="/ecommerce" path="../../../../ofbiz/ecommerce/webapp/">
         <server name="defaultServer"></server>
     </webapp>

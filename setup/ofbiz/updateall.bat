@@ -18,6 +18,8 @@ cd ../facility
 cvs update
 cd ../marketing
 cvs update
+cd ../content
+cvs update
 cd ../setup
 cvs update
 cd ../website
