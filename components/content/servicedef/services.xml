@@ -1562,4 +1562,5 @@
         <description>Change statusId to published (BLOG_PUBLISHED)</description>
         <attribute mode="IN" name="userLogin" optional="false" type="GenericValue"/>
         <attribute mode="IN" name="content" optional="false" type="GenericValue"/>
+    </service>
 </services>
