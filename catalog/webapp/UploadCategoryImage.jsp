@@ -36,7 +36,12 @@
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
-
+<%!
+    //these should be static in the JSP context, which should make them work...
+    static Object forLock = new Object();
+    static Object forLock1 = new Object();
+    static Object SessionIdLock = new Object();
+%>
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", request.getSession())) {%>
 <%
   String fileType = request.getParameter("upload_file_type");
@@ -48,8 +53,7 @@
 %>
     <%
       String contentType = request.getContentType();
-      if(contentType != null && contentType.indexOf("boundary=") > 0)
-      {
+      if(contentType != null && contentType.indexOf("boundary=") > 0) {
         String fileName = "/images/catalog/category/" + productCategoryId + "." + fileType + ".";
         String imageUrl = null;
     %>
@@ -61,21 +65,16 @@
     <%
 //===============================================================================
         String name = productCategoryId + "." + fileType;
-        String dir = UtilProperties.getPropertyValue(application.getResource("/WEB-INF/ecommerce.properties"), 
-            "image.server.path") + "/catalog/category";
+        String dir = UtilProperties.getPropertyValue(application.getResource("/WEB-INF/catalog.properties"), 
+            "image.server.path") + "/catalog";
         String characterEncoding = request.getCharacterEncoding();
 
         int i1;
-        if((i1 = contentType.indexOf("boundary=")) != -1)
-        {
+        if ((i1 = contentType.indexOf("boundary=")) != -1) {
             contentType = contentType.substring(i1 + 9);
             contentType = "--" + contentType;
         }
 
-        //these aren't static in the JSP context, which may make them not work...
-        Object forLock = new Object();
-        Object forLock1 = new Object();
-        Object SessionIdLock = new Object();
         int HOW_LONG = 6;
         String newline = "\n";
 
@@ -83,8 +82,7 @@
         String fileNameToUse = "";
         long l = 0L;
         String idString; // = getId();
-        synchronized(SessionIdLock)
-        {
+        synchronized (SessionIdLock) {
             long time = System.currentTimeMillis();
             Random random = new Random();
             idString = String.valueOf(time);
@@ -101,34 +99,31 @@
 
         out.print("<p>The file on you computer: <b>" + clientFileName + "</b>");
 
-        //fileNameToUse = clientFileName;
-        if(clientFileName.lastIndexOf(".") > 0) name = name + clientFileName.substring(clientFileName.indexOf("."));
-        else name = name + ".jpg";
+        if (clientFileName.lastIndexOf(".") > 0) name += clientFileName.substring(clientFileName.indexOf("."));
+        else name += ".jpg";
 
-        fileNameToUse = name;
+        fileNameToUse = "category." + name;
         out.print("<p>server file name: <b>" + fileNameToUse + "</b>");
         out.print("<p>server directory: <b>" + dir + "</b>");
-        imageUrl = "/images/catalog/category/" + java.net.URLEncoder.encode(fileNameToUse);
+        imageUrl = "/images/catalog/" + java.net.URLEncoder.encode(fileNameToUse);
         out.print("<p>The URL of your uploaded file: <b><a href=\"" + imageUrl + "\">" + imageUrl + "</a></b>");
 
-            try
-            {
-                File file = new File(dir, idString);
-                synchronized(forLock1)
-                {
-                    File file1 = new File(dir, fileNameToUse);
-                    try
-                    {
-                        file1.delete();
-                    }
-                    catch(Exception _ex) { }
-                    file.renameTo(file1);
+        try {
+            File file = new File(dir, idString);
+            synchronized(forLock1) {
+                File file1 = new File(dir, fileNameToUse);
+                try {
+                    file1.delete();
+                } catch (Exception e) {
+                    Debug.logError("Error deleting file");
                 }
+                file.renameTo(file1);
             }
-            catch(Exception _ex) { }
+        } catch (Exception e) {
+            Debug.logError("Error moving file");
+        }
 
-        if(imageUrl != null && imageUrl.length() > 0)
-        {
+        if (imageUrl != null && imageUrl.length() > 0) {
           out.print("<p>Setting category image url to <b>\"" + imageUrl + "\"</b>");
           productCategory.set("categoryImageUrl", imageUrl);
           productCategory.store();

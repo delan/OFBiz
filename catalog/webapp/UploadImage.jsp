@@ -39,19 +39,24 @@
 <table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
 <%@ include file="/includes/onecolumn.jsp" %>
 
+<%!
+    //these should be static in the JSP context, which should make them work...
+    static Object forLock = new Object();
+    static Object forLock1 = new Object();
+    static Object SessionIdLock = new Object();
+%>
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", request.getSession())) {%>
 <%
   String fileType = request.getParameter("upload_file_type");
-  if(fileType == null || fileType.length() <= 0) fileType="small";
+  if (fileType == null || fileType.length() <= 0) fileType="small";
 
   String productId = request.getParameter("PRODUCT_ID");
   GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-  if(product != null) {
+  if (product != null) {
 %>
     <%
       String contentType = request.getContentType();
-      if(contentType != null && contentType.indexOf("boundary=") > 0)
-      {
+      if (contentType != null && contentType.indexOf("boundary=") > 0) {
         String fileName = "/images/catalog/" + productId + "." + fileType + ".";
         String imageUrl = null;
     %>
@@ -63,21 +68,16 @@
     <%
 //===============================================================================
         String name = productId + "." + fileType;
-        String dir = UtilProperties.getPropertyValue(application.getResource("/WEB-INF/ecommerce.properties"), 
+        String dir = UtilProperties.getPropertyValue(application.getResource("/WEB-INF/catalog.properties"), 
             "image.server.path") + "/catalog";
         String characterEncoding = request.getCharacterEncoding();
 
         int i1;
-        if((i1 = contentType.indexOf("boundary=")) != -1)
-        {
+        if ((i1 = contentType.indexOf("boundary=")) != -1) {
             contentType = contentType.substring(i1 + 9);
             contentType = "--" + contentType;
         }
 
-        //these aren't static in the JSP context, which may make them not work...
-        Object forLock = new Object();
-        Object forLock1 = new Object();
-        Object SessionIdLock = new Object();
         int HOW_LONG = 6;
         String newline = "\n";
 
@@ -86,8 +86,7 @@
 
         long l = 0L;
         String idString; // = getId();
-        synchronized(SessionIdLock)
-        {
+        synchronized (SessionIdLock) {
             long time = System.currentTimeMillis();
             Random random = new Random();
             idString = String.valueOf(time);
@@ -104,45 +103,35 @@
 
         out.print("<p>The file on you computer: <b>" + clientFileName + "</b>");
 
-        fileNameToUse = clientFileName;
-        if(clientFileName.lastIndexOf(".") > 0) name = name + clientFileName.substring(clientFileName.indexOf("."));
-        else name = name + ".jpg";
+        if (clientFileName.lastIndexOf(".") > 0) name += clientFileName.substring(clientFileName.indexOf("."));
+        else name += ".jpg";
 
-        fileNameToUse = name;
+        fileNameToUse = "product." + name;
         out.print("<p>server file name: <b>" + fileNameToUse + "</b>");
         out.print("<p>server directory: <b>" + dir + "</b>");
         imageUrl = "/images/catalog/" + java.net.URLEncoder.encode(fileNameToUse);
         out.print("<p>The URL of your uploaded file: <b><a href=\"" + imageUrl + "\">" + imageUrl + "</a></b>");
           
-            try
-            {
-                File file = new File(dir, idString);
-                synchronized(forLock1)
-                {
-                    File file1 = new File(dir, fileNameToUse);
-                    try
-                    {
-                        file1.delete();
-                    }
-                    catch(Exception _ex) { 
-                        System.out.println("error deleting existing file (not neccessarily a problem)");
-                    }
-                    file.renameTo(file1);
+        try {
+            File file = new File(dir, idString);
+            synchronized(forLock1) {
+                File file1 = new File(dir, fileNameToUse);
+                try {
+                    file1.delete();
+                } catch(Exception e) { 
+                    System.out.println("error deleting existing file (not neccessarily a problem)");
                 }
+                file.renameTo(file1);
             }
-            catch(Exception _ex) { 
-                _ex.printStackTrace();
-            }
+        } catch(Exception e) { 
+            e.printStackTrace();
+        }
 
-        if(imageUrl != null && imageUrl.length() > 0)
-        {
-          if(fileType.compareTo("large") == 0)
-          {
+        if (imageUrl != null && imageUrl.length() > 0) {
+          if (fileType.compareTo("large") == 0) {
             out.print("<p>Setting <b>large</b> image url to <b>\"" + imageUrl + "\"</b>");
             product.set("largeImageUrl", imageUrl);
-          }
-          else
-          {
+          } else {
             out.print("<p>Setting <b>small</b> image url to <b>\"" + imageUrl + "\"</b>");
             product.set("smallImageUrl", imageUrl);
           }
