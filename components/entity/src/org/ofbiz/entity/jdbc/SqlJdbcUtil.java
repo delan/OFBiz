@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.12 2004/01/20 16:17:12 jonesde Exp $
+ * $Id: SqlJdbcUtil.java,v 1.13 2004/01/20 16:34:53 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,7 @@ import java.io.ObjectInputStream;
 import java.io.Reader;
 import java.sql.Clob;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -66,7 +67,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -539,12 +540,13 @@ public class SqlJdbcUtil {
         try {
             // checking to see if the object is null is really only necessary for the numbers
             int typeValue = getType(fieldType);
-
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int colType = rsmd.getColumnType(ind);
+            
             if (typeValue <= 4 || typeValue == 10 || typeValue == 11) {
                 switch (typeValue) {
                 case 1:
-                    String value = rs.getString(ind);
-                    if (value == null || value.length() == 0) {
+                    if (java.sql.Types.CLOB == colType) {
                         Debug.logInfo("For field " + curField.getName() + " of entity " + entity.getEntityName() + " getString was null or empty, trying getCharacterStream", module);
                         // if the String is empty, try to get a text input stream, this is required for some databases for larger fields, like CLOBs
                         Clob valueClob = rs.getClob(ind);
@@ -564,9 +566,14 @@ public class SqlJdbcUtil {
                             } catch (IOException e) {
                                 throw new GenericEntityException("Error reading long character stream for field " + curField.getName() + " of entity " + entity.getEntityName(), e);
                             }
+                            entity.dangerousSetNoCheckButFast(curField, strBuf.toString());
+                        } else {
+                            entity.dangerousSetNoCheckButFast(curField, null);
                         }
+                    } else {
+                        String value = rs.getString(ind);
+                        entity.dangerousSetNoCheckButFast(curField, value);
                     }
-                    entity.dangerousSetNoCheckButFast(curField, value);
                     break;
 
                 case 2:
