@@ -155,6 +155,15 @@ public class GenericDelegator {
         return getModelReader().getModelEntity(entityName);
     }
 
+    /** Gets the helper name that corresponds to this delegator and the specified entityName
+     *@param entityName The name of the entity to get the helper for
+     *@return String with the helper name that corresponds to this delegator and the specified entityName
+     */
+    public String getEntityGroupName(String entityName) {
+        String groupName = getModelGroupReader().getEntityGroupName(entityName);
+        return groupName;
+    }
+
     /** Gets a collection of entity models that are in a group corresponding to the specified group name
      *@param groupName The name of the group
      *@return Collection of ModelEntity instances
