@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
  -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -44,8 +44,9 @@
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
             <td><div class="tabletext"><b>${uiLabelMap.ProductCategory_Id}</b></div></td>
+            <td><div class="tabletext"><b>Type</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
-            <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequenceType}</b></div></td>
+            <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
         </tr>
@@ -56,7 +57,10 @@
         
         <tr valign="middle">
             <td><a href="<@ofbizUrl>/EditCategory?productCategoryId=${prodCatalogCategory.productCategoryId}</@ofbizUrl>" class="buttontext">
-            <div class="buttontext"><#if productCategory?exists>${productCategory.description?if_exists}</#if>&nbsp;[${prodCatalogCategory.productCategoryId}]</div>
+                ${(productCategory.description)?if_exists}&nbsp;[${prodCatalogCategory.productCategoryId}]</a>
+            </td>
+            <td>
+                <div class="buttontext">${(curProdCatalogCategoryType.description)?default(prodCatalogCategory.prodCatalogCategoryTypeId)}</div>
             </td>
             <#assign hasntStarted = false>
             <#if prodCatalogCategory.getTimestamp("fromDate")?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(prodCatalogCategory.getTimestamp("fromDate"))>
@@ -71,10 +75,12 @@
                 <FORM method=POST action="<@ofbizUrl>/updateProductCategoryToProdCatalog</@ofbizUrl>" name="lineForm${line}">
                     <input type="hidden" name="prodCatalogId" value="${prodCatalogCategory.prodCatalogId}">
                     <input type="hidden" name="productCategoryId" value="${prodCatalogCategory.productCategoryId}">
+                    <input type="hidden" name="prodCatalogCategoryTypeId" value="${prodCatalogCategory.prodCatalogCategoryTypeId}">
                     <input type="hidden" name="fromDate" value="${prodCatalogCategory.fromDate}">
                     <input type="text" name="thruDate" class="inputBox" size="25" <#if hasExpired == true> style="color: red;"</#if> value="<#if prodCatalogCategory.getTimestamp("thruDate")?exists> ${prodCatalogCategory.getTimestamp("thruDate")}</#if>">
                     <a href="javascript:call_cal(document.lineForm${line}.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
                     <input type="text" class="inputBox" size="5" name="sequenceNum" value="<#if prodCatalogCategory.sequenceNum?exists>${prodCatalogCategory.sequenceNum}</#if>">
+                    <#-- prodCatalogCategoryTypeId is part of the PK, so no longer selectable
                     <select class="selectBox" name="prodCatalogCategoryTypeId" size="1">
                         <#if prodCatalogCategory.get("prodCatalogCategoryTypeId")?exists>
                         <option value="${prodCatalogCategory.getString("prodCatalogCategoryTypeId")}">
@@ -91,7 +97,7 @@
                         <#list prodCatalogCategoryTypes as prodCatalogCategoryType>
                         <option value="${prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")}">${prodCatalogCategoryType.getString("description")}</option>
                         </list>
-                    </select>
+                    </select> -->
                     <INPUT type=submit value="${uiLabelMap.CommonUpdate}">
                     <td align="center">
                         <a href="<@ofbizUrl>/removeProductCategoryFromProdCatalog?prodCatalogId=${prodCatalogCategory.prodCatalogId}&productCategoryId=${prodCatalogCategory.productCategoryId}&fromDate=${prodCatalogCategory.fromDate}&prodCatalogCategoryTypeId=${prodCatalogCategory.prodCatalogCategoryTypeId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
