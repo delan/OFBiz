@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
     <template>lookup</template> 
-    <property name="title">Lookup Virtual Products</property>
+    <property name="titleProperty">PageTitleLookupVirtualProducts</property>
     <property name="formDefFile">/bom/BomForms.xml</property>    
     <property name="singleFormName">lookupVirtualProduct</property>    
     <property name="listFormName">listLookupVirtualProduct</property>    

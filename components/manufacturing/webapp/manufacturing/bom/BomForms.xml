@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -145,6 +145,14 @@
         <field name="createdByUserLogin"><ignored/></field>
         <field name="lastModifiedDate"><ignored/></field>
         <field name="lastModifiedByUserLogin"><ignored/></field>
+        <field name="depthUomId"><ignored/></field>
+        <field name="productDepth"><ignored/></field>
+        <field name="widthUomId"><ignored/></field>
+        <field name="productWidth"><ignored/></field>
+        <field name="heightUomId"><ignored/></field>
+        <field name="productHeight"><ignored/></field>
+        <field name="amountUomTypeId"><ignored/></field>
+        <field name="requireAmount"><ignored/></field>
         <field name="submitButton" title="Lookup" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>

@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -42,8 +42,13 @@
         <field name="workEffortToRun" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}" ><display/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSelected}" widget-style="smallSubmit" ><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="RemoveRoutingTaskAssoc?workEffortIdFrom=${workEffortIdFrom}&amp;workEffortIdTo=${workEffortIdTo}&amp;sequenceNum=${sequenceNum}&amp;workEffortAssocTypeId=ROUTING_COMPONENT" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+            <hyperlink target="RemoveRoutingTaskAssoc?workEffortIdFrom=${workEffortIdFrom}&amp;workEffortIdTo=${workEffortIdTo}&amp;fromDate=${fromDate}&amp;workEffortAssocTypeId=ROUTING_COMPONENT" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
+		<sort-order>
+			<sort-field name="workEffortIdFrom"/>
+			<sort-field name="workEffortIdTo"/>
+			<sort-field name="sequenceNum"/>
+		</sort-order>
     </form>
  
      <form name="UpdateRoutingTaskAssoc" type="single" 
@@ -51,13 +56,89 @@
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
         <field name="workEffortIdFrom"><hidden/></field>
-        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"></field>
         <field name="workEffortIdTo"  title="${uiLabelMap.ManufacturingRoutingTaskId}">
         	<display description="${routingTask.workEffortName}"/></field>
         <field name="workEffortAssocTypeId" ><hidden/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}" ></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+		<sort-order>
+			<sort-field name="workEffortIdFrom"/>
+			<sort-field name="workEffortIdTo"/>
+			<sort-field name="sequenceNum"/>
+		</sort-order>
     </form>
 
+     <form name="AddRoutingProductLink" type="single" 
+            target="AddRoutingProductLink" title=""
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createWorkEffortGoodStandard" map-name="routingProductLink"/>
+       <field name="byProduct"><hidden/></field>
+        <field name="routingTemplate"><hidden/></field>
+        <field name="statusId"><hidden/></field>
+         <field name="workEffortId"><hidden/></field>
+        <field name="workEffortName" title="${uiLabelMap.ManufacturingRoutingName}"><display description="${workEffortName}[${workEffortId}]"/></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"></field>
+        <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+		<sort-order>
+			<sort-field name="workEffortName"/>
+			<sort-field name="productId"/>
+			<sort-field name="fromDate"/>
+			<sort-field name="thruDate"/>
+			<sort-field name="estimatedQuantity"/>
+		</sort-order>
+    </form>
+     <form name="UpdateRoutingProductLink" type="single" 
+            target="UpdateRoutingProductLink" title=""
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="updateWorkEffortGoodStandard" map-name="routingProductLink"/>
+        <field name="byProduct"><hidden/></field>
+        <field name="routingTemplate"><hidden/></field>
+        <field name="statusId"><hidden/></field>
+         <field name="workEffortId"><hidden/></field>
+        <field name="productId" ><hidden/></field>
+        <field name="workEffortName" title="${uiLabelMap.ManufacturingRoutingName}" position="1"><display description="${workEffortName} [${routingProductLink.workEffortId}]"/></field>
+        <field name="productName" title="${uiLabelMap.ProductProductName}" position="2"><display description="${productName} [${routingProductLink.productId}]"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" position="1"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"></field>
+        <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}" position="3"></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+		<sort-order>
+			<sort-field name="workEffortName"/>
+			<sort-field name="productName"/>
+			<sort-field name="fromDate"/>
+			<sort-field name="thruDate"/>
+			<sort-field name="estimatedQuantity"/>
+		</sort-order>
+    </form>
+
+    <form name="ListRoutingProductLink" type="list" 
+            target="EditWorkEffortGoodStandard" title="" list-name="allRoutingProductLinks"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="updateWorkEffortGoodStandard" map-name="routingProductLink"/>
+        <field name="byProduct"><hidden/></field>
+        <field name="routingTemplate"><hidden/></field>
+        <field name="statusId"><hidden/></field>
+        <field name="workEffortId"><hidden/></field>
+        <field name="workEffortName"  title="${uiLabelMap.ManufacturingRoutingName}"><display description="${workEffortName} [${workEffortId}]"/></field>
+        <field name="productId"><hidden/></field>
+        <field name="productName" title="${uiLabelMap.ProductProductName}"><display description="${productName} [${productId}]"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+        <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><display/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSelected}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="RemoveWorkEffortGoodStandard?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}&amp;byProduct=${byProduct}&amp;routingTemplate=${routingTemplate}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+		<sort-order>
+			<sort-field name="workEffortName"/>
+			<sort-field name="productName"/>
+		</sort-order>
+    </form>
 </forms>

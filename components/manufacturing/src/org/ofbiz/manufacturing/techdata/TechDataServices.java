@@ -1,5 +1,5 @@
 /*
- * $Id: TechDataServices.java,v 1.2 2003/11/21 12:45:35 holivier Exp $
+ * $Id: TechDataServices.java,v 1.3 2003/11/27 15:38:03 holivier Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,10 +52,8 @@ import org.ofbiz.service.ServiceUtil;
 /**
  * TechDataServices - TechData related Services
  *
- * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @author     <a href="mailto:johan@ibibi.com">Johan Isacsson</a>
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class TechDataServices {
@@ -104,7 +102,7 @@ public class TechDataServices {
     }
 	/**
 	 * 
-	 * Used to check if there is not two routing task with the same SeqId at the same moment
+	 * Used to check if there is not two routing task with the same SeqId valid at the same period
 	 * 
 	 * @author holivier
 	 * @param ctx
@@ -120,7 +118,6 @@ public class TechDataServices {
 			String workEffortIdTo = (String) context.get("workEffortIdTo");    
 			String workEffortAssocTypeId = (String) context.get("workEffortAssocTypeId");    
 			Long sequenceNum =  (Long) context.get("sequenceNum");
-//			Long sequenceNum =  Long.valueOf((String) context.get("sequenceNum"));
 			java.sql.Timestamp  fromDate =  (java.sql.Timestamp) context.get("fromDate");
 			java.sql.Timestamp  thruDate =  (java.sql.Timestamp) context.get("thruDate");
 
@@ -140,7 +137,7 @@ public class TechDataServices {
 					if ( ! workEffortIdFrom.equals(routingTaskAssoc.getString("workEffortIdFrom")) ||
 						  ! workEffortIdTo.equals(routingTaskAssoc.getString("workEffortIdTo")) ||
 						  ! workEffortAssocTypeId.equals(routingTaskAssoc.getString("workEffortAssocTypeId")) ||
-						    sequenceNum != routingTaskAssoc.getLong("sequenceNum")
+						  ! sequenceNum.equals(routingTaskAssoc.getLong("sequenceNum"))
 						  ) {
 							if (routingTaskAssoc.getTimestamp("thruDate") == null && routingTaskAssoc.getTimestamp("fromDate") == null) sequenceNumNotOk = "Y";
 							else if (routingTaskAssoc.getTimestamp("thruDate") == null) {

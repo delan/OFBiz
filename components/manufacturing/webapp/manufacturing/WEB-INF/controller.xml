@@ -60,11 +60,6 @@
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
-    <request-map uri="fieldLookup">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="fieldLookup"/>
-    </request-map> 
-        
     <request-map uri="view">
         <security https="false" auth="false"/>
         <response name="success" type="view" value="main"/>
@@ -301,6 +296,28 @@
         <response name="success" type="view" value="EditRoutingTaskAssoc"/>
         <response name="error" type="view" value="EditRoutingTaskAssoc"/>
     </request-map>
+    <request-map uri="EditWorkEffortGoodStandard">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditWorkEffortGoodStandard"/>
+    </request-map>
+    <request-map uri="AddRoutingProductLink">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffortGoodStandard"/>
+        <response name="success" type="view" value="EditWorkEffortGoodStandard"/>
+        <response name="error" type="view" value="EditWorkEffortGoodStandard"/>
+    </request-map>
+    <request-map uri="UpdateRoutingProductLink">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWorkEffortGoodStandard"/>
+        <response name="success" type="view" value="EditWorkEffortGoodStandard"/>
+        <response name="error" type="view" value="EditWorkEffortGoodStandard"/>
+    </request-map>
+    <request-map uri="RemoveWorkEffortGoodStandard">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeWorkEffortGoodStandard"/>
+        <response name="success" type="view" value="EditWorkEffortGoodStandard"/>
+        <response name="error" type="view" value="EditWorkEffortGoodStandard"/>
+    </request-map>
 
     <!-- BOM request mappings -->
     
@@ -321,18 +338,6 @@
         <event type="java" path="org.ofbiz.manufacturing.bom.BOMEvents" invoke="updateProductBom"/>
         <response name="success" type="view" value="EditProductBom"/>
         <response name="error" type="view" value="EditProductBom"/>
-    </request-map>
-
-    <!-- MRP request mappings -->
-    <request-map uri="RunningMrp">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="RunningMrp"/>
-    </request-map>
-    <request-map uri="RunningMrpGo">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="runningMrp"/>
-        <response name="success" type="view" value="RunningMrp"/>
-        <response name="error" type="view" value="RunningMrp"/>
     </request-map>
 
     <request-map uri="EditProductManufacturingRules">
@@ -358,13 +363,45 @@
         <response name="error" type="view" value="EditProductManufacturingRules"/>
     </request-map>
  
+    <!-- Lookup request mappings -->
+    <request-map uri="fieldLookup">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="fieldLookup"/>
+    </request-map> 
     <request-map uri="LookupVirtualProduct">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupVirtualProduct"/>
         <response name="error" type="view" value="LookupVirtualProduct"/>
     </request-map>
+    <request-map uri="LookupProduct">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupProduct"/>
+        <response name="error" type="view" value="LookupProduct"/>
+    </request-map>
 
-    
+     <!-- MRP request mappings -->
+    <request-map uri="RunningMrp">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="RunningMrp"/>
+    </request-map>
+    <request-map uri="RunningMrpGo">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="runningMrp"/>
+        <response name="success" type="view" value="RunningMrp"/>
+        <response name="error" type="view" value="RunningMrp"/>
+    </request-map>
+     <!-- JobShop Management request mappings -->
+    <request-map uri="CreateProductionRun">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateProductionRun"/>
+    </request-map>
+    <request-map uri="CreateProductionRunGo">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProductionRun"/>
+        <response name="success" type="view" value="CreateProductionRun"/>
+        <response name="error" type="view" value="CreateProductionRun"/>
+    </request-map>
+
     
     <!-- end of request mappings -->
 
@@ -374,7 +411,6 @@
     <view-map name="main" type="jpublish" page="/main.ftl"/>
     <view-map name="login" type="jpublish" page="/login.ftl"/>       
 
-    <view-map name="fieldLookup" type="jpublish" page="/includes/fieldlookup.ftl"/>
 
     <!-- Routing view mappings -->
     <view-map name="FindCalendar" type="jpublish" page="/routing/FindCalendar.ftl"/>
@@ -388,14 +424,20 @@
     <view-map name="FindRoutingTask" type="jpublish" page="/routing/FindRoutingTask.ftl"/>
     <view-map name="FindRouting" type="jpublish" page="/routing/FindRouting.ftl"/>
     <view-map name="EditRoutingTaskAssoc" type="jpublish" page="/routing/EditRoutingTaskAssoc.ftl"/>
+    <view-map name="EditWorkEffortGoodStandard" type="jpublish" page="/routing/EditWorkEffortGoodStandard.ftl"/>
     <!-- BOM view mappings -->
-    <view-map name="LookupVirtualProduct" page="/bom/LookupVirtualProduct.ftl" type="jpublish"/>
     <view-map name="findParts" type="jpublish" page="/bom/findParts.ftl"/>
     <view-map name="findBom" type="jpublish" page="/bom/findBom.ftl"/>
     <view-map name="EditProductBom" type="jpublish" page="/bom/EditProductBom.ftl"/>
+    <view-map name="EditProductManufacturingRules" type="jpublish" page="/bom/EditProductManufacturingRules.ftl"/>
+    <!-- Lookup request mappings -->
+    <view-map name="fieldLookup" type="jpublish" page="/includes/fieldlookup.ftl"/>
+    <view-map name="LookupVirtualProduct" page="/bom/LookupVirtualProduct.ftl" type="jpublish"/>
+    <view-map name="LookupProduct" page="/includes/LookupProduct.ftl" type="jpublish"/>
     <!-- MRP view mappings -->
     <view-map name="RunningMrp" type="jpublish" page="/mrp/RunningMrp.ftl"/>
-    <view-map name="EditProductManufacturingRules" type="jpublish" page="/bom/EditProductManufacturingRules.ftl"/>
+     <!-- JobShop Management request mappings -->
+    <view-map name="CreateProductionRun" type="jpublish" page="/jobshopmgt/CreateProductionRun.ftl"/>
 
     <!-- end of view mappings -->
 </site-conf>
