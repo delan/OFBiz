@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  */
 -->
 
@@ -46,6 +46,7 @@
   <!--  - org.ofbiz.common.datasource -->
   <!--  - org.ofbiz.common.enum -->
   <!--  - org.ofbiz.common.geo -->
+  <!--  - org.ofbiz.common.keyword -->
   <!--  - org.ofbiz.common.language -->
   <!--  - org.ofbiz.common.note -->
   <!--  - org.ofbiz.common.period -->
@@ -231,6 +232,18 @@
       <relation type="many" rel-entity-name="Geo">
         <key-map field-name="geoTypeId"/>
       </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.common.keyword -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="KeywordThesaurus"
+            package-name="org.ofbiz.common.keyword">
+      <field name="enteredKeyword" type="short-varchar"></field>
+      <field name="alternateKeyword" type="short-varchar"></field>
+      <prim-key field="enteredKeyword"/>
+      <prim-key field="alternateKeyword"/>
     </entity>
 
   <!-- ========================================================= -->
