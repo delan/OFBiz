@@ -23,8 +23,8 @@
     *  $Id: widget-form.dtd 3811 2004-10-29 05:43:54Z jonesde $
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-    <xs:element name="AllFields" abstract="true"/>
-    <xs:element name="AllActions" abstract="true"/>
+
+  <!-- ================== FORMS ==================== -->
     <xs:element name="forms">
         <xs:complexType>
             <xs:sequence>
@@ -160,42 +160,34 @@
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
-    <!--
-        name: a unique name for this field
-        map-name: the name (or location) of the map that contains the data for this 
-        	field in the form context
-        entity-name: used along with the field-name to look up the entity field definition
-        	for any information that might be helpful when rendering the form field
-        field-name: see the description of entity-name
-        service-name: used along with the attribute-name to look up the service attribute 
-        	definition for any information that might be helpful when rendering the form field
-        attribute-name: see the description of service-name
-        entry-name: defaults to the value of the name attribute; is used to 
-        	specify the name of the entry in the map that contains the value to populate
-        parameter-name: defaults to the value of the name attribute; is the name of the 
-        	parameter to use for this field (the request parameter in a web application)
-        title: the name of this field that will be shown to the user; can use the ${} 
-        	and foo.bar (dot) syntax to insert values from the context for parameterization
-        	or internationalization
-        tooltip: the text to show on mouse over or help for more information; can use the ${} 
-        	and foo.bar (dot) syntax to insert values from the context for parameterization
-        	or internationalization
-        title-style: the name of a style (like a CSS class) to apply to the title of this field
-        widget-style: the name of a style (like a CSS class) to apply to the widget 
-        	that the user will interact with for this field
-        position: for row oriented forms (single type) can specify that the field should be put 
-        	a column other than the first; for column oriented forms (list type) specifies 
-        	the row the field should be put in
-        red-when: the widget/interaction part will be red if the date value is
-        	before-now (for thruDate), after-now (for fromDate), or by-name (if the
-        	field's name or entry-name or fromDate or thruDate the corresponding 
-        	action will be done); only applicable when the field is a timestamp
-        use-when: used to specify a condition that must be true to use this field;
-        	the condition should be written using the Java syntax and can operate 
-        	on values in the form context; if this is used the field will only be put
-        	on the field list, and not in the field map meaning that values for this
-        	field cannot be overridden
-    -->
+    <xs:element name="sort-order">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="sort-field"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.sort-order"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.sort-order">
+        <xs:attribute name="type" default="explicit">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="explicit"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="sort-field">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.sort-field"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.sort-field">
+        <xs:attribute type="xs:string" name="name" use="required"/>
+    </xs:attributeGroup>
+    
+  <!-- ================== FIELDS ==================== -->
+    <xs:element name="AllFields" abstract="true"/>
     <xs:element name="field">
         <xs:complexType>
             <xs:sequence>
@@ -205,21 +197,50 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.field">
-        <xs:attribute type="xs:string" name="name" use="required"/>
-        <xs:attribute type="xs:string" name="map-name"/>
-        <xs:attribute type="xs:string" name="entity-name"/>
-        <xs:attribute type="xs:string" name="service-name"/>
-        <xs:attribute type="xs:string" name="entry-name"/>
-        <xs:attribute type="xs:string" name="parameter-name"/>
-        <xs:attribute type="xs:string" name="field-name"/>
-        <xs:attribute type="xs:string" name="attribute-name"/>
-        <xs:attribute type="xs:string" name="title"/>
-        <xs:attribute type="xs:string" name="tooltip"/>
-        <xs:attribute type="xs:string" name="title-style"/>
-        <xs:attribute type="xs:string" name="widget-style"/>
-        <xs:attribute type="xs:string" name="tooltip-style"/>
-        <xs:attribute type="xs:positiveInteger" name="position" default="1"/>
+        <xs:attribute type="xs:string" name="name" use="required">
+            <xs:annotation><xs:documentation>A unique name for this field.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="map-name">
+            <xs:annotation><xs:documentation>The name (or location) of the map that contains the data for this field in the form context.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="entity-name">
+            <xs:annotation><xs:documentation>Used along with the field-name to look up the entity field definition for any information that might be helpful when rendering the form field.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="field-name">
+            <xs:annotation><xs:documentation>See the description of entity-name.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="service-name">
+            <xs:annotation><xs:documentation>Used along with the attribute-name to look up the service attribute definition for any information that might be helpful when rendering the form field.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="attribute-name">
+            <xs:annotation><xs:documentation>See the description of service-name.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="entry-name">
+            <xs:annotation><xs:documentation>Defaults to the value of the name attribute; is used to specify the name of the entry in the map that contains the value to populate.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="parameter-name">
+            <xs:annotation><xs:documentation>Defaults to the value of the name attribute; is the name of the parameter to use for this field (the request parameter in a web application).</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="title">
+            <xs:annotation><xs:documentation>The name of this field that will be shown to the user; can use the ${} and foo.bar (dot) syntax to insert values from the context for parameterization or internationalization.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="tooltip">
+            <xs:annotation><xs:documentation>The text to show on mouse over or help for more information; can use the ${} and foo.bar (dot) syntax to insert values from the context for parameterization or internationalization.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="title-style">
+            <xs:annotation><xs:documentation>The name of a style (like a CSS class) to apply to the title of this field.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="widget-style">
+            <xs:annotation><xs:documentation>The name of a style (like a CSS class) to apply to the widget that the user will interact with for this field.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="tooltip-style">
+            <xs:annotation><xs:documentation>The name of a style (like a CSS class) to apply to the tooltip of this field.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:positiveInteger" name="position" default="1">
+            <xs:annotation><xs:documentation>For row oriented forms (single type) can specify that the field should be put a column other than the first; for column oriented forms (list type) specifies the row the field should be put in.</xs:documentation></xs:annotation>
+        </xs:attribute>
         <xs:attribute name="red-when" default="by-name">
+            <xs:annotation><xs:documentation>The widget/interaction part will be red if the date value is before-now (for thruDate), after-now (for fromDate), or by-name (if the field's name or entry-name or fromDate or thruDate the corresponding action will be done); only applicable when the field is a timestamp.</xs:documentation></xs:annotation>
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="never"/>
@@ -229,7 +250,9 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute type="xs:string" name="use-when"/>
+        <xs:attribute type="xs:string" name="use-when">
+            <xs:annotation><xs:documentation>Used to specify a condition that must be true to use this field; the condition should be written using the Java syntax and can operate on values in the form context; if this is used the field will only be put on the field list, and not in the field map meaning that values for this field cannot be overridden.</xs:documentation></xs:annotation>
+        </xs:attribute>
         <xs:attribute type="xs:string" name="id-name"/>
         <xs:attribute name="separate-column" default="false">
             <xs:simpleType>
@@ -240,11 +263,50 @@
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
-    <!--
-        description: specifies the string to display, can use the ${} synrax
-        	to insert context values; if empty the value of the field will be
-        	printed for a default
-    -->
+  <!-- ================== FIELD TYPES ==================== -->
+    <xs:element name="check" substitutionGroup="AllFields">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="date-find" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.date-find"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.date-find">
+        <xs:attribute name="type" default="timestamp">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="timestamp"/>
+                    <xs:enumeration value="date"/>
+                    <xs:enumeration value="time"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="default-value"/>
+    </xs:attributeGroup>
+    <xs:element name="date-time" substitutionGroup="AllFields">
+        <xs:annotation>
+            <xs:documentation>
+                A special entry for date-time fields; may just have a default size text 
+                entry box and some sort of widget to make date entry/selection easier.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.date-time"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.date-time">
+        <xs:attribute name="type" default="timestamp">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="timestamp"/>
+                    <xs:enumeration value="date"/>
+                    <xs:enumeration value="time"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="default-value"/>
+    </xs:attributeGroup>
     <xs:element name="display" substitutionGroup="AllFields">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.display"/>
@@ -259,10 +321,12 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute type="xs:string" name="description"/>
+        <xs:attribute type="xs:string" name="description">
+            <xs:annotation><xs:documentation>Specifies the string to display, can use the ${} syntax to insert context values; if empty the value of the field will be printed for a default.</xs:documentation></xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
-    <!-- this is just like display but looks up a description using the Entity Engine; note that if also-hidden is true then it uses the key as the value, not the shown description -->
     <xs:element name="display-entity" substitutionGroup="AllFields">
+        <xs:annotation><xs:documentation>This is just like display but looks up a description using the Entity Engine; note that if also-hidden is true then it uses the key as the value, not the shown description.</xs:documentation></xs:annotation>
         <xs:complexType>
             <xs:attributeGroup ref="attlist.display-entity"/>
         </xs:complexType>
@@ -288,13 +352,62 @@
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
-    <!--
-        target: the target location of the hyperlink; can use the ${} syntax to 
-        	substitute values from the context
-        description: specifies the string to display, can use the ${} synrax
-        	to insert context values; if empty the value of the field will be
-        	printed for a default
-    -->
+    <xs:element name="drop-down" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element ref="entity-options"/>
+                    <xs:element ref="list-options"/>
+                    <xs:element ref="option"/>
+                </xs:choice>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.drop-down"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.drop-down">
+        <xs:attribute name="allow-empty" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="current" default="first-in-list">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="first-in-list"/>
+                    <xs:enumeration value="selected"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="no-current-selected-key">
+            <xs:annotation><xs:documentation>The key to mark as selected when there is no current entry value.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="current-description"/>
+    </xs:attributeGroup>
+    <xs:element name="file" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.file"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.file">
+        <xs:attribute type="xs:positiveInteger" name="size" default="25"/>
+        <xs:attribute type="xs:positiveInteger" name="maxlength"/>
+        <xs:attribute type="xs:string" name="default-value"/>
+    </xs:attributeGroup>
+    <xs:element name="hidden" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.hidden"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.hidden">
+        <xs:attribute type="xs:string" name="value"/>
+    </xs:attributeGroup>
     <xs:element name="hyperlink" substitutionGroup="AllFields">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.hyperlink"/>
@@ -319,31 +432,104 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute type="xs:string" name="target" use="required"/>
-        <xs:attribute type="xs:string" name="description"/>
+        <xs:attribute type="xs:string" name="target" use="required">
+            <xs:annotation><xs:documentation>The target location of the hyperlink; can use the ${} syntax to substitute values from the context.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="description">
+            <xs:annotation><xs:documentation>Specifies the string to display, can use the ${} syntax to insert context values; if empty the value of the field will be printed for a default.</xs:documentation></xs:annotation>
+        </xs:attribute>
         <xs:attribute type="xs:string" name="target-window"/>
     </xs:attributeGroup>
-    <xs:element name="sub-hyperlink">
+    <xs:element name="ignored" substitutionGroup="AllFields">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="image" substitutionGroup="AllFields">
         <xs:complexType>
-            <xs:attributeGroup ref="attlist.sub-hyperlink"/>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.image"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.sub-hyperlink">
-        <xs:attribute type="xs:string" name="use-when"/>
-        <xs:attribute type="xs:string" name="link-style"/>
-        <xs:attribute name="target-type" default="intra-app">
+    <xs:attributeGroup name="attlist.image">
+        <xs:attribute type="xs:nonNegativeInteger" name="border" default="0"/>
+        <xs:attribute type="xs:positiveInteger" name="width"/>
+        <xs:attribute type="xs:positiveInteger" name="height"/>
+        <xs:attribute type="xs:string" name="value"/>
+        <xs:attribute type="xs:string" name="default-value"/>
+    </xs:attributeGroup>
+    <xs:element name="lookup" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.lookup"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.lookup">
+        <xs:attribute type="xs:string" name="target-form-name" use="required"/>
+        <xs:attribute type="xs:positiveInteger" name="size" default="25"/>
+        <xs:attribute type="xs:positiveInteger" name="maxlength"/>
+        <xs:attribute type="xs:string" name="default-value"/>
+    </xs:attributeGroup>
+    <xs:element name="password" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.password"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.password">
+        <xs:attribute type="xs:positiveInteger" name="size" default="25"/>
+        <xs:attribute type="xs:positiveInteger" name="maxlength"/>
+        <xs:attribute type="xs:string" name="default-value"/>
+    </xs:attributeGroup>
+    <xs:element name="radio" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="entity-options"/>
+                <xs:element ref="list-options"/>
+                <xs:element ref="option"/>
+            </xs:choice>
+            <xs:attributeGroup ref="attlist.radio"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.radio">
+        <xs:attribute type="xs:string" name="no-current-selected-key"/>
+    </xs:attributeGroup>
+    <xs:element name="range-find" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.range-find"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.range-find">
+        <xs:attribute type="xs:positiveInteger" name="size" default="25"/>
+        <xs:attribute type="xs:positiveInteger" name="maxlength"/>
+        <xs:attribute type="xs:string" name="default-value"/>
+    </xs:attributeGroup>
+    <xs:element name="reset" substitutionGroup="AllFields">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="submit" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.submit"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.submit">
+        <xs:attribute name="button-type" default="button">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
-                    <xs:enumeration value="intra-app"/>
-                    <xs:enumeration value="inter-app"/>
-                    <xs:enumeration value="content"/>
-                    <xs:enumeration value="plain"/>
+                    <xs:enumeration value="button"/>
+                    <xs:enumeration value="text-link"/>
+                    <xs:enumeration value="image"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute type="xs:string" name="target" use="required"/>
-        <xs:attribute type="xs:string" name="description"/>
-        <xs:attribute type="xs:string" name="target-window"/>
+        <xs:attribute type="xs:string" name="image-location"/>
     </xs:attributeGroup>
     <xs:element name="text" substitutionGroup="AllFields">
         <xs:complexType>
@@ -368,67 +554,21 @@
         <xs:attribute type="xs:positiveInteger" name="rows" default="3"/>
         <xs:attribute type="xs:string" name="default-value"/>
     </xs:attributeGroup>
-    <!--
-        a special entry for date-time fields; may just have a default size text 
-        entry box and some sort of widget to make date entry/selection easier
-    -->
-    <xs:element name="date-time" substitutionGroup="AllFields">
-        <xs:complexType>
-            <xs:attributeGroup ref="attlist.date-time"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.date-time">
-        <xs:attribute name="type" default="timestamp">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="timestamp"/>
-                    <xs:enumeration value="date"/>
-                    <xs:enumeration value="time"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute type="xs:string" name="default-value"/>
-    </xs:attributeGroup>
-    <!--
-        entity-options will look up options for the field in the given entity
-        key-field-name: the value of the key-field-name will be the value passed 
-            to the server
-        description: will be presented to the user with field values
-            substituted using the ${} syntax
-        key-field-name: the name of the field in the looked up entity that will be used 
-            for the key value; defaults to the entry-name of the field this is in
-    -->
-    <xs:element name="entity-options">
+    <xs:element name="text-find" substitutionGroup="AllFields">
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="entity-constraint"/>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="entity-order-by"/>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
             </xs:sequence>
-            <xs:attributeGroup ref="attlist.entity-options"/>
+            <xs:attributeGroup ref="attlist.text-find"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.entity-options">
-        <xs:attribute type="xs:string" name="entity-name" use="required"/>
-        <xs:attribute type="xs:string" name="key-field-name"/>
-        <xs:attribute type="xs:string" name="description" use="required"/>
-        <xs:attribute name="cache" default="true">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="filter-by-date" default="by-name">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                    <xs:enumeration value="by-name"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+    <xs:attributeGroup name="attlist.text-find">
+        <xs:attribute type="xs:positiveInteger" name="size" default="25"/>
+        <xs:attribute type="xs:positiveInteger" name="maxlength"/>
+        <xs:attribute type="xs:string" name="default-value"/>
     </xs:attributeGroup>
+
+  <!-- ================== FIELD SUB-ELEMENTS ==================== -->
     <xs:element name="entity-constraint">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.entity-constraint"/>
@@ -470,6 +610,44 @@
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
+    <xs:element name="entity-options">
+        <xs:annotation>
+            <xs:documentation>entity-options will look up options for the field in the given entity</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="entity-constraint"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="entity-order-by"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.entity-options"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.entity-options">
+        <xs:attribute type="xs:string" name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="key-field-name">
+            <xs:annotation><xs:documentation>The name of the field in the looked up entity that will be used for the key value; if empty defaults to the entry-name of the field this is in.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="description" use="required">
+            <xs:annotation><xs:documentation>Will be presented to the user with field values substituted using the ${} syntax.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cache" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="filter-by-date" default="by-name">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                    <xs:enumeration value="by-name"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
     <xs:element name="entity-order-by">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.entity-order-by"/>
@@ -478,31 +656,43 @@
     <xs:attributeGroup name="attlist.entity-order-by">
         <xs:attribute name="field-name" use="required"/>
     </xs:attributeGroup>
-    <!--
-        list-options will create options based on data in a list
-            list-name: the name of the list to iterate through to get values
-            list-entry-name: if specified the list entry will be placed in the local 
-        	    context, otherwise each list entry must be a Map that will be expanded 
-        	    into the local context
-        key-name: the value of the key-name will be the value passed 
-            to the server; this should be the full name of the location of the
-            key value in the context, given the list-entry-name or expanded
-            list-entry Map as the options you would most likely use
-        description: will be presented to the user with field values
-            substituted using the ${} syntax
-    -->
     <xs:element name="list-options">
+        <xs:annotation>
+            <xs:documentation>list-options will create options based on data in a list</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attributeGroup ref="attlist.list-options"/>
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.list-options">
-        <xs:attribute type="xs:string" name="list-name" use="required"/>
-        <xs:attribute type="xs:string" name="list-entry-name"/>
-        <xs:attribute type="xs:string" name="key-name" use="required"/>
-        <xs:attribute type="xs:string" name="description"/>
+        <xs:attribute type="xs:string" name="list-name" use="required">
+            <xs:annotation><xs:documentation>The name of the list to iterate through to get values.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="list-entry-name">
+            <xs:annotation>
+                <xs:documentation>
+                    If specified the list entry will be placed in the local 
+                    context, otherwise each list entry must be a Map that will be expanded 
+                    into the local context.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="key-name" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The value of the key-name will be the value passed 
+                    to the server; this should be the full name of the location of the
+                    key value in the context, given the list-entry-name or expanded
+                    list-entry Map as the options you would most likely use.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="description">
+            <xs:annotation>
+                <xs:documentation>Will be presented to the user with field values substituted using the ${} syntax.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
-    <!-- description: what the user will see in the widget; defaults to the value of the key attribute -->
     <xs:element name="option">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.option"/>
@@ -510,215 +700,35 @@
     </xs:element>
     <xs:attributeGroup name="attlist.option">
         <xs:attribute type="xs:string" name="key" use="required"/>
+        <xs:attribute type="xs:string" name="description">
+            <xs:annotation><xs:documentation>What the user will see in the widget; defaults to the value of the key attribute.</xs:documentation></xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="sub-hyperlink">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.sub-hyperlink"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.sub-hyperlink">
+        <xs:attribute type="xs:string" name="use-when"/>
+        <xs:attribute type="xs:string" name="link-style"/>
+        <xs:attribute name="target-type" default="intra-app">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="intra-app"/>
+                    <xs:enumeration value="inter-app"/>
+                    <xs:enumeration value="content"/>
+                    <xs:enumeration value="plain"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="target" use="required"/>
         <xs:attribute type="xs:string" name="description"/>
+        <xs:attribute type="xs:string" name="target-window"/>
     </xs:attributeGroup>
-    <!--
-        no-current-selected-key: the key to mark as selected when there is no
-        	current entry value
-    -->
-    <xs:element name="drop-down" substitutionGroup="AllFields">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:choice minOccurs="0" maxOccurs="unbounded">
-                    <xs:element ref="entity-options"/>
-                    <xs:element ref="list-options"/>
-                    <xs:element ref="option"/>
-                </xs:choice>
-                <xs:element minOccurs="0" ref="sub-hyperlink"/>
-            </xs:sequence>
-            <xs:attributeGroup ref="attlist.drop-down"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.drop-down">
-        <xs:attribute name="allow-empty" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="current" default="first-in-list">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="first-in-list"/>
-                    <xs:enumeration value="selected"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute type="xs:string" name="no-current-selected-key"/>
-        <xs:attribute type="xs:string" name="current-description"/>
-    </xs:attributeGroup>
-    <xs:element name="radio" substitutionGroup="AllFields">
-        <xs:complexType>
-            <xs:choice minOccurs="0" maxOccurs="unbounded">
-                <xs:element ref="entity-options"/>
-                <xs:element ref="list-options"/>
-                <xs:element ref="option"/>
-            </xs:choice>
-            <xs:attributeGroup ref="attlist.radio"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.radio">
-        <xs:attribute type="xs:string" name="no-current-selected-key"/>
-    </xs:attributeGroup>
-    <xs:element name="check" substitutionGroup="AllFields">
-        <xs:complexType/>
-    </xs:element>
-    <xs:element name="submit" substitutionGroup="AllFields">
-        <xs:complexType>
-            <xs:attributeGroup ref="attlist.submit"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.submit">
-        <xs:attribute name="button-type" default="button">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="button"/>
-                    <xs:enumeration value="text-link"/>
-                    <xs:enumeration value="image"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute type="xs:string" name="image-location"/>
-    </xs:attributeGroup>
-    <xs:element name="reset" substitutionGroup="AllFields">
-        <xs:complexType/>
-    </xs:element>
-    <xs:element name="hidden" substitutionGroup="AllFields">
-        <xs:complexType>
-            <xs:attributeGroup ref="attlist.hidden"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.hidden">
-        <xs:attribute type="xs:string" name="value"/>
-    </xs:attributeGroup>
-    <xs:element name="ignored" substitutionGroup="AllFields">
-        <xs:complexType/>
-    </xs:element>
-    <xs:element name="text-find" substitutionGroup="AllFields">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element minOccurs="0" ref="sub-hyperlink"/>
-            </xs:sequence>
-            <xs:attributeGroup ref="attlist.text-find"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.text-find">
-        <xs:attribute type="xs:positiveInteger" name="size" default="25"/>
-        <xs:attribute type="xs:positiveInteger" name="maxlength"/>
-        <xs:attribute type="xs:string" name="default-value"/>
-    </xs:attributeGroup>
-    <xs:element name="range-find" substitutionGroup="AllFields">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element minOccurs="0" ref="sub-hyperlink"/>
-            </xs:sequence>
-            <xs:attributeGroup ref="attlist.range-find"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.range-find">
-        <xs:attribute type="xs:positiveInteger" name="size" default="25"/>
-        <xs:attribute type="xs:positiveInteger" name="maxlength"/>
-        <xs:attribute type="xs:string" name="default-value"/>
-    </xs:attributeGroup>
-    <xs:element name="lookup" substitutionGroup="AllFields">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element minOccurs="0" ref="sub-hyperlink"/>
-            </xs:sequence>
-            <xs:attributeGroup ref="attlist.lookup"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.lookup">
-        <xs:attribute type="xs:string" name="target-form-name" use="required"/>
-        <xs:attribute type="xs:positiveInteger" name="size" default="25"/>
-        <xs:attribute type="xs:positiveInteger" name="maxlength"/>
-        <xs:attribute type="xs:string" name="default-value"/>
-    </xs:attributeGroup>
-    <xs:element name="date-find" substitutionGroup="AllFields">
-        <xs:complexType>
-            <xs:attributeGroup ref="attlist.date-find"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.date-find">
-        <xs:attribute name="type" default="timestamp">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="timestamp"/>
-                    <xs:enumeration value="date"/>
-                    <xs:enumeration value="time"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute type="xs:string" name="default-value"/>
-    </xs:attributeGroup>
-    <xs:element name="sort-order">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="sort-field"/>
-            </xs:sequence>
-            <xs:attributeGroup ref="attlist.sort-order"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.sort-order">
-        <xs:attribute name="type" default="explicit">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="explicit"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-    </xs:attributeGroup>
-    <xs:element name="sort-field">
-        <xs:complexType>
-            <xs:attributeGroup ref="attlist.sort-field"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.sort-field">
-        <xs:attribute type="xs:string" name="name" use="required"/>
-    </xs:attributeGroup>
-    <xs:element name="file" substitutionGroup="AllFields">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element minOccurs="0" ref="sub-hyperlink"/>
-            </xs:sequence>
-            <xs:attributeGroup ref="attlist.file"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.file">
-        <xs:attribute type="xs:positiveInteger" name="size" default="25"/>
-        <xs:attribute type="xs:positiveInteger" name="maxlength"/>
-        <xs:attribute type="xs:string" name="default-value"/>
-    </xs:attributeGroup>
-    <xs:element name="password" substitutionGroup="AllFields">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element minOccurs="0" ref="sub-hyperlink"/>
-            </xs:sequence>
-            <xs:attributeGroup ref="attlist.password"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.password">
-        <xs:attribute type="xs:positiveInteger" name="size" default="25"/>
-        <xs:attribute type="xs:positiveInteger" name="maxlength"/>
-        <xs:attribute type="xs:string" name="default-value"/>
-    </xs:attributeGroup>
-    <xs:element name="image" substitutionGroup="AllFields">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element minOccurs="0" ref="sub-hyperlink"/>
-            </xs:sequence>
-            <xs:attributeGroup ref="attlist.image"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.image">
-        <xs:attribute type="xs:nonNegativeInteger" name="border" default="0"/>
-        <xs:attribute type="xs:positiveInteger" name="width"/>
-        <xs:attribute type="xs:positiveInteger" name="height"/>
-        <xs:attribute type="xs:string" name="value"/>
-        <xs:attribute type="xs:string" name="default-value"/>
-    </xs:attributeGroup>
+
+  <!-- ================== ACTIONS ==================== -->
+    <xs:element name="AllActions" abstract="true"/>
     <xs:element name="actions">
         <xs:complexType>
             <xs:sequence>
@@ -726,41 +736,6 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="set" substitutionGroup="AllActions">
-        <xs:complexType>
-            <xs:attributeGroup ref="attlist.set"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.set">
-        <xs:attribute type="xs:string" name="field" use="required"/>
-        <xs:attribute type="xs:string" name="from-field"/>
-        <xs:attribute type="xs:string" name="value"/>
-        <xs:attribute name="global" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="type" default="String">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="PlainString"/>
-                    <xs:enumeration value="String"/>
-                    <xs:enumeration value="Double"/>
-                    <xs:enumeration value="Float"/>
-                    <xs:enumeration value="Long"/>
-                    <xs:enumeration value="Integer"/>
-                    <xs:enumeration value="Date"/>
-                    <xs:enumeration value="Time"/>
-                    <xs:enumeration value="Timestamp"/>
-                    <xs:enumeration value="Boolean"/>
-                    <xs:enumeration value="Object"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-    </xs:attributeGroup>
     <xs:element name="property-map" substitutionGroup="AllActions">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.property-map"/>
@@ -798,6 +773,14 @@
         </xs:attribute>
         <xs:attribute type="xs:string" name="arg-list-name"/>
     </xs:attributeGroup>
+    <xs:element name="script" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.script"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.script">
+        <xs:attribute type="xs:string" name="location" use="required"/>
+    </xs:attributeGroup>
     <xs:element name="service" substitutionGroup="AllActions">
         <xs:complexType>
             <xs:sequence>
@@ -820,19 +803,16 @@
         <xs:attribute type="xs:string" name="result-map-list-iterator-name"/>
         <xs:attribute type="xs:string" name="result-map-list-name"/>
     </xs:attributeGroup>
-    <xs:element name="entity-one" substitutionGroup="AllActions">
+    <xs:element name="set" substitutionGroup="AllActions">
         <xs:complexType>
-            <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="field-map"/>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="select-field"/>
-            </xs:sequence>
-            <xs:attributeGroup ref="attlist.entity-one"/>
+            <xs:attributeGroup ref="attlist.set"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.entity-one">
-        <xs:attribute type="xs:string" name="entity-name" use="required"/>
-        <xs:attribute type="xs:string" name="value-name"/>
-        <xs:attribute name="use-cache" default="false">
+    <xs:attributeGroup name="attlist.set">
+        <xs:attribute type="xs:string" name="field" use="required"/>
+        <xs:attribute type="xs:string" name="from-field"/>
+        <xs:attribute type="xs:string" name="value"/>
+        <xs:attribute name="global" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true"/>
@@ -840,15 +820,25 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="auto-field-map" default="true">
+        <xs:attribute name="type" default="String">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
+                    <xs:enumeration value="PlainString"/>
+                    <xs:enumeration value="String"/>
+                    <xs:enumeration value="Double"/>
+                    <xs:enumeration value="Float"/>
+                    <xs:enumeration value="Long"/>
+                    <xs:enumeration value="Integer"/>
+                    <xs:enumeration value="Date"/>
+                    <xs:enumeration value="Time"/>
+                    <xs:enumeration value="Timestamp"/>
+                    <xs:enumeration value="Boolean"/>
+                    <xs:enumeration value="Object"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
+
     <xs:element name="entity-and" substitutionGroup="AllActions">
         <xs:complexType>
             <xs:sequence>
@@ -948,44 +938,36 @@
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
-    <xs:element name="condition-list">
+    <xs:element name="entity-one" substitutionGroup="AllActions">
         <xs:complexType>
-            <xs:choice maxOccurs="unbounded">
-                <xs:element ref="condition-expr"/>
-                <xs:element ref="condition-list"/>
-            </xs:choice>
-            <xs:attributeGroup ref="attlist.condition-list"/>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="field-map"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="select-field"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.entity-one"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.condition-list">
-        <xs:attribute name="combine" default="and">
+    <xs:attributeGroup name="attlist.entity-one">
+        <xs:attribute type="xs:string" name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="value-name"/>
+        <xs:attribute name="use-cache" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
-                    <xs:enumeration value="and"/>
-                    <xs:enumeration value="or"/>
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="auto-field-map" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
-    <xs:element name="having-condition-list">
-        <xs:complexType>
-            <xs:choice maxOccurs="unbounded">
-                <xs:element ref="condition-expr"/>
-                <xs:element ref="condition-list"/>
-            </xs:choice>
-            <xs:attributeGroup ref="attlist.having-condition-list"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.having-condition-list">
-        <xs:attribute name="combine" default="and">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="and"/>
-                    <xs:enumeration value="or"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-    </xs:attributeGroup>
+
     <xs:element name="condition-expr">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.condition-expr"/>
@@ -1027,21 +1009,52 @@
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
-    <xs:element name="select-field">
+    <xs:element name="condition-list">
         <xs:complexType>
-            <xs:attributeGroup ref="attlist.select-field"/>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="condition-expr"/>
+                <xs:element ref="condition-list"/>
+            </xs:choice>
+            <xs:attributeGroup ref="attlist.condition-list"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.select-field">
-        <xs:attribute type="xs:string" name="field-name" use="required"/>
+    <xs:attributeGroup name="attlist.condition-list">
+        <xs:attribute name="combine" default="and">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="and"/>
+                    <xs:enumeration value="or"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
-    <xs:element name="order-by">
+    <xs:element name="field-map">
         <xs:complexType>
-            <xs:attributeGroup ref="attlist.order-by"/>
+            <xs:attributeGroup ref="attlist.field-map"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.order-by">
-        <xs:attribute type="xs:string" name="field-name" use="required"/>
+    <xs:attributeGroup name="attlist.field-map">
+        <xs:attribute type="xs:string" name="env-name" use="required"/>
+        <xs:attribute type="xs:string" name="field-name"/>
+    </xs:attributeGroup>
+    <xs:element name="having-condition-list">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="condition-expr"/>
+                <xs:element ref="condition-list"/>
+            </xs:choice>
+            <xs:attributeGroup ref="attlist.having-condition-list"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.having-condition-list">
+        <xs:attribute name="combine" default="and">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="and"/>
+                    <xs:enumeration value="or"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="limit-range">
         <xs:complexType>
@@ -1064,21 +1077,20 @@
     <xs:element name="use-iterator">
         <xs:complexType/>
     </xs:element>
-    <xs:element name="field-map">
+    <xs:element name="order-by">
         <xs:complexType>
-            <xs:attributeGroup ref="attlist.field-map"/>
+            <xs:attributeGroup ref="attlist.order-by"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.field-map">
-        <xs:attribute type="xs:string" name="env-name" use="required"/>
-        <xs:attribute type="xs:string" name="field-name"/>
+    <xs:attributeGroup name="attlist.order-by">
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
     </xs:attributeGroup>
-    <xs:element name="script" substitutionGroup="AllActions">
+    <xs:element name="select-field">
         <xs:complexType>
-            <xs:attributeGroup ref="attlist.script"/>
+            <xs:attributeGroup ref="attlist.select-field"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.script">
-        <xs:attribute type="xs:string" name="location" use="required"/>
+    <xs:attributeGroup name="attlist.select-field">
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
     </xs:attributeGroup>
 </xs:schema>
