@@ -22,7 +22,7 @@
  
 <div class='contenttext'>Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
 <div class='contenttext'>Last Updated: January 1, 2003</div>
-<!-- $Id: minilang.html,v 1.3 2003/10/11 03:34:52 jonesde Exp $ -->
+<!-- $Id: minilang.html,v 1.4 2003/11/23 11:57:09 jonesde Exp $ -->
 
 <hr class='sepbar'>
 <h3>Table of Contents</h3>
@@ -1010,6 +1010,30 @@ map in the method environment.</p>
 <tr>
     <td>request-name</td><td>N</td>
     <td>The name of the request attribute to use. Defaults to the field-name.</td>
+</tr>
+</table>
+
+<p class='contenttext'><b><u>request-parameters-to-list</u></b></p>
+
+<p class='contenttext'>The request-parameters-to-list tag appends a request parameter values from the servlet request to the specified list.</p>
+
+<p class='contenttext'>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>request-name</td>
+    <td>Y</td>
+    <td>The name of the request parameter values to use.</td>
+</tr>
+<tr>
+    <td>list-name</td>
+    <td>N</td>
+    <td>The name of the list in the method environment that the request parameter values will be appended to. (default: request-name)</td>
 </tr>
 </table>
 
