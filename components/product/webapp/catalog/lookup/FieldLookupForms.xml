@@ -89,4 +89,44 @@
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
     </form>
+    <form name="lookupProductFeature"
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupProductFeature" title="" type="single">
+        <auto-fields-entity entity-name="ProductFeature" default-field-type="find" />
+        <field name="productFeatureTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="ProductFeatureType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productFeatureCategoryId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="ProductFeatureCategory">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Lookup" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="listLookupProductFeature" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="entityList" paginate-target="LookupProductFeature" 
+        title="" type="list">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="ProductFeature" default-field-type="display"/>
+        <field name="productFeatureId" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${productFeatureId}" target="javascript:set_value('${productFeatureId}')"/>
+        </field>
+    </form>
+
 </forms>

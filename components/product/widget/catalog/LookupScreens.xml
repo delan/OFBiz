@@ -73,4 +73,29 @@
             </widgets>
         </section>
     </screen>
+    <screen name="LookupProductFeature">
+        <section>
+            <condition>
+                <or>
+                    <if-has-permission permission="CATALOG" action="_VIEW"/>
+                </or>
+            </condition>
+            <actions>
+                <set field="title" value="Lookup Product Feature"/>
+                <set field="entityName" value="ProductFeature"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="lookupProductFeature" location="component://product/webapp/catalog/lookup/FieldLookupForms.xml" />
+                        <include-form name="listLookupProductFeature" location="component://product/webapp/catalog/lookup/FieldLookupForms.xml" />
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>
