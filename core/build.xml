@@ -72,16 +72,12 @@
         <property name="ejbsrc.dir"     value="ejbsrc" />
 		
         <!-- Classpath setting -->
-        <property name="mail.jar"    value="${env.JBOSS_HOME}/lib/ext/mail.jar" />
-        <property name="jaxp.jar"    value="${env.JBOSS_HOME}/lib/jaxp.jar" />
-        <property name="parser.jar"  value="${env.JBOSS_HOME}/lib/xml.jar" />
-
         <property name="ejb1.jar"    value="${env.JBOSS_HOME}/lib/ext/jboss-j2ee.jar" />
         <property name="ejb2.jar"    value="${env.JBOSS_HOME}/lib/ext/ejb.jar" />
         <property name="ejb.jar"     value="${ejb1.jar}:${ejb2.jar}" />
 
-        <property name="ejbclasspath"   value="${classpath}:${ejb.dir}" />
-        <echo message="classpath: ${classpath}" />
+        <property name="ejbclasspath"   value="${classpath}:${ejb.jar}" />
+        <echo message="ejbclasspath: ${ejbclasspath}" />
     </target>
 
 
@@ -150,7 +146,7 @@
 	
     <target name="ejbclasses" depends="ejbxml,jar">
         <javac srcdir="${ejbsrc.dir}"
-            classpath="${ejbclasspath}:${build.dir}/lib"
+            classpath="${ejbclasspath}:${build.dir}/jar"
             destdir="${build.dir}/ejb" />
     </target>
 
