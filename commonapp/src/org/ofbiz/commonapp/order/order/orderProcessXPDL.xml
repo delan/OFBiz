@@ -190,17 +190,28 @@
                     <Limit>1</Limit>
                     <Implementation>
                     	<!-- change the order status -->
-                        <Tool Id="completeOrderStatus" Type="PROCEDURE">
-                            <ActualParameters>
-                                <ActualParameter>orderId</ActualParameter>
-                                <ActualParameter>statusId</ActualParameter>
-                            </ActualParameters>
-                            <ExtendedAttributes>                            	                            	
+                       <Tool Id="approveOrderChangeOrderStatus" Type="PROCEDURE">
+                        	<ActualParameters>                        		
+                        		<ActualParameter>orderId</ActualParameter>
+                        		<ActualParameter>statusId</ActualParameter>
+                        	</ActualParameters>
+                        	<ExtendedAttributes>                          		
                                 <ExtendedAttribute Name="statusId" Value="ORDER_APPROVED"/>
-                                <ExtendedAttribute Name="serviceName" Value="changeOrderStatus"/>
+                                <ExtendedAttribute Name="serviceName" Value="changeOrderStatus"/>                              
                                 <ExtendedAttribute Name="runAsUser" Value="admin"/>
                             </ExtendedAttributes>
                         </Tool>
+                        <Tool Id="approveOrderChangeItemStatus" Type="PROCEDURE">
+                        	<ActualParameters>                        		
+                        		<ActualParameter>orderId</ActualParameter>
+                        		<ActualParameter>statusId</ActualParameter>
+                        	</ActualParameters>
+                        	<ExtendedAttributes>                          		
+                                <ExtendedAttribute Name="statusId" Value="ITEM_APPROVED"/>
+                                <ExtendedAttribute Name="serviceName" Value="changeOrderItemStatus"/>                              
+                                <ExtendedAttribute Name="runAsUser" Value="admin"/>
+                            </ExtendedAttributes>
+                        </Tool>                                                
                         <!-- email customer with the status change 
                         <Tool Id="emailOrderStatus" Type="PROCEDURE">
                             <ActualParameters>
@@ -375,18 +386,29 @@
                     <Description>Activity runs after an order is completed</Description>
                     <Limit>1</Limit>
                     <Implementation>
-                    	<!-- change the order status -->
-                        <Tool Id="completeOrderStatus" Type="PROCEDURE">
-                            <ActualParameters>
-                                <ActualParameter>orderId</ActualParameter>
-                                <ActualParameter>statusId</ActualParameter>
-                            </ActualParameters>
-                            <ExtendedAttributes>                            	                            	
+                    	<!-- change the order status -->                    
+                        <Tool Id="completeOrderChangeOrderStatus" Type="PROCEDURE">
+                        	<ActualParameters>                        		
+                        		<ActualParameter>orderId</ActualParameter>
+                        		<ActualParameter>statusId</ActualParameter>
+                        	</ActualParameters>
+                        	<ExtendedAttributes>                          		
                                 <ExtendedAttribute Name="statusId" Value="ORDER_COMPLETED"/>
-                                <ExtendedAttribute Name="serviceName" Value="changeOrderStatus"/>
+                                <ExtendedAttribute Name="serviceName" Value="changeOrderStatus"/>                              
                                 <ExtendedAttribute Name="runAsUser" Value="admin"/>
                             </ExtendedAttributes>
                         </Tool>
+                        <Tool Id="completelOrderChangeItemStatus" Type="PROCEDURE">
+                        	<ActualParameters>                        		
+                        		<ActualParameter>orderId</ActualParameter>
+                        		<ActualParameter>statusId</ActualParameter>
+                        	</ActualParameters>
+                        	<ExtendedAttributes>                          		
+                                <ExtendedAttribute Name="statusId" Value="ITEM_COMPLETED"/>
+                                <ExtendedAttribute Name="serviceName" Value="changeOrderItemStatus"/>                              
+                                <ExtendedAttribute Name="runAsUser" Value="admin"/>
+                            </ExtendedAttributes>
+                        </Tool>                                   
                         <!-- email customer with the status change 
                         <Tool Id="emailOrderStatus" Type="PROCEDURE">
                             <ActualParameters>
@@ -459,7 +481,7 @@
                     </ExtendedAttributes>                                                     
                 </Transition>                             
                 <Transition Id="trans4.1" From="completeOrder" To="completeOrderEvent" Loop="NOLOOP" Name="Complete Order">
-                    <Condition Type="CONDITION"><![CDATA[approvalCode.equals("2")]]></Condition>        
+                    <Condition Type="CONDITION"><![CDATA[approvalCode.equals("3")]]></Condition>        
                      <!-- Extended Attributes are not used by the engine; this is for client application reference -->
                     <ExtendedAttributes>
                     	<ExtendedAttribute Name="approvalCode" Value="3"/>
