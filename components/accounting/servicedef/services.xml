@@ -629,6 +629,33 @@
         <implements service="ccCreditInterface"/>
     </service>
 
+    <!-- ClearCommerce Implementations -->
+    <service name="clearCommerceCCAuth" engine="java"
+            location="org.ofbiz.accounting.thirdparty.clearcommerce.CCPaymentServices" invoke="ccAuth">
+        <description>ClearCommerce Credit Card Authorization</description>
+        <implements service="ccAuthInterface"/>
+    </service>
+    <service name="clearCommerceCCCapture" engine="java"
+            location="org.ofbiz.accounting.thirdparty.clearcommerce.CCPaymentServices" invoke="ccCapture">
+        <description>ClearCommerce Credit Card Capture</description>
+        <implements service="ccCaptureInterface"/>
+    </service>
+    <service name="clearCommerceCCRelease" engine="java"
+            location="org.ofbiz.accounting.thirdparty.clearcommerce.CCPaymentServices" invoke="ccRelease">
+        <description>ClearCommerce Credit Card Release</description>
+        <implements service="paymentReleaseInterface"/>
+    </service>
+    <service name="clearCommerceCCRefund" engine="java"
+            location="org.ofbiz.accounting.thirdparty.clearcommerce.CCPaymentServices" invoke="ccRefund">
+        <description>ClearCommerce Credit Card Refund</description>
+        <implements service="paymentRefundInterface"/>
+    </service>
+    <service name="clearCommerceCCCredit" engine="java"
+            location="org.ofbiz.accounting.thirdparty.clearcommerce.CCPaymentServices" invoke="ccCredit">
+        <description>ClearCommerce Credit Card Credit</description>
+        <implements service="ccCreditInterface"/>
+    </service>
+
     <!-- ValueLink Implementations -->
     <service name="valueLinkProcessor" engine="java"
             location="org.ofbiz.accounting.thirdparty.valuelink.ValueLinkServices" invoke="giftCardProcessor" auth="true">
