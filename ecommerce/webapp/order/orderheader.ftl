@@ -134,7 +134,7 @@
                     <#if !paymentMethod?has_content && paymentMethodType?has_content>
                       <tr>
                         <#if paymentMethodType.paymentMethodTypeId == "EXT_OFFLINE">
-                          <td colspan="2" valign="top">
+                          <td colspan="3" valign="top">
                             <div class="tabletext" align="center"><b>Offline Payment</b></div>
                             <ofbiz:if name="orderHeader">
                               <div class="tabletext" align="center">Please Send Payment To:</div>
@@ -145,7 +145,8 @@
                             </ofbiz:if>                            
                           </td>                  
                         <#else>
-                          <td colspan="2" valign="top">
+                          <#assign outputted = true>
+                          <td colspan="3" valign="top">
                             <div class="tabletext" align="center"><b>Payment Via ${paymentMethodType.description}</b></div>
                           </td>
                         </#if>
@@ -189,7 +190,7 @@
                     <#-- billing account info -->
                     <#if billingAccount?has_content>
                       <#if outputted?default(false)>
-                        <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                        <tr><td colspan="3"><hr class='sepbar'></td></tr>
                       </#if>
                       <#assign outputted = true>
                       <tr>

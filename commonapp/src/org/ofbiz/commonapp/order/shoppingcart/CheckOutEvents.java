@@ -68,7 +68,8 @@ public class CheckOutEvents {
         String resp = setCheckOutOptions(request, response);
         request.setAttribute(SiteDefs.ERROR_MESSAGE, null);
         return "success";
-    }            
+    }       
+         
     public static String setCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
         StringBuffer errorMessage = new StringBuffer();
@@ -76,15 +77,19 @@ public class CheckOutEvents {
         if (cart != null && cart.size() > 0) {
             String shippingMethod = request.getParameter("shipping_method");
             String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
-            String checkOutPaymentId = request.getParameter("checkOutPaymentId");
-            String billingAccountId = request.getParameter("billing_account_id");
+            String checkOutPaymentId = request.getParameter("checkOutPaymentId");            
             String correspondingPoId = request.getParameter("corresponding_po_id");
             String shippingInstructions = request.getParameter("shipping_instructions");
             String orderAdditionalEmails = request.getParameter("order_additional_emails");
             String maySplit = request.getParameter("may_split");
             String giftMessage = request.getParameter("gift_message");
             String isGift = request.getParameter("is_gift");
-
+            String billingAccountId = null;
+            if (checkOutPaymentId != null && checkOutPaymentId.startsWith("EXT_BILLACT")) {
+                billingAccountId = checkOutPaymentId.substring(checkOutPaymentId.indexOf('|')+1);
+                checkOutPaymentId = "EXT_BILLACT"; 
+            } 
+            
             if (UtilValidate.isNotEmpty(shippingMethod)) {
                 int delimiterPos = shippingMethod.indexOf('@');
                 String shipmentMethodTypeId = null;
@@ -116,12 +121,14 @@ public class CheckOutEvents {
 
             cart.setOrderAdditionalEmails(orderAdditionalEmails);
 
+            // set the shipping address
             if (UtilValidate.isNotEmpty(shippingContactMechId)) {
                 cart.setShippingContactMechId(shippingContactMechId);
             } else {
                 errorMessage.append("<li>Please Select a Shipping Destination");
             }
 
+            // set the payment method option
             if (UtilValidate.isNotEmpty(checkOutPaymentId)) {
                 // clear out the old payments
                 cart.clearPaymentMethodTypeIds();
@@ -131,18 +138,21 @@ public class CheckOutEvents {
                     cart.addPaymentMethodTypeId(checkOutPaymentId);
                 } else {
                     cart.addPaymentMethodId(checkOutPaymentId);
-                }
+                }            
+            } else if (UtilValidate.isEmpty(checkOutPaymentId)) {
+                errorMessage.append("<li>Please Select a Method of Billing");
             }
+                
+            // set the billingAccountId - if null then set it to null (resetting)
+            cart.setBillingAccountId(billingAccountId);
+            
+            // set the PO number              
             if (UtilValidate.isNotEmpty(correspondingPoId)) {
                 cart.setPoNumber(correspondingPoId);
             } else {
                 cart.setPoNumber("(none)");
-            }
-            if (UtilValidate.isNotEmpty(billingAccountId)) {
-                cart.setBillingAccountId(billingAccountId);               
-            } else if (UtilValidate.isEmpty(checkOutPaymentId)) {
-                errorMessage.append("<li>Please Select a Method of Billing");
-            }                       
+            }            
+                                              
         } else {
             errorMessage.append("<li>There are no items in the cart.");
         }
@@ -277,7 +287,7 @@ public class CheckOutEvents {
         
         return "success";
     }
-
+    
     // TODO: remove me after the FTL integration
     public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
         String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
@@ -754,13 +764,7 @@ public class CheckOutEvents {
         // Load the order.properties file.
         URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);    
 
-        // Get some payment related strings from order.properties.
-        //final String HEADER_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
-        //final String ITEM_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
-        //final String HEADER_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.declined.status", "ORDER_REJECTED");
-        //final String ITEM_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.declined.status", "ITEM_REJECTED");
-        //final String HEADER_CANCELLED_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.cancelled.status", "ORDER_CANCELLED");
-        //final String ITEM_CANCELLED_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.cancelled.status", "ITEM_CANCELLED");        
+        // Get some payment related strings from order.properties.        
         final String DECLINE_MESSAGE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.declined.message", "Error! Set the declined message!");
 
         // Get the orderId from the cart.
@@ -828,6 +832,12 @@ public class CheckOutEvents {
                 cart.setOrderId(null);
                 return false;                                                                                        
             }
+        } else if (cart.getBillingAccountId() != null) {
+            // approve all billing account transactions (would not be able to use account if limit is reached)
+            boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
+            if (!ok)
+                throw new GeneralException("Problem with order change; see above error");   
+            return true;          
         } else {
             // Handle NO payment gateway as a success.
             return true;
@@ -979,7 +989,7 @@ public class CheckOutEvents {
         String orderId = (String) request.getAttribute("order_id");
         GenericValue orderHeader = null;
         try {
-            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));  
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));             
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems getting order header", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems getting order header. WF not started!");

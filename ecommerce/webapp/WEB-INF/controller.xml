@@ -239,6 +239,7 @@
     	<response name="offline" type="request" value="emailorder"/>
     	<response name="worldpay" type="request" value="callWorldPay"/>
     	<response name="paypal" type="request" value="callPayPal"/>
+    	<response name="billact" type="request" value="emailorder"/>
     	<response name="error" type="view" value="checkout"/>
     </request-map> 
 
@@ -250,14 +251,14 @@
     </request-map>
     
     <request-map uri="callWorldPay">
-    	<security https="true"/>
+    	<security https="true" direct-request="false"/>
     	<event type="java" path="org.ofbiz.commonapp.thirdparty.worldpay.WorldPayEvents" invoke="worldPayRequest"/>
     	<response name="success" type="none"/>
     	<response name="error" type="view" value="checkout"/>
     </request-map>
     
     <request-map uri="callPayPal">
-    	<security https="true"/>
+    	<security https="true" direct-request="false"/>
     	<event type="java" path="org.ofbiz.commonapp.thirdparty.paypal.PayPalEvents" invoke="callPayPal"/>
     	<response name="success" type="none"/>
     	<response name="error" type="view" value="checkout"/>
@@ -274,7 +275,13 @@
     	<event type="java" path="org.ofbiz.commonapp.thirdparty.paypal.PayPalEvents" invoke="cancelPayPalOrder"/>
     	<response name="success" type="view" value="main"/>
     	<response name="error" type="view" value="main"/>
-    </request-map>                      
+    </request-map>  
+    
+    <request-map uri="approveOrder">
+    	<security https="true" direct-request="false"/>
+    	<event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="autoApproveOrder"/>
+    	<response name="success" type="view" value="ordercomplete"/>
+    </request-map>                    
     
     <request-map uri="confirmorder">
         <response name="success" type="view" value="confirmorder"/>

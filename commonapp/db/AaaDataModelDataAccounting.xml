@@ -111,6 +111,7 @@
   <PaymentMethodType description="Certified Check" paymentMethodTypeId="CERTIFIED_CHECK"/>
   <PaymentMethodType description="Money Order" paymentMethodTypeId="MONEY_ORDER"/>  
   <PaymentMethodType description="Company Account" paymentMethodTypeId="COMPANY_ACCOUNT"/>
+  <PaymentMethodType description="Billing Account" paymentMethodTypeId="EXT_BILLACT"/>
   <PaymentMethodType description="Offline Payment" paymentMethodTypeId="EXT_OFFLINE"/>
   <PaymentMethodType description="PayPal" paymentMethodTypeId="EXT_PAYPAL"/>
   <PaymentMethodType description="WorldPay" paymentMethodTypeId="EXT_WORLDPAY"/>
@@ -143,7 +144,21 @@
   <StatusItem description="Not Reconciled" sequenceId="01" statusCode="NOT_RECONCILED" statusId="AES_NOT_RECONCILED" statusTypeId="ACCTG_ENREC_STATUS"/>
   <StatusItem description="Partly Reconciled" sequenceId="02" statusCode="PARTLY_RECONCILED" statusId="AES_PARTLY_RECON" statusTypeId="ACCTG_ENREC_STATUS"/>
   <StatusItem description="Reconciled" sequenceId="03" statusCode="RECONCILED" statusId="AES_RECONCILED" statusTypeId="ACCTG_ENREC_STATUS"/>
-
+  
+  <!-- invoice status -->
+  <StatusType description="Invoice" hasTable="N" parentTypeId="" statusTypeId="INVOICE_STATUS"/>
+  <StatusItem description="In-Process" sequenceId="01" statusCode="IN_PROCESS" statusId="INVOICE_IN_PROCESS" statusTypeId="INVOICE_STATUS"/>
+  <StatusItem description="Ready" sequenceId="02" statusCode="READY" statusId="INVOICE_READY" statusTypeId="INVOICE_STATUS"/>
+  <StatusItem description="Sent" sequenceId="03" statusCode="SENT" statusId="INVOICE_SENT" statusTypeId="INVOICE_STATUS"/>
+  <StatusItem description="Paid" sequenceId="10" statusCode="PAID" statusId="INVOICE_PAID" statusTypeId="INVOICE_STATUS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="INVOICE_CANCELLED" statusTypeId="INVOICE_STATUS"/>
+  <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_READY" transitionName="Invoice Ready"/>
+  <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_CANCELLED" transitionName="Invoice Cancelled"/>
+  <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_SENT" transitionName="Invoice Sent"/>
+  <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_CANCELLED" transitionName="Invoice Cancelled"/>
+  <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_PAID" transitionName="Invoice Paid"/>
+  <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_CANCELLED" transitionName="Invoice Cancelled"/>    
+  
   <SettlementTerm settlementTermId="COD" termName="Cash Due on Delivery" termValue="0" uomId="TF_day"/>
   <SettlementTerm settlementTermId="NET_15" termName="Net Due in 15 Days" termValue="15" uomId="TF_day"/>
   <SettlementTerm settlementTermId="NET_30" termName="Net Due in 30 Days" termValue="30" uomId="TF_day"/>

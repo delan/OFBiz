@@ -311,7 +311,23 @@ function submitForm(form, mode, value) {
                           <span class="tabletext">Pay With PayPal</span>
                         </td>
                       </tr>    
-                      <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="2"><hr class='sepbar'></td></tr>                      
+                      <#if billingAccountList?has_content>                                                         
+                        <#list billingAccountList as billingAccount>                          
+                          <tr>
+                            <td align="left" valign="top" width="1%" nowrap>                             
+                              <input type="radio" name="checkOutPaymentId" value="EXT_BILLACT|${billingAccount.billingAccountId?if_exists}" <#if ((cart.getGrandTotal()?double + billingAccount.accountBalance?double) > billingAccount.accountLimit?double)>disabled<#elseif selectedBillingAccountId?default("") == billingAccount.billingAccountId>checked</#if>>
+                            </td>
+                            <td align="left" valign="top" width="99%" nowrap>
+                              <div class="tabletext">
+                               Bill Account #<b>${billingAccount.billingAccountId}</b>&nbsp;(${(billingAccount.accountLimit?double - billingAccount.accountBalance)?string.currency})<br>
+                               ${billingAccount.description?if_exists} 
+                              </div> 
+                            </td>
+                          </tr>
+                          <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                        </#list>
+                      </#if>                      
                       <#list context.paymentMethodList as paymentMethod>
                         <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                           <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
@@ -338,31 +354,9 @@ function submitForm(form, mode, value) {
                           <tr><td colspan="2"><hr class='sepbar'></td></tr>
                         </#if>
                       </#list>
-                    </table>
-                    
+                    </table>                    
                     <#if !paymentMethodList?has_content>                 
                       <div class='tabletext'><b>There are no payment methods on file.</b></div>
-                    </#if>
-                    <#if billingAccountRoleList?has_content>
-                      <div class="tabletext">To pay with store credit, select the billing account:</div>                     
-                      <table width="90%" border="0" cellpadding="0" cellspacing="0">
-                        <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                        <#list billingAccountRoleList as billingAccountRole>
-                          <#assign billingAccount = billingAccountRole.getRelatedOne("BillingAccount")>
-                          <tr>
-                            <td align="left" valign="top" width="1%" nowrap>
-                              <input type="radio" name="billing_account_id" value="${billingAccount.billingAccountId}" <#if cart.getBillingAccountId() == billingAccount.billingAccountId>checked</#if>>
-                            </td>
-                            <td align="left" valign="top" width="99%" nowrap>
-                              <div class="tabletext">
-                               Billing Account #<b>${billingAccount.billingAccountId}</b><br>
-                               ${billingAccount.description?if_exists}
-                              </div> 
-                            </td>
-                          </tr>
-                          <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                        </#list>
-                      </table>
                     </#if>
                   </td>
                 </tr>

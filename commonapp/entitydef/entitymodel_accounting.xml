@@ -602,6 +602,7 @@
       <field name="billingAccountId" type="id"></field>
       <field name="contactMechId" type="id"></field>
       <field name="invoiceDate" type="date-time"></field>
+      <field name="dueDate" type="date-time"></field>
       <field name="invoiceMessage" type="long-varchar"></field>
       <field name="description" type="description"></field>
       <prim-key field="invoiceId"/>
