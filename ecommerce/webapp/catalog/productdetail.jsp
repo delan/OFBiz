@@ -423,7 +423,7 @@
     <%-- obsolete --%>
     <ofbiz:service name='getAssociatedProducts'>
         <ofbiz:param name='productId' value='<%=productId%>'/>
-        <ofbiz:param name='type' value='PRODUCT_OBSOLESCENCE'/>
+        <ofbiz:param name='type' value='<%="PRODUCT_OBSOLESCENCE"%>'/>
     </ofbiz:service>
     <ofbiz:if name="assocProducts" size="0">
         <tr><td>&nbsp;</td></tr>
@@ -459,7 +459,7 @@
     <%-- cross sell --%>
     <ofbiz:service name='getAssociatedProducts'>
         <ofbiz:param name='productId' value='<%=productId%>'/>
-        <ofbiz:param name='type' value='PRODUCT_COMPLEMENT'/>
+        <ofbiz:param name='type' value='<%="PRODUCT_COMPLEMENT"%>'/>
     </ofbiz:service>
     <ofbiz:if name="assocProducts" size="0">
         <tr><td>&nbsp;</td></tr>
@@ -495,7 +495,7 @@
     <%-- up sell --%>
     <ofbiz:service name='getAssociatedProducts'>
         <ofbiz:param name='productId' value='<%=productId%>'/>
-        <ofbiz:param name='type' value='PRODUCT_UPGRADE'/>
+        <ofbiz:param name='type' value='<%="PRODUCT_UPGRADE"%>'/>
     </ofbiz:service>
     <ofbiz:if name="assocProducts" size="0">
         <tr><td>&nbsp;</td></tr>
@@ -531,7 +531,7 @@
     <%-- obsolescence --%>
     <ofbiz:service name='getAssociatedProducts'>
         <ofbiz:param name='productIdTo' value='<%=productId%>'/>
-        <ofbiz:param name='type' value='PRODUCT_OBSOLESCENCE'/>
+        <ofbiz:param name='type' value='<%="PRODUCT_OBSOLESCENCE"%>'/>
     </ofbiz:service>
     <ofbiz:if name="assocProducts" size="0">
         <tr><td>&nbsp;</td></tr>
