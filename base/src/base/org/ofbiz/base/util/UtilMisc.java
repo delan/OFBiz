@@ -1,5 +1,5 @@
 /*
- * $Id: UtilMisc.java,v 1.5 2003/10/11 20:34:09 ajzeneski Exp $
+ * $Id: UtilMisc.java,v 1.6 2003/10/15 06:18:17 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import java.util.TreeMap;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class UtilMisc {
@@ -331,14 +331,22 @@ public class UtilMisc {
         }
     }
 
-    /** Returns a Collection of available locales sorted by display name */
-    public static Collection availableLocales() {
-        TreeMap localeMap = new TreeMap();
-        Locale[] locales = Locale.getAvailableLocales();
-        for (int i = 0; i < locales.length; i++) {
-            localeMap.put(locales[i].getDisplayName(), locales[i]);
+    public static List availableLocaleList = null;
+    /** Returns a List of available locales sorted by display name */
+    public static List availableLocales() {
+        if (availableLocaleList == null) {
+            synchronized(UtilMisc.class) {
+                if (availableLocaleList == null) {
+                    TreeMap localeMap = new TreeMap();
+                    Locale[] locales = Locale.getAvailableLocales();
+                    for (int i = 0; i < locales.length; i++) {
+                        localeMap.put(locales[i].getDisplayName(), locales[i]);
+                    }
+                    availableLocaleList = new LinkedList(localeMap.values());
+                }
+            }
         }
-        return localeMap.values();
+        return availableLocaleList;
     }
 
     /** This is meant to be very quick to create and use for small sized maps, perfect for how we usually use UtilMisc.toMap */
