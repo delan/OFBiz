@@ -5,7 +5,7 @@
 -->
 
 <!--
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,7 +25,8 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *This is the DTD for the Open For Business Entity Engine configuration XML file.
+ *  This is the DTD for the Open For Business Entity Engine configuration XML file.
+ *  $Id$
 -->
 
 <!-- ====================== Root Element ======================= -->
@@ -123,7 +124,21 @@
         jdbc-uri CDATA #REQUIRED
         jdbc-username CDATA #REQUIRED
         jdbc-password CDATA #REQUIRED
-        isolation-level ( None | ReadCommitted | ReadUncommitted | RepeatableRead | Serializable ) "Serializable"
+        isolation-level ( None | ReadCommitted | ReadUncommitted | RepeatableRead | Serializable ) "ReadCommitted"
+    >
+    <!ELEMENT jotm-jdbc EMPTY>
+    <!ATTLIST jotm-jdbc
+        jdbc-driver CDATA #REQUIRED
+        jdbc-uri CDATA #REQUIRED
+        jdbc-username CDATA #REQUIRED
+        jdbc-password CDATA #REQUIRED
+        isolation-level ( None | ReadCommitted | ReadUncommitted | RepeatableRead | Serializable ) "ReadCommitted"
+        pool-maxsize CDATA "50"
+        pool-minsize CDATA "2"
+        pool-sleeptime CDATA "300000"
+        pool-lifetime CDATA "600000"
+        pool-deadlock-maxwait CDATA "300000"
+        pool-deadlock-retrywait CDATA "10000"
     >
     <!ELEMENT jndi-jdbc EMPTY>
     <!ATTLIST jndi-jdbc
