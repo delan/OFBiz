@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.11 2003/12/02 03:14:01 ajzeneski Exp $
+ * $Id: Start.java,v 1.12 2003/12/22 03:41:28 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.11 $
+  *@version    $Revision: 1.12 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -74,7 +74,8 @@ public class Start implements Runnable {
         this.serverThread = new Thread(this, this.toString());
         this.serverThread.setDaemon(false);
         this.serverThread.start();
-    }       
+        System.out.println("Admin socket listening on - " + config.adminAddress + ":" + config.adminPort);
+    }
          
     public void run() {       
         while (serverRunning) {
