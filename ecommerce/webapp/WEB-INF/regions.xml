@@ -50,44 +50,35 @@
         <put section='content' content='/login.jsp'/>
     </define>
     
-    <define id='showcart' region='MAIN_REGION'>
+    <define id='showcart' region='LEFT_ONLY_REGION'>
         <put section='title'>Show Cart</put>
         <put section='content' content='/cart/showcart.jsp'/>
     </define>
     
-    <define id='quickadd' region='MAIN_REGION'>
+    <define id='quickadd' region='LEFT_RIGHT_REGION'>
         <put section='title'>Quick Add</put>
         <put section='content' content='/catalog/quickadd.jsp'/>
     </define>
-    <define id='category' region='MAIN_REGION'>
+    <define id='category' region='LEFT_RIGHT_REGION'>
         <put section='title'>Product Category Page</put>
         <put section='content' content='/catalog/category.jsp'/>
     </define>
-    <define id='product' region='MAIN_REGION'>
+    <define id='product' region='LEFT_RIGHT_REGION'>
         <put section='title'>Product Page</put>
         <put section='content' content='/catalog/product.jsp'/>
     </define>
-    <define id='keywordsearch' region='MAIN_REGION'>
+    <define id='keywordsearch' region='LEFT_RIGHT_REGION'>
         <put section='title'>Keyword Search Page</put>
         <put section='content' content='/catalog/keywordsearch.jsp'/>
     </define>
 
-    <define id='shippingAddress' region='MAIN_REGION'>
-        <put section='title'>Shipping Address Page</put>
-        <put section='content' content='/shipping/shipping.jsp'/>
-    </define>
-    
     <define id='checkoutoptions' region='MAIN_REGION'>
         <put section='title'>Checkout Options Page</put>
         <put section='content' content='/order/checkoutoptions.jsp'/>
     </define>
     <define id='checkout' region='MAIN_REGION'>
-        <put section='title'>Checkout Page</put>
+        <put section='title'>Final Checkout Review Page</put>
         <put section='content' content='/order/checkout.jsp'/>
-    </define>
-    <define id='confirmorder' region='MAIN_REGION'>
-        <put section='title'>Confirm Order Page</put>
-        <put section='content' content='/order/confirmorder.jsp'/>
     </define>
     <define id='showconfirmorder' region='MAIN_REGION'>
         <put section='title'>Show Confirm Order Page</put>
@@ -97,7 +88,7 @@
         <put section='title'>Order History Page</put>
         <put section='content' content='/order/orderhistory.jsp'/>
     </define>
-    <define id='orderstatus' region='MAIN_REGION'>
+    <define id='orderstatus' region='RIGHT_ONLY_REGION'>
         <put section='title'>Order Status Page</put>
         <put section='content' content='/order/orderstatus.jsp'/>
     </define>

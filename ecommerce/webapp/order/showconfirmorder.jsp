@@ -27,11 +27,6 @@
  *@version    1.0
  */
 %>
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
 
+<%-- This is already rendered in advance for the HTML email message --%>
 <%=request.getAttribute("confirmorder")%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

@@ -1,4 +1,5 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*, org.ofbiz.core.entity.*" %>
 
 <ofbiz:object name="cart" property="_SHOPPING_CART_" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCart" />  
 <%if(cart != null && cart.size() > 0) {%>
@@ -17,7 +18,7 @@
           <td valign="middle" align="right">
             <div class='lightbuttontextdisabled'>
               <a href="<ofbiz:url>/main</ofbiz:url>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
-              <%if(microCart != null && microCart.size() > 0){%>
+              <%if(cart != null && cart.size() > 0){%>
                 <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="lightbuttontext">[Checkout]</a>
               <%}else{%>
                 [Checkout]
@@ -52,10 +53,10 @@
 //-->
 </script>
 <BR>
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Shopping Cart</div>
@@ -78,7 +79,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
         <tr>
           <td>
   <ofbiz:if name="cartIter">
@@ -173,10 +174,10 @@
 
  <ofbiz:if name="associatedProducts" size="0">
   <BR>
-  <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+  <TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
     <TR>
       <TD width='100%'>
-        <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+        <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
           <tr>
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;You might also be interested in:</div>
@@ -188,7 +189,7 @@
     </TR>
     <TR>
       <TD width='100%'>
-        <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+        <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
           <tr>
             <td>
     <table width='100%' CELLSPACING="0" CELLPADDING="4" BORDER="0">

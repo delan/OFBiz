@@ -31,17 +31,16 @@
 
 <%@ page import="java.util.*" %>
 
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.ecommerce.misc.*" %>
 <%@ page import="org.ofbiz.ecommerce.catalog.*" %>
 <%@ page import="org.ofbiz.ecommerce.shoppingcart.*" %>
+<%@ page import="org.ofbiz.commonapp.order.order.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.ContactHelper" %>
 <%@ page import="org.ofbiz.commonapp.party.party.PartyHelper" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
-
-<% pageContext.setAttribute("PageName", "checkout"); %>
-
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<ofbiz:object name="person" property="person" type="org.ofbiz.core.entity.GenericValue" />  
 
 <p class="head1">Final Checkout Review</p>
 <p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>
@@ -85,6 +84,3 @@
 <ofbiz:unless name="cart" size="0">
 <h3>ERROR: Shopping cart empty, please start over.</h3>
 </ofbiz:unless>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

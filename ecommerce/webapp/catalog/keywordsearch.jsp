@@ -1,11 +1,7 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.ecommerce.catalog.*, org.ofbiz.commonapp.product.product.*"%>
-
-<% pageContext.setAttribute("PageName", "Keyword Search"); %>
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/leftcolumn.jsp" %> 
 
 <%String searchCategoryId = request.getParameter("SEARCH_CATEGORY_ID");%>
 <%ProductWorker.getKeywordSearchProducts(pageContext, "", searchCategoryId);%>
@@ -78,6 +74,3 @@
     </tr>
 </table>
 </ofbiz:if>
-
-<%@ include file="/includes/rightcolumn.jsp" %> 
-<%@ include file="/includes/footer.jsp" %>

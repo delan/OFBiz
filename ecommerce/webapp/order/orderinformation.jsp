@@ -1,4 +1,6 @@
 <%
+// NOTE: This page is meant to be included, not called independently
+
 /**
  *  Title: Order Information
  *  Description: None
@@ -29,13 +31,6 @@
  */
 %>
 
-<%@ page import="org.ofbiz.ecommerce.catalog.*" %>
-<%@ page import="org.ofbiz.ecommerce.shoppingcart.*" %>
-<%@ page import="org.ofbiz.commonapp.party.contact.ContactHelper" %>
-<%@ page import="org.ofbiz.commonapp.order.order.*" %>
-<%@ page import="org.ofbiz.commonapp.party.party.PartyHelper" %>
-<%@ page import="org.ofbiz.ecommerce.misc.*" %>
-
     <%GenericValue localOrderHeader = null;%>
     <%OrderReadHelper localOrder = null;%>
     <ofbiz:if name="orderHeader">
@@ -57,13 +52,13 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
   <td width='50%' valign=top align=left>
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Order <ofbiz:if name="orderHeader">#<%entityField.run("orderHeader", "orderId");%> </ofbiz:if>Information</div>
+            <div class="boxhead">&nbsp;Order <ofbiz:if name="orderHeader">#<%EntityField.run("orderHeader", "orderId", pageContext);%> </ofbiz:if>Information</div>
           </td>
         </tr>
       </table>
@@ -71,66 +66,66 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
         <tr>
           <td>
-  <table width="100%" border="0" cellpadding="1">
-   <ofbiz:if name="userLogin">
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Name</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-        <div class="tabletext">
-        <%if(person!=null){%>
-          <%=PartyHelper.getPersonName(person)%>
-        <%}%>
-        <%entityField.run("userLogin", "userLoginId", " (", ") ");%>
-        </div>
-      </td>
-    </tr>
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-   </ofbiz:if>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Status</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-        <ofbiz:if name="orderHeader">
-          <div class="tabletext"><%=localOrder.getStatusString()%></div>
-        </ofbiz:if>
-        <ofbiz:unless name="orderHeader">
-          <div class="tabletext"><b>Not Yet Ordered</b></div>
-        </ofbiz:unless>
-      </td>
-    </tr>
-  <ofbiz:if name="orderHeader">
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Date</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext"><%entityField.run("orderHeader", "orderDate");%></div>
-      </td>
-    </tr>
-  </ofbiz:if>
-  <ofbiz:if name="distributorId">
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Distributor</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext"><%=PartyHelper.formatPartyId(distributorId, delegator)%></div>
-      </td>
-    </tr>
-  </ofbiz:if>
-  </table>
+              <table width="100%" border="0" cellpadding="1">
+               <ofbiz:if name="userLogin">
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Name</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                    <div class="tabletext">
+                    <%if(person!=null){%>
+                      <%=PartyHelper.getPersonName(person)%>
+                    <%}%>
+                    <%EntityField.run("userLogin", "userLoginId", " (", ") ", pageContext);%>
+                    </div>
+                  </td>
+                </tr>
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+               </ofbiz:if>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Status</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                    <ofbiz:if name="orderHeader">
+                      <div class="tabletext"><%=localOrder.getStatusString()%></div>
+                    </ofbiz:if>
+                    <ofbiz:unless name="orderHeader">
+                      <div class="tabletext"><b>Not Yet Ordered</b></div>
+                    </ofbiz:unless>
+                  </td>
+                </tr>
+              <ofbiz:if name="orderHeader">
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Date</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext"><%EntityField.run("orderHeader", "orderDate", pageContext);%></div>
+                  </td>
+                </tr>
+              </ofbiz:if>
+              <ofbiz:if name="distributorId">
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Distributor</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext"><%=PartyHelper.formatPartyId(distributorId, delegator)%></div>
+                  </td>
+                </tr>
+              </ofbiz:if>
+              </table>
           </td>
         </tr>
       </table>
@@ -140,10 +135,10 @@
 
     <br>
 
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Payment Information</div>
@@ -154,77 +149,77 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
         <tr>
           <td>
-  <table width="100%" border="0" cellpadding="1">
-  <ofbiz:if name="creditCardInfo"> 
-    <%pageContext.setAttribute("outputted", "true");%>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Credit Card</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-            <%entityField.run("creditCardInfo", "nameOnCard");%><br>
-            <%=ContactHelper.formatCreditCard(creditCardInfo)%>
-          </div>
-      </td>
-    </tr>
-  </ofbiz:if>
-  <ofbiz:if name="billingAccount">
-    <ofbiz:if name="outputted">
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    </ofbiz:if>
-    <%pageContext.setAttribute("outputted", "true");%>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Billing Account</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-            #<%entityField.run("billingAccount", "billingAccountId");%> - <%entityField.run("billingAccount", "description");%>
-          </div>
-      </td>
-    </tr>
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Purchase Order Number</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext"><%=UtilFormatOut.checkNull(customerPoNumber)%></div>
-      </td>
-    </tr>
-  </ofbiz:if>
-  <%--ofbiz:if name="billingAddress">
-    <ofbiz:if name="outputted">
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    </ofbiz:if>
-    <%pageContext.setAttribute("outputted", "true");%>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Billing Address</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-            <%entityField.run("billingAddress", "toName", "<b>To:</b> ", "<br>");%>
-            <%entityField.run("billingAddress", "attnName", "<b>Attn:</b> ", "<br>");%>
-            <%entityField.run("billingAddress", "address1");%><br>
-            <%entityField.run("billingAddress", "address2", "", "<br>");%>
-            <%entityField.run("billingAddress", "city");%>,
-            <%entityField.run("billingAddress", "stateProvinceGeoId");%>
-            <%entityField.run("billingAddress", "postalCode");%>
-            <%entityField.run("billingAddress", "countryGeoId", "<br>", "");%>
-          </div>
-      </td>
-    </tr>
-  </ofbiz:if> --%>
-  </table>
+              <table width="100%" border="0" cellpadding="1">
+              <ofbiz:if name="creditCardInfo"> 
+                <%pageContext.setAttribute("outputted", "true");%>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Credit Card</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                        <%EntityField.run("creditCardInfo", "nameOnCard", pageContext);%><br>
+                        <%=ContactHelper.formatCreditCard(creditCardInfo)%>
+                      </div>
+                  </td>
+                </tr>
+              </ofbiz:if>
+              <ofbiz:if name="billingAccount">
+                <ofbiz:if name="outputted">
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                </ofbiz:if>
+                <%pageContext.setAttribute("outputted", "true");%>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Billing Account</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                        #<%EntityField.run("billingAccount", "billingAccountId", pageContext);%> - <%EntityField.run("billingAccount", "description", pageContext);%>
+                      </div>
+                  </td>
+                </tr>
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Purchase Order Number</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext"><%=UtilFormatOut.checkNull(customerPoNumber)%></div>
+                  </td>
+                </tr>
+              </ofbiz:if>
+              <%--ofbiz:if name="billingAddress">
+                <ofbiz:if name="outputted">
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                </ofbiz:if>
+                <%pageContext.setAttribute("outputted", "true");%>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Billing Address</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                        <%EntityField.run("billingAddress", "toName", "<b>To:</b> ", "<br>", pageContext);%>
+                        <%EntityField.run("billingAddress", "attnName", "<b>Attn:</b> ", "<br>", pageContext);%>
+                        <%EntityField.run("billingAddress", "address1", pageContext);%><br>
+                        <%EntityField.run("billingAddress", "address2", "", "<br>", pageContext);%>
+                        <%EntityField.run("billingAddress", "city", pageContext);%>,
+                        <%EntityField.run("billingAddress", "stateProvinceGeoId", pageContext);%>
+                        <%EntityField.run("billingAddress", "postalCode", pageContext);%>
+                        <%EntityField.run("billingAddress", "countryGeoId", "<br>", "", pageContext);%>
+                      </div>
+                  </td>
+                </tr>
+              </ofbiz:if> --%>
+              </table>
           </td>
         </tr>
       </table>
@@ -236,10 +231,10 @@
 <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
 <td width='50%' valign=top align=left>
 
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Shipping Information</div>
@@ -250,74 +245,74 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
         <tr>
           <td>
-  <table width="100%" border="0" cellpadding="1">
-    <ofbiz:if name="shippingAddress">
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Destination</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-            <%entityField.run("shippingAddress", "toName", "<b>To:</b> ", "<br>");%>
-            <%entityField.run("shippingAddress", "attnName", "<b>Attn:</b> ", "<br>");%>
-            <%entityField.run("shippingAddress", "address1");%><br>
-            <%entityField.run("shippingAddress", "address2", "", "<br>");%>
-            <%entityField.run("shippingAddress", "city");%>,
-            <%entityField.run("shippingAddress", "stateProvinceGeoId");%>
-            <%entityField.run("shippingAddress", "postalCode");%>
-            <%entityField.run("shippingAddress", "countryGeoId", "<br>", "");%>
-          </div>
-      </td>
-    </tr>
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    </ofbiz:if>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Method</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-          <%=UtilFormatOut.checkNull(carrierPartyId)%> 
-          <%=UtilFormatOut.checkNull(shipMethDescription)%>
-          <%--=UtilFormatOut.ifNotEmpty(shippingAccount, "<br>Use Account: ", "")--%>
-          </div>
-      </td>
-    </tr>
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Splitting Preference</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-          <ofbiz:unless name="maySplit">
-          Please wait until the entire order is ready before shipping.
-          </ofbiz:unless>
-          <ofbiz:if name="maySplit">
-          Please ship items I ordered as they become available (may incur additional shipping charges).    
-          </ofbiz:if>
-          </div>
-      </td>
-    </tr>
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Instructions</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-          <%=UtilFormatOut.checkNull(shippingInstructions)%>
-          </div>
-       </td>
-    </tr>
-  </table>
+              <table width="100%" border="0" cellpadding="1">
+                <ofbiz:if name="shippingAddress">
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Destination</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                        <%EntityField.run("shippingAddress", "toName", "<b>To:</b> ", "<br>", pageContext);%>
+                        <%EntityField.run("shippingAddress", "attnName", "<b>Attn:</b> ", "<br>", pageContext);%>
+                        <%EntityField.run("shippingAddress", "address1", pageContext);%><br>
+                        <%EntityField.run("shippingAddress", "address2", "", "<br>", pageContext);%>
+                        <%EntityField.run("shippingAddress", "city", pageContext);%>,
+                        <%EntityField.run("shippingAddress", "stateProvinceGeoId", pageContext);%>
+                        <%EntityField.run("shippingAddress", "postalCode", pageContext);%>
+                        <%EntityField.run("shippingAddress", "countryGeoId", "<br>", "", pageContext);%>
+                      </div>
+                  </td>
+                </tr>
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                </ofbiz:if>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Method</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                      <%=UtilFormatOut.checkNull(carrierPartyId)%> 
+                      <%=UtilFormatOut.checkNull(shipMethDescription)%>
+                      <%--=UtilFormatOut.ifNotEmpty(shippingAccount, "<br>Use Account: ", "")--%>
+                      </div>
+                  </td>
+                </tr>
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Splitting Preference</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                      <ofbiz:unless name="maySplit">
+                      Please wait until the entire order is ready before shipping.
+                      </ofbiz:unless>
+                      <ofbiz:if name="maySplit">
+                      Please ship items I ordered as they become available (may incur additional shipping charges).    
+                      </ofbiz:if>
+                      </div>
+                  </td>
+                </tr>
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Instructions</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                      <%=UtilFormatOut.checkNull(shippingInstructions)%>
+                      </div>
+                   </td>
+                </tr>
+              </table>
           </td>
         </tr>
       </table>

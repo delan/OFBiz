@@ -28,8 +28,9 @@
  */
 %>
 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
-<%String previousParams=(String) session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
+<%String previousParams = (String) session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
 
 <br>
 <div class="head1">Log&nbsp;In</div>

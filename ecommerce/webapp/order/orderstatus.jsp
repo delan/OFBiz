@@ -41,12 +41,6 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<% pageContext.setAttribute("PageName", "orderstatus"); %>
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
-<%@ include file="/includes/datepicker.js" %>
-
 <%
   String orderId = request.getParameter("order_id");
   GenericValue orderHeader = null;
@@ -119,9 +113,3 @@
 <ofbiz:unless name="orderHeader">
 <h3>The specified order was not found, please try again.</h3>
 </ofbiz:unless>
-
-<%@ include file="/includes/rightcolumn.jsp" %>
-<%@ include file="/includes/footer.jsp" %>
-
-
- 

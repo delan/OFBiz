@@ -1,11 +1,6 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.commonapp.product.product.*"%>
-
-<% pageContext.setAttribute("PageName", "Product Detail"); %>
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/leftcolumn.jsp" %> 
 
 <%
   // Get the value object of the request product id.
@@ -172,6 +167,3 @@
 
   </table>
 </ofbiz:if>
-
-<%@ include file="/includes/rightcolumn.jsp" %> 
-<%@ include file="/includes/footer.jsp" %>

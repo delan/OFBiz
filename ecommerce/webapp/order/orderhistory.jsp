@@ -38,12 +38,6 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<% pageContext.setAttribute("PageName", "orderhistory"); %>
-
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
-
 <%
   Iterator statusIterator = null;
   Iterator methodIterator = null;
@@ -73,50 +67,50 @@
       <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
-  <table width="100%" cellpadding="3" cellspacing="0" border="0">
-    <tr>
-      <td width="30%">
-        <div class="tabletext"><b>Date</b></div>
-      </td>
-      <td width="15%">
-        <div class="tabletext"><b><nobr>Order #</nobr></b></div>
-      </td>
-      <td width="15%">
-        <div class="tabletext"><b>Amount</b></div>
-      </td>
-      <td width="15%">
-        <div class="tabletext"><b>Status</b></div>
-      </td>
-      <td width="15%"><b></b>
-      </td>
-    </tr>
-    <ofbiz:iterator name="orderHeader" property="orderHeaderList">
-      <%-- XXX should be most recent first --%>
-	<%OrderReadHelper order = new OrderReadHelper(orderHeader); %>
-        <%String orderStatusString = order.getStatusString();%>
-        <tr><td colspan="7"><hr class='sepbar'></td></tr>
-        <tr>
-          <td>
-            <div class="tabletext"><nobr><%=orderHeader.getTimestamp("orderDate")%></nobr></div>
-          </td>
-          <td>
-            <div class="tabletext"><%=orderHeader.getString("orderId")%></div>
-          </td>
-          <td>
-            <div class="tabletext"><%=UtilFormatOut.formatPrice(order.getTotalPrice())%></div>
-          </td>
-          <td>
-            <div class="tabletext"><%=orderStatusString%></div>
-          </td>
-          <td align=right>
-            <a href="<ofbiz:url><%="/orderstatus?order_id=" + orderHeader.getString("orderId")%></ofbiz:url>" class='buttontext'>[View]</a>
-          </td>
-        </tr>
-    </ofbiz:iterator>
-    <ofbiz:unless name="orderHeaderList" size="0">
-      <tr><td colspan="8"><div class='head3'>No Orders Found</div></td></tr>
-    </ofbiz:unless>
-  </table>
+              <table width="100%" cellpadding="3" cellspacing="0" border="0">
+                <tr>
+                  <td width="30%">
+                    <div class="tabletext"><b>Date</b></div>
+                  </td>
+                  <td width="15%">
+                    <div class="tabletext"><b><nobr>Order #</nobr></b></div>
+                  </td>
+                  <td width="15%">
+                    <div class="tabletext"><b>Amount</b></div>
+                  </td>
+                  <td width="15%">
+                    <div class="tabletext"><b>Status</b></div>
+                  </td>
+                  <td width="15%"><b></b>
+                  </td>
+                </tr>
+                <ofbiz:iterator name="orderHeader" property="orderHeaderList">
+                  <%-- XXX should be most recent first --%>
+                    <%OrderReadHelper order = new OrderReadHelper(orderHeader); %>
+                    <%String orderStatusString = order.getStatusString();%>
+                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr>
+                      <td>
+                        <div class="tabletext"><nobr><%=orderHeader.getTimestamp("orderDate")%></nobr></div>
+                      </td>
+                      <td>
+                        <div class="tabletext"><%=orderHeader.getString("orderId")%></div>
+                      </td>
+                      <td>
+                        <div class="tabletext"><%=UtilFormatOut.formatPrice(order.getTotalPrice())%></div>
+                      </td>
+                      <td>
+                        <div class="tabletext"><%=orderStatusString%></div>
+                      </td>
+                      <td align=right>
+                        <a href="<ofbiz:url><%="/orderstatus?order_id=" + orderHeader.getString("orderId")%></ofbiz:url>" class='buttontext'>[View]</a>
+                      </td>
+                    </tr>
+                </ofbiz:iterator>
+                <ofbiz:unless name="orderHeaderList" size="0">
+                  <tr><td colspan="8"><div class='head3'>No Orders Found</div></td></tr>
+                </ofbiz:unless>
+              </table>
           </td>
         </tr>
       </table>
@@ -125,6 +119,3 @@
 </TABLE>
 <%-- <a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">&nbsp;[Back Home]</a> --%>
 <br>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

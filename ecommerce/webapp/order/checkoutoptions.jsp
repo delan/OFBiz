@@ -32,15 +32,14 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.ecommerce.shoppingcart.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.*" %>
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
-<% pageContext.setAttribute("PageName", "checkoutoptions"); %>
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
-
-<%ShoppingCart cart = (ShoppingCart)session.getAttribute(SiteDefs.SHOPPING_CART); %>
+<ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />  
+<%ShoppingCart cart = (ShoppingCart) session.getAttribute(SiteDefs.SHOPPING_CART);%>
 <%if ((cart != null) && (cart.size() > 0)) pageContext.setAttribute("cart", cart);%>
 <ofbiz:if name="cart">
     <%if (cart.getMaySplit() != null) pageContext.setAttribute("maySplit", cart.getMaySplit());%>
@@ -58,10 +57,10 @@
 <table width="100%" border="0" cellpadding='0' cellspacing='0'>
   <tr valign="top" align="left">
     <td height='100%'>
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
         <tr>
           <td valign=middle align=left>
             <div class="boxhead">1)&nbsp;How&nbsp;shall&nbsp;we&nbsp;ship&nbsp;it?</div>
@@ -72,7 +71,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
         <tr>
           <td>
   <table width="100%" cellpadding="4" border="0" cellpadding="0" cellspacing="0">
@@ -177,10 +176,10 @@
 <%-- ======================================================================== --%>
 <%-- ======================================================================== --%>
 <td height='100%'>
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>' style='height: 100%;'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>' style='height: 100%;'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
         <tr>
           <td valign=middle align=left>
             <div class="boxhead">2)&nbsp;Where&nbsp;shall&nbsp;we&nbsp;ship&nbsp;it?</div>
@@ -191,7 +190,7 @@
   </TR>
   <TR style='height: 100%;'>
     <TD width='100%' valign=top>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>' style='height: 100%;'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>' style='height: 100%;'>
         <tr>
           <td valign=top>
 
@@ -240,10 +239,10 @@
 <%-- ======================================================================== --%>
 <td>
 
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>' style='height: 100%;'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>' style='height: 100%;'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
         <tr>
           <td valign=middle align=left>
             <div class="boxhead">3)&nbsp;How&nbsp;shall&nbsp;you&nbsp;pay?</div>
@@ -254,7 +253,7 @@
   </TR>
   <TR style='height: 100%;'>
     <TD width='100%' valign=top>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>' style='height: 100%;'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>' style='height: 100%;'>
         <tr>
           <td valign=top>
 
@@ -348,5 +347,3 @@
 </td>
 </tr>
 </table>
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>
