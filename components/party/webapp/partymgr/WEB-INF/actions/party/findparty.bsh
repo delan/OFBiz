@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      3.0
  */
 
@@ -29,6 +29,7 @@ import java.sql.Timestamp;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
+import org.ofbiz.entity.model.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
@@ -95,6 +96,25 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
     entityName = "PartySearchView";
     lookupErrorMessage = null;
 
+    // create the dynamic view entity
+    dynamicView = new DynamicViewEntity();
+
+    // default view settings
+    dynamicView.addMemberEntity("PT", "Party");
+    dynamicView.addMemberEntity("PE", "Person");
+    dynamicView.addMemberEntity("PG", "PartyGroup");
+    dynamicView.addMemberEntity("UL", "UserLogin");
+    dynamicView.addAlias("PT", "partyId");
+    dynamicView.addAlias("PT", "partyTypeId");
+    dynamicView.addAlias("PE", "firstName");
+    dynamicView.addAlias("PE", "lastName");
+    dynamicView.addAlias("PG", "groupName");
+    dynamicView.addAlias("UL", "userLoginId");
+    dynamicView.addViewLink("PT", "PE", Boolean.TRUE, ModelKeyMap.makeKeyMapList("partyId"));
+    dynamicView.addViewLink("PT", "PG", Boolean.TRUE, ModelKeyMap.makeKeyMapList("partyId"));
+    dynamicView.addViewLink("PT", "UL", Boolean.TRUE, ModelKeyMap.makeKeyMapList("partyId"));
+    dynamicView.addRelation("one-nofk", "", "PartyType", ModelKeyMap.makeKeyMapList("partyTypeId"));
+
     // define the main condition & expression list
     andExprs = new ArrayList();
     mainCond = null;
@@ -106,6 +126,10 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
         andExprs.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
     }
 
+    // ----
+    // UserLogin Fields
+    // ----
+
     // filter on user login
     userLoginId = request.getParameter("userLoginId");
     if (userLoginId != null && userLoginId.length() > 0) {
@@ -113,12 +137,20 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
         andExprs.add(new EntityExpr("userLoginId", true, EntityOperator.LIKE, "%"+userLoginId+"%", true));
     }
 
+    // ----
+    // PartyGroup Fields
+    // ----
+
     // filter on groupName
     groupName = request.getParameter("groupName");
     if (groupName != null && groupName.length() > 0) {
         paramList = paramList + "&groupName=" + groupName;
         andExprs.add(new EntityExpr("groupName", true, EntityOperator.LIKE, "%"+groupName+"%", true));
     }
+
+    // ----
+    // Person Fields
+    // ----
 
     // filter on firstName
     firstName = request.getParameter("firstName");
@@ -134,68 +166,10 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
         andExprs.add(new EntityExpr("lastName", true, EntityOperator.LIKE, "%"+lastName+"%", true));
     }
 
-    // filter on address1
-    address1 = request.getParameter("address1");
-    if (address1 != null && address1.length() > 0) {
-        paramList = paramList + "&address1=" + address1;
-        andExprs.add(new EntityExpr("address1", true, EntityOperator.LIKE, "%"+address1+"%", true));
-    }
 
-    // filter on address2
-    address2 = request.getParameter("address2");
-    if (address2 != null && address2.length() > 0) {
-        paramList = paramList + "&address2=" + address2;
-        andExprs.add(new EntityExpr("address2", true, EntityOperator.LIKE, "%"+address2+"%", true));
-    }
-
-    // filter on city
-    city = request.getParameter("city");
-    if (city != null && city.length() > 0) {
-        paramList = paramList + "&city=" + city;
-        andExprs.add(new EntityExpr("city", true, EntityOperator.LIKE, "%"+city+"%", true));
-    }
-
-    // filter on state geo
-    stateGeo = request.getParameter("stateProvinceGeoId");
-    if (stateGeo != null && !"ANY".equals(stateGeo)) {
-        paramList = paramList + "&stateGeo=" + stateGeo;
-        andExprs.add(new EntityExpr("stateProvinceGeoId", EntityOperator.EQUALS, stateGeo));
-    }
-
-    // filter on postal code
-    postalCode = request.getParameter("postalCode");
-    if (postalCode != null && postalCode.length() > 0) {
-        paramList = paramList + "&postalCode=" + postalCode;
-        andExprs.add(new EntityExpr("postalCode", true, EntityOperator.LIKE, "%"+postalCode+"%", true));
-    }
-
-    // filter on infoString
-    infoString = request.getParameter("infoString");
-    if (infoString != null && infoString.length() > 0) {
-        paramList = paramList + "&infoString=" + infoString;
-        andExprs.add(new EntityExpr("infoString", true, EntityOperator.LIKE, "%"+infoString+"%", true));
-    }
-
-    // filter on countryCode
-    countryCode = request.getParameter("countryCode");
-    if (countryCode != null && countryCode.length() > 0) {
-        paramList = paramList + "&countryCode=" + countryCode;
-        andExprs.add(new EntityExpr("countryCode", true, EntityOperator.LIKE, "%"+countryCode+"%", true));
-    }
-
-    // filter on areaCode
-    areaCode = request.getParameter("areaCode");
-    if (areaCode != null && areaCode.length() > 0) {
-        paramList = paramList + "&areaCode=" + areaCode;
-        andExprs.add(new EntityExpr("areaCode", true, EntityOperator.LIKE, "%"+areaCode+"%", true));
-    }
-
-    // filter on contact number
-    contactNumber = request.getParameter("contactNumber");
-    if (contactNumber != null && contactNumber.length() > 0) {
-        paramList = paramList + "&contactNumber=" + contactNumber;
-        andExprs.add(new EntityExpr("contactNumber", true, EntityOperator.LIKE, "%"+contactNumber+"%", true));
-    }
+    // ----
+    // RoleType Fields
+    // ----
 
     // filter on role member
     roleType = request.getParameter("roleTypeId");
@@ -204,6 +178,86 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
         andExprs.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, roleType));
     }
 
+    // ----
+    // PostalAddress fields
+    // ----
+    if (extraInfo != null && extraInfo.equals("P")) {
+        // filter on address1
+        address1 = request.getParameter("address1");
+        if (address1 != null && address1.length() > 0) {
+            paramList = paramList + "&address1=" + address1;
+            andExprs.add(new EntityExpr("address1", true, EntityOperator.LIKE, "%"+address1+"%", true));
+        }
+
+        // filter on address2
+        address2 = request.getParameter("address2");
+        if (address2 != null && address2.length() > 0) {
+            paramList = paramList + "&address2=" + address2;
+            andExprs.add(new EntityExpr("address2", true, EntityOperator.LIKE, "%"+address2+"%", true));
+        }
+
+        // filter on city
+        city = request.getParameter("city");
+        if (city != null && city.length() > 0) {
+            paramList = paramList + "&city=" + city;
+            andExprs.add(new EntityExpr("city", true, EntityOperator.LIKE, "%"+city+"%", true));
+        }
+
+        // filter on state geo
+        stateGeo = request.getParameter("stateProvinceGeoId");
+        if (stateGeo != null && !"ANY".equals(stateGeo)) {
+            paramList = paramList + "&stateGeo=" + stateGeo;
+            andExprs.add(new EntityExpr("stateProvinceGeoId", EntityOperator.EQUALS, stateGeo));
+        }
+
+        // filter on postal code
+        postalCode = request.getParameter("postalCode");
+        if (postalCode != null && postalCode.length() > 0) {
+            paramList = paramList + "&postalCode=" + postalCode;
+            andExprs.add(new EntityExpr("postalCode", true, EntityOperator.LIKE, "%"+postalCode+"%", true));
+        }
+    }
+
+    // ----
+    // Generic CM Fields
+    // ----
+    if (extraInfo != null && extraInfo.equals("O")) {
+        // filter on infoString
+        infoString = request.getParameter("infoString");
+        if (infoString != null && infoString.length() > 0) {
+            paramList = paramList + "&infoString=" + infoString;
+            andExprs.add(new EntityExpr("infoString", true, EntityOperator.LIKE, "%"+infoString+"%", true));
+        }
+    }
+
+    // ----
+    // TelecomNumber Fields
+    // ----
+    if (extraInfo != null && extraInfo.equals("T")) {
+        // filter on countryCode
+        countryCode = request.getParameter("countryCode");
+        if (countryCode != null && countryCode.length() > 0) {
+            paramList = paramList + "&countryCode=" + countryCode;
+            andExprs.add(new EntityExpr("countryCode", true, EntityOperator.LIKE, "%"+countryCode+"%", true));
+        }
+
+        // filter on areaCode
+        areaCode = request.getParameter("areaCode");
+        if (areaCode != null && areaCode.length() > 0) {
+            paramList = paramList + "&areaCode=" + areaCode;
+            andExprs.add(new EntityExpr("areaCode", true, EntityOperator.LIKE, "%"+areaCode+"%", true));
+        }
+
+        // filter on contact number
+        contactNumber = request.getParameter("contactNumber");
+        if (contactNumber != null && contactNumber.length() > 0) {
+            paramList = paramList + "&contactNumber=" + contactNumber;
+            andExprs.add(new EntityExpr("contactNumber", true, EntityOperator.LIKE, "%"+contactNumber+"%", true));
+        }
+    }
+
+    // ---- End of Dynamic View Creation
+
     // build the main condition
     if (andExprs.size() > 0 || showAll.equalsIgnoreCase("Y")) mainCond = new EntityConditionList(andExprs, EntityOperator.AND);
 
@@ -211,21 +265,39 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
     if (lookupErrorMessage == null && mainCond != null) {
         // fields we need to select; will be used to set distinct
         List fieldsToSelect = new ArrayList();
+        List orderBy = new ArrayList();
         fieldsToSelect.add("partyId");
-        fieldsToSelect.add("firstName");
-        fieldsToSelect.add("lastName");
-        fieldsToSelect.add("groupName");
         fieldsToSelect.add("partyTypeId");
         fieldsToSelect.add("userLoginId");
-        if (extraInfo != null && extraInfo.equals("P")) {
-          fieldsToSelect.add("postalCode");
-        }
-        if (extraInfo != null && extraInfo.equals("T")) {
-          fieldsToSelect.add("areaCode");
-        }
 
-        // sorting by return entry date newest first
-        List orderBy = UtilMisc.toList("lastName", "firstName", "groupName");
+        // Person
+        if ((firstName != null && firstName.length() > 0) || (lastName != null && lastName.length() > 0)) {
+            fieldsToSelect.add("firstName");
+            fieldsToSelect.add("lastName");
+            orderBy.add("lastName");
+            orderBy.add("firstName");
+        }
+        // PartyGroup
+        if (groupName != null && groupName.length() > 0) {
+            fieldsToSelect.add("groupName");
+            orderBy.add("groupName");
+        }
+        // RoleType
+        if (roleType != null && !"ANY".equals(roleType)) {
+            fieldsToSelect.add("roleTypeId");
+        }
+        // PostalAddress
+        if (extraInfo != null && extraInfo.equals("P")) {
+            fieldsToSelect.add("postalCode");
+        }
+        // TelecomNumber
+        if (extraInfo != null && extraInfo.equals("T")) {
+            fieldsToSelect.add("areaCode");
+        }
+        // ContactMech
+        if (extraInfo != null && extraInfo.equals("O")) {
+            fieldsToSelect.add("infoString");
+        }
 
         // set distinct on so we only get one row per order
         EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
@@ -234,7 +306,7 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
         partyListSize = delegator.findCountByCondition(entityName, mainCond, null);
 
         // using list iterator
-        EntityListIterator pli = delegator.findListIteratorByCondition(entityName, mainCond, null, fieldsToSelect, orderBy, findOpts);
+        EntityListIterator pli = delegator.findListIteratorByCondition(dynamicView, mainCond, null, fieldsToSelect, orderBy, findOpts);
 
         // get the indexes for the partial list
         lowIndex = (((viewIndex - 1) * viewSize) + 1);
