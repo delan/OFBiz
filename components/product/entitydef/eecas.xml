@@ -30,12 +30,5 @@
     <!-- The InventoryItemDetail entity should never be updated/stored or deleted/removed, but we'll catch those too anyway... -->
     <eca entity="InventoryItemDetail" operation="create-store-remove" event="return">
         <action service="updateInventoryItemFromDetail" mode="sync"/>
-    </eca>
-    
-    <!-- Inventory Issue ECAs for Immediately Fulfilled Orders -->
-    <eca entity="OrderHeader" operation="create-store" event="return">
-        <condition field-name="statusId" operator="equals" value="ORDER_COMPLETED"/>
-        <condition field-name="needsInventoryIssuance" operator="equals" value="Y"/>
-        <action service="issueImmediatelyFulfilledOrder" mode="sync"/>
-    </eca>
+    </eca>    
 </entity-eca>
