@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/04 18:09:49  azeneski
+ * Updated CatalogHelper to allow passing the name of the attribute to store
+ * catalog data in. Used in the CORE taglibs.
+ *
  * Revision 1.3  2001/09/01 01:59:44  azeneski
  * Cleaned up catalog files, using new taglibs.
  *
@@ -21,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.http.HttpSession;
 
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
@@ -61,10 +66,14 @@ import org.ofbiz.core.entity.GenericHelperFactory;
 public class CatalogHelper {
     
     public static void getRelatedCategories(PageContext pageContext, String attributeName, String parentId) {        
-        ArrayList categories = new ArrayList();
+        ArrayList categories = new ArrayList();                        
         GenericHelper helper = GenericHelperFactory.getDefaultHelper();
-        Collection rollups = helper.findByAnd("ProductCategoryRollup",UtilMisc.toMap("parentProductCategoryId",parentId),null);
-        
+        GenericValue requestedCategory = helper.findByPrimaryKey("ProductCategory",UtilMisc.toMap("productCategoryId",parentId));
+        if ( requestedCategory.getString("primaryParentCategoryId") != null ) 
+            setTrail(pageContext,parentId,false);
+        else
+            setTrail(pageContext,parentId,true);
+        Collection rollups = helper.findByAnd("ProductCategoryRollup",UtilMisc.toMap("parentProductCategoryId",parentId),null);        
         Debug.log("Got rollups...");
         if ( rollups != null && rollups.size() > 0 ) {
             Debug.log("Rollup size: " + rollups.size());            
@@ -104,4 +113,36 @@ public class CatalogHelper {
             pageContext.setAttribute(attributeName,product);
     }
     
+    public static void setTrail(PageContext pageContext, String category, boolean topLevel) {
+        HttpSession session = pageContext.getSession();
+        ArrayList crumb = null;
+        if ( !topLevel ) {
+            crumb = (ArrayList) session.getAttribute("_BREAD_CRUMB_TRAIL_");
+            if ( crumb != null ) {
+                Debug.logInfo("Appended category to crumb.");
+                crumb.add(category);
+            }
+            else {
+                crumb = new ArrayList();
+                Debug.logInfo("Created new crumb, added category.");
+                crumb.add(category);
+            }            
+        }
+        else {
+            crumb = new ArrayList();
+            crumb.add(category);
+            Debug.logInfo("New crumb force, created and added category.");
+        }
+        if ( crumb != null )
+            session.setAttribute("_BREAD_CRUMB_TRAIL_",crumb);
+    }
+    
+    public static Collection getTrail(PageContext pageContext) {
+        HttpSession session = pageContext.getSession();
+        ArrayList crumb = (ArrayList) session.getAttribute("_BREAD_CRUMB_TRAIL_");
+        if ( crumb == null )
+            return null;
+        
+        return crumb;
+    }
 }
