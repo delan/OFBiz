@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -56,8 +56,17 @@
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateProductManufacturingRule" map-name="manufacturingRule"/>
         <field name="ruleId"><display/></field>
+        <field name="productId">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="productIdFor">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
         <field name="productIdIn">
             <lookup target-form-name="LookupVirtualProduct"/>
+        </field>
+        <field name="productIdInSubst">
+            <lookup target-form-name="LookupProduct"/>
         </field>
         <field name="ruleOperator">
             <drop-down>
@@ -81,8 +90,17 @@
                 <option key="AND"/>
             </drop-down>
         </field>
+        <field name="productId">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="productIdFor">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
         <field name="productIdIn">
             <lookup target-form-name="LookupVirtualProduct"/>
+        </field>
+        <field name="productIdInSubst">
+            <lookup target-form-name="LookupProduct"/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" >
             <submit button-type="button"/>
