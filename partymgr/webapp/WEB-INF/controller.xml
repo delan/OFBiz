@@ -227,10 +227,16 @@
         <response name="success" type="view" value="editlogin"/>
     </request-map>
 
-    <request-map uri="updateLogin">
+    <request-map uri="updatePassword">
         <security https="true" auth="true"/>
-        <event type="service" path="org.ofbiz.commonapp.security.login.LoginServices" invoke="updatePassword"/>
-        <response name="success" type="view" value="viewprofile"/>
+        <event type="service" path="" invoke="updatePassword"/>
+        <response name="success" type="view" value="editlogin"/>
+        <response name="error" type="view" value="editlogin"/>
+    </request-map>
+    <request-map uri="updateUserLoginSecurity">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateUserLoginSecurity"/>
+        <response name="success" type="view" value="editlogin"/>
         <response name="error" type="view" value="editlogin"/>
     </request-map>
 

@@ -54,12 +54,9 @@
         String donePage = request.getParameter("DONE_PAGE");
         if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 %>
-  <p class="head1">Edit UserLogin</p>
+  <p class="head1">Change UserLogin Password</p>
 
-    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
-    &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>
-
-  <form method="post" action="<ofbiz:url>/updateLogin/<%=donePage%></ofbiz:url>" name="changepasswordform">
+  <form method="post" action="<ofbiz:url>/updatePassword</ofbiz:url>" name="changepasswordform">
   <input type="hidden" name="userLoginId" value="<%=userLoginId%>">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
@@ -76,28 +73,46 @@
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Password Hint</div></td>
+      <td width="74%"><input type="text" size="40" maxlength="100" name="passwordHint" value="<ofbiz:entityfield attribute="userUserLogin" field="passwordHint"/>"></td>
+    </tr>
+  </table>
+  </form>
+  <div>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
+    &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Change&nbsp;Password]</a>
+  </div>
+<br>
+  <p class="head1">Update UserLogin Security Settings</p>
+  <form method="post" action="<ofbiz:url>/updateUserLoginSecurity</ofbiz:url>" name="updatesecurityform">
+  <input type="hidden" name="userLoginId" value="<%=userLoginId%>">
+  <table width="90%" border="0" cellpadding="2" cellspacing="0">
+    <tr>
+      <td width="26%" align=right><div class="tabletext">Account Enabled?</div></td>
       <td width="74%">
-        <input type="text" size="40" maxlength="100" name="passwordHint" value="<ofbiz:entityfield attribute="userUserLogin" field="passwordHint"/>">
+        <select name="enabled">
+          <option><ofbiz:inputvalue field="enabled" entityAttr="userUserLogin"/></option>
+          <option value='<ofbiz:inputvalue field="enabled" entityAttr="userUserLogin"/>'></option>
+          <option>Y</option>
+          <option>N</option>
+        </select>
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">Account Enabled</div></td>
-      <td width="74%">
-        <%
-           Boolean enabledFlag = userUserLogin.getBoolean("enabled");
-           if (enabledFlag == null) enabledFlag = new Boolean(true);
-        %>
-        <select name="enabled">
-            <option value="true" <%=enabledFlag.booleanValue() ? "SELECTED" : ""%>>Yes</option>
-            <option value="false" <%=!enabledFlag.booleanValue() ? "SELECTED" : ""%>>No</option>
-        </select>
-      </td>
+      <td width="26%" align=right><div class="tabletext">Disabled Date</div></td>
+      <td width="74%"><input type="text" size="20" name="disabledDateTime" value="<ofbiz:inputvalue entityAttr="userUserLogin" field="disabledDateTime"/>"></td>
+    </tr>
+    <tr>
+      <td width="26%" align=right><div class="tabletext">Successive Failed Logins</div></td>
+      <td width="74%"><input type="text" size="5" name="successiveFailedLogins" value="<ofbiz:inputvalue entityAttr="userUserLogin" field="successiveFailedLogins"/>"></td>
     </tr>
   </table>
   </form>
 
+  <div>
     &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
-    &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>
+    &nbsp;<a href="javascript:document.updatesecurityform.submit()" class="buttontext">[Update&nbsp;Security&nbsp;Settings]</a>
+  </div>
+
 <%}else{%>
   <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
 <%}%>
