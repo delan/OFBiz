@@ -20,11 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -47,15 +47,19 @@
                 <td width="30%">
                   <div class="tabletext"><b>${requestAttributes.uiLabelMap.CommonDate}</b></div>
                 </td>
+                <td width="10">&nbsp;</td>
                 <td width="15%">
                   <div class="tabletext"><b><nobr>${requestAttributes.uiLabelMap.OrderOrder} #</nobr></b></div>
                 </td>
+                <td width="10">&nbsp;</td>
                 <td width="15%">
                   <div class="tabletext"><b>${requestAttributes.uiLabelMap.CommonAmount}</b></div>
                 </td>
+                <td width="10">&nbsp;</td>
                 <td width="15%">
                   <div class="tabletext"><b>${requestAttributes.uiLabelMap.CommonStatus}</b></div>
                 </td>
+                <td width="10">&nbsp;</td>
                 <td width="15%"><b></b></td>                
               </tr>
               <#list orderHeaderList as orderHeader>
@@ -65,15 +69,19 @@
                   <td>
                     <div class="tabletext"><nobr>${orderHeader.orderDate.toString()}</nobr></div>
                   </td>
+                  <td width="10">&nbsp;</td>
                   <td>
                     <div class="tabletext">${orderHeader.orderId}</div>
                   </td>
+                  <td width="10">&nbsp;</td>
                   <td>
                     <div class="tabletext"><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></div>
                   </td>
+                  <td width="10">&nbsp;</td>
                   <td>
                     <div class="tabletext">${status.description}</div>
                   </td>
+                  <td width="10">&nbsp;</td>
                   <td align=right>
                     <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[${requestAttributes.uiLabelMap.CommonView}]</a>
                   </td>

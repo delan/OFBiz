@@ -8,7 +8,7 @@
               <a class="tabButton" href="<@ofbizUrl>/searchContent?siteId=${lastContent.contentId?if_exists}</@ofbizUrl>" >Search</a> 
     </div>
 </#if>
-<table width="100%" border="0" >
+<table border="0">
 <#assign viewIdx = "" />
 <#if requestParameters.viewIndex?has_content>
 <#assign viewIdx = requestParameters.viewIndex?if_exists />
