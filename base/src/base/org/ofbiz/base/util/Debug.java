@@ -42,7 +42,7 @@ import org.ofbiz.base.util.collections.FlexibleProperties;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public final class Debug {
@@ -100,9 +100,9 @@ public final class Debug {
                 levelOnCache[x] = true;
             }
             LoggerRepository repo = root.getLoggerRepository();
-            Enumeration enum = repo.getCurrentLoggers();
-            while (enum.hasMoreElements()) {
-                Logger thisLogger = (Logger) enum.nextElement();
+            Enumeration en = repo.getCurrentLoggers();
+            while (en.hasMoreElements()) {
+                Logger thisLogger = (Logger) en.nextElement();
                 thisLogger.setLevel(Level.DEBUG);
             }            
         }

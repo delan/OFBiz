@@ -195,7 +195,7 @@ public class IteratorTag extends BodyTagSupport {
                         if (m[i].getName().equals("iterator")) {
                             Debug.logVerbose("Found iterator method. Using it.", module);
                             newIterator = (Iterator) m[i].invoke(
-                                        objectTag.getObject(), null);
+                                        objectTag.getObject(), (Object[]) null);
                             break;
                         }
                     }
