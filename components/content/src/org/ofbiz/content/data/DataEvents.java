@@ -31,7 +31,7 @@ import org.ofbiz.base.util.GeneralException;
  * DataEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.0
  *
  * 
@@ -70,9 +70,9 @@ public class DataEvents {
 
         byte[] b = null;
         String imageType = DataResourceWorker.getImageType(delegator, dataResource);
-        if (Debug.infoOn()) Debug.logInfo("in serveImage, imageType:" + imageType, module);
+        //if (Debug.infoOn()) Debug.logInfo("in serveImage, imageType:" + imageType, module);
         String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
-        if (Debug.infoOn()) Debug.logInfo("in serveImage, dataResourceTypeId:" + dataResourceTypeId, module);
+        //if (Debug.infoOn()) Debug.logInfo("in serveImage, dataResourceTypeId:" + dataResourceTypeId, module);
         if (dataResourceTypeId != null && dataResourceTypeId.equals("IMAGE_OBJECT")) {
             try {
                 b = DataResourceWorker.acquireImage(delegator, dataResource);
@@ -84,10 +84,10 @@ public class DataEvents {
             }
         } else if (dataResourceTypeId != null && dataResourceTypeId.indexOf("_FILE") >= 0) {
             String fileName = dataResource.getString("objectInfo");
-            if (Debug.infoOn()) Debug.logInfo("in serveImage, fileName:" + fileName, module);
+            //if (Debug.infoOn()) Debug.logInfo("in serveImage, fileName:" + fileName, module);
             ServletContext servletContext = request.getSession().getServletContext();
             String rootDir = servletContext.getRealPath("/");
-            if (Debug.infoOn()) Debug.logInfo("in serveImage, rootDir:" + rootDir, module);
+            //if (Debug.infoOn()) Debug.logInfo("in serveImage, rootDir:" + rootDir, module);
             try {
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 OutputStreamWriter outWriter = new OutputStreamWriter(os, "ISO8859_1");
@@ -96,15 +96,12 @@ public class DataEvents {
                 FileInputStream fis = new FileInputStream(contentFile);
                 InputStreamReader isr = new InputStreamReader(fis, "ISO8859_1");
                 String enc = isr.getEncoding();
-                if (Debug.infoOn()) Debug.logInfo("in serveImage, encoding:" + enc, module);
+                //if (Debug.infoOn()) Debug.logInfo("in serveImage, encoding:" + enc, module);
                 int c;
-                int count=0;
                 while ((c = isr.read()) != -1) {
                     outWriter.write(c);
-                    count++;
                 }
                 outWriter.flush();
-                if (Debug.infoOn()) Debug.logInfo("in serveImage, count:" + count, module);
                 b = os.toByteArray();
 
             } catch (FileNotFoundException e4) {

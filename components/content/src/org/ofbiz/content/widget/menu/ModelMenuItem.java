@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenuItem.java,v 1.3 2004/03/29 18:14:16 byersa Exp $
+ * $Id: ModelMenuItem.java,v 1.4 2004/04/01 21:55:47 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class ModelMenuItem {
@@ -740,7 +740,7 @@ public class ModelMenuItem {
            public Map getParamMap(Map context) {
                Map map = new HashMap();
                map.put(infoName, (String)getValue(context));
-               if (Debug.infoOn()) Debug.logInfo("in getParamMap, context: " + context + " map:" + map, module);
+               //if (Debug.infoOn()) Debug.logInfo("in getParamMap, context: " + context + " map:" + map, module);
                return map;
            }
 
