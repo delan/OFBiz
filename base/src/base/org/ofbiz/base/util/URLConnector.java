@@ -1,5 +1,5 @@
 /*
- * $Id: URLConnector.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: URLConnector.java,v 1.2 2003/10/24 20:26:26 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,22 +27,33 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.GeneralSecurityException;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 
 /**
  * URLConnector.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class URLConnector {
+    
+    public static final String module = URLConnector.class.getName();
 
     private URLConnection connection = null;
     private URL url = null;
+    private String clientCertAlias = null;
     private boolean timedOut = false;
 
-    protected URLConnector() {}
-    protected URLConnector(URL url) {
+    protected URLConnector() {}    
+    protected URLConnector(URL url, String clientCertAlias) {
+        this.clientCertAlias = clientCertAlias;
         this.url = url;
     }
     
@@ -53,10 +64,11 @@ public class URLConnector {
         try {
             this.wait(timeout);
         } catch (InterruptedException e) {
-            if (connection == null)
+            if (connection == null) {
                 timedOut = true;
-            else
+            } else {
                 close(connection);
+            }
             throw new IOException("Connection never established");
         }
 
@@ -73,7 +85,15 @@ public class URLConnector {
     }
     
     public static URLConnection openConnection(URL url, int timeout) throws IOException {
-        URLConnector uc = new URLConnector(url);
+        return openConnection(url, timeout, null);
+    }
+    
+    public static URLConnection openConnection(URL url, String clientCertAlias) throws IOException {
+        return openConnection(url, 30000, clientCertAlias);
+    }
+      
+    public static URLConnection openConnection(URL url, int timeout, String clientCertAlias) throws IOException {
+        URLConnector uc = new URLConnector(url, clientCertAlias);
         return uc.openConnection(timeout);
     }    
 
@@ -83,23 +103,44 @@ public class URLConnector {
             URLConnection con = null;
             try {
                 con = url.openConnection();
-            } catch (IOException e) {}
+                if ("HTTPS".equalsIgnoreCase(url.getProtocol())) {
+                    HttpsURLConnection scon = (HttpsURLConnection) con;
+                    try {
+                        scon.setSSLSocketFactory(getSSLSocketFactory(clientCertAlias));
+                    } catch (GeneralSecurityException gse) {
+                        Debug.logError(gse, module);
+                    }
+                }
+            } catch (IOException e) {
+                Debug.logError(e, module);
+            }
 
             synchronized (URLConnector.this) {
-                if (timedOut && con != null)
+                if (timedOut && con != null) {
                     close(con);
-                else {
+                } else {
                     connection = con;
                     URLConnector.this.notify();
                 }
             }
         }
     }
-
+    
     // closes the HttpURLConnection does nothing to others
     private static void close(URLConnection con) {
         if (con instanceof HttpURLConnection) {
             ((HttpURLConnection) con).disconnect();
         }
+    }
+    
+    // gets a aliased SSL socket factory
+    private static SSLSocketFactory getSSLSocketFactory(String alias) throws IOException, GeneralSecurityException {
+        KeyManager[] km = KeyStoreUtils.getKeyManagers(alias);
+        TrustManager[] tm = KeyStoreUtils.getTrustManagers();
+            
+        // may want to have this in the properties file
+        SSLContext context = SSLContext.getInstance("SSL");
+        context.init(km, tm, null);
+        return (SSLSocketFactory) context.getSocketFactory();        
     }
 }
