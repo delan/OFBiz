@@ -1,5 +1,5 @@
 /*
- * $Id: ContextFilter.java,v 1.2 2003/08/20 18:42:06 ajzeneski Exp $
+ * $Id: ContextFilter.java,v 1.3 2003/12/06 17:39:38 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,6 +46,9 @@ import org.ofbiz.base.util.CachedClassLoader;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.container.ComponentContainer;
+import org.ofbiz.base.component.AlreadyLoadedException;
+import org.ofbiz.base.component.ComponentException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.security.Security;
 import org.ofbiz.security.SecurityConfigurationException;
@@ -57,7 +60,7 @@ import org.ofbiz.service.WebAppDispatcher;
  * ContextFilter - Restricts access to raw files and configures servlet objects.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class ContextFilter implements Filter {
@@ -71,13 +74,15 @@ public class ContextFilter implements Filter {
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
-    public void init(FilterConfig config) {
+    public void init(FilterConfig config) throws ServletException {
         this.config = config;
         
         // initialize the cached class loader for this application
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        localCachedClassLoader = new CachedClassLoader(loader, getWebSiteId());        
-        
+        localCachedClassLoader = new CachedClassLoader(loader, getWebSiteId());
+
+        // load the components
+        getComponents();
         // check the serverId
         getServerId();
         // initialize the delegator
@@ -332,5 +337,18 @@ public class ContextFilter implements Filter {
             config.getServletContext().setAttribute("_serverId", serverId);
         }
         return serverId;
+    }
+
+    protected boolean getComponents() throws ServletException {
+        try {
+            ComponentContainer.loadComponents(false);
+        } catch (AlreadyLoadedException e) {
+            Debug.logVerbose("Components already loaded; not loading from ContextFilter", module);
+            return false;
+        } catch (ComponentException e) {
+            Debug.logError(e, module);
+            throw new ServletException("Unable to load components; cannot start ContextFilter");
+        }
+        return true;
     }
 }
