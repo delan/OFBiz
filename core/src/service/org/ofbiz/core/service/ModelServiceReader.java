@@ -296,6 +296,7 @@ public class ModelServiceReader {
         this.createAutoAttrDefs(serviceElement, service);
         this.createAttrDefs(serviceElement, service);
         this.createOverrideDefs(serviceElement, service);
+               
         return service;
     }
 
@@ -505,41 +506,51 @@ public class ModelServiceReader {
             Element attribute = (Element) paramIter.next();
             String name = UtilXml.checkEmpty(attribute.getAttribute("name"));
             ModelParam param = service.getParam(name);
+            boolean directToParams = true;
             if (param == null) {
-                // we will create a new one in case we implement a service                
-                param = new ModelParam();
-                param.name = name;
-            }
-                                               
-            // set the overrideParam flag
-            param.overrideParam = true;
+                if (service.implServices.size() > 0 && !service.inheritedParameters) {                
+                    // create a temp def to place in the ModelService
+                    // this will get read when we read implemented services 
+                    directToParams = false;               
+                    param = new ModelParam();
+                    param.name = name;
+                } else {
+                    Debug.logWarning("No parameter found for override parameter named: " + name, module);
+                }
+            }             
             
-            // set only modified values
-            if (attribute.getAttribute("type") != null && attribute.getAttribute("type").length() > 0) {                
-                param.name = UtilXml.checkEmpty(attribute.getAttribute("type"));
-            }
-            if (attribute.getAttribute("mode") != null && attribute.getAttribute("mode").length() > 0) {                            
-                param.mode = UtilXml.checkEmpty(attribute.getAttribute("mode"));
-            }
-            if (attribute.getAttribute("entity-name") != null && attribute.getAttribute("entity-name").length() > 0) {
-               param.entityName = UtilXml.checkEmpty(attribute.getAttribute("entity-name"));
-            }
-            if (attribute.getAttribute("field-name") != null && attribute.getAttribute("field-name").length() > 0) {
-                param.fieldName = UtilXml.checkEmpty(attribute.getAttribute("field-name"));
-            }
-            if (attribute.getAttribute("form-label") != null && attribute.getAttribute("form-label").length() > 0) {                
-                param.formLabel = UtilXml.checkEmpty(attribute.getAttribute("form-label"));
-            }
-            if (attribute.getAttribute("optional") != null && attribute.getAttribute("optional").length() > 0) {                            
-                param.optional = "true".equalsIgnoreCase(attribute.getAttribute("optional")); // default to true
-                param.overrideOptional = true;
-            }
-            if (attribute.getAttribute("form-display") != null && attribute.getAttribute("form-display").length() > 0) {                
-                param.formDisplay = !"false".equalsIgnoreCase(attribute.getAttribute("form-display")); // default to false
-                param.overrideFormDisplay = true;
-            }
-                                     
-            service.addParam(param);                                     
+            if (param != null) {                                                        
+                // set only modified values
+                if (attribute.getAttribute("type") != null && attribute.getAttribute("type").length() > 0) {                
+                    param.name = UtilXml.checkEmpty(attribute.getAttribute("type"));
+                }
+                if (attribute.getAttribute("mode") != null && attribute.getAttribute("mode").length() > 0) {                            
+                    param.mode = UtilXml.checkEmpty(attribute.getAttribute("mode"));
+                }
+                if (attribute.getAttribute("entity-name") != null && attribute.getAttribute("entity-name").length() > 0) {
+                   param.entityName = UtilXml.checkEmpty(attribute.getAttribute("entity-name"));
+                }
+                if (attribute.getAttribute("field-name") != null && attribute.getAttribute("field-name").length() > 0) {
+                    param.fieldName = UtilXml.checkEmpty(attribute.getAttribute("field-name"));
+                }
+                if (attribute.getAttribute("form-label") != null && attribute.getAttribute("form-label").length() > 0) {                
+                    param.formLabel = UtilXml.checkEmpty(attribute.getAttribute("form-label"));
+                }
+                if (attribute.getAttribute("optional") != null && attribute.getAttribute("optional").length() > 0) {                            
+                    param.optional = "true".equalsIgnoreCase(attribute.getAttribute("optional")); // default to true
+                    param.overrideOptional = true;
+                }
+                if (attribute.getAttribute("form-display") != null && attribute.getAttribute("form-display").length() > 0) {                
+                    param.formDisplay = !"false".equalsIgnoreCase(attribute.getAttribute("form-display")); // default to false
+                    param.overrideFormDisplay = true;
+                }
+                
+                if (directToParams) {
+                    service.addParam(param);
+                } else {                  
+                    service.overrideParameters.add(param);                    
+                }
+            }                                                                                      
         }        
     }
 

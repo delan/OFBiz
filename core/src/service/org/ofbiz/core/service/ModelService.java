@@ -103,7 +103,10 @@ public class ModelService {
     public boolean requireNewTransaction;
     
     /** Set of services this service implements */
-    public Set implServices = new OrderedSet();    
+    public Set implServices = new OrderedSet();  
+    
+    /** Set of override parameters */
+    public Set overrideParameters = new OrderedSet();  
 
     /** Context Information, a list of parameters used by the service, contains ModelParam objects */
     protected Map contextInfo = new HashMap();
@@ -123,11 +126,13 @@ public class ModelService {
         this.nameSpace = model.nameSpace;
         this.location = model.location;
         this.invoke = model.invoke;
+        this.defaultEntityName = model.defaultEntityName;
         this.auth = model.auth;
         this.export = model.export;
         this.validate = model.validate;
         this.useTransaction = model.useTransaction || true;
         this.implServices = model.implServices;
+        this.overrideParameters = model.overrideParameters;
         List modelParamList = model.getModelParamList();
         Iterator i = modelParamList.iterator();
         while (i.hasNext()) 
@@ -535,51 +540,42 @@ public class ModelService {
                 }
                 
                 // add in the non-override parameters                
-                Set keySet = contextInfo.keySet();
-                             
-                // handle all non-override params first
-                Iterator keySetIter = keySet.iterator(); 
-                while (keySetIter.hasNext()) { 
-                    String key = (String) keySetIter.next();
-                    ModelParam param = (ModelParam) this.contextInfo.get(key);
-                    if (!param.overrideParam) {                      
-                        newInfo.put(key, param);
-                        newParams.add(param);
-                    }                                  
-                }
-                
-                keySetIter = keySet.iterator();
-                while (keySetIter.hasNext()) {
-                    String key = (String) keySetIter.next();
-                    ModelParam param = (ModelParam) this.contextInfo.get(key);
-                    if (param.overrideParam) {
-                        ModelParam existingParam = (ModelParam) newInfo.get(param.name);
-                        if (existingParam != null) {
-                            // now re-write the parameters
-                            if (param.type != null && param.type.length() > 0) {
-                                existingParam.type = param.type;                                   
-                            }
-                            if (param.mode != null && param.mode.length() > 0) {
-                                existingParam.mode = param.mode;
-                            }
-                            if (param.entityName != null && param.entityName.length() > 0) {
-                                existingParam.entityName = param.entityName;
-                            }
-                            if (param.fieldName != null && param.fieldName.length() > 0) {
-                                existingParam.fieldName = param.fieldName;
-                            }
-                            if (param.formLabel != null && param.formLabel.length() > 0) {
-                                existingParam.formLabel = param.formLabel;
-                            }
-                            if (param.overrideFormDisplay) {
-                                existingParam.formDisplay = param.formDisplay;
-                            }
-                            if (param.overrideOptional) {
-                                existingParam.optional = param.optional;
-                            }
-                            newInfo.put(key, existingParam);
-                            newParams.add(existingParam);
+                newInfo.putAll(this.contextInfo);
+                newParams.addAll(this.contextParamList);
+                  
+                // now loop through the override params and override any existing params                                                     
+                Iterator keySetIter = overrideParameters.iterator();
+                while (keySetIter.hasNext()) {                    
+                    ModelParam overrideParam = (ModelParam) keySetIter.next();                    
+                    ModelParam existingParam = (ModelParam) newInfo.get(overrideParam.name);                  
+                    
+                    if (existingParam != null) {                                                
+                        // now re-write the parameters
+                        if (overrideParam.type != null && overrideParam.type.length() > 0) {
+                            existingParam.type = overrideParam.type;                                   
                         }
+                        if (overrideParam.mode != null && overrideParam.mode.length() > 0) {
+                            existingParam.mode = overrideParam.mode;
+                        }
+                        if (overrideParam.entityName != null && overrideParam.entityName.length() > 0) {
+                            existingParam.entityName = overrideParam.entityName;
+                        }
+                        if (overrideParam.fieldName != null && overrideParam.fieldName.length() > 0) {
+                            existingParam.fieldName = overrideParam.fieldName;
+                        }
+                        if (overrideParam.formLabel != null && overrideParam.formLabel.length() > 0) {
+                            existingParam.formLabel = overrideParam.formLabel;
+                        }
+                        if (overrideParam.overrideFormDisplay) {
+                            existingParam.formDisplay = overrideParam.formDisplay;
+                        }
+                        if (overrideParam.overrideOptional) {
+                            existingParam.optional = overrideParam.optional;
+                        }
+                        newInfo.put(existingParam.name, existingParam);
+                        newParams.add(existingParam);
+                    } else {
+                        Debug.logWarning("Override param found but no parameter existing; ignoring: " + overrideParam.name, module);                   
                     }
                 }
                               
