@@ -118,9 +118,6 @@
                           <option value="${newShoppingListType.shoppingListTypeId}">${newShoppingListType.description?default(newShoppingListType.shoppingListTypeId)}</option>
                         </#list>
                       </select>
-                      <#if parentShoppingList?exists>
-                        <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">Go To Parent (${parentShoppingList.listName?default(parentShoppingList.shoppingListId)})</a>
-                      </#if>
                     </td>
                   </tr>                           
                   <tr>
