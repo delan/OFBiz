@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-group PUBLIC "-//OFBiz//DTD Service Group Config//EN" "http://www.ofbiz.org/dtds/service-group.dtd">
+
+<service-group>
+	
+	<!-- Entity Engine Service Groups (Distributed Cache Clearing) -->
+	<group name="distributedClearAllEntityCaches" send-mode="all">
+		<service name="localhostClearAllEntityCaches" mode="async"/>
+	</group>	
+	<group name="distributedClearCacheLineByValue" send-mode="all">
+		<service name="localhostClearCacheLineByValue" mode="async"/>
+	</group>	
+	<group name="distributedClearCacheLineByDummyPK" send-mode="all">
+		<service name="localhostClearCacheLineByDummyPK" mode="async"/>
+	</group>	
+	<group name="distributedClearCacheLineByPrimaryKey" send-mode="all">
+		<service name="localhostClearCacheLineByPrimaryKey" mode="async"/>
+	</group>	
+			
+</service-group>

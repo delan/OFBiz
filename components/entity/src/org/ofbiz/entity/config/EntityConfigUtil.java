@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConfigUtil.java,v 1.1 2003/08/16 22:05:51 ajzeneski Exp $
+ * $Id: EntityConfigUtil.java,v 1.2 2003/08/17 06:58:16 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.entity.*;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class EntityConfigUtil {
@@ -267,7 +267,7 @@ public class EntityConfigUtil {
             // this defaults to false, ie anything but true is false
             this.useDistributedCacheClear = "true".equals(element.getAttribute("distributed-cache-clear-enabled"));
             this.distributedCacheClearClassName = element.getAttribute("distributed-cache-clear-class-name");
-            if (UtilValidate.isEmpty(this.distributedCacheClearClassName)) this.distributedCacheClearClassName = "org.ofbiz.core.extentity.EntityCacheServices";
+            if (UtilValidate.isEmpty(this.distributedCacheClearClassName)) this.distributedCacheClearClassName = "org.ofbiz.entityext.cache.EntityCacheServices";
             
             this.distributedCacheClearUserLoginId = element.getAttribute("distributed-cache-clear-user-login-id");
             if (UtilValidate.isEmpty(this.distributedCacheClearUserLoginId)) this.distributedCacheClearUserLoginId= "admin";
