@@ -137,6 +137,8 @@
     		tofile="${walib.dir}/${name}.jar" />
     	<copy file="${ofbcore-webapp.jar}"
     		tofile="${walib.dir}/ofbcore-webapp.jar" />
+    	<copy file="${ofbcommonapp.jar}"
+    		tofile="${walib.dir}/ofbcommonapp.jar" />
     </target>
 
     <!-- ================================================================== -->
