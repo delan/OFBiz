@@ -39,10 +39,10 @@ import org.w3c.dom.Element;
  * ServiceEcaCondition
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
-public class ServiceEcaCondition {
+public class ServiceEcaCondition implements java.io.Serializable {
     
     public static final String module = ServiceEcaCondition.class.getName();
 
