@@ -2,6 +2,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/11/26 14:18:41  jonesde
+ * Moved XpdlParser code to XpdlReader in order to restore previous XpdlParser, will be developed in parallel
+ *
  *
  */
 
@@ -384,9 +387,10 @@ public class XpdlReader {
         GenericValue activityValue = delegator.makeValue("WorkflowActivity", null);
         values.add(activityValue);
 
+        String activityId = activityElement.getAttribute("Id");
         activityValue.set("packageId", packageId);
         activityValue.set("processId", processId);
-        activityValue.set("activityId", activityElement.getAttribute("Id"));
+        activityValue.set("activityId", activityId);
         activityValue.set("objectName", activityElement.getAttribute("Name"));
 
         activityValue.set("description", UtilXml.childElementValue(activityElement, "Description"));
@@ -395,6 +399,8 @@ public class XpdlReader {
             activityValue.set("timeLimit", Double.valueOf(limitStr));
 
         //(Route | Implementation)
+        Element routeElement = UtilXml.firstChildElement(activityElement, "Route");
+        Element implementationElement = UtilXml.firstChildElement(activityElement, "Implementation");
 
 
         //Performer?
@@ -456,8 +462,9 @@ public class XpdlReader {
         activityValue.set("documentationUrl", UtilXml.childElementValue(activityElement, "Documentation"));
 
         //TransitionRestrictions?
-
-
+        Element transitionRestrictionsElement = UtilXml.firstChildElement(activityElement, "TransitionRestrictions");
+        List transitionRestrictions = UtilXml.childElementList(transitionRestrictionsElement, "TransitionRestriction");
+        readTransitionRestrictions(transitionRestrictions, packageId, processId, activityId);
     }
 
     protected void readTransitions(List transitions, String packageId, String processId) throws DefinitionParserException {
@@ -474,9 +481,10 @@ public class XpdlReader {
         GenericValue transitionValue = delegator.makeValue("WorkflowTransition", null);
         values.add(transitionValue);
 
+        String transitionId = transitionElement.getAttribute("Id");
         transitionValue.set("packageId", packageId);
         transitionValue.set("processId", processId);
-        transitionValue.set("transitionId", transitionElement.getAttribute("Id"));
+        transitionValue.set("transitionId", transitionId);
         transitionValue.set("fromActivityId", transitionElement.getAttribute("From"));
         transitionValue.set("toActivityId", transitionElement.getAttribute("To"));
 
@@ -508,6 +516,29 @@ public class XpdlReader {
         transitionValue.set("description", UtilXml.childElementValue(transitionElement, "Description"));
     }
 
+    protected void readTransitionRestrictions(List transitionRestrictions, String packageId, String processId, String activityId) throws DefinitionParserException {
+        if (transitionRestrictions == null || transitionRestrictions.size() == 0)
+            return;
+        Iterator transitionRestrictionsIter = transitionRestrictions.iterator();
+        int index = 1;
+        while (transitionRestrictionsIter.hasNext()) {
+            Element transitionRestrictionElement = (Element) transitionRestrictionsIter.next();
+            readTransitionRestriction(transitionRestrictionElement, index, packageId, processId, activityId);
+            index++;
+        }
+    }
+
+    protected void readTransitionRestriction(Element transitionRestrictionElement, int index, String packageId, String processId, String activityId) throws DefinitionParserException {
+        GenericValue transRestrictionValue = delegator.makeValue("WorkflowTransRestriction", null);
+        values.add(transRestrictionValue);
+
+        String restrictionSeqId = Integer.toString(index);
+        transRestrictionValue.set("packageId", packageId);
+        transRestrictionValue.set("processId", processId);
+        transRestrictionValue.set("activityId", activityId);
+        transRestrictionValue.set("restrictionSeqId", restrictionSeqId);
+    }
+    
     // ---------------------------------------------------------
     // RUNTIME, TEST, AND SAMPLE METHODS
     // ---------------------------------------------------------
@@ -522,4 +553,5 @@ public class XpdlReader {
             System.out.println(viter.next().toString());
     }
 }
+
 
