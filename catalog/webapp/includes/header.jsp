@@ -33,7 +33,7 @@
           <ofbiz:if name="userLogin">
             <td class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
           </ofbiz:if>
-          <%-- <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td> --%>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
           <ofbiz:unless name="person">
             <TD width="90%" align=center class='headerCenter'>Welcome!</TD>
           </ofbiz:unless>

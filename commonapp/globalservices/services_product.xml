@@ -81,7 +81,19 @@
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="duplicateProduct" auth="true">
         <description>Duplicate a Product using a new productId</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="newProductId" type="String" mode="IN" optional="false"/>
+        <attribute name="oldProductId" type="String" mode="IN" optional="false"/>
+        <attribute name="duplicatePrices" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateCategoryMembers" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateAssocs" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateAttributes" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateFeatureAppls" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateInventoryItems" type="String" mode="IN" optional="true"/>
+        <attribute name="removePrices" type="String" mode="IN" optional="true"/>
+        <attribute name="removeCategoryMembers" type="String" mode="IN" optional="true"/>
+        <attribute name="removeAssocs" type="String" mode="IN" optional="true"/>
+        <attribute name="removeAttributes" type="String" mode="IN" optional="true"/>
+        <attribute name="removeFeatureAppls" type="String" mode="IN" optional="true"/>
+        <attribute name="removeInventoryItems" type="String" mode="IN" optional="true"/>
     </service>
 
     <!-- Product Price Services -->

@@ -99,17 +99,117 @@
             </else>
         </if-empty>
     </simple-method>
+    
     <simple-method method-name="duplicateProduct" short-description="Duplicate a Product">
         <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run duplicateProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run duplicateProduct you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <!-- look up the old product and clone it -->
-        <field-to-field field-name="productId" map-name="parameters" to-map-name="productFindContext"/>
+        <field-to-field field-name="oldProductId" map-name="parameters" to-field-name="productId" to-map-name="productFindContext"/>
         <find-by-primary-key entity-name="Product" map-name="productFindContext" value-name="oldProduct"/>
         <clone-value value-name="oldProduct" new-value-name="newProduct"/>
         
-        <!-- set the newProductId, and write it to the datasource -->
-        <field-to-field field-name="newProductId" map-name="parameters" to-field-name="productId" to-map-name="newProduct"/>
+        <!-- set the productId, and write it to the datasource -->
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="newProduct"/>
         <create-value value-name="newProduct"/>
+        
+        <!-- induce keywords if autoCreateKeywords is emtpy or Y-->
+        <if-empty field-name="autoCreateKeywords" map-name="newProduct">
+            <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newProduct);]]></call-bsh>
+            <else>
+                <if-compare field-name="autoCreateKeywords" map-name="newProduct" operator="equals" value="Y">
+                    <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newProduct);]]></call-bsh>
+                </if-compare>
+            </else>
+        </if-empty>
+
+        <!-- if requested, duplicate related data as well -->
+        <if-not-empty field-name="duplicatePrices" map-name="parameters">
+            <find-by-and entity-name="ProductPrice" map-name="productFindContext" list-name="foundValues"/>
+            <iterate entry-name="foundValue" list-name="foundValues">
+                <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                <create-value value-name="newTempValue"/>
+            </iterate>
+        </if-not-empty>
+        <if-not-empty field-name="duplicateCategoryMembers" map-name="parameters">
+            <find-by-and entity-name="ProductCategoryMember" map-name="productFindContext" list-name="foundValues"/>
+            <iterate entry-name="foundValue" list-name="foundValues">
+                <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                <create-value value-name="newTempValue"/>
+            </iterate>
+        </if-not-empty>
+        <if-not-empty field-name="duplicateAssocs" map-name="parameters">
+            <find-by-and entity-name="ProductAssoc" map-name="productFindContext" list-name="foundValues"/>
+            <iterate entry-name="foundValue" list-name="foundValues">
+                <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                <create-value value-name="newTempValue"/>
+            </iterate>
+            
+            <!-- small difference here, also do the reverse assocs... -->
+            <field-to-field field-name="oldProductId" map-name="parameters" to-field-name="productIdTo" to-map-name="reverseProductFindContext"/>
+            <find-by-and entity-name="ProductAssoc" map-name="reverseProductFindContext" list-name="foundValues"/>
+            <iterate entry-name="foundValue" list-name="foundValues">
+                <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                <field-to-field field-name="productId" map-name="parameters" to-field-name="productIdTo" to-map-name="newTempValue"/>
+                <create-value value-name="newTempValue"/>
+            </iterate>
+        </if-not-empty>
+        <if-not-empty field-name="duplicateAttributes" map-name="parameters">
+            <find-by-and entity-name="ProductAttribute" map-name="productFindContext" list-name="foundValues"/>
+            <iterate entry-name="foundValue" list-name="foundValues">
+                <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                <create-value value-name="newTempValue"/>
+            </iterate>
+        </if-not-empty>
+        <if-not-empty field-name="duplicateFeatureAppls" map-name="parameters">
+            <find-by-and entity-name="ProductFeatureAppl" map-name="productFindContext" list-name="foundValues"/>
+            <iterate entry-name="foundValue" list-name="foundValues">
+                <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                <create-value value-name="newTempValue"/>
+            </iterate>
+        </if-not-empty>
+        <if-not-empty field-name="duplicateInventoryItems" map-name="parameters">
+            <find-by-and entity-name="InventoryItem" map-name="productFindContext" list-name="foundValues"/>
+            <iterate entry-name="foundValue" list-name="foundValues">
+                <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                
+                <!-- this one is slightly different because it needs a new sequenced inventoryItemId -->
+                <sequenced-id-to-env sequence-name="InventoryItem" env-name="inventoryItemId"/>
+                <to-string field-name="inventoryItemId"/>
+                <env-to-field env-name="inventoryItemId" map-name="newTempValue"/>
+                
+                <create-value value-name="newTempValue"/>
+            </iterate>
+        </if-not-empty>
+        
+        <!-- if requested, remove related data as well -->
+        <if-not-empty field-name="removePrices" map-name="parameters">
+            <remove-by-and entity-name="ProductPrice" map-name="productFindContext"/>
+        </if-not-empty>
+        <if-not-empty field-name="removeCategoryMembers" map-name="parameters">
+            <remove-by-and entity-name="ProductCategoryMember" map-name="productFindContext"/>
+        </if-not-empty>
+        <if-not-empty field-name="removeAssocs" map-name="parameters">
+            <remove-by-and entity-name="ProductAssoc" map-name="productFindContext"/>
+            <!-- small difference here, also do the reverse assocs... -->
+            <field-to-field field-name="oldProductId" map-name="parameters" to-field-name="productIdTo" to-map-name="reverseProductFindContext"/>
+            <remove-by-and entity-name="ProductAssoc" map-name="reverseProductFindContext"/>
+        </if-not-empty>
+        <if-not-empty field-name="removeAttributes" map-name="parameters">
+            <remove-by-and entity-name="ProductAttribute" map-name="productFindContext"/>
+        </if-not-empty>
+        <if-not-empty field-name="removeFeatureAppls" map-name="parameters">
+            <remove-by-and entity-name="ProductFeatureAppl" map-name="productFindContext"/>
+        </if-not-empty>
+        <if-not-empty field-name="removeInventoryItems" map-name="parameters">
+            <remove-by-and entity-name="InventoryItem" map-name="productFindContext"/>
+        </if-not-empty>
     </simple-method>
 </simple-methods>

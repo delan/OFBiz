@@ -415,11 +415,6 @@ function insertImageName(size,ext) {
     <%if (productId != null) {%>
         <br>
         <div class="head2">Duplicate Product</div>
-        <%-- <form action="<ofbiz:url>/DuplicateProduct</ofbiz:url>" method=POST style='margin: 0;'>
-            <INPUT type=hidden name='productId' value='<%=productId%>'>
-            <SPAN class='tabletext'>With New ID:</SPAN>&nbsp;<INPUT type=text size='20' maxlength='20' name='productId'>&nbsp;
-            <INPUT type=submit value='AutoDuplicate'>
-        </form> --%>
         <%if (product != null) {%>
             <form action="<ofbiz:url>/EditProduct</ofbiz:url>" method=POST style='margin: 0;'>
                 <%-- <INPUT type=hidden name='productId' value='<%=productId%>'> --%>
@@ -452,11 +447,37 @@ function insertImageName(size,ext) {
                 <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='chargeShipping' fullattrs="true"/>>
                 <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='autoCreateKeywords' fullattrs="true"/>>
                 <SPAN class='tabletext'>Populate New Form:</SPAN>&nbsp;
-                <INPUT type=submit value='Duplicate'>
+                <INPUT type=submit value='NewForm'>
             </form>
+            <hr class='sepbar'>
+            <form action="<ofbiz:url>/DuplicateProduct</ofbiz:url>" method=POST style='margin: 0;'>
+                <INPUT type=hidden name='oldProductId' value='<%=productId%>'>
+                <div>
+                    <SPAN class='tabletext'>Duplicate/Remove Selected With New ID:</SPAN>
+                    <INPUT type=text size='20' maxlength='20' name='productId'>&nbsp;<INPUT type=submit value='Go!'>
+                </div>
+                <div class='tabletext'>
+                    <b>Duplicate:</b>
+                    Prices&nbsp;<input type=CHECKBOX name='duplicatePrices' value='Y' checked/>
+                    CategoryMembers&nbsp;<input type=CHECKBOX name='duplicateCategoryMembers' value='Y' checked/>
+                    Assocs&nbsp;<input type=CHECKBOX name='duplicateAssocs' value='Y' checked/>
+                    Attributes&nbsp;<input type=CHECKBOX name='duplicateAttributes' value='Y' checked/>
+                    FeatureAppls&nbsp;<input type=CHECKBOX name='duplicateFeatureAppls' value='Y' checked/>
+                    InventoryItems&nbsp;<input type=CHECKBOX name='duplicateInventoryItems' value='Y' checked/>
+                </div>
+                <div class='tabletext'>
+                    <b>Remove:</b>
+                    Prices&nbsp;<input type=CHECKBOX name='removePrices' value='Y'/>
+                    CategoryMembers&nbsp;<input type=CHECKBOX name='removeCategoryMembers' value='Y'/>
+                    Assocs&nbsp;<input type=CHECKBOX name='removeAssocs' value='Y'/>
+                    Attributes&nbsp;<input type=CHECKBOX name='removeAttributes' value='Y'/>
+                    FeatureAppls&nbsp;<input type=CHECKBOX name='removeFeatureAppls' value='Y'/>
+                    InventoryItems&nbsp;<input type=CHECKBOX name='removeInventoryItems' value='Y'/>
+                </div>
+            </form>
+            <br><br>
         <%}%>
     <%}%>
-
 <%}else{%>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>

@@ -189,7 +189,7 @@
         <response name="error" type="view" value="EditProduct"/>
     </request-map>
     <request-map uri="DuplicateProduct"><security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/catalog/ProductEvents.xml" invoke="catalogDuplicateProduct"/>
+        <event type="service" path="" invoke="duplicateProduct"/>
     	<response name="success" type="view" value="EditProduct"/>
     	<response name="error" type="view" value="EditProduct"/>
     </request-map>
