@@ -1246,7 +1246,7 @@ public class GenericDAO {
     
     //get ALL tables from this database
     TreeSet tableNames = this.getTableNames(messages);
-    if(tableNames == null || tableNames.size() == 0) {
+    if(tableNames == null) {
         String message = "Could not get table name information from the database, aborting.";
         if(messages != null) messages.add(message);
         Debug.logError("[GenericDAO.checkDb] " + message);
@@ -1256,7 +1256,7 @@ public class GenericDAO {
     
     //get ALL column info, put into hashmap by table name
     Map colInfo = this.getColumnInfo(tableNames, messages);
-    if(colInfo == null || colInfo.size() == 0) {
+    if(colInfo == null) {
         String message = "Could not get column information from the database, aborting.";
         if(messages != null) messages.add(message);
         Debug.logError("[GenericDAO.checkDb] " + message);
