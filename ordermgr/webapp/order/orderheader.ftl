@@ -439,7 +439,7 @@
                           <div class="tabletext">                         
                             <#if maySplit?upper_case == "N">
                                 Please wait until the entire order is ready before shipping.
-                                <a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">[Allow&nbsp;Split]</a>
+                                <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED"><a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">[Allow&nbsp;Split]</a></#if>
                             <#else>
                                 Please ship items I ordered as they become available (may incur additional shipping charges).
                             </#if>
@@ -508,7 +508,10 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                             <div class="tabletext"><a href="<@ofbizUrl>/OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">View/Edit Delivery Schedule Info</a></div>
+                            <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED">
+                            <#if orderHeader.productStoreId?has_content><div class="tabletext"><a href="<@ofbizUrl>/quickShipOrder?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Order</a></div></#if>
                             <div class="tabletext"><a href="/facility/control/EditShipment?primaryOrderId=${orderId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">New Shipment</a></div>
+                            </#if>
                         </td>
                       </tr>
                   </table>

@@ -47,6 +47,10 @@ context.put("orderStatuses", orderStatuses);
 websites = delegator.findAll("WebSite", UtilMisc.toList("siteName"));
 context.put("webSites", websites);
 
+// get the stores
+stores = delegator.findAll("ProductStore", UtilMisc.toList("storeName"));
+context.put("productStores", stores);
+
 // current role type
 currentRoleTypeId = request.getParameter("roleTypeId");
 if (currentRoleTypeId != null && currentRoleTypeId.length() > 0) {
@@ -72,6 +76,13 @@ currentWebSiteId = request.getParameter("webSiteId");
 if (currentWebSiteId != null && currentWebSiteId.length() > 0) {
     currentWebSite = delegator.findByPrimaryKeyCache("WebSite", UtilMisc.toMap("webSiteId", currentWebSiteId));
     context.put("currentWebSite", currentWebSite);
+}
+
+// current store
+currentProductStoreId = request.getParameter("productStoreId");
+if (currentProductStoreId != null && currentProductStoreId.length() > 0) {
+    currentProductStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", currentProductStoreId));
+    context.put("currentProductStore", currentProductStore);
 }
 
 // create the fromDate for calendar
@@ -153,17 +164,23 @@ if (lookupFlag != null) {
         roleType = request.getParameter("roleTypeId");
         orderType = request.getParameter("orderTypeId");
         orderStatus = request.getParameter("orderStatusId");
+        productStoreId = request.getParameter("productStoreId");
         webSiteId = request.getParameter("webSiteId");
         createdBy = request.getParameter("createdBy");
         billAcct = request.getParameter("billingAccountId");
         minDate = request.getParameter("minDate");
         maxDate = request.getParameter("maxDate");
         
+        if (productStoreId == null) productStoreId = "ANY";
         if (webSiteId == null) webSiteId = "ANY";
         if (roleType == null) roleType = "ANY";
         if (orderType == null) orderType = "ANY";
         if (orderStatus == null) orderStatus = "ANY";
         
+        paramList = paramList + "&productStoreId=" + productStoreId;
+        if (!"ANY".equals(productStoreId)) {           
+            andExprs.add(new EntityExpr("productStoreId", EntityOperator.EQUALS, productStoreId));
+        }         
         paramList = paramList + "&webSiteId=" + webSiteId;
         if (!"ANY".equals(webSiteId)) {           
             andExprs.add(new EntityExpr("webSiteId", EntityOperator.EQUALS, webSiteId));

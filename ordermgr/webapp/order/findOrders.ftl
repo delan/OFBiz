@@ -134,6 +134,22 @@ function lookupOrders() {
                 <td><input type='text' class='inputBox' name='createdBy' value='${requestParameters.createdBy?if_exists}'></td>
               </tr>
               <tr>
+                <td width='25%' align='right'><div class='tableheadtext'>Store:</div></td>
+                <td width='5%'>&nbsp;</td>
+                <td>
+                  <select name='productStoreId' class='selectBox'>
+                    <#if currentProductStore?has_content>
+                    <option value="${currentProductStore.productStoreId}">${currentProductStore.storeName}</option>
+                    <option value="${currentProductStore.productStoreId}">---</option>
+                    </#if>
+                    <option value="ANY">Any Store</option>                
+                    <#list productStores as store>
+                      <option value="${store.productStoreId}">${store.storeName}</option>
+                    </#list>
+                  </select>
+                </td>
+              </tr>
+              <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Web Site:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
