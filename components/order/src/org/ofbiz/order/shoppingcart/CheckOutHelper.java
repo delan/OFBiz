@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.24 2004/07/09 05:43:08 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.25 2004/07/18 16:15:17 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -66,7 +66,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -74,9 +74,9 @@ public class CheckOutHelper {
     public static final String module = CheckOutHelper.class.getName();
     public static final String resource = "OrderUiLabels";
 
-    private ShoppingCart cart;
-    private GenericDelegator delegator;
-    private LocalDispatcher dispatcher;
+    protected LocalDispatcher dispatcher = null;
+    protected GenericDelegator delegator = null;
+    protected ShoppingCart cart = null;
 
     public CheckOutHelper(LocalDispatcher dispatcher, GenericDelegator delegator, ShoppingCart cart) {
         this.delegator = delegator;
@@ -147,7 +147,7 @@ public class CheckOutHelper {
     }
 
     private List setCheckOutShippingOptionsInternal(String shippingMethod, String correspondingPoId, String shippingInstructions,
-        String orderAdditionalEmails, String maySplit, String giftMessage, String isGift) {
+            String orderAdditionalEmails, String maySplit, String giftMessage, String isGift) {
         List errorMessages = new ArrayList();
         String errMsg = null;
 
@@ -244,7 +244,8 @@ public class CheckOutHelper {
                 double accountCredit = this.availableAccountBalance(cart.getBillingAccountId());
                 // make sure we have enough to cover; if this is selected we don't have other payment methods
                 if (cart.getGrandTotal() > accountCredit) {
-                    errMsg = UtilProperties.getMessage(resource,"checkhelper.insufficient_credit_available_on_account", (cart != null ? cart.getLocale() : Locale.getDefault()));
+                    errMsg = UtilProperties.getMessage(resource,"checkhelper.insufficient_credit_available_on_account",
+                            (cart != null ? cart.getLocale() : Locale.getDefault()));
                     errorMessages.add(errMsg);
                 }
             }
@@ -270,7 +271,8 @@ public class CheckOutHelper {
                 }
             }
         } else {
-            errMsg = UtilProperties.getMessage(resource,"checkhelper.select_method_of_payment", (cart != null ? cart.getLocale() : Locale.getDefault()));
+            errMsg = UtilProperties.getMessage(resource,"checkhelper.select_method_of_payment",
+                    (cart != null ? cart.getLocale() : Locale.getDefault()));
             errorMessages.add(errMsg);
         }
 

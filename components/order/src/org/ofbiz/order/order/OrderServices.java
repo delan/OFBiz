@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.42 2004/07/03 19:54:23 jonesde Exp $
+ * $Id: OrderServices.java,v 1.43 2004/07/18 16:15:17 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -76,7 +76,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.42 $
+ * @version    $Revision: 1.43 $
  * @since      2.0
  */
 
@@ -958,10 +958,14 @@ public class OrderServices {
             // now set the new order status
             if (newStatus != null) {
                 Map serviceContext = UtilMisc.toMap("orderId", orderId, "statusId", newStatus, "userLogin", userLogin);
+                Map newSttsResult = null;
                 try {
-                    Map result = dispatcher.runSync("changeOrderStatus", serviceContext);
+                    newSttsResult = dispatcher.runSync("changeOrderStatus", serviceContext);
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Problem calling the changeOrderStatus service", module);
+                }
+                if (ServiceUtil.isError(newSttsResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(newSttsResult));
                 }
             }
         } else {
@@ -2760,7 +2764,7 @@ public class OrderServices {
 
                 // since there is no payments required; order is ready for processing/shipment
                 if (createdOrderId != null) {
-                    boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, createdOrderId);
+                    OrderChangeHelper.approveOrder(dispatcher, userLogin, createdOrderId);
                 }
             }
         }
@@ -2911,24 +2915,6 @@ public class OrderServices {
             if (orderStatus.equals("ORDER_CREATED")) {
                 // first check for un-paid orders
                 Timestamp orderDate = orderHeader.getTimestamp("entryDate");
-                //appears to not be used: String webSiteId = orderHeader.getString("webSiteId");
-
-                // name of the payment.properties file to use
-                String propsFile = null;
-
-                // need the payment.properties file for the website
-                Map lookupFields = UtilMisc.toMap("productStoreId", orderHeader.getString("productStoreId"), "paymentMethodTypeId", "EXT_OFFLINE", "paymentServiceTypeEnumId", "_NA_");
-                GenericValue paymentSettings = null;
-                try {
-                    paymentSettings = delegator.findByPrimaryKey("ProductStorePaymentSetting", lookupFields);
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Cannot get product store payment setting record");
-                }
-                if (paymentSettings == null || paymentSettings.get("paymentPropertiesPath") == null) {
-                    propsFile = "payment.properties";
-                } else {
-                    propsFile = paymentSettings.getString("paymentPropertiesPath");
-                }
 
                 // need the store for the order
                 GenericValue productStore = null;
