@@ -31,5 +31,6 @@ ${authInfoString}
 
 
 [ORDER BARCODE]
+
 ${CENTER}${DOUBLE_HEIGHT}${BOLD}THANK-YOU
 
