@@ -1,5 +1,5 @@
 /*
- * $Id: contentaddprep.bsh,v 1.1 2004/06/06 08:02:49 jonesde Exp $
+ * $Id: contentaddprep.bsh,v 1.2 2004/06/07 19:44:16 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  */
@@ -82,7 +82,10 @@ singleWrapper.putInContext("contentIdTo", contentIdTo);
 //singleWrapper.putInContext("ownerContentId", contentIdTo);
 summaryDataResourceTypeId = page.getProperty("summaryDataResourceTypeId");
 singleWrapper.putInContext("summaryDataResourceTypeId", summaryDataResourceTypeId);
-singleWrapper.putInContext("targetOperation", "CONTENT_CREATE");
+targetOperation = page.getProperty("targetOperation");
+if (UtilValidate.isEmpty(targetOperation))
+    targetOperation = "CONTENT_CREATE";
+singleWrapper.putInContext("targetOperation", targetOperation);
 singleWrapper.putInContext("contentTypeId", "DOCUMENT");
 contentPurpose = page.getProperty("contentPurpose");
 if (UtilValidate.isEmpty(contentPurpose))

@@ -13,11 +13,11 @@
     <property name="summaryDataResourceTypeId"></property>    
     <property name="priKeyName">contentId</property>    
     <property name="permissionIdName">forumId</property>    
-    <property name="permittedOperations">CONTENT_CREATE</property>    
+    <property name="permittedOperations">HAS_USER_ROLE</property>    
     <property name="entityOperation">_CREATE</property>    
     <!-- no contentAssocTypeId is specified because the content will not be linked to a publish point when created. That is done in a separate operation -->
     <property name="contentAssocTypeId">PUBLISH_LINK</property>    
-    <property name="targetOperation">CONTENT_CREATE</property>    
+    <property name="targetOperation">HAS_USER_ROLE</property>    
     <property name="requiredRoles">BLOG_AUTHOR|BLOG_EDITOR|BLOG_ADMIN|BLOG_PUBLISHER</property>    
     <property name="contentTypeId">DOCUMENT</property>    
     <property name="contentPurposeTypeId">ARTICLE</property>    
