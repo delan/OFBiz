@@ -27,6 +27,7 @@
     <SurveyQuestion surveyQuestionId="1038" surveyQuestionCategoryId="1001" surveyQuestionTypeId="SEPERATOR_LINE" lastUpdatedStamp="2003-12-05 19:21:53.36" lastUpdatedTxStamp="2003-12-05 19:21:53.36"/>
     <SurveyQuestion surveyQuestionId="1040" surveyQuestionCategoryId="1002" surveyQuestionTypeId="OPTION" question="Which side should the mini-poll box show?" lastUpdatedStamp="2003-12-05 19:12:29.893" lastUpdatedTxStamp="2003-12-05 19:12:29.893"/>
     <SurveyQuestion surveyQuestionId="1041" surveyQuestionCategoryId="1002" surveyQuestionTypeId="OPTION" question="Which hand do you use your mouse with?" lastUpdatedStamp="2003-12-05 19:12:29.893" lastUpdatedTxStamp="2003-12-05 19:12:29.893"/>
+    <SurveyQuestion surveyQuestionId="1042" surveyQuestionCategoryId="1001" surveyQuestionTypeId="CONTENT" question="Do you have a picture you would like to attach?" lastUpdatedStamp="2004-09-14 17:59:27.115" lastUpdatedTxStamp="2004-09-14 17:59:27.115"/>
 
     <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1000" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="1" lastUpdatedStamp="2003-12-04 21:40:23.233" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
     <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1001" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="2" lastUpdatedStamp="2003-12-04 21:40:23.239" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
@@ -41,8 +42,9 @@
     <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1033" fromDate="2001-01-01 00:00:00.0" requiredField="N" sequenceNum="5" lastUpdatedStamp="2003-12-05 19:21:18.896" lastUpdatedTxStamp="2003-12-05 19:21:18.896"/>
     <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1034" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="6" lastUpdatedStamp="2003-12-05 19:21:23.89" lastUpdatedTxStamp="2003-12-05 19:21:23.89"/>
     <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1038" fromDate="2001-01-01 00:00:00.0" requiredField="N" sequenceNum="7" lastUpdatedStamp="2003-12-05 19:21:59.761" lastUpdatedTxStamp="2003-12-05 19:21:59.761"/>
-    <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1036" fromDate="2001-01-01 00:00:00.0" requiredField="N" sequenceNum="9" lastUpdatedStamp="2003-12-05 19:22:03.015" lastUpdatedTxStamp="2003-12-05 19:22:03.015"/>
-    <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1035" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="8" lastUpdatedStamp="2003-12-05 19:22:07.669" lastUpdatedTxStamp="2003-12-05 19:22:07.669"/>
+    <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1036" fromDate="2001-01-01 00:00:00.0" requiredField="N" sequenceNum="10" lastUpdatedStamp="2003-12-05 19:22:03.015" lastUpdatedTxStamp="2003-12-05 19:22:03.015"/>
+    <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1035" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="9" lastUpdatedStamp="2003-12-05 19:22:07.669" lastUpdatedTxStamp="2003-12-05 19:22:07.669"/>
+    <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1042" fromDate="2001-01-01 00:00:00.0" requiredField="N" sequenceNum="8" lastUpdatedStamp="2004-09-14 17:59:47.669" lastUpdatedTxStamp="2004-09-14 17:59:47.669"/>
     <SurveyQuestionAppl surveyId="1003" surveyQuestionId="1040" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="1" lastUpdatedStamp="2003-12-04 21:40:23.233" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
     <SurveyQuestionAppl surveyId="1004" surveyQuestionId="1041" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="1" lastUpdatedStamp="2003-12-04 21:40:23.233" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
 
