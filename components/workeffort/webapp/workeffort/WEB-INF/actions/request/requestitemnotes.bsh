@@ -20,35 +20,28 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
  
-import java.util.*;
-import org.ofbiz.security.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
-import org.ofbiz.service.*;
-import org.ofbiz.workeffort.workeffort.*;
 
 delegator = request.getAttribute("delegator");
 
 String custRequestId = request.getParameter("custRequestId");
 String custRequestItemSeqId = request.getParameter("custRequestItemSeqId");
-String showAll = request.getParameter("showAll");	
-if (showAll == null) showAll = "false";
-context.put("showAll",showAll);
-
-GenericValue custRequestItem = null;
-if (custRequestId != null && custRequestItemSeqId != null) {
-	custRequestItem = delegator.findByPrimaryKey("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId));
-   	if (custRequestItem != null) context.put("custRequestItem", custRequestItem);
-}	
+String showAll = request.getParameter("showAll");
+if (showAll == null) {
+    showAll = "false";
+}
+context.put("showAll", showAll);
 
 Map fields = UtilMisc.toMap("custRequestId", custRequestId);
-if (showAll.equals("false")) fields.put("custRequestItemSeqId", custRequestItemSeqId);
+if (showAll.equals("false")) {
+    fields.put("custRequestItemSeqId", custRequestItemSeqId);
+}
 List notes = delegator.findByAnd("CustRequestItemNoteView", fields, UtilMisc.toList("-noteDateTime"));
-if (notes != null && notes.size() > 0) context.put("notes", notes);	
-
-context.put("custRequestId",custRequestId);
-context.put("custRequestItemSeqId",custRequestItemSeqId);
+if (notes != null && notes.size() > 0) {
+    context.put("notes", notes);
+}
