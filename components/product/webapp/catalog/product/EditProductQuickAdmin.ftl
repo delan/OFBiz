@@ -129,11 +129,10 @@
                 <td>&nbsp;</td>
             </tr>
         <#assign idx=0/>
-        <#list selectableFeatureAppls as selFeatAppl>
-            <#assign selFeature = selFeatAppl.getRelatedOne("ProductFeature")/>
+        <#list distinguishingFeatures as distinguishingFeature>
             <tr>
-                <td><a href="<@ofbizUrl>/quickAdminRemoveProductFeature?productId=${productId}&productFeatureId=${selFeature.productFeatureId}</@ofbizUrl>">[x]</a></td>
-                <td>[${selFeature.productFeatureId}] ${productFeatureTypeLookup.get(selFeature.productFeatureId).description}</td>
+                <td><a href="<@ofbizUrl>/quickAdminRemoveProductFeature?productId=${productId}&productFeatureId=${distinguishingFeature.productFeatureId}</@ofbizUrl>">[x]</a></td>
+                <td>[${distinguishingFeature.productFeatureId}] ${productFeatureTypeLookup.get(distinguishingFeature.productFeatureId).description}: ${distinguishingFeature.description} </td>
             </tr>
         </#list>
 

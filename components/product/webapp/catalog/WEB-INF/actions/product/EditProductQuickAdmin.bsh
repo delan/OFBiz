@@ -25,6 +25,7 @@
  */
 
 import java.util.*;
+import java.util.Collection.*;
 import java.sql.*;
 import java.io.*;
 import org.ofbiz.entity.*;
@@ -156,11 +157,23 @@ if (product != null) {
         selectableFeatureLookup.put(selectableFeature.getString("productFeatureId"), selectableFeature);
 
     }
-    context.put("productFeatureTypeLookup", productFeatureTypeLookup);
     context.put("selectableFeatureLookup", selectableFeatureLookup);
     context.put("selectableFeatureAppls", selectableFeatureAppls);
 
-    // get feature types that are deletable from selectable features section
+    if ("Y".equalsIgnoreCase(product.getString("isVariant"))) {
+        Set distinguishingFeatures = ProductWorker.getVariantDistinguishingFeatures(product);
+        context.put("distinguishingFeatures", distinguishingFeatures);
+        for (int i = 0; i < distinguishingFeatures.size(); i++) {
+            GenericValue distFeature = (GenericValue)distinguishingFeatures.toArray()[i];
+            GenericValue featureType = distFeature.getRelatedOne("ProductFeatureType");
+            if (!productFeatureTypeLookup.containsKey(distFeature.getString("productFeatureId"))) {
+                productFeatureTypeLookup.put(distFeature.getString("productFeatureId"), featureType);
+            }
+        }
+    }
+    context.put("productFeatureTypeLookup", productFeatureTypeLookup);
+
+    // get feature types that are deleteable from selectable features section
     ArrayList usedFeatureTypes = new ArrayList();
     List prodFeatures = product.getRelatedMulti("ProductFeatureAppl", "ProductFeature");
     Iterator featureTypeIter = featureTypes.iterator();
