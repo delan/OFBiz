@@ -1,5 +1,5 @@
 /*
- * $Id: GenericValue.java,v 1.5 2004/04/23 15:05:06 doogie Exp $
+ * $Id: GenericValue.java,v 1.6 2004/07/07 05:56:52 doogie Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -41,10 +41,12 @@ import org.ofbiz.entity.util.EntityUtil;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     Eric Pabst
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      1.0
  */
 public class GenericValue extends GenericEntity {
+
+    public static final GenericValue NULL_VALUE = new NullGenericValue();
 
     /** Hashtable to cache various related entity collections */
     public transient Map relatedCache = null;
@@ -57,6 +59,8 @@ public class GenericValue extends GenericEntity {
      * no have this Map, ie it will be null to not take up memory.
      */
     protected Map originalDbValues = null;
+
+    protected GenericValue() { }
 
     /** Creates new GenericValue */
     public GenericValue(ModelEntity modelEntity) {
@@ -395,4 +399,6 @@ public class GenericValue extends GenericEntity {
         newEntity.setDelegator(internalDelegator);
         return newEntity;
     }
+
+    protected static class NullGenericValue extends GenericValue implements NULL { };
 }
