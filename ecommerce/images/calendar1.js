@@ -18,6 +18,8 @@ var BUL_TIMECOMPONENT = false;
 var BUL_YEARSCROLL = true;
 
 var calendars = [];
+var lookups = [];
+
 var RE_NUM = /^\-?\d+$/;
 
 var webPath = "";
@@ -190,6 +192,38 @@ function cal_prs_time1 (str_time, dt_date) {
 }
 
 function cal_error (str_message) {
+	alert (str_message);
+	return null;
+}
+
+function call_fieldlookup(target, viewName, formName) {   
+    var fieldLookup = new fieldLookup1(target);  
+    fieldLookup.popup(viewName, formName);
+}
+
+function fieldLookup1(obj_target) {
+
+	// assing methods
+	this.popup    = lookup_popup1;
+
+	// validate input parameters
+	if (!obj_target)
+		return lookup_error("Error calling the field lookup: no target control specified");
+	if (obj_target.value == null)
+		return cal_error("Error calling the field lookup: parameter specified is not valid tardet control");
+	this.target = obj_target;	
+	
+	// register in global collections
+	this.id = lookups.length;
+	lookups[this.id] = this;
+}
+
+function lookup_popup1 (view_name, form_name) {
+	var obj_lookupwindow = window.open(view_name + '?formName=' + form_name + '&id=' + this.id,'FieldLookup', 'width=150,height=150,status=no,resizable=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
+	obj_lookupwindow.opener = window;
+	obj_lookupwindow.focus();
+}
+function lookup_error (str_message) {
 	alert (str_message);
 	return null;
 }
