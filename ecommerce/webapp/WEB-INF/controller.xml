@@ -213,13 +213,22 @@
         <response name="success" type="request" value="initiateOrderWorkflow"/>
         <response name="error" type="view" value="checkout"/>
     </request-map>
-    
+
     <request-map uri="initiateOrderWorkflow">
         <security https="true" auth="true" direct-request="false"/>
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="initiateOrderWorkflow"/>
-        <response name="success" type="request" value="renderconfirmorder"/>
+        <response name="success" type="request" value="checkExternalPayment"/>
         <response name="error" type="view" value="checkout"/>
-    </request-map>    
+    </request-map>   
+    
+    <request-map uri="checkExternalPayment">
+    	<security https="true" auth="true" direct-request="false"/>
+    	<event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="checkExternalPayment"/>
+    	<response name="none" type="request" value="renderconfirmorder"/>
+    	<response name="worldpay" type="request" value="callWorldpay"/>
+    	<response name="paypal" type="request" value="callPayPal"/>
+    	<response name="error" type="view" value="checkout"/>
+    </request-map> 
 
     <request-map uri="renderconfirmorder">
         <security https="true" auth="true"/>
@@ -234,7 +243,14 @@
         <response name="success" type="view" value="showconfirmorder"/>
         <response name="error" type="view" value="showconfirmorder"/>
     </request-map>
-
+    
+    <request-map uri="callWorldPay">
+    	<security https="true" auth="true"/>
+    	<event type="java" path="org.ofbiz.commonapp.thirdparty.worldpay.WorldPayEvents" invoke="WorldPayEvents"/>
+    	<response name="success" type="none"/>
+    	<response name="error" type="view" value="checkout"/>
+    </request-map>
+    
     <request-map uri="confirmorder">
         <response name="success" type="view" value="confirmorder"/>
     </request-map>
