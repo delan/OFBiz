@@ -328,7 +328,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"/>
         <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localfirebird" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
-        <!-- <tyrex-dataSource dataSource-name="firebird" isolation-level="ReadCommitted"/>  -->    
+        <!-- <tyrex-dataSource dataSource-name="firebird" isolation-level="ReadCommitted"/>  -->
     </datasource>
 
     <datasource name="localmssql"
