@@ -31,6 +31,7 @@ delegator = request.getAttribute("delegator");
 facilityId = request.getParameter("facilityId"); 
 purchaseOrderId = request.getParameter("purchaseOrderId");
 productId = request.getParameter("productId");
+shipmentId = request.getParameter("shipmentId");
 
 facility = null;
 if (facilityId != null) {
@@ -50,10 +51,41 @@ if (productId != null) {
 }
 context.put("product", product);
 
+shipments = null;
+if (purchaseOrder != null && shipmentId == null) {
+    issuances = delegator.findByAnd("ItemIssuance", UtilMisc.toMap("orderId", purchaseOrderId));    
+    if (issuances != null) {
+        shipments = new TreeSet();
+        issueIter = issuances.iterator();
+        while (issueIter.hasNext()) {
+            issuance = issueIter.next();
+            shipment = issuance.getRelatedOne("Shipment");
+            shipments.add(shipment);
+        }        
+    }
+}
+context.put("shipments", shipments);
+
+shipment = null;
+if (shipmentId != null && !shipmentId.equals("_NA_")) {
+    shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
+}
+context.put("shipment", shipment);
+
 purchaseOrderItems = null;
 if (purchaseOrder != null) {
     if (product != null) {
-        purchaseOrderItems = purchaseOrder.getRelated("OrderItem", UtilMisc.toMap("productId", productId), null);        
+        purchaseOrderItems = purchaseOrder.getRelated("OrderItem", UtilMisc.toMap("productId", productId), null);
+    } else if (shipment != null) {
+        orderItems = purchaseOrder.getRelated("OrderItem");
+        issuances = shipment.getRelated("ItemIssuance", UtilMisc.toMap("orderId", purchaseOrderId), null);
+        issueIter = issuances.iterator();
+        exprs = new ArrayList();
+        while (issueIter.hasNext()) {
+            issuance = issueIter.next();
+            exprs.add(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, issuance.getString("orderItemSeqId")));                                
+        }               
+        purchaseOrderItems = EntityUtil.filterByOr(orderItems, exprs);
     } else {    
         purchaseOrderItems = purchaseOrder.getRelated("OrderItem");
     }

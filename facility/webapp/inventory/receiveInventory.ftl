@@ -274,6 +274,64 @@ function removeSelected() {
     </script>
   </form>
   
+<#-- Select Shipment Screen -->
+<#elseif requestParameters.initialSelected?exists && !requestParameters.shipmentId?exists && shipments?has_content>
+  <form method="post" action="<@ofbizUrl>/ReceiveInventory</@ofbizUrl>" name='receiveform' style='margin: 0;'>
+    <#-- general request fields -->
+    <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">   
+    <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId?if_exists}">
+    <input type="hidden" name="initialSelected" value="Y">
+    <table width="100%" border='0' cellpadding='2' cellspacing='0'>
+      <tr>
+        <td>
+          <div class="head3">Select Shipment To Receive</div>
+        </td>
+      </tr>
+      <#list shipments as shipment>
+        <#assign originFacility = shipment.getRelatedOneCache("OriginFacility")?if_exists>
+        <#assign destinationFacility = shipment.getRelatedOneCache("DestinationFacility")?if_exists>
+        <#assign statusItem = shipment.getRelatedOneCache("StatusItem")>
+        <#assign shipmentType = shipment.getRelatedOneCache("ShipmentType")>      
+        <#assign shipmentDate = shipment.estimatedArrivalDate?if_exists>       
+        <tr>
+          <td><hr class="sepbar"></td>
+        </tr> 
+        <tr>
+          <td>
+            <table width="100%" border='0' cellpadding='2' cellspacing='0'>
+              <tr>
+                <td width="5%" nowrap><input type="radio" name="shipmentId" value="${shipment.shipmentId}"></td>
+                <td width="5%" nowrap><div class="tabletext">${shipment.shipmentId}</div></td>
+                <td><div class="tabletext">${shipmentType.description?default(shipmentType.shipmentTypeId?default(""))}</div></td>
+                <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
+                <td><div class="tabletext">${(originFacility.facilityName)?if_exists} [${shipment.originFacilityId?if_exists}]</div></td>
+                <td><div class="tabletext">${(destinationFacility.facilityName)?if_exists} [${shipment.destinationFacilityId?if_exists}]</div></td>
+                <td><div class="tabletext"><nobr>${(shipment.estimatedArrivalDate.toString())?if_exists}</nobr></div></td>                                                          
+              </tr>              
+            </table>
+          </td>
+        </tr>
+      </#list>
+      <tr>
+        <td><hr class="sepbar"></td>
+      </tr>
+      <tr>
+        <td>
+          <table width="100%" border='0' cellpadding='2' cellspacing='0'>
+            <tr>
+              <td width="5%" nowrap><input type="radio" name="shipmentId" value="_NA_"></td>
+              <td width="5%" nowrap><div class="tabletext">No specific shipment (Receive entire PO)</div></td>
+              <td colspan="5"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>&nbsp;<a href="javascript:document.receiveform.submit();" class="buttontext">Receive Selected Shipment</a></td>
+      </tr>
+    </table>
+  </form>
+  
 <#-- Multi-Item PO Receiving -->
 <#elseif requestParameters.initialSelected?exists && purchaseOrder?has_content>
   <form method="post" action="<@ofbizUrl>/receiveInventoryProduct</@ofbizUrl>" name='receiveform' style='margin: 0;'>
@@ -297,9 +355,8 @@ function removeSelected() {
           <td align="right">
             <span class="tableheadtext">Select All</span>&nbsp;
             <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
-          </td>
-        </tr>
-               
+          </td>            
+        </tr>               
         <#list purchaseOrderItems as orderItem>
           <#assign defaultQuantity = orderItem.quantity - receivedQuantities[orderItem.orderItemSeqId]?double>
           <#if 0 < defaultQuantity>
