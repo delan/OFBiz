@@ -1,5 +1,5 @@
 /*
- * $Id: HttpClient.java,v 1.3 2003/11/03 18:04:39 ajzeneski Exp $
+ * $Id: HttpClient.java,v 1.4 2003/11/13 04:19:31 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import java.util.Set;
  * Send HTTP GET/POST requests.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class HttpClient {
@@ -48,6 +48,7 @@ public class HttpClient {
     public static final String module = HttpClient.class.getName();
     
     private int timeout = 30000;
+    private boolean debug = false;
     private boolean lineFeed = true;
     private boolean followRedirects = true;
     
@@ -97,6 +98,11 @@ public class HttpClient {
         this.url = url.toExternalForm();
         this.parameters = parameters;
         this.headers = headers;
+    }
+
+    /** When true overrides Debug.verboseOn() and forces debugging for this instance */
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 
     /** Sets the timeout for waiting for the connection (default 30sec) */
@@ -262,15 +268,13 @@ public class HttpClient {
 
     private String sendHttpRequest(String method) throws HttpClientException {
         InputStream in = sendHttpRequestStream(method);
-
         if (in == null) return null;
 
         StringBuffer buf = new StringBuffer();
-
         try {
-            if (Debug.verboseOn()) {
+            if (Debug.verboseOn() || debug) {
                 try {
-                    Debug.logVerbose("ContentEncoding: " + con.getContentEncoding() + "; ContentType: " + 
+                    Debug.log("ContentEncoding: " + con.getContentEncoding() + "; ContentType: " +
                             con.getContentType() + " or: " + URLConnection.guessContentTypeFromStream(in), module);                            
                 } catch (IOException ioe) {
                     Debug.logWarning(ioe, "Caught exception printing content debugging information", module);
@@ -287,7 +291,7 @@ public class HttpClient {
                 }
             }
             
-            if (Debug.verboseOn()) Debug.logVerbose("Content-Type: " + contentType, module);
+            if (Debug.verboseOn() || debug) Debug.log("Content-Type: " + contentType, module);
             
             if (contentType != null) {
                 contentType = contentType.toUpperCase();
@@ -300,15 +304,15 @@ public class HttpClient {
                 }
                 
                 if (charset != null) charset = charset.trim();
-                if (Debug.infoOn()) Debug.logInfo("Getting text from HttpClient with charset: " + charset, module);
+                if (Debug.verboseOn() || debug) Debug.log("Getting text from HttpClient with charset: " + charset, module);
             }
             
             BufferedReader post = new BufferedReader(charset == null ? new InputStreamReader(in) : new InputStreamReader(in, charset));
             String line = new String();
 
-            if (Debug.verboseOn()) Debug.logVerbose("---- HttpClient Response Content ----", module);
+            if (Debug.verboseOn() || debug) Debug.log("---- HttpClient Response Content ----", module);
             while ((line = post.readLine()) != null) {
-                if (Debug.verboseOn()) Debug.logVerbose("[HttpClient] : " + line, module);
+                if (Debug.verboseOn() || debug) Debug.log("[HttpClient] : " + line, module);
                 buf.append(line);
                 if (lineFeed) {
                     buf.append("\n");
@@ -346,15 +350,21 @@ public class HttpClient {
         try {
             requestUrl = new URL(url);
             con = URLConnector.openConnection(requestUrl, timeout, clientCertAlias);
-            if ((con instanceof HttpURLConnection))                 
+            if (Debug.verboseOn() || debug) Debug.log("Connection opened to : " + requestUrl.toExternalForm(), module);
+
+            if ((con instanceof HttpURLConnection)) {
                 ((HttpURLConnection) con).setInstanceFollowRedirects(followRedirects);
-            
+                if (Debug.verboseOn() || debug) Debug.log("Connection is of type HttpURLConnection", module);
+            }
+
             con.setDoOutput(true);
             con.setUseCaches(false);
+            if (Debug.verboseOn() || debug) Debug.log("Do Input = true / Use Caches = false", module);
 
             if (method.equalsIgnoreCase("post")) {
                 con.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
                 con.setDoInput(true);
+                if (Debug.verboseOn() || debug) Debug.log("Set content type to : application/x-www-form-urlencoded", module);
             }
 
             if (headers != null && headers.size() > 0) {
@@ -365,14 +375,27 @@ public class HttpClient {
                     String headerName = (String) i.next();
                     String headerValue = (String) headers.get(headerName);
                     con.setRequestProperty(headerName, headerValue);
+                    if (Debug.verboseOn() || debug) Debug.log("Header : " + headerName + " -> " + headerValue, module);
                 }
+            } else {
+                if (Debug.verboseOn() || debug) Debug.log("No headers to set", module);
             }
 
             if (method.equalsIgnoreCase("post")) {
                 DataOutputStream out = new DataOutputStream(con.getOutputStream());
+                if (Debug.verboseOn() || debug) Debug.log("Opened output stream", module);
+
                 out.writeBytes(arguments);
+                if (Debug.verboseOn() || debug) Debug.log("Wrote arguements (parameters) : " + arguments, module);
+
                 out.flush();
                 out.close();
+                if (Debug.verboseOn() || debug) Debug.log("Flushed and closed buffer", module);
+            }
+
+            if (Debug.verboseOn() || debug) {
+                Map headerFields = con.getHeaderFields();
+                Debug.log("Header Fields : " + headerFields, module);
             }
 
             in = con.getInputStream();
