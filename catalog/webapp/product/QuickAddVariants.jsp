@@ -172,7 +172,7 @@
                             }
 
                             if (hasAllFeatures) {
-                                %>"<b><%=productAssoc.getString("productIdTo")%></b>"&nbsp;<%
+                                %>[<a href="<ofbiz:url>/EditProduct?productId=<%=productAssoc.getString("productIdTo")%></ofbiz:url>" class="buttontext"><%=productAssoc.getString("productIdTo")%></a>] &nbsp;<%
                             }
                         }
                     }
