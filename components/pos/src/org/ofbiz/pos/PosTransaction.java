@@ -561,7 +561,7 @@ public class PosTransaction implements Serializable {
 
                 XModel line = Journal.appendNode(model, "tr", "", "");
                 Journal.appendNode(line, "td", "sku", item.getProductId());
-                Journal.appendNode(line, "td", "desc", item.getDescription());
+                Journal.appendNode(line, "td", "desc", item.getName());
                 Journal.appendNode(line, "td", "qty", UtilFormatOut.formatQuantity(quantity));
                 Journal.appendNode(line, "td", "price", UtilFormatOut.formatPrice(subTotal));
                 Journal.appendNode(line, "td", "index", new Integer(cart.getItemIndex(item)).toString());
