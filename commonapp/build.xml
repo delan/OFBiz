@@ -65,7 +65,8 @@
             <fileset dir="${extlib.dir}/scripting" includes="*.jar"/>
             <fileset dir="${extlib.dir}/datavision" includes="*.jar"/>
             <fileset dir="${extlib.dir}/jasperreports" includes="*.jar"/>
-            <fileset dir="${extlib.dir}/weka" includes="*.jar"/>            
+            <fileset dir="${extlib.dir}/weka" includes="*.jar"/>   
+            <fileset dir="${extlib.dir}/worldpay" includes="*.jar"/>         
         </path>
     </target>
 
@@ -116,8 +117,7 @@
             <exclude name="org/ofbiz/commonapp/thirdparty/cybersource/**"/> 
             <exclude name="org/ofbiz/commonapp/thirdparty/verisign/**"/>
             <exclude name="org/ofbiz/commonapp/thirdparty/taxware/**"/> 
-            <exclude name="org/ofbiz/commonapp/thirdparty/paymentech/**"/> 
-            <exclude name="org/ofbiz/commonapp/thirdparty/worldpay/**"/>
+            <exclude name="org/ofbiz/commonapp/thirdparty/paymentech/**"/>           
         </javac>
         
         <!-- also copy all .xml, .bsh & .logic files to classpath directory -->
