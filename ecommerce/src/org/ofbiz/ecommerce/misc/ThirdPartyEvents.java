@@ -128,7 +128,7 @@ public class ThirdPartyEvents {
                 else {
                     //no distributorId is available
                     Debug.log("No distributor in session or already associated with user " + userLogin.getString("partyId"));
-                    return "error";
+                    return "success";
                 }
             }
             else {
@@ -140,7 +140,7 @@ public class ThirdPartyEvents {
         else {
             //not logged in
             Debug.log("Cannot associate distributor since not logged in yet");
-            return "error";
+            return "success";
         }
     }
     
@@ -195,7 +195,7 @@ public class ThirdPartyEvents {
                 else {
                     //no distributorId is available
                     Debug.log("No affiliate in session or already associated with user " + userLogin.getString("partyId"));
-                    return "error";
+                    return "success";
                 }
             }
             else {
@@ -207,7 +207,7 @@ public class ThirdPartyEvents {
         else {
             //not logged in
             Debug.log("Cannot associate affiliate since not logged in yet");
-            return "error";
+            return "success";
         }
     }
     
