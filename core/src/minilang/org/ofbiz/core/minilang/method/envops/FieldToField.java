@@ -84,6 +84,9 @@ public class FieldToField extends MethodOperation {
             return true;
         }
         
+        //note that going to an env field will only work if it came from an env 
+        // field because if not specified the to-map-name will be set to the map-name
+        //to go from a map field to an env field, use the field-to-env operation
         Map toMap = null;
         if (toMapName != null && toMapName.length() > 0) {
             toMap = (Map) methodContext.getEnv(toMapName);
@@ -93,7 +96,6 @@ public class FieldToField extends MethodOperation {
                 methodContext.putEnv(toMapName, toMap);
             }
             toMap.put(toFieldName, fieldVal);
-            
         } else {
             // no to-map, so put in env
             methodContext.putEnv(toFieldName, fieldVal);
