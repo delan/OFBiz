@@ -77,7 +77,7 @@ public abstract class BaseCompare extends SimpleMapOperation {
     
     public static Boolean doRealCompare(Object value1, Object value2, String operator, String type, String format, 
             List messages, Locale locale, ClassLoader loader) {
-        Debug.logVerbose("[BaseCompare.doCompare] Comparing value1: \"" + value1 + "\", value2:\"" + value2 + "\"");
+        Debug.logVerbose("[BaseCompare.doCompare] Comparing value1: \"" + value1 + "\" " + operator + " value2:\"" + value2 + "\"");
 
         int result = 0;
 
@@ -135,7 +135,7 @@ public abstract class BaseCompare extends SimpleMapOperation {
 
             if (value1Double < value2Double)
                 result = -1;
-            else if (value1Double < value2Double)
+            else if (value1Double > value2Double)
                 result = 1;
             else
                 result = 0;
@@ -156,7 +156,7 @@ public abstract class BaseCompare extends SimpleMapOperation {
             return null;
         }
 
-        //Debug.logInfo("[BaseCompare.doCompare] Got Compare result: " + result + ", operator: " + operator);
+        Debug.logVerbose("[BaseCompare.doCompare] Got Compare result: " + result + ", operator: " + operator);
         if ("less".equals(operator)) {
             if (result >= 0)
                 return Boolean.FALSE;
@@ -180,6 +180,7 @@ public abstract class BaseCompare extends SimpleMapOperation {
             return null;
         }
         
+        Debug.logVerbose("[BaseCompare.doCompare] Returning true");
         return Boolean.TRUE;
     }
 }
