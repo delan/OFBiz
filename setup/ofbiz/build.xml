@@ -112,6 +112,7 @@
         <delete file="${etc.dir}/servers.properties" />
         <delete file="${etc.dir}/debug.properties" />
         <delete file="${etc.dir}/cache.properties" />
+        <delete file="${etc.dir}/poolman.xml" />
         <delete file="${lib.dir}/ofbcommonapp.jar" />        
 
         <delete file="${lib.dir}/ofbcore.jar" />        
@@ -273,6 +274,8 @@
             toFile="${etc.dir}/debug.properties" />
         <copy file="commonapp/etc/cache.properties"
             toFile="${etc.dir}/cache.properties" />
+        <copy file="commonapp/etc/poolman.xml"
+            toFile="${etc.dir}/poolman.xml" />
         <copy file="commonapp/lib/ofbcommonapp.jar"
             toFile="${lib.dir}/ofbcommonapp.jar" />        
         
