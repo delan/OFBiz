@@ -16,6 +16,11 @@
   <OrderAdjustmentType description="Surcharge" hasTable="N" orderAdjustmentTypeId="SURCHARGE_ADJUSTMENT" parentTypeId=""/>
   <OrderAdjustmentType description="Additional Feature" hasTable="N" orderAdjustmentTypeId="ADDITIONAL_FEATURE" parentTypeId=""/>
   <OrderAdjustmentType description="Warranty" hasTable="N" orderAdjustmentTypeId="WARRANTY_ADJUSTMENT" parentTypeId=""/>
+  
+  <OrderBlacklistType orderBlacklistTypeId="BLACKLIST_ADDRESS" description="Addresss"/>
+  <OrderBlacklistType orderBlacklistTypeId="BLACKLIST_CREDITCARD" description="Credit Card"/>
+  <OrderBlacklistType orderBlacklistTypeId="BLACKLIST_EMAIL" description="E-Mail"/>  
+  <OrderBlacklistType orderBlacklistTypeId="BLACKLIST_PHONE" description="Phone Number"/>    
 
   <OrderItemType description="Purchase" hasTable="N" orderItemTypeId="PURCHASE_ORDER_ITEM" parentTypeId=""/>
   <OrderItemType description="Sales" hasTable="N" orderItemTypeId="SALES_ORDER_ITEM" parentTypeId=""/>

@@ -176,15 +176,30 @@
         <response name="error" type="view" value="checkoutoptions"/>
     </request-map>
 
+    <request-map uri="checkBlacklist">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="checkOrderBlacklist"/>
+        <response name="success" type="request" value="processpayment"/>
+        <response name="failed" type="request" value="failedBlacklist"/>
+        <response name="error" type="view" value="checkout"/>
+    </request-map>
+    
+    <request-map uri="failedBlacklist">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="failedBlacklistCheck"/>
+        <response name="success" type="view" value="main"/>       
+        <response name="error" type="view" value="error"/>
+    </request-map>    
+
     <request-map uri="processorder">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>
-        <response name="success" type="request" value="processpayment"/>
+        <response name="success" type="request" value="checkBlacklist"/>
         <response name="error" type="view" value="checkout"/>
     </request-map>
 
     <request-map uri="processpayment">
-        <security https="true" auth="true"/>
+        <security direct-request="false"/>
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="processPayment"/>
         <response name="success" type="request" value="clearcart"/>
         <response name="fail" type="view" value="checkoutoptions"/>

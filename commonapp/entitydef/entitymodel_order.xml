@@ -175,6 +175,27 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
+    <entity entity-name="OrderBlacklist"
+            package-name="org.ofbiz.commonapp.order.order"
+            title="Order Blacklist Entity">
+      <field name="blacklistString" type="long-varchar"></field>
+      <field name="orderBlacklistTypeId" type="id-ne"></field>     
+      <prim-key field="blacklistString"/>      
+      <prim-key field="orderBlacklistTypeId"/>     
+      <relation type="one" fk-name="ORDER_BKL_TYPE" rel-entity-name="OrderBlacklistType">
+        <key-map field-name="orderBlacklistTypeId"/>
+      </relation>
+    </entity>        
+    <entity entity-name="OrderBlacklistType"
+            package-name="org.ofbiz.commonapp.order.order"
+            title="Order Blacklist Type Entity">
+      <field name="orderBlacklistTypeId" type="id-ne"></field>      
+      <field name="description" type="description"></field>
+      <prim-key field="orderBlacklistTypeId"/>     
+      <relation type="many" rel-entity-name="OrderBlacklist">
+        <key-map field-name="orderBlacklistTypeId"/>
+      </relation>
+    </entity>    
     <entity entity-name="OrderContactMech"
             package-name="org.ofbiz.commonapp.order.order"
             never-cache="true"

@@ -547,7 +547,6 @@ public class CheckOutEvents {
 
         // Load the order.properties file.
         URL orderPropertiesUrl = null;
-
         try {
             orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
         } catch (MalformedURLException e) {
@@ -581,7 +580,6 @@ public class CheckOutEvents {
         // Invoke payment processing.
         if (requireAuth) {
             Map paymentResult = null;
-
             try {
                 // invoke the payment gateway service.
                 paymentResult = dispatcher.runSync("processPayments", UtilMisc.toMap("orderId", orderId));
@@ -611,13 +609,10 @@ public class CheckOutEvents {
 
                         if (orderHeader != null) {
                             Collection orderItems = orderHeader.getRelated("OrderItem");
-
                             if (orderItems != null && orderItems.size() > 0) {
                                 Iterator i = orderItems.iterator();
-
                                 while (i.hasNext()) {
                                     GenericValue v = (GenericValue) i.next();
-
                                     v.set("statusId", ITEM_DECLINE_STATUS);
                                     v.store();
                                 }
@@ -627,7 +622,6 @@ public class CheckOutEvents {
                         // cancel inventory reservations
                         try {
                             Map cancelResult = dispatcher.runSync("cancelOrderInventoryReservation", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
-
                             if (ModelService.RESPOND_ERROR.equals((String) cancelResult.get(ModelService.RESPONSE_MESSAGE))) {
                                 Debug.logError("cancelOrderInventoryReservation service failed for Order with ID [" + orderId + "] - " + ServiceUtil.makeErrorMessage(cancelResult, "", "\n", "", ""), module);
                             }
@@ -666,7 +660,6 @@ public class CheckOutEvents {
 
                                 while (orderItemsIter.hasNext()) {
                                     GenericValue orderItem = (GenericValue) orderItemsIter.next();
-
                                     orderItem.set("statusId", ITEM_APPROVE_STATUS);
                                     orderItem.store();
                                 }
@@ -733,4 +726,148 @@ public class CheckOutEvents {
             return true;
         }
     }
+    
+    public static String checkOrderBlacklist(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        ShoppingCart cart = (ShoppingCart) session.getAttribute(SiteDefs.SHOPPING_CART);        
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
+        
+        GenericValue shippingAddressObj = cart.getShippingAddress();
+        String shippingAddress = UtilFormatOut.checkNull(shippingAddressObj.getString("address1").toUpperCase());
+        List exprs = UtilMisc.toList(new EntityExprList(UtilMisc.toList(
+                new EntityExpr("orderBlacklistString", true, EntityOperator.EQUALS, shippingAddress, true),
+                new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_ADDRESS")), EntityOperator.AND));
+        
+        List paymentMethods = cart.getPaymentMethods();
+        Iterator i = paymentMethods.iterator();
+        while (i.hasNext()) {
+            GenericValue paymentMethod = (GenericValue) i.next();
+            if (paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD")) {
+                GenericValue creditCard = null;
+                GenericValue billingAddress = null;
+                try {
+                    creditCard = paymentMethod.getRelatedOne("CreditCard");
+                    if (creditCard != null)
+                        billingAddress = creditCard.getRelatedOne("PostalAddress");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Problems getting credit card from payment method", module);
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "Problems reading the database, please try again.");
+                    return "error";                    
+                }
+                if (creditCard != null) {
+                    String creditCardNumber = UtilFormatOut.checkNull(creditCard.getString("cardNumber"));
+                    exprs.add(new EntityExprList(UtilMisc.toList(
+                            new EntityExpr("orderBlacklistString", EntityOperator.EQUALS, creditCardNumber),
+                            new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_CREDITCARD")), 
+                            EntityOperator.AND));
+                }
+                if (billingAddress != null) {
+                    String address = UtilFormatOut.checkNull(billingAddress.getString("address1").toUpperCase());
+                    exprs.add(new EntityExprList(UtilMisc.toList(
+                            new EntityExpr("orderBlacklistString", true, EntityOperator.EQUALS, address, true),
+                            new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_ADDRESS")), 
+                            EntityOperator.AND));  
+                }  
+            }
+        }
+        
+        List blacklistFound = null;
+        if (exprs.size() > 0) {            
+            try {
+                blacklistFound = delegator.findByAnd("OrderBlacklist", exprs);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problems with OrderBlacklist lookup.", module);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Problems reading the database, please try again.");
+                return "error";
+            }
+        }
+        
+        if (blacklistFound != null && blacklistFound.size() > 0) 
+            return "failed";
+                                                                                                                          
+        return "success";
+    }
+    
+    public static String failedBlacklistCheck(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        ShoppingCart cart = (ShoppingCart) session.getAttribute(SiteDefs.SHOPPING_CART);        
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
+        
+        // first nuke the userlogin
+        userLogin.set("enabled", "N");
+        try {
+            userLogin.store();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems de-activating userLogin.", module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Database error.");
+            return "error";
+        }
+                    
+        // Load the order.properties file.
+        URL orderPropertiesUrl = null;
+        try {
+            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
+        } catch (MalformedURLException e) {
+            Debug.logWarning(e, module);
+        }
+
+        // Get some payment related strings from order.properties.       
+        final String HEADER_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.declined.status", "ORDER_REJECTED");
+        final String ITEM_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.declined.status", "ITEM_REJECTED");          
+        final String DECLINE_MESSAGE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.declined.message", "Error! Set the declined message!");
+
+        // Get the orderId from the cart.
+        String orderId = cart.getOrderId();
+        
+        Map statusResult = null;
+        try {
+            // set the status on the order header
+            statusResult = dispatcher.runSync("changeOrderStatus",
+                    UtilMisc.toMap("orderId", orderId, "statusId", HEADER_DECLINE_STATUS));
+            if (statusResult.containsKey("errorMessage")) {
+                throw new GenericServiceException((String) statusResult.get("errorMessage"));
+            }
+
+            // set the status on the order item(s)
+            GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+
+            if (orderHeader != null) {
+                Collection orderItems = orderHeader.getRelated("OrderItem");
+
+                if (orderItems != null && orderItems.size() > 0) {
+                    Iterator i = orderItems.iterator();
+                    while (i.hasNext()) {
+                        GenericValue v = (GenericValue) i.next();
+                        v.set("statusId", ITEM_DECLINE_STATUS);
+                        v.store();
+                    }
+                }
+            }
+                        
+            // cancel inventory reservations
+            try {
+                Map cancelResult = dispatcher.runSync("cancelOrderInventoryReservation", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
+
+                if (ModelService.RESPOND_ERROR.equals((String) cancelResult.get(ModelService.RESPONSE_MESSAGE))) {
+                    Debug.logError("cancelOrderInventoryReservation service failed for Order with ID [" + orderId + "] - " + ServiceUtil.makeErrorMessage(cancelResult, "", "\n", "", ""), module);
+                }
+            } catch (GenericServiceException e) {
+                throw new GeneralException("Error in cancelOrderInventoryReservation for Order with ID [" + orderId + "]", e);
+            }
+
+            // null out the orderId for next pass.
+            cart.setOrderId(null);
+        } catch (GeneralException e) {            
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
+            return "error";
+        }
+        
+        cart.clear();
+        session.invalidate();
+        return "success";
+    }            
 }
