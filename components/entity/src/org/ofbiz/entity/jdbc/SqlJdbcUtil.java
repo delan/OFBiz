@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.20 2004/04/23 05:38:07 doogie Exp $
+ * $Id: SqlJdbcUtil.java,v 1.21 2004/04/29 23:31:24 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -66,7 +66,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -637,6 +637,9 @@ public class SqlJdbcUtil {
                 case 12:
                     entity.dangerousSetNoCheckButFast(curField, rs.getClob(ind));
                     break;
+                case 13:
+                    entity.dangerousSetNoCheckButFast(curField, rs.getObject(ind));
+                    break;
                 }
             } else {
                 switch (typeValue) {
@@ -780,6 +783,10 @@ public class SqlJdbcUtil {
             case 12:
                 sqlP.setValue((java.sql.Clob) fieldValue);
                 break;
+
+            case 13:
+                sqlP.setValue(new java.sql.Date(((java.util.Date) fieldValue).getTime()));
+                break;
             }
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while setting value (" + modelField.getName() + "): ", sqle);
@@ -812,6 +819,7 @@ public class SqlJdbcUtil {
         fieldTypeMap.put("Blob", new Integer(11));
         fieldTypeMap.put("java.sql.Clob", new Integer(12));
         fieldTypeMap.put("Clob", new Integer(12));
+        fieldTypeMap.put("java.util.Date", new Integer(13));
     }
 
     public static int getType(String fieldType) throws GenericNotImplementedException {
