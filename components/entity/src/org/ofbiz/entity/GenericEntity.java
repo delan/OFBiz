@@ -67,9 +67,10 @@ import org.w3c.dom.Element;
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
+    public static final String module = GenericEntity.class.getName();
 
     public static final GenericEntity NULL_ENTITY = new NullGenericEntity();
-    public static final String module = GenericEntity.class.getName();
+    public static final NullField NULL_FIELD = new NullField();
 
     public static NumberFormat nf = NumberFormat.getInstance();
     static {
@@ -1150,4 +1151,5 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     public static interface NULL { };
 
     protected static class NullGenericEntity extends GenericEntity implements NULL { };
+    protected static class NullField extends GenericEntity implements NULL { };
 }

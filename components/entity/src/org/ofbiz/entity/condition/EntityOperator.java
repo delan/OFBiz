@@ -88,7 +88,7 @@ public abstract class EntityOperator extends EntityConditionBase {
     public static final EntityComparisonOperator EQUALS = new EntityComparisonOperator(ID_EQUALS, "=") {
         public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareEqual(lhs, rhs); }
         protected void makeRHSWhereString(ModelEntity entity, List entityConditionParams, StringBuffer sb, ModelField field, Object rhs) {
-            if (rhs == null) {
+            if (rhs == null || rhs == GenericEntity.NULL_FIELD) {
                 sb.append(" IS NULL");
             } else {
                 super.makeRHSWhereString(entity, entityConditionParams, sb, field, rhs);
@@ -99,7 +99,7 @@ public abstract class EntityOperator extends EntityConditionBase {
     public static final EntityComparisonOperator NOT_EQUAL = new EntityComparisonOperator(ID_NOT_EQUAL, "<>") {
         public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareNotEqual(lhs, rhs); }
         protected void makeRHSWhereString(ModelEntity entity, List entityConditionParams, StringBuffer sb, ModelField field, Object rhs) {
-            if (rhs == null) {
+            if (rhs == null || rhs == GenericEntity.NULL_FIELD) {
                 sb.append(" IS NOT NULL");
             } else {
                 super.makeRHSWhereString(entity, entityConditionParams, sb, field, rhs);

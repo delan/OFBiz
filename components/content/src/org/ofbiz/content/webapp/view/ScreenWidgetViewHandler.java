@@ -52,6 +52,7 @@ import org.ofbiz.content.webapp.control.LoginWorker;
 import org.ofbiz.content.widget.html.HtmlFormRenderer;
 import org.ofbiz.content.widget.html.HtmlScreenRenderer;
 import org.ofbiz.content.widget.screen.ScreenRenderer;
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericValue;
 import org.xml.sax.SAXException;
 
@@ -151,6 +152,9 @@ public class ScreenWidgetViewHandler implements ViewHandler {
         context.put("delegator", request.getAttribute("delegator"));
         context.put("dispatcher", request.getAttribute("dispatcher"));
         context.put("security", request.getAttribute("security"));
+
+        // make sure the "null" object is in there for entity ops
+        context.put("null", GenericEntity.NULL_FIELD);
         
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         context.put("userLogin", userLogin);
