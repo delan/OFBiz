@@ -39,7 +39,7 @@ public interface StartupLoader {
      * @param args Startup arguments    
      * @throws StartupException
      */
-    public void load(String args[]) throws StartupException;
+    public void load(Start.Config config) throws StartupException;
 
     /**
      * Stop the container

@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.ofbiz.core.start.StartupException;
 import org.ofbiz.core.start.StartupLoader;
+import org.ofbiz.core.start.Start;
 import org.ofbiz.core.util.Debug;
 
 /**
@@ -42,24 +43,19 @@ import org.ofbiz.core.util.Debug;
 public class ContainerLoader implements StartupLoader {
     
     public static final String module = ContainerLoader.class.getName();
-    public static final String OFBIZ_CONFIG = "ofbiz.xml";
+    public static final String CONTAINER_CONFIG = "container.xml";
     
     protected List containers = new LinkedList();    
 
     /**
      * @see org.ofbiz.core.start.StartupLoader#load(java.lang.String)
      */
-    public void load(String args[]) throws StartupException {
-        Debug.logInfo("[Startup] ContainerLoader : " + args, module);
+    public void load(Start.Config config) throws StartupException {
+        Debug.logInfo("[Startup] ContainerLoader : " + config.containerConfig, module);
               
-        // get the master ofbiz configuration file
-        String configFileLocation = null;
-        if (args[1] != null) {
-            configFileLocation = args[1];
-        } else {
-            configFileLocation = System.getProperty("ofbiz.home") + OFBIZ_CONFIG;   
-        }
-        
+        // get the master container configuration file
+        String configFileLocation = config.containerConfig;
+                
         ContainerConfig.ComponentContainer componentContainer = null;
         ContainerConfig.WebContainer webContainer = null;
         try { 
@@ -134,5 +130,5 @@ public class ContainerLoader implements StartupLoader {
         }  
         
         return componentObj;
-    }    
+    }   
 }
