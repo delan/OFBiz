@@ -2,6 +2,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/12/02 10:21:17  jonesde
+ * Finished pretty complete first pass; not fully tested, still needs complex data types
+ *
  * Revision 1.7  2001/12/01 23:48:32  jonesde
  * A bit of organization and a start at handling data types, etc
  *
@@ -165,8 +168,13 @@ public class XpdlReader {
             packageValue.set("specificationVersion", UtilXml.childElementValue(packageHeaderElement, "XPDLVersion"));
             packageValue.set("sourceVendorInfo", UtilXml.childElementValue(packageHeaderElement, "Vendor"));
             String createdStr = UtilXml.childElementValue(packageHeaderElement, "Created");
-            if (createdStr != null)
-                packageValue.set("creationDateTime", java.sql.Timestamp.valueOf(createdStr));
+            if (createdStr != null) {
+                try {
+                    packageValue.set("creationDateTime", java.sql.Timestamp.valueOf(createdStr));
+                } catch (IllegalArgumentException e) {
+                    throw new DefinitionParserException("Invalid Date-Time format in Package->Created: " + createdStr, e);
+                }
+            }
             packageValue.set("description", UtilXml.childElementValue(packageHeaderElement, "Description"));
             packageValue.set("documentationUrl", UtilXml.childElementValue(packageHeaderElement, "Documentation"));
             packageValue.set("priorityUomId", UtilXml.childElementValue(packageHeaderElement, "PriorityUnit"));
@@ -318,36 +326,76 @@ public class XpdlReader {
             //TODO: add prefix to duration Unit or map it to make it a real uomId
             workflowProcessValue.set("durationUomId", processHeaderElement.getAttribute("DurationUnit"));
             String createdStr = UtilXml.childElementValue(processHeaderElement, "Created");
-            if (createdStr != null)
-                workflowProcessValue.set("creationDateTime", java.sql.Timestamp.valueOf(createdStr));
+            if (createdStr != null) {
+                try {
+                    workflowProcessValue.set("creationDateTime", java.sql.Timestamp.valueOf(createdStr));
+                } catch (IllegalArgumentException e) {
+                    throw new DefinitionParserException("Invalid Date-Time format in WorkflowProcess->ProcessHeader->Created: " + createdStr, e);
+                }
+            }
             workflowProcessValue.set("description", UtilXml.childElementValue(processHeaderElement, "Description"));
 
             String priorityStr = UtilXml.childElementValue(processHeaderElement, "Priority");
-            if (priorityStr != null)
-                workflowProcessValue.set("objectPriority", Long.valueOf(priorityStr));
+            if (priorityStr != null) {
+                try {
+                    workflowProcessValue.set("objectPriority", Long.valueOf(priorityStr));
+                } catch (NumberFormatException e) {
+                    throw new DefinitionParserException("Invalid whole number format in WorkflowProcess->ProcessHeader->Priority: " + priorityStr, e);
+                }
+            }
             String limitStr = UtilXml.childElementValue(processHeaderElement, "Limit");
-            if (limitStr != null)
-                workflowProcessValue.set("timeLimit", Double.valueOf(limitStr));
+            if (limitStr != null) {
+                try {
+                    workflowProcessValue.set("timeLimit", Double.valueOf(limitStr));
+                } catch (NumberFormatException e) {
+                    throw new DefinitionParserException("Invalid decimal number format in WorkflowProcess->ProcessHeader->Limit: " + limitStr, e);
+                }
+            }
 
             String validFromStr = UtilXml.childElementValue(processHeaderElement, "ValidFrom");
-            if (validFromStr != null)
-                workflowProcessValue.set("validFromDate", java.sql.Timestamp.valueOf(validFromStr));
+            if (validFromStr != null) {
+                try {
+                    workflowProcessValue.set("validFromDate", java.sql.Timestamp.valueOf(validFromStr));
+                } catch (IllegalArgumentException e) {
+                    throw new DefinitionParserException("Invalid Date-Time format in WorkflowProcess->ProcessHeader->ValidFrom: " + validFromStr, e);
+                }
+            }
             String validToStr = UtilXml.childElementValue(processHeaderElement, "ValidTo");
-            if (validToStr != null)
-                workflowProcessValue.set("validToDate", java.sql.Timestamp.valueOf(validToStr));
+            if (validToStr != null) {
+                try {
+                    workflowProcessValue.set("validToDate", java.sql.Timestamp.valueOf(validToStr));
+                } catch (IllegalArgumentException e) {
+                    throw new DefinitionParserException("Invalid Date-Time format in WorkflowProcess->ProcessHeader->ValidTo: " + validToStr, e);
+                }
+            }
 
             //TimeEstimation?
             Element timeEstimationElement = UtilXml.firstChildElement(processHeaderElement, "TimeEstimation");
             if (timeEstimationElement != null) {
                 String waitingTimeStr = UtilXml.childElementValue(timeEstimationElement, "WaitingTime");
-                if (waitingTimeStr != null)
-                    workflowProcessValue.set("waitingTime", Double.valueOf(waitingTimeStr));
+                if (waitingTimeStr != null) {
+                    try {
+                        workflowProcessValue.set("waitingTime", Double.valueOf(waitingTimeStr));
+                    } catch (NumberFormatException e) {
+                        throw new DefinitionParserException("Invalid decimal number format in WorkflowProcess->ProcessHeader->TimeEstimation->WaitingTime: " + waitingTimeStr, e);
+                    }
+                }
                 String workingTimeStr = UtilXml.childElementValue(timeEstimationElement, "WorkingTime");
-                if (workingTimeStr != null)
-                    workflowProcessValue.set("waitingTime", Double.valueOf(workingTimeStr));
+                if (workingTimeStr != null) {
+                    try {
+                        workflowProcessValue.set("waitingTime", Double.valueOf(workingTimeStr));
+                    } catch (NumberFormatException e) {
+                        throw new DefinitionParserException("Invalid decimal number format in WorkflowProcess->ProcessHeader->TimeEstimation->WorkingTime: " + workingTimeStr, e);
+                    }
+                }
                 String durationStr = UtilXml.childElementValue(timeEstimationElement, "Duration");
-                if (durationStr != null)
-                    workflowProcessValue.set("duration", Double.valueOf(durationStr));
+                if (durationStr != null) {
+                    try {
+                        workflowProcessValue.set("duration", Double.valueOf(durationStr));
+                    } catch (NumberFormatException e) {
+                        throw new DefinitionParserException("Invalid decimal number format in WorkflowProcess->ProcessHeader->TimeEstimation->Duration: " + durationStr, e);
+                    }
+                }
             }
         }
 
@@ -426,8 +474,13 @@ public class XpdlReader {
 
         activityValue.set("description", UtilXml.childElementValue(activityElement, "Description"));
         String limitStr = UtilXml.childElementValue(activityElement, "Limit");
-        if (limitStr != null)
-            activityValue.set("timeLimit", Double.valueOf(limitStr));
+        if (limitStr != null) {
+            try {
+                activityValue.set("timeLimit", Double.valueOf(limitStr));
+            } catch (NumberFormatException e) {
+                throw new DefinitionParserException("Invalid decimal number format in Activity->Limit: " + limitStr, e);
+            }
+        }
 
         //(Route | Implementation)
         Element routeElement = UtilXml.firstChildElement(activityElement, "Route");
@@ -486,9 +539,15 @@ public class XpdlReader {
                 throw new DefinitionParserException("Could not find Mode under FinishMode");
         }
 
+        //Priority?
         String priorityStr = UtilXml.childElementValue(activityElement, "Priority");
-        if (priorityStr != null)
-            activityValue.set("objectPriority", Long.valueOf(priorityStr));
+        if (priorityStr != null) {
+            try {
+                activityValue.set("objectPriority", Long.valueOf(priorityStr));
+            } catch (NumberFormatException e) {
+                throw new DefinitionParserException("Invalid whole number format in Activity->Priority: " + priorityStr, e);
+            }
+        }
 
 
         //SimulationInformation?
@@ -497,21 +556,41 @@ public class XpdlReader {
             if (simulationInformationElement.getAttribute("Instantiation") != null)
                 activityValue.set("instantiationLimitEnumId", "WFI_" + simulationInformationElement.getAttribute("Instantiation"));
             String costStr = UtilXml.childElementValue(simulationInformationElement, "Cost");
-            if (costStr != null)
-                activityValue.set("cost", Double.valueOf(costStr));
+            if (costStr != null) {
+                try {
+                    activityValue.set("cost", Double.valueOf(costStr));
+                } catch (NumberFormatException e) {
+                    throw new DefinitionParserException("Invalid decimal number format in Activity->SimulationInformation->Cost: " + costStr, e);
+                }
+            }
 
             //TimeEstimation
             Element timeEstimationElement = UtilXml.firstChildElement(simulationInformationElement, "TimeEstimation");
             if (timeEstimationElement != null) {
                 String waitingTimeStr = UtilXml.childElementValue(timeEstimationElement, "WaitingTime");
-                if (waitingTimeStr != null)
-                    activityValue.set("waitingTime", Double.valueOf(waitingTimeStr));
+                if (waitingTimeStr != null) {
+                    try {
+                        activityValue.set("waitingTime", Double.valueOf(waitingTimeStr));
+                    } catch (NumberFormatException e) {
+                        throw new DefinitionParserException("Invalid decimal number format in Activity->SimulationInformation->TimeEstimation->WaitingTime: " + waitingTimeStr, e);
+                    }
+                }
                 String workingTimeStr = UtilXml.childElementValue(timeEstimationElement, "WorkingTime");
-                if (workingTimeStr != null)
-                    activityValue.set("waitingTime", Double.valueOf(workingTimeStr));
+                if (workingTimeStr != null) {
+                    try {
+                        activityValue.set("waitingTime", Double.valueOf(workingTimeStr));
+                    } catch (NumberFormatException e) {
+                        throw new DefinitionParserException("Invalid decimal number format in Activity->SimulationInformation->TimeEstimation->WorkingTime: " + workingTimeStr, e);
+                    }
+                }
                 String durationStr = UtilXml.childElementValue(timeEstimationElement, "Duration");
-                if (durationStr != null)
-                    activityValue.set("duration", Double.valueOf(durationStr));
+                if (durationStr != null) {
+                    try {
+                        activityValue.set("duration", Double.valueOf(durationStr));
+                    } catch (NumberFormatException e) {
+                        throw new DefinitionParserException("Invalid decimal number format in Activity->SimulationInformation->TimeEstimation->Duration: " + durationStr, e);
+                    }
+                }
             }
         }
 
@@ -855,7 +934,11 @@ public class XpdlReader {
             //Length?
             String lengthStr = UtilXml.childElementValue(dataFieldElement, "Length");
             if (lengthStr != null && lengthStr.length() > 0) {
-                dataFieldValue.set("lengthBytes", Long.valueOf(lengthStr));
+                try {
+                    dataFieldValue.set("lengthBytes", Long.valueOf(lengthStr));
+                } catch (NumberFormatException e) {
+                    throw new DefinitionParserException("Invalid whole number format in DataField->Length: " + lengthStr, e);
+                }
             }
 
             //Description?
@@ -881,9 +964,13 @@ public class XpdlReader {
             formalParameterValue.set("modeEnumId", "WPM_" + formalParameterElement.getAttribute("Mode"));
 
             String indexStr = formalParameterElement.getAttribute("Index");
-            if (indexStr != null && indexStr.length() > 0)
-                formalParameterValue.set("indexNumber", Long.valueOf(indexStr));
-            else
+            if (indexStr != null && indexStr.length() > 0) {
+                try {
+                    formalParameterValue.set("indexNumber", Long.valueOf(indexStr));
+                } catch (NumberFormatException e) {
+                    throw new DefinitionParserException("Invalid decimal number format in FormalParameter->Index: " + indexStr, e);
+                }
+            } else
                 formalParameterValue.set("indexNumber", new Long(index));
             index++;
 
