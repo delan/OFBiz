@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.22 $
+ *@version    $Revision: 1.23 $
  *@since      2.1
  */
 
@@ -39,7 +39,7 @@ String buildNext(Map map, List order, String current, String prefix, Map feature
     ct = 0;
     i = keySet.iterator();
     buf = new StringBuffer();
-    buf.append("function list" + current + prefix + "() { ");
+    buf.append("function listFT" + current + prefix + "() { ");
     buf.append("document.forms[\"addform\"].elements[\"FT" + current + "\"].options.length = 1;");
     buf.append("document.forms[\"addform\"].elements[\"FT" + current + "\"].options[0] = new Option(\"" + featureTypes.get(current) + "\",\"\",true,true);");
     while (i.hasNext()) {
@@ -316,8 +316,11 @@ if (product != null) {
 	            jsBuf.append("function toggleAmt(toggle) { if (toggle == 'Y') changeObjectVisibility(\"add_amount\", \"visible\"); if (toggle == 'N') changeObjectVisibility(\"add_amount\", \"hidden\"); }");
 	            jsBuf.append("function findIndex(name) { for (i=0; i<OPT.length; i++) { if (OPT[i] == name) return i; } return -1; }");
 	            jsBuf.append("function getList(name, value, src) { var value2 = 'NULL'; currentOrderIndex = findIndex(name);");
-	            jsBuf.append("if (src == 1 && OPT.length == 1) { value2 = document.forms[\"addform\"].elements[name].options[(value*1)+1].value;");
-	            jsBuf.append("} if (currentOrderIndex < 0 || value == \"\") return; if (currentOrderIndex < (OPT.length - 1) || OPT.length == 1) {");
+
+
+
+	            jsBuf.append("if ((currentOrderIndex >= (OPT.length-1)) || (src == 1 && OPT.length == 1)) { value2 = document.forms[\"addform\"].elements[name].options[(value*1)+1].value;");
+	            jsBuf.append("} if (currentOrderIndex < 0) { return; } if (currentOrderIndex < (OPT.length - 1) || OPT.length == 1) {");
 	            jsBuf.append("if (IMG[value] != null) { if (document.images['mainImage'] != null) document.images['mainImage'].src = IMG[value];");
 	            jsBuf.append("detailImageUrl = DET[value]; document.addform.FT" + topLevelName + ".selectedIndex = (value*1)+1;");
 	            jsBuf.append("} if (OPT.length != 1) { eval(\"list\" + OPT[currentOrderIndex+1] + value + \"()\");");
