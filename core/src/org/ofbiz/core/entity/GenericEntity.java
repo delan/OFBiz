@@ -39,6 +39,8 @@ public class GenericEntity implements Serializable
   protected String entityName;
   /** Denotes whether or not this entity has been modified, or is known to be out of sync with the persistent record */
   public boolean modified = false;
+  /** Map to store related entities that will be updated if modified when this entity is stored; populated with preStoreRelated(String, Collection). This is here so that it can be implicitly stored in the same transaction context. */
+  public Map relatedToStore = new HashMap();
 
   /** Creates new GenericEntity */
   public GenericEntity() { this.entityName = null; this.fields = null; }

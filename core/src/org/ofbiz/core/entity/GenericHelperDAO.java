@@ -108,6 +108,7 @@ public class GenericHelperDAO implements GenericHelper
   {
     Collection collection = null;
     collection = genericDAO.selectByAnd(entityName, null, orderBy);
+    absorbCollection(collection);
     return collection;
   }
 
@@ -121,6 +122,7 @@ public class GenericHelperDAO implements GenericHelper
   {
     Collection collection = null;
     collection = genericDAO.selectByAnd(entityName, fields, orderBy);
+    absorbCollection(collection);
     return collection;
   }
   
@@ -154,19 +156,6 @@ public class GenericHelperDAO implements GenericHelper
     if(value == null) { return; }
     if(!genericDAO.update(value)) Debug.logError("[GenericHelperDAO.store] Could not store GenericValue: " + value.toString());
     value.helper = this;
-    //also store valueObject.relatedToStore related entities
-    if(value.relatedToStore != null)
-    {
-      Iterator entries = value.relatedToStore.entrySet().iterator();
-      Map.Entry anEntry = null;
-      while(entries != null && entries.hasNext())
-      {
-        anEntry = (Map.Entry)entries.next();
-        String relationName = (String)anEntry.getKey();
-        Collection entities = (Collection)anEntry.getValue();
-        genericDAO.storeRelated(relationName, value, entities);
-      }
-    }
   }
   
   /** Get the named Related Entity for the GenericValue from the persistent store
@@ -176,7 +165,10 @@ public class GenericHelperDAO implements GenericHelper
    */
   public Collection getRelated(String relationName, GenericValue value)
   {
-    return genericDAO.selectRelated(relationName, value);;
+    Collection col = genericDAO.selectRelated(relationName, value);
+    absorbCollection(col);
+    return col;
+    
   }  
   
   /** Remove the named Related Entity for the GenericValue from the persistent store
@@ -186,5 +178,16 @@ public class GenericHelperDAO implements GenericHelper
   public void removeRelated(String relationName, GenericValue value)
   {
     genericDAO.deleteRelated(relationName, value);
-  }  
+  }
+  
+  private void absorbCollection(Collection col)
+  {
+    if(col == null) return;
+    Iterator iter = col.iterator();
+    while(iter.hasNext())
+    {
+      GenericValue value = (GenericValue)iter.next();
+      value.helper = this;
+    }
+  }
 }

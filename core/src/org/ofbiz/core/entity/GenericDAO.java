@@ -62,33 +62,51 @@ public class GenericDAO
       return false;
     }
 */    
+    boolean useTX = true;
     Connection connection = null;
-    PreparedStatement ps = null;
     try { connection = getConnection(); } 
     catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.insert]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
     
-    String sql = "INSERT INTO " + modelEntity.tableName + " (" + modelEntity.colNameString(modelEntity.fields) + ") VALUES (" + modelEntity.fieldsStringList(modelEntity.fields, "?", ", ") + ")";
+    
+    try { connection.setAutoCommit(false); } 
+    catch(SQLException sqle) { useTX = false; }
+    
     try 
     {
-      ps = connection.prepareStatement(sql);
-
-      for(int i=0;i<modelEntity.fields.size();i++)
-      { 
-        ModelField curField=(ModelField)modelEntity.fields.elementAt(i);
-        setValue(ps, i+1, curField, entity);
-      }
-
-      ps.executeUpdate();
-      entity.modified = false;
-    } catch (SQLException sqle) {
-      Debug.logWarning("ERROR [GenericDAO.insert]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
+      singleInsert(entity, modelEntity, modelEntity.fields, connection);
+      storeAllRelated(entity, connection);
+      if(useTX) connection.commit();
+    } 
+    catch (SQLException sqle) 
+    {
+      Debug.logWarning("ERROR [GenericDAO.insert]: SQL Exception while executing insert. Error was:\n");
       Debug.logWarning(sqle);
+      
+      try { if(useTX) connection.rollback(); }
+      catch(SQLException sqle2) { Debug.logWarning("ERROR [GenericDAO.insert]: SQL Exception while rolling back insert. Error was:\n"); Debug.logWarning(sqle2); }
+      
       return false;
     } finally {
-      try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
       try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
     }    
     return true;
+  }
+  
+  private void singleInsert(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave, Connection connection) throws SQLException
+  {
+    PreparedStatement ps = null;
+    String sql = "INSERT INTO " + modelEntity.tableName + " (" + modelEntity.colNameString(fieldsToSave) + ") VALUES (" + modelEntity.fieldsStringList(fieldsToSave, "?", ", ") + ")";
+    ps = connection.prepareStatement(sql);
+
+    for(int i=0;i<fieldsToSave.size();i++)
+    { 
+      ModelField curField=(ModelField)fieldsToSave.elementAt(i);
+      setValue(ps, i+1, curField, entity);
+    }
+
+    ps.executeUpdate();
+    entity.modified = false;
+    try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
   }
 
   public boolean update(GenericEntity entity)
@@ -99,44 +117,8 @@ public class GenericDAO
       Debug.logError("[GenericDAO.update] Could not find ModelEntity record for entityName: " + entity.getEntityName());
       return false;
     }
-/*
-    if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
-      Debug.logWarning("ERROR [GenericDAO.update]: Cannot update GenericEntity: required primary key field(s) missing.");
-      return false;
-    }
-*/    
-    Connection connection = null;
-    PreparedStatement ps = null;
-    try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.update]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
-
-    String sql = "UPDATE " + modelEntity.tableName + " SET " + modelEntity.colNameString(modelEntity.nopks, "=?, ", "=?") + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
-    try {
-      ps = connection.prepareStatement(sql);
-
-      int i;
-      for(i=0;i<modelEntity.nopks.size();i++)
-      {
-        ModelField curField=(ModelField)modelEntity.nopks.elementAt(i);
-        setValue(ps, i+1, curField, entity);
-      }
-      for(int j=0;j<modelEntity.pks.size();j++)
-      {
-        ModelField curField=(ModelField)modelEntity.pks.elementAt(j);
-        setValue(ps, i+j+1, curField, entity);
-      }
-
-      ps.executeUpdate();
-      entity.modified = false;
-    } catch (SQLException sqle) {
-      Debug.logWarning("ERROR [GenericDAO.update]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
-      Debug.logWarning(sqle);
-      return false;
-    } finally {
-      try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
-      try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
-    }    
-    return true;
+    
+    return customUpdate(entity, modelEntity, modelEntity.nopks);
   }
 
   public boolean partialUpdate(GenericEntity entity)
@@ -147,17 +129,6 @@ public class GenericDAO
       Debug.logError("[GenericDAO.partialUpdate] Could not find ModelEntity record for entityName: " + entity.getEntityName());
       return false;
     }
-/*
-    if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
-      Debug.logWarning("ERROR [GenericDAO.update]: Cannot update GenericEntity: required primary key field(s) missing.");
-      return false;
-    }
-*/    
-    Connection connection = null;
-    PreparedStatement ps = null;
-    try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.update]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
-
     //we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity
     Vector partialFields = new Vector();
     Collection keys = entity.getAllKeys();
@@ -167,35 +138,106 @@ public class GenericDAO
       if(keys.contains(curField.name)) partialFields.add(curField);
     }
     
-    String sql = "UPDATE " + modelEntity.tableName + " SET " + modelEntity.colNameString(partialFields, "=?, ", "=?") + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
-    try {
-      ps = connection.prepareStatement(sql);
+    return customUpdate(entity, modelEntity, partialFields);
+  }
+  
+  private boolean customUpdate(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave)
+  {
+/*
+    if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
+      Debug.logWarning("ERROR [GenericDAO.update]: Cannot update GenericEntity: required primary key field(s) missing.");
+      return false;
+    }
+*/    
+    boolean useTX = true;
+    Connection connection = null;
+    try { connection = getConnection(); } 
+    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.update]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
 
-      int i;
-      for(i=0;i<partialFields.size();i++)
-      {
-        ModelField curField=(ModelField)partialFields.elementAt(i);
-        setValue(ps, i+1, curField, entity);
-      }
-      for(int j=0;j<modelEntity.pks.size();j++)
-      {
-        ModelField curField=(ModelField)modelEntity.pks.elementAt(j);
-        setValue(ps, i+j+1, curField, entity);
-      }
-
-      ps.executeUpdate();
-      entity.modified = false;
-    } catch (SQLException sqle) {
-      Debug.logWarning("ERROR [GenericDAO.update]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
+    try { connection.setAutoCommit(false); } 
+    catch(SQLException sqle) { useTX = false; }
+        
+    try 
+    {
+      singleUpdate(entity, modelEntity, fieldsToSave, connection);
+      storeAllRelated(entity, connection);
+      if(useTX) connection.commit();
+    } 
+    catch (SQLException sqle) 
+    {
+      Debug.logWarning("ERROR [GenericDAO.update]: SQL Exception while executing update. Error was:\n");
       Debug.logWarning(sqle);
+
+      try { if(useTX) connection.rollback(); }
+      catch(SQLException sqle2) { Debug.logWarning("ERROR [GenericDAO.insert]: SQL Exception while rolling back insert. Error was:\n"); Debug.logWarning(sqle2); }
+
       return false;
     } finally {
-      try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
       try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
-    }    
+    }
+    
     return true;
   }
 
+  private void singleUpdate(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave, Connection connection) throws SQLException
+  {
+    String sql = "UPDATE " + modelEntity.tableName + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
+    PreparedStatement ps = null;
+    ps = connection.prepareStatement(sql);
+
+    int i;
+    for(i=0;i<fieldsToSave.size();i++)
+    {
+      ModelField curField=(ModelField)fieldsToSave.elementAt(i);
+      setValue(ps, i+1, curField, entity);
+    }
+    for(int j=0;j<modelEntity.pks.size();j++)
+    {
+      ModelField curField=(ModelField)modelEntity.pks.elementAt(j);
+      setValue(ps, i+j+1, curField, entity);
+    }
+
+    ps.executeUpdate();
+    entity.modified = false;
+    try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
+  }
+  
+  private void storeAllRelated(GenericEntity entity, Connection connection) throws SQLException
+  {
+    //also store valueObject.relatedToStore related entities
+    if(entity.relatedToStore != null && entity.relatedToStore.size() > 0)
+    {
+      Iterator entries = entity.relatedToStore.entrySet().iterator();
+      Map.Entry anEntry = null;
+      while(entries != null && entries.hasNext())
+      {
+        anEntry = (Map.Entry)entries.next();
+        String relationName = (String)anEntry.getKey();
+        Collection entities = (Collection)anEntry.getValue();
+        storeRelated(relationName, entity, entities, connection);
+      }
+    }
+  }
+  
+  private void storeRelated(String relationName, GenericEntity value, Collection entities, Connection connection) throws SQLException
+  {
+    ModelEntity entity = value.getModelEntity();
+    ModelRelation relation = entity.getRelation(relationName);
+    ModelEntity relatedEntity = ModelReader.getModelEntity(relation.relEntityName);
+
+    //if entity exists, update, else insert
+    Iterator entIter = UtilMisc.toIterator(entities);
+    while(entIter != null && entIter.hasNext())
+    {
+      GenericEntity curEntity = (GenericEntity)entIter.next();
+      if(select(curEntity)) singleUpdate(curEntity, relatedEntity, relatedEntity.nopks, connection);
+      else singleInsert(curEntity, relatedEntity, relatedEntity.fields, connection);
+    }    
+  }  
+
+/* ====================================================================== */
+/* ====================================================================== */
+  
   public boolean select(GenericEntity entity)
   {
     ModelEntity modelEntity = entity.getModelEntity();
@@ -318,48 +360,6 @@ public class GenericDAO
     return true;
   }
 
-  public boolean delete(GenericEntity entity)
-  {
-    ModelEntity modelEntity = entity.getModelEntity();
-    if(modelEntity == null)
-    {
-      Debug.logError("[GenericDAO.delete] Could not find ModelEntity record for entityName: " + entity.getEntityName());
-      return false;
-    }
-/*
-    if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
-      Debug.logWarning("ERROR [GenericDAO.delete]: Cannot delete GenericEntity: required primary key field(s) missing.");
-      return false;
-    }
-*/    
-    Connection connection = null;
-    PreparedStatement ps = null;
-    try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.delete]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
-    
-    String sql = "DELETE FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?");
-    try {
-      ps = connection.prepareStatement(sql);
-
-      for(int i=0;i<modelEntity.pks.size();i++)
-      {
-        ModelField curField=(ModelField)modelEntity.pks.elementAt(i);
-        setValue(ps, i+1, curField, entity);
-      }
-
-      ps.executeUpdate();
-      entity.modified = true;
-    } catch (SQLException sqle) {
-      Debug.logWarning("ERROR [GenericDAO.delete]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
-      Debug.logWarning(sqle);
-      return false;
-    } finally {
-      try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
-      try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
-    }    
-    return true;
-  }
-
   public Collection selectByAnd(String entityName, Map fields, List orderBy)
   {
     if(entityName == null || fields == null) return null;
@@ -470,39 +470,65 @@ public class GenericDAO
   public Collection selectRelated(String relationName, GenericEntity value)
   {
     Collection collection = null;
-    ModelEntity entity = value.getModelEntity();
-    ModelRelation relation = entity.getRelation(relationName);
+    ModelEntity modelEntity = value.getModelEntity();
+    ModelRelation relation = modelEntity.getRelation(relationName);
     ModelEntity relatedEntity = ModelReader.getModelEntity(relation.relEntityName);
 
-    if(relation.type.equalsIgnoreCase("one"))
+    Map fields = new HashMap();
+    for(int i=0; i<relation.keyMaps.size(); i++)
     {
-      //public <%=relatedEntity.ejbName%> get<%=relation.relationTitle%><%=relatedEntity.ejbName%>() { return <%=relatedEntity.ejbName%>Helper.findByPrimaryKey(<%=relation.keyMapString(", ", "")%>); }
+      ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(i);
+      fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
     }
-    else if(relation.type.equalsIgnoreCase("many"))
-    {
-      //public Collection get<%=relation.relationTitle%><%=relatedEntity.ejbName%>s() { return <%=relatedEntity.ejbName%>Helper.findBy<%=relation.keyMapRelatedUpperString("And","")%>(<%=relation.keyMapString(", ", "")%>); }
-    }
-    return collection;
-  }  
-    
-  public boolean storeRelated(String relationName, GenericEntity value, Collection entities)
+
+    return selectByAnd(relatedEntity.entityName, fields, null);
+  }
+
+/* ====================================================================== */
+/* ====================================================================== */
+
+  public boolean delete(GenericEntity entity)
   {
-    ModelEntity entity = value.getModelEntity();
-    ModelRelation relation = entity.getRelation(relationName);
-    ModelEntity relatedEntity = ModelReader.getModelEntity(relation.relEntityName);
-
-    //if entity exists, update, else insert
-    if(relation.type.equalsIgnoreCase("one"))
+    ModelEntity modelEntity = entity.getModelEntity();
+    if(modelEntity == null)
     {
-      //public <%=relatedEntity.ejbName%> get<%=relation.relationTitle%><%=relatedEntity.ejbName%>() { return <%=relatedEntity.ejbName%>Helper.findByPrimaryKey(<%=relation.keyMapString(", ", "")%>); }
+      Debug.logError("[GenericDAO.delete] Could not find ModelEntity record for entityName: " + entity.getEntityName());
+      return false;
     }
-    else if(relation.type.equalsIgnoreCase("many"))
-    {
-      //public Collection get<%=relation.relationTitle%><%=relatedEntity.ejbName%>s() { return <%=relatedEntity.ejbName%>Helper.findBy<%=relation.keyMapRelatedUpperString("And","")%>(<%=relation.keyMapString(", ", "")%>); }
+/*
+    if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
+      Debug.logWarning("ERROR [GenericDAO.delete]: Cannot delete GenericEntity: required primary key field(s) missing.");
+      return false;
     }
-    return false;
-  }  
+*/    
+    Connection connection = null;
+    PreparedStatement ps = null;
+    try { connection = getConnection(); } 
+    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.delete]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
     
+    String sql = "DELETE FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?");
+    try {
+      ps = connection.prepareStatement(sql);
+
+      for(int i=0;i<modelEntity.pks.size();i++)
+      {
+        ModelField curField=(ModelField)modelEntity.pks.elementAt(i);
+        setValue(ps, i+1, curField, entity);
+      }
+
+      ps.executeUpdate();
+      entity.modified = true;
+    } catch (SQLException sqle) {
+      Debug.logWarning("ERROR [GenericDAO.delete]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
+      Debug.logWarning(sqle);
+      return false;
+    } finally {
+      try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
+      try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
+    }    
+    return true;
+  }
+
   public boolean deleteRelated(String relationName, GenericEntity value)
   {
     ModelEntity entity = value.getModelEntity();
@@ -520,6 +546,9 @@ public class GenericDAO
     return false;
   }  
     
+/* ====================================================================== */
+/* ====================================================================== */
+
   public void getValue(ResultSet rs, ModelField curField, GenericEntity entity) throws SQLException
   {
     ModelFieldType mft = ModelReader.getModelFieldType(curField.type);

@@ -43,20 +43,6 @@ public class GenericBean extends GenericEntity implements EntityBean
   public void setValueObject(GenericValue valueObject)
   {
     this.setNonPKFields(valueObject.getAllFields());
-
-    //also store valueObject.relatedToStore related entities
-    if(valueObject.relatedToStore != null)
-    {
-      Iterator entries = valueObject.relatedToStore.entrySet().iterator();
-      Map.Entry anEntry = null;
-      while(entries != null && entries.hasNext())
-      {
-        anEntry = (Map.Entry)entries.next();
-        String relationName = (String)anEntry.getKey();
-        Collection entities = (Collection)anEntry.getValue();
-        dao.storeRelated(relationName, this, entities);
-      }
-    }
   }
 
   /** Gets the ValueObject attribute of the GenericBean object

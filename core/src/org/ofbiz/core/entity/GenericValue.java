@@ -35,8 +35,6 @@ public class GenericValue extends GenericEntity
 {
   /** Reference to an instance of GenericHelper used to do some basic operations on this entity value. If null various methods in this class will fail. This is automatically set by the GenericHelper implementations for all GenericValue objects instantiated through them. You may set this manually for objects you instantiate manually, but it is optional. */
   public transient GenericHelper helper = null;
-  /** Map to store related entities that will be updated if modified when this entity is stored; populated with preStoreRelated(String, Collection) */
-  public Map relatedToStore = new HashMap();
   
   /** Creates new GenericValue */
   public GenericValue(String entityName) { super(entityName); }
