@@ -20,14 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign locale = requestAttributes.locale>
-
-<#if hasPermission>
-	${pages.get("/routing/CalendarTabBar.ftl")}
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
+<#if (requestAttributes.locale)?exists>
+    <#assign locale = requestAttributes.locale>
+</#if>
 
 	<div class="head1">${uiLabelMap.ManufacturingEditCalendarExceptionWeekFor}&nbsp; 
 			<span class='head2'> <#if (techDataCalendar.description)?has_content>"${(techDataCalendar.get("description", locale))}"</#if> 
@@ -47,8 +48,5 @@
 	</#if>
 	<br>
 
-<#else>
- 	<h3>${uiLabelMap.ManufacturingCalendarPermissionError}</h3>
-</#if>
 
 	

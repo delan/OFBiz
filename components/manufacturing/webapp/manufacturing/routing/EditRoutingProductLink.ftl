@@ -23,10 +23,10 @@
  *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
-<#if hasPermission>
-${pages.get("/routing/RoutingDetailTabBar.ftl")}
 
 	<div class="head1">${uiLabelMap.ManufacturingEditRoutingProductLink}&nbsp;
 	</div>
@@ -46,8 +46,5 @@ ${pages.get("/routing/RoutingDetailTabBar.ftl")}
 		${listRoutingProductLinkWrapper.renderFormString()}
 	</#if>
 
-<#else>
- 	<h3>${uiLabelMap.ManufacturingMachinePermissionError}</h3>
-</#if>
 
 	

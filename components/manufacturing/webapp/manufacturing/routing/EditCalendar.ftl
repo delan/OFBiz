@@ -20,13 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign locale = requestAttributes.locale>
-
-${pages.get("/routing/CalendarTabBar.ftl")}
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
+<#if (requestAttributes.locale)?exists>
+    <#assign locale = requestAttributes.locale>
+</#if>
 
 <#if techDataCalendar?has_content>
   <div class="head1">${uiLabelMap.ManufacturingUpdateCalendar} </div>

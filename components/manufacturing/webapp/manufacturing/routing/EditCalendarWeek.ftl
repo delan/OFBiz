@@ -23,10 +23,10 @@
  *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign locale = requestAttributes.locale>
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
-<#if hasPermission>
     <div class="tabContainer">
         <a href="<@ofbizUrl>/ListCalendarWeek</@ofbizUrl>" class="tabButton">${uiLabelMap.CommonBackToList}</a>
         <a href="<@ofbizUrl>/EditCalendarWeek</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingNewCalendarWeek}</a>
@@ -130,8 +130,5 @@
 		</table>
 	<br>
 
-<#else>
- 	<h3>${uiLabelMap.ManufacturingCalendarPermissionError}</h3>
-</#if>
 
 	
