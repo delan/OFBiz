@@ -73,7 +73,7 @@
       <field name="reserveInventory" type="indicator"></field>
       <field name="useQuickAdd" type="indicator"></field>
       <prim-key field="prodCatalogId"/>
-      <relation type="one" rel-entity-name="Facility">
+      <relation type="one" fk-name="PROD_CAT_FACILITY" rel-entity-name="Facility">
         <key-map field-name="inventoryFacilityId" rel-field-name="facilityId"/>
       </relation>
       <relation type="many" rel-entity-name="ProdCatalogPromoAppl">
@@ -98,13 +98,13 @@
       <prim-key field="prodCatalogId"/>
       <prim-key field="productCategoryId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="ProdCatalog">
+      <relation type="one" fk-name="PROD_CC_CATALOG" rel-entity-name="ProdCatalog">
         <key-map field-name="prodCatalogId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductCategory">
+      <relation type="one" fk-name="PROD_CC_CATEGORY" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProdCatalogCategoryType">
+      <relation type="one" fk-name="PROD_CC_TYPE" rel-entity-name="ProdCatalogCategoryType">
         <key-map field-name="prodCatalogCategoryTypeId"/>
       </relation>
     </entity>
@@ -129,10 +129,10 @@
       <prim-key field="prodCatalogId"/>
       <prim-key field="facilityId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="ProdCatalog">
+      <relation type="one" fk-name="PROD_CIF_CATALOG" rel-entity-name="ProdCatalog">
         <key-map field-name="prodCatalogId"/>
       </relation>
-      <relation type="one" rel-entity-name="Facility">
+      <relation type="one" fk-name="PROD_CIF_FACILITY" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
     </entity>
@@ -147,10 +147,10 @@
       <prim-key field="prodCatalogId"/>
       <prim-key field="productPromoId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="ProdCatalog">
+      <relation type="one" fk-name="PROD_CPA_CATALOG" rel-entity-name="ProdCatalog">
         <key-map field-name="prodCatalogId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductPromo">
+      <relation type="one" fk-name="PROD_CPA_PROMO" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
       </relation>
     </entity>
@@ -165,10 +165,10 @@
       <prim-key field="webSiteId"/>
       <prim-key field="prodCatalogId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="WebSite">
+      <relation type="one" fk-name="WS_CAT_WEBSITE" rel-entity-name="WebSite">
         <key-map field-name="webSiteId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProdCatalog">
+      <relation type="one" fk-name="WS_CAT_CATALOG" rel-entity-name="ProdCatalog">
         <key-map field-name="prodCatalogId"/>
       </relation>
     </entity>
@@ -195,13 +195,13 @@
       <relation type="many" rel-entity-name="ProductCategoryMember">
         <key-map field-name="productCategoryId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductCategoryType">
+      <relation type="one" fk-name="PROD_CTGRY_TYPE" rel-entity-name="ProductCategoryType">
         <key-map field-name="productCategoryTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductCategoryTypeAttr">
         <key-map field-name="productCategoryTypeId"/>
       </relation>
-      <relation type="one" title="PrimaryParent" rel-entity-name="ProductCategory">
+      <relation type="one" fk-name="PROD_CTGRY_PARENT" title="PrimaryParent" rel-entity-name="ProductCategory">
         <key-map field-name="primaryParentCategoryId" rel-field-name="productCategoryId"/>
       </relation>
       <relation type="many" title="PrimaryChild" rel-entity-name="ProductCategory">
@@ -240,7 +240,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="productCategoryId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="ProductCategory">
+      <relation type="one" fk-name="PROD_CTGRY_ATTR" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductCategoryTypeAttr">
@@ -260,10 +260,10 @@
       <prim-key field="productCategoryId"/>
       <prim-key field="productId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="PROD_CMBR_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductCategory">
+      <relation type="one" fk-name="PROD_CMBR_CATEGORY" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
     </entity>
@@ -278,10 +278,10 @@
       <prim-key field="productCategoryId"/>
       <prim-key field="parentProductCategoryId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" title="Current" rel-entity-name="ProductCategory">
+      <relation type="one" fk-name="PROD_CRLP_CURRENT" title="Current" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
-      <relation type="one" title="Parent" rel-entity-name="ProductCategory">
+      <relation type="one" fk-name="PROD_CRLP_PARENT" title="Parent" rel-entity-name="ProductCategory">
         <key-map field-name="parentProductCategoryId" rel-field-name="productCategoryId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="ProductCategoryRollup">
@@ -302,7 +302,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="productCategoryTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="ProductCategoryType">
+      <relation type="one" fk-name="PROD_CTGRY_TYPEPAR" title="Parent" rel-entity-name="ProductCategoryType">
         <key-map field-name="parentTypeId" rel-field-name="productCategoryTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="ProductCategoryType">
@@ -322,7 +322,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="productCategoryTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="ProductCategoryType">
+      <relation type="one" fk-name="PROD_CTGRY_TATTR" rel-entity-name="ProductCategoryType">
         <key-map field-name="productCategoryTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductCategoryAttribute">
@@ -350,7 +350,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="cost" type="currency-amount"></field>
       <prim-key field="costComponentId"/>
-      <relation type="one" rel-entity-name="CostComponentType">
+      <relation type="one" fk-name="COST_COMP_TYPE" rel-entity-name="CostComponentType">
         <key-map field-name="costComponentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="CostComponentTypeAttr">
@@ -359,16 +359,16 @@
       <relation type="many" rel-entity-name="CostComponentAttribute">
         <key-map field-name="costComponentId"/>
       </relation>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="COST_COMP_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductFeature">
+      <relation type="one" fk-name="COST_COMP_PRODFEAT" rel-entity-name="ProductFeature">
         <key-map field-name="productFeatureId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="COST_COMP_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="Geo">
+      <relation type="one" fk-name="COST_COMP_GEO" rel-entity-name="Geo">
         <key-map field-name="geoId"/>
       </relation>
     </entity>
@@ -380,7 +380,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="costComponentId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="CostComponent">
+      <relation type="one" fk-name="COST_COMP_ATTR" rel-entity-name="CostComponent">
         <key-map field-name="costComponentId"/>
       </relation>
       <relation type="many" rel-entity-name="CostComponentTypeAttr">
@@ -395,7 +395,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="costComponentTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="CostComponentType">
+      <relation type="one" fk-name="COST_COMP_TYPE_PAR" title="Parent" rel-entity-name="CostComponentType">
         <key-map field-name="parentTypeId" rel-field-name="costComponentTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="CostComponentType">
@@ -415,7 +415,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="costComponentTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="CostComponentType">
+      <relation type="one" fk-name="COST_COMP_TATTR" rel-entity-name="CostComponentType">
         <key-map field-name="costComponentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="CostComponentAttribute">
@@ -437,10 +437,10 @@
       <field name="productFeatureId" type="id-ne"></field>
       <prim-key field="dataObjectId"/>
       <prim-key field="productFeatureId"/>
-      <relation type="one" rel-entity-name="ProductFeature">
+      <relation type="one" fk-name="FEAT_DATA_FEATURE" rel-entity-name="ProductFeature">
         <key-map field-name="productFeatureId"/>
       </relation>
-      <relation type="one" rel-entity-name="DataObject">
+      <relation type="one" fk-name="FEAT_DATA_DATA" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId"/>
       </relation>
     </entity>
@@ -456,10 +456,10 @@
       <field name="defaultSequenceNum" type="numeric"></field>
       <field name="idCode" type="id"></field>
       <prim-key field="productFeatureId"/>
-      <relation type="one" rel-entity-name="ProductFeatureCategory">
+      <relation type="one" fk-name="PROD_FEAT_CATEGORY" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="productFeatureCategoryId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductFeatureType">
+      <relation type="one" fk-name="PROD_FEAT_TYPE" rel-entity-name="ProductFeatureType">
         <key-map field-name="productFeatureTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductFeatureAppl">
@@ -513,13 +513,13 @@
       <prim-key field="productId"/>
       <prim-key field="productFeatureId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="ProductFeatureApplType">
+      <relation type="one" fk-name="PROD_FAPPL_TYPE" rel-entity-name="ProductFeatureApplType">
         <key-map field-name="productFeatureApplTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="PROD_FAPPL_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductFeature">
+      <relation type="one" fk-name="PROD_FAPPL_FEATURE" rel-entity-name="ProductFeature">
         <key-map field-name="productFeatureId"/>
       </relation>
     </entity>
@@ -531,7 +531,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="productFeatureApplTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="ProductFeatureApplType">
+      <relation type="one" fk-name="PROD_FAPPL_TYPPAR" title="Parent" rel-entity-name="ProductFeatureApplType">
         <key-map field-name="parentTypeId" rel-field-name="productFeatureApplTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="ProductFeatureApplType">
@@ -548,7 +548,7 @@
       <field name="parentCategoryId" type="id"></field>
       <field name="description" type="description"></field>
       <prim-key field="productFeatureCategoryId"/>
-      <relation type="one" title="Parent" rel-entity-name="ProductFeatureCategory">
+      <relation type="one" fk-name="PROD_FEAT_CAT_PAR" title="Parent" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="parentCategoryId" rel-field-name="productFeatureCategoryId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductFeature">
@@ -568,10 +568,10 @@
       <prim-key field="productCategoryId"/>
       <prim-key field="productFeatureCategoryId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="ProductCategory">
+      <relation type="one" fk-name="PROD_FCAPPL_CAT" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductFeatureCategory">
+      <relation type="one" fk-name="PROD_FCAPPL_FCAT" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="productFeatureCategoryId"/>
       </relation>
     </entity>
@@ -584,13 +584,13 @@
       <field name="productId" type="id"></field>
       <prim-key field="productFeatureId"/>
       <prim-key field="productFeatureIdTo"/>
-      <relation type="one" rel-entity-name="ProductFeatureIactnType">
+      <relation type="one" fk-name="PROD_FICTN_TYPE" rel-entity-name="ProductFeatureIactnType">
         <key-map field-name="productFeatureIactnTypeId"/>
       </relation>
-      <relation type="one" title="Main" rel-entity-name="ProductFeature">
+      <relation type="one" fk-name="PROD_FICTN_MFEAT" title="Main" rel-entity-name="ProductFeature">
         <key-map field-name="productFeatureId"/>
       </relation>
-      <relation type="one" title="Assoc" rel-entity-name="ProductFeature">
+      <relation type="one" fk-name="PROD_FICTN_AFEAT" title="Assoc" rel-entity-name="ProductFeature">
         <key-map field-name="productFeatureIdTo" rel-field-name="productFeatureId"/>
       </relation>
     </entity>
@@ -602,7 +602,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="productFeatureIactnTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="ProductFeatureIactnType">
+      <relation type="one" fk-name="PROD_FICTN_TYPPAR" title="Parent" rel-entity-name="ProductFeatureIactnType">
         <key-map field-name="parentTypeId" rel-field-name="productFeatureIactnTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="ProductFeatureIactnType">
@@ -620,7 +620,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="productFeatureTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="ProductFeatureType">
+      <relation type="one" fk-name="PROD_FEAT_TYPPAR" title="Parent" rel-entity-name="ProductFeatureType">
         <key-map field-name="parentTypeId" rel-field-name="productFeatureTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="ProductFeatureType">
@@ -651,7 +651,7 @@
       <field name="availableToPromise" type="floating-point"></field>
       <field name="serialNumber" type="value"></field>
       <prim-key field="inventoryItemId"/>
-      <relation type="one" rel-entity-name="InventoryItemType">
+      <relation type="one" fk-name="INV_ITEM_TYPE" rel-entity-name="InventoryItemType">
         <key-map field-name="inventoryItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="InventoryItemTypeAttr">
@@ -660,25 +660,25 @@
       <relation type="many" rel-entity-name="InventoryItemAttribute">
         <key-map field-name="inventoryItemId"/>
       </relation>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="INV_ITEM_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="INV_ITEM_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="StatusItem">
+      <relation type="one" fk-name="INV_ITEM_STTSITM" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
-      <relation type="one" rel-entity-name="Facility">
+      <relation type="one" fk-name="INV_ITEM_FACILITY" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
-      <relation type="one" rel-entity-name="Container">
+      <relation type="one" fk-name="INV_ITEM_CONTAINER" rel-entity-name="Container">
         <key-map field-name="containerId"/>
       </relation>
-      <relation type="one" rel-entity-name="Lot">
+      <relation type="one" fk-name="INV_ITEM_LOT" rel-entity-name="Lot">
         <key-map field-name="lotId"/>
       </relation>
-      <relation type="one" rel-entity-name="Uom">
+      <relation type="one" fk-name="INV_ITEM_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
       </relation>
       <relation type="many" rel-entity-name="InventoryItemStatus">
@@ -699,7 +699,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="inventoryItemId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="InventoryItem">
+      <relation type="one" fk-name="INV_ITEM_ATTR" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
       </relation>
       <relation type="many" rel-entity-name="InventoryItemTypeAttr">
@@ -715,10 +715,10 @@
       <prim-key field="inventoryItemId"/>
       <prim-key field="statusId"/>
       <prim-key field="statusDatetime"/>
-      <relation type="one" rel-entity-name="InventoryItem">
+      <relation type="one" fk-name="INV_ITEM_STTS_II" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
       </relation>
-      <relation type="one" rel-entity-name="StatusItem">
+      <relation type="one" fk-name="INV_ITEM_STTS_SI" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
     </entity>
@@ -730,7 +730,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="inventoryItemTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="InventoryItemType">
+      <relation type="one" fk-name="INV_ITEM_TYPPAR" title="Parent" rel-entity-name="InventoryItemType">
         <key-map field-name="parentTypeId" rel-field-name="inventoryItemTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="InventoryItemType">
@@ -750,7 +750,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="inventoryItemTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="InventoryItemType">
+      <relation type="one" fk-name="INV_ITEM_TYP_ATTR" rel-entity-name="InventoryItemType">
         <key-map field-name="inventoryItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="InventoryItemAttribute">
@@ -770,13 +770,13 @@
       <field name="comments" type="comment"></field>
       <prim-key field="inventoryItemId"/>
       <prim-key field="physicalInventoryId"/>
-      <relation type="one" rel-entity-name="VarianceReason">
+      <relation type="one" fk-name="INV_ITEM_VAR_RSN" rel-entity-name="VarianceReason">
         <key-map field-name="varianceReasonId"/>
       </relation>
-      <relation type="one" rel-entity-name="PhysicalInventory">
+      <relation type="one" fk-name="INV_ITEM_VAR_PINV" rel-entity-name="PhysicalInventory">
         <key-map field-name="physicalInventoryId"/>
       </relation>
-      <relation type="one" rel-entity-name="InventoryItem">
+      <relation type="one" fk-name="INV_ITEM_VAR_ITEM" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
       </relation>
       <relation type="many" rel-entity-name="ItemVarianceAcctgTrans">
@@ -791,16 +791,16 @@
       <field name="inventoryItemId" type="id"></field>
       <field name="physicalInventoryId" type="id"></field>
       <prim-key field="acctgTransId"/>
-      <relation type="one" rel-entity-name="AcctgTrans">
+      <relation type="one" fk-name="ITEM_VAR_ACCT_TRNS" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId"/>
       </relation>
-      <relation type="one" rel-entity-name="PhysicalInventory">
+      <relation type="one" fk-name="ITEM_VAR_PHS_INV" rel-entity-name="PhysicalInventory">
         <key-map field-name="physicalInventoryId"/>
       </relation>
-      <relation type="one" rel-entity-name="InventoryItem">
+      <relation type="one" fk-name="ITEM_VAR_ITEM" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
       </relation>
-      <relation type="one" rel-entity-name="InventoryItemVariance">
+      <relation type="one" fk-name="ITEM_VAR_ITEM_VAR" rel-entity-name="InventoryItemVariance">
         <key-map field-name="inventoryItemId"/>
         <key-map field-name="physicalInventoryId"/>
       </relation>
@@ -869,7 +869,7 @@
       <field name="pricePercent" type="floating-point"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="priceComponentId"/>
-      <relation type="one" rel-entity-name="PriceComponentType">
+      <relation type="one" fk-name="PRICE_COMP_TYPE" rel-entity-name="PriceComponentType">
         <key-map field-name="priceComponentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="PriceComponentTypeAttr">
@@ -878,44 +878,44 @@
       <relation type="many" rel-entity-name="PriceComponentAttribute">
         <key-map field-name="priceComponentId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="PRICE_COMP_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyClassificationGroup">
+      <relation type="one" fk-name="PRICE_COMP_PCG" rel-entity-name="PartyClassificationGroup">
         <key-map field-name="partyClassificationGroupId"/>
       </relation>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="PRICE_COMP_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductFeature">
+      <relation type="one" fk-name="PRICE_COMP_PRFEAT" rel-entity-name="ProductFeature">
         <key-map field-name="productFeatureId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductCategory">
+      <relation type="one" fk-name="PRICE_COMP_PRCAT" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
-      <relation type="one" rel-entity-name="Agreement">
+      <relation type="one" fk-name="PRICE_COMP_AGRMNT" rel-entity-name="Agreement">
         <key-map field-name="agreementId"/>
       </relation>
-      <relation type="one" rel-entity-name="AgreementItem">
+      <relation type="one" fk-name="PRICE_COMP_AITEM" rel-entity-name="AgreementItem">
         <key-map field-name="agreementId"/>
         <key-map field-name="agreementItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="Uom">
+      <relation type="one" fk-name="PRICE_COMP_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
       </relation>
-      <relation type="one" rel-entity-name="Geo">
+      <relation type="one" fk-name="PRICE_COMP_GEO" rel-entity-name="Geo">
         <key-map field-name="geoId"/>
       </relation>
-      <relation type="one" rel-entity-name="SaleType">
+      <relation type="one" fk-name="PRICE_COMP_STYPE" rel-entity-name="SaleType">
         <key-map field-name="saleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="QuantityBreak">
+      <relation type="one" fk-name="PRICE_COMP_QBREAK" rel-entity-name="QuantityBreak">
         <key-map field-name="quantityBreakId"/>
       </relation>
-      <relation type="one" title="Utilization" rel-entity-name="Uom">
+      <relation type="one" fk-name="PRICE_COMP_UTUOM" title="Utilization" rel-entity-name="Uom">
         <key-map field-name="utilizationUomId" rel-field-name="uomId"/>
       </relation>
-      <relation type="one" title="OrderValue" rel-entity-name="QuantityBreak">
+      <relation type="one" fk-name="PRICE_COMP_OCQBRK" title="OrderValue" rel-entity-name="QuantityBreak">
         <key-map field-name="orderValueBreakId" rel-field-name="quantityBreakId"/>
       </relation>
     </entity>
@@ -927,7 +927,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="priceComponentId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="PriceComponent">
+      <relation type="one" fk-name="PRICE_COMP_PRICE" rel-entity-name="PriceComponent">
         <key-map field-name="priceComponentId"/>
       </relation>
       <relation type="many" rel-entity-name="PriceComponentTypeAttr">
@@ -942,7 +942,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="priceComponentTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="PriceComponentType">
+      <relation type="one" fk-name="PRICE_COMP_TYPEPAR" title="Parent" rel-entity-name="PriceComponentType">
         <key-map field-name="parentTypeId" rel-field-name="priceComponentTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="PriceComponentType">
@@ -962,7 +962,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="priceComponentTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="PriceComponentType">
+      <relation type="one" fk-name="PRICE_COMP_TATTR" rel-entity-name="PriceComponentType">
         <key-map field-name="priceComponentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="PriceComponentAttribute">
@@ -983,7 +983,7 @@
       <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="quantityBreakId"/>
       </relation>
-      <relation type="one" rel-entity-name="QuantityBreakType">
+      <relation type="one" fk-name="QUANT_BRK_TYPE" rel-entity-name="QuantityBreakType">
         <key-map field-name="quantityBreakTypeId"/>
       </relation>
     </entity>
@@ -1020,10 +1020,10 @@
       <field name="idValue" type="id-long"></field>
       <prim-key field="goodIdentificationTypeId"/>
       <prim-key field="productId"/>
-      <relation type="one" rel-entity-name="GoodIdentificationType">
+      <relation type="one" fk-name="GOOD_ID_TYPE" rel-entity-name="GoodIdentificationType">
         <key-map field-name="goodIdentificationTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="GOOD_ID_PRODICT" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
     </entity>
@@ -1035,7 +1035,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="goodIdentificationTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="GoodIdentificationType">
+      <relation type="one" fk-name="GOOD_ID_TYPE_PAR" title="Parent" rel-entity-name="GoodIdentificationType">
         <key-map field-name="parentTypeId" rel-field-name="goodIdentificationTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="GoodIdentificationType">
@@ -1089,13 +1089,13 @@
       <relation type="many" rel-entity-name="ProductAttribute">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductType">
+      <relation type="one" fk-name="PROD_TYPE" rel-entity-name="ProductType">
         <key-map field-name="productTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductTypeAttr">
         <key-map field-name="productTypeId"/>
       </relation>
-      <relation type="one" title="Primary" rel-entity-name="ProductCategory">
+      <relation type="one" fk-name="PROD_PRIMARY_CAT" title="Primary" rel-entity-name="ProductCategory">
         <key-map field-name="primaryProductCategoryId" rel-field-name="productCategoryId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductCategoryMember">
@@ -1104,10 +1104,10 @@
       <relation type="many" rel-entity-name="ProductKeyword">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" title="Manufacturer" rel-entity-name="Party">
+      <relation type="one" fk-name="PROD_MFG_PARTY" title="Manufacturer" rel-entity-name="Party">
         <key-map field-name="manufacturerPartyId" rel-field-name="partyId"/>
       </relation>
-      <relation type="one" title="Quantity" rel-entity-name="Uom">
+      <relation type="one" fk-name="PROD_QUANT_UOM" title="Quantity" rel-entity-name="Uom">
         <key-map field-name="quantityUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="many" rel-entity-name="GoodIdentification">
@@ -1137,7 +1137,7 @@
       <relation type="many" rel-entity-name="SupplierProduct">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" title="Weight" rel-entity-name="Uom">
+      <relation type="one" fk-name="PROD_WEIGHT_UOM" title="Weight" rel-entity-name="Uom">
         <key-map field-name="weightUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductOrderItem">
@@ -1146,10 +1146,10 @@
       <relation type="many" rel-entity-name="ShoppingListItem">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" title="CreatedBy" rel-entity-name="UserLogin">
+      <relation type="one" fk-name="PROD_CB_USERLOGIN" title="CreatedBy" rel-entity-name="UserLogin">
         <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
       </relation>
-      <relation type="one" title="LastModifiedBy" rel-entity-name="UserLogin">
+      <relation type="one" fk-name="PROD_LMB_USERLOGIN" title="LastModifiedBy" rel-entity-name="UserLogin">
         <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
     </entity>
@@ -1168,13 +1168,13 @@
       <prim-key field="productIdTo"/>
       <prim-key field="productAssocTypeId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="ProductAssocType">
+      <relation type="one" fk-name="PROD_ASSOC_TYPE" rel-entity-name="ProductAssocType">
         <key-map field-name="productAssocTypeId"/>
       </relation>
-      <relation type="one" title="Main" rel-entity-name="Product">
+      <relation type="one" fk-name="PROD_ASSOC_MPROD" title="Main" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" title="Assoc" rel-entity-name="Product">
+      <relation type="one" fk-name="PROD_ASSOC_APROD" title="Assoc" rel-entity-name="Product">
         <key-map field-name="productIdTo" rel-field-name="productId"/>
       </relation>
     </entity>
@@ -1186,7 +1186,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="productAssocTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="ProductAssocType">
+      <relation type="one" fk-name="PROD_ASSOC_TYPEPAR" title="Parent" rel-entity-name="ProductAssocType">
         <key-map field-name="parentTypeId" rel-field-name="productAssocTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="ProductAssocType">
@@ -1205,7 +1205,7 @@
       <field name="attrType" type="value"></field>
       <prim-key field="productId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="PROD_ATTR" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductTypeAttr">
@@ -1219,10 +1219,10 @@
       <field name="productId" type="id-ne"></field>
       <prim-key field="dataObjectId"/>
       <prim-key field="productId"/>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="PROD_DATA_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" rel-entity-name="DataObject">
+      <relation type="one" fk-name="PROD_DATA_DATA" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId"/>
       </relation>
     </entity>
@@ -1233,7 +1233,7 @@
       <field name="keyword" type="short-varchar"></field>
       <prim-key field="productId"/>
       <prim-key field="keyword"/>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="PROD_KWD_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
     </entity>
@@ -1245,7 +1245,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="productTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="ProductType">
+      <relation type="one" fk-name="PROD_TYPE_PARENT" title="Parent" rel-entity-name="ProductType">
         <key-map field-name="parentTypeId" rel-field-name="productTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="ProductType">
@@ -1265,7 +1265,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="productTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="ProductType">
+      <relation type="one" fk-name="PROD_TYPE_ATTR" rel-entity-name="ProductType">
         <key-map field-name="productTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductAttribute">
@@ -1312,17 +1312,17 @@
       <prim-key field="productPromoId"/>
       <prim-key field="productPromoRuleId"/>
       <prim-key field="productPromoActionSeqId"/>
-      <relation type="one" rel-entity-name="ProductPromoActionType">
+      <relation type="one" fk-name="PROD_PRACT_TYPE" rel-entity-name="ProductPromoActionType">
         <key-map field-name="productPromoActionTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductPromo">
+      <relation type="one" fk-name="PROD_PRACT_PR" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductPromoRule">
+      <relation type="one" fk-name="PROD_PRACT_RL" rel-entity-name="ProductPromoRule">
         <key-map field-name="productPromoId"/>
         <key-map field-name="productPromoRuleId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderAdjustmentType">
+      <relation type="one" fk-name="PROD_PRACT_OATYPE" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="orderAdjustmentTypeId"/>
       </relation>
     </entity>
@@ -1348,17 +1348,17 @@
       <prim-key field="productPromoId"/>
       <prim-key field="productPromoRuleId"/>
       <prim-key field="productPromoCondSeqId"/>
-      <relation type="one" rel-entity-name="ProductPromo">
+      <relation type="one" fk-name="PROD_PRCOND_PROMO" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductPromoRule">
+      <relation type="one" fk-name="PROD_PRCOND_RULE" rel-entity-name="ProductPromoRule">
         <key-map field-name="productPromoId"/>
         <key-map field-name="productPromoRuleId"/>
       </relation>
-      <relation type="one" title="InputParam" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="PROD_PRCOND_INENUM" title="InputParam" rel-entity-name="Enumeration">
         <key-map field-name="inputParamEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="one" title="Operator" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="PROD_PRCOND_OPENUM" title="Operator" rel-entity-name="Enumeration">
         <key-map field-name="operatorEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
@@ -1370,7 +1370,7 @@
       <field name="ruleName" type="name"></field>
       <prim-key field="productPromoId"/>
       <prim-key field="productPromoRuleId"/>
-      <relation type="one" rel-entity-name="ProductPromo">
+      <relation type="one" fk-name="PROD_PRRLE_PROMO" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductPromoAction">
@@ -1394,21 +1394,21 @@
       <field name="partyId" type="id"></field>
       <field name="usageDateTime" type="date-time"></field>
       <prim-key field="productPromoUsageId"/>
-      <relation type="one" rel-entity-name="ProductPromo">
+      <relation type="one" fk-name="PROD_PRUSG" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="ProductPromoRule">
         <key-map field-name="productPromoId"/>
         <key-map field-name="productPromoRuleId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="PROD_PRUSG_OHEAD" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="PROD_PRUSG_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
     </entity>
@@ -1425,13 +1425,13 @@
       <field name="facilityId" type="id"></field>
       <field name="description" type="description"></field>
       <prim-key field="containerId"/>
-      <relation type="one" rel-entity-name="ContainerType">
+      <relation type="one" fk-name="CONTAINER_TYPE" rel-entity-name="ContainerType">
         <key-map field-name="containerTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="InventoryItem">
         <key-map field-name="containerId"/>
       </relation>
-      <relation type="one" rel-entity-name="Facility">
+      <relation type="one" fk-name="CONTAINER_FACILITY" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
     </entity>
@@ -1454,7 +1454,7 @@
       <field name="squareFootage" type="numeric"></field>
       <field name="description" type="description"></field>
       <prim-key field="facilityId"/>
-      <relation type="one" rel-entity-name="FacilityType">
+      <relation type="one" fk-name="FACILITY_TYPE" rel-entity-name="FacilityType">
         <key-map field-name="facilityTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="FacilityTypeAttr">
@@ -1490,7 +1490,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="facilityId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="Facility">
+      <relation type="one" fk-name="FACILITY_ATTR" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
       <relation type="many" rel-entity-name="FacilityTypeAttr">
@@ -1505,10 +1505,10 @@
       <field name="contactMechId" type="id-ne"></field>
       <prim-key field="facilityId"/>
       <prim-key field="contactMechId"/>
-      <relation type="one" rel-entity-name="Facility">
+      <relation type="one" fk-name="FACILITY_CM_FAC" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="FACILITY_CM_CM" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>
@@ -1530,7 +1530,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="facilityTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="FacilityType">
+      <relation type="one" fk-name="FACILITY_TYPEPAR" title="Parent" rel-entity-name="FacilityType">
         <key-map field-name="parentTypeId" rel-field-name="facilityTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="FacilityType">
@@ -1550,7 +1550,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="facilityTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="FacilityType">
+      <relation type="one" fk-name="FACILITY_TYPE_ATTR" rel-entity-name="FacilityType">
         <key-map field-name="facilityTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="FacilityAttribute">
@@ -1568,13 +1568,13 @@
       <field name="facilityRoleTypeId" type="id"></field>
       <prim-key field="partyId"/>
       <prim-key field="facilityId"/>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="PARTY_FAC_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="Facility">
+      <relation type="one" fk-name="PARTY_FAC_FAC" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
-      <relation type="one" rel-entity-name="FacilityRoleType">
+      <relation type="one" fk-name="PARTY_FAC_ROLET" rel-entity-name="FacilityRoleType">
         <key-map field-name="facilityRoleTypeId"/>
       </relation>
     </entity>
@@ -1593,10 +1593,10 @@
       <prim-key field="productCategoryId"/>
       <prim-key field="partyClassificationGroupId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="ProductCategory">
+      <relation type="one" fk-name="MARKET_INT_PCAT" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyClassificationGroup">
+      <relation type="one" fk-name="MARKET_INT_PCGRP" rel-entity-name="PartyClassificationGroup">
         <key-map field-name="partyClassificationGroupId"/>
       </relation>
     </entity>
@@ -1614,16 +1614,16 @@
       <field name="reorderQuantity" type="floating-point"></field>
       <field name="reorderLevel" type="floating-point"></field>
       <prim-key field="reorderGuidelineId"/>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="REORDER_GD_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="REORDER_GD_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="Facility">
+      <relation type="one" fk-name="REORDER_GD_FAC" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
-      <relation type="one" rel-entity-name="Geo">
+      <relation type="one" fk-name="REORDER_GD_GEO" rel-entity-name="Geo">
         <key-map field-name="geoId"/>
       </relation>
     </entity>
@@ -1650,16 +1650,16 @@
       <field name="comments" type="comment"></field>
       <prim-key field="productId"/>
       <prim-key field="partyId"/>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="SUPPL_PROD_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="SUPPL_PROD_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="SupplierPrefOrder">
+      <relation type="one" fk-name="SUPPL_PROD_SPORD" rel-entity-name="SupplierPrefOrder">
         <key-map field-name="supplierPrefOrderId"/>
       </relation>
-      <relation type="one" rel-entity-name="SupplierRatingType">
+      <relation type="one" fk-name="SUPPL_PROD_SRTPE" rel-entity-name="SupplierRatingType">
         <key-map field-name="supplierRatingTypeId"/>
       </relation>
     </entity>
