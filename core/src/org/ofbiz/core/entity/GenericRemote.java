@@ -1,12 +1,12 @@
 package org.ofbiz.core.entity;
 
-import java.io.*;
+import java.rmi.*;
+import javax.ejb.*;
 import java.util.*;
-import org.ofbiz.core.entity.model.*;
 
 /**
- * <p><b>Title:</b> Generic Entity Value Object
- * <p><b>Description:</b> Handles persisntence for any defined entity.
+ * <p><b>Title:</b> Generic Entity EJB Remote Interface
+ * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a 
@@ -28,24 +28,14 @@ import org.ofbiz.core.entity.model.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Aug 08 2001
+ *@created    Sat Aug 11 2001
  *@version    1.0
  */
-public class GenericValue extends GenericEntity
+public interface GenericRemote extends EJBObject
 {
-  public GenericHelper helper = null;
-  
-  /** Creates new GenericValue */
-  public GenericValue(String entityName) { super(entityName); }
-  /** Creates new GenericValue from existing Map */
-  public GenericValue(String entityName, Map fields) { super(entityName, fields); }
-  /** Creates new GenericValue from existing GenericValue */
-  public GenericValue(GenericValue value) { super(value); }
-  /** Creates new GenericValue from existing GenericValue */
-  public GenericValue(GenericPK primaryKey) { super(primaryKey); }
-  
-  public GenericPK getPrimaryKey() { return new GenericPK(entityName, this.getFields(this.getModelEntity().pks)); }
-  
-  public void store() { helper.store(this); }
-  public void remove() { helper.removeByPrimaryKey(getPrimaryKey()); }
+  /** Get the value object of this Generic Entity. */
+  public GenericValue getValueObject() throws RemoteException;
+  /** Set the values in the value object for this Generic Entity. */
+  public void setValueObject(GenericValue genericValue) throws RemoteException;
 }
+

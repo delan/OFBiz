@@ -56,7 +56,7 @@ public class GenericEntity implements Serializable
   //would be nice to add valid field name checking for the given entityName
   public synchronized void set(String name, Object value) { fields.put(name, value); modified = true; }
   
-  //would be nice to add some ClassCastException handling...
+  //might be nice to add some ClassCastException handling...
   public String getString(String name) { return (String)fields.get(name); }
   public java.sql.Timestamp getTimestamp(String name) { return (java.sql.Timestamp)fields.get(name); }
   public java.sql.Time getTime(String name) { return (java.sql.Time)fields.get(name); }
@@ -66,6 +66,10 @@ public class GenericEntity implements Serializable
   public Float getFloat(String name) { return (Float)fields.get(name); }
   public Double getDouble(String name) { return (Double)fields.get(name); }
   
+  /** Returns key/value pairs of entity fields
+   * @return java.util.Collection
+   */
+  public Collection getAllKeys() { return fields.keySet(); }
   /** Returns key/value pairs of entity fields
    * @return java.util.Map
    */

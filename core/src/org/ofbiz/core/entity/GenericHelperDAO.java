@@ -1,6 +1,7 @@
 package org.ofbiz.core.entity;
 
 import java.util.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> Generic Entity Helper Class
@@ -29,40 +30,79 @@ import java.util.*;
  *@created    Tue Aug 07 01:10:32 MDT 2001
  *@version    1.0
  */
-public interface GenericHelper
+public class GenericHelperDAO implements GenericHelper
 {
+  GenericDAO genericDAO;
+  
+  public GenericHelperDAO() { genericDAO = new GenericDAO("default"); }
+  public GenericHelperDAO(String serverName) { genericDAO = new GenericDAO(serverName); }
+  
   /** Creates a Entity in the form of a GenericValue and write it to the database
    *@return GenericValue instance containing the new instance
    */
-  public GenericValue create(String entityName, Map fields);
+  public GenericValue create(String entityName, Map fields)
+  {
+    if(entityName == null || fields == null) { return null; }
+    GenericValue genericValue = null;
+    return genericValue;
+  }
 
   /** Creates a Entity in the form of a GenericValue and write it to the database
    *@return GenericValue instance containing the new instance
    */
-  public GenericValue create(GenericValue value);
+  public GenericValue create(GenericValue value)
+  {
+    if(value == null) { return null; }
+    GenericValue genericValue = null;
+    return genericValue;
+  }
 
   /** Creates a Entity in the form of a GenericValue and write it to the database
    *@return GenericValue instance containing the new instance
    */
-  public GenericValue create(GenericPK primaryKey);
+  public GenericValue create(GenericPK primaryKey)
+  {
+    if(primaryKey == null) { return null; }
+    GenericValue genericValue = null;
+    return genericValue;
+  }
 
   /** Find a Generic Entity by its Primary Key
    *@param primaryKey The primary key to find by.
    *@return The GenericValue corresponding to the primaryKey
    */
-  public GenericValue findByPrimaryKey(GenericPK primaryKey);
+  public GenericValue findByPrimaryKey(GenericPK primaryKey)
+  {
+    if(primaryKey == null) { return null; }
+    GenericValue genericValue = null;
+    return genericValue;
+  }
 
   /** Remove a Generic Entity corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
    */
-  public void removeByPrimaryKey(GenericPK primaryKey);
+  public void removeByPrimaryKey(GenericPK primaryKey)
+  {
+    if(primaryKey == null) return;
+    GenericValue generic = findByPrimaryKey(primaryKey);
+    try 
+    { 
+      Debug.logInfo("Removing GenericValue: " + generic.toString());
+      if(generic != null) generic.remove();
+    }
+    catch(Exception e) { Debug.logWarning(e); }
+  }
 
   /** Finds all Generic entities
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
    *@return    Collection containing all Generic entities
    */
-  public Collection findAll(String entityName, List orderBy);
+  public Collection findAll(String entityName, List orderBy)
+  {
+    Collection collection = null;
+    return collection;
+  }
 
   /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
    *@param entityName The Name of the Entity as defined in the entity XML file
@@ -70,17 +110,38 @@ public interface GenericHelper
    *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
    *@return Collection of GenericValue instances that match the query
    */
-  public Collection findByAnd(String entityName, Map fields, List orderBy);
+  public Collection findByAnd(String entityName, Map fields, List orderBy)
+  {
+    Collection collection = null;
+    return collection;
+  }
   
   /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param fields The fields of the named entity to query by with their corresponging values
    *@return Collection of GenericValue instances that match the query
    */
-  public void removeByAnd(String entityName, Map fields);
+  public void removeByAnd(String entityName, Map fields)
+  {
+    if(entityName == null || fields == null) { return; }
+    Iterator iterator = UtilMisc.toIterator(findByAnd(entityName, fields, null));
+
+    while(iterator != null && iterator.hasNext())
+    {
+      try
+      {
+        GenericValue generic = (GenericValue)iterator.next();
+        Debug.logInfo("Removing GenericValue: " + generic.toString());
+        generic.remove();
+      }
+      catch(Exception e) { Debug.logError(e); }
+    }
+  }
   
   /** Store the Entity from the GenericValue to the database
    *@param GenericValue instance containing the entity
    */
-  public void store(GenericValue value);
+  public void store(GenericValue value)
+  {
+  }
 }

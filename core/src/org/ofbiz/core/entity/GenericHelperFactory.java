@@ -1,12 +1,10 @@
 package org.ofbiz.core.entity;
 
-import java.io.*;
-import java.util.*;
-import org.ofbiz.core.entity.model.*;
+import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> Generic Entity Value Object
- * <p><b>Description:</b> Handles persisntence for any defined entity.
+ * <p><b>Title:</b> Generic Entity Helper Factory Class
+ * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a 
@@ -28,24 +26,22 @@ import org.ofbiz.core.entity.model.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Aug 08 2001
+ *@created    Tue Aug 07 01:10:32 MDT 2001
  *@version    1.0
  */
-public class GenericValue extends GenericEntity
+public class GenericHelperFactory
 {
-  public GenericHelper helper = null;
-  
-  /** Creates new GenericValue */
-  public GenericValue(String entityName) { super(entityName); }
-  /** Creates new GenericValue from existing Map */
-  public GenericValue(String entityName, Map fields) { super(entityName, fields); }
-  /** Creates new GenericValue from existing GenericValue */
-  public GenericValue(GenericValue value) { super(value); }
-  /** Creates new GenericValue from existing GenericValue */
-  public GenericValue(GenericPK primaryKey) { super(primaryKey); }
-  
-  public GenericPK getPrimaryKey() { return new GenericPK(entityName, this.getFields(this.getModelEntity().pks)); }
-  
-  public void store() { helper.store(this); }
-  public void remove() { helper.removeByPrimaryKey(getPrimaryKey()); }
+  public static GenericHelper getDefaultHelper()
+  {
+    if(UtilProperties.propertyValueEqualsIgnoreCase("servers", "jdbc.uri", "jdbc"))
+      return getJDBCHelper();
+    else
+      return getEJBHelper();
+  }
+
+  public static GenericHelper getJDBCHelper() { return new GenericHelperDAO(); }
+  public static GenericHelper getJDBCHelper(String serverName) { return new GenericHelperDAO(serverName); }
+
+  public static GenericHelper getEJBHelper() { return new GenericHelperEJB(); }
+  public static GenericHelper getEJBHelper(String serverName) { return new GenericHelperEJB(serverName); }
 }

@@ -271,9 +271,12 @@ public class ModelReader
     }
     
     //now that we have the pks and the fields, make the nopks vector
-    entity.nopks = new Vector(entity.fields);
-    for(int ind=0;ind<entity.pks.size();ind++)
-      entity.nopks.removeElement(entity.pks.elementAt(ind)); 
+    entity.nopks = new Vector();
+    for(int ind=0;ind<entity.fields.size();ind++)
+    {
+      ModelField field = (ModelField)entity.fields.elementAt(ind);
+      if(!field.isPk) entity.nopks.add(field);
+    }
     
     if(utilTimer != null) utilTimer.timerString("  createModelEntity: before relations");
     NodeList relationList = entityElement.getElementsByTagName("relation");

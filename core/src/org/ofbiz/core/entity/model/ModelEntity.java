@@ -62,20 +62,7 @@ public class ModelEntity
   public Vector relations = new Vector();
 
   /** Default Constructor */  
-  public ModelEntity()
-  {
-  }
-
-  public void makePkArray()
-  {
-    for(int i = 0; i < fields.size(); i++)
-    {
-      if(((ModelField)fields.elementAt(i)).isPk)
-      {
-        pks.add(fields.elementAt(i));
-      }
-    }
-  }
+  public ModelEntity() { }
 
   public String nameString(Vector flds) { return nameString(flds, ", ", ""); }
   public String nameString(Vector flds, String separator, String afterLast)
