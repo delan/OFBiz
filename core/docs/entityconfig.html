@@ -295,6 +295,32 @@ sub-elements:</p>
     <td>Add missing entities and fields to the datasource on startup when checking
     is done? Must be true or false, defaults to false.</td>
 </tr>
+<tr>
+    <td>use-foreign-keys</td><td>N</td>
+    <td>Use/Create foreign keys for "one" relationships? Must be true or false, defaults to true.</td>
+</tr>
+<tr>
+    <td>use-foreign-key-indices</td><td>N</td>
+    <td>Use/Create indices for foreign keys (ie an index on the foreign key columns)?
+    Note that creating foreign keys is not required for this to work and that
+    indices are created for type "one" relationship definitions. 
+    Must be true or false, defaults to true.</td>
+</tr>
+<tr>
+    <td>check-fks-on-start</td><td>N</td>
+    <td>Check foreign keys at startup and add missing as needed? Must be true or false, defaults to false.
+    Some databases have a hard time with this and do not return a full list of foreign keys.</td>
+</tr>
+<tr>
+    <td>use-pk-constraint-names</td><td>N</td>
+    <td>Use constraint names for Primary Keys? Some databases have a problem
+    with this, but work fine if they assign their own names. Must be true or false, defaults to true.</td>
+</tr>
+<tr>
+    <td>constraint-name-clip-length</td><td>N</td>
+    <td>Specifies max length of a constraint name. Constraint names are clipped
+    to this length. When playing with this watch for duplicate constraint names. Must be an integer, defaults to 30.</td>
+</tr>
 </table>
 <br>
 <table cellpadding='2' cellspacing='0' border='1'>

@@ -84,6 +84,14 @@ public class DatabaseUtil {
             useFks = !"false".equals(datasourceElement.getAttribute("use-foreign-keys"));
         }
         
+        boolean useFkIndices = true;
+        if (datasourceElement == null) {
+            Debug.logWarning("datasource def not found with name " + helperName + ", using defaults use-foreign-key-indices (true)");
+        } else {
+            //anything but false is true
+            useFkIndices = !"false".equals(datasourceElement.getAttribute("use-foreign-key-indices"));
+        }
+        
         boolean checkForeignKeysOnStart = false;
         if (datasourceElement == null) {
             Debug.logWarning("datasource def not found with name " + helperName + ", using defaults for check-fks-on-start (false)");
@@ -400,7 +408,29 @@ public class DatabaseUtil {
                     if (messages != null) messages.add(message);
                 }
             }
-            
+        }
+        // for each newly added table, add fks
+        if (useFkIndices) {
+            Iterator eaIter = entitiesAdded.iterator();
+
+            while (eaIter.hasNext()) {
+                ModelEntity curEntity = (ModelEntity) eaIter.next();
+                String indErrMsg = this.createForeignKeyIndices(curEntity, constraintNameClipLength);
+
+                if (indErrMsg != null && indErrMsg.length() > 0) {
+                    String message = "Could not create foreign key indices for entity \"" + curEntity.getEntityName() + "\"";
+
+                    Debug.logError(message, module);
+                    if (messages != null) messages.add(message);
+                    Debug.logError(indErrMsg, module);
+                    if (messages != null) messages.add(indErrMsg);
+                } else {
+                    String message = "Created foreign key indices for entity \"" + curEntity.getEntityName() + "\"";
+
+                    Debug.logImportant(message, module);
+                    if (messages != null) messages.add(message);
+                }
+            }
         }
         
         //make sure each one-relation has an FK
@@ -1073,6 +1103,8 @@ public class DatabaseUtil {
         return null;
     }
 
+    /* ====================================================================== */
+    /* ====================================================================== */
     public String makeFkConstraintName(ModelRelation modelRelation, int constraintNameClipLength) {
         String relConstraintName = modelRelation.getFkName();
         if (relConstraintName == null || relConstraintName.length() == 0) {
@@ -1087,6 +1119,8 @@ public class DatabaseUtil {
         return relConstraintName;
     }
     
+    /* ====================================================================== */
+    /* ====================================================================== */
     public String createForeignKeys(ModelEntity entity, Map modelEntities, int constraintNameClipLength) {
         if (entity == null) {
             return "ModelEntity was null and is required to create foreign keys for a table";
@@ -1094,6 +1128,8 @@ public class DatabaseUtil {
         if (entity instanceof ModelViewEntity) {
             return "ERROR: Cannot create foreign keys for a view entity";
         }
+
+        StringBuffer retMsgsBuffer = new StringBuffer();
         
         //go through the relationships to see if any foreign keys need to be added
         Iterator relationsIter = entity.getRelationsIterator();
@@ -1114,13 +1150,19 @@ public class DatabaseUtil {
                 }
                 
                 String retMsg = createForeignKey(entity, modelRelation, relModelEntity, constraintNameClipLength);
-
-                if (retMsg != null) {
-                    return retMsg;
+                if (retMsg != null && retMsg.length() > 0) {
+                    if (retMsgsBuffer.length() > 0) {
+                        retMsgsBuffer.append("\n");
+                    }
+                    retMsgsBuffer.append(retMsg);
                 }
             }
         }
-        return null;
+        if (retMsgsBuffer.length() > 0) {
+            return retMsgsBuffer.toString();
+        } else {
+            return null;
+        }
     }
         
     public String createForeignKey(ModelEntity entity, ModelRelation modelRelation, ModelEntity relModelEntity, int constraintNameClipLength) {
@@ -1142,7 +1184,7 @@ public class DatabaseUtil {
         sqlBuf.append(" ADD ");
         sqlBuf.append(makeFkConstraintClause(entity, modelRelation, relModelEntity, constraintNameClipLength));
     
-        //Debug.logVerbose("[createForeignKey] sql=" + sqlBuf.toString());
+        Debug.logVerbose("[createForeignKey] sql=" + sqlBuf.toString());
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate(sqlBuf.toString());
@@ -1212,7 +1254,7 @@ public class DatabaseUtil {
         
         //go through the relationships to see if any foreign keys need to be added
         Iterator relationsIter = entity.getRelationsIterator();
-
+        StringBuffer retMsgsBuffer = new StringBuffer();
         while (relationsIter.hasNext()) {
             ModelRelation modelRelation = (ModelRelation) relationsIter.next();
             
@@ -1230,12 +1272,19 @@ public class DatabaseUtil {
                 
                 String retMsg = deleteForeignKey(entity, modelRelation, relModelEntity, constraintNameClipLength);
 
-                if (retMsg != null) {
-                    return retMsg;
+                if (retMsg != null && retMsg.length() > 0) {
+                    if (retMsgsBuffer.length() > 0) {
+                        retMsgsBuffer.append("\n");
+                    }
+                    retMsgsBuffer.append(retMsg);
                 }
             }
         }
-        return null;
+        if (retMsgsBuffer.length() > 0) {
+            return retMsgsBuffer.toString();
+        } else {
+            return null;
+        }
     }
         
     public String deleteForeignKey(ModelEntity entity, ModelRelation modelRelation, ModelEntity relModelEntity, int constraintNameClipLength) {
@@ -1259,7 +1308,7 @@ public class DatabaseUtil {
         sqlBuf.append(" DROP CONSTRAINT ");
         sqlBuf.append(relConstraintName);
     
-        Debug.logVerbose("[createTable] sql=" + sqlBuf.toString());
+        Debug.logVerbose("[deleteForeignKey] sql=" + sqlBuf.toString());
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate(sqlBuf.toString());
@@ -1278,6 +1327,175 @@ public class DatabaseUtil {
         return null;
     }
 
+    /* ====================================================================== */
+    /* ====================================================================== */
+    public String createForeignKeyIndices(ModelEntity entity, int constraintNameClipLength) {
+        if (entity == null) {
+            return "ModelEntity was null and is required to create foreign keys indices for a table";
+        }
+        if (entity instanceof ModelViewEntity) {
+            return "ERROR: Cannot create foreign keys indices for a view entity";
+        }
+
+        StringBuffer retMsgsBuffer = new StringBuffer();
+        
+        //go through the relationships to see if any foreign keys need to be added
+        Iterator relationsIter = entity.getRelationsIterator();
+
+        while (relationsIter.hasNext()) {
+            ModelRelation modelRelation = (ModelRelation) relationsIter.next();
+            
+            if ("one".equals(modelRelation.getType())) {
+                String retMsg = createForeignKeyIndex(entity, modelRelation, constraintNameClipLength);
+                if (retMsg != null && retMsg.length() > 0) {
+                    if (retMsgsBuffer.length() > 0) {
+                        retMsgsBuffer.append("\n");
+                    }
+                    retMsgsBuffer.append(retMsg);
+                }
+            }
+        }
+        if (retMsgsBuffer.length() > 0) {
+            return retMsgsBuffer.toString();
+        } else {
+            return null;
+        }
+    }
+        
+    public String createForeignKeyIndex(ModelEntity entity, ModelRelation modelRelation, int constraintNameClipLength) {
+        Connection connection = null;
+        Statement stmt = null;
+
+        try {
+            connection = getConnection();
+        } catch (SQLException sqle) {
+            return "Unable to esablish a connection with the database... Error was: " + sqle.toString();
+        } catch (GenericEntityException e) {
+            return "Unable to esablish a connection with the database... Error was: " + e.toString();
+        }
+
+        String createIndexSql = makeFkIndexClause(entity, modelRelation, constraintNameClipLength);
+        Debug.logVerbose("[createForeignKeyIndex] index sql=" + createIndexSql);
+        
+        try {
+            stmt = connection.createStatement();
+            stmt.executeUpdate(createIndexSql);
+        } catch (SQLException sqle) {
+            return "SQL Exception while executing the following:\n" + createIndexSql + "\nError was: " + sqle.toString();
+        } finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException sqle) {}
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) {}
+        }
+        return null;
+    }
+
+    public String makeFkIndexClause(ModelEntity entity, ModelRelation modelRelation, int constraintNameClipLength) {
+        Iterator keyMapsIter = modelRelation.getKeyMapsIterator();
+        StringBuffer mainCols = new StringBuffer();
+
+        while (keyMapsIter.hasNext()) {
+            ModelKeyMap keyMap = (ModelKeyMap) keyMapsIter.next();
+
+            ModelField mainField = entity.getField(keyMap.getFieldName());
+            if (mainCols.length() > 0) {
+                mainCols.append(", ");
+            }
+            mainCols.append(mainField.getColName());
+        }
+
+        StringBuffer indexSqlBuf = new StringBuffer("CREATE INDEX ");
+        String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
+        indexSqlBuf.append(relConstraintName);
+        indexSqlBuf.append(" ON ");
+        indexSqlBuf.append(entity.getTableName());
+        
+        indexSqlBuf.append(" (");
+        indexSqlBuf.append(mainCols.toString());
+        indexSqlBuf.append(")");
+        
+        return indexSqlBuf.toString();
+    }
+    
+    public String deleteForeignKeyIndices(ModelEntity entity, int constraintNameClipLength) {
+        if (entity == null) {
+            return "ModelEntity was null and is required to delete foreign keys indices for a table";
+        }
+        if (entity instanceof ModelViewEntity) {
+            return "ERROR: Cannot delete foreign keys indices for a view entity";
+        }
+
+        StringBuffer retMsgsBuffer = new StringBuffer();
+        
+        //go through the relationships to see if any foreign keys need to be added
+        Iterator relationsIter = entity.getRelationsIterator();
+
+        while (relationsIter.hasNext()) {
+            ModelRelation modelRelation = (ModelRelation) relationsIter.next();
+            
+            if ("one".equals(modelRelation.getType())) {
+                String retMsg = deleteForeignKeyIndex(entity, modelRelation, constraintNameClipLength);
+                if (retMsg != null && retMsg.length() > 0) {
+                    if (retMsgsBuffer.length() > 0) {
+                        retMsgsBuffer.append("\n");
+                    }
+                    retMsgsBuffer.append(retMsg);
+                }
+            }
+        }
+        if (retMsgsBuffer.length() > 0) {
+            return retMsgsBuffer.toString();
+        } else {
+            return null;
+        }
+    }
+        
+    public String deleteForeignKeyIndex(ModelEntity entity, ModelRelation modelRelation, int constraintNameClipLength) {
+        Connection connection = null;
+        Statement stmt = null;
+
+        try {
+            connection = getConnection();
+        } catch (SQLException sqle) {
+            return "Unable to esablish a connection with the database... Error was: " + sqle.toString();
+        } catch (GenericEntityException e) {
+            return "Unable to esablish a connection with the database... Error was: " + e.toString();
+        }
+
+        StringBuffer indexSqlBuf = new StringBuffer("DROP INDEX ");
+        String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
+        indexSqlBuf.append(entity.getTableName());
+        indexSqlBuf.append(".");
+        indexSqlBuf.append(relConstraintName);
+
+        String deleteIndexSql = indexSqlBuf.toString();
+        Debug.logVerbose("[deleteForeignKeyIndex] index sql=" + deleteIndexSql);
+        
+        try {
+            stmt = connection.createStatement();
+            stmt.executeUpdate(deleteIndexSql);
+        } catch (SQLException sqle) {
+            return "SQL Exception while executing the following:\n" + deleteIndexSql + "\nError was: " + sqle.toString();
+        } finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException sqle) {}
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) {}
+        }
+        return null;
+    }
+
+    /* ====================================================================== */
+    /* ====================================================================== */
     public static class ColumnCheckInfo {
         public String tableName;
         public String columnName;
