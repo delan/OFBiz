@@ -62,7 +62,7 @@
 ### Set global-ignores to a set of whitespace-delimited globs
 ### which Subversion will ignore in its 'status' output.
 
-global-ignores = *.o *.lo *.la #*# .*.rej *.rej .*~ *~ .#* *.bak *.class .DS_Store
+global-ignores = *.o *.lo *.la #*# .*.orig *.orig .*.rej *.rej .*~ *~ .#* *.bak *.class .DS_Store
 
 ### Set log-encoding to the default encoding for log messages
 # log-encoding = latin1

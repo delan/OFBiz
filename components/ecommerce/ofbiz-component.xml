@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.14 2004/08/05 16:42:50 ajzeneski Exp $
+ *  $Id$
 -->
 
 <ofbiz-component name="ecommerce">
@@ -41,6 +41,7 @@
     <entity-resource type="data" reader-name="main" loader="main" location="data/DemoTree.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/DemoFactoids.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/DemoRelatedData.xml"/>
+    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoConfigurator.xml"/>
     <webapp name="ecommerce"
         title="ECommerce"
         server="default-server"

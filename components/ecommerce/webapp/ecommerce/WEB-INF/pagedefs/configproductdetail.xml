@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <content-action name="/catalog/productdetail.bsh"/>
+    <content-action name="/catalog/prepareconfigform.bsh"/>
+</page>

@@ -1799,5 +1799,83 @@
         <attribute name="productFeatureIds" type="String" mode="IN" optional="false"/>
         <attribute name="productVariantId" type="String" mode="INOUT" optional="false"/>
     </service>
+    
+    <!-- Product Configuration Services -->
+    <service name="createProductConfig" default-entity-name="ProductConfig" engine="simple"
+                location="org/ofbiz/product/config/ConfigServices.xml" invoke="createProductConfig" auth="true">
+        <description>Create a ProductConfig</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateProductConfig" default-entity-name="ProductConfig" engine="simple"
+                location="org/ofbiz/product/config/ConfigServices.xml" invoke="updateProductConfig" auth="true">
+        <description>Update a ProductConfig</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductConfig" default-entity-name="ProductConfig" engine="simple"
+                location="org/ofbiz/product/config/ConfigServices.xml" invoke="deleteProductConfig" auth="true">
+        <description>Delete a ProductConfig</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- Product Config Items Services -->
+    <service name="createProductConfigItem" default-entity-name="ProductConfigItem" auth="true" engine="simple"
+        location="org/ofbiz/product/config/ConfigServices.xml" invoke="createProductConfigItem">
+        <description>Create a Config Item</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductConfigItem" default-entity-name="ProductConfigItem" auth="true" engine="simple"
+        location="org/ofbiz/product/config/ConfigServices.xml" invoke="updateProductConfigItem">
+        <description>Update a Config Item</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductConfigItem" default-entity-name="ProductConfigItem" auth="true" engine="simple"
+        location="org/ofbiz/product/config/ConfigServices.xml" invoke="deleteProductConfigItem">
+        <description>Delete a Config Item</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- Product Config Options Services -->
+    <service name="createProductConfigOption" default-entity-name="ProductConfigOption" auth="true" engine="simple"
+        location="org/ofbiz/product/config/ConfigServices.xml" invoke="createProductConfigOption">
+        <description>Create a Config Option</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="configItemId" type="String" mode="IN" optional="false"/><!-- FIXME -->
+    </service>
+    <service name="updateProductConfigOption" default-entity-name="ProductConfigOption" auth="true" engine="simple"
+        location="org/ofbiz/product/config/ConfigServices.xml" invoke="updateProductConfigOption">
+        <description>Update a Config Option</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductConfigOption" default-entity-name="ProductConfigOption" auth="true" engine="simple"
+        location="org/ofbiz/product/config/ConfigServices.xml" invoke="deleteProductConfigOption">
+        <description>Delete a Config Option</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- Product Config Product Services -->
+    <service name="createProductConfigProduct" default-entity-name="ProductConfigProduct" auth="true" engine="simple"
+        location="org/ofbiz/product/config/ConfigServices.xml" invoke="createProductConfigProduct">
+        <description>Create a ProductConfigProduct</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductConfigProduct" default-entity-name="ProductConfigProduct" auth="true" engine="simple"
+        location="org/ofbiz/product/config/ConfigServices.xml" invoke="updateProductConfigProduct">
+        <description>Update a ProductConfigProduct</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductConfigProduct" default-entity-name="ProductConfigProduct" auth="true" engine="simple"
+        location="org/ofbiz/product/config/ConfigServices.xml" invoke="deleteProductConfigProduct">
+        <description>Delete ProductConfigProduct</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 
 </services>

@@ -555,4 +555,49 @@
         <field use-when="contentId == null" name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field use-when="contentId != null" name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
+    
+    <!-- ProductConfig -->
+    <form name="AddProductConfig" type="single"
+            target="createProductConfig" title="" 
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createProductConfig" map-name=""/>
+        <field name="productId"><hidden value="${productId}"/></field>
+        <field name="configTypeId" title="${uiLabelMap.ProductConfigTypeId}" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <option key="STANDARD" description="${uiLabelMap.ProductStandard}" />
+                <option key="QUESTION" description="${uiLabelMap.ProductQuestion}"/>
+            </drop-down>
+        </field>
+        <field name="configItemId" title="${uiLabelMap.ProductConfigItemId}" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProductConfigItem" description="${description} [${configItemId}]"> <!-- [${productTypeId}] -->
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="UpdateProductConfig" type="list"
+            target="updateProductConfig" title="" list-name="productConfigs"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="updateProductConfig" map-name="productConfig"/>
+        <field name="productId"><hidden/></field>
+        <!-- TODO: get descriptions from IDs <display description="${roleType.description}"/> -->
+        <field name="sequenceNum" title="${uiLabelMap.CommonSeqNum}" widget-style="tabletext"><display/></field>
+        <field name="configItemId" title="${uiLabelMap.ProductConfig}" widget-style="tabletext"><display-entity entity-name="ProductConfigItem" key-field-name="configItemId" description="${description} [${configItemId}]"/></field>
+        <field name="configTypeId" title="${uiLabelMap.ProductConfigTypeId}" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <option key="STANDARD" description="${uiLabelMap.ProductStandard}" />
+                <option key="QUESTION" description="${uiLabelMap.ProductQuestion}"/>
+            </drop-down>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="deleteProductConfig?productId=${productId}&amp;configItemId=${configItemId}&amp;sequenceNum=${sequenceNum}&amp;fromDate=${fromDate}"
+                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+
 </forms>

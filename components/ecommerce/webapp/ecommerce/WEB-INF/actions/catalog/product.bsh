@@ -84,6 +84,11 @@ if (productId != null) {
         }
         context.put("metaKeywords", StringUtil.join(keywords, ", "));
           
+        // Set the default template for aggregated product (product component configurator ui)
+        if (product.getString("productTypeId") != null && product.getString("productTypeId").equals("AGGREGATED")) {
+            detailTemplate = "catalog/configproductdetail.ftl";
+        }
+
         productTemplate = product.getString("detailTemplate");
         if (productTemplate != null && productTemplate.length() > 0) {
             detailTemplate = productTemplate;

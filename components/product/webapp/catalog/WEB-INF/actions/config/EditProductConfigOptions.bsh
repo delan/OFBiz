@@ -1,0 +1,93 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Patrick Lykins (patrick.lykins@gabes.net)
+ *@version    $Revision: 1.6 $
+ *@since      3.0
+ */
+
+import java.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.content.widget.html.*;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+
+if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+
+configItemId = request.getParameter("configItemId");
+configOptionId = request.getParameter("configOptionId");
+if (configOptionId == null) {
+    configOptionId = request.getAttribute("configOptionId");
+}
+context.put("configOptionId", configOptionId);
+
+configItem = null;
+if (configItemId != null && configItemId.length() > 0) {
+    configItem = delegator.findByPrimaryKey("ProductConfigItem", UtilMisc.toMap("configItemId", configItemId));
+}
+context.put("configItem", configItem);
+
+
+configOptionList = delegator.findByAnd("ProductConfigOption", UtilMisc.toMap("configItemId", configItemId), UtilMisc.toList("sequenceNum"));
+
+configOption = null;
+if (configOptionId != null && configOptionId.length() > 0) {
+    configOption = delegator.findByPrimaryKey("ProductConfigOption", UtilMisc.toMap("configItemId", configItemId, "configOptionId", configOptionId));
+}
+context.put("configOption", configOption);
+
+HtmlFormWrapper createConfigOptionWrapper = new HtmlFormWrapper("/config/ConfigForms.xml", "CreateConfigOption", request, response);
+createConfigOptionWrapper.putInContext("configItemId", configItemId);
+createConfigOptionWrapper.putInContext("configOption", configOption);
+
+context.put("configItemId", configItemId);
+context.put("configOptionList", configOptionList);
+context.put("createConfigOptionWrapper", createConfigOptionWrapper);
+
+
+if (configOption != null) {
+    // get the options
+    configProducts = delegator.findByAnd("ProductConfigProduct", UtilMisc.toMap("configItemId", configItemId, "configOptionId", configOptionId), UtilMisc.toList("sequenceNum"));
+    context.put("configProducts", configProducts);
+
+    HtmlFormWrapper createConfigProductWrapper = new HtmlFormWrapper("/config/ConfigForms.xml", "CreateProductConfigProduct", request, response);
+
+    // survey question option
+    productId = request.getParameter("productId");
+    configProduct = null;
+    if (productId != null) {
+        configProduct = delegator.findByPrimaryKey("ProductConfigProduct", UtilMisc.toMap("configItemId", configItemId, "configOptionId", configOptionId, "productId", productId));
+    }
+    context.put("configProduct", configProduct);
+
+    createConfigProductWrapper.putInContext("productConfigProduct", configProduct);
+    createConfigProductWrapper.putInContext("configOptionId", configOptionId);
+    createConfigProductWrapper.putInContext("configItemId", configItemId);
+    context.put("createConfigProductWrapper", createConfigProductWrapper);
+}
+
