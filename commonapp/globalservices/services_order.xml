@@ -514,9 +514,9 @@
         <description>Gets Picklist Data</description>
         <attribute name="orderHeaderList" type="List" mode="IN" optional="true"/>
         <attribute name="inventoryItemInfoList" type="List" mode="OUT" optional="false"/>
-        <attribute name="wrongQuantityReservedList" type="List" mode="OUT" optional="false"/>
-        <attribute name="insufficientQohList" type="List" mode="OUT" optional="false"/>
         <attribute name="orderHeaderInfoList" type="List" mode="OUT" optional="false"/>
+        <attribute name="wrongQuantityReservedList" type="List" mode="OUT" optional="true"/>
+        <attribute name="insufficientQohList" type="List" mode="OUT" optional="true"/>
     </service>
 </services>
 
