@@ -92,6 +92,12 @@ public class ModelViewEntity extends ModelEntity {
             alias.entityAlias = UtilXml.checkEmpty(aliasElement.getAttribute("entity-alias"));
             alias.name = UtilXml.checkEmpty(aliasElement.getAttribute("name"));
             alias.field = UtilXml.checkEmpty(aliasElement.getAttribute("field"), alias.name);
+            String primKeyValue = UtilXml.checkEmpty(aliasElement.getAttribute("prim-key"));
+            if (UtilValidate.isNotEmpty(primKeyValue)) {
+                alias.isPk = new Boolean("true".equals(primKeyValue));
+            } else {
+                alias.isPk = null;
+            }
             this.aliases.add(alias);
         }
 
@@ -213,7 +219,12 @@ public class ModelViewEntity extends ModelEntity {
             ModelField field = new ModelField();
 
             field.name = alias.name;
-            field.isPk = alias.isPk = aliasedField.isPk;
+            if (alias.isPk != null) {
+                field.isPk = alias.isPk.booleanValue();
+            } else {
+                alias.isPk = new Boolean(aliasedField.isPk);
+                field.isPk = aliasedField.isPk;
+            }
 
             this.fields.add(field);
             if (field.isPk) {
@@ -240,7 +251,7 @@ public class ModelViewEntity extends ModelEntity {
         protected String entityAlias = "";
         protected String name = "";
         protected String field = "";
-        protected boolean isPk = false;
+        protected Boolean isPk = null;
 
         public ModelAlias() {}
 
@@ -256,7 +267,7 @@ public class ModelViewEntity extends ModelEntity {
             return this.field;
         }
 
-        public boolean getIsPk() {
+        public Boolean getIsPk() {
             return this.isPk;
         }
     }
