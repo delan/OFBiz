@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  */
 -->
 
@@ -69,9 +69,6 @@
       <relation type="one" fk-name="DATA_SRC_TYP" rel-entity-name="DataSourceType">
         <key-map field-name="dataSourceTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="PartyDataSource">
-        <key-map field-name="dataSourceId"/>
-      </relation>
     </entity>
     <entity entity-name="DataSourceType"
             package-name="org.ofbiz.common.datasource"
@@ -79,9 +76,6 @@
       <field name="dataSourceTypeId" type="id"></field>
       <field name="description" type="description"></field>
       <prim-key field="dataSourceTypeId"/>
-      <relation type="many" rel-entity-name="DataSource">
-        <key-map field-name="dataSourceTypeId"/>
-      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -112,12 +106,6 @@
       <relation type="one" fk-name="ENUM_TYPE_PARENT" title="Parent" rel-entity-name="EnumerationType">
         <key-map field-name="parentTypeId" rel-field-name="enumTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="EnumerationType">
-        <key-map field-name="enumTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Enumeration">
-        <key-map field-name="enumTypeId"/>
-      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -145,12 +133,6 @@
       <field name="countryNumber" type="short-varchar"></field>
       <field name="countryName" type="description"></field>
       <prim-key field="countryCode"/>
-      <relation type="one-nofk" rel-entity-name="CountryCapital">
-        <key-map field-name="countryCode"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="CountryTeleCode">
-        <key-map field-name="countryCode"/>
-      </relation>
     </entity>
     <entity entity-name="CountryTeleCode"
             package-name="org.ofbiz.common.geo"
@@ -177,15 +159,6 @@
       <relation type="one" fk-name="GEO_TO_TYPE" rel-entity-name="GeoType">
         <key-map field-name="geoTypeId"/>
       </relation>
-      <relation type="many" title="Main" rel-entity-name="GeoAssoc">
-        <key-map field-name="geoId"/>
-      </relation>
-      <relation type="many" title="Assoc" rel-entity-name="GeoAssoc">
-        <key-map field-name="geoId" rel-field-name="geoIdTo"/>
-      </relation>
-      <relation type="many" rel-entity-name="PostalAddressBoundary">
-        <key-map field-name="geoId"/>
-      </relation>
     </entity>
     <entity entity-name="GeoAssoc"
             package-name="org.ofbiz.common.geo"
@@ -211,9 +184,6 @@
       <field name="geoAssocTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="geoAssocTypeId"/>
-      <relation type="many" rel-entity-name="GeoAssoc">
-        <key-map field-name="geoAssocTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="GeoType"
             package-name="org.ofbiz.common.geo"
@@ -225,12 +195,6 @@
       <prim-key field="geoTypeId"/>
       <relation type="one" fk-name="GEO_TYPE_PARENT" title="Parent" rel-entity-name="GeoType">
         <key-map field-name="parentTypeId" rel-field-name="geoTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="GeoType">
-        <key-map field-name="geoTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Geo">
-        <key-map field-name="geoTypeId"/>
       </relation>
     </entity>
 
@@ -303,9 +267,6 @@
       <relation type="one" fk-name="ORG_PRD_PARPER" title="Parent" rel-entity-name="CustomTimePeriod">
         <key-map field-name="parentPeriodId" rel-field-name="customTimePeriodId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="CustomTimePeriod">
-        <key-map field-name="customTimePeriodId" rel-field-name="parentPeriodId"/>
-      </relation>
       <relation type="one" fk-name="ORG_PRD_PARTY" title="Organization" rel-entity-name="Party">
         <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
       </relation>
@@ -369,54 +330,6 @@
       <relation type="one" fk-name="STATUS_TO_TYPE" rel-entity-name="StatusType">
         <key-map field-name="statusTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="OrderStatus">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" title="Main" rel-entity-name="StatusValidChange">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" title="To" rel-entity-name="StatusValidChange">
-        <key-map field-name="statusId" rel-field-name="statusIdTo"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetStatus">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyFixedAssetAssignment">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Invoice">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceStatus">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CustRequestStatus">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="RequirementStatus">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortFixedAssetAssign">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortGoodStandard">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortInventoryAssign">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentStatus">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="EmploymentApp">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="UnemploymentClaim">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="EmplPosition">
-        <key-map field-name="statusId"/>
-      </relation>
     </entity>
     <entity entity-name="StatusType"
             package-name="org.ofbiz.common.status"
@@ -428,12 +341,6 @@
       <prim-key field="statusTypeId"/>
       <relation type="one" fk-name="STATUS_TYPE_PARENT" title="Parent" rel-entity-name="StatusType">
         <key-map field-name="parentTypeId" rel-field-name="statusTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="StatusType">
-        <key-map field-name="statusTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="StatusItem">
-        <key-map field-name="statusTypeId"/>
       </relation>
     </entity>
     <entity entity-name="StatusValidChange"
@@ -491,21 +398,6 @@
       <prim-key field="uomId"/>
       <relation type="one" fk-name="UOM_TO_TYPE" rel-entity-name="UomType">
         <key-map field-name="uomTypeId"/>
-      </relation>
-      <relation type="many" title="Main" rel-entity-name="UomConversion">
-        <key-map field-name="uomId"/>
-      </relation>
-      <relation type="many" title="ConvTo" rel-entity-name="UomConversion">
-        <key-map field-name="uomId" rel-field-name="uomIdTo"/>
-      </relation>
-      <relation type="many" rel-entity-name="FixedAsset">
-        <key-map field-name="uomId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceItem">
-        <key-map field-name="uomId"/>
-      </relation>
-      <relation type="many" rel-entity-name="QuoteItem">
-        <key-map field-name="uomId"/>
       </relation>
     </entity>
     <entity entity-name="UomConversion"

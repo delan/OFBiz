@@ -1,5 +1,5 @@
 /*
- * $Id: ModelRelation.java,v 1.3 2004/01/19 19:26:52 jonesde Exp $
+ * $Id: ModelRelation.java,v 1.4 2004/06/18 14:46:23 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Relation model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ModelRelation {
@@ -54,6 +54,8 @@ public class ModelRelation {
 
     /** the main entity of this relation */
     protected ModelEntity mainEntity = null;
+    
+    protected boolean isAutoRelation = false;
 
     /** Default Constructor */
     public ModelRelation() {
@@ -247,5 +249,17 @@ public class ModelRelation {
         }
 
         return returnString.toString();
+    }
+    /**
+     * @return Returns the isAutoRelation.
+     */
+    public boolean isAutoRelation() {
+        return isAutoRelation;
+    }
+    /**
+     * @param isAutoRelation The isAutoRelation to set.
+     */
+    public void setAutoRelation(boolean isAutoRelation) {
+        this.isAutoRelation = isAutoRelation;
     }
 }

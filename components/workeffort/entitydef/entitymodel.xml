@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  */
 -->
 
@@ -280,12 +280,6 @@
       <relation type="one" fk-name="DELIVERABLE_DLTYP" rel-entity-name="DeliverableType">
         <key-map field-name="deliverableTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="Requirement">
-        <key-map field-name="deliverableId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortDeliverableProd">
-        <key-map field-name="deliverableId"/>
-      </relation>
     </entity>
     <entity entity-name="DeliverableType"
             package-name="org.ofbiz.workeffort.workeffort"
@@ -293,12 +287,6 @@
       <field name="deliverableTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="deliverableTypeId"/>
-      <relation type="many" rel-entity-name="Deliverable">
-        <key-map field-name="deliverableTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="QuoteItem">
-        <key-map field-name="deliverableTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="WorkEffort"
             package-name="org.ofbiz.workeffort.workeffort"
@@ -360,17 +348,8 @@
       <relation type="one" fk-name="WK_EFFRT_PARENT" title="Parent" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortParentId" rel-field-name="workEffortId"/>
       </relation>
-      <relation type="many"  title="Child" rel-entity-name="WorkEffort">
-        <key-map field-name="workEffortId" rel-field-name="workEffortParentId"/>
-      </relation>
       <relation type="many" rel-entity-name="WorkEffortTypeAttr">
         <key-map field-name="workEffortTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortAttribute">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkOrderItemFulfillment">
-        <key-map field-name="workEffortId"/>
       </relation>
       <relation type="one" fk-name="WK_EFFRT_CURSTTS" title="Current" rel-entity-name="StatusItem">
         <key-map field-name="currentStatusId" rel-field-name="statusId"/>
@@ -396,18 +375,6 @@
       <relation type="one" fk-name="WK_EFFRT_NOTE" rel-entity-name="NoteData">
         <key-map field-name="noteId"/>
       </relation>
-      <relation type="many" title="From" rel-entity-name="WorkEffortAssoc">
-        <key-map field-name="workEffortId" rel-field-name="workEffortIdFrom"/>
-      </relation>
-      <relation type="many" title="To" rel-entity-name="WorkEffortAssoc">
-        <key-map field-name="workEffortId" rel-field-name="workEffortIdTo"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortStatus">
-        <key-map field-name="workEffortId"/>
-      </relation>
       <relation type="one" fk-name="WK_EFFRT_WFLW_PKG" rel-entity-name="WorkflowPackage">
         <key-map field-name="workflowPackageId" rel-field-name="packageId"/>
         <key-map field-name="workflowPackageVersion" rel-field-name="packageVersion"/>
@@ -424,48 +391,6 @@
         <key-map field-name="workflowProcessId" rel-field-name="processId"/>
         <key-map field-name="workflowProcessVersion" rel-field-name="processVersion"/>
         <key-map field-name="workflowActivityId" rel-field-name="activityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="QuoteItem">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkRequirementFulfillment">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="TimeEntry">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortDeliverableProd">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortBilling">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortAssignmentRate">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CommunicationEventWorkEff">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortGoodStandard">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortFixedAssetStd">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortFixedAssetAssign">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortInventoryProduced">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortInventoryAssign">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortSkillStandard">
-        <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortNote">
-        <key-map field-name="workEffortId"/>
       </relation>
     </entity>
     <view-entity entity-name="WorkEffortAndFulfillment"

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.87 $
+ * @version    $Revision: 1.88 $
  */
 -->
 
@@ -185,12 +185,6 @@
       <field name="detailTemplate" type="long-varchar"></field>
       <field name="showInSelect" type="indicator"></field>
       <prim-key field="productCategoryId"/>
-      <relation type="many" rel-entity-name="ProductCategoryAttribute">
-        <key-map field-name="productCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductCategoryMember">
-        <key-map field-name="productCategoryId"/>
-      </relation>
       <relation type="one" fk-name="PROD_CTGRY_TYPE" rel-entity-name="ProductCategoryType">
         <key-map field-name="productCategoryTypeId"/>
       </relation>
@@ -203,34 +197,7 @@
       <relation type="many" title="PrimaryChild" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId" rel-field-name="primaryParentCategoryId"/>
       </relation>
-      <relation type="many" title="Primary" rel-entity-name="Product">
-        <key-map field-name="productCategoryId" rel-field-name="primaryProductCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="MarketInterest">
-        <key-map field-name="productCategoryId"/>
-      </relation>
-      <relation type="many" title="Current" rel-entity-name="ProductCategoryRollup">
-        <key-map field-name="productCategoryId"/>
-      </relation>
-      <relation type="many" title="Parent" rel-entity-name="ProductCategoryRollup">
-        <key-map field-name="productCategoryId" rel-field-name="parentProductCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFeatureCategoryAppl">
-        <key-map field-name="productCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFeatureCatGrpAppl">
-        <key-map field-name="productCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProdCatalogCategory">
-        <key-map field-name="productCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyNeed">
-        <key-map field-name="productCategoryId"/>
-      </relation>
       <relation type="many" rel-entity-name="ProductKeywordResult">
-        <key-map field-name="productCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductCategoryRole">
         <key-map field-name="productCategoryId"/>
       </relation>
     </entity>
@@ -495,9 +462,6 @@
       <relation type="many" rel-entity-name="CostComponentTypeAttr">
         <key-map field-name="costComponentTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="CostComponentAttribute">
-        <key-map field-name="costComponentId"/>
-      </relation>
       <relation type="one" fk-name="COST_COMP_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
@@ -536,15 +500,6 @@
       <prim-key field="costComponentTypeId"/>
       <relation type="one" fk-name="COST_COMP_TYPE_PAR" title="Parent" rel-entity-name="CostComponentType">
         <key-map field-name="parentTypeId" rel-field-name="costComponentTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="CostComponentType">
-        <key-map field-name="costComponentTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CostComponentTypeAttr">
-        <key-map field-name="costComponentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CostComponent">
-        <key-map field-name="costComponentTypeId"/>
       </relation>
     </entity>
     <entity entity-name="CostComponentTypeAttr"
@@ -588,33 +543,6 @@
       </relation>
       <relation type="one" fk-name="PROD_FEAT_TYPE" rel-entity-name="ProductFeatureType">
         <key-map field-name="productFeatureTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFeatureAppl">
-        <key-map field-name="productFeatureId"/>
-      </relation>
-      <relation type="many" title="Main" rel-entity-name="ProductFeatureIactn">
-        <key-map field-name="productFeatureId"/>
-      </relation>
-      <relation type="many" title="Assoc" rel-entity-name="ProductFeatureIactn">
-        <key-map field-name="productFeatureId" rel-field-name="productFeatureIdTo"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFeatureDataResource">
-        <key-map field-name="productFeatureId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CostComponent">
-        <key-map field-name="productFeatureId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceItem">
-        <key-map field-name="productFeatureId"/>
-      </relation>
-      <relation type="many" rel-entity-name="QuoteItem">
-        <key-map field-name="productFeatureId"/>
-      </relation>
-      <relation type="many" rel-entity-name="DesiredFeature">
-        <key-map field-name="productFeatureId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentItemFeature">
-        <key-map field-name="productFeatureId"/>
       </relation>
     </entity>
     <view-entity entity-name="ProductFeatureAndAppl"
@@ -883,15 +811,8 @@
       <relation type="many" rel-entity-name="InventoryItemTypeAttr">
         <key-map field-name="inventoryItemTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="InventoryItemAttribute">
-        <key-map field-name="inventoryItemId"/>
-      </relation>
       <relation type="one" fk-name="INV_ITEM_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="ProductFacility">
-        <key-map field-name="productId"/>
-        <key-map field-name="facilityId"/>
       </relation>
       <relation type="one" fk-name="INV_ITEM_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -908,6 +829,10 @@
       <relation type="one" fk-name="INV_ITEM_LOT" rel-entity-name="Lot">
         <key-map field-name="lotId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="ProductFacility">
+        <key-map field-name="productId"/>
+        <key-map field-name="facilityId"/>
+      </relation>
       <relation type="one-nofk" rel-entity-name="FacilityLocation">
         <key-map field-name="facilityId"/>
         <key-map field-name="locationSeqId"/>
@@ -919,33 +844,6 @@
       </relation>
       <relation type="one" fk-name="INV_ITEM_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InventoryItemStatus">
-        <key-map field-name="inventoryItemId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InventoryItemVariance">
-        <key-map field-name="inventoryItemId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTrans">
-        <key-map field-name="inventoryItemId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceItem">
-        <key-map field-name="inventoryItemId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderItemInventoryRes">
-        <key-map field-name="inventoryItemId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortInventoryProduced">
-        <key-map field-name="inventoryItemId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortInventoryAssign">
-        <key-map field-name="inventoryItemId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ItemIssuance">
-        <key-map field-name="inventoryItemId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentReceipt">
-        <key-map field-name="inventoryItemId"/>
       </relation>
     </entity>
     <view-entity entity-name="InventoryItemAndLocation"
@@ -1035,15 +933,6 @@
       <relation type="one" fk-name="INV_ITEM_TYPPAR" title="Parent" rel-entity-name="InventoryItemType">
         <key-map field-name="parentTypeId" rel-field-name="inventoryItemTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="InventoryItemType">
-        <key-map field-name="inventoryItemTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InventoryItemTypeAttr">
-        <key-map field-name="inventoryItemTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InventoryItem">
-        <key-map field-name="inventoryItemTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="InventoryItemTypeAttr"
             package-name="org.ofbiz.product.inventory"
@@ -1081,10 +970,6 @@
       </relation>
       <relation type="one" fk-name="INV_ITEM_VAR_ITEM" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTrans">
-        <key-map field-name="inventoryItemId"/>
-        <key-map field-name="physicalInventoryId"/>
       </relation>
     </entity>
     <entity entity-name="InventoryTransfer"
@@ -1142,9 +1027,6 @@
       <field name="quantity" type="floating-point"></field>
       <field name="expirationDate" type="date-time"></field>
       <prim-key field="lotId"/>
-      <relation type="many" rel-entity-name="InventoryItem">
-        <key-map field-name="lotId"/>
-      </relation>
     </entity>
     <entity entity-name="PhysicalInventory"
             package-name="org.ofbiz.product.inventory"
@@ -1154,12 +1036,6 @@
       <field name="partyId" type="id"></field>
       <field name="generalComments" type="comment"></field>
       <prim-key field="physicalInventoryId"/>
-      <relation type="many" rel-entity-name="InventoryItemVariance">
-        <key-map field-name="physicalInventoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTrans">
-        <key-map field-name="physicalInventoryId"/>
-      </relation>
     </entity>
     <view-entity entity-name="PhysicalInventoryAndVariance"
             package-name="org.ofbiz.product.inventory"
@@ -1451,15 +1327,6 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <prim-key field="productPriceRuleId"/>
-      <relation type="many" rel-entity-name="ProductPriceAction">
-        <key-map field-name="productPriceRuleId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductPriceCond">
-        <key-map field-name="productPriceRuleId"/>
-      </relation>
-      <relation type="many" rel-entity-name="MarketingCampaignPrice">
-        <key-map field-name="productPriceRuleId"/>
-      </relation>
     </entity>
     <entity entity-name="ProductPriceType"
             package-name="org.ofbiz.product.price"
@@ -1597,9 +1464,6 @@
       <field name="lastModifiedDate" type="date-time"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="productId"/>
-      <relation type="many" rel-entity-name="ProductAttribute">
-        <key-map field-name="productId"/>
-      </relation>
       <relation type="one" fk-name="PROD_TYPE" rel-entity-name="ProductType">
         <key-map field-name="productTypeId"/>
       </relation>
@@ -1609,12 +1473,6 @@
       <relation type="one" fk-name="PROD_PRIMARY_CAT" title="Primary" rel-entity-name="ProductCategory">
         <key-map field-name="primaryProductCategoryId" rel-field-name="productCategoryId"/>
       </relation>
-      <relation type="many" rel-entity-name="ProductCategoryMember">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductKeyword">
-        <key-map field-name="productId"/>
-      </relation>
       <relation type="one" fk-name="PROD_FACILITY" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
@@ -1623,30 +1481,6 @@
       </relation>
       <relation type="one" fk-name="PROD_QUANT_UOM" title="Quantity" rel-entity-name="Uom">
         <key-map field-name="quantityUomId" rel-field-name="uomId"/>
-      </relation>
-      <relation type="many" rel-entity-name="GoodIdentification">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductContent">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" title="Main" rel-entity-name="ProductAssoc">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" title="Assoc" rel-entity-name="ProductAssoc">
-        <key-map field-name="productId" rel-field-name="productIdTo"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFeatureAppl">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CostComponent">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InventoryItem">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="SupplierProduct">
-        <key-map field-name="productId"/>
       </relation>
       <relation type="one" fk-name="PROD_AMOUNT_UOMT" title="Amount" rel-entity-name="UomType">
         <key-map field-name="amountUomTypeId" rel-field-name="uomTypeId"/>
@@ -1666,65 +1500,14 @@
       <relation type="one" fk-name="PROD_RATE_ENUM" rel-entity-name="Enumeration">
         <key-map field-name="ratingTypeEnum" rel-field-name="enumId"/>
       </relation>
-      <relation type="many" rel-entity-name="ProductOrderItem">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShoppingListItem">
-        <key-map field-name="productId"/>
-      </relation>
       <relation type="one" fk-name="PROD_CB_USERLOGIN" title="CreatedBy" rel-entity-name="UserLogin">
         <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
       </relation>
       <relation type="one" fk-name="PROD_LMB_USERLOGIN" title="LastModifiedBy" rel-entity-name="UserLogin">
         <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
-      <relation type="many" rel-entity-name="ProductPrice">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductReview">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceItem">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementProductAppl">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyNeed">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="QuoteItem">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Requirement">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortGoodStandard">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentReceipt">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentItem">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InventoryItemTempRes">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CartAbandonedLine">
-        <key-map field-name="productId"/>
-      </relation>
       <relation type="many" rel-entity-name="SimpleSalesTaxLookup">
         <key-map field-name="taxCategory"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductGlAccount">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFacility">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFacilityLocation">
-        <key-map field-name="productId"/>
       </relation>
     </entity>
     <entity entity-name="ProductAssoc"
@@ -2429,9 +2212,6 @@
       <relation type="one" fk-name="CONTAINER_CTTYP" rel-entity-name="ContainerType">
         <key-map field-name="containerTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="InventoryItem">
-        <key-map field-name="containerId"/>
-      </relation>
       <relation type="one" fk-name="CONTAINER_FACILITY" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
@@ -2442,9 +2222,6 @@
       <field name="containerTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="containerTypeId"/>
-      <relation type="many" rel-entity-name="Container">
-        <key-map field-name="containerTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="Facility"
             package-name="org.ofbiz.product.storage"
@@ -2468,50 +2245,8 @@
       <relation type="one" fk-name="FACILITY_PRDS" rel-entity-name="ProductStore">
         <key-map field-name="productStoreId"/>
       </relation>
-      <relation type="many" rel-entity-name="FacilityGroupMember">
-        <key-map field-name="facilityId"/>
-      </relation>
       <relation type="many" rel-entity-name="FacilityTypeAttr">
         <key-map field-name="facilityTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FacilityAttribute">
-        <key-map field-name="facilityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InventoryItem">
-        <key-map field-name="facilityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Product">
-        <key-map field-name="facilityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Container">
-        <key-map field-name="facilityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FacilityContactMech">
-        <key-map field-name="facilityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FacilityRole">
-        <key-map field-name="facilityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FacilityLocation">
-        <key-map field-name="facilityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffort">
-        <key-map field-name="facilityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
-        <key-map field-name="facilityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Requirement">
-        <key-map field-name="facilityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Shipment">
-        <key-map field-name="facilityId" rel-field-name="originFacilityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentRouteSegment">
-        <key-map field-name="facilityId" rel-field-name="originFacilityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FacilityCarrierShipment">
-        <key-map field-name="facilityId"/>
       </relation>
     </entity>
     <entity entity-name="FacilityAttribute"
@@ -2622,15 +2357,6 @@
       <relation type="one" fk-name="FACILITY_GP_PGRP" title="PrimaryParent" rel-entity-name="FacilityGroup">
         <key-map field-name="primaryParentGroupId" rel-field-name="facilityGroupId"/>
       </relation>
-      <relation type="many" title="Current" rel-entity-name="FacilityGroupRollup">
-        <key-map field-name="facilityGroupId"/>
-      </relation>
-      <relation type="many" title="Parent" rel-entity-name="FacilityGroupRollup">
-        <key-map field-name="facilityGroupId" rel-field-name="parentFacilityGroupId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FacilityGroupMember">
-        <key-map field-name="facilityGroupId"/>
-      </relation>
     </entity>
     <entity entity-name="FacilityGroupMember"
             package-name="org.ofbiz.product.storage"
@@ -2702,9 +2428,6 @@
       <field name="facilityGroupTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="facilityGroupTypeId"/>
-      <relation type="many" rel-entity-name="FacilityGroup">
-        <key-map field-name="facilityGroupTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="FacilityLocation"
             package-name="org.ofbiz.product.storage"
@@ -2763,15 +2486,6 @@
       <prim-key field="facilityTypeId"/>
       <relation type="one" fk-name="FACILITY_TYPEPAR" title="Parent" rel-entity-name="FacilityType">
         <key-map field-name="parentTypeId" rel-field-name="facilityTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="FacilityType">
-        <key-map field-name="facilityTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FacilityTypeAttr">
-        <key-map field-name="facilityTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Facility">
-        <key-map field-name="facilityTypeId"/>
       </relation>
     </entity>
     <entity entity-name="FacilityTypeAttr"

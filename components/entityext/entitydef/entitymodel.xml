@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  */
 -->
 
@@ -62,9 +62,6 @@
       <field name="targetDelegatorName" type="long-varchar"></field>
       <field name="keepRemoveInfoHours" type="floating-point"></field>
       <prim-key field="entitySyncId"/>
-      <relation type="many" rel-entity-name="EntitySyncInclude">
-        <key-map field-name="entitySyncId"/>
-      </relation>
     </entity>
     <entity entity-name="EntitySyncHistory"
             package-name="org.ofbiz.entity.synchronization"

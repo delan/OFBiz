@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.12 2004/02/06 22:14:09 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.13 2004/06/18 14:46:23 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilTimer;
@@ -44,7 +45,7 @@ import org.w3c.dom.NodeList;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class ModelEntity implements Comparable {
@@ -267,6 +268,17 @@ public class ModelEntity implements Comparable {
                 this.indexes.add(index);
             }
         }
+    }
+    
+    public boolean containsAllPkFieldNames(Set fieldNames) {
+        Iterator pksIter = this.getPksIterator();
+        while (pksIter.hasNext()) {
+            ModelField pkField = (ModelField) pksIter.next();
+            if (!fieldNames.contains(pkField.getName())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // ===== GETTERS/SETTERS =====

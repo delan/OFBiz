@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  */
 -->
 
@@ -118,32 +118,11 @@
         <key-map field-name="partyIdFrom"/>
         <key-map field-name="partyIdTo"/>
       </relation>
-      <relation type="many" rel-entity-name="AgreementItem">
-        <key-map field-name="agreementId"/>
-      </relation>
       <relation type="one" fk-name="AGRMNT_TYPE" rel-entity-name="AgreementType">
         <key-map field-name="agreementTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementTypeAttr">
         <key-map field-name="agreementTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementAttribute">
-        <key-map field-name="agreementId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementProductAppl">
-        <key-map field-name="agreementId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementPartyApplic">
-        <key-map field-name="agreementId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementRole">
-        <key-map field-name="agreementId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementTerm">
-        <key-map field-name="agreementId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementGeographicalApplic">
-        <key-map field-name="agreementId"/>
       </relation>
     </entity>
     <entity entity-name="AgreementAttribute"
@@ -200,26 +179,6 @@
       <relation type="many" rel-entity-name="AgreementItemTypeAttr">
         <key-map field-name="agreementItemTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="AgreementItemAttribute">
-        <key-map field-name="agreementId"/>
-        <key-map field-name="agreementItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementProductAppl">
-        <key-map field-name="agreementId"/>
-        <key-map field-name="agreementItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementPartyApplic">
-        <key-map field-name="agreementId"/>
-        <key-map field-name="agreementItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementTerm">
-        <key-map field-name="agreementId"/>
-        <key-map field-name="agreementItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementGeographicalApplic">
-        <key-map field-name="agreementId"/>
-        <key-map field-name="agreementItemSeqId"/>
-      </relation>
     </entity>
     <entity entity-name="AgreementItemAttribute"
             package-name="org.ofbiz.party.agreement"
@@ -249,15 +208,6 @@
       <prim-key field="agreementItemTypeId"/>
       <relation type="one" fk-name="AGRMNT_TYPEPAR" title="Parent" rel-entity-name="AgreementItemType">
         <key-map field-name="parentTypeId" rel-field-name="agreementItemTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="AgreementItemType">
-        <key-map field-name="agreementItemTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementItemTypeAttr">
-        <key-map field-name="agreementItemTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementItem">
-        <key-map field-name="agreementItemTypeId"/>
       </relation>
     </entity>
     <entity entity-name="AgreementItemTypeAttr"
@@ -385,15 +335,6 @@
       <relation type="one" fk-name="AGRMNT_TYPE_PAR" title="Parent" rel-entity-name="AgreementType">
         <key-map field-name="parentTypeId" rel-field-name="agreementTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="AgreementType">
-        <key-map field-name="agreementTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementTypeAttr">
-        <key-map field-name="agreementTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Agreement">
-        <key-map field-name="agreementTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="AgreementTypeAttr"
             package-name="org.ofbiz.party.agreement"
@@ -506,9 +447,6 @@
       <relation type="one" fk-name="COM_EVNT_TYPE" rel-entity-name="CommunicationEventType">
         <key-map field-name="communicationEventTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="CommunicationEventPurpose">
-        <key-map field-name="communicationEventId"/>
-      </relation>
       <relation type="one" fk-name="COM_EVNT_TPTY" title="To" rel-entity-name="Party">
         <key-map field-name="partyIdTo" rel-field-name="partyId"/>
       </relation>
@@ -537,15 +475,6 @@
       </relation>
       <relation type="one" fk-name="COM_EVNT_CMTP" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CommunicationEventRole">
-        <key-map field-name="communicationEventId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyNeed">
-        <key-map field-name="communicationEventId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CommunicationEventWorkEff">
-        <key-map field-name="communicationEventId"/>
       </relation>
     </entity>
     <view-entity entity-name="CommunicationEventAndRole"
@@ -640,12 +569,6 @@
       <relation type="one" fk-name="COM_EVNT_PRP_TYP" title="Parent" rel-entity-name="CommunicationEventPrpTyp">
         <key-map field-name="parentTypeId" rel-field-name="communicationEventPrpTypId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="CommunicationEventPrpTyp">
-        <key-map field-name="communicationEventPrpTypId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CommunicationEventPurpose">
-        <key-map field-name="communicationEventPrpTypId"/>
-      </relation>
     </entity>
     <entity entity-name="CommunicationEventPurpose"
             package-name="org.ofbiz.party.communication"
@@ -696,12 +619,6 @@
       <relation type="one" fk-name="COM_EVNT_TYPE_PAR" title="Parent" rel-entity-name="CommunicationEventType">
         <key-map field-name="parentTypeId" rel-field-name="communicationEventTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="CommunicationEventType">
-        <key-map field-name="communicationEventTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CommunicationEvent">
-        <key-map field-name="communicationEventTypeId"/>
-      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -720,42 +637,6 @@
       </relation>
       <relation type="many" rel-entity-name="ContactMechTypeAttr">
         <key-map field-name="contactMechTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ContactMechAttribute">
-        <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="many" title="From" rel-entity-name="ContactMechLink">
-        <key-map field-name="contactMechId" rel-field-name="contactMechIdFrom"/>
-      </relation>
-      <relation type="many" title="To" rel-entity-name="ContactMechLink">
-        <key-map field-name="contactMechId" rel-field-name="contactMechIdTo"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyContactMech">
-        <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FacilityContactMech">
-        <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="PostalAddress">
-        <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="TelecomNumber">
-        <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderContactMech">
-        <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderItemContactMech">
-        <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Invoice">
-        <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="many" rel-entity-name="RespondingParty">
-        <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentContactMech">
-        <key-map field-name="contactMechId"/>
       </relation>
       <index name="INFO_STRING_IDX">
         <index-field name="infoString"/>
@@ -796,18 +677,6 @@
       <field name="contactMechPurposeTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="contactMechPurposeTypeId"/>
-      <relation type="many" rel-entity-name="PartyContactMechPurpose">
-        <key-map field-name="contactMechPurposeTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderContactMech">
-        <key-map field-name="contactMechPurposeTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderItemContactMech">
-        <key-map field-name="contactMechPurposeTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ContactMechTypePurpose">
-        <key-map field-name="contactMechPurposeTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ContactMechType"
             package-name="org.ofbiz.party.contact"
@@ -819,24 +688,6 @@
       <prim-key field="contactMechTypeId"/>
       <relation type="one" fk-name="CONT_MECH_TYP_PAR" title="Parent" rel-entity-name="ContactMechType">
         <key-map field-name="parentTypeId" rel-field-name="contactMechTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="ContactMechType">
-        <key-map field-name="contactMechTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ContactMechTypeAttr">
-        <key-map field-name="contactMechTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ContactMech">
-        <key-map field-name="contactMechTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ValidContactMechRole">
-        <key-map field-name="contactMechTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ContactMechTypePurpose">
-        <key-map field-name="contactMechTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CommunicationEvent">
-        <key-map field-name="contactMechTypeId"/>
       </relation>
     </entity>
     <entity entity-name="ContactMechTypeAttr"
@@ -1142,100 +993,13 @@
       <relation type="many" rel-entity-name="PartyTypeAttr">
         <key-map field-name="partyTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="PartyAttribute">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyClassification">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="UserLogin">
-        <key-map field-name="partyId"/>
-      </relation>
       <relation type="many" title="From" rel-entity-name="PartyRelationship">
         <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
       </relation>
       <relation type="many" title="To" rel-entity-name="PartyRelationship">
         <key-map field-name="partyId" rel-field-name="partyIdTo"/>
       </relation>
-      <relation type="many" rel-entity-name="PartyContent">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="PartyGroup">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="Person">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PaymentMethod">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyContactMech">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyContactMechPurpose">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CostComponent">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InventoryItem">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FacilityRole">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FacilityGroupRole">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ReorderGuideline">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="SupplierProduct">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderItemRole">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderRole">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" title="Carrier" rel-entity-name="OrderShipmentPreference">
-        <key-map field-name="partyId" rel-field-name="carrierPartyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentCostEstimate">
-        <key-map field-name="partyId"/>
-      </relation>
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="Affiliate">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="Vendor">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetReview">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetRole">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTrans">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTransEntry">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FixedAsset">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyFixedAssetAssignment">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Invoice">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceRole">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="many" rel-entity-name="CustomTimePeriod">
@@ -1244,134 +1008,14 @@
       <relation type="many" rel-entity-name="FinAccountRole">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="many" rel-entity-name="FinAccountTrans">
-        <key-map field-name="partyId"/>
-      </relation>
       <relation type="many" rel-entity-name="GlAccountRole">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementPartyApplic">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementRole">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CommunicationEventRole">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" title="To" rel-entity-name="CommunicationEvent">
-        <key-map field-name="partyId" rel-field-name="partyIdTo"/>
-      </relation>
-      <relation type="many" title="From" rel-entity-name="CommunicationEvent">
-        <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyNeed">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Quote">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="QuoteRole">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CustRequestRole">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="RequirementRole">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyRate">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="RespondingParty">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="TimeEntry">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="TimesheetRole">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Timesheet">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortAssignmentRate">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ItemIssuanceRole">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentReceiptRole">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentRouteSegment">
         <key-map field-name="partyId" rel-field-name="carrierPartyId"/>
       </relation>
-      <relation type="many" rel-entity-name="PartyResume">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyQual">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" title="Employee" rel-entity-name="PerfReviewItem">
-        <key-map field-name="partyId" rel-field-name="employeePartyId"/>
-      </relation>
-      <relation type="many" title="Employee" rel-entity-name="PerfReview">
-        <key-map field-name="partyId" rel-field-name="employeePartyId"/>
-      </relation>
-      <relation type="many" title="Manager" rel-entity-name="PerfReview">
-        <key-map field-name="partyId" rel-field-name="managerPartyId"/>
-      </relation>
-      <relation type="many" title="PayHistoryFrom" rel-entity-name="PerfReview">
-        <key-map field-name="partyId" rel-field-name="payHistoryPartyIdFrom"/>
-      </relation>
-      <relation type="many" title="PayHistoryTo" rel-entity-name="PerfReview">
-        <key-map field-name="partyId" rel-field-name="payHistoryPartyIdTo"/>
-      </relation>
-      <relation type="many" rel-entity-name="PerformanceNote">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PersonTraining">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" title="Applying" rel-entity-name="EmploymentApp">
-        <key-map field-name="partyId" rel-field-name="applyingPartyId"/>
-      </relation>
-      <relation type="many" title="ReferredBy" rel-entity-name="EmploymentApp">
-        <key-map field-name="partyId" rel-field-name="referredByPartyId"/>
-      </relation>
-      <relation type="many" title="To" rel-entity-name="Employment">
-        <key-map field-name="partyId" rel-field-name="partyIdTo"/>
-      </relation>
-      <relation type="many" title="From" rel-entity-name="Employment">
-        <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
-      </relation>
-      <relation type="many" rel-entity-name="PayrollPreference">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" title="To" rel-entity-name="PartyBenefit">
-        <key-map field-name="partyId" rel-field-name="partyIdTo"/>
-      </relation>
-      <relation type="many" title="From" rel-entity-name="PartyBenefit">
-        <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
-      </relation>
-      <relation type="many" rel-entity-name="EmplPositionFulfillment">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="EmplPosition">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="EmplPositionType">
-        <key-map field-name="partyId"/>
-      </relation>
       <relation type="many" rel-entity-name="ContentRole">
         <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" title="To" rel-entity-name="Shipment">
-        <key-map field-name="partyId" rel-field-name="partyIdTo"/>
-      </relation>
-      <relation type="many" title="From" rel-entity-name="Shipment">
-        <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
       </relation>
       <index name="EXTERNAL_ID_IDX">
         <index-field name="externalId"/>
@@ -1794,39 +1438,11 @@
       <relation type="many" rel-entity-name="PartyAttribute">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="many" title="From" rel-entity-name="PartyRelationship">
-        <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
-        <key-map field-name="roleTypeId" rel-field-name="roleTypeIdFrom"/>
-      </relation>
-      <relation type="many" title="To" rel-entity-name="PartyRelationship">
-        <key-map field-name="partyId" rel-field-name="partyIdTo"/>
-        <key-map field-name="roleTypeId" rel-field-name="roleTypeIdTo"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyContactMech">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderItemRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" title="Carrier" rel-entity-name="OrderShipmentPreference">
-        <key-map field-name="partyId" rel-field-name="carrierPartyId"/>
-        <key-map field-name="roleTypeId" rel-field-name="carrierRoleTypeId"/>
-      </relation>
       <relation type="many" rel-entity-name="ShipmentCostEstimate">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
@@ -1846,26 +1462,6 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="InvoiceRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FinAccountRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="GlAccountRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AgreementRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CommunicationEventRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
       <relation type="many" title="To" rel-entity-name="CommunicationEvent">
         <key-map field-name="partyId" rel-field-name="partyIdTo"/>
         <key-map field-name="roleTypeId" rel-field-name="roleTypeIdTo"/>
@@ -1878,23 +1474,7 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="QuoteRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CustRequestRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="RequirementRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
       <relation type="many" rel-entity-name="TimeEntry">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="TimesheetRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
@@ -1906,63 +1486,7 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="ItemIssuanceRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentReceiptRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" title="Employee" rel-entity-name="PerfReviewItem">
-        <key-map field-name="partyId" rel-field-name="employeePartyId"/>
-        <key-map field-name="roleTypeId" rel-field-name="employeeRoleTypeId"/>
-      </relation>
-      <relation type="many" title="Employee" rel-entity-name="PerfReview">
-        <key-map field-name="partyId" rel-field-name="employeePartyId"/>
-        <key-map field-name="roleTypeId" rel-field-name="employeeRoleTypeId"/>
-      </relation>
-      <relation type="many" title="Manager" rel-entity-name="PerfReview">
-        <key-map field-name="partyId" rel-field-name="managerPartyId"/>
-        <key-map field-name="roleTypeId" rel-field-name="managerRoleTypeId"/>
-      </relation>
-      <relation type="many" title="PayHistoryFrom" rel-entity-name="PerfReview">
-        <key-map field-name="partyId" rel-field-name="payHistoryPartyIdFrom"/>
-        <key-map field-name="roleTypeId" rel-field-name="payHistoryRoleTypeIdFrom"/>
-      </relation>
-      <relation type="many" title="PayHistoryTo" rel-entity-name="PerfReview">
-        <key-map field-name="partyId" rel-field-name="payHistoryPartyIdTo"/>
-        <key-map field-name="roleTypeId" rel-field-name="payHistoryRoleTypeIdTo"/>
-      </relation>
-      <relation type="many" rel-entity-name="PerformanceNote">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" title="To" rel-entity-name="Employment">
-        <key-map field-name="partyId" rel-field-name="partyIdTo"/>
-        <key-map field-name="roleTypeId" rel-field-name="roleTypeIdTo"/>
-      </relation>
-      <relation type="many" title="From" rel-entity-name="Employment">
-        <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
-        <key-map field-name="roleTypeId" rel-field-name="roleTypeIdFrom"/>
-      </relation>
-      <relation type="many" rel-entity-name="PayrollPreference">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" title="To" rel-entity-name="PartyBenefit">
-        <key-map field-name="partyId" rel-field-name="partyIdTo"/>
-        <key-map field-name="roleTypeId" rel-field-name="roleTypeIdTo"/>
-      </relation>
-      <relation type="many" title="From" rel-entity-name="PartyBenefit">
-        <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
-        <key-map field-name="roleTypeId" rel-field-name="roleTypeIdFrom"/>
-      </relation>
       <relation type="many" rel-entity-name="EmplPositionType">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ContentRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  */
 -->
 
@@ -358,20 +358,6 @@
       <relation type="one" fk-name="EMPLMNT_TNTP" rel-entity-name="TerminationType">
         <key-map field-name="terminationTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="PayHistory">
-        <key-map field-name="roleTypeIdFrom"/>
-        <key-map field-name="roleTypeIdTo"/>
-        <key-map field-name="partyIdFrom"/>
-        <key-map field-name="partyIdTo"/>
-        <key-map field-name="fromDate"/>
-      </relation>
-      <relation type="many" rel-entity-name="UnemploymentClaim">
-        <key-map field-name="roleTypeIdFrom"/>
-        <key-map field-name="roleTypeIdTo"/>
-        <key-map field-name="partyIdFrom"/>
-        <key-map field-name="partyIdTo"/>
-        <key-map field-name="fromDate"/>
-      </relation>
     </entity>
     <entity entity-name="EmploymentApp"
             package-name="org.ofbiz.humanres.employment"
@@ -406,9 +392,6 @@
       <field name="employmentAppSourceTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="employmentAppSourceTypeId"/>
-      <relation type="many" rel-entity-name="EmploymentApp">
-        <key-map field-name="employmentAppSourceTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="PartyBenefit"
             package-name="org.ofbiz.humanres.employment"
@@ -635,24 +618,6 @@
       <relation type="one" fk-name="EMPL_POS_EPSTP" rel-entity-name="EmplPositionType">
         <key-map field-name="emplPositionTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="PerfReview">
-        <key-map field-name="emplPositionId"/>
-      </relation>
-      <relation type="many" rel-entity-name="EmploymentApp">
-        <key-map field-name="emplPositionId"/>
-      </relation>
-      <relation type="many" title="ReportingTo" rel-entity-name="EmplPositionReportingStruct">
-        <key-map field-name="emplPositionId" rel-field-name="emplPositionIdReportingTo"/>
-      </relation>
-      <relation type="many" title="ManagedBy" rel-entity-name="EmplPositionReportingStruct">
-        <key-map field-name="emplPositionId" rel-field-name="emplPositionIdManagedBy"/>
-      </relation>
-      <relation type="many" rel-entity-name="EmplPositionFulfillment">
-        <key-map field-name="emplPositionId"/>
-      </relation>
-      <relation type="many" rel-entity-name="EmplPositionResponsibility">
-        <key-map field-name="emplPositionId"/>
-      </relation>
     </entity>
     <entity entity-name="EmplPositionClassType"
             package-name="org.ofbiz.humanres.position"
@@ -660,9 +625,6 @@
       <field name="emplPositionClassTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="emplPositionClassTypeId"/>
-      <relation type="many" rel-entity-name="EmplPositionTypeClass">
-        <key-map field-name="emplPositionClassTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="EmplPositionFulfillment"
             package-name="org.ofbiz.humanres.position"
@@ -727,9 +689,6 @@
       <field name="roleTypeId" type="id"></field>
       <field name="description" type="description"></field>
       <prim-key field="emplPositionTypeId"/>
-      <relation type="one" fk-name="EMPL_PSTP_EPTP" rel-entity-name="EmplPositionType">
-        <key-map field-name="emplPositionTypeId"/>
-      </relation>
       <relation type="one" fk-name="EMPL_PSTP_PRTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
@@ -739,15 +698,6 @@
       <relation type="one-nofk" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ValidResponsibility">
-        <key-map field-name="emplPositionTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="EmplPosition">
-        <key-map field-name="emplPositionTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="EmplPositionTypeClass">
-        <key-map field-name="emplPositionTypeId"/>
       </relation>
     </entity>
     <entity entity-name="EmplPositionTypeClass"
