@@ -556,6 +556,7 @@ public class PaymentGatewayServices {
 
                 // set the release info
                 pgResponse.set("referenceNum", releaseResult.get("releaseRefNum"));
+                pgResponse.set("altReference", releaseResult.get("releaseAltRefNum"));
                 pgResponse.set("gatewayCode", releaseResult.get("releaseCode"));
                 pgResponse.set("gatewayFlag", releaseResult.get("releaseFlag"));
                 pgResponse.set("gatewayMessage", releaseResult.get("releaseMessage"));
@@ -1140,6 +1141,7 @@ public class PaymentGatewayServices {
         // set the auth info
         response.set("amount", context.get("processAmount"));
         response.set("referenceNum", context.get("authRefNum"));
+        response.set("altReference", context.get("authAltRefNum"));
         response.set("gatewayCode", context.get("authCode"));
         response.set("gatewayFlag", context.get("authFlag"));
         response.set("gatewayMessage", context.get("authMessage"));
@@ -1329,6 +1331,9 @@ public class PaymentGatewayServices {
         response.set("transCodeEnumId", "PGT_CAPTURE");
         if (context.get("authRefNum") != null) {
             response.set("subReference", context.get("authRefNum"));
+            response.set("altReference", context.get("authAltRefNum"));
+        } else {
+            response.set("altReference", context.get("captureAltRefNum"));
         }
 
         // set the capture info
@@ -1516,6 +1521,7 @@ public class PaymentGatewayServices {
                 // set the capture info
                 response.set("amount", refundResponse.get("refundAmount"));
                 response.set("referenceNum", refundResponse.get("refundRefNum"));
+                response.set("altReference", refundResponse.get("refundAltRefNum"));
                 response.set("gatewayCode", refundResponse.get("refundCode"));
                 response.set("gatewayFlag", refundResponse.get("refundFlag"));
                 response.set("gatewayMessage", refundResponse.get("refundMessage"));
@@ -1925,6 +1931,7 @@ public class PaymentGatewayServices {
 
         result.put("processAmount", context.get("processAmount"));
         result.put("authRefNum", refNum);
+        result.put("authAltRefNum", refNum);
         result.put("authFlag", "X");
         result.put("authMessage", "This is a test processor; no payments were captured or authorized.");
         result.put("internalRespMsgs", UtilMisc.toList("This is a test processor; no payments were captured or authorized."));
@@ -1953,7 +1960,9 @@ public class PaymentGatewayServices {
 
         result.put("processAmount", context.get("processAmount"));
         result.put("authRefNum", refNum);
+        result.put("authAltRefNum", refNum);
         result.put("captureRefNum", refNum);
+        result.put("captureAltRefNum", refNum);
         result.put("authCode", "100");
         result.put("captureCode", "200");
         result.put("authFlag", "X");
@@ -1974,6 +1983,7 @@ public class PaymentGatewayServices {
         result.put("authResult", new Boolean(true));
         result.put("processAmount", context.get("processAmount"));
         result.put("authRefNum", new Long(nowTime).toString());
+        result.put("authAltRefNum", new Long(nowTime).toString());
         result.put("authCode", "100");
         result.put("authFlag", "A");
         result.put("authMessage", "This is a test processor; no payments were captured or authorized.");
@@ -1990,7 +2000,9 @@ public class PaymentGatewayServices {
         result.put("captureResult", new Boolean(true));
         result.put("processAmount", context.get("processAmount"));
         result.put("authRefNum", refNum);
+        result.put("authAltRefNum", refNum);
         result.put("captureRefNum", refNum);
+        result.put("captureAltRefNum", refNum);
         result.put("authCode", "100");
         result.put("captureCode", "200");
         result.put("authFlag", "A");
@@ -2010,6 +2022,7 @@ public class PaymentGatewayServices {
         result.put("authResult", new Boolean(false));
         result.put("processAmount", processAmount);
         result.put("authRefNum", new Long(nowTime).toString());
+        result.put("authAltRefNum", new Long(nowTime).toString());
         result.put("authFlag", "D");
         result.put("authMessage", "This is a test processor; no payments were captured or authorized");
         return result;
@@ -2029,6 +2042,7 @@ public class PaymentGatewayServices {
         result.put("releaseResult", new Boolean(true));
         result.put("releaseAmount", context.get("releaseAmount"));
         result.put("releaseRefNum", new Long(nowTime).toString());
+        result.put("releaseAltRefNum", new Long(nowTime).toString());
         result.put("releaseFlag", "U");
         result.put("releaseMessage", "This is a test release; no authorizations exist");
         return result;
@@ -2045,6 +2059,7 @@ public class PaymentGatewayServices {
          result.put("captureResult", new Boolean(true));
          result.put("captureAmount", context.get("captureAmount"));
          result.put("captureRefNum", new Long(nowTime).toString());
+         result.put("captureAltRefNum", new Long(nowTime).toString());
          result.put("captureFlag", "C");
          result.put("captureMessage", "This is a test capture; no money was transferred");
          return result;
