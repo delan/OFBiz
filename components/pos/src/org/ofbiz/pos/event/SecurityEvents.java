@@ -1,5 +1,5 @@
 /*
- * $Id: SecurityEvents.java,v 1.1 2004/07/27 18:37:39 ajzeneski Exp $
+ * $Id: SecurityEvents.java,v 1.2 2004/08/15 21:26:42 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.content.xui.XuiSession;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      Jul 13, 2004
  */
 public class SecurityEvents {
@@ -66,9 +66,7 @@ public class SecurityEvents {
                 }
                 if (passed) {
                     pos.setLock(false);
-                    output.clear();
-                    input.clear();
-                    pos.getJournal().refresh(pos);                    
+                    pos.refresh();
                     return;
                 }
             }
@@ -80,14 +78,10 @@ public class SecurityEvents {
     }
 
     public static void mgrLogin(PosScreen pos) {
-
+        pos.showPage("main/mgrpanel");
     }
 
     public static void lock(PosScreen pos) {
         pos.setLock(true);
-    }
-
-    public static void unlock(PosScreen pos) {
-
-    }
+    }    
 }

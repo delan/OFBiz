@@ -3,7 +3,7 @@
     <Components>
         <Panel name="mainPanel" x="0" y="0" w="1024" h="768" style="input" border="0">
             <Panel name="inputPanel" x="0" y="0" w="1024" h="48" style="input" border="0">
-                <Include file="main/includes/input"/>
+                <Include file="main/includes/posinput"/>
             </Panel>
             <Panel name="journalPanel" x="0" y="48" w="412" h="700" style="menu">
                 <Include file="main/includes/journal"/>

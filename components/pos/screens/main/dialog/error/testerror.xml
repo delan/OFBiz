@@ -4,8 +4,8 @@
         <!-- when used as a PosDialog the x/y will be set to center of screen -->
         <!-- setting the width and height to 0 will cause the box to auto-size -->
         <Panel name="errorPanel" x="0" y="0" w="500" h="500" style="errorpanel" border="1">
-            <Label x="0" y="0" w="400" h="50" name="testLabel" style="error" content="Error Alert Test" alignment="Center"/>
-            <Button name="closeBtn" x="0" y="60" w="400" h="60" style="error" content="OK" alignment="Center"/>                                       
+            <Label x="0" y="0" w="500" h="50" name="testLabel" style="error" content="ERROR DIALOG TEST" alignment="Center"/>
+            <Button name="closeBtn" x="0" y="60" w="500" h="60" style="error" content="OK" alignment="Center"/>                                       
         </Panel>
     </Components>
 </XPage>

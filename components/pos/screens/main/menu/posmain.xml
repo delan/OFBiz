@@ -2,15 +2,15 @@
 <XPage>
     <Components>
         <!-- col 1 -->
-        <Button name="menuPlu" x="0" y="0" w="100" h="60" style="posButton" content="PLU" alignment="Center"/>
-        <Button name="menuFunc" x="102" y="0" w="100" h="60" style="posButton" content="FN" alignment="Center"/>
+        <Button name="menuSku" x="0" y="0" w="100" h="60" style="posButton" content="SKU" alignment="Center"/>
+        <Button name="" x="102" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="menuMgr" x="204" y="0" w="100" h="60" style="posButton" content="MGR" alignment="Center"/>
         <Button name="" x="306" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="menuPromo" x="408" y="0" w="100" h="60" style="posButton" content="PROMO" alignment="Center"/>
         <Button name="menuLock" x="510" y="0" w="100" h="60" style="posButton" content="LOCK" alignment="Center"/>
 
         <!-- col 2 -->
-        <Button name="testAlert" x="0" y="62" w="100" h="60" style="posButton" content="ALERT" alignment="Center"/>
+        <Button name="" x="0" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="102" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="204" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="306" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
@@ -47,6 +47,6 @@
         <Button name="" x="204" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="306" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="408" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        <Button name="" x="510" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
+        <Button name="menuPay" x="510" y="310" w="100" h="60" style="posButton" content="PAY" alignment="Center"/>
     </Components>    
 </XPage>

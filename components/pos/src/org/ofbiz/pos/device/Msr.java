@@ -1,5 +1,5 @@
 /*
- * $Id: Msr.java,v 1.4 2004/08/10 18:58:56 ajzeneski Exp $
+ * $Id: Msr.java,v 1.5 2004/08/15 21:26:41 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,19 +27,27 @@ package org.ofbiz.pos.device;
 import jpos.JposException;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.pos.adaptor.DataEventAdaptor;
 import org.ofbiz.pos.adaptor.ErrorEventAdaptor;
 import org.ofbiz.pos.screen.PosScreen;
+import org.ofbiz.pos.event.PaymentEvents;
 
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.2
  */
 public class Msr extends GenericDevice {
 
     public static final String module = Msr.class.getName();
+    public static final int MSR_CREDIT_CARD = 100;
+    public static final int MSR_GIFT_CARD = 101;
+    public static final int MSR_ATM_CARD = 102;
+    public static final int MSR_CUST_CARD = 701;
+    public static final int MSR_CLERK_CARD = 801;
+    public static final int MSR_UNKNOWN = 999;
 
     public Msr(String deviceName, int timeout, PosScreen screen) {
         super(deviceName, timeout, screen);
@@ -88,7 +96,7 @@ public class Msr extends GenericDevice {
 
             public void errorOccurred(jpos.events.ErrorEvent event) {
                 Debug.log("Error Occurred : " + event.getErrorCodeExtended(), module);
-                screen.showDialog("main/dialog/error/cardreaderror.xml");
+                screen.showDialog("main/dialog/error/cardreaderror");
                 try {
                     msr.clearInput();
                 } catch (jpos.JposException e) {
@@ -108,7 +116,27 @@ public class Msr extends GenericDevice {
         msrStr.append("|");
         msrStr.append(decodedData[3]);
         Debug.log("Msr Info : " + msrStr.toString(), module);
-        screen.getInput().setFunction("CREDITINFO", msrStr.toString());
+        screen.getInput().setFunction("MSRINFO", msrStr.toString());
+
+        // implemented validation
+        int msrType = MSR_UNKNOWN;
+        if (UtilValidate.isCreditCard(decodedData[5])) {
+            msrType = MSR_CREDIT_CARD;
+        } else if (UtilValidate.isGiftCard(decodedData[5])) {
+            msrType = MSR_GIFT_CARD;
+        }
+
+        // all implemented types
+        switch (msrType) {
+            case MSR_CREDIT_CARD:
+                PaymentEvents.payCredit(screen);
+                break;
+            case MSR_UNKNOWN:
+                screen.showDialog("main/dialog/error/unknowncardtype");
+                screen.getInput().clear();
+                break;
+        }
+
         screen.getOutput().print("Credit Card Read");
     }
 }

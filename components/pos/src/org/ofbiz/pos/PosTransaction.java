@@ -1,5 +1,5 @@
 /*
- * $Id: PosTransaction.java,v 1.1 2004/07/27 18:37:36 ajzeneski Exp $
+ * $Id: PosTransaction.java,v 1.2 2004/08/15 21:26:40 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -45,6 +45,7 @@ import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.pos.component.Journal;
+import org.ofbiz.pos.device.DeviceLoader;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityUtil;
@@ -54,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class PosTransaction {
@@ -228,7 +229,7 @@ public class PosTransaction {
         return cart.selectedPayments();
     }
 
-    public double processSale() {
+    public double processSale() throws GeneralException {
         double grandTotal = this.getGrandTotal();
         double paymentAmt = this.getPaymentTotal();
         if (grandTotal > paymentAmt) {
@@ -242,23 +243,38 @@ public class PosTransaction {
         Map orderRes = ch.createOrder(session.getUserLogin());
         Debug.log("Create Order Resp : " + orderRes, module);
 
+        if (orderRes != null && ServiceUtil.isError(orderRes)) {
+            throw new GeneralException(ServiceUtil.getErrorMessage(orderRes));
+        }
+
         // process the payment(s)
         Map payRes = null;
         try {
             payRes = ch.processPayment(ProductStoreWorker.getProductStore(productStoreId, session.getDelegator()), session.getUserLogin(), true);
         } catch (GeneralException e) {
             Debug.logError(e, module);
+            throw e;
         }
         Debug.log("Process Payment Resp : " + payRes, module);
 
-        if (payRes == null || ServiceUtil.isError(payRes)) {
-            // handle the error
-        } else {
-            cart.clear();
-            currentTx = null;
+        if (payRes != null && ServiceUtil.isError(payRes)) {
+            throw new GeneralException(ServiceUtil.getErrorMessage(payRes));
         }
 
-        return (grandTotal - paymentAmt);
+        // get the change due
+        double change = (grandTotal - paymentAmt);
+
+        // open the drawer (only supports 1 drawer for now)
+        DeviceLoader.drawer[0].openDrawer();
+
+        // print the receipt
+        DeviceLoader.receipt.print(this);
+
+        // clear the tx
+        cart.clear();
+        currentTx = null;
+
+        return change;
     }
 
     private synchronized GenericValue getStoreOrgAddress() {

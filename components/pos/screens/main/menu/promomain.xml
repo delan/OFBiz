@@ -2,6 +2,6 @@
 <XPage>
     <Components>
         <Label x="0" y="0" w="600" h="50" name="promoLabel" style="input" content="This will be the promo page!" alignment="center"/>
-        <Button x="0" y="200" w="600" h="50" name="promoMain" content="Main Screen" alignment="Center"/>
+        <Button x="0" y="200" w="600" h="50" name="menuMain" content="Main Screen" alignment="Center"/>
     </Components>    
 </XPage>

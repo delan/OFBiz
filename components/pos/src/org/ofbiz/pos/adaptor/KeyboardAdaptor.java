@@ -1,5 +1,5 @@
 /*
- * $Id: KeyboardAdaptor.java,v 1.2 2004/08/07 01:23:07 ajzeneski Exp $
+ * $Id: KeyboardAdaptor.java,v 1.3 2004/08/15 21:26:40 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -33,6 +33,8 @@ import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.Map;
 
+import net.xoetrope.xui.XPage;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.collections.OrderedMap;
 import org.ofbiz.pos.component.Input;
@@ -42,7 +44,7 @@ import org.ofbiz.pos.component.Input;
  * KeyboardAdaptor - Handles reading keyboard input
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.2
  */
 public class KeyboardAdaptor {
@@ -53,18 +55,18 @@ public class KeyboardAdaptor {
     public static final int MSR_DATA = 102;
     public static final int ALL_DATA = 999;
 
+    protected static List loadedComponents = new LinkedList();
     protected static Map receivers = new OrderedMap();
     protected static KeyboardAdaptor adaptor = null;
-    protected static Input input = null;
     protected static boolean running = true;
 
     protected KeyboardListener listener = null;
 
     public static KeyboardAdaptor getInstance(KeyboardReceiver receiver, int dataType) {
-        if (input == null) {
-            throw new IllegalStateException();
-        }
+        return getInstance(receiver, dataType, null);
+    }
 
+    public static KeyboardAdaptor getInstance(KeyboardReceiver receiver, int dataType, Component[] coms) {
         if (adaptor == null) {
             synchronized(KeyboardAdaptor.class) {
                 if (adaptor == null) {
@@ -72,12 +74,14 @@ public class KeyboardAdaptor {
                 }
             }
         }
+
+        // add the new components to listen on
+        if (adaptor != null && coms != null) {
+            adaptor.addComponents(coms);
+        }
+
         receivers.put(receiver, new Integer(dataType));
         return adaptor;
-    }
-
-    public static void setInput(Input input) {
-        KeyboardAdaptor.input = input;
     }
 
     public static void stop() {
@@ -92,12 +96,17 @@ public class KeyboardAdaptor {
         KeyboardAdaptor.adaptor = this;
     }
 
+    private void addComponents(Component[] coms) {
+        listener.reader.configureComponents(coms);
+    }
+
     private class KeyboardListener extends Thread {
 
         private static final long MAX_WAIT = 200;
         private List keyCodeData = new LinkedList();
         private List keyCharData = new LinkedList();
         private long lastKey = -1;
+        private KeyReader reader = null;
 
         private void receiveKey(int keycode, char keychar) {
             lastKey = System.currentTimeMillis();
@@ -150,7 +159,7 @@ public class KeyboardAdaptor {
         }
 
         public void run() {
-            new KeyReader(this);
+            this.reader = new KeyReader(this);
             while (running) {
                 long now = System.currentTimeMillis();
                 if ((now - lastKey) >= MAX_WAIT) {
@@ -175,15 +184,16 @@ public class KeyboardAdaptor {
 
         public KeyReader(KeyboardListener k) {
             this.k = k;
-            this.configureListener(input.getComponents());
         }
 
-        private void configureListener(Component[] coms) {
+        private void configureComponents(Component[] coms) {
             for (int i = 0; i < coms.length; i++) {
-                coms[i].addKeyListener(this);
+                if (!loadedComponents.contains(coms[i])) {
+                    coms[i].addKeyListener(this);
+                }
                 if (coms[i] instanceof Container) {
                     Component[] nextComs = ((Container) coms[i]).getComponents();
-                    configureListener(nextComs);
+                    configureComponents(nextComs);
                 }
             }
         }
