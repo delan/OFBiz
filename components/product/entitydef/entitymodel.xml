@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.30 $
+ * @version    $Revision: 1.31 $
  */
 -->
 
@@ -1978,6 +1978,10 @@
       <field name="useLimitPerOrder" type="numeric"></field>
       <field name="useLimitPerCustomer" type="numeric"></field>
       <field name="useLimitPerPromotion" type="numeric"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="productPromoId"/>
       <relation type="many" rel-entity-name="ProductPromoRule">
         <key-map field-name="productPromoId"/>
@@ -2063,6 +2067,10 @@
       <field name="productPromoId" type="id-ne"></field>
       <field name="useLimitPerCode" type="numeric"></field>
       <field name="useLimitPerCustomer" type="numeric"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="productPromoCodeId"/>
       <relation type="one" fk-name="PROD_PRCOD_PROMO" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>

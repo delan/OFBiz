@@ -35,7 +35,7 @@
 
         <make-value value-name="newEntity" entity-name="Product"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        
+
         <field-to-field field-name="productId" map-name="parameters" to-map-name="newEntity"/>
         <if-empty field-name="productId" map-name="newEntity">
             <sequenced-id-to-env sequence-name="Product" env-name="productId"/>
@@ -47,13 +47,13 @@
         </else>
         </if-empty>
         <field-to-result field-name="productId" map-name="newEntity" result-name="productId"/>
-        
+
         <now-timestamp-to-env env-name="nowTimestamp"/>
-        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/>
-        <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/>
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/>
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/>
-        
+        <env-to-env env-name="nowTimestamp" to-env-name="newEntity.createdDate"/>
+        <env-to-env env-name="nowTimestamp" to-env-name="newEntity.lastModifiedDate"/>
+        <env-to-env env-name="userLogin.userLoginId" to-env-name="newEntity.lastModifiedByUserLogin"/>
+        <env-to-env env-name="userLogin.userLoginId" to-env-name="newEntity.createdByUserLogin"/>
+
         <create-value value-name="newEntity"/>
 
         <!-- if setting the primaryProductCategoryId create a member entity too -->
@@ -67,7 +67,7 @@
             <create-value value-name="newMember"/>
         </if-not-empty>
         -->
-        
+
         <!-- if the user has the role limited position, add this product to the limit category/ies -->
         <if-has-permission permission="CATALOG_ROLE" action="_CREATE">
             <field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupCategoryRolesMap"/>
@@ -97,8 +97,9 @@
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
 
         <now-timestamp-to-env env-name="nowTimestamp"/>
-        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="lookedUpValue"/>
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpValue"/>
+        <env-to-env env-name="nowTimestamp" to-env-name="newEntity.lastModifiedDate"/>
+        <env-to-env env-name="userLogin.userLoginId" to-env-name="newEntity.lastModifiedByUserLogin"/>
+
         <store-value value-name="lookedUpValue"/>
 
         <!-- if setting the primaryParentCategoryId, create a rollup entity too -->
@@ -128,11 +129,11 @@
         <field-to-field field-name="oldProductId" map-name="parameters" to-field-name="productId" to-map-name="productFindContext"/>
         <find-by-primary-key entity-name="Product" map-name="productFindContext" value-name="oldProduct"/>
         <clone-value value-name="oldProduct" new-value-name="newProduct"/>
-        
+
         <!-- set the productId, and write it to the datasource -->
         <field-to-field field-name="productId" map-name="parameters" to-map-name="newProduct"/>
         <create-value value-name="newProduct"/>
-        
+
         <!-- if requested, duplicate related data as well -->
         <if-not-empty field-name="duplicatePrices" map-name="parameters">
             <find-by-and entity-name="ProductPrice" map-name="productFindContext" list-name="foundValues"/>
@@ -165,7 +166,7 @@
                 <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
                 <create-value value-name="newTempValue"/>
             </iterate>
-            
+
             <!-- small difference here, also do the reverse assocs... -->
             <field-to-field field-name="oldProductId" map-name="parameters" to-field-name="productIdTo" to-map-name="reverseProductFindContext"/>
             <find-by-and entity-name="ProductAssoc" map-name="reverseProductFindContext" list-name="foundValues"/>
@@ -196,12 +197,12 @@
             <iterate entry-name="foundValue" list-name="foundValues">
                 <clone-value value-name="foundValue" new-value-name="newTempValue"/>
                 <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
-                
+
                 <!-- this one is slightly different because it needs a new sequenced inventoryItemId -->
                 <sequenced-id-to-env sequence-name="InventoryItem" env-name="inventoryItemId"/>
                 <to-string field-name="inventoryItemId"/>
                 <env-to-field env-name="inventoryItemId" map-name="newTempValue"/>
-                
+
                 <create-value value-name="newTempValue"/>
             </iterate>
         </if-not-empty>
@@ -235,14 +236,14 @@
 
     <simple-method method-name="indexProductKeywords" short-description="Index the Keywords for a Product" login-required="false">
         <!-- this service is meant to be called from an entity ECA for entities that include a productId -->
-        <!-- if it is the Product entity itself triggering this action, then a [productInstance] parameter 
+        <!-- if it is the Product entity itself triggering this action, then a [productInstance] parameter
             will be passed and we can save a few cycles looking that up -->
         <field-to-env field-name="productInstance" map-name="parameters" env-name="productInstance"/>
         <if-empty field-name="productInstance">
             <field-to-field field-name="productId" map-name="parameters" to-map-name="findProductMap"/>
             <find-by-primary-key entity-name="Product" map-name="findProductMap" value-name="productInstance"/>
         </if-empty>
-    
+
         <!-- induce keywords if autoCreateKeywords is emtpy or Y-->
         <if>
             <condition>
@@ -275,7 +276,7 @@
             </if-empty>
         </iterate>
     </simple-method>
-        
+
     <!-- GoodIdentification methods -->
     <simple-method method-name="createGoodIdentification" short-description="Create an GoodIdentification">
         <string-to-field string="createGoodIdentification" field-name="callingMethodName"/>
@@ -348,7 +349,7 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
-    <!-- a method to centralize product security code, meant to be called in-line with 
+    <!-- a method to centralize product security code, meant to be called in-line with
         call-simple-method, and the checkAction and callingMethodName attributes should be in the method context -->
     <simple-method method-name="checkProductRelatedPermission" short-description="Check Product Related Permission">
         <if-empty field-name="callingMethodName">
@@ -357,7 +358,7 @@
         <if-empty field-name="checkAction">
             <string-to-field string="UPDATE" field-name="checkAction"/>
         </if-empty>
-    
+
         <!-- find all role-categories that this product is a member of -->
         <if>
             <condition>
@@ -393,23 +394,23 @@
             </then>
         </if>
     </simple-method>
-    
-    <simple-method method-name="createProductReview" short-description="Create an ProductReview">        
+
+    <simple-method method-name="createProductReview" short-description="Create an ProductReview">
         <make-value value-name="newEntity" entity-name="ProductReview"/>
-        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>        
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-map-name="newEntity"/>
-        
+
         <sequenced-id-to-env sequence-name="ProductReview" env-name="productReviewId"/>
         <to-string field-name="productReviewId"/>
         <env-to-field env-name="productReviewId" map-name="newEntity"/>
         <field-to-result field-name="productReviewId" result-name="productReviewId"/>
-        
+
         <if-empty field-name="postedDateTime" map-name="newEntity">
             <now-timestamp-to-env env-name="nowTimestamp"/>
             <env-to-field env-name="nowTimestamp" field-name="postedDateTime" map-name="newEntity"/>
-        </if-empty>            
-                
+        </if-empty>
+
         <create-value value-name="newEntity"/>
-    </simple-method>    
-    
+    </simple-method>
+
 </simple-methods>
