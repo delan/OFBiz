@@ -3,6 +3,7 @@ package org.ofbiz.content.layout;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
@@ -42,7 +44,7 @@ import javax.servlet.http.HttpSession;
  * LayoutEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.0
  *
  * 
@@ -226,7 +228,7 @@ public class LayoutEvents {
         HttpSession session = request.getSession();
         Map context = new HashMap();
         Map paramMap = UtilHttp.getParameterMap(request);
-        //Debug.logInfo("in replaceSubContent, paramMap:" + paramMap, module);
+        Debug.logInfo("in replaceSubContent, paramMap:" + paramMap, module);
         String dataResourceId = (String)paramMap.get("dataResourceId");
         if (UtilValidate.isEmpty(dataResourceId)) {
             request.setAttribute("_ERROR_MESSAGE_", "DataResourceId is null.");
@@ -300,7 +302,15 @@ public class LayoutEvents {
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
         HttpSession session = request.getSession();
-        String contentId = request.getParameter("contentId");
+        Map paramMap = UtilHttp.getParameterMap(request);
+        String contentId = (String)paramMap.get("contentId");
+        Debug.logInfo("in cloneLayout, contentId:" + contentId, "");
+        if (UtilValidate.isEmpty(contentId)) {
+                request.setAttribute("_ERROR_MESSAGE_", "contentId is empty");
+                return "error";
+        }
+        String contentIdTo = (String)paramMap.get("contentIdTo");
+        Debug.logInfo("in cloneLayout, contentIdTo:" + contentIdTo, "");
         GenericValue content = null;
         GenericValue newContent = null;
         List entityList = null;
@@ -309,7 +319,13 @@ public class LayoutEvents {
         try {
             content = delegator.findByPrimaryKey("Content", 
                        UtilMisc.toMap("contentId", contentId));
+        Debug.logInfo("in cloneLayout, content:" + content, "");
+        if (content == null) {
+                request.setAttribute("_ERROR_MESSAGE_", "content is empty");
+                return "error";
+        }
             newContent = delegator.makeValue("Content", content);
+        Debug.logInfo("in cloneLayout, newContent:" + newContent, "");
             String oldName = (String)content.get("contentName");
             newId = delegator.getNextSeqId("Content").toString();
             newContent.set("contentId", newId);
@@ -342,7 +358,6 @@ public class LayoutEvents {
             entityList = (List)results.get("entityList");
             if (entityList == null || entityList.size() == 0) {
                 request.setAttribute("_ERROR_MESSAGE_", "No subContent found");
-                return "error";
             }
         } catch(GenericServiceException e) {
                 request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
@@ -399,7 +414,7 @@ public class LayoutEvents {
         GenericValue view = delegator.makeValue("ContentDataResourceView", null);
         view.set("contentId", newId);
         view.set("drDataResourceId", newDataResourceId);
-            //Debug.logInfo("in cloneLayout, view:" + view, "");
+        Debug.logInfo("in cloneLayout, view:" + view, "");
         ContentManagementWorker.setCurrentEntityMap(request, view); 
         request.setAttribute("contentId", view.get("contentId"));
         request.setAttribute("drDataResourceId", view.get("drDataResourceId"));
@@ -549,4 +564,36 @@ public class LayoutEvents {
         return "success";
     }
 
+    public static String copyToClip(HttpServletRequest request, HttpServletResponse response) {
+        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+        Map paramMap = UtilHttp.getParameterMap(request);
+        String entityName = (String)paramMap.get("entityName");
+        
+        if (UtilValidate.isEmpty(entityName) ) {
+            request.setAttribute("_ERROR_MESSAGE_", "'entityName' is empty.");
+            return "error";
+        } 
+        GenericValue v = delegator.makeValue(entityName, null);
+        GenericPK passedPK = v.getPrimaryKey();
+        Collection keyColl = passedPK.getAllKeys();
+        Iterator keyIt = keyColl.iterator();
+        while (keyIt.hasNext()) {
+            String attrName = (String)keyIt.next();
+            String attrVal = (String)request.getAttribute(attrName);
+            if (attrVal == null) {
+                attrVal = (String)paramMap.get(attrName);
+            }
+        Debug.logInfo("in copyToClip, attrName:" + attrName,"");
+        Debug.logInfo("in copyToClip, attrVal:" + attrVal,"");
+            if (UtilValidate.isNotEmpty(attrVal)) {
+                passedPK.put(attrName,attrVal);
+            } else {
+                request.setAttribute("_ERROR_MESSAGE_", attrName + " is empty.");
+                return "error";
+            }
+        }
+        ContentManagementWorker.mruAdd(request, passedPK);
+
+        return "success";
+    }
 }
