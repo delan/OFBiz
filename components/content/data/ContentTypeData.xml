@@ -52,6 +52,10 @@
     <ContentOperation contentOperationId="HAS_PUBLISHER_ROLE" description="Has Publisher Role"/>
     <ContentOperation contentOperationId="CONTENT_CREATE_SUB" description="Create SubContent"/>
     <ContentOperation contentOperationId="CONTENT_VIEW_SHORT" description="View Short Desc"/>
+    <ContentOperation contentOperationId="CHILD_CREATE" description="Child Create"/>
+    <ContentOperation contentOperationId="CHILD_UPDATE" description="Child Update"/>
+    <ContentOperation contentOperationId="CHILD_DELETE" description="Child Delete"/>
+    <ContentOperation contentOperationId="CHILD_VIEW" description="Child View"/>
 
     <!-- These ContentTypes are primarily for structuring documents or content -->
     <ContentPurposeType contentPurposeTypeId="ARTICLE" description="Article"/>
