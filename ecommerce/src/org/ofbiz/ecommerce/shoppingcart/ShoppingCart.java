@@ -192,6 +192,7 @@ public class ShoppingCart implements java.io.Serializable {
         result.put("carrierPartyId", getCarrierPartyId());
         result.put("maySplit", getMaySplit());
         result.put("paymentMethodId", getPaymentMethodId());
+        result.put("paymentMethod", getPaymentMethod(delegator));
         return result;
     }
     
