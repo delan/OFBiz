@@ -182,4 +182,13 @@
   <StatusItem description="Scheduled" sequenceId="02" statusCode="SCHEDULED" statusId="IXF_SCHEDULED" statusTypeId="INVENTORY_XFER_STTS"/>
   <StatusItem description="En-Route" sequenceId="03" statusCode="EN_ROUTE" statusId="IXF_EN_ROUTE" statusTypeId="INVENTORY_XFER_STTS"/>
   <StatusItem description="Complete" sequenceId="04" statusCode="COMPLETE" statusId="IXF_COMPLETE" statusTypeId="INVENTORY_XFER_STTS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="IXF_CANCELLED" statusTypeId="INVENTORY_XFER_STTS"/>
+  <StatusValidChange condition="" statusId="IXF_REQUESTED" statusIdTo="IXF_SCHEDULED" transitionName="Inventory Request Scheduled"/>
+  <StatusValidChange condition="" statusId="IXF_REQUESTED" statusIdTo="IXF_EN_ROUTE" transitionName="Inventory Request In Route"/>
+  <StatusValidChange condition="" statusId="IXF_REQUESTED" statusIdTo="IXF_COMPLETE" transitionName="Inventory Request Completed"/>
+  <StatusValidChange condition="" statusId="IXF_REQUESTED" statusIdTo="IXF_CANCELLED" transitionName="Inventory Request Cancelled"/>
+  <StatusValidChange condition="" statusId="IXF_SCHEDULED" statusIdTo="IXF_EN_ROUTE" transitionName="Scheduled Inventory In Route"/>
+  <StatusValidChange condition="" statusId="IXF_SCHEDULED" statusIdTo="IXF_COMPLETE" transitionName="Scheduled Inventory Completed"/>
+  <StatusValidChange condition="" statusId="IXF_SCHEDULED" statusIdTo="IXF_CANCELLED" transitionName="Scheduled Inventory Cancelled"/>
+  <StatusValidChange condition="" statusId="IXF_EN_ROUTE" statusIdTo="IXF_COMPLETE" transitionName="In Route Transfer Completed"/>
 </entity-engine-xml>
