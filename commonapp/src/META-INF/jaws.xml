@@ -28,29 +28,392 @@
 
   <enterprise-beans>
     <entity>
+      <ejb-name>Geo</ejb-name>
+      <table-name>GEO</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>geoId</field-name>
+        <column-name>GEO_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>geoTypeId</field-name>
+        <column-name>GEO_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>geoCode</field-name>
+        <column-name>GEO_CODE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>abbreviation</field-name>
+        <column-name>ABBREVIATION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByGeoTypeId</name>
+        <query>GEO_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByGeoCode</name>
+        <query>GEO_CODE like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByAbbreviation</name>
+        <query>ABBREVIATION like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>GeoType</ejb-name>
+      <table-name>GEO_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>geoTypeId</field-name>
+        <column-name>GEO_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHasTable</name>
+        <query>HAS_TABLE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>GeoAssoc</ejb-name>
+      <table-name>GEO_ASSOC</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>geoId</field-name>
+        <column-name>GEO_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>geoIdTo</field-name>
+        <column-name>GEO_ID_TO</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>geoAssocTypeId</field-name>
+        <column-name>GEO_ASSOC_TYPE_ID</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByGeoId</name>
+        <query>GEO_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByGeoIdTo</name>
+        <query>GEO_ID_TO like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByGeoAssocTypeId</name>
+        <query>GEO_ASSOC_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>GeoAssocType</ejb-name>
+      <table-name>GEO_ASSOC_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>geoAssocTypeId</field-name>
+        <column-name>GEO_ASSOC_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+    </entity>
+    <entity>
+      <ejb-name>PeriodType</ejb-name>
+      <table-name>PERIOD_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>periodTypeId</field-name>
+        <column-name>PERIOD_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+    </entity>
+    <entity>
+      <ejb-name>StandardTimePeriod</ejb-name>
+      <table-name>STANDARD_TIME_PERIOD</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>standardTimePeriodId</field-name>
+        <column-name>STANDARD_TIME_PERIOD_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>periodTypeId</field-name>
+        <column-name>PERIOD_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>fromDate</field-name>
+        <column-name>FROM_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>thruDate</field-name>
+        <column-name>THRU_DATE</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByPeriodTypeId</name>
+        <query>PERIOD_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>Status</ejb-name>
+      <table-name>STATUS</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>statusId</field-name>
+        <column-name>STATUS_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>statusTypeId</field-name>
+        <column-name>STATUS_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByStatusTypeId</name>
+        <query>STATUS_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>StatusType</ejb-name>
+      <table-name>STATUS_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>statusTypeId</field-name>
+        <column-name>STATUS_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHasTable</name>
+        <query>HAS_TABLE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>Uom</ejb-name>
+      <table-name>UOM</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>uomId</field-name>
+        <column-name>UOM_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>uomTypeId</field-name>
+        <column-name>UOM_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>abbreviation</field-name>
+        <column-name>ABBREVIATION</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByUomTypeId</name>
+        <query>UOM_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>UomType</ejb-name>
+      <table-name>UOM_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>uomTypeId</field-name>
+        <column-name>UOM_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHasTable</name>
+        <query>HAS_TABLE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>UomConversion</ejb-name>
+      <table-name>UOM_CONVERSION</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>uomId</field-name>
+        <column-name>UOM_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>uomIdTo</field-name>
+        <column-name>UOM_ID_TO</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>conversionFactor</field-name>
+        <column-name>CONVERSION_FACTOR</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByUomId</name>
+        <query>UOM_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByUomIdTo</name>
+        <query>UOM_ID_TO like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
       <ejb-name>Party</ejb-name>
       <table-name>PARTY</table-name>
-        <create-table>true</create-table>
-        <remove-table>false</remove-table>
-        <tuned-updates>false</tuned-updates>
-        <read-only>false</read-only>
-        <time-out>300</time-out>
-
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
       <cmp-field>
         <field-name>partyId</field-name>
         <column-name>PARTY_ID</column-name>
       </cmp-field>
-
+      
     </entity>
     <entity>
       <ejb-name>PartyClassification</ejb-name>
       <table-name>PARTY_CLASSIFICATION</table-name>
-        <create-table>true</create-table>
-        <remove-table>false</remove-table>
-        <tuned-updates>false</tuned-updates>
-        <read-only>false</read-only>
-        <time-out>300</time-out>
-
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
       <cmp-field>
         <field-name>partyId</field-name>
         <column-name>PARTY_ID</column-name>
@@ -71,7 +434,7 @@
         <field-name>thruDate</field-name>
         <column-name>THRU_DATE</column-name>
       </cmp-field>
-
+      
       <finder>
         <name>findByPartyId</name>
         <query>PARTY_ID like {0}</query>
@@ -91,12 +454,12 @@
     <entity>
       <ejb-name>PartyClassificationType</ejb-name>
       <table-name>PARTY_CLASSIFICATION_TYPE</table-name>
-        <create-table>true</create-table>
-        <remove-table>false</remove-table>
-        <tuned-updates>false</tuned-updates>
-        <read-only>false</read-only>
-        <time-out>300</time-out>
-
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
       <cmp-field>
         <field-name>partyClassificationTypeId</field-name>
         <column-name>PARTY_CLASSIFICATION_TYPE_ID</column-name>
@@ -113,7 +476,7 @@
         <field-name>description</field-name>
         <column-name>DESCRIPTION</column-name>
       </cmp-field>
-
+      
       <finder>
         <name>findByParentTypeId</name>
         <query>PARENT_TYPE_ID like {0}</query>
@@ -128,12 +491,12 @@
     <entity>
       <ejb-name>PartyType</ejb-name>
       <table-name>PARTY_TYPE</table-name>
-        <create-table>true</create-table>
-        <remove-table>false</remove-table>
-        <tuned-updates>false</tuned-updates>
-        <read-only>false</read-only>
-        <time-out>300</time-out>
-
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
       <cmp-field>
         <field-name>partyTypeId</field-name>
         <column-name>PARTY_TYPE_ID</column-name>
@@ -150,7 +513,7 @@
         <field-name>description</field-name>
         <column-name>DESCRIPTION</column-name>
       </cmp-field>
-
+      
       <finder>
         <name>findByParentTypeId</name>
         <query>PARENT_TYPE_ID like {0}</query>
@@ -165,12 +528,12 @@
     <entity>
       <ejb-name>PartyAttribute</ejb-name>
       <table-name>PARTY_ATTRIBUTE</table-name>
-        <create-table>true</create-table>
-        <remove-table>false</remove-table>
-        <tuned-updates>false</tuned-updates>
-        <read-only>false</read-only>
-        <time-out>300</time-out>
-
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
       <cmp-field>
         <field-name>partyId</field-name>
         <column-name>PARTY_ID</column-name>
@@ -183,7 +546,7 @@
         <field-name>value</field-name>
         <column-name>VALUE</column-name>
       </cmp-field>
-
+      
       <finder>
         <name>findByPartyId</name>
         <query>PARTY_ID like {0}</query>
@@ -198,12 +561,12 @@
     <entity>
       <ejb-name>PartyTypeAttr</ejb-name>
       <table-name>PARTY_TYPE_ATTR</table-name>
-        <create-table>true</create-table>
-        <remove-table>false</remove-table>
-        <tuned-updates>false</tuned-updates>
-        <read-only>false</read-only>
-        <time-out>300</time-out>
-
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
       <cmp-field>
         <field-name>partyTypeId</field-name>
         <column-name>PARTY_TYPE_ID</column-name>
@@ -212,7 +575,7 @@
         <field-name>name</field-name>
         <column-name>NAME</column-name>
       </cmp-field>
-
+      
       <finder>
         <name>findByPartyTypeId</name>
         <query>PARTY_TYPE_ID like {0}</query>
@@ -225,14 +588,2472 @@
       </finder>
     </entity>
     <entity>
+      <ejb-name>PartyRole</ejb-name>
+      <table-name>PARTY_ROLE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>partyId</field-name>
+        <column-name>PARTY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>roleTypeId</field-name>
+        <column-name>ROLE_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>partyRoleId</field-name>
+        <column-name>PARTY_ROLE_ID</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByPartyId</name>
+        <query>PARTY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByRoleTypeId</name>
+        <query>ROLE_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPartyRoleId</name>
+        <query>PARTY_ROLE_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>RoleType</ejb-name>
+      <table-name>ROLE_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>roleTypeId</field-name>
+        <column-name>ROLE_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHasTable</name>
+        <query>HAS_TABLE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>RoleTypeAttr</ejb-name>
+      <table-name>ROLE_TYPE_ATTR</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>roleTypeId</field-name>
+        <column-name>ROLE_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByRoleTypeId</name>
+        <query>ROLE_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>Product</ejb-name>
+      <table-name>PRODUCT</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productId</field-name>
+        <column-name>PRODUCT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>primaryProductCategoryId</field-name>
+        <column-name>PRIMARY_PRODUCT_CATEGORY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>manufacturerPartyId</field-name>
+        <column-name>MANUFACTURER_PARTY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>uomId</field-name>
+        <column-name>UOM_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>quantityIncluded</field-name>
+        <column-name>QUANTITY_INCLUDED</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>introductionDate</field-name>
+        <column-name>INTRODUCTION_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>salesDiscontinuationDate</field-name>
+        <column-name>SALES_DISCONTINUATION_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>supportDiscontinuationDate</field-name>
+        <column-name>SUPPORT_DISCONTINUATION_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>comment</field-name>
+        <column-name>COMMENT</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>longDescription</field-name>
+        <column-name>LONG_DESCRIPTION</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>smallImageUrl</field-name>
+        <column-name>SMALL_IMAGE_URL</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>largeImageUrl</field-name>
+        <column-name>LARGE_IMAGE_URL</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>defaultPrice</field-name>
+        <column-name>DEFAULT_PRICE</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByPrimaryProductCategoryId</name>
+        <query>PRIMARY_PRODUCT_CATEGORY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByManufacturerPartyId</name>
+        <query>MANUFACTURER_PARTY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByUomId</name>
+        <query>UOM_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductClass</ejb-name>
+      <table-name>PRODUCT_CLASS</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productId</field-name>
+        <column-name>PRODUCT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productTypeId</field-name>
+        <column-name>PRODUCT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>fromDate</field-name>
+        <column-name>FROM_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>thruDate</field-name>
+        <column-name>THRU_DATE</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductId</name>
+        <query>PRODUCT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductTypeId</name>
+        <query>PRODUCT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductType</ejb-name>
+      <table-name>PRODUCT_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productTypeId</field-name>
+        <column-name>PRODUCT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHasTable</name>
+        <query>HAS_TABLE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductAttribute</ejb-name>
+      <table-name>PRODUCT_ATTRIBUTE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productId</field-name>
+        <column-name>PRODUCT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>value</field-name>
+        <column-name>VALUE</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductId</name>
+        <query>PRODUCT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductTypeAttr</ejb-name>
+      <table-name>PRODUCT_TYPE_ATTR</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productTypeId</field-name>
+        <column-name>PRODUCT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductTypeId</name>
+        <query>PRODUCT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>GoodIdentification</ejb-name>
+      <table-name>GOOD_IDENTIFICATION</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>goodIdentificationTypeId</field-name>
+        <column-name>GOOD_IDENTIFICATION_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productId</field-name>
+        <column-name>PRODUCT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>idValue</field-name>
+        <column-name>ID_VALUE</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByGoodIdentificationTypeId</name>
+        <query>GOOD_IDENTIFICATION_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductId</name>
+        <query>PRODUCT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByIdValue</name>
+        <query>ID_VALUE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>GoodIdentificationType</ejb-name>
+      <table-name>GOOD_IDENTIFICATION_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>goodIdentificationTypeId</field-name>
+        <column-name>GOOD_IDENTIFICATION_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHasTable</name>
+        <query>HAS_TABLE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductAssoc</ejb-name>
+      <table-name>PRODUCT_ASSOC</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productId</field-name>
+        <column-name>PRODUCT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productIdTo</field-name>
+        <column-name>PRODUCT_ID_TO</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productAssocTypeId</field-name>
+        <column-name>PRODUCT_ASSOC_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>fromDate</field-name>
+        <column-name>FROM_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>thruDate</field-name>
+        <column-name>THRU_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>reason</field-name>
+        <column-name>REASON</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>quantity</field-name>
+        <column-name>QUANTITY</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>instruction</field-name>
+        <column-name>INSTRUCTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductId</name>
+        <query>PRODUCT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductIdTo</name>
+        <query>PRODUCT_ID_TO like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductAssocTypeId</name>
+        <query>PRODUCT_ASSOC_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductIdAndProductIdTo</name>
+        <query>PRODUCT_ID like {0} AND PRODUCT_ID_TO like {1}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductIdAndProductAssocTypeId</name>
+        <query>PRODUCT_ID like {0} AND PRODUCT_ASSOC_TYPE_ID like {1}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductIdToAndProductAssocTypeId</name>
+        <query>PRODUCT_ID_TO like {0} AND PRODUCT_ASSOC_TYPE_ID like {1}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductAssocType</ejb-name>
+      <table-name>PRODUCT_ASSOC_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productAssocTypeId</field-name>
+        <column-name>PRODUCT_ASSOC_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductDataObject</ejb-name>
+      <table-name>PRODUCT_DATA_OBJECT</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>dataObjectId</field-name>
+        <column-name>DATA_OBJECT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productId</field-name>
+        <column-name>PRODUCT_ID</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByDataObjectId</name>
+        <query>DATA_OBJECT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductId</name>
+        <query>PRODUCT_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductCategory</ejb-name>
+      <table-name>PRODUCT_CATEGORY</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productCategoryId</field-name>
+        <column-name>PRODUCT_CATEGORY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+    </entity>
+    <entity>
+      <ejb-name>ProductCategoryClass</ejb-name>
+      <table-name>PRODUCT_CATEGORY_CLASS</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productCategoryId</field-name>
+        <column-name>PRODUCT_CATEGORY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productCategoryTypeId</field-name>
+        <column-name>PRODUCT_CATEGORY_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>fromDate</field-name>
+        <column-name>FROM_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>thruDate</field-name>
+        <column-name>THRU_DATE</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductCategoryId</name>
+        <query>PRODUCT_CATEGORY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductCategoryTypeId</name>
+        <query>PRODUCT_CATEGORY_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductCategoryType</ejb-name>
+      <table-name>PRODUCT_CATEGORY_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productCategoryTypeId</field-name>
+        <column-name>PRODUCT_CATEGORY_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHasTable</name>
+        <query>HAS_TABLE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductCategoryAttribute</ejb-name>
+      <table-name>PRODUCT_CATEGORY_ATTRIBUTE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productCategoryId</field-name>
+        <column-name>PRODUCT_CATEGORY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>value</field-name>
+        <column-name>VALUE</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductCategoryId</name>
+        <query>PRODUCT_CATEGORY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductCategoryTypeAttr</ejb-name>
+      <table-name>PRODUCT_CATEGORY_TYPE_ATTR</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productCategoryTypeId</field-name>
+        <column-name>PRODUCT_CATEGORY_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductCategoryTypeId</name>
+        <query>PRODUCT_CATEGORY_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductCategoryMember</ejb-name>
+      <table-name>PRODUCT_CATEGORY_MEMBER</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productCategoryId</field-name>
+        <column-name>PRODUCT_CATEGORY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productId</field-name>
+        <column-name>PRODUCT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>fromDate</field-name>
+        <column-name>FROM_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>thruDate</field-name>
+        <column-name>THRU_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>primaryFlag</field-name>
+        <column-name>PRIMARY_FLAG</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>comment</field-name>
+        <column-name>COMMENT</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductCategoryId</name>
+        <query>PRODUCT_CATEGORY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductId</name>
+        <query>PRODUCT_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductCategoryRollup</ejb-name>
+      <table-name>PRODUCT_CATEGORY_ROLLUP</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productCategoryId</field-name>
+        <column-name>PRODUCT_CATEGORY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentProductCategoryId</field-name>
+        <column-name>PARENT_PRODUCT_CATEGORY_ID</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductCategoryId</name>
+        <query>PRODUCT_CATEGORY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByParentProductCategoryId</name>
+        <query>PARENT_PRODUCT_CATEGORY_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductFeature</ejb-name>
+      <table-name>PRODUCT_FEATURE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productFeatureId</field-name>
+        <column-name>PRODUCT_FEATURE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productFeatureTypeId</field-name>
+        <column-name>PRODUCT_FEATURE_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productFeatureCategoryId</field-name>
+        <column-name>PRODUCT_FEATURE_CATEGORY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>uomId</field-name>
+        <column-name>UOM_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>numberSpecified</field-name>
+        <column-name>NUMBER_SPECIFIED</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductFeatureTypeId</name>
+        <query>PRODUCT_FEATURE_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductFeatureCategoryId</name>
+        <query>PRODUCT_FEATURE_CATEGORY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByUomId</name>
+        <query>UOM_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductFeatureType</ejb-name>
+      <table-name>PRODUCT_FEATURE_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productFeatureTypeId</field-name>
+        <column-name>PRODUCT_FEATURE_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHasTable</name>
+        <query>HAS_TABLE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductFeatureCategory</ejb-name>
+      <table-name>PRODUCT_FEATURE_CATEGORY</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productFeatureCategoryId</field-name>
+        <column-name>PRODUCT_FEATURE_CATEGORY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentCategoryId</field-name>
+        <column-name>PARENT_CATEGORY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentCategoryId</name>
+        <query>PARENT_CATEGORY_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductFeatureAppl</ejb-name>
+      <table-name>PRODUCT_FEATURE_APPL</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productId</field-name>
+        <column-name>PRODUCT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productFeatureId</field-name>
+        <column-name>PRODUCT_FEATURE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productFeatureApplTypeId</field-name>
+        <column-name>PRODUCT_FEATURE_APPL_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>fromDate</field-name>
+        <column-name>FROM_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>thruDate</field-name>
+        <column-name>THRU_DATE</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductId</name>
+        <query>PRODUCT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductFeatureId</name>
+        <query>PRODUCT_FEATURE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductIdAndProductFeatureId</name>
+        <query>PRODUCT_ID like {0} AND PRODUCT_FEATURE_ID like {1}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductFeatureApplTypeId</name>
+        <query>PRODUCT_FEATURE_APPL_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductFeatureApplType</ejb-name>
+      <table-name>PRODUCT_FEATURE_APPL_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productFeatureApplTypeId</field-name>
+        <column-name>PRODUCT_FEATURE_APPL_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHasTable</name>
+        <query>HAS_TABLE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductFeatureIactn</ejb-name>
+      <table-name>PRODUCT_FEATURE_IACTN</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productFeatureId</field-name>
+        <column-name>PRODUCT_FEATURE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productFeatureIdTo</field-name>
+        <column-name>PRODUCT_FEATURE_ID_TO</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productFeatureIactnTypeId</field-name>
+        <column-name>PRODUCT_FEATURE_IACTN_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productId</field-name>
+        <column-name>PRODUCT_ID</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductFeatureId</name>
+        <query>PRODUCT_FEATURE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductFeatureIdTo</name>
+        <query>PRODUCT_FEATURE_ID_TO like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductFeatureIactnTypeId</name>
+        <query>PRODUCT_FEATURE_IACTN_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductId</name>
+        <query>PRODUCT_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ProductFeatureIactnType</ejb-name>
+      <table-name>PRODUCT_FEATURE_IACTN_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productFeatureIactnTypeId</field-name>
+        <column-name>PRODUCT_FEATURE_IACTN_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHasTable</name>
+        <query>HAS_TABLE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>FeatureDataObject</ejb-name>
+      <table-name>FEATURE_DATA_OBJECT</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>dataObjectId</field-name>
+        <column-name>DATA_OBJECT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productFeatureId</field-name>
+        <column-name>PRODUCT_FEATURE_ID</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByDataObjectId</name>
+        <query>DATA_OBJECT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductFeatureId</name>
+        <query>PRODUCT_FEATURE_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>CostComponent</ejb-name>
+      <table-name>COST_COMPONENT</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>costComponentId</field-name>
+        <column-name>COST_COMPONENT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>costComponentTypeId</field-name>
+        <column-name>COST_COMPONENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productId</field-name>
+        <column-name>PRODUCT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productFeatureId</field-name>
+        <column-name>PRODUCT_FEATURE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>partyId</field-name>
+        <column-name>PARTY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>geoId</field-name>
+        <column-name>GEO_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>fromDate</field-name>
+        <column-name>FROM_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>thruDate</field-name>
+        <column-name>THRU_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>cost</field-name>
+        <column-name>COST</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByCostComponentTypeId</name>
+        <query>COST_COMPONENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductId</name>
+        <query>PRODUCT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductFeatureId</name>
+        <query>PRODUCT_FEATURE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductIdAndProductFeatureId</name>
+        <query>PRODUCT_ID like {0} AND PRODUCT_FEATURE_ID like {1}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPartyId</name>
+        <query>PARTY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByGeoId</name>
+        <query>GEO_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>CostComponentType</ejb-name>
+      <table-name>COST_COMPONENT_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>costComponentTypeId</field-name>
+        <column-name>COST_COMPONENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHasTable</name>
+        <query>HAS_TABLE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>CostComponentAttribute</ejb-name>
+      <table-name>COST_COMPONENT_ATTRIBUTE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>costComponentId</field-name>
+        <column-name>COST_COMPONENT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>value</field-name>
+        <column-name>VALUE</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByCostComponentId</name>
+        <query>COST_COMPONENT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>CostComponentTypeAttr</ejb-name>
+      <table-name>COST_COMPONENT_TYPE_ATTR</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>costComponentTypeId</field-name>
+        <column-name>COST_COMPONENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByCostComponentTypeId</name>
+        <query>COST_COMPONENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>PriceComponent</ejb-name>
+      <table-name>PRICE_COMPONENT</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>priceComponentId</field-name>
+        <column-name>PRICE_COMPONENT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>priceComponentTypeId</field-name>
+        <column-name>PRICE_COMPONENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>partyId</field-name>
+        <column-name>PARTY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>partyTypeId</field-name>
+        <column-name>PARTY_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productId</field-name>
+        <column-name>PRODUCT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productFeatureId</field-name>
+        <column-name>PRODUCT_FEATURE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productCategoryId</field-name>
+        <column-name>PRODUCT_CATEGORY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>agreementId</field-name>
+        <column-name>AGREEMENT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>agreementItemSeqId</field-name>
+        <column-name>AGREEMENT_ITEM_SEQ_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>uomId</field-name>
+        <column-name>UOM_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>geoId</field-name>
+        <column-name>GEO_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>saleTypeId</field-name>
+        <column-name>SALE_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>orderValueBreakId</field-name>
+        <column-name>ORDER_VALUE_BREAK_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>quantityBreakId</field-name>
+        <column-name>QUANTITY_BREAK_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>utilizationUomId</field-name>
+        <column-name>UTILIZATION_UOM_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>utilizationQuantity</field-name>
+        <column-name>UTILIZATION_QUANTITY</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>fromDate</field-name>
+        <column-name>FROM_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>thruDate</field-name>
+        <column-name>THRU_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>price</field-name>
+        <column-name>PRICE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>percent</field-name>
+        <column-name>PERCENT</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>comment</field-name>
+        <column-name>COMMENT</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByPriceComponentTypeId</name>
+        <query>PRICE_COMPONENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPartyId</name>
+        <query>PARTY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPartyTypeId</name>
+        <query>PARTY_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPartyIdAndPartyTypeId</name>
+        <query>PARTY_ID like {0} AND PARTY_TYPE_ID like {1}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductId</name>
+        <query>PRODUCT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductFeatureId</name>
+        <query>PRODUCT_FEATURE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductIdAndProductFeatureId</name>
+        <query>PRODUCT_ID like {0} AND PRODUCT_FEATURE_ID like {1}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductCategoryId</name>
+        <query>PRODUCT_CATEGORY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductIdAndProductCategoryId</name>
+        <query>PRODUCT_ID like {0} AND PRODUCT_CATEGORY_ID like {1}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByAgreementId</name>
+        <query>AGREEMENT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByAgreementIdAndAgreementItemSeqId</name>
+        <query>AGREEMENT_ID like {0} AND AGREEMENT_ITEM_SEQ_ID like {1}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByUomId</name>
+        <query>UOM_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByGeoId</name>
+        <query>GEO_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findBySaleTypeId</name>
+        <query>SALE_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByOrderValueBreakId</name>
+        <query>ORDER_VALUE_BREAK_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByQuantityBreakId</name>
+        <query>QUANTITY_BREAK_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>PriceComponentType</ejb-name>
+      <table-name>PRICE_COMPONENT_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>priceComponentTypeId</field-name>
+        <column-name>PRICE_COMPONENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHasTable</name>
+        <query>HAS_TABLE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>PriceComponentAttribute</ejb-name>
+      <table-name>PRICE_COMPONENT_ATTRIBUTE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>priceComponentId</field-name>
+        <column-name>PRICE_COMPONENT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>value</field-name>
+        <column-name>VALUE</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByPriceComponentId</name>
+        <query>PRICE_COMPONENT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>PriceComponentTypeAttr</ejb-name>
+      <table-name>PRICE_COMPONENT_TYPE_ATTR</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>priceComponentTypeId</field-name>
+        <column-name>PRICE_COMPONENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByPriceComponentTypeId</name>
+        <query>PRICE_COMPONENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>QuantityBreak</ejb-name>
+      <table-name>QUANTITY_BREAK</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>quantityBreakId</field-name>
+        <column-name>QUANTITY_BREAK_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>fromQuantity</field-name>
+        <column-name>FROM_QUANTITY</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>thruQuantity</field-name>
+        <column-name>THRU_QUANTITY</column-name>
+      </cmp-field>
+      
+    </entity>
+    <entity>
+      <ejb-name>OrderValueBreak</ejb-name>
+      <table-name>ORDER_VALUE_BREAK</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>orderValueBreakId</field-name>
+        <column-name>ORDER_VALUE_BREAK_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>fromAmount</field-name>
+        <column-name>FROM_AMOUNT</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>thruAmount</field-name>
+        <column-name>THRU_AMOUNT</column-name>
+      </cmp-field>
+      
+    </entity>
+    <entity>
+      <ejb-name>SaleType</ejb-name>
+      <table-name>SALE_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>saleTypeId</field-name>
+        <column-name>SALE_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+    </entity>
+    <entity>
+      <ejb-name>InventoryItem</ejb-name>
+      <table-name>INVENTORY_ITEM</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>inventoryItemId</field-name>
+        <column-name>INVENTORY_ITEM_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>inventoryItemTypeId</field-name>
+        <column-name>INVENTORY_ITEM_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productId</field-name>
+        <column-name>PRODUCT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>partyId</field-name>
+        <column-name>PARTY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>statusTypeId</field-name>
+        <column-name>STATUS_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>facilityId</field-name>
+        <column-name>FACILITY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>containerId</field-name>
+        <column-name>CONTAINER_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>lotId</field-name>
+        <column-name>LOT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>uomId</field-name>
+        <column-name>UOM_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>quantityOnHand</field-name>
+        <column-name>QUANTITY_ON_HAND</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>serialNumber</field-name>
+        <column-name>SERIAL_NUMBER</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByInventoryItemTypeId</name>
+        <query>INVENTORY_ITEM_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByProductId</name>
+        <query>PRODUCT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPartyId</name>
+        <query>PARTY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByStatusTypeId</name>
+        <query>STATUS_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByFacilityId</name>
+        <query>FACILITY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByContainerId</name>
+        <query>CONTAINER_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByLotId</name>
+        <query>LOT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByUomId</name>
+        <query>UOM_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>InventoryItemType</ejb-name>
+      <table-name>INVENTORY_ITEM_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>inventoryItemTypeId</field-name>
+        <column-name>INVENTORY_ITEM_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHasTable</name>
+        <query>HAS_TABLE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>InventoryItemAttribute</ejb-name>
+      <table-name>INVENTORY_ITEM_ATTRIBUTE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>inventoryItemId</field-name>
+        <column-name>INVENTORY_ITEM_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>value</field-name>
+        <column-name>VALUE</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByInventoryItemId</name>
+        <query>INVENTORY_ITEM_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>InventoryItemTypeAttr</ejb-name>
+      <table-name>INVENTORY_ITEM_TYPE_ATTR</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>inventoryItemTypeId</field-name>
+        <column-name>INVENTORY_ITEM_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByInventoryItemTypeId</name>
+        <query>INVENTORY_ITEM_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>PhysicalInventory</ejb-name>
+      <table-name>PHYSICAL_INVENTORY</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>physicalInventoryId</field-name>
+        <column-name>PHYSICAL_INVENTORY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>date</field-name>
+        <column-name>DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>partyId</field-name>
+        <column-name>PARTY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>comment</field-name>
+        <column-name>COMMENT</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByPartyId</name>
+        <query>PARTY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByDate</name>
+        <query>DATE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>InventoryItemVariance</ejb-name>
+      <table-name>INVENTORY_ITEM_VARIANCE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>inventoryItemId</field-name>
+        <column-name>INVENTORY_ITEM_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>physicalInventoryId</field-name>
+        <column-name>PHYSICAL_INVENTORY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>varianceReasonId</field-name>
+        <column-name>VARIANCE_REASON_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>quantity</field-name>
+        <column-name>QUANTITY</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>comment</field-name>
+        <column-name>COMMENT</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByInventoryItemId</name>
+        <query>INVENTORY_ITEM_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPhysicalInventoryId</name>
+        <query>PHYSICAL_INVENTORY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByVarianceReasonId</name>
+        <query>VARIANCE_REASON_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>VarianceReason</ejb-name>
+      <table-name>VARIANCE_REASON</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>varianceReasonId</field-name>
+        <column-name>VARIANCE_REASON_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+    </entity>
+    <entity>
+      <ejb-name>ItemVarianceAcctgTrans</ejb-name>
+      <table-name>ITEM_VARIANCE_ACCTG_TRANS</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>acctgTransId</field-name>
+        <column-name>ACCTG_TRANS_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>inventoryItemId</field-name>
+        <column-name>INVENTORY_ITEM_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>physicalInventoryId</field-name>
+        <column-name>PHYSICAL_INVENTORY_ID</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByInventoryItemId</name>
+        <query>INVENTORY_ITEM_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPhysicalInventoryId</name>
+        <query>PHYSICAL_INVENTORY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByInventoryItemIdAndPhysicalInventoryId</name>
+        <query>INVENTORY_ITEM_ID like {0} AND PHYSICAL_INVENTORY_ID like {1}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>Lot</ejb-name>
+      <table-name>LOT</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>lotId</field-name>
+        <column-name>LOT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>creationDate</field-name>
+        <column-name>CREATION_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>quantity</field-name>
+        <column-name>QUANTITY</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>expirationDate</field-name>
+        <column-name>EXPIRATION_DATE</column-name>
+      </cmp-field>
+      
+    </entity>
+    <entity>
+      <ejb-name>Container</ejb-name>
+      <table-name>CONTAINER</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>containerId</field-name>
+        <column-name>CONTAINER_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>containerTypeId</field-name>
+        <column-name>CONTAINER_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>facilityId</field-name>
+        <column-name>FACILITY_ID</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByContainerTypeId</name>
+        <query>CONTAINER_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByFacilityId</name>
+        <query>FACILITY_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>ContainerType</ejb-name>
+      <table-name>CONTAINER_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>containerTypeId</field-name>
+        <column-name>CONTAINER_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+    </entity>
+    <entity>
+      <ejb-name>Facility</ejb-name>
+      <table-name>FACILITY</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>facilityId</field-name>
+        <column-name>FACILITY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>facilityTypeId</field-name>
+        <column-name>FACILITY_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>facilityName</field-name>
+        <column-name>FACILITY_NAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>squareFootage</field-name>
+        <column-name>SQUARE_FOOTAGE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByFacilityTypeId</name>
+        <query>FACILITY_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByFacilityName</name>
+        <query>FACILITY_NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>FacilityType</ejb-name>
+      <table-name>FACILITY_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>facilityTypeId</field-name>
+        <column-name>FACILITY_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>parentTypeId</field-name>
+        <column-name>PARENT_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>hasTable</field-name>
+        <column-name>HAS_TABLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByParentTypeId</name>
+        <query>PARENT_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHasTable</name>
+        <query>HAS_TABLE like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>FacilityAttribute</ejb-name>
+      <table-name>FACILITY_ATTRIBUTE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>facilityId</field-name>
+        <column-name>FACILITY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>value</field-name>
+        <column-name>VALUE</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByFacilityId</name>
+        <query>FACILITY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>FacilityTypeAttr</ejb-name>
+      <table-name>FACILITY_TYPE_ATTR</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>facilityTypeId</field-name>
+        <column-name>FACILITY_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByFacilityTypeId</name>
+        <query>FACILITY_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>FacilityContactMechanism</ejb-name>
+      <table-name>FACILITY_CONTACT_MECHANISM</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>facilityId</field-name>
+        <column-name>FACILITY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>contactMechanismId</field-name>
+        <column-name>CONTACT_MECHANISM_ID</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByFacilityId</name>
+        <query>FACILITY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByContactMechanismId</name>
+        <query>CONTACT_MECHANISM_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>PartyFacility</ejb-name>
+      <table-name>PARTY_FACILITY</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>partyId</field-name>
+        <column-name>PARTY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>facilityId</field-name>
+        <column-name>FACILITY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>facilityRoleTypeId</field-name>
+        <column-name>FACILITY_ROLE_TYPE_ID</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByPartyId</name>
+        <query>PARTY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByFacilityId</name>
+        <query>FACILITY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByFacilityRoleTypeId</name>
+        <query>FACILITY_ROLE_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByFacilityIdAndFacilityRoleTypeId</name>
+        <query>FACILITY_ID like {0} AND FACILITY_ROLE_TYPE_ID like {1}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>FacilityRoleType</ejb-name>
+      <table-name>FACILITY_ROLE_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>facilityRoleTypeId</field-name>
+        <column-name>FACILITY_ROLE_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+    </entity>
+    <entity>
+      <ejb-name>ReorderGuideline</ejb-name>
+      <table-name>REORDER_GUIDELINE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>reorderGuidelineId</field-name>
+        <column-name>REORDER_GUIDELINE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productId</field-name>
+        <column-name>PRODUCT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>partyId</field-name>
+        <column-name>PARTY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>roleTypeId</field-name>
+        <column-name>ROLE_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>facilityId</field-name>
+        <column-name>FACILITY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>geoId</field-name>
+        <column-name>GEO_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>fromDate</field-name>
+        <column-name>FROM_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>thruDate</field-name>
+        <column-name>THRU_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>reorderQuantity</field-name>
+        <column-name>REORDER_QUANTITY</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>reorderLevel</field-name>
+        <column-name>REORDER_LEVEL</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductId</name>
+        <query>PRODUCT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPartyId</name>
+        <query>PARTY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByRoleTypeId</name>
+        <query>ROLE_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPartyIdAndRoleTypeId</name>
+        <query>PARTY_ID like {0} AND ROLE_TYPE_ID like {1}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByFacilityId</name>
+        <query>FACILITY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByGeoId</name>
+        <query>GEO_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>SupplierProduct</ejb-name>
+      <table-name>SUPPLIER_PRODUCT</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productId</field-name>
+        <column-name>PRODUCT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>partyId</field-name>
+        <column-name>PARTY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>availableFromDate</field-name>
+        <column-name>AVAILABLE_FROM_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>availableThruDate</field-name>
+        <column-name>AVAILABLE_THRU_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>supplierPrefOrderId</field-name>
+        <column-name>SUPPLIER_PREF_ORDER_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>supplierRatingTypeId</field-name>
+        <column-name>SUPPLIER_RATING_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>standardLeadTime</field-name>
+        <column-name>STANDARD_LEAD_TIME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>comment</field-name>
+        <column-name>COMMENT</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductId</name>
+        <query>PRODUCT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPartyId</name>
+        <query>PARTY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findBySupplierPrefOrderId</name>
+        <query>SUPPLIER_PREF_ORDER_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findBySupplierRatingTypeId</name>
+        <query>SUPPLIER_RATING_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>SupplierRatingType</ejb-name>
+      <table-name>SUPPLIER_RATING_TYPE</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>supplierRatingTypeId</field-name>
+        <column-name>SUPPLIER_RATING_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+    </entity>
+    <entity>
+      <ejb-name>SupplierPrefOrder</ejb-name>
+      <table-name>SUPPLIER_PREF_ORDER</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>supplierPrefOrderId</field-name>
+        <column-name>SUPPLIER_PREF_ORDER_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      
+    </entity>
+    <entity>
+      <ejb-name>MarketInterest</ejb-name>
+      <table-name>MARKET_INTEREST</table-name>
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
+      <cmp-field>
+        <field-name>productCategoryId</field-name>
+        <column-name>PRODUCT_CATEGORY_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>partyTypeId</field-name>
+        <column-name>PARTY_TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>fromDate</field-name>
+        <column-name>FROM_DATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>thruDate</field-name>
+        <column-name>THRU_DATE</column-name>
+      </cmp-field>
+      
+      <finder>
+        <name>findByProductCategoryId</name>
+        <query>PRODUCT_CATEGORY_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPartyTypeId</name>
+        <query>PARTY_TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
       <ejb-name>UserLogin</ejb-name>
       <table-name>USER_LOGIN</table-name>
-        <create-table>true</create-table>
-        <remove-table>false</remove-table>
-        <tuned-updates>false</tuned-updates>
-        <read-only>false</read-only>
-        <time-out>300</time-out>
-
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
       <cmp-field>
         <field-name>userLoginId</field-name>
         <column-name>USER_LOGIN_ID</column-name>
@@ -253,7 +3074,7 @@
         <field-name>currentPassword</field-name>
         <column-name>CURRENT_PASSWORD</column-name>
       </cmp-field>
-
+      
       <finder>
         <name>findByPartyId</name>
         <query>PARTY_ID like {0}</query>
@@ -273,12 +3094,12 @@
     <entity>
       <ejb-name>LoginAccountHistory</ejb-name>
       <table-name>LOGIN_ACCOUNT_HISTORY</table-name>
-        <create-table>true</create-table>
-        <remove-table>false</remove-table>
-        <tuned-updates>false</tuned-updates>
-        <read-only>false</read-only>
-        <time-out>300</time-out>
-
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
       <cmp-field>
         <field-name>userLoginId</field-name>
         <column-name>USER_LOGIN_ID</column-name>
@@ -307,7 +3128,7 @@
         <field-name>password</field-name>
         <column-name>PASSWORD</column-name>
       </cmp-field>
-
+      
       <finder>
         <name>findByUserLoginId</name>
         <query>USER_LOGIN_ID like {0}</query>
@@ -327,12 +3148,12 @@
     <entity>
       <ejb-name>SecurityGroup</ejb-name>
       <table-name>SECURITY_GROUP</table-name>
-        <create-table>true</create-table>
-        <remove-table>false</remove-table>
-        <tuned-updates>false</tuned-updates>
-        <read-only>false</read-only>
-        <time-out>300</time-out>
-
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
       <cmp-field>
         <field-name>groupId</field-name>
         <column-name>GROUP_ID</column-name>
@@ -341,17 +3162,17 @@
         <field-name>description</field-name>
         <column-name>DESCRIPTION</column-name>
       </cmp-field>
-
+      
     </entity>
     <entity>
       <ejb-name>SecurityPermission</ejb-name>
       <table-name>SECURITY_PERMISSION</table-name>
-        <create-table>true</create-table>
-        <remove-table>false</remove-table>
-        <tuned-updates>false</tuned-updates>
-        <read-only>false</read-only>
-        <time-out>300</time-out>
-
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
       <cmp-field>
         <field-name>permissionId</field-name>
         <column-name>PERMISSION_ID</column-name>
@@ -360,7 +3181,7 @@
         <field-name>description</field-name>
         <column-name>DESCRIPTION</column-name>
       </cmp-field>
-
+      
       <finder>
         <name>findByPermissionId</name>
         <query>PERMISSION_ID like {0}</query>
@@ -370,12 +3191,12 @@
     <entity>
       <ejb-name>SecurityGroupPermission</ejb-name>
       <table-name>SECURITY_GROUP_PERMISSION</table-name>
-        <create-table>true</create-table>
-        <remove-table>false</remove-table>
-        <tuned-updates>false</tuned-updates>
-        <read-only>false</read-only>
-        <time-out>300</time-out>
-
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
       <cmp-field>
         <field-name>groupId</field-name>
         <column-name>GROUP_ID</column-name>
@@ -384,7 +3205,7 @@
         <field-name>permissionId</field-name>
         <column-name>PERMISSION_ID</column-name>
       </cmp-field>
-
+      
       <finder>
         <name>findByGroupId</name>
         <query>GROUP_ID like {0}</query>
@@ -399,12 +3220,12 @@
     <entity>
       <ejb-name>UserLoginSecurityGroup</ejb-name>
       <table-name>USER_LOGIN_SECURITY_GROUP</table-name>
-        <create-table>true</create-table>
-        <remove-table>false</remove-table>
-        <tuned-updates>false</tuned-updates>
-        <read-only>false</read-only>
-        <time-out>300</time-out>
-
+      <create-table>true</create-table>
+      <remove-table>false</remove-table>
+      <tuned-updates>false</tuned-updates>
+      <read-only>false</read-only>
+      <time-out>300</time-out>
+      
       <cmp-field>
         <field-name>userLoginId</field-name>
         <column-name>USER_LOGIN_ID</column-name>
@@ -413,7 +3234,7 @@
         <field-name>groupId</field-name>
         <column-name>GROUP_ID</column-name>
       </cmp-field>
-
+      
       <finder>
         <name>findByUserLoginId</name>
         <query>USER_LOGIN_ID like {0}</query>
