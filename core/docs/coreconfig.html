@@ -23,6 +23,7 @@ $Id$ <br>
 <ul>
   <li><a href="#Related_Documents">Related Documents</a>
   <li><a href="#Introduction">Introduction</a>
+  <li><a href="#Properties">Properties File Extensions</a>
   <li><a href="#cache">cache.properties</a>
   <li><a href="#debug">debug.properties</a>
   <li><a href="#localdtds">localdtds.properties</a>
@@ -59,6 +60,23 @@ a changed copy of the desired file in the webapp/WEB-INF/classes directory.</p>
 in the Entity Engine Configuration Guide as a separate document because of the 
 large number of options in the file. See the Related Documents section for a link to
 the Entity Engine Configuration Guide.</p>
+
+<hr>
+<h3><a name="Properties">Properties File Extensions</a></h3>
+<hr>
+<p>The OFBiz UtilProperties class uses the OFBiz FlexibleProperties to read
+and parse properties files with a few extensions. The FlexibleProperties class
+is an extension of the standard Java Properties class.</p>
+
+<p>The extensions included allow the value of a property to be substituted into
+the value of another property by simply using the ${property.name} syntax. Another
+extension is that if a "env." precedes a property.name inside the ${ and } 
+delimiters then the named property will be looked up in the system environment
+instead of in the current properties file.</p>
+
+<p>For example the ofbiz.home system
+property is added using the -D parameter on the java command line and is used
+in the entityengine.properties and other properties files with <b>${env.ofbiz.home}</b>.</p>
 
 <hr>
 <h3><a name="cache">cache.properties</a></h3>
