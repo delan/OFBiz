@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFieldMap.java,v 1.10 2004/07/08 04:25:47 jonesde Exp $
+ * $Id: EntityFieldMap.java,v 1.11 2004/07/14 04:15:49 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@
 package org.ofbiz.entity.condition;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,24 +42,35 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
-public class EntityFieldMap extends EntityCondition {
+public class EntityFieldMap extends EntityConditionListBase {
 
     protected Map fieldMap;
-    protected EntityJoinOperator operator;
 
-    protected EntityFieldMap() {}
+    protected EntityFieldMap() {
+        super();
+    }
+
+    public static List makeConditionList(Map fieldMap, EntityComparisonOperator op) {
+        if (fieldMap == null) return new ArrayList();
+        List list = new ArrayList(fieldMap.size());
+        Iterator it = fieldMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            String field = (String)entry.getKey();
+            Object value = entry.getValue();
+            list.add(new EntityExpr(field, op, value));
+        }
+        return list;
+    }
 
     public EntityFieldMap(Map fieldMap, EntityJoinOperator operator) {
+        super(makeConditionList(fieldMap, EntityOperator.EQUALS), operator);
         this.fieldMap = fieldMap;
         if (this.fieldMap == null) this.fieldMap = new LinkedHashMap();
         this.operator = operator;
-    }
-
-    public EntityJoinOperator getOperator() {
-        return this.operator;
     }
 
     public Object getField(String name) {
@@ -70,71 +82,13 @@ public class EntityFieldMap extends EntityCondition {
     }
     
     public Iterator getFieldKeyIterator() {
-        return this.fieldMap.keySet().iterator();
+        return Collections.unmodifiableSet(this.fieldMap.keySet()).iterator();
     }
     
     public Iterator getFieldEntryIterator() {
-        return this.fieldMap.entrySet().iterator();
+        return Collections.unmodifiableSet(this.fieldMap.entrySet()).iterator();
     }
     
-    public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
-        // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName(), module);
-        List whereFields = new ArrayList();
-
-        if (fieldMap != null && fieldMap.size() > 0) {
-            if (modelEntity == null) {
-                Iterator iter = fieldMap.keySet().iterator();
-                while (iter.hasNext()) {
-                    String fieldName = (String) iter.next();
-                    whereFields.add(fieldName);
-                }
-            } else {
-                for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
-                    ModelField curField = modelEntity.getField(fi);
-
-                    if (fieldMap.containsKey(curField.getName())) {
-                        whereFields.add(curField);
-                    }
-                }
-            }
-        }
-        return SqlJdbcUtil.makeWhereStringFromFields(whereFields, fieldMap, operator.getCode(), entityConditionParams);
-    }
-
-    public boolean mapMatches(GenericDelegator delegator, Map map) {
-        Iterator iter = fieldMap.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            String fieldName = (String) entry.getKey();
-            Object value = map.get( fieldName );
-            if (value == EntityOperator.WILDCARD) return true;
-            if ( value == null ) {
-                if ( entry.getValue() != null ) {
-                    return false;
-                }
-            } else {
-                if ( !value.equals( entry.getValue() ) ) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
-        // if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName(), module);
-        // make sure that all fields in the Map are valid
-        if (fieldMap != null && !modelEntity.areFields(fieldMap.keySet())) {
-            throw new GenericModelException("At least one of the passed fields is not valid: " + fieldMap.keySet().toString());
-        }
-    }
-
-    public EntityCondition freeze() {
-        Map newMap = new LinkedHashMap();
-        newMap.putAll(fieldMap);
-        return new EntityFieldMap(newMap, operator);
-    }
-
     public boolean equals(Object obj) {
         if (!(obj instanceof EntityFieldMap)) return false;
         EntityFieldMap other = (EntityFieldMap) obj;

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionList.java,v 1.7 2004/07/07 05:48:23 doogie Exp $
+ * $Id: EntityConditionList.java,v 1.8 2004/07/14 04:15:49 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,57 +37,27 @@ import org.ofbiz.entity.model.ModelEntity;
  * Encapsulates a list of EntityConditions to be used as a single EntityCondition combined as specified
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
-public class EntityConditionList extends EntityCondition {
+public class EntityConditionList extends EntityConditionListBase {
 
-    protected List conditionList;
-    protected EntityJoinOperator operator;
-
-    protected EntityConditionList() {}
+    protected EntityConditionList() {
+        super();
+    }
 
     public EntityConditionList(List conditionList, EntityJoinOperator operator) {
-        this.conditionList = conditionList;
-        this.operator = operator;
+        super(conditionList, operator);
     }
 
-    public EntityOperator getOperator() {
-        return this.operator;
-    }
-
-    public EntityCondition getCondition(int index) {
-        return (EntityCondition) this.conditionList.get(index);
-    }
-    
     public int getConditionListSize() {
-        return this.conditionList.size();
+        return super.getConditionListSize();
     }
     
     public Iterator getConditionIterator() {
-        return this.conditionList.iterator();
+        return super.getConditionIterator();
     }
     
-    public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
-        // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName(), module);
-        StringBuffer sql = new StringBuffer();
-        operator.addSqlValue(sql, modelEntity, entityConditionParams, conditionList);
-        return sql.toString();
-    }
-
-    public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
-        // if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName(), module);
-        operator.validateSql(modelEntity, conditionList);
-    }
-
-    public boolean mapMatches(GenericDelegator delegator, Map map) {
-        return operator.mapMatches(delegator, map, conditionList);
-    }
-
-    public EntityCondition freeze() {
-        return operator.freeze(conditionList);
-    }
-
     public boolean equals(Object obj) {
         if (!(obj instanceof EntityConditionList)) return false;
         EntityConditionList other = (EntityConditionList) obj;
