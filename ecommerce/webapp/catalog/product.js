@@ -25,6 +25,7 @@
 */
 
 importPackage(Packages.java.lang);
+importPackage(Packages.java.util);
 importPackage(Packages.org.ofbiz.core.util);
 importPackage(Packages.org.ofbiz.core.entity);
 importPackage(Packages.org.ofbiz.core.service);
@@ -33,6 +34,7 @@ importPackage(Packages.org.ofbiz.commonapp.product.catalog);
 var dispatcher = request.getAttribute("dispatcher");
 var delegator = request.getAttribute("delegator");
 var contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
+var catalogName = CatalogWorker.getCatalogName(request);
 
 var detailTemplate = "/catalog/productdetail.ftl";
 var productId = request.getParameter("product_id");
@@ -46,7 +48,20 @@ if (productId != null) {
     if (product != null) {
         request.setAttribute("product", product);  
         var content = context.get("content");
-        content.setTitle(product.getString("productName"));  
+        content.setTitle(product.getString("productName"));
+        context.put("metaDescription", product.getString("productName"));
+        var keywords = new ArrayList();
+        keywords.add(product.getString("productName"));
+        keywords.add(catalogName);
+        var members = delegator.findByAndCache("ProductCategoryMember", UtilMisc.toMap("productId", productId));
+        var membersIter = members.iterator();
+        while (membersIter.hasNext()) {
+            var member = membersIter.next();
+            var category = member.getRelatedOneCache("ProductCategory");
+            keywords.add(category.getString("description"));            
+        }
+        context.put("metaKeywords", StringUtil.join(keywords, ", "));
+          
         var productTemplate = product.getString("detailTemplate");
         if (productTemplate != null && productTemplate.length() > 0) {
             detailTempalte = productTemplate;

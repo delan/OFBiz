@@ -28,7 +28,7 @@
 <#assign layoutSettings = requestAttributes.layoutSettings>
 
 <html>
-<head>
+  <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>${layoutSettings.companyName?if_exists}: ${content.title?if_exists}</title>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
@@ -42,34 +42,42 @@
     <#if sessionAttributes.overrideCss?exists>
 	<link rel='stylesheet' href='${sessionAttributes.overrideCss}' type="text/css">
     </#if>
-</head>
+    
+    <#-- Meta tags if defined by the page action -->
+    <#if metaDescription?exists>
+    <meta name="description" content="${metaDescription}">
+    </#if>
+    <#if metaKeywords?exists>
+    <meta name="keywords" content="${metaKeywords}">
+    </#if>    
+  </head>
 <body>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
-  <TR>
-    <TD width='100%'>
+<table border='0' width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
         <tr>
           <#if sessionAttributes.overrideLogo?exists>
-            <TD align=left width='1%'><IMG src='${sessionAttributes.overrideLogo}'></TD> 
+            <td align=left width='1%'><IMG src='${sessionAttributes.overrideLogo}'></TD> 
           <#elseif requestAttributes.catalogHeaderLogo?exists>
-            <TD align=left width='1%'><IMG src='${requestAttributes.catalogHeaderLogo}'></TD> 
+            <td align=left width='1%'><IMG src='${requestAttributes.catalogHeaderLogo}'></TD> 
           <#elseif layoutSettings.headerImageUrl?has_content>
-            <TD align=left width='1%'><IMG src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></TD>
+            <td align=left width='1%'><IMG src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></TD>
           </#if>
-          <TD align=center width='98%' <#if layoutSettings.headerMiddleBackgroundUrl?has_content>background='<@ofbizContentUrl>${layoutSettings.headerMiddleBackgroundUrl}</@ofbizContentUrl>'</#if> >
+          <td align=center width='98%' <#if layoutSettings.headerMiddleBackgroundUrl?has_content>background='<@ofbizContentUrl>${layoutSettings.headerMiddleBackgroundUrl}</@ofbizContentUrl>'</#if> >
               <#if layoutSettings.companyName?exists><span class='headerCompanyName'>${layoutSettings.companyName}</span></#if>
               <#if layoutSettings.companySubtitle?exists><br><span class='headerCompanySubtitle'>${layoutSettings.companySubtitle}</span></#if>
-          </TD>
-          <TD align=right width='1%' nowrap <#if layoutSettings.headerRightBackgroundUrl?has_content>background='<@ofbizContentUrl>${layoutSettings.headerRightBackgroundUrl}</@ofbizContentUrl>'</#if> >
+          </td>
+          <td align=right width='1%' nowrap <#if layoutSettings.headerRightBackgroundUrl?has_content>background='<@ofbizContentUrl>${layoutSettings.headerRightBackgroundUrl}</@ofbizContentUrl>'</#if> >
             ${pages.get("/cart/microcart.ftl")}
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
+    </td>
+  </tr>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
           <#if userLogin?exists>
@@ -80,12 +88,12 @@
           <td class="headerButtonLeft"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="headerbuttontext">Main</a></td>
 
           <#if sessionAttributes.autoName?exists>
-            <TD width="90%" align="center" class="headerCenter">
+            <td width="90%" align="center" class="headerCenter">
                 Welcome&nbsp;${sessionAttributes.autoName}!
                 (Not&nbsp;You?&nbsp;<a href="<@ofbizUrl>/autoLogout</@ofbizUrl>" class="buttontext">click&nbsp;here</a>)
-            </TD>
+            </td>
           <#else>
-              <TD width="90%" align=center class='headerCenter'>Welcome!</TD>
+              <td width="90%" align=center class='headerCenter'>Welcome!</TD>
           </#if>
 
           <#if Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCatalogQuickaddUse(request)>
@@ -93,10 +101,10 @@
           </#if>
           <td class="headerButtonRight"><a href="<@ofbizUrl>/orderhistory</@ofbizUrl>" class="headerbuttontext">Order&nbsp;History</a></td>
           <td class="headerButtonRight"><a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="headerbuttontext">Profile</a></td>
-        </TR>
-      </TABLE>
-    </TD>
-  </TR>
-</TABLE>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
 
 <br>
