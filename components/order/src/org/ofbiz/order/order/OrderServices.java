@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.18 2003/11/17 20:08:04 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.19 2003/11/18 23:22:32 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.0
  */
 
@@ -2526,7 +2526,7 @@ public class OrderServices {
                 return ServiceUtil.returnError((String)invoiceResult.get(ModelService.ERROR_MESSAGE));
             }
 
-            // update the status of DIGITAL_GOOD to COMPLETED; clean FINDIG as APPROVED for pick/ship
+            // update the status of DIGITAL_GOOD to COMPLETED; leave FINDIG as APPROVED for pick/ship
             Iterator dii = digitalItems.iterator();
             while (dii.hasNext()) {
                 GenericValue item = (GenericValue) dii.next();
@@ -2549,10 +2549,8 @@ public class OrderServices {
             }
 
             // fulfill the digital goods
-            // TODO: add the fulfillment service!
-            Map fulfillContext = UtilMisc.toMap("orderId", orderId, "orderItems", digitalItems);
+            Map fulfillContext = UtilMisc.toMap("orderId", orderId, "orderItems", digitalItems, "userLogin", userLogin);
             Map fulfillResult = null;
-            /*
             try {
                 fulfillResult = dispatcher.runSync("fulfillDigitalItems", fulfillContext);
             } catch (GenericServiceException e) {
@@ -2562,9 +2560,93 @@ public class OrderServices {
             if (ModelService.RESPOND_ERROR.equals((String)fulfillResult.get(ModelService.RESPONSE_MESSAGE))) {
                 return ServiceUtil.returnError((String)fulfillResult.get(ModelService.ERROR_MESSAGE));
             }
-            */
         }
 
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map fulfillDigitalItems(DispatchContext ctx, Map context) {
+        GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        String orderId = (String) context.get("orderId");
+        List orderItems = (List) context.get("orderItems");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        if (orderItems != null && orderItems.size() > 0) {
+            // loop through the digital items to fulfill
+            Iterator itemsIterator = orderItems.iterator();
+            while (itemsIterator.hasNext()) {
+                GenericValue orderItem = (GenericValue) itemsIterator.next();
+
+                // make sure we have a valid item
+                if (orderItem == null) {
+                    ServiceUtil.returnError("ERROR: Cannot check for fulfillment; item not found.");
+                }
+
+                // locate the Product & ProductContent records
+                GenericValue product = null;
+                List productContent = null;
+                try {
+                    product = orderItem.getRelatedOne("Product");
+                    if (product == null) {
+                        ServiceUtil.returnError("ERROR: Cannot check for fulfillment; product not found.");
+                    }
+
+                    List allProductContent = product.getRelated("ProductContent");
+                    if (allProductContent != null && allProductContent.size() > 0) {
+                        // only keep ones with valid dates
+                        productContent = EntityUtil.filterByDate(allProductContent, UtilDateTime.nowTimestamp(), "fromDate", "thruDate", true);
+                        Debug.logInfo("Product has " + allProductContent.size() + " associations, " +
+                                (productContent == null ? "0" : "" + productContent.size()) + " has valid from/thru dates", module);
+                    }
+                } catch (GenericEntityException e) {
+                    return ServiceUtil.returnError("ERROR: Cannot get Product entity: " + e.getMessage());
+                }
+
+                // now use the ProductContent to fulfill the item
+                if (productContent != null && productContent.size() > 0) {
+                    Iterator prodcontentIterator = productContent.iterator();
+                    while (prodcontentIterator.hasNext()) {
+                        GenericValue productContentItem = (GenericValue) prodcontentIterator.next();
+                        GenericValue content = null;
+                        try {
+                            content = productContentItem.getRelatedOne("Content");
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e,"ERROR: Cannot get Content entity: " + e.getMessage(),module);
+                            continue;
+                        }
+
+                        String fulfillmentType = productContentItem.getString("productContentTypeId");
+                        if ("FULFILLMENT_EXTERNAL".equals(fulfillmentType)) {
+                            // enternal service fulfillment
+                            String fulfillmentService = (String) content.get("serviceName");
+                            if (fulfillmentService == null) {
+                                Debug.logError("ProductContent of type FULFILLMENT_EXTERNAL had Content with empty serviceName, can not run fulfillment", module);
+                            }
+                            Map serviceCtx = UtilMisc.toMap("userLogin", userLogin, "orderItem", orderItem);
+                            serviceCtx.putAll(productContentItem.getPrimaryKey());
+                            try {
+                                Debug.logInfo("Running external fulfillment '" + fulfillmentService + "'", module);
+                                dispatcher.runAsync(fulfillmentService, serviceCtx, true);
+                            } catch (GenericServiceException e) {
+                                Debug.logError(e, "ERROR: Could not run external fulfillment service '" + fulfillmentService + "'; " + e.getMessage(), module);
+                            }
+                        } else if("FULFILLMENT_EMAIL".equals(fulfillmentType)) {
+                            // digital email fulfillment
+                            // TODO: Add support for fulfillment email
+                            return ServiceUtil.returnError("Email Fulfillment type not yet implemented");
+                        } else if("DIGITAL_DOWNLOAD".equals(fulfillmentType)) {
+                            // digital download fulfillment
+
+                            // Nothing to do for here. Downloads are made available to the user
+                            // though a query of OrderItems with related ProductContent.
+                        } else {
+                            Debug.logError("Invalid fulfillment type : " + fulfillmentType + " not supported.", module);
+                        }
+                    }
+                }
+            }
+        }
         return ServiceUtil.returnSuccess();
     }
 
