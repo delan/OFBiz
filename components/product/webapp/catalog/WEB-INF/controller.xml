@@ -1758,6 +1758,25 @@
         <response name="success" type="view" value="EditSupplierProduct"/>
         <response name="error" type="view" value="EditSupplierProduct"/>
     </request-map>
+    <request-map uri="createSupplierProductFeature">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createSupplierProductFeature"/>
+        <response name="success" type="view" value="EditFeature"/>
+        <response name="error" type="view" value="EditFeature"/>
+    </request-map>
+    <request-map uri="updateSupplierProductFeature">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateSupplierProductFeature"/>
+        <response name="success" type="view" value="EditFeature"/>
+        <response name="error" type="view" value="EditFeature"/>
+    </request-map>
+    <request-map uri="removeSupplierProductFeature">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeSupplierProductFeature"/>
+        <response name="success" type="view" value="EditFeature"/>
+        <response name="error" type="view" value="EditFeature"/>
+    </request-map>
+
 
     <!-- ================ Product Configuration Requests ================= -->
     <request-map uri="EditProductConfigs">

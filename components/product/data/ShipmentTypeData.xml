@@ -44,6 +44,15 @@
     <StatusValidChange condition="" statusId="SHIPMENT_PICKED" statusIdTo="SHIPMENT_CANCELLED" transitionName="Cancel"/>
     <StatusValidChange condition="" statusId="SHIPMENT_PACKED" statusIdTo="SHIPMENT_CANCELLED" transitionName="Cancel"/>
 
+    <!-- these shipment status are intended for purchase shipments -->
+    <StatusType description="Purchase Shipment" hasTable="N" parentTypeId="" statusTypeId="PURCH_SHIP_STATUS"/>
+    <StatusItem description="Created" sequenceId="01" statusCode="CREATED" statusId="PURCH_SHIP_CREATED" statusTypeId="PURCH_SHIP_STATUS"/>
+    <StatusItem description="Shipped" sequenceId="02" statusCode="SHIPPED" statusId="PURCH_SHIP_SHIPPED" statusTypeId="PURCH_SHIP_STATUS"/>
+    <StatusItem description="Received" sequenceId="03" statusCode="RECEIVED" statusId="PURCH_SHIP_RECEIVED" statusTypeId="PURCH_SHIP_STATUS"/>
+    <StatusValidChange condition="" statusId="PURCH_SHIP_CREATED" statusIdTo="PURCH_SHIP_RECEIVED" transitionName="Receive"/>
+    <StatusValidChange condition="" statusId="PURCH_SHIP_CREATED" statusIdTo="PURCH_SHIP_SHIPPED" transitionName="Ship"/>
+    <StatusValidChange condition="" statusId="PURCH_SHIP_SHIPPED" statusIdTo="PURCH_SHIP_RECEIVED" transitionName="Receive"/>
+
     <!-- ShipmentRouteSegment CarrierService status -->
     <StatusType description="ShipmentRouteSegment:CarrierService" hasTable="N" parentTypeId="" statusTypeId="SHPRTSG_CS_STATUS"/>
     <StatusItem description="Not Started" sequenceId="01" statusCode="NOT_STARTED" statusId="SHRSCS_NOT_STARTED" statusTypeId="SHPRTSG_CS_STATUS"/>

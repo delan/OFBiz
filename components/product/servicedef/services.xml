@@ -611,6 +611,42 @@
         </required-permissions>
         <auto-attributes mode="IN" include="pk" optional="false"/>              
     </service>
+   
+    <!-- supplier product feature services -->          
+    <service name="createSupplierProductFeature" default-entity-name="SupplierProductFeature" engine="simple"
+            location="org/ofbiz/product/supplier/SupplierProductServices.xml" invoke="createSupplierProductFeature" auth="true">
+        <description>Create a new SupplierProductFeature record</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="CATALOG" action="_CREATE"/>
+        </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updateSupplierProductFeature" default-entity-name="SupplierProductFeature" engine="simple"
+            location="org/ofbiz/product/supplier/SupplierProductServices.xml" invoke="updateSupplierProductFeature" auth="true">
+        <description>Update a SupplierProduct record</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="CATALOG" action="_UPDATE"/>
+        </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="removeSupplierProductFeature" default-entity-name="SupplierProductFeature" engine="simple"
+            location="org/ofbiz/product/supplier/SupplierProductServices.xml" invoke="removeSupplierProductFeature" auth="true">
+        <description>Remove a SupplierProduct record</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="CATALOG" action="_DELETE"/>
+        </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>              
+    </service>
+    <service name="getSupplierProductFeatures" engine="simple"
+            location="org/ofbiz/product/supplier/SupplierProductServices.xml" invoke="getSupplierProductFeatures">
+       <description>Finds a list of SupplierProductFeature entities based on the productFeatureId.
+       	If a partyId is given, only product feature information for that supplier party is returned.</description>
+       	<attribute name="productFeatureId" type="String" mode="IN" optional="false"/>
+       	<attribute name="partyId" type="String" mode="IN" optional="true"/>
+       	<attribute name="supplierProductFeatures" type="java.util.List" mode="OUT" optional="false"/>
+    </service>
     
     <!-- Product Configuration Services -->
     <service name="createProductConfig" default-entity-name="ProductConfig" engine="simple"

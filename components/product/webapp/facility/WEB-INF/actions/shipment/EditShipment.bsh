@@ -35,22 +35,35 @@ shipmentId = request.getParameter("shipmentId");
 if (UtilValidate.isEmpty(shipmentId)) shipmentId = request.getAttribute("shipmentId");
 shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
 
+// orderHeader is needed here to determine type of order and hence types of shipment status
+orderHeader = null;
+primaryOrderId = null;
+if (shipment == null) {
+    primaryOrderId = request.getParameter("primaryOrderId");
+} else {
+    primaryOrderId = shipment.get("primaryOrderId");
+}
+orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", primaryOrderId));
+
 HtmlFormWrapper editShipmentWrapper = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "EditShipment", request, response);
 editShipmentWrapper.putInContext("shipmentId", shipmentId);
 editShipmentWrapper.putInContext("shipment", shipment);
 editShipmentWrapper.putInContext("productStoreId", null); // seems to be needed not exist != null
 if (shipment == null) editShipmentWrapper.setUseRequestParameters(true);
 
+// the kind of StatusItem to use is based on the type of order 
+if ((orderHeader != null) && (orderHeader.getString("orderTypeId").equals("PURCHASE_ORDER"))) {
+    statusItemType = "PURCH_SHIP_STATUS";
+} else {
+    statusItemType = "SHIPMENT_STATUS";
+}
+editShipmentWrapper.putInContext("statusItemType", statusItemType);    
+
 context.put("shipmentId", shipmentId);
 context.put("shipment", shipment);
 context.put("editShipmentWrapper", editShipmentWrapper);
 
 if (shipment != null) {
-    orderHeader = null;
-    if (shipment.get("primaryOrderId") != null) {
-        orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", shipment.get("primaryOrderId")));
-        editShipmentWrapper.putInContext("productStoreId", orderHeader.get("productStoreId"));
-    }    
     currentStatus = shipment.getRelatedOne("StatusItem");
     originPostalAddress = shipment.getRelatedOne("OriginPostalAddress");
     destinationPostalAddress = shipment.getRelatedOne("DestinationPostalAddress");
@@ -72,7 +85,8 @@ if (shipment != null) {
     editShipmentWrapper.putInContext("fromPerson", fromPerson);
     editShipmentWrapper.putInContext("fromPartyGroup", fromPartyGroup);
     editShipmentWrapper.putInContext("orderHeader", orderHeader);  
-    
+    editShipmentWrapper.putInContext("productStoreId", orderHeader.get("productStoreId"));
+
     context.put("currentStatus", currentStatus);
     context.put("originPostalAddress", originPostalAddress);
     context.put("destinationPostalAddress", destinationPostalAddress);

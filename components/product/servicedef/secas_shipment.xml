@@ -23,10 +23,17 @@
 
 <service-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/service-eca.xsd">
-    <!-- if new statusId is SHIPMENT_PACKED, create invoice -->
+    <!-- if new statusId of a SALES_SHIPMENT is SHIPMENT_PACKED, create invoice -->
     <eca service="updateShipment" event="commit">
         <condition-field field-name="statusId" operator="not-equals" to-field-name="oldStatusId"/>
         <condition field-name="statusId" operator="equals" value="SHIPMENT_PACKED"/>
+        <action service="createInvoicesFromShipment" mode="sync"/>
+    </eca>
+
+    <!-- if new statusId of a PURCHASE_SHIPMENT is PURCH_SHIP_RECEIVED, create invoice -->
+    <eca service="updateShipment" event="commit">
+        <condition-field field-name="statusId" operator="not-equals" to-field-name="oldStatusId"/>
+        <condition field-name="statusId" operator="equals" value="PURCH_SHIP_RECEIVED"/>
         <action service="createInvoicesFromShipment" mode="sync"/>
     </eca>
 

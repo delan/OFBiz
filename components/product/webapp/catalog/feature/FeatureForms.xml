@@ -66,5 +66,51 @@
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
+
+    <form name="CreateSupplierProductFeature" type="single"
+	    	target="createSupplierProductFeature" title=""
+			default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext"
+			default-map-name="productFeature">
+		<auto-fields-service service-name="createSupplierProductFeature" default-field-type="edit"/>
+		<field name="partyId" title="Supplier">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName} ${firstName} ${lastName} [${partyId}]">
+                    <entity-constraint name="roleTypeId" value="SUPPLIER"/>
+                    <entity-order-by field-name="groupName"/>
+                    <entity-order-by field-name="firstName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+		<field name="uomId">
+		    <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" description="${uomId}"/>
+            </drop-down>
+        </field>
+		<field name="productFeatureId" ><hidden/></field>
+		<field name="submitForm" title="Create"><submit/></field>
+	</form>
+	<form name="EditSupplierProductFeatures" type="list"
+	    	target="updateSupplierProductFeature" title=""
+			default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext"
+			list-name="supplierProductFeatures">
+		<auto-fields-service service-name="updateSupplierProductFeature" default-field-type="display"/>
+		<field name="productFeatureId"><hidden/></field>
+		<field name="partyId" title="Supplier">
+            <display-entity entity-name="PartyGroup" description="${groupName}"/>
+		</field>
+		<field name="description"><text size="60"/></field>
+		<field name="idCode"><text size="5"/></field>
+		<field name="uomId">
+		    <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" description="${uomId}"/>
+            </drop-down>
+        </field>
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="removeSupplierProductFeature?productFeatureId=${productFeatureId}&amp;partyId=${partyId}"
+                description="[${uiLabelMap.CommonDelete}]"/>
+        </field>
+    </form>
+
 </forms>
 

@@ -88,7 +88,17 @@
               If a partyId is given, it is used to filter the list down.  Note that productId is REQUIRED, even if you are passing in a product entity.</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="currencyUomId" type="String" mode="IN" optional="true"/>
+       	<attribute name="quantity" type="Double" mode="IN" optional="true"/>  
         <attribute name="supplierProducts" type="java.util.List" mode="OUT" optional="false"/>
+    </service>
+    <service name="convertFeaturesForSupplier" engine="java"
+        location = "org.ofbiz.product.supplier.SupplierProductServices" invoke="convertFeaturesForSupplier">
+        <description>Takes a list of product feature (either ProductFeature or ProductFeatureAndAppl) and converts
+            each one for the supplier specified by partyId, changing the description and idCode</description>
+        <attribute type="java.util.Collection" mode="IN" name="productFeatures" optional="false"/>
+        <attribute type="String" mode="IN" name="partyId" optional="false"/>
+        <attribute type="java.util.Collection" mode="OUT" name="convertedProductFeatures"/>
     </service>
 
     <!-- Category View Services -->
