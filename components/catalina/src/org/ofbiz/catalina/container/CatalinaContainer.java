@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.3 2004/05/23 07:35:27 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.4 2004/05/25 20:29:26 ajzeneski Exp $
  *
  */
 package org.ofbiz.catalina.container;
@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      May 21, 2004
  */
 public class CatalinaContainer implements Container {
@@ -314,10 +314,11 @@ public class CatalinaContainer implements Container {
                             Context context = embedded.createContext(mount, location);
                             context.setLoader(embedded.createLoader(ClassLoaderContainer.getClassLoader()));
 
+                            context.setDisplayName(appInfo.name);
+                            context.setDocBase(location);
+
                             context.setDistributable(true);
                             context.setCrossContext(true);
-                            context.addJspMapping("*.jsp");
-                            context.addWelcomeFile("index.jsp");
                             context.getServletContext().setAttribute("_serverId", appInfo.server);
 
                             // create the Default Servlet instance to mount
@@ -329,17 +330,19 @@ public class CatalinaContainer implements Container {
                             defaultServlet.addInitParameter("listing", "true");
                             defaultServlet.addMapping("/");
                             context.addChild(defaultServlet);
+                            context.addServletMapping("/", "default");
 
                             // create the Jasper Servlet instance to mount
                             StandardWrapper jspServlet = new StandardWrapper();
                             jspServlet.setServletClass("org.apache.jasper.servlet.JspServlet");
                             jspServlet.setServletName("jsp");
-                            jspServlet.setServletName("jspx");
                             jspServlet.setLoadOnStartup(1);
                             jspServlet.addInitParameter("fork", "false");
                             jspServlet.addInitParameter("xpoweredBy", "false");
                             jspServlet.addMapping("*.jsp");
+                            jspServlet.addMapping("*.jspx");
                             context.addChild(jspServlet);
+                            context.addServletMapping("*.jsp", "jsp");
 
                             // default mime-type mappings
                             configureMimeTypes(context);
@@ -360,7 +363,7 @@ public class CatalinaContainer implements Container {
                             }
 
                             host.addChild(context);
-
+                            context.getMapper().setDefaultHostName(host.getName());
                         } catch (Exception e) {
                             Debug.logError(e, "Problem mounting application [" + appInfo.name + " / " + appInfo.location + "]", module);
                         }
