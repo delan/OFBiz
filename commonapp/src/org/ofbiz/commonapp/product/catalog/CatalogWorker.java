@@ -437,9 +437,16 @@ public class CatalogWorker {
         return getProdCatalog(pageContext, getCurrentCatalogId(pageContext));
     }
 
+    public static GenericValue getProdCatalog(ServletRequest request) {
+        return getProdCatalog(request, getCurrentCatalogId(request));
+    }
+
     public static GenericValue getProdCatalog(PageContext pageContext, String prodCatalogId) {
+        return getProdCatalog(pageContext.getRequest(), prodCatalogId);
+    }
+    public static GenericValue getProdCatalog(ServletRequest request, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
         try {
             return delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
@@ -507,9 +514,16 @@ public class CatalogWorker {
         return getCatalogQuickaddUse(pageContext, getCurrentCatalogId(pageContext));
     }
 
+    public static boolean getCatalogQuickaddUse(ServletRequest request) {
+        return getCatalogQuickaddUse(request, getCurrentCatalogId(request));
+    }
+
     public static boolean getCatalogQuickaddUse(PageContext pageContext, String prodCatalogId) {
+        return getCatalogQuickaddUse(pageContext.getRequest(), prodCatalogId);
+    }
+    public static boolean getCatalogQuickaddUse(ServletRequest request, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return false;
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
         try {
             GenericValue prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));

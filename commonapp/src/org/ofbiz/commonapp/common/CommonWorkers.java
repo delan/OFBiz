@@ -44,8 +44,10 @@ public class CommonWorkers {
     }
 
     public static String makeLoginUrl(PageContext pageContext, String requestName) {
+        return makeLoginUrl(pageContext.getRequest(), requestName);
+    }
+    public static String makeLoginUrl(ServletRequest request, String requestName) {
         String queryString = null;
-        ServletRequest request = pageContext.getRequest();
 
         Enumeration parameterNames = request.getParameterNames();
 
