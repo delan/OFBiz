@@ -24,7 +24,7 @@
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1.1
 -->
 
@@ -100,7 +100,10 @@
         <string-to-field field-name="parentMethodName" string="createShoppingListItem"/>
         <string-to-field field-name="permissionAction" string="CREATE"/>
         <call-simple-method method-name="checkShoppingListItemSecurity"/>
-        <check-errors/> 
+        <check-errors/>
+
+        <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ShoppingList" map-name="lookupPKMap" value-name="shoppingList"/>
 
         <make-value value-name="newEntity" entity-name="ShoppingListItem"/>
         <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="newEntity"/>
@@ -125,6 +128,12 @@
         <field-to-result field-name="shoppingListItemSeqId" map-name="newEntity"/>                                        
         <field-to-result field-name="shoppingListId" map-name="newEntity"/>                                        
         <create-value value-name="newEntity"/>
+
+        <if-compare-field map-name="shoppingList" field-name="partyId" operator="not-equals" to-map-name="userLogin">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" map-name="shoppingList" field-name="lastAdminModified"/>
+            <store-value value-name="shoppingList"/>
+        </if-compare-field>
     </simple-method>
     
     <simple-method method-name="updateShoppingListItem" short-description="Update a ShoppingListItem">
@@ -134,10 +143,18 @@
         <check-errors/>
 
         <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ShoppingList" map-name="lookupPKMap" value-name="shoppingList"/>
+
         <field-to-field field-name="shoppingListItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ShoppingListItem" map-name="lookupPKMap" value-name="shoppingListItem"/>
         <set-nonpk-fields map-name="parameters" value-name="shoppingListItem"/>
         <store-value value-name="shoppingListItem"/>
+
+        <if-compare-field map-name="shoppingList" field-name="partyId" operator="not-equals" to-map-name="userLogin">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" map-name="shoppingList" field-name="lastAdminModified"/>
+            <store-value value-name="shoppingList"/>
+        </if-compare-field>
     </simple-method>
     
     <simple-method method-name="removeShoppingListItem" short-description="Remove a ShoppingListItem">
@@ -147,10 +164,18 @@
         <check-errors/>
 
         <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ShoppingList" map-name="lookupPKMap" value-name="shoppingList"/>
+
         <field-to-field field-name="shoppingListItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ShoppingListItem" map-name="lookupPKMap" value-name="shoppingListItem"/>
         <remove-value value-name="shoppingListItem"/>
-    </simple-method>    
+
+        <if-compare-field map-name="shoppingList" field-name="partyId" operator="not-equals" to-map-name="userLogin">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" map-name="shoppingList" field-name="lastAdminModified"/>
+            <store-value value-name="shoppingList"/>
+        </if-compare-field>
+    </simple-method>
 
     <simple-method method-name="calculateShoppingListDeepTotalPrice" short-description="Calculate Deep Total Price for a ShoppingList">
         <string-to-field field-name="parentMethodName" string="calculateShoppingListDeepTotalPrice"/>
