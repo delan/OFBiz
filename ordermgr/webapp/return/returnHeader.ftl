@@ -29,9 +29,10 @@
     <a href="<@ofbizUrl>/returnItems?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">Items</a>
     <a href="<@ofbizUrl>/returnRefund?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">Refund</a>
 </div>
-
+  
 ${editReturnForm.renderFormString()}
 
 <hr>
 
-${returnItemsForm.renderFormString()}
+<#--${returnItemsForm.renderFormString()}-->
+

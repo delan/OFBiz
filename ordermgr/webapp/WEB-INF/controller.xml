@@ -318,7 +318,7 @@
     </request-map>
     <request-map uri="returnItems">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="returnItems"/>    
+        <response name="success" type="view" value="returnitems"/>    
     </request-map>        	
     <request-map uri="updateReturn">
         <security https="true" auth="true"/>

@@ -39,17 +39,10 @@ if (returnId != null) {
 }
 
 editReturnForm = new HtmlFormWrapper("/return/ReturnForms.xml", "EditReturn", request, response);
-Debug.log("returnId: " +returnId);
-Debug.log("returnheader: " + returnHeader);
 editReturnForm.putInContext("orderId", orderId);
 editReturnForm.putInContext("returnId", returnId);
 editReturnForm.putInContext("returnHeader", returnHeader);
 
-// temp 
-orderItems = delegator.findAll("OrderItem");
-returnItemsForm = new HtmlFormWrapper("/return/ReturnForms.xml", "ReturnItems", request, response);
-returnItemsForm.putInContext("orderItems", orderItems);
-returnItemsForm.putInContext("returnId", "10000");
 
 context.put("orderId", orderId);
 context.put("returnId", returnId);

@@ -26,4 +26,14 @@
  
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
-import org.ofbiz.core.widgetimpl.*;
+
+delegator = request.getAttribute("delegator");
+returnId = request.getParameter("returnId");
+returnItems = delegator.findByAnd("ReturnItem", UtilMisc.toMap("returnId", returnId));
+context.put("returnItems", returnItems);
+
+orderId = request.getParameter("orderId");
+if (orderId != null) {
+    orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
+    context.put("orderItems", orderItems);
+}
