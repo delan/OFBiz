@@ -569,7 +569,6 @@ public class ContentPermissionServices {
     }
     public static boolean checkPermissionMethod(GenericDelegator delegator, String partyId,  String entityName, List entityIdList, AuxiliaryValueGetter auxiliaryValueGetter, RelatedRoleGetter relatedRoleGetter, PermissionConditionGetter permissionConditionGetter ) throws GenericEntityException {
 
-        if (Debug.infoOn()) Debug.logInfo("ENTITIES:" + StringUtil.join(entityIdList, ","), module);
         if (Debug.infoOn()) Debug.logInfo(permissionConditionGetter.dumpAsText(), module);
         boolean passed = false;
 
@@ -586,6 +585,20 @@ public class ContentPermissionServices {
         // Note that "quickCheck" id come first in the list
         // Check with no roles or purposes on the chance that the permission fields contain _NA_ s.
         String pkFieldName = ContentWorker.getPkFieldName(entityName, modelEntity);
+        if (Debug.infoOn()) {
+        String entityIdString = "ENTITIES: ";
+        for (int i=0; i < entityIdList.size(); i++) {
+            Object obj = entityIdList.get(i);
+            if (obj instanceof GenericValue) {
+                String s = ((GenericValue)obj).getString(pkFieldName);
+                entityIdString += s + "  ";
+            } else {
+                entityIdString += obj + "  ";
+            }
+        }
+        if (Debug.infoOn()) Debug.logInfo(entityIdString, module);
+        }
+        
         List alreadyCheckedIds = new ArrayList();
         Map entities = new HashMap();
         Iterator iter = entityIdList.iterator();
