@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.12 2003/09/02 01:32:46 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.13 2003/09/10 02:31:47 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.base.util.UtilURL;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.12 $
+  *@version    $Revision: 1.13 $
  * @since      3.0
  */
 public class JettyContainer implements Container {
@@ -159,10 +159,10 @@ public class JettyContainer implements Container {
                         listener.setKeystore(props.getProperty("keystore").value);    
                     }
                     if (props.getProperty("password") != null) {
-                        listener.setKeystore(props.getProperty("password").value);    
+                        listener.setPassword(props.getProperty("password").value);    
                     }                
                     if (props.getProperty("key-password") != null) {
-                        listener.setKeystore(props.getProperty("key-password").value);    
+                        listener.setKeyPassword(props.getProperty("key-password").value);    
                     }
                     if (props.getProperty("low-resource-persist-time") != null) {
                         int value = 0;
