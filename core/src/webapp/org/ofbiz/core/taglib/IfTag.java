@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/11/11 14:48:51  jonesde
+ * Added inputvalue tag
+ *
  * Revision 1.2  2001/11/06 22:18:00  jonesde
  * The getSize method now returns a String; Eric Pabst reported this problem, hopefully this will fix it for him.
  *
@@ -57,156 +60,181 @@ import org.ofbiz.core.util.Debug;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on August 31, 2001, 7:57 PM
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@version    1.0
+ *@created    August 31, 2001, 7:57 PM
  */
 public class IfTag extends BodyTagSupport {
-  
-  private String name = null;
-  private String value = null;
-  private String type = null;
-  private int size = -1;
-  
-  public void setName(String name) {
-    this.name = name;
-  }
-  
-  public void setValue(String value) {
-    this.value = value;
-  }
-  
-  public void setType(String type) {
-    this.type = type;
-  }
-  
-  public void setSize(String size) throws NumberFormatException {
-    this.size = Integer.parseInt(size);
-  }
-  
-  public String getName() {
-    return name;
-  }
-  
-  public String getValue() {
-    return value;
-  }
-  
-  public String getType() {
-    return type;
-  }
-  
-  public String getSize() {
-    return Integer.toString(size);
-  }
-  
-  public int doStartTag() throws JspTagException {
     
-    Object object = null;
-    try {
-      object = pageContext.findAttribute(name);
-      if ( object == null )
+    private String name = null;
+    private String value = null;
+    private String type = null;
+    private Integer size = null;
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public void setValue(String value) {
+        this.value = value;
+    }
+    
+    public void setType(String type) {
+        this.type = type;
+    }
+    
+    public void setSize(String size) throws NumberFormatException {
+        this.size = Integer.valueOf(size);
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public String getValue() {
+        return value;
+    }
+    
+    public String getType() {
+        return type;
+    }
+    
+    public String getSize() {
+        if (size == null)
+            return null;
+        return size.toString();
+    }
+    
+    public int doStartTag() throws JspTagException {
+        Object object = null;
+        try {
+            object = pageContext.findAttribute(name);
+            if (object == null)
+                return SKIP_BODY;
+        } catch (RuntimeException e) {
+            return SKIP_BODY;
+        }
+        //Debug.logInfo("Found object, and is not null");
+        
+        if (size != null) {
+            int localSize = size.intValue();
+            //make sure is reset since it is an optional attribute
+            size = null;
+        
+            try {
+                if (object instanceof Collection) {
+                    // the object is a Collection so compare the size.
+                    if (((Collection) object).size() > localSize)
+                        return EVAL_BODY_AGAIN;
+                } else if (object instanceof String) {
+                    // the object is a Collection so compare the size.
+                    if (((String) object).length() > localSize)
+                        return EVAL_BODY_AGAIN;
+                } else {
+                    //use reflection to find a size() method
+                    try {
+                        Method sizeMethod = object.getClass().getMethod("size", null);
+                        int objectSize = ((Integer) sizeMethod.invoke(object, null)).intValue();
+                        if (objectSize > localSize)
+                            return EVAL_BODY_AGAIN;
+                    } catch (Exception e) {
+                        return SKIP_BODY;
+                    }
+                }
+            } catch (RuntimeException e) {
+                return SKIP_BODY;
+            }
+        } else if (object instanceof String || "String".equalsIgnoreCase(type)) {
+            // Assume the object is a string and compare to the String value of value.
+            try {
+                String s = (String) object;
+                if (s.equals(value))
+                    return EVAL_BODY_AGAIN;
+            }
+            catch ( RuntimeException e ) { return SKIP_BODY; }
+        } else if (object instanceof Integer || "Integer".equalsIgnoreCase(type)) {
+            // Assume the object is a Integer and compare to the Integer value of value.
+            try {
+                Integer i = (Integer) object;
+                Integer v = Integer.valueOf(value);
+                if (i.equals(v))
+                    return EVAL_BODY_AGAIN;
+            } catch (RuntimeException e) {
+                return SKIP_BODY;
+            }
+        } else if (object instanceof Long || "Long".equalsIgnoreCase(type)) {
+            // Assume the object is a Integer and compare to the Integer value of value.
+            try {
+                Long i = (Long) object;
+                Long v = Long.valueOf(value);
+                if (i.equals(v))
+                    return EVAL_BODY_AGAIN;
+            } catch (RuntimeException e) {
+                return SKIP_BODY;
+            }
+        } else if (object instanceof Float || "Float".equalsIgnoreCase(type)) {
+            // Assume the object is a Double and compare to the Double value of value.
+            try {
+                Float d = (Float) object;
+                Float v = Float.valueOf(value);
+                if (d.equals(v))
+                    return EVAL_BODY_AGAIN;
+            } catch (RuntimeException e) {
+                return SKIP_BODY;
+            }
+        } else if (object instanceof Double || "Double".equalsIgnoreCase(type)) {
+            // Assume the object is a Double and compare to the Double value of value.
+            try {
+                Double d = (Double) object;
+                Double v = Double.valueOf(value);
+                if (d.equals(v))
+                    return EVAL_BODY_AGAIN;
+            } catch (RuntimeException e) {
+                return SKIP_BODY;
+            }
+        } else if (object instanceof Boolean || "Boolean".equalsIgnoreCase(type)) {
+            // Assume the object is a Boolean and compare to the Boolean value of value.
+            try {
+                Boolean b = (Boolean) object;
+                if(value != null) {
+                    Boolean v = new Boolean(value);
+                    if(b.equals(v)) return EVAL_BODY_AGAIN;
+                } else {
+                    if(b.booleanValue()) return EVAL_BODY_AGAIN;
+                }
+            } catch (RuntimeException e) {
+                return SKIP_BODY;
+            }
+        } else {
+            // Assume the object is an Object and compare to the Object named value.
+            Object valueObject = null;
+            try {
+                valueObject = pageContext.findAttribute(value);
+                if (valueObject != null && valueObject.equals(object))
+                    return EVAL_BODY_AGAIN;
+            } catch (RuntimeException e) {
+                return SKIP_BODY;
+            }
+        }
+        
         return SKIP_BODY;
     }
-    catch ( RuntimeException e ) { return SKIP_BODY; }
-    //Debug.logInfo("Found object, and is not null");
     
-    if ( size == -1 && value == null && type == null )
-      return EVAL_BODY_AGAIN;
+    public int doAfterBody() {
+        return SKIP_BODY;
+    }
     
-    if (  size > -1 ) {
-      try {
-        if (object instanceof Collection) {
-          // the object is a Collection so compare the size.
-          if ( ((Collection) object).size() > size )
-            return EVAL_BODY_AGAIN;
-        } else {
-          //use reflection to find a size() method
-          try {
-            Method sizeMethod = object.getClass().getMethod("size", null);
-            int objectSize = ((Integer) sizeMethod.invoke(object, null)).intValue();
-            if ( objectSize > size )
-              return EVAL_BODY_AGAIN;
-          } catch (Exception e) { return SKIP_BODY; }
+    public int doEndTag() {
+        try {
+            BodyContent body = getBodyContent();
+            if (body != null) {
+                JspWriter out = body.getEnclosingWriter();
+                out.print(body.getString());
+            }
+        } catch(IOException e) {
+            Debug.logError(e,"IfTag Error.");
         }
-      }
-      catch ( RuntimeException e ) { return SKIP_BODY; }
+        return EVAL_PAGE;
     }
-    
-    else if ( "String".equalsIgnoreCase(type) ) {
-      // Assume the object is a string and compare to the String value of value.
-      try {
-        String s = (String) object;
-        if ( s.equals(value) )
-          return EVAL_BODY_AGAIN;
-      }
-      catch ( RuntimeException e ) { return SKIP_BODY; }
-    }
-    
-    else if ( "Integer".equalsIgnoreCase(type) ) {
-      // Assume the object is a Integer and compare to the Integer value of value.
-      try {
-        Integer i = (Integer) object;
-        Integer v = new Integer(value);
-        if ( i == v )
-          return EVAL_BODY_AGAIN;
-      }
-      catch ( RuntimeException e ) { return SKIP_BODY; }
-    }
-    
-    else if ( "Double".equalsIgnoreCase(type) ) {
-      // Assume the object is a Double and compare to the Double value of value.
-      try {
-        Double d = (Double) object;
-        Double v = new Double(value);
-        if ( d == v )
-          return EVAL_BODY_AGAIN;
-      }
-      catch ( RuntimeException e ) { return SKIP_BODY; }
-    }
-    
-    else if ( "Boolean".equalsIgnoreCase(type) ) {
-      // Assume the object is a Boolean and compare to the Boolean value of value.
-      try {
-        Boolean b = (Boolean) object;
-        if(value != null) {
-          Boolean v = new Boolean(value);
-          if(b.equals(v)) return EVAL_BODY_AGAIN;
-        }
-        else {
-          if(b.booleanValue()) return EVAL_BODY_AGAIN;
-        }
-      }
-      catch ( RuntimeException e ) { return SKIP_BODY; }
-    }
-    
-    else {
-      // Assume the object is an Object and compare to the Object named value.
-      Object valueObject = null;
-      try {
-        valueObject = pageContext.findAttribute(value);
-        if ( valueObject != null && valueObject.equals(object) )
-          return EVAL_BODY_AGAIN;
-      }
-      catch ( RuntimeException e ) { return SKIP_BODY; }
-    }
-    
-    return SKIP_BODY;
-  }
-  
-  public int doAfterBody() {
-    return SKIP_BODY;
-  }
-  
-  public int doEndTag() {
-    try {
-      BodyContent body = getBodyContent();
-      if (body != null) {
-        JspWriter out = body.getEnclosingWriter();
-        out.print(body.getString());
-      }
-    }
-    catch(IOException e) { Debug.logError(e,"IfTag Error."); }
-    return EVAL_PAGE;
-  }
 }
