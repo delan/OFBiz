@@ -249,11 +249,11 @@ entity group XML file, just like any normal entity.</p>
             entity-name=&quot;SampleViewEntity&quot;&gt;
       &lt;member-entity entity-alias=&quot;SE&quot; entity-name=&quot;SampleEntity&quot; /&gt;
       &lt;member-entity entity-alias=&quot;OSE&quot; entity-name=&quot;OtherSampleEntity&quot; /&gt;
-      &lt;alias entity-alias=&quot;SE&quot; name=&quot;primaryKeyFieldOne&quot; prim-key=&quot;true&quot; /&gt;
-      &lt;alias entity-alias=&quot;SE&quot; name=&quot;primaryKeyFieldTwo&quot; prim-key=&quot;true&quot; /&gt;
+      &lt;alias entity-alias=&quot;SE&quot; name=&quot;primaryKeyFieldOne&quot; /&gt;
+      &lt;alias entity-alias=&quot;SE&quot; name=&quot;primaryKeyFieldTwo&quot; /&gt;
       &lt;alias entity-alias=&quot;SE&quot; name=&quot;fieldOne&quot; /&gt;
       &lt;alias entity-alias=&quot;SE&quot; name=&quot;fieldTwo&quot; /&gt;
-      &lt;alias entity-alias=&quot;OSE&quot; name=&quot;primaryKeyOne&quot; prim-key=&quot;true&quot; /&gt;
+      &lt;alias entity-alias=&quot;OSE&quot; name=&quot;primaryKeyOne&quot; /&gt;
       &lt;alias entity-alias=&quot;OSE&quot; name=&quot;otherFieldOne&quot; field=&quot;fieldOne&quot; /&gt;
       &lt;view-link entity-alias=&quot;SE&quot; rel-entity-alias=&quot;OSE&quot;&gt;
         &lt;key-map field-name=&quot;foreignKeyOne&quot; rel-field-name=&quot;primaryKeyOne&quot; /&gt;
@@ -278,7 +278,9 @@ entity-alias.</p>
 key-maps just like relations. Here the field-name specifies the name of the field on the aliased entity and the rel-field-name the field on
 the related aliased entity. As with many other things, the rel-field-name is optional if it is the same as the field-name.</p>
 
-<p>View Entities have primary keys just like normal entities. Specifying that an alias is a primary key is done by using the prim-key attribute.</p>
+<p>View Entities have primary keys just like normal entities. The Entity Engine
+automatically determines which aliases are primary keys by looking at the field
+that they alias.</p>
 <p>The primary key for a view entity should include all primary key fields of each
 member entity of the view. This means that all of the primary key fields must be aliased, but fields that are used to link the entities need only be aliased
 once. For example, if an OrderHeader entity has an orderId primary key and an OrderLine entity has an orderId primary key and an orderLineSeqId

@@ -499,12 +499,12 @@
             title="Workflow Participants View Entity">
       <member-entity entity-alias="WP" entity-name="WorkflowParticipant"/>
       <member-entity entity-alias="WPL" entity-name="WorkflowParticipantList"/>
-      <alias entity-alias="WP" name="participantId" prim-key="true"/>
+      <alias entity-alias="WP" name="participantId"/>
       <alias entity-alias="WP" name="partyId"/>
       <alias entity-alias="WP" name="participantName"/>
       <alias entity-alias="WP" name="description"/>
       <alias entity-alias="WP" name="participantTypeId"/>
-      <alias entity-alias="WPL" name="participantListId" prim-key="true"/>
+      <alias entity-alias="WPL" name="participantListId"/>
       <alias entity-alias="WPL" name="participantIndex"/>
       <view-link entity-alias="WP" rel-entity-alias="WPL">
         <key-map field-name="participantId"/>

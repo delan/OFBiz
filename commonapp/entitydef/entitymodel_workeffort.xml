@@ -519,7 +519,7 @@
             title="Work Effort And Party Assignment Entity">
       <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
       <member-entity entity-alias="WE" entity-name="WorkEffort"/>
-      <alias entity-alias="WE" name="workEffortId" prim-key="true"/>
+      <alias entity-alias="WE" name="workEffortId"/>
       <alias entity-alias="WE" name="workEffortTypeId"/>
       <alias entity-alias="WE" name="workEffortParentId"/>
       <alias entity-alias="WE" name="currentStatusId"/>
@@ -553,9 +553,9 @@
       <alias entity-alias="WE" name="runtimeDataId"/>
       <alias entity-alias="WE" name="noteId"/>
       <alias entity-alias="WE" name="serviceLoaderName"/>
-      <alias entity-alias="WEPA" name="partyId" prim-key="true"/>
-      <alias entity-alias="WEPA" name="roleTypeId" prim-key="true"/>
-      <alias entity-alias="WEPA" name="fromDate" prim-key="true"/>
+      <alias entity-alias="WEPA" name="partyId"/>
+      <alias entity-alias="WEPA" name="roleTypeId"/>
+      <alias entity-alias="WEPA" name="fromDate"/>
       <alias entity-alias="WEPA" name="thruDate"/>
       <alias entity-alias="WEPA" name="partyAssignFacilityId" field="facilityId"/>
       <alias entity-alias="WEPA" name="statusId"/>
@@ -843,7 +843,7 @@
       <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
       <member-entity entity-alias="WE" entity-name="WorkEffort"/>
       <member-entity entity-alias="PREL" entity-name="PartyRelationship"/>
-      <alias entity-alias="WE" name="workEffortId" prim-key="true"/>
+      <alias entity-alias="WE" name="workEffortId"/>
       <alias entity-alias="WE" name="workEffortTypeId"/>
       <alias entity-alias="WE" name="currentStatusId"/>
       <alias entity-alias="WE" name="lastStatusUpdate"/>
@@ -876,8 +876,8 @@
       <alias entity-alias="WE" name="runtimeDataId"/>
       <alias entity-alias="WE" name="noteId"/>
       <alias entity-alias="WE" name="serviceLoaderName"/>
-      <alias entity-alias="WEPA" name="roleTypeId" prim-key="true"/>
-      <alias entity-alias="WEPA" name="fromDate" prim-key="true"/>
+      <alias entity-alias="WEPA" name="roleTypeId"/>
+      <alias entity-alias="WEPA" name="fromDate"/>
       <alias entity-alias="WEPA" name="thruDate"/>
       <alias entity-alias="WEPA" name="partyAssignFacilityId" field="facilityId"/>
       <alias entity-alias="WEPA" name="statusId"/>
@@ -885,8 +885,8 @@
       <alias entity-alias="WEPA" name="comments"/>
       <alias entity-alias="WEPA" name="mustRsvp"/>
       <alias entity-alias="WEPA" name="expectationEnumId"/>
-      <alias entity-alias="PREL" name="partyId" field="partyIdFrom" prim-key="true"/>
-      <alias entity-alias="PREL" name="groupPartyId" field="partyIdTo" prim-key="true"/>
+      <alias entity-alias="PREL" name="partyId" field="partyIdFrom"/>
+      <alias entity-alias="PREL" name="groupPartyId" field="partyIdTo"/>
       <view-link entity-alias="WE" rel-entity-alias="WEPA">
         <key-map field-name="workEffortId"/>
       </view-link>
@@ -923,7 +923,7 @@
       <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
       <member-entity entity-alias="WE" entity-name="WorkEffort"/>
       <member-entity entity-alias="PR" entity-name="PartyRole"/>
-      <alias entity-alias="WE" name="workEffortId" prim-key="true"/>
+      <alias entity-alias="WE" name="workEffortId"/>
       <alias entity-alias="WE" name="workEffortTypeId"/>
       <alias entity-alias="WE" name="currentStatusId"/>
       <alias entity-alias="WE" name="lastStatusUpdate"/>
@@ -956,8 +956,8 @@
       <alias entity-alias="WE" name="runtimeDataId"/>
       <alias entity-alias="WE" name="noteId"/>
       <alias entity-alias="WE" name="serviceLoaderName"/>
-      <alias entity-alias="WEPA" name="wepaPartyId" field="partyId" prim-key="true"/>
-      <alias entity-alias="WEPA" name="fromDate" prim-key="true"/>
+      <alias entity-alias="WEPA" name="wepaPartyId" field="partyId"/>
+      <alias entity-alias="WEPA" name="fromDate"/>
       <alias entity-alias="WEPA" name="thruDate"/>
       <alias entity-alias="WEPA" name="partyAssignFacilityId" field="facilityId"/>
       <alias entity-alias="WEPA" name="statusId"/>
@@ -965,8 +965,8 @@
       <alias entity-alias="WEPA" name="comments"/>
       <alias entity-alias="WEPA" name="mustRsvp"/>
       <alias entity-alias="WEPA" name="expectationEnumId"/>
-      <alias entity-alias="PR" name="partyId" prim-key="true"/>
-      <alias entity-alias="PR" name="roleTypeId" prim-key="true"/>
+      <alias entity-alias="PR" name="partyId"/>
+      <alias entity-alias="PR" name="roleTypeId"/>
       <view-link entity-alias="WE" rel-entity-alias="WEPA">
         <key-map field-name="workEffortId"/>
       </view-link>

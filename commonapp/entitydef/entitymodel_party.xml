@@ -6,25 +6,25 @@
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included 
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org)
+ *@author David E. Jones (jonesde@ofbiz.org) 
  *@author Andy Zeneski (jaz@zsolv.com)
  *@version    1.0
  */
@@ -1289,12 +1289,12 @@
     <view-entity entity-name="PartyAndContactMech"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party and Contact Mech View Entity">
-      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
       <member-entity entity-alias="CM" entity-name="ContactMech"/>
+      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
       <member-entity entity-alias="PTY" entity-name="Party"/>
-      <alias entity-alias="CM" name="contactMechId" prim-key="true"/>
-      <alias entity-alias="PTY" name="partyId" prim-key="true"/>
-      <alias entity-alias="PCM" name="fromDate" prim-key="true"/>
+      <alias entity-alias="CM" name="contactMechId"/>
+      <alias entity-alias="PTY" name="partyId"/>
+      <alias entity-alias="PCM" name="fromDate"/>
       <alias entity-alias="PCM" name="thruDate"/>
       <alias entity-alias="PTY" name="partyTypeId"/>
       <alias entity-alias="CM" name="contactMechTypeId"/>
@@ -1327,9 +1327,9 @@
             title="Party and Contact Mech View Entity">
       <member-entity entity-alias="ULN" entity-name="UserLogin"/>
       <member-entity entity-alias="PTY" entity-name="Party"/>
-      <alias entity-alias="PTY" name="partyId" prim-key="true"/>
+      <alias entity-alias="PTY" name="partyId"/>
       <alias entity-alias="PTY" name="partyTypeId"/>
-      <alias entity-alias="ULN" name="userLoginId" prim-key="true"/>
+      <alias entity-alias="ULN" name="userLoginId"/>
       <alias entity-alias="ULN" name="currentPassword"/>
       <alias entity-alias="ULN" name="passwordHint"/>
       <alias entity-alias="ULN" name="enabled"/>
@@ -1427,11 +1427,11 @@
       <member-entity entity-alias="PT" entity-name="ContactMechPurposeType"/>
       <member-entity entity-alias="PC" entity-name="PartyContactMech"/>
       <member-entity entity-alias="PR" entity-name="PartyContactMechPurpose"/>
-      <alias entity-alias="CM" name="contactMechId" prim-key="true"/>
-      <alias entity-alias="PC" name="partyId" prim-key="true"/>
-      <alias entity-alias="PR" name="contactMechPurposeTypeId" prim-key="true"/>
-      <alias entity-alias="PC" name="contactFromDate" field="fromDate" prim-key="true"/>
-      <alias entity-alias="PR" name="purposeFromDate" field="fromDate" prim-key="true"/>
+      <alias entity-alias="CM" name="contactMechId"/>
+      <alias entity-alias="PC" name="partyId"/>
+      <alias entity-alias="PR" name="contactMechPurposeTypeId"/>
+      <alias entity-alias="PC" name="contactFromDate" field="fromDate"/>
+      <alias entity-alias="PR" name="purposeFromDate" field="fromDate"/>
       <alias entity-alias="PR" name="purposeThruDate" field="thruDate"/>
       <alias entity-alias="PC" name="contactThruDate" field="thruDate"/>
       <alias entity-alias="CM" name="contactMechTypeId"/>
@@ -1512,8 +1512,8 @@
       <member-entity entity-alias="PN" entity-name="PartyNote"/>
       <member-entity entity-alias="ND" entity-name="NoteData"/>
       <member-entity entity-alias="PR" entity-name="Person"/>
-      <alias entity-alias="PN" name="targetPartyId" field="partyId" prim-key="true"/>
-      <alias entity-alias="ND" name="noteId" prim-key="true"/>
+      <alias entity-alias="PN" name="targetPartyId" field="partyId"/>
+      <alias entity-alias="ND" name="noteId"/>
       <alias entity-alias="ND" name="noteName"/>
       <alias entity-alias="ND" name="noteInfo"/>
       <alias entity-alias="ND" name="noteDateTime"/>
@@ -1893,7 +1893,7 @@
             title="Person Role View Entity">
       <member-entity entity-alias="PS" entity-name="Person"/>
       <member-entity entity-alias="PR" entity-name="PartyRole"/>
-      <alias entity-alias="PS" name="partyId" prim-key="true"/>
+      <alias entity-alias="PS" name="partyId"/>
       <alias entity-alias="PS" name="lastName"/>
       <alias entity-alias="PS" name="firstName"/>
       <alias entity-alias="PS" name="middleName"/>
@@ -1961,10 +1961,10 @@
     <view-entity entity-name="RoleTypeAndParty"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Role View Entity">
-      <member-entity entity-alias="RT" entity-name="RoleType"/>
       <member-entity entity-alias="PR" entity-name="PartyRole"/>
-      <alias entity-alias="PR" name="partyId" prim-key="true"/>
-      <alias entity-alias="RT" name="roleTypeId" prim-key="true"/>
+      <member-entity entity-alias="RT" entity-name="RoleType"/>
+      <alias entity-alias="PR" name="partyId"/>
+      <alias entity-alias="RT" name="roleTypeId"/>
       <alias entity-alias="RT" name="description"/>
       <view-link entity-alias="RT" rel-entity-alias="PR">
         <key-map field-name="roleTypeId"/>

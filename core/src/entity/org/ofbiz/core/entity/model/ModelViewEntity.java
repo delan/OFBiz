@@ -92,7 +92,6 @@ public class ModelViewEntity extends ModelEntity {
             alias.entityAlias = UtilXml.checkEmpty(aliasElement.getAttribute("entity-alias"));
             alias.name = UtilXml.checkEmpty(aliasElement.getAttribute("name"));
             alias.field = UtilXml.checkEmpty(aliasElement.getAttribute("field"), alias.name);
-            alias.isPk = "true".equals(aliasElement.getAttribute("prim-key"));
             this.aliases.add(alias);
         }
 
@@ -198,31 +197,31 @@ public class ModelViewEntity extends ModelEntity {
 
             String aliasedEntityName = (String) memberEntityNames.get(alias.entityAlias);
             ModelEntity aliasedEntity = (ModelEntity) entityCache.get(aliasedEntityName);
-
             if (aliasedEntity == null) {
                 Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelEntity for entity name: " +
                     aliasedEntityName);
                 continue;
             }
 
-            ModelField field = new ModelField();
-
-            field.name = alias.name;
-            field.isPk = alias.isPk;
-
-            this.fields.add(field);
-            if (field.isPk)
-                this.pks.add(field);
-            else
-                this.nopks.add(field);
-
             ModelField aliasedField = aliasedEntity.getField(alias.field);
-
             if (aliasedField == null) {
                 Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelField for field name \"" +
                     alias.field + "\" on entity with name: " + aliasedEntityName);
                 continue;
             }
+            
+            ModelField field = new ModelField();
+
+            field.name = alias.name;
+            field.isPk = alias.isPk = aliasedField.isPk;
+
+            this.fields.add(field);
+            if (field.isPk) {
+                this.pks.add(field);
+            } else {
+                this.nopks.add(field);
+            }
+
             field.type = aliasedField.type;
             field.colName = alias.entityAlias + "." + aliasedField.colName;
             field.validators = aliasedField.validators;

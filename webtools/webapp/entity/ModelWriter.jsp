@@ -160,7 +160,7 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
   for (int y = 0; y < viewEntity.getAliasesSize(); y++) {
     ModelViewEntity.ModelAlias alias = viewEntity.getAlias(y);%>
       <alias entity-alias="<%=alias.getEntityAlias()%>" name="<%=alias.getName()%>"<%if (!alias.getName().equals(alias.getField())){
-      %> field="<%=alias.getField()%>"<%}%><%if (alias.getIsPk()) {%> prim-key="true"<%}%>/><%
+      %> field="<%=alias.getField()%>"<%}%>/><%
   }
   for (int r = 0; r < viewEntity.getViewLinksSize(); r++) {
     ModelViewEntity.ModelViewLink viewLink = viewEntity.getViewLink(r);%>
