@@ -254,5 +254,31 @@ public class LocalDispatcher {
     public DispatchContext getDispatchContext() {
         return ctx;
     }
+
+    /**
+     * Returns a Map of JMS Listeners
+     * @return Map of JMS Listeners
+     */
+    public Map getJMSListeners() {
+        return dispatcher.getJMSListeners();
+    }
+
+    /**
+     * Load a JMS message listener.
+     * @param jmsName Name of the jms-service
+     * @throws GenericServiceException
+     */
+    public void loadListener(String jmsName) throws GenericServiceException {
+        dispatcher.loadListener(jmsName);
+    }
+
+    /**
+     * Close a JMS message listener.
+     * @param jmsName Name of the jms-service
+     * @throws GenericServiceException
+     */
+    public void closeListener(String jmsName) throws GenericServiceException {
+        dispatcher.closeListener(jmsName);
+    }
 }
 

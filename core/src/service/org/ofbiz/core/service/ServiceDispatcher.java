@@ -53,17 +53,18 @@ public class ServiceDispatcher {
     protected GenericDelegator delegator;
     protected Security security;
     protected Map localContext;
+    protected Map jmsListeners;
     protected JobManager jm;
-    protected List jmsListeners;
 
     public ServiceDispatcher(GenericDelegator delegator) {
         Debug.logInfo("[ServiceDispatcher] : Creating new instance.", module);
         this.delegator = delegator;
         this.localContext = new HashMap();
+        this.jmsListeners = new HashMap();
         this.jm = new JobManager(this, this.delegator);
         if (delegator != null) {
             this.security = new Security(delegator);
-            jmsListeners = loadListeners(this);
+            loadListeners();
         }
     }
 
@@ -308,6 +309,40 @@ public class ServiceDispatcher {
         return localContext.containsKey(name);
     }
 
+    /**
+     * Load a JMS message listener.
+     * @param jmsName Name of the jms-service
+     * @throws GenericServiceException
+     */
+    public void loadListener(String jmsName) throws GenericServiceException {
+        try {
+            Element rootElement = ServiceConfigUtil.getXmlRootElement();
+            Element jmsElement = UtilXml.firstChildElement(rootElement, "jms-service", "name", jmsName);
+            loadListener(jmsName, jmsElement);
+        } catch (org.ofbiz.core.config.GenericConfigException e) {
+            throw new GenericServiceException("Cannot read serviceengine.xml.", e.getNested());
+        }
+    }
+
+    /**
+     * Close a JMS message listener.
+     * @param jmsName Name of the jms-service
+     * @throws GenericServiceException
+     */
+    public void closeListener(String jmsName) throws GenericServiceException {
+        Object listener = (Object) jmsListeners.get(jmsName);
+        if (listener == null)
+            throw new GenericServiceException("No listener found with that name.");
+    }
+
+    /**
+     * Gets a Map of JMS Listeners.
+     * @return Map of JMS Listeners
+     */
+    public Map getJMSListeners() {
+        return new HashMap(jmsListeners);
+    }
+
     // checks if parameters were passed for authentication
     private Map checkAuth(String localName, Map context, ModelService origService) throws GenericServiceException {
         String service = ServiceConfigUtil.getElementAttr("authorization", "service-name");
@@ -363,8 +398,7 @@ public class ServiceDispatcher {
     }
 
     // Load the JMS listeners
-    private List loadListeners(ServiceDispatcher dispatcher) {
-        List listeners = new ArrayList();
+    private void loadListeners() {
         try {
             Element rootElement = ServiceConfigUtil.getXmlRootElement();
             NodeList nodeList = rootElement.getElementsByTagName("jms-service");
@@ -372,11 +406,9 @@ public class ServiceDispatcher {
             for (int i = 0; i < nodeList.getLength(); i++) {
                 try {
                     Element element = (Element) nodeList.item(i);
-                    Object o = JMSListenerFactory.getMessageListener(element, dispatcher);
-                    if (o != null)
-                        listeners.add(o);
+                    loadListener(element.getAttribute("name"), element);
                 } catch (GenericServiceException gse) {
-                    Debug.logError(gse, "Cannot load message listener for position [" + i + "].", module);
+                    Debug.logError("Cannot load message listener (" + gse.toString() + ").", module);
                 } catch (Exception e) {
                     Debug.logError(e, "Uncaught exception.", module);
                 }
@@ -386,7 +418,12 @@ public class ServiceDispatcher {
         } catch (Exception e) {
             Debug.logError(e, "Uncaught exception.", module);
         }
-        return listeners;
     }
 
+    private void loadListener(String jmsName, Element jmsElement) throws GenericServiceException {
+        Debug.logWarning("Loading listener: " + jmsName, module);
+        Object o = JMSListenerFactory.getMessageListener(jmsElement, this);
+        if (o != null)
+            jmsListeners.put(jmsName, o);
+    }
 }
