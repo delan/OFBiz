@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.5 2003/11/12 20:35:14 jonesde Exp $
+ * $Id: EntityUtil.java,v 1.6 2003/12/14 06:17:52 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@
 package org.ofbiz.entity.util;
 
 import java.sql.Timestamp;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -396,7 +397,7 @@ public class EntityUtil {
      *      optionally add a " ASC" for ascending or " DESC" for descending
      *@return List of GenericValue's in the proper order
      */
-    public static List orderBy(List values, List orderBy) {
+    public static List orderBy(Collection values, List orderBy) {
         if (values == null) return null;
         if (values.size() == 0) return new ArrayList();
         if (orderBy == null || orderBy.size() == 0) {

@@ -1,5 +1,5 @@
 /*
- * $Id: ParametricSearch.java,v 1.7 2003/11/25 06:05:36 jonesde Exp $
+ * $Id: ParametricSearch.java,v 1.8 2003/12/14 06:17:52 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -43,7 +43,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for parametric search based on features.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.1
  */
 public class ParametricSearch {
@@ -70,24 +70,53 @@ public class ParametricSearch {
                         GenericValue productFeature = (GenericValue) pfsIter.next();
                         
                         String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
-                        List featuresByType = (List) productFeaturesByTypeMap.get(productFeatureTypeId);
+                        Map featuresByType = (Map) productFeaturesByTypeMap.get(productFeatureTypeId);
                         if (featuresByType == null) {
-                            featuresByType = new LinkedList();
+                            featuresByType = new HashMap();
                             productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
                         }
-                        featuresByType.add(productFeature);
+                        featuresByType.put(productFeature.get("productFeatureId"), productFeature);
                     }
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error getting features associated with the category with ID: " + productCategoryId, module);
+            Debug.logError(e, "Error getting feature categories associated with the category with ID: " + productCategoryId, module);
         }
-        
+           
+        try {
+            List productFeatureCatGrpAppls = delegator.findByAndCache("ProductFeatureCatGrpAppl", UtilMisc.toMap("productCategoryId", productCategoryId));
+            productFeatureCatGrpAppls = EntityUtil.filterByDate(productFeatureCatGrpAppls, true);
+            if (productFeatureCatGrpAppls != null) { 
+                Iterator pfcgasIter = productFeatureCatGrpAppls.iterator();
+                while (pfcgasIter.hasNext()) {
+                    GenericValue productFeatureCatGrpAppl = (GenericValue) pfcgasIter.next();
+                    List productFeatureGroupAndAppls = delegator.findByAndCache("ProductFeatureGroupAndAppl", UtilMisc.toMap("productFeatureGroupId", productFeatureCatGrpAppl.get("productFeatureGroupId")));
+                    Iterator pfgaasIter = productFeatureGroupAndAppls.iterator();
+                    while (pfgaasIter.hasNext()) {
+                        GenericValue productFeatureGroupAndAppl = (GenericValue) pfgaasIter.next();
+                        GenericValue productFeature = delegator.makeValue("ProductFeature", null);
+                        productFeature.setPKFields(productFeatureGroupAndAppl);
+                        productFeature.setNonPKFields(productFeatureGroupAndAppl);
+                        
+                        String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
+                        Map featuresByType = (Map) productFeaturesByTypeMap.get(productFeatureTypeId);
+                        if (featuresByType == null) {
+                            featuresByType = new HashMap();
+                            productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
+                        }
+                        featuresByType.put(productFeature.get("productFeatureId"), productFeature);
+                    }
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error getting feature groups associated with the category with ID: " + productCategoryId, module);
+        }
+           
         // now before returning, order the features in each list by description
         Iterator productFeatureTypeEntries = productFeaturesByTypeMap.entrySet().iterator();
         while (productFeatureTypeEntries.hasNext()) {
             Map.Entry entry = (Map.Entry) productFeatureTypeEntries.next();
-            List sortedFeatures = EntityUtil.orderBy((List) entry.getValue(), UtilMisc.toList("description"));
+            List sortedFeatures = EntityUtil.orderBy(((Map) entry.getValue()).values(), UtilMisc.toList("description"));
             productFeaturesByTypeMap.put(entry.getKey(), sortedFeatures);
         }
         
