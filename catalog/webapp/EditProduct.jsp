@@ -62,6 +62,7 @@
 <%if(productId != null && productId.length() > 0){%>
   <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[View Product Page]</a>
   <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Product]</a>
+  <a href="<ofbiz:url>/EditProductCategories?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Category Members]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Keywords]</a>
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Associations]</a>
 <%}%>
@@ -263,54 +264,11 @@
 <%if(productId != null && productId.length() > 0){%>
   <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[View Product Page]</a>
   <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Product]</a>
+  <a href="<ofbiz:url>/EditProductCategories?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Category Members]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Keywords]</a>
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Associations]</a>
 <%}%>
 <br>
-
-<%-- Edit 'ProductCategoryMember's --%>
-<%if(productId!=null && product!=null){%>
-<hr>
-<p class="head2">Product-Category Member Maintenance</p>
-
-<table border="1" cellpadding='2' cellspacing='0'>
-  <tr>
-    <td><div class="tabletext"><b>Category ID</b></div></td>
-    <td><div class="tabletext"><b>Description</b></div></td>
-    <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-    <td><div class="tabletext"><b>&nbsp;</b></div></td>
-  </tr>
-<%Iterator pcIterator = UtilMisc.toIterator(product.getRelated("ProductCategoryMember"));%>
-<%while(pcIterator != null && pcIterator.hasNext()) {%>
-  <%GenericValue productCategoryMember = (GenericValue)pcIterator.next();%>
-  <%GenericValue category = productCategoryMember.getRelatedOne("ProductCategory");%>
-  <tr valign="middle">
-    <td><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=productCategoryMember.getString("productCategoryId")%></a></td>
-    <td><%if(category!=null){%><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=category.getString("description")%></a><%}%>&nbsp;</td>
-    <td><div class='tabletext'><%=productCategoryMember.getTimestamp("fromDate")%></div></td>
-    <td>
-      <a href="<ofbiz:url>/UpdateProductCategoryMember?UPDATE_MODE=DELETE&PRODUCT_ID=<%=productId%>&PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%>&useValues=true</ofbiz:url>" class="buttontext">
-      [Delete]</a>
-    </td>
-  </tr>
-<%}%>
-</table>
-
-<form method="POST" action="<ofbiz:url>/UpdateProductCategoryMember</ofbiz:url>" style='margin: 0;'>
-  <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
-  <input type="hidden" name="UPDATE_MODE" value="CREATE">
-  <input type="hidden" name="useValues" value="true">
-  Add ProductCategoryMember (enter Category ID):
-    <select name="PRODUCT_CATEGORY_ID">
-    <%Iterator it = UtilMisc.toIterator(categoryCol);%>
-    <%while(it != null && it.hasNext()) {%>
-      <%GenericValue category = (GenericValue)it.next();%>
-      <option value="<%=category.getString("productCategoryId")%>"><%=category.getString("description")%> [<%=category.getString("productCategoryId")%>]</option>
-    <%}%>
-    </select>
-  <input type="submit" value="Add">
-</form>
-<%}%>
 
 <%}else{%>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>

@@ -96,9 +96,14 @@
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProduct"/>
     </request-map>
     
+    <request-map uri="EditProductCategories">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductCategories"/>
+    </request-map>
+    
     <request-map uri="UpdateProductCategoryMember"><security https="true" auth="true"/>
-        <response name="success" type="view" value="EditProduct"/>
-        <response name="error" type="view" value="EditProduct"/>
+        <response name="success" type="view" value="EditProductCategories"/>
+        <response name="error" type="view" value="EditProductCategories"/>
         <event type="java" path="org.ofbiz.catalog.CategoryEvents" invoke="updateProductCategoryMember"/>
     </request-map>
 
@@ -152,6 +157,7 @@
     <view-map name="ChooseTopCategory" page="/ChooseTopCategory.jsp"/>
     <view-map name="EditCategory" page="/EditCategory.jsp"/>
     <view-map name="EditProduct" page="/EditProduct.jsp"/>
+    <view-map name="EditProductCategories" page="/EditProductCategories.jsp"/>
     <view-map name="EditProductKeyword" page="/EditProductKeyword.jsp"/>
     <view-map name="EditProductAssoc" page="/EditProductAssoc.jsp"/>
     <view-map name="UploadImage" page="/UploadImage.jsp"/>
