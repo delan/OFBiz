@@ -161,6 +161,21 @@
     hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
   <DocumentType description="" documentTypeId="TAX_TARIFF_DOCUMENT"
     hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+  <Enumeration description="For Your Information" enumCode="FYI" enumId="WEE_FYI" sequenceId="01" enumTypeId="WORK_EFF_EXPECT"/>
+  <Enumeration description="Involvement Required" enumCode="REQUIRE" enumId="WEE_REQUIRE" sequenceId="02" enumTypeId="WORK_EFF_EXPECT"/>
+  <Enumeration description="Involvement Requested" enumCode="REQUEST" enumId="WEE_REQUEST" sequenceId="03" enumTypeId="WORK_EFF_EXPECT"/>
+  <Enumeration description="Immediate Response Requested" enumCode="IMMEDIATE" enumId="WEE_IMMEDIATE" sequenceId="04" enumTypeId="WORK_EFF_EXPECT"/>
+  <Enumeration description="General, public access" enumCode="PUBLIC" enumId="WES_PUBLIC" sequenceId="01" enumTypeId="WORK_EFF_SCOPE"/>
+  <Enumeration description="Restricted, private access" enumCode="PRIVATE" enumId="WES_PRIVATE" sequenceId="02" enumTypeId="WORK_EFF_SCOPE"/>
+  <Enumeration description="Very restricted, confidential access" enumCode="CONFIDENTIAL" enumId="WES_CONFIDENTIAL" sequenceId="03" enumTypeId="WORK_EFF_SCOPE"/>
+  <Enumeration description="No restriction on network structure (DEFAULT)" enumCode="NON_BLOCKED" enumId="WGC_NON_BLOCKED" sequenceId="01" enumTypeId="WORKFLOW_GRAPH_CONF"/>
+  <Enumeration description="Network structure restricted to proper nesting of LOOP" enumCode="LOOP_BLOCKED" enumId="WGC_LOOP_BLOCKED" sequenceId="02" enumTypeId="WORKFLOW_GRAPH_CONF"/>
+  <Enumeration description="Network structure restricted to proper nesting of SPLIT/JOIN and LOOP" enumCode="FULL_BLOCKED" enumId="WGC_FULL_BLOCKED" sequenceId="03" enumTypeId="WORKFLOW_GRAPH_CONF"/>
+  <EnumerationType description="Parent Type for all Work Effort enum types" enumTypeId="WORK_EFFORT" hasTable="N" parentTypeId=""/>
+  <EnumerationType description="Work Effort Expectations" enumTypeId="WORK_EFF_EXPECT" hasTable="N" parentTypeId="WORK_EFFORT"/>
+  <EnumerationType description="Work Effort Scope Classifications" enumTypeId="WORK_EFF_SCOPE" hasTable="N" parentTypeId="WORK_EFFORT"/>
+  <EnumerationType description="Parent Type for all Workflow enum types" enumTypeId="WORKFLOW" hasTable="N" parentTypeId=""/>
+  <EnumerationType description="Workflow Graph Conformance Classifications" enumTypeId="WORKFLOW_GRAPH_CONF" hasTable="N" parentTypeId="WORKFLOW"/>
   <FacilityType description="" facilityTypeId="OFFICE" hasTable="N" parentTypeId=""/>
   <FacilityType description="" facilityTypeId="ROOM" hasTable="N" parentTypeId=""/>
   <FacilityType description="" facilityTypeId="PLANT" hasTable="N" parentTypeId=""/>
@@ -422,59 +437,52 @@
     parentTypeId="OUTGOING_SHIPMENT" shipmentTypeId="PURCHASE_RETURN"/>
   <ShipmentType description="" hasTable="N" parentTypeId="" shipmentTypeId="DROP_SHIPMENT"/>
   <ShipmentType description="" hasTable="N" parentTypeId="" shipmentTypeId="TRANSFER"/>
-  <StatusItem description="Ordered" sequenceId="01" statusId="ORDERED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Scheduled" sequenceId="02"
-    statusId="SCHEDULED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Shipped" sequenceId="03" statusId="SHIPPED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Invoiced" sequenceId="04" statusId="INVOICED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Back-Ordered" sequenceId="10"
-    statusId="BACKORDERED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Cancelled" sequenceId="99"
-    statusId="CANCELLED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Needs Action" sequenceId="01"
-    statusId="CAL_NEEDS_ACTION" statusTypeId="CALENDAR_STATUS"/>
-  <StatusItem description="Sent" sequenceId="02"
-    statusId="CAL_SENT" statusTypeId="CALENDAR_STATUS"/>
-  <StatusItem description="Declined" sequenceId="03"
-    statusId="CAL_DECLINED" statusTypeId="CALENDAR_STATUS"/>
-  <StatusItem description="Delegated" sequenceId="04"
-    statusId="CAL_DELEGATED" statusTypeId="CALENDAR_STATUS"/>
-  <StatusItem description="Accepted" sequenceId="01"
-    statusId="CAL_ACCEPTED" statusTypeId="TASK_STATUS"/>
-  <StatusItem description="Completed" sequenceId="02"
-    statusId="CAL_COMPLETED" statusTypeId="TASK_STATUS"/>
-  <StatusItem description="Tentative" sequenceId="01"
-    statusId="CAL_TENTATIVE" statusTypeId="EVENT_STATUS"/>
-  <StatusItem description="Confirmed" sequenceId="02"
-    statusId="CAL_CONFIRMED" statusTypeId="EVENT_STATUS"/>
-  <StatusItem description="open.not_running.not_started" sequenceId="01"
-    statusId="WF_NOT_STARTED" statusTypeId="WORKFLOW_STATUS"/>
-  <StatusItem description="open.not_running.suspended" sequenceId="02"
-    statusId="WF_SUSPENDED" statusTypeId="WORKFLOW_STATUS"/>
-  <StatusItem description="open.running" sequenceId="03"
-    statusId="WF_RUNNING" statusTypeId="WORKFLOW_STATUS"/>
-  <StatusItem description="closed.completed" sequenceId="04"
-    statusId="WF_COMPLETED" statusTypeId="WORKFLOW_STATUS"/>
-  <StatusItem description="closed.terminated" sequenceId="05"
-    statusId="WF_TERMINATED" statusTypeId="WORKFLOW_STATUS"/>
-  <StatusItem description="closed.aborted" sequenceId="06"
-    statusId="WF_ABORTED" statusTypeId="WORKFLOW_STATUS"/>
-  <StatusItem description="Needs Action" sequenceId="01"
-    statusId="CAL_ASN_NEEDS_ACTION" statusTypeId="CALENDAR_ASSIGN"/>
-  <StatusItem description="Accepted" sequenceId="02"
-    statusId="CAL_ASN_ACCEPTED" statusTypeId="CALENDAR_ASSIGN"/>
-  <StatusItem description="Sent" sequenceId="03"
-    statusId="CAL_ASN_SENT" statusTypeId="CALENDAR_ASSIGN"/>
-  <StatusItem description="Tentative" sequenceId="04"
-    statusId="CAL_ASN_TENTATIVE" statusTypeId="CALENDAR_ASSIGN"/>
-  <StatusItem description="Confirmed" sequenceId="05"
-    statusId="CAL_ASN_CONFIRMED" statusTypeId="CALENDAR_ASSIGN"/>
-  <StatusItem description="Declined" sequenceId="06"
-    statusId="CAL_ASN_DECLINED" statusTypeId="CALENDAR_ASSIGN"/>
-  <StatusItem description="Completed" sequenceId="07"
-    statusId="CAL_ASN_COMPLETED" statusTypeId="CALENDAR_ASSIGN"/>
-  <StatusItem description="Delegated" sequenceId="08"
-    statusId="CAL_ASN_DELEGATED" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ORDERED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Scheduled" sequenceId="02" statusCode="SCHEDULED" statusId="SCHEDULED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Shipped" sequenceId="03" statusCode="SHIPPED" statusId="SHIPPED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Invoiced" sequenceId="04" statusCode="INVOICED" statusId="INVOICED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="BACKORDERED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="CANCELLED" statusTypeId="ORDER_STATUS"/>
+  <StatusValidChange condition="" statusId="ORDERED" statusIdTo="SCHEDULED" transitionName="Schedule Shipment"/>
+  <StatusValidChange condition="" statusId="SCHEDULED" statusIdTo="SHIPPED" transitionName="Ship Order"/>
+  <StatusValidChange condition="" statusId="SHIPPED" statusIdTo="INVOICED" transitionName="Invoice Order"/>
+  <StatusValidChange condition="" statusId="ORDERED" statusIdTo="BACKORDERED" transitionName="Back Order"/>
+  <StatusValidChange condition="" statusId="BACKORDERED" statusIdTo="SCHEDULED" transitionName="Schedule Shipment"/>
+  <StatusValidChange condition="" statusId="ORDERED" statusIdTo="CANCELLED" transitionName="Cancel Order"/>
+  <StatusValidChange condition="" statusId="BACKORDERED" statusIdTo="CANCELLED" transitionName="Cancel Back Order"/>
+  <StatusValidChange condition="" statusId="SCHEDULED" statusIdTo="CANCELLED" transitionName="Last Minute Cancel Order"/>
+  <StatusItem description="Needs Action" sequenceId="01" statusCode="NEEDS ACTION" statusId="CAL_NEEDS_ACTION" statusTypeId="CALENDAR_STATUS"/>
+  <StatusItem description="Sent" sequenceId="02" statusCode="SENT" statusId="CAL_SENT" statusTypeId="CALENDAR_STATUS"/>
+  <StatusItem description="Declined" sequenceId="03" statusCode="DECLINED" statusId="CAL_DECLINED" statusTypeId="CALENDAR_STATUS"/>
+  <StatusItem description="Delegated" sequenceId="04" statusCode="DELEGATED" statusId="CAL_DELEGATED" statusTypeId="CALENDAR_STATUS"/>
+  <StatusItem description="Accepted" sequenceId="01" statusCode="ACCEPTED" statusId="CAL_ACCEPTED" statusTypeId="TASK_STATUS"/>
+  <StatusItem description="Completed" sequenceId="02" statusCode="COMPLETED" statusId="CAL_COMPLETED" statusTypeId="TASK_STATUS"/>
+  <StatusItem description="Tentative" sequenceId="01" statusCode="TENTATIVE" statusId="CAL_TENTATIVE" statusTypeId="EVENT_STATUS"/>
+  <StatusItem description="Confirmed" sequenceId="02" statusCode="CONFIRMED" statusId="CAL_CONFIRMED" statusTypeId="EVENT_STATUS"/>
+  <StatusItem description="open.not_running.not_started" sequenceId="01" statusCode="open.not_running.not_started" statusId="WF_NOT_STARTED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="open.not_running.suspended" sequenceId="02" statusCode="open.not_running.suspended" statusId="WF_SUSPENDED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="open.running" sequenceId="03" statusCode="open.running" statusId="WF_RUNNING" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="closed.completed" sequenceId="04" statusCode="closed.completed" statusId="WF_COMPLETED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="closed.terminated" sequenceId="05" statusCode="closed.terminated" statusId="WF_TERMINATED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="closed.aborted" sequenceId="06" statusCode="closed.aborted" statusId="WF_ABORTED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusValidChange condition="" statusId="WF_NOT_STARTED" statusIdTo="WF_RUNNING" transitionName="Start"/>
+  <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_SUSPENDED" transitionName="Suspend"/>
+  <StatusValidChange condition="" statusId="WF_SUSPENDED" statusIdTo="WF_RUNNING" transitionName="Un-suspend"/>
+  <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_COMPLETED" transitionName="Suspend"/>
+  <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_TERMINATED" transitionName="Suspend"/>
+  <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_ABORTED" transitionName="Suspend"/>
+  <StatusItem description="Needs Action" sequenceId="01" statusCode="NEEDS ACTION" statusId="CAL_ASN_NEEDS_ACTION" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Accepted" sequenceId="02" statusCode="ACCEPTED" statusId="CAL_ASN_ACCEPTED" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Sent" sequenceId="03" statusCode="SENT" statusId="CAL_ASN_SENT" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Tentative" sequenceId="04" statusCode="TENTATIVE" statusId="CAL_ASN_TENTATIVE" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Confirmed" sequenceId="05" statusCode="CONFIRMED" statusId="CAL_ASN_CONFIRMED" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Declined" sequenceId="06" statusCode="DECLINED" statusId="CAL_ASN_DECLINED" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Completed" sequenceId="07" statusCode="COMPLETED" statusId="CAL_ASN_COMPLETED" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Delegated" sequenceId="08" statusCode="DELEGATED" statusId="CAL_ASN_DELEGATED" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Under Revision" sequenceId="01" statusCode="UNDER_REVISION" statusId="WPS_UNDER_REVISION" statusTypeId="WORKFLOW_PUB_STATUS"/>
+  <StatusItem description="Under Test"  sequenceId="02" statusCode="UNDER_TEST" statusId="WPS_UNDER_TEST" statusTypeId="WORKFLOW_PUB_STATUS"/>
+  <StatusItem description="Released"  sequenceId="03" statusCode="RELEASED" statusId="WPS_RELEASED" statusTypeId="WORKFLOW_PUB_STATUS"/>
+  <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WORKFLOW_PUB_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="BUDGET_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="CASE_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="COM_EVENT_STATUS"/>
@@ -519,13 +527,6 @@
     parentTypeId="WORK_EFF_DEPENDENCY" workEffortAssocTypeId="WORK_EFF_CONCURRENCY"/>
   <WorkEffortAssocType description="" hasTable="N"
     parentTypeId="WORK_EFF_DEPENDENCY" workEffortAssocTypeId="WORK_EFF_PRECEDENCY"/>
-  <WorkEffortExpectation description="For Your Information" expectationId="FYI"/>
-  <WorkEffortExpectation description="Involvement Required" expectationId="REQUIRE"/>
-  <WorkEffortExpectation description="Involvement Requested" expectationId="REQUEST"/>
-  <WorkEffortExpectation description="Immediate Response Requested" expectationId="IMMEDIATE"/>
-  <WorkEffortScope description="General, public access" workEffortScopeId="PUBLIC"/>
-  <WorkEffortScope description="Restricted, private access" workEffortScopeId="PRIVATE"/>
-  <WorkEffortScope description="Very restricted, confidential access" workEffortScopeId="CONFIDENTIAL"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="PROGRAM"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="PHASE"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="PROJECT"/>
