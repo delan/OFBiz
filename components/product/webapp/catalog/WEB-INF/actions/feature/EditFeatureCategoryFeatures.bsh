@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -104,6 +104,7 @@ efo.setDistinct(true);
 efo.setResultSetType(EntityFindOptions.TYPE_SCROLL_INSENSITIVE);
 productFeaturesEli = delegator.findListIteratorByCondition("ProductFeature", whereCondition, null, null, UtilMisc.toList("productFeatureTypeId", "description"), efo);
 productFeatures = productFeaturesEli.getPartialList(lowIndex + 1, highIndex - lowIndex);
+productFeaturesEli.close();
 context.put("productFeatures", productFeatures);
 
 productFeatureApplMap = new HashMap();
