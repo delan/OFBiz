@@ -35,6 +35,7 @@ import org.ofbiz.order.shoppingcart.shipping.*;
 dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
 cart = session.getAttribute("shoppingCart");
+currencyUomId = cart.getCurrency();
 userLogin = session.getAttribute("userLogin");
 party = userLogin.getRelatedOne("Party");
 productStoreId = ProductStoreWorker.getProductStoreId(request);
@@ -76,15 +77,15 @@ if (billingAccountRoleList != null && billingAccountRoleList.size() > 0) {
     while (billingAcctIter.hasNext()) {
         billingAccountRole = billingAcctIter.next();
         billingAccountVO = billingAccountRole.getRelatedOne("BillingAccount");
-        accountBalance = BillingAccountWorker.getBillingAccountBalance(billingAccountVO);
-
-        billingAccount = new HashMap(billingAccountVO);
-        accountLimit = billingAccountVO.getDouble("accountLimit").doubleValue();
-
-        billingAccount.put("accountBalance", new Double(accountBalance));
-        accountAvailable = accountLimit - accountBalance;
-        totalAvailable += accountAvailable;
-        sortedAccounts.put(new Double(accountAvailable), billingAccount);
+        if (currencyUomId.equals(billingAccountVO.getString("accountCurrencyUomId"))) {
+            accountBalance = BillingAccountWorker.getBillingAccountBalance(billingAccountVO);
+            billingAccount = new HashMap(billingAccountVO);
+            accountLimit = billingAccountVO.getDouble("accountLimit").doubleValue();
+            billingAccount.put("accountBalance", new Double(accountBalance));
+            accountAvailable = accountLimit - accountBalance;
+            totalAvailable += accountAvailable;
+            sortedAccounts.put(new Double(accountAvailable), billingAccount);
+        }
     }
 
     billingAccountList = new ArrayList(sortedAccounts.values());

@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -63,7 +63,7 @@
     <#list billingAccounts as billingAccount>
       <tr>
         <td><div class="tabletext">${billingAccount.billingAccountId}</div></td>
-        <td><div class="tabletext">${billingAccount.accountLimit?default(0)?string.currency}</div></td>
+        <td><div class="tabletext"><@ofbizCurrency amount=billingAccount.accountLimit isoCode=billingAccount.accountCurrencyUomId/></div></td>
         <td align="right">
           <a href="<@ofbizUrl>/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="buttontext">[Edit]</a>
         </td>        

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 */
 
@@ -34,6 +34,7 @@ import org.ofbiz.party.contact.*;
 delegator = request.getAttribute("delegator");
 cart = session.getAttribute("shoppingCart");
 partyId = cart.getPartyId();
+currencyUomId = cart.getCurrency();
 payType = request.getParameter("paymentMethodType");
 if (payType == null && request.getParameter("useGc") != null) {
     payType = "GC";
@@ -65,11 +66,12 @@ if (partyId != null && !partyId.equals("_NA_")) {
             while (billingAcctIter.hasNext()) {
                 billingAccountRole = billingAcctIter.next();
                 billingAccountVO = billingAccountRole.getRelatedOne("BillingAccount");
-                accountBalance = BillingAccountWorker.getBillingAccountBalance(billingAccountVO);
-
-                billingAccount = new HashMap(billingAccountVO);
-                billingAccount.put("accountBalance", new Double(accountBalance));
-                billingAccountList.add(billingAccount);
+                if (currencyUomId.equals(billingAccountVO.getString("accountCurrencyUomId"))) {
+                    accountBalance = BillingAccountWorker.getBillingAccountBalance(billingAccountVO);
+                    billingAccount = new HashMap(billingAccountVO);
+                    billingAccount.put("accountBalance", new Double(accountBalance));
+                    billingAccountList.add(billingAccount);
+                }
             }
             context.put("selectedBillingAccountId", cart.getBillingAccountId());
             context.put("billingAccountList", billingAccountList);

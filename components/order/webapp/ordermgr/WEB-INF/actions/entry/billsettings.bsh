@@ -34,6 +34,7 @@ import org.ofbiz.party.contact.*;
 delegator = request.getAttribute("delegator");
 cart = session.getAttribute("shoppingCart");
 partyId = cart.getPartyId();
+currencyUomId = cart.getCurrency();
 context.put("cart", cart);
 context.put("paymentMethodType", request.getParameter("paymentMethodType"));
 
@@ -54,13 +55,14 @@ if (partyId != null && !partyId.equals("_NA_")) {
             billingAccountList = new ArrayList();
             while (billingAcctIter.hasNext()) {
                 billingAccountRole = billingAcctIter.next();        
-                billingAccountVO = billingAccountRole.getRelatedOne("BillingAccount");                        
-                accountBalance = BillingAccountWorker.getBillingAccountBalance(billingAccountVO);
-        
-                billingAccount = new HashMap(billingAccountVO);
-                billingAccount.put("accountBalance", new Double(accountBalance));        
-                billingAccountList.add(billingAccount);
-            }            
+                billingAccountVO = billingAccountRole.getRelatedOne("BillingAccount");
+                if (currencyUomId.equals(billingAccountVO.getString("accountCurrencyUomId"))) {
+                    accountBalance = BillingAccountWorker.getBillingAccountBalance(billingAccountVO);
+                    billingAccount = new HashMap(billingAccountVO);
+                    billingAccount.put("accountBalance", new Double(accountBalance));        
+                    billingAccountList.add(billingAccount);
+                }
+            }
             context.put("selectedBillingAccountId", cart.getBillingAccountId());
             context.put("billingAccountList", billingAccountList);
         }
