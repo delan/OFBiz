@@ -321,7 +321,7 @@
         <description>Update an ProductPrice</description>
         <attribute name="productPriceRuleId" type="String" mode="IN" optional="false"/>
         <attribute name="ruleName" type="String" mode="IN" optional="false"/>
-         <attribute name="isSale" type="String" mode="IN" optional="true"/>
+        <attribute name="isSale" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
