@@ -167,29 +167,29 @@
     </request-map>
 
     <request-map uri="keywordsearch">
-    	<response name="success" type="view" value="keywordsearch"/>
+      <response name="success" type="view" value="keywordsearch"/>
     </request-map>
 
     <request-map uri="orderhistory">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="orderhistory"/>
+      <security https="true" auth="true"/>
+      <response name="success" type="view" value="orderhistory"/>
     </request-map>
 
     <request-map uri="orderstatus">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="orderstatus"/>
+      <security https="true" auth="true"/>
+      <response name="success" type="view" value="orderstatus"/>
     </request-map>
 
     <request-map uri="newcustomer">
-    	<security https="true" auth="false"/>
-    	<response name="success" type="view" value="newcustomer"/>
+      <security https="true" auth="false"/>
+      <response name="success" type="view" value="newcustomer"/>
     </request-map>
 
     <request-map uri="createcustomer">
-		<security https="true" auth="false"/>
-		<event type="java" path="org.ofbiz.ecommerce.customer.CustomerEvents" invoke="createCustomer"/>
-		<response name="success" type="view" value="main"/>
-		<response name="error" type="view" value="newcustomer"/>
+      <security https="true" auth="false"/>
+      <event type="java" path="org.ofbiz.ecommerce.customer.CustomerEvents" invoke="createCustomer"/>
+      <response name="success" type="request" value="updatedistributor"/>
+      <response name="error" type="view" value="newcustomer"/>
     </request-map>
 
     <request-map uri="viewprofile">
