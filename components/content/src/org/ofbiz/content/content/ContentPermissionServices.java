@@ -393,9 +393,9 @@ public class ContentPermissionServices {
             iter = entityIdList.iterator();
             while (iter.hasNext()) {
                 GenericValue entity = getNextEntity(delegator, entityName, pkFieldName, iter.next(), entities);
-                String entityId = entity.getString(pkFieldName);
                 if (entity == null) continue;
                  
+                String entityId = entity.getString(pkFieldName);
                 purposeList = getRelatedPurposes(entity, null);
                 String statusId = null;
                 if (hasStatusOp && hasStatusField) {
@@ -420,8 +420,8 @@ public class ContentPermissionServices {
         iter = entityIdList.iterator();
         while (iter.hasNext()) {
             GenericValue entity = getNextEntity(delegator, entityName, pkFieldName, iter.next(), entities);
-            String entityId = entity.getString(pkFieldName);
             if (entity == null) continue;
+            String entityId = entity.getString(pkFieldName);
             List tmpPurposeList = (List)purposes.get(entityId);
             if (purposeList != null ) {
                 if (tmpPurposeList != null) {
@@ -460,8 +460,8 @@ public class ContentPermissionServices {
             iter = entityIdList.iterator();
             while (iter.hasNext()) {
                    GenericValue entity = getNextEntity(delegator, entityName, pkFieldName, iter.next(), entities);
-                   String entityId = entity.getString(pkFieldName);
                  if (entity == null) continue;
+                   String entityId = entity.getString(pkFieldName);
                  
                    String ownedEntityId = entity.getString("owner" + entityName + "Id");
                    GenericValue ownedEntity = delegator.findByPrimaryKeyCache(entityName,UtilMisc.toMap(pkFieldName, ownedEntityId));
