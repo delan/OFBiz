@@ -2,6 +2,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/12/02 12:05:24  jonesde
+ * Added error checking, now partially tested
+ *
  * Revision 1.8  2001/12/02 10:21:17  jonesde
  * Finished pretty complete first pass; not fully tested, still needs complex data types
  *
@@ -487,7 +490,7 @@ public class XpdlReader {
         Element implementationElement = UtilXml.firstChildElement(activityElement, "Implementation");
         if (routeElement != null) {
             activityValue.set("activityTypeEnumId", "WAT_ROUTE");
-        } else if (routeElement != null) {
+        } else if (implementationElement != null) {
             Element noElement = UtilXml.firstChildElement(implementationElement, "No");
             Element subFlowElement = UtilXml.firstChildElement(implementationElement, "SubFlow");
             Element loopElement = UtilXml.firstChildElement(implementationElement, "Loop");
@@ -507,10 +510,10 @@ public class XpdlReader {
             } else {
                 throw new DefinitionParserException(
                         "No, SubFlow, Loop or one or more Tool elements must exist under the Implementation element of Activity with ID " + activityId +
-                        "in Process with ID " + processId);
+                        " in Process with ID " + processId);
             }
         } else {
-            throw new DefinitionParserException("Route or Implementation must exist for Activity with ID " + activityId + "in Process with ID " + processId);
+            throw new DefinitionParserException("Route or Implementation must exist for Activity with ID " + activityId + " in Process with ID " + processId);
         }
 
 
@@ -627,7 +630,7 @@ public class XpdlReader {
         //ActualParameters?
         Element actualParametersElement = UtilXml.firstChildElement(subFlowElement, "ActualParameters");
         List actualParameters = UtilXml.childElementList(actualParametersElement, "ActualParameter");
-        subFlowValue.set("actualParameters", readActualParameters(actualParameters));
+        subFlowValue.set("actualParameters", readActualParameters(actualParameters), false);
     }
 
     protected void readLoop(Element loopElement, String packageId, String processId, String activityId) throws DefinitionParserException {
@@ -683,10 +686,11 @@ public class XpdlReader {
         //ActualParameters?
         Element actualParametersElement = UtilXml.firstChildElement(toolElement, "ActualParameters");
         List actualParameters = UtilXml.childElementList(actualParametersElement, "ActualParameter");
-        toolValue.set("actualParameters", readActualParameters(actualParameters));
+        toolValue.set("actualParameters", readActualParameters(actualParameters), false);
     }
 
     protected String readActualParameters(List actualParameters) {
+        if (actualParameters == null || actualParameters.size() == 0) return null;
         StringBuffer actualParametersBuf = new StringBuffer();
         Iterator actualParametersIter = actualParameters.iterator();
         while (actualParametersIter.hasNext()) {
@@ -1004,13 +1008,13 @@ public class XpdlReader {
         } else if ((typeElement = UtilXml.firstChildElement(element, "ListType")) != null) {
             //TODO: write code for complex type
         } else if ((typeElement = UtilXml.firstChildElement(element, "BasicType")) != null) {
-            value.set("dataTypeEnumId", "WDT_" + element.getAttribute("Type"));
+            value.set("dataTypeEnumId", "WDT_" + typeElement.getAttribute("Type"));
         } else if ((typeElement = UtilXml.firstChildElement(element, "PlainType")) != null) {
-            value.set("dataTypeEnumId", "WDT_" + element.getAttribute("Type"));
+            value.set("dataTypeEnumId", "WDT_" + typeElement.getAttribute("Type"));
         } else if ((typeElement = UtilXml.firstChildElement(element, "DeclaredType")) != null) {
             //For DeclaredTypes complexTypeInfoId will actually be the type id
             value.set("dataTypeEnumId", "WDT_DECLARED");
-            value.set("complexTypeInfoId", element.getAttribute("Id"));
+            value.set("complexTypeInfoId", typeElement.getAttribute("Id"));
         }
         /*
         <entity entity-name="WorkflowComplexTypeInfo"
