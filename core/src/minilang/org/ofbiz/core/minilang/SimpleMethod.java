@@ -550,6 +550,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallSimpleMapProcessor(curOperElem, simpleMethod));
                 } else if ("check-errors".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.callops.CheckErrors(curOperElem, simpleMethod));
+                } else if ("add-error".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.callops.AddError(curOperElem, simpleMethod));
                 } else if ("return".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.callops.Return(curOperElem, simpleMethod));
                 } else if ("call-service".equals(nodeName)) {
@@ -672,6 +674,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfHasPermission(curOperElem, simpleMethod));
                 } else if ("check-permission".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.ifops.CheckPermission(curOperElem, simpleMethod));
+                } else if ("check-id".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.ifops.CheckId(curOperElem, simpleMethod));
                 } else if ("else".equals(nodeName)) {// don't add anything, but don't complain either, this one is handled in the individual operations
                     
                 } else if ("property-to-field".equals(nodeName)) {

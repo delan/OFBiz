@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.method.ifops;
+package org.ofbiz.core.minilang.method.callops;
 
 
 import java.net.*;
@@ -39,27 +39,20 @@ import org.ofbiz.core.security.*;
 
 
 /**
- * Iff the user does not have the specified permission the fail-message 
- * or fail-property sub-elements are used to add a message to the error-list.
+ * Adds the fail-message or fail-property value to the error-list.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 19, 2002
  *@version    1.0
  */
-public class CheckPermission extends MethodOperation {
+public class AddError extends MethodOperation {
     String message = null;
     String propertyResource = null;
     boolean isProperty = false;
 
-    String permission;
-    String action;
     String errorListName;
 
-    public CheckPermission(Element element, SimpleMethod simpleMethod) {
+    public AddError(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.permission = element.getAttribute("permission");
-        this.action = element.getAttribute("action");
-
         errorListName = element.getAttribute("error-list-name");
         if (errorListName == null || errorListName.length() == 0) {
             errorListName = "error_list";
@@ -88,29 +81,7 @@ public class CheckPermission extends MethodOperation {
             methodContext.putEnv(errorListName, messages);
         }
 
-        // if no user is logged in, treat as if the user does not have permission: do not run subops
-        GenericValue userLogin = methodContext.getUserLogin();
-
-        if (userLogin != null) {
-            Security security = methodContext.getSecurity();
-
-            if (action != null && action.length() > 0) {
-                // run hasEntityPermission
-                if (security.hasEntityPermission(permission, action, userLogin)) {
-                    hasPermission = true;
-                }
-            } else {
-                // run hasPermission
-                if (security.hasPermission(permission, userLogin)) {
-                    hasPermission = true;
-                }
-            }
-        }
-
-        if (!hasPermission) {
-            this.addMessage(messages, methodContext.getLoader());
-        }
-
+        this.addMessage(messages, methodContext.getLoader());
         return true;
     }
 
@@ -122,12 +93,12 @@ public class CheckPermission extends MethodOperation {
             String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
 
             if (propMsg == null || propMsg.length() == 0)
-                messages.add("Simple Method Permission error occurred, but no message was found, sorry.");
+                messages.add("Simple Method error occurred, but no message was found, sorry.");
             else
                 messages.add(propMsg);
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg);
         } else {
-            messages.add("Simple Method Permission error occurred, but no message was found, sorry.");
+            messages.add("Simple Method error occurred, but no message was found, sorry.");
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] ERROR: No message found");
         }
     }

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -39,32 +39,32 @@ import org.ofbiz.core.security.*;
 
 
 /**
- * Iff the user does not have the specified permission the fail-message 
+ * Iff the given ID field is not valid the fail-message 
  * or fail-property sub-elements are used to add a message to the error-list.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 19, 2002
  *@version    1.0
  */
-public class CheckPermission extends MethodOperation {
+public class CheckId extends MethodOperation {
     String message = null;
     String propertyResource = null;
     boolean isProperty = false;
 
-    String permission;
-    String action;
+    String fieldName;
+    String mapName;
     String errorListName;
 
-    public CheckPermission(Element element, SimpleMethod simpleMethod) {
+    public CheckId(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.permission = element.getAttribute("permission");
-        this.action = element.getAttribute("action");
+        this.fieldName = element.getAttribute("field-name");
+        this.mapName = element.getAttribute("map-name");
 
         errorListName = element.getAttribute("error-list-name");
         if (errorListName == null || errorListName.length() == 0) {
             errorListName = "error_list";
         }
 
+        //note: if no fail-message or fail-property then message will be null
         Element failMessage = UtilXml.firstChildElement(element, "fail-message");
         Element failProperty = UtilXml.firstChildElement(element, "fail-property");
 
@@ -79,7 +79,7 @@ public class CheckPermission extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        boolean hasPermission = false;
+        boolean isValid = true;
 
         List messages = (List) methodContext.getEnv(errorListName);
 
@@ -88,47 +88,73 @@ public class CheckPermission extends MethodOperation {
             methodContext.putEnv(errorListName, messages);
         }
 
-        // if no user is logged in, treat as if the user does not have permission: do not run subops
-        GenericValue userLogin = methodContext.getUserLogin();
+        Object fieldVal = null;
 
-        if (userLogin != null) {
-            Security security = methodContext.getSecurity();
+        if (mapName != null && mapName.length() > 0) {
+            Map fromMap = (Map) methodContext.getEnv(mapName);
 
-            if (action != null && action.length() > 0) {
-                // run hasEntityPermission
-                if (security.hasEntityPermission(permission, action, userLogin)) {
-                    hasPermission = true;
-                }
+            if (fromMap == null) {
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", running operations");
             } else {
-                // run hasPermission
-                if (security.hasPermission(permission, userLogin)) {
-                    hasPermission = true;
-                }
+                fieldVal = fromMap.get(fieldName);
             }
+        } else {
+            // no map name, try the env
+            fieldVal = methodContext.getEnv(fieldName);
+        }
+        
+        String fieldStr = fieldVal.toString();
+        StringBuffer errorDetails = new StringBuffer();
+        
+        //check various illegal characters, etc for ids
+        if (fieldStr.indexOf(' ') >= 0) {
+            isValid = false;
+            errorDetails.append("[space found at position " + (fieldStr.indexOf(' ') + 1) + "]");
+        }
+        if (fieldStr.indexOf('"') >= 0) {
+            isValid = false;
+            errorDetails.append("[double-quote found at position " + (fieldStr.indexOf('"') + 1) + "]");
+        }
+        if (fieldStr.indexOf('\'') >= 0) {
+            isValid = false;
+            errorDetails.append("[single-quote found at position " + (fieldStr.indexOf('\'') + 1) + "]");
+        }
+        if (fieldStr.indexOf('&') >= 0) {
+            isValid = false;
+            errorDetails.append("[ampersand found at position " + (fieldStr.indexOf('&') + 1) + "]");
+        }
+        if (fieldStr.indexOf('?') >= 0) {
+            isValid = false;
+            errorDetails.append("[question mark found at position " + (fieldStr.indexOf('?') + 1) + "]");
+        }
+        if (fieldStr.indexOf('<') >= 0) {
+            isValid = false;
+            errorDetails.append("[less-than sign found at position " + (fieldStr.indexOf('<') + 1) + "]");
+        }
+        if (fieldStr.indexOf('>') >= 0) {
+            isValid = false;
+            errorDetails.append("[greater-than sign found at position " + (fieldStr.indexOf('>') + 1) + "]");
         }
 
-        if (!hasPermission) {
-            this.addMessage(messages, methodContext.getLoader());
+        if (!isValid) {
+            this.addMessage(messages, methodContext.getLoader(), "The ID value in the field [" + fieldName + "] was not valid", ": " + errorDetails.toString());
         }
 
         return true;
     }
 
-    public void addMessage(List messages, ClassLoader loader) {
+    public void addMessage(List messages, ClassLoader loader, String defaultMessage, String errorDetails) {
         if (!isProperty && message != null) {
-            messages.add(message);
-            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message);
+            messages.add(message + errorDetails);
         } else if (isProperty && propertyResource != null && message != null) {
             String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
 
             if (propMsg == null || propMsg.length() == 0)
-                messages.add("Simple Method Permission error occurred, but no message was found, sorry.");
+                messages.add(defaultMessage + errorDetails);
             else
-                messages.add(propMsg);
-            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg);
+                messages.add(propMsg + errorDetails);
         } else {
-            messages.add("Simple Method Permission error occurred, but no message was found, sorry.");
-            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] ERROR: No message found");
+            messages.add(defaultMessage + errorDetails);
         }
     }
 }
