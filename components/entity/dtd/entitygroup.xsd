@@ -19,8 +19,8 @@
      *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
      *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
      *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-    
-    *This is the DTD for the Open For Business Generic Entity Model field type definition XML file.
+     *   
+     * This is the DTD for the Open For Business Generic Entity Model field type definition XML file.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <!-- ====================== Root Element ======================= -->
@@ -39,7 +39,7 @@
     </xs:element>
     <!-- ================= Children of entity-group =================== -->
     <xs:attributeGroup name="attlist.entity-group">
-        <xs:attribute name="group" use="required"/>
-        <xs:attribute name="entity" use="required"/>
+        <xs:attribute type="xs:string" name="group" use="required"/>
+        <xs:attribute type="xs:string" name="entity" use="required"/>
     </xs:attributeGroup>
 </xs:schema>

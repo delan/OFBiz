@@ -23,8 +23,6 @@
     *  $Id: widget-menu.dtd 3795 2004-10-27 05:43:59Z byersa $
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-    <xs:element name="AllConditionals" abstract="true"/>
-    <xs:element name="AllActions" abstract="true"/>
     <xs:element name="menus">
         <xs:complexType>
             <xs:sequence>
@@ -42,7 +40,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.menu">
-        <xs:attribute name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute name="type" default="simple">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -51,13 +49,13 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="title"/>
-        <xs:attribute name="tooltip"/>
-        <xs:attribute name="default-entity-name"/>
-        <xs:attribute name="default-title-style"/>
-        <xs:attribute name="default-widget-style"/>
-        <xs:attribute name="default-tooltip-style"/>
-        <xs:attribute name="default-selected-style"/>
+        <xs:attribute type="xs:string" name="title"/>
+        <xs:attribute type="xs:string" name="tooltip"/>
+        <xs:attribute type="xs:string" name="default-entity-name"/>
+        <xs:attribute type="xs:string" name="default-title-style"/>
+        <xs:attribute type="xs:string" name="default-widget-style"/>
+        <xs:attribute type="xs:string" name="default-tooltip-style"/>
+        <xs:attribute type="xs:string" name="default-selected-style"/>
         <xs:attribute name="orientation" default="horizontal">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -66,10 +64,10 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="extends"/>
-        <xs:attribute name="extends-resource"/>
-        <xs:attribute name="default-menu-item-name"/>
-        <xs:attribute name="default-associated-content-id"/>
+        <xs:attribute type="xs:string" name="extends"/>
+        <xs:attribute type="xs:string" name="extends-resource"/>
+        <xs:attribute type="xs:string" name="default-menu-item-name"/>
+        <xs:attribute type="xs:string" name="default-associated-content-id"/>
         <xs:attribute name="default-hide-if-selected" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -78,11 +76,11 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="menu-width"/>
-        <xs:attribute name="default-cell-width"/>
-        <xs:attribute name="default-disabled-title-style"/>
-        <xs:attribute name="selected-menuitem-context-field-name" default="currentMenuItemName"/>
-        <xs:attribute name="menu-wrapper-style"/>
+        <xs:attribute type="xs:string" name="menu-width"/>
+        <xs:attribute type="xs:string" name="default-cell-width"/>
+        <xs:attribute type="xs:string" name="default-disabled-title-style"/>
+        <xs:attribute type="xs:string" name="selected-menuitem-context-field-name" default="currentMenuItemName"/>
+        <xs:attribute type="xs:string" name="menu-wrapper-style"/>
     </xs:attributeGroup>
     <xs:element name="menu-item">
         <xs:complexType>
@@ -96,22 +94,98 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.menu-item">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="title"/>
-        <xs:attribute name="tooltip"/>
-        <xs:attribute name="title-style"/>
-        <xs:attribute name="widget-style"/>
-        <xs:attribute name="tooltip-style"/>
-        <xs:attribute name="selected-style"/>
-        <xs:attribute name="position" default="1"/>
-        <xs:attribute name="associated-content-id"/>
-        <xs:attribute name="hide-if-selected"/>
-        <xs:attribute name="cell-width"/>
-        <xs:attribute name="disable-if-empty"/>
-        <xs:attribute name="disabled-title-style"/>
-        <xs:attribute name="target-window"/>
-        <xs:attribute name="sub-menu"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="title"/>
+        <xs:attribute type="xs:string" name="tooltip"/>
+        <xs:attribute type="xs:string" name="title-style"/>
+        <xs:attribute type="xs:string" name="widget-style"/>
+        <xs:attribute type="xs:string" name="tooltip-style"/>
+        <xs:attribute type="xs:string" name="selected-style"/>
+        <xs:attribute type="xs:string" name="position" default="1"/>
+        <xs:attribute type="xs:string" name="associated-content-id"/>
+        <xs:attribute type="xs:string" name="hide-if-selected"/>
+        <xs:attribute type="xs:string" name="cell-width"/>
+        <xs:attribute type="xs:string" name="disable-if-empty"/>
+        <xs:attribute type="xs:string" name="disabled-title-style"/>
+        <xs:attribute type="xs:string" name="target-window"/>
+        <xs:attribute type="xs:string" name="sub-menu"/>
     </xs:attributeGroup>
+    <xs:element name="image">
+        <xs:complexType mixed="true">
+            <xs:attributeGroup ref="attlist.image"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.image">
+        <xs:attribute type="xs:string" name="src"/>
+        <xs:attribute type="xs:string" name="id"/>
+        <xs:attribute type="xs:string" name="style"/>
+        <xs:attribute type="xs:string" name="width"/>
+        <xs:attribute type="xs:string" name="height"/>
+        <xs:attribute type="xs:string" name="border"/>
+        <xs:attribute name="url-mode" default="content">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="ofbiz"/>
+                    <xs:enumeration value="content"/>
+                    <xs:enumeration value="raw"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="link">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="image"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.link"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.link">
+        <xs:attribute type="xs:string" name="text"/>
+        <xs:attribute type="xs:string" name="id"/>
+        <xs:attribute type="xs:string" name="style"/>
+        <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:string" name="target"/>
+        <xs:attribute type="xs:string" name="target-window"/>
+        <xs:attribute type="xs:string" name="prefix"/>
+        <xs:attribute name="url-mode" default="intra-app">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="intra-app"/>
+                    <xs:enumeration value="inter-app"/>
+                    <xs:enumeration value="content"/>
+                    <xs:enumeration value="plain"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="full-path" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="secure" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="encode" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <!-- ================ ACTIONS ================ -->
+    <xs:element name="AllActions" abstract="true"/>
     <xs:element name="actions">
         <xs:complexType>
             <xs:sequence>
@@ -119,16 +193,61 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    <xs:element name="property-map" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.property-map"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.property-map">
+        <xs:attribute type="xs:string" name="resource" use="required"/>
+        <xs:attribute type="xs:string" name="map-name" use="required"/>
+        <xs:attribute name="global" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="property-to-field" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.property-to-field"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.property-to-field">
+        <xs:attribute type="xs:string" name="resource" use="required"/>
+        <xs:attribute type="xs:string" name="property" use="required"/>
+        <xs:attribute type="xs:string" name="field" use="required"/>
+        <xs:attribute type="xs:string" name="default"/>
+        <xs:attribute name="no-locale" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="arg-list-name"/>
+    </xs:attributeGroup>
+    <xs:element name="script" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.script"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.script">
+        <xs:attribute type="xs:string" name="location" use="required"/>
+    </xs:attributeGroup>
     <xs:element name="set" substitutionGroup="AllActions">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.set"/>
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.set">
-        <xs:attribute name="field" use="required"/>
-        <xs:attribute name="from-field"/>
-        <xs:attribute name="value"/>
-        <xs:attribute name="default-value"/>
+        <xs:attribute type="xs:string" name="field" use="required"/>
+        <xs:attribute type="xs:string" name="from-field"/>
+        <xs:attribute type="xs:string" name="value"/>
+        <xs:attribute type="xs:string" name="default-value"/>
         <xs:attribute name="global" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -173,143 +292,36 @@
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
-    <xs:element name="property-map" substitutionGroup="AllActions">
-        <xs:complexType>
-            <xs:attributeGroup ref="attlist.property-map"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.property-map">
-        <xs:attribute name="resource" use="required"/>
-        <xs:attribute name="map-name" use="required"/>
-        <xs:attribute name="global" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-    </xs:attributeGroup>
-    <xs:element name="property-to-field" substitutionGroup="AllActions">
-        <xs:complexType>
-            <xs:attributeGroup ref="attlist.property-to-field"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.property-to-field">
-        <xs:attribute name="resource" use="required"/>
-        <xs:attribute name="property" use="required"/>
-        <xs:attribute name="field" use="required"/>
-        <xs:attribute name="default"/>
-        <xs:attribute name="no-locale" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="arg-list-name"/>
-    </xs:attributeGroup>
-    <xs:element name="script" substitutionGroup="AllActions">
-        <xs:complexType>
-            <xs:attributeGroup ref="attlist.script"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.script">
-        <xs:attribute name="location" use="required"/>
-    </xs:attributeGroup>
-    <xs:element name="image">
-        <xs:complexType mixed="true">
-            <xs:attributeGroup ref="attlist.image"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.image">
-        <xs:attribute name="src"/>
-        <xs:attribute name="id"/>
-        <xs:attribute name="style"/>
-        <xs:attribute name="width"/>
-        <xs:attribute name="height"/>
-        <xs:attribute name="border"/>
-        <xs:attribute name="url-mode" default="content">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="ofbiz"/>
-                    <xs:enumeration value="content"/>
-                    <xs:enumeration value="raw"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-    </xs:attributeGroup>
-    <xs:element name="link">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element minOccurs="0" ref="image"/>
-            </xs:sequence>
-            <xs:attributeGroup ref="attlist.link"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.link">
-        <xs:attribute name="text"/>
-        <xs:attribute name="id"/>
-        <xs:attribute name="style"/>
-        <xs:attribute name="name"/>
-        <xs:attribute name="target"/>
-        <xs:attribute name="target-window"/>
-        <xs:attribute name="prefix"/>
-        <xs:attribute name="url-mode" default="intra-app">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="intra-app"/>
-                    <xs:enumeration value="inter-app"/>
-                    <xs:enumeration value="content"/>
-                    <xs:enumeration value="plain"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="full-path" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="secure" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="encode" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-    </xs:attributeGroup>
+
+    <!-- ================ CONDITIONS ================ -->
+    <xs:element name="AllConditionals" abstract="true"/>
     <xs:element name="condition">
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllConditionals"/>
+                <xs:element minOccurs="1" maxOccurs="1" ref="AllConditionals"/>
             </xs:sequence>
             <xs:attributeGroup ref="attlist.condition"/>
         </xs:complexType>
     </xs:element>
-    <!--
-        * If a pass-style provided and the condition passes, the widget-style of
-        * the parent menu-item is set with the pass-style. If no pass-style is given,
-        * the widget-style is not changed.
-        * If a disabled-style provided and the condition fails, the disabled-style of
-        * the parent menu-item is set with the disabled-style and processing is allowed to continue. 
-        * If no disabled-style is given, the widget-style is not changed and the menu-item is not rendered.
-    -->
     <xs:attributeGroup name="attlist.condition">
-        <xs:attribute name="pass-style"/>
-        <xs:attribute name="disabled-style"/>
+        <xs:attribute type="xs:string" name="pass-style">
+            <xs:annotation>
+                <xs:documentation>
+                    If a pass-style provided and the condition passes, the widget-style of
+                    the parent menu-item is set with the pass-style. If no pass-style is given,
+                    the widget-style is not changed.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="disabled-style">
+            <xs:annotation>
+                <xs:documentation>
+                    If a disabled-style provided and the condition fails, the disabled-style of
+                    the parent menu-item is set with the disabled-style and processing is allowed to continue. 
+                    If no disabled-style is given, the widget-style is not changed and the menu-item is not rendered.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="and" substitutionGroup="AllConditionals">
         <xs:complexType>
@@ -345,22 +357,25 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.if-has-permission">
-        <xs:attribute name="permission" use="required"/>
-        <xs:attribute name="action"/>
+        <xs:attribute type="xs:string" name="permission" use="required"/>
+        <xs:attribute type="xs:string" name="action"/>
     </xs:attributeGroup>
     <xs:element name="if-entity-permission" substitutionGroup="AllConditionals">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.if-entity-permission"/>
         </xs:complexType>
     </xs:element>
-    <!-- entity-id and target-operation can have multiple pipe separated values. Don't use spaces. -->
     <xs:attributeGroup name="attlist.if-entity-permission">
-        <xs:attribute name="entity-name" use="required"/>
-        <xs:attribute name="entity-id" use="required"/>
-        <xs:attribute name="target-operation" use="required"/>
+        <xs:attribute type="xs:string" name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="entity-id" use="required">
+            <xs:annotation><xs:documentation>Can have multiple pipe separated values, but don't use spaces.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="target-operation" use="required">
+            <xs:annotation><xs:documentation>Can have multiple pipe separated values, but don't use spaces.</xs:documentation></xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
-    <!-- if-validate-method calls a static Java method that takes a String and returns a boolean -->
     <xs:element name="if-validate-method" substitutionGroup="AllConditionals">
+        <xs:annotation><xs:documentation>Calls a static Java method that takes a String and returns a boolean.</xs:documentation></xs:annotation>
         <xs:complexType>
             <xs:attributeGroup ref="attlist.if-validate-method"/>
         </xs:complexType>
