@@ -54,6 +54,7 @@
   <!--  - org.ofbiz.commonapp.product.supplier -->
   <!-- ========================================================= -->
 
+
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.catalog -->
   <!-- ========================================================= -->
@@ -62,7 +63,7 @@
             package-name="org.ofbiz.commonapp.product.catalog"
             title="Catalog Entity">
       <field name="prodCatalogId" type="id-ne"></field>
-      <field name="name" type="name"></field>
+      <field name="catalogName" type="name"></field>
       <field name="title" type="name"></field>
       <field name="subtitle" type="description"></field>
       <field name="inventoryFacilityId" type="id"></field>
@@ -78,12 +79,12 @@
       <field name="productCategoryId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="sequenceNum" type="number"></field>
+      <field name="sequenceNum" type="numeric"></field>
       <field name="prodCatalogCategoryTypeId" type="id"></field>
       <prim-key field="prodCatalogId"/>
       <prim-key field="productCategoryId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="Catalog">
+      <relation type="one" rel-entity-name="ProdCatalog">
         <key-map field-name="prodCatalogId"/>
       </relation>
       <relation type="one" rel-entity-name="ProductCategory">
@@ -124,7 +125,7 @@
       <field name="prodCatalogId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="sequenceNum" type="number"></field>
+      <field name="sequenceNum" type="numeric"></field>
       <prim-key field="prodCatalogPromoId"/>
       <prim-key field="prodCatalogId"/>
       <prim-key field="fromDate"/>
@@ -152,7 +153,7 @@
       <field name="prodCatalogId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="sequenceNum" type="number"></field>
+      <field name="sequenceNum" type="numeric"></field>
       <prim-key field="webSiteId"/>
       <prim-key field="prodCatalogId"/>
       <prim-key field="fromDate"/>

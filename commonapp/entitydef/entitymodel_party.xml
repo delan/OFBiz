@@ -6,25 +6,25 @@
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included 
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org)
+ *@author David E. Jones (jonesde@ofbiz.org) 
  *@author Andy Zeneski (jaz@zsolv.com)
  *@version    1.0
  */
@@ -726,51 +726,6 @@
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>
-    <view-entity entity-name="PartyContactWithPurpose"
-            package-name="org.ofbiz.commonapp.party.party"
-            title="Party Contact Purpose View Entity">
-      <member-entity entity-alias="CM" entity-name="ContactMech"/>
-      <member-entity entity-alias="PC" entity-name="PartyContactMech"/>
-      <member-entity entity-alias="PR" entity-name="PartyContactMechPurpose"/>
-      <member-entity entity-alias="PT" entity-name="ContactMechPurposeType"/>
-      <alias entity-alias="CM" name="contactMechId" prim-key="true"/>
-      <alias entity-alias="PC" name="partyId" prim-key="true"/>
-      <alias entity-alias="PR" name="contactMechPurposeTypeId" prim-key="true"/>
-      <alias entity-alias="PC" name="contactFromDate" field="fromDate" prim-key="true"/>
-      <alias entity-alias="PR" name="purposeFromDate" field="fromDate" prim-key="true"/>
-      <alias entity-alias="PC" name="purposeThruDate" field="thruDate"/>
-      <alias entity-alias="PC" name="contactThruDate" field="thruDate"/>
-      <alias entity-alias="CM" name="contactMechTypeId"/>
-      <alias entity-alias="PC" name="comments"/>
-      <alias entity-alias="PC" name="extension"/>
-      <alias entity-alias="PC" name="allowSolicitation"/>
-      <alias entity-alias="PT" name="purposeDescription" field="description"/>
-      <view-link entity-alias="PC" rel-entity-alias="CM">
-        <key-map field-name="contactMechId"/>
-      </view-link>
-      <view-link entity-alias="CM" rel-entity-alias="PR">
-        <key-map field-name="contactMechId"/>
-      </view-link>
-      <view-link entity-alias="PT" rel-entity-alias="PR">
-        <key-map field-name="contactMechPurposeTypeId"/>
-      </view-link>
-      <relation type="many" rel-entity-name="PartyContactMech">
-        <key-map field-name="partyId"/>
-        <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="one" rel-entity-name="ContactMechPurposeType">
-        <key-map field-name="contactMechPurposeTypeId"/>
-      </relation>
-      <relation type="one" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one" rel-entity-name="ContactMech">
-        <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="TelecomNumber">
-        <key-map field-name="contactMechId"/>
-      </relation>
-    </view-entity>
     <entity entity-name="PostalAddress"
             package-name="org.ofbiz.commonapp.party.contact"
             title="Postal Address Entity">
@@ -1060,6 +1015,51 @@
         <key-map field-name="partyClassificationTypeId"/>
       </relation>
     </entity>
+    <view-entity entity-name="PartyContactWithPurpose"
+            package-name="org.ofbiz.commonapp.party.party"
+            title="Party Contact Purpose View Entity">
+      <member-entity entity-alias="CM" entity-name="ContactMech"/>
+      <member-entity entity-alias="PT" entity-name="ContactMechPurposeType"/>
+      <member-entity entity-alias="PC" entity-name="PartyContactMech"/>
+      <member-entity entity-alias="PR" entity-name="PartyContactMechPurpose"/>
+      <alias entity-alias="CM" name="contactMechId" prim-key="true"/>
+      <alias entity-alias="PC" name="partyId" prim-key="true"/>
+      <alias entity-alias="PR" name="contactMechPurposeTypeId" prim-key="true"/>
+      <alias entity-alias="PC" name="contactFromDate" field="fromDate" prim-key="true"/>
+      <alias entity-alias="PR" name="purposeFromDate" field="fromDate" prim-key="true"/>
+      <alias entity-alias="PC" name="purposeThruDate" field="thruDate"/>
+      <alias entity-alias="PC" name="contactThruDate" field="thruDate"/>
+      <alias entity-alias="CM" name="contactMechTypeId"/>
+      <alias entity-alias="PC" name="comments"/>
+      <alias entity-alias="PC" name="extension"/>
+      <alias entity-alias="PC" name="allowSolicitation"/>
+      <alias entity-alias="PT" name="purposeDescription" field="description"/>
+      <view-link entity-alias="PC" rel-entity-alias="CM">
+        <key-map field-name="contactMechId"/>
+      </view-link>
+      <view-link entity-alias="CM" rel-entity-alias="PR">
+        <key-map field-name="contactMechId"/>
+      </view-link>
+      <view-link entity-alias="PT" rel-entity-alias="PR">
+        <key-map field-name="contactMechPurposeTypeId"/>
+      </view-link>
+      <relation type="many" rel-entity-name="PartyContactMech">
+        <key-map field-name="partyId"/>
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ContactMechPurposeType">
+        <key-map field-name="contactMechPurposeTypeId"/>
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="TelecomNumber">
+        <key-map field-name="contactMechId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="PartyDataObject"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Data Object Entity">

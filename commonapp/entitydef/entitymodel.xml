@@ -57,6 +57,7 @@
   <!--  - org.ofbiz.commonapp.content.preference -->
   <!--  - org.ofbiz.commonapp.content.subscription -->
   <!--  - org.ofbiz.commonapp.content.visit -->
+  <!--  - org.ofbiz.commonapp.content.website -->
   <!--  - org.ofbiz.commonapp.security.login -->
   <!--  - org.ofbiz.commonapp.security.securitygroup -->
   <!-- ========================================================= -->
@@ -1270,23 +1271,23 @@
   <!-- org.ofbiz.commonapp.content.website -->
   <!-- ========================================================= -->
 
-    <entity entity-name="WebSite"
-            package-name="org.ofbiz.commonapp.content.website"
-            title="Web Site Entity">
-      <field name="webSiteId" type="id-ne"></field>
-      <field name="name" type="name"></field>
-      <prim-key field="webSiteId"/>
-    </entity>
     <entity entity-name="WebPage"
             package-name="org.ofbiz.commonapp.content.website"
             title="Web Page Entity">
       <field name="webPageId" type="id-ne"></field>
-      <field name="name" type="name"></field>
+      <field name="pageName" type="name"></field>
       <field name="contentId" type="id"></field>
-      <prim-key field="webSiteId"/>
+      <prim-key field="webPageId"/>
       <relation type="one" rel-entity-name="Content">
         <key-map field-name="contentId"/>
       </relation>
+    </entity>
+    <entity entity-name="WebSite"
+            package-name="org.ofbiz.commonapp.content.website"
+            title="Web Site Entity">
+      <field name="webSiteId" type="id-ne"></field>
+      <field name="siteName" type="name"></field>
+      <prim-key field="webSiteId"/>
     </entity>
 
   <!-- ========================================================= -->
