@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentCacheTransform.java,v 1.6 2004/03/29 18:14:15 byersa Exp $
+ * $Id: RenderSubContentCacheTransform.java,v 1.7 2004/04/01 21:55:46 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -53,7 +53,7 @@ import freemarker.template.TemplateModelException;
  * RenderSubContentCacheTransform - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).
@@ -172,7 +172,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                 String rootDir = servletContext.getRealPath("/");
                 String webSiteId = (String) servletContext.getAttribute("webSiteId");
                 String https = (String) servletContext.getAttribute("https");
-                if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, rootDir:" + rootDir, module);
+                //if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, rootDir:" + rootDir, module);
                 templateCtx.put("webSiteId", webSiteId);
                 templateCtx.put("https", https);
                 templateCtx.put("rootDir", rootDir);
