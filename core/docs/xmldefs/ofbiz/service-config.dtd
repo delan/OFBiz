@@ -43,6 +43,7 @@
     jobs CDATA #REQUIRED
     min-threads CDATA #REQUIRED
     max-threads CDATA #REQUIRED
+    poll-enabled (true|false) "true"
     poll-db-millis CDATA #REQUIRED
 >
 
@@ -70,6 +71,8 @@
 <!ATTLIST jms-service
     name CDATA #REQUIRED
     broker CDATA #REQUIRED
+    username CDATA #IMPLIED
+    password CDATA #IMPLIED
     type (topic|queue) #REQUIRED
     topic-queue CDATA #REQUIRED
     jndi-name CDATA #REQUIRED
