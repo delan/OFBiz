@@ -47,8 +47,6 @@
     <attribute><name>name</name><required>true</required></attribute>
     <attribute><name>property</name><required>false</required></attribute>
     <attribute><name>type</name><required>false</required></attribute>
-    <attribute><name>offset</name><required>false</required></attribute>
-    <attribute><name>limit</name><required>false</required></attribute>
     <attribute><name>expandMap</name><required>false</required></attribute>
   </tag>
 
@@ -145,4 +143,24 @@
     <attribute><name>default</name><required>false</required></attribute>
     <attribute><name>fullattrs</name><required>false</required></attribute>
   </tag>
+
+  <tag>
+    <name>service</name>
+    <tagclass>org.ofbiz.core.taglib.ServiceTag</tagclass>
+    <bodycontent>JSP</bodycontent>
+    <info>Invokes a service.</info>
+    <attribute><name>name</name><required>true</required></attribute>
+    <attribute><name>resultTo</name><required>false</required></attribute>
+  </tag>
+
+  <tag>
+    <name>param</name>
+    <tagclass>org.ofbiz.core.taglib.ParamTag</tagclass>
+    <bodycontent>empty</bodycontent>
+    <info>Adds a parameter to a parameter tag</info>
+    <attribute><name>name</name><required>true</required></attribute>
+    <attribute><name>value</name><required>false</required></attribute>
+    <attribute><name>attribute</name><required>false</required></attribute>
+  </tag>
+
 </taglib>
