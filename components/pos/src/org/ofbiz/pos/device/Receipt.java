@@ -72,6 +72,7 @@ public class Receipt extends GenericDevice implements DialogCallback {
     protected int priceLength = 7;
     protected int qtyLength = 5;
     protected int descLength = 25;
+    protected int pridLength = 25;
 
     protected PosTransaction lastTransaction = null;
 
@@ -163,9 +164,15 @@ public class Receipt extends GenericDevice implements DialogCallback {
                 while ((line = dis.readLine()) != null) {
                     if (line.trim().startsWith("#")) {
                         String[] code = line.trim().split("\\=");
-                        if ("#descripion.length".equals(code[0])) {
+                        if ("#description.length".equals(code[0])) {
                             try {
                                 this.descLength = Integer.parseInt(code[1]);
+                            } catch (NumberFormatException e) {
+                                Debug.logWarning(e, module);
+                            }
+                        } else if ("#productId.length".equals(code[0])) {
+                            try {
+                                this.pridLength = Integer.parseInt(code[1]);
                             } catch (NumberFormatException e) {
                                 Debug.logWarning(e, module);
                             }
@@ -228,8 +235,11 @@ public class Receipt extends GenericDevice implements DialogCallback {
             expandMap.putAll(trans.getItemInfo(i));
             // adjust the padding
             expandMap.put("description", padString((String) expandMap.get("description"), descLength, true));
+            expandMap.put("productId", padString((String) expandMap.get("productId"), pridLength, true));
             expandMap.put("basePrice", padString((String) expandMap.get("basePrice"), priceLength, false));
+            expandMap.put("subtotal", padString((String) expandMap.get("subtotal"), priceLength, false));
             expandMap.put("quantity", padString((String) expandMap.get("quantity"), qtyLength, false));
+            expandMap.put("adjustments", padString((String) expandMap.get("adjustments"), priceLength, false));
             String toPrint = FlexibleStringExpander.expandString(loopStr, expandMap);
             if (toPrint.indexOf("\\n") > -1) {
                 String[] lines = toPrint.split("\\n");
