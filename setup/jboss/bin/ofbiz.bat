@@ -3,7 +3,7 @@
 @if "%OS%" == "Windows_NT"  setlocal
 
 set JBOSS_CONFIG=ofbiz
-set JAVA_HOME=C:\jdk1.3.0_02
+set JAVA_HOME=F:\jdk1.3.0_02
 set JBOSS_HOME=..
 set TOMCAT_HOME=..\..\tomcat
 set APP_HOME=..\..\ofbiz
@@ -11,6 +11,7 @@ set APP_HOME=..\..\ofbiz
 echo CLASSPATH before setup is %CLASSPATH%
 
 set CLASSPATH=%CLASSPATH%;%APP_HOME%\entitygen\src
+set CLASSPATH=%CLASSPATH%;%APP_HOME%\core\src
 set CLASSPATH=%CLASSPATH%;%APP_HOME%\commonapp\src
 set CLASSPATH=%CLASSPATH%;%APP_HOME%\commonapp\conf
 
