@@ -172,11 +172,11 @@ public class ServiceEventHandler implements EventHandler {
 
             Object value = null;
             if (modelParam.stringMapPrefix != null && modelParam.stringMapPrefix.length() > 0) {
-                Map paramMap = UtilHttp.makeParamMapWithPrefix(request, modelParam.stringMapPrefix, null);
+                Map paramMap = UtilHttp.makeParamMapWithPrefix(request, multiPartMap, modelParam.stringMapPrefix, null);
                 value = paramMap;
                 if (Debug.verboseOn()) Debug.log("Set [" + modelParam.name + "]: " + paramMap, module);
             } else if (modelParam.stringListSuffix != null && modelParam.stringListSuffix.length() > 0) {
-                List paramList = UtilHttp.makeParamListWithSuffix(request, modelParam.stringListSuffix, null);
+                List paramList = UtilHttp.makeParamListWithSuffix(request, multiPartMap, modelParam.stringListSuffix, null);
                 value = paramList;
             } else {
                 // first check the multi-part map
