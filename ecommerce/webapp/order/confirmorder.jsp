@@ -114,6 +114,11 @@
   }%>
 <%if (orderHeader != null) pageContext.setAttribute("orderHeader", orderHeader);%>
 <ofbiz:if name="orderHeader">
+<h1><div class="head1">Order Confirmation</div></h1>
+<p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>
+<div class="tabletext">Thank you for shopping at <%=companyName%> online. Don't forget to stop back for more great deals, contests, new store openings and specials.<br></div>
+</ofbiz:if>
+<ofbiz:if name="orderHeader">
     <%
       OrderReadHelper order = new OrderReadHelper(orderHeader);
       Collection orderItemList = orderHeader.getRelated("OrderItem");
@@ -151,10 +156,6 @@
         customerPoNumber = ((GenericValue)orderItemPOIter.next()).getString("correspondingPoId");
       }
 %>
-<h1><div class="head1">Order Confirmation</div></h1>
-<p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>
-<div class="tabletext">Thank you for shopping at <%=companyName%> online. Don't forget to stop back for more great deals, contests, new store openings and specials.<br></div>
-
 <%@ include file="orderinformation.jsp" %>
   
 <br>
