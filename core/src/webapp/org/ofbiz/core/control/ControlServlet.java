@@ -92,6 +92,25 @@ public class ControlServlet extends HttpServlet {
             timer.timerString("[" + rname + "] Servlet Starting, doing setup", module);
         }
 
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("--- Start Request Headers: ---");
+            Enumeration headerNames = request.getHeaderNames();
+            while (headerNames.hasMoreElements()) {
+                String headerName = (String) headerNames.nextElement();
+                Debug.logVerbose(headerName + ":" + request.getHeader(headerName));
+            }
+            Debug.logVerbose("--- End Request Headers: ---");
+        }
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("--- Start Request Parameters: ---");
+            Enumeration paramNames = request.getParameterNames();
+            while (paramNames.hasMoreElements()) {
+                String paramName = (String) paramNames.nextElement();
+                Debug.logVerbose(paramName + ":" + request.getParameter(paramName));
+            }
+            Debug.logVerbose("--- End Request Parameters: ---");
+        }
+        
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
         HttpSession session = request.getSession();
