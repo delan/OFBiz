@@ -52,7 +52,7 @@ public class ProductEvents {
     String updateMode = request.getParameter("UPDATE_MODE");
     if(updateMode == null || updateMode.length() <= 0) {
       request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
-      Debug.logWarning("[updateProduct] Update Mode was not specified, but is required");
+      Debug.logWarning("[ProductEvents.updateProduct] Update Mode was not specified, but is required");
       return "error";
     }
     
@@ -179,7 +179,7 @@ public class ProductEvents {
     
     if(updateMode.equals("CREATE")) {
       GenericValue newProduct = helper.create(product);
-      if(product == null) {
+      if(newProduct == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create product (write error)");
         return "error";
       }
@@ -228,8 +228,11 @@ public class ProductEvents {
     String productId = request.getParameter("PRODUCT_ID");
     String keyword = request.getParameter("KEYWORD");
     
-    if(productId == null || keyword == null) {
-      request.setAttribute("ERROR_MESSAGE", "Product ID or Keyword were not specified, but are required.");
+    if(!UtilValidate.isNotEmpty(productId)) errMsg += "<li>Product ID is missing.";
+    if(!UtilValidate.isNotEmpty(keyword)) errMsg += "<li>Keyword is missing.";
+    if(errMsg.length() > 0) {
+      errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+      request.setAttribute("ERROR_MESSAGE", errMsg);
       return "error";
     }
     

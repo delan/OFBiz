@@ -258,10 +258,10 @@
   <%GenericValue productCategoryMember = (GenericValue)pcIterator.next();%>
   <%GenericValue category = productCategoryMember.getRelatedOne("ProductCategory");%>
   <tr valign="middle">
-    <td><a href="/ecommerce/control/category?PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("categoryId")%>" class="buttontext"><%=productCategoryMember.getString("categoryId")%></a></td>
+    <td><a href="/ecommerce/control/category?PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%>" class="buttontext"><%=productCategoryMember.getString("productCategoryId")%></a></td>
     <td><%if(category!=null){%><a href="/ecommerce/control/category?PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("categoryId")%>" class="buttontext"><%=category.getString("description")%></a><%}%>&nbsp;</td>
     <td>
-      <a href="<ofbiz:url>/UpdateProductCategoryMember?PRODUCT_ID=<%=productId%>&PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("categoryId")%></ofbiz:url>" class="buttontext">
+      <a href="<ofbiz:url>/UpdateProductCategoryMember?PRODUCT_ID=<%=productId%>&PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%></ofbiz:url>" class="buttontext">
       [Delete]</a>
     </td>
   </tr>
