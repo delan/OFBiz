@@ -633,8 +633,7 @@ public class RecurrenceRule {
             throw new RecurrenceRuleException("Invalid frequency");
         if (interval < 0)
             throw new RecurrenceRuleException("Invalid interval");
-        if (count < 0)
-            throw new RecurrenceRuleException("Invalid count");
+       
         String freqStr = freq[frequency];
 
         try {
