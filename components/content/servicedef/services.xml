@@ -61,21 +61,18 @@
     </service>
 
     <!-- WebSite Services -->
-    <service name="webSiteInterface" engine="interface" default-entity-name="WebSite" location="" invoke="">
-        <description>WebSite Interface</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
-    <service name="createWebSite" engine="simple"
+    <service name="createWebSite" default-entity-name="WebSite" engine="simple"
         location="org/ofbiz/content/website/WebSiteServices.xml" invoke="createWebSite" auth="true">
         <description>Create an WebSite</description>
-        <implements service="webSiteInterface"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="siteName" optional="false"/>
     </service>
-    <service name="updateWebSite" engine="simple"
+    <service name="updateWebSite" default-entity-name="WebSite" engine="simple"
         location="org/ofbiz/content/website/WebSiteServices.xml" invoke="updateWebSite" auth="true">
         <description>Update an WebSite</description>
-        <implements service="webSiteInterface"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
     <!-- WebSiteRole services -->
@@ -108,15 +105,13 @@
             invoke="createContent"
             auth="true" >
         <description>Create a Content</description>
-        <auto-attributes include="nonpk" mode="IN" optional="true">
-            <exclude field-name="contentTypeId"/>
-        </auto-attributes>
-        <attribute mode="IN" name="contentTypeId" optional="false" type="String"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeTypeId" optional="true" type="String"/>
         <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
         <attribute mode="INOUT" name="contentId" optional="true" type="String"/>
+        <override name="contentTypeId" optional="false"/>
     </service>
     <service name="updateContent" default-entity-name="Content" engine="java"
             location="org.ofbiz.content.content.ContentServices" invoke="updateContent" auth="true">

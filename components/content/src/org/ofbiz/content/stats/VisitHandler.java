@@ -1,5 +1,5 @@
 /*
- * $Id: VisitHandler.java,v 1.2 2003/09/14 05:36:47 jonesde Exp $
+ * $Id: VisitHandler.java,v 1.3 2004/02/11 06:04:20 jonesde Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.GenericValue;
  * Handles saving and maintaining visit information
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class VisitHandler {
@@ -127,7 +127,7 @@ public class VisitHandler {
                     delegator = GenericDelegator.getGenericDelegator(delegatorName);
                 }
                 if (delegator == null) {
-                    Debug.logError("Could not find delegator with delegatorName in session, not creating Visit entity", module);
+                    Debug.logError("Could not find delegator with delegatorName [" + delegatorName + "] in session, not creating Visit entity", module);
                 } else {
                     visit = delegator.makeValue("Visit", null);
                     Long nextId = delegator.getNextSeqId("Visit");

@@ -1,5 +1,5 @@
 /*
- * $Id: permprep.bsh,v 1.3 2003/12/30 07:28:06 jonesde Exp $
+ * $Id: permprep.bsh,v 1.4 2004/02/11 06:04:20 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
 
  * Does either a "simple" (does entity perm check) or complex
@@ -55,8 +55,8 @@ import javax.servlet.http.*;
 
 String module = "permprep.bsh";
 
-dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
-delegator = (GenericDelegator) request.getAttribute("delegator");
+dispatcher = request.getAttribute("dispatcher");
+delegator = request.getAttribute("delegator");
     
 security = request.getAttribute("security");
 // Get permission from pagedef config file
@@ -75,7 +75,7 @@ if (permissionType.equals("complex")) {
     mapIn.put("userLogin", userLogin);
     mapIn.put("entityOperation", entityOperation);
     
-    currentValue = (GenericValue)request.getAttribute("currentValue");
+    currentValue = request.getAttribute("currentValue");
 
     if (currentValue == null || !currentValue.getEntityName().equals("Content")) {
         currentEntityMap = session.getAttribute("currentEntityMap");
@@ -96,8 +96,8 @@ if (permissionType.equals("complex")) {
         request.setAttribute("hasPermission", Boolean.TRUE);
         request.setAttribute("permissionStatus", "granted");
     } else {
-        context.put("hasPermission", Boolean.FALSE);
-        request.setAttribute("hasPermission", Boolean.FALSE);
+        context.put("hasPermission", false);
+        request.setAttribute("hasPermission", false);
         request.setAttribute("permissionStatus", "");
     }
 } else {
