@@ -7,6 +7,7 @@
     <errorpage>/error/error.jsp</errorpage>
 
     <handler name="java" type="request" class="org.ofbiz.core.event.JavaEventHandler"/>
+    <handler name="bsf" type="request" class="org.ofbiz.core.event.BsfEventHandler"/>
     <handler name="soap" type="request" class="org.ofbiz.core.event.SOAPEventHandler"/>
     <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.core.event.SimpleEventHandler"/>
