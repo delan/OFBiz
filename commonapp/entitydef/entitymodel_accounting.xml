@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Mon Oct 08 17:32:55 EDT 2001
+ *@created    Wed Oct 10 13:29:48 MDT 2001
  *@version    1.0
  */
 -->
@@ -109,7 +109,11 @@
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
-  <!--   - Accounting                                            -->
+  <!--  - org.ofbiz.commonapp.accounting.budget -->
+  <!--  - org.ofbiz.commonapp.accounting.fixedasset -->
+  <!--  - org.ofbiz.commonapp.accounting.invoice -->
+  <!--  - org.ofbiz.commonapp.accounting.ledger -->
+  <!--  - org.ofbiz.commonapp.accounting.payment -->
   <!-- ========================================================= -->
 
 
@@ -1258,7 +1262,6 @@
       <field name="finAccountTransId" type="id-ne"></field>
       <field name="paymentId" type="id-ne"></field>	
       <prim-key field="finAccountTransId" />
-    </entity>
-
+    </entity>  
 </entitymodel>
 

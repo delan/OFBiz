@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Mon Oct 08 17:32:55 EDT 2001
+ *@created    Wed Oct 10 13:29:48 MDT 2001
  *@version    1.0
  */
 -->
@@ -109,9 +109,18 @@
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
-  <!--   - Common                                                -->
-  <!--   - Content                                               -->
-  <!--   - Security                                              -->
+  <!--  - org.ofbiz.commonapp.common.geo -->
+  <!--  - org.ofbiz.commonapp.common.period -->
+  <!--  - org.ofbiz.commonapp.common.sequence -->
+  <!--  - org.ofbiz.commonapp.common.status -->
+  <!--  - org.ofbiz.commonapp.common.uom -->
+  <!--  - org.ofbiz.commonapp.content.content -->
+  <!--  - org.ofbiz.commonapp.content.document -->
+  <!--  - org.ofbiz.commonapp.content.preference -->
+  <!--  - org.ofbiz.commonapp.content.subscription -->
+  <!--  - org.ofbiz.commonapp.content.visit -->
+  <!--  - org.ofbiz.commonapp.security.login -->
+  <!--  - org.ofbiz.commonapp.security.securitygroup -->
   <!-- ========================================================= -->
 
 
@@ -1155,6 +1164,6 @@
       <relation type="many" rel-entity-name="SecurityGroupPermission">
         <key-map field-name="groupId" />
       </relation>
-    </entity>
+    </entity>  
 </entitymodel>
 

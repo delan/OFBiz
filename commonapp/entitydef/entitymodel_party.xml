@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Mon Oct 08 17:32:55 EDT 2001
+ *@created    Wed Oct 10 13:29:48 MDT 2001
  *@version    1.0
  */
 -->
@@ -109,7 +109,11 @@
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
-  <!--   - Party                                                 -->
+  <!--  - org.ofbiz.commonapp.party.agreement -->
+  <!--  - org.ofbiz.commonapp.party.communication -->
+  <!--  - org.ofbiz.commonapp.party.contact -->
+  <!--  - org.ofbiz.commonapp.party.need -->
+  <!--  - org.ofbiz.commonapp.party.party -->
   <!-- ========================================================= -->
 
 
@@ -1315,6 +1319,6 @@
       <relation type="many" title="ValidTo" rel-entity-name="PartyRelationshipType">
         <key-map field-name="roleTypeId" rel-field-name="roleTypeIdValidTo" />
       </relation>
-    </entity>
+    </entity>  
 </entitymodel>
 

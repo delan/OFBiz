@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Mon Oct 08 17:32:55 EDT 2001
+ *@created    Wed Oct 10 13:29:48 MDT 2001
  *@version    1.0
  */
 -->
@@ -109,7 +109,10 @@
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
-  <!--   - Shipment                                              -->
+  <!--  - org.ofbiz.commonapp.shipment.issuance -->
+  <!--  - org.ofbiz.commonapp.shipment.receipt -->
+  <!--  - org.ofbiz.commonapp.shipment.route -->
+  <!--  - org.ofbiz.commonapp.shipment.shipment -->
   <!-- ========================================================= -->
 
 
@@ -443,6 +446,6 @@
       <field name="shipmentPackageId" type="id"></field>
       <field name="description" type="description"></field>	
       <prim-key field="documentId" />
-    </entity>
+    </entity>  
 </entitymodel>
 

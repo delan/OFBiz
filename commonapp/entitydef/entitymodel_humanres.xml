@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Mon Oct 08 17:32:55 EDT 2001
+ *@created    Wed Oct 10 13:29:48 MDT 2001
  *@version    1.0
  */
 -->
@@ -109,7 +109,9 @@
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
-  <!--   - Human Resources                                       -->
+  <!--  - org.ofbiz.commonapp.humanres.ability -->
+  <!--  - org.ofbiz.commonapp.humanres.employment -->
+  <!--  - org.ofbiz.commonapp.humanres.position -->
   <!-- ========================================================= -->
 
 
@@ -539,6 +541,6 @@
       <prim-key field="positionTypeId" />	
       <prim-key field="responsibilityTypeId" />	
       <prim-key field="fromDate" />
-    </entity>
+    </entity>  
 </entitymodel>
 

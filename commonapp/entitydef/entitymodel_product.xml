@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Mon Oct 08 17:32:55 EDT 2001
+ *@created    Wed Oct 10 13:29:48 MDT 2001
  *@version    1.0
  */
 -->
@@ -109,7 +109,14 @@
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
-  <!--   - Product                                               -->
+  <!--  - org.ofbiz.commonapp.product.category -->
+  <!--  - org.ofbiz.commonapp.product.cost -->
+  <!--  - org.ofbiz.commonapp.product.feature -->
+  <!--  - org.ofbiz.commonapp.product.inventory -->
+  <!--  - org.ofbiz.commonapp.product.price -->
+  <!--  - org.ofbiz.commonapp.product.product -->
+  <!--  - org.ofbiz.commonapp.product.storage -->
+  <!--  - org.ofbiz.commonapp.product.supplier -->
   <!-- ========================================================= -->
 
 
@@ -1412,6 +1419,6 @@
       <relation type="many" rel-entity-name="SupplierProduct">
         <key-map field-name="supplierRatingTypeId" />
       </relation>
-    </entity>
+    </entity>  
 </entitymodel>
 
