@@ -2,6 +2,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/12/01 03:37:10  jonesde
+ * Finished activity stuff, now just a bunch of small elements to deal with
+ *
  * Revision 1.5  2001/11/30 14:20:24  jonesde
  * Refactored for changes in Application, DataField and FormalParam; started Activity implementations
  *
@@ -135,9 +138,9 @@ public class XpdlReader {
         return(values);
     }
 
-    // -------------------------------------------------------
-    // Methods for individual entities
-    // -------------------------------------------------------
+    // ----------------------------------------------------------------
+    // Package
+    // ----------------------------------------------------------------
 
     protected void readPackage(Element packageElement) throws DefinitionParserException {
         if (packageElement == null)
@@ -256,42 +259,44 @@ public class XpdlReader {
         while (externalPackageIter.hasNext()) {
             Element externalPackageElement = (Element) externalPackageIter.next();
             GenericValue externalPackageValue = delegator.makeValue("WorkflowPackageExternal", null);
+            values.add(externalPackageValue);
             externalPackageValue.set("packageId", packageId);
             externalPackageValue.set("externalPackageId", externalPackageElement.getAttribute("href"));
-            values.add(externalPackageValue);
         }
     }
 
     protected void readTypeDeclarations(List typeDeclarations, String packageId) throws DefinitionParserException {
         if (typeDeclarations == null || typeDeclarations.size() == 0)
             return;
-        //TODO: write method
+        Iterator typeDeclarationsIter = typeDeclarations.iterator();
+        while (typeDeclarationsIter.hasNext()) {
+            Element typeDeclarationElement = (Element) typeDeclarationsIter.next();
+            GenericValue typeDeclarationValue = delegator.makeValue("WorkflowTypeDeclaration", null);
+            values.add(typeDeclarationValue);
+            
+            typeDeclarationValue.set("packageId", packageId);
+            typeDeclarationValue.set("typeId", typeDeclarationElement.getAttribute("Id"));
+            typeDeclarationValue.set("typeName", typeDeclarationElement.getAttribute("Name"));
+    
+            //(%Type;) - (RecordType | UnionType | EnumerationType | ArrayType | ListType | BasicType | PlainType | DeclaredType)
+    
+            //Description?
+            typeDeclarationValue.set("description", UtilXml.childElementValue(typeDeclarationElement, "Description"));
+        }
     }
-
-    protected void readParticipants(List participants, GenericValue valueObject) throws DefinitionParserException {
-        if (participants == null || participants.size() == 0)
-            return;
-        //TODO: write method
-    }
-
-    protected void readApplications(List applications, String packageId, String processId) throws DefinitionParserException {
-        if (applications == null || applications.size() == 0)
-            return;
-        //TODO: write method
-    }
-
-    protected void readDataFields(List dataFields, String packageId, String processId) throws DefinitionParserException {
-        if (dataFields == null || dataFields.size() == 0)
-            return;
-        //TODO: write method
-    }
-
-    protected void readFormalParameters(List formalParameters, String packageId, String processId, String applicationId) throws DefinitionParserException {
-        if (formalParameters == null || formalParameters.size() == 0)
-            return;
-        //TODO: write method
-    }
-
+    /*
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="typeId" type="id-ne"></field>
+      <field name="typeName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="dataTypeEnumId" type="id"></field>
+      <field name="arrayTypeMembersId" type="id"></field>	
+     */
+     
+    // ----------------------------------------------------------------
+    // Process
+    // ----------------------------------------------------------------
+    
     protected void readWorkflowProcesses(List workflowProcesses, String packageId) throws DefinitionParserException {
         if (workflowProcesses == null || workflowProcesses.size() == 0)
             return;
@@ -386,6 +391,10 @@ public class XpdlReader {
         List transitions = UtilXml.childElementList(transitionsElement, "Transition");
         readTransitions(transitions, packageId, processId);
     }
+
+    // ----------------------------------------------------------------
+    // Activity
+    // ----------------------------------------------------------------
 
     protected void readActivities(List activities, String packageId, String processId, GenericValue workflowProcessValue) throws DefinitionParserException {
         if (activities == null || activities.size() == 0)
@@ -614,6 +623,10 @@ public class XpdlReader {
         return actualParametersBuf.toString();
     }
 
+    // ----------------------------------------------------------------
+    // Transition
+    // ----------------------------------------------------------------
+
     protected void readTransitions(List transitions, String packageId, String processId) throws DefinitionParserException {
         if (transitions == null || transitions.size() == 0)
             return;
@@ -734,6 +747,50 @@ public class XpdlReader {
             transitionRefValue.set("processId", processId);
             transitionRefValue.set("activityId", activityId);
             transitionRefValue.set("transitionId", transitionRefElement.getAttribute("Id"));
+        }
+    }
+
+    // ----------------------------------------------------------------
+    // Others
+    // ----------------------------------------------------------------
+
+    protected void readParticipants(List participants, GenericValue valueObject) throws DefinitionParserException {
+        if (participants == null || participants.size() == 0)
+            return;
+        Iterator participantsIter = participants.iterator();
+        while (participantsIter.hasNext()) {
+            Element participantElement = (Element) participantsIter.next();
+        //TODO: write method
+        }
+    }
+
+    protected void readApplications(List applications, String packageId, String processId) throws DefinitionParserException {
+        if (applications == null || applications.size() == 0)
+            return;
+        Iterator applicationsIter = applications.iterator();
+        while (applicationsIter.hasNext()) {
+            Element applicationElement = (Element) applicationsIter.next();
+        //TODO: write method
+        }
+    }
+
+    protected void readDataFields(List dataFields, String packageId, String processId) throws DefinitionParserException {
+        if (dataFields == null || dataFields.size() == 0)
+            return;
+        Iterator dataFieldsIter = dataFields.iterator();
+        while (dataFieldsIter.hasNext()) {
+            Element dataFieldElement = (Element) dataFieldsIter.next();
+        //TODO: write method
+        }
+    }
+
+    protected void readFormalParameters(List formalParameters, String packageId, String processId, String applicationId) throws DefinitionParserException {
+        if (formalParameters == null || formalParameters.size() == 0)
+            return;
+        Iterator formalParametersIter = formalParameters.iterator();
+        while (formalParametersIter.hasNext()) {
+            Element formalParameterElement = (Element) formalParametersIter.next();
+        //TODO: write method
         }
     }
 
