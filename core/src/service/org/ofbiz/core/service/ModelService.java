@@ -120,9 +120,8 @@ public class ModelService {
      * then sorts by order if specified.
      */
     public void addParam(ModelParam param) {
-        this.interfaceCheck();
         contextInfo.put(param.name, param);
-        contextParamList.add(param);
+        contextParamList.add(param);        
     }
 
     public List getAllParamNames() {
