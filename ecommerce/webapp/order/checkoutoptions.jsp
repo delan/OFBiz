@@ -299,15 +299,26 @@
       <span class="tabletext">Offline:&nbsp;Check/Money Order</span>
     </td>
   </tr>
+  <tr><td colspan="2"><hr class='sepbar'></td></tr>
   <tr>
     <td width="1%" nowrap>
       <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY"
         <%="EXT_WORLDPAY".equals(checkOutPaymentId) ? "CHECKED" : ""%>>
     </td>
     <td width="50%" nowrap>
-      <span class="tabletext">WorldPay&nbsp;Payment</span>
+      <span class="tabletext">Pay With WorldPay</span>
     </td>
   </tr>  
+  <tr><td colspan="2"><hr class='sepbar'></td></tr>
+  <tr>
+    <td width="1%" nowrap>
+      <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL"
+        <%="EXT_PAYPAL".equals(checkOutPaymentId) ? "CHECKED" : ""%>>
+    </td>
+    <td width="50%" nowrap>
+      <span class="tabletext">Pay With PayPal</span>
+    </td>
+  </tr>    
   <tr><td colspan="2"><hr class='sepbar'></td></tr>
  <ofbiz:if name="paymentMethodList" size="0">
   <ofbiz:iterator name="paymentMethod" property="paymentMethodList">
