@@ -6,10 +6,13 @@
 <%@ page import="org.ofbiz.core.security.*" %>
 
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
 <% pageContext.setAttribute("PageName", "Main Page"); %>
 
 <%@ include file="shipsetuphelper.jsp" %>
+
+<%if(security.hasEntityPermission("SHIPRATE", "_VIEW", session)) {%>
 
 <BR>
 <TABLE border=0 width='100%' cellpadding='0' cellspacing=0 class='boxoutside'>
@@ -92,7 +95,11 @@
       <td><div class="tabletext"><ofbiz:entityfield attribute="est" field="orderPricePercent"/>%</div></td>
       <td><div class="tabletext"><ofbiz:entityfield attribute="est" field="orderFlatPrice"/></div></td>
       <td><div class="tabletext"><ofbiz:entityfield attribute="est" field="orderItemFlatPrice"/></div></td>
+      <%if(security.hasEntityPermission("SHIPRATE", "_DELETE", session)) {%>
       <td><div class="tabletext"><a href="<ofbiz:url>/removeshipestimate?shipmentCostEstimateId=<ofbiz:entityfield attribute="est" field="shipmentCostEstimateId"/></ofbiz:url>" class="buttontext">[Remove]</a></div></td>
+      <%} else {%>
+      <td>&nbsp;</td>
+      <%}%>
     </tr>
 <%
        wv = null;
@@ -107,6 +114,7 @@
     </table>
     </p>
 
+    <%if(security.hasEntityPermission("SHIPRATE", "_CREATE", session)) {%>
     <br>
     <form name="addform" method="post" action="<ofbiz:url>/createshipestimate</ofbiz:url>">
     <p>
@@ -210,6 +218,7 @@
     </p>
     </form>
     <br>
+    <%}%>
 
           </td>
         </tr>
@@ -218,6 +227,8 @@
   </TR>
 </TABLE>
 
-</body>
-</html>
+<%}else{%>
+  <br>
+  <h3>You do not have permission to view this page. ("SHIPRATE_VIEW" or "SHIPRATE_ADMIN" needed)</h3>
+<%}%>
 

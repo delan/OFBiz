@@ -4,6 +4,8 @@
 <%@ page import="org.ofbiz.commonapp.common.*" %>
 <%@ page import="java.util.*" %>
 
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
   <TR>
     <TD width='100%'>
@@ -41,7 +43,9 @@
             <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>
           </ofbiz:if>
           <td class="headerButtonRight"><a href="<ofbiz:url>/orderlist</ofbiz:url>" class="buttontext">Order&nbsp;List</a></td>
+          <%if(security.hasEntityPermission("SHIPRATE", "_VIEW", session)) {%>
           <td class="headerButtonRight"><a href="<ofbiz:url>/shipsetup</ofbiz:url>" class="buttontext">Ship&nbsp;Rates</a></td>
+          <%}%>
         </TR>
       </TABLE>
     </TD>
