@@ -100,6 +100,7 @@
 
   <TrackingCodeType trackingCodeTypeId="INTERNAL" description="Internal"/>
   <TrackingCodeType trackingCodeTypeId="EXTERNAL" description="External"/>
+  <TrackingCodeType trackingCodeTypeId="PARTNER_MGD" description="Partner Managed"/>
   
   <EnumerationType description="Tracking Code Source" enumTypeId="TRACKINGCODE_SRC" hasTable="N" parentTypeId=""/>
 

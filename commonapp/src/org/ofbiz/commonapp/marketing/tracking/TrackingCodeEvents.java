@@ -66,73 +66,174 @@ public class TrackingCodeEvents {
                 return "error";
             }
 
-            //check effective dates
-            java.sql.Timestamp nowStamp = UtilDateTime.nowTimestamp();
-            if (trackingCode.get("fromDate") != null && nowStamp.before(trackingCode.getTimestamp("fromDate"))) {
-                if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has not yet gone into effect, ignoring this trackingCodeId");
-                return "success";
-            }
-            if (trackingCode.get("thruDate") != null && nowStamp.after(trackingCode.getTimestamp("thruDate"))) {
-                if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has expired, ignoring this trackingCodeId");
-                return "success";
+            return processTrackingCode(trackingCode, request, response);
+        } else {
+            return "success";
+        }
+    }
+
+    /** If TrackingCode monitoring is desired this event should be added to the list 
+     * of events that run on every request. This event looks for the parameter 
+     * <code>ptc</code> and handles the value as a Partner Managed Tracking Code.
+     * 
+     * If the specified trackingCodeId exists then it is used as is, otherwise a new one
+     * is created with the ptc value as the trackingCodeId. The values for the fields of 
+     * the new TrackingCode can come from one of two places: if a <code>dtc</code> parameter
+     * is included the value will be used to lookup a TrackingCode with default values,
+     * otherwise the default trackingCodeId will be looked up in the <code>partner.trackingCodeId.default</code>
+     * in the <code>general.properties</code> file. If that is still not found just use an empty TrackingCode.
+     */
+    public static String checkPartnerTrackingCodeUrlParam(HttpServletRequest request, HttpServletResponse response) {
+        String trackingCodeId = request.getParameter("ptc");
+        
+        if (UtilValidate.isNotEmpty(trackingCodeId)) {
+            //partner managed tracking code is specified on the request
+            GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+            GenericValue trackingCode = null;
+            try {
+                trackingCode = delegator.findByPrimaryKeyCache("TrackingCode", UtilMisc.toMap("trackingCodeId", trackingCodeId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error looking up TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId");
+                return "error";
             }
             
-            //persist that info by associating with the current visit
-            GenericValue visit = VisitHandler.getVisit(request.getSession());
-            if (visit == null) {
-                Debug.logWarning("Could not get visit, not associating trackingCode [" + trackingCodeId + "] with visit");
-            } else {
-                GenericValue trackingCodeVisit = delegator.makeValue("TrackingCodeVisit", 
-                        UtilMisc.toMap("trackingCodeId", trackingCodeId, "visitId", visit.get("visitId"), 
-                        "fromDate", UtilDateTime.nowTimestamp(), "sourceEnumId", "TKCDSRC_URL_PARAM"));
-                try {
-                    trackingCodeVisit.create();
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Error while saving TrackingCodeVisit");
+            if (trackingCode == null) {
+                //create new TrackingCode with default values from a "dtc" parameter or from a properties file
+                
+                String dtc = request.getParameter("dtc");
+                if (UtilValidate.isEmpty(dtc)) {
+                    dtc = UtilProperties.getPropertyValue("general", "partner.trackingCodeId.default");
+                }
+                if (UtilValidate.isNotEmpty(dtc)) {
+                    GenericValue defaultTrackingCode = null;
+                    try {
+                        defaultTrackingCode = delegator.findByPrimaryKeyCache("TrackingCode", UtilMisc.toMap("trackingCodeId", dtc));
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Error looking up Default values TrackingCode with trackingCodeId [" + dtc + "], not using the dtc value for new TrackingCode defaults");
+                    }
+                    
+                    if (defaultTrackingCode != null) {
+                        defaultTrackingCode.set("trackingCodeId", trackingCodeId);
+                        defaultTrackingCode.set("trackingCodeTypeId", "PARTNER_MGD");
+                        //null out userLogin fields, no use tracking to customer, or is there?; set dates to current
+                        defaultTrackingCode.set("createdDate", UtilDateTime.nowTimestamp());
+                        defaultTrackingCode.set("createdByUserLogin", null);
+                        defaultTrackingCode.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+                        defaultTrackingCode.set("lastModifiedByUserLogin", null);
+                        
+                        trackingCode = defaultTrackingCode;
+                        try {
+                            trackingCode.create();
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, "Error creating new Partner TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId");
+                            return "error";
+                        }
+                    }
+                }
+                
+                //if trackingCode is still null then the defaultTrackingCode thing didn't work out, use empty TrackingCode
+                if (trackingCode == null) {
+                    trackingCode = delegator.makeValue("TrackingCode", null);
+                    trackingCode.set("trackingCodeId", trackingCodeId);
+                    trackingCode.set("trackingCodeTypeId", "PARTNER_MGD");
+                    //leave userLogin fields empty, no use tracking to customer, or is there?; set dates to current
+                    trackingCode.set("createdDate", UtilDateTime.nowTimestamp());
+                    trackingCode.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+
+                    //use nearly unlimited trackable lifetime: 10 billion seconds, 310 years
+                    trackingCode.set("trackableLifetime", new Long(10000000000L));
+                    //use 2592000 seconds as billable lifetime: equals 1 month
+                    trackingCode.set("billableLifetime", new Long(2592000));
+
+                    trackingCode.set("comments", "This TrackingCode has default values because no default TrackingCode could be found.");
+                    
+                    Debug.logWarning("No default TrackingCode record was found, using a TrackingCode with hard coded default values: " + trackingCode);
+                    
+                    try {
+                        trackingCode.create();
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Error creating new Partner TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId");
+                        return "error";
+                    }
                 }
             }
 
-            
-            // write trackingCode cookies with the value set to the trackingCodeId
-            // NOTE: just write these cookies and if others exist from other tracking codes they will be overwritten, ie only keep the newest
-            
-            // if trackingCode.trackableLifetime not null and is > 0 write a trackable cookie with name in the form: TKCDT_{trackingCode.trackingCodeTypeId} and timeout will be trackingCode.trackableLifetime
-            Long trackableLifetime = trackingCode.getLong("trackableLifetime");
-            if (trackableLifetime != null && trackableLifetime.longValue() > 0) {
-                Cookie trackableCookie = new Cookie("TKCDT_" + trackingCode.getString("trackingCodeTypeId"), trackingCode.getString("trackingCodeId"));
-                trackableCookie.setMaxAge(trackableLifetime.intValue());
-                response.addCookie(trackableCookie);
-            }
-            
-            // if trackingCode.billableLifetime not null and is > 0 write a billable cookie with name in the form: TKCDB_{trackingCode.trackingCodeTypeId} and timeout will be trackingCode.billableLifetime
-            Long billableLifetime = trackingCode.getLong("billableLifetime");
-            if (billableLifetime != null && billableLifetime.longValue() > 0) {
-                Cookie billableCookie = new Cookie("TKCDB_" + trackingCode.getString("trackingCodeTypeId"), trackingCode.getString("trackingCodeId"));
-                billableCookie.setMaxAge(billableLifetime.intValue());
-                response.addCookie(billableCookie);
-            }
+            return processTrackingCode(trackingCode, request, response);
+        } else {
+            return "success";
+        }
+    }
 
-			// if we have overridden logo and/or css set some session attributes
-			HttpSession session = request.getSession();
-			String overrideLogo = trackingCode.getString("overrideLogo");
-			if (overrideLogo != null)
-				session.setAttribute("overrideLogo", overrideLogo);
-			String overrideCss = trackingCode.getString("overrideCss");
-			if (overrideCss != null)
-				session.setAttribute("overrideCss", overrideCss);				
-            
-            // if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views
-            String redirectUrl = trackingCode.getString("redirectUrl");
-            if (UtilValidate.isNotEmpty(redirectUrl)) {
-                try {
-                    response.sendRedirect(redirectUrl);
-                } catch (java.io.IOException e) {
-                    Debug.logError(e, "Could not redirect as requested in the trackingCode to: " + redirectUrl);
-                }
-                return null;
-            }
+    private static String processTrackingCode(GenericValue trackingCode, HttpServletRequest request, HttpServletResponse response) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        String trackingCodeId = trackingCode.getString("trackingCodeId");
+        
+        //check effective dates
+        java.sql.Timestamp nowStamp = UtilDateTime.nowTimestamp();
+        if (trackingCode.get("fromDate") != null && nowStamp.before(trackingCode.getTimestamp("fromDate"))) {
+            if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has not yet gone into effect, ignoring this trackingCodeId");
+            return "success";
+        }
+        if (trackingCode.get("thruDate") != null && nowStamp.after(trackingCode.getTimestamp("thruDate"))) {
+            if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has expired, ignoring this trackingCodeId");
+            return "success";
         }
         
+        //persist that info by associating with the current visit
+        GenericValue visit = VisitHandler.getVisit(request.getSession());
+        if (visit == null) {
+            Debug.logWarning("Could not get visit, not associating trackingCode [" + trackingCodeId + "] with visit");
+        } else {
+            GenericValue trackingCodeVisit = delegator.makeValue("TrackingCodeVisit", 
+                    UtilMisc.toMap("trackingCodeId", trackingCodeId, "visitId", visit.get("visitId"), 
+                    "fromDate", UtilDateTime.nowTimestamp(), "sourceEnumId", "TKCDSRC_URL_PARAM"));
+            try {
+                trackingCodeVisit.create();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error while saving TrackingCodeVisit");
+            }
+        }
+
+        
+        // write trackingCode cookies with the value set to the trackingCodeId
+        // NOTE: just write these cookies and if others exist from other tracking codes they will be overwritten, ie only keep the newest
+        
+        // if trackingCode.trackableLifetime not null and is > 0 write a trackable cookie with name in the form: TKCDT_{trackingCode.trackingCodeTypeId} and timeout will be trackingCode.trackableLifetime
+        Long trackableLifetime = trackingCode.getLong("trackableLifetime");
+        if (trackableLifetime != null && trackableLifetime.longValue() > 0) {
+            Cookie trackableCookie = new Cookie("TKCDT_" + trackingCode.getString("trackingCodeTypeId"), trackingCode.getString("trackingCodeId"));
+            trackableCookie.setMaxAge(trackableLifetime.intValue());
+            response.addCookie(trackableCookie);
+        }
+        
+        // if trackingCode.billableLifetime not null and is > 0 write a billable cookie with name in the form: TKCDB_{trackingCode.trackingCodeTypeId} and timeout will be trackingCode.billableLifetime
+        Long billableLifetime = trackingCode.getLong("billableLifetime");
+        if (billableLifetime != null && billableLifetime.longValue() > 0) {
+            Cookie billableCookie = new Cookie("TKCDB_" + trackingCode.getString("trackingCodeTypeId"), trackingCode.getString("trackingCodeId"));
+            billableCookie.setMaxAge(billableLifetime.intValue());
+            response.addCookie(billableCookie);
+        }
+
+        // if we have overridden logo and/or css set some session attributes
+        HttpSession session = request.getSession();
+        String overrideLogo = trackingCode.getString("overrideLogo");
+        if (overrideLogo != null)
+            session.setAttribute("overrideLogo", overrideLogo);
+        String overrideCss = trackingCode.getString("overrideCss");
+        if (overrideCss != null)
+            session.setAttribute("overrideCss", overrideCss);               
+        
+        // if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views
+        String redirectUrl = trackingCode.getString("redirectUrl");
+        if (UtilValidate.isNotEmpty(redirectUrl)) {
+            try {
+                response.sendRedirect(redirectUrl);
+            } catch (java.io.IOException e) {
+                Debug.logError(e, "Could not redirect as requested in the trackingCode to: " + redirectUrl);
+            }
+            return null;
+        }
+                
         return "success";
     }
     
