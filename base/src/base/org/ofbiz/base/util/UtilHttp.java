@@ -1,5 +1,5 @@
 /*
- * $Id: UtilHttp.java,v 1.6 2003/09/18 16:01:21 jonesde Exp $
+ * $Id: UtilHttp.java,v 1.7 2003/09/21 05:58:51 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.1
  */
 public class UtilHttp {
@@ -158,16 +158,7 @@ public class UtilHttp {
     private static Locale getLocale(HttpServletRequest request, HttpSession  session) {
         Object localeObject = session != null ? session.getAttribute("locale") : null;
         if (localeObject == null) localeObject = request != null ? request.getLocale() : null;
-    
-        if (localeObject != null && localeObject instanceof String) {
-            localeObject = UtilMisc.parseLocale((String) localeObject);
-        } 
-        
-        if (localeObject != null && localeObject instanceof Locale) {
-            return (Locale) localeObject;
-        } else {
-            return Locale.getDefault();
-        }                                
+        return UtilMisc.ensureLocale(localeObject);
     }
 
     /**
@@ -186,7 +177,7 @@ public class UtilHttp {
      * @param session HttpSession object to use for lookup
      * @return Locale The current Locale to use
      */
-    public static Locale getLocale(HttpSession  session) {
+    public static Locale getLocale(HttpSession session) {
         if (session == null) return Locale.getDefault();
         return UtilHttp.getLocale(null, session);
     }

@@ -1,5 +1,5 @@
 /*
- * $Id: UtilProperties.java,v 1.3 2003/09/20 18:33:41 jonesde Exp $
+ * $Id: UtilProperties.java,v 1.4 2003/09/21 05:58:51 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.ResourceBundle;
  * Generic Property Accessor with Cache - Utilities for working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      1.0
  */
 public class UtilProperties {
@@ -393,7 +393,7 @@ public class UtilProperties {
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
      * @param locale The locale that the given resource will correspond to
-     * @param arguments A list of Objects to insert into the message argument place holders
+     * @param arguments A List of Objects to insert into the message argument place holders
      * @return The value of the property in the properties file
      */
     public static String getMessage(String resource, String name, List arguments, Locale locale) {
@@ -404,6 +404,27 @@ public class UtilProperties {
         } else {
             if (arguments != null && arguments.size() > 0) {
                 value = MessageFormat.format(value, arguments.toArray());
+            }   
+            return value;
+        }
+    }
+
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding 
+     * to the given locale and replacing argument place holders with the given arguments using the FlexibleStringExpander class
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @param locale The locale that the given resource will correspond to
+     * @param context A Map of Objects to insert into the message place holders using the ${} syntax of the FlexibleStringExpander
+     * @return The value of the property in the properties file
+     */
+    public static String getMessage(String resource, String name, Map context, Locale locale) {
+        String value = getMessage(resource, name, locale);
+        
+        if (value == null || value.length() == 0) {
+            return "";
+        } else {
+            if (context != null && context.size() > 0) {
+                value = FlexibleStringExpander.expandString(value, context);
             }   
             return value;
         }
@@ -420,26 +441,6 @@ public class UtilProperties {
             return null;
         }
         return (ResourceBundle) bundleMap.get("_RESOURCE_BUNDLE_");
-    }
-    
-    protected static ResourceBundle getBaseResourceBundle(String resource, Locale locale) {
-        if (resource == null || resource.length() <= 0) return null;
-        if (locale == null) locale = Locale.getDefault();
-
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        ResourceBundle bundle = null;
-        try {
-            bundle = ResourceBundle.getBundle(resource, locale, loader);
-        } catch (MissingResourceException e) {
-            Debug.log(e, "[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString(), module);
-            return null;
-        }
-        if (bundle == null) {
-            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString(), module);
-            return null;
-        }
-        
-        return bundle;
     }
     
     /** Returns the specified resource/properties file as a Map with the original ResourceBundle in the Map under the key _RESOURCE_BUNDLE_
@@ -462,6 +463,26 @@ public class UtilProperties {
         return bundleMap;
     }
 
+    protected static ResourceBundle getBaseResourceBundle(String resource, Locale locale) {
+        if (resource == null || resource.length() <= 0) return null;
+        if (locale == null) locale = Locale.getDefault();
+
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        ResourceBundle bundle = null;
+        try {
+            bundle = ResourceBundle.getBundle(resource, locale, loader);
+        } catch (MissingResourceException e) {
+            Debug.log(e, "[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString(), module);
+            return null;
+        }
+        if (bundle == null) {
+            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString(), module);
+            return null;
+        }
+        
+        return bundle;
+    }
+    
     protected static Map resourceBundleToMap(ResourceBundle bundle) {
         if (bundle == null) {
             return new HashMap();

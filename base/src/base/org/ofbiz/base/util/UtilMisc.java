@@ -1,5 +1,5 @@
 /*
- * $Id: UtilMisc.java,v 1.2 2003/09/20 18:14:36 jonesde Exp $
+ * $Id: UtilMisc.java,v 1.3 2003/09/21 05:58:51 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.Map;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class UtilMisc {
@@ -302,6 +302,20 @@ public class UtilMisc {
         
         Locale locale = new Locale(language, country);
         return locale;
+    }
+
+    /** The input can be a String, Locale, or even null and a valid Locale will always be returned; if nothing else works, returns the default locale.
+     * @param localeObject An Object representing the locale
+     */
+    public static Locale ensureLocale(Object localeObject) {
+        if (localeObject != null && localeObject instanceof String) {
+            localeObject = UtilMisc.parseLocale((String) localeObject);
+        } 
+        if (localeObject != null && localeObject instanceof Locale) {
+            return (Locale) localeObject;
+        } else {
+            return Locale.getDefault();
+        }                                
     }
     
     /** This is meant to be very quick to create and use for small sized maps, perfect for how we usually use UtilMisc.toMap */

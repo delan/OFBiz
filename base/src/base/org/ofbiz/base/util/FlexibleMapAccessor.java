@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleMapAccessor.java,v 1.2 2003/08/17 01:43:48 ajzeneski Exp $
+ * $Id: FlexibleMapAccessor.java,v 1.3 2003/09/21 05:58:51 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,7 @@ package org.ofbiz.base.util;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -34,7 +35,7 @@ import java.util.Map;
  * list elements. See individual Map operations for more information.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class FlexibleMapAccessor {
@@ -90,8 +91,20 @@ public class FlexibleMapAccessor {
         }
     }
     
-    /** Given the name based information in this accessor, get the value from the passed in Map. */
+    /** Given the name based information in this accessor, get the value from the passed in Map. 
+     *  Supports LocalizedMaps by getting a String or Locale object from the base Map with the key "locale", or by explicit locale parameter.
+     */
     public Object get(Map base) {
+        return get(base, null);
+    }
+    
+    /** Given the name based information in this accessor, get the value from the passed in Map. 
+     *  Supports LocalizedMaps by getting a String or Locale object from the base Map with the key "locale", or by explicit locale parameter.
+     *  Note that the localization functionality is only used when the lowest level sub-map implements the LocalizedMap interface
+     * @param base Map to get value from
+     * @param locale Optional locale parameter, if null will see if the base Map contains a "locale" key
+     */
+    public Object get(Map base, Locale locale) {
         if (base == null) {
             return null;
         }
@@ -106,17 +119,32 @@ public class FlexibleMapAccessor {
         Object ret = null;
         if (this.isListReference) {
             List lst = (List) newBase.get(extName);
-            ret = lst.get(listIndex);            
+            ret = lst.get(listIndex);
         } else {
-            ret = newBase.get(extName);
+            ret = getByLocale(extName, base, newBase, locale);
         }
         
         // in case the name has a dot like system env values
         if (ret == null) {
-            ret = base.get(original);
+            ret = getByLocale(original, base, base, locale);
         }        
         
         return ret;
+    }
+    
+    protected Object getByLocale(String name, Map base, Map sub, Locale locale) {
+        if (sub instanceof LocalizedMap) {
+            LocalizedMap locMap = (LocalizedMap) sub;
+            if (locale != null) {
+                return locMap.get(name, locale);
+            } else if (base.containsKey("locale")) {
+                return locMap.get(name, UtilMisc.ensureLocale(base.get("locale")));
+            } else {
+                return locMap.get(name, Locale.getDefault());
+            }
+        } else {
+            return sub.get(name);
+        }
     }
     
     /** Given the name based information in this accessor, put the value in the passed in Map. 

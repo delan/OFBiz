@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormWrapper.java,v 1.1 2003/08/17 08:40:11 ajzeneski Exp $
+ * $Id: HtmlFormWrapper.java,v 1.2 2003/09/21 05:58:51 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  * Widget Library - HTML Form Wrapper class - makes it easy to do the setup and render of a form
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class HtmlFormWrapper {
@@ -73,7 +73,10 @@ public class HtmlFormWrapper {
         this.context = new HashMap();
         Map parameterMap = UtilHttp.getParameterMap(request);
         context.put("parameters", parameterMap);
-
+        
+        //make sure the locale is in the context
+        context.put("locale", UtilHttp.getLocale(request));
+        
         // if there was an error message, this is an error
         if (UtilValidate.isNotEmpty((String) request.getAttribute("_ERROR_MESSAGE_"))) {
             context.put("isError", Boolean.TRUE);
