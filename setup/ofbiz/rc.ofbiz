@@ -5,11 +5,11 @@
 # $Id$
 ####
 
-# Paths
+# Paths - Edit for your locations
 JAVA_HOME=/usr/lib/jvm/java-1.4.1-sun/
 OFBIZ_HOME=/home/ofbiz/ofbiz
 
-# *nix user ofbiz should run as
+# *nix user ofbiz should run as (you must create this user first)
 OFBIZ_USER=ofbiz     
 
 # Enable /etc/rc.d/init.d/functions style color
