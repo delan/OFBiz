@@ -6,12 +6,13 @@
 <%-- ====================================================== --%>
 <%-- Get the requested product                                --%>
 <%-- ====================================================== --%>
+<%String productId = request.getParameter("product_id");%>
 <ofbiz:service name='getProduct'>
-    <ofbiz:param name='productId' value='<%=request.getParameter("product_id")%>'/>
+    <ofbiz:param name='productId' value='<%=productId%>'/>
 </ofbiz:service>
 
 <ofbiz:unless name="product">
-  <center><h2>Product not found for Product ID "<%=UtilFormatOut.checkNull(request.getParameter("product_id"))%>"!</h2></center>
+  <center><h2>Product not found for Product ID "<%=UtilFormatOut.checkNull(productId)%>"!</h2></center>
 </ofbiz:unless>
 
 <ofbiz:if name="product">
@@ -24,11 +25,11 @@
     <%-- ====================================================== --%>
     <% if (productTypeId.equals("VIRTUAL_PRODUCT")) {%>
         <ofbiz:service name="getProductFeatureSet">
-            <ofbiz:param name='productId' value='<%=request.getParameter("product_id")%>'/>
+            <ofbiz:param name='productId' value='<%=productId%>'/>
         </ofbiz:service>
         <ofbiz:if name="featureSet">
             <ofbiz:service name="getProductVariantTree">
-                <ofbiz:param name='productId' value='<%=request.getParameter("product_id")%>'/>
+                <ofbiz:param name='productId' value='<%=productId%>'/>
                 <ofbiz:param name='featureOrder' attribute='featureSet'/>
             </ofbiz:service>
  
@@ -291,17 +292,18 @@
   <%-- =========================== --%>
   <%-- Upgrades/Cross-sell/Up-sell --%>
   <%-- =========================== --%>
+<%pageContext.setAttribute("productValue", pageContext.getAttribute("product"));%>
   <table width='100%'>
     <%int listIndex = 1;%>
 
     <%-- obsolete --%>
     <ofbiz:service name='getAssociatedProducts'>
-        <ofbiz:param name='productId' value='<%=product.getString("productId")%>'/>
+        <ofbiz:param name='productId' value='<%=productId%>'/>
         <ofbiz:param name='type' value='PRODUCT_OBSOLESCENCE'/>
     </ofbiz:service>
     <ofbiz:if name="assocProducts" size="0">
         <tr><td>&nbsp;</td></tr>
-        <tr><td colspan="2"><div class="head2"><ofbiz:entityfield attribute="product" field="productName"/> is made obsolete by these products:</div></td></tr>
+        <tr><td colspan="2"><div class="head2"><ofbiz:entityfield attribute="productValue" field="productName"/> is made obsolete by these products:</div></td></tr>
         <tr><td><hr class='sepbar'></td></tr>
 
         <ofbiz:iterator name="productAssoc" property="assocProducts">
@@ -315,8 +317,8 @@
             </td></tr>
 
               <%{%>
-                <%GenericValue prodo = productAssoc.getRelatedOneCache("AssocProduct");%>
-                <%pageContext.setAttribute("overrideProduct", prodo);%>
+                <%GenericValue asscProduct = productAssoc.getRelatedOneCache("AssocProduct");%>
+                <%pageContext.setAttribute("product", asscProduct);%>
                 <tr>
                   <td>
                     <%@ include file="/catalog/productsummary.jsp"%>
@@ -332,7 +334,7 @@
 
     <%-- cross sell --%>
     <ofbiz:service name='getAssociatedProducts'>
-        <ofbiz:param name='productId' value='<%=product.getString("productId")%>'/>
+        <ofbiz:param name='productId' value='<%=productId%>'/>
         <ofbiz:param name='type' value='PRODUCT_COMPLEMENT'/>
     </ofbiz:service>
     <ofbiz:if name="assocProducts" size="0">
@@ -351,8 +353,8 @@
             </td></tr>
 
               <%{%>
-                <%GenericValue prodo = productAssoc.getRelatedOneCache("AssocProduct");%>
-                <%pageContext.setAttribute("overrideProduct", prodo);%>
+                <%GenericValue asscProduct = productAssoc.getRelatedOneCache("AssocProduct");%>
+                <%pageContext.setAttribute("product", asscProduct);%>
                 <tr>
                   <td>
                     <%@ include file="/catalog/productsummary.jsp"%>
@@ -368,12 +370,12 @@
 
     <%-- up sell --%>
     <ofbiz:service name='getAssociatedProducts'>
-        <ofbiz:param name='productId' value='<%=product.getString("productId")%>'/>
+        <ofbiz:param name='productId' value='<%=productId%>'/>
         <ofbiz:param name='type' value='PRODUCT_UPGRADE'/>
     </ofbiz:service>
     <ofbiz:if name="assocProducts" size="0">
         <tr><td>&nbsp;</td></tr>
-        <tr><td colspan="2"><div class="head2">Try these instead of <ofbiz:entityfield attribute="product" field="productName"/>:</div></td></tr>
+        <tr><td colspan="2"><div class="head2">Try these instead of <ofbiz:entityfield attribute="productValue" field="productName"/>:</div></td></tr>
         <tr><td><hr class='sepbar'></td></tr>
 
         <ofbiz:iterator name="productAssoc" property="assocProducts">
@@ -387,8 +389,8 @@
             </td></tr>
 
               <%{%>
-                <%GenericValue prodo = productAssoc.getRelatedOneCache("AssocProduct");%>
-                <%pageContext.setAttribute("overrideProduct", prodo);%>
+                <%GenericValue asscProduct = productAssoc.getRelatedOneCache("AssocProduct");%>
+                <%pageContext.setAttribute("product", asscProduct);%>
                 <tr>
                   <td>
                     <%@ include file="/catalog/productsummary.jsp"%>
@@ -404,12 +406,12 @@
 
     <%-- obsolescence --%>
     <ofbiz:service name='getAssociatedProducts'>
-        <ofbiz:param name='productIdTo' value='<%=product.getString("productId")%>'/>
+        <ofbiz:param name='productIdTo' value='<%=productId%>'/>
         <ofbiz:param name='type' value='PRODUCT_OBSOLESCENCE'/>
     </ofbiz:service>
     <ofbiz:if name="assocProducts" size="0">
         <tr><td>&nbsp;</td></tr>
-        <tr><td colspan="2"><div class="head2"><ofbiz:entityfield attribute="product" field="productName"/> makes these products obsolete:</div></td></tr>
+        <tr><td colspan="2"><div class="head2"><ofbiz:entityfield attribute="productValue" field="productName"/> makes these products obsolete:</div></td></tr>
         <tr><td><hr class='sepbar'></td></tr>
 
         <ofbiz:iterator name="productAssoc" property="assocProducts">
@@ -423,8 +425,8 @@
             </td></tr>
 
               <%{%>
-                <%GenericValue prodo = productAssoc.getRelatedOneCache("MainProduct");%>
-                <%pageContext.setAttribute("overrideProduct", prodo);%>
+                <%GenericValue asscProduct = productAssoc.getRelatedOneCache("MainProduct");%>
+                <%pageContext.setAttribute("product", asscProduct);%>
                 <tr>
                   <td>
                     <%@ include file="/catalog/productsummary.jsp"%>

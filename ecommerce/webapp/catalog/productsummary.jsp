@@ -1,11 +1,8 @@
-
 <ofbiz:if name="product">
   <table border="0" width='100%' cellpadding='0' cellspacing='0'>
     <tr>
       <td valign="top">
         <%GenericValue localProduct = (GenericValue) pageContext.getAttribute("product");%>
-        <%GenericValue overrideProduct = (GenericValue) pageContext.getAttribute("productOverride");%>
-        <%localProduct = overrideProduct != null ? overrideProduct : localProduct;%>
         <%String smallImageUrl = localProduct.getString("smallImageUrl");%>
         <%if(smallImageUrl == null || smallImageUrl.length() <= 0) smallImageUrl = "/images/defaultImage.jpg";%>
           <a href='<ofbiz:url>/product?product_id=<%EntityField.run("product", "productId", pageContext);%></ofbiz:url>'>
