@@ -56,10 +56,12 @@
     <TD colspan="3">Administration</TD>
   </TR>
 
-  <%Enumeration enum = UtilCache.utilCacheTable.elements();%>
-  <%if(enum!=null && enum.hasMoreElements()){%>
-    <%while(enum.hasMoreElements()){%>
-      <%UtilCache utilCache = (UtilCache)enum.nextElement();%>
+  <%TreeSet names = new TreeSet(UtilCache.utilCacheTable.keySet());%>
+  <%Iterator nameIter = names.iterator();%>
+  <%if(nameIter!=null && nameIter.hasNext()){%>
+    <%while(nameIter.hasNext()){%>
+      <%String cacheName = (String)nameIter.next();%>
+      <%UtilCache utilCache = (UtilCache)UtilCache.utilCacheTable.get(cacheName);%>
       <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
       <tr bgcolor="<%=rowColor%>">
         <TD><%=UtilFormatOut.checkNull(utilCache.getName())%></TD>
@@ -68,15 +70,15 @@
         <TD><%=UtilFormatOut.formatQuantity(utilCache.getMissCount())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(utilCache.getMaxSize())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(utilCache.getExpireTime())%></TD>
-        <TD>
+        <TD align=center valign=middle>
           <a href="<%=response.encodeURL(controlPath + "/FindUtilCacheElements?UTIL_CACHE_NAME=" + UtilFormatOut.checkNull(utilCache.getName()))%>" class="buttontext">Elements</a>
         </TD>
-        <TD>
+        <TD align=center valign=middle>
           <%if(hasUtilCacheEdit){%>
             <a href="<%=response.encodeURL(controlPath + "/EditUtilCache?UTIL_CACHE_NAME=" + UtilFormatOut.checkNull(utilCache.getName()))%>" class="buttontext">Edit</a>
           <%}%>
         </TD>
-        <TD>
+        <TD align=center valign=middle>
           <%if(hasUtilCacheEdit){%>
             <a href="<%=response.encodeURL(controlPath + "/FindUtilCacheClear?UTIL_CACHE_NAME=" + UtilFormatOut.checkNull(utilCache.getName()))%>" class="buttontext">Clear</a>
           <%}%>
