@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -50,7 +50,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                     <DIV class="boxhead">Add product keyword:</DIV>
                 </TD>
                 <TD align=right>
-                    <a href="<@ofbizUrl>/EditProduct?productId=${productId?if_exists}</@ofbizUrl>" class="lightbuttontext">[Edit Product]</a>
+                    <a href="<@ofbizUrl>/EditProduct?productId=${productId?if_exists}</@ofbizUrl>" class="submenutextright">Edit Product</a>
                 </td>
                 </tr>
             </table>
@@ -85,8 +85,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                     <DIV class="boxhead">Keywords</DIV>
                 </TD>
                 <TD align=right>
-                    <a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=CREATE&PRODUCT_ID=${productId}</@ofbizUrl>" class="lightbuttontext">[Re-induce Keywords]</a>
-                    <a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}</@ofbizUrl>" class="lightbuttontext">[Delete All Keywords]</a>
+                    <a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=CREATE&PRODUCT_ID=${productId}</@ofbizUrl>" class="submenutext">Re-induce Keywords</a><a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}</@ofbizUrl>" class="submenutextright">Delete All Keywords</a>
                 </td>
             </tr>
             </table>
