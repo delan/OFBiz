@@ -302,7 +302,11 @@ public class ProductEvents {
 
         //clear some cache entries
         delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productId", productId));
+        delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", productAssocTypeId));
+
         delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productIdTo", productIdTo));
+        delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId));
+
         delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productAssocTypeId", productAssocTypeId));
         delegator.clearCacheLine("ProductAssoc",
                 UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
