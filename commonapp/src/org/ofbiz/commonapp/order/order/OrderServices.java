@@ -233,6 +233,7 @@ public class OrderServices {
             return result;
         }
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        result.put("orderStatusId", statusId);
         return result;
     }
     
