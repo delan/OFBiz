@@ -19,7 +19,7 @@ as you want it, that is where this configuration will look for it. Make sure
 it is getting the JTA UserTransaction object and the JDBC connection from JNDI.
 
 In the OFBIZ_HOME directory run "ant ear" to create the ofbiz.ear file. Copy
-this file into the ofbiz/deploy directory.
+this file into the jboss/deploy directory.
 
 Go into jboss/bin and run the ofbiz.sh script. It uses the ofbiz config that
 you just created.
