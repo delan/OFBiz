@@ -20,25 +20,39 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
-<div class='head1'>${uiLabelMap.ProductAdvancedSearchinCategory}: ${(searchCategory.description)?if_exists}</div>
+<div class="head1">${uiLabelMap.ProductAdvancedSearchinCategory}</div>
 <br>
-<form name="advtokeywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style='margin: 0;'>
-  <input type='hidden' name="VIEW_SIZE" value="10">
-  <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}">
+<form name="advtokeywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style="margin: 0;">
+  <input type="hidden" name="VIEW_SIZE" value="10">
   <table border="0" wdith="100%">
+    <#if searchCategory?has_content>
+        <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}">
+        <tr>
+          <td align="right" valign="middle">
+            <div class="tabletext">Category:</div>
+          </td>
+          <td valign="middle">
+            <div class="tabletext">
+              ${(searchCategory.description)?if_exists}, include sub-categories?
+              Yes<input type="RADIO" name="SEARCH_SUB_CATEGORIES" value="Y" checked>
+              No<input type="RADIO" name="SEARCH_SUB_CATEGORIES" value="N">
+            </div>
+          </td>
+        </tr>
+    </#if>
     <tr>
-      <td>
-        <div class='tabletext'>${uiLabelMap.ProductKeywords}:</div>
+      <td align="right" valign="middle">
+        <div class="tabletext">${uiLabelMap.ProductKeywords}:</div>
       </td>
-      <td>
-        <div class='tabletext'>
-          <input type='text' class='inputBox' name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING?if_exists}">&nbsp;
-          ${uiLabelMap.CommonAny}<input type='RADIO' name='SEARCH_OPERATOR' value='OR' <#if searchOperator == "OR">checked</#if>>
-         ${uiLabelMap.CommonAll}<input type='RADIO' name='SEARCH_OPERATOR' value='AND' <#if searchOperator == "AND">checked</#if>>
+      <td valign="middle">
+        <div class="tabletext">
+          <input type="text" class="inputBox" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING?if_exists}">&nbsp;
+          ${uiLabelMap.CommonAny}<input type="RADIO" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked</#if>>
+          ${uiLabelMap.CommonAll}<input type="RADIO" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked</#if>>
         </div>
       </td>
     </tr>   
@@ -47,11 +61,11 @@
       <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
       <tr>
-        <td>
-          <div class='tabletext'>${(productFeatureType.description)?if_exists}:</div>
+        <td align="right" valign="middle">
+          <div class="tabletext">${(productFeatureType.description)?if_exists}:</div>
         </td>
-        <td>
-          <div class='tabletext'>
+        <td valign="middle">
+          <div class="tabletext">
             <select class="selectBox" name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonAny} -</option>
               <#list productFeatures as productFeature>
@@ -62,9 +76,27 @@
         </td>
       </tr>
     </#list>
+
+    <#if searchConstraintStrings?has_content>
+      <tr>
+        <td align="right" valign="top">
+          <div class="tabletext">Last Search:</div>
+        </td>
+        <td valign="top">
+            <#list searchConstraintStrings as searchConstraintString>
+                <div class="tabletext">&nbsp;-&nbsp;${searchConstraintString}</div>
+            </#list>
+            <div class="tabletext">Sorted by: ${searchSortOrderString}</div>
+            <div class="tabletext">
+              New Search<input type="RADIO" name="clearSearch" value="Y" checked>
+              Refine Search<input type="RADIO" name="clearSearch" value="N">
+            </div>
+        </td>
+      </tr>
+    </#if>
     <tr>
       <td>
-        <div class='tabletext'>
+        <div class="tabletext">
           <a href="javascript:document.advtokeywordsearchform.submit()" class="buttontext">${uiLabelMap.CommonFind}</a>
         </div>
       </td>

@@ -20,39 +20,123 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 */
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.product.catalog.*;
+import org.ofbiz.product.feature.*;
 import org.ofbiz.product.product.*;
 
 delegator = request.getAttribute("delegator");
 
 contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
 requestParams = UtilHttp.getParameterMap(request);
+
+// clear search? by default yes, but if the clearSearch parameter is N then don't
+clearSearchString = requestParams.get("clearSearch");
+if (!"N".equals(clearSearchString)) {
+    ProductSearch.searchClear(session);
+} else {
+    removeConstraint = requestParams.get("removeConstraint");
+    if (UtilValidate.isNotEmpty(removeConstraint)) {
+        try {
+            ProductSearch.searchRemoveConstraint(Integer.parseInt(removeConstraint), session);
+        } catch (Exception e) {
+            Debug.logError(e, "Error removing constraint [" + removeConstraint + "]", "keywordsearch.bsh");
+        }
+    }
+}
+
+// if there is another category, add a constraint for it
 searchCategoryId = requestParams.get("SEARCH_CATEGORY_ID");
+searchSubCategories = requestParams.get("SEARCH_SUB_CATEGORIES");
+if (UtilValidate.isNotEmpty(searchCategoryId)) {
+    ProductSearch.searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories)), session);
+}
+
+// if keywords were specified, add a constraint for them
+keywordString = requestParams.get("SEARCH_STRING");
 searchOperator = requestParams.get("SEARCH_OPERATOR");
-if (searchOperator == null) searchOperator = session.getAttribute("searchOperator");
+if (searchOperator == null) {
+    searchOperator = session.getAttribute("searchOperator");
+} else {
+    session.setAttribute("searchOperator", searchOperator);
+}
+if (UtilValidate.isNotEmpty(keywordString)) {
+    ProductSearch.searchAddConstraint(new ProductSearch.KeywordConstraint(keywordString, true, true, null, "AND".equals(searchOperator)), session);
+}
 
-ProductWorker.getKeywordSearchProducts(request, "", searchCategoryId, true, true, "AND".equals(searchOperator));
+// if features were selected add a constraint for each
+featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(request);
+ProductSearch.searchAddFeatureIdConstraints(featureIdByType.values(), session);
 
-keywordString = request.getAttribute("keywordString");
-viewIndex = request.getAttribute("viewIndex");
-viewSize = request.getAttribute("viewSize");
+// set the sort order
+String sortOrder = requestParams.get("sortOrder");
+sortAscending = requestParams.get("sortAscending");
+boolean ascending = !"N".equals(sortAscending);
+if (sortOrder != null) {
+    if (sortOrder.equals("SortKeywordRelevancy")) {
+        ProductSearch.searchSetSortOrder(new ProductSearch.SortKeywordRelevancy());
+    } else if (sortOrder.startsWith("SortProductField:")) {
+        fieldName = sortOrder.substring("SortProductField:".length());
+        ProductSearch.searchSetSortOrder(new ProductSearch.SortProductField(fieldName, ascending));
+    } else if (sortOrder.equals("SortListPrice")) {
+        ProductSearch.searchSetSortOrder(new ProductSearch.SortListPrice(ascending));
+    }
+}
 
-baseSearchStr = "~SEARCH_STRING="+keywordString+"/~SEARCH_OPERATOR="+searchOperator+"/~SEARCH_CATEGORY_ID="+searchCategoryId+"/~VIEW_SIZE="+viewSize;
-nextStr = baseSearchStr+"/~VIEW_INDEX="+(viewIndex.intValue()+1);
-prevStr = baseSearchStr+"/~VIEW_INDEX="+(viewIndex.intValue()-1);
+// ========== Do the actual search
+productIds = ProductSearch.searchDo(session, delegator);
+context.put("productIds", productIds);
 
+// ========== Create View Indexes
+int viewIndex = 0;
+int viewSize = 20;
+int highIndex = 0;
+int lowIndex = 0;
+int listSize = 0;
+
+try {
+    viewIndex = Integer.valueOf((String) requestParams.get("VIEW_INDEX")).intValue();
+} catch (Exception e) {
+    Debug.logError(e, "Error formatting VIEW_INDEX", "keywordsearch.bsh");
+    viewIndex = 0;
+}
+
+try {
+    viewSize = Integer.valueOf((String) requestParams.get("VIEW_SIZE")).intValue();
+} catch (Exception e) {
+    Debug.logError(e, "Error formatting VIEW_SIZE", "keywordsearch.bsh");
+    viewSize = 20;
+}
+
+if (productIds != null) {
+    listSize = productIds.size();
+}
+
+lowIndex = viewIndex * viewSize;
+highIndex = (viewIndex + 1) * viewSize;
+if (listSize < highIndex) {
+    highIndex = listSize;
+}
+
+context.put("viewIndex", viewIndex);
+context.put("viewSize", viewSize);
+context.put("listSize", listSize);
+context.put("lowIndex", lowIndex);
+context.put("highIndex", highIndex);
+
+// ========== Setup other display info
 searchCategory = (searchCategoryId == null || searchCategoryId.length() == 0) ? null : 
 	delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", searchCategoryId));
 
-session.setAttribute("searchOperator", searchOperator);
+searchConstraintStrings = ProductSearch.searchGetConstraintStrings(false, session, delegator);
+searchSortOrderString = ProductSearch.searchGetSortOrderString(false, session);
+        
 context.put("searchOperator", searchOperator);
-context.put("baseSearchStr", baseSearchStr);
-context.put("nextStr", nextStr);
-context.put("prevStr", prevStr);
 context.put("searchCategory", searchCategory);
+context.put("searchConstraintStrings", searchConstraintStrings);
+context.put("searchSortOrderString", searchSortOrderString);
 
