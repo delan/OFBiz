@@ -153,7 +153,14 @@
         <tr>
           <td>
               <table width="100%" border="0" cellpadding="1">
-              <ofbiz:if name="paymentMethod"> 
+              <ofbiz:unless name="paymentMethod">
+                    <tr>
+                      <td colspan="2" align="center" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>OFFLINE Payment</b></div>
+                      </td>
+                    </tr>
+              </ofbiz:unless>
+              <ofbiz:if name="paymentMethod">
                 <%pageContext.setAttribute("outputted", "true");%>
                 <%if ("CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {%>
                     <%GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");%>

@@ -264,7 +264,17 @@
     <a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Credit Card]</a>
     <a href="<ofbiz:url>/editeftaccount?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[EFT Account]</a>
   </td></tr>
- <ofbiz:if name="paymentMethodList" size="0"> 
+ <ofbiz:if name="paymentMethodList" size="0">
+  <tr><td colspan="2"><hr class='sepbar'></td></tr>
+  <tr>
+    <td width="1%" nowrap>
+      <input type="radio" name="paymentMethodId" value="_OFFLINE_"
+      <ofbiz:if name="cart"><%="_OFFLINE_".equals(cart.getPaymentMethodId()) ? "CHECKED" : ""%></ofbiz:if>>
+    </td>
+    <td width="50%" nowrap>
+      <span class="tabletext">Offline:&nbsp;Check/Money Order</span>
+    </td>
+  </tr>
   <tr><td colspan="2"><hr class='sepbar'></td></tr>
   <ofbiz:iterator name="paymentMethod" property="paymentMethodList">
       <%if ("CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {%>
