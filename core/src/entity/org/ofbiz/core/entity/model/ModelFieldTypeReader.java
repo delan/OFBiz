@@ -74,6 +74,10 @@ public class ModelFieldTypeReader {
 
     public static ModelFieldTypeReader getModelFieldTypeReader(String helperName) {
         EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+        if (datasourceInfo == null) {
+            throw new IllegalArgumentException("Could not find a datasource/helper with the name " + helperName);
+        }
+
         String tempModelName = datasourceInfo.fieldTypeName;
         ModelFieldTypeReader reader = (ModelFieldTypeReader) readers.get(tempModelName);
 
