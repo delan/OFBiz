@@ -4,7 +4,7 @@
 # the code examples.  
 #
 # To create your own start script for your domain, you can initialize the 
-# environment by calling ${WL_HOME}/common/bin/commEnv.sh. It sets following
+# environment by calling $WL_HOME/common/bin/commEnv.sh. It sets following
 # variables: 
 # WL_HOME        - The root directory of your WebLogic installation.
 # JAVA_HOME      - Location of the version of Java used to start WebLogic
@@ -38,7 +38,7 @@
 #                  will be tagged on to the end of the JAVA_VM and MEM_ARGS)
 #
 # If you want to start the examples server using the JRockit JVM, edit
-# ${WL_HOME}/common/bin/commEnv.sh to specify the correct values for
+# $WL_HOME/common/bin/commEnv.sh to specify the correct values for
 # JAVA_HOME and JAVA_VENDOR.
 #
 # For additional information, refer to the WebLogic Server Administration 
@@ -60,7 +60,7 @@ JAVA_VENDOR="Sun"
 # Set JAVA_HOME to java virtual machine you want to run on server side.
 JAVA_HOME="C:/bea/jdk141_05"
 
-. "${WL_HOME}/common/bin/commEnv.sh"
+. "$WL_HOME/common/bin/commEnv.sh"
 
 # Set SERVER_NAME to the name of the server you wish to start up.
 SERVER_NAME=examplesServer
@@ -81,28 +81,30 @@ unset POINTBASE_PID
 
 
 SAMPLES_HOME="C:/bea/weblogic81/samples"
-EXAMPLES_CONFIG="${SAMPLES_HOME}/domains/examples"
+EXAMPLES_CONFIG="$SAMPLES_HOME/domains/examples"
 
-EXAMPLES_HOME="${SAMPLES_HOME}/server/examples"
-EXAMPLES_BUILD="${EXAMPLES_HOME}/build"
+EXAMPLES_HOME="$SAMPLES_HOME/server/examples"
+EXAMPLES_BUILD="$EXAMPLES_HOME/build"
 
-APPLICATIONS="${EXAMPLES_CONFIG}/applications"
-CLIENT_CLASSES="${EXAMPLES_BUILD}/clientclasses"
-SERVER_CLASSES="${EXAMPLES_BUILD}/serverclasses"
-COMMON_CLASSES="${EXAMPLES_BUILD}/common"
-EX_WEBAPP_CLASSES="${EXAMPLES_BUILD}/examplesWebApp/WEB-INF/classes"
+APPLICATIONS="$EXAMPLES_CONFIG/applications"
+CLIENT_CLASSES="$EXAMPLES_BUILD/clientclasses"
+SERVER_CLASSES="$EXAMPLES_BUILD/serverclasses"
+COMMON_CLASSES="$EXAMPLES_BUILD/common"
+EX_WEBAPP_CLASSES="$EXAMPLES_BUILD/examplesWebApp/WEB-INF/classes"
 
+<#noparse>
 CLASSPATH="${WL_HOME}/server/lib/webservices.jar${CLASSPATHSEP}${POINTBASE_CLASSPATH}${CLASSPATHSEP}${CLIENT_CLASSES}${CLASSPATHSEP}${SERVER_CLASSES}${CLASSPATHSEP}${COMMON_CLASSES}${CLASSPATHSEP}${CLIENT_CLASSES}/utils_common.jar"
 export CLASSPATH
 
 "$JAVA_HOME/bin/java" ${JAVA_OPTIONS} com.pointbase.net.netServer /port:9092 /d:3 /noconsole /pointbase.ini="pointbase.ini" > "pointbase.log" 2>&1 &
 POINTBASE_PID=${!}
+</#noparse>
 
 # trap SIGINT, this function is defined in commEnv.sh
 trapSIGINT
 
 echo
-echo "POINTBASE DATABASE HAS BEEN STARTED, IT'S PID IS ${POINTBASE_PID}!"
+echo "POINTBASE DATABASE HAS BEEN STARTED, IT'S PID IS $POINTBASE_PID!"
 echo
 #****************************************************************************
 
@@ -112,11 +114,17 @@ echo
 resetFd
 
 # Start WebLogic server
-CLASSPATH="${WEBLOGIC_CLASSPATH}${CLASSPATHSEP}${CLASSPATH}"
+CLASSPATH="$WEBLOGIC_CLASSPATH$CLASSPATHSEP$CLASSPATH"
+
+# -=-=-=-=-=-=-=-=- Start OFBiz Classpath Here -=-=-=-=-=-=-=-=-
+<#list classpathJars as jar>
+CLASSPATH="$CLASSPATH$CLASSPATHSEP${jar}"
+</#list>
+# -=-=-=-=-=-=-=-=- End OFBiz Classpath Here -=-=-=-=-=-=-=-=-
  
-echo CLASSPATH="${CLASSPATH}"
+echo CLASSPATH="$CLASSPATH"
 echo
-echo PATH="${PATH}"
+echo PATH="$PATH"
 echo
 echo "***************************************************"
 echo "*  To start WebLogic Server, use a username and   *"
@@ -126,14 +134,15 @@ echo "*  console at http://<hostname>:<port>/console    *"
 echo "***************************************************"
 
 
-"$JAVA_HOME/bin/java" ${JAVA_VM} ${MEM_ARGS} ${JAVA_OPTIONS}     \
-  -Dweblogic.Name=${SERVER_NAME}                                 \
-  -Dweblogic.ProductionModeEnabled=${PRODUCTION_MODE}            \
-  -Djava.security.policy="${WL_HOME}/server/lib/weblogic.policy" \
+"$JAVA_HOME/bin/java" $JAVA_VM $MEM_ARGS $JAVA_OPTIONS         \
+  -Dweblogic.Name=$SERVER_NAME                                 \
+  -Dweblogic.ProductionModeEnabled=$PRODUCTION_MODE            \
+  -Djava.security.policy="$WL_HOME/server/lib/weblogic.policy" \
+  -Dofbiz.home="${env.get("ofbiz.home")}"                      \
    weblogic.Server 
   
 
-if [ "${POINTBASE_PID}" != "" ]; then
-  kill -9 ${POINTBASE_PID}
+if [ "$POINTBASE_PID" != "" ]; then
+  kill -9 $POINTBASE_PID
   unset POINTBASE_PID
 fi

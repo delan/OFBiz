@@ -3,7 +3,7 @@
 @rem the code examples. 
 @rem
 @rem To create your own start script for your domain, you can initialize the 
-@rem environment by calling ${WL_HOME}/common/bin/commEnv.cmd. 
+@rem environment by calling %WL_HOME%/common/bin/commEnv.cmd. 
 @rem
 @rem commEnv.cmd initializes following variables: 
 @rem WL_HOME        - The root directory of your WebLogic installation.
@@ -34,7 +34,7 @@
 @rem                  MEM_ARGS)
 @rem
 @rem If you want to start the examples server using the JRockit JVM, edit
-@rem ${WL_HOME}/common/bin/commEnv.cmd to specify the correct values for
+@rem %WL_HOME%/common/bin/commEnv.cmd to specify the correct values for
 @rem JAVA_HOME and JAVA_VENDOR.
 @rem
 @rem For additional information, refer to the WebLogic Server Administration 
@@ -96,6 +96,12 @@ start "PointBase" cmd /c ""%JAVA_HOME%\bin\java" com.pointbase.net.netServer /po
 
 set CLASSPATH=%WEBLOGIC_CLASSPATH%;%CLASSPATH%
 
-"%JAVA_HOME%\bin\java" %JAVA_VM% %MEM_ARGS% %JAVA_OPTIONS% -Dweblogic.Name=%SERVER_NAME% -Dweblogic.ProductionModeEnabled=%PRODUCTION_MODE% -Djava.security.policy="%WL_HOME%\server\lib\weblogic.policy" weblogic.Server 
+@rem -=-=-=-=-=-=-=-=- Start OFBiz Classpath Here -=-=-=-=-=-=-=-=-
+<#list classpathJars as jar>
+set CLASSPATH=%CLASSPATH%;${jar}
+</#list>
+@rem -=-=-=-=-=-=-=-=- End OFBiz Classpath Here -=-=-=-=-=-=-=-=-
+
+"%JAVA_HOME%\bin\java" %JAVA_VM% %MEM_ARGS% %JAVA_OPTIONS% -Dweblogic.Name=%SERVER_NAME% -Dweblogic.ProductionModeEnabled=%PRODUCTION_MODE% -Djava.security.policy="%WL_HOME%\server\lib\weblogic.policy" -Dofbiz.home="${env.get("ofbiz.home")}" weblogic.Server
 
 ENDLOCAL
