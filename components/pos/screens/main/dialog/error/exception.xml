@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XPage>
+    <Components>
+        <!-- when used as a PosDialog the x/y will be set to center of screen -->
+        <Panel name="errorPanel" x="0" y="0" w="600" h="300" style="errorpanel" border="1" alignment="Center">
+            <TextArea x="0" y="0" w="550" h="200" name="dialog_output" style="error" border="0" alignment="Left"/>
+            <Button name="closeBtn" x="0" y="400" w="550" h="60" style="error" content="OK" alignment="Center"/>
+        </Panel>
+    </Components>
+</XPage>

@@ -152,7 +152,11 @@ public class PaymentEvents {
             try {
                 trans.processSale();
             } catch (GeneralException e) {
-                pos.showDialog("main/dialog/error/testerror");
+                pos.getInput().clearFunction("PAID");
+                pos.getInput().setFunction("TOTAL");
+                pos.getInput().setLock(false);
+                pos.getButtons().setLock(false);
+                pos.showDialog("main/dialog/error/exception", e.getMessage());
             }
         }
     }

@@ -41,7 +41,7 @@ import javax.swing.JDialog;
 import javax.swing.JRootPane;
 
 import net.xoetrope.swing.XButton;
-import net.xoetrope.swing.XEdit;
+import net.xoetrope.swing.XTextArea;
 import net.xoetrope.xui.XPage;
 import net.xoetrope.xui.XResourceManager;
 
@@ -65,7 +65,7 @@ public class PosDialog {
     protected Component parent = null;
 
     protected JDialog dialog = null;
-    protected XEdit output = null;
+    protected XTextArea output = null;
     protected XPage page = null;
     protected boolean modal = true;
     protected int padding = 0;
@@ -108,7 +108,12 @@ public class PosDialog {
         dialog.getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG);
 
         // find the output edit object
-        this.output = (XEdit) page.findComponent("dialog_output");
+        this.output = (XTextArea) page.findComponent("dialog_output");
+        if (this.output != null) {
+            this.output.setWrapStyleWord(true);
+            this.output.setLineWrap(true);
+            this.output.setEditable(false);
+        }
 
         // set the components
         Component[] coms = page.getComponents();
@@ -157,9 +162,12 @@ public class PosDialog {
         });
     }
 
-    public void showDialog(Container parent, DialogCallback cb) {
+    public void showDialog(Container parent, DialogCallback cb, String text) {
         this.parent = parent;
         this.cb = cb;
+        if (text != null) {
+            this.setText(text);
+        }
 
         // don't allow the main window to take focus
         appWindow.setFocusable(false);
@@ -173,7 +181,10 @@ public class PosDialog {
 
     public void setText(String text) {
         if (this.output != null) {
+            Debug.log("Setting output text - " + text, module);
             this.output.setText(text);
+        } else {
+            Debug.log("PosDialog output edit box is NULL!", module);
         }
     }
 
