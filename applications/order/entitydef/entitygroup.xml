@@ -117,6 +117,7 @@
     <entity-group group="org.ofbiz" entity="CustRequestItem" />
     <entity-group group="org.ofbiz" entity="CustRequestItemNote" />
     <entity-group group="org.ofbiz" entity="CustRequestItemNoteView" />
+    <entity-group group="org.ofbiz" entity="CustRequestItemWorkEffort" />
     <entity-group group="org.ofbiz" entity="CustRequestResolution" />
     <entity-group group="org.ofbiz" entity="CustRequestRole" />
     <entity-group group="org.ofbiz" entity="CustRequestStatus" />
