@@ -1,0 +1,38 @@
+
+This Orion deployment is kind of weird, actually Orion is kind of a weird app
+server. Note that this deployment does not use Orion's JTA or XA JDBC pooling
+implementations because I couldn't find out how to get the JTA UserTransaction
+and TransactionManager objects. If anyone knows, please email me.
+
+The performance under Orion is good, though not as good as Weblogic.
+
+To deploy on Orion copy the files in this directory to the Orion root directory
+and the files in config to the Orion config directory. Be sure to backup the
+files in the config directory that these will overwrite if those files are
+important to you.
+
+That done, in the OFBiz home directory run "ant ear" to create the ofbiz.ear
+file, and copy that file into orion/applications, where it is referenced in
+the config/server.xml file.
+
+Now, go into the Orion home directory and run the "ofbiz-get-files.sh" script
+which will copy a bunch of files from the OFBiz directories to the orion/lib
+directory. The "ofbiz-remove-files.sh" script can be use to get rid of these.
+
+With all of that in place, just set your $OFBIZ_HOME environment variable
+and run "ofbiz.sh" in the Orion root directory.
+
+By the way, be sure to copy the tools.jar file from your JDK lib directory to
+the Orion root directory, it needs it there for compilation.
+
+The default entityengine.properties file is used at the moment for Orion
+because of the problem mentioned at the top of this file, ie no access to the
+JTA interfaces. So, the Tyrex configurations there can be used just fine.
+
+
+Hope that helps!
+
+-David Jones
+jonesde@ofbiz.org
+
+
