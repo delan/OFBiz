@@ -16,9 +16,9 @@
         <tr>
           <td>
             <DIV class='tabletext'><br/><br/><br/>
-            <center><h1> Welcome to the Hotel Demo Backend system <br/>of the 
+            <center><h2> Welcome to the Hotel Demo Backend system <br/>of the 
             <a href="http://opentravelsystem.org" target="new"> OpenTravelSystem.</a><br/><br/>
-            </h1></center></DIV>  
+            </h2></center></DIV>  
            <center><table width='60%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'><tr><td>
             The purpose of this system is to provide Hotels with the possbility to maintain the offerings (products), reservations, customer 
             management and access and settings.<br>

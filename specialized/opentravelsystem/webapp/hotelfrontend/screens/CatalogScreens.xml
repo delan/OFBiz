@@ -166,14 +166,15 @@
     <screen name="category">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
-
-                <set field="title" value="Category Page"/>
                 <set field="title-property" value="PageTitleCategoryPage"/>
+                <set field="rightbarScreenName" value="rightbar"/>
             </actions>
             <widgets>
-                <include-screen name="category-include"/>
+                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-screen name="category-include"/>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -183,7 +184,17 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/category.bsh"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/category.ftl"/></html></platform-specific>
+                <section>
+                    <condition>
+                        <not><if-empty field-name="productCategory"/></not>
+                    </condition>
+                    <widgets>
+                        <include-screen name="${detailScreen}"/>
+                    </widgets>
+                    <fail-widgets>
+                        <label style="head2">${uiLabelMap.ProductCategoryNotFoundforCategoryID} ${productCategoryId}!</label>
+                    </fail-widgets>
+                </section>
             </widgets>
         </section>
     </screen>

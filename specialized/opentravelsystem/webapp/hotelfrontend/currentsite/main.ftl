@@ -13,7 +13,7 @@
 				</tr>
 				<tr>
 					<td>
-						<table width="100%" cellpadding="0" cellspacing="0" border="0" class="boxbottom">
+						<table width="100%" cellpadding="5" cellspacing="0" border="0" class="boxbottom">
 							<tr>
 								<td><a href="http://www.rydges-chiangmai.com/profile.shtml" target="_self"><img src="/hotelfrontend/images/hotel_front.gif" width="80" height="80" border="0"></a></td>
 								<td valign="top" class="tabletext">

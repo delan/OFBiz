@@ -447,6 +447,34 @@
             </widgets>
         </section>
     </screen>
+    <screen name="EditProductContent">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="page.headerItem" value="products"/>
+                <set field="page.tabButtonItem" value="EditProductPrices"/>
+                <set field="title" value="Edit Product Prices"/>
+                <set field="titleProperty" value="PageTitleEditProductPrices"/>
+                <set field="labelTitleProperty" value="ProductPrices"/>
+                <set field="productId" from-field="parameters.productId"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductContent.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                    <container>
+                       <platform-specific>
+                           <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
+                       </platform-specific>
+                            <label style="head1">Edit Product Content: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
+                     </container>
+                        <include-form name="EditProductContent" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="EditProductAssetUsage">
         <!-- screen for rental parameters -->
         <section>

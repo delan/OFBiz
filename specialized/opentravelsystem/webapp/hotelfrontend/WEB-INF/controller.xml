@@ -1106,7 +1106,8 @@
     <view-map name="showPromotionDetails" type="jpublish" page="/cart/showPromotionDetails.ftl"/>
 
     <view-map name="quickadd" type="jpublish" page="/catalog/quickadd.ftl"/>
-    <view-map name="category" type="jpublish" page="/catalog/category.ftl"/>
+    <!--view-map name="category" type="jpublish" page="/catalog/category.ftl"/-->
+    <view-map name="category" type="screen" page="component://opentravelsystem/webapp/hotelfrontend/screens/CatalogScreens.xml#category"/>
     <!--view-map name="product" type="jpublish" page="/catalog/product.ftl"/-->
     <view-map name="product" type="screen" page="component://opentravelsystem/webapp/hotelfrontend/screens/CatalogScreens.xml#product"/>
     <view-map name="detailImage" type="jpublish" page="/catalog/detailImage.ftl"/>

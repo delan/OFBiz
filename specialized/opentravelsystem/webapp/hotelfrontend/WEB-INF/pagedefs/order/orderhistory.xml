@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
-    <template>main_right</template> 
+    <template>main</template> 
     <property name="title">Order History</property>
     <property name="title-property">PageTitleOrderHistory</property>
     <content-action name="/order/orderhistory.bsh"/>
