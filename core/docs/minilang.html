@@ -33,11 +33,14 @@ $Id$ <br>
     <ul>
     <li><a href='#MethodOverview'>Simple Method Overview</a>
     <li><a href='#Call'>Call Operations</a>
+    <li><a href='#JavaCall'>Java Call Operations</a>
+    <li><a href='#ControlError'>Control and Error Handling Operations</a>
     <li><a href='#Event'>Event Specific Operations</a>
     <li><a href='#Service'>Service Specific Operations</a>
     <li><a href='#Environment'>Method Environment Operations</a>
     <li><a href='#Entity'>Entity Engine Operations</a>
     <li><a href='#Conditional'>Conditional (If) Operations</a>
+    <li><a href='#Other'>Other Operations</a>
     <li><a href='#MethodExample'>Simple Methods Example</a>
     </ul>
 </ul>
@@ -223,11 +226,14 @@ in addition to all of the the attributes in the copy tag.</p>
 <ul>
 <li><a href='#MethodOverview'>Simple Method Overview</a>
 <li><a href='#Call'>Call Operations</a>
+<li><a href='#JavaCall'>Java Call Operations</a>
+<li><a href='#ControlError'>Control and Error Handling Operations</a>
 <li><a href='#Event'>Event Specific Operations</a>
 <li><a href='#Service'>Service Specific Operations</a>
 <li><a href='#Environment'>Method Environment Operations</a>
 <li><a href='#Entity'>Entity Engine Operations</a>
 <li><a href='#Conditional'>Conditional (If) Operations</a>
+<li><a href='#Other'>Other Operations</a>
 <li><a href='#MethodExample'>Simple Methods Example</a>
 </ul>
 <hr>
@@ -376,6 +382,18 @@ available operations.</p>
 <h4><a name='Call'>Call Operations</a></h4>
 
 <p><b><u>call-map-processor</u></b></p>
+
+<p>The call-map-processor tag invokes a simple map processor from an existing 
+map, creating a new map or adding to an existing one if the named out-map already
+exists. Resulting messages are added to the named list, and a new list is
+created if a list with the given name does not yet exist. Note that all lists 
+and maps exist in the same context and must have unique names.</p>
+
+<p>An inline simple-map-processor can be used by putting a <b>simple-map-processor</b>
+tag under the <b>call-map-processor</b> tag. If both an external and an inline 
+map-processor are specified, the external one will be called first, allowing the 
+inline one to override its behavior</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -423,18 +441,15 @@ available operations.</p>
 </tr>
 </table>
 
-<p>The call-map-processor tag invokes a simple map processor from an existing 
-map, creating a new map or adding to an existing one if the named out-map already
-exists. Resulting messages are added to the named list, and a new list is
-created if a list with the given name does not yet exist. Note that all lists 
-and maps exist in the same context and must have unique names.</p>
-
-<p>An inline simple-map-processor can be used by putting a <b>simple-map-processor</b>
-tag under the <b>call-map-processor</b> tag. If both an external and an inline 
-map-processor are specified, the external one will be called first, allowing the 
-inline one to override its behavior</p>
-
 <p><b><u>call-service</u></b></p>
+
+<p>The call-service tag invokes a service through the Service Engine. If the
+specified error code is returned from the service, the event is aborted
+and the transaction in the current thread is rolled back. Otherwise, the
+remaining operations are invoked.</p>
+
+<p>The result-to-request and result-to-session elements will be IGNORED when 
+called in a service context. So, they are ONLY used when called in an event context.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -520,15 +535,12 @@ inline one to override its behavior</p>
 </tr>
 </table>
 
-<p>The call-service tag invokes a service through the Service Engine. If the
-specified error code is returned from the service, the event is aborted
-and the transaction in the current thread is rolled back. Otherwise, the
-remaining operations are invoked.</p>
-
-<p>The result-to-request and result-to-session elements will be IGNORED when 
-called in a service context. So, they are ONLY used when called in an event context.</p>
-
 <p><b><u>call-service-asynch</u></b></p>
+
+<p>Calls a service asynchronously and ignores the result, so no return messages 
+are used; that doesn't mean no errors will result, but they would just be
+system errors like database failures, etc which all have system error messages.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -549,11 +561,19 @@ called in a service context. So, they are ONLY used when called in an event cont
 </tr>
 </table>
 
-<p>Calls a service asynchronously and ignores the result, so no return messages 
-are used; that doesn't mean no errors will result, but they would just be
-system errors like database failures, etc which all have system error messages.</p>
-
 <p><b><u>call-bsh</u></b></p>
+
+<p>Runs an external bsh script from the classpath if resource is specified and 
+then runs the inlined bsh script if any is specified.</p>
+
+<p>The bsh context is the current simple-method environment including maps, lists
+and special objects whose names are defined in the simple-method attributes.</p>
+
+<p>The current env cannot be modified, but if a Map is returned by the bsh block
+the entries in the map will be put into the current env.</p>
+
+<p>Error messages go on the error list and are handled with the check-errors tag.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -569,18 +589,14 @@ system errors like database failures, etc which all have system error messages.<
     <td>Defaults to "error_list".</td>
 </tr>
 </table>
-<p>Runs an external bsh script from the classpath if resource is specified and 
-then runs the inlined bsh script if any is specified.</p>
-
-<p>The bsh context is the current simple-method environment including maps, lists
-and special objects whose names are defined in the simple-method attributes.</p>
-
-<p>The current env cannot be modified, but if a Map is returned by the bsh block
-the entries in the map will be put into the current env.</p>
-
-<p>Error messages go on the error list and are handled with the check-errors tag.</p>
 
 <p><b><u>call-simple-method</u></b></p>
+
+<p>The call-simple-method tag calls another simple-method in the same context as
+the current one. In other words the called simple-method will have the same 
+environment as the calling simple-method, including all environment fields, and
+either the event or service objects that the calling simple-method was called with.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -599,12 +615,167 @@ the entries in the map will be put into the current env.</p>
     xml-resource, or in the current XML file if no xml-resource is specified.</td>
 </tr>
 </table>
-<p>The call-simple-method tag calls another simple-method in the same context as
-the current one. In other words the called simple-method will have the same 
-environment as the calling simple-method, including all environment fields, and
-either the event or service objects that the calling simple-method was called with.</p>
+
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
+<hr>
+<h4><a name='JavaCall'>Java Call Operations</a></h4>
+
+<p><b><u>create-object</u></b></p>
+
+<p>Creates an object of the given class and if the field-name is specified saves it in that field.</p>
+
+<p>The string and field sub-elements are passed to the constructor method as arguments in the order they are specified. If the sub-elements do not match the constructor method arguments an error will be returned.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>class-name</td><td>Y</td>
+    <td>The name of the class to construct an object of.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>N</td>
+    <td>The name of a field to put the new object in. If not specified the object will be created but ignored after that.</td>
+</tr>
+<tr>
+    <td>map-name</td><td>N</td>
+    <td>The name of the map the field will go in. If not specified the field will be put in the environment.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>string</td><td>0 to many</td>
+    <td>Used to specify an inline String argument to the constructor method.</td>
+</tr>
+<tr>
+    <td>field</td><td>0 to many</td>
+    <td>Used to specify a field to be passed as an argument to the constructor method. The field can be in a map in the environment or if no map-name is specified then the field will come directly from the environment.</td>
+</tr>
+</table>
+
+<p><b><u>call-object-method</u></b></p>
+
+<p>Calls a method on an existing object that exists in a field in the environment or in a map in the environment.</p>
+
+<p>The string and field sub-elements are passed to the method as arguments in the order they are specified. If the sub-elements do not match the method arguments an error will be returned.</p>
+
+<p>The return value will be put in the named field if an value is returned and if a field and optionally a map name are specified.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>obj-field-name</td><td>Y</td>
+    <td>The name of the field the object is in that has the method to be called.</td>
+</tr>
+<tr>
+    <td>obj-map-name</td><td>N</td>
+    <td>The name of the map the field of the object is in that has the method to be called. If this is not specified the environment will be used to find the field in.</td>
+</tr>
+<tr>
+    <td>method-name</td><td>Y</td>
+    <td>The name of the method to call on the given object.</td>
+</tr>
+<tr>
+    <td>ret-field-name</td><td>N</td>
+    <td>The name of the field to put the result in. If not specified any return value will be ignored.</td>
+</tr>
+<tr>
+    <td>ret-map-name</td><td>N</td>
+    <td>The name of the map the field of the return value is in. If not specified but the field name is then the environment will be used to find the field in.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>string</td><td>0 to many</td>
+    <td>Used to specify an inline String argument to the method call.</td>
+</tr>
+<tr>
+    <td>field</td><td>0 to many</td>
+    <td>Used to specify a field to be passed as an argument to the method call. The field can be in a map in the environment or if no map-name is specified then the field will come directly from the environment.</td>
+</tr>
+</table>
+
+<p><b><u>call-class-method</u></b></p>
+
+<p>Calls a static method on a class.</p>
+
+<p>The string and field sub-elements are passed to the method as arguments in the order they are specified. If the sub-elements do not match the method arguments an error will be returned.</p>
+
+<p>The return value will be put in the named field if an value is returned and if a field and optionally a map name are specified.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>class-name</td><td>Y</td>
+    <td>The name of the class to call the static method on.</td>
+</tr>
+<tr>
+    <td>method-name</td><td>Y</td>
+    <td>The name of the static method to call on the given class.</td>
+</tr>
+<tr>
+    <td>ret-field-name</td><td>N</td>
+    <td>The name of the field to put the result in. If not specified any return value will be ignored.</td>
+</tr>
+<tr>
+    <td>ret-map-name</td><td>N</td>
+    <td>The name of the map the field of the return value is in. If not specified but the field name is then the environment will be used to find the field in.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>string</td><td>0 to many</td>
+    <td>Used to specify an inline String argument to the method call.</td>
+</tr>
+<tr>
+    <td>field</td><td>0 to many</td>
+    <td>Used to specify a field to be passed as an argument to the method call. The field can be in a map in the environment or if no map-name is specified then the field will come directly from the environment.</td>
+</tr>
+</table>
+
+
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
+<hr>
+<h4><a name='ControlError'>Control and Error Handling Operations</a></h4>
 
 <p><b><u>check-errors</u></b></p>
+
+<p>The message lists from invoking are not checked until the check-errors tag
+is used. The named list is checked and if it contains any messages they are 
+put in the servlet request object and the specified error code is returned to
+the control servlet.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -620,11 +791,78 @@ either the event or service objects that the calling simple-method was called wi
     <td>The name of the list to in the method environment to check for error messages. Defaults to "error_list".</td>
 </tr>
 </table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>error-prefix</td><td>0 or 1</td>
+    <td></td>
+</tr>
+<tr>
+    <td>error-suffix</td><td>0 or 1</td>
+    <td></td>
+</tr>
+<tr>
+    <td>message-prefix</td><td>0 or 1</td>
+    <td></td>
+</tr>
+<tr>
+    <td>message-suffix</td><td>0 or 1</td>
+    <td></td>
+</tr>
+</table>
 
-<p>The message lists from invoking are not checked until the check-errors tag
-is used. The named list is checked and if it contains any messages they are 
-put in the servlet request object and the specified error code is returned to
-the control servlet.</p>
+<p><b><u>add-error</u></b></p>
+
+<p>Adds an error message with to the given error list from either an inline message or a message from a properties file.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>error-list-name</td><td>N</td>
+    <td>The name of the list to in the method environment to check for error messages. Defaults to "error_list".</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>fail-message</td><td>0 or 1</td>
+    <td>Used to specify an inline message. Has one attribute called 'message'.</td>
+</tr>
+<tr>
+    <td>fail-property</td><td>0 or 1</td>
+    <td>Used to get the message from a properties file. Has two attributes: resource and property.</td>
+</tr>
+</table>
+
+<p><b><u>return</u></b></p>
+
+<p>Returns immediately from the simple-method with the given response code string.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>response-code</td><td>N</td>
+    <td>The string to return as a response code. Defaults to "success".</td>
+</tr>
+</table>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
@@ -632,6 +870,12 @@ the control servlet.</p>
 <h4><a name='Event'>Event Specific Operations</a></h4>
 
 <p><b><u>field-to-request</u></b></p>
+
+<p>The field-to-request tag copies a field from a map to the specified servlet request
+attribute.</p>
+
+<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -652,12 +896,13 @@ the control servlet.</p>
     <td>The name of the request attribute to use. Defaults to the field-name.</td>
 </tr>
 </table>
-<p>The field-to-request tag copies a field from a map to the specified servlet request
-attribute.</p>
+
+<p><b><u>field-to-session</u></b></p>
+
+<p>The field-to-session tag copies a field from a map to the specified servlet session attribute.</p>
 
 <p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
 
-<p><b><u>field-to-session</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -678,12 +923,14 @@ attribute.</p>
     <td>The name of the session attribute to use. Defaults to the field-name.</td>
 </tr>
 </table>
-<p>The field-to-session tag copies a field from a map to the specified servlet session
-attribute.</p>
-
-<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
 
 <p><b><u>request-to-field</u></b></p>
+
+<p>The request-to-field tag copies an attribute from the servlet request to a field of a 
+map in the method environment.</p>
+
+<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise (except the default value, if specified).</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -709,12 +956,13 @@ attribute.</p>
     <td>The name of the request attribute to use. Defaults to the field-name.</td>
 </tr>
 </table>
-<p>The request-to-field tag copies an attribute from the servlet request to a field of a 
-map in the method environment.</p>
+
+<p><b><u>session-to-field</u></b></p>
+
+<p>The session-to-field tag copies an attribute from the servlet session to a field of a map in the method environment.</p>
 
 <p>The tag is only used when the simple-method is called as an event, it is ignored otherwise (except the default value, if specified).</p>
 
-<p><b><u>session-to-field</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -740,12 +988,13 @@ map in the method environment.</p>
     <td>The name of the session attribute to use. Defaults to the field-name.</td>
 </tr>
 </table>
-<p>The session-to-field tag copies an attribute from the servlet session to a field of a 
-map in the method environment.</p>
+
+<p><b><u>webapp-property-to-field</u></b></p>
+
+<p>The webapp-property-to-field tag copies a property value from a properties file in a ServletContext resource to a field.</p>
 
 <p>The tag is only used when the simple-method is called as an event, it is ignored otherwise (except the default value, if specified).</p>
 
-<p><b><u>webapp-property-to-field</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -777,9 +1026,6 @@ map in the method environment.</p>
     <td>The name (key) of the map field to use.</td>
 </tr>
 </table>
-<p>The webapp-property-to-field tag copies a property value from a properties file in a ServletContext resource to a field.</p>
-
-<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise (except the default value, if specified).</p>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
@@ -787,6 +1033,11 @@ map in the method environment.</p>
 <h4><a name='Service'>Service Specific Operations</a></h4>
 
 <p><b><u>field-to-result</u></b></p>
+
+<p>The field-to-result tag copies a field from a map to the specified service result field.</p>
+
+<p>The tag is only used when the simple-method is called as a service, it is ignored otherwise.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -807,17 +1058,37 @@ map in the method environment.</p>
     <td>The name of the request attribute to use. Defaults to the field-name.</td>
 </tr>
 </table>
-<p>The field-to-result tag copies a field from a map to the specified service 
-result field.</p>
-
-<p>The tag is only used when the simple-method is called as a service, it is ignored otherwise.</p>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
 <h4><a name='Environment'>Method Environment Operations</a></h4>
 
+<p><b><u>map-to-map</u></b></p>
+
+<p>The map-to-map tag copies all fields from one map to another map.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the map in the method environment the fields will come from.</td>
+</tr>
+<tr>
+    <td>to-map-name</td><td>N</td>
+    <td>The name of the map in the method environment the fields will go to.
+    If empty the fields will be copied to the environment.</td>
+</tr>
+</table>
+
 <p><b><u>field-to-field</u></b></p>
+
+<p>The field-to-field tag copies a field from a map to a field in another map.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -847,9 +1118,11 @@ result field.</p>
     If empty will default to the field-name.</td>
 </tr>
 </table>
-<p>The field-to-field tag copies a field from a map to a field in another map.</p>
 
 <p><b><u>field-to-list</u></b></p>
+
+<p>The field-to-list tag appends a field to the specified list.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -870,9 +1143,11 @@ result field.</p>
     <td>The name of the list in the method environment that the object will be appended to.</td>
 </tr>
 </table>
-<p>The field-to-list tag appends a field to the specified list.</p>
 
 <p><b><u>env-to-field</u></b></p>
+
+<p>The env-to-field tag copies a field from the method environment to a field in a map.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -894,9 +1169,11 @@ result field.</p>
     If empty will default to the env-name.</td>
 </tr>
 </table>
-<p>The env-to-field tag copies a field from the method environment to a field in a map.</p>
 
 <p><b><u>field-to-env</u></b></p>
+
+<p>The field-to-env tag copies a field from a map to a field in the method environment.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -918,9 +1195,11 @@ result field.</p>
     If empty will default to the env-name.</td>
 </tr>
 </table>
-<p>The field-to-env tag copies a field from a map to a field in the method environment.</p>
 
 <p><b><u>string-to-field</u></b></p>
+
+<p>The string-to-field tag put the inlined string value in the specified field.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -941,40 +1220,11 @@ result field.</p>
     <td>The name (key) of the map field to use.</td>
 </tr>
 </table>
-<p>The string-to-field tag put the inlined string value in the specified field.</p>
-
-<p><b><u>property-to-field</u></b></p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>resource</td><td>Y</td>
-    <td>The resource location of the properties file.</td>
-</tr>
-<tr>
-    <td>property</td><td>Y</td>
-    <td>The property whose value will be put in the field.</td>
-</tr>
-<tr>
-    <td>default</td><td>N</td>
-    <td>The default value to use if the specified property is empty.</td>
-</tr>
-<tr>
-    <td>map-name</td><td>N</td>
-    <td>The name of the map in the method environment. If not specified the 
-    field-name will be used to get the field from the method environment.</td>
-</tr>
-<tr>
-    <td>field-name</td><td>Y</td>
-    <td>The name (key) of the map field to use.</td>
-</tr>
-</table>
-<p>The property-to-field tag puts the inlined string value in the specified field.</p>
 
 <p><b><u>to-string</u></b></p>
+
+<p>The to-string tag converts the Object in the specified field to a String, putting the string in the same field.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -991,10 +1241,11 @@ result field.</p>
     <td>The name (key) of the map field to use.</td>
 </tr>
 </table>
-<p>The to-string tag converts the Object in the specified field to a String,
-putting the string in the same field.</p>
 
-<p><b><u>iterate</u></b></p>
+<p><b><u>clear-field</u></b></p>
+
+<p>The clear-field tag clears/removes the specified field.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1002,7 +1253,31 @@ putting the string in the same field.</p>
     <td><b>Description</b></td>
 </tr>
 <tr>
-    <td>entry-name</td><td>N</td>
+    <td>map-name</td><td>N</td>
+    <td>The name of the map in the method environment. If not specified the 
+    field-name will be used to get the field from the method environment.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name (key) of the map field to use.</td>
+</tr>
+</table>
+
+<p><b><u>iterate</u></b></p>
+
+<p>The operations contained by the iterate tag will be executed
+for each of the entries in the list, and will make the current entry available
+in the method environment by the entry-name specified. This tag can contain any of the simple-method
+operations, including the conditional/if operations.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>entry-name</td><td>Y</td>
     <td>The name of the method environment field that will contain each entry as we iterate through the list.</td>
 </tr>
 <tr>
@@ -1022,12 +1297,11 @@ putting the string in the same field.</p>
     <td>Any simple-method operation can be nested under the iterate tag.</td>
 </tr>
 </table>
-<p>The operations contained by the iterate tag will be executed
-for each of the entries in the list, and will make the current entry available
-in the method environment by the entry-name specified. This tag can contain any of the simple-method
-operations, including the conditional/if operations.</p>
 
-<p><b><u>calculate</u></b></p>
+<p><b><u>first-from-list</u></b></p>
+
+<p>The first-from-list tag will get the first entry from the given list and put it in the environment field with the given entry-name.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1035,88 +1309,15 @@ operations, including the conditional/if operations.</p>
     <td><b>Description</b></td>
 </tr>
 <tr>
-    <td>map-name</td><td>N</td>
-    <td>The name of the map in the method environment. If not specified the 
-    field-name will be used to get the field from the method environment.</td>
+    <td>entry-name</td><td>Y</td>
+    <td>The name of the method environment field that will contain the first entry in the list.</td>
 </tr>
 <tr>
-    <td>field-name</td><td>Y</td>
-    <td>The name (key) of the map field to use.</td>
-</tr>
-<tr>
-    <td>type</td><td>N</td>
-    <td>The object type to put into this field. Can be: Double | Float | Long | Integer.
-    The default is Double.</td>
+    <td>list-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the list to get the first entry from.</td>
 </tr>
 </table>
-<br>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Sub-Element&nbsp;Name</b></td>
-    <td><b>How&nbsp;Many</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>calcop</td><td>0 to many</td>
-    <td>This tag is used to apply an operator in the calculation. It can have
-    calcop and number tags nested under it, making it also act like a
-    parenthesis. It has three attributes: operator, map-name, and field-name.
-    These are described below.</td>
-</tr>
-<tr>
-    <td>number</td><td>0 to many</td>
-    <td>This is used to put a numeric constant (a number) into the calculation.
-    It has one attribute: value. This must be a properly formatted number or an
-    error will result.</td>
-</tr>
-</table>
-<p>The calculate tag performs the specified calculation and puts the result in
-an object in the field of the specified map (see the calculate element attribute
-descriptions above). The type of the object can be specified with the
-<b>type</b> attribute, but defaults to Double.</p>
 
-<p>The calculate tag can contain <b>calcop</b> and <b>number</b> tags, and the
-<b>calcop</b> tag can also contain these two tags to enable nested
-calculations.</p>
-
-<p>Each calcop tag has three attributes: operator, map-name and field-name. Only
-the operator is required. The operator specifies the operation to perform on the
-given field and nested calcops and numbers. It must be one of the following: 
-get | add | subtract | multiply | divide | negative.</p>
-
-<p>Regardless of the operator the action is very similar. It translates to a
-formula like the following: <b><code>(V1 [operator] V2 [operator] V3)</code></b>. In other
-words a final result is calculated by applying the operator to the values in the
-order they are specified. If a field-name (and optionally map-name) is specifies
-on the calcop tag that field will be used as the first value, otherwise the
-first nested <b>calcop</b> or <b>number</b> will be the first value.</p>
-
-<p>The get operator is just an alias for add. It adds all of the values under
-it. Likewise the negative operator is almost an alias for subtract, with the
-exception that the first value is negated instead of left positive. For
-convenience the calculate tag itself acts like an add, in other words the
-calcops and numbers under it are all added together.<p>
-
-<p>Here is an example of an XML snippet the performs the calculation
-<b><code>a=b+(((c+x+2)*-d)/e)</code></b>, or in Reverse Polish Notation (a little
-bit closer to the resulting XML, and the notation used in the Rule Engine)
-<b><code>a=+(b,/(*(+(c,x,2),-d),e))</code></b>. Here is the XML:</p>
-
-<pre>
-    &lt;calculate field-name="a"&gt;
-        &lt;calcop operator="get" field-name="b"/&gt;
-        &lt;calcop operator="divide"&gt;
-            &lt;calcop operator="multiply"&gt;
-                &lt;calcop operator="add" field-name="c"&gt;
-                    &lt;calcop operator="get" field-name="x"/&gt;
-                    &lt;number value="2"/&gt;
-                &lt;/calcop&gt;
-                &lt;calcop operator="negative" field-name="d"/&gt;
-            &lt;/calcop&gt;
-            &lt;calcop operator="get" field-name="e"/&gt;
-        &lt;/calcop&gt;
-    &lt;/calculate&gt;
-</pre>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
@@ -1124,6 +1325,10 @@ bit closer to the resulting XML, and the notation used in the Rule Engine)
 <h4><a name='Entity'>Entity Engine Operations</a></h4>
 
 <p><b><u>now-timestamp-to-env</u></b></p>
+
+<p>The now-timestamp-to-env tag creates a java.sql.Timestamp object with the current date
+and time in it and puts it in a field in the method environment.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1135,10 +1340,12 @@ bit closer to the resulting XML, and the notation used in the Rule Engine)
     <td>The name of the method environment field the timestamp will be put in.</td>
 </tr>
 </table>
-<p>The now-timestamp-to-env tag creates a java.sql.Timestamp object with the current date
-and time in it and puts it in a field in the method environment.</p>
 
 <p><b><u>now-date-to-env</u></b></p>
+
+<p>The now-date-to-env tag creates a java.sql.Date object with the current date
+in it and puts it in a field in the method environment.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1150,10 +1357,13 @@ and time in it and puts it in a field in the method environment.</p>
     <td>The name of the method environment field the date will be put in.</td>
 </tr>
 </table>
-<p>The now-date-to-env tag creates a java.sql.Date object with the current date
-in it and puts it in a field in the method environment.</p>
 
 <p><b><u>sequenced-id-to-env</u></b></p>
+
+<p>The sequenced-id-to-env tag gets a sequenced ID from the Entity Engine (through
+the delegator) and puts it in the specified method environment field. The object
+will be a java.lang.Long, but can of course be converted to a String.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1171,11 +1381,13 @@ in it and puts it in a field in the method environment.</p>
     <td>The name of the method environment field the sequenced ID will be put in.</td>
 </tr>
 </table>
-<p>The sequenced-id-to-env tag gets a sequenced ID from the Entity Engine (through
-the delegator) and puts it in the specified method environment field. The object
-will be a java.lang.Long, but can of course be converted to a String.</p>
 
 <p><b><u>set-current-user-login</u></b></p>
+
+<p>The set-current-user-login tag sets the UserLogin GenericValue object to be 
+used for authentication for the rest of the method. This is mostly used for 
+calling services, etc.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1187,11 +1399,13 @@ will be a java.lang.Long, but can of course be converted to a String.</p>
     <td>The name of the method environment field that contains the UserLogin GenericValue object.</td>
 </tr>
 </table>
-<p>The set-current-user-login tag sets the UserLogin GenericValue object to be 
-used for authentication for the rest of the method. This is mostly used for 
-calling services, etc.</p>
 
 <p><b><u>find-by-primary-key</u></b></p>
+
+<p>The find-by-primary-key tag uses the delegator to find an entity value by
+its primary key. The resulting GenericValue object will be placed in the method
+environment using the specified value-name.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1219,11 +1433,13 @@ calling services, etc.</p>
     "true" or "false", defaults to "false".</td>
 </tr>
 </table>
-<p>The find-by-primary-key tag uses the delegator to find an entity value by
-its primary key. The resulting GenericValue object will be placed in the method
-environment using the specified value-name.</p>
 
 <p><b><u>find-by-and</u></b></p>
+
+<p>The find-by-and tag uses the delegator to find entity values by
+anding the fields passed in the map. The resulting GenericValue objects will be 
+placed in the method environment using the specified list-name.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1256,11 +1472,11 @@ environment using the specified value-name.</p>
     "true" or "false", defaults to "false".</td>
 </tr>
 </table>
-<p>The find-by-and tag uses the delegator to find entity values by
-anding the fields passed in the map. The resulting GenericValue objects will be 
-placed in the method environment using the specified list-name.</p>
 
 <p><b><u>filter-list-by-and</u></b></p>
+
+<p>The filter-list-by-and tag filters the given list by the fields in the specified map.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1283,9 +1499,11 @@ placed in the method environment using the specified list-name.</p>
     entity fields. If no map is used this will just make a copy of the list.</td>
 </tr>
 </table>
-<p>The filter-list-by-and tag filters the given list by the fields in the specified map.</p>
 
 <p><b><u>filter-list-by-date</u></b></p>
+
+<p>The filter-list-by-date tag filters the given list by the valid date using the from and thru dates in each value object.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1322,9 +1540,15 @@ placed in the method environment using the specified list-name.</p>
     same entity. Defaults to <b>true</b>.</td>
 </tr>
 </table>
-<p>The filter-list-by-date tag filters the given list by the valid date using the from and thru dates in each value object.</p>
 
 <p><b><u>make-value</u></b></p>
+
+<p>The make-value tag uses the delegator to construct an entity value.
+The resulting value will not necessarily exist in the database, but will simply
+be assembled using the entity-name and fields map.
+The resulting GenericValue object will be placed in the method
+environment using the specified value-name.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1345,13 +1569,13 @@ placed in the method environment using the specified list-name.</p>
     entity fields.</td>
 </tr>
 </table>
-<p>The make-value tag uses the delegator to construct an entity value.
-The resulting value will not necessarily exist in the database, but will simply
-be assembled using the entity-name and fields map.
-The resulting GenericValue object will be placed in the method
-environment using the specified value-name.</p>
 
-<p><b><u>make-value</u></b></p>
+<p><b><u>clone-value</u></b></p>
+
+<p>The clone-value tag make a copy of the value in the method environment field 
+specified by value-name. The resulting GenericValue object will be placed in the method
+environment using the specified new-value-name.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1367,27 +1591,13 @@ environment using the specified value-name.</p>
     <td>The name of the method environment field that will contain the new GenericValue object.</td>
 </tr>
 </table>
-<p>The clone-value tag make a copy of the value in the method environment field 
-specified by value-name. The resulting GenericValue object will be placed in the method
-environment using the specified new-value-name.</p>
 
 <p><b><u>create-value</u></b></p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>value-name</td><td>Y</td>
-    <td>The name of the method environment field that contains the GenericValue object.</td>
-</tr>
-</table>
+
 <p>The create-value tag persists the specified GenericValue object by creating a
 new instance of the entity in the datasource. An error will result if an 
 instance of the entity exists in the datasource with the same primary key.</p>
 
-<p><b><u>store-value</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1399,11 +1609,13 @@ instance of the entity exists in the datasource with the same primary key.</p>
     <td>The name of the method environment field that contains the GenericValue object.</td>
 </tr>
 </table>
+
+<p><b><u>store-value</u></b></p>
+
 <p>The store-value tag persists the specified GenericValue object by updating the
 instance of the entity in the datasource. An error will result if an 
 instance of the entity does not exist in the datasource with the same primary key.</p>
 
-<p><b><u>remove-value</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1415,11 +1627,31 @@ instance of the entity does not exist in the datasource with the same primary ke
     <td>The name of the method environment field that contains the GenericValue object.</td>
 </tr>
 </table>
+
+<p><b><u>remove-value</u></b></p>
+
 <p>The remove-value tag removes the specified GenericValue object by removing the
 instance of the entity in the datasource. An error will result if an 
 instance of the entity does not exist in the datasource with the same primary key.</p>
 
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>value-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the GenericValue object.</td>
+</tr>
+</table>
+
 <p><b><u>remove-by-and</u></b></p>
+
+<p>The remove-by-and tag uses the delegator to remove entity values from the 
+datasource and is constrained by anding the fields passed in the map. Make sure
+the map contains something, or all values will be removed.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1436,11 +1668,12 @@ instance of the entity does not exist in the datasource with the same primary ke
     entity fields.</td>
 </tr>
 </table>
-<p>The remove-by-and tag uses the delegator to remove entity values from the 
-datasource and is constrained by anding the fields passed in the map. Make sure
-the map contains something, or all values will be removed.</p>
 
 <p><b><u>clear-cache-line</u></b></p>
+
+<p>Uses the delegator to clear elements from the cache; intelligently looks at
+the map passed to see if it is a byPrimaryKey, and byAnd, or an all.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1460,33 +1693,11 @@ the map contains something, or all values will be removed.</p>
     If no map-name is specified the entry will be removed from the all cache.</td>
 </tr>
 </table>
-<p>Uses the delegator to clear elements from the cache; intelligently looks at
-the map passed to see if it is a byPrimaryKey, and byAnd, or an all.</p>
 
 <p><b><u>set-pk-fields</u></b></p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>value-name</td><td>Y</td>
-    <td>The name of the method environment field that contains the GenericValue object.</td>
-</tr>
-<tr>
-    <td>map-name</td><td>Y</td>
-    <td>The name of a map in the method environment that will be used for the
-    entity fields.</td>
-</tr>
-<tr>
-    <td>set-if-null</td><td>N</td>
-    <td>Specifies whether or not to set fields that are null or empty. Defaults to true.</td>
-</tr>
-</table>
+
 <p>Looks for each PK field in the named map and if it exists there it will copy it into the named value object.</p>
 
-<p><b><u>set-nonpk-fields</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1507,9 +1718,11 @@ the map passed to see if it is a byPrimaryKey, and byAnd, or an all.</p>
     <td>Specifies whether or not to set fields that are null or empty. Defaults to true.</td>
 </tr>
 </table>
+
+<p><b><u>set-nonpk-fields</u></b></p>
+
 <p>Looks for each non-PK field in the named map and if it exists there it will copy it into the named value object.</p>
 
-<p><b><u>store-list</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1517,15 +1730,26 @@ the map passed to see if it is a byPrimaryKey, and byAnd, or an all.</p>
     <td><b>Description</b></td>
 </tr>
 <tr>
-    <td>list-name</td><td>Y</td>
-    <td>The name of the method environment field that contains the list of GenericValue objects.</td>
+    <td>value-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the GenericValue object.</td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of a map in the method environment that will be used for the
+    entity fields.</td>
+</tr>
+<tr>
+    <td>set-if-null</td><td>N</td>
+    <td>Specifies whether or not to set fields that are null or empty. Defaults to true.</td>
 </tr>
 </table>
+
+<p><b><u>store-list</u></b></p>
+
 <p>The store-list tag uses the delegator to store all entity values in the list.
 This is different than storing a single value in that values in the list will
 be inserted if it does not exist or updated if it does exist.</p>
 
-<p><b><u>remove-list</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1537,10 +1761,25 @@ be inserted if it does not exist or updated if it does exist.</p>
     <td>The name of the method environment field that contains the list of GenericValue objects.</td>
 </tr>
 </table>
+
+<p><b><u>remove-list</u></b></p>
+
 <p>The remove-list tag uses the delegator to remove all entity values in the list.
 For each value in the list if it is a primary key just that entity instance will
 be removed, but if it is not a full primary key all entity instances will be
 removed from the datasource that match the constraint of the field map.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>list-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the list of GenericValue objects.</td>
+</tr>
+</table>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
@@ -1548,6 +1787,11 @@ removed from the datasource that match the constraint of the field map.</p>
 <h4><a name='Conditional'>Conditional (If) Operations</a></h4>
 
 <p><b><u>if-validate-method</u></b></p>
+
+<p>The operations contained by the if-validate-method tag will only be executed
+if the validate method returns true. This tag can contain any of the simple-method
+operations, including the conditional/if operations.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1594,11 +1838,13 @@ removed from the datasource that match the constraint of the field map.</p>
     must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
-<p>The operations contained by the if-validate-method tag will only be executed
-if the validate method returns true. This tag can contain any of the simple-method
-operations, including the conditional/if operations.</p>
 
 <p><b><u>if-compare</u></b></p>
+
+<p>The operations contained by the if-compare tag will only be executed
+if the comparison returns true. This tag can contain any of the simple-method
+operations, including the conditional/if operations.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1656,11 +1902,13 @@ operations, including the conditional/if operations.</p>
     must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
-<p>The operations contained by the if-compare tag will only be executed
+
+<p><b><u>if-compare-field</u></b></p>
+
+<p>The operations contained by the if-compare-field tag will only be executed
 if the comparison returns true. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
 
-<p><b><u>if-compare-field</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1724,11 +1972,13 @@ operations, including the conditional/if operations.</p>
     must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
-<p>The operations contained by the if-compare-field tag will only be executed
-if the comparison returns true. This tag can contain any of the simple-method
-operations, including the conditional/if operations.</p>
 
 <p><b><u>if-regexp</u></b></p>
+
+<p>The operations contained by the if-regexp tag will only be executed
+if the value complies with the regular expression. This tag can contain any of the simple-method
+operations, including the conditional/if operations.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1769,52 +2019,13 @@ operations, including the conditional/if operations.</p>
     must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
-<p>The operations contained by the if-regexp tag will only be executed
-if the value complies with the regular expression. This tag can contain any of the simple-method
-operations, including the conditional/if operations.</p>
 
 <p><b><u>if-empty</u></b></p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>map-name</td><td>N</td>
-    <td>The name of the method environment field that contains the map that the 
-    field to be validated will come from. If not specified the field-name will
-    be treated as a method environment field name (an env-name).</td>
-</tr>
-<tr>
-    <td>field-name</td><td>Y</td>
-    <td>The name of the map field that will be compared.</td>
-</tr>
-</table>
-<br>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Sub-Element&nbsp;Name</b></td>
-    <td><b>How&nbsp;Many</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>Any Operation</td><td>0 to many</td>
-    <td>Any simple-method operation can be nested under an if-* tag.</td>
-</tr>
-<tr>
-    <td>else</td><td>0 or 1</td>
-    <td>The else tag can be used to contain operations that will run if the
-    condition fails, or in other words if the operations under the if tag do
-    not run. It can also contain any simple-method operation. The else tag
-    must be placed as the last tag under the if-* tag.</td>
-</tr>
-</table>
+
 <p>The operations contained by the if-empty tag will only be executed
 if the map field is empty. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
 
-<p><b><u>if-not-empty</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1851,11 +2062,56 @@ operations, including the conditional/if operations.</p>
     must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
+
+<p><b><u>if-not-empty</u></b></p>
+
 <p>The operations contained by the if-not-empty tag will only be executed
 if the map field is not empty. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
 
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>N</td>
+    <td>The name of the method environment field that contains the map that the 
+    field to be validated will come from. If not specified the field-name will
+    be treated as a method environment field name (an env-name).</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name of the map field that will be compared.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>Any Operation</td><td>0 to many</td>
+    <td>Any simple-method operation can be nested under an if-* tag.</td>
+</tr>
+<tr>
+    <td>else</td><td>0 or 1</td>
+    <td>The else tag can be used to contain operations that will run if the
+    condition fails, or in other words if the operations under the if tag do
+    not run. It can also contain any simple-method operation. The else tag
+    must be placed as the last tag under the if-* tag.</td>
+</tr>
+</table>
+
 <p><b><u>if-has-permission</u></b></p>
+
+<p>The operations contained by the if-has-permission tag will only be executed
+if the user has the specified permission, and optionally the action. This tag can contain any of the simple-method
+operations, including the conditional/if operations.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1893,11 +2149,14 @@ operations, including the conditional/if operations.</p>
     must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
-<p>The operations contained by the if-has-permission tag will only be executed
-if the user has the specified permission, and optionally the action. This tag can contain any of the simple-method
-operations, including the conditional/if operations.</p>
 
 <p><b><u>check-permission</u></b></p>
+
+<p>The check-permission tag checks to see if the current user has the specified
+permission. The the user does not have the specified permission or there is no
+user associated with the context then the failure message from fail-message or
+file-property will be added to the specified error list.</p>
+
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -1937,10 +2196,138 @@ operations, including the conditional/if operations.</p>
     <td>A failure message from a properties file.</td>
 </tr>
 </table>
-<p>The check-permission tag checks to see if the current user has the specified
-permission. The the user does not have the specified permission or there is no
-user associated with the context then the failure message from fail-message or
-file-property will be added to the specified error list.</p>
+
+
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
+<hr>
+<h4><a name='Other'>Other Operations</a></h4>
+
+<p><b><u>property-to-field</u></b></p>
+
+<p>The property-to-field tag puts the inlined string value in the specified field.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>resource</td><td>Y</td>
+    <td>The resource location of the properties file.</td>
+</tr>
+<tr>
+    <td>property</td><td>Y</td>
+    <td>The property whose value will be put in the field.</td>
+</tr>
+<tr>
+    <td>default</td><td>N</td>
+    <td>The default value to use if the specified property is empty.</td>
+</tr>
+<tr>
+    <td>map-name</td><td>N</td>
+    <td>The name of the map in the method environment. If not specified the 
+    field-name will be used to get the field from the method environment.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name (key) of the map field to use.</td>
+</tr>
+</table>
+
+<p><b><u>calculate</u></b></p>
+
+<p>The calculate tag performs the specified calculation and puts the result in
+an object in the field of the specified map (see the calculate element attribute
+descriptions above). The type of the object can be specified with the
+<b>type</b> attribute, but defaults to Double.</p>
+
+<p>The calculate tag can contain <b>calcop</b> and <b>number</b> tags, and the
+<b>calcop</b> tag can also contain these two tags to enable nested
+calculations.</p>
+
+<p>Each calcop tag has three attributes: operator, map-name and field-name. Only
+the operator is required. The operator specifies the operation to perform on the
+given field and nested calcops and numbers. It must be one of the following: 
+get | add | subtract | multiply | divide | negative.</p>
+
+<p>Regardless of the operator the action is very similar. It translates to a
+formula like the following: <b><code>(V1 [operator] V2 [operator] V3)</code></b>. In other
+words a final result is calculated by applying the operator to the values in the
+order they are specified. If a field-name (and optionally map-name) is specifies
+on the calcop tag that field will be used as the first value, otherwise the
+first nested <b>calcop</b> or <b>number</b> will be the first value.</p>
+
+<p>The get operator is just an alias for add. It adds all of the values under
+it. Likewise the negative operator is almost an alias for subtract, with the
+exception that the first value is negated instead of left positive. For
+convenience the calculate tag itself acts like an add, in other words the
+calcops and numbers under it are all added together.<p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>N</td>
+    <td>The name of the map in the method environment. If not specified the 
+    field-name will be used to get the field from the method environment.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name (key) of the map field to use.</td>
+</tr>
+<tr>
+    <td>type</td><td>N</td>
+    <td>The object type to put into this field. Can be: Double | Float | Long | Integer.
+    The default is Double.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>calcop</td><td>0 to many</td>
+    <td>This tag is used to apply an operator in the calculation. It can have
+    calcop and number tags nested under it, making it also act like a
+    parenthesis. It has three attributes: operator, map-name, and field-name.
+    These are described below.</td>
+</tr>
+<tr>
+    <td>number</td><td>0 to many</td>
+    <td>This is used to put a numeric constant (a number) into the calculation.
+    It has one attribute: value. This must be a properly formatted number or an
+    error will result.</td>
+</tr>
+</table>
+
+<p>Here is an example of an XML snippet the performs the calculation
+<b><code>a=b+(((c+x+2)*-d)/e)</code></b>, or in Reverse Polish Notation (a little
+bit closer to the resulting XML, and the notation used in the Rule Engine)
+<b><code>a=+(b,/(*(+(c,x,2),-d),e))</code></b>. Here is the XML:</p>
+
+<pre>
+    &lt;calculate field-name="a"&gt;
+        &lt;calcop operator="get" field-name="b"/&gt;
+        &lt;calcop operator="divide"&gt;
+            &lt;calcop operator="multiply"&gt;
+                &lt;calcop operator="add" field-name="c"&gt;
+                    &lt;calcop operator="get" field-name="x"/&gt;
+                    &lt;number value="2"/&gt;
+                &lt;/calcop&gt;
+                &lt;calcop operator="negative" field-name="d"/&gt;
+            &lt;/calcop&gt;
+            &lt;calcop operator="get" field-name="e"/&gt;
+        &lt;/calcop&gt;
+    &lt;/calculate&gt;
+</pre>
 
 
 <!-- ======================================================================= -->
