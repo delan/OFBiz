@@ -1851,6 +1851,7 @@
       <field name="shoppingListTypeId" type="id"></field>
       <field name="parentShoppingListId" type="id"></field>
       <field name="productStoreId" type="id"></field>
+      <field name="visitorId" type="id"></field>
       <field name="partyId" type="id"></field>
       <field name="listName" type="name"></field>
       <field name="description" type="description"></field>
@@ -1877,6 +1878,12 @@
       </relation>
       <relation type="one" fk-name="SHLIST_PRDS" rel-entity-name="ProductStore">
         <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="SHLIST_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="SHLIST_VSTR" rel-entity-name="Visitor">
+        <key-map field-name="visitorId"/>
       </relation>
       <relation type="one" fk-name="SHLIST_PSSM" rel-entity-name="ProductStoreShipmentMeth">
         <key-map field-name="productStoreId"/>

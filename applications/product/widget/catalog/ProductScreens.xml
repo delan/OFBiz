@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -151,7 +151,6 @@
             </widgets>
         </section>
     </screen>
-	
     <screen name="EditProductAssetUsage"><!-- screen for rental parameters -->
         <section>
             <actions>
@@ -203,7 +202,6 @@
             </widgets>
         </section>
     </screen>
-
     <screen name="newFixedAssetProduct"><!-- add a fixed asset -->
         <section>
             <actions>
@@ -223,6 +221,5 @@
             </widgets>
         </section>
     </screen>
-	
 </screens>
 

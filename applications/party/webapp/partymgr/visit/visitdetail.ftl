@@ -39,6 +39,15 @@
       </td>
     </tr>
     <tr>
+      <td width="26%" align="right"><div class="tableheadtext">Visitor ID</div></td>
+      <td width="5">:&nbsp;</td>
+      <td width="74%" align="left">
+        <div class="tabletext">
+          ${visit.visitorId?default("Not Found")}
+        </div>
+      </td>
+    </tr>
+    <tr>
       <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyPartyIDUserLoginID}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">

@@ -64,6 +64,7 @@
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr>
       <td><a href="<@ofbizUrl>/showvisits?sort=visitId&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyVisitId}</a></td>      
+      <td><a href="<@ofbizUrl>/showvisits?sort=visitorId&showAll=${showAll}<#if visitorId?has_content>&visitorId=${visitorId}</#if></@ofbizUrl>" class="tableheadbutton">Visitor ID</a></td>
       <td><a href="<@ofbizUrl>/showvisits?sort=partyId&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyPartyId}</a></td>
       <td><a href="<@ofbizUrl>/showvisits?sort=userLoginId&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyUserLoginId}</a></td>
       <td><a href="<@ofbizUrl>/showvisits?sort=-userCreated&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyNewUser}</a></td>
@@ -78,6 +79,7 @@
     <#list visitList as visitObj>
       <tr class="${rowClass}">
         <td><a href="<@ofbizUrl>/visitdetail?visitId=${visitObj.visitId}</@ofbizUrl>" class="buttontext">${visitObj.visitId}</a></td>       
+        <td><div class="tabletext">${visitObj.visitorId?if_exists}</div></td>
         <td><a href="<@ofbizUrl>/viewprofile?partyId=${visitObj.partyId?if_exists}</@ofbizUrl>" class="buttontext">${visitObj.partyId?if_exists}</a></td>
         <td><div class="tabletext">${visitObj.userLoginId?if_exists}</div></td>
         <td><div class="tabletext">${visitObj.userCreated?if_exists}</div></td>
