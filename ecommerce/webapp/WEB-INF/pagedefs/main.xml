@@ -4,3 +4,4 @@
     <property name="title">Main Page</property>
     <page-action name="main.js"/>
 </page>
+
