@@ -46,7 +46,7 @@ public class ResourceBundleMapWrapper implements Map {
     protected MapStack rbmwStack;
     protected ResourceBundle initialResourceBundle;
 
-    public ResourceBundleMapWrapper() {
+    protected ResourceBundleMapWrapper() {
         rbmwStack = new MapStack();
     }
 
@@ -62,6 +62,9 @@ public class ResourceBundleMapWrapper implements Map {
      * When creating new from a ResourceBundle the one passed to the constructor should be the most specific or local ResourceBundle, with more common ones pushed onto the stack progressively.
      */
     public ResourceBundleMapWrapper(ResourceBundle initialResourceBundle) {
+        if (initialResourceBundle == null) {
+            throw new IllegalArgumentException("Cannot create ResourceBundleMapWrapper with a null initial ResourceBundle.");
+        }
         this.initialResourceBundle = initialResourceBundle;
         this.rbmwStack = new MapStack(new InternalRbmWrapper(initialResourceBundle));
     }
@@ -78,6 +81,9 @@ public class ResourceBundleMapWrapper implements Map {
 
     /** Don't pass the locale to make sure it has the same locale as the base */
     public void addBottomResourceBundle(String resource) {
+        if (this.initialResourceBundle == null) {
+            throw new IllegalArgumentException("Cannot add bottom resource bundle, this wrapper was not properly initialized (there is no base/initial ResourceBundle).");
+        }
         this.addBottomResourceBundle(UtilProperties.getInternalRbmWrapper(resource, this.initialResourceBundle.getLocale()));
     }
 
@@ -138,6 +144,9 @@ public class ResourceBundleMapWrapper implements Map {
         protected Map topLevelMap;
         
         public InternalRbmWrapper(ResourceBundle resourceBundle) {
+            if (resourceBundle == null) {
+                throw new IllegalArgumentException("Cannot create InternalRbmWrapper with a null ResourceBundle.");
+            }
             this.resourceBundle = resourceBundle;
             topLevelMap = new HashMap();
             // NOTE: this does NOT return all keys, ie keys from parent ResourceBundles, so we keep the resourceBundle object to look at when the main Map doesn't have a certain value 
