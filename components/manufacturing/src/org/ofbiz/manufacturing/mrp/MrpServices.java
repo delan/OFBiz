@@ -742,8 +742,19 @@ public class MrpServices {
                             // process the product components
                             processBomComponent(product, proposedOrder.getQuantity(), proposedOrder.getRequirementStartDate(), routingTaskStartDate, components);
                         }
-                        // create the  ProposedOrder and the InventoryEventPlanned associated (see ECA)
-                        String proposedOrderId = proposedOrder.create(ctx, userLogin);
+                        // create the  ProposedOrder (only if the product is warehouse managed), and the InventoryEventPlanned associated
+                        if (productFacility != null) {
+                            String proposedOrderId = proposedOrder.create(ctx, userLogin);
+                        }
+                        Map eventMap = UtilMisc.toMap("productId", product.getString("productId"),
+                                                      "eventDate", eventDate,
+                                                      "inventoryEventPlanTypeId", (isbuild? "MRP_PRO_PROD_ORDER" : "MRP_PRO_PURCH_ORDER"));
+                        try {
+                            InventoryEventPlannedServices.createOrUpdateInventoryEventPlanned(eventMap, new Double(proposedOrder.getQuantity()), delegator);
+                        } catch (GenericEntityException e) {
+                            return ServiceUtil.returnError("Problem running createOrUpdateInventoryEventPlanned");
+                        }
+                        //
                         stockTmp = stockTmp + proposedOrder.getQuantity();
                     }
                 }
