@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE site-conf PUBLIC "-//OFBiz//DTD Request Config//EN" "http://www.ofbiz.org/dtds/site-conf.dtd">
+
+<site-conf>
+    <description>Content Manager Module Site Configuration File</description>
+    <owner>The Open For Business Project Copyright (c) 2002</owner>
+    <errorpage>/error/error.jsp</errorpage>
+    
+    <handler name="java" type="request" class="org.ofbiz.core.event.JavaEventHandler"/>
+    <handler name="soap" type="request" class="org.ofbiz.core.event.SOAPEventHandler"/>
+    <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
+    <handler name="simple" type="request" class="org.ofbiz.core.event.SimpleEventHandler"/>
+
+    <handler name="region" type="view" class="org.ofbiz.core.view.RegionViewHandler"/>
+    <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
+    
+    <preprocessor>
+    	<!-- Events to run on every request before security (chains exempt) -->
+    	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
+    </preprocessor>
+    <postprocessor>
+    	<!-- Events to run on every request after all other processing (chains exempt) -->
+    	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
+    </postprocessor>
+
+    <!-- Security Mappings -->
+    <request-map uri="checkLogin" edit="false">
+        <description>Verify a user is logged in.</description>
+        <security https="false" auth="false"/>
+        <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="checkLogin" />
+        <response name="success" type="view" value="name" />
+        <response name="error" type="view" value="login" />
+    </request-map>
+
+    <request-map uri="login">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="login"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="login"/>
+    </request-map>
+
+    <request-map uri="logout">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="logout"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+    <!-- End of Security Mappings -->
+
+    <!-- Request Mappings -->
+    <request-map uri="view">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
+    
+    <request-map uri="chain">
+        <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/>
+        <response name="success" type="request" value="/view"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
+
+    <request-map uri="main"><security https="false" auth="false"/>
+    	<response name="success" type="view" value="main"/>
+    </request-map>
+    
+    <request-map uri="changeDelegator">
+        <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>    
+    <!-- end of request mappings -->
+
+    <!-- View Mappings -->
+    <view-map name="error" page="/error/error.jsp"/>
+    <view-map name="main" type="region"/>
+    <view-map name="login" type="region"/>
+    <!-- end of view mappings -->
+</site-conf>
