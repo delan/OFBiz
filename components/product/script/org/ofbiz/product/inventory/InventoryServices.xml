@@ -80,7 +80,8 @@
                 <result-to-field result-name="availableToPromise"/>
             </call-service>
             <if-compare field-name="availableToPromise" operator="less-equals" value="0" type="Double">
-                <call-service service-name="discontinueProductSales" in-map-name="productIdMap"/>
+                <field-to-field field-name="productId" map-name="parameters" to-map-name="discontinueProductSalesMap"/>
+                <call-service service-name="discontinueProductSales" in-map-name="discontinueProductSalesMap"/>
             </if-compare>
         </if-compare>
     </simple-method>
