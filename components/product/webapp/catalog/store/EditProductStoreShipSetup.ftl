@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -430,7 +430,7 @@ function setAssocFields(select) {
               <td width='1' align="right">
                 <nobr>
                   <a href="javascript:document.methUpdate${idx}.submit();" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
-                  <a href="<@ofbizUrl>/storeRemoveShipMeth?viewProductStoreId=${productStoreId}&productStoreId=${meth.productStoreId}&shipmentMethodTypeId=${meth.shipmentMethodTypeId}&partyId=${meth.partyId}&roleTypeId=${meth.roleTypeId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
+                  <a href="<@ofbizUrl>/storeRemoveShipMeth?viewProductStoreId=${productStoreId}&productStoreId=${meth.productStoreId}&newShipMethod=Y&shipmentMethodTypeId=${meth.shipmentMethodTypeId}&partyId=${meth.partyId}&roleTypeId=${meth.roleTypeId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
                 </nobr>
               </td>
             </tr>
@@ -515,7 +515,7 @@ function setAssocFields(select) {
         <tr>
           <td align="right"><span class="tableheadtext">${uiLabelMap.ProductDescription}</span></td>
           <td><input type="text" class="inputBox" name="description" size="30" value="${shipmentMethodType.description?if_exists}"> *</td>
-        </tr>        
+        </tr>
         <tr>
           <td>           
             <input type="submit" class="smallSubmit" value="${buttonText}">
