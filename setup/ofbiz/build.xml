@@ -137,10 +137,10 @@
         <delete file="${lib.dir}/ofbcore-share.jar" />
         <delete file="${lib.dir}/ofbcore-rules.jar" />
         <delete file="${lib.dir}/ofbcore-workflow.jar" />
+        <delete file="${lib.dir}/ofbcommonapp.jar" />
 
         <delete file="${j2eedeploy.dir}/ofbcore-ejb.jar" />    
 
-        <delete file="${j2eedeploy.dir}/commonapp-ext.war" />
         <delete file="${j2eedeploy.dir}/ecommerce-ext.war" />
 
         <delete file="${j2eedeploy.dir}/catalog-ext.war" />
@@ -301,10 +301,9 @@
         <copy file="commonapp/etc/jndi.properties" toFile="${etc.dir}/jndi.properties" />
         <copy file="commonapp/etc/servicesengine.properties" toFile="${etc.dir}/servicesengine.properties" />
         <copy file="commonapp/etc/tyrexdomain.xml" toFile="${etc.dir}/tyrexdomain.xml" />
-<!--
+
         <copy file="commonapp/lib/ofbcommonapp.jar"
             toFile="${lib.dir}/ofbcommonapp.jar" />
--->
         
         <copy file="core/lib/ofbcore-share.jar" toFile="${lib.dir}/ofbcore-share.jar" />
         <copy file="core/lib/ofbcore-rules.jar" toFile="${lib.dir}/ofbcore-rules.jar" />
@@ -324,9 +323,6 @@
         <copy file="commonapp/entitydef/fieldtypemysql.xml"
             toFile="${home.dir}/commonapp/entitydef/fieldtypemysql.xml" />
     
-        <copy file="commonapp/lib/commonapp-ext.war"
-            toFile="${j2eedeploy.dir}/commonapp-ext.war" />
-        
         <copy file="ecommerce/lib/ecommerce-ext.war"
             toFile="${j2eedeploy.dir}/ecommerce-ext.war" />
     
