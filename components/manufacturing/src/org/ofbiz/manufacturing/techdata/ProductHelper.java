@@ -1,5 +1,5 @@
 /*
- * $Id: ProductHelper.java,v 1.1 2004/04/14 09:18:48 holivier Exp $
+ * $Id: ProductHelper.java,v 1.2 2004/05/09 21:29:10 holivier Exp $
  *
  * Copyright (c)  2003, 2004 The Open For Business Project - www.ofbiz.org
  * Copyright (c)  2003, 2004 École Polytechnique de l'Université de Tours, Département Informatique - www.univ-tours.fr
@@ -28,9 +28,11 @@ package org.ofbiz.manufacturing.techdata;
 
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.TreeMap;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -38,6 +40,7 @@ import java.util.Vector;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.lang.*;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -51,6 +54,7 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.manufacturing.mrp.MrpServices;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
@@ -63,8 +67,9 @@ import org.ofbiz.service.GenericServiceException;
  * Method to retrieve some manufacturing Product Information 
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
+ * @author     <a href="mailto:nicolas@librenberry.net">Nicolas MALIN</a>
  * @author     <a href=mailto:tgrauss@free.fr">Thierry GRAUSS</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class ProductHelper {
@@ -115,8 +120,8 @@ public class ProductHelper {
 	* test to know if the product is build or bought
 	* @param GenericValue product to test.
 	* @return <ul>
-    * <li>return true if the product is build</li>
-    * <li>return false if the product is bought</li></ul>
+	* <li>return true if the product is build</li>
+	* <li>return false if the product is bought</li></ul>
 	*/
 	public static boolean isBuild(GenericValue product) {
 		Debug.logInfo("isBuild called", module);
@@ -136,4 +141,69 @@ public class ProductHelper {
 			return false;
 		}
 	}
+
+    /**
+     * Calcul the ATP Date of a list d'objet inventoryEventPlan
+     * @param List The list of inventoryEventPlan that transmit to ftl
+     * @return List of Double represant ATPDate
+     */
+    public static List getVariationProduct(List inventoryList){
+	
+	Debug.logInfo("coucou de la methode", module);
+	ArrayList inventoryProductList;
+        Map inventoryProductMap = new TreeMap();
+        Map cumulativeAtpByEventMap = new TreeMap();
+        GenericValue inventoryTmp;
+        boolean firstOfList = true;
+
+        //regroupement des inventorys en fonction de l'article
+        Iterator iter = inventoryList.iterator();
+        while( iter.hasNext() ){
+            inventoryTmp = (GenericValue) iter.next();
+	    inventoryProductList = (ArrayList)inventoryProductMap.get( inventoryTmp.getString("productId") );
+	    if( inventoryProductList == null ){
+		inventoryProductList = new ArrayList();
+		inventoryProductMap.put( inventoryTmp.getString("productId"), inventoryProductList);
+	    }
+	    inventoryProductList.add( inventoryTmp );
+        }
+    
+        // iteration on the product found
+        ArrayList keys = new ArrayList( inventoryProductMap.keySet() );
+        for (Iterator iterMap = keys.iterator(); iterMap.hasNext(); ){
+            String productId = (String) iterMap.next();
+            inventoryProductList = (ArrayList)  inventoryProductMap.get(productId);
+            double productAtp = 0;
+            for (iter = inventoryProductList.iterator();iter.hasNext();){
+                //Acumulate all the InventoryEventPlanned.quantity 
+                inventoryTmp = (GenericValue)iter.next();
+                if (firstOfList){
+                    //Intinial ATP equal to the current product QOH
+                    try {
+                         GenericValue product = inventoryTmp.getRelatedOneCache("Product");
+                         productAtp =  MrpServices.findProductMrpQoh(product);
+                     } catch (GenericEntityException e) {
+                             Debug.logError("Error : getRelatedOneCache Produc with productId="+inventoryTmp.getString("productId")+"--"+e.getMessage(), module);
+                             return null;
+                     }
+                     firstOfList = false;
+                }
+                Double doubleTmp = (Double)inventoryTmp.getDouble("eventQuantity");
+                productAtp += doubleTmp.doubleValue();
+                cumulativeAtpByEventMap.put( inventoryTmp, new Double(productAtp) );
+            }
+            firstOfList = true;
+        }
+
+        //construct the return list
+        List eventPlannedAndCumulativeAtp = new LinkedList();
+        iter = inventoryList.iterator();
+        while( iter.hasNext() ){
+            inventoryTmp = (GenericValue)iter.next();
+            Double productAtp = (Double) cumulativeAtpByEventMap.get(inventoryTmp);
+            eventPlannedAndCumulativeAtp.add( productAtp );
+        }
+        return eventPlannedAndCumulativeAtp;
+
+    }
 }

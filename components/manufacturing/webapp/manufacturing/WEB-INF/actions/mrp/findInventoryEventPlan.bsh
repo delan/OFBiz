@@ -28,14 +28,18 @@
 
 import java.util.*;
 import java.sql.Timestamp;
-import org.ofbiz.entity.*;
-import org.ofbiz.entity.condition.*;
 import org.ofbiz.base.util.*;
-import org.ofbiz.manufacturing.mrp.*;
+import org.ofbiz.service.*;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.content.widget.html.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.manufacturing.mrp.MrpServices;
+import org.ofbiz.manufacturing.techdata.ProductHelper;
 import org.ofbiz.base.util.Debug;
 
-delegator = request.getAttribute("delegator");
-
+GenericDelegator  delegator  = request.getAttribute("delegator");
 inventory = new HashMap();
 
 //get the inventory (inventoryEventPlanned)
@@ -78,6 +82,7 @@ if (lookupFlag != null) {
     eventDate = request.getParameter("eventDate");
     paramList = paramList + "&productId=" + productId;
     
+
     if (eventDate != null && eventDate.length() > 8) {            
 	eventDate = eventDate.trim();
 	if (eventDate.length() < 14) eventDate = eventDate + " " + "00:00:00.000";
@@ -111,18 +116,40 @@ try {
     viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
 } catch (Exception e) {}
 listSize = 0;
-if (inventoryList != null) {
+if (inventoryList != null)
     listSize = inventoryList.size();
-}
+
 lowIndex = viewIndex * viewSize;
 highIndex = (viewIndex + 1) * viewSize;
-if (listSize < highIndex) {
+if (listSize < highIndex) 
     highIndex = listSize;
-}
+if( highIndex < 1 )
+    highIndex = 0;
+
 context.put("viewIndex", viewIndex);
 context.put("listSize", listSize);
 context.put("highIndex", highIndex);
 context.put("lowIndex", lowIndex);
 context.put("viewSize", viewSize);
 
-    
+//Calcul variation quantity of product in stock 
+
+if (inventoryList != null && !inventoryList.isEmpty() ){
+    List numberProductList = ProductHelper.getVariationProduct( inventoryList.subList( 0, highIndex) );
+    context.put("numberProductList", numberProductList);
+
+
+    //Map productQoh
+    List qohProduct = new LinkedList();
+    String productTmp = new String("");
+    GenericValue inventoryTmp;
+    for( Iterator iter = inventoryList.iterator(); iter.hasNext(); ){
+	inventoryTmp = iter.next();
+	productId = inventoryTmp.getString("productId");
+	if( ! productId.equals( productTmp ) ){
+	    qohProduct.add( MrpServices.findProductMrpQoh(inventoryTmp.getRelatedOneCache("Product") ) );
+	    productTmp = productId;
+	}
+    }
+    context.put("qohProduct", qohProduct );
+}

@@ -1,0 +1,149 @@
+/*
+ * $Id: dataresourcepagelist.bsh,v 1.1 2003/11/04 23:58:06 byersa Exp $
+ *
+ * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
+ * copy from content component  actions/includes/findprep.bsh 1.8 
+ * @author     Olivier.Heintz@nereide.biz
+ * @author     Nicolas.Malin@librenberry.net	
+ * @version    $Revision: 0.1 $
+ * @since      3.0
+ *
+ * This script is a special version of includes/pagelistprep that
+ * gets the ElectronicText associated with a DataResource and puts it in
+ * a Map (electronicTextMap) in the context so that a custom .ftl 
+ * (does not use widget-form like pagelistprep) can render it.
+ */
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.ofbiz.base.util.*;
+import org.ofbiz.common.FindServices;
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.util.*;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityJoinOperator;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.model.DynamicViewEntity;
+import org.ofbiz.entity.model.ModelKeyMap;
+import org.ofbiz.base.util.BshUtil;
+import bsh.EvalError;
+
+import java.util.ListIterator;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+security = request.getAttribute("security");
+if(security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+
+delegator = (GenericDelegator) request.getAttribute("delegator");
+
+// field from the user query 
+Map inputFields            = UtilHttp.getParameterMap(request);
+//preload the query 
+staticConditionsStr = page.getProperty("staticConditions");
+if (staticConditionsStr != null && staticConditionsStr.length() > 0) {
+    String [] staticConditions = BshUtil.eval("String [] cond=" 
+                      + staticConditionsStr + "; return cond;",new HashMap());
+    for(int i=0; i < staticConditions.length; i += 2) {
+        inputFields.put(staticConditions[i], staticConditions[i+1]);
+    }
+}
+//Debug.logInfo("inputFields:"+ inputFields, "");
+String hideSearch = inputFields.get("hideSearch");
+context.put("hideSearch",hideSearch);
+String showListIfSelection = page.getProperty("showListIfSelection");
+Debug.logInfo("avant test","");
+if (UtilValidate.isEmpty(showListIfSelection) || showListIfSelection.equals("Y") || (UtilValidate.isNotEmpty(hideSearch) && hideSearch.equals("Y"))) {
+    context.put("showList", "Y");
+    Debug.logInfo("aprés test","");
+
+     // create the dynamic view entity
+    DynamicViewEntity dynamicView = new DynamicViewEntity();
+
+     // default view settings ProposedOrder
+     dynamicView.addMemberEntity("RE", "Requirement");
+     dynamicView.addAlias("RE", "requirementId" );
+     dynamicView.addAlias("RE", "requirementStartDate" );
+     dynamicView.addAlias("RE", "requiredByDate" );
+     dynamicView.addAlias("RE", "quantity" );
+     dynamicView.addAlias("RE", "productId");
+     dynamicView.addAlias("RE", "requirementTypeId" );
+     //RequirementType
+     dynamicView.addMemberEntity("RT", "RequirementType" );
+     dynamicView.addAlias("RT", "description" );
+     dynamicView.addViewLink("RE", "RT", Boolean.TRUE, ModelKeyMap.makeKeyMapList("requirementTypeId"));
+     //Product
+     dynamicView.addMemberEntity("PR", "Product" );
+     dynamicView.addAlias("PR", "internalName" );
+     dynamicView.addViewLink("RE", "PR", Boolean.TRUE, ModelKeyMap.makeKeyMapList("productId"));
+     // fieldsToSelect
+     Collection fieldsToSelect=null;
+     
+     // read and analyse the inputFields
+     Map queryStringMap = new HashMap();
+     Map origValueMap = new HashMap();
+     HashMap normalizedFields = FindServices.prepareField((Map) inputFields,(Map) queryStringMap,(Map) origValueMap);
+     //HashMap normalizedFields = FindServices.prepareField((Map) inputFields,new Double(5),(Map) origValueMap);
+     
+     // compare the normalizedFields with the field the user can query on
+     List keys = UtilMisc.toList("requirementId");
+     keys.add("description");
+     keys.add("productId");
+     keys.add("internalName");
+     keys.add("requirementStartDate");
+     keys.add("requiredByDate");
+     keys.add("quantity") ;
+     ArrayList tmpList = FindServices.createCondition(keys, normalizedFields, queryStringMap, origValueMap);
+    
+     //create the entity condition
+     EntityOperator entOp = EntityOperator.AND;
+     EntityConditionList mainCond = new EntityConditionList(tmpList, (EntityJoinOperator) entOp);
+    
+     // create the orderBy
+     List orderByList = null;
+     String orderBy  = page.getProperty("orderBy");
+     if (UtilValidate.isNotEmpty(orderBy)) {
+	 orderByList = StringUtil.split(orderBy,"|");
+     }
+    
+     // set entityFindOptions
+     EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
+    
+     // using list iterator
+     EntityListIterator listIt = delegator.findListIteratorByCondition(dynamicView, mainCond, null, fieldsToSelect, orderBy, findOpts);
+     request.setAttribute("listIt", listIt);
+    
+     String queryString = UtilHttp.urlEncodeArgs(inputFields);
+     context.put("queryString", queryString);
+}
+else  context.put("showList", "N");
+

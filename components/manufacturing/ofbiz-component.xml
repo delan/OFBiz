@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.8 2004/05/07 17:27:09 jacopo Exp $
+ *  $Id: ofbiz-component.xml,v 1.9 2004/05/09 21:29:12 holivier Exp $
  *  *  2003/10/21  Olivier Heintz  *
  *  *  2003/10/27  Jacopo Cappellato  *
 -->
@@ -48,6 +48,7 @@
     
     <!-- service resources: model(s) [definitions], eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
+    <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     
     <!-- web applications; will be mounted when using the embedded Jetty container -->
     <webapp name="manufacturing" 
