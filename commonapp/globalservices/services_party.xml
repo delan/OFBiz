@@ -34,10 +34,18 @@
     </service>
     <service name="createPerson" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createPerson" auth="false">
-        <description>Create a Person</description>
+        <description>Create a Person</description>        
         <implements service="interfacePerson"/>
         <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
     </service>
+    <service name="createPersonAndUserLogin" engine="simple" require-new-transaction="true"
+            location="org/ofbiz/commonapp/party/party/PartySimpleMethods.xml" invoke="createPersonAndUserLogin" auth="false">
+        <description>Create a Person and UserLogin</description>
+        <implements service="interfacePerson"/>
+        <implements service="createUserLogin"/>
+        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="newUserLogin" type="Map" mode="OUT" optional="false"/>
+    </service>    
     <service name="updatePerson" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyServices" invoke="updatePerson" auth="true">
         <description>Update a Person</description>

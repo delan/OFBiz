@@ -75,4 +75,20 @@
             <create-value value-name="newValue"/>
         </if-empty>
     </simple-method>
+    
+    <simple-method method-name="createPersonAndUserLogin" short-description="Creates a person and userlogin" login-required="false">
+    	<set-service-fields map-name="parameters" service-name="createPerson" to-map-name="createPersonCtx"/>
+    	<call-service service-name="createPerson" in-map-name="createPersonCtx">
+    		<result-to-field result-name="partyId" map-name="tempMap"/>    		
+    	</call-service>
+    	
+    	<make-value entity-name="UserLogin" value-name="newUserLogin"/>
+    	<set-pk-fields map-name="parameters" value-name="newUserLogin"/>
+    	<set-nonpk-fields map-name="parameters" value-name="newUserLogin"/>
+    	<field-to-field field-name="partyId" map-name="tempMap" to-map-name="newUserLogin"/>
+    	<create-value value-name="newUserLogin"/>
+    	
+    	<field-to-result field-name="newUserLogin"/>
+    	<field-to-result field-name="partyId" map-name="tempMap"/>    	
+    </simple-method>    
 </simple-methods>
