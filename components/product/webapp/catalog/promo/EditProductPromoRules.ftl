@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.13 $
+ *@version    $Revision: 1.14 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -107,8 +107,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                     <option value="${(condOperEnum.enumId)?if_exists}">${(condOperEnum.description)?if_exists}</option>
                                     </#list>
                                 </select>
-                                <input type=text size="20" name="condValue" value="${(productPromoCond.condValue)?if_exists}" class="inputBox">
-                                <span class="tabletext">Quantity:</span><input type=text size="5" name="quantity" value="${(productPromoCond.quantity)?if_exists}" class="inputBox">
+                                <input type=text size="25" name="condValue" value="${(productPromoCond.condValue)?if_exists}" class="inputBox">
                                 <input type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                             </form>
                             <#-- ======================= Categories ======================== -->
@@ -200,8 +199,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                 <option value="${(condOperEnum.enumId)?if_exists}">${(condOperEnum.description)?if_exists}</option>
                                 </#list>
                             </select>
-                            <input type="text" size="20" name="condValue" class="inputBox">
-                            <span class="tabletext">Quantity:</span><input type="text" size="5" name="quantity" class="inputBox">
+                            <input type="text" size="25" name="condValue" class="inputBox">
                             <input type=submit value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
                         </form>
                     </td>
