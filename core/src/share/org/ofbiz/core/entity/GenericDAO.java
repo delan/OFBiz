@@ -83,7 +83,6 @@ public class GenericDAO {
         
         try {
             singleInsert(entity, modelEntity, modelEntity.fields, connection);
-            storeAllOther(entity, connection);
             if(manualTX) {
                 try {
                     connection.commit();
@@ -167,7 +166,6 @@ public class GenericDAO {
         
         try {
             singleUpdate(entity, modelEntity, fieldsToSave, connection);
-            storeAllOther(entity, connection);
             if(manualTX) {
                 try {
                     connection.commit();
@@ -223,17 +221,6 @@ public class GenericDAO {
         }
     }
     
-    private void storeAllOther(GenericEntity entity, Connection connection) throws GenericEntityException {
-        //also store valueObject.otherToStore entities
-        if (entity.otherToStore != null && entity.otherToStore.size() > 0) {
-            Iterator entities = entity.otherToStore.iterator();
-            while (entities != null && entities.hasNext()) {
-                GenericEntity curEntity = (GenericEntity)entities.next();
-                singleStore(curEntity, connection);
-            }
-        }
-    }
-    
     /** Store the passed entity - insert if does not exist, otherwise update; then call storeAllOther to do a deep store */
     private void singleStore(GenericEntity entity, Connection connection) throws GenericEntityException {
         GenericPK tempPK = entity.getPrimaryKey();
@@ -244,12 +231,10 @@ public class GenericDAO {
             //Debug.logInfo(e);
             //select failed, does not exist, insert
             singleInsert(entity, entity.getModelEntity(), entity.getModelEntity().fields, connection);
-            storeAllOther(entity, connection);
             return;
         }
         //select did not fail, so exists, update
         singleUpdate(entity, entity.getModelEntity(), entity.getModelEntity().nopks, connection);
-        storeAllOther(entity, connection);
     }
     
     /* ====================================================================== */
