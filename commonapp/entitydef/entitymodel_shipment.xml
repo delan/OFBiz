@@ -292,11 +292,14 @@
       <field name="estimatedArrivalWorkEffId" type="id"></field>
       <field name="latestCancelDate" type="date-time"></field>
       <field name="estimatedShipCost" type="currency-amount"></field>
+      <field name="currencyUomId" type="id"></field>
       <field name="handlingInstructions" type="long-varchar"></field>
       <field name="originFacilityId" type="id"></field>
       <field name="destinationFacilityId" type="id"></field>
       <field name="originContactMechId" type="id"></field>
+      <field name="originTelecomNumberId" type="id"></field>
       <field name="destinationContactMechId" type="id"></field>
+      <field name="destinationTelecomNumberId" type="id"></field>
       <field name="partyIdTo" type="id"></field>
       <field name="partyIdFrom" type="id"></field>
       <field name="createdDate" type="date-time"></field>
@@ -316,6 +319,9 @@
       <relation type="one" fk-name="SHPMNT_EARRWEFF" title="EstimatedArrival" rel-entity-name="WorkEffort">
         <key-map field-name="estimatedArrivalWorkEffId" rel-field-name="workEffortId"/>
       </relation>
+      <relation type="one" fk-name="SHPMNT_CUOM" title="Currency" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      </relation>
       <relation type="one" fk-name="SHPMNT_OFAC" title="Origin" rel-entity-name="Facility">
         <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
       </relation>
@@ -331,8 +337,14 @@
       <relation type="one" fk-name="SHPMNT_OPAD" title="Origin" rel-entity-name="PostalAddress">
         <key-map field-name="originContactMechId" rel-field-name="contactMechId"/>
       </relation>
+      <relation type="one" fk-name="SHPMNT_OTCN" title="Origin" rel-entity-name="TelecomNumber">
+        <key-map field-name="originTelecomNumberId" rel-field-name="contactMechId"/>
+      </relation>
       <relation type="one" fk-name="SHPMNT_DPAD" title="Destination" rel-entity-name="PostalAddress">
         <key-map field-name="destinationContactMechId" rel-field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_DTCN" title="Destination" rel-entity-name="TelecomNumber">
+        <key-map field-name="destinationTelecomNumberId" rel-field-name="contactMechId"/>
       </relation>
       <relation type="one" fk-name="SHPMNT_PODR" title="Primary" rel-entity-name="OrderHeader">
         <key-map field-name="primaryOrderId" rel-field-name="orderId"/>
@@ -831,6 +843,12 @@
       <field name="shipmentRouteSegmentId" type="id-ne"></field>
       <field name="trackingCode" type="short-varchar"></field>
       <field name="boxNumber" type="short-varchar"></field>
+      <field name="labelImage" type="blob"></field>
+      <field name="packageServiceCost" type="currency-amount"></field>
+      <field name="packageOtherCost" type="currency-amount"></field>
+      <field name="codAmount" type="currency-amount"></field>
+      <field name="insuredAmount" type="currency-amount"></field>
+      <field name="currencyUomId" type="id"></field>
       <prim-key field="shipmentId"/>
       <prim-key field="shipmentPackageSeqId"/>
       <prim-key field="shipmentRouteSegmentId"/>
@@ -845,6 +863,9 @@
         <key-map field-name="shipmentId"/>
         <key-map field-name="shipmentRouteSegmentId"/>
       </relation>
+      <relation type="one" fk-name="SHPKRTSG_CUOM" title="Currency" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      </relation>
     </entity>
     <entity entity-name="ShipmentRouteSegment"
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -855,14 +876,22 @@
       <field name="originFacilityId" type="id"></field>
       <field name="destFacilityId" type="id"></field>
       <field name="originContactMechId" type="id"></field>
+      <field name="originTelecomNumberId" type="id"></field>
       <field name="destContactMechId" type="id"></field>
+      <field name="destTelecomNumberId" type="id"></field>
       <field name="carrierPartyId" type="id"></field>
       <field name="shipmentMethodTypeId" type="id"></field>
+      <field name="actualTransportCost" type="currency-amount"></field>
+      <field name="actualServiceCost" type="currency-amount"></field>
+      <field name="actualOtherCost" type="currency-amount"></field>
       <field name="actualCost" type="currency-amount"></field>
+      <field name="currencyUomId" type="id"></field>
       <field name="actualStartDate" type="date-time"></field>
       <field name="actualArrivalDate" type="date-time"></field>
       <field name="estimatedStartDate" type="date-time"></field>
       <field name="estimatedArrivalDate" type="date-time"></field>
+      <field name="shipmentConfirmed" type="indicator"></field>
+      <field name="trackingCode" type="short-varchar"></field>
       <prim-key field="shipmentId"/>
       <prim-key field="shipmentRouteSegmentId"/>
       <relation type="one" fk-name="SHPMT_RTSEG_SHPMT" rel-entity-name="Shipment">
@@ -895,8 +924,14 @@
       <relation type="one" fk-name="SHPMT_RTSEG_OPAD" title="Origin" rel-entity-name="PostalAddress">
         <key-map field-name="originContactMechId" rel-field-name="contactMechId"/>
       </relation>
+      <relation type="one" fk-name="SHPMT_RTSEG_OTCN" title="Origin" rel-entity-name="TelecomNumber">
+        <key-map field-name="originTelecomNumberId" rel-field-name="contactMechId"/>
+      </relation>
       <relation type="one" fk-name="SHPMT_RTSEG_DPAD" title="Dest" rel-entity-name="PostalAddress">
         <key-map field-name="destContactMechId" rel-field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMT_RTSEG_DTCN" title="Dest" rel-entity-name="TelecomNumber">
+        <key-map field-name="destTelecomNumberId" rel-field-name="contactMechId"/>
       </relation>
       <relation type="one" fk-name="SHPMT_RTSEG_SHMT" rel-entity-name="ShipmentMethodType">
         <key-map field-name="shipmentMethodTypeId"/>
@@ -904,6 +939,9 @@
       <relation type="many" rel-entity-name="ShipmentPackageRouteSeg">
         <key-map field-name="shipmentId"/>
         <key-map field-name="shipmentRouteSegmentId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMT_RTSEG_CUOM" title="Currency" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentStatus"
