@@ -1,5 +1,5 @@
 /*
- * $Id: ShippingEvents.java,v 1.9 2003/12/10 15:43:11 ajzeneski Exp $
+ * $Id: ShippingEvents.java,v 1.10 2004/01/24 14:51:40 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.common.geo.GeoWorker;
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class ShippingEvents {
@@ -323,8 +323,11 @@ public class ShippingEvents {
         if (estimate.getDouble("orderPricePercent") != null)
             orderPercent = estimate.getDouble("orderPricePercent").doubleValue();
 
+        double itemFlatAmount = shippableQuantity * orderItemFlat;
+        double orderPercentage = shippableTotal * (orderPercent / 100);
+
         // flat total
-        double flatTotal = orderFlat + orderItemFlat + orderPercent;
+        double flatTotal = orderFlat + itemFlatAmount + orderPercentage;
 
         // spans
         double weightUnit = 0.00;
@@ -345,9 +348,6 @@ public class ShippingEvents {
 
         // span total
         double spanTotal = weightAmount + quantityAmount + priceAmount;
-
-        double itemFlatAmount = shippableQuantity * orderItemFlat;
-        double orderPercentage = shippableTotal * (orderPercent / 100);
 
         // feature surcharges
         double featureSurcharge = 0.00;
