@@ -64,25 +64,41 @@ public class FieldToField extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        Map fromMap = (Map) methodContext.getEnv(mapName);
-        if (fromMap == null) {
-            Debug.logWarning("Map not found with name " + mapName + ", not copying field");
-            return true;
-        }
-        Map toMap = (Map) methodContext.getEnv(toMapName);
-        if (toMap == null) {
-            Debug.logVerbose("Map not found with name " + toMapName + ", creating new map");
-            toMap = new HashMap();
-            methodContext.putEnv(toMapName, toMap);
+        Object fieldVal = null;
+
+        if (mapName != null && mapName.length() > 0) {
+            Map fromMap = (Map) methodContext.getEnv(mapName);
+            if (fromMap == null) {
+                Debug.logWarning("Map not found with name " + mapName);
+                return true;
+            }
+
+            fieldVal = fromMap.get(fieldName);
+        } else {
+            //no map name, try the env
+            fieldVal = methodContext.getEnv(fieldName);
         }
 
-        Object fieldVal = fromMap.get(fieldName);
         if (fieldVal == null) {
-            Debug.logInfo("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not copying field");
+            Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not copying field");
             return true;
         }
+        
+        Map toMap = null;
+        if (toMapName != null && toMapName.length() > 0) {
+            toMap = (Map) methodContext.getEnv(toMapName);
+            if (toMap == null) {
+                Debug.logInfo("Map not found with name " + toMapName + ", creating new map");
+                toMap = new HashMap();
+                methodContext.putEnv(toMapName, toMap);
+            }
+            toMap.put(toFieldName, fieldVal);
+            
+        } else {
+            // no to-map, so put in env
+            methodContext.putEnv(toFieldName, fieldVal);
+        }
 
-        toMap.put(toFieldName, fieldVal);
         return true;
     }
 }
