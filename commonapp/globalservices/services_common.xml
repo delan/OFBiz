@@ -25,6 +25,24 @@
         <attribute name="body" type="String" mode="IN" optional="false"/>        
     </service>
     
+    <service name="prepareNotificationInterface" engine="interface"
+            location="" invoke="">
+        <description>Send Template Based Notification Service</description>   
+        <implements service="sendMailInterface"/>
+        <attribute name="body" type="String" mode="INOUT" optional="true"/>        
+    	<attribute name="baseUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="templateName" type="String" mode="IN" optional="false"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="sendNotificationInterface" engine="interface"
+            location="" invoke="">
+        <description>Send Template Based Notification Service</description>   
+        <implements service="prepareNotificationInterface"/>
+        <attribute name="body" type="String" mode="IN" optional="true"/>
+        <attribute name="templateName" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <service name="sendMailFromUrl" engine="java"
             location="org.ofbiz.commonapp.common.CommonServices" invoke="sendMailFromUrl">
         <description>Send E-Mail From URL Service</description>
