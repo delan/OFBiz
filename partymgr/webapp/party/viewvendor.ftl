@@ -39,7 +39,7 @@
           ${lookupPerson.suffix?if_exists}
         <#else>
           <#if lookupGroup?exists>
-            ${lookupGroup.groupName?if_exists}
+            ${lookupGroup.groupName?default("No name (group)")}
           <#else>
           "New User"
           </#if>
@@ -48,13 +48,14 @@
     </td>
     <td align="right">
 	  <div class="tabContainer">
-      <a href="<@ofbizUrl>/viewprofile?partyId=${partyId}</@ofbizUrl>" class="tabButton">Profile</a>
-      <a href="<@ofbizUrl>/viewvendor?partyId=${partyId}</@ofbizUrl>" class="tabButtonSelected">Vendor</a>
-      <a href="<@ofbizUrl>/viewroles?partyId=${partyId}</@ofbizUrl>" class="tabButton">Roles</a>
-      <a href="<@ofbizUrl>/viewrelationships?partyId=${partyId}</@ofbizUrl>" class="tabButton">Relationships</a>
+        <a href="<@ofbizUrl>/viewprofile?partyId=${partyId}</@ofbizUrl>" class="tabButton">Profile</a>
+        <a href="<@ofbizUrl>/viewvendor?partyId=${partyId}</@ofbizUrl>" class="tabButtonSelected">Vendor</a>
+        <a href="<@ofbizUrl>/viewroles?partyId=${partyId}</@ofbizUrl>" class="tabButton">Roles</a>
+        <a href="<@ofbizUrl>/viewrelationships?partyId=${partyId}</@ofbizUrl>" class="tabButton">Relationships</a>
+        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButton">Communications</a>
       </div>
     </td>
-  </tr>
+  </tr>  
 </table>
 
 <br>

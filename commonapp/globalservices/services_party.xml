@@ -437,4 +437,39 @@
         <description>Remove Vendor Information</description>
         <auto-attributes entity-name="Vendor" include="pk" mode="IN" optional="false"/>
     </service>
+    
+    <!-- Communication Event Services -->
+    <service name="createCommunicationEvent" engine="simple"
+            location="org/ofbiz/commonapp/party/communication/CommunicationEventServices.xml" invoke="createCommunicationEvent" auth="true">
+        <description>Create a Communication Event</description>
+        <auto-attributes entity-name="CommunicationEvent" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="CommunicationEvent" include="pk" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateCommunicationEvent" engine="simple"
+            location="org/ofbiz/commonapp/party/communication/CommunicationEventServices.xml" invoke="updateCommunicationEvent" auth="true">
+        <description>Create a Communication Event</description>
+        <auto-attributes entity-name="CommunicationEvent" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="CommunicationEvent" include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="createCommunicationEventPurpose" engine="simple"
+            location="org/ofbiz/commonapp/party/communication/CommunicationEventServices.xml" invoke="createCommunicationEventPurpose" auth="true">
+        <description>Create a Communication Event Purpose</description>
+        <auto-attributes entity-name="CommunicationEventPurpose" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="CommunicationEventPurpose" include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeCommunicationEventPurpose" engine="simple"
+            location="org/ofbiz/commonapp/party/communication/CommunicationEventServices.xml" invoke="removeCommunicationEventPurpose" auth="true">
+        <description>Remove a Communication Event Purpose</description>
+        <auto-attributes entity-name="CommunicationEventPurpose" include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="createCommunicationEventRole" engine="simple"
+            location="org/ofbiz/commonapp/party/communication/CommunicationEventServices.xml" invoke="createCommunicationEventRole" auth="true">
+        <description>Create a Communication Event Role</description>
+        <auto-attributes entity-name="CommunicationEventRole" include="pk" mode="IN" optional="false"/>       
+    </service>
+    <service name="removeCommunicationEventRole" engine="simple"
+            location="org/ofbiz/commonapp/party/communication/CommunicationEventServices.xml" invoke="removeCommunicationEventRole" auth="true">
+        <description>Remove a Communication Event Role</description>
+        <auto-attributes entity-name="CommunicationEventRole" include="pk" mode="IN" optional="false"/>
+    </service>               
 </services>

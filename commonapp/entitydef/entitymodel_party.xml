@@ -494,7 +494,7 @@
       <field name="roleTypeIdTo" type="id"></field>
       <field name="partyIdFrom" type="id"></field>
       <field name="partyIdTo" type="id"></field>
-      <field name="fromDate" type="date-time"></field>
+      <field name="entryDate" type="date-time"></field>
       <field name="datetimeStarted" type="date-time"></field>
       <field name="datetimeEnded" type="date-time"></field>
       <field name="note" type="comment"></field>

@@ -500,6 +500,52 @@
     	<event type="java" path="org.ofbiz.commonapp.common.CommonEvents" invoke="setAppletFollower"/>
     	<response name="success" type="view" value="visitdetail"/>
     </request-map>
+    
+    <!-- communication event requests -->
+    <request-map uri="viewcommunications">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listCommunications"/>
+    </request-map>
+    <request-map uri="viewCommunicationEvent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="communicationEvent"/>
+    </request-map>
+    <request-map uri="createCommunicationEvent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCommunicationEvent"/>
+        <response name="success" type="view" value="communicationEvent"/>
+        <response name="success" type="view" value="communicationEvent"/>
+    </request-map>
+    <request-map uri="updateCommunicationEvent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCommunicationEvent"/>
+        <response name="success" type="view" value="communicationEvent"/>
+        <response name="success" type="view" value="communicationEvent"/>
+    </request-map>
+    <request-map uri="createCommunicationEventPurpose">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCommunicationEventPurpose"/>
+        <response name="success" type="view" value="communicationEvent"/>
+        <response name="success" type="view" value="communicationEvent"/>
+    </request-map>
+    <request-map uri="removeCommunicationEventPurpose">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeCommunicationEventPurpose"/>
+        <response name="success" type="view" value="communicationEvent"/>
+        <response name="success" type="view" value="communicationEvent"/>
+    </request-map> 
+    <request-map uri="createCommunicationEventRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCommunicationEventRole"/>
+        <response name="success" type="view" value="communicationEvent"/>
+        <response name="success" type="view" value="communicationEvent"/>
+    </request-map>
+    <request-map uri="removeCommunicationEventRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeCommunicationEventRole"/>
+        <response name="success" type="view" value="communicationEvent"/>
+        <response name="success" type="view" value="communicationEvent"/>
+    </request-map>                 
 
     <!-- end of request mappings -->
 
@@ -534,5 +580,8 @@
     
     <view-map name="showvisits" type="region"/>
     <view-map name="visitdetail" type="region"/>
+    
+    <view-map name="listCommunications" type="jpublish" page="/communication/listCommunications.ftl"/>
+    <view-map name="communicationEvent" type="jpublish" page="/communication/editCommunication.ftl"/>   
     <!-- end of view mappings -->
 </site-conf>

@@ -57,21 +57,24 @@
         <a href="<@ofbizUrl>/viewvendor?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">Vendor</a>
         <a href="<@ofbizUrl>/viewroles?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">Roles</a>
         <a href="<@ofbizUrl>/viewrelationships?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">Relationships</a>
+        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButton">Communications</a>
       </div>
-      <nobr>
-        <#if showOld>
-          <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[Hide Old]</a>
-        <#else>      
-          <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}&SHOW_OLD=true</@ofbizUrl>" class="buttontext">[Show Old]</a>
-        </#if>
-        <a href="/accounting/control/findBillingAccount?partyId=${partyId}${externalKeyParam}" class="buttontext">[Billing Accounts]</a>
-        <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
-          <a href="/ordermgr/control/findorders?lookupFlag=Y&partyId=${partyId}${externalKeyParam}" class="buttontext">[Orders]</a>
-        </#if>
-        <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-          <a href="/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=${partyId}${externalKeyParam}" class="buttontext">[New Order]</a>
-        </#if>      
-      </nobr>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="right" nowrap>     
+      <#if showOld>
+        <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[Hide Old]</a>
+      <#else>      
+        <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}&SHOW_OLD=true</@ofbizUrl>" class="buttontext">[Show Old]</a>
+      </#if>
+      <a href="/accounting/control/findBillingAccount?partyId=${partyId}${externalKeyParam}" class="buttontext">[Billing Accounts]</a>
+      <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
+        <a href="/ordermgr/control/findorders?lookupFlag=Y&partyId=${partyId}${externalKeyParam}" class="buttontext">[Orders]</a>
+      </#if>
+      <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
+        <a href="/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=${partyId}${externalKeyParam}" class="buttontext">[New Order]</a>
+      </#if>      
     </td>
   </tr>
 </table>
