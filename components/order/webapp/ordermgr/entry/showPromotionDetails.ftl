@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -43,8 +43,8 @@
         <table width="100%" border="0" cellspacing="0" cellpadding="4" class="boxbottom">
           <tr>
             <td>
-                <div class="tabletext">${productPromo.promoText}</div>
-                <div class="tabletext">TODO: put long auto text here</div>
+                <div class="tabletext">Manual Description: ${productPromo.promoText?if_exists}</div>
+                <div class="tabletext">Generated Description: ${promoAutoDescription?if_exists}</div>
             </td>
           </tr>
         </table>
