@@ -9,15 +9,15 @@
   <!-- WorkEffort services -->
     <service name="interfaceWorkEffort" engine="interface" location="" invoke="">
         <description>WorkEffort Entity Interface</description>
-        <attribute name="workEffortTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="workEffortTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="workEffortPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="workEffortParentId" type="String" mode="IN" optional="true"/>
-        <attribute name="currentStatusId" type="String" mode="IN" optional="false"/>
+        <attribute name="currentStatusId" type="String" mode="IN" optional="true"/>
         <attribute name="universalId" type="String" mode="IN" optional="true"/>
         <attribute name="scopeEnumId" type="String" mode="IN" optional="true"/>
         <attribute name="priority" type="Long" mode="IN" optional="true"/>
         <attribute name="percentComplete" type="Long" mode="IN" optional="true"/>
-        <attribute name="workEffortName" type="String" mode="IN" optional="false"/>
+        <attribute name="workEffortName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="locationDesc" type="String" mode="IN" optional="true"/>
         <attribute name="fixedAssetId" type="String" mode="IN" optional="true"/>
@@ -47,7 +47,10 @@
     <service name="createWorkEffort" engine="simple"
             location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffort">
         <description>Create a WorkEffort Entity</description>
-        <implements service="interfaceWorkEffort"/>
+        <implements service="interfaceWorkEffort"/>        
+        <attribute name="workEffortTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="workEffortName" type="String" mode="IN" optional="false"/>
+        <attribute name="currentStatusId" type="String" mode="IN" optional="false"/>
         <attribute name="quickAssignPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="workEffortId" type="String" mode="OUT" optional="false"/>
     </service>
@@ -55,7 +58,7 @@
             location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffort">
         <description>Update a WorkEffort Entity</description>
         <implements service="interfaceWorkEffort"/>
-        <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
+        <attribute name="workEffortId" type="String" mode="IN" optional="false"/>        
     </service>
     <service name="deleteWorkEffort" engine="simple"
             location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffort">
@@ -76,7 +79,7 @@
     <service name="assignPartyToWorkEffort" engine="java"
             location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortPartyAssignmentServices" invoke="assignPartyToWorkEffort">
         <description>Create a WorkEffortPartyAssignment Entity</description>
-        <implements service="interfaceWorkEffort"/>
+        <implements service="interfaceWorkEffortPartyAssignment"/>
         <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
@@ -85,7 +88,7 @@
     <service name="updatePartyToWorkEffortAssignment" engine="java"
             location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortPartyAssignmentServices" invoke="updatePartyToWorkEffortAssignment">
         <description>Update a WorkEffortPartyAssignment Entity</description>
-        <implements service="interfaceWorkEffort"/>
+        <implements service="interfaceWorkEffortPartyAssignment"/>
         <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
