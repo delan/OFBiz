@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.2 2003/08/15 22:05:59 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.3 2003/08/16 18:56:54 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -36,13 +36,11 @@ import org.ofbiz.base.util.*;
  * 
  * Example ofbiz-container.xml configuration:
  * <pre>
- *   <container name="component-container" class="org.ofbiz.base.component.ComponentContainer">
- *     <property name="[component-name]" value="[path-to-component-configuration]"/>
- *   </container>
+ *   <container name="component-container" class="org.ofbiz.base.component.ComponentContainer"/>
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.2 $
+  *@version    $Revision: 1.3 $
  * @since      2.2
  */
 public class ComponentContainer implements Container {
@@ -50,7 +48,7 @@ public class ComponentContainer implements Container {
     public static final String module = ComponentContainer.class.getName();
     
     protected List loadedComponents = null;
-    protected Classpath classPath = null;
+    protected Classpath classPath = null;    
 
     /**
      * @see org.ofbiz.core.start.StartupContainer#start(java.lang.String)
@@ -66,28 +64,92 @@ public class ComponentContainer implements Container {
         }
         
         // get the components
-        ContainerConfig.Container cc = ContainerConfig.getContainer("component-container", configFileLocation);        
-        Iterator i = cc.properties.values().iterator();
-        while (i.hasNext()) {
-            ContainerConfig.Container.Property prop = (ContainerConfig.Container.Property) i.next();                        
-            ComponentConfig config = null;
-            try {
-                config = ComponentConfig.getComponentConfig(prop.name, prop.value); 
-            } catch (ComponentException e) {
-                Debug.logError("Cannot load component : " + prop.name + " @ " + prop.value + " : " + e.getMessage(), module);                
-            }
-            if (config == null) {
-                Debug.logError("Cannot load component : " + prop.name + " @ " + prop.value, module);
-            } else {
-                loadComponent(config);
-            }                                       
+        List componentsToLoad = null;
+        try {            
+            componentsToLoad = ComponentLoaderConfig.getComponentsToLoad(null);
+        } catch (ComponentException e) {            
+            throw new ContainerException(e);    
         }
         
+        // get the config for this container
+        ContainerConfig.Container cc = ContainerConfig.getContainer("component-container", configFileLocation);
+        
+        // check for an override loader config
+        String loaderConfig = null;
+        if (cc.getProperty("loader-config") != null) {
+            loaderConfig = cc.getProperty("loader-config").value;
+        }
+                
+        // get the components to load
+        List components = null;
+        try {            
+            components = ComponentLoaderConfig.getComponentsToLoad(loaderConfig);
+        } catch (ComponentException e) {
+            throw new ContainerException(e);            
+        }
+        
+        // load each component
+        if (components != null) {
+            Iterator ci = components.iterator();
+            while (ci.hasNext()) {
+                ComponentLoaderConfig.ComponentDef def = (ComponentLoaderConfig.ComponentDef) ci.next();
+                if (def.type == ComponentLoaderConfig.SINGLE_COMPONENT) {
+                    ComponentConfig config = null;
+                    try {
+                        config = ComponentConfig.getComponentConfig(def.name, def.location);
+                    } catch (ComponentException e) {
+                        Debug.logError("Cannot load component : " + def.name + " @ " + def.location + " : " + e.getMessage(), module);    
+                    }
+                    if (config == null) {
+                        Debug.logError("Cannot load component : " + def.name + " @ " + def.location, module);   
+                    } else {
+                        loadComponent(config);
+                    }
+                } else if (def.type == ComponentLoaderConfig.COMPONENT_DIRECTORY) {
+                    loadComponentDirectory(def.location);    
+                }                
+            }
+        }
+
         // set the new classload on the current thread
         ClassLoader cl = classPath.getClassLoader();
         Thread.currentThread().setContextClassLoader(cl);
         
         return true;
+    }
+    
+    private void loadComponentDirectory(String directoryName) throws ContainerException {
+        File parentPath = new File(directoryName);
+        if (!parentPath.exists() || !parentPath.isDirectory()) {
+            Debug.logError("Auto-Load Component directory not found : " + directoryName, module);
+        } else {
+            String subs[] = parentPath.list();
+            for (int i = 0; i < subs.length; i++) {
+                try {
+                    File componentPath = new File(parentPath.getCanonicalPath() + "/" + subs[i]);
+                    if (componentPath.isDirectory() && !subs[i].equals("CVS")) {
+                        // make sure we have a component configuraton file
+                        String componentLocation = componentPath.getCanonicalPath();
+                        File configFile = new File(componentLocation + "/ofbiz-component.xml");
+                        if (configFile.exists()) {
+                            ComponentConfig config = null;
+                            try {
+                                config = ComponentConfig.getComponentConfig(directoryName, componentLocation);
+                            } catch (ComponentException e) {
+                                Debug.logError("Cannot load component : " + directoryName + " @ " + componentLocation + " : " + e.getMessage(), module);    
+                            }
+                            if (config == null) {
+                                Debug.logError("Cannot load component : " + directoryName + " @ " + componentLocation, module);    
+                            } else {
+                                loadComponent(config);
+                            }                          
+                        }
+                    }
+                } catch (IOException ioe) {
+                    Debug.logError(ioe, module);
+                }
+            }            
+        }                           
     }
     
     private void loadComponent(ComponentConfig config) throws ContainerException {
