@@ -8,7 +8,12 @@
 
     <!-- Product Services -->
     <service name="interfaceProduct" default-entity-name="Product" engine="interface" location="" invoke="">
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdDate"/>
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedDate"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
         <override name="productTypeId" optional="false"/>
         <override name="productName" optional="false"/>
     </service>
@@ -423,14 +428,24 @@
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductPromo" auth="true">
         <description>Create a ProductPromo</description>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdDate"/>
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedDate"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
         <override name="promoName" optional="false"/>
     </service>
     <service name="updateProductPromo" default-entity-name="ProductPromo" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromo" auth="true">
         <description>Update a ProductPromo</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdDate"/>
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedDate"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
     </service>
     <service name="deleteProductPromo" default-entity-name="ProductPromo" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromo" auth="true">
@@ -480,13 +495,23 @@
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductPromoCode" auth="true">
         <description>Create a ProductPromoCode</description>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdDate"/>
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedDate"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
     </service>
     <service name="updateProductPromoCode" default-entity-name="ProductPromoCode" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoCode" auth="true">
         <description>Update a ProductPromoCode</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdDate"/>
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedDate"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
     </service>
     <service name="deleteProductPromoCode" default-entity-name="ProductPromoCode" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromoCode" auth="true">

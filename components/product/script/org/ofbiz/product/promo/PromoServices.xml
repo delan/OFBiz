@@ -36,9 +36,15 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <sequenced-id-to-env sequence-name="ProductPromo" env-name="newEntity.productPromoId" to-string="true"/>
         <field-to-result field-name="productPromoId" map-name="newEntity"/>
+
         <if-empty field-name="newEntity.userEntered">
             <string-to-field string="Y" field-name="newEntity.userEntered"/>
         </if-empty>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-env env-name="nowTimestamp" to-env-name="newEntity.createdDate"/>
+        <env-to-env env-name="nowTimestamp" to-env-name="newEntity.lastModifiedDate"/>
+        <env-to-env env-name="userLogin.userLoginId" to-env-name="newEntity.lastModifiedByUserLogin"/>
+        <env-to-env env-name="userLogin.userLoginId" to-env-name="newEntity.createdByUserLogin"/>
 
         <create-value value-name="newEntity"/>
     </simple-method>
@@ -50,9 +56,13 @@
         <field-to-field field-name="productPromoId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPromo" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+
         <if-empty field-name="newEntity.userEntered">
             <string-to-field string="Y" field-name="newEntity.userEntered"/>
         </if-empty>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-env env-name="nowTimestamp" to-env-name="newEntity.lastModifiedDate"/>
+        <env-to-env env-name="userLogin.userLoginId" to-env-name="newEntity.lastModifiedByUserLogin"/>
 
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -149,6 +159,12 @@
         <sequenced-id-to-env sequence-name="ProductPromoCode" env-name="newEntity.productPromoCodeId" to-string="true"/>
         <field-to-result field-name="productPromoCodeId" map-name="newEntity"/>
 
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-env env-name="nowTimestamp" to-env-name="newEntity.createdDate"/>
+        <env-to-env env-name="nowTimestamp" to-env-name="newEntity.lastModifiedDate"/>
+        <env-to-env env-name="userLogin.userLoginId" to-env-name="newEntity.lastModifiedByUserLogin"/>
+        <env-to-env env-name="userLogin.userLoginId" to-env-name="newEntity.createdByUserLogin"/>
+
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductPromoCode" short-description="Update an ProductPromoCode">
@@ -160,6 +176,11 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-env env-name="nowTimestamp" to-env-name="newEntity.lastModifiedDate"/>
+        <env-to-env env-name="userLogin.userLoginId" to-env-name="newEntity.lastModifiedByUserLogin"/>
+
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteProductPromoCode" short-description="Delete an ProductPromoCode">

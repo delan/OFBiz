@@ -306,7 +306,7 @@
   <InventoryItem availableToPromise="10" quantityOnHand="10" facilityId="WebStoreWarehouse" inventoryItemId="9013" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-9943-S4" />
 
   <!-- a default promotion to play with -->
-  <ProductPromo productPromoId="9000" promoName="Test Promo 1"
+  <ProductPromo productPromoId="9000" promoName="Test Promo 1" createdDate="2003-01-01 12:00:00.0" userEntered="Y"
     promoText="Spend more than $100 on your favorite widgets and gizmos and get a free &lt;a href=&apos;/ecommerce/control/product?category_id=20111&amp;product_id=WG-1111&apos; class=&apos;buttontext&apos;&gt;Micro Chrome Widget&lt;/a&gt;!"/>
   <ProductPromoRule productPromoId="9000" productPromoRuleId="01" ruleName="Rule 1: Free Widget" />
   <ProductPromoCond inputParamEnumId="PPIP_ORDER_TOTAL" operatorEnumId="PPC_GT" condValue="100"
@@ -320,9 +320,9 @@
     <!-- $ off items, any in category, limit use (try by order, customer, promo) -->
     <!-- 20% off any one item in product list, ie limit 1 per order -->
     <!-- 10% off entire purchase -->
-    <!-- $ off entire purchase -->
+    <!-- $ off entire purchase with promo code -->
     <!-- Buy 2 Get 1 Free, limit to two usages to test interesting combinations -->
-    <!-- Buy 1 Get 1 At 50% off -->
+    <!-- Buy 1 Get 1 At 50% off with promo code -->
     <!-- 2 for $ -->
     <!-- GWP (above exmaple will do) -->
 

@@ -46,5 +46,12 @@
         </field>
 
         <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+
+        <field use-when="productPromo!=null" name="lastUpdatedByText" title="Last Modified By:" widget-style="tabletext">
+            <display description="[${productPromo.lastModifiedByUserLogin}] on ${productPromo.lastModifiedDate}" also-hidden="false"/>
+        </field>
+        <field use-when="productPromo!=null" name="createdByText" title="Created By:" widget-style="tabletext">
+            <display description="[${productPromo.createdByUserLogin}] on ${productPromo.createdDate}" also-hidden="false"/>
+        </field>
     </form>
 </forms>
