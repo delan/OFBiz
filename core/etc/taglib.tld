@@ -21,6 +21,16 @@
 	  </info>
 	</tag>
 	
+	<tag>
+	  <name>format</name>
+	  <tagclass>org.ofbiz.core.taglib.FormatTag</tagclass>
+	  <bodycontent>JSP</bodycontent>
+	  <info>
+	    Formats dates, numbers and currencies.
+	  </info>
+	  <attribute><name>type</name><required>false</required></attribute>
+	</tag>
+		
     <tag>
 	  <name>iterator</name>
 	  <tagclass>org.ofbiz.core.taglib.IteratorTag</tagclass>
@@ -31,7 +41,7 @@
 	  </info>
 	  <attribute><name>name</name><required>true</required></attribute>	
 	  <attribute><name>property</name><required>false</required></attribute>
-	  <attribute><name>type</name><required>true</required></attribute>
+	  <attribute><name>type</name><required>false</required></attribute>
     </tag>
 	
     <tag>
@@ -57,7 +67,7 @@
 	  </info>
 	  <attribute><name>name</name><required>true</required></attribute>	
 	  <attribute><name>property</name><required>false</required></attribute>
-	  <attribute><name>type</name><required>true</required></attribute>
+	  <attribute><name>type</name><required>false</required></attribute>
     </tag>
 	
 </taglib>

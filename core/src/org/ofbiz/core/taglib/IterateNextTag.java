@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/06 00:45:09  azeneski
+ * minor adjustments to tag files. added new format tag.
+ *
  * Revision 1.1  2001/08/05 00:48:47  azeneski
  * Added new core JSP tag library. Non-application specific taglibs.
  *
@@ -75,17 +78,7 @@ public class IterateNextTag extends BodyTagSupport {
             return SKIP_BODY;
         
         if ( name == null )
-            name = "next";
-        
-        if ( type == null ) {
-            try {
-                setType(iteratorTag.getType());
-                setValue("type",type);
-            }
-            catch ( ClassNotFoundException e ) {
-                throw new JspTagException(e.getMessage());
-            }            
-        }
+            name = "next";                
                 
         // get the next element from the iterator
         Object element = iterator.next();

@@ -1,6 +1,9 @@
 /*
  * $id$
  * $Log$
+ * Revision 1.1  2001/08/05 00:48:47  azeneski
+ * Added new core JSP tag library. Non-application specific taglibs.
+ *
  */
 
 package org.ofbiz.core.taglib;
@@ -49,7 +52,7 @@ public class IterateNextTEI extends TagExtraInfo {
         	
         className = data.getAttributeString("type");                
         if ( className == null )
-            className = "java.lang.Object";
+            className = "org.ofbiz.core.entity.GenericValue";
                        	                                     
 	VariableInfo info = new VariableInfo(name, className, true, VariableInfo.NESTED);
 	VariableInfo[] result = { info };
