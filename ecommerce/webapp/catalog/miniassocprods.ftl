@@ -1,7 +1,7 @@
 
-<#assign associatedProducts = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getRandomCartProductAssoc(request)>
+<#assign associatedProducts = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getRandomCartProductAssoc(request)?if_exists>
 
-<#if associatedProducts?exists>
+<#if associatedProducts?has_content>
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>
       <TD width='100%'>
