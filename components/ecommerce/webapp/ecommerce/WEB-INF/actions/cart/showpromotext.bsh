@@ -51,12 +51,15 @@ while (productPromoIterator.hasNext()) {
 
 // now slim it down to promoShowLimit
 productPromosRandomTemp = new ArrayList(productPromosAllShowable);
-productPromos = new ArrayList(promoShowLimit);
-if (productPromosRandomTemp.size() > 0) {
+productPromos = null;
+if (productPromosRandomTemp.size() > promoShowLimit) {
+    productPromos = new ArrayList(promoShowLimit);
     for (int i=0; i<promoShowLimit; i++) {
         randomIndex = (int) Math.round(java.lang.Math.random() * (productPromosRandomTemp.size() - 1));
         productPromos.add(productPromosRandomTemp.remove(randomIndex));
     }
+} else {
+    productPromos = productPromosRandomTemp;
 }
 
 context.put("promoShowLimit", promoShowLimit);
