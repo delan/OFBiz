@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.2 2004/05/22 22:43:04 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.3 2004/05/23 07:35:27 ajzeneski Exp $
  *
  */
 package org.ofbiz.catalina.container;
@@ -32,9 +32,11 @@ import org.apache.catalina.Host;
 import org.apache.catalina.Context;
 import org.apache.catalina.Connector;
 import org.apache.catalina.Loader;
+import org.apache.catalina.valves.AccessLogValve;
 
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardWrapper;
+import org.apache.catalina.core.StandardEngine;
 import org.apache.coyote.tomcat5.CoyoteServerSocketFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -43,7 +45,7 @@ import org.xml.sax.SAXException;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      May 21, 2004
  */
 public class CatalinaContainer implements Container {
@@ -116,6 +118,7 @@ public class CatalinaContainer implements Container {
             createConnector(connectorProp);
         }
 
+
         // Start the embedded server
         try {
             embedded.start();
@@ -139,7 +142,7 @@ public class CatalinaContainer implements Container {
         String engineName = engineConfig.name;
         String hostName = defaultHostProp.value;
 
-        Engine engine = embedded.createEngine();
+        StandardEngine engine = (StandardEngine) embedded.createEngine();
         engine.setName(engineName);
         engine.setDefaultHost(hostName);
         engines.put(engine.getName(), engine);
@@ -147,6 +150,9 @@ public class CatalinaContainer implements Container {
         // create a default virtual host; others will be created as needed
         Host host = createHost(engine, hostName);
         hosts.put(engineName + "._DEFAULT", host);
+
+        AccessLogValve al = new AccessLogValve();
+        engine.addValve(al);
 
         embedded.addEngine(engine);
         return engine;
