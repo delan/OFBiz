@@ -43,14 +43,12 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.entity.model.ModelEntity;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 /**
  * ContentPermissionServices Class
  *

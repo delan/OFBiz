@@ -25,17 +25,16 @@ package org.ofbiz.content.widget.html;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
 import org.ofbiz.content.widget.screen.ScreenRenderer;

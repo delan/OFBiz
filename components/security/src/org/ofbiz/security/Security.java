@@ -30,7 +30,6 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.cache.UtilCache;
-import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 

@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;

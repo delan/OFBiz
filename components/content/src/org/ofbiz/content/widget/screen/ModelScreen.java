@@ -27,7 +27,6 @@ import java.io.Writer;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.LocalDispatcher;
 import org.w3c.dom.Element;
