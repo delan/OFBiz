@@ -214,6 +214,10 @@
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="containerId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <now-timestamp-to-env env-name="nowTimestamp"/>
+        
+        <make-value entity-name="OrderHeader" value-name="ohLookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="ohLookupMap"/>
+        <find-by-primary-key entity-name="OrderHeader" map-name="ohLookupMap" value-name="orderHeader"/>
 
         <!-- before we do the find, put together the orderBy list based on which reserveOrderEnumId is specified -->
         <if-compare value="INVRO_FIFO_EXP" operator="equals" field-name="reserveOrderEnumId" map-name="parameters">
@@ -242,6 +246,7 @@
         <iterate entry-name="inventoryItem" list-name="inventoryItems">
             <!-- only do something with this inventoryItem if there is more inventory to reserve -->
             <if-compare field-name="quantityNotReserved" map-name="parameters" type="Double" operator="greater" value="0.0">
+            	<!-- get the promiseDatetime -->           	
             	<get-related-one value-name="inventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
             	<field-to-env env-name="daysToShip" field-name="daysToShip" map-name="productFacility"/>
             	<if-empty field-name="daysToShip">
@@ -249,6 +254,14 @@
             	    	<number value="30"/>
             	    </calculate>           		
             	</if-empty>
+            	<call-bsh><![CDATA[
+            	java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate");
+            	java.util.Calendar cal = java.util.Calendar.getInstance();
+            	cal.setTimeInMillis(orderDate.getTime());
+            	cal.add(java.util.Calendar.DAY_OF_YEAR, daysToShip.intValue());
+            	return org.ofbiz.core.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()));            	
+            	]]></call-bsh>
+            	
                 <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
                     <if-compare value="INV_AVAILABLE" operator="equals" field-name="statusId" map-name="inventoryItem">
                         <!-- change status on inventoryItem -->
@@ -261,7 +274,7 @@
                         <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="reserveOiiMap"/>
                         <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
                         <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
-                        <env-to-field env-name="daysToShip" field-name="promisedDays" map-name="reserveOiiMap"/>
+                        <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOiiMap"/>
                         <calculate field-name="quantity" map-name="reserveOiiMap"><number value="1"/></calculate>
                         <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
                         <clear-field field-name="reserveOiiMap"/>
@@ -298,7 +311,7 @@
                             <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
                             <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
                             <field-to-field field-name="deductAmount" map-name="parameters" to-field-name="quantity" to-map-name="reserveOiiMap"/>
-                            <env-to-field env-name="daysToShip" field-name="promisedDays" map-name="reserveOiiMap"/>
+                            <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOiiMap"/>
                             <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
                             <clear-field field-name="reserveOiiMap"/>
 
@@ -335,13 +348,21 @@
                     </calculate>
                     <store-value value-name="lastNonSerInventoryItem"/>
                     
-                    <get-related-one value-name="lastNonSerInventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
-            	    <field-to-env env-name="daysToShip" field-name="daysToShip" map-name="productFacility"/>
-            	    <if-empty field-name="daysToShip">
-            		    <calculate field-name="daysToShip" type="Long">
+           	        <!-- get the promiseDatetime -->           	
+            		<get-related-one value-name="lastNonSerInventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
+            		<field-to-env env-name="daysToShip" field-name="daysToShip" map-name="productFacility"/>
+            		<if-empty field-name="daysToShip">
+            			<calculate field-name="daysToShip" type="Long">
             	    		<number value="30"/>
-            	    	</calculate>
-            	    </if-empty>
+            	    	</calculate>           		
+            		</if-empty>
+            		<call-bsh><![CDATA[
+            		java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate");
+            		java.util.Calendar cal = java.util.Calendar.getInstance();
+            		cal.setTimeInMillis(orderDate.getTime());
+            		cal.add(java.util.Calendar.DAY_OF_YEAR, daysToShip.intValue());
+            		return org.ofbiz.core.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()));            	
+            		]]></call-bsh>                                        
 
                     <!-- create or update OrderItemInventoryRes record -->
                     <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
@@ -350,7 +371,7 @@
                     <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
-                    <env-to-field env-name="daysToShip" field-name="promisedDays" map-name="reserveOiiMap"/>
+                    <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOiiMap"/>
                     <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
                     <clear-field field-name="reserveOiiMap"/>
                 <else>
@@ -369,14 +390,22 @@
                     </calculate>
                     <create-value value-name="newNonSerInventoryItem"/>
                     
-                    <get-related-one value-name="newNonSerInventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
-            	    <field-to-env env-name="daysToShip" field-name="daysToShip" map-name="productFacility"/>
-            	    <if-empty field-name="daysToShip">
-            	    	<calculate field-name="daysToShip" type="Long">
+           	        <!-- get the promiseDatetime -->           	
+            		<get-related-one value-name="newNonSerInventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
+            		<field-to-env env-name="daysToShip" field-name="daysToShip" map-name="productFacility"/>
+            		<if-empty field-name="daysToShip">
+            			<calculate field-name="daysToShip" type="Long">
             	    		<number value="30"/>
-            	    	</calculate>
-            	    </if-empty>
-                    
+            	    	</calculate>           		
+            		</if-empty>
+            		<call-bsh><![CDATA[
+            		java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate");
+            		java.util.Calendar cal = java.util.Calendar.getInstance();
+            		cal.setTimeInMillis(orderDate.getTime());
+            		cal.add(java.util.Calendar.DAY_OF_YEAR, daysToShip.intValue());
+            		return org.ofbiz.core.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()));            	
+            		]]></call-bsh>                                        
+                                     
                     <!-- create OrderItemInventoryRes record -->
                     <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOiiMap"/>
@@ -384,7 +413,7 @@
                     <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
-                    <env-to-field env-name="daysToShip" field-name="promisedDays" map-name="reserveOiiMap"/>
+                    <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOiiMap"/>
                     <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
                     <clear-field field-name="reserveOiiMap"/>
                 </else>

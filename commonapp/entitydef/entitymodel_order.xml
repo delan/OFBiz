@@ -777,13 +777,13 @@
             never-cache="true"
             title="Order Item Inventory Reservation Entity">
       <field name="orderId" type="id-ne"></field>
-      <field name="orderItemSeqId" type="id-ne"></field>
-      <field name="promisedDays" type="numeric"></field>
+      <field name="orderItemSeqId" type="id-ne"></field>      
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="reserveOrderEnumId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="reservedDatetime" type="date-time"></field>
       <field name="createdDatetime" type="date-time"></field>
+      <field name="promisedDatetime" type="date-time"></field>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
       <prim-key field="inventoryItemId"/>
