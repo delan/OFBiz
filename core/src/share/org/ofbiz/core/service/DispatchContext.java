@@ -203,7 +203,10 @@ public class DispatchContext {
         Iterator i = paths.iterator();
         while ( i.hasNext() ) {
             URL readerURL = UtilURL.fromFilename((String)i.next());
-            globalMap.putAll(addReader(readerURL));
+            if ( readerURL != null )
+                globalMap.putAll(addReader(readerURL));
+            else 
+                Debug.logInfo("[DispatchContext.addGlobal] : URL returned a 'null' service map");
         }
         return globalMap;
     }
