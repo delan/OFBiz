@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.13 2003/12/23 12:34:17 jonesde Exp $
+ * $Id: DataResourceWorker.java,v 1.14 2003/12/23 15:03:23 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,21 +52,17 @@ import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateHashModel;
 
 /**
  * DataResourceWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -347,13 +343,28 @@ public class DataResourceWorker {
         
         // if this is a template, we need to get the full template text and interpret it, otherwise we should just write a bit at a time to the writer to better support large text
         if (UtilValidate.isEmpty(dataTemplateTypeId) || "NONE".equals(dataTemplateTypeId)) {
-            writeDataResourceText(dataResource, mimeTypeId, locale, context, delegator, out);
+            writeDataResourceText(dataResource, mimeTypeId, locale, templateContext, delegator, out);
         } else {
+            String subContentId = (String)context.get("subContentId");
+            if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, subContentId:" + subContentId, module);
+            if (UtilValidate.isNotEmpty(subContentId)) {
+                context.put("contentId", subContentId);
+                context.put("subContentId", null);
+            }
+            
+            //String subContentId2 = (String)context.get("subContentId");
+
             // get the full text of the DataResource
-            String templateText = getDataResourceText(dataResource, mimeTypeId, locale, context, delegator);
+            String templateText = getDataResourceText(dataResource, mimeTypeId, locale, templateContext, delegator);
+            
+            //String subContentId3 = (String)context.get("subContentId");
+            
+            context.put("mimeTypeId", null);
+            templateContext.put("context", context);
+            
             if ("FTL".equals(dataTemplateTypeId)) {
                 try {
-                    FreeMarkerWorker.renderTemplate("DataResource:" + dataResourceId, templateText, context, out);
+                    FreeMarkerWorker.renderTemplate("DataResource:" + dataResourceId, templateText, templateContext, out);
                 } catch (TemplateException e) {
                     throw new GeneralException("Error rendering FTL template", e);
                 }
@@ -362,6 +373,7 @@ public class DataResourceWorker {
             }
         }
     }
+    
     public static String getDataResourceText(GenericValue dataResource, String mimeTypeId, Locale locale, Map context, GenericDelegator delegator) throws IOException, GeneralException {
         Writer outWriter = new StringWriter();
         writeDataResourceText(dataResource, mimeTypeId, locale, context, delegator, outWriter);

@@ -1,5 +1,5 @@
 /*
- * $Id: editsubcontentprep.bsh,v 1.4 2003/12/23 13:50:40 jonesde Exp $
+ * $Id: editsubcontentprep.bsh,v 1.5 2003/12/23 15:03:23 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
 
  */
@@ -60,18 +60,18 @@ mruFormName = page.getProperty("mruFormName");
 entityName = page.getProperty("entityName");
 paramMap = UtilHttp.getParameterMap(request);
 contentIdTo = (String)paramMap.get("contentIdTo");
-Debug.logInfo("in editsubcontentprep, contentIdTo:" + contentIdTo, "");
+//Debug.logInfo("in editsubcontentprep, contentIdTo:" + contentIdTo, "");
 //String defaultMapName = page.getProperty("defaultMapName");
 //if( defaultMapName == null) defaultMapName = "currentValue";
 defaultMapName	= "currentValue";
 GenericValue currentValue = (GenericValue)request.getAttribute("currentValue");
-Debug.logInfo("in editsubcontentprep, currentValue:" + currentValue, "");
+//Debug.logInfo("in editsubcontentprep, currentValue:" + currentValue, "");
 mode = (String)request.getParameter("mode");
 if (mode == null || mode.length() == 0) {
     mode = (String)request.getAttribute("mode");
 }
-Debug.logInfo("in editsubcontentprep, mode:" + mode, "");
-Locale locale = HttpUtil.getLocale(request);
+//Debug.logInfo("in editsubcontentprep, mode:" + mode, "");
+Locale locale = UtilHttp.getLocale(request);
 if (currentValue == null || (mode != null && mode.equalsIgnoreCase("add"))) {
     view = delegator.makeValue("SubContentDataResourceView", null);
     view.put("localeString", locale.toString());
@@ -83,8 +83,8 @@ if (currentValue == null || (mode != null && mode.equalsIgnoreCase("add"))) {
     singleWrapper = new HtmlFormWrapper(formDefFile, editFormName, request, response);
     dataResourceId = (String)currentValue.get("drDataResourceId");
     dataResourceTypeId =  (String)currentValue.get("drDataResourceTypeId");
-    Debug.logInfo("in editsubcontentprep, dataResourceId:" + dataResourceId, "");
-    Debug.logInfo("in editsubcontentprep, dataResourceTypeId:" + dataResourceTypeId, "");
+    //Debug.logInfo("in editsubcontentprep, dataResourceId:" + dataResourceId, "");
+    //Debug.logInfo("in editsubcontentprep, dataResourceTypeId:" + dataResourceTypeId, "");
     currentMap = new HashMap(currentValue);
     if (UtilValidate.isNotEmpty(dataResourceTypeId)) {
         mimeTypeId =  (String)currentValue.get("drMimeTypeId");
@@ -98,11 +98,10 @@ if (currentValue == null || (mode != null && mode.equalsIgnoreCase("add"))) {
         // webSiteId and https need to go here, too
         templateRoot.put("context", ctx);
         out = new StringWriter();
-        DataResourceWorker.renderDataResourceAsText(delegator, dataResourceId, out, 
-            templateRoot, currentValue, locale, mimeTypeId);
+        DataResourceWorker.renderDataResourceAsText(delegator, dataResourceId, out, templateRoot, currentValue, locale, mimeTypeId);
         textData = out.toString();
-        Debug.logInfo("in editsubcontentprep, textData:" + textData, "");
-        Debug.logInfo("in editsubcontentprep, contentIdTo:" + contentIdTo, "");
+        //Debug.logInfo("in editsubcontentprep, textData:" + textData, "");
+        //Debug.logInfo("in editsubcontentprep, contentIdTo:" + contentIdTo, "");
         currentMap.put("textData", textData);
     }
     singleWrapper.putInContext("currentValue", currentMap);
@@ -118,5 +117,4 @@ mapKey = (String)paramMap.get("mapKey");
 Debug.logInfo("in editsubcontentprep, mapKey:" + mapKey, "");
 singleWrapper.putInContext("mapKey", mapKey);
 context.put("singleWrapper", singleWrapper);
-
 
