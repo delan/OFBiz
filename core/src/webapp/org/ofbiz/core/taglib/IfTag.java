@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.4  2001/09/21 19:38:50  jonesde
  * Updated settings to work with PoolMan & Tomcat 4, the current default config
  * Includes updated JNDIContextFactory and default datasource get through JNDI
@@ -90,8 +93,8 @@ public class IfTag extends BodyTagSupport {
     return type;
   }
   
-  public int getSize() {
-    return size;
+  public String getSize() {
+    return Integer.toString(size);
   }
   
   public int doStartTag() throws JspTagException {
