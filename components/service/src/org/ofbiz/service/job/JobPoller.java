@@ -1,5 +1,5 @@
 /*
- * $Id: JobPoller.java,v 1.5 2004/01/24 20:40:45 ajzeneski Exp $
+ * $Id: JobPoller.java,v 1.6 2004/01/24 22:02:16 ajzeneski Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.base.util.Debug;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:">Magnus Rosenquist</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class JobPoller implements Runnable {
@@ -47,12 +47,12 @@ public class JobPoller implements Runnable {
     public static final int POLL_WAIT = 20000;
     //public static final long MAX_TTL = 18000000;
 
-    protected boolean isRunning = false;
-
     protected Thread thread = null;
     protected LinkedList pool = null;
     protected LinkedList run = null;
     protected JobManager jm = null;
+
+    protected volatile boolean isRunning = false;
 
     /**
      * Creates a new JobScheduler

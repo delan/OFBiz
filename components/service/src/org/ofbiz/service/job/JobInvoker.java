@@ -1,5 +1,5 @@
 /*
- * $Id: JobInvoker.java,v 1.4 2004/01/24 19:37:53 ajzeneski Exp $
+ * $Id: JobInvoker.java,v 1.5 2004/01/24 22:02:16 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.base.util.UtilDateTime;
  * JobInvoker
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class JobInvoker implements Runnable {
@@ -49,11 +49,11 @@ public class JobInvoker implements Runnable {
     private String name = null;
     private int count = 0;
     private int wait = 0;
-    private boolean run = false;
 
-    private Job currentJob = null;
-    private int statusCode = 0;
-    private long jobStart = 0;
+    private volatile boolean run = false;
+    private volatile Job currentJob = null;
+    private volatile int statusCode = 0;
+    private volatile long jobStart = 0;
 
     public JobInvoker(JobPoller jp) {
         this(jp, WAIT_TIME);
