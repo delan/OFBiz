@@ -802,26 +802,35 @@ public class GenericDAO {
         }
         
         StringBuffer sqlBuffer = new StringBuffer("SELECT ");
-        if (selectFields.size() > 0)
+        if (selectFields.size() > 0) {
             sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", ""));
-        else
+        } else {
             sqlBuffer.append("*");
+        }
         sqlBuffer.append(" ");
         sqlBuffer.append(makeFromClause(modelEntity));
         
         StringBuffer whereString = new StringBuffer("");
-        Vector whereFields = new Vector();
         if (expressions != null && expressions.size() > 0) {
             for (int i = 0; i < expressions.size(); i++) {
                 EntityExpr expr = (EntityExpr) expressions.get(i);
                 ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
                 if (field != null) {
-                    whereFields.add(field);
-                    whereString.append(field.getColName() + expr.getOperator());
-                    if (i < expressions.size() - 1)
-                        whereString.append(" ? AND ");
-                    else
+                    if (expr.getRhs() == null) {
+                        whereString.append(field.getColName());
+                        if (expr.getOperator() == EntityOperator.NOT_EQUAL) {
+                            whereString.append(" IS NOT NULL ");
+                        } else {
+                            whereString.append(" IS NULL ");
+                        }
+                    } else {
+                        whereString.append(field.getColName());
+                        whereString.append(expr.getOperator());
                         whereString.append(" ? ");
+                    }
+                    if (i < expressions.size() - 1) {
+                        whereString.append(" AND ");
+                    }
                 } else {
                     throw new IllegalArgumentException("ModelField with field name " + (String) expr.getLhs() + " not found");
                 }
@@ -849,9 +858,10 @@ public class GenericDAO {
             if (expressions != null && expressions.size() > 0) {
                 for (int i = 0; i < expressions.size(); i++) {
                     EntityExpr expr = (EntityExpr) expressions.get(i);
-                    ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
-                    dummyValue.set(field.getName(), expr.getRhs());
-                    setValue(ps, i + 1, field, dummyValue);
+                    if (expr.getRhs() != null) {
+                        ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
+                        setValue(ps, i + 1, field, dummyValue);
+                    }
                 }
             }
             Debug.logVerbose("[GenericDAO.selectByAnd] ps=" + ps.toString(), module);
@@ -934,22 +944,32 @@ public class GenericDAO {
         sqlBuffer.append(makeFromClause(modelEntity));
         
         StringBuffer whereString = new StringBuffer("");
-        Vector whereFields = new Vector();
         if (expressions != null && expressions.size() > 0) {
+            whereString.append("(");
             for (int i = 0; i < expressions.size(); i++) {
                 EntityExpr expr = (EntityExpr) expressions.get(i);
                 ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
                 if (field != null) {
-                    whereFields.add(field);
-                    whereString.append(field.getColName() + expr.getOperator());
-                    if (i < expressions.size() - 1)
-                        whereString.append(" ? OR ");
-                    else
+                    if (expr.getRhs() == null) {
+                        whereString.append(field.getColName());
+                        if (expr.getOperator() == EntityOperator.NOT_EQUAL) {
+                            whereString.append(" IS NOT NULL ");
+                        } else {
+                            whereString.append(" IS NULL ");
+                        }
+                    } else {
+                        whereString.append(field.getColName());
+                        whereString.append(expr.getOperator());
                         whereString.append(" ? ");
+                    }
+                    if (i < expressions.size() - 1) {
+                        whereString.append(" OR ");
+                    }
                 } else {
                     throw new IllegalArgumentException("ModelField with field name " + (String) expr.getLhs() + " not found");
                 }
             }
+            whereString.append(")");
         }
         
         String viewClause = makeViewWhereClause(modelEntity);
@@ -973,9 +993,10 @@ public class GenericDAO {
             if (expressions != null && expressions.size() > 0) {
                 for (int i = 0; i < expressions.size(); i++) {
                     EntityExpr expr = (EntityExpr) expressions.get(i);
-                    ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
-                    dummyValue.set(field.getName(), expr.getRhs());
-                    setValue(ps, i + 1, field, dummyValue);
+                    if (expr.getRhs() != null) {
+                        ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
+                        setValue(ps, i + 1, field, dummyValue);
+                    }
                 }
             }
             Debug.logVerbose("[GenericDAO.selectByOr] ps=" + ps.toString(), module);
