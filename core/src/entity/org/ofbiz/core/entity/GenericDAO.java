@@ -566,7 +566,9 @@ public class GenericDAO {
             throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation insert not supported yet for view entities");
         }
         
-        Debug.logVerbose("[selectByClause] Start");
+        boolean verboseOn = Debug.verboseOn();
+        
+        if (verboseOn) Debug.logVerbose("[selectByClause] Start");
         if (entityClauses == null)
             return null;
         
@@ -577,7 +579,7 @@ public class GenericDAO {
         ModelField firstModelField = null;
         ModelField secondModelField = null;
         
-        Debug.logVerbose("[selectByClause] Starting to build select statement.");
+        if (verboseOn) Debug.logVerbose("[selectByClause] Starting to build select statement.");
         StringBuffer select = new StringBuffer(" SELECT DISTINCT ");
         StringBuffer from = new StringBuffer(" FROM ");
         StringBuffer where = new StringBuffer("");
@@ -587,16 +589,18 @@ public class GenericDAO {
         String test = "";
         
         List whereTables = new ArrayList();
+        // Add the main table to the FROM clause in case there are no WHERE clause entries.
+        whereTables.add(modelEntity.getTableName());
         
-        Debug.logVerbose("[selectByClause] Starting to iterate through entity clauses.");
+        if (verboseOn) Debug.logVerbose("[selectByClause] Starting to iterate through entity clauses.");
         ModelReader entityModelReader = modelEntity.getModelReader();
         boolean paren = false;
 
         // Each iteration defines one relationship for the query.
         for (int i = 0; i < entityClauses.size(); i++) {
-            Debug.logVerbose("[selectByClause] Processing entity clause " + String.valueOf(i));
+            if (verboseOn) Debug.logVerbose("[selectByClause] Processing entity clause " + String.valueOf(i));
             EntityClause entityClause = (EntityClause) entityClauses.get(i);
-            Debug.logVerbose("[selectByClause] Entity clause: " + entityClause.toString());
+            if (verboseOn) Debug.logVerbose("[selectByClause] Entity clause: " + entityClause.toString());
             EntityClause nextEntityClause = null;
             //get the next interFieldOperation.  This is used to determine if
             //we need to insert a parenthesis.
@@ -608,22 +612,22 @@ public class GenericDAO {
             }
 
             if(nextEntityClause != null) {
-                Debug.logVerbose("[selectByClause] Next entity clause: " + nextEntityClause.toString());
+                if (verboseOn) Debug.logVerbose("[selectByClause] Next entity clause: " + nextEntityClause.toString());
                 nextInterFieldOperation = nextEntityClause.getInterFieldOperation().getCode();
             }
             String interFieldOperation = entityClause.getInterFieldOperation().toString();
             String intraFieldOperation = entityClause.getIntraFieldOperation().toString();
             
-            Debug.logVerbose("[selectByClause] Got operations");
+            if (verboseOn) Debug.logVerbose("[selectByClause] Got operations");
             firstModelEntity = entityClause.getFirstModelEntity();
             if (!whereTables.contains(firstModelEntity.getTableName())) {
                 whereTables.add(firstModelEntity.getTableName());
             }
-            Debug.logVerbose("[selectByClause] Got first model entity.");
+            if (verboseOn) Debug.logVerbose("[selectByClause] Got first model entity.");
             
             if(entityClause.getSecondEntity().trim().length() > 0 ){
                 secondModelEntity = entityClause.getSecondModelEntity();
-                Debug.logVerbose("[selectByClause] Got second model entity.");
+                if (verboseOn) Debug.logVerbose("[selectByClause] Got second model entity.");
             if (!whereTables.contains(secondModelEntity.getTableName())) {
                 whereTables.add(secondModelEntity.getTableName());
             }
@@ -641,66 +645,66 @@ public class GenericDAO {
                 paren = true;
             }
 
-            Debug.logVerbose("[selectByClause] About to append entity clause info onto select statement.");
+            if (verboseOn) Debug.logVerbose("[selectByClause] About to append entity clause info onto select statement.");
             if (entityClause.getSecondEntity().trim().length() > 0 ) {
                 // Entity clause has a second entity and field instead of a constant value.
                 where.append(firstModelEntity.getTableName());
-                Debug.logVerbose("[selectByClause] Method 2 - Appended first table name: " +
+                if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended first table name: " +
                     firstModelEntity.getTableName());
                 where.append(".");
-                Debug.logVerbose("[selectByClause] Method 2 - Appended \".\"");
+                if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended \".\"");
                 if (firstModelField==null || firstModelField.getColName()==null) {
-                    Debug.logVerbose("[selectByClause] Method 2 - error 1");
+                    if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - error 1");
                     throw new GenericEntityException(entityClause.getFirstField() +
                         " is not a field of " + entityClause.getFirstEntity());
                 }
                 where.append(firstModelField.getColName());
-                Debug.logVerbose("[selectByClause] Method 2 - Appended first column name: " +
+                if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended first column name: " +
                     firstModelField.getColName());
                 where.append(" ");
                 where.append(intraFieldOperation);
-                Debug.logVerbose("[selectByClause] Method 2 - Appended intra field operation: " +
+                if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended intra field operation: " +
                     intraFieldOperation);
                 where.append(" ");
                 where.append(secondModelEntity.getTableName());
-                Debug.logVerbose("[selectByClause] Method 2 - Appended second table name: " +
+                if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended second table name: " +
                     secondModelEntity.getTableName());
                 where.append(".");
                 if (secondModelField==null || secondModelField.getColName()==null) {
-                    Debug.logVerbose("[selectByClause] Method 2 - error 2");
+                    if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - error 2");
                     throw new GenericEntityException(entityClause.getSecondField() +
                         " is not a field of " + entityClause.getSecondEntity());
                 }
                 where.append(secondModelField.getColName());
-                Debug.logVerbose("[selectByClause] Method 1 - Appended second column name: " +
+                if (verboseOn) Debug.logVerbose("[selectByClause] Method 1 - Appended second column name: " +
                     secondModelField.getColName());
             } else {
                 // Entity clause has a constant value instead of a second entity and field.
                 where.append(firstModelEntity.getTableName());
-                Debug.logVerbose("[selectByClause] Method 1 - Appended first table name: " +
+                if (verboseOn) Debug.logVerbose("[selectByClause] Method 1 - Appended first table name: " +
                     firstModelEntity.getTableName());
                 where.append(".");
                 if (firstModelField==null || firstModelField.getColName()==null) {
-                    Debug.logVerbose("[selectByClause] Method 1 - error 1");
+                    if (verboseOn) Debug.logVerbose("[selectByClause] Method 1 - error 1");
                     throw new GenericEntityException(entityClause.getFirstField() +
                         " is not a field of " + entityClause.getFirstEntity());
                 }
                 where.append(firstModelField.getColName());
-                Debug.logVerbose("[selectByClause] Method 1 - Appended first column name: " +
+                if (verboseOn) Debug.logVerbose("[selectByClause] Method 1 - Appended first column name: " +
                     firstModelField.getColName());
                 where.append(" ");
                 where.append(intraFieldOperation);
-                Debug.logVerbose("[selectByClause] Method 2 - Appended intra field operation: " +
+                if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended intra field operation: " +
                     intraFieldOperation);
                 if (intraFieldOperation.indexOf("IN") > 0) {
-                    Debug.logVerbose("[selectByClause] Intrafield operation is IN");
+                    if (verboseOn) Debug.logVerbose("[selectByClause] Intrafield operation is IN");
                     where.append(" (");
                 } else {
-                    Debug.logVerbose("[selectByClause] Intrafield operation is not IN");
+                    if (verboseOn) Debug.logVerbose("[selectByClause] Intrafield operation is not IN");
                  where.append(" '");
                 }
                 where.append(entityClause.getValue());
-                Debug.logVerbose("[selectByClause] Method 2 - Appended value: " + entityClause.getValue());
+                if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended value: " + entityClause.getValue());
                 if (intraFieldOperation.indexOf("IN") > 0) {
                     where.append(")");
                 } else {
@@ -726,7 +730,7 @@ public class GenericDAO {
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
                 
-            Debug.logVerbose("[selectByClause] Adding field " + curField.getName() + " to selectFields");
+            if (verboseOn) Debug.logVerbose("[selectByClause] Adding field " + curField.getName() + " to selectFields");
             selectFields.add(curField);
 
             // Add all filter fields to the where field list.
@@ -832,7 +836,9 @@ public class GenericDAO {
             return null;
         }
         
-        if (Debug.verboseOn()) {
+        boolean verboseOn = Debug.verboseOn();
+        
+        if (verboseOn) {
             //put this inside an if statement so that we don't have to generate the string when not used...
             Debug.logVerbose("Doing selectListIteratorByCondition with entityCondition: " + entityCondition);
         }
@@ -899,7 +905,7 @@ public class GenericDAO {
         
         SQLProcessor sqlP = new SQLProcessor(helperName);
         sqlP.prepareStatement(sql, specifyTypeAndConcur, resultSetType, resultSetConcurrency);
-        if (Debug.verboseOn()) {
+        if (verboseOn) {
             //put this inside an if statement so that we don't have to generate the string when not used...
             Debug.logVerbose("Setting the entityConditionParams: " + entityConditionParams);
         }
