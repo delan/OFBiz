@@ -28,32 +28,35 @@ import javax.servlet.jsp.tagext.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  * @version    1.0
  * @created    August 4, 2001
  */
 public class IteratorTEI extends TagExtraInfo {
-    
+
     public IteratorTEI() {
         super();
     }
-    
+
     public VariableInfo[] getVariableInfo(TagData data) {
         String name = null;
         String className = null;
-        
+
         name = data.getAttributeString("name");
         className = data.getAttributeString("type");
         //Debug.logInfo("IteratorTEI: "+className);
-        if(className == null) className = "org.ofbiz.core.entity.GenericValue";
+        if (className == null)
+            className = "org.ofbiz.core.entity.GenericValue";
         //Debug.logInfo("IteratorTEI: "+className);
-        
-        VariableInfo info = new VariableInfo(name, className, true, VariableInfo.NESTED);
+
+        VariableInfo info =
+                new VariableInfo(name, className, true, VariableInfo.NESTED);
         VariableInfo[] result = { info };
         return result;
     }
-    
+
     public boolean isValid(TagData data) {
         return true;
     }
 }
+

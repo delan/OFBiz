@@ -39,80 +39,80 @@ import org.ofbiz.core.util.*;
  * @created    August 4, 2001
  */
 public class IteratorTag extends BodyTagSupport {
-    
+
     protected Iterator iterator = null;
     protected String name = null;
     protected String property = null;
     protected Object element = null;
     protected Class type = null;
     protected boolean expandMap = false;
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public void setProperty(String property) {
         this.property = property;
     }
-    
+
     public void setType(String type) throws ClassNotFoundException {
         this.type = Class.forName(type);
     }
-    
+
     public void setExpandMap(String expMap) {
         //defaults to false, so if anything but true will be false:
         expandMap = "true".equals(expMap);
     }
-    
+
     public void setIterator(Iterator iterator) {
         this.iterator = iterator;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public String getProperty() {
         return property;
     }
-    
+
     public Object getElement() {
         return element;
     }
-    
+
     public Iterator getIterator() {
         return this.iterator;
     }
-    
+
     public String getType() {
         return type.getName();
     }
-    
+
     public String getExpandMap() {
-        return expandMap?"true":"false";
+        return expandMap ? "true":"false";
     }
-    
+
     public int doStartTag() throws JspTagException {
         //Debug.logInfo("Starting Iterator Tag...");
-        
-        if (  !defineIterator() )
+
+        if (!defineIterator())
             return SKIP_BODY;
-        
+
         //Debug.logInfo("We now have an iterator.");
-        
-        if ( defineElement() )
+
+        if (defineElement())
             return EVAL_BODY_AGAIN;
         else
             return SKIP_BODY;
     }
-    
+
     public int doAfterBody() {
-        if ( defineElement() )
+        if (defineElement())
             return EVAL_BODY_AGAIN;
         else
             return SKIP_BODY;
     }
-    
+
     public int doEndTag() {
         try {
             BodyContent body = getBodyContent();
@@ -120,18 +120,18 @@ public class IteratorTag extends BodyTagSupport {
                 JspWriter out = body.getEnclosingWriter();
                 out.print(body.getString());
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             Debug.logInfo("IteratorTag IO Error");
             Debug.logInfo(e);
         }
         return EVAL_PAGE;
     }
-    
+
     private boolean defineIterator() {
         //clear the iterator, after this it may be set directly
         Iterator newIterator = null;
         Collection thisCollection = null;
-        if ( property != null ) {
+        if (property != null) {
             Debug.logInfo("Getting iterator from property: " + property);
             Object propertyObject = pageContext.findAttribute(property);
             if (propertyObject instanceof Iterator) {
@@ -142,31 +142,34 @@ public class IteratorTag extends BodyTagSupport {
             }
         } else {
             //Debug.logInfo("No property, check for Object Tag.");
-            ObjectTag objectTag = (ObjectTag) findAncestorWithClass(this, ObjectTag.class);
+            ObjectTag objectTag =
+                    (ObjectTag) findAncestorWithClass(this, ObjectTag.class);
             if (objectTag == null)
                 return false;
             if (objectTag.getType().equals("java.util.Collection")) {
                 thisCollection = (Collection) objectTag.getObject();
             } else {
                 try {
-                    Method[] m = Class.forName(objectTag.getType()).getDeclaredMethods();
-                    for ( int i = 0; i <m.length; i++ ) {
-                        if ( m[i].getName().equals("iterator") ) {
+                    Method[] m =
+                            Class.forName(objectTag.getType()).getDeclaredMethods();
+                    for (int i = 0; i < m.length; i++) {
+                        if (m[i].getName().equals("iterator")) {
                             //Debug.logInfo("Found iterator method. Using it.");
-                            newIterator = (Iterator) m[i].invoke(objectTag.getObject(),null);
+                            newIterator = (Iterator) m[i].invoke(
+                                    objectTag.getObject(), null);
                             break;
                         }
                     }
-                } catch ( Exception e ) {
+                } catch (Exception e) {
                     return false;
                 }
             }
         }
-        
+
         if (newIterator == null) {
-            if ( thisCollection == null || thisCollection.size() < 1 )
+            if (thisCollection == null || thisCollection.size() < 1)
                 return false;
-            
+
             newIterator = thisCollection.iterator();
             //Debug.logInfo("Got iterator.");
         } else {//already set
@@ -175,30 +178,31 @@ public class IteratorTag extends BodyTagSupport {
         this.iterator = newIterator;
         return true;
     }
-    
+
     private boolean defineElement() {
         element = null;
         pageContext.removeAttribute(name);
-        if ( this.iterator.hasNext() ) {
+        if (this.iterator.hasNext()) {
             element = this.iterator.next();
             //Debug.logInfo("iterator has another object: " + element);
         } else {
             //Debug.logInfo("iterator has no more objects");
         }
-        if ( element != null ) {
+        if (element != null) {
             //Debug.logInfo("set attribute " + name + " to be " + element + " as next value from iterator");
-            pageContext.setAttribute(name,element);
-            
+            pageContext.setAttribute(name, element);
+
             //expand a map element here if requested
             if (expandMap) {
                 Map tempMap = (Map) element;
                 Iterator mapEntries = tempMap.entrySet().iterator();
                 while (mapEntries.hasNext()) {
                     Map.Entry entry = (Map.Entry) mapEntries.next();
-                    pageContext.setAttribute((String) entry.getKey(), entry.getValue());
+                    pageContext.setAttribute((String) entry.getKey(),
+                            entry.getValue());
                 }
             }
-            
+
             return true;
         }
         //Debug.logInfo("no more iterations; element = " + element);
@@ -206,6 +210,7 @@ public class IteratorTag extends BodyTagSupport {
         return false;
     }
 }
+
 
 
 

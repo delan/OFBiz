@@ -34,59 +34,59 @@ import org.ofbiz.core.util.*;
  * @version    1.0
  * @created    August 4, 2001
  */
-public  class ObjectTag extends TagSupport {
-    
+public class ObjectTag extends TagSupport {
+
     protected Object element = null;
     protected String name = null;
     protected String property = null;
     protected Class type = null;
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public void setProperty(String property) {
         this.property = property;
     }
-    
+
     public void setType(String type) throws ClassNotFoundException {
         this.type = Class.forName(type);
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public String getProperty() {
         return property;
     }
-    
+
     public Object getObject() {
         return element;
     }
-    
+
     public String getType() {
         return type.getName();
     }
-    
+
     public int doStartTag() throws JspTagException {
         //Debug.logInfo("Starting Object Tag...");
-        element = pageContext.findAttribute(property);        
-        if ( element != null ) {
+        element = pageContext.findAttribute(property);
+        if (element != null) {
             //Debug.logInfo("Got element from property: " + property);
-            pageContext.setAttribute(name,element);
-        }
-        else {
-            Debug.logWarning("Did not find element in property. ("+property+")");
+            pageContext.setAttribute(name, element);
+        } else {
+            Debug.logWarning("Did not find element in property. ("+property + ")");
         }
         return EVAL_BODY_INCLUDE;
     }
-    
+
     public int doEndTag() {
         //Debug.logInfo("ObjectTag done.");
         return EVAL_PAGE;
     }
 }
+
 
 
 

@@ -36,25 +36,26 @@ import javax.servlet.jsp.tagext.*;
  * @created    August 4, 2001
  */
 public class IteratorHasNextTag extends BodyTagSupport {
-    
+
     public int doStartTag() throws JspTagException {
-        IteratorTag iteratorTag = (IteratorTag) findAncestorWithClass(this, IteratorTag.class);
-        
-        if(iteratorTag == null)
+        IteratorTag iteratorTag =
+                (IteratorTag) findAncestorWithClass(this, IteratorTag.class);
+
+        if (iteratorTag == null)
             throw new JspTagException("IterateNextTag not inside IteratorTag.");
-        
+
         Iterator iterator = iteratorTag.getIterator();
-        
-        if(iterator == null || !iterator.hasNext())
+
+        if (iterator == null || !iterator.hasNext())
             return SKIP_BODY;
-        
+
         return EVAL_BODY_AGAIN;
     }
-    
+
     public int doAfterBody() {
         return SKIP_BODY;
     }
-    
+
     public int doEndTag() {
         try {
             BodyContent body = getBodyContent();
@@ -62,13 +63,13 @@ public class IteratorHasNextTag extends BodyTagSupport {
                 JspWriter out = body.getEnclosingWriter();
                 out.print(body.getString());
             }
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             System.out.println("IterateNext Tag error: " + e);
         }
         return EVAL_PAGE;
     }
 }
+
 
 
 

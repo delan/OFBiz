@@ -39,46 +39,46 @@ import org.ofbiz.core.util.*;
  * @created    August 31, 2001
  */
 public class IfTag extends BodyTagSupport {
-    
+
     private String name = null;
     private String value = null;
     private String type = null;
     private Integer size = null;
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public void setValue(String value) {
         this.value = value;
     }
-    
+
     public void setType(String type) {
         this.type = type;
     }
-    
+
     public void setSize(String size) throws NumberFormatException {
         this.size = Integer.valueOf(size);
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public String getValue() {
         return value;
     }
-    
+
     public String getType() {
         return type;
     }
-    
+
     public String getSize() {
         if (size == null)
             return null;
         return size.toString();
     }
-    
+
     public int doStartTag() throws JspTagException {
         Object object = null;
         try {
@@ -89,12 +89,12 @@ public class IfTag extends BodyTagSupport {
             return SKIP_BODY;
         }
         //Debug.logInfo("Found object, and is not null");
-        
+
         if (size != null) {
             int localSize = size.intValue();
             //make sure is reset since it is an optional attribute
             size = null;
-        
+
             try {
                 if (object instanceof Collection) {
                     // the object is a Collection so compare the size.
@@ -108,7 +108,8 @@ public class IfTag extends BodyTagSupport {
                     //use reflection to find a size() method
                     try {
                         Method sizeMethod = object.getClass().getMethod("size", null);
-                        int objectSize = ((Integer) sizeMethod.invoke(object, null)).intValue();
+                        int objectSize = ((Integer) sizeMethod.invoke(object, null)).
+                                intValue();
                         if (objectSize > localSize)
                             return EVAL_BODY_AGAIN;
                     } catch (Exception e) {
@@ -122,11 +123,13 @@ public class IfTag extends BodyTagSupport {
             // Assume the object is a Boolean and compare to the Boolean value of value.
             try {
                 Boolean b = (Boolean) object;
-                if(value != null) {
+                if (value != null) {
                     Boolean v = new Boolean(value);
-                    if(b.equals(v)) return EVAL_BODY_AGAIN;
+                    if (b.equals(v))
+                        return EVAL_BODY_AGAIN;
                 } else {
-                    if(b.booleanValue()) return EVAL_BODY_AGAIN;
+                    if (b.booleanValue())
+                        return EVAL_BODY_AGAIN;
                 }
             } catch (RuntimeException e) {
                 return SKIP_BODY;
@@ -138,9 +141,11 @@ public class IfTag extends BodyTagSupport {
                     String s = (String) object;
                     if (s.equals(value))
                         return EVAL_BODY_AGAIN;
+                } catch (RuntimeException e) {
+                    return SKIP_BODY;
                 }
-                catch ( RuntimeException e ) { return SKIP_BODY; }
-            } else if (object instanceof Integer || "Integer".equalsIgnoreCase(type)) {
+            } else if (object instanceof Integer ||
+                    "Integer".equalsIgnoreCase(type)) {
                 // Assume the object is a Integer and compare to the Integer value of value.
                 try {
                     Integer i = (Integer) object;
@@ -197,14 +202,14 @@ public class IfTag extends BodyTagSupport {
             // treat as true here
             return EVAL_BODY_AGAIN;
         }
-        
+
         return SKIP_BODY;
     }
-    
+
     public int doAfterBody() {
         return SKIP_BODY;
     }
-    
+
     public int doEndTag() {
         try {
             BodyContent body = getBodyContent();
@@ -212,9 +217,10 @@ public class IfTag extends BodyTagSupport {
                 JspWriter out = body.getEnclosingWriter();
                 out.print(body.getString());
             }
-        } catch(IOException e) {
-            Debug.logError(e,"IfTag Error.");
+        } catch (IOException e) {
+            Debug.logError(e, "IfTag Error.");
         }
         return EVAL_PAGE;
     }
 }
+

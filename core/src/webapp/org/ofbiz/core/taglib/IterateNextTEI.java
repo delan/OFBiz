@@ -33,32 +33,34 @@ import javax.servlet.jsp.tagext.*;
  * @created    August 4, 2001
  */
 public class IterateNextTEI extends TagExtraInfo {
-    
+
     public IterateNextTEI() {
         super();
     }
-    
+
     public VariableInfo[] getVariableInfo(TagData data) {
         String name = null;
         String className = null;
-        
+
         name = data.getAttributeString("name");
-        if ( name == null )
+        if (name == null)
             name = "next";
-        
+
         className = data.getAttributeString("type");
-        if ( className == null )
+        if (className == null)
             className = "org.ofbiz.core.entity.GenericValue";
-        
-        VariableInfo info = new VariableInfo(name, className, true, VariableInfo.NESTED);
+
+        VariableInfo info =
+                new VariableInfo(name, className, true, VariableInfo.NESTED);
         VariableInfo[] result = { info };
         return result;
     }
-    
+
     public boolean isValid(TagData data) {
         return true;
     }
 }
+
 
 
 

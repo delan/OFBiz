@@ -37,29 +37,30 @@ import org.ofbiz.core.util.*;
  * @created    August 4, 2001
  */
 public class UrlTag extends BodyTagSupport {
-    
+
     public int doEndTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
+        HttpServletResponse response =
+                (HttpServletResponse) pageContext.getResponse();
         BodyContent body = getBodyContent();
-        
+
         String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
         String baseURL = body.getString();
         String newURL = controlPath + baseURL;
         //Debug.logInfo("baseURL: " + baseURL + "; newURL: " + newURL);
-        
+
         body.clearBody();
-        
+
         try {
             String encodedURL = response.encodeURL(newURL);
             getPreviousOut().print(encodedURL);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new JspException(e.getMessage());
         }
         return SKIP_BODY;
     }
 }
+
 
 
 

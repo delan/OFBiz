@@ -48,7 +48,7 @@ public class EntityFieldTag extends TagSupport {
     String defaultStr = "";
     String prefix = null;
     String suffix = null;
-    
+
     public String getAttribute() {
         return attribute;
     }
@@ -103,7 +103,8 @@ public class EntityFieldTag extends TagSupport {
         // We should be a ValueObject
         if (type == null) {
             // Get the ValueObject from PageContext.
-            GenericValue valueObject = (GenericValue) pageContext.findAttribute(attribute);
+            GenericValue valueObject =
+                    (GenericValue) pageContext.findAttribute(attribute);
             if (valueObject == null) {
                 fieldObject = defaultStr;
                 fieldObjectType = "comment"; // Default for NULL objects.
@@ -134,7 +135,9 @@ public class EntityFieldTag extends TagSupport {
                     fieldObjectType = fieldModel.type;
                     // Try to get the Field Type
                     try {
-                        ModelFieldType fieldType = delegator.getEntityFieldType(entityModel, fieldObjectType);
+                        ModelFieldType fieldType =
+                                delegator.getEntityFieldType(entityModel,
+                                fieldObjectType);
                         javaType = fieldType.javaType;
                     } catch (GenericEntityException e) {
                         throw new JspTagException("[EntityFieldTag] : Cannot get the ModelFieldType from the Delegator.");
@@ -146,7 +149,8 @@ public class EntityFieldTag extends TagSupport {
                     javaType = "java.lang.String";
                 }
             }
-        } else {
+        }
+        else {
             // We should be either a 'currency' or a java type.
             fieldObject = pageContext.findAttribute(attribute);
             javaType = type;
@@ -172,7 +176,7 @@ public class EntityFieldTag extends TagSupport {
             }
         }
 
-        // Get the Locale from the Request object. 
+        // Get the Locale from the Request object.
         Locale userLocale = pageContext.getRequest().getLocale();
         if (userLocale == null)
             userLocale = Locale.getDefault();
@@ -219,7 +223,8 @@ public class EntityFieldTag extends TagSupport {
                 fieldString = "No";
         } else if (javaType.equals("java.sql.Timestamp")) {
             Date dateValue = (Date) fieldObject;
-            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.FULL, userLocale);
+            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,
+                    DateFormat.FULL, userLocale);
             fieldString = df.format(dateValue);
         } else if (javaType.equals("java.sql.Time")) {
             Date dateValue = (Date) fieldObject;
@@ -234,14 +239,17 @@ public class EntityFieldTag extends TagSupport {
         try {
             JspWriter out = pageContext.getOut();
             if (fieldString.length() > 0) {
-                if (prefix != null) out.print(prefix);
+                if (prefix != null)
+                    out.print(prefix);
                 out.print(fieldString);
-                if (suffix != null) out.print(suffix);
+                if (suffix != null)
+                    out.print(suffix);
             }
         } catch (IOException e) {
             throw new JspTagException(e.getMessage());
         }
-        
+
         return (SKIP_BODY);
     }
 }
+

@@ -15,9 +15,9 @@ import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> InputValueTag
- * <p><b>Description:</b> Outputs a string for an input box from either an entity field or 
- *     a request parameter. Decides which to use by checking to see if the entityattr exist and 
- *     using the specified field if it does. If the Boolean object referred to by the tryentityattr 
+ * <p><b>Description:</b> Outputs a string for an input box from either an entity field or
+ *     a request parameter. Decides which to use by checking to see if the entityattr exist and
+ *     using the specified field if it does. If the Boolean object referred to by the tryentityattr
  *     attribute is false, always tries to use the request parameter and ignores the entity field.
  * <p>Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -100,16 +100,16 @@ public class InputValueTag extends TagSupport {
         String paramName = param;
         if (paramName == null || paramName.length() == 0)
             paramName = field;
-        
+
         Boolean tempBool = null;
-        if (tryEntityAttr != null) 
+        if (tryEntityAttr != null)
             tempBool = (Boolean) pageContext.getAttribute(tryEntityAttr);
         if (tempBool != null)
             tryEntity = tempBool.booleanValue();
 
         //if anything but true, it will be false, ie default is false
         fullattrs = "true".equals(fullattrsStr);
-        
+
         if (tryEntity) {
             Object entTemp = pageContext.getAttribute(entityAttr);
             if (entTemp != null) {
@@ -130,13 +130,14 @@ public class InputValueTag extends TagSupport {
         if (inputValue == null) {
             inputValue = pageContext.getRequest().getParameter(paramName);
         }
-        
+
         if (inputValue == null || inputValue.length() == 0)
             inputValue = defaultStr;
-                
+
         try {
             if (fullattrs) {
-                pageContext.getOut().print("name='" + paramName + "' value='" + inputValue + "'");
+                pageContext.getOut().print("name='" + paramName + "' value='" +
+                        inputValue + "'");
             } else {
                 pageContext.getOut().print(inputValue);
             }
@@ -147,3 +148,4 @@ public class InputValueTag extends TagSupport {
         return (SKIP_BODY);
     }
 }
+
