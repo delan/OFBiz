@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  */
 -->
 
@@ -2895,6 +2895,8 @@
       <field name="supplierPrefOrderId" type="id"></field>
       <field name="supplierRatingTypeId" type="id"></field>
       <field name="standardLeadTime" type="date-time"></field>
+      <field name="minimumOrderQuantity" type="floating-point"></field>
+      <field name="quantityUomId" type="id"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="productId"/>
       <prim-key field="partyId"/>
