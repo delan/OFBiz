@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
-<!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
-
 <!--
- *  Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -26,7 +23,8 @@
  * @author     Jacopo Cappellato (tiz@sastau.it)
 -->
 
-<simple-map-processors>
+<simple-map-processors xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <simple-map-processor name="prepareUpdateBOMAssoc">
         <process field="productId">
             <copy/>

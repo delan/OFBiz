@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
-
 <!--
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,11 +21,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
 -->
 
-<simple-map-processors>
+<simple-map-processors xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
   <simple-map-processor name="assignmentMap">
     <process field="workEffortId"><copy/><not-empty><fail-message message="Work Effort ID is missing."/></not-empty></process>
     <process field="partyId"><copy/><not-empty><fail-message message="Party ID is missing."/></not-empty></process>
