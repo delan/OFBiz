@@ -103,9 +103,10 @@
 	<tr>
 		<td width="50%" align="center">
 			<div class="tabletext">
-				<form action="<@ofbizUrl>/month</@ofbizUrl>" method="POST">
+				<form action="<@ofbizUrl>/month</@ofbizUrl>" name="partyform" method="POST">
 					<input type="hidden" name="start" value="${start.time?string("#")}"/>
 					 ${uiLabelMap.WorkEffortByPartyId}: <input type="text" name="partyId" value="${requestParameters.partyId?if_exists}" class="inputbox"/>
+                                         <a href="javascript:call_fieldlookup(document.partyform.partyId,'<@ofbizUrl>/fieldLookup</@ofbizUrl>', 'lookupParty');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
 					<input type="submit" value="${uiLabelMap.CommonView}" class="smallSubmit"/>
 				</form>
 			</div>
