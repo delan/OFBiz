@@ -1,3 +1,4 @@
+
 <#import "bloglib.ftl" as blog/>
 
 <@blog.renderBlog contentId=forumId />

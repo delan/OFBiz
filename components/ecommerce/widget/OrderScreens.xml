@@ -62,7 +62,6 @@
 
     <!-- =========== Top-Level and Stand-Alone Screens =========== -->
 
-    <!-- Category Screens -->
     <screen name="billsettings">
         <section>
             <actions>
