@@ -1,5 +1,5 @@
 /*
- * $Id: ValueLinkServices.java,v 1.9 2004/07/01 08:37:49 jonesde Exp $
+ * $Id: ValueLinkServices.java,v 1.10 2004/07/21 00:41:14 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import org.ofbiz.service.ServiceXaWrapper;
  * ValueLinkServices - Integration with ValueLink Gift Cards
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.0
  */
 public class ValueLinkServices {
@@ -745,10 +745,11 @@ public class ValueLinkServices {
         Map context = new HashMap(ctx);
 
         // append the rollback interface
-        if (vlInterface.endsWith("Rollback")) {
-            context.put("Interface", vlInterface);
-        } else {
+        if (!vlInterface.endsWith("Rollback")) {
             context.put("Interface", vlInterface + "/Rollback");
+        } else {
+            // no need to re-run ourself we are persisted
+            return;
         }
 
         // set the old tx time and number
