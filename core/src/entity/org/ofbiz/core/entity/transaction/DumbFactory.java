@@ -1,6 +1,7 @@
 package org.ofbiz.core.entity.transaction;
 
 import javax.transaction.*;
+import org.ofbiz.core.entity.*;
 
 /**
  * A dumb, non-working transaction manager.
@@ -17,7 +18,7 @@ public class DumbFactory implements TransactionFactoryInterface {
             }
 
             public int getStatus() throws SystemException {
-                return 0;
+                return TransactionUtil.STATUS_NO_TRANSACTION;
             }
 
             public Transaction getTransaction() throws SystemException {
@@ -51,7 +52,7 @@ public class DumbFactory implements TransactionFactoryInterface {
             }
 
             public int getStatus() throws SystemException {
-                return 0;
+                return TransactionUtil.STATUS_NO_TRANSACTION;
             }
 
             public void rollback() throws IllegalStateException, SecurityException, SystemException {
