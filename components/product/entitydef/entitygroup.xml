@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  */
 -->
 
@@ -100,6 +100,7 @@
     <entity-group group="org.ofbiz" entity="ProductFacility" />
     <entity-group group="org.ofbiz" entity="ProductFacilityLocation" />
     <entity-group group="org.ofbiz" entity="ProductFacilityLocationView" />
+    <entity-group group="org.ofbiz" entity="ProductFacilityLocationQuantityTest" />
     <entity-group group="org.ofbiz" entity="VarianceReason" />
 
   <!-- ========================================================= -->

@@ -399,8 +399,18 @@
         </description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="moveByOiirInfoList" type="List" mode="OUT" optional="true"/>
+        <attribute name="stockMoveHandled" type="Map" mode="OUT" optional="true"/>
+        <attribute name="warningMessageList" type="List" mode="OUT" optional="true"/>
+    </service>
+    <service name="findStockMovesRecommended" engine="simple"
+            location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="findStockMovesRecommended">
+        <description>
+            Find all Stock Moves that should be done based on minimum quantities on each Pick/Primary ProductFacilityLocation
+        </description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="stockMoveHandled" type="Map" mode="IN" optional="true"/>
         <attribute name="moveByPflInfoList" type="List" mode="OUT" optional="true"/>
-        <attribute name="insufficientQuantityOiirList" type="List" mode="OUT" optional="true"/>
+        <attribute name="warningMessageList" type="List" mode="OUT" optional="true"/>
     </service>
     <service name="processPhysicalStockMove" engine="simple"
             location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="processPhysicalStockMove">

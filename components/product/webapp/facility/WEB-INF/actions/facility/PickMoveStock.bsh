@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
  */
 
@@ -38,7 +38,15 @@ context.put("facilityId", facilityId);
 
 outMap = dispatcher.runSync("findStockMovesNeeded", UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId));
 moveByOiirInfoList = outMap.get("moveByOiirInfoList");
-moveByPflInfoList = outMap.get("moveByPflInfoList");
+oiirWarningMessageList = outMap.get("warningMessageList");
+stockMoveHandled = outMap.get("stockMoveHandled");
 context.put("moveByOiirInfoList", moveByOiirInfoList);
+context.put("oiirWarningMessageList", oiirWarningMessageList);
+context.put("stockMoveHandledWithOiir", stockMoveHandled);
+
+outMap = dispatcher.runSync("findStockMovesRecommended", UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId, "stockMoveHandled", stockMoveHandled));
+moveByPflInfoList = outMap.get("moveByPflInfoList");
+pflWarningMessageList = outMap.get("warningMessageList");
 context.put("moveByPflInfoList", moveByPflInfoList);
+context.put("pflWarningMessageList", pflWarningMessageList);
 
