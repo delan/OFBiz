@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/01/24 11:11:20  jonesde
+ * Added workers for viewprofile
+ *
  * Revision 1.2  2002/01/24 05:14:12  jonesde
  * Added credit card info related workers
  *
@@ -45,34 +48,6 @@ import org.ofbiz.core.util.*;
  *@created January 22, 2002
  */
 public class ContactMechWorker {
-    public static void getPartyOtherValues(PageContext pageContext, String partyId, String partyAttr, String personAttr, String partyGroupAttr) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
-
-        try {
-            GenericValue party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
-            if (party != null)
-                pageContext.setAttribute(partyAttr, party);
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-        }
-
-        try {
-            GenericValue person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
-            if (person != null)
-                pageContext.setAttribute(personAttr, person);
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-        }
-
-        try {
-            GenericValue partyGroup = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
-            if (partyGroup != null)
-                pageContext.setAttribute(partyGroupAttr, partyGroup);
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-        }
-    }
-    
     public static void getPartyCreditCardInfos(PageContext pageContext, String partyId, boolean showOld, String creditCardInfosAttr) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
         try {
@@ -145,7 +120,7 @@ public class ContactMechWorker {
 
     public static void getContactMechAndRelated(PageContext pageContext, String partyId, String contactMechAttr, String contactMechIdAttr,
             String partyContactMechAttr, String partyContactMechPurposesAttr, String contactMechTypeIdAttr, String contactMechTypeAttr, String purposeTypesAttr,
-            String postalAddressAttr, String telecomNumberAttr, String requestNameAttr, String tryEntityAttr, String contactMechTypesAttr) {
+            String postalAddressAttr, String telecomNumberAttr, String requestNameAttr, String donePageAttr, String tryEntityAttr, String contactMechTypesAttr) {
 
         ServletRequest request = pageContext.getRequest();
         GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
@@ -156,6 +131,7 @@ public class ContactMechWorker {
 
         String donePage = request.getParameter("DONE_PAGE");
         if (donePage == null || donePage.length() <= 0) donePage="viewprofile";
+        pageContext.setAttribute(donePageAttr, donePage);
 
         String contactMechId = request.getParameter("contactMechId");
         if (request.getAttribute("contactMechId") != null)
