@@ -72,8 +72,8 @@
     <!-- Return ECAs -->
     <eca service="updateReturnStatusFromReceipt" event="commit">
         <condition field-name="returnHeaderStatus" operator="equals" value="RETURN_RECEIVED"/>        
-        <action service="processCreditReturn" mode="async"/>
-        <action service="processRefundReturn" mode="async"/>
+        <action service="processCreditReturn" mode="sync"/>
+        <action service="processRefundReturn" mode="sync"/>
     </eca>
     
     <!-- ShoppingList ECAs --> 
