@@ -1270,6 +1270,44 @@ the map contains something, or all values will be removed.</p>
 <p>Uses the delegator to clear elements from the cache; intelligently looks at
 the map passed to see if it is a byPrimaryKey, and byAnd, or an all.</p>
 
+<p><b><u>set-pk-fields</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>value-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the GenericValue object.</td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of a map in the method environment that will be used for the
+    entity fields.</td>
+</tr>
+</table>
+<p>Looks for each PK field in the named map and if it exists there it will copy it into the named value object.</p>
+
+<p><b><u>set-nonpk-fields</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>value-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the GenericValue object.</td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of a map in the method environment that will be used for the
+    entity fields.</td>
+</tr>
+</table>
+<p>Looks for each non-PK field in the named map and if it exists there it will copy it into the named value object.</p>
+
 <p><b><u>store-list</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
