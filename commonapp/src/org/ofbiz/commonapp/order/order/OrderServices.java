@@ -657,7 +657,7 @@ public class OrderServices {
         try {
             orderItems = delegator.findByAnd("OrderItem", fields);
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError("ERROR: Cannot get OrderRole entity: " + e.getMessage());
+            return ServiceUtil.returnError("ERROR: Cannot get OrderItem entity: " + e.getMessage());
         }
         
         if (orderItems != null && orderItems.size() > 0) {
@@ -788,6 +788,12 @@ public class OrderServices {
             result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change order status (" + e.getMessage() + ").");
             return result;
         }
+        
+        // cancel any order processing if we are cancelled
+        if ("ORDER_CANCELLED".equals("statusId")) {
+            OrderChangeHelper.releaseInitialOrderHold(ctx.getDispatcher(), orderId);
+        }
+        
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         result.put("orderStatusId", statusId);
         return result;

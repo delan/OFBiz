@@ -31,7 +31,12 @@
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Order Items</div>
-          </td>          
+          </td>
+          <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED">
+          <td valign="middle" align="right">
+            <div class="tabletext"><a href="<@ofbizUrl>/changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutextright">Cancel All Items</a></div>
+          </td>
+          </#if>
         </tr>
       </table>
     </td>
