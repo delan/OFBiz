@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -213,7 +213,7 @@ ${pages.get("/bom/BomTabBar.ftl")}
     
     <tr>
         <td colspan="2">&nbsp;</td>
-        <td align=left><input type="submit" <#if isCreate>value="${uiLabelMap.CommonAdd}"<#else>value="${uiLabelMap.CommonEdit}"</#if>></td>
+        <td align=left><input type="submit" class="SmallSubmit" <#if isCreate>value="${uiLabelMap.CommonAdd}"<#else>value="${uiLabelMap.CommonEdit}"</#if>></td>
     </tr>
     </table>
     </form>
