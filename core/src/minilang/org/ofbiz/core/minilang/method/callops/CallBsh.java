@@ -111,8 +111,10 @@ public class CallBsh extends MethodOperation {
                 }
             }
 
+            if (Debug.verboseOn()) Debug.logVerbose("Running inline BSH script: " + inline);
             // run inlined second to it can override the one from the property
             Object inlineResult = bsh.eval(inline);
+            if (Debug.verboseOn()) Debug.logVerbose("Result of inline BSH script: " + inlineResult);
 
             // if map is returned, copy values into env
             if ((inlineResult != null) && (inlineResult instanceof Map)) {

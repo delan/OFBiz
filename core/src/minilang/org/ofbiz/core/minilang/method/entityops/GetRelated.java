@@ -84,16 +84,9 @@ public class GetRelated extends MethodOperation {
                 listAcsr.put(methodContext, value.getRelated(relationName, constraintMap, orderByNames));
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem getting related from entity with name " + value.getEntityName() + " for the relation-name: " + relationName + ": " + e.getMessage() + "]";
-
-            if (methodContext.getMethodType() == MethodContext.EVENT) {
-                methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
-                methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
-            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
-                methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errMsg);
-                methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
-            }
+            Debug.logError(e, errMsg);
+            methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;
         }
         return true;

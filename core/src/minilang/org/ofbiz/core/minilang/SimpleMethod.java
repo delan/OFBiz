@@ -617,6 +617,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.callops.AddError(curOperElem, simpleMethod));
                 } else if ("return".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.callops.Return(curOperElem, simpleMethod));
+                } else if ("set-service-fields".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.callops.SetServiceFields(curOperElem, simpleMethod));
                 } else if ("call-service".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallService(curOperElem, simpleMethod));
                 } else if ("call-service-asynch".equals(nodeName)) {

@@ -70,8 +70,8 @@ public class GetRelatedOne extends MethodOperation {
                 toValueAcsr.put(methodContext, value.getRelatedOne(relationName));
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem getting related one from entity with name " + value.getEntityName() + " for the relation-name: " + relationName + ": " + e.getMessage() + "]";
+            Debug.logError(e, errMsg);
             methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;
         }
