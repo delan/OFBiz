@@ -9,7 +9,7 @@
         <!-- NOTE: This configuration does not currently work because of this class; I can't figure out which one to use for Postgres, if there is one...
         <dataSource>
             <name>localpostgres</name>
-            <jar>../ofbiz/lib/common/pgjdbc2.jar</jar>
+            <jar>../ofbiz/lib/common/postgresql.jar</jar>
             <class>org.postgresql.Driver</class>
             <config>
                 <URL>jdbc:postgresql://127.0.0.1/ofbiz</URL>
