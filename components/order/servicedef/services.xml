@@ -202,9 +202,13 @@
     </service>
 
     <service name="resetGrandTotal" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="resetGrandTotal">
-        <description>Change the status of an existing order</description>
+            location="org.ofbiz.order.order.OrderServices" invoke="resetGrandTotal" require-new-transaction="true">
+        <description>Reset the grandTotal of an existing order</description>
         <attribute name="orderId" type="String" mode="IN"/>
+    </service>
+    <service name="setEmptyGrandTotals" engine="java"
+            location="org.ofbiz.order.order.OrderServices" invoke="setEmptyGrandTotals">
+        <description>Find all OrderHeaders with no grandTotal and call resetGrandTotal</description>
     </service>
 
     <service name="recalcShippingTotal" engine="java"

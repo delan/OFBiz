@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.29 2004/01/22 17:47:24 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.30 2004/02/18 07:33:10 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,6 +37,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEvents;
@@ -52,7 +53,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.29 $
+ * @version    $Revision: 1.30 $
  * @since      2.0
  */
 
@@ -560,14 +561,16 @@ public class OrderServices {
     /** Service for resetting the OrderHeader grandTotal */
     public static Map resetGrandTotal(DispatchContext ctx, Map context) {
         GenericDelegator delegator = ctx.getDelegator();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        //appears to not be used: GenericValue userLogin = (GenericValue) context.get("userLogin");
         String orderId = (String) context.get("orderId");
 
         GenericValue orderHeader = null;
         try {
             orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError("ERROR: Cannot get OrderHeader entity: " + e.getMessage());
+            String errMsg = "ERROR: Could not set grantTotal on OrderHeader entity: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
         }
 
         if (orderHeader != null) {
@@ -578,9 +581,47 @@ public class OrderServices {
                 try {
                     orderHeader.store();
                 } catch (GenericEntityException e) {
-                    return ServiceUtil.returnError("ERROR: Cannot write OrderHeader entity: " + e.getMessage());
+                    String errMsg = "ERROR: Could not set grantTotal on OrderHeader entity: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
                 }
             }
+        }
+
+        return ServiceUtil.returnSuccess();
+    }
+
+    /** Service for setting the OrderHeader grandTotal for all OrderHeaders with no grandTotal */
+    public static Map setEmptyGrandTotals(DispatchContext ctx, Map context) {
+        GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        try {
+            EntityListIterator eli = delegator.findListIteratorByCondition("OrderHeader", new EntityExpr("grandTotal", EntityOperator.EQUALS, null), UtilMisc.toList("orderId"), null);
+            GenericValue orderHeader = null;
+            List orderIdList = new LinkedList();
+            while ((orderHeader = (GenericValue) eli.next()) != null) {
+                orderIdList.add(orderHeader.get("orderId"));
+            }
+            eli.close();
+            
+            Iterator orderIdIter = orderIdList.iterator();
+            while (orderIdIter.hasNext()) {
+                String orderId = (String) orderIdIter.next();
+                Map results = dispatcher.runSync("resetGrandTotal", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
+                if (ServiceUtil.isError(results)) {
+                    return ServiceUtil.returnError(null, null, null, results);
+                }
+            }
+        } catch (GenericServiceException e) {
+            String errMsg = "ERROR: Could not set grantTotal on OrderHeader entity: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        } catch (GenericEntityException e) {
+            String errMsg = "ERROR: Could not set grantTotal on OrderHeader entity: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
         }
 
         return ServiceUtil.returnSuccess();
@@ -1183,11 +1224,11 @@ public class OrderServices {
                 result.put("paymentMethodType", paymentMethodType);
 
                 if (paymentMethod != null && "CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
-                    GenericValue creditCard = (GenericValue) paymentMethod.getRelatedOneCache("CreditCard");
+                    GenericValue creditCard = paymentMethod.getRelatedOneCache("CreditCard");
                     result.put("creditCard", creditCard);
                     result.put("formattedCardNumber", ContactHelper.formatCreditCard(creditCard));
                 } else if (paymentMethod != null && "EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {
-                    GenericValue eftAccount = (GenericValue) paymentMethod.getRelatedOneCache("EftAccount");
+                    GenericValue eftAccount = paymentMethod.getRelatedOneCache("EftAccount");
                     result.put("eftAccount", eftAccount);
                 }
             }
@@ -1294,17 +1335,17 @@ public class OrderServices {
 
     /** Service to email order notifications for pending actions */
     public static Map sendProcessNotification(DispatchContext ctx, Map context) {
-        Map result = new HashMap();
+        //appears to not be used: Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         String adminEmailList = (String) context.get("adminEmailList");
         String assignedToUser = (String) context.get("assignedPartyId");
-        String assignedToRole = (String) context.get("assignedRoleTypeId");
+        //appears to not be used: String assignedToRole = (String) context.get("assignedRoleTypeId");
         String workEffortId = (String) context.get("workEffortId");
 
         GenericValue workEffort = null;
         GenericValue orderHeader = null;
-        String assignedEmail = null;
+        //appears to not be used: String assignedEmail = null;
 
         // get the order/workflow info
         try {
@@ -1511,7 +1552,7 @@ public class OrderServices {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         String orderId = (String) context.get("orderId");
-        GenericValue v = null;
+        //appears to not be used: GenericValue v = null;
         String purpose[] = { "BILLING_LOCATION", "SHIPPING_LOCATION" };
         String outKey[] = { "billingAddress", "shippingAddress" };
         GenericValue orderHeader = null;
@@ -1863,7 +1904,7 @@ public class OrderServices {
                 return ServiceUtil.returnError("ERROR: Unable to get return item information");
             }
             if (returnedItems == null || returnedItems.size() == 0) {
-                returnableQuantity = orderQty;;
+                returnableQuantity = orderQty;
             } else {
                 double returnedQty = 0.00;
                 Iterator ri = returnedItems.iterator();
@@ -1965,7 +2006,7 @@ public class OrderServices {
 
     // check return items status and update return header status
     public static Map checkReturnComplete(DispatchContext ctx, Map context) {
-        LocalDispatcher dispatcher = ctx.getDispatcher();
+        //appears to not be used: LocalDispatcher dispatcher = ctx.getDispatcher();
         GenericDelegator delegator = ctx.getDelegator();
         String returnId = (String) context.get("returnId");
 
@@ -2118,7 +2159,6 @@ public class OrderServices {
                 returnStatus.set("returnItemSeqId", item.get("returnItemSeqId"));
                 returnStatus.set("statusDatetime", now);
                 toBeStored.add(returnStatus);
-
             }
 
             // create a Double object for the amount
@@ -2668,7 +2708,7 @@ public class OrderServices {
             if (orderStatus.equals("ORDER_CREATED")) {
                 // first check for un-paid orders
                 Timestamp orderDate = orderHeader.getTimestamp("entryDate");
-                String webSiteId = orderHeader.getString("webSiteId");
+                //appears to not be used: String webSiteId = orderHeader.getString("webSiteId");
 
                 // name of the payment.properties file to use
                 String propsFile = null;
@@ -2825,8 +2865,8 @@ public class OrderServices {
                 Debug.logError(e, "ERROR: Unable to invoice digital items", module);
                 return ServiceUtil.returnError("Problem with invoice creation; digital items not fulfilled.");
             }
-            if (ModelService.RESPOND_ERROR.equals((String)invoiceResult.get(ModelService.RESPONSE_MESSAGE))) {
-                return ServiceUtil.returnError((String)invoiceResult.get(ModelService.ERROR_MESSAGE));
+            if (ModelService.RESPOND_ERROR.equals(invoiceResult.get(ModelService.RESPONSE_MESSAGE))) {
+                return ServiceUtil.returnError((String) invoiceResult.get(ModelService.ERROR_MESSAGE));
             }
 
             // update the status of DIGITAL_GOOD to COMPLETED; leave FINDIG as APPROVED for pick/ship
@@ -2860,7 +2900,7 @@ public class OrderServices {
             } catch (GenericServiceException e) {
                 Debug.logError(e, "ERROR: Unable to fulfill digital items", module);
             }
-            if (ModelService.RESPOND_ERROR.equals((String)fulfillResult.get(ModelService.RESPONSE_MESSAGE))) {
+            if (ModelService.RESPOND_ERROR.equals(fulfillResult.get(ModelService.RESPONSE_MESSAGE))) {
                 // this service cannot return error at this point or we will roll back the invoice
                 // since payments are already captured; errors should have been logged already.
                 // the response message here will be passed as an error to the user.
@@ -2872,9 +2912,9 @@ public class OrderServices {
     }
 
     public static Map fulfillDigitalItems(DispatchContext ctx, Map context) {
-        GenericDelegator delegator = ctx.getDelegator();
+        //appears to not be used: GenericDelegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
-        String orderId = (String) context.get("orderId");
+        //appears to not be used: String orderId = (String) context.get("orderId");
         List orderItems = (List) context.get("orderItems");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
