@@ -870,8 +870,6 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
      */
     public static Map updatePageType(DispatchContext dctx, Map context) throws GenericServiceException{
         
-            return ServiceUtil.returnError("This service has been disabled.");
-            /*
         GenericDelegator delegator = dctx.getDelegator();
         Map results = new HashMap();
     	String pageMode = (String)context.get("pageMode");
@@ -902,7 +900,6 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         }
             
         return results;
-        */
     }
     
     public static void updatePageNodeChildren(GenericValue content) throws GenericEntityException {
