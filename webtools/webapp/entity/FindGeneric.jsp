@@ -45,10 +45,10 @@
 <%ModelReader reader = delegator.getModelReader();%>
 <%ModelEntity entity = reader.getModelEntity(entityName);%>
 
-<%boolean hasViewPermission=security.hasEntityPermission(entity.tableName, "_VIEW", session);%>
-<%boolean hasCreatePermission=security.hasEntityPermission(entity.tableName, "_CREATE", session);%>
-<%boolean hasUpdatePermission=security.hasEntityPermission(entity.tableName, "_UPDATE", session);%>
-<%boolean hasDeletePermission=security.hasEntityPermission(entity.tableName, "_DELETE", session);%>
+<%boolean hasViewPermission=security.hasEntityPermission(entity.getTableName(), "_VIEW", session);%>
+<%boolean hasCreatePermission=security.hasEntityPermission(entity.getTableName(), "_CREATE", session);%>
+<%boolean hasUpdatePermission=security.hasEntityPermission(entity.getTableName(), "_UPDATE", session);%>
+<%boolean hasDeletePermission=security.hasEntityPermission(entity.getTableName(), "_DELETE", session);%>
 <%if(hasViewPermission){%>
 <%
   String rowClassTop1 = "viewOneTR1";
@@ -128,9 +128,9 @@
   if(arraySize<highIndex) highIndex=arraySize;
   //Debug.logInfo("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
 %>
-<h3 style='margin:0;'>Find <%=entity.entityName%>s</h3>
+<h3 style='margin:0;'>Find <%=entity.getEntityName()%>s</h3>
 <%-- Note: you may use the '%' character as a wildcard for String fields. --%>
-<br>To find ALL <%=entity.entityName%>s, leave all entries blank.
+<br>To find ALL <%=entity.getEntityName()%>s, leave all entries blank.
 <form method="post" action="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName)%>" style='margin:0;'>
 <INPUT type=hidden name='find' value='true'>
 <table cellpadding="2" cellspacing="2" border="0">
@@ -149,10 +149,10 @@
   </tr>
 </table>
 </form>
-<b><%=entity.entityName%>s found by: <%=findByEntity.toString()%></b><br>
-<b><%=entity.entityName%>s curFindString: <%=curFindString%></b><br>
+<b><%=entity.getEntityName()%>s found by: <%=findByEntity.toString()%></b><br>
+<b><%=entity.getEntityName()%>s curFindString: <%=curFindString%></b><br>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?entityName=" + entityName)%>" class="buttontext">[Create New <%=entity.entityName%>]</a>
+  <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?entityName=" + entityName)%>" class="buttontext">[Create New <%=entity.getEntityName()%>]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
@@ -258,7 +258,7 @@
 %>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
 <td colspan="<%=entity.fields.size() + 2%>">
-<h3>No <%=entity.entityName%>s Found.</h3>
+<h3>No <%=entity.getEntityName()%>s Found.</h3>
 </td>
 </tr>
 <%}%>
@@ -284,10 +284,10 @@
 <% } %>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?entityName=" + entityName)%>" class="buttontext">[Create New <%=entity.entityName%>]</a>
+  <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?entityName=" + entityName)%>" class="buttontext">[Create New <%=entity.getEntityName()%>]</a>
 <%}%>
 <%}else{%>
-  <h3>You do not have permission to view this page (<%=entity.tableName%>_ADMIN, or <%=entity.tableName%>_VIEW needed).</h3>
+  <h3>You do not have permission to view this page (<%=entity.getTableName()%>_ADMIN, or <%=entity.getTableName()%>_VIEW needed).</h3>
 <%}%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>

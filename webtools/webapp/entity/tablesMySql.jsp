@@ -5,10 +5,10 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   TreeSet entities = new TreeSet(ec);
   Iterator classNamesIterator = entities.iterator();
   while(classNamesIterator != null && classNamesIterator.hasNext()) { ModelEntity entity = reader.getModelEntity((String)classNamesIterator.next());%>
-CREATE TABLE <%=entity.tableName%> (<%for(int i=0;i<entity.fields.size();i++){ModelField field=(ModelField)entity.fields.get(i); ModelFieldType type = delegator.getEntityFieldType(entity, field.type);%><%if(field.isPk){%>
+CREATE TABLE <%=entity.getTableName()%> (<%for(int i=0;i<entity.fields.size();i++){ModelField field=(ModelField)entity.fields.get(i); ModelFieldType type = delegator.getEntityFieldType(entity, field.type);%><%if(field.isPk){%>
   <%=field.colName%> <%=type.sqlType%> NOT NULL,<%}else{%>
   <%=field.colName%> <%=type.sqlType%>,<%}%><%}%>
-  CONSTRAINT PK_<%=entity.tableName%> PRIMARY KEY (<%=entity.colNameString(entity.pks)%>));
+  CONSTRAINT PK_<%=entity.getTableName()%> PRIMARY KEY (<%=entity.colNameString(entity.pks)%>));
 <%}%> 
 <%
 } 

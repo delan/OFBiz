@@ -48,7 +48,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   {
     String eName = (String)ecIter.next();
     ModelEntity ent = reader.getModelEntity(eName);
-    packageNames.add(ent.packageName);
+    packageNames.add(ent.getPackageName());
   }
 %>
 

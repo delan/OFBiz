@@ -140,7 +140,7 @@ if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("orig
       if(entity instanceof ModelViewEntity) {
         ModelViewEntity viewEntity = (ModelViewEntity)entity;
 %>	
-    <view-entity entity-name="<%=entity.entityName%>" 
+    <view-entity entity-name="<%=entity.getEntityName()%>" 
             package-name="<%=entity.packageName%>"<%if(entity.dependentOn.length() > 0){%>
             dependent-on="<%=entity.dependentOn%>"<%}%><%if(!title.equals(entity.title)){%>
             title="<%=entity.title%>"<%}%><%if(!copyright.equals(entity.copyright)){%>
@@ -177,8 +177,8 @@ if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("orig
       }
       else {
 %>
-    <entity entity-name="<%=entity.entityName%>"<%if(!entity.entityName.equals(ModelUtil.dbNameToClassName(entity.tableName))){
-          %> table-name="<%=entity.tableName%>"<%}%> 
+    <entity entity-name="<%=entity.getEntityName()%>"<%if(!entity.getEntityName().equals(ModelUtil.dbNameToClassName(entity.getTableName()))){
+          %> table-name="<%=entity.getTableName()%>"<%}%> 
             package-name="<%=entity.packageName%>"<%if(entity.dependentOn.length() > 0){%>
             dependent-on="<%=entity.dependentOn%>"<%}%><%if(!title.equals(entity.title)){%>
             title="<%=entity.title%>"<%}%><%if(!copyright.equals(entity.copyright)){%>

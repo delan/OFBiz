@@ -1,6 +1,6 @@
 <%@page contentType="text/html"%>
-<!--
- *  Copyright (c) 2001 The Open For Business Project and respected authors.
+<%
+ /*  Copyright (c) 2001 The Open For Business Project and respected authors.
  
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -23,7 +23,8 @@
  * @author Andy Zeneski (jaz@zsolv.com)
  * @author David E. Jones (jonesde@ofbiz.org)
  * @version 1.0
--->
+ */
+%>
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.util.*" %>
@@ -48,24 +49,23 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   if("addEntity".equals(event)) {
     if(entity == null) {
       entity = new ModelEntity();
-      entity.entityName = request.getParameter("entityName");
-      entity.tableName = ModelUtil.javaNameToDbName(entity.entityName);
-      reader.entityCache.put(entity.entityName, entity);
-      entityName = entity.entityName;
+      entity.setEntityName(request.getParameter("entityName"));
+      entity.setTableName(ModelUtil.javaNameToDbName(entity.getEntityName()));
+      reader.getEntityCache().put(entity.getEntityName(), entity);
+      entityName = entity.getEntityName();
       
       String entityGroup = request.getParameter("entityGroup");
       delegator.getModelGroupReader().getGroupCache().put(entityName, entityGroup);
     }
-  }
-  else if("updateEntity".equals(event)) {
-    entity.tableName = request.getParameter("tableName");
-    entity.packageName = request.getParameter("packageName");
-    entity.dependentOn = request.getParameter("dependentOn");
-    entity.title = request.getParameter("title");
-    entity.description = request.getParameter("description");
-    entity.copyright = request.getParameter("copyright");
-    entity.author = request.getParameter("author");
-    entity.version = request.getParameter("version");
+  } else if("updateEntity".equals(event)) {
+    entity.setTableName(request.getParameter("tableName"));
+    entity.setPackageName(request.getParameter("packageName"));
+    entity.setDependentOn(request.getParameter("dependentOn"));
+    entity.setTitle(request.getParameter("title"));
+    entity.setDescription(request.getParameter("description"));
+    entity.setCopyright(request.getParameter("copyright"));
+    entity.setAuthor(request.getParameter("author"));
+    entity.setVersion(request.getParameter("version"));
 
     String entityGroup = request.getParameter("entityGroup");
     delegator.getModelGroupReader().getGroupCache().put(entityName, entityGroup);
@@ -73,124 +73,117 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     String filename = request.getParameter("filename");
     delegator.getModelReader().entityFile.put(entityName, filename);
     delegator.getModelReader().rebuildFileNameEntities();
-  }
-  else if("removeField".equals(event)) {
+  } else if("removeField".equals(event)) {
     String fieldName = request.getParameter("fieldName");
     entity.removeField(fieldName);
-  }
-  else if("updateField".equals(event)) {
+  } else if("updateField".equals(event)) {
     String fieldName = request.getParameter("fieldName");
     String fieldType = request.getParameter("fieldType");
     String primaryKey = request.getParameter("primaryKey");
     ModelField field = entity.getField(fieldName);
-    field.type = fieldType;
+    field.setType(fieldType);
     if(primaryKey != null) field.isPk = true;
-    else field.isPk = false;
+    else field.setIsPk(false);
     entity.updatePkLists();
-  }
-  else if("addField".equals(event)) {
+  } else if("addField".equals(event)) {
     ModelField field = new ModelField();
-    field.name = request.getParameter("name");
-    field.colName = ModelUtil.javaNameToDbName(field.name);
-    field.type = request.getParameter("fieldType");
-    entity.fields.add(field);
-  }
-  else if("addRelation".equals(event)) {
+    field.setName(request.getParameter("name"));
+    field.setColName(ModelUtil.javaNameToDbName(field.getName()));
+    field.setType(request.getParameter("fieldType"));
+    entity.addField(field);
+  } else if("addRelation".equals(event)) {
     String relEntityName = request.getParameter("relEntityName");
     String type = request.getParameter("type");
     String title = request.getParameter("title");
     ModelRelation relation = new ModelRelation();
 
     ModelEntity relEntity = reader.getModelEntity(relEntityName);
-    if(relEntity == null) errorMsg = errorMsg + "<li> Related Entity \"" + relEntityName + "\" not found, not adding.";
-    else {
-      relation.relEntityName = relEntityName;
-      relation.type = type;
-      relation.title = title;
-      relation.mainEntity = entity;
-      entity.relations.add(relation);
+    if(relEntity == null) {
+        errorMsg = errorMsg + "<li> Related Entity \"" + relEntityName + "\" not found, not adding.";
+    } else {
+      relation.setRelEntityName(relEntityName);
+      relation.setType(type);
+      relation.setTitle(title);
+      relation.setMainEntity(entity);
+      entity.addRelation(relation);
       if("one".equals(type)) {
-        for(int pk=0; pk<relEntity.pks.size(); pk++) {
-          ModelField pkf = (ModelField)relEntity.pks.get(pk);
+        for(int pk=0; pk<relEntity.getPks().size(); pk++) {
+          ModelField pkf = (ModelField)relEntity.getPks().get(pk);
           ModelKeyMap keyMap = new ModelKeyMap();
-          keyMap.fieldName = pkf.name;
-          keyMap.relFieldName = pkf.name;
-          relation.keyMaps.add(keyMap);
+          keyMap.setFieldName(pkf.getName());
+          keyMap.setRelFieldName(pkf.getName());
+          relation.addKeyMaps(keyMap);
         }
       }
     }
-  }
-  else if("updateRelation".equals(event)) {
+  } else if("updateRelation".equals(event)) {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
     String type = request.getParameter("type");
     String title = request.getParameter("title");
 
-    ModelRelation relation = (ModelRelation)entity.relations.get(relNum);
+    ModelRelation relation = (ModelRelation)entity.getRelations().get(relNum);
     relation.type = type;
     relation.title = title;
-  }
-  else if("removeRelation".equals(event)) {
+  } else if("removeRelation".equals(event)) {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
-    if(relNum < entity.relations.size() && relNum >= 0) entity.relations.removeElementAt(relNum);
+    if(relNum < entity.relations.size() && relNum >= 0) entity.getRelations().removeElementAt(relNum);
     else errorMsg = errorMsg + "<li> Relation number " + relNum + " is out of bounds.";
-  }
-  else if("updateKeyMap".equals(event)) {
+  } else if("updateKeyMap".equals(event)) {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
     int kmNum = Integer.parseInt(request.getParameter("kmNum"));
     String fieldName = request.getParameter("fieldName");
     String relFieldName = request.getParameter("relFieldName");
     
-    ModelRelation relation = (ModelRelation)entity.relations.get(relNum);
-    ModelEntity relEntity = reader.getModelEntity(relation.relEntityName);
-    ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(kmNum);
+    ModelRelation relation = (ModelRelation)entity.getRelations().get(relNum);
+    ModelEntity relEntity = reader.getModelEntity(relation.getRelEntityName());
+    ModelKeyMap keyMap = (ModelKeyMap)relation.getKeyMaps().get(kmNum);
     ModelField field = entity.getField(fieldName);
     ModelField relField = relEntity.getField(relFieldName);
 
     keyMap.fieldName = field.name;
     keyMap.relFieldName = relField.name;
-  }
-  else if("removeKeyMap".equals(event)) {
+  } else if("removeKeyMap".equals(event)) {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
     int kmNum = Integer.parseInt(request.getParameter("kmNum"));
 
-    ModelRelation relation = (ModelRelation)entity.relations.get(relNum);
+    ModelRelation relation = (ModelRelation)entity.getRelations().get(relNum);
     relation.keyMaps.removeElementAt(kmNum);
-  }
-  else if("addKeyMap".equals(event)) {
+  } else if("addKeyMap".equals(event)) {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
 
-    ModelRelation relation = (ModelRelation)entity.relations.get(relNum);
+    ModelRelation relation = (ModelRelation)entity.getRelations().get(relNum);
     ModelKeyMap keyMap = new ModelKeyMap();
     relation.keyMaps.add(keyMap);
-  }
-  else if("addReverse".equals(event)) {
+  } else if("addReverse".equals(event)) {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
 
-    ModelRelation relation = (ModelRelation)entity.relations.get(relNum);
-    ModelEntity relatedEnt = reader.getModelEntity(relation.relEntityName);
+    ModelRelation relation = (ModelRelation)entity.getRelations().get(relNum);
+    ModelEntity relatedEnt = reader.getModelEntity(relation.getRelEntityName());
     if(relatedEnt != null) {
-      if(relatedEnt.getRelation(relation.title + entity.entityName) == null) {
+      if(relatedEnt.getRelation(relation.getTitle() + entity.getEntityName()) == null) {
         ModelRelation newRel = new ModelRelation();
         relatedEnt.relations.add(newRel);
 
-        newRel.relEntityName = entity.entityName;
-        newRel.title = relation.title;
+        newRel.relEntityName = entity.getEntityName();
+        newRel.title = relation.getTitle();
         if(relation.type.equalsIgnoreCase("one")) newRel.type = "many";
         else newRel.type = "one";
 
-        for(int kmn=0; kmn<relation.keyMaps.size(); kmn++) {
-          ModelKeyMap curkm = (ModelKeyMap)relation.keyMaps.get(kmn);
+        for(int kmn=0; kmn<relation.getKeyMaps().size(); kmn++) {
+          ModelKeyMap curkm = (ModelKeyMap)relation.getKeyMaps().get(kmn);
           ModelKeyMap newkm = new ModelKeyMap();
           newRel.keyMaps.add(newkm);
-          newkm.fieldName = curkm.relFieldName;
-          newkm.relFieldName = curkm.fieldName;
+          newkm.fieldName = curkm.getRelFieldName();
+          newkm.relFieldName = curkm.getFieldName();
         }
 
         newRel.mainEntity = relatedEnt;
+      } else {
+        errorMsg = errorMsg + "<li> Related entity already has a relation with name " + relation.getTitle() + entity.getEntityName() + ", no reverse relation added.";
       }
-      else errorMsg = errorMsg + "<li> Related entity already has a relation with name " + relation.title + entity.entityName + ", no reverse relation added.";
+    } else {
+      errorMsg = errorMsg + "<li> Could not find related entity " + relation.getRelEntityName() + ", no reverse relation added.";
     }
-    else errorMsg = errorMsg + "<li> Could not find related entity " + relation.relEntityName + ", no reverse relation added.";
   }
 
   Collection typesCol = delegator.getEntityFieldTypeNames(entity);
@@ -244,17 +237,17 @@ The following errors occurred:
 <A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName)%>'>Reload Current Entity: <%=entityName%></A><BR>
 <BR>
 Entity Name: <%=entityName%><br>
-Column Name: <%=(modelViewEntity == null)?entity.tableName:"What column name? This is a VIEW Entity."%><br>
+Column Name: <%=(modelViewEntity == null)?entity.getTableName():"What column name? This is a VIEW Entity."%><br>
 
 <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateEntity")%>' style='margin: 0;'>
   <%if(modelViewEntity == null) {%>
-    <INPUT type=text size='60' name='tableName' value='<%=UtilFormatOut.checkNull(entity.tableName)%>'> (Table Name)
+    <INPUT type=text size='60' name='tableName' value='<%=UtilFormatOut.checkNull(entity.getTableName())%>'> (Table Name)
     <BR>
   <%}%>
-  <INPUT type=text size='60' name='packageName' value='<%=entity.packageName%>'> (Package Name)
+  <INPUT type=text size='60' name='packageName' value='<%=entity.getPackageName()%>'> (Package Name)
   <BR>
   <SELECT name='dependentOn'>
-    <OPTION selected><%=entity.dependentOn%></OPTION>
+    <OPTION selected><%=entity.getDependentOn()%></OPTION>
     <OPTION></OPTION>
     <%Iterator depIter = entSet.iterator();%>
     <%while(depIter.hasNext()){%>
@@ -263,15 +256,15 @@ Column Name: <%=(modelViewEntity == null)?entity.tableName:"What column name? Th
   </SELECT>
   (Dependent On Entity)
   <BR>
-  <INPUT type=text size='60' name='title' value='<%=entity.title%>'> (Title)
+  <INPUT type=text size='60' name='title' value='<%=entity.getTitle()%>'> (Title)
   <BR>
-  <TEXTAREA cols='60' rows='5' name='description'><%=entity.description%></TEXTAREA> (Description)
+  <TEXTAREA cols='60' rows='5' name='description'><%=entity.getDescription()%></TEXTAREA> (Description)
   <BR>
-  <INPUT type=text size='60' name='copyright' value='<%=entity.copyright%>'> (Copyright)
+  <INPUT type=text size='60' name='copyright' value='<%=entity.getCopyright()%>'> (Copyright)
   <BR>
-  <INPUT type=text size='60' name='author' value='<%=entity.author%>'> (Author)
+  <INPUT type=text size='60' name='author' value='<%=entity.getAuthor()%>'> (Author)
   <BR>
-  <INPUT type=text size='60' name='version' value='<%=entity.version%>'> (Version)
+  <INPUT type=text size='60' name='version' value='<%=entity.getVersion()%>'> (Version)
   <BR>
   <BR>
   <INPUT type=text size='60' name='entityGroup' value='<%=UtilFormatOut.checkNull(delegator.getModelGroupReader().getEntityGroupName(entityName))%>'> (Group)
@@ -288,17 +281,17 @@ Column Name: <%=(modelViewEntity == null)?entity.tableName:"What column name? Th
 <B>FIELDS</B>
   <TABLE border='1' cellpadding='2' cellspacing='0'>
     <TR><TD>Field Name</TD><TD>Column Name (Length)</TD><TD>Field Type</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
-    <%for(int f=0; f<entity.fields.size(); f++){%>
-      <%ModelField field = (ModelField)entity.fields.get(f);%>
+    <%for(int f=0; f<entity.getFields().size(); f++){%>
+      <%ModelField field = (ModelField)entity.getFields().get(f);%>
       <TR>
-        <TD><%=field.isPk?"<B>":""%><%=field.name%><%=field.isPk?"</B>":""%></TD>
-        <TD><%=field.colName%> (<%=field.colName.length()%>)</TD>
-        <TD><%=field.type%></TD>
+        <TD><%=field.getIsPk()?"<B>":""%><%=field.getName()%><%=field.getIsPk()?"</B>":""%></TD>
+        <TD><%=field.getColName()%> (<%=field.getColName().length()%>)</TD>
+        <TD><%=field.getType()%></TD>
         <TD>
-          <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&fieldName=" + field.name + "&event=updateField")%>' style='margin: 0;'>
-            <INPUT type=CHECKBOX name='primaryKey'<%=field.isPk?" checked":""%>>
+          <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&fieldName=" + field.getName() + "&event=updateField")%>' style='margin: 0;'>
+            <INPUT type=CHECKBOX name='primaryKey'<%=field.getIsPk()?" checked":""%>>
             <SELECT name='fieldType'>
-              <OPTION selected><%=field.type%></OPTION>
+              <OPTION selected><%=field.getType()%></OPTION>
               <%Iterator iter = UtilMisc.toIterator(types);%>
               <%while(iter != null && iter.hasNext()){ String typeName = (String)iter.next();%>
                 <OPTION><%=typeName%></OPTION>
@@ -307,7 +300,7 @@ Column Name: <%=(modelViewEntity == null)?entity.tableName:"What column name? Th
             <INPUT type=submit value='Set'>
           </FORM>
         </TD>
-        <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&fieldName=" + field.name + "&event=removeField")%>'>Remove</A></TD>
+        <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&fieldName=" + field.getName() + "&event=removeField")%>'>Remove</A></TD>
       </TR>
     <%}%>
   </TABLE>
@@ -330,16 +323,16 @@ Column Name: <%=(modelViewEntity == null)?entity.tableName:"What column name? Th
 
 <B>RELATIONS</B>
   <TABLE border='1' cellpadding='2' cellspacing='0'>
-  <%for(int r=0; r<entity.relations.size(); r++){%>
-    <%ModelRelation relation = (ModelRelation)entity.relations.elementAt(r);%>
-    <%ModelEntity relEntity = reader.getModelEntity(relation.relEntityName);%>
+  <%for(int r=0; r<entity.getRelations().size(); r++){%>
+    <%ModelRelation relation = (ModelRelation)entity.getRelations().elementAt(r);%>
+    <%ModelEntity relEntity = reader.getModelEntity(relation.getRelEntityName());%>
     <tr bgcolor='#CCCCFF'>
       <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateRelation&relNum=" + r)%>'>
-        <td align="left"><%=relation.title%><A class='listtext' href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + relation.relEntityName)%>'><%=relation.relEntityName%></A></td>
+        <td align="left"><%=relation.title%><A class='listtext' href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + relation.getRelEntityName())%>'><%=relation.getRelEntityName()%></A></td>
         <td>
-          <INPUT type=TEXT name='title' value='<%=relation.title%>'>
+          <INPUT type=TEXT name='title' value='<%=relation.getTitle()%>'>
           <SELECT name='type'>
-            <OPTION selected><%=relation.type%></OPTION>
+            <OPTION selected><%=relation.getType()%></OPTION>
             <OPTION>&nbsp;</OPTION>
             <OPTION>one</OPTION>
             <OPTION>many</OPTION>
@@ -353,25 +346,25 @@ Column Name: <%=(modelViewEntity == null)?entity.tableName:"What column name? Th
         <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&relNum=" + r + "&event=addReverse")%>'>Add&nbsp;Reverse</A></TD>
       </FORM>
     </tr>
-    <%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
+    <%for(int km=0; km<relation.getKeyMaps().size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.getKeyMaps().get(km);%>
       <tr>
         <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateKeyMap&relNum=" + r + "&kmNum=" + km)%>'>
           <td></td>
           <td colspan='2'>
             Main:
             <SELECT name='fieldName'>
-              <OPTION selected><%=keyMap.fieldName%></OPTION>
+              <OPTION selected><%=keyMap.getFieldName()%></OPTION>
               <OPTION>&nbsp;</OPTION>
-              <%for(int fld=0; fld<entity.fields.size(); fld++){%>
-                <OPTION><%=((ModelField)entity.fields.get(fld)).name%></OPTION>
+              <%for(int fld=0; fld<entity.getFields().size(); fld++){%>
+                <OPTION><%=((ModelField)entity.getFields().get(fld)).name%></OPTION>
               <%}%>
             </SELECT>
             Related:
             <SELECT name='relFieldName'>
-              <OPTION selected><%=keyMap.relFieldName%></OPTION>
+              <OPTION selected><%=keyMap.getRelFieldName()%></OPTION>
               <OPTION>&nbsp;</OPTION>
-              <%for(int fld=0; fld<relEntity.fields.size(); fld++){%>
-                <OPTION><%=((ModelField)relEntity.fields.get(fld)).name%></OPTION>
+              <%for(int fld=0; fld<relEntity.getFields().size(); fld++){%>
+                <OPTION><%=((ModelField)relEntity.getFields().get(fld)).name%></OPTION>
               <%}%>
             </SELECT>
           </td>

@@ -5,7 +5,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   TreeSet entities = new TreeSet(ec);
   Iterator classNamesIterator = entities.iterator();
   while(classNamesIterator != null && classNamesIterator.hasNext()) { ModelEntity entity = reader.getModelEntity((String)classNamesIterator.next());%>
-DROP TABLE IF EXISTS <%=entity.tableName%>;<%}%> 
+DROP TABLE IF EXISTS <%=entity.getTableName()%>;<%}%> 
 <%
 } 
 else {

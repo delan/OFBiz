@@ -66,18 +66,18 @@
         <%int kIdx = 0;%>
         <%while (classNamesIterator != null && classNamesIterator.hasNext()) { ModelEntity entity = reader.getModelEntity((String)classNamesIterator.next());%>
             <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-              <TD><div class='tabletext'><%=entity.entityName%></div></TD>
+              <TD><div class='tabletext'><%=entity.getEntityName()%></div></TD>
               <%if (entity instanceof ModelViewEntity) {%>
                     <TD colspan='3' align=center><div class='tabletext'>View Entity</div></TD>
               <%} else {%>
-                  <%if (security.hasEntityPermission(entity.tableName, "_CREATE", session)){%>
-                    <TD><a href="<%=response.encodeURL(controlPath + "/ViewGeneric?entityName=" + entity.entityName)%>" class="buttontext">Create</a></TD>
+                  <%if (security.hasEntityPermission(entity.getTableName(), "_CREATE", session)){%>
+                    <TD><a href="<%=response.encodeURL(controlPath + "/ViewGeneric?entityName=" + entity.getEntityName())%>" class="buttontext">Create</a></TD>
                   <%} else {%>
                     <TD><div class='tabletext'>Perm</div></TD>
                   <%}%>
-                  <%if (security.hasEntityPermission(entity.tableName, "_VIEW", session)){%>
-                    <TD><a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entity.entityName)%>" class="buttontext">Find</a></TD>
-                    <TD><a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entity.entityName)%>&find=true&VIEW_SIZE=50&VIEW_INDEX=0" class="buttontext">Find All</a></TD>
+                  <%if (security.hasEntityPermission(entity.getTableName(), "_VIEW", session)){%>
+                    <TD><a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entity.getEntityName())%>" class="buttontext">Find</a></TD>
+                    <TD><a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entity.getEntityName())%>&find=true&VIEW_SIZE=50&VIEW_INDEX=0" class="buttontext">Find All</a></TD>
                   <%} else {%>
                     <TD><div class='tabletext'>Perm</div></TD>
                     <TD><div class='tabletext'>Perm</div></TD>
