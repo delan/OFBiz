@@ -587,7 +587,8 @@
     </request-map>
     <request-map uri="createContent">
         <security auth="true" https="true"/>
-        <event invoke="createContent" path="" type="service"/>
+        <event invoke="createContentAndPurpose"
+            path="org/ofbiz/content/content/ContentEvents.xml" type="simple"/>
         <response name="success" type="request" value="addLRUContent"/>
         <response name="error" type="view" value="AddContent"/>
     </request-map>
@@ -633,7 +634,8 @@
     </request-map>
     <request-map uri="AddContentAssoc">
         <security auth="true" https="true"/>
-        <event invoke="createContentAssoc" path="" type="service"/>
+        <event invoke="addContentAssoc" 
+            path="org/ofbiz/content/content/ContentEvents.xml" type="simple"/>
         <response name="success" type="request" value="addLRUContentAssoc"/>
         <response name="error" type="view" value="EditContentAssoc"/>
     </request-map>
@@ -645,6 +647,11 @@
     </request-map>
 
 	<!-- DataResource requests -->
+    <request-map uri="BrowseDataResource">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="BrowseDataResource"/>
+        <response name="error" type="view" value="BrowseDataResource"/>
+    </request-map>
     <request-map uri="EditDataResource">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="EditDataResource"/>
@@ -655,23 +662,82 @@
         <response name="success" type="view" value="AddDataResource"/>
         <response name="error" type="view" value="AddDataResource"/>
     </request-map>
+    <request-map uri="AddDataResourceText">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditDataResourceText"/>
+        <response name="error" type="view" value="AddDataResourceText"/>
+    </request-map>
+    <request-map uri="AddDataResourceUrl">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditDataResourceUrl"/>
+        <response name="error" type="view" value="AddDataResourceUrl"/>
+    </request-map>
+    <request-map uri="AddDataResourceUpload">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="AddDataResourceUpload"/>
+        <response name="error" type="view" value="AddDataResourceUpload"/>
+    </request-map>
+    <request-map uri="updateDataResourceText">
+        <security auth="true" https="true"/>
+        <event invoke="updateDataResource" path="" type="service"/>
+        <response name="success" type="request" value="addLRUDataResource"/>
+        <response name="error" type="view" value="EditDataResource"/>
+    </request-map>
     <request-map uri="UpdateDataResource">
         <security auth="true" https="true"/>
         <event invoke="updateDataResource" path="" type="service"/>
         <response name="success" type="request" value="addLRUDataResource"/>
         <response name="error" type="view" value="EditDataResource"/>
     </request-map>
-    <request-map uri="createDataResource">
+    <request-map uri="createDataResourceUpload">
         <security auth="true" https="true"/>
         <event invoke="createDataResource" path="" type="service"/>
+        <response name="success" type="request" value="EditDataResourceUpload"/>
+        <response name="error" type="view" value="AddDataResourceUpload"/>
+    </request-map>
+    <request-map uri="createDataResourceAndText">
+        <security auth="true" https="true"/>
+        <event invoke="createDataResourceAndText" path="" type="service"/>
         <response name="success" type="request" value="addLRUDataResource"/>
-        <response name="error" type="view" value="EditDataResource"/>
+        <response name="error" type="view" value="AddDataResourceText"/>
     </request-map>
     <request-map uri="addLRUDataResource">
         <security auth="true" https="true"/>
         <event invoke="org/ofbiz/content/lruaddDataResource.bsh" path="" type="bsf"/>
         <response name="success" type="view" value="EditDataResource"/>
         <response name="error" type="view" value="AddDataResource"/>
+    </request-map>
+    <request-map uri="EditDataResourceText">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditDataResourceText"/>
+        <response name="error" type="view" value="EditDataResourceText"/>
+    </request-map>
+    <request-map uri="EditDataResourceUrl">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditDataResourceUrl"/>
+        <response name="error" type="view" value="EditDataResourceUrl"/>
+    </request-map>
+    <request-map uri="EditDataResourceUpload">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditDataResourceUpload"/>
+        <response name="error" type="view" value="EditDataResourceUpload"/>
+    </request-map>
+    <request-map uri="uploadImage">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="uploadImage" />
+        <response name="success" type="request" value="EditDataResourceUpload"/>
+        <response name="error" type="view" value="EditDataResourceUpload"/>
+    </request-map>
+    <request-map uri="UploadImage">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="UploadImage"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+    <request-map uri="img">
+        <security auth="false" https="false"/>
+        <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="serveImage" />
+        <response name="success" type="none" />
+        <response name="error" type="view" value="main"/>
     </request-map>
 
     <!-- ================ ContentOperation Requests ================= -->
@@ -878,9 +944,17 @@
     <view-map name="EditContentOperation" page="/contentsetup/EditContentOperation.ftl" type="jpublish"/>
     <view-map name="EditContentPurposeOperation" page="/contentsetup/EditContentPurposeOperation.ftl" type="jpublish"/>
     
+    <view-map name="UploadImage" page="/data/UploadImage.ftl" type="jpublish"/>
     <view-map name="FindDataResource" page="/data/FindDataResource.ftl" type="jpublish"/>
     <view-map name="EditDataResource" page="/data/EditDataResource.ftl" type="jpublish"/>
+    <view-map name="BrowseDataResource" page="/data/BrowseDataResource.ftl" type="jpublish"/>
     <view-map name="AddDataResource" page="/data/AddDataResource.ftl" type="jpublish"/>
+    <view-map name="AddDataResourceText" page="/data/AddDataResourceText.ftl" type="jpublish"/>
+    <view-map name="AddDataResourceUrl" page="/data/AddDataResourceUrl.ftl" type="jpublish"/>
+    <view-map name="AddDataResourceUpload" page="/data/AddDataResourceUpload.ftl" type="jpublish"/>
+    <view-map name="EditDataResourceText" page="/data/EditDataResourceText.ftl" type="jpublish"/>
+    <view-map name="EditDataResourceUrl" page="/data/EditDataResourceUrl.ftl" type="jpublish"/>
+    <view-map name="EditDataResourceUpload" page="/data/EditDataResourceUpload.ftl" type="jpublish"/>
     <view-map name="EditElectronicText" page="/data/EditElectronicText.ftl" type="jpublish"/>
     <view-map name="EditDataResourceAttribute" page="/data/EditDataResourceAttribute.ftl" type="jpublish"/>
     <view-map name="EditDataResourceRole" page="/data/EditDataResourceRole.ftl" type="jpublish"/>
