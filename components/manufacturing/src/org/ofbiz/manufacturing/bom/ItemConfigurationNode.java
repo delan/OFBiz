@@ -34,6 +34,7 @@ public class ItemConfigurationNode {
     private ArrayList childrenNodes; // part's children nodes (ItemConfigurationNode)
     private int depth;
     private float quantity;
+    private String bomTypeId;
    
     public ItemConfigurationNode(GenericValue part) {
         this.part = part;
@@ -41,6 +42,7 @@ public class ItemConfigurationNode {
         childrenNodes = new ArrayList();
         parentNode = null;
         productForRules = null;
+        bomTypeId = null;
         // Now we initialize the fields used in breakdowns
         depth = 0;
         quantity = 0;
@@ -54,6 +56,7 @@ public class ItemConfigurationNode {
         if (part == null) {
             throw new GenericEntityException("Part is null");
         }
+        bomTypeId = partBomTypeId;
         GenericDelegator delegator = part.getDelegator();
         List rows = delegator.findByAnd("ProductAssoc", 
                                             UtilMisc.toMap("productId", part.get("productId"), 
@@ -189,6 +192,7 @@ public class ItemConfigurationNode {
         if (part == null) {
             throw new GenericEntityException("Part is null");
         }
+        bomTypeId = partBomTypeId;
         GenericDelegator delegator = part.getDelegator();
         List rows = delegator.findByAnd("ProductAssoc", 
                                             UtilMisc.toMap("productIdTo", part.get("productId"), 
@@ -399,6 +403,15 @@ public class ItemConfigurationNode {
     public void setProductForRules(String productForRules) {
         this.productForRules = productForRules;
     }
+    
+    /** Getter for property bomTypeId.
+     * @return Value of property bomTypeId.
+     *
+     */
+    public java.lang.String getBomTypeId() {
+        return bomTypeId;
+    }
+    
     
 }
 
