@@ -97,7 +97,7 @@ public class ShoppingCartEvents {
             return "error";
         }
         
-        if ("VIRTUAL_PRODUCT".equals(product.getString("productTypeId"))) {
+        if ("Y".equals(product.getString("isVirtual"))) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Cannot add a Virtual Product to the cart [productId: " + product.getString("productId") + "]");
             return "error";
         }
@@ -138,7 +138,7 @@ public class ShoppingCartEvents {
                     GenericValue orderItem = (GenericValue) itemIter.next();
                     try {
                         GenericValue relProd = orderItem.getRelatedOne("Product");
-                        if ("VIRTUAL_PRODUCT".equals(relProd.getString("productTypeId"))) {
+                        if ("Y".equals(relProd.getString("isVirtual"))) {
                             errMsg += "<li>Did not add Virtual Product to the cart [productId: " + relProd.getString("productId") + "]";
                         } else {
                             cart.addOrIncreaseItem(relProd, orderItem.getDouble("quantity").doubleValue(), null);
@@ -173,7 +173,7 @@ public class ShoppingCartEvents {
                     if (orderItem != null) {
                         try {
                             GenericValue relProd = orderItem.getRelatedOne("Product");
-                            if ("VIRTUAL_PRODUCT".equals(relProd.getString("productTypeId"))) {
+                            if ("Y".equals(relProd.getString("isVirtual"))) {
                                 errMsg += "<li>Did not add Virtual Product to the cart [productId: " + relProd.getString("productId") + "]";
                             } else {
                                 cart.addOrIncreaseItem(relProd, orderItem.getDouble("quantity").doubleValue(), null);
@@ -245,7 +245,7 @@ public class ShoppingCartEvents {
                     if (product == null) {
                         errMsg += "<li>Did not add product with id \"" + productCategoryMember.getString("productId") + "\" because a product with that ID could not be found.";
                     } else {
-                        if ("VIRTUAL_PRODUCT".equals(product.getString("productTypeId"))) {
+                        if ("Y".equals(product.getString("isVirtual"))) {
                             errMsg += "<li>Did not add Virtual Product to the cart [productId: " + product.getString("productId") + "]";
                         } else {
                             cart.addOrIncreaseItem(product, quantity, null);
@@ -308,7 +308,7 @@ public class ShoppingCartEvents {
                 if (product == null) {
                     errMsg += "<li>Did not add product with id \"" + productCategoryMember.getString("productId") + "\" because a product with that ID could not be found.";
                 } else {
-                    if ("VIRTUAL_PRODUCT".equals(product.getString("productTypeId"))) {
+                    if ("Y".equals(product.getString("isVirtual"))) {
                         errMsg += "<li>Did not add Virtual Product to the cart [productId: " + product.getString("productId") + "]";
                     } else {
                         cart.addOrIncreaseItem(product, quantity.doubleValue(), null);

@@ -23,7 +23,7 @@
             </nobr>
           </div>
       </td>
-      <%if (!"VIRTUAL_PRODUCT".equals(localProduct.getString("productTypeId"))) {%>
+      <%if (!"Y".equals(localProduct.getString("isVirtual"))) {%>
           <td valign=top align=right>
             <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="the<%=UtilFormatOut.formatQuantity(listIndex)%>form" style='margin: 0;'>
               <input type='hidden' name='add_product_id' value='<%EntityField.run("product", "productId", pageContext);%>'>

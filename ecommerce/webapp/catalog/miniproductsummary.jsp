@@ -11,7 +11,7 @@
     </b>
   </div>
   <%GenericValue miniProd = (GenericValue) pageContext.getAttribute("miniProduct");%>
-  <%if (!"VIRTUAL_PRODUCT".equals(miniProd.getString("productTypeId"))) {%>
+  <%if (!"Y".equals(miniProd.getString("isVirtual"))) {%>
   <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="<%=miniProdFormName%>" style='margin: 0;'>
     <input type='hidden' name="add_product_id" value='<%EntityField.run("miniProduct", "productId", pageContext);%>'>
     <input type='hidden' name="quantity" value="<%=miniProdQuantity%>">

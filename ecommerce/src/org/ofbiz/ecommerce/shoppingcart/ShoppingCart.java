@@ -80,8 +80,8 @@ public class ShoppingCart implements java.io.Serializable {
      *  @return the new/increased item index
      */
     public int addOrIncreaseItem(org.ofbiz.core.entity.GenericValue product, double quantity, HashMap attributes) {
-        if ("VIRTUAL_PRODUCT".equals(product.getString("productTypeId"))) {
-            Debug.logWarning("Tried to add a VIRTUAL_PRODUCT to the cart with productId " + product.getString("productId"));
+        if ("Y".equals(product.getString("isVirtual"))) {
+            Debug.logWarning("Tried to add a Virtual Product to the cart with productId " + product.getString("productId"));
             return -1;
         }
         
@@ -107,8 +107,8 @@ public class ShoppingCart implements java.io.Serializable {
     
     /** Add an item to the shopping cart. */
     public int addItem(org.ofbiz.core.entity.GenericValue product, double quantity, HashMap attributes) {
-        if ("VIRTUAL_PRODUCT".equals(product.getString("productTypeId"))) {
-            Debug.logWarning("Tried to add a VIRTUAL_PRODUCT to the cart with productId " + product.getString("productId"));
+        if ("Y".equals(product.getString("isVirtual"))) {
+            Debug.logWarning("Tried to add a Virtual Product to the cart with productId " + product.getString("productId"));
             return -1;
         }
         return addItem(new ShoppingCartItem(product,quantity,attributes));

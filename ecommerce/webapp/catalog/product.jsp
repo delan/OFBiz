@@ -33,7 +33,7 @@
     <%-- ====================================================== --%>
     <%-- Special Variant Code                                   --%>
     <%-- ====================================================== --%>
-    <% if (productTypeId != null && productTypeId.equals("VIRTUAL_PRODUCT")) {%>
+    <% if ("Y".equals(product.getString("isVirtual"))) {%>
         <ofbiz:service name="getProductFeatureSet">
             <ofbiz:param name='productId' value='<%=productId%>'/>
         </ofbiz:service>
