@@ -60,6 +60,7 @@
 <a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
 <%if(productId != null && productId.length() > 0){%>
   <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[Product Page]</a>
+  <a href='<ofbiz:url>/EditInventoryItem?productId=<%=productId%></ofbiz:url>' class="buttontext">[Create New Inventory Item for this Product]</a>
 <%}%>
 <br>
 
@@ -141,15 +142,13 @@
       [Edit]</a>
     </td>
     <td>
-      <a href='<ofbiz:url>/DeleteProductInventoryItem?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/DeleteProductInventoryItem?productId=<%=productId%>&inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
 </ofbiz:iterator>
 </table>
 <br>
-<a href='<ofbiz:url>/EditInventoryItem?productId=<%=productId%></ofbiz:url>' class="buttontext">
-[Create New Inventory Item for this Product]</a>
 <%}%>
 <br>
 
