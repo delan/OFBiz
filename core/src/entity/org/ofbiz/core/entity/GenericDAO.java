@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity;
 
+
 import java.lang.reflect.*;
 import java.sql.*;
 import java.util.*;
@@ -31,6 +32,7 @@ import org.w3c.dom.Element;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.entity.model.*;
+
 
 /**
  * Generic Entity Data Access Object - Handles persisntence for any defined entity.
@@ -51,6 +53,7 @@ public class GenericDAO {
     
     public static GenericDAO getGenericDAO(String helperName) {
         GenericDAO newGenericDAO = (GenericDAO) genericDAOs.get(helperName);
+
         if (newGenericDAO == null)//don't want to block here
         {
             synchronized (GenericDAO.class) {
@@ -71,17 +74,20 @@ public class GenericDAO {
     
     public Connection getConnection() throws SQLException, GenericEntityException {
         Connection connection = ConnectionFactory.getConnection(helperName);
+
         return connection;
     }
     
     public void insert(GenericEntity entity) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
+
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
         
         boolean manualTX = true;
         Connection connection = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -122,14 +128,15 @@ public class GenericDAO {
                 Debug.logWarning(sqle2, module);
             }
             throw new GenericDataSourceException("Exception occured in insert", e);
+        } finally {
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage(), module);
+            }
         }
-        finally { try {
-            if (connection != null)
-                connection.close();
-        } catch (SQLException sqle) {
-            Debug.logWarning(sqle.getMessage(), module);
-        }
-        } }
+    }
     
     private void singleInsert(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave, Connection connection) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
@@ -142,13 +149,15 @@ public class GenericDAO {
         
         PreparedStatement ps = null;
         String sql = "INSERT INTO " + modelEntity.getTableName() + " (" + modelEntity.colNameString(fieldsToSave) + ") VALUES (" +
-                modelEntity.fieldsStringList(fieldsToSave, "?", ", ") + ")";
+            modelEntity.fieldsStringList(fieldsToSave, "?", ", ") + ")";
+
         Debug.logVerbose("[GenericDAO.singleInsert] sql=" + sql + "\nEntity=" + entity, module);
         try {
             ps = connection.prepareStatement(sql);
             
             for (int i = 0; i < fieldsToSave.size(); i++) {
                 ModelField curField = (ModelField) fieldsToSave.elementAt(i);
+
                 setValue(ps, i + 1, curField, entity);
             }
             
@@ -170,6 +179,7 @@ public class GenericDAO {
     
     public void updateAll(GenericEntity entity) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
+
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
@@ -179,14 +189,17 @@ public class GenericDAO {
     
     public void update(GenericEntity entity) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
+
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
         //we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity
         Vector partialFields = new Vector();
         Collection keys = entity.getAllKeys();
+
         for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
             ModelField curField = modelEntity.getNopk(fi);
+
             if (keys.contains(curField.getName()))
                 partialFields.add(curField);
         }
@@ -197,6 +210,7 @@ public class GenericDAO {
     private void customUpdate(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave) throws GenericEntityException {
         boolean manualTX = true;
         Connection connection = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -265,10 +279,12 @@ public class GenericDAO {
         
         if (modelEntity.lock()) {
             GenericEntity entityCopy = new GenericEntity(entity);
+
             select(entityCopy, connection);
             if ((entity.get(ModelEntity.STAMP_FIELD) != null) &&
-            (!entity.get(ModelEntity.STAMP_FIELD).equals(entityCopy.get(ModelEntity.STAMP_FIELD)))) {
+                (!entity.get(ModelEntity.STAMP_FIELD).equals(entityCopy.get(ModelEntity.STAMP_FIELD)))) {
                 String lockedTime = entityCopy.getTimestamp(ModelEntity.STAMP_FIELD).toString();
+
                 throw new EntityLockedException("Version locked (" + lockedTime + ")");
             }
         }
@@ -278,20 +294,25 @@ public class GenericDAO {
             entity.set(ModelEntity.STAMP_FIELD, UtilDateTime.nowTimestamp());
         
         String sql = "UPDATE " + modelEntity.getTableName() + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " +
-        makeWhereStringAnd(modelEntity.getPksCopy(), entity);
+            makeWhereStringAnd(modelEntity.getPksCopy(), entity);
+
         Debug.logVerbose("[GenericDAO.singleUpdate] sql=" + sql + "\nEntity=" + entity, module);
 
         PreparedStatement ps = null;
+
         try {
             ps = connection.prepareStatement(sql);
             
             int i;
+
             for (i = 0; i < fieldsToSave.size(); i++) {
                 ModelField curField = (ModelField) fieldsToSave.elementAt(i);
+
                 setValue(ps, i + 1, curField, entity);
             }
             for (int j = 0; j < modelEntity.getPksSize(); j++) {
                 ModelField curField = modelEntity.getPk(j);
+
                 //for where clause variables only setValue if not null...
                 if (entity.get(curField.getName()) != null) {
                     setValue(ps, i + j + 1, curField, entity);
@@ -317,6 +338,7 @@ public class GenericDAO {
     /** Store the passed entity - insert if does not exist, otherwise update */
     private void singleStore(GenericEntity entity, Connection connection) throws GenericEntityException {
         GenericPK tempPK = entity.getPrimaryKey();
+
         try {
             //must use same connection for select or it won't be in the same transaction...
             select(tempPK, connection);
@@ -331,6 +353,7 @@ public class GenericDAO {
     }
     
     /* ====================================================================== */
+    
     /* ====================================================================== */
     
     public void storeAll(Collection entities) throws GenericEntityException {
@@ -340,6 +363,7 @@ public class GenericDAO {
         
         boolean manualTX = true;
         Connection connection = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -357,8 +381,10 @@ public class GenericDAO {
         
         try {
             Iterator entityIter = entities.iterator();
+
             while (entityIter != null && entityIter.hasNext()) {
                 GenericEntity curEntity = (GenericEntity) entityIter.next();
+
                 singleStore(curEntity, connection);
             }
             if (manualTX) {
@@ -398,10 +424,12 @@ public class GenericDAO {
     }
     
     /* ====================================================================== */
+    
     /* ====================================================================== */
     
     public void select(GenericEntity entity) throws GenericEntityException {
         Connection connection = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -422,6 +450,7 @@ public class GenericDAO {
     
     public void select(GenericEntity entity, Connection connection) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
+
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
@@ -433,6 +462,7 @@ public class GenericDAO {
         ResultSet rs = null;
         
         String sql = "SELECT ";
+
         if (modelEntity.getNopksSize() > 0)
             sql += modelEntity.colNameString(modelEntity.getNopksCopy(), ", ", "");
         else
@@ -447,6 +477,7 @@ public class GenericDAO {
             
             for (int i = 0; i < modelEntity.getPksSize(); i++) {
                 ModelField curField = modelEntity.getPk(i);
+
                 //for where clause variables only setValue if not null...
                 if (entity.get(curField.getName()) != null) {
                     //Debug.logInfo(" setting field " + curField.getName() + " to " + (i+1) + " entity: " + entity.toString());
@@ -459,6 +490,7 @@ public class GenericDAO {
             if (rs.next()) {
                 for (int j = 0; j < modelEntity.getNopksSize(); j++) {
                     ModelField curField = modelEntity.getNopk(j);
+
                     getValue(rs, j + 1, curField, entity);
                 }
                 
@@ -489,6 +521,7 @@ public class GenericDAO {
     
     public void partialSelect(GenericEntity entity, Set keys) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
+
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
@@ -498,14 +531,15 @@ public class GenericDAO {
         }
         
         /*
-            if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
-              Debug.logWarning("[GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.");
-              return false;
-            }
+         if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
+         Debug.logWarning("[GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.");
+         return false;
+         }
          */
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -514,13 +548,16 @@ public class GenericDAO {
         
         //we don't want to select ALL fields, just the nonpk fields that are in the passed GenericEntity
         Vector partialFields = new Vector();
+
         for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
             ModelField curField = modelEntity.getNopk(fi);
+
             if (keys.contains(curField.getName()))
                 partialFields.add(curField);
         }
         
         String sql = "SELECT ";
+
         if (partialFields.size() > 0)
             sql += modelEntity.colNameString(partialFields, ", ", "");
         else
@@ -533,6 +570,7 @@ public class GenericDAO {
             
             for (int i = 0; i < modelEntity.getPksSize(); i++) {
                 ModelField curField = modelEntity.getPk(i);
+
                 //for where clause variables only setValue if not null...
                 if (entity.get(curField.getName()) != null) {
                     setValue(ps, i + 1, curField, entity);
@@ -544,6 +582,7 @@ public class GenericDAO {
             if (rs.next()) {
                 for (int j = 0; j < partialFields.size(); j++) {
                     ModelField curField = (ModelField) partialFields.elementAt(j);
+
                     getValue(rs, j + 1, curField, entity);
                 }
                 
@@ -587,6 +626,7 @@ public class GenericDAO {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -596,10 +636,13 @@ public class GenericDAO {
         //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
         Vector whereFields = new Vector();
         Vector selectFields = new Vector();
+
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
+
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
+
                 if (keys.contains(curField.getName()))
                     whereFields.add(curField);
                 else
@@ -610,12 +653,14 @@ public class GenericDAO {
         }
         
         GenericValue dummyValue;
+
         if (fields != null && fields.size() > 0)
             dummyValue = new GenericValue(modelEntity, fields);
         else
             dummyValue = new GenericValue(modelEntity);
         
         String sql = "SELECT ";
+
         if (selectFields.size() > 0)
             sql += modelEntity.colNameString(selectFields, ", ", "");
         else
@@ -632,6 +677,7 @@ public class GenericDAO {
             if (fields != null && fields.size() > 0) {
                 for (int i = 0; i < whereFields.size(); i++) {
                     ModelField curField = (ModelField) whereFields.elementAt(i);
+
                     //for where clause variables only setValue if not null...
                     if (dummyValue.get(curField.getName()) != null) {
                         setValue(ps, i + 1, curField, dummyValue);
@@ -646,6 +692,7 @@ public class GenericDAO {
                 
                 for (int j = 0; j < selectFields.size(); j++) {
                     ModelField curField = (ModelField) selectFields.elementAt(j);
+
                     getValue(rs, j + 1, curField, value);
                 }
                 
@@ -688,6 +735,7 @@ public class GenericDAO {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -697,10 +745,13 @@ public class GenericDAO {
         //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
         Vector whereFields = new Vector();
         Vector selectFields = new Vector();
+
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
+
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
+
                 if (keys.contains(curField.getName()))
                     whereFields.add(curField);
                 else
@@ -711,12 +762,14 @@ public class GenericDAO {
         }
         
         GenericValue dummyValue;
+
         if (fields != null && fields.size() > 0)
             dummyValue = new GenericValue(modelEntity, fields);
         else
             dummyValue = new GenericValue(modelEntity);
         
         String sql = "SELECT ";
+
         if (selectFields.size() > 0)
             sql += modelEntity.colNameString(selectFields, ", ", "");
         else
@@ -733,6 +786,7 @@ public class GenericDAO {
             if (fields != null && fields.size() > 0) {
                 for (int i = 0; i < whereFields.size(); i++) {
                     ModelField curField = (ModelField) whereFields.elementAt(i);
+
                     //for where clause variables only setValue if not null...
                     if (dummyValue.get(curField.getName()) != null) {
                         setValue(ps, i + 1, curField, dummyValue);
@@ -747,6 +801,7 @@ public class GenericDAO {
                 
                 for (int j = 0; j < selectFields.size(); j++) {
                     ModelField curField = (ModelField) selectFields.elementAt(j);
+
                     getValue(rs, j + 1, curField, value);
                 }
                 
@@ -791,6 +846,7 @@ public class GenericDAO {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -800,13 +856,8 @@ public class GenericDAO {
         //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
         Vector selectFields = modelEntity.getFieldsCopy();
         
-        //Vector modelEntityFields = modelEntity.getFieldsCopy();
-        if (expressions != null && expressions.size() > 0) {
-            for (int fi = 0; fi < expressions.size(); fi++) {
-            }
-        }
-        
         StringBuffer sqlBuffer = new StringBuffer("SELECT ");
+
         if (selectFields.size() > 0) {
             sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", ""));
         } else {
@@ -816,10 +867,12 @@ public class GenericDAO {
         sqlBuffer.append(makeFromClause(modelEntity));
         
         StringBuffer whereString = new StringBuffer("");
+
         if (expressions != null && expressions.size() > 0) {
             for (int i = 0; i < expressions.size(); i++) {
                 EntityExpr expr = (EntityExpr) expressions.get(i);
                 ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
+
                 if (field != null) {
                     if (expr.getRhs() == null) {
                         whereString.append(field.getColName());
@@ -843,6 +896,7 @@ public class GenericDAO {
         }
         
         String viewClause = makeViewWhereClause(modelEntity);
+
         if (viewClause.length() > 0) {
             whereString.append(" AND ");
             whereString.append(viewClause);
@@ -855,16 +909,20 @@ public class GenericDAO {
         
         sqlBuffer.append(makeOrderByClause(modelEntity, orderBy));
         String sql = sqlBuffer.toString();
+
         Debug.logVerbose("[GenericDAO.selectByAnd] sql=" + sql, module);
         
         try {
             ps = connection.prepareStatement(sql);
             GenericValue dummyValue = new GenericValue(modelEntity);
+
             if (expressions != null && expressions.size() > 0) {
                 for (int i = 0; i < expressions.size(); i++) {
                     EntityExpr expr = (EntityExpr) expressions.get(i);
+
                     if (expr.getRhs() != null) {
                         ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
+
                         //set the field in the dummyValue so that the setValue method can get it out
                         dummyValue.set(field.getName(), expr.getRhs());
                         setValue(ps, i + 1, field, dummyValue);
@@ -879,6 +937,7 @@ public class GenericDAO {
                 
                 for (int j = 0; j < selectFields.size(); j++) {
                     ModelField curField = (ModelField) selectFields.elementAt(j);
+
                     getValue(rs, j + 1, curField, value);
                 }
                 
@@ -923,6 +982,7 @@ public class GenericDAO {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -932,13 +992,8 @@ public class GenericDAO {
         //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
         Vector selectFields = modelEntity.getFieldsCopy();
         
-        //Vector modelEntityFields = modelEntity.getFieldsCopy();
-        if (expressions != null && expressions.size() > 0) {
-            for (int fi = 0; fi < expressions.size(); fi++) {
-            }
-        }
-        
         StringBuffer sqlBuffer = new StringBuffer("SELECT ");
+
         if (selectFields.size() > 0)
             sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", ""));
         else
@@ -947,11 +1002,13 @@ public class GenericDAO {
         sqlBuffer.append(makeFromClause(modelEntity));
         
         StringBuffer whereString = new StringBuffer("");
+
         if (expressions != null && expressions.size() > 0) {
             whereString.append("(");
             for (int i = 0; i < expressions.size(); i++) {
                 EntityExpr expr = (EntityExpr) expressions.get(i);
                 ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
+
                 if (field != null) {
                     if (expr.getRhs() == null) {
                         whereString.append(field.getColName());
@@ -976,6 +1033,7 @@ public class GenericDAO {
         }
         
         String viewClause = makeViewWhereClause(modelEntity);
+
         if (viewClause.length() > 0) {
             whereString.append(" AND ");
             whereString.append(viewClause);
@@ -988,16 +1046,20 @@ public class GenericDAO {
         
         sqlBuffer.append(makeOrderByClause(modelEntity, orderBy));
         String sql = sqlBuffer.toString();
+
         Debug.logVerbose("[GenericDAO.selectByOr] sql=" + sql, module);
         
         try {
             ps = connection.prepareStatement(sql);
             GenericValue dummyValue = new GenericValue(modelEntity);
+
             if (expressions != null && expressions.size() > 0) {
                 for (int i = 0; i < expressions.size(); i++) {
                     EntityExpr expr = (EntityExpr) expressions.get(i);
+
                     if (expr.getRhs() != null) {
                         ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
+
                         //set the field in the dummyValue so that the setValue method can get it out
                         dummyValue.set(field.getName(), expr.getRhs());
                         setValue(ps, i + 1, field, dummyValue);
@@ -1012,6 +1074,7 @@ public class GenericDAO {
                 
                 for (int j = 0; j < selectFields.size(); j++) {
                     ModelField curField = (ModelField) selectFields.elementAt(j);
+
                     getValue(rs, j + 1, curField, value);
                 }
                 
@@ -1057,6 +1120,7 @@ public class GenericDAO {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -1066,10 +1130,13 @@ public class GenericDAO {
         //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
         Vector whereFields = new Vector();
         Vector selectFields = new Vector();
+
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
+
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
+
                 if (keys.contains(curField.getName())) {
                     whereFields.add(curField);
                     selectFields.add(curField);
@@ -1081,6 +1148,7 @@ public class GenericDAO {
         }
         
         String sql = "SELECT ";
+
         if (selectFields.size() > 0)
             sql += modelEntity.colNameString(selectFields, ", ", "");
         else
@@ -1096,10 +1164,12 @@ public class GenericDAO {
             ps = connection.prepareStatement(sql);
             
             GenericValue dummyValue;
+
             if (fields != null && fields.size() > 0) {
                 dummyValue = new GenericValue(modelEntity, fields);
                 for (int i = 0; i < whereFields.size(); i++) {
                     ModelField curField = (ModelField) whereFields.elementAt(i);
+
                     setValue(ps, i + 1, curField, dummyValue);
                 }
             } else
@@ -1109,8 +1179,10 @@ public class GenericDAO {
             
             while (rs.next()) {
                 GenericValue value = new GenericValue(dummyValue);
+
                 for (int j = 0; j < selectFields.size(); j++) {
                     ModelField curField = (ModelField) selectFields.elementAt(j);
+
                     getValue(rs, j + 1, curField, value);
                 }
                 value.modified = false;
@@ -1202,9 +1274,10 @@ public class GenericDAO {
             if (i > 0)
                 where.append(interFieldOperation);
             where.append(firstModelEntity.getTableName() + "." + firstModelField.getColName() + " " + intraFieldOperation + " " + secondModelEntity.getTableName() + "." +
-            secondModelField.getColName());
+                secondModelField.getColName());
         }
         int ix = 0;
+
         for (; ix < whereTables.size() - 1; ix++) {
             from.append(whereTables.get(ix) + ", ");
         }
@@ -1212,10 +1285,13 @@ public class GenericDAO {
         
         Vector whereFields = new Vector();
         Vector selectFields = new Vector();
+
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
+
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
+
                 if (keys.contains(curField.getName())) {
                     whereFields.add(curField);
                     selectFields.add(curField);
@@ -1225,6 +1301,7 @@ public class GenericDAO {
         }
         
         String tableNamePrefix = modelEntity.getTableName() + ".";
+
         if (fields != null && fields.size() > 0) {
             test = where.toString();
             if (test.trim().length() > 0)
@@ -1236,19 +1313,21 @@ public class GenericDAO {
         select.append(tableNamePrefix);
         select.append(modelEntity.colNameString(selectFields, ", " + tableNamePrefix, ""));
         
-        
         select.append(makeOrderByClause(modelEntity, orderBy));
         
         String sql = "";
+
         try {
             sql = select.toString() + " " + from.toString() + " " + where.toString() + (order.toString().trim().length() > 0 ? order.toString() : "");
             ps = connection.prepareStatement(sql);
             
             GenericValue dummyValue;
+
             if (fields != null && fields.size() > 0) {
                 dummyValue = new GenericValue(modelEntity, fields);
                 for (int i = 0; i < whereFields.size(); i++) {
                     ModelField curField = (ModelField) whereFields.elementAt(i);
+
                     setValue(ps, i + 1, curField, dummyValue);
                 }
             } else {
@@ -1261,6 +1340,7 @@ public class GenericDAO {
                 
                 for (int j = 0; j < selectFields.size(); j++) {
                     ModelField curField = (ModelField) selectFields.elementAt(j);
+
                     getValue(rs, j + 1, curField, value);
                 }
                 
@@ -1295,10 +1375,12 @@ public class GenericDAO {
     }
     
     /* ====================================================================== */
+    
     /* ====================================================================== */
     
     public void delete(GenericEntity entity) throws GenericEntityException {
         Connection connection = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -1306,6 +1388,7 @@ public class GenericDAO {
         }
         
         boolean manualTX = true;
+
         try {
             connection.setAutoCommit(false);
         } catch (SQLException sqle) {
@@ -1349,6 +1432,7 @@ public class GenericDAO {
     
     public void delete(GenericEntity entity, Connection connection) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
+
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
@@ -1359,11 +1443,13 @@ public class GenericDAO {
         
         PreparedStatement ps = null;
         String sql = "DELETE FROM " + modelEntity.getTableName() + " WHERE " + makeWhereStringAnd(modelEntity.getPksCopy(), entity);
+
         try {
             ps = connection.prepareStatement(sql);
             
             for (int i = 0; i < modelEntity.getPksSize(); i++) {
                 ModelField curField = modelEntity.getPk(i);
+
                 //for where clause variables only setValue if not null...
                 if (entity.get(curField.getName()) != null) {
                     setValue(ps, i + 1, curField, entity);
@@ -1388,6 +1474,7 @@ public class GenericDAO {
     
     public void deleteByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException {
         Connection connection = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -1395,6 +1482,7 @@ public class GenericDAO {
         }
         
         boolean manualTX = true;
+
         try {
             connection.setAutoCommit(false);
         } catch (SQLException sqle) {
@@ -1447,10 +1535,13 @@ public class GenericDAO {
         
         //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
         Vector whereFields = new Vector();
+
         if (fields != null || fields.size() > 0) {
             Set keys = fields.keySet();
+
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
+
                 if (keys.contains(curField.getName()))
                     whereFields.add(curField);
             }
@@ -1458,6 +1549,7 @@ public class GenericDAO {
         
         GenericValue dummyValue = new GenericValue(modelEntity, fields);
         String sql = "DELETE FROM " + modelEntity.getTableName();
+
         if (fields != null || fields.size() > 0)
             sql += " WHERE " + makeWhereStringAnd(whereFields, dummyValue);
         
@@ -1467,6 +1559,7 @@ public class GenericDAO {
             if (fields != null || fields.size() > 0) {
                 for (int i = 0; i < whereFields.size(); i++) {
                     ModelField curField = (ModelField) whereFields.elementAt(i);
+
                     //for where clause variables only setValue if not null...
                     if (dummyValue.get(curField.getName()) != null) {
                         setValue(ps, i + 1, curField, dummyValue);
@@ -1495,6 +1588,7 @@ public class GenericDAO {
         }
         
         Connection connection = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -1502,6 +1596,7 @@ public class GenericDAO {
         }
         
         boolean manualTX = true;
+
         try {
             connection.setAutoCommit(false);
         } catch (SQLException sqle) {
@@ -1513,6 +1608,7 @@ public class GenericDAO {
         
         try {
             Iterator iter = dummyPKs.iterator();
+
             while (iter.hasNext()) {
                 GenericEntity entity = (GenericEntity) iter.next();
                 
@@ -1554,19 +1650,23 @@ public class GenericDAO {
         }
     }
     
-    
     /* ====================================================================== */
+    
     /* ====================================================================== */
     
     protected String makeFromClause(ModelEntity modelEntity) {
         StringBuffer sql = new StringBuffer("");
+
         if (modelEntity instanceof ModelViewEntity) {
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
+
             sql.append(" FROM ");
             Iterator meIter = modelViewEntity.getMemberEntityNames().entrySet().iterator();
+
             while (meIter.hasNext()) {
                 Map.Entry entry = (Map.Entry) meIter.next();
                 ModelEntity fromEntity = modelViewEntity.getMemberModelEntity((String) entry.getKey());
+
                 sql.append(fromEntity.getTableName());
                 sql.append(" ");
                 sql.append((String) entry.getKey());
@@ -1583,13 +1683,16 @@ public class GenericDAO {
     /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
     protected String makeWhereStringAnd(Vector modelFields, GenericEntity entity) {
         StringBuffer returnString = new StringBuffer("");
+
         if (modelFields.size() < 1) {
             return "";
         }
         
         int i = 0;
+
         for (; i < modelFields.size() - 1; i++) {
             ModelField modelField = (ModelField) modelFields.elementAt(i);
+
             returnString.append(modelField.getColName());
             if (entity.get(modelField.getName()) != null)
                 returnString.append("=? AND ");
@@ -1597,6 +1700,7 @@ public class GenericDAO {
                 returnString.append(" IS NULL AND ");
         }
         ModelField modelField2 = (ModelField) modelFields.elementAt(i);
+
         returnString.append(modelField2.getColName());
         if (entity.get(modelField2.getName()) != null)
             returnString.append("=?");
@@ -1607,11 +1711,13 @@ public class GenericDAO {
     
     protected String makeWhereClauseAnd(ModelEntity modelEntity, Vector modelFields, GenericEntity entity) {
         StringBuffer whereString = new StringBuffer("");
+
         if (modelFields != null && modelFields.size() > 0) {
             whereString.append(makeWhereStringAnd(modelFields, entity));
         }
         
         String viewClause = makeViewWhereClause(modelEntity);
+
         if (viewClause.length() > 0) {
             if (whereString.length() > 0)
                 whereString.append(" AND ");
@@ -1626,13 +1732,16 @@ public class GenericDAO {
     
     protected String makeWhereStringOr(Vector modelFields, GenericEntity entity) {
         StringBuffer returnString = new StringBuffer("");
+
         if (modelFields.size() < 1) {
             return "";
         }
         
         int i = 0;
+
         for (; i < modelFields.size() - 1; i++) {
             ModelField modelField = (ModelField) modelFields.elementAt(i);
+
             returnString.append(modelField.getColName());
             if (entity.get(modelField.getName()) != null)
                 returnString.append("=? OR ");
@@ -1640,6 +1749,7 @@ public class GenericDAO {
                 returnString.append(" IS NULL OR ");
         }
         ModelField modelField2 = (ModelField) modelFields.elementAt(i);
+
         returnString.append(modelField2.getColName());
         if (entity.get(modelField2.getName()) != null)
             returnString.append("=?");
@@ -1650,11 +1760,13 @@ public class GenericDAO {
     
     protected String makeWhereClauseOr(ModelEntity modelEntity, Vector modelFields, GenericEntity entity) {
         StringBuffer whereString = new StringBuffer("");
+
         if (modelFields != null && modelFields.size() > 0) {
             whereString.append(makeWhereStringOr(modelFields, entity));
         }
         
         String viewClause = makeViewWhereClause(modelEntity);
+
         if (viewClause.length() > 0) {
             if (whereString.length() > 0)
                 whereString.append(" AND ");
@@ -1669,6 +1781,7 @@ public class GenericDAO {
     
     protected String makeViewWhereClause(ModelEntity modelEntity) {
         StringBuffer whereString = new StringBuffer("");
+
         if (modelEntity instanceof ModelViewEntity) {
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
             
@@ -1700,6 +1813,7 @@ public class GenericDAO {
     
     protected String makeOrderByClause(ModelEntity modelEntity, List orderBy) {
         StringBuffer sql = new StringBuffer("");
+
         if (orderBy != null && orderBy.size() > 0) {
             Debug.logVerbose("Order by list contains: " + orderBy.size() + " entries.");
             List orderByStrings = new LinkedList();
@@ -1710,6 +1824,7 @@ public class GenericDAO {
                 
                 // check for ASC/DESC
                 int spaceIdx = keyName.indexOf(" ");
+
                 if (spaceIdx > 0) {
                     ext = keyName.substring(spaceIdx);
                     keyName = keyName.substring(0, spaceIdx);
@@ -1722,6 +1837,7 @@ public class GenericDAO {
                 
                 for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                     ModelField curField = modelEntity.getField(fi);
+
                     if (curField.getName().equals(keyName)) {
                         if (ext != null)
                             orderByStrings.add(curField.getColName() + ext);
@@ -1735,8 +1851,10 @@ public class GenericDAO {
                 sql.append(" ORDER BY ");
                 
                 Iterator iter = orderByStrings.iterator();
+
                 while (iter.hasNext()) {
                     String curString = (String) iter.next();
+
                     sql.append(curString);
                     if (iter.hasNext())
                         sql.append(", ");
@@ -1748,13 +1866,15 @@ public class GenericDAO {
     }
     
     /* ====================================================================== */
+    
     /* ====================================================================== */
     
     public void getValue(ResultSet rs, int ind, ModelField curField, GenericEntity entity) throws SQLException, GenericEntityException {
         ModelFieldType mft = modelFieldTypeReader.getModelFieldType(curField.getType());
+
         if (mft == null) {
             throw new GenericModelException("definition fieldType " + curField.getType() + " not found, cannot getValue for field " +
-            entity.getEntityName() + "." + curField.getName() + ".");
+                    entity.getEntityName() + "." + curField.getName() + ".");
         }
         String fieldType = mft.getJavaType();
         
@@ -1796,21 +1916,24 @@ public class GenericDAO {
         //there should be no parameter for null fields, so we can just return and do nothing
         
         ModelFieldType mft = modelFieldTypeReader.getModelFieldType(curField.getType());
+
         if (mft == null) {
             throw new GenericModelException("GenericDAO.getValue: definition fieldType " + curField.getType() + " not found, cannot setValue for field " +
-            entity.getEntityName() + "." + curField.getName() + ".");
+                    entity.getEntityName() + "." + curField.getName() + ".");
         }
         
         String fieldType = mft.getJavaType();
+
         if (field != null) {
             Class fieldClass = field.getClass();
             String fieldClassName = fieldClass.getName();
+
             if (!fieldClassName.equals(mft.getJavaType()) && fieldClassName.indexOf(mft.getJavaType()) < 0) {
                 Debug.logWarning("type of field " + entity.getEntityName() + "." + curField.getName() +
-                " is " + fieldClassName + ", was expecting " + mft.getJavaType() + "; this may " +
-                "indicate an error in the configuration or in the class, and may result " +
-                "in an SQL-Java data conversion error. Will use the real field type: " +
-                fieldClassName + ", not the definition.", module);
+                    " is " + fieldClassName + ", was expecting " + mft.getJavaType() + "; this may " +
+                    "indicate an error in the configuration or in the class, and may result " +
+                    "in an SQL-Java data conversion error. Will use the real field type: " +
+                    fieldClassName + ", not the definition.", module);
                 fieldType = fieldClassName;
             }
         }
@@ -1861,6 +1984,7 @@ public class GenericDAO {
     }
     
     /* ====================================================================== */
+    
     /* ====================================================================== */
     public String createTable(ModelEntity entity, Map modelEntities, boolean addFks) {
         if (entity == null) {
@@ -1872,6 +1996,7 @@ public class GenericDAO {
         
         Connection connection = null;
         Statement stmt = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -1881,11 +2006,13 @@ public class GenericDAO {
         }
         
         StringBuffer sqlBuf = new StringBuffer("CREATE TABLE ");
+
         sqlBuf.append(entity.getTableName());
         sqlBuf.append(" (");
         for (int i = 0; i < entity.getFieldsSize(); i++) {
             ModelField field = entity.getField(i);
             ModelFieldType type = modelFieldTypeReader.getModelFieldType(field.getType());
+
             if (type == null) {
                 return "Field type [" + type + "] not found for field [" + field.getName() + "] of entity [" + entity.getEntityName() + "], not creating table.";
             }
@@ -1900,6 +2027,7 @@ public class GenericDAO {
             }
         }
         String pkName = "PK_" + entity.getTableName();
+
         if (pkName.length() > 30) {
             pkName = pkName.substring(0, 30);
         }
@@ -1912,11 +2040,13 @@ public class GenericDAO {
         if (addFks) {
             //go through the relationships to see if any foreign keys need to be added
             Iterator relationsIter = entity.getRelationsIterator();
+
             while (relationsIter.hasNext()) {
                 ModelRelation modelRelation = (ModelRelation) relationsIter.next();
 
                 if ("one".equals(modelRelation.getType())) {
                     ModelEntity relModelEntity = (ModelEntity) modelEntities.get(modelRelation.getRelEntityName());
+
                     if (relModelEntity == null) {
                         Debug.logError("Error adding foreign key: ModelEntity was null for related entity name " + modelRelation.getRelEntityName());
                         continue;
@@ -1943,11 +2073,11 @@ public class GenericDAO {
             try {
                 if (stmt != null)
                     stmt.close();
-            } catch (SQLException sqle) { }
+            } catch (SQLException sqle) {}
             try {
                 if (connection != null)
                     connection.close();
-            } catch (SQLException sqle) { }
+            } catch (SQLException sqle) {}
         }
         return null;
     }
@@ -1962,11 +2092,13 @@ public class GenericDAO {
         
         //go through the relationships to see if any foreign keys need to be added
         Iterator relationsIter = entity.getRelationsIterator();
+
         while (relationsIter.hasNext()) {
             ModelRelation modelRelation = (ModelRelation) relationsIter.next();
             
             if ("one".equals(modelRelation.getType())) {
                 ModelEntity relModelEntity = (ModelEntity) modelEntities.get(modelRelation.getRelEntityName());
+
                 if (relModelEntity == null) {
                     Debug.logError("Error adding foreign key: ModelEntity was null for related entity name " + modelRelation.getRelEntityName());
                     continue;
@@ -1977,6 +2109,7 @@ public class GenericDAO {
                 }
                 
                 String retMsg = createForeignKey(entity, modelRelation, relModelEntity);
+
                 if (retMsg != null) {
                     return retMsg;
                 }
@@ -1988,6 +2121,7 @@ public class GenericDAO {
     public String createForeignKey(ModelEntity entity, ModelRelation modelRelation, ModelEntity relModelEntity) {
         Connection connection = null;
         Statement stmt = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -1998,6 +2132,7 @@ public class GenericDAO {
 
         //now add constraint clause
         StringBuffer sqlBuf = new StringBuffer("ALTER TABLE ");
+
         sqlBuf.append(entity.getTableName());
         sqlBuf.append(" ADD ");
         sqlBuf.append(makeFkConstraintClause(entity, modelRelation, relModelEntity));
@@ -2013,11 +2148,11 @@ public class GenericDAO {
             try {
                 if (stmt != null)
                     stmt.close();
-            } catch (SQLException sqle) { }
+            } catch (SQLException sqle) {}
             try {
                 if (connection != null)
                     connection.close();
-            } catch (SQLException sqle) { }
+            } catch (SQLException sqle) {}
         }
         return null;
     }
@@ -2027,16 +2162,19 @@ public class GenericDAO {
         Iterator keyMapsIter = modelRelation.getKeyMapsIterator();
         StringBuffer mainCols = new StringBuffer();
         StringBuffer relCols = new StringBuffer();
+
         while (keyMapsIter.hasNext()) {
             ModelKeyMap keyMap = (ModelKeyMap) keyMapsIter.next();
 
             ModelField mainField = entity.getField(keyMap.getFieldName());
+
             if (mainCols.length() > 0) {
                 mainCols.append(", ");
             }
             mainCols.append(mainField.getColName());
 
             ModelField relField = relModelEntity.getField(keyMap.getRelFieldName());
+
             if (relCols.length() > 0) {
                 relCols.append(", ");
             }
@@ -2045,10 +2183,12 @@ public class GenericDAO {
 
         //make constraint name
         String relConstraintName = modelRelation.getTitle() + modelRelation.getRelEntityName();
+
         if (relConstraintName.length() > 30)
             relConstraintName = relConstraintName.substring(0, 30);
 
         StringBuffer sqlBuf = new StringBuffer("CONSTRAINT ");
+
         sqlBuf.append(relConstraintName);
         sqlBuf.append(" FOREIGN KEY (");
         sqlBuf.append(mainCols.toString());
@@ -2070,6 +2210,7 @@ public class GenericDAO {
         
         Connection connection = null;
         Statement stmt = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -2079,6 +2220,7 @@ public class GenericDAO {
         }
         
         ModelFieldType type = modelFieldTypeReader.getModelFieldType(field.getType());
+
         if (type == null) {
             return "Field type [" + type + "] not found for field [" + field.getName() + "] of entity [" + entity.getEntityName() + "], not adding column.";
         }
@@ -2095,21 +2237,23 @@ public class GenericDAO {
             try {
                 if (stmt != null)
                     stmt.close();
-            } catch (SQLException sqle) { }
+            } catch (SQLException sqle) {}
             try {
                 if (connection != null)
                     connection.close();
-            } catch (SQLException sqle) { }
+            } catch (SQLException sqle) {}
         }
         return null;
     }
     
     /* ====================================================================== */
+    
     /* ====================================================================== */
     
     public void checkDb(Map modelEntities, Collection messages, boolean addMissing) {
         Element rootElement = null;
         Element datasourceElement = null;
+
         try {
             rootElement = EntityConfigUtil.getXmlRootElement();
             datasourceElement = UtilXml.firstChildElement(rootElement, "datasource", "name", helperName);
@@ -2117,6 +2261,7 @@ public class GenericDAO {
             Debug.logError(e, "Error loading entity config XML file");
         }
         boolean useFks = true;
+
         if (datasourceElement == null) {
             Debug.logWarning("datasource def not found with name " + helperName + ", using defaults for use-foreign-keys (true)");
         } else {
@@ -2125,12 +2270,15 @@ public class GenericDAO {
         }
         
         UtilTimer timer = new UtilTimer();
+
         timer.timerString("Start - Before Get Database Meta Data");
         
         //get ALL tables from this database
         TreeSet tableNames = this.getTableNames(messages);
+
         if (tableNames == null) {
             String message = "Could not get table name information from the database, aborting.";
+
             if (messages != null)
                 messages.add(message);
             Debug.logError(message, module);
@@ -2140,8 +2288,10 @@ public class GenericDAO {
         
         //get ALL column info, put into hashmap by table name
         Map colInfo = this.getColumnInfo(tableNames, messages);
+
         if (colInfo == null) {
             String message = "Could not get column information from the database, aborting.";
+
             if (messages != null)
                 messages.add(message);
             Debug.logError(message, module);
@@ -2159,6 +2309,7 @@ public class GenericDAO {
         timer.timerString("Before Individual Table/Column Check");
         
         ArrayList modelEntityList = new ArrayList(modelEntities.values());
+
         //sort using compareTo method on ModelEntity
         Collections.sort(modelEntityList);
 
@@ -2166,6 +2317,7 @@ public class GenericDAO {
         int curEnt = 0;
         int totalEnt = modelEntityList.size();
         List entitiesAdded = new LinkedList();
+
         while (modelEntityIter.hasNext()) {
             curEnt++;
             ModelEntity entity = (ModelEntity) modelEntityIter.next();
@@ -2174,6 +2326,7 @@ public class GenericDAO {
             //if this is a view entity, do not check it...
             if (entity instanceof ModelViewEntity) {
                 String entMessage = "(" + timer.timeSinceLast() + "ms) NOT Checking #" + curEnt + "/" + totalEnt + " View Entity " + entity.getEntityName();
+
                 Debug.logVerbose(entMessage, module);
                 if (messages != null)
                     messages.add(entMessage);
@@ -2181,29 +2334,35 @@ public class GenericDAO {
             }
             
             String entMessage = "(" + timer.timeSinceLast() + "ms) Checking #" + curEnt + "/" + totalEnt +
-            " Entity " + entity.getEntityName() + " with table " + entity.getTableName();
+                " Entity " + entity.getEntityName() + " with table " + entity.getTableName();
+
             Debug.logVerbose(entMessage, module);
             if (messages != null)
                 messages.add(entMessage);
             
-            //-make sure all entities have a corresponding table
+                //-make sure all entities have a corresponding table
             if (tableNames.contains(entity.getTableName().toUpperCase())) {
                 tableNames.remove(entity.getTableName().toUpperCase());
                 
                 if (colInfo != null) {
                     Map fieldColNames = new HashMap();
+
                     for (int fnum = 0; fnum < entity.getFieldsSize(); fnum++) {
                         ModelField field = entity.getField(fnum);
+
                         fieldColNames.put(field.getColName().toUpperCase(), field);
                     }
                     
                     List colList = (List) colInfo.get(entity.getTableName().toUpperCase());
                     int numCols = 0;
+
                     for (; numCols < colList.size(); numCols++) {
                         ColumnCheckInfo ccInfo = (ColumnCheckInfo) colList.get(numCols);
+
                         //-list all columns that do not have a corresponding field
                         if (fieldColNames.containsKey(ccInfo.columnName)) {
                             ModelField field = null;
+
                             field = (ModelField) fieldColNames.remove(ccInfo.columnName);
                             ModelFieldType modelFieldType = modelFieldTypeReader.getModelFieldType(field.getType());
                             
@@ -2222,6 +2381,7 @@ public class GenericDAO {
                                     typeName = fullTypeStr.substring(0, openParen);
                                     if (comma > 0 && comma > openParen && comma < closeParen) {
                                         String csStr = fullTypeStr.substring(openParen + 1, comma);
+
                                         try {
                                             columnSize = Integer.parseInt(csStr);
                                         } catch (NumberFormatException e) {
@@ -2229,6 +2389,7 @@ public class GenericDAO {
                                         }
                                         
                                         String ddStr = fullTypeStr.substring(comma + 1, closeParen);
+
                                         try {
                                             decimalDigits = Integer.parseInt(ddStr);
                                         } catch (NumberFormatException e) {
@@ -2236,6 +2397,7 @@ public class GenericDAO {
                                         }
                                     } else {
                                         String csStr = fullTypeStr.substring(openParen + 1, closeParen);
+
                                         try {
                                             columnSize = Integer.parseInt(csStr);
                                         } catch (NumberFormatException e) {
@@ -2248,37 +2410,42 @@ public class GenericDAO {
                                 
                                 if (!ccInfo.typeName.equals(typeName.toUpperCase())) {
                                     String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" +
-                                    entity.getEntityName() + "\" is of type \"" + ccInfo.typeName + "\" in the database, but is defined as type \"" +
-                                    typeName + "\" in the entity definition.";
+                                        entity.getEntityName() + "\" is of type \"" + ccInfo.typeName + "\" in the database, but is defined as type \"" +
+                                        typeName + "\" in the entity definition.";
+
                                     Debug.logError(message, module);
                                     if (messages != null)
                                         messages.add(message);
                                 }
                                 if (columnSize != -1 && ccInfo.columnSize != -1 && columnSize != ccInfo.columnSize) {
                                     String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" +
-                                    entity.getEntityName() + "\" has a column size of \"" + ccInfo.columnSize +
-                                    "\" in the database, but is defined to have a column size of \"" + columnSize + "\" in the entity definition.";
+                                        entity.getEntityName() + "\" has a column size of \"" + ccInfo.columnSize +
+                                        "\" in the database, but is defined to have a column size of \"" + columnSize + "\" in the entity definition.";
+
                                     Debug.logWarning(message, module);
                                     if (messages != null)
                                         messages.add(message);
                                 }
                                 if (decimalDigits != -1 && decimalDigits != ccInfo.decimalDigits) {
                                     String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" +
-                                    entity.getEntityName() + "\" has a decimalDigits of \"" + ccInfo.decimalDigits +
-                                    "\" in the database, but is defined to have a decimalDigits of \"" + decimalDigits + "\" in the entity definition.";
+                                        entity.getEntityName() + "\" has a decimalDigits of \"" + ccInfo.decimalDigits +
+                                        "\" in the database, but is defined to have a decimalDigits of \"" + decimalDigits + "\" in the entity definition.";
+
                                     Debug.logWarning(message, module);
                                     if (messages != null)
                                         messages.add(message);
                                 }
                             } else {
                                 String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" + entity.getEntityName() +
-                                "\" has a field type name of \"" + field.getType() + "\" which is not found in the field type definitions";
+                                    "\" has a field type name of \"" + field.getType() + "\" which is not found in the field type definitions";
+
                                 Debug.logError(message, module);
                                 if (messages != null)
                                     messages.add(message);
                             }
                         } else {
                             String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" + entity.getEntityName() + "\" exists in the database but has no corresponding field";
+
                             Debug.logWarning(message, module);
                             if (messages != null)
                                 messages.add(message);
@@ -2288,7 +2455,8 @@ public class GenericDAO {
                     //-display message if number of table columns does not match number of entity fields
                     if (numCols != entity.getFieldsSize()) {
                         String message = "Entity \"" + entity.getEntityName() + "\" has " + entity.getFieldsSize() + " fields but table \"" + entity.getTableName() + "\" has " +
-                        numCols + " columns.";
+                            numCols + " columns.";
+
                         Debug.logWarning(message, module);
                         if (messages != null)
                             messages.add(message);
@@ -2296,11 +2464,13 @@ public class GenericDAO {
                     
                     //-list all fields that do not have a corresponding column
                     Iterator fcnIter = fieldColNames.keySet().iterator();
+
                     while (fcnIter.hasNext()) {
                         String colName = (String) fcnIter.next();
                         ModelField field = (ModelField) fieldColNames.get(colName);
                         String message =
-                        "Field \"" + field.getName() + "\" of entity \"" + entity.getEntityName() + "\" is missing its corresponding column \"" + field.getColName() + "\"";
+                            "Field \"" + field.getName() + "\" of entity \"" + entity.getEntityName() + "\" is missing its corresponding column \"" + field.getColName() + "\"";
+
                         Debug.logWarning(message, module);
                         if (messages != null)
                             messages.add(message);
@@ -2308,6 +2478,7 @@ public class GenericDAO {
                         if (addMissing) {
                             //add the column
                             String errMsg = addColumn(entity, field);
+
                             if (errMsg != null && errMsg.length() > 0) {
                                 message = "Could not add column \"" + field.getColName() + "\" to table \"" + entity.getTableName() + "\"";
                                 Debug.logError(message, module);
@@ -2324,6 +2495,7 @@ public class GenericDAO {
                 }
             } else {
                 String message = "Entity \"" + entity.getEntityName() + "\" has no table in the database";
+
                 Debug.logWarning(message, module);
                 if (messages != null)
                     messages.add(message);
@@ -2331,6 +2503,7 @@ public class GenericDAO {
                 if (addMissing) {
                     //create the table
                     String errMsg = createTable(entity, modelEntities, false);
+
                     if (errMsg != null && errMsg.length() > 0) {
                         message = "Could not create table \"" + entity.getTableName() + "\"";
                         Debug.logError(message, module);
@@ -2351,9 +2524,11 @@ public class GenericDAO {
         
         //-list all tables that do not have a corresponding entity
         Iterator tableNamesIter = tableNames.iterator();
+
         while (tableNamesIter != null && tableNamesIter.hasNext()) {
             String tableName = (String) tableNamesIter.next();
             String message = "Table named \"" + tableName + "\" exists in the database but has no corresponding entity";
+
             Debug.logWarning(message, module);
             if (messages != null)
                 messages.add(message);
@@ -2362,25 +2537,28 @@ public class GenericDAO {
         // for each newly added table, add fks
         if (useFks) {
             Iterator eaIter = entitiesAdded.iterator();
+
             while (eaIter.hasNext()) {
                 ModelEntity curEntity = (ModelEntity) eaIter.next();
                 String errMsg = this.createForeignKeys(curEntity, modelEntities);
+
                 if (errMsg != null && errMsg.length() > 0) {
                     String message = "Could not create foreign keys for entity \"" + curEntity.getEntityName() + "\"";
+
                     Debug.logError(message, module);
                     if (messages != null) messages.add(message);
                     Debug.logError(errMsg, module);
                     if (messages != null) messages.add(errMsg);
                 } else {
                     String message = "Created foreign keys for entity \"" + curEntity.getEntityName() + "\"";
+
                     Debug.logImportant(message, module);
                     if (messages != null) messages.add(message);
                 }
             }
         }
         
-        if (useFks) {
-            //TODO: get all fks from database and make sure that one exists for each relationship
+        if (useFks) {//TODO: get all fks from database and make sure that one exists for each relationship
         }
         
         timer.timerString("Finished Checking Entity Database");
@@ -2401,11 +2579,13 @@ public class GenericDAO {
         
         //iterate over the table names is alphabetical order
         Iterator tableNamesIter = new TreeSet(colInfo.keySet()).iterator();
+
         while (tableNamesIter.hasNext()) {
             String tableName = (String) tableNamesIter.next();
             Vector colList = (Vector) colInfo.get(tableName);
             
             ModelEntity newEntity = new ModelEntity(tableName, colList, modelFieldTypeReader);
+
             newEntList.add(newEntity);
         }
         
@@ -2414,16 +2594,19 @@ public class GenericDAO {
     
     public TreeSet getTableNames(Collection messages) {
         Connection connection = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
             String message = "Unable to esablish a connection with the database... Error was:" + sqle.toString();
+
             Debug.logError(message, module);
             if (messages != null)
                 messages.add(message);
             return null;
         } catch (GenericEntityException e) {
             String message = "Unable to esablish a connection with the database... Error was:" + e.toString();
+
             Debug.logError(message, module);
             if (messages != null)
                 messages.add(message);
@@ -2431,10 +2614,12 @@ public class GenericDAO {
         }
         
         DatabaseMetaData dbData = null;
+
         try {
             dbData = connection.getMetaData();
         } catch (SQLException sqle) {
             String message = "Unable to get database meta data... Error was:" + sqle.toString();
+
             Debug.logError(message, module);
             if (messages != null)
                 messages.add(message);
@@ -2457,10 +2642,12 @@ public class GenericDAO {
         //get ALL tables from this database
         TreeSet tableNames = new TreeSet();
         ResultSet tableSet = null;
+
         try {
             tableSet = dbData.getTables(null, dbData.getUserName(), null, null);
         } catch (SQLException sqle) {
             String message = "Unable to get list of table information... Error was:" + sqle.toString();
+
             Debug.logError(message, module);
             if (messages != null)
                 messages.add(message);
@@ -2469,6 +2656,7 @@ public class GenericDAO {
                 connection.close();
             } catch (SQLException sqle2) {
                 String message2 = "Unable to close database connection, continuing anyway... Error was:" + sqle2.toString();
+
                 Debug.logError(message2, module);
                 if (messages != null)
                     messages.add(message2);
@@ -2480,18 +2668,21 @@ public class GenericDAO {
             while (tableSet.next()) {
                 try {
                     String tableName = tableSet.getString("TABLE_NAME");
+
                     tableName = (tableName == null) ? null : tableName.toUpperCase();
                     String tableType = tableSet.getString("TABLE_TYPE");
+
                     tableType = (tableType == null) ? null : tableType.toUpperCase();
                     //only allow certain table types
                     if (tableType != null && !"TABLE".equals(tableType) && !"VIEW".equals(tableType) && !"ALIAS".equals(tableType) && !"SYNONYM".equals(tableType))
                         continue;
                     
-                    //String remarks = tableSet.getString("REMARKS");
+                        //String remarks = tableSet.getString("REMARKS");
                     tableNames.add(tableName);
                     //Debug.logInfo("Found table named \"" + tableName + "\" of type \"" + tableType + "\" with remarks: " + remarks);
                 } catch (SQLException sqle) {
                     String message = "Error getting table information... Error was:" + sqle.toString();
+
                     Debug.logError(message, module);
                     if (messages != null)
                         messages.add(message);
@@ -2500,6 +2691,7 @@ public class GenericDAO {
             }
         } catch (SQLException sqle) {
             String message = "Error getting next table information... Error was:" + sqle.toString();
+
             Debug.logError(message, module);
             if (messages != null)
                 messages.add(message);
@@ -2508,6 +2700,7 @@ public class GenericDAO {
                 tableSet.close();
             } catch (SQLException sqle) {
                 String message = "Unable to close ResultSet for table list, continuing anyway... Error was:" + sqle.toString();
+
                 Debug.logError(message, module);
                 if (messages != null) messages.add(message);
             }
@@ -2516,6 +2709,7 @@ public class GenericDAO {
                 connection.close();
             } catch (SQLException sqle) {
                 String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
+
                 Debug.logError(message, module);
                 if (messages != null) messages.add(message);
             }
@@ -2525,16 +2719,19 @@ public class GenericDAO {
     
     public Map getColumnInfo(Set tableNames, Collection messages) {
         Connection connection = null;
+
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
             String message = "Unable to esablish a connection with the database... Error was:" + sqle.toString();
+
             Debug.logError(message, module);
             if (messages != null)
                 messages.add(message);
             return null;
         } catch (GenericEntityException e) {
             String message = "Unable to esablish a connection with the database... Error was:" + e.toString();
+
             Debug.logError(message, module);
             if (messages != null)
                 messages.add(message);
@@ -2542,10 +2739,12 @@ public class GenericDAO {
         }
         
         DatabaseMetaData dbData = null;
+
         try {
             dbData = connection.getMetaData();
         } catch (SQLException sqle) {
             String message = "Unable to get database meta data... Error was:" + sqle.toString();
+
             Debug.logError(message, module);
             if (messages != null)
                 messages.add(message);
@@ -2554,6 +2753,7 @@ public class GenericDAO {
                 connection.close();
             } catch (SQLException sqle2) {
                 String message2 = "Unable to close database connection, continuing anyway... Error was:" + sqle2.toString();
+
                 Debug.logError(message2, module);
                 if (messages != null)
                     messages.add(message2);
@@ -2575,11 +2775,14 @@ public class GenericDAO {
         }
         
         Map colInfo = new HashMap();
+
         try {
             ResultSet rsCols = dbData.getColumns(null, dbData.getUserName(), null, null);
+
             while (rsCols.next()) {
                 try {
                     ColumnCheckInfo ccInfo = new ColumnCheckInfo();
+
                     ccInfo.tableName = rsCols.getString("TABLE_NAME");
                     ccInfo.tableName = (ccInfo.tableName == null) ? null : ccInfo.tableName.toUpperCase();
                     //ignore the column info if the table name is not in the list we are concerned with
@@ -2598,6 +2801,7 @@ public class GenericDAO {
                     ccInfo.isNullable = (ccInfo.isNullable == null) ? null : ccInfo.isNullable.toUpperCase();
                     
                     List tableColInfo = (List) colInfo.get(ccInfo.tableName);
+
                     if (tableColInfo == null) {
                         tableColInfo = new Vector();
                         colInfo.put(ccInfo.tableName, tableColInfo);
@@ -2605,6 +2809,7 @@ public class GenericDAO {
                     tableColInfo.add(ccInfo);
                 } catch (SQLException sqle) {
                     String message = "Error getting column info for column. Error was:" + sqle.toString();
+
                     Debug.logError(message, module);
                     if (messages != null)
                         messages.add(message);
@@ -2616,12 +2821,14 @@ public class GenericDAO {
                 rsCols.close();
             } catch (SQLException sqle) {
                 String message = "Unable to close ResultSet for column list, continuing anyway... Error was:" + sqle.toString();
+
                 Debug.logError(message, module);
                 if (messages != null)
                     messages.add(message);
             }
         } catch (SQLException sqle) {
             String message = "Error getting column meta data for Error was:" + sqle.toString() + ". Not checking columns.";
+
             Debug.logError(message, module);
             if (messages != null)
                 messages.add(message);
@@ -2631,6 +2838,7 @@ public class GenericDAO {
                 connection.close();
             } catch (SQLException sqle) {
                 String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
+
                 Debug.logError(message, module);
                 if (messages != null)
                     messages.add(message);
