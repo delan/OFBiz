@@ -181,7 +181,7 @@
     key-field-name: the name of the field in the looked up entity that will be used 
     	for the key value; defaults to the entry-name of the field this is in
  -->
-<!ELEMENT entity-options ( entity-constraint* )>
+<!ELEMENT entity-options ( entity-constraint*, entity-order-by* )>
 <!ATTLIST entity-options
     entity-name CDATA #REQUIRED
     key-field-name CDATA #IMPLIED
@@ -193,6 +193,10 @@
 <!ATTLIST entity-constraint
     name CDATA #REQUIRED
     value CDATA #REQUIRED
+>
+<!ELEMENT entity-order-by EMPTY>
+<!ATTLIST entity-order-by
+    field-name CDATA #REQUIRED
 >
 
 <!--
