@@ -36,6 +36,9 @@
         <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="create.allow.password" default="true" field-name="create_allow_password"/>
         <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="default.customer.password" default="ungssblepsswd" field-name="default_customer_password"/>
 
+        <property-to-field resource="security" property="username.lowercase" default="false" field-name="username_lowercase"/>
+        <property-to-field resource="security" property="password.lowercase" default="false" field-name="password_lowercase"/>
+
         <now-timestamp-to-env env-name="nowStamp"/>
         <string-to-field string="CUSTOMER" field-name="roleTypeId" map-name="parameters"/>
 
@@ -43,6 +46,15 @@
             <env-to-field env-name="default_customer_password" field-name="PASSWORD" map-name="parameters"/>
             <env-to-field env-name="default_customer_password" field-name="CONFIRM_PASSWORD" map-name="parameters"/>
             <string-to-field string="No hint set, accout not yet enabled" field-name="PASSWORD_HINT" map-name="parameters"/>
+        </if-compare>
+        
+        <!-- if username and/or password should be lowercased, do that now -->
+        <if-compare field-name="username_lowercase" operator="equals" value="true">
+            <call-object-method obj-field-name="USERNAME" obj-map-name="parameters" method-name="toLowerCase" ret-field-name="USERNAME" ret-map-name="parameters"/>
+        </if-compare>
+        <if-compare field-name="password_lowercase" operator="equals" value="true">
+            <call-object-method obj-field-name="PASSWORD" obj-map-name="parameters" method-name="toLowerCase" ret-field-name="PASSWORD" ret-map-name="parameters"/>
+            <call-object-method obj-field-name="CONFIRM_PASSWORD" obj-map-name="parameters" method-name="toLowerCase" ret-field-name="CONFIRM_PASSWORD" ret-map-name="parameters"/>
         </if-compare>
 
         <!-- Create the UserLogin Record -->
