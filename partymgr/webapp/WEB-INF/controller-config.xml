@@ -2,53 +2,60 @@
 
 <site-conf>
     <description>Party Manager Module Site Configuration File</description>
-    
-    <owner>unused</owner>
-    <datasource>unused</datasource>
+    <owner>The Open For Business Project (c) 2001 </owner>
     <errorpage>/error/error.jsp</errorpage>
 
+    <preprocessor>
+    	<!-- Events to run on every request before security (chains exempt) -->
+    	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
+    </preprocessor>
+    <postprocessor>
+    	<!-- Events to run on every request after all other processing (chains exempt) -->
+    	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
+    </postprocessor>
+
     <!-- Security Mappings -->
-    <request-map>
-        <uri>checkLogin</uri><secure>false</secure><auth>false</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>checkLogin</event-invoke>
-        <success>view:main</success><error>view:login</error>
+    <request-map uri="checkLogin" edit="false">
+      <description>Verify a user is logged in.</description>
+      <security https="false" auth="false"/>
+      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="checkLogin" />
+      <response name="success" type="view" value="name" />
+      <response name="error" type="view" value="login" />
     </request-map>
-    <request-map>
-        <uri>login</uri><secure>true</secure><auth>false</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>login</event-invoke>
-        <success>view:main</success><error>view:login</error>
+
+    <request-map uri="login">
+      <security https="true" auth="false"/>
+      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="login"/>
+      <response name="success" type="request" value="updatedistributor"/>
+      <response name="error" type="view" value="login"/>
     </request-map>
-    <request-map>
-        <uri>logout</uri><secure>true</secure><auth>true</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>logout</event-invoke>
-        <success>view:main</success><error>view:main</error>
+
+    <request-map uri="logout">
+      <security https="true" auth="true"/>
+      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="logout"/>
+      <response name="success" type="view" value="main"/>
+      <response name="error" type="view" value="main"/>
     </request-map>
-    <view-map><view>login</view><mapped-page>/login.jsp</mapped-page></view-map>
+    <view-map name="login" page="/login.jsp"/>
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
-    <request-map>
-        <uri>view</uri>
-        <secure>false</secure>
-        <auth>false</auth>
-        <success>view:main</success>
-        <error>view:error</error>
+    <request-map uri="view">
+        <security https="false" auth="false">
+        <response name="success" type="view" value="main">
+        <response name="error" type="view" value="error">
     </request-map>
-    <request-map>
-        <uri>chain</uri>
-        <event-type>java</event-type>
-        <event-path>org.ofbiz.core.event.TestEvent</event-path>
-        <event-invoke>test</event-invoke>
-        <success>request:/view</success>
-        <error>view:error</error>
+    <request-map uri="chain">
+        <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test">
+        <response name="success" type="request" value="/view">
+        <response name="error" type="view" value="error">
     </request-map>
 
-    <request-map><uri>main</uri><secure>false</secure><auth>false</auth><success>view:main</success></request-map>
+    <request-map uri="main"><security https="false" auth="false"/><response name="success" type="view" value="main"/></request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
-    <view-map><view>error</view><mapped-page>/error/error.jsp</mapped-page></view-map>
-    <view-map><view>main</view><mapped-page>/main.jsp</mapped-page></view-map>
+    <view-map name="error" page="/error/error.jsp">
+    <view-map name="main" page="/main.jsp">
     <!-- end of view mappings -->
 </site-conf>
-

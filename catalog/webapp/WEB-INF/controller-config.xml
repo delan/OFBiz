@@ -2,101 +2,102 @@
 
 <site-conf>
     <description>Catalog Module Site Configuration File</description>
-    
-    <owner>unused</owner>
-    <datasource>unused</datasource>
-    <errorpage>/error/error.jsp</errorpage>
+    <owner>The Open For Business Project (c) 2001 </owner>
+    <errorpage>/error/error.jsp"page>
+
+    <preprocessor>
+    	<!-- Events to run on every request before security (chains exempt) -->
+    	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
+    </preprocessor>
+    <postprocessor>
+    	<!-- Events to run on every request after all other processing (chains exempt) -->
+    	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
+    </postprocessor>
 
     <!-- Security Mappings -->
-    <request-map>
-        <uri>checkLogin</uri><secure>false</secure><auth>false</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>checkLogin</event-invoke>
-        <success>view:main</success><error>view:login</error>
+    <request-map uri="checkLogin" edit="false">
+      <description>Verify a user is logged in.</description>
+      <security https="false" auth="false"/>
+      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="checkLogin" />
+      <response name="success" type="view" value="name" />
+      <response name="error" type="view" value="login" />
     </request-map>
-    <request-map>
-        <uri>login</uri><secure>true</secure><auth>false</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>login</event-invoke>
-        <success>view:main</success><error>view:login</error>
+
+    <request-map uri="login">
+      <security https="true" auth="false"/>
+      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="login"/>
+      <response name="success" type="request" value="updatedistributor"/>
+      <response name="error" type="view" value="login"/>
     </request-map>
-    <request-map>
-        <uri>logout</uri><secure>true</secure><auth>true</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>logout</event-invoke>
-        <success>view:main</success><error>view:main</error>
+
+    <request-map uri="logout">
+      <security https="true" auth="true"/>
+      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="logout"/>
+      <response name="success" type="view" value="main"/>
+      <response name="error" type="view" value="main"/>
     </request-map>
-    <view-map><view>login</view><mapped-page>/login.jsp</mapped-page></view-map>
+    <view-map name="login" page="/login.jsp"/>
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
-    <request-map>
-        <uri>view</uri>
-        <secure>false</secure>
-        <auth>false</auth>
-        <success>view:main</success>
-        <error>view:error</error>
+    <request-map uri="view">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="error"/>
     </request-map>
-    <request-map>
-        <uri>chain</uri>
-        <event-type>java</event-type>
-        <event-path>org.ofbiz.core.event.TestEvent</event-path>
-        <event-invoke>test</event-invoke>
-        <success>request:/view</success>
-        <error>view:error</error>
+    <request-map uri="chain">
+        <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/>
+        <response name="success" type="request" value="/view"/>
+        <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map><uri>main</uri><secure>false</secure><auth>false</auth><success>view:main</success></request-map>
+    <request-map uri="main"><security https="false" auth="false"/><response name="success" type="view" value="main"/></request-map>
 
-    <request-map><uri>EditCategory</uri><secure>true</secure><auth>true</auth><success>view:EditCategory</success></request-map>
-    <request-map>
-        <uri>UpdateCategory</uri><secure>true</secure><auth>true</auth>
-        <success>view:EditCategory</success><error>view:EditCategory</error>
-        <event-type>java</event-type><event-path>org.ofbiz.catalog.CategoryEvents</event-path><event-invoke>updateCategory</event-invoke>
+    <request-map uri="EditCategory"><security https="true" auth="true"/><response name="success" type="view" value="EditCategory"/></request-map>
+    <request-map uri="UpdateCategory"><security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCategory"/><response name="error" type="view" value="EditCategory"/>
+        <event type="java" path="org.ofbiz.catalog.CategoryEvents" invoke="updateCategory"/>
     </request-map>
-    <request-map>
-        <uri>UpdateProductCategoryRollup</uri><secure>true</secure><auth>true</auth>
-        <success>view:EditCategory</success><error>view:EditCategory</error>
-        <event-type>java</event-type><event-path>org.ofbiz.catalog.CategoryEvents</event-path><event-invoke>updateProductCategoryRollup</event-invoke>
+    <request-map uri="UpdateProductCategoryRollup"><security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCategory"/><response name="error" type="view" value="EditCategory"/>
+        <event type="java" path="org.ofbiz.catalog.CategoryEvents" invoke="updateProductCategoryRollup"/>
     </request-map>
 
-    <request-map><uri>EditProduct</uri><secure>true</secure><auth>true</auth><success>view:EditProduct</success></request-map>
-    <request-map>
-        <uri>UpdateProduct</uri><secure>true</secure><auth>true</auth>
-        <success>view:EditProduct</success><error>view:EditProduct</error>
-        <event-type>java</event-type><event-path>org.ofbiz.catalog.ProductEvents</event-path><event-invoke>updateProduct</event-invoke>
+    <request-map uri="EditProduct"><security https="true" auth="true"/><response name="success" type="view" value="EditProduct"/></request-map>
+    <request-map uri="UpdateProduct"><security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProduct"/><response name="error" type="view" value="EditProduct"/>
+        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProduct"/>
     </request-map>
-    <request-map>
-        <uri>UpdateProductCategoryMember</uri><secure>true</secure><auth>true</auth>
-        <success>view:EditProduct</success><error>view:EditProduct</error>
-        <event-type>java</event-type><event-path>org.ofbiz.catalog.CategoryEvents</event-path><event-invoke>updateProductCategoryMember</event-invoke>
+    <request-map uri="UpdateProductCategoryMember"><security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProduct"/><response name="error" type="view" value="EditProduct"/>
+        <event type="java" path="org.ofbiz.catalog.CategoryEvents" invoke="updateProductCategoryMember"/>
     </request-map>
 
-    <request-map><uri>EditProductKeyword</uri><secure>true</secure><auth>true</auth><success>view:EditProductKeyword</success></request-map>
-    <request-map>
-        <uri>UpdateProductKeyword</uri><secure>true</secure><auth>true</auth>
-        <success>view:EditProductKeyword</success><error>view:EditProductKeyword</error>
-        <event-type>java</event-type><event-path>org.ofbiz.catalog.ProductEvents</event-path><event-invoke>updateProductKeyword</event-invoke>
+    <request-map uri="EditProductKeyword"><security https="true" auth="true"/><response name="success" type="view" value="EditProductKeyword"/></request-map>
+    <request-map uri="UpdateProductKeyword"><security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductKeyword"/><response name="error" type="view" value="EditProductKeyword"/>
+        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductKeyword"/>
     </request-map>
-    <request-map>
-        <uri>UpdateProductKeywords</uri><secure>true</secure><auth>true</auth>
-        <success>view:EditProductKeyword</success><error>view:EditProductKeyword</error>
-        <event-type>java</event-type><event-path>org.ofbiz.catalog.ProductEvents</event-path><event-invoke>updateProductKeywords</event-invoke>
+    <request-map uri="UpdateProductKeywords"><security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductKeyword"/><response name="error" type="view" value="EditProductKeyword"/>
+        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductKeywords"/>
     </request-map>
 
-    <request-map>
-        <uri>UpdateAllKeywords</uri><secure>true</secure><auth>true</auth>
-        <success>view:main</success><error>view:main</error>
-        <event-type>java</event-type><event-path>org.ofbiz.catalog.ProductEvents</event-path><event-invoke>updateAllKeywords</event-invoke>
+    <request-map uri="UpdateAllKeywords"><security https="true" auth="true"/>
+        <response name="success" type="view" value="main"/><response name="error" type="view" value="main"/>
+        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateAllKeywords"/>
     </request-map>
 
-    <request-map><uri>UploadImage</uri><secure>true</secure><auth>true</auth><success>view:UploadImage</success></request-map>
+    <request-map uri="UploadImage"><security https="true" auth="true"/><response name="success" type="view" value="UploadImage"/></request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
-    <view-map><view>error</view><mapped-page>/error/error.jsp</mapped-page></view-map>
-    <view-map><view>main</view><mapped-page>/main.jsp</mapped-page></view-map>
+    <view-map name="error" page="/error/error.jsp"/>
+    <view-map name="main" page="/main.jsp"/>
 
-    <view-map><view>EditCategory</view><mapped-page>/EditCategory.jsp</mapped-page></view-map>
-    <view-map><view>EditProduct</view><mapped-page>/EditProduct.jsp</mapped-page></view-map>
-    <view-map><view>EditProductKeyword</view><mapped-page>/EditProductKeyword.jsp</mapped-page></view-map>
-    <view-map><view>UploadImage</view><mapped-page>/UploadImage.jsp</mapped-page></view-map>
+    <view-map name="EditCategory" page="/EditCategory.jsp"/>
+    <view-map name="EditProduct" page="/EditProduct.jsp"/>
+    <view-map name="EditProductKeyword" page="/EditProductKeyword.jsp"/>
+    <view-map name="UploadImage" page="/UploadImage.jsp"/>
     <!-- end of view mappings -->
 </site-conf>

@@ -2,108 +2,111 @@
 
 <site-conf>
     <description>CommonApp Site Configuration File</description>
-    
-    <owner>unused</owner>
-    <datasource>unused</datasource>
+    <owner>The Open For Business Project (c) 2001 </owner>
     <errorpage>/error/error.jsp</errorpage>
 
+    <preprocessor>
+    	<!-- Events to run on every request before security (chains exempt) -->
+    	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
+    </preprocessor>
+    <postprocessor>
+    	<!-- Events to run on every request after all other processing (chains exempt) -->
+    	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
+    </postprocessor>
+
     <!-- Security Mappings -->
-    <request-map>
-        <uri>checkLogin</uri><secure>false</secure><auth>false</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>checkLogin</event-invoke>
-        <success>view:main</success><error>view:login</error>
+    <request-map uri="checkLogin" edit="false">
+      <description>Verify a user is logged in.</description>
+      <security https="false" auth="false"/>
+      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="checkLogin" />
+      <response name="success" type="view" value="name" />
+      <response name="error" type="view" value="login" />
     </request-map>
-    <request-map>
-        <uri>login</uri><secure>true</secure><auth>false</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>login</event-invoke>
-        <success>view:main</success><error>view:login</error>
+
+    <request-map uri="login">
+      <security https="true" auth="false"/>
+      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="login"/>
+      <response name="success" type="request" value="updatedistributor"/>
+      <response name="error" type="view" value="login"/>
     </request-map>
-    <request-map>
-        <uri>logout</uri><secure>true</secure><auth>true</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>logout</event-invoke>
-        <success>view:main</success><error>view:main</error>
+
+    <request-map uri="logout">
+      <security https="true" auth="true"/>
+      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="logout"/>
+      <response name="success" type="view" value="main"/>
+      <response name="error" type="view" value="main"/>
     </request-map>
-    <view-map><view>login</view><mapped-page>/login.jsp</mapped-page></view-map>
+    <view-map name="login" page="/login.jsp"/>
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
-    <request-map>
-        <uri>view</uri>
-        <secure>false</secure>
-        <auth>false</auth>
-        <success>view:main</success>
-        <error>view:error</error>
+    <request-map uri="view">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="error"/>
     </request-map>
-    <request-map>
-        <uri>chain</uri>
-        <event-type>java</event-type>
-        <event-path>org.ofbiz.core.event.TestEvent</event-path>
-        <event-invoke>test</event-invoke>
-        <success>request:/view</success>
-        <error>view:error</error>
+    <request-map uri="chain">
+        <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/>
+        <response name="success" type="request" value="/view"/>
+        <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map><uri>main</uri><secure>false</secure><auth>false</auth><success>view:main</success></request-map>
-    <request-map><uri>sitemap</uri><secure>false</secure><auth>false</auth><success>view:sitemap</success></request-map>
-    <request-map><uri>install</uri><secure>false</secure><auth>false</auth><success>view:install</success></request-map>
-    <request-map><uri>entitymaint</uri><secure>true</secure><auth>true</auth><success>view:entitymaint</success></request-map>
+    <request-map uri="main"><security https="false" auth="false"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="sitemap"><security https="false" auth="false"/><response name="success" type="view" value="sitemap"/></request-map>
+    <request-map uri="install"><security https="false" auth="false"/><response name="success" type="view" value="install"/></request-map>
+    <request-map uri="entitymaint"><security https="true" auth="true"/><response name="success" type="view" value="entitymaint"/></request-map>
 
-    <request-map><uri>FindGeneric</uri><secure>true</secure><auth>true</auth><success>view:FindGeneric</success></request-map>
-    <request-map><uri>ViewGeneric</uri><secure>true</secure><auth>true</auth><success>view:ViewGeneric</success></request-map>
-    <request-map>
-        <uri>UpdateGeneric</uri><secure>true</secure><auth>true</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.entity.GenericWebEvent</event-path><event-invoke>updateGeneric</event-invoke>
-        <success>view:ViewGeneric</success><error>view:ViewGeneric</error>
+    <request-map uri="FindGeneric"><security https="true" auth="true"/><response name="success" type="view" value="FindGeneric"/></request-map>
+    <request-map uri="ViewGeneric"><security https="true" auth="true"/><response name="success" type="view" value="ViewGeneric"/></request-map>
+    <request-map uri="UpdateGeneric"><security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.core.entity.GenericWebEvent" invoke="updateGeneric"/>
+        <response name="success" type="view" value="ViewGeneric"/><response name="error" type="view" value="ViewGeneric"/>
     </request-map>
 
-    <request-map><uri>FindUtilCache</uri><secure>true</secure><auth>true</auth><success>view:FindUtilCache</success></request-map>
-    <request-map>
-        <uri>FindUtilCacheClear</uri><secure>true</secure><auth>true</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.util.UtilCache</event-path><event-invoke>clearEvent</event-invoke>
-        <success>view:FindUtilCache</success><error>view:FindUtilCache</error>
+    <request-map uri="FindUtilCache"><security https="true" auth="true"/><response name="success" type="view" value="FindUtilCache"/></request-map>
+    <request-map uri="FindUtilCacheClear"><security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="clearEvent"/>
+        <response name="success" type="view" value="FindUtilCache"/><response name="error" type="view" value="FindUtilCache"/>
     </request-map>
 
-    <request-map><uri>EditUtilCache</uri><secure>true</secure><auth>true</auth><success>view:EditUtilCache</success></request-map>
-    <request-map>
-        <uri>EditUtilCacheUpdate</uri><secure>true</secure><auth>true</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.util.UtilCache</event-path><event-invoke>updateEvent</event-invoke>
-        <success>view:EditUtilCache</success><error>view:EditUtilCache</error>
+    <request-map uri="EditUtilCache"/><security https="true" auth="true"/><response name="success" type="view" value="EditUtilCache"/></request-map>
+    <request-map uri="EditUtilCacheUpdate"><security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="updateEvent"/>
+        <response name="success" type="view" value="EditUtilCache"/><response name="error" type="view" value="EditUtilCache"/>
     </request-map>
-    <request-map>
-        <uri>EditUtilCacheClear</uri><secure>true</secure><auth>true</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.util.UtilCache</event-path><event-invoke>clearEvent</event-invoke>
-        <success>view:EditUtilCache</success><error>view:EditUtilCache</error>
+    <request-map uri="EditUtilCacheClear"><security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="clearEvent"/>
+        <response name="success" type="view" value="EditUtilCache"/><response name="error" type="view" value="EditUtilCache"/>
     </request-map>
 
-    <request-map><uri>FindUtilCacheElements</uri><secure>true</secure><auth>true</auth><success>view:FindUtilCacheElements</success><error>view:FindUtilCacheElements</error></request-map>
-    <request-map>
-        <uri>FindUtilCacheElementsRemoveElement</uri><secure>true</secure><auth>true</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.util.UtilCache</event-path><event-invoke>removeElementEvent</event-invoke>
-        <success>view:FindUtilCacheElements</success><error>view:FindUtilCacheElements</error>
+    <request-map uri="FindUtilCacheElements"><security https="true" auth="true"/><response name="success" type="view" value="FindUtilCacheElements"/><response name="error" type="view" value="FindUtilCacheElements"/></request-map>
+    <request-map uri="FindUtilCacheElementsRemoveElement"><security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="removeElementEvent"/>
+        <response name="success" type="view" value="FindUtilCacheElements"/><response name="error" type="view" value="FindUtilCacheElements"/>
     </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
-    <view-map><view>error</view><mapped-page>/error/error.jsp</mapped-page></view-map>
-    <view-map><view>main</view><mapped-page>/main.jsp</mapped-page></view-map>
-    <view-map><view>sitemap</view><mapped-page>/sitemap.jsp</mapped-page></view-map>
-    <view-map><view>install</view><mapped-page>/install.jsp</mapped-page></view-map>
+    <view-map name="error" page="/error/error.jsp"/>
+    <view-map name="main" page="/main.jsp"/>
+    <view-map name="sitemap" page="/sitemap.jsp"/>
+    <view-map name="install" page="/install.jsp"/>
 
-    <view-map><view>entitymaint</view><mapped-page>/entity/entitymaint.jsp</mapped-page></view-map>
-    <view-map><view>entityref</view><mapped-page>/entity/entityref.jsp</mapped-page></view-map>
-    <view-map><view>entityref_list</view><mapped-page>/entity/entityref_list.jsp</mapped-page></view-map>
-    <view-map><view>entityref_main</view><mapped-page>/entity/entityref_main.jsp</mapped-page></view-map>
-    <view-map><view>FindGeneric</view><mapped-page>/entity/FindGeneric.jsp</mapped-page></view-map>
-    <view-map><view>ViewGeneric</view><mapped-page>/entity/ViewGeneric.jsp</mapped-page></view-map>
+    <view-map name="entitymaint" page="/entity/entitymaint.jsp"/>
+    <view-map name="entityref" page="/entity/entityref.jsp"/>
+    <view-map name="entityref_list" page="/entity/entityref_list.jsp"/>
+    <view-map name="entityref_main" page="/entity/entityref_main.jsp"/>
+    <view-map name="FindGeneric" page="/entity/FindGeneric.jsp"/>
+    <view-map name="ViewGeneric" page="/entity/ViewGeneric.jsp"/>
 
-    <view-map><view>tablesMySql</view><mapped-page>/entity/tablesMySql.jsp</mapped-page></view-map>
-    <view-map><view>dataMySql</view><mapped-page>/entity/dataMySql.jsp</mapped-page></view-map>
-    <view-map><view>ModelWriter</view><mapped-page>/entity/ModelWriter.jsp</mapped-page></view-map>
-    <view-map><view>EditEntity</view><mapped-page>/entity/EditEntity.jsp</mapped-page></view-map>
-    <view-map><view>checkdb</view><mapped-page>/entity/checkdb.jsp</mapped-page></view-map>
+    <view-map name="tablesMySql" page="/entity/tablesMySql.jsp"/>
+    <view-map name="dataMySql" page="/entity/dataMySql.jsp"/>
+    <view-map name="ModelWriter" page="/entity/ModelWriter.jsp"/>
+    <view-map name="EditEntity" page="/entity/EditEntity.jsp"/>
+    <view-map name="checkdb" page="/entity/checkdb.jsp"/>
 
-    <view-map><view>EditUtilCache</view><mapped-page>/cache/EditUtilCache.jsp</mapped-page></view-map>
-    <view-map><view>FindUtilCache</view><mapped-page>/cache/FindUtilCache.jsp</mapped-page></view-map>
-    <view-map><view>FindUtilCacheElements</view><mapped-page>/cache/FindUtilCacheElements.jsp</mapped-page></view-map>
+    <view-map name="EditUtilCache" page="/cache/EditUtilCache.jsp"/>
+    <view-map name="FindUtilCache" page="/cache/FindUtilCache.jsp"/>
+    <view-map name="FindUtilCacheElements" page="/cache/FindUtilCacheElements.jsp"/>
     <!-- end of view mappings -->
 </site-conf>
