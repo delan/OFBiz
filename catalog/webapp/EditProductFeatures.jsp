@@ -68,7 +68,7 @@
 <p class="head2">Product Feature Application Maintenance</p>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>Dessciption</b></div></td>
+    <td><div class="tabletext"><b>Description</b></div></td>
     <td><div class="tabletext"><b>Feature&nbsp;Type</b></div></td>
     <td><div class="tabletext"><b>Feature&nbsp;Category</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
@@ -79,14 +79,16 @@
     <td><div class="tabletext">&nbsp;</div></td>
   </tr>
 <ofbiz:iterator name="productFeatureAndAppl" property="productFeatureAndAppls">
+  <%GenericValue curProductFeatureCategory = delegator.findByPrimaryKey("ProductFeatureCategory", UtilMisc.toMap("productFeatureCategoryId", productFeatureAndAppl.get("productFeatureCategoryId")));%>
+  <%if (curProductFeatureCategory != null) pageContext.setAttribute("curProductFeatureCategory", curProductFeatureCategory);%>
   <tr valign="middle">
     <FORM method=POST action='<ofbiz:url>/UpdateFeatureToProductApplication</ofbiz:url>'>
-        <input type=hidden <ofbiz:inputvalue entityAttr="productAttribute" field="productId" fullattrs="true"/>>
-        <input type=hidden <ofbiz:inputvalue entityAttr="productAttribute" field="productFeatureId" fullattrs="true"/>>
-        <input type=hidden <ofbiz:inputvalue entityAttr="productAttribute" field="fromDate" fullattrs="true"/>>
+        <input type=hidden <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="productId" fullattrs="true"/>>
+        <input type=hidden <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="productFeatureId" fullattrs="true"/>>
+        <input type=hidden <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="fromDate" fullattrs="true"/>>
     <td><div class='tabletext'><ofbiz:entityfield attribute="productFeatureAndAppl" field="description"/></div></td>
     <td><div class='tabletext'><ofbiz:entityfield attribute="productFeatureAndAppl" field="productFeatureTypeId"/></div></td>
-    <td><div class='tabletext'><ofbiz:entityfield attribute="productFeatureAndAppl" field="productFeatureCategoryId"/></div></td>
+    <td><div class='tabletext'><ofbiz:entityfield attribute="curProductFeatureCategory" field="description"/> [<ofbiz:entityfield attribute="productFeatureAndAppl" field="productFeatureCategoryId"/>]</div></td>
     <td><div class='tabletext'><ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="fromDate"/></div></td>
     <td><input type=text size='20' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="thruDate" fullattrs="true"/>></td>
     <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="sequenceNum" fullattrs="true"/>></td>
