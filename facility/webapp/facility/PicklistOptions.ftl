@@ -42,7 +42,7 @@
 
 <form method='post' name="PicklistOptions" action="<@ofbizUrl>/Picklist</@ofbizUrl>">
   <#if requestParameters.facilityId?exists>
-    <input type="hidden" name="facilityId" value="requestParameters.facilityId"/>
+    <input type="hidden" name="facilityId" value="${requestParameters.facilityId}"/>
   </#if>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
