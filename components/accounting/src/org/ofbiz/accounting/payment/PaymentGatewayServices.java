@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.10 2003/09/04 19:23:52 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.11 2003/09/05 17:20:01 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class PaymentGatewayServices {    
@@ -899,7 +899,7 @@ public class PaymentGatewayServices {
             paymentCtx.put("paymentMethodId", paymentPreference.get("paymentMethodId"));
             paymentCtx.put("partyIdTo", payTo);
             paymentCtx.put("partyIdFrom", orderRole.get("partyId")); 
-            paymentCtx.put("statusId", "PAYMENT_PAID");                                                                           
+            paymentCtx.put("statusId", "PMNT_RECEIVED");                                                                           
             paymentCtx.put("paymentPreferenceId", paymentPreference.get("orderPaymentPreferenceId"));
             paymentCtx.put("amount", result.get("captureAmount"));
             paymentCtx.put("userLogin", userLogin);
