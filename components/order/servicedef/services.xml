@@ -453,7 +453,8 @@
     <service name="importZipSalesTaxData" engine="java" transaction-timout="7200"
             location="org.ofbiz.order.thirdparty.zipsales.ZipSalesServices" invoke="importFlatTable">
         <description>Import ZipSales Flat File</description>
-        <attribute name="fileLocation" type="String" mode="IN" optional="false"/>
+        <attribute name="taxFileLocation" type="String" mode="IN" optional="false"/>
+        <attribute name="ruleFileLocation" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="_calcTax" engine="java"

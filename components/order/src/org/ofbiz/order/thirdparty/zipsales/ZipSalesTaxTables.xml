@@ -28,7 +28,7 @@
 -->
 
 <data-files>
-    <data-file name="FlatTable" type-code="001" record-length="182" separator-style="fixed-length">
+    <data-file name="FlatTaxTable" type-code="001" record-length="182" separator-style="fixed-length">
         <record name="taxEntry">
             <field name="zipCode" position="0" length="5" type="String"/>
             <field name="city" position="5" length="28" type="String"/>
@@ -52,6 +52,18 @@
             <field name="effectiveDate" position="163" length="8" type="String"/>
             <field name="geoCode" position="171" length="10" type="String"/>
             <field name="insideCity" position="181" length="1" type="String"/>
+        </record>
+    </data-file>
+
+    <data-file name="FreightRuleTable" type-code="001" record-length="321" separator-style="fixed-length">
+        <record name="ruleEntry">
+            <field name="stateCode" position="0" length="2" type="String"/>
+            <field name="county" position="2" length="25" type="String"/>
+            <field name="city" position="27" length="28" type="String"/>
+            <field name="idCode" position="55" length="3" type="String"/>
+            <field name="taxable" position="58" length="1" type="String"/>
+            <field name="condition" position="59" length="254" type="String"/>
+            <field name="effectiveDate" position="313" length="8" type="String"/>
         </record>
     </data-file>
 </data-files>
