@@ -27,8 +27,11 @@ package org.ofbiz.entityext.eca;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -46,14 +49,15 @@ import org.w3c.dom.Element;
  */
 public class EntityEcaAction {
     public static final String module = EntityEcaAction.class.getName();
-    
-    protected String serviceName;
-    protected String serviceMode;
-    protected boolean resultToValue;
-    protected boolean abortOnError;
-    protected boolean rollbackOnError;
-    protected boolean persist;
-    protected String valueAttr;
+
+    protected String serviceName = null;
+    protected String serviceMode = null;
+    protected String runAsUser = null;
+    protected String valueAttr = null;
+    protected boolean resultToValue = true;
+    protected boolean abortOnError = false;
+    protected boolean rollbackOnError = false;
+    protected boolean persist = false;
 
     protected EntityEcaAction() {}
 
@@ -66,6 +70,7 @@ public class EntityEcaAction {
         this.abortOnError = "true".equals(action.getAttribute("abort-on-error"));
         this.rollbackOnError = "true".equals(action.getAttribute("rollback-on-error"));
         this.persist = "true".equals(action.getAttribute("persist"));
+        this.runAsUser = action.getAttribute("run-as-user");
         this.valueAttr = action.getAttribute("value-attr");
     }
 
@@ -82,7 +87,16 @@ public class EntityEcaAction {
             
             //Debug.logInfo("Running Entity ECA action service " + this.serviceName + " triggered by entity: " + value.getEntityName(), module);
             //Debug.logInfo("Running Entity ECA action service " + this.serviceName + "; value=" + value + "; actionContext=" + actionContext, module);
-        
+
+            // setup the run-as-user
+            GenericValue userLoginToRunAs = null;
+            if (UtilValidate.isNotEmpty(this.runAsUser)) {
+                userLoginToRunAs = dctx.getDelegator().findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", this.runAsUser));
+                if (userLoginToRunAs != null) {
+                    actionContext.put("userLogin", userLoginToRunAs);
+                }
+            }
+
             LocalDispatcher dispatcher = dctx.getDispatcher();
             if ("sync".equals(this.serviceMode)) {
                 actionResult = dispatcher.runSync(this.serviceName, actionContext);
