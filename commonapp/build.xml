@@ -51,9 +51,17 @@
         <property name="extlib.dir"        value="../lib" />
 
         <property name="ofbcore-share.jar"    value="${corelib.dir}/ofbcore-share.jar" />
+        <property name="ofbcore-entity.jar"    value="${corelib.dir}/ofbcore-entity.jar" />
+        <property name="ofbcore-service.jar"    value="${corelib.dir}/ofbcore-service.jar" />
+        <property name="ofbcore-extutil.jar"    value="${corelib.dir}/ofbcore-extutil.jar" />
         <property name="ofbcore-webapp.jar"   value="${corelib.dir}/ofbcore-webapp.jar" />
-        <property name="ofbcore-rules.jar"    value="${corelib.dir}/ofbcore-rules.jar" />
         <property name="ofbcore-workflow.jar" value="${corelib.dir}/ofbcore-workflow.jar" />
+        <property name="ofbcore-rules.jar"    value="${corelib.dir}/ofbcore-rules.jar" />
+        <property name="ofbcore-datafile.jar"    value="${corelib.dir}/ofbcore-datafile.jar" />
+        <property name="ofbcore-minilang.jar"    value="${corelib.dir}/ofbcore-minilang.jar" />
+        <property name="ofb-jars1"    value="${ofbcore-share.jar}:${ofbcore-entity.jar}:${ofbcore-service.jar}:${ofbcore-extutil.jar}" />
+        <property name="ofb-jars2"    value="${ofbcore-webapp.jar}:${ofbcore-workflow.jar}:${ofbcore-rules.jar}:${ofbcore-datafile.jar}:${ofbcore-minilang.jar}" />
+        <property name="ofb-jars"    value="${ofb-jars1}:${ofb-jars2}" />
         
         <property name="j2ee.jar"      value="${extlib.dir}/compile/jboss-j2ee.jar" />
         <property name="jdbc.jar"      value="${extlib.dir}/compile/jdbc2_0-stdext.jar" />
@@ -75,7 +83,6 @@
         <property name="api-jars3"     value="${bsh.jar}:${axis.jar}:${clutil.jar}:${wsdl4j.jar}" />
 	<property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}" />
         
-        <property name="ofb-jars"    value="${ofbcore-share.jar}:${ofbcore-webapp.jar}:${ofbcore-rules.jar}:${ofbcore-workflow.jar}" />
         <property name="classpath"   value="${env.CLASSPATH}:${ofb-jars}:${api-jars}" />
 	<echo message="classpath: ${classpath}" />
     </target>

@@ -9,7 +9,7 @@
     <handler name="java" class="org.ofbiz.core.event.JavaEventHandler"/>
     <handler name="soap" class="org.ofbiz.core.event.SOAPEventHandler"/>
     <handler name="service" class="org.ofbiz.core.event.ServiceEventHandler"/>
-    <handler name="simple" class="org.ofbiz.core.event.SimpleEventHandler"/>
+    <handler name="simple" class="org.ofbiz.core.minilang.SimpleEventHandler"/>
     
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->

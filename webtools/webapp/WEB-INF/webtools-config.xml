@@ -118,7 +118,7 @@
     
     <request-map uri="UpdateGeneric">
     	<security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.core.entity.GenericWebEvent" invoke="updateGeneric"/>
+        <event type="java" path="org.ofbiz.core.generic.GenericWebEvent" invoke="updateGeneric"/>
         <response name="success" type="view" value="ViewGeneric"/>
         <response name="error" type="view" value="ViewGeneric"/>
     </request-map>
@@ -231,4 +231,3 @@
     <!-- end of view mappings -->
     
 </site-conf>
-
