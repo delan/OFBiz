@@ -78,8 +78,9 @@ import javax.servlet.http.*;
 	LocalDispatcher dispatcher	= (LocalDispatcher)request.getAttribute("dispatcher");
        	GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
-	priKeyValue	= request.getParameter(priKeyName);
-	genericValue	= delegator.findByPrimaryKey(entityName, UtilMisc.toMap(priKeyName, priKeyValue));
+	//priKeyValue	= request.getParameter(priKeyName);
+	//genericValue	= delegator.findByPrimaryKey(entityName, UtilMisc.toMap(priKeyName, priKeyValue));
+        genericValue = session.getAttribute("current" + entityName);
 
 	HtmlFormWrapper editWrapper = new HtmlFormWrapper(formDefFile, 
 					singleFormName, request, response);
@@ -90,7 +91,7 @@ import javax.servlet.http.*;
 	ModelForm modelForm	= editWrapper.getModelForm();
 	modelForm.setDefaultMapName(defaultMapName);
 	context.put("editWrapper", editWrapper);
-	context.put(priKeyName, priKeyValue);
+	//context.put(priKeyName, priKeyValue);
 
 	return "success";
 

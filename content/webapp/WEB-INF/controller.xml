@@ -525,6 +525,12 @@
         <response name="success" type="view" value="EditContent"/>
         <response name="error" type="view" value="EditContent"/>
     </request-map>
+    <request-map uri="gotoContent">
+        <security auth="true" https="true"/>
+        <event invoke="org/ofbiz/content/clearCurrentContent.bsh" path="" type="bsf" />
+        <response name="success" type="view" value="EditContent"/>
+        <response name="error" type="view" value="EditContent"/>
+    </request-map>
 
 	<!-- DataResource requests -->
     <request-map uri="EditDataResource">
