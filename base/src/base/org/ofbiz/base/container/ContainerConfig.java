@@ -86,7 +86,7 @@ public class ContainerConfig {
                 }                
             }
             if (containers.size() == 0) {
-                throw new ContainerException("No contaners loaded; problem with configuration");
+                throw new ContainerException("No containers loaded; problem with configuration");
             }            
         }
         return containers.values();
