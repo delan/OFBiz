@@ -48,6 +48,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <resource loader="mainfile" location="entitymodel_order.xml"/>
         <resource loader="mainfile" location="entitymodel_party.xml"/>
         <resource loader="mainfile" location="entitymodel_product.xml"/>
+        <resource loader="mainfile" location="entitymodel_marketing.xml"/>
     </entity-model-reader>
 
     <entity-group-reader name="main" loader="mainfile" location="entitygroup.xml"/>
