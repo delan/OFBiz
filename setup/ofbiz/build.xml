@@ -32,6 +32,9 @@
     <!-- Install OFBIZ Components in JBoss & Tomcat                         -->
     <!-- ================================================================== -->
 
+    <target name="install" depends="install-catalina">
+    </target>
+
     <target name="install-jboss">
         <property environment="env" />
         <property name="jboss.dir"      value="${env.JBOSS_HOME}" />
@@ -65,14 +68,21 @@
              toDir="${tomcat.dir}/conf" />
     </target>
 
-    <target name="install" depends="install-jboss, install-tomcat">
+    <target name="install-catalina">
+        <property environment="env" />
+        <property name="catalina.dir"      value="${env.CATALINA_HOME}" />
+    
+        <move file="${catalina.dir}/conf/server.xml"
+            toFile="${catalina.dir}/conf/server.orig.xml" />
+        <copy file="setup/catalina/conf/server.xml"
+             toDir="${catalina.dir}/conf" />
     </target>
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
 
-    <target name="init">
+    <target name="ofbiz-init">
         <property environment="env" />
         <property name="home.dir"        value="${env.OFBIZ_HOME}" />
         <property name="etc.dir"        value="${home.dir}/etc" />
@@ -80,12 +90,57 @@
         <property name="j2eedeploy.dir"  value="${home.dir}/j2eedeploy" />
     </target>
 
+    <target name="catalina-init">
+        <property environment="env" />
+        <property name="catalina.dir"      value="${env.CATALINA_HOME}" />
+        <property name="home.dir"        value="${env.OFBIZ_HOME}" />
+
+        <property name="etc.dir"         value="${catalina.dir}/classes" />
+        <property name="lib.dir"         value="${catalina.dir}/lib" />
+        <property name="j2eedeploy.dir"  value="${catalina.dir}/webapps" />
+    </target>
+
 
     <!-- ================================================================== -->
     <!-- Removes all created files and directories                          -->
     <!-- ================================================================== -->
 
-    <target name="clean" depends="clean-lib">
+    <target name="clean" depends="catalina-clean">
+    </target>
+
+    <target name="catalina-clean" depends="catalina-init,sub-clean">
+        <delete file="${etc.dir}/servers.properties" />
+        <delete file="${etc.dir}/debug.properties" />
+        <delete file="${etc.dir}/cache.properties" />
+        <delete file="${lib.dir}/ofbcommonapp.jar" />        
+
+        <delete file="${lib.dir}/ofbcore.jar" />        
+
+        <delete file="${etc.dir}/ecommerce.properties" />
+        <delete file="${lib.dir}/ofbecom.jar" />
+
+        <delete file="${lib.dir}/ofbcatalog.jar" />
+        <delete file="${lib.dir}/ofbpartymgr.jar" />
+        <delete file="${lib.dir}/ofbordermgr.jar" />
+
+        <delete file="${j2eedeploy.dir}/ofbcore-ejb.jar" />    
+
+        <delete file="${j2eedeploy.dir}/commonapp-ext.war" />
+
+        <delete file="${j2eedeploy.dir}/ecommerce-ext.war" />
+
+        <delete file="${j2eedeploy.dir}/catalog-ext.war" />
+        <delete file="${j2eedeploy.dir}/partymgr-ext.war" />
+        <delete file="${j2eedeploy.dir}/ordermgr-ext.war" />
+    </target>
+
+    <target name="ofbiz-clean" depends="ofbiz-init,sub-clean">
+        <delete dir="${etc.dir}" />        
+        <delete dir="${lib.dir}" />
+        <delete dir="${j2eedeploy.dir}" />
+    </target>
+
+    <target name="sub-clean" depends="">
         <echo message="[clean] ===== Cleaning core =====" />
         <ant dir="core" target="clean" inheritAll="false" />
         <echo message="[clean] ===== Cleaning commonapp =====" />
@@ -104,18 +159,12 @@
         <echo message="[clean] ===== Done Cleaning =====" />
     </target>
 
-    <target name="clean-lib" depends="init">
-        <delete dir="${etc.dir}" />        
-        <delete dir="${lib.dir}" />
-        <delete dir="${j2eedeploy.dir}" />
-    </target>
-
 
     <!-- ================================================================== -->
     <!-- Makes sure the needed directory structure is in place              -->
     <!-- ================================================================== -->
 
-    <target name="prepare" depends="clean-lib">
+    <target name="ofbiz-prepare" depends="ofbiz-init">
         <mkdir dir="${etc.dir}" />
         <mkdir dir="${lib.dir}" />
         <mkdir dir="${j2eedeploy.dir}" />
@@ -127,19 +176,19 @@
 
     <target name="build" depends="">
         <echo message="[build] ===== Building core =====" />
-        <ant dir="core" />
+        <ant dir="core" inheritAll="false" />
         <echo message="[build] ===== Building commonapp =====" />
-        <ant dir="commonapp" />
-        
+        <ant dir="commonapp" inheritAll="false" />
+
         <echo message="[build] ===== Building ecommerce =====" />
-        <ant dir="ecommerce" />
-        
+        <ant dir="ecommerce" inheritAll="false" />
+
         <echo message="[build] ===== Building catalog =====" />
-        <ant dir="catalog" />
+        <ant dir="catalog" inheritAll="false" />
         <echo message="[build] ===== Building partymgr =====" />
-        <ant dir="partymgr" />
+        <ant dir="partymgr" inheritAll="false" />
         <echo message="[build] ===== Building ordermgr =====" />
-        <ant dir="ordermgr" />
+        <ant dir="ordermgr" inheritAll="false" />
         
         <echo message="[build] ===== Done Building =====" />
     </target>
@@ -150,17 +199,17 @@
           <ant dir="core" target="war" />
         -->
         <echo message="[build] ===== Building commonapp =====" />
-        <ant dir="commonapp" target="war" />
+        <ant dir="commonapp" target="war" inheritAll="false" />
         
         <echo message="[build] ===== Building ecommerce =====" />
-        <ant dir="ecommerce" target="war" />
+        <ant dir="ecommerce" target="war" inheritAll="false" />
         
         <echo message="[build] ===== Building catalog =====" />
-        <ant dir="catalog" target="war" />
+        <ant dir="catalog" target="war" inheritAll="false" />
         <echo message="[build] ===== Building partymgr =====" />
-        <ant dir="partymgr" target="war" />
+        <ant dir="partymgr" target="war" inheritAll="false" />
         <echo message="[build] ===== Building ordermgr =====" />
-        <ant dir="ordermgr" target="war" />
+        <ant dir="ordermgr" target="war" inheritAll="false" />
         
         <echo message="[build] ===== Done Building =====" />
     </target>
@@ -192,8 +241,32 @@
     <!-- Deploy the app                                                     -->
     <!-- ================================================================== -->
 	
+    <target name="deploy" depends="catalina-deploy">
+    </target>
+
+    <target name="deploy-ext" depends="catalina-deploy-ext">
+    </target>
+
+    <target name="ofbiz-deploy" depends="build, ofbiz-prepare, ofbiz-init">
+        <antcall target="int-deploy" />
+    </target>
+
+    <target name="ofbiz-deploy-ext" depends="build, ofbiz-prepare, ofbiz-init, war">
+        <antcall target="int-deploy" />
+        <antcall target="int-deploy-ext" />
+    </target>
+
+    <target name="catalina-deploy" depends="build, catalina-init">
+        <antcall target="int-deploy" />
+    </target>
+
+    <target name="catalina-deploy-ext" depends="build, catalina-init, war">
+        <antcall target="int-deploy" />
+        <antcall target="int-deploy-ext" />
+    </target>
+
     <!-- Copy all files necessary for running IN PLACE (ie: OFBIZ_HOME == .) -->
-    <target name="deploy" depends="build, prepare">
+    <target name="int-deploy" depends="build">
         <copy file="commonapp/etc/servers.properties"
             toFile="${etc.dir}/servers.properties" />
         <copy file="commonapp/etc/debug.properties"
@@ -205,8 +278,6 @@
         
         <copy file="core/lib/ofbcore.jar"
             toFile="${lib.dir}/ofbcore.jar" />        
-        <copy file="core/lib/ofbcore-ejb.jar"
-            toFile="${j2eedeploy.dir}/ofbcore-ejb.jar" />    
 
         <copy file="ecommerce/etc/ecommerce.properties"
             toFile="${etc.dir}/ecommerce.properties" />
@@ -221,8 +292,13 @@
             toFile="${lib.dir}/ofbordermgr.jar" />
     </target>
 
+    <target name="ejbdeploy" depends="deploy">
+        <copy file="core/lib/ofbcore-ejb.jar"
+            toFile="${j2eedeploy.dir}/ofbcore-ejb.jar" />    
+    </target>
+
     <!-- Copy all files necessary for EXTERNAL running -->
-    <target name="deploy-ext" depends="deploy, war">
+    <target name="int-deploy-ext" depends="">
         <mkdir dir="${home.dir}/commonapp/entitydef" />
         <copy file="commonapp/entitydef/entitymodel.xml"
             toFile="${home.dir}/commonapp/entitydef/entitymodel.xml" />

@@ -42,28 +42,45 @@
         <property name="build.dir"      value="build" />
         <property name="build.compiler" value="classic" /> 
         <property name="pkg-dist.name"  value="${name}-pkg" />
-        <property name="jbejbd.dir"     value="${env.JBOSS_HOME}/deploy" />
-        <property name="jbcored.dir"    value="${env.JBOSS_HOME}/lib/ext" />
         <property name="tccored.dir"    value="${env.TOMCAT_HOME}/lib" />
 		
         <!-- Classpath setting -->
-        <property name="servlet.jar" value="${env.TOMCAT_HOME}/lib/servlet.jar" />
+        <property name="servlet1.jar"  value="${env.CATALINA_HOME}/common/lib/servlet.jar" />
+        <property name="servlet2.jar"  value="${env.TOMCAT_HOME}/lib/servlet.jar" />
+        <property name="servlet.jar"   value="${servlet1.jar}:${servlet2.jar}" />
+
+        <property name="jdbc1.jar"     value="${env.CATALINA_HOME}/common/lib/jdbc2_0-stdext.jar" />
+        <property name="jdbc2.jar"     value="${env.JBOSS_HOME}/lib/jboss-jdbc_ext.jar.jar" />
+        <property name="jdbc3.jar"     value="${env.JBOSS_HOME}/lib/jdbc2_0-stdext.jar" />
+        <property name="jdbc.jar"      value="${jdbc1.jar}:${jdbc2.jar}:${jdbc3.jar}" />
+
+        <property name="mail1.jar"    value="${env.CATALINA_HOME}/common/lib/mail.jar" />
+        <property name="mail2.jar"    value="${env.JBOSS_HOME}/lib/ext/mail.jar" />
+        <property name="mail.jar"     value="${mail1.jar}:${mail2.jar}" />
+
+        <property name="jaxp1.jar"    value="${env.CATALINA_HOME}/common/lib/jaxp.jar" />
+        <property name="jaxp2.jar"    value="${env.JBOSS_HOME}/lib/jaxp.jar" />
+        <property name="jaxp.jar"     value="${jaxp1.jar}:${jaxp2.jar}" />
+
+        <property name="api-jars"      value="${servlet.jar}:${jdbc.jar}:${mail.jar}" />
+        <property name="xml-jars"      value="${jaxp.jar}" />
+        <property name="classpath"     value="${env.CLASSPATH}:${lib.dir}:${api-jars}:${xml-jars}" />
+        <echo message="classpath: ${classpath}" />
+    </target>
+
+    <target name="ejbinit">
+        <property name="ejbsrc.dir"     value="ejbsrc" />
+		
+        <!-- Classpath setting -->
         <property name="mail.jar"    value="${env.JBOSS_HOME}/lib/ext/mail.jar" />
         <property name="jaxp.jar"    value="${env.JBOSS_HOME}/lib/jaxp.jar" />
         <property name="parser.jar"  value="${env.JBOSS_HOME}/lib/xml.jar" />
 
-        <!-- JBoss 2.4 Jar(s) -->
         <property name="ejb1.jar"    value="${env.JBOSS_HOME}/lib/ext/jboss-j2ee.jar" />
-        <property name="jdbc1.jar"   value="${env.JBOSS_HOME}/lib/jboss-jdbc_ext.jar" />
-        <!-- JBoss 2.2 Jar(s) -->
         <property name="ejb2.jar"    value="${env.JBOSS_HOME}/lib/ext/ejb.jar" />
-        <property name="jdbc2.jar"   value="${env.JBOSS_HOME}/lib/jdbc2_0-stdext.jar" />
-
         <property name="ejb.jar"     value="${ejb1.jar}:${ejb2.jar}" />
-        <property name="jdbc.jar"    value="${jdbc1.jar}:${jdbc2.jar}" />
-        <property name="api-jars"    value="${servlet.jar}:${ejb.jar}:${jdbc.jar}:${mail.jar}" />
-        <property name="xml-jars"    value="${jaxp.jar}:${parser.jar}" />
-        <property name="classpath"   value="${env.CLASSPATH}:${lib.dir}:${api-jars}:${xml-jars}" />
+
+        <property name="ejbclasspath"   value="${classpath}:${ejb.dir}" />
         <echo message="classpath: ${classpath}" />
     </target>
 
@@ -103,36 +120,45 @@
     <!-- Compilation of the core component                                  -->
     <!-- ================================================================== -->
 
-
     <target name="tld" depends="prepare">
         <copy file="${etc.dir}/taglib.tld"
             tofile="${build.dir}/jar/META-INF/taglib.tld" />
     </target>
 	
-    <target name="classes" depends="ejbxml">
-        <javac srcdir="${src.dir}"
+    <target name="classes" depends="tld">
+        <!-- deprecation="on" -->
+        <javac srcdir="${src.dir}" 
             classpath="${classpath}"
             destdir="${build.dir}/jar" />               
     </target>
 
-    <target name="ejbxml" depends="tld">
+    <target name="jar" depends="classes">
+        <jar jarfile="${lib.dir}/${name}.jar"
+            basedir="${build.dir}/jar" />
+    </target>
+	
+    <!-- ================================================================== -->
+    <!-- Compilation of the core component ejb jar                          -->
+    <!-- ================================================================== -->
+
+    <target name="ejbxml" depends="prepare,ejbinit">
         <copy file="${etc.dir}/ejb-jar.xml"
             tofile="${build.dir}/ejb/META-INF/ejb-jar.xml" />
         <copy file="${etc.dir}/jboss.xml"
             tofile="${build.dir}/ejb/META-INF/jboss.xml" />
     </target>
 	
-    <target name="ejbjar" depends="classes">
+    <target name="ejbclasses" depends="ejbxml,jar">
+        <javac srcdir="${ejbsrc.dir}"
+            classpath="${ejbclasspath}:${build.dir}/lib"
+            destdir="${build.dir}/ejb" />
+    </target>
+
+    <target name="ejbjar" depends="ejbclasses">
         <jar jarfile="${lib.dir}/${name}-ejb.jar"
             basedir="${build.dir}/ejb" />
-	</target>
-	
-    <target name="jar" depends="ejbjar">
-        <jar jarfile="${lib.dir}/${name}.jar"
-            basedir="${build.dir}/jar" />
     </target>
 	
-
 	
     <!-- ================================================================== -->
     <!-- Build JavaDoc                                                      -->
@@ -175,26 +201,6 @@
     </target>
 
     <target name="all" depends="jar,pkg-dist" />
-
-    <!-- ================================================================== -->
-    <!-- Deploy the app                                                     -->
-    <!-- ================================================================== -->
-	
-    <target name="deploy-jboss" depends="ejbjar,jar">
-        <delete file="${jbejbd.dir}/${name}-ejb.jar" />
-        <delete file="${jbcored.dir}/${name}.jar" />
-        <copy file="${lib.dir}/${name}-ejb.jar"
-            tofile="${jbejbd.dir}/${name}-ejb.jar" />
-        <copy file="${lib.dir}/${name}.jar"
-            tofile="${jbcored.dir}/${name}.jar" />
-
-    </target>
-
-    <target name="deploy-tomcat" depends="jar">
-        <delete file="${tccored.dir}/${name}.jar" />
-        <copy file="${lib.dir}/${name}.jar"
-            toFile="${tccored.dir}/${name}.jar" />
-    </target>
 
 </project>
 
