@@ -23,7 +23,7 @@ $Id$ <br>
 <ul>
   <li><a href="#Related_Documents">Related Documents</a>
   <li><a href="#Introduction">Introduction</a>
-  <li><a href="#Resource_JNDI">Resource Loaders and JNDI Servers</a>
+  <li><a href="#Resource">Resource Loaders</a>
   <li><a href="#JTA_Elements">JTA Elements</a>
   <li><a href="#Delegator_Elements">Delegator Elements</a>
   <li><a href="#Entity_Model">Entity Model XML Files</a>
@@ -40,6 +40,7 @@ $Id$ <br>
   <li><a href="entity.html">Entity Engine Guide</a></li>
   <li><a href="coreconfig.html">Core Configuration Guide</a></li>
   <li><a href="serviceconfig.html">Service Engine Configuration Guide</a></li>
+  <li><a href="../dtds/entity-config.html">Entity Engine Config DTD</a></li>
 </ul>
 
 <hr>
@@ -85,10 +86,8 @@ entity specified in the entity group XML file and the helper for that group
 specified in the <b><code>entityengine.xml</code></b> file. The default entity group XML
 file for the OFBiz entity model can be found in <b><code>ofbiz/commonapp/entitydef/entitygroup.xml</code></b>.</p>
 
-    <resource-loader name="mainfile" class="org.ofbiz.core.entity.config.FileLoader" 
-            prepend-env="ofbiz.home" prefix="/commonapp/entitydef/"/>
 <hr>
-<h3><a name="Resource_JNDI">Resource Loaders and JNDI Servers</a></h3>
+<h3><a name="Resource">Resource Loaders</a></h3>
 <hr>
 <p>The <b><code>resource-loader</code></b> tag is used to configure a named resource loader
 that can be used elsewhere to load XML and other resources. It has the following
@@ -122,43 +121,6 @@ attributes.</p>
 </tr>
 </table>
 
-<p>The <b><code>jndi-server</code></b> tag is used to configure JNDI servers
-that will be used for JTA objects, JDBC objects, and other JNDI resources used
-by the Entity Engine.</p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>name</td><td>Y</td>
-    <td>The name of the JNDI Server. Used in other tags in the 'jndi-server-name' 
-    attribute. This is the only required attribute. The others can be left out
-    to use the default constructor of the InitialContext class, which will
-    load the JNDI parameters from the jndi.properties file, which most app servers include.</td>
-</tr>
-<tr>
-    <td>context-provider-url</td><td>N</td>
-    <td>Example: rmi://127.0.0.1:1099</td>
-</tr>
-<tr>
-    <td>initial-context-factory</td><td>N</td>
-    <td>Example: com.sun.jndi.rmi.registry.RegistryContextFactory</td>
-</tr>
-<tr>
-    <td>url-pkg-prefixes</td><td>N</td>
-    <td>Example: java.naming.rmi.security.manager</td>
-</tr>
-<tr>
-    <td>security-principal</td><td>N</td>
-    <td>JNDI Username</td>
-</tr>
-<tr>
-    <td>security-credentials</td><td>N</td>
-    <td>JNDI Password</td>
-</tr>
-</table>
 <br>
 <hr>
 <h3><a name="JTA_Elements">JTA Elements</a></h3>
