@@ -140,25 +140,23 @@
             <td nowrap align="right"><div class='tabletext'>${cartLine.getItemSubTotal()?string.currency}</div></TD>
             <td nowrap align="center"><div class='tabletext'><#if !cartLine.getIsPromo()><input type="checkbox" name="delete_${cartLineIndex}" value="0"><#else>&nbsp;</#if></div></TD>
           </TR>
-        </ofbiz:iterator>
+        </#list>
 
-        <ofbiz:if name="cartAdjustments" size="0">
-            <%double cartSubTotal = cart.getSubTotal();%>
+        <#if shoppingCart.getAdjustments()?has_content>
             <tr><td colspan="7"><hr class='sepbar'></td></tr>
               <tr>
                 <td colspan="4" nowrap align="right"><div class='tabletext'>Sub&nbsp;Total:</div></td>
-                <td nowrap align="right"><div class='tabletext'><ofbiz:format type="currency"><%=cartSubTotal%></ofbiz:format></div></td>
+                <td nowrap align="right"><div class='tabletext'>${shoppingCart.getSubTotal()?string.currency}</div></td>
                 <td>&nbsp;</td>
               </tr>
-            <ofbiz:iterator name="cartAdjustment" property="cartAdjustments" type="org.ofbiz.core.entity.GenericValue">
-              <%GenericValue adjustmentType = cartAdjustment.getRelatedOneCache("OrderAdjustmentType");%>
-              <%if (adjustmentType != null) pageContext.setAttribute("adjustmentType", adjustmentType);%>
+            <#list shoppingCart.getAdjustments() as cartAdjustment>
+              <#assign adjustmentType = cartAdjustment.getRelatedOneCache("OrderAdjustmentType")>
               <tr>
-                <td colspan="4" nowrap align="right"><div class='tabletext'><i>Adjustment</i> - <ofbiz:entityfield attribute="adjustmentType" field="description" default="&nbsp;"/>:</div></td>
-                <td nowrap align="right"><div class='tabletext'><ofbiz:format type="currency"><%=OrderReadHelper.calcOrderAdjustment(cartAdjustment, cartSubTotal)%></ofbiz:format></div></td>
+                <td colspan="4" nowrap align="right"><div class='tabletext'><i>Adjustment</i> - ${adjustmentType.description?if_exists}:</div></td>
+                <td nowrap align="right"><div class='tabletext'>${Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal())?string.currency}</div></td>
                 <td>&nbsp;</td>
               </tr>
-            </ofbiz:iterator>
+            </#list>
         </#if>
 <#--
         <TR>
@@ -194,7 +192,7 @@
       </table>
     </TD>
   </TR>
-<%--
+<#-- Un-comment this to include a link bar at the bottom too 
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
@@ -208,13 +206,13 @@
           <td valign="middle" align="right">
             <div class='lightbuttontextdisabled'>
               <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
-              <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
-              <%if(microCart != null && microCart.size() > 0){%>
+              <#if (shoppingCartSize > 0)>
+                <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
                 <a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="lightbuttontext">[Empty&nbsp;Cart]</a>
                 <a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="lightbuttontext">[Checkout]</a>
-              <%}else{%>
-                [Empty&nbsp;Cart] [Checkout]
-              <%}%>
+              <#else>
+                [Recalculate&nbsp;Cart] [Empty&nbsp;Cart] [Checkout]
+              </#if>
             </div>
           </td>
         </tr>
@@ -224,10 +222,10 @@
       </table>
     </TD>
   </TR>
---%>
+-->
 </TABLE>
 
-<ofbiz:if name="showPromoText" type="Boolean">
+<#if showPromoText>
   <BR>
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>
@@ -248,21 +246,19 @@
           <tr>
             <td>
                 <table width='100%' cellspacing="0" cellpadding="1" border="0">
-                  <%int listIndex = 1;%>
-                  <!-- show promotions text -->
-                  <ofbiz:iterator name="productPromo" property="productPromos">
-                    <%if (UtilValidate.isNotEmpty(productPromo.getString("promoText"))) {%>
-                        <%if (listIndex > 1) {%>
-                          <tr><td><hr class='sepbar'></td></tr>
-                        <%}%>
+                  <#-- show promotions text -->
+                  <#list productPromos as productPromo>
+                    <#if productPromo.promoText?has_content>
                         <tr>
                           <td>
-                            <div class='tabletext'><%=productPromo.getString("promoText")%></div>
+                            <div class='tabletext'>${productPromo.promoText}</div>
                           </td>
                         </tr>
-                        <%listIndex++;%>
-                    <%}%>
-                  </ofbiz:iterator>
+                        <#if productPromo_has_next>
+                          <tr><td><hr class='sepbar'></td></tr>
+                        </#if>
+                    </#if>
+                  </#list>
                 </table>
             </td>
           </tr>
@@ -270,9 +266,9 @@
       </TD>
     </TR>
   </TABLE>
-</ofbiz:if>
+</#if>
 
- <ofbiz:if name="associatedProducts" size="0">
+<#if associatedProducts?has_content>
   <BR>
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>
@@ -293,19 +289,19 @@
           <tr>
             <td>
     <table width='100%' cellspacing="0" cellpadding="1" border="0">
-      <%int listIndex = 1;%>
-      <!-- random complementary products -->
-      <ofbiz:iterator name="product" property="associatedProducts">
-        <%if(listIndex > 1) {%>
-          <tr><td><hr class='sepbar'></td></tr>
-        <%}%>
+      <#-- random complementary products -->
+      <#list associatedProducts as assocProduct> 
         <tr>
           <td>
-            <%@ include file="/catalog/productsummary.jsp"%>
+            ${setRequestAttribute("optProduct", assocProduct)} 
+            ${setRequestAttribute("listIndex", assocProduct_index)}         
+            ${pages.get("/catalog/productsummary.ftl")}
           </td>
         </tr>
-        <%listIndex++;%>
-      </ofbiz:iterator>
+        <#if assocProduct_has_next>
+          <tr><td><hr class='sepbar'></td></tr>
+        </#if>
+      </#list>
     </table>
             </td>
           </tr>
@@ -313,4 +309,4 @@
       </TD>
     </TR>
   </TABLE>
- </ofbiz:if>
+</#if>

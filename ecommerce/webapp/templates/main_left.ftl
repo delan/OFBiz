@@ -33,7 +33,7 @@ ${pages.get("/templates/header.ftl")}
   ${pages.get("/templates/leftbar.ftl")}
   <td width='100%' valign='top' align='left'>
     ${pages.get("/templates/errormsg.ftl")}
-    ${pages.get("${content.path}")}
+    ${pages.get(content.path)}
   </td>
  </tr>
 </table>

@@ -32,20 +32,29 @@ importPackage(Packages.org.ofbiz.commonapp.product.catalog);
 
 var dispatcher = request.getAttribute("dispatcher");
 var delegator = request.getAttribute("delegator");
-var productId = request.getAttribute("productId");
+
+//either optProduct, optProductId or productId must be specified
+var product = request.getAttribute("optProduct");
 var optProductId = request.getAttribute("optProductId");
+var productId = request.getAttribute("productId");
+
 var webSiteId = CatalogWorker.getWebSiteId(request);
 var catalogId = CatalogWorker.getCurrentCatalogId(request);
 var autoUserLogin = session.getAttribute("autoUserLogin");
 var userLogin = session.getAttribute(SiteDefs.USER_LOGIN);
 
+if (product != null) {
+    productId = product.get("productId");
+}
 if (optProductId != null) {
     productId = optProductId;
 }
 
 // get the product entity
-if (productId != null) {
+if (product == null && productId != null) {
     product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+}
+if (product != null) {
     request.setAttribute("product", product);   
 }
 

@@ -519,7 +519,7 @@
     <view-map name="login" type="region"/>
     <view-map name="passwordemail" page="/customer/passwordemail.jsp"/>
 
-    <view-map name="showcart" type="region"/>
+    <view-map name="showcart" type="wsp" page="/cart/showcart.ftl"/>  
 
     <view-map name="quickadd" type="region"/>
     <view-map name="category" type="wsp" page="/catalog/category.ftl"/>  
