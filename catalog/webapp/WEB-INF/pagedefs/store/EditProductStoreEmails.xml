@@ -4,5 +4,6 @@
     <property name="title">Product Store Email Setup</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="headerItem">store</property>
+    <property name="tabButtonItem">EditProductStoreEmails</property>
     <page-action name="/store/EditProductStoreEmails.bsh"/>
 </page>

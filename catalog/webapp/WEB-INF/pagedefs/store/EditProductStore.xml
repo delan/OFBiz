@@ -4,5 +4,6 @@
     <property name="title">Edit Product Store</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="headerItem">store</property>
+    <property name="tabButtonItem">EditProductStore</property>
     <page-action name="/store/EditProductStore.bsh"/>
 </page>

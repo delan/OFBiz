@@ -42,7 +42,7 @@ if (shipmentCostEstimateId != null) {
     context.put("shipEstimate", shipmentCostEstimate);
 }
 
-productStoreId = request.getParameter("productStoreId");
+productStoreId = request.getParameter("viewProductStoreId");
 if (productStoreId != null) {
     productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));    
     context.put("productStoreId", productStoreId);

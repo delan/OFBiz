@@ -25,21 +25,18 @@
 -->
 
 <#if hasPermission>
-  <#if productStoreId?has_content>
-    <div class='tabContainer'>
-      <a href="<@ofbizUrl>/EditProductStore?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Store</a>
-      <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Promos</a>
-      <a href="<@ofbizUrl>/EditProductStoreCatalogs?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Catalogs</a>
-      <a href="<@ofbizUrl>/EditProductStoreWebSites?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">WebSites</a>
-      <a href="<@ofbizUrl>/EditProductStoreTaxSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Sales Tax</a>
-      <a href="<@ofbizUrl>/EditProductStoreShipSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButtonSelected">Shipping</a>
-      <a href="<@ofbizUrl>/EditProductStorePaySetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Payments</a>
-      <a href="<@ofbizUrl>/EditProductStoreEmails?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Emails</a>
-    </div>
-  </#if>
+  ${pages.get("/store/ProductStoreTabBar.ftl")}
   <div class="head1">Product Store Shipment Settings <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
   <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[New Product Store]</a>
-  <a href="<@ofbizUrl>/EditProductStoreShipSetup?productStoreId=${productStoreId}&createNew=Y</@ofbizUrl>" class="buttontext">[New Shipment Estimate]</a>
+  <#if !requestParameters.createNew?exists || requestParameters.createNew != "Y">
+    <a href="<@ofbizUrl>/EditProductStoreShipSetup?viewProductStoreId=${productStoreId}&createNew=Y</@ofbizUrl>" class="buttontext">[New Shipment Estimate]</a>
+  </#if>
+  <#if !requestParameters.newShipMethod?exists || requestParameters.newShipMethod != "Y">
+    <a href="<@ofbizUrl>/EditProductStoreShipSetup?viewProductStoreId=${productStoreId}&newShipMethod=Y</@ofbizUrl>" class="buttontext">[New Shipment Method]</a>
+  </#if>
+  <#if requestParameters.newShipMethod?default("N") == "Y" || requestParameters.createNew?default("N") == "Y">
+    <a href="<@ofbizUrl>/EditProductStoreShipSetup?viewProductStoreId=${productStoreId}</@ofbizUrl>" class="buttontext">[View Estimates]</a>
+  </#if>
   <br>
   <br>   
   
@@ -70,7 +67,7 @@
           <td><div class="tabletext">${estimate.orderFlatPrice?default(0)?string.currency}</div></td>
           <td><div class="tabletext">${estimate.orderItemFlatPrice?default(0)?string.currency}</div></td>
           <td>
-            <div class="tabletext"><#if security.hasEntityPermission("SHIPRATE", "_DELETE", session)><a href="<@ofbizUrl>/storeRemoveShipRate?productStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[Remove]</a></#if> <a href="<@ofbizUrl>/EditProductStoreShipSetup?productStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[View]</a></div>     
+            <div class="tabletext"><#if security.hasEntityPermission("SHIPRATE", "_DELETE", session)><a href="<@ofbizUrl>/storeRemoveShipRate?viewProductStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[Remove]</a></#if> <a href="<@ofbizUrl>/EditProductStoreShipSetup?productStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[View]</a></div>     
           </td>
         </tr>
       </#list>
@@ -204,7 +201,7 @@
   <#if requestParameters.createNew?exists>
     <div class="head2">New Shipment Estimate:</div>    
     <form name="addform" method="post" action="<@ofbizUrl>/storeCreateShipRate</@ofbizUrl>">    
-      <input type="hidden" name="productStoreId" value="${productStoreId}">
+      <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
       <table cellspacing="2" cellpadding="2">
         <tr>
           <td align='right'><span class="tableheadtext">Shipment Method</span></td>
@@ -213,8 +210,7 @@
               <#list shipmentMethods as shipmentMethod>
                 <option value="${shipmentMethod.partyId}|${shipmentMethod.shipmentMethodTypeId}">${shipmentMethod.description} (${shipmentMethod.partyId})</option>
               </#list>
-            </select>
-            <a href="<@ofbizUrl>/EditProductStoreShipSetup?productStoreId=${productStoreId}&newShipMethod=Y</@ofbizUrl>" class="buttontext">[New Shipment Method]</a>
+            </select>            
           </td>
           <td>&nbsp;</td>
         </tr>    
@@ -369,7 +365,7 @@
     <div class="head2">Shipment Method Type:</div>                
     <table cellspacing="2" cellpadding="2">
       <form name="editmeth" method="post" action="<@ofbizUrl>/EditProductStoreShipSetup</@ofbizUrl>">
-        <input type="hidden" name="productStoreId" value="${productStoreId}">
+        <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
         <input type="hidden" name="newShipMethod" value="Y">
         <tr>
           <td align="right"><span class="tableheadtext">Select To Edit</span></td>
@@ -391,7 +387,7 @@
         <#assign buttonText = "Create">
       </#if> 
       <form name="addmeth" method="post" action="<@ofbizUrl>${webRequest}</@ofbizUrl>">
-        <input type="hidden" name="productStoreId" value="${productStoreId}">
+        <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
         <input type="hidden" name="newShipMethod" value="Y">
         <tr>
           <td align="right"><span class="tableheadtext">Shipment Method Type ID</span></td>
@@ -421,7 +417,7 @@
     <div class="head2">Carrier Shipment Method:</div>              
     <table cellspacing="2" cellpadding="2">
       <form name="editcarr" method="post" action="<@ofbizUrl>/EditProductStoreShipSetup</@ofbizUrl>">
-        <input type="hidden" name="productStoreId" value="${productStoreId}">
+        <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
         <input type="hidden" name="newShipMethod" value="Y">
         <tr>
           <td align="right"><span class="tableheadtext">Select To Edit</span></td>
@@ -443,7 +439,7 @@
         <#assign buttonText = "Create">
       </#if> 
       <form name="addcarr" method="post" action="<@ofbizUrl>${webRequest}</@ofbizUrl>">
-        <input type="hidden" name="productStoreId" value="${productStoreId}">
+        <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
         <#if carrierShipmentMethod?has_content>
           <input type="hidden" name="newShipMethod" value="Y">
         <#else>
@@ -504,7 +500,13 @@
             <input type="text" class="inputBox" name="sequenceNumber" size="5" value="${carrierShipmentMethod.sequenceNumber?if_exists}">
             <span class="tabletext">Used for display ordering</span>
           </td>
-        </tr> 
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Limit to this store?</span></td>
+          <td>
+            <input type="checkbox" class="inputBox" name="productStoreId" value="${productStoreId}">            
+          </td>
+        </tr>
         <tr>
           <td>            
             <input type="submit" class="smallSubmit" value="${buttonText}">
