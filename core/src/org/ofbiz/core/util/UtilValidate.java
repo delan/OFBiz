@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/09/14 21:15:52  epabst
+ * cleaned up
+ *
  * Revision 1.7  2001/09/05 16:59:23  epabst
  * use java.lang.Character.isXxx methods
  *
@@ -813,7 +816,9 @@ public class UtilValidate
     for(int i = 0; i < l; i++) 
     {
       String digit = st.substring(l-i-1,l-i);
-      int tproduct = Integer.parseInt(digit,10)*mul;
+      int tproduct = 0;
+      try { tproduct = Integer.parseInt(digit,10)*mul; }
+      catch(Exception e) { Debug.logWarning(e.getMessage()); return false; }
       if(tproduct >= 10) sum +=(tproduct % 10) + 1;
       else sum += tproduct;
       if(mul == 1) mul++;
