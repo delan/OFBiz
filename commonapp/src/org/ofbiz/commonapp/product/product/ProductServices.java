@@ -135,7 +135,7 @@ public class ProductServices {
         Collection features = null;
         try {
             Map fields = UtilMisc.toMap("productId", productId);
-            List order = UtilMisc.toList("sequenceNum", "featureTypeId");
+            List order = UtilMisc.toList("sequenceNum", "productFeatureTypeId");
             if (distinct != null) fields.put("productFeatureType", distinct);
             if (type != null) fields.put("productFeatureApplTypeId", type);
             features = delegator.findByAndCache("ProductFeatureAndAppl", fields, order);
