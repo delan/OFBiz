@@ -1,3 +1,4 @@
+//NOTE: This file has been updated for OFBiz logikus customizations
 // prime.txt contains factor and prime proofs
 factor(N, I, J) :- 
     for(I, 2, N), for(J, 2, N), =(N, I*J);
@@ -9,4 +10,3 @@ for(I, Lower, Upper) :-
     for(I, LowerPlusOne, Upper);
 
 prime(N) :- not factor(N, _, _);
-

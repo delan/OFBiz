@@ -1,3 +1,5 @@
+//NOTE: This file has been updated for OFBiz logikus customizations
+//To run this program use the query: geneval(Solution)
 /*
  * This program solves the following puzzle:
  * 
@@ -34,16 +36,15 @@ permutation([], []);
 
 generate(Solution) :-
     permutation(
-        [ellis, fowler, goodrich, hightower], 
+        ["ellis", "fowler", "goodrich", "hightower"], 
         LastNames),
 
     permutation(
-        [sparring, shootFighting, pressurePoints, 
-         childrens], 
+        ["sparring", "shootFighting", "pressurePoints", "childrens"], 
         Specialties),
 
     associate(
-        [amy, betti, carla, dianne], 
+        ["amy", "betti", "carla", "dianne"], 
         LastNames, 
         Specialties, 
         Solution);
@@ -74,30 +75,29 @@ member(X, [Y | Rest]) :- member(X, Rest);
 
 evaluate(Solution) :-
     // Clue 1
-    not member(student(amy, ellis, _), Solution),
-    not member(student(amy, fowler, _), Solution),
+    not member(student("amy", "ellis", _), Solution),
+    not member(student("amy", "fowler", _), Solution),
 
     // Clue 2
-    not member(student(carla, _, sparring), Solution),
-    not member(student(dianne, _, sparring), Solution),
+    not member(student("carla", _, "sparring"), Solution),
+    not member(student("dianne", _, "sparring"), Solution),
 
     // Clue 3
-    not member(student(_, fowler, shootFighting), Solution),
-    not member(student(_, fowler, pressurePoints), 
-               Solution),
+    not member(student(_, "fowler", "shootFighting"), Solution),
+    not member(student(_, "fowler", "pressurePoints"), Solution),
 
     // Clue 4
-    not member(student(dianne, _, childrens), Solution),
+    not member(student("dianne", _, "childrens"), Solution),
 
     // Clue 5
-    not member(student(amy, goodrich, _), Solution),
-    not member(student(amy, _, pressurePoints), Solution),
+    not member(student("amy", "goodrich", _), Solution),
+    not member(student("amy", _, "pressurePoints"), Solution),
 
     // Clue 6
-    not member(student(betti, fowler, _), Solution),
+    not member(student("betti", "fowler", _), Solution),
 
     // Clue 7
-    not member(student(_, hightower, sparring), Solution),
+    not member(student(_, "hightower", "sparring"), Solution),
 
     // Clue 4, 1
-    not member(student(dianne, ellis, _), Solution);
+    not member(student("dianne", "ellis", _), Solution);

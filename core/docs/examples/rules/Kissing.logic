@@ -1,11 +1,12 @@
+//NOTE: This file has been updated for OFBiz logikus customizations
 // try running the query exposed(Who, 0615)
 
-kiss(jill,  james, 0321);
-kiss(julian, jill, 0405);
-kiss(jill, jasper, 0412);
-kiss(james, jenni, 0420);
-kiss(julian, judy, 0508);
-kiss(jed,    judy, 0614);
+kiss("jill",  "james", 0321);
+kiss("julian", "jill", 0405);
+kiss("jill", "jasper", 0412);
+kiss("james", "jenni", 0420);
+kiss("julian", "judy", 0508);
+kiss("jed",    "judy", 0614);
 
 kissed(Student1, Student2, Date) :- 
     kiss(Student1, Student2, Date);
@@ -13,7 +14,7 @@ kissed(Student1, Student2, Date) :-
 kissed(Student1, Student2, Date) :- 
     kiss(Student2, Student1, Date); 
 
-infected(julian, 0307);
+infected("julian", 0307);
 
 exposed(Student, Date) :- 
     infected(Student, Date1), 

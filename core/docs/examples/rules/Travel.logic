@@ -1,14 +1,16 @@
+//NOTE: This file has been updated for OFBiz logikus customizations
+//try the query: travel(AltBand, X)
 // travel.txt
-city(abilene, 1718);
+city("abilene", 1718);
 city("addis ababa", 8000);
-city(denver, 5280);
-city(flagstaff, 6970);
-city(jacksonville, 8);
-city(leadville, 10200);
-city(madrid, 1305);
-city(richmond, 19);
-city(spokane, 1909);
-city(wichita, 1305); 
+city("denver", 5280);
+city("flagstaff", 6970);
+city("jacksonville", 8);
+city("leadville", 10200);
+city("madrid", 1305);
+city("richmond", 19);
+city("spokane", 1909);
+city("wichita", 1305); 
 highCity(Name) :- city(Name, Alt), >(Alt, 5000);
 for(I, I, Upper) :- <= (I, Upper);
 for(I, Lower, Upper) :- 
@@ -21,4 +23,3 @@ travel(AltBand, Name) :-
     city(Name, Alt), 
     >(Alt, AltBand - 1000), 
     <= (Alt, AltBand);
-
