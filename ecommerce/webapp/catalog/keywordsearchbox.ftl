@@ -63,7 +63,7 @@
                   </select>
                 </div>
               <#else>
-                <#assign searchCategory = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCatalogSearchCategoryId(request, currentCatalogId)>
+                <#assign searchCategory = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCatalogSearchCategoryId(request, currentCatalogId)?if_exists>
                 <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategory}">
               </#if>
               <div class='tabletext'>
