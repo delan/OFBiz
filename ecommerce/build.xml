@@ -127,40 +127,24 @@
 
 
     <target name="classes" depends="prepare">
-      <javac debug="on" srcdir="${src.dir}"
-             classpath="${classpath}"
-             destdir="${build.dir}/jar" />
+      <javac debug="on" srcdir="${src.dir}" classpath="${classpath}" destdir="${build.dir}/jar" />
     </target>
 
     <target name="jar" depends="classes">
-      <jar jarfile="${lib.dir}/${name}.jar"
-           basedir="${build.dir}/jar" />
+      <jar jarfile="${lib.dir}/${name}.jar" basedir="${build.dir}/jar" />
     </target>
     
     <target name="jar-deploy" depends="jar">
-    	<copy file="${lib.dir}/${name}.jar"
-    		tofile="${walib.dir}/${name}.jar" />
-    	<copy file="${ofbcore-webapp.jar}"
-    		tofile="${walib.dir}/ofbcore-webapp.jar" />
-    	<copy file="${ofbcommonapp.jar}"
-    		tofile="${walib.dir}/ofbcommonapp.jar" />
+    	<copy file="${lib.dir}/${name}.jar" tofile="${walib.dir}/${name}.jar" />
+    	<copy file="${ofbcore-webapp.jar}" tofile="${walib.dir}/ofbcore-webapp.jar" />
     </target>
 
     <!-- ================================================================== -->
     <!-- Build the WARs                                                     -->
     <!-- ================================================================== -->
 	
-    <target name="war" depends="jar,prepare">
-        <copy file="${lib.dir}/${name}.jar"
-              tofile="${walib.dir}/${name}.jar" />
-
-        <copy file="${ofbcore-webapp.jar}"
-              tofile="${walib.dir}/ofbcore-webapp.jar" />
-        <copy file="${ofbcommonapp.jar}"
-              tofile="${walib.dir}/ofbcommonapp.jar" />
-        
-        <jar jarfile="${lib.dir}/${name}.war"
-             basedir="${webapp.dir}" />
+    <target name="war" depends="jar-deploy,prepare">
+        <jar jarfile="${lib.dir}/${name}.war" basedir="${webapp.dir}" />
     </target>
 
 
