@@ -155,9 +155,6 @@
         
         <jar jarfile="${lib.dir}/${name}.war"
              basedir="${webapp.dir}" />
-        
-        <delete dir="${walib.dir}" />
-        <delete dir="${waclasses.dir}" />
     </target>
 
 
