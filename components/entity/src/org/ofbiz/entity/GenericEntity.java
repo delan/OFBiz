@@ -1172,8 +1172,22 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         return condition.entityMatches(this);
     }
 
-    public static interface NULL { };
+    public static interface NULL {
+    }
 
-    protected static class NullGenericEntity extends GenericEntity implements NULL { };
-    protected static class NullField implements NULL { };
+    protected static class NullGenericEntity extends GenericEntity implements NULL {
+        protected NullGenericEntity() { }
+        
+        public String toString() {
+            return "[null-entity]";
+        }
+    }
+    
+    protected static class NullField implements NULL {
+        protected NullField() { }
+    
+        public String toString() {
+            return "[null-field]";
+        }
+    }
 }
