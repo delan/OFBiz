@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
 
@@ -41,28 +41,22 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
     context.put("hasPermission", Boolean.FALSE);
 }    
 nowTimestamp = UtilDateTime.nowTimestamp();
+nowTimestampString = nowTimestamp.toString();
+
+productCategoryId = request.getParameter("productCategoryId");
+productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
+
+prodCatalogCategories = null;
+if (productCategory != null) {
+    prodCatalogCategories = productCategory.getRelated("ProdCatalogCategory", null, UtilMisc.toList("prodCatalogCategoryTypeId", "sequenceNum", "prodCatalogId"));
+}
+prodCatalogs = delegator.findAll("ProdCatalog", UtilMisc.toList("catalogName"));
+prodCatalogCategoryTypes = delegator.findAll("ProdCatalogCategoryType", UtilMisc.toList("description"));
+
 context.put("nowTimestamp", nowTimestamp);
-
-String nowTimestampString = nowTimestamp.toString();
 context.put("nowTimestampString", nowTimestampString);
-
-boolean tryEntity = true;
-if (request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
-
-String productCategoryId = request.getParameter("productCategoryId");
-if (productCategoryId != null) context.put("productCategoryId", productCategoryId);
-
-GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
-if (productCategory == null) tryEntity = false; else context.put ("productCategory", productCategory);
-
-Collection prodCatalogCategories = productCategory.getRelated("ProdCatalogCategory", null, UtilMisc.toList("prodCatalogCategoryTypeId", "sequenceNum", "prodCatalogId"));
-if (prodCatalogCategories != null) context.put("prodCatalogCategories", prodCatalogCategories);
-
-Collection prodCatalogs = delegator.findAll("ProdCatalog", UtilMisc.toList("catalogName"));
-if (prodCatalogs != null) context.put("prodCatalogs", prodCatalogs);
-
-Collection prodCatalogCategoryTypes = delegator.findAll("ProdCatalogCategoryType", UtilMisc.toList("description"));
-if (prodCatalogCategoryTypes != null) context.put("prodCatalogCategoryTypes", prodCatalogCategoryTypes);
-
-if ("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) tryEntity = true;
-context.put("tryEntity", tryEntity);
+context.put("productCategoryId", productCategoryId);
+context.put("productCategory", productCategory);
+context.put("prodCatalogCategories", prodCatalogCategories);
+context.put("prodCatalogs", prodCatalogs);
+context.put("prodCatalogCategoryTypes", prodCatalogCategoryTypes);

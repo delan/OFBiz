@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -77,7 +77,6 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <br>
         <form method="POST" action="<@ofbizUrl>/addPartyToCategory</@ofbizUrl>" style="margin: 0;" name="addNewForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId}">
-        <input type="hidden" name="tryEntity" value="true">
         
         <div class="head2">Associate Party to Category (enter Party ID, select Type, then enter optional From Date):</div>
         <br>

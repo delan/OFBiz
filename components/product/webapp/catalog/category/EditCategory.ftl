@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -28,9 +28,7 @@
 
 ${pages.get("/category/CategoryTabBar.ftl")}
 
-<div class="head1">Category <span class="head2">  <#if productCategory?has_content> 
-${productCategory.description?if_exists} 
-</#if>[ID:${productCategoryId?if_exists}]</span></div>
+<div class="head1">Category <span class="head2"><#if productCategory?has_content>${productCategory.description?if_exists}</#if> [ID:${productCategoryId?if_exists}]</span></div>
 <a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">[New Category]</a>
 <#if productCategoryId?has_content> 
   <a href="/ecommerce/control/category?category_id=${productCategoryId}" class="buttontext" target="_blank">[Category Page]</a>
@@ -82,7 +80,7 @@ ${productCategory.description?if_exists}
       <select name="productCategoryTypeId" size=1 class="selectBox">
         <option value="">&nbsp;</option>
         <#list productCategoryTypes as productCategoryTypeData>
-          <option <#if productCategoryId?has_content><#if productCategory.productCategoryTypeId==productCategoryTypeData.productCategoryTypeId> selected</#if></#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.description}</option>
+          <option <#if productCategory?has_content><#if productCategory.productCategoryTypeId==productCategoryTypeData.productCategoryTypeId> selected</#if></#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.description}</option>
        </#list>
       </select>
     </td>
@@ -91,12 +89,12 @@ ${productCategory.description?if_exists}
   <tr>
     <td width="26%" align=right><div class="tabletext">Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" <#if productCategoryId?has_content>value="${productCategory.description?if_exists}"</#if> name="description" size="60" maxlength="60" class="inputBox"></td>
+    <td width="74%"><input type="text" <#if productCategory?has_content>value="${productCategory.description?if_exists}"</#if> name="description" size="60" maxlength="60" class="inputBox"></td>
   </tr>
   <tr>
     <td width="26%" align=right valign=top><div class="tabletext">Long Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><textarea cols="60" rows="3" name="longDescription" maxlength="2000" class="textAreaBox"><#if productCategoryId?has_content>${productCategory.longDescription?if_exists}</#if></textarea></td>
+    <td width="74%"><textarea cols="60" rows="3" name="longDescription" maxlength="2000" class="textAreaBox"><#if productCategory?has_content>${productCategory.longDescription?if_exists}</#if></textarea></td>
   </tr>
 
 <#if productCategoryId?has_content> 
@@ -110,7 +108,7 @@ ${productCategory.description?if_exists}
     <td width="26%" align=right><div class="tabletext">Category Image URL</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-      <input type="text" <#if productCategoryId?has_content>value="${productCategory.categoryImageUrl?if_exists}"</#if> name="categoryImageUrl" size="60" maxlength="250" class="inputBox">
+      <input type="text" <#if productCategory?has_content>value="${productCategory.categoryImageUrl?if_exists}"</#if> name="categoryImageUrl" size="60" maxlength="250" class="inputBox">
       <#if productCategoryId?has_content> 
         <div>
           <a href="<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=category</@ofbizUrl>" class="buttontext">[Upload Category Image]</a>
@@ -125,7 +123,7 @@ ${productCategory.description?if_exists}
     <td width="26%" align=right><div class="tabletext">Link One Image URL</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-      <input type="text" <#if productCategoryId?has_content>value="${productCategory.linkOneImageUrl?if_exists}"</#if> name="linkOneImageUrl" size="60" maxlength="250" class="inputBox">
+      <input type="text" <#if productCategory?has_content>value="${productCategory.linkOneImageUrl?if_exists}"</#if> name="linkOneImageUrl" size="60" maxlength="250" class="inputBox">
       <#if productCategoryId?has_content> 
         <div>
           <a href="<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=linkOne</@ofbizUrl>" class="buttontext">[Upload Link One Image]</a>
@@ -140,7 +138,7 @@ ${productCategory.description?if_exists}
     <td width="26%" align=right><div class="tabletext">Link Two Image URL</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-      <input type="text" <#if productCategoryId?has_content>value="${productCategory.linkTwoImageUrl?if_exists}"</#if> name="linkTwoImageUrl" size="60" maxlength="250" class="inputBox">
+      <input type="text" <#if productCategory?has_content>value="${productCategory.linkTwoImageUrl?if_exists}"</#if> name="linkTwoImageUrl" size="60" maxlength="250" class="inputBox">
       <#if productCategoryId?has_content> 
         <div>
           <a href="<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=linkTwo</@ofbizUrl>" class="buttontext">[Upload Link Two Image]</a>
@@ -156,7 +154,7 @@ ${productCategory.description?if_exists}
     <td width="26%" align="right"><div class="tabletext">Detail Template</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-        <input type="text" <#if productCategoryId?has_content>value="${productCategory.detailTemplate?if_exists}"</#if> name="detailTemplate" size="60" maxlength="250" class="inputBox">
+        <input type="text" <#if productCategory?has_content>value="${productCategory.detailTemplate?if_exists}"</#if> name="detailTemplate" size="60" maxlength="250" class="inputBox">
         <br><span class="tabletext">Defaults to "/catalog/categorydetail.ftl"</span>
     </td>
   </tr>
@@ -166,7 +164,7 @@ ${productCategory.description?if_exists}
     <td>&nbsp;</td>
     <td width="74%">
       <select name="primaryParentCategoryId" size=1 class="selectbox">
-        <#if productCategory.primaryParentCategoryId?exists>
+        <#if (productCategory.primaryParentCategoryId)?exists>
           <option value="${productCategory.primaryParentCategoryId}">${(primaryParentCategory.description)?if_exists} [${productCategory. primaryParentCategoryId}]</option>
         </#if>
         <option value="">&nbsp;</option>

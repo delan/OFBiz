@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -74,18 +74,14 @@ ${pages.get("/category/CategoryTabBar.ftl")}
             <#assign line = 0>
             <#list productCategoryMembers[lowIndex..highIndex] as productCategoryMember> 
             <#assign product = productCategoryMember.getRelatedOne("Product")>
+            <#assign hasntStarted = false>
+            <#if productCategoryMember.fromDate?exists && nowTimestamp.before(productCategoryMember.getTimestamp("fromDate"))><#assign hasntStarted = true></#if>
+            <#assign hasExpired = false>
+            <#if productCategoryMember.thruDate?exists && nowTimestamp.after(productCategoryMember.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
             <tr valign="middle">
                 <td><a href="<@ofbizUrl>/EditProduct?productId=${(productCategoryMember.productId)?if_exists}</@ofbizUrl>" class="buttontext"><#if product?exists>${(product.productName)?if_exists}</#if> [${(productCategoryMember.productId)?if_exists}]</a></td>
-                <td>
-                    <#assign hasntStarted = false>
-                    <#if (productCategoryMember.getTimestamp("fromDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productCategoryMember.getTimestamp("fromDate"))> <#assign hasntStarted = true> </#if>
-                    <div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>
-                    ${(productCategoryMember.fromDate)?if_exists}
-                    </div>
-                </td>
+                <td><div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>${(productCategoryMember.fromDate)?if_exists}</div></td>
                 <td align="center">
-                    <#assign hasExpired = false>
-                    <#if (productCategoryMember.getTimestamp("thruDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productCategoryMember.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
                     <FORM method=POST action="<@ofbizUrl>/updateCategoryProductMember?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}</@ofbizUrl>" name="lineForm${line}">
                         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
                         <input type=hidden name="productId" value="${(productCategoryMember.productId)?if_exists}">
@@ -130,7 +126,6 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <br>
         <form method="POST" action="<@ofbizUrl>/addCategoryProductMember</@ofbizUrl>" style="margin: 0;" name="addProductCategoryMemberForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
-        <input type="hidden" name="useValues" value="true">
         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
         
         <div class="head2">Add ProductCategoryMember:</div>
@@ -145,7 +140,6 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <br>
         <form method="POST" action="<@ofbizUrl>/copyCategoryProductMembers</@ofbizUrl>" style="margin: 0;">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
-        <input type="hidden" name="useValues" value="true">
         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
         
         <div class="head2">Copy ProductCategoryMembers to Another Category:</div>
@@ -172,7 +166,6 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <br>
         <form method="POST" action="<@ofbizUrl>/expireAllCategoryProductMembers</@ofbizUrl>" style="margin: 0;">
         <input type="hidden" name="productCategoryId" value="${productCategoryId}?if_exists">
-        <input type="hidden" name="useValues" value="true">
         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
         
         <div class="head2">Expire All Product Members:</div>
@@ -184,7 +177,6 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <br>
         <form method="POST" action="<@ofbizUrl>/removeExpiredCategoryProductMembers</@ofbizUrl>" style="margin: 0;">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
-        <input type="hidden" name="useValues" value="true">
         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
         
         <div class="head2">Remove Expired Product Members:</div>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
 
@@ -37,27 +37,25 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
     context.put("hasPermission", Boolean.FALSE);
 }
 
-    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+nowTimestamp = UtilDateTime.nowTimestamp();
+nowTimestampString = nowTimestamp.toString();
 
-    boolean useValues = true;
-    if(request.getAttribute("_ERROR_MESSAGE_") != null) useValues = false;
+productCategoryId = request.getParameter("showProductCategoryId");
+productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
 
-    String productCategoryId = request.getParameter("showProductCategoryId");
-    GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
-    Collection parentProductCategoryRollups = null;
-    Collection currentProductCategoryRollups = null;
-    if(productCategory == null) {
-        useValues = false;
-    } else {
-        parentProductCategoryRollups = productCategory.getRelated("ParentProductCategoryRollup");
-        if (parentProductCategoryRollups != null) context.put("parentProductCategoryRollups", parentProductCategoryRollups);
+parentProductCategoryRollups = null;
+currentProductCategoryRollups = null;
+if(productCategory != null) {
+    parentProductCategoryRollups = productCategory.getRelated("ParentProductCategoryRollup");
+    currentProductCategoryRollups = productCategory.getRelated("CurrentProductCategoryRollup");
+}
 
-        currentProductCategoryRollups = productCategory.getRelated("CurrentProductCategoryRollup");
-        if (currentProductCategoryRollups != null) context.put("currentProductCategoryRollups", currentProductCategoryRollups);
-    }
+productCategoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
 
-    Collection productCategoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
-
+context.put("nowTimestamp", nowTimestamp);
+context.put("nowTimestampString", nowTimestampString);
 context.put("productCategoryId", productCategoryId);
 context.put("productCategory", productCategory);
+context.put("parentProductCategoryRollups", parentProductCategoryRollups);
+context.put("currentProductCategoryRollups", currentProductCategoryRollups);
 context.put("productCategoryCol", productCategoryCol);

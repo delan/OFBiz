@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -40,7 +40,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
 <#if productCategoryId?has_content> 
 <p class="head2">Category Rollup: Parent Categories</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table width="100%" border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td><div class="tabletext"><b>Parent&nbsp;Category&nbsp;[ID]</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
@@ -49,21 +49,23 @@ ${pages.get("/category/CategoryTabBar.ftl")}
   </tr>
 <#if currentProductCategoryRollups.size() != 0>
   <#assign lineParent = 0>
-    <#list currentProductCategoryRollups as productCategoryRollup>
+  <#list currentProductCategoryRollups as productCategoryRollup>
     <#assign lineParent = lineParent + 1>
     <#assign curCategory = productCategoryRollup.getRelatedOne("ParentProductCategory")>
+    <#assign hasntStarted = false>
+    <#if productCategoryRollup.fromDate?exists && nowTimestamp.before(productCategoryRollup.getTimestamp("fromDate"))><#assign hasntStarted = true></#if>
+    <#assign hasExpired = false>
+    <#if productCategoryRollup.thruDate?exists && nowTimestamp.after(productCategoryRollup.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
     <tr valign="middle">
-      <td><#if curCategory?has_content><a href="<@ofbizUrl>/EditCategory?productCategoryId=${curCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${curCategory.description?if_exists} [${curCategory.productCategoryId}]</a></#if>
-      </td>
-      <td><div class="tabletext" style="color: red;">${productCategoryRollup.fromDate}<ofbiz:inputvalue entityAttr="productCategoryRollup" field="fromDate"/></div></td>
+      <td><#if curCategory?has_content><a href="<@ofbizUrl>/EditCategory?productCategoryId=${curCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${curCategory.description?if_exists} [${curCategory.productCategoryId}]</a></#if></td>
+      <td><div class="tabletext" <#if hasntStarted>style="color: red;"</#if>>${productCategoryRollup.fromDate}</div></td>
       <td align="center">
         <form method=POST action="<@ofbizUrl>/updateProductCategoryToCategory</@ofbizUrl>" name="lineParentForm${lineParent}">
             <input type=hidden name="showProductCategoryId" value="${productCategoryRollup.productCategoryId}">
-	    	    
             <input type=hidden name="productCategoryId" value="${productCategoryRollup.productCategoryId}">
             <input type=hidden name="parentProductCategoryId" value="${productCategoryRollup.parentProductCategoryId}">
             <input type=hidden name="fromDate" value="${productCategoryRollup.fromDate}">
-            <input type=text size="25" name="thruDate" value="${productCategoryRollup.thruDate?if_exists}" class="inputBox" style="color: red">
+            <input type=text size="25" name="thruDate" value="${productCategoryRollup.thruDate?if_exists}" class="inputBox" <#if hasExpired>style="color: red"</#if>>
             <a href="javascript:call_cal(document.lineParentForm${lineParent}.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <input type=text size="5" name="sequenceNum" value="${productCategoryRollup.sequenceNum?if_exists}" class="inputBox">
             <input type=submit value="Update" style="font-size: x-small;">
@@ -88,7 +90,6 @@ ${pages.get("/category/CategoryTabBar.ftl")}
   <input type="hidden" name="showProductCategoryId" value="${productCategoryId}">
   <div class="tabletext">Add <b>Parent</b> Category (select Category and enter From Date):</div>
     <select name="parentProductCategoryId" class="selectBox">
-    
     <#list productCategoryCol as curCategory>
         <#if productCategoryId != curCategory.productCategoryId>
           <option value="${curCategory.productCategoryId}">${curCategory.description?if_exists} [${curCategory.productCategoryId}]</option>
@@ -105,7 +106,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
 
 <p class="head2">Category Rollup: Child Categories</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table width="100%" border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td><div class="tabletext"><b>Child&nbsp;Category&nbsp;ID</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
@@ -114,21 +115,23 @@ ${pages.get("/category/CategoryTabBar.ftl")}
   </tr>
 <#if parentProductCategoryRollups.size() != 0>
   <#assign lineChild = 0>
-   <#list parentProductCategoryRollups as productCategoryRollup>
+  <#list parentProductCategoryRollups as productCategoryRollup>
     <#assign lineChild = lineChild + 1>
-    
-        <#assign curCategory = productCategoryRollup.getRelatedOne("CurrentProductCategory")>
+    <#assign curCategory = productCategoryRollup.getRelatedOne("CurrentProductCategory")>
+    <#assign hasntStarted = false>
+    <#if productCategoryRollup.fromDate?exists && nowTimestamp.before(productCategoryRollup.getTimestamp("fromDate"))><#assign hasntStarted = true></#if>
+    <#assign hasExpired = false>
+    <#if productCategoryRollup.thruDate?exists && nowTimestamp.after(productCategoryRollup.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
     <tr valign="middle">
       <td><#if curCategory?has_content><a href="<@ofbizUrl>/EditCategory?productCategoryId=${curCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${curCategory.description?if_exists} [${curCategory.productCategoryId}]</a></#if>
-      
-      <td><div class="tabletext" style="color: red">${productCategoryRollup.fromDate}</div></td>
+      <td><div class="tabletext" <#if hasntStarted>style="color: red"</#if>>${productCategoryRollup.fromDate}</div></td>
       <td align="center">
         <form method=POST action="<@ofbizUrl>/updateProductCategoryToCategory</@ofbizUrl>" name="lineChildForm${lineChild}">
             <input type=hidden name="showProductCategoryId" value="${productCategoryId}">
             <input type=hidden name="productCategoryId" value="${productCategoryRollup.productCategoryId}">
             <input type=hidden name="parentProductCategoryId" value="${productCategoryRollup.parentProductCategoryId}">
             <input type=hidden name="fromDate" value="${productCategoryRollup.fromDate}">
-            <input type=text size="25" name="thruDate" value="${productCategoryRollup.thruDate?if_exists}" class="inputBox" style="color: red;">
+            <input type=text size="25" name="thruDate" value="${productCategoryRollup.thruDate?if_exists}" class="inputBox" <#if hasExpired>style="color: red;"</#if>>
             <a href="javascript:call_cal(document.lineChildForm${lineChild}.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <input type=text size="5" name="sequenceNum" value="${productCategoryRollup.sequenceNum?if_exists}" class="inputBox">
             <input type=submit value="Update" style="font-size: x-small;">
