@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDispatcher.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: GenericDispatcher.java,v 1.2 2003/08/28 18:48:32 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.base.util.Debug;
  * Generic Services Local Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class GenericDispatcher extends GenericAbstractDispatcher {
@@ -71,7 +71,7 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
         ctx.loadReaders();
         dispatcher.register(name, ctx);
     }
-
+    
     protected void init(String name, GenericDelegator delegator, DispatchContext ctx) {
         if (name == null && name.length() == 0)
             throw new IllegalArgumentException("The name of a LocalDispatcher cannot be a null or empty String");
@@ -84,6 +84,23 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
         ctx.loadReaders();
         if (Debug.infoOn()) Debug.logInfo("[LocalDispatcher] : Created Dispatcher for: " + name, module);
     }
+    
+    public static LocalDispatcher getLocalDispatcher(String name, GenericDelegator delegator) throws GenericServiceException {
+        ServiceDispatcher sd = ServiceDispatcher.getInstance(name, delegator);
+        LocalDispatcher thisDispatcher = null;
+        if (sd != null) {
+            thisDispatcher = sd.getLocalDispatcher(name);
+        }
+        if (thisDispatcher == null) {
+            thisDispatcher = new GenericDispatcher(name, delegator);
+        }
+        
+        if (thisDispatcher != null) {
+            return thisDispatcher;
+        } else {
+            throw new GenericServiceException("Unable to load dispatcher for name : " + name + " with delegator : " + delegator.getDelegatorName());
+        }
+    }    
    
     /**
      * @see org.ofbiz.service.LocalDispatcher#runSync(java.lang.String, java.util.Map)

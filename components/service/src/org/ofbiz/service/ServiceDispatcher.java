@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.1 2003/08/17 05:12:41 ajzeneski Exp $
+ * $Id: ServiceDispatcher.java,v 1.2 2003/08/28 18:48:32 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.job.JobManager;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -97,8 +97,9 @@ public class ServiceDispatcher {
     public static ServiceDispatcher getInstance(String name, GenericDelegator delegator) {
         ServiceDispatcher sd = getInstance(null, null, delegator);
 
-        if (!sd.containsContext(name))
+        if (!sd.containsContext(name)) {
             return null;
+        }
         return sd;
     }
 
@@ -124,8 +125,9 @@ public class ServiceDispatcher {
                 }
             }
         }
-        if (name != null && context != null)
+        if (name != null && context != null) {
             sd.register(name, context);
+        }
         return sd;
     }
 
