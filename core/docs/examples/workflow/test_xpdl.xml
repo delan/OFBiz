@@ -121,6 +121,13 @@
 		    <ExtendedAttribute Name="partyId" Value="admin"/>
 	      </ExtendedAttributes>
         </Participant>
+        <Participant Id="all" Name="All Participant">
+          <ParticipantType Type="HUMAN"/>
+          <Description>None</Description>
+		  <ExtendedAttributes>
+		    <ExtendedAttribute Name="roleTypeId" Value="ORDER_CLERK"/>
+	      </ExtendedAttributes>
+        </Participant>        
       </Participants>
 
       <!--
@@ -261,7 +268,7 @@
 		  <Implementation>
 		    <No/>
 		  </Implementation>
-          <Performer>user</Performer>
+          <Performer>all</Performer>
           <!-- <Performer>??? - assigned at run time</Performer> -->
 
 		  <StartMode>
@@ -278,8 +285,8 @@
             </TransitionRestriction>
           </TransitionRestrictions>
           <ExtendedAttributes>
-            <ExtendedAttribute Name="acceptAllAssignments" Value="N"/>
-            <ExtendedAttribute Name="completeAllAssignments" Value="N"/>
+            <ExtendedAttribute Name="acceptAllAssignments" Value="Y"/>
+            <ExtendedAttribute Name="completeAllAssignments" Value="Y"/>
             <ExtendedAttribute Name="limitAfterStart" Value="N"/>
             <ExtendedAttribute Name="limitService" Value="testScv"/>
             <ExtendedAttribute Name="inheritPriority" Value="Y"/>
