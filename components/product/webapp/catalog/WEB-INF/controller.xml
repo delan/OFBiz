@@ -694,7 +694,7 @@
     <request-map uri="createProductFeature">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createProductFeature"/>
-        <response name="success" type="view" value="EditFeature"/>
+        <response name="success" type="view" value="EditFeatureCategoryFeatures"/>
         <response name="error" type="view" value="EditFeature"/>
     </request-map>
     <request-map uri="updateProductFeature">

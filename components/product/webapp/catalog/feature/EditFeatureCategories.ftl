@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
 -->
 
@@ -59,6 +59,7 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
     <td><input type=text class="inputBox" size="30" name="description" value="${productFeatureCategory.description?if_exists}"></td>
     <td>
       <select name="parentCategoryId" size=1 class="selectBox">
+        ${productFeatureCategory}
         <#assign curProdFeatCat = productFeatureCategory.getRelatedOne("ParentProductFeatureCategory")?if_exists>
         <#if curProdFeatCat?has_content>
           <option value="${curProdFeatCat.productFeatureCategoryId}">${curProdFeatCat.description?if_exists}</option>
