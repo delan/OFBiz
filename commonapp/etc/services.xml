@@ -1,0 +1,24 @@
+
+<services>
+	<description>Common Application Shared Services</description>
+	<vendor>OFBiz</vendor>
+	<version>1.0</version>
+	
+	<service name="checkLogin" engine="staticJava" location="org.ofbiz.commonapp.security.login.LoginEvents" invoke="checkLogin">
+	  <attribute name="request" type="javax.servlet.http.HttpServletRequest" mode="IN"/>	  
+	  <attribute name="response" type="javax.servlet.http.HttpServletResponse" mode="IN"/>
+	  <attribute name="response" type="String" mode="OUT"/>
+	</service>
+	
+    <servcice name="userLogin" engine="staticJava" location="org.ofbiz.commonapp.security.login.LoginEvents" invoke="login">
+	  <attribute name="request" type="javax.servlet.http.HttpServletRequest" mode="IN"/>	  
+	  <attribute name="response" type="javax.servlet.http.HttpServletResponse" mode="IN"/>
+	  <attribute name="response" type="String" mode="OUT"/>
+	</service>
+
+    <service name="userLogout" engine="staticJava" location="org.ofbiz.commonapp.security.login.LoginEvents" invoke="logout">
+	  <attribute name="request" type="javax.servlet.http.HttpServletRequest" mode="IN"/>	  
+	  <attribute name="response" type="javax.servlet.http.HttpServletResponse" mode="IN"/>
+	  <attribute name="response" type="String" mode="OUT"/>
+	</service>
+</services>
