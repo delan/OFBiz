@@ -464,6 +464,10 @@
             corresponding serialized inventoryItem to available.
         -->
         <field-to-field field-name="orderId" map-name="parameters" to-map-name="oiirListLookupMap"/>
+        <if-not-empty field-name="orderItemSeqId" map-name="parameters">        	
+        	<field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="oiirListLookupMap"/>
+        	<log level="info" message="OIIR Cancel for single item : ${oiirListLookupMap}"/>
+        </if-not-empty>
         <find-by-and entity-name="OrderItemInventoryRes" map-name="oiirListLookupMap" list-name="oiirList" use-cache="false"/>
         <iterate entry-name="oiir" list-name="oiirList">
         	<field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>

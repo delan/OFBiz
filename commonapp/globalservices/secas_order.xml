@@ -5,13 +5,15 @@
 	<!-- Order ECAs -->
     <eca service="changeOrderItemStatus" event="commit">
         <condition field-name="statusId" operator="equals" value="ITEM_CANCELLED"/>
+        <action service="cancelOrderInventoryReservation" mode="sync"/>
         <action service="resetGrandTotal" mode="sync"/>
-        <action service="sendOrderNotification" mode="async"/>
+        <action service="checkOrderItemStatus" mode="sync"/>
+        <action service="sendOrderNotification" mode="async"/>        
     </eca>
     <eca service="changeOrderItemStatus" event="commit">
-        <condition field-name="statusId" operator="equals" value="ITEM_BACKORDERED"/>
-        <action service="sendOrderNotification" mode="async"/>
-    </eca>    
+        <condition field-name="statusId" operator="equals" value="ITEM_COMPLETED"/>
+        <action service="checkOrderItemStatus" mode="sync"/>
+    </eca>          
     <eca service="changeOrderStatus" event="commit" run-on-error="false">
         <condition field-name="statusId" operator="equals" value="ORDER_COMPLETED"/>        
         <action service="createInvoiceFromOrder" mode="sync" result-to-context="true"/>     

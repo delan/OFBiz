@@ -557,6 +557,76 @@ public class OrderServices {
         
         return ServiceUtil.returnSuccess();
     }
+    
+    /** Service for checking to see if an order is fully completed or canceled */
+    public static Map checkItemStatus(DispatchContext ctx, Map context) {
+        GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();        
+        
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String orderId = (String) context.get("orderId");        
+        
+        // check and make sure we have permission to change the order
+        Security security = ctx.getSecurity();
+        if (!security.hasEntityPermission("ORDERMGR", "_UPDATE", userLogin)) {
+            GenericValue placingCustomer = null;
+            try {
+                Map placingCustomerFields = UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER");
+                placingCustomer = delegator.findByPrimaryKey("OrderRole", placingCustomerFields);                
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError("ERROR: Cannot get OrderRole entity: " + e.getMessage());
+            }
+            if (placingCustomer == null)
+                return ServiceUtil.returnError("You do not have permission to change this order's status.");
+        }   
+             
+        List orderItems = null;
+        try {
+            orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot get OrderItem records", module);
+            return ServiceUtil.returnError("Problem getting OrderItem records");
+        }
+        
+        boolean allCanceled = true;
+        boolean allComplete = true;
+        if (orderItems != null) {
+            Iterator itemIter = orderItems.iterator();
+            while (itemIter.hasNext()) {
+                GenericValue item = (GenericValue) itemIter.next();
+                String statusId = item.getString("statusId");
+                if (!"ITEM_CANCELLED".equals(statusId)) {
+                    allCanceled = false;
+                    if (!"ITEM_COMPLETED".equals("statusId")) {
+                        allComplete = false;
+                        break;                       
+                    }
+                }
+            }
+            
+            // find the next status to set to (if any)
+            String newStatus = null;
+            if (allCanceled) {                                
+                newStatus = "ORDER_CANCELLED";
+            } else if (allComplete) {                
+                newStatus = "ORDER_COMPLETED";                
+            }
+            
+            // now set the new order status
+            if (newStatus != null) {
+                Map serviceContext = UtilMisc.toMap("orderId", orderId, "statusId", newStatus, "userLogin", userLogin);
+                try {
+                    Map result = dispatcher.runSync("changeOrderStatus", serviceContext);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "Problem calling the changeOrderStatus service", module);
+                }
+            }
+        } else {
+            Debug.logWarning("Received NULL for OrderItem records orderId : " + orderId, module);
+        }
+        
+        return ServiceUtil.returnSuccess();
+    }
         
     /** Service for changing the status on order item(s) */
     public static Map setItemStatus(DispatchContext ctx, Map context) {

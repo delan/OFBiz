@@ -766,14 +766,20 @@
         <attribute name="availableToPromise" type="Double" mode="OUT" optional="false"/>
     </service>
 
+    <service name="checkInventoryAvailability" engine="java"
+            location="org.ofbiz.commonapp.product.inventory.InventoryServices" invoke="checkInventoryAvailability">
+        <description>Batch service for checking and sending backorder notifications</description>
+        <!-- this service has no parameters IN or OUT -->
+    </service>
+    
     <service name="balanceInventoryItems" engine="simple"
-                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="balanceInventoryItems" auth="true">
+            location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="balanceInventoryItems" auth="true">
         <description>Balance inventory items based on the item passed</description>
         <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
     </service>
     
     <service name="reserveProductInventory" engine="simple"
-                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="reserveProductInventory" auth="true">
+            location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="reserveProductInventory" auth="true">
         <description>Reserve Inventory for a Product.
             If requireInventory is Y the quantity not reserved is returned, if N then a negative
             availableToPromise will be used to track quantity ordered beyond what is in stock.
@@ -838,6 +844,7 @@
             corresponding serialized inventoryItem to available.
         </description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="cancelOrderItemInventoryRes" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="cancelOrderItemInventoryRes" auth="true">
@@ -868,24 +875,24 @@
     	<attribute name="inventoryTransferId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateInventoryTransfer" engine="simple"
-    		location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="updateInventoryTransfer" auth="true">
+            location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="updateInventoryTransfer" auth="true">
     	<description>Update an inventory transfer record</description>
     	<implements service="interfaceInventoryTransfer"/>
     	<attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="prepareInventoryTransfer" engine="java" 
-    		location="org.ofbiz.commonapp.product.inventory.InventoryServices" invoke="prepareInventoryTransfer">
+            location="org.ofbiz.commonapp.product.inventory.InventoryServices" invoke="prepareInventoryTransfer">
     	<description>Prepares inventory item for transfer</description>
     	<attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
     	<attribute name="xferQty" type="Double" mode="IN" optional="false"/>    	
     </service>
     <service name="completeInventoryTransfer" engine="java" 
-    		location="org.ofbiz.commonapp.product.inventory.InventoryServices" invoke="completeInventoryTransfer">
+            location="org.ofbiz.commonapp.product.inventory.InventoryServices" invoke="completeInventoryTransfer">
     	<description>Completes the inventory transfer</description>
     	<attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="cancelInventoryTransfer" engine="java" 
-    		location="org.ofbiz.commonapp.product.inventory.InventoryServices" invoke="cancelInventoryTransfer">
+            location="org.ofbiz.commonapp.product.inventory.InventoryServices" invoke="cancelInventoryTransfer">
     	<description>Cancel the inventory transfer</description>
     	<attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
     </service>

@@ -45,7 +45,10 @@
         <attribute name="giftMessage" type="String" mode="OUT" optional="true"/>
         <attribute name="isGift" type="Boolean" mode="OUT" optional="true"/>
         <attribute name="trackingNumber" type="String" mode="OUT" optional="true"/>
-        <attribute name="customerPoNumber" type="String" mode="OUT" optional="true"/>        
+        <attribute name="customerPoNumber" type="String" mode="OUT" optional="true"/>
+        <attribute name="itemsPromised" type="Map" mode="OUT" optional="true"/>
+        <attribute name="backOrderedItems" type="Map" mode="OUT" optional="true"/>
+        <attribute name="cancelDateItems" type="Map" mode="OUT" optional="true"/>              
     </service>
     
     <service name="prepareOrderConfirmation" engine="java"
@@ -199,6 +202,12 @@
     	<attribute name="fromStatusId" type="String" mode="IN" optional="true"/>
     	<attribute name="statusId" type="String" mode="IN" optional="false"/>
     </service>
+    
+    <service name="checkOrderItemStatus" engine="java"
+    		location="org.ofbiz.commonapp.order.order.OrderServices" invoke="checkItemStatus">
+    	<description>Check the status of all items and cancel/complete the order if we can</description>
+    	<attribute name="orderId" type="String" mode="IN" optional="false"/>    
+    </service>    
     
     <service name="updateOrderStatusFromReceipt" engine="simple"
     		location="org/ofbiz/commonapp/order/order/OrderSimpleMethods.xml" invoke="updateOrderStatusFromReceipt">
