@@ -125,7 +125,6 @@ public class CSPaymentServices {
         request.setDisableAVS(disableAvs);
         if (!disableAvs && avsDeclineCodes != null && avsDeclineCodes.length() > 0) {
             String delcineString = getAvsDeclineCodes(person, avsDeclineCodes);
-
             request.setField("decline_avs_flags", avsDeclineCodes);
         }
 
@@ -215,7 +214,7 @@ public class CSPaymentServices {
         String totalStr = nf.format(processAmount);
         ICSClientOffer mainOffer = new ICSClientOffer();
 
-        mainOffer.setAmount(totalStr);
+        mainOffer.setAmount(totalStr.substring(1));
         request.addOffer(mainOffer);
 
         // Create the offers (one for each line item)
@@ -260,10 +259,15 @@ public class CSPaymentServices {
             } else {
                 result.put("authResult", new Boolean(false));
             }
+            if (reply.getField("auth_auth_amount") != null)
+                result.put("processAmount", new Double(reply.getField("auth_auth_amount")));
+            else 
+                result.put("processAmount", new Double(0.00));
             result.put("authRefNum", reply.getField("request_id"));
             result.put("authFlag", reply.getField("ics_rflag"));
             result.put("authMessage", reply.getErrorMessage());
-
+            result.put("avsCode", reply.getField("auth_auth_avs"));
+            result.put("scoreCode", reply.getField("score_score_result"));
         } catch (ICSException ie) {
             ie.printStackTrace();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);

@@ -166,7 +166,6 @@ public class PaymentGatewayServices {
 
             try {
                 LocalDispatcher dispatcher = dctx.getDispatcher();
-
                 processorResult = dispatcher.runSync(serviceName, processContext);
             } catch (GenericServiceException gse) {
                 Debug.logError(gse, "Problems invoking payment processor!" + "(" + orderId + ")", module);
@@ -233,6 +232,10 @@ public class PaymentGatewayServices {
         } else {
             paymentPreference.set("statusId", "PAYMENT_ERROR");
         }
+        // set the avs/fraud result
+        paymentPreference.set("avsCode", result.get("scoreCode"));
+        paymentPreference.set("scoreCode", result.get("scoreCode"));
+        // set the auth info
         paymentPreference.set("authRefNum", result.get("authRefNum"));
         paymentPreference.set("authFlag", result.get("authFlag"));
         paymentPreference.set("authMessage", result.get("authMessage"));

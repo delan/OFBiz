@@ -135,8 +135,10 @@
         <attribute name="captureResult" type="Boolean" mode="OUT" optional="true"/>
         <attribute name="authCode" type="String" mode="OUT" optional="true"/>
         <attribute name="authRefNum" type="String" mode="OUT" optional="false"/>
-        <attribute name="authFlag" type="String" mode="OUT" optional="false"/>
+        <attribute name="authFlag" type="String" mode="OUT" optional="false"/>        
         <attribute name="authMessage" type="String" mode="OUT" optional="false"/>
+        <attribute name="avsCode" type="String" mode="OUT" optional="true"/>
+        <attrubute name="scoreCode" type="String" mode="OUT" optional="true"/>
         <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>
     </service>
 
