@@ -368,6 +368,7 @@
         <response name="success" type="view" value="EntityPerformanceTest"/>
     </request-map>
 
+    <!-- EntitySync requests -->
     <request-map uri="EntitySyncStatus">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EntitySyncStatus"/>
@@ -375,6 +376,24 @@
     <request-map uri="resetEntitySyncStatusToNotStarted">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="resetEntitySyncStatusToNotStarted"/>
+        <response name="success" type="view" value="EntitySyncStatus"/>
+        <response name="error" type="view" value="EntitySyncStatus"/>
+    </request-map>
+    <request-map uri="runOfflineEntitySync">
+        <security https="true" auth="true"/>
+        <event type="service" path="ASYNC" invoke="runOfflineEntitySync"/>
+        <response name="success" type="view" value="EntitySyncStatus"/>
+        <response name="error" type="view" value="EntitySyncStatus"/>
+    </request-map>
+    <request-map uri="updateOfflineEntitySync">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateOfflineEntitySync"/>
+        <response name="success" type="view" value="EntitySyncStatus"/>
+        <response name="error" type="view" value="EntitySyncStatus"/>
+    </request-map>
+    <request-map uri="loadOfflineEntitySyncData">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="loadOfflineEntitySyncData"/>
         <response name="success" type="view" value="EntitySyncStatus"/>
         <response name="error" type="view" value="EntitySyncStatus"/>
     </request-map>

@@ -193,6 +193,15 @@
         <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
     </service>
 
+    <service name="runOfflineEntitySync" engine="java"
+            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="runOfflineEntitySync" auth="true" use-transaction="false">
+        <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
+        <attribute name="fileName" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="loadOfflineEntitySyncData" engine="java"
+            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="loadOfflineSyncData" auth="true" use-transaction="false">
+        <attribute name="xmlFileName" type="String" mode="IN" optional="false"/>        
+    </service>
 
     <!-- Entity Remote Synchronization services -->
     <service name="runEntitySync" engine="java" auth="true" use-transaction="false"

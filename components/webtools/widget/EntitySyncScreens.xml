@@ -39,7 +39,10 @@
                                 <container>
                                     <label style="head1">${uiLabelMap.${labelTitleProperty}}</label>
                                 </container>
-								
+                                <container>
+                                    <link target="EntitySyncStatus" style="buttontext" text="[Refresh]"/>
+                                </container>
+
 								<!-- Now call the SimpleScreen form -->
                                 <decorator-section-include name="body"/>
                             </widgets>
@@ -64,6 +67,8 @@
                 <decorator-screen name="GenericDecorator">
                     <decorator-section name="body">
                         <include-form name="EntitySyncStatus" location="component://webtools/widget/EntitySyncForms.xml"/>
+                        <label style="head1">Load Offline Data</label>
+                        <include-form name="EntitySyncLoadOffline" location="component://webtools/widget/EntitySyncForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
