@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -84,8 +84,10 @@ if (shipment != null) {
     editShipmentWrapper.putInContext("toPartyGroup", toPartyGroup);
     editShipmentWrapper.putInContext("fromPerson", fromPerson);
     editShipmentWrapper.putInContext("fromPartyGroup", fromPartyGroup);
-    editShipmentWrapper.putInContext("orderHeader", orderHeader);  
-    editShipmentWrapper.putInContext("productStoreId", orderHeader.get("productStoreId"));
+    editShipmentWrapper.putInContext("orderHeader", orderHeader);
+    if (orderHeader != null) {
+        editShipmentWrapper.putInContext("productStoreId", orderHeader.get("productStoreId"));
+    }
 
     context.put("currentStatus", currentStatus);
     context.put("originPostalAddress", originPostalAddress);
