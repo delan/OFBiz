@@ -33,7 +33,7 @@ else
   String copyright = "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org";
   String author = "None";
   String version = "1.0";
-%><?xml version="1.0"?>
+%><?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
 /**
  *  Title: Entity Generator Definitions for the General Data Model
@@ -63,6 +63,69 @@ else
  *@version    1.0
  */
 -->
+
+<!DOCTYPE entitymodel [
+    <!-- ====================== Root Element ======================= -->
+    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, entity* )>
+    <!-- ================= Children of entitymodel =================== -->
+    <!ELEMENT entity ( description?, field*, prim-key-field*, relation* )>
+    <!ELEMENT title ( #PCDATA  )>
+    <!ELEMENT description ( #PCDATA  )>
+    <!ELEMENT copyright ( #PCDATA  )>
+    <!ELEMENT author ( #PCDATA  )>
+    <!ELEMENT version ( #PCDATA  )>
+    <!-- ================== Children of entity ===================== -->
+    <!-- see the children of entitymodel section for description, etc. -->
+    <!ATTLIST entity
+	entity-name CDATA #REQUIRED >
+    <!ATTLIST entity
+	table-name CDATA #IMPLIED >
+    <!ATTLIST entity
+	package-name CDATA #REQUIRED >
+    <!ATTLIST entity
+	title CDATA #IMPLIED >
+    <!ATTLIST entity
+	copyright CDATA #IMPLIED >
+    <!ATTLIST entity
+	author CDATA #IMPLIED >
+    <!ATTLIST entity
+	version CDATA #IMPLIED >
+    <!ELEMENT field ( validate* )>
+    <!ELEMENT prim-key-field ( #PCDATA  )>
+    <!ELEMENT relation ( key-map* )>
+    <!-- ==================== Children of field ===================== -->
+    <!ATTLIST field
+	name CDATA #REQUIRED >
+    <!ATTLIST field
+	col-name CDATA #IMPLIED >
+    <!ATTLIST field
+	type CDATA #REQUIRED >
+    <!ELEMENT validate EMPTY>
+    <!ATTLIST validate
+	name CDATA #REQUIRED >
+    <!-- ==================== Children of relation ====================== -->
+    <!ATTLIST relation
+	type ( one | many ) #REQUIRED >
+    <!ATTLIST relation
+	title CDATA #IMPLIED >
+    <!ATTLIST relation
+	rel-entity-name CDATA #REQUIRED >
+    <!ATTLIST relation
+	rel-table-name CDATA #IMPLIED >
+    <!ELEMENT key-map EMPTY>
+    <!-- see definition of relation in entity section above -->
+    <!-- ===================== Children of key-map ====================== -->
+    <!ATTLIST key-map
+	field-name CDATA #REQUIRED >
+    <!ATTLIST key-map
+	col-name CDATA #IMPLIED >
+    <!-- this is only required if the field-name in the related table is different from the name in this table -->
+    <!ATTLIST key-map
+	rel-field-name CDATA #IMPLIED >
+    <!-- this is only required if the col-name in the related table is different from the col-name in this table -->
+    <!ATTLIST key-map
+	rel-col-namee CDATA #IMPLIED >
+]>
 <% 
   //GenericDelegator delegator = GenericHelperFactory.getDefaultHelper();
   ModelReader reader = delegator.getModelReader();
