@@ -119,8 +119,10 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         Double wpTotal = new Double(authAmount);
         Double orderTotal = orderHeader != null ? orderHeader.getDouble("grandTotal") : null;
         if (orderTotal != null && wpTotal != null) {
-            if (orderTotal.doubleValue() != wpTotal.doubleValue())
+            if (orderTotal.doubleValue() != wpTotal.doubleValue()) {
+                Debug.logError("AuthAmount (" + wpTotal + ") does not match OrderTotal (" + orderTotal + ")", module);
                 callError(request);
+            }                
         }
         
         // store some stuff for calling existing events
