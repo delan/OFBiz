@@ -16,7 +16,7 @@ DESC                              PRICE    QTY
 ==============================================
 [BEGIN ITEM LOOP]
 ${productId} ${isTaxable}${basePrice} ${quantity}
-${description} ${basePrice}
+${description} ${adjustments}
 [END ITEM LOOP]
 
                          SALES TAX: ${taxTotal}
