@@ -303,19 +303,20 @@ public class GenericDAO {
         try {
             ps = connection.prepareStatement(sql);
             
-            int i;
-
-            for (i = 0; i < fieldsToSave.size(); i++) {
+            int ind = 1;
+            for (int i = 0; i < fieldsToSave.size(); i++) {
                 ModelField curField = (ModelField) fieldsToSave.elementAt(i);
 
-                setValue(ps, i + 1, curField, entity);
+                setValue(ps, ind, curField, entity);
+                ind++;
             }
             for (int j = 0; j < modelEntity.getPksSize(); j++) {
                 ModelField curField = modelEntity.getPk(j);
 
                 //for where clause variables only setValue if not null...
                 if (entity.get(curField.getName()) != null) {
-                    setValue(ps, i + j + 1, curField, entity);
+                    setValue(ps, ind, curField, entity);
+                    ind++;
                 }
             }
             
@@ -475,13 +476,15 @@ public class GenericDAO {
         try {
             ps = connection.prepareStatement(sql);
             
+            int ind = 1;
             for (int i = 0; i < modelEntity.getPksSize(); i++) {
                 ModelField curField = modelEntity.getPk(i);
 
                 //for where clause variables only setValue if not null...
                 if (entity.get(curField.getName()) != null) {
                     //Debug.logInfo(" setting field " + curField.getName() + " to " + (i+1) + " entity: " + entity.toString());
-                    setValue(ps, i + 1, curField, entity);
+                    setValue(ps, ind, curField, entity);
+                    ind++;
                 }
             }
             
@@ -568,12 +571,14 @@ public class GenericDAO {
         try {
             ps = connection.prepareStatement(sql);
             
+            int ind = 1;
             for (int i = 0; i < modelEntity.getPksSize(); i++) {
                 ModelField curField = modelEntity.getPk(i);
 
                 //for where clause variables only setValue if not null...
                 if (entity.get(curField.getName()) != null) {
-                    setValue(ps, i + 1, curField, entity);
+                    setValue(ps, ind, curField, entity);
+                    ind++;
                 }
             }
             
@@ -675,12 +680,14 @@ public class GenericDAO {
             ps = connection.prepareStatement(sql);
             
             if (fields != null && fields.size() > 0) {
+                int ind = 1;
                 for (int i = 0; i < whereFields.size(); i++) {
                     ModelField curField = (ModelField) whereFields.elementAt(i);
 
                     //for where clause variables only setValue if not null...
                     if (dummyValue.get(curField.getName()) != null) {
-                        setValue(ps, i + 1, curField, dummyValue);
+                        setValue(ps, ind, curField, dummyValue);
+                        ind++;
                     }
                 }
             }
@@ -784,12 +791,14 @@ public class GenericDAO {
             ps = connection.prepareStatement(sql);
             
             if (fields != null && fields.size() > 0) {
+                int ind = 1;
                 for (int i = 0; i < whereFields.size(); i++) {
                     ModelField curField = (ModelField) whereFields.elementAt(i);
 
                     //for where clause variables only setValue if not null...
                     if (dummyValue.get(curField.getName()) != null) {
-                        setValue(ps, i + 1, curField, dummyValue);
+                        setValue(ps, ind, curField, dummyValue);
+                        ind++;
                     }
                 }
             }
@@ -917,6 +926,7 @@ public class GenericDAO {
             GenericValue dummyValue = new GenericValue(modelEntity);
 
             if (expressions != null && expressions.size() > 0) {
+                int ind = 1;
                 for (int i = 0; i < expressions.size(); i++) {
                     EntityExpr expr = (EntityExpr) expressions.get(i);
 
@@ -925,7 +935,8 @@ public class GenericDAO {
 
                         //set the field in the dummyValue so that the setValue method can get it out
                         dummyValue.set(field.getName(), expr.getRhs());
-                        setValue(ps, i + 1, field, dummyValue);
+                        setValue(ps, ind, field, dummyValue);
+                        ind++;
                     }
                 }
             }
@@ -1054,6 +1065,7 @@ public class GenericDAO {
             GenericValue dummyValue = new GenericValue(modelEntity);
 
             if (expressions != null && expressions.size() > 0) {
+                int ind = 1;
                 for (int i = 0; i < expressions.size(); i++) {
                     EntityExpr expr = (EntityExpr) expressions.get(i);
 
@@ -1062,7 +1074,8 @@ public class GenericDAO {
 
                         //set the field in the dummyValue so that the setValue method can get it out
                         dummyValue.set(field.getName(), expr.getRhs());
-                        setValue(ps, i + 1, field, dummyValue);
+                        setValue(ps, ind, field, dummyValue);
+                        ind++;
                     }
                 }
             }
@@ -1447,12 +1460,14 @@ public class GenericDAO {
         try {
             ps = connection.prepareStatement(sql);
             
+            int ind = 1;
             for (int i = 0; i < modelEntity.getPksSize(); i++) {
                 ModelField curField = modelEntity.getPk(i);
 
                 //for where clause variables only setValue if not null...
                 if (entity.get(curField.getName()) != null) {
-                    setValue(ps, i + 1, curField, entity);
+                    setValue(ps, ind, curField, entity);
+                    ind++;
                 }
             }
             
@@ -1557,12 +1572,14 @@ public class GenericDAO {
             ps = connection.prepareStatement(sql);
             
             if (fields != null || fields.size() > 0) {
+                int ind = 1;
                 for (int i = 0; i < whereFields.size(); i++) {
                     ModelField curField = (ModelField) whereFields.elementAt(i);
 
                     //for where clause variables only setValue if not null...
                     if (dummyValue.get(curField.getName()) != null) {
-                        setValue(ps, i + 1, curField, dummyValue);
+                        setValue(ps, ind, curField, dummyValue);
+                        ind++;
                     }
                 }
             }
