@@ -212,8 +212,9 @@ public class ServiceDispatcher {
             // commit the transaction
             try {
                 TransactionUtil.commit(beganTrans);
-            } catch (GenericTransactionException te) {
-                Debug.logError(te, "Cannot commit transaction", module);
+            } catch (GenericTransactionException e) {
+                //Debug.logError(te, "Cannot commit transaction", module);
+                throw new GenericServiceException("Could not commit the transaction:", e);
             }
 
             // pre-return ECA
@@ -296,8 +297,9 @@ public class ServiceDispatcher {
             // commit the transaction
             try {
                 TransactionUtil.commit(beganTrans);
-            } catch (GenericTransactionException te) {
-                Debug.logError(te, "Cannot commit transaction", module);
+            } catch (GenericTransactionException e) {
+                //Debug.logError(te, "Cannot commit transaction", module);
+                throw new GenericServiceException("Could not commit the transaction:", e);
             }
 
             // pre-return ECA
