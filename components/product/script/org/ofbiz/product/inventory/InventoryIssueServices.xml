@@ -124,8 +124,8 @@
             </else>
             </if-compare>
             <field-to-list field-name="orderByString" list-name="orderByList"/>
-            <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupFieldMap"/>
-            <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupFieldMap"/>
+            <env-to-env env-name="orderItem.productId" to-env-name="lookupFieldMap.productId"/>
+            <env-to-env env-name="orderHeader.originFacilityId" to-env-name="lookupFieldMap.facilityId"/>
             <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItemList" order-by-list-name="orderByList"/>
     
             <field-to-field field-name="quantity" map-name="parameters" to-field-name="quantityNotIssued"/>
