@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentTransform.java,v 1.3 2003/12/15 11:52:07 byersa Exp $
+ * $Id: EditRenderSubContentTransform.java,v 1.4 2003/12/15 23:20:20 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -85,7 +85,7 @@ import org.ofbiz.content.content.ContentWorker;
  * the contents that are placed within it.
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class EditRenderSubContentTransform implements TemplateTransformModel {
@@ -178,7 +178,7 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                         parentContent = delegator.findByPrimaryKey("Content",
                                            UtilMisc.toMap("contentId", contentId));
                         if (parentContent != null) {
-                            mimeTypeIdTemp = (String)parentContent.get("mimeTypeIdTemp");
+                            mimeTypeIdTemp = (String)parentContent.get("mimeTypeId");
               Debug.logInfo("in EditRenderSubContent, parentContentId: " + parentContent.get("contentId"),"");
                         }
                     } catch (GenericEntityException e) {
