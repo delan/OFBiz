@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceLoader.java,v 1.3 2004/08/15 21:26:41 ajzeneski Exp $
+ * $Id: DeviceLoader.java,v 1.4 2004/08/19 18:49:14 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,14 +24,13 @@
  */
 package org.ofbiz.pos.device;
 
-import org.ofbiz.pos.screen.PosScreen;
-import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.2
  */
 public class DeviceLoader {
@@ -48,11 +47,11 @@ public class DeviceLoader {
     //public static CheckReader check = null;
 
 
-    public static void load(PosScreen screen) throws GeneralException {
+    public static void load() throws GeneralException {
         // TODO get device names from some configuration -- THIS WILL CHANGE!
 
         // load the scanner
-        scanner = new Scanner("KeyboardScanner", -1, screen);
+        scanner = new Scanner("KeyboardScanner", -1);
         try {
             scanner.open();
         } catch (jpos.JposException jpe) {
@@ -63,7 +62,7 @@ public class DeviceLoader {
         // load the check reader
 
         // load the msr
-        msr = new Msr("KeyboardMsr", -1, screen);
+        msr = new Msr("KeyboardMsr", -1);
         try {
             msr.open();
         } catch (jpos.JposException jpe) {
@@ -74,7 +73,7 @@ public class DeviceLoader {
         // load the keyboard
 
         // load the receipt printer
-        receipt = new Receipt("PosPrinter", -1, screen);
+        receipt = new Receipt("PosPrinter", -1);
 
         // load the journal printer
 
@@ -84,6 +83,6 @@ public class DeviceLoader {
 
         // load the cash drawers
         drawer = new CashDrawer[1];
-        drawer[0] = new CashDrawer("CashDrawer", -1, screen);
+        drawer[0] = new CashDrawer("CashDrawer", -1);
     }
 }

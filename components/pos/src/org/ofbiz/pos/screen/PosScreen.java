@@ -1,5 +1,5 @@
 /*
- * $Id: PosScreen.java,v 1.4 2004/08/15 21:26:42 ajzeneski Exp $
+ * $Id: PosScreen.java,v 1.5 2004/08/19 18:49:15 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.pos.PosTransaction;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
 public class PosScreen extends NavigationHelper implements Runnable {
@@ -54,6 +54,7 @@ public class PosScreen extends NavigationHelper implements Runnable {
     public static final Frame appFrame = XResourceManager.getAppFrame();
     public static final String BUTTON_ACTION_METHOD = "buttonPressed";
     public static final long MAX_INACTIVITY = 1800000;
+    public static PosScreen currentScreen;
 
     protected static boolean deviceInit = false;
     protected boolean monitorRunning = false;
@@ -91,7 +92,7 @@ public class PosScreen extends NavigationHelper implements Runnable {
 
             // load the shared devices
             try {
-                DeviceLoader.load(this);
+                DeviceLoader.load();
             } catch (Exception e) {
                 Debug.logError(e, module);
             }
@@ -118,6 +119,8 @@ public class PosScreen extends NavigationHelper implements Runnable {
                 activityMonitor.start();
             }
         }
+
+        currentScreen = this;
         this.refresh();
 
         Debug.log("App Frame :", module);

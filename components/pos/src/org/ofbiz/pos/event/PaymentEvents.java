@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentEvents.java,v 1.3 2004/08/17 19:51:26 ajzeneski Exp $
+ * $Id: PaymentEvents.java,v 1.4 2004/08/19 18:49:15 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class PaymentEvents {
@@ -48,7 +48,7 @@ public class PaymentEvents {
     public static void payCash(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         try {
-            double amount = processAmount(pos, trans.getGrandTotal());
+            double amount = processAmount(pos, null, trans.getGrandTotal());
             Debug.log("Processing [Cash] Amount : " + amount, module);
 
             // add the payment
@@ -63,7 +63,68 @@ public class PaymentEvents {
     public static void payCredit(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         Input input = pos.getInput();
+        String[] msrInfo = input.getFunction("MSRINFO");
+        String[] crtInfo = input.getFunction("CREDIT");
+
+        if (crtInfo == null) {
+            input.setFunction("CREDIT");
+            if (msrInfo != null) {
+                try {
+                    double amount = processAmount(pos, null, trans.getGrandTotal());
+                    Debug.log("Processing Credit Card Amount : " + amount, module);
+                } catch (GeneralException e) {
+                }
+            }
+            pos.getOutput().print(Output.CREDNO);
+        } else {
+            if (msrInfo == null) {
+                input.setFunction("MSRINFO");
+                pos.getOutput().print(Output.CREDEX);
+            } else {
+                int allInfo = validateCreditInfo(msrInfo[1]);
+                switch (allInfo) {
+                    case 1 : // card number found
+                        input.setFunction("MSRINFO", msrInfo[1] + "|" + input.value());
+                        msrInfo = input.getFunction("MSRINFO");
+                        try {
+                            double amount = processAmount(pos, crtInfo[1], trans.getGrandTotal());
+                            Debug.log("Processing Credit Card Amount : " + amount, module);
+                        } catch (GeneralException e) {
+                        }
+                        break;
+                    default :
+                        input.clearFunction("MSRINFO");
+                        pos.getOutput().print(Output.CREDNO);
+                        break;
+
+                }
+            }
+        }
+
+        /*
+                if (allInfo == 1) {
+                input.setFunction("MSRINFO", msrInfo[1] + "|" + input.value());
+            }
+                input.setFunction("CREDIT");
+
+        } else {
+            int allInfo = validateCreditInfo(msrInfo[1]);
+            if (allInfo == 1) {
+                // card number set; exp should be in input
+                input.setFunction("MSRINFO", msrInfo[1] + "|" + input.value());
+                Debug.log("Got all info : " + input.getFunction("MSRINFO"), module);
+
+            } else if (allInfo == 0) {
+                // missing card number (??)
+                input.clearFunction("MSRINFO");
+                pos.getOutput().print(Output.CREDNO);
+            } else {
+                // all info available add the payment
+            }
+
+        }
         String[] func = input.getLastFunction();
+
 
         if ("MSRINFO".equals(func[0])) {
             // make sure we have all necessary data
@@ -71,7 +132,7 @@ public class PaymentEvents {
             if (allInfo == 1) {
                 // card number set; exp should be in input
                 input.setFunction("MSRINFO", func[1] + "|" + input.value());
-                Debug.log("Got all info : " + input.getFunction("MSRINFO"), module);                
+                Debug.log("Got all info : " + input.getFunction("MSRINFO"), module);
 
             } else if (allInfo == 0) {
                 // missing card number (??)
@@ -97,6 +158,7 @@ public class PaymentEvents {
                 // errors handled
             }
         }
+        */
     }
 
     public static void clearAllPayments(PosScreen pos) {
@@ -128,11 +190,11 @@ public class PaymentEvents {
         }
     }
 
-    private static double processAmount(PosScreen pos, double grandTotal) throws GeneralException {
+    private static double processAmount(PosScreen pos, String amountStr, double grandTotal) throws GeneralException {
         Input input = pos.getInput();
 
         if (input.isFunctionSet("TOTAL")) {
-            String amtStr = input.value();
+            String amtStr = amountStr != null ? amountStr : input.value();
             double amount;
             if (UtilValidate.isNotEmpty(amtStr)) {
                 try {

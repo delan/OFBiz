@@ -26,6 +26,7 @@
 
     <!-- payment events -->
     <event button-name="payCash" class-name="org.ofbiz.pos.event.PaymentEvents" method-name="payCash" disable-lock="false"/>
+    <event button-name="payCredit" class-name="org.ofbiz.pos.event.PaymentEvents" method-name="payCredit" disable-lock="false"/>
     <event button-name="payFinish" class-name="org.ofbiz.pos.event.PaymentEvents" method-name="processSale" disable-lock="false"/>
     <event button-name="payClearAll" class-name="org.ofbiz.pos.event.PaymentEvents" method-name="clearAllPayments" disable-lock="false"/>
 
