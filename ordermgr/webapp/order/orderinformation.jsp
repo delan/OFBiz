@@ -94,7 +94,7 @@
                        <input type="hidden" name="orderId" value="<%=localOrderHeader.getString("orderId")%>">        
                        <select name="statusId">
                          <option value="<%=localOrderHeader.getString("statusId")%>"><%=localOrderHeader.getString("statusId")%></option>
-                         <option value="">----</option>
+                         <option value="<%=localOrderHeader.getString("statusId")%>">----</option>
                          <ofbiz:iterator name="status" property="statusChange">
                            <option value="<%=status.getString("statusIdTo")%>"><%=status.getString("statusIdTo")%></option>               
                          </ofbiz:iterator>
