@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -55,7 +55,7 @@
           ${uiLabelMap.CommonAll}<input type="RADIO" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked</#if>>
         </div>
       </td>
-    </tr>   
+    </tr>
     <#list productFeaturesByTypeMap.keySet() as productFeatureTypeId>
       <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
       <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
@@ -76,7 +76,19 @@
         </td>
       </tr>
     </#list>
-
+    <tr>
+      <td align="right" valign="middle">
+        <div class="tabletext">Sort Order:</div>
+      </td>
+      <td valign="middle">
+        <div class="tabletext">
+          <select name="sortOrder" class="selectBox">
+            <option value="SortKeywordRelevancy">Keyword Relevancy</option>
+            <option value="SortProductField:productName">Product Name</option>
+          </select>
+        </div>
+      </td>
+    </tr>
     <#if searchConstraintStrings?has_content>
       <tr>
         <td align="right" valign="top">
