@@ -577,8 +577,14 @@ public class EntitySyncContext {
     }
     
     public void runPushSendData(ArrayList valuesToCreate, ArrayList valuesToStore, List keysToRemove) throws GeneralServiceException {
+        // grab the totals for this data
+        this.totalRowsToCreate = valuesToCreate.size();
+        this.totalRowsToStore = valuesToStore.size();
+        this.totalRowsToRemove = keysToRemove.size();
+        this.totalRowsPerSplit = this.totalRowsToCreate + this.totalRowsToStore + this.totalRowsToRemove;
+        
         // call service named on EntitySync, IFF there is actually data to send over
-        if (totalRowsPerSplit > 0) {
+        if (this.totalRowsPerSplit > 0) {
             Map targetServiceMap = UtilMisc.toMap("entitySyncId", entitySyncId, "valuesToCreate", valuesToCreate, "valuesToStore", valuesToStore, "keysToRemove", keysToRemove, "userLogin", userLogin);
             if (UtilValidate.isNotEmpty(targetDelegatorName)) {
                 targetServiceMap.put("delegatorName", targetDelegatorName);
