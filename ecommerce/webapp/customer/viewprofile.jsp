@@ -54,11 +54,11 @@
   <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td valign="middle" align="left">
-      <p class="head2"><font color="white">&nbsp;Personal Info</font>
+      <p class="head2"><font color="white">&nbsp;Personal Information</font>
     </td>
     <td valign="middle" align="right">
         <a href="editprofile.jsp" class="lightbuttontext">
-        [Update]&nbsp;&nbsp;</a>
+        [Update]</a>&nbsp;&nbsp;
     </td>
   </tr>
   </table>
@@ -68,7 +68,7 @@
     <td bgcolor='white' colspan='2'>
 <table width="80%" border="0" cellpadding="1">
     <tr>
-        <td align="right" valign="top" width="5%"><div class="tabletext"><b>Name</b></div></td>
+        <td align="right" width="5%"><div class="tabletext"><b>Name</b></div></td>
         <td width="5">&nbsp;</td>
         <td align="left">
           <div class="tabletext">
@@ -80,27 +80,39 @@
           </div>
         </td>
     </tr>
+</table>
+    </td>
+  </tr>
+</table>
 <%-- ============================================================= --%>
+<br>
+<table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
+  <tr>
+    <td bgcolor="#678475">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td valign="middle" align="left">
+      <p class="head2"><font color="white">&nbsp;Contact Information</font>
+    </td>
+    <td valign="middle" align="right">
+        <a href="<%=response.encodeURL(controlPath + "/editcontactmech")%>" class="lightbuttontext">
+        [Create New]</a>&nbsp;
+        <%if(showOld){%>
+          <a href="<%=response.encodeURL(controlPath + "/viewprofile")%>" class="lightbuttontext">
+          [Hide Old]</a>&nbsp;&nbsp;
+        <%}else{%>
+          <a href="<%=response.encodeURL(controlPath + "/viewprofile?SHOW_OLD=true")%>" class="lightbuttontext">
+          [Show Old]</a>&nbsp;&nbsp;
+        <%}%>
+    </td>
+  </tr>
+  </table>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor='white' colspan='2'>
+<table width="80%" border="0" cellpadding="1">
     <tr>
-      <td colspan="4" height="1" bgcolor="#899ABC"></td>
-    </tr>
-    <tr>
-      <td align="right" valign="top" width="5%" nowrap>
-        <div class="tabletext"><b>Contact Information</b></div>
-        <div class="tabletext">
-          <a href="<%=response.encodeURL(controlPath + "/editcontactmech")%>" class="buttontext">
-          [Add Contact Information]</a>
-          <br>
-          <%if(showOld){%>
-            <a href="<%=response.encodeURL(controlPath + "/viewprofile")%>" class="buttontext">
-            [Hide Old Contact Info]</a>
-          <%}else{%>
-            <a href="<%=response.encodeURL(controlPath + "/viewprofile?SHOW_OLD=true")%>" class="buttontext">
-            [Show Old Contact Info]</a>
-          <%}%>
-        </div>
-      </td>
-      <td width="5">&nbsp;</td>
       <td align="left">
         <%if(partyContactMechIterator != null && partyContactMechIterator.hasNext()){%>
           <table width="100%" border="0" cellpadding="1">
@@ -169,19 +181,32 @@
         <%}%>
       </td>
     </tr>
+</table>
+    </td>
+  </tr>
+</table>
 <%-- ============================================================= --%>
+<br>
+<table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
+  <tr>
+    <td bgcolor="#678475">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td valign="middle" align="left">
+      <p class="head2"><font color="white">&nbsp;Credit Card Information</font>
+    </td>
+    <td valign="middle" align="right">
+      <a href="profilenewcc.jsp" class="lightbuttontext">
+      [Create New]</a>&nbsp;&nbsp;
+    </td>
+  </tr>
+  </table>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor='white' colspan='2'>
+<table width="80%" border="0" cellpadding="1">
     <tr>
-      <td colspan="4" height="1" bgcolor="#899ABC"></td>
-    </tr>
-    <tr>
-      <td align="right" valign="top" width="5%" nowrap>
-        <div class="tabletext"><b>Credit Cards</b></div>
-        <div class="tabletext">
-          <a href="profilenewcc.jsp" class="buttontext">
-          [Add Card]</a>
-        </div>
-      </td>
-      <td width="5">&nbsp;</td>
       <td align="left">
         <%if(creditCardInfoIterator != null && creditCardInfoIterator.hasNext()){%>
           <p>Select an account on file to update or delete.</p>
@@ -233,7 +258,7 @@
     </td>
     <td valign="middle" align="right">
       <a href="changepassword.jsp" class="lightbuttontext">
-      [Update]&nbsp;&nbsp;</a>
+      [Change Password]</a>&nbsp;&nbsp;
     </td>
   </tr>
   </table>
@@ -243,7 +268,7 @@
     <td bgcolor='white' colspan='2'>
 <table width="80%" border="0" cellpadding="1">
   <tr>
-    <td align="right" valign="top" width="15%" nowrap><div class="tabletext"><b>User Name</b></div></td>
+    <td align="left" valign="top" width="15%" nowrap><div class="tabletext"><b>User Name</b></div></td>
     <td width="5">&nbsp;</td>
     <td align="left" valign="top"><div class="tabletext"><%=userLogin.getString("userLoginId")%></div></td>
   </tr>

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/08/31 06:41:58  jonesde
+ * Cleaned up the new contact info process
+ *
  * Revision 1.6  2001/08/31 00:39:48  jonesde
  * First pass of editcontactmech and CustomerEvents.updateContactMech finished.
  *
@@ -388,7 +391,124 @@ public class CustomerEvents
     return "success";
   }
 
+  public static String createPartyContactMechPurpose(HttpServletRequest request, HttpServletResponse response)
+  {
+    String errMsg = "";
+    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+    if(userLogin == null) { errMsg = "<li>ERROR: User not logged in, cannot add purpose to contact mechanism. Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+
+    String contactMechId = request.getParameter("CONTACT_MECH_ID");    
+    String contactMechPurposeTypeId = request.getParameter("CONTACT_MECH_PURPOSE_TYPE_ID");
+    if(contactMechPurposeTypeId == null || contactMechPurposeTypeId.length() <= 0) { errMsg = "<li>ERROR: Purpose type not specified, cannot add purpose to contact mechanism. Please try again."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+
+    if(helper.create("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp())) == null)
+    {
+      errMsg = "<li>ERROR: Could not add purpose to contact mechanism (write failure). Please contact customer service."; 
+      request.setAttribute("ERROR_MESSAGE", errMsg);
+      return "error";
+    }
+    return "success";
+  }
+
+  public static String deletePartyContactMechPurpose(HttpServletRequest request, HttpServletResponse response)
+  {
+    String errMsg = "";
+    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+    if(userLogin == null) { errMsg = "<li>ERROR: User not logged in, cannot delete contact mechanism purpose. Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+
+    String contactMechId = request.getParameter("CONTACT_MECH_ID");
+    String contactMechPurposeTypeId = request.getParameter("CONTACT_MECH_PURPOSE_TYPE_ID");    
+    if(contactMechPurposeTypeId == null || contactMechPurposeTypeId.length() <= 0) { errMsg = "<li>ERROR: Purpose type not specified, cannot delete purpose from contact mechanism. Please try again."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+
+    GenericValue pcmp = helper.findByPrimaryKey("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId));
+    if(pcmp == null)
+    {
+      errMsg = "<li>ERROR: Could not delete purpose from contact mechanism (record not found). Please contact customer service."; 
+      request.setAttribute("ERROR_MESSAGE", errMsg);
+      return "error";
+    }
+    
+    pcmp.set("thruDate", UtilDateTime.nowTimestamp());
+    try { pcmp.store(); }
+    catch(Exception e) { errMsg = "<li>ERROR: Could not delete purpose from contact mechanism (write failure) . Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+    return "success";
+  }
+  
 /*  
+  public static boolean changePassword(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
+  {
+    String errorMsg = (String)request.getAttribute(HttpRequestConstants.ERROR_MESSAGE);
+    if(errorMsg == null || errorMsg.length() <= 0)
+    {
+      Person person = null;
+      person = (Person)request.getSession().getAttribute(HttpSessionConstants.LOGIN_PERSON);
+
+      boolean hasPermission = Security.hasPermission(Security.USER_ADMIN, request.getSession());
+      if(hasPermission)
+      {
+        Person tempPerson = (Person)request.getSession().getAttribute(HttpSessionConstants.ACTING_AS_PERSON);
+        if(tempPerson != null)
+        {
+          person = tempPerson;
+        }
+      }
+
+      String password = request.getParameter(HttpRequestConstants.LOGIN_PASSWORD);
+      if(hasPermission)
+      {
+        password = person.getPassword();
+      }
+
+      String newPassword = request.getParameter(HttpRequestConstants.LOGIN_NEW_PASSWORD);
+      String confirmPassword = request.getParameter(HttpRequestConstants.LOGIN_CONFIRM_PASSWORD);
+
+      if(person == null)
+      {
+        //person not found, return error
+        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Person not found: critical error.  Please login.");
+        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
+        rd.forward(request, response);
+        return false;
+      }
+
+      if(password == null || password.length() <= 0 ||
+        newPassword == null || newPassword.length() <= 0 ||
+        confirmPassword == null || confirmPassword.length() <= 0)
+      {
+        //one or more of the passwords was incomplete
+        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "One or more of the passwords was empty, please re-enter.");
+        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
+        rd.forward(request, response);
+        return false;
+      }
+
+      if(person.getPassword().compareTo(password) != 0)
+      {
+        //password was NOT correct, send back to changepassword page with an error
+        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Old Password was not correct, please re-enter.");
+        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
+        rd.forward(request, response);
+        return false;
+      }
+
+      //password was correct, check new password
+      if(newPassword.compareTo(confirmPassword) != 0)
+      {
+        //passwords did not match
+        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "New Passwords did not match, please re-enter.");
+        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
+        rd.forward(request, response);
+        return false;
+      }
+
+      //all is well, update password
+      person.setPassword(newPassword);
+    }
+    return true;
+  }
+
   public static boolean handleUpdateCustomer(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
   {
     // a little check to avoid an endless loop in error cases...
@@ -973,78 +1093,6 @@ public class CustomerEvents
     address.setGeoCode(geoCode);
     address.setMapUrl(mapUrl);
 
-    return true;
-  }
-
-  public static boolean changePassword(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
-  {
-    String errorMsg = (String)request.getAttribute(HttpRequestConstants.ERROR_MESSAGE);
-    if(errorMsg == null || errorMsg.length() <= 0)
-    {
-      Person person = null;
-      person = (Person)request.getSession().getAttribute(HttpSessionConstants.LOGIN_PERSON);
-
-      boolean hasPermission = Security.hasPermission(Security.USER_ADMIN, request.getSession());
-      if(hasPermission)
-      {
-        Person tempPerson = (Person)request.getSession().getAttribute(HttpSessionConstants.ACTING_AS_PERSON);
-        if(tempPerson != null)
-        {
-          person = tempPerson;
-        }
-      }
-
-      String password = request.getParameter(HttpRequestConstants.LOGIN_PASSWORD);
-      if(hasPermission)
-      {
-        password = person.getPassword();
-      }
-
-      String newPassword = request.getParameter(HttpRequestConstants.LOGIN_NEW_PASSWORD);
-      String confirmPassword = request.getParameter(HttpRequestConstants.LOGIN_CONFIRM_PASSWORD);
-
-      if(person == null)
-      {
-        //person not found, return error
-        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Person not found: critical error.  Please login.");
-        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
-        rd.forward(request, response);
-        return false;
-      }
-
-      if(password == null || password.length() <= 0 ||
-        newPassword == null || newPassword.length() <= 0 ||
-        confirmPassword == null || confirmPassword.length() <= 0)
-      {
-        //one or more of the passwords was incomplete
-        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "One or more of the passwords was empty, please re-enter.");
-        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
-        rd.forward(request, response);
-        return false;
-      }
-
-      if(person.getPassword().compareTo(password) != 0)
-      {
-        //password was NOT correct, send back to changepassword page with an error
-        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Old Password was not correct, please re-enter.");
-        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
-        rd.forward(request, response);
-        return false;
-      }
-
-      //password was correct, check new password
-      if(newPassword.compareTo(confirmPassword) != 0)
-      {
-        //passwords did not match
-        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "New Passwords did not match, please re-enter.");
-        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
-        rd.forward(request, response);
-        return false;
-      }
-
-      //all is well, update password
-      person.setPassword(newPassword);
-    }
     return true;
   }
 

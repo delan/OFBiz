@@ -52,6 +52,7 @@
 
 <%if(!security.hasPermission("USER_ADMIN", session) && partyContactMech == null && contactMech != null){%>
   <p><h3>The contact information specified does not belong to you, you may not view or edit it.</h3></p>
+  &nbsp;<a href="<%=response.encodeURL(controlPath + "/authview/" + donePage)%>" class="buttontext">[Back]</a>
 <%}else{%>
 
   <%if(contactMech == null){%>
@@ -83,17 +84,50 @@
   <%if(contactMechTypeId != null){%>
     <%if(contactMech == null){%>
       <p class="head1">Create New Contact Information</p>
-      <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform">
-      <input type=hidden name="CONTACT_MECH_TYPE_ID" value="<%=contactMechTypeId%>">
-      <input type=hidden name="UPDATE_MODE" value="CREATE">
-    <%}else{%>  
+      <table width="90%" border="0" cellpadding="2" cellspacing="0">
+        <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform">
+        <input type=hidden name="CONTACT_MECH_TYPE_ID" value="<%=contactMechTypeId%>">
+        <input type=hidden name="UPDATE_MODE" value="CREATE">
+    <%}else{%>
       <p class="head1">Edit Contact Information</p>
-      <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform">
-      <input type=hidden name="CONTACT_MECH_ID" value="<%=contactMechId%>">
-      <input type=hidden name="UPDATE_MODE" value="UPDATE">
+      <table width="90%" border="0" cellpadding="2" cellspacing="0">
+        <tr>
+          <td width="26%" valign=top><div class="tabletext">Contact Purposes</div></td>
+          <td width="74%">
+            <table border='0' cellspacing='1' bgcolor='black'>
+              <%Iterator partyContactMechPurposesIter = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));%>
+              <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
+                <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
+                <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>            
+                <tr>
+                  <td bgcolor='white'><div class="tabletext">&nbsp;<b><%=contactMechPurposeType.getString("description")%></b>&nbsp;</div></td>
+                  <td bgcolor='white'><div><a href='<%=response.encodeURL(controlPath + "/deletepartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&CONTACT_MECH_PURPOSE_TYPE_ID=" + contactMechPurposeType.getString("contactMechPurposeTypeId") + "&DONE_PAGE=" + donePage)%>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
+                </tr>
+              <%}%>
+              <tr>
+                <form method=POST action='<%=response.encodeURL(controlPath + "/createpartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&DONE_PAGE=" + donePage)%>' name='newpurposeform'>
+                  <td bgcolor='white'>
+                    <SELECT name='CONTACT_MECH_PURPOSE_TYPE_ID'>
+                      <OPTION>&nbsp;</OPTION>
+                      <%Iterator purposeTypes = UtilMisc.toIterator(helper.findByAnd("ContactMechTypePurpose", UtilMisc.toMap("contactMechTypeId", contactMechTypeId), null));%>
+                      <%while(purposeTypes != null && purposeTypes.hasNext()){%>
+                        <%GenericValue contactMechTypePurpose = (GenericValue)purposeTypes.next();%>
+                        <%GenericValue contactMechPurposeType = contactMechTypePurpose.getRelatedOne("ContactMechPurposeType");%>
+                        <OPTION value='<%=contactMechPurposeType.getString("contactMechPurposeTypeId")%>'><%=contactMechPurposeType.getString("description")%></OPTION>
+                      <%}%>
+                    </SELECT>
+                  </td>
+                </form>
+                <td bgcolor='white'><div><a href='javascript:document.newpurposeform.submit()' class='buttontext'>&nbsp;Add&nbsp;Purpose&nbsp;</a></div></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform">
+        <input type=hidden name="CONTACT_MECH_ID" value="<%=contactMechId%>">
+        <input type=hidden name="UPDATE_MODE" value="UPDATE">
     <%}%>
 
-  <table width="90%" border="0" cellpadding="2" cellspacing="0">
   <%if("POSTAL_ADDRESS".equals(contactMechTypeId)){%>
     <%GenericValue postalAddress = null;%>
     <%if(contactMech != null) postalAddress = contactMech.getRelatedOne("PostalAddress");%>
@@ -157,9 +191,6 @@
     <%GenericValue telecomNumber = null;%>
     <%if(contactMech != null) telecomNumber = contactMech.getRelatedOne("TelecomNumber");%>
     <tr>
-      <td colspan='2'>All phone numbers: [Country Code] [Area Code] [Contact Number] [Extension]</td>
-    </tr>
-    <tr>
       <td width="26%"><div class="tabletext">Phone Number</div></td>
       <td width="74%">
           <input type="text" name="CM_COUNTRY_CODE" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("countryCode"):request.getParameter("CM_COUNTRY_CODE"))%>" size="4" maxlength="10">
@@ -167,6 +198,10 @@
           -&nbsp;<input type="text" name="CM_CONTACT_NUMBER" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("contactNumber"):request.getParameter("CM_CONTACT_NUMBER"))%>" size="15" maxlength="15">
           &nbsp;ext&nbsp;<input type="text" name="CM_EXTENSION" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("extension"):request.getParameter("CM_EXTENSION"))%>" size="6" maxlength="10">
       </td>
+    </tr>
+    <tr>
+      <td width="26%"><div class="tabletext"></div></td>
+      <td><div class="tabletext">[Country Code] [Area Code] [Contact Number] [Extension]</div></td>
     </tr>
   <%}else if("EMAIL_ADDRESS".equals(contactMechTypeId)){%>
     <tr>
@@ -185,14 +220,16 @@
         </select>
       </td>
     </tr>
+  </form>
   </table>
 
+    &nbsp;<a href="<%=response.encodeURL(controlPath + "/authview/" + donePage)%>" class="buttontext">[Back]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
     <%--  <input type="image" value="[Save]" border="0" src="/commerce/images/btn_save.gif"> --%>
-  </form>
+  <%}else{%>
+    &nbsp;<a href="<%=response.encodeURL(controlPath + "/authview/" + donePage)%>" class="buttontext">[Back]</a>
   <%}%>
 <%}%>
 
-&nbsp;<a href="<%=response.encodeURL(controlPath + "/authview/" + donePage)%>" class="buttontext">[Back]</a>
 
 <%@ include file="/includes/footer.jsp" %>

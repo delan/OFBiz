@@ -134,6 +134,17 @@
         <success>view:editcontactmech</success><error>view:editcontactmech</error>
     </request-map>
 
+    <request-map>
+        <uri>createpartycontactmechpurpose</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>createPartyContactMechPurpose</event-invoke>
+        <success>view:editcontactmech</success><error>view:editcontactmech</error>
+    </request-map>
+    <request-map>
+        <uri>deletepartycontactmechpurpose</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>deletePartyContactMechPurpose</event-invoke>
+        <success>view:editcontactmech</success><error>view:editcontactmech</error>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
