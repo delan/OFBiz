@@ -35,7 +35,20 @@
             <div class="boxhead">&nbsp;Notes</div>
           </td>
           <td valign="middle" align="right">&nbsp;
-            <a href="<ofbiz:url>/createnewnote</ofbiz:url>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp;
+            <% 
+               String qString = "";
+               if (orderId != null)
+                   qString = qString + "order_id=" + orderId;
+               if (workEffortId != null)
+                   qString = qString + "&workEffortId=" + workEffortId;
+               if (assignPartyId != null)
+                   qString = qString + "&partyId=" + assignPartyId;
+               if (assignRoleTypeId != null)
+                   qString = qString + "&roleTypeId=" + assignRoleTypeId;
+               if (fromDate != null)
+                   qString = qString + "&fromDate=" + fromDate;
+            %>
+            <a href="<ofbiz:url>/createnewnote?<%=qString%></ofbiz:url>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp;
           </td>
         </tr>
       </table>
