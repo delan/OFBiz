@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.32 $
+ * @version    $Revision: 1.33 $
  */
 -->
 
@@ -199,19 +199,18 @@
       <member-entity entity-alias="CO" entity-name="Content"/>
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
       <member-entity entity-alias="DR" entity-name="DataResource"/>
-      <alias-all entity-alias="CA" prefix="ca"/>
       <alias-all entity-alias="CO" />
+      <alias-all entity-alias="CA" prefix="ca"/>
       <alias-all entity-alias="DR" prefix="dr"/>
       <alias entity-alias="CA" name="contentIdStart" field="contentIdTo"/>
-      <view-link entity-alias="CA" rel-entity-alias="CO">
+      <view-link entity-alias="CO" rel-entity-alias="CA" rel-optional="true">
         <key-map field-name="contentId" rel-field-name="contentId"/>
       </view-link>
       <view-link entity-alias="CO" rel-entity-alias="DR" rel-optional="true">
         <key-map field-name="dataResourceId" rel-field-name="dataResourceId"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="ElectronicText">
-        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
-      </relation>
+        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" /> </relation>
       <relation type="one-nofk" rel-entity-name="ImageDataResource">
         <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
       </relation>
@@ -223,6 +222,18 @@
       </relation>
       <relation type="many" rel-entity-name="ContentAssocDataResourceViewTo">
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentPurpose">
+          <key-map field-name="contentId" rel-field-name="contentId"/>
+      </relation>
+      <relation type="many" title="From" rel-entity-name="ContentAssoc">
+        <key-map field-name="contentId"/>
+      </relation>
+      <relation type="many" title="To" rel-entity-name="ContentAssoc">
+        <key-map field-name="contentId" rel-field-name="contentIdTo"/>
+      </relation>
+      <relation type="many" rel-entity-name="ContentRole">
+        <key-map field-name="contentId"/>
       </relation>
     </view-entity>
     <view-entity entity-name="ContentAssocDataResourceViewTo"
@@ -255,6 +266,18 @@
       </relation>
       <relation type="many" rel-entity-name="ContentAssocDataResourceViewTo">
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentPurpose">
+          <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+      </relation>
+      <relation type="many" title="From" rel-entity-name="ContentAssoc">
+        <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+      </relation>
+      <relation type="many" title="To" rel-entity-name="ContentAssoc">
+        <key-map field-name="contentIdTo" rel-field-name="contentIdTo"/>
+      </relation>
+      <relation type="many" rel-entity-name="ContentRole">
+        <key-map field-name="contentIdTo" rel-field-name="contentId"/>
       </relation>
     </view-entity>
     <entity entity-name="ContentAssocPredicate"
@@ -340,6 +363,18 @@
       </relation>
       <relation type="many" rel-entity-name="ContentAssocDataResourceViewTo">
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
+      </relation>
+      <relation type="many" title="From" rel-entity-name="ContentAssoc">
+        <key-map field-name="contentId"/>
+      </relation>
+      <relation type="many" title="To" rel-entity-name="ContentAssoc">
+        <key-map field-name="contentId" rel-field-name="contentIdTo"/>
+      </relation>
+      <relation type="many" rel-entity-name="ContentPurpose">
+          <key-map field-name="contentId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ContentRole">
+        <key-map field-name="contentId"/>
       </relation>
     </view-entity>
     <entity entity-name="ContentMetaData"
@@ -518,6 +553,12 @@
       </relation>
       <relation type="many" rel-entity-name="ContentRole">
         <key-map field-name="contentId" />
+      </relation>
+      <relation type="many" title="From" rel-entity-name="ContentAssoc">
+        <key-map field-name="contentId"/>
+      </relation>
+      <relation type="many" title="To" rel-entity-name="ContentAssoc">
+        <key-map field-name="contentId" rel-field-name="contentIdTo"/>
       </relation>
     </view-entity>
 
