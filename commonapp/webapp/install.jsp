@@ -8,9 +8,16 @@
 <%@ include file="/includes/onecolumn.jsp" %> 
 
 <%
-  String serverName = delegator.getServerName();
-  String paths = UtilProperties.getPropertyValue("servers", serverName + ".sql.load.paths");
-  
+  String loadFile = request.getParameter("loadFile");
+  String paths = null;
+  String groupName = request.getParameter("groupName");
+  String helperName = null;
+
+  if(groupName != null && groupName.length() > 0) {
+    helperName = delegator.getGroupHelperName(groupName);
+    paths = UtilProperties.getPropertyValue("servers", helperName + ".sql.load.paths");
+  }
+
   ArrayList fileList = new ArrayList();
   if(paths != null && paths.length() > 0) {
     StringTokenizer tokenizer = new StringTokenizer(paths, ";");
@@ -27,46 +34,76 @@
       }
     }
   }
+%>
+<br>
+Specify the group name for the entity group whose data you want to load:<br>
+<form method=post action='<%=response.encodeURL(controlPath + "/install")%>'>
+  Group Name: <INPUT type=text name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
+  <INPUT type=submit value='Load Data'>
+</form>
+<%--
+<br>
+OR Specify the filename of an SQL file to load:<br>
+<form method=post action='<%=response.encodeURL(controlPath + "/install")%>'>
+  Server File Path/Name: <INPUT type=text name='loadFile' value='<%=loadFile!=null?loadFile:""%>' size='60'>
+  <INPUT type=submit value='Load SQL File'>
+</form>
+--%>
+<hr>
+<%if(groupName != null && groupName.length() > 0) {%>
+  <%if(request.getParameter("loadfiles") == null) {%>
+    <br>
+    <DIV class='head1'>Open For Business Installation (Data Load) Page</DIV>
+    <DIV class='head2'>Do you want to load the following SQL files and generated entity specific data?</DIV>
+    <DIV class='tabletext'>(From the path list: "<%=UtilFormatOut.checkNull(paths)%>")</DIV>
+    <UL>
+      <%if(fileList.size() > 0) {%>
+        <%for(int i=0; i<fileList.size(); i++) {%>
+          <%File sqlFile = (File)fileList.get(i);%>
+          <LI><DIV class='tabletext'><%=sqlFile.getAbsolutePath()%></DIV>
+        <%}%>
+      <%}else{%>
+        <LI><DIV class='tabletext'>No SQL Files found.</DIV>
+      <%}%>
+      <LI><DIV class='tabletext'>Entity granularity security settings (auto generated, not in a file)</DIV>
+    </UL>
+    <A href='<%=response.encodeURL(controlPath + "/install?loadfiles=true&groupName=" + groupName)%>' class='buttontext'>[Yes, Load Now]</A>
+  <%}else{%>
+    <br>
+    <DIV class='head1'>Open For Business Installation (Data Load) Page</DIV>
+    <DIV class='head2'>Loading the SQL files and generated entity specific data...</DIV>
+    <DIV class='tabletext'>(From the path list: "<%=UtilFormatOut.checkNull(paths)%>")</DIV>
+    <UL>
+      <%int totalRowsChanged = 0;%>
+      <%if(fileList.size() > 0) {%>
+        <%for(int i=0; i<fileList.size(); i++) {%>
+          <%File sqlFile = (File)fileList.get(i);%>
+          <%int rowsChanged = loadData(sqlFile, helperName);%>
+          <%totalRowsChanged += rowsChanged;%>
+          <LI><DIV class='tabletext'>Loaded <%=rowsChanged%> rows from <%=sqlFile.getAbsolutePath()%> (<%=totalRowsChanged%> total rows so far)</DIV>
+        <%}%>
+      <%}else{%>
+        <LI><DIV class='tabletext'>No SQL Files found.</DIV>
+      <%}%>
+      <%int genRowsChanged = generateData(delegator);%>
+       <%totalRowsChanged += genRowsChanged;%>
+      <LI><DIV class='tabletext'>Loaded <%=genRowsChanged%> rows for generated entity granularity security settings (<%=totalRowsChanged%> total rows so far)</DIV>
+    </UL>
+    <DIV class='head2'>Finished loading all data; <%=totalRowsChanged%> total rows updated.</DIV>
 
-  if(request.getParameter("loadfiles") == null) {%>
-  <br>
-  <DIV class='head1'>Open For Business Installation (Data Load) Page</DIV>
-  <DIV class='head2'>Do you want to load the following SQL files and generated entity specific data?</DIV>
-  <DIV class='tabletext'>(From the path list: "<%=UtilFormatOut.checkNull(paths)%>")</DIV>
-  <UL>
-    <%if(fileList.size() > 0) {%>
-      <%for(int i=0; i<fileList.size(); i++) {%>
-        <%File sqlFile = (File)fileList.get(i);%>
-        <LI><DIV class='tabletext'><%=sqlFile.getAbsolutePath()%></DIV>
+    <DIV class='head2'>Error Messages:</DIV>
+    <UL>
+      <%Iterator errIter = errorMessages.iterator();%>
+      <%while(errIter.hasNext()){%>
+        <LI><%=(String)errIter.next()%>
       <%}%>
-    <%}else{%>
-      <LI><DIV class='tabletext'>No SQL Files found.</DIV>
-    <%}%>
-    <LI><DIV class='tabletext'>Entity granularity security settings (auto generated, not in a file)</DIV>
-  </UL>
-  <A href='<%=response.encodeURL(controlPath + "/install?loadfiles=true")%>' class='buttontext'>[Yes, Load Now]</A>
-<%}else{%>
-  <br>
-  <DIV class='head1'>Open For Business Installation (Data Load) Page</DIV>
-  <DIV class='head2'>Loading the SQL files and generated entity specific data...</DIV>
-  <DIV class='tabletext'>(From the path list: "<%=UtilFormatOut.checkNull(paths)%>")</DIV>
-  <UL>
-    <%int totalRowsChanged = 0;%>
-    <%if(fileList.size() > 0) {%>
-      <%for(int i=0; i<fileList.size(); i++) {%>
-        <%File sqlFile = (File)fileList.get(i);%>
-        <%int rowsChanged = loadData(sqlFile, serverName);%>
-        <%totalRowsChanged += rowsChanged;%>
-        <LI><DIV class='tabletext'>Loaded <%=rowsChanged%> rows from <%=sqlFile.getAbsolutePath()%> (<%=totalRowsChanged%> total rows so far)</DIV>
-      <%}%>
-    <%}else{%>
-      <LI><DIV class='tabletext'>No SQL Files found.</DIV>
-    <%}%>
-    <%int genRowsChanged = generateData(delegator);%>
-     <%totalRowsChanged += genRowsChanged;%>
-    <LI><DIV class='tabletext'>Loaded <%=genRowsChanged%> rows for generated entity granularity security settings (<%=totalRowsChanged%> total rows so far)</DIV>
-  </UL>
-  <DIV class='head2'>Finished loading all data; <%=totalRowsChanged%> total rows updated.</DIV>
+    </UL>
+
+  <%}%>
+<%--
+<%}else if(loadFile != null && loadFile.length > 0) {%>
+  <%int rowsChanged = loadData(sqlFile, helperName);%>
+  <DIV class='head2'>Finished loading file data; <%=totalRowsChanged%> total rows updated.</DIV>
 
   <DIV class='head2'>Error Messages:</DIV>
   <UL>
@@ -75,7 +112,7 @@
       <LI><%=(String)errIter.next()%>
     <%}%>
   </UL>
-
+--%>
 <%}%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
@@ -84,7 +121,7 @@
 <%!
   Collection errorMessages = new LinkedList();
 
-  int loadData(File sqlFile, String serverName)
+  int loadData(File sqlFile, String helperName)
   {
     if(!sqlFile.exists()) return 0;
     Debug.logInfo("[install.loadData] Loading SQL File: \"" + sqlFile.getAbsolutePath() + "\"");
@@ -93,7 +130,7 @@
     Statement stmt = null;
     int rowsChanged = 0;
     try {
-      connection = ConnectionFactory.getConnection(serverName);
+      connection = ConnectionFactory.getConnection(helperName);
       connection.setAutoCommit(true);
       stmt = connection.createStatement();
 
@@ -159,19 +196,23 @@
     Iterator classNamesIterator = entityCol.iterator();
     while(classNamesIterator != null && classNamesIterator.hasNext()) { 
       ModelEntity entity = reader.getModelEntity((String)classNamesIterator.next());
-      if(delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_ADMIN", "description", "Permission to Administer a " + entity.entityName + " entity.")) != null) rowsChanged++;
-      else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating ADMIN SecurityPermission"; errorMessages.add(errorMsg); }
-      if(delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_VIEW", "description", "Permission to View a " + entity.entityName + " entity.")) != null) rowsChanged++;
-      else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating VIEW SecurityPermission"; errorMessages.add(errorMsg); }
-      if(delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_CREATE", "description", "Permission to Create a " + entity.entityName + " entity.")) != null) rowsChanged++;
-      else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating CREATE SecurityPermission"; errorMessages.add(errorMsg); }
-      if(delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_UPDATE", "description", "Permission to Update a " + entity.entityName + " entity.")) != null) rowsChanged++;
-      else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating UPDATE SecurityPermission"; errorMessages.add(errorMsg); }
-      if(delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_DELETE", "description", "Permission to Delete a " + entity.entityName + " entity.")) != null) rowsChanged++;
-      else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating DELETE SecurityPermission"; errorMessages.add(errorMsg); }
+      try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_ADMIN", "description", "Permission to Administer a " + entity.entityName + " entity.")); rowsChanged++; }
+      catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating ADMIN SecurityPermission"); }
 
-      if(delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FULLADMIN", "permissionId", entity.tableName + "_ADMIN")) != null) rowsChanged++;
-      else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating FULLADMIN SecurityGroupPermission"; errorMessages.add(errorMsg); }
+      try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_VIEW", "description", "Permission to View a " + entity.entityName + " entity.")); rowsChanged++; }
+      catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating VIEW SecurityPermission"); }
+
+      try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_CREATE", "description", "Permission to Create a " + entity.entityName + " entity.")); rowsChanged++; }
+      catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating CREATE SecurityPermission"); }
+
+      try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_UPDATE", "description", "Permission to Update a " + entity.entityName + " entity.")); rowsChanged++; }
+      catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating UPDATE SecurityPermission"); }
+
+      try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_DELETE", "description", "Permission to Delete a " + entity.entityName + " entity.")); rowsChanged++; }
+      catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating DELETE SecurityPermission"); }
+
+      try { delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FULLADMIN", "permissionId", entity.tableName + "_ADMIN")); rowsChanged++; }
+      catch(GenericEntityException e) { errorMessages.add("Generated Data Load error for entity \"" + entity.tableName + "\" creating FULLADMIN SecurityGroupPermission"); }
       //if(delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_VIEW")) != null) rowsChanged++;
       //if(delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_CREATE")) != null) rowsChanged++;
       //if(delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_UPDATE")) != null) rowsChanged++;

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Thu Sep 20 11:13:41 PDT 2001
+ *@created    Thu Sep 20 12:55:33 PDT 2001
  *@version    1.0
  */
 -->
@@ -1367,7 +1367,7 @@
     <entity entity-name="Sequence" 
             package-name="org.ofbiz.commonapp.common.sequence"
             title="Sequence Entity">
-      <field name="seqName" type="id-ne"></field>
+      <field name="seqName" type="id-long-ne"></field>
       <field name="seqId" type="numeric"></field>	
       <prim-key field="seqName" />
     </entity>

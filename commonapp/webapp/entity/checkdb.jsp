@@ -37,10 +37,20 @@
   String addMissingStr = request.getParameter("addMissing");
   if("true".equalsIgnoreCase(addMissingStr)) addMissing = true;
   
-  Collection messages = new LinkedList();
-  GenericDAO dao = GenericDAO.getGenericDAO(delegator.getServerName());
-  dao.checkDb(messages, addMissing);
-  Iterator miter = messages.iterator();
+  String groupName = request.getParameter("groupName");
+  
+  Iterator miter = null;
+
+  if(groupName != null && groupName.length() > 0) {
+    String helperName = delegator.getGroupHelperName(groupName);
+
+    Collection messages = new LinkedList();
+    GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+    Map modelEntities = delegator.getModelEntityMapByGroup(groupName);
+
+    helper.checkDataSource(modelEntities, messages, addMissing);
+    miter = messages.iterator();
+  }
 %>
 
 <html>
@@ -48,11 +58,19 @@
 <body>
 
 <H3>Check/Update Database</H3>
-<A href='<%=response.encodeURL(controlPath + "/view/checkdb")%>'>Check Only</A>
-<A href='<%=response.encodeURL(controlPath + "/view/checkdb?addMissing=true")%>'>Check and Add Missing</A>
 
+<form method=post action='<%=response.encodeURL(controlPath + "/view/checkdb")%>'>
+  Group Name: <INPUT type=text name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
+  <INPUT type=submit value='Check Only'>
+</form>
+<form method=post action='<%=response.encodeURL(controlPath + "/view/checkdb?addMissing=true")%>'>
+  Group Name: <INPUT type=text name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
+  <INPUT type=submit value='Check and Add Missing'>
+</form>
+
+<hr>
 <UL>
-<%while(miter.hasNext()){%>
+<%while(miter != null && miter.hasNext()){%>
   <%String message = (String)miter.next();%>
   <LI><%=message%>
 <%}%>
