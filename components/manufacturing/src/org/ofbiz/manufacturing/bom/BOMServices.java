@@ -47,7 +47,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
-
 /** Bills of Materials' services implementation.
  * These services are useful when dealing with product's
  * bills of materials.
@@ -138,11 +137,37 @@ public class BOMServices {
         if (alsoComponents == null) {
             alsoComponents = new Boolean(true);
         }
+        Boolean alsoVariants = (Boolean) context.get("alsoVariants");
+        if (alsoVariants == null) {
+            alsoVariants = new Boolean(true);
+        }
+
         Integer llc = null;
         try {
             GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
             Map depthResult = dispatcher.runSync("getMaxDepth", UtilMisc.toMap("productId", productId, "bomType", "MANUF_COMPONENT"));
             llc = (Integer)depthResult.get("depth");
+            // If the product is a variant of a virtual, then the billOfMaterialLevel cannot be 
+            // lower than the billOfMaterialLevel of the virtual product.
+            List virtualProducts = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT"));
+            if (virtualProducts != null) {
+                int virtualMaxDepth = 0;
+                Iterator virtualProductsIt = virtualProducts.iterator();
+                while (virtualProductsIt.hasNext()) {
+                    int virtualDepth = 0;
+                    GenericValue oneVirtualProductAssoc = (GenericValue)virtualProductsIt.next();
+                    GenericValue virtualProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", oneVirtualProductAssoc.getString("productId")));
+                    if (virtualProduct.get("billOfMaterialLevel") != null) {
+                        virtualDepth = virtualProduct.getLong("billOfMaterialLevel").intValue();
+                        if (virtualDepth > virtualMaxDepth) {
+                            virtualMaxDepth = virtualDepth;
+                        }
+                    }
+                }
+                if (virtualMaxDepth > llc.intValue()) {
+                    llc = new Integer(virtualMaxDepth);
+                }
+            }
             product.set("billOfMaterialLevel", llc);
             product.store();
             if (alsoComponents.booleanValue()) {
@@ -159,7 +184,18 @@ public class BOMServices {
                     }
                 }
             }
-            // FIXME: also all the variants llc should be updated?
+            if (alsoVariants.booleanValue()) {
+                List variantProducts = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT"));
+                if (variantProducts != null) {
+                    Iterator variantProductsIt = variantProducts.iterator();
+                    while (variantProductsIt.hasNext()) {
+                        GenericValue oneVariantProductAssoc = (GenericValue)variantProductsIt.next();
+                        GenericValue variantProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", oneVariantProductAssoc.getString("productId")));
+                        variantProduct.set("billOfMaterialLevel", llc);
+                        variantProduct.store();
+                    }
+                }
+            }
         } catch (Exception e) {
             return ServiceUtil.returnError("Error running updateLowLevelCode: " + e.getMessage());
         }
@@ -180,21 +216,26 @@ public class BOMServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
         try {
-            List products = delegator.findAll("Product");
+            List products = delegator.findAll("Product", UtilMisc.toList("isVirtual DESC"));
             Iterator productsIt = products.iterator();
             Integer zero = new Integer(0);
+            List allProducts = new ArrayList();
             while (productsIt.hasNext()) {
                 GenericValue product = (GenericValue)productsIt.next();
                 product.set("billOfMaterialLevel", zero);
-                product.store();
+                allProducts.add(product);
             }
+            delegator.storeAll(allProducts);
+                        
             productsIt = products.iterator();
             List productLLCs = new ArrayList();
             while (productsIt.hasNext()) {
                 GenericValue product = (GenericValue)productsIt.next();
-                Map depthResult = dispatcher.runSync("updateLowLevelCode", UtilMisc.toMap("productId", product.getString("productId"), "alsoComponents", Boolean.valueOf(false)));
-                //System.out.println("PRODUCT: " + product.getString("productId") + " - LLC: " + depthResult.get("lowLevelCode"));
-                productLLCs.add(product.getString("productId") + " - " + depthResult.get("lowLevelCode"));
+                try {
+                    Map depthResult = dispatcher.runSync("updateLowLevelCode", UtilMisc.toMap("productId", product.getString("productId"), "alsoComponents", Boolean.valueOf(false), "alsoVariants", Boolean.valueOf(false)));
+                    productLLCs.add(product.getString("productId") + " - " + depthResult.get("lowLevelCode"));
+                } catch(Exception exc) {
+                }
             }
             result.put("productLLCs", productLLCs);
             // FIXME: also all the variants llc should be updated?
