@@ -36,10 +36,10 @@
       </ExtendedAttributes>
     </Participant>
     <Participant Id="user" Name="First Participant">
-      <ParticipantType Type="ROLE"/>
+      <ParticipantType Type="RESOURCE"/>
       <Description>None</Description>
       <ExtendedAttributes>
-        <ExtendedAttribute Name="partyIdExpr" Value="partyId"/>
+        <ExtendedAttribute Name="partyId" Value="expr:partyId"/>
       </ExtendedAttributes>
     </Participant>
   </Participants>
