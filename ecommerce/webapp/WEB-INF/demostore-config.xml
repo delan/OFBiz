@@ -114,13 +114,19 @@
         <response name="success" type="view" value="checkoutoptions"/>
         <response name="error" type="view" value="main"/>
     </request-map>
-
+    
     <request-map uri="checkout">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="setCheckOutOptions"/>
-        <response name="success" type="request" value="calcShipping"/>
-        <response name="error" type="view" value="checkoutoptions"/>
+	  <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="cartNotEmpty"/> 
+      <response name="success" type="request" value="setOptions"/>
+	  <response name="error" type="view" value="showcart"/>
     </request-map>
+
+	<request-map uri="setOptions">
+      <security https="true" auth="true"/>
+	  <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="setCheckOutOptions"/> 
+	  <response name="success" type="request" value="calcShipping"/>
+	  <response name="error" type="view" value="checkoutoptions"/>
+	</request-map>    
     
     <request-map uri="calcShipping">
         <security https="true" auth="true"/>
@@ -217,12 +223,14 @@
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
+    
     <request-map uri="updateContactMech">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updateContactMech"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
+    
     <request-map uri="deleteContactMech">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="deleteContactMech"/>
