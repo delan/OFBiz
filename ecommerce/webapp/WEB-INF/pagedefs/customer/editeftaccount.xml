@@ -2,6 +2,6 @@
 <page>
     <template>main</template>
     <property name="title">Edit EFT Account</property>
-    <page-action>/customer/editeftaccount.js</page-action>
+    <page-action>/customer/editpaymentmethod.js</page-action>
 </page>
 

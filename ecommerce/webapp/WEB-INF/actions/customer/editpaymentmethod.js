@@ -35,15 +35,25 @@ if (userLogin != null) {
     person = userLogin.getRelatedOne("Person");
 }
 
-PaymentWorker.getPaymentMethodAndRelated(request, userLogin.getString("partyId")) 
+var paymentResults = PaymentWorker.getPaymentMethodAndRelated(request, userLogin.getString("partyId")) 
 //returns the following: "paymentMethod", "creditCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity"
+context.put("paymentMethod", paymentResults.get("paymentMethod"));
+context.put("creditCard", paymentResults.get("creditCard"));
+context.put("eftAccount", paymentResults.get("eftAccount"));
+context.put("paymentMethodId", paymentResults.get("paymentMethodId"));
+context.put("curContactMechId", paymentResults.get("curContactMechId"));
+context.put("donePage", paymentResults.get("donePage"));
+context.put("tryEntity", paymentResults.get("tryEntity"));
 
-    
-<%ContactMechWorker.getCurrentPostalAddress(pageContext, userLogin.getString("partyId"), 
-    (String) pageContext.getAttribute("curContactMechId"), "curPartyContactMech", "curContactMech", 
-    "curPostalAddress", "curPartyContactMechPurposes");%>
+var curPostalAddressResults = ContactMechWorker.getCurrentPostalAddress(pageContext, userLogin.getString("partyId"), pageContext.getAttribute("curContactMechId")); 
+//returns the following: "curPartyContactMech", "curContactMech", "curPostalAddress", "curPartyContactMechPurposes"
+context.put("curPartyContactMech", paymentResults.get("curPartyContactMech"));
+context.put("curContactMech", paymentResults.get("curContactMech"));
+context.put("curPostalAddress", paymentResults.get("curPostalAddress"));
+context.put("curPartyContactMechPurposes", paymentResults.get("curPartyContactMechPurposes"));
 
-<%ContactMechWorker.getPartyPostalAddresses(pageContext, userLogin.getString("partyId"), (String) pageContext.getAttribute("curContactMechId"), "postalAddressInfos");%>
+var postalAddressInfos = ContactMechWorker.getPartyPostalAddresses(pageContext, userLogin.getString("partyId"), pageContext.getAttribute("curContactMechId"));
+context.put("postalAddressInfos", postalAddressInfos);
 
 var personData = person;
 if (!tryEntity) personData = UtilHttp.getParameterMap(request);
