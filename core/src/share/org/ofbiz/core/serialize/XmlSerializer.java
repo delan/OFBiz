@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/17 05:52:42  jonesde
+ * First pretty complete pass of the serialization/deser methods, cleaned up a bit too
+ *
  * Revision 1.1  2001/11/16 15:54:56  jonesde
  * Initial checkin of XML serialization stuff
  *
@@ -264,11 +267,31 @@ public class XmlSerializer {
             if("map-Entry".equals(curElement.getTagName())) {
               NodeList tempList = curElement.getElementsByTagName("map-Key");
               if(tempList.getLength() != 1) throw new SerializeException("There were " + tempList.getLength() + " map-Key elements, expected 1");
-              Element keyElement = (Element)tempList.item(0);
+              Element mapKeyElement = (Element)tempList.item(0);
+              Element keyElement = null;
+              Node tempNode = mapKeyElement.getFirstChild();
+              while(tempNode != null) {
+                if(tempNode.getNodeType() == Node.ELEMENT_NODE) {
+                  keyElement = (Element)tempNode;
+                  break;
+                }
+                tempNode = tempNode.getNextSibling();
+              }
+              if(keyElement == null) throw new SerializeException("Could not find an element under the map-Key");
               
               tempList = curElement.getElementsByTagName("map-Value");
               if(tempList.getLength() != 1) throw new SerializeException("There were " + tempList.getLength() + " map-Value elements, expected 1");
-              Element valueElement = (Element)tempList.item(0);
+              Element mapValueElement = (Element)tempList.item(0);
+              Element valueElement = null;
+              tempNode = mapValueElement.getFirstChild();
+              while(tempNode != null) {
+                if(tempNode.getNodeType() == Node.ELEMENT_NODE) {
+                  valueElement = (Element)tempNode;
+                  break;
+                }
+                tempNode = tempNode.getNextSibling();
+              }
+              if(valueElement == null) throw new SerializeException("Could not find an element under the map-Value");
               
               value.put(deserializeSingle(keyElement, delegator), deserializeSingle(valueElement, delegator));
             }
