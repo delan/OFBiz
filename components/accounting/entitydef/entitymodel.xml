@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  */
 -->
 
@@ -1838,9 +1838,10 @@
             package-name="org.ofbiz.accounting.payment"
             title="Gift Card Information Entity">
       <field name="paymentMethodId" type="id-ne"></field>
-      <field name="cardNumber" type="short-varchar"></field>
-      <field name="extNumber" type="short-varchar"></field>
-      <field name="pinNumber" type="very-short"></field>
+      <field name="physicalNumber" type="short-varchar"></field>
+      <field name="physicalPin" type="very-short"></field>
+      <field name="virtualNumber" type="short-varchar"></field>
+      <field name="virtualPin" type="very-short"></field>
       <field name="expireDate" type="credit-card-date"></field>
       <field name="contactMechId" type="id-ne"></field>
       <prim-key field="paymentMethodId"/>
