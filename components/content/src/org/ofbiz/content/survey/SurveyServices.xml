@@ -367,7 +367,7 @@
             <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="GIFT_CARD">
                 <if-validate-method field-name="${question.surveyQuestionId}" map-name="answers" method="isGiftCard">
                 <else>
-                    <add-error><fail-message message="${question.question} requires a valid credit-card number"></fail-message></add-error>
+                    <add-error><fail-message message="${question.question} requires a valid gift-card number"></fail-message></add-error>
                 </else>
                 </if-validate-method>
             </if-compare>
