@@ -591,7 +591,7 @@ public class UtilXml {
                             publicId + "] and the file/resource is [" + filename + "]", module);
                     return inputSource;
                 } else {
-                    if (Debug.verboseOn()) Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] could not find LOCAL DTD/Schema with publicId [" +
+                    Debug.logWarning("[UtilXml.LocalResolver.resolveEntity] could not find LOCAL DTD/Schema with publicId [" +
                             publicId + "] and the file/resource is [" + filename + "]", module);
                     return null;
                 }
