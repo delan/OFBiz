@@ -29,17 +29,17 @@
                 <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="common-decorator" location="specialized://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
+                <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for ACCOUNTING, CATALOG _VIEW permission -->
                             <widgets>
                                 <platform-specific>
-                                    <html><html-template location="specialized://opentravelsystem/webapp/hotelbackend/includes/appheaderCatalog.ftl"/></html>
+                                    <html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderCatalog.ftl"/></html>
                                 </platform-specific>
                                 <container style="contentarea">
                                  <platform-specific>
-                                    <html><html-template location="applications://common/webcommon/includes/messages.ftl"/></html>
+                                    <html><html-template location="component://common/webcommon/includes/messages.ftl"/></html>
                                 </platform-specific>
                                 <decorator-section-include name="body"/>
                                 </container>
@@ -69,7 +69,7 @@
                                 <container>
                                 <platform-specific>
                                     <html>
-                                        <html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/main.ftl"/>
+                                        <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/main.ftl"/>
                                     </html>
                                 </platform-specific>
                                 </container>
@@ -113,12 +113,12 @@
                         <container>
                             <label style="head1">Active Categories</label>
                         <container style="column-left-wide">
-                            <include-tree name="productTree" location="specialized://opentravelsystem/webapp/hotelbackend/screens/trees.xml" /> 
+                            <include-tree name="productTree" location="component://opentravelsystem/webapp/hotelbackend/screens/trees.xml" /> 
                         </container>
                         </container>
                             <platform-specific>
                                 <html>
-                                    <html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/EditProdCatalogCategories.ftl"/>
+                                    <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/EditProdCatalogCategories.ftl"/>
                                 </html>
                             </platform-specific>
                             <link target="EditCategory" text="[Create new Category]" style="buttontext"/>
@@ -148,11 +148,11 @@
                 <decorator-screen name="CommonCatalogDecorator">
                     <decorator-section name="body">
 	                       <platform-specific>
-	                           <html><html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/CategoryTabBar.ftl"/></html>
+	                           <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/CategoryTabBar.ftl"/></html>
 	                       </platform-specific>
                             <label style="head1">Add/Update Category</label>
                             <link target="EditCategory" text="[New Category]" style="buttontext"/>
-                            <include-form name="editProdCatalogCategory" location="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
+                            <include-form name="editProdCatalogCategory" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -182,7 +182,7 @@
                     <decorator-section name="body">
                         <container>
 	                       <platform-specific>
-	                           <html><html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/CategoryTabBar.ftl"/></html>
+	                           <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/CategoryTabBar.ftl"/></html>
 	                       </platform-specific>
                             <label style="head1">${uiLabelMap.PageTitleEditCategoryProducts} for Category "${productCategory.description}" [${productCategoryId}]</label>
                         </container>
@@ -191,11 +191,11 @@
                                 text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
                         </container>
                         <container>
-                            <include-form name="EditCategoryProducts" location="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
+                            <include-form name="EditCategoryProducts" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                         <container>
                             <label style="head1">&lt;br&gt;${uiLabelMap.ProductAddProductCategoryMember}</label>
                         </container>
-                            <include-form name="addProductToCategory" location="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
+                            <include-form name="addProductToCategory" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                         </container>
                     </decorator-section>
                 </decorator-screen>
@@ -226,7 +226,7 @@
                                 text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
                         </container>
                         <container>
-                            <include-form name="EditProducts" location="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
+                            <include-form name="EditProducts" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                         </container>
                         <container>
                             <link target="EditProduct"
@@ -260,7 +260,7 @@
                             <link target="EditFixedAsset"
                                 text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
                         </container>
-                        <include-form name="ListFixedAssets" location="applications://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <include-form name="ListFixedAssets" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                         <container>
                             <link target="EditFixedAsset"
                                 text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
@@ -286,12 +286,12 @@
     <screen name="keywordsearchbox">
         <section>
             <actions>
-                <script location="applications://product/webapp/catalog/WEB-INF/actions/find/keywordsearchbox.bsh"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/find/keywordsearchbox.bsh"/>
             </actions>
             <widgets>
                 <platform-specific>
                     <html>
-                        <html-template location="applications://product/webapp/catalog/find/keywordsearchbox.ftl"/>
+                        <html-template location="component://product/webapp/catalog/find/keywordsearchbox.ftl"/>
                     </html>
                 </platform-specific>
             </widgets>
@@ -300,12 +300,12 @@
     <screen name="sidecatalogs">
         <section>
             <actions>
-                <script location="applications://product/webapp/catalog/WEB-INF/actions/find/sidecatalogs.bsh"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/find/sidecatalogs.bsh"/>
             </actions>
             <widgets>
                 <platform-specific>
                     <html>
-                        <html-template location="applications://product/webapp/catalog/find/sidecatalogs.ftl"/>
+                        <html-template location="component://product/webapp/catalog/find/sidecatalogs.ftl"/>
                     </html>
                 </platform-specific>
             </widgets>
@@ -314,12 +314,12 @@
     <screen name="sidedeepcategory">
         <section>
             <actions>
-                <script location="applications://product/webapp/catalog/WEB-INF/actions/find/sidedeepcategory.bsh"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/find/sidedeepcategory.bsh"/>
             </actions>
             <widgets>
                 <platform-specific>
                     <html>
-                        <html-template location="applications://product/webapp/catalog/find/sidedeepcategory.ftl"/>
+                        <html-template location="component://product/webapp/catalog/find/sidedeepcategory.ftl"/>
                     </html>
                 </platform-specific>
             </widgets>
@@ -328,12 +328,12 @@
     <screen name="miniproductlist">
         <section>
             <actions>
-                <script location="applications://product/webapp/catalog/WEB-INF/actions/find/miniproductlist.bsh"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/find/miniproductlist.bsh"/>
             </actions>
             <widgets>
                 <platform-specific>
                     <html>
-                        <html-template location="applications://product/webapp/catalog/find/miniproductlist.ftl"/>
+                        <html-template location="component://product/webapp/catalog/find/miniproductlist.ftl"/>
                     </html>
                 </platform-specific>
             </widgets>
@@ -358,15 +358,15 @@
                 <decorator-section name="body">
                     <container>
                        <platform-specific>
-                           <html><html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
+                           <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
                        </platform-specific>
                             <label style="head1">${uiLabelMap.ProductEditProduct}: ${product.internalName} [${uiLabelMap.CommonId}:${productId}]</label>
                      </container>
-                     <include-form name="EditProduct" location="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
+                     <include-form name="EditProduct" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                      <!-- include the duplicate product form template -->
                      <!--platform-specific>
                             <html>
-                                <html-template location="applications://product/webapp/catalog/product/EditProductDupForm.ftl"/>
+                                <html-template location="component://product/webapp/catalog/product/EditProductDupForm.ftl"/>
                             </html>
                      </platform-specific-->
                     </decorator-section>
@@ -399,13 +399,13 @@
                     <decorator-section name="body">
                     <container>
                        <platform-specific>
-                           <html><html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
+                           <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
                        </platform-specific>
                             <label style="head1">${uiLabelMap.PageTitleEditProductCategories}: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
                      </container>
-                        <include-form name="ListProductCategoryMembers" location="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
+                        <include-form name="ListProductCategoryMembers" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                          <label style="head1">&lt;br/&gt;${uiLabelMap.ProductAddCategory}</label>
-                        <include-form name="AddProductCategoryMember" location="applications://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="AddProductCategoryMember" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -438,13 +438,13 @@
                     <decorator-section name="body">
                     <container>
                        <platform-specific>
-                           <html><html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
+                           <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
                        </platform-specific>
                             <label style="head1">${uiLabelMap.PageTitleEditProductPrices}: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
                      </container>
-                        <include-form name="UpdateProductPrice" location="applications://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="UpdateProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                          <label style="head1">&lt;br/&gt;${uiLabelMap.ProductAddPrice}</label>
-                        <include-form name="AddProductPrice" location="applications://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="AddProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -461,18 +461,18 @@
                 <set field="titleProperty" value="PageTitleEditProductPrices"/>
                 <set field="labelTitleProperty" value="ProductPrices"/>
                 <set field="productId" from-field="parameters.productId"/>
-                <script location="applications://product/webapp/catalog/WEB-INF/actions/product/EditProductContent.bsh"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductContent.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator">
                     <decorator-section name="body">
                     <container>
                        <platform-specific>
-                           <html><html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
+                           <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
                        </platform-specific>
                             <label style="head1">Edit Product Content: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
                      </container>
-                        <include-form name="EditProductContent" location="applications://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="EditProductContent" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -499,11 +499,11 @@
                     <decorator-section name="body">
                     <container>
                        <platform-specific>
-                           <html><html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
+                           <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
                        </platform-specific>
                             <label style="head1">${uiLabelMap.ProductEditProduct}: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
                      </container>
-                        <include-form name="EditProductAssetUsage" location="applications://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="EditProductAssetUsage" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                         <container>
                             <label/>
                             <label style="head1">${uiLabelMap.AccountingFixedAssets}</label>
@@ -511,7 +511,7 @@
                         <container>
                             <link target="newFixedAssetProduct?productId=${productId}" text="[${uiLabelMap.AccountingFixedAssetNew}]" style="buttontext"/>
                         </container>
-                        <include-form name="ListProductFixedAssets" location="applications://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="ListProductFixedAssets" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -533,7 +533,7 @@
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator">
                     <decorator-section name="body">
-                        <include-form name="showFixedAssetProduct" location="applications://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="showFixedAssetProduct" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -556,10 +556,10 @@
                 <decorator-screen name="CommonCatalogDecorator">
                     <decorator-section name="body">
                        <platform-specific><!-- TODO: tabbar does not want to display -->
-                           <html><html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
+                           <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
                        </platform-specific>
                          <label style="head1">${uiLabelMap.AccountingFixedAssetNew}: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
-                        <include-form name="addFixedAssetProduct" location="applications://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="addFixedAssetProduct" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -588,7 +588,7 @@
                                 <container>
                                     <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
                                 </container>
-                        <include-form name="ListFixedAssets" location="applications://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <include-form name="ListFixedAssets" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                                 <container>
                                     <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
                                 </container>
@@ -615,14 +615,14 @@
                     <decorator-section name="body">
                         <container>
                                  <platform-specific>
-                                    <html><html-template location="applications://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
+                                    <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
                                 </platform-specific>
                             <label style="head1">${uiLabelMap.AccountingFixedAssetEdit}</label>
                         </container>
                          <container>
                             <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
                          </container>
-                        <include-form name="EditFixedAsset" location="applications://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <include-form name="EditFixedAsset" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -658,15 +658,15 @@
                     <decorator-section name="body">
                       <container>
                        <platform-specific>
-                           <html><html-template location="applications://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
+                           <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
                        </platform-specific>
                             <label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
                              </container>
-                        <include-form name="ListFixedAssetProducts" location="applications://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <include-form name="ListFixedAssetProducts" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                         <container>
                             <label style="head1">${uiLabelMap.AccountingFixedAssetProductNew}</label>
                              </container>
-                        <include-form name="AddFixedAssetProduct" location="applications://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <include-form name="AddFixedAssetProduct" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -688,14 +688,14 @@
                 <set field="nowTimestamp" value="UtilDateTime.nowTimestamp()"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
-                <script location="applications://accounting/webapp/accounting/fixedasset/month.bsh"/>
+                <script location="component://accounting/webapp/accounting/fixedasset/month.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator">
                     <decorator-section name="body">
                                 <container>
                                  <platform-specific>
-                                    <html><html-template location="applications://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
+                                    <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
                                 </platform-specific>
                                    <label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
                                 </container>
@@ -705,7 +705,7 @@
                                     <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}" text="[${uiLabelMap.CommonThis} ${uiLabelMap.CommonMonth}]" style="buttontext"/>
                                     <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=1" text="[${uiLabelMap.CommonNext} ${uiLabelMap.CommonMonth}]" style="buttontext"/>
                                     <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=3" text="[${uiLabelMap.CommonNext} ${uiLabelMap.CommonQuarter}]" style="buttontext"/>
-                                    <include-form name="listFixedAssetCalendar" location="applications://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                                    <include-form name="listFixedAssetCalendar" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                                     <label style="tabletext" text="*) empty, but maximum from fixed Asset capacity shown"></label>
                                 </container>
 <!--                                 <container>
@@ -713,7 +713,7 @@
                                 </container>
                                 <container>
                                    <label style="head1">${uiLabelMap.AccountingUpdateAvailability}</label>
-                                   <include-form name="updateFixedAssetCalendar" location="applications://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                                   <include-form name="updateFixedAssetCalendar" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                                 </container>
  -->                    </decorator-section>
                 </decorator-screen>

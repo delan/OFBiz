@@ -43,8 +43,7 @@
     <!--entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/ExampleTypeData.xml"/-->
 
-    <entity-resource type="data" reader-name="demo" loader="main" location="data/HotelDemoStoreProduct.xml"/>
-    <entity-resource type="data" reader-name="demo" loader="main" location="data/HotelDemoStoreShipping.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/HotelDemoStore.xml"/>
     
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
@@ -67,7 +66,7 @@
         title="Hotel Demo Backend Images directory"
         server="default-server"
         location="webapp/hotelbackend/images"
-        mount-point="/hotelbackend/images"
+        mount-point="/hotelbackendimages"
         app-bar-display="false"/>        
 
     <webapp name="hotelfrontend"
@@ -81,7 +80,7 @@
         title="Hotel Demo Backend Images directory"
         server="default-server"
         location="webapp/hotelfrontend/images"
-        mount-point="/hotelfrontend/images"
+        mount-point="/hotelfrontendimages"
         app-bar-display="false"/>        
         
 </ofbiz-component>

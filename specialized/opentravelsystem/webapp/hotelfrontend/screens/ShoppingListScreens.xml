@@ -33,12 +33,12 @@
 
                 <set field="title-property" value="PageTitleShoppingList"/>
                 <set field="headerItem" value="Shopping List"/>
-                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/shoppinglist/editShoppingList.bsh"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/shoppinglist/editShoppingList.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="applications://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/shoppinglist/editShoppingList.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/shoppinglist/editShoppingList.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
