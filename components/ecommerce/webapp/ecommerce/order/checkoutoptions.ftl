@@ -20,50 +20,54 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      2.1
 -->
 
 <script language="javascript" type="text/javascript">
 <!--
 function submitForm(form, mode, value) {
-        if (mode == "DN") {
-                // done action; checkout
-                form.action="<@ofbizUrl>/checkout</@ofbizUrl>";
-                form.submit();
-        } else if (mode == "CS") {
-                // continue shopping
-                form.action="<@ofbizUrl>/updateCheckoutOptions/showcart</@ofbizUrl>";
-                form.submit();
-        } else if (mode == "NA") {
-                // new address
-                form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@ofbizUrl>";
-                form.submit();
-        } else if (mode == "EA") {
-                // edit address
-                form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?contactMechId="+value+"</@ofbizUrl>";
-                form.submit();
-        } else if (mode == "NC") {
-                // new credit card
-                form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard</@ofbizUrl>";
-                form.submit();
-        } else if (mode == "EC") {
-                // edit credit card
-                form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?paymentMethodId="+value+"</@ofbizUrl>";
-                form.submit();
-        } else if (mode == "NE") {
-                // new eft account
-                form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount</@ofbizUrl>";
-                form.submit();
-        } else if (mode == "EE") {
-                // edit eft account
-                form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?paymentMethodId="+value+"</@ofbizUrl>";
-                form.submit();
-        } else if (mode == "SP") {
-                // split payment
-                form.action="<@ofbizUrl>/updateCheckoutOptions/checkoutpayment</@ofbizUrl>";
-                form.submit();
-        } else if (mode == "SA") {
+    if (mode == "DN") {
+        // done action; checkout
+        form.action="<@ofbizUrl>/checkout</@ofbizUrl>";
+        form.submit();
+    } else if (mode == "CS") {
+        // continue shopping
+        form.action="<@ofbizUrl>/updateCheckoutOptions/showcart</@ofbizUrl>";
+        form.submit();
+    } else if (mode == "NA") {
+        // new address
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@ofbizUrl>";
+        form.submit();
+    } else if (mode == "EA") {
+        // edit address
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?contactMechId="+value+"</@ofbizUrl>";
+        form.submit();
+    } else if (mode == "NC") {
+        // new credit card
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard</@ofbizUrl>";
+        form.submit();
+    } else if (mode == "EC") {
+        // edit credit card
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?paymentMethodId="+value+"</@ofbizUrl>";
+        form.submit();
+    } else if (mode == "GC") {
+        // edit gift card
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editgiftcard?paymentMethodId="+value+"</@ofbizUrl>";
+        form.submit();
+    } else if (mode == "NE") {
+        // new eft account
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount</@ofbizUrl>";
+        form.submit();
+    } else if (mode == "EE") {
+        // edit eft account
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?paymentMethodId="+value+"</@ofbizUrl>";
+        form.submit();
+    } else if (mode == "SP") {
+        // split payment
+        form.action="<@ofbizUrl>/updateCheckoutOptions/checkoutpayment</@ofbizUrl>";
+        form.submit();
+    } else if (mode == "SA") {
         // selected shipping address
         form.action="<@ofbizUrl>/updateCheckoutOptions/quickcheckout</@ofbizUrl>";
         form.submit();
@@ -381,7 +385,57 @@ function toggleBillingAccount(box) {
                               <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
                             </td>
                           </tr>
-                          <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                        <#elseif paymentMethod.paymentMethodTypeId == "GIFT_CARD">
+                          <#assign giftCard = paymentMethod.getRelatedOne("GiftCard")>
+
+                          <#if giftCard?has_content && giftCard.physicalNumber?has_content>
+                            <#assign pcardNumberDisplay = "">
+                            <#assign pcardNumber = giftCard.physicalNumber>
+                            <#if pcardNumber?has_content>
+                              <#assign psize = pcardNumber?length - 4>
+                              <#if 0 < psize>
+                                <#list 0 .. psize-1 as foo>
+                                  <#assign pcardNumberDisplay = pcardNumberDisplay + "*">
+                                </#list>
+                                <#assign pcardNumberDisplay = pcardNumberDisplay + pcardNumber[psize .. psize + 3]>
+                              <#else>
+                                <#assign pcardNumberDisplay = pcardNumber>
+                              </#if>
+                            </#if>
+
+                            <#if giftCard?has_content && giftCard.virtualNumber?has_content>
+                              <#assign vcardNumberDisplay = "">
+                              <#assign vcardNumber = giftCard.virtualNumber>
+                              <#if vcardNumber?has_content>
+                                <#assign vsize = vcardNumber?length - 4>
+                                <#if 0 < vsize>
+                                  <#list 0 .. vsize-1 as foo>
+                                    <#assign vcardNumberDisplay = vcardNumberDisplay + "*">
+                                  </#list>
+                                  <#assign vcardNumberDisplay = vcardNumberDisplay + vcardNumber[vsize .. vsize + 3]>
+                                <#else>
+                                  <#assign vcardNumberDisplay = vcardNumber>
+                                </#if>
+                              </#if>
+                            </#if>
+
+                            <#assign giftCardNumber = pcardNumberDisplay?if_exists>
+                            <if (!giftCardNumber?has_content)>
+                              <#assign giftCardNumber = vcardNumberDisplay?if_exists>
+                            <#elseif vcardNumberDisplay?has_content>
+                              <#assign giftCardNumber = giftCardNumber + " / " + vcardNumberDisplay>
+                            </#if>
+                          </#if>
+
+                          <tr>
+                            <td width="1%" nowrap>
+                              <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
+                            </td>
+                            <td width="50%" nowrap>
+                              <span class="tabletext">Gift:&nbsp;${giftCardNumber}</span>
+                              <a href="javascript:submitForm(document.checkoutInfoForm, 'EG', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
+                            </td>
+                          </tr>
                         </#if>
                       </#list>
 

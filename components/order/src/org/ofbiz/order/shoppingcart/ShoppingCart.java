@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.11 2003/10/30 19:29:41 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.12 2003/11/04 23:08:33 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,10 +25,12 @@ package org.ofbiz.order.shoppingcart;
 
 import java.text.NumberFormat;
 import java.util.*;
+import java.sql.Timestamp;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
@@ -43,13 +45,14 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
     public static final String module = ShoppingCart.class.getName();
 
     private List paymentMethodIds = new LinkedList();
+    private List singleUsePaymentIds = new LinkedList();
     private Map paymentMethodAmounts = new HashMap();
     private List paymentMethodTypeIds = new LinkedList();
     private Map paymentMethodTypeAmounts = new HashMap();
@@ -352,7 +355,32 @@ public class ShoppingCart implements java.io.Serializable {
         this.paymentMethodIds.clear();
         this.paymentMethodTypeIds.clear();
         this.adjustments.clear();
+        this.expireSingleUsePayments();
         this.cartLines.clear();
+    }
+
+    private void expireSingleUsePayments() {
+        Iterator i = singleUsePaymentIds.iterator();
+        Timestamp now = UtilDateTime.nowTimestamp();
+        while (i.hasNext()) {
+            String paymentMethodId = (String) i.next();
+            GenericValue paymentMethod = null;
+            try {
+                paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "ERROR: Unable to get payment method record to expire : " + paymentMethodId, module);
+            }
+            if (paymentMethod != null) {
+                paymentMethod.set("thruDate", now);
+                try {
+                    paymentMethod.store();
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Unable to store single use PaymentMethod record : " + paymentMethod, module);
+                }
+            } else {
+                Debug.logError("ERROR: Received back a null payment method record for expired ID : " + paymentMethodId, module);
+            }
+        }
     }
 
     /** Sets the order type. */
@@ -385,13 +413,20 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Sets the amount of a Payment Method. */
-    public void setPaymentMethodAmount(String paymentMethodId, Double amount) {
+    public void setPaymentMethodAmount(String paymentMethodId, Double amount, boolean isSingleUse) {
         if (paymentMethodId != null) {
             if (!this.paymentMethodIds.contains(paymentMethodId)) {
                 this.paymentMethodIds.add(paymentMethodId);
             }
             this.paymentMethodAmounts.put(paymentMethodId, amount);
         }
+        if (isSingleUse) {
+            this.singleUsePaymentIds.add(paymentMethodId);
+        }
+    }
+
+    public void setPaymentMethodAmount(String paymentMethodId, Double amount) {
+        setPaymentMethodAmount(paymentMethodId, amount, false);
     }
 
     /** Returns the Payment Method Ids. */
@@ -1217,5 +1252,10 @@ public class ShoppingCart implements java.io.Serializable {
         result.put("currencyUom", this.getCurrency());
         result.put("billingAccountId", this.getBillingAccountId());
         return result;
+    }
+
+    protected void finalize() throws Throwable {
+        this.clear();
+        super.finalize();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.16 2003/11/03 21:16:06 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.17 2003/11/04 23:08:33 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -524,6 +524,8 @@ public class CheckOutEvents {
         String isGift = null;
         String methodType = null;
         String checkOutPaymentId = null;
+        String singleUsePayment = null;
+        String appendPayment = null;
 
         String mode = request.getParameter("finalizeMode");
         Debug.logInfo("FinalizeMode: " + mode, module);
@@ -579,10 +581,14 @@ public class CheckOutEvents {
         if (checkOutPaymentId == null) {
             checkOutPaymentId = (String) request.getAttribute("paymentMethodId");
         }
+        singleUsePayment = request.getParameter("singleUsePayment");
+        appendPayment = request.getParameter("appendPayment");
+        boolean isSingleUsePayment = singleUsePayment != null && "Y".equalsIgnoreCase(singleUsePayment) ? true : false;
+        boolean doAppendPayment = appendPayment != null && "Y".equalsIgnoreCase(appendPayment) ? true : false;
 
         CheckOutHelper checkOutHelper = new CheckOutHelper(null, delegator, cart);
         Map callResult = checkOutHelper.finalizeOrderEntry(mode, shippingContactMechId, shippingMethod, shippingInstructions,
-            maySplit, giftMessage, isGift, methodType, checkOutPaymentId, paramMap);
+            maySplit, giftMessage, isGift, methodType, checkOutPaymentId, isSingleUsePayment, doAppendPayment, paramMap);
 
         // generate any messages required
         ServiceUtil.getMessages(request, callResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
@@ -646,6 +652,10 @@ public class CheckOutEvents {
                     return "payment";
                 }
             }
+        }
+
+        if (isSingleUsePayment) {
+            return "paysplit";
         }
 
         if ("SALES_ORDER".equals(cart.getOrderType())) {

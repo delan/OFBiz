@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      3.0
 -->
 
@@ -50,6 +50,10 @@ function submitForm(form, mode, value) {
     } else if (mode == "EC") {
         // edit credit card
         form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
+        form.submit();
+    } else if (mode == "GC") {
+        // edit gift card
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editgiftcard?paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
     } else if (mode == "NE") {
         // new eft account
@@ -114,53 +118,117 @@ function toggleBillingAccount(box) {
                         <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="buttontext">[${uiLabelMap.AccountingCreditCard}]</a>
                         <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">[${uiLabelMap.AccountingEftAccount}]</a>
                       </td></tr>
-                      <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="3"><hr class='sepbar'></td></tr>
                       <tr>
-                        <td width="1%" nowrap>
+                        <td width="1" nowrap>
                           <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == context.checkOutPaymentId>checked</#if>>
                         </td>
-                        <td width="50%" nowrap>
+                        <td width="1" nowrap>
                           <span class="tabletext">${uiLabelMap.OrderMoneyOrder}</span>
                         </td>
+                        <td width="1" nowrap>&nbsp;</td>
                       </tr>
                       <tr>
-                        <td width="1%" nowrap>
+                        <td width="1" nowrap>
                           <input type="radio" name="checkOutPaymentId" value="EXT_COD" <#if "EXT_COD" == context.checkOutPaymentId>checked</#if>>
                         </td>
-                        <td width="50%" nowrap>
+                        <td width="1" nowrap>
                           <span class="tabletext">${uiLabelMap.OrderCOD}</span>
                         </td>
+                        <td width="1" nowrap>&nbsp;</td>
                       </tr>
                       <tr>
-                        <td width="1%" nowrap>
+                        <td width="1" nowrap>
                           <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == context.checkOutPaymentId>checked</#if>>
                         </td>
-                        <td width="50%" nowrap>
+                        <td width="1" nowrap>
                           <span class="tabletext">${uiLabelMap.AccountingPayWithWorldPay}</span>
                         </td>
+                        <td width="1" nowrap>&nbsp;</td>
                       </tr>
                       <tr>
-                        <td width="1%" nowrap>
+                        <td width="1" nowrap>
                           <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == context.checkOutPaymentId>checked</#if>>
                         </td>
-                        <td width="50%" nowrap>
+                        <td width="1" nowrap>
                           <span class="tabletext">${uiLabelMap.AccountingPayWithPayPal}</span>
                         </td>
+                        <td width="1" nowrap>&nbsp;</td>
                       </tr>
-                      <tr><td colspan="2"><hr class='sepbar'></td></tr>
-
+                      <tr><td colspan="3"><hr class='sepbar'></td></tr>
                       <#list context.paymentMethodList as paymentMethod>
-                        <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
+                        <#if paymentMethod.paymentMethodTypeId == "GIFT_CARD">
+                          <#assign giftCard = paymentMethod.getRelatedOne("GiftCard")>
+
+                          <#if giftCard?has_content && giftCard.physicalNumber?has_content>
+                            <#assign pcardNumberDisplay = "">
+                            <#assign pcardNumber = giftCard.physicalNumber>
+                            <#if pcardNumber?has_content>
+                              <#assign psize = pcardNumber?length - 4>
+                              <#if 0 < psize>
+                                <#list 0 .. psize-1 as foo>
+                                  <#assign pcardNumberDisplay = pcardNumberDisplay + "*">
+                                </#list>
+                                <#assign pcardNumberDisplay = pcardNumberDisplay + pcardNumber[psize .. psize + 3]>
+                              <#else>
+                                <#assign pcardNumberDisplay = pcardNumber>
+                              </#if>
+                            </#if>
+
+                            <#if giftCard?has_content && giftCard.virtualNumber?has_content>
+                              <#assign vcardNumberDisplay = "">
+                              <#assign vcardNumber = giftCard.virtualNumber>
+                              <#if vcardNumber?has_content>
+                                <#assign vsize = vcardNumber?length - 4>
+                                <#if 0 < vsize>
+                                  <#list 0 .. vsize-1 as foo>
+                                    <#assign vcardNumberDisplay = vcardNumberDisplay + "*">
+                                  </#list>
+                                  <#assign vcardNumberDisplay = vcardNumberDisplay + vcardNumber[vsize .. vsize + 3]>
+                                <#else>
+                                  <#assign vcardNumberDisplay = vcardNumber>
+                                </#if>
+                              </#if>
+                            </#if>
+
+                            <#assign giftCardNumber = pcardNumberDisplay?if_exists>
+                            <if (!giftCardNumber?has_content)>
+                              <#assign giftCardNumber = vcardNumberDisplay?if_exists>
+                            <#elseif vcardNumberDisplay?has_content>
+                              <#assign giftCardNumber = giftCardNumber + " / " + vcardNumberDisplay>
+                            </#if>
+                          </#if>
+
+                          <tr>
+                            <td width="1%" nowrap>
+                              <input type="checkbox" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
+                            </td>
+                            <td width="1%" nowrap>
+                              <span class="tabletext">Gift:&nbsp;${giftCardNumber}</span>
+                              <span class="tabletext" align="right">
+                                <a href="javascript:submitForm(document.checkoutInfoForm, 'EG', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
+                              </span>
+                            </td>
+                            <td>
+                              &nbsp;
+                              <span class="tabletext">
+                                <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="amount_${paymentMethod.paymentMethodId}" value="<#if (cart.getPaymentMethodAmount(paymentMethod.paymentMethodId) > 0)>${cart.getPaymentMethodAmount(paymentMethod.paymentMethodId)?double?string("##0.00")}</#if>">
+                              </span>
+                            </td>
+                          </tr>
+                        <#elseif paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                           <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
                           <tr>
                             <td width="1%" nowrap>
                               <input type="checkbox" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
                             </td>
-                            <td width="50%" nowrap>
+                            <td width="1%" nowrap>
                               <span class="tabletext">CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
                               <span class="tabletext" align="right">
                                 <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
                               </span>
+                            </td>
+                            <td>
                               &nbsp;
                               <span class="tabletext">
                                 <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="amount_${paymentMethod.paymentMethodId}" value="<#if (cart.getPaymentMethodAmount(paymentMethod.paymentMethodId) > 0)>${cart.getPaymentMethodAmount(paymentMethod.paymentMethodId)?double?string("##0.00")}</#if>">
@@ -173,12 +241,13 @@ function toggleBillingAccount(box) {
                             <td width="1%" nowrap>
                               <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if paymentMethod.paymentMethodId == checkOutPaymentId>checked</#if>>
                             </td>
-                            <td width="50%" nowrap>
+                            <td width="1%" nowrap>
                               <span class="tabletext">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</span>
                               <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
                             </td>
+                            <td>&nbsp;</td>
                           </tr>
-                          <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                          <tr><td colspan="3"><hr class='sepbar'></td></tr>
                         </#if>
                       </#list>
 
@@ -219,7 +288,16 @@ function toggleBillingAccount(box) {
                         </tr>
                       </#if>
                       <#-- end of special billing account functionality -->
-
+                      <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                      <tr>
+                        <td colspan="3">
+                          <div class='tabletext' valign='middle'>
+                            <a href="<@ofbizUrl>/setBilling?paymentMethodType=CC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[Single Use Credit Card]</a>&nbsp;
+                            <a href="<@ofbizUrl>/setBilling?paymentMethodType=GC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[Single Use Gift Card]</a>&nbsp;
+                            <a href="<@ofbizUrl>/setBilling?paymentMethodType=EFT&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[Single Use EFT Account]</a>&nbsp;
+                          </div>
+                        </td>
+                      </tr>
                     </table>
                     <#if !paymentMethodList?has_content>
                       <div class='tabletext'><b>${uiLabelMap.AccountingNoPaymentMethodsOnFile}.</b></div>

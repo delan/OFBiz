@@ -20,17 +20,22 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
 <script language="javascript">
 <!-- //
 function shipBillAddr() {
+    <#if requestParameters.singleUsePayment?default("N") == "Y">
+      <#assign singleUse = "&singleUsePayment=Y">
+    <#else>
+      <#assign singleUse = "">
+    </#if>
     if (document.billsetupform.useShipAddr.checked) {
-        window.location.replace("setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}&useShipAddr=Y");
+        window.location.replace("setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}&useShipAddr=Y${singleUse}");
     } else {
-        window.location.replace("setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}");
+        window.location.replace("setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}${singleUse}");
     }
 }
 </script>
@@ -44,9 +49,11 @@ function shipBillAddr() {
             <div class='boxhead'>&nbsp;Payment Information</div>
           </td>
           <td nowrap align="right">
-            <div class="tabletext">
-              ${pages.get("/order/anonymoustrail.ftl")}
-            </div>
+            <#if requestParameters.singleUsePayment?default("N") != "Y">
+              <div class="tabletext">
+                ${pages.get("/order/anonymoustrail.ftl")}
+              </div>
+            </#if>
           </td>
         </tr>
       </table>
@@ -81,9 +88,22 @@ function shipBillAddr() {
                   <form method="post" action="<@ofbizUrl>/enterEftAccountAndBillingAddress</@ofbizUrl>" name="billsetupform">
                 </#if>
               </#if>
+              <#if paymentMethodType == "GC">
+                <#if giftCard?has_content>
+                  <form method="post" action="<@ofbizUrl>/changeGiftCard</@ofbizUrl>" name="billsetupform">
+                  <input type="hidden" name="paymentMethodId" value="${eftAccount.paymentMethodId?if_exists}">
+                <#else>
+                  <form method="post" action="<@ofbizUrl>/enterGiftCard</@ofbizUrl>" name="billsetupform">
+                </#if>
+              </#if>
+
+              <#if requestParameters.singleUsePayment?default("N") == "Y">
+                <input type="hidden" name="singleUsePayment" value="Y">
+                <input type="hidden" name="appendPayment" value="Y">
+              </#if>
 
               <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS">
-              <input type="hidden" name="partyId" value="${sessionAttributes.orderPartyId}">
+              <input type="hidden" name="partyId" value="${partyId}">
               <input type="hidden" name="paymentMethodType" value="${paymentMethodType}">
               <input type="hidden" name="finalizeMode" value="payment">
               <input type="hidden" name="createNew" value="Y">
@@ -92,7 +112,7 @@ function shipBillAddr() {
               </#if>
 
               <table width="100%" border="0" cellpadding="1" cellspacing="0">
-                <#if cart.getShippingContactMechId()?exists>
+                <#if cart.getShippingContactMechId()?exists && paymentMethodType != "GC">
                   <tr>
                     <td width="26%" align="right"= valign="top">
                       <input type="checkbox" name="useShipAddr" value="Y" onClick="javascript:shipBillAddr();" <#if requestParameters.useShipAddr?exists>checked</#if>>
@@ -115,9 +135,7 @@ function shipBillAddr() {
                   <#if !giftCard?has_content>
                     <#assign giftCard = requestParameters>
                   </#if>
-                  <tr>
-                    <td colspan="3"><hr class="sepbar"></td>
-                  </tr>
+                  <tr><td colspan="3">&nbsp;</td></tr>
                   <tr>
                     <td width="26%" align=right valign=top><div class="tabletext">Physical Number</div></td>
                     <td width="5">&nbsp;</td>

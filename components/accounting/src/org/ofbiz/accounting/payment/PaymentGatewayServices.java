@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.16 2003/10/29 22:46:10 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.17 2003/11/04 23:08:33 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -352,13 +352,18 @@ public class PaymentGatewayServices {
             toContext.put("billingAddress", billingAddress);
         } else if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("EFT_ACCOUNT")) {
             // type eft
-            GenericValue eftAccount = paymentMethod.getRelatedOne("EFT_ACCOUNT");
+            GenericValue eftAccount = paymentMethod.getRelatedOne("EftAccount");
             GenericValue billingAddress = eftAccount.getRelatedOne("PostalAddress");
             toContext.put("eftAccount", eftAccount);
             toContext.put("billingAddress", billingAddress);
+        } else if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("GIFT_CARD")) {
+            // type gift card
+            GenericValue giftCard = paymentMethod.getRelatedOne("GiftCard");
+            toContext.put("giftCard", giftCard);
         } else {
             // add other payment types here; i.e. gift cards, etc.
             // unknown payment type; ignoring.
+            Debug.logError("ERROR: Unsupported PaymentMethodType passed for authorization", module);
             return null;
         }
 
