@@ -1,10 +1,14 @@
-<!-- Version 0.4 -->
+<!-- Version 0.5 -->
 <!-- NOTE: THIS DTD IS ONLY A GUIDE. IT MAY NOT BE CORRECT. -->
 <!-- DON'T TRUST IT. -->
+
 <!-- All sizes are in points (72 points == 1 inch) -->
 
-<!ELEMENT report	(database query parameters? formulas? headers?
-			 footers? page? groups? details)
+<!-- Color is stored as "red;green;blue;alpha". Each component is an -->
+<!-- integer from 0 to 255. -->
+
+<!ELEMENT report	(database query parameters? formulas? usercols?
+			 headers? footers? page? groups? details)
 >
 
 <!ATTLIST report	version		CDATA	#REQUIRED
@@ -70,6 +74,14 @@
 			name		CDATA	#REQUIRED
 >
 
+<!ELEMENT usercols	usercol*>
+
+<!-- With user-defined columns, PCDATA is text of formula -->
+<!ELEMENT usercol	(#PCDATA)>
+<!ATTLIST usercol	id		CDATA	#REQUIRED
+			name		CDATA	#REQUIRED
+>
+
 <!ELEMENT page		headers footers>
 
 <!ELEMENT headers	section*>
@@ -91,7 +103,8 @@
 					|formula
 					|parameter
 					|text
-					|special)
+					|special
+					|image)
 						#REQUIRED
 			value		CDATA	#REQUIRED
 >
@@ -105,7 +118,6 @@
 			height		CDATA	#REQUIRED
 >
 
-<!-- Color is stored as "red;green;blue;alpha" -->
 <!ELEMENT format	EMPTY>
 <!ATTLIST format	font		CDATA
 			size		CDATA
@@ -130,7 +142,6 @@
 >
 
 <!ELEMENT line		point point>
-<!-- Color is stored as "red;green;blue;alpha" -->
 <!ATTLIST line		thickness	CDATA
 			color		CDATA
 			visible		(true|false)

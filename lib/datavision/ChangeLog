@@ -1,4 +1,305 @@
+2002-10-19  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/LayoutEngine.java (groupFooters): when a group
+	footer is output, make sure all of the footers before (above) it
+	are also output.
+
+	* jimm/datavision/Query.java (findColumnsUsed): clear list of user
+	columns along with tables and columns.
+
+	* jimm/datavision/Report.java (writeXML): removed extraneous '?'
+	in XMLDecl tag.
+
+2002-10-14  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/DataVision.java: added 'w' command line option
+	for Swing layout engine.
+
+2002-10-09  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/ReportReader.java (line): save newly created
+	line into instance variable.
+
+2002-09-26  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/ReportReader.java (database): fixed error
+	window title I18N lookup string.
+
+2002-09-21  Jim Menard  <jimm@io.com>
+
+	* Version 0.5.0 released.
+
+	* jimm/datavision/ColumnField.java (ctor): throw an exception if
+	we are given a bad column name.
+
+	* jimm/datavision/sql/ResultSetRow.java (ctor): avoid creating a
+	prepared statement or running the query if the string is empty.
+
+2002-09-12  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/sql/Database.java
+	(loadTablesUsingSchemaNameAndTypes): check for a null ResultSet.
+
+2002-09-11  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/sql/Column.java (ctor): put try/catch block
+	around fetch of optional metadata values like COLUMN_DEF and
+	ignore any SQL exceptions. Some drivers don't support some of
+	those values, but they are unused anyway.
+
+2002-09-04  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/DropListenerTextArea.java: 
+
+	* jimm/datavision/DataVision.java (main): new command line options
+	for language and region.
+
+	* jimm/datavision/gui/DropListenerTextArea.java (drop): when
+	dropping a column, surround the name with "{}". When string prefix
+	is not recognized, accept the whole string.
+
+2002-08-30  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/SectionWidget.java (makeWidgetFor): removed
+	unnecessary field widget argument.
+
+2002-08-29  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/Report.java (contains): created.
+	(getFirstSectionByType): created.
+
+2002-08-28  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/Report.java (add): created.
+
+	* jimm/datavision/gui/FieldPickerWin.java: cleaned up code.
+
+2002-08-27  Jim Menard  <jimm@io.com>
+
+	* All files: removed dirty flags and code. This is now handled by
+	commands: if the command history's list of performed commands is
+	non-empty, the report is dirty.
+
+	* jimm/datavision/Parameter.java (getDefaultForType): use type
+	method parameter, not type of the parameter itself.
+
+2002-08-21  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/Report.java: factored out section insertion and
+	deletion code.
+
+2002-08-19  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/UserColumn.java (writeXML): fixed close tag
+	name.
+
+2002-08-16  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/Point.java: new constructors.
+	(translate): created.
+
+2002-08-15  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/MenuUtils.java: align and size submenus will
+	now display correct strings.
+
+	* jimm/datavision/gui/*.java: use commands.
+
+	* jimm/datavision/gui/cmd/*.java: created. I'll not be listing
+	every new command in here.
+
+2002-08-14  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/DesignWin.java (getSectionWidgetAt): fixed
+	algorithm for finding section widget.
+
+	* jimm/datavision/gui/FieldWidget.java (enableMenuItems): only
+	enable "Format" if some this field or some other selected field
+	can be formatted.
+	(pickUp): created.
+	(putDown): created
+
+	* jimm/datavision/gui/DesignWin.java (enableMenuItems): only
+	enable "Format" if some selected field can be formatted.
+	(someSelectedFieldUsesFormat): created.
+	(pickUp): call FieldWidget.pickUp.
+	(putDown): call FieldWidget.putDown.
+
+	* Version 0.4.3 released.
+
+	* jimm/datavision/gui/DesignWin.java: added redo menu item.
+
+	* jimm/datavision/I18N.java: created.
+
+	* Everywhere: start using I18N.
+
+	* jimm/datavision/DataVision.java (main): if command line argument
+	error, print usage and exit.
+
+2002-08-11  Jim Menard  <jimm@io.com>
+
+	* Version 0.4.2 released.
+
+	* jimm/datavision/Report.java (remove): created.
+
+	* jimm/datavision/gui/*.java: added user columns.
+
+2002-08-10  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/sql/Database.java (loadAllTables): rewritten to
+	ignore errors until the very end.
+
+2002-08-09  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/*.java: added user columns.
+
+2002-08-08  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/DataVision.java (main): fixed command line
+	option handling.
+
+	* jimm/datavision/layout/swing/SwingPage.java: use a JScrollBar,
+	not a ScrollBar. This fixes the "menus behind the report output"
+	bug.
+	(print): call print(Graphics), not paint(Graphcs). Now all pages
+	are printed and they look so purty!
+	
+
+2002-08-07  Jim Menard  <jimm@io.com>
+
+	* Version 0.4.1 released.
+
+	* jimm/datavision/layout/swing/SwingPage.java: back to being a
+	subclass of JPanel. When subclassing Panel the output is better
+	but only the currently displayed page prints. All other pages spew
+	blank paper.
+
+	* jimm/datavision/Formula.java (rpnEval): added floor, ceil,
+	round, sqrt, pow, **, max, min, abs, sin, cos, and tan operators.
+
+2002-08-06  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/PaperFormat.java (getPageFormat): created.
+
+	* jimm/datavision/layout/swing/SwingLE.java (printReport): use the
+	report's page format, not the print job's default one.
+
+	* jimm/datavision/Format.java (clone): copy font family name.
+
+	* jimm/datavision/gui/ImageFieldWidget.java: draw hidden
+	(disabled) image when appropriate.
+
+	* jimm/datavision/ImageField.java: added hidden (disabled) image.
+
+2002-08-05  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/DesignWin.java (createImageField): created.
+
+	* jimm/datavision/ImageField.java (canLoad): created.
+
+2002-08-02  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/EditFieldLayout.java: created.
+
+	* jimm/datavision/gui/*.java: use EditFieldLayout in various
+	dialog windows.
+
+2002-08-01  Jim Menard  <jimm@io.com>
+
+	* Version 0.4.0 released.
+
+	* jimm/datavision/SortedLayoutEngine.java: sort by y, then x.
+
+	* jimm/datavision/layout/HTMLLE.java (doOutputSection): output
+	section height correctly.
+	(outputColor): created.
+	(doOutputField): call outputColor.
+
+2002-07-31  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/layout/HTMLLE.java: output "pt" so sizes are
+	expressed in points. New table for each section, not one single
+	table for the entire report.
+
+	* jimm/datavision/LayoutEngine.java: added image output logic.
+
+	* jimm/datavision/layout/*.java: added image output (or at least
+	stubs).
+
+2002-07-30  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/parameter/*.java: cleaned up layout code.
+
+	* jimm/datavision/Report.java (runReport): when asking for
+	parameters, catch a UserCancellationException and return without
+	displaying it to the user.
+
+2002-07-29  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/Query.java: fixed where clause parsing bug.
+	Introduced ParserHelper and mucked with addParameter().
+
+	* jimm/datavision/gui/FieldWidget.java: now contains a swing
+	widget instead of inheriting from it.
+	(findFieldWidgetOwning): created. In the ctor, save widgets in a
+	map so we can find 'em later, given a component.
+
+	* jimm/datavision/gui/DesignWin.java (withWidgetsDo): now that
+	FieldWidgets are no longer components, call FieldWidget's
+	findFieldWidgetOwning() to retrieve the widget.
+
+2002-07-26  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/LayoutEngine.java (groupFooters): output group
+	footers in reverse order.
+
+	* jimm/datavision/layout/swing/SwingPageContents.java: use a
+	ScrollPane instead of a JScrollPane, now that the page is a Panel
+	instead of a JPanel.
+
+	* jimm/datavision/ParameterField.java (refersTo(Parameter)):
+	created.
+
+2002-07-25  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/Border.java (setColor): fixed code comparing new
+	and old colors.
+
+	* jimm/datavision/ReportReader.java (paper): check for bogus paper
+	names and use default if necessary.
+
+	* jimm/datavision/layout/swing/SwingPage.java: inherit from Panel,
+	not JPanel, per Miguel's fix. Should print much better now and
+	should stop printing exceptions. Removed unused page border code.
+
+	* jimm/datavision/layout/swing/SwingField.java: created. This is a
+	new interface; the old SwingField has been renamed SwingTextField.
+
+	* jimm/datavision/layout/swing/AbstractSwingField.java: created.
+
+	* jimm/datavision/layout/swing/SwingTextField.java: renamed from
+	SwingField and made subclass of AbstractSwingField.
+
+	* jimm/datavision/layout/swing: directory created and all Swing*
+	files moved here.
+
+2002-07-24  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/layout/SwingImageField.java: created.
+
+	* jimm/datavision/layout/SwingPageContents.java (buildPage):
+	create image fields.
+
+	* jimm/datavision/layout/SwingLE.java (doOutputField): make sure
+	field is visible.
+
+2002-07-23  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/ImageField.java: created.
+
 2002-07-22  Jim Menard  <jimm@io.com>
+
+	* Version 0.3.8 released.
 
 	* jimm/datavision/ReportReader.java (border): bug fix: add border
 	to field.

@@ -13,5 +13,7 @@
   -- A value is a text value. For booleans, "t", "true", "y", and "yes" are
   -- all interpreted as "true". Anything else is interpreted as "false".
   -- Case is not significant.
+  --
+  -- Dates must be in YYYY-MM-DD format.
   -->
 <!ELEMENT value		(#PCDATA)>

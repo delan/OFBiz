@@ -2,53 +2,41 @@
     Bugs
 ================================================================
 
-* [Need to reproduce. This will be tough without a printer.] When "bunching
-  up" fields in the report designer close to the left hand margin to enable
-  one to fit more fields into a report across an A4 portraited page layout,
-  leftmost fields are excluded in the print. It seems as though they are
-  positioned outside of the margined print area.
+* Paste problems:
 
-* Typing Control-A in the FieldPicker window goes to first item instead of
-  executing the menu item associated with that key. NOTE: This happends
-  under Linux but not under Mac OS X. Therefore, it is a Java
-  implementation issue and not my bug. Perhaps I should assign a different
-  key anyway.
+    ** Paste command, when executed, doesn't get put on menu.
 
-* When the text insertion caret is at the left of a text field, it is not
-  visible; it's hidden behind the gray "field selected" border.
+    ** When try to drag pasted field, WIERD things happen.
 
-* When printing from the Swing window, the background of the page is
-  "painted" a light gray.
+    ** PasteCommand must handle FPLeafInfo objects, too.
 
-* Handle CHAR(30) BINARY columns...but how?
+    ** PasteCommand must store type of section so paste can paste into
+      proper section between reports.
 
-* Microsoft Windows only: Tony reports, "The formatting in data fields does
-  not accept in the same time bold and italic. If the both are checked only
-  italic works. This is not true for a text fields."
+    ** FP window enable/disable cut, copy, paste.
 
-* When editing a text field, clicking and dragging in the field does not
-  always visually display the selection of a range of text. Nor does
-  shift-clicking. Instead, these actions move the carat but do not paint the
-  text blue. [One user has reported that he has seen the same problem in
-  other Java programs, so this may not be a DataVision problem.] When I
-  hide and re-show the window during editing, everything behaves properly.
+    ** Pasting into another report does not work because the field wants to
+       plop itself down in the same section. I need to put in the same
+       *logical* section.
+
+    ** Pasting needs to re-fit sections (and on undo, un-re-fit them).
+
+* Qaiser writes: "i do the same thing which you said , i initilized the
+  total report in init method. then in doGet i create a new parameter file
+  attach this paarmeter file with report , then i create a new Layoutengine
+  in doGet method attach this wioth report and run the report in the same
+  method. but i not always get the latest result , even you cannot write
+  some thing on the Printwrtiter which i attached with layout engine in
+  doGet method."
+
+* When run command in field picker, what should happen to undo/redo?
+
+* HTML layout engine doesn't handle vertical placement of fields within a
+  section. For example, in postgresql.xml the date is under the report
+  title. When output as HTML, the date is to the right of the title.
 
 * If you close a report while editing a text field, the edit is not
   enforced. Capture the dispose? I think that ignoreKeys will be true.
-
-* SubtotWin: modified flags of each section not being reset properly on
-  revert or cancel. Don't worry about this too much; when we start
-  implementing undoable commands, their existance will provide us with the
-  dirty flag.
-
-* In FieldWidget.applyNewFormatAndBorder, are the setFormat, setBorder
-  calls correctly dirtying the field? The dirty bits will always get set
-  (unless both old and new values are null), but this may not always be
-  appropriate. No harm done, I think.
-
-* If a dialog box is open and you hit "Apply", a snapshot of data is taken,
-  including dirty bits. If some other window changes the same data while
-  that dialog box is still open, the saved dirty bits may be invalid.
 
 * All dialog boxes must be prevented from opening multiple instances for a
   single design window.
@@ -66,16 +54,100 @@
     To Do 
 ================================================================
 
+* FAQ: column or report record counts: add a column to your query (using a
+  UserColumn) that always returns the number 1. Add that column to the
+  details section, then hide it.
+
+  Finally, add a subtotal on that field for the group. Voila: the number of
+  records in the group!
+
+* Carlos suggests a record number within groups.
+
+* Add Sergio to credits for pt_PT.
+
+* Add pt_PT to properties script. Change default pt language.
+
+* Incorporate and test DB2 changes by Stefan Hansel
+  (thestefan@users.sourceforge.net). See file "jimm.datavision.sql to work
+  with DB/2.txt" in ../datavision-other.
+
+* Report: use section walker in findField
+
+* Paste into drag targets (code windows, report).
+
+* Lazily instantiate tables' columns.
+
+* Add copyright to source files.
+
+* Docs: java -Duser.language=fr user.region=FR ...
+
+  Tony writes: "The problem was that I use Java 1.2 which does not support
+  cyrillic. I have read a couple of articles for this problem.
+
+  "I have a Java 1.3 installed and yes it works :-)))))
+
+  "Just now I will download 1.4 which has a better support for cyrillic.
+  Maybe some people must know that when they go to use a cyrillic or other
+  not english language."
+
+* Need a way to bind different shortcut and accel keys to menu items.
+
+* New duplicate command? Necessary?
+
+* Commands
+
+  -- create/delete parameter/formula/user col
+
+* Persistent undo/redo between application runs.
+
+* User columns
+
+  -- Document
+  -- tests
+
+* Idea: use formula to present text interspersed with column data.
+
+* Disable image's format menu item (but not border).
+
+* All layout engines: take file object instead of writer?
+
+* Document new formula funcs.
+
+* Fix relative path names of images in generated HTML and in other layout
+  engines. Copy images to report destination folder and output file name
+  only? What if two different images have the same file name?
+  Append/prepend file id number to file name.
+
+* Allow creation images using any file. That way, eps, tiff, and png files
+  can be included in HTML or LaTeX exports, for example.
+
+* Binary data: see if can convert into a string?
+
+* Page borders.
+
+* Cache images so we don't load the same image page after page.
+
 * Support line and border color in layout engines.
 
+* A user requests, "I would love to be able to print labels using this.
+  Columns would need column spacing and row spacing. I would not care about
+  the direction of the columns, left to right, or top to down."
+
 * Different color (e.g., red) if number is negative.
+
+* JFreeChart integration?
 
 * Comments in PaperFormat.java.
 
 * Comments in SortedListModel.java.
 
+* Comments in new Swing classes.
+
+* PDF layout engine.
+
 * Page breaks. Conditionally? By group? Miguel Angel Rojas Aquino
-  <mrojas_aquino@flashmail.com>.
+  <mrojas_aquino@flashmail.com>. Force new page break if a group doesn't
+  fit; keep group "unbreakable" (Jordi Llonch <jordi@laigu.net>).
 
 * Pass database connection to report? David Jones <jonesde@ofbiz.org>
 
@@ -83,6 +155,8 @@
   <jonesde@ofbiz.org>
 
 * Docs: Add reference to field formatting in edit.html.
+
+* When placing a text widget, let ESC key cancel operation.
 
 * Turn "http:", "ftp:" etc. into hyperlinks in HTML and DocBook layout
   engines. How about XML and LaTeX (use htlink command)? David Jones
@@ -256,9 +330,6 @@
 
 * Handle page/paper orientations in design window.
 
-* Command pattern w/undo. See
-  http://java.sun.com/docs/books/tutorial/uiswing/components/generaltext.html#undo
-
 * ASCII layout engine.
 
 * RTF layout engine.
@@ -292,24 +363,6 @@
 Notes
 ================================================================
 
-See /etc/paper.config for size values.
-
-Is "dirty" equivalent to "something in command history"? If not, could make
-a command attribute that stores old dirty flag and sets new one.
-
-From comp.lang.java.programmer: "Normally, question marks (?) inside of
-quoted strings are ignored when scanning for placeholders, however I notice
-you are quoting strings in SQL using a double quote("). You should use
-single quote (') for quoting strings in SQL. Perhaps your JDBC driver
-doesn't see the double quotes because it is expecting single quotes."
-
-Command: make redo() call perform() by default.
-
-How about if delete commands don't really delete, but just mark fields and 
-sections as deleted? That way, undo is really easy. However, report 
-running becomes more complicated. (Does it? The Element class needs a 
-deleted flag, as does the section class. Is that all?)
-
 Installer script that edits classpath?
 
 Formula language: keep RPN, use embedded Ruby, or write a tree parser?
@@ -321,3 +374,7 @@ http://java.sun.com/docs/books/tutorial/uiswing/painting/example-swing/Selection
 http://jdbc.postgresql.org/doc.html
 
 ksnapshot
+
+http://www.javaworld.com/javaworld/jw-10-2000/jw-1020-print.html
+
+/home/groups/d/da/datavision/htdocs

@@ -2,6 +2,33 @@ DavaVision is currently owned and developed by Jim Menard, jimm@io.com. The
 following people have kindly submitted bug reports, bug fixes, and
 suggestions for improvement. Many thanks to all of them.
 
+================================================================
+
+Translations have come--or are coming--from:
+
+Language (Region)                 Translator(s)
+-----------------                 -------------
+
+bg_BG Bulgarian (Bulgaria)        Tony Tomov <tomovtony@yahoo.com>
+
+en_US English (USA)               Jim Menard <jimm@io.com>
+
+es_MX Spanish (Mexico)            Miguel Angel Rojas Aquino
+                                  <mrojas_aquino@mail.flashmail.com>
+
+fr_FR French (France)             Daniel Essayag and Yaacov Akiba Slama
+                                  <ya@slamail.org>
+
+it_IT Italian (Italy)             Guido Amoruso <guidonte@libero.it>
+
+pt_BR Portuguese (Brazil)         Carlos Silva <silva@carlosilva.com>
+
+pt_PT Portuguese (Portugal)       Sergio Ferreira <sergio@moredata.pt>
+
+ru_RU Russian (Russia)            Igor Osminin <oia@kovgok.ru>
+
+================================================================
+
 Bug reports, fixes, and suggestions have come from:
 
 Stephen <stephen@webreserve.com>
@@ -75,7 +102,8 @@ Brendon Price <Brendon.Price@sytec.co.nz>
 Miguel Angel Rojas Aquino <mrojas_aquino@mail.flashmail.com>
 
     Suggested code to look for table names without grabbing system tables.
-    Pointed out Oracle date/timestamp issues.
+    Pointed out Oracle date/timestamp issues. Found fixes that greatly
+    improved print quality and layout. Found format dialog crash bug.
 
 William Colls <bcolls@cbnlottery.com>
 
@@ -83,26 +111,52 @@ William Colls <bcolls@cbnlottery.com>
 
 Marius Hillenbrand <marius.hillenbrand@integration.riess.de>
 
-    Found dialog layout bugs.
+    Found dialog layout bugs. Found bogus paper name bug and suggested fix.
 
-Aditya Gilra, <aditya_gilra@yahoo.com>
+Aditya Gilra <aditya_gilra@yahoo.com>
 
     Suggested adding portrait/landscape paper sizes. Found solution to
     printer exception bug.
 
-David Jones, <jonesde@ofbiz.org>
+David Jones <jonesde@ofbiz.org>
 
     Added DataVision to the OFBiz project (http://www.ofbiz.org/). Many
     suggestions including re-using external database connections and
     passing URLs or InputStreams to the report instead of an XML file name
     (neither implemented yet).
 
-Jennifer Taylor, <jennifer.taylor@caris.com>
+Jennifer Taylor <jennifer.taylor@caris.com>
 
     Found and suggested a fix for reading beyond the end of the database
     cursor, which caused a problem with the DB2 JDBC driver.
 
-Gabriel Tlalpachicatl, <gab571@netscape.net>
+Gabriel Tlalpachicatl <gab571@netscape.net>
 
     Found the bug where fields' and lines' "visible" flags weren't being
     saved to the report XML.
+
+C Wayne Huling <c.w.huling@pobox.com>
+
+    Found command line option parsing bug.
+
+Yaacov Akiba Slama <ya@slamail.org>
+
+    Started the i18n process.
+
+Carlos Silva <silva@carlosilva.com>
+
+    Found XML line tag parsing bug.
+
+Tasneem Talawala <tasneem@netcore.co.in>
+
+    Found XMLDecl tag bug in report XML file output.
+
+Ryan Delany <ryandelany@users.sourceforge.net>
+
+    Reported User Column bug: queries didn't empty their user column info
+    each time, so deleting a user column didn't remove it from the query.
+
+Stefan Hansel <thestefan@users.sourceforge.net>
+
+    Reported group footer output bug: when a group footer is output, make
+    sure all of the footers before (above) it are also output.
