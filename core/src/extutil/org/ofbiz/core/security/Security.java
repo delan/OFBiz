@@ -41,6 +41,16 @@ import org.ofbiz.core.entity.*;
  */
 public class Security {
 
+    /** Hashtable to cache a Collection of UserLoginSecurityGroup entities for each UserLogin, by userLoginId.
+     */
+    public static UtilCache userLoginSecurityGroupByUserLoginId = new UtilCache("security.UserLoginSecurityGroupByUserLoginId");
+
+    /** Hashtable to cache whether or not a certain SecurityGroupPermission row exists or not.
+     * For each SecurityGroupPermissionPK there is a Boolean in the cache specifying whether or not it exists.
+     * In this way the cache speeds things up whether or not the user has a permission.
+     */
+    public static UtilCache securityGroupPermissionCache = new UtilCache("security.SecurityGroupPermissionCache");
+
     GenericDelegator delegator = null;
 
     public Security(GenericDelegator delegator) {
@@ -54,16 +64,6 @@ public class Security {
     public void setDelegator(GenericDelegator delegator) {
         this.delegator = delegator;
     }
-
-    /** Hashtable to cache a Collection of UserLoginSecurityGroup entities for each UserLogin, by userLoginId.
-     */
-    public UtilCache userLoginSecurityGroupByUserLoginId = new UtilCache("UserLoginSecurityGroupByUserLoginId");
-
-    /** Hashtable to cache whether or not a certain SecurityGroupPermission row exists or not.
-     * For each SecurityGroupPermissionPK there is a Boolean in the cache specifying whether or not it exists.
-     * In this way the cache speeds things up whether or not the user has a permission.
-     */
-    public UtilCache securityGroupPermissionCache = new UtilCache("SecurityGroupPermissionCache");
 
     /** Uses userLoginSecurityGroupByUserLoginId cache to speed up the finding of the userLogin's security group list.
      * @param userLoginId The userLoginId to find security groups by
