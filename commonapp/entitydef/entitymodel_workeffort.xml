@@ -402,6 +402,7 @@
       <alias entity-alias="WEPA" name="thruDate" />
       <alias entity-alias="WEPA" name="partyAssignFacilityId" field="facilityId" />
       <alias entity-alias="WEPA" name="statusId" />
+      <alias entity-alias="WEPA" name="statusDateTime" />
       <alias entity-alias="WEPA" name="comments" />
       <alias entity-alias="WEPA" name="mustRsvp" />
       <alias entity-alias="WEPA" name="expectationEnumId" />
@@ -639,6 +640,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="facilityId" type="id"></field>
       <field name="statusId" type="id"></field>
+      <field name="statusDateTime" type="date-time"></field>
       <field name="comments" type="comment"></field>
       <field name="mustRsvp" type="indicator"></field>
       <field name="expectationEnumId" type="id"></field>	
