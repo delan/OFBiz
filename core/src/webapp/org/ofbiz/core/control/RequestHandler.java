@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericValue;
 import org.ofbiz.core.event.EventFactory;
 import org.ofbiz.core.event.EventHandler;
@@ -49,6 +50,7 @@ import org.ofbiz.core.util.Debug;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.StringUtil;
 import org.ofbiz.core.util.UtilHttp;
+import org.ofbiz.core.util.UtilMisc;
 import org.ofbiz.core.util.UtilProperties;
 import org.ofbiz.core.view.ViewFactory;
 import org.ofbiz.core.view.ViewHandler;
@@ -514,18 +516,52 @@ public class RequestHandler implements Serializable {
     }
     
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, boolean fullPath, boolean secure, boolean encode) {
-        String httpsPort = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
-        String httpsServer = UtilProperties.getPropertyValue("url.properties", "force.https.host");
-        String httpPort = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
-        String httpServer = UtilProperties.getPropertyValue("url.properties", "force.http.host");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");        
+        String webSiteId = (String) request.getSession().getAttribute("webSiteId");
         
+        String httpsPort = null;
+        String httpsServer = null;
+        String httpPort = null;
+        String httpServer = null;
+        Boolean enableHttps = null;
+        
+        // load the properties from the website entity        
+        GenericValue webSite = null;
+        if (webSiteId != null) {
+            try {
+                webSite = delegator.findByPrimaryKeyCache("WebSite", UtilMisc.toMap("webSiteId", webSiteId));
+                if (webSite != null) {
+                    httpsPort = webSite.getString("httpsPort");
+                    httpsServer = webSite.getString("httpsHost");
+                    httpPort = webSite.getString("httpPort");
+                    httpServer = webSite.getString("httpHost");
+                    enableHttps = webSite.getBoolean("enableHttps");
+                }
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, "Problems with WebSite entity; using global defaults", module);
+            }
+        }
+        
+        // fill in any missing properties with fields from the global file
+        if (httpsPort == null) 
+            httpsPort = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
+        if (httpServer == null)
+            httpsServer = UtilProperties.getPropertyValue("url.properties", "force.https.host");
+        if (httpPort == null)
+            httpPort = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
+        if (httpServer == null)
+            httpServer = UtilProperties.getPropertyValue("url.properties", "force.http.host");
+        if (enableHttps == null)
+            enableHttps = new Boolean(UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y"));
+        
+        // create the path the the control servlet
         String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);              
+        
         
         String requestUri = RequestHandler.getRequestUri(url);
         StringBuffer newURL = new StringBuffer();
 
-        boolean useHttps = UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y");        
-        
+        boolean useHttps = enableHttps.booleanValue();                
         if (useHttps || fullPath || secure) {
             if (secure || (useHttps && requestManager.requiresHttps(requestUri) && !request.isSecure())) {
                 String server = httpsServer;
