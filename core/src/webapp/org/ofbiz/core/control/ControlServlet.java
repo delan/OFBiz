@@ -67,10 +67,6 @@ public class ControlServlet extends HttpServlet {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         localCachedClassLoader = new CachedClassLoader(loader, getWebSiteId());
 
-        //this tells BSF to use this class for handling javascript
-        String[] jsExtensions = {"js"};
-        BSFManager.registerScriptingEngine("javascript", "org.ofbiz.core.action.OfbizJsBsfEngine", jsExtensions);
-        
         // initialize the delegator
         getDelegator();
         // initialize security
