@@ -314,7 +314,7 @@
         <auto-attributes entity-name="ReturnHeader" include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="ReturnHeader" include="pk" mode="OUT" optional="false"/>
     </service>
-    <service name="updateReturnHeader" engine="simple" debug="true"
+    <service name="updateReturnHeader" engine="simple"
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="updateReturnHeader">
         <description>Update a ReturnHeader</description>
         <auto-attributes entity-name="ReturnHeader" include="pk" mode="IN" optional="false"/>
@@ -356,6 +356,7 @@
             location="org.ofbiz.order.order.OrderServices" invoke="checkReturnComplete">
         <description>Checks if all items on a return are complete/cancelled and updates the header status</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="OUT" optional="true"/>
     </service>
 
     <service name="sendReturnAcceptNotification" engine="java"

@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.22 2003/12/03 18:54:13 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.23 2003/12/05 02:25:47 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -1121,7 +1121,6 @@ public class PaymentGatewayServices {
     }
 
     public static Map refundPayment(DispatchContext dctx, Map context) {
-        Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -1149,13 +1148,14 @@ public class PaymentGatewayServices {
             String serviceName = paymentSettings.getString("paymentService");
             if (serviceName != null) {
                 Map serviceContext = new HashMap();
+                serviceContext.put("orderPaymentPreference", paymentPref);
                 serviceContext.put("paymentConfig", paymentConfig);
                 serviceContext.put("currency", orh.getCurrency());
 
                 // get the creditCard/address/email
                 String payToPartyId = null;
                 try {
-                    payToPartyId = getBillingInformation(orh, paymentPref, serviceContext);
+                    payToPartyId = getBillingInformation(orh, paymentPref, new HashMap());
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Problems getting billing information", module);
                     return ServiceUtil.returnError("Problems getting billing information");
@@ -1184,69 +1184,78 @@ public class PaymentGatewayServices {
                     return ServiceUtil.returnError("Refund processor problems; see logs");
                 }
 
+                Debug.log("Called Electronic Refund Service : " + refundResponse, module);
+
                 // get the pay-from party
                 if (paymentConfig == null || paymentConfig.length() == 0) {
                     paymentConfig = "payment.properties";
                 }
                 String payFromPartyId = getPayToPartyId(orderHeader);
 
-                // create the PaymentGatewayResponse
+                // create the PaymentGatewayResponse record
                 String responseId = delegator.getNextSeqId("PaymentGatewayResponse").toString();
                 GenericValue response = delegator.makeValue("PaymentGatewayResponse", null);
                 response.set("paymentGatewayResponseId", responseId);
                 response.set("paymentServiceTypeEnumId", REFUND_SERVICE_TYPE);
                 response.set("orderPaymentPreferenceId", paymentPref.get("orderPaymentPreferenceId"));
                 response.set("paymentMethodTypeId", paymentPref.get("paymentMethodTypeId"));
-                response.set("paymentMethodTypeId", paymentPref.get("paymentMethodId"));
+                response.set("paymentMethodId", paymentPref.get("paymentMethodId"));
 
-                // set the refund info
+                // set the capture info
                 response.set("amount", refundResponse.get("refundAmount"));
                 response.set("referenceNum", refundResponse.get("refundRefNum"));
                 response.set("gatewayCode", refundResponse.get("refundCode"));
                 response.set("gatewayFlag", refundResponse.get("refundFlag"));
                 response.set("gatewayMessage", refundResponse.get("refundMessage"));
                 response.set("transactionDate", UtilDateTime.nowTimestamp());
-
-                // store the gateway response
                 try {
                     delegator.create(response);
                 } catch (GenericEntityException e) {
-                    Debug.logError(e, "Problem creating PaymentGatewayResponse entity : " + response, module);
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError("Unable to create PaymentGatewayResponse record");
                 }
 
                 // handle the (reverse) payment
                 Boolean refundResult = (Boolean) refundResponse.get("refundResult");
                 if (refundResult != null && refundResult.booleanValue()) {
                     // create a payment record
-                    Map payment = new HashMap();
-                    payment.put("paymentTypeId", "DISBURSEMENT");
-                    payment.put("paymentMethodTypeId", paymentPref.get("paymentMethodTypeId"));
-                    payment.put("paymentMethodId", paymentPref.get("paymentMethodId"));
-                    payment.put("paymentGatewayResponseId", responseId);
-                    payment.put("partyIdFrom", payFromPartyId);
-                    payment.put("partyIdTo", payToPartyId);
-                    payment.put("userLogin", userLogin);
-                    payment.put("statusId", "PMNT_SENT");
-                    payment.put("paymentRefNum", refundResponse.get("refundRefNum"));
-                    payment.put("amount", refundResponse.get("refundAmount"));
-                    payment.put("comments", "Refund : " + refundResponse.get("refundMessage"));
+                    Map paymentCtx = UtilMisc.toMap("paymentTypeId", "DISBURSEMENT");
+                    paymentCtx.put("paymentMethodTypeId", paymentPref.get("paymentMethodTypeId"));
+                    paymentCtx.put("paymentMethodId", paymentPref.get("paymentMethodId"));
+                    paymentCtx.put("paymentGatewayResponseId", responseId);
+                    paymentCtx.put("partyIdTo", payToPartyId);
+                    paymentCtx.put("partyIdFrom", payFromPartyId);
+                    paymentCtx.put("statusId", "PMNT_SENT");
+                    paymentCtx.put("paymentPreferenceId", paymentPref.get("orderPaymentPreferenceId"));
+                    paymentCtx.put("amount", refundResponse.get("refundAmount"));
+                    paymentCtx.put("userLogin", userLogin);
+                    paymentCtx.put("paymentRefNum", refundResponse.get("refundRefNum"));
+                    paymentCtx.put("comments", "Refund");
+
                     String paymentId = null;
                     try {
-                        Map payRes = dispatcher.runSync("createPayment", payment);
-                        paymentId = (String) payRes.get("paymentId");
+                        Map payRes = dispatcher.runSync("createPayment", paymentCtx);
+                        if (ModelService.RESPOND_ERROR.equals(payRes.get(ModelService.RESPONSE_MESSAGE))) {
+                            return ServiceUtil.returnError((String) payRes.get(ModelService.ERROR_MESSAGE));
+                        } else {
+                            paymentId = (String) payRes.get("paymentId");
+                        }
                     } catch (GenericServiceException e) {
                         Debug.logError(e, "Problem creating Payment", module);
                         return ServiceUtil.returnError("Problem creating Payment");
                     }
+                    Debug.log("Payment created : " + paymentId, module);
 
-                    // return the paymentId
-                    result.put("paymentId", paymentId);
+                    if (paymentId == null) {
+                        return ServiceUtil.returnError("Create payment failed");
+                    }
+
+                    Map result = ServiceUtil.returnSuccess();
+                    result.put("paymentId", "10000");
+                    return result;
                 } else {
                     return ServiceUtil.returnError("The refund failed");
                 }
-
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-                return result;
             } else {
                 return ServiceUtil.returnError("No refund service defined");
             }
@@ -1256,7 +1265,7 @@ public class PaymentGatewayServices {
     }
 
     public static Map retryFailedAuths(DispatchContext dctx, Map context) {
-        return ServiceUtil.returnSuccess();
+        return ServiceUtil.returnError("Service not yet implemented");
     }
 
     public static GenericValue getAuthTransaction(GenericValue orderPaymentPreference) {

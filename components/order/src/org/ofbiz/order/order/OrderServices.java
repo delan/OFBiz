@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.24 2003/11/29 23:34:57 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.25 2003/12/05 02:25:47 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      2.0
  */
 
@@ -1888,6 +1888,14 @@ public class OrderServices {
             return ServiceUtil.returnError("Error getting ReturnHeader/Item information");
         }
 
+        // if already completed just return
+        if (returnHeader != null && returnHeader.get("statusId") != null) {
+            String currentStatus = returnHeader.getString("statusId");
+            if ("RETURN_COMPLETED".equals(currentStatus) || "RETURN_CANCELLED".equals(currentStatus)) {
+                return ServiceUtil.returnSuccess();
+            }
+        }
+
         // now; to be used for all timestamps
         Timestamp now = UtilDateTime.nowTimestamp();
 
@@ -1907,13 +1915,9 @@ public class OrderServices {
 
             // if all items are completed/cancelled these should match
             if (completedItems.size() == returnItems.size()) {
-                Map returnCtx = UtilMisc.toMap("statusId", "RETURN_COMPLETED", "returnId", returnId);
-                try {
-                    dispatcher.runSyncIgnore("updateReturnHeader", returnCtx);
-                } catch (GenericServiceException e) {
-                    Debug.logError(e, module);
-                    return ServiceUtil.returnError("ERROR: Unable to update return header status");
-                }
+                List toStore = new LinkedList();
+                returnHeader.set("statusId", "RETURN_COMPLETED");
+                toStore.add(returnHeader);
 
                 // create the status change history and set it to be stored
                 String returnStatusId = delegator.getNextSeqId("ReturnStatus").toString();
@@ -1921,8 +1925,9 @@ public class OrderServices {
                 returnStatus.set("statusId", "RETURN_COMPLETED");
                 returnStatus.set("returnId", returnId);
                 returnStatus.set("statusDatetime", now);
+                toStore.add(returnStatus);
                 try {
-                    delegator.create(returnStatus);
+                    delegator.storeAll(toStore);
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError("ERROR: Unable to create ReturnStatus history");
@@ -1931,7 +1936,9 @@ public class OrderServices {
 
         }
 
-        return ServiceUtil.returnSuccess();
+        Map result = ServiceUtil.returnSuccess();
+        result.put("statusId", returnHeader.get("statusId"));
+        return result;
     }
 
     // credit (billingAccount) return
@@ -2181,7 +2188,8 @@ public class OrderServices {
                     String paymentId = null;
 
                     // this can be extended to support additional electronic types
-                    List electronicTypes = UtilMisc.toList("CREDIT_CARD", "EFT_ACCOUNT");
+                    List electronicTypes = UtilMisc.toList("CREDIT_CARD", "EFT_ACCOUNT", "GIFT_CARD");
+                    //List electronicTypes = new ArrayList();
 
                     if (electronicTypes.contains(orderPayPref.getString("paymentMethodTypeId"))) {
                         // call the refund service to refund the payment
@@ -2196,6 +2204,8 @@ public class OrderServices {
                         // TODO: handle manual refunds (accounts payable)
                     }
 
+                    Debug.log("Finished handing refund payments", module);
+
                     // now; for all timestamps
                     Timestamp now = UtilDateTime.nowTimestamp();
 
@@ -2209,12 +2219,17 @@ public class OrderServices {
                         // a null payment ID means no electronic refund was available; manual refund needed
                         response.set("paymentId", paymentId);
                     }
+
+                    Debug.log("About to create return response", module);
+
                     try {
                         delegator.create(response);
                     } catch (GenericEntityException e) {
                         Debug.logError(e, "Problems creating new ReturnItemResponse entity", module);
                         return ServiceUtil.returnError("Problems creating ReturnItemResponse entity");
                     }
+
+                    Debug.log("Return response created", module);
 
                     // set the response on each item
                     Iterator itemsIter = itemList.iterator();
@@ -2231,6 +2246,7 @@ public class OrderServices {
                         returnStatus.set("returnItemSeqId", item.get("returnItemSeqId"));
                         returnStatus.set("statusDatetime", now);
 
+                        Debug.log("Updating item status", module);
                         try {
                             item.store();
                             delegator.create(returnStatus);
@@ -2238,11 +2254,14 @@ public class OrderServices {
                             Debug.logError("Problem updating the ReturnItem entity", module);
                             return ServiceUtil.returnError("Problem updating ReturnItem (returnItemResponseId)");
                         }
+
+                        Debug.log("Item status and return status history created", module);
                     }
                 }
             }
         }
 
+        Debug.log("Finished refund process");
         return ServiceUtil.returnSuccess();
     }
 

@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -91,8 +91,8 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <#list returnItems as returnItem>
           <#assign defaultQuantity = returnItem.returnQuantity - receivedQuantities[returnItem.returnItemSeqId]?double>
           <#if 0 < defaultQuantity>
-          <#assign orderItem = returnItem.getRelatedOne("OrderItem")>
-          <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")>         
+          <#assign orderItem = returnItem.getRelatedOne("OrderItem")?if_exists>
+          <#assign orderItemType = (orderItem.getRelatedOne("OrderItemType"))?if_exists>
           <input type="hidden" name="inventoryItemTypeId_o_${rowCount}" value="SERIALIZED_INV_ITEM">
           <input type="hidden" name="returnId_o_${rowCount}" value="${returnItem.returnId}">
           <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="${returnItem.returnItemSeqId}"> 
@@ -119,12 +119,18 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                         <#if serializedInv?has_content><font color='red'>**${uiLabelMap.ProductSerializedInventoryFound}**</font></#if>
                       </div>                       
                     </td>
+                  <#elseif orderItem?has_content>
+                    <td width="45%">
+                      <div class="tabletext">
+                        ${returnItem.returnItemSeqId}:&nbsp;<b>${orderItemType.description}</b> : ${orderItem.itemDescription?if_exists}&nbsp;&nbsp;
+                        <input type="text" class="inputBox" size="12" name="productId_o_${rowCount}">
+                        <a href="/catalog/control/EditProduct?externalLoginKey=${requestAttributes.externalLoginKey}" target="catalog" class="buttontext">${uiLabelMap.ProductCreateProduct}</a>
+                      </div>
+                    </td>
                   <#else>
                     <td width="45%">
                       <div class="tabletext">
-                        <b>${orderItemType.description}</b> : ${orderItem.itemDescription?if_exists}&nbsp;&nbsp;
-                        <input type="text" class="inputBox" size="12" name="productId_o_${rowCount}">
-                        <a href="/catalog/control/EditProduct?externalLoginKey=${requestAttributes.externalLoginKey}" target="catalog" class="buttontext">${uiLabelMap.ProductCreateProduct}</a>
+                        ${returnItem.returnItemSeqId}:&nbsp;${returnItem.description?if_exists}
                       </div>
                     </td>
                   </#if>
