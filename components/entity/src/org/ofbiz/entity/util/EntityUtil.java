@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.2 2003/10/27 11:07:04 jonesde Exp $
+ * $Id: EntityUtil.java,v 1.3 2003/11/07 11:46:17 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -24,20 +24,29 @@
 
 package org.ofbiz.entity.util;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityComparisonOperator;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityDateFilterCondition;
 import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityFieldMap;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelField;
 
@@ -71,6 +80,26 @@ public class EntityUtil {
         } else {
             return null;
         }
+    }
+
+    public static EntityCondition getFilterByDateExpr() {
+        return new EntityDateFilterCondition("fromDate", "thruDate");
+    }
+
+    public static EntityCondition getFilterByDateExpr(String fromDateName, String thruDateName) {
+        return new EntityDateFilterCondition(fromDateName, thruDateName);
+    }
+
+    public static EntityCondition getFilterByDateExpr(java.util.Date moment) {
+        return EntityDateFilterCondition.makeCondition(new java.sql.Timestamp(moment.getTime()), "fromDate", "thruDate");
+    }
+
+    public static EntityCondition getFilterByDateExpr(java.sql.Timestamp moment) {
+        return EntityDateFilterCondition.makeCondition(moment, "fromDate", "thruDate");
+    }
+
+    public static EntityCondition getFilterByDateExpr(java.sql.Timestamp moment, String fromDateName, String thruDateName) {
+        return EntityDateFilterCondition.makeCondition(moment, fromDateName, thruDateName);
     }
 
     /**
@@ -252,72 +281,26 @@ public class EntityUtil {
                 int operatorId = expr.getOperator().getId();
                 switch (operatorId) {
                     case EntityOperator.ID_EQUALS:
-                        // if the field named by lhs is not equal to rhs value, constraint fails
-                        if (lhs == null) {
-                            if (rhs != null) {
-                                include = false;
-                            }
-                        } else if (!lhs.equals(rhs)) {
-                            include = false;
-                        }
+                        include = EntityComparisonOperator.compareEqual(lhs, rhs);
                         break;
                     case EntityOperator.ID_NOT_EQUAL:
-                        if (lhs == null) {
-                            if (rhs == null) {
-                                include = false;
-                            }
-                        } else if (lhs.equals(rhs)) {
-                            include = false;
-                        }
+                        include = EntityComparisonOperator.compareNotEqual(lhs, rhs);
                         break;
                     case EntityOperator.ID_GREATER_THAN:
-                        if (lhs == null) {
-                            if (rhs == null) {
-                                include = false;
-                            }
-                        } else if (((Comparable) lhs).compareTo(rhs) <= 0) {
-                            include = false;
-                        }
+                        include = EntityComparisonOperator.compareGreaterThanEqualTo(lhs, rhs);
                         break;
                     case EntityOperator.ID_GREATER_THAN_EQUAL_TO:
-                        if (lhs == null) {
-                            if (rhs != null) {
-                                include = false;
-                            }
-                        } else if (((Comparable) lhs).compareTo(rhs) < 0) {
-                            include = false;
-                        }
+                        include = EntityComparisonOperator.compareGreaterThan(lhs, rhs);
                         break;
                     case EntityOperator.ID_LESS_THAN:
-                        if (lhs == null) {
-                            if (rhs == null) {
-                                include = false;
-                            }
-                        } else if (((Comparable) lhs).compareTo(rhs) >= 0) {
-                            include = false;
-                        }
+                        include = EntityComparisonOperator.compareLessThan(lhs, rhs);
                         break;
                     case EntityOperator.ID_LESS_THAN_EQUAL_TO:
-                        if (lhs == null) {
-                            if (rhs != null) {
-                                include = false;
-                            }
-                        } else if (((Comparable) lhs).compareTo(rhs) > 0) {
-                            include = false;
-                        }
+                        include = EntityComparisonOperator.compareLessThanEqualTo(lhs, rhs);
                         break;
-                    /*
                     case EntityOperator.ID_LIKE:
-                        if (lhs == null) {
-                            if (rhs != null) {
-                                include = false;
-                            }
-                        } else if (lhs instanceof String && rhs instanceof String) {
-                            //see if the lhs value is like the rhs value, rhs will have the pattern characters in it...
-                            include = false;
-                        }
+                        include = EntityComparisonOperator.compareLike(lhs, rhs);
                         break;
-                     */
                     default:
                         throw new IllegalArgumentException("The " + expr.getOperator().getCode() + " with id " + expr.getOperator().getId() + " operator is not yet supported by filterByAnd");
                 }
@@ -359,35 +342,40 @@ public class EntityUtil {
                 int operatorId = expr.getOperator().getId();
                 switch (operatorId) {
                     case EntityOperator.ID_EQUALS:
-                        if (lhs.equals(rhs)) {
-                            include = true;                         
-                        }                        
+                        if (EntityComparisonOperator.compareEqual(lhs, rhs)) {
+                            include = true;
+                        }
                         break;
                     case EntityOperator.ID_NOT_EQUAL:
-                        if (!lhs.equals(rhs)) {
+                        if (EntityComparisonOperator.compareNotEqual(lhs, rhs)) {
                             include = true;
-                        }                        
+                        }
                         break;
                     case EntityOperator.ID_GREATER_THAN:
-                        if (((Comparable) lhs).compareTo(rhs) > 0) {
+                        if (EntityComparisonOperator.compareGreaterThanEqualTo(lhs, rhs)) {
                             include = true;
-                        }                        
+                        }
                         break;
                     case EntityOperator.ID_GREATER_THAN_EQUAL_TO:
-                        if (((Comparable) lhs).compareTo(rhs) >= 0) {
+                        if (EntityComparisonOperator.compareGreaterThan(lhs, rhs)) {
                             include = true;
-                        }                        
+                        }
                         break;
                     case EntityOperator.ID_LESS_THAN:
-                        if (((Comparable) lhs).compareTo(rhs) < 0) {
+                        if (EntityComparisonOperator.compareLessThan(lhs, rhs)) {
                             include = true;
-                        }                        
+                        }
                         break;
                     case EntityOperator.ID_LESS_THAN_EQUAL_TO:
-                        if (((Comparable) lhs).compareTo(rhs) <= 0) {
+                        if (EntityComparisonOperator.compareLessThanEqualTo(lhs, rhs)) {
                             include = true;
-                        }                        
-                        break;                  
+                        }
+                        break;
+                    case EntityOperator.ID_LIKE:
+                        if (EntityComparisonOperator.compareLike(lhs, rhs)) {
+                            include = true;
+                        }
+                        break;
                     default:
                         throw new IllegalArgumentException("The " + expr.getOperator().getCode() + " with id " + expr.getOperator().getId() + " operator is not yet supported by filterByOr");
                 }
@@ -452,6 +440,36 @@ public class EntityUtil {
 
         while (iter.hasNext()) {
             result.addAll(((GenericValue) iter.next()).getRelatedByAnd(relationName, fields));
+        }
+        return result;
+    }
+
+    public static List filterByCondition(List values, EntityCondition condition) {
+        if (values == null) return null;
+
+        List result = new ArrayList(values.size());
+        Iterator iter = values.iterator();
+
+        while (iter.hasNext()) {
+            GenericValue value = (GenericValue) iter.next();
+            if (condition.entityMatches(value)) {
+                result.add(value);
+            }
+        }
+        return result;
+    }
+
+    public static List filterOutByCondition(List values, EntityCondition condition) {
+        if (values == null) return null;
+
+        List result = new ArrayList(values.size());
+        Iterator iter = values.iterator();
+
+        while (iter.hasNext()) {
+            GenericValue value = (GenericValue) iter.next();
+            if (!condition.entityMatches(value)) {
+                result.add(value);
+            }
         }
         return result;
     }
@@ -535,6 +553,62 @@ public class EntityUtil {
             } else {
                 return false;
             }
+        }
+    }
+
+    public static List findDatedInclusionEntity(GenericDelegator delegator, String entityName, Map search) throws GenericEntityException {
+        return findDatedInclusionEntity(delegator, entityName, search, UtilDateTime.nowTimestamp());
+    }
+
+    public static List findDatedInclusionEntity(GenericDelegator delegator, String entityName, Map search, Timestamp now) throws GenericEntityException {
+        EntityCondition searchCondition = new EntityConditionList(UtilMisc.toList(
+            new EntityFieldMap(search, EntityOperator.AND),
+            EntityUtil.getFilterByDateExpr(now)
+        ), EntityOperator.AND);
+        return delegator.findByCondition(entityName,searchCondition,null,UtilMisc.toList("-fromDate"));
+    }
+
+    public static GenericValue newDatedInclusionEntity(GenericDelegator delegator, String entityName, Map search) throws GenericEntityException {
+        return newDatedInclusionEntity(delegator, entityName, search, UtilDateTime.nowTimestamp());
+    }
+
+    public static GenericValue newDatedInclusionEntity(GenericDelegator delegator, String entityName, Map search, Timestamp now) throws GenericEntityException {
+        List entities = findDatedInclusionEntity(delegator, entityName, search, now);
+        if (entities != null && entities.size() > 0) {
+            search = null;
+            for (int i = 0; i < entities.size(); i++) {
+                GenericValue entity = (GenericValue)entities.get(i);
+                if (now.equals(entity.get("fromDate"))) {
+                    search = new HashMap(entity.getPrimaryKey());
+                    entity.remove("thruDate");
+                } else {
+                    entity.set("thruDate",now);
+                }
+                entity.store();
+            }
+            if (search == null) search = new HashMap(EntityUtil.getFirst(entities));
+        } else {
+            search = new HashMap(search);
+        }
+        if (now.equals(search.get("fromDate"))) {
+            return EntityUtil.getOnly(delegator.findByAnd(entityName, search));
+        } else {
+            search.put("fromDate",now);
+            search.remove("thruDate");
+            return delegator.makeValue(entityName, search);
+        }
+    }
+
+    public static void delDatedInclusionEntity(GenericDelegator delegator, String entityName, Map search) throws GenericEntityException {
+        delDatedInclusionEntity(delegator, entityName, search, UtilDateTime.nowTimestamp());
+    }
+
+    public static void delDatedInclusionEntity(GenericDelegator delegator, String entityName, Map search, Timestamp now) throws GenericEntityException {
+        List entities = findDatedInclusionEntity(delegator, entityName, search, now);
+        for (int i = 0; entities != null && i < entities.size(); i++) {
+            GenericValue entity = (GenericValue)entities.get(i);
+            entity.set("thruDate",now);
+            entity.store();
         }
     }
 }
