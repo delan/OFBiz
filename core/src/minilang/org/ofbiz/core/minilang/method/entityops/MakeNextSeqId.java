@@ -53,8 +53,8 @@ public class MakeNextSeqId extends MethodOperation {
         seqFieldName = element.getAttribute("seq-field-name");
         valueAcsr = new ContextAccessor(element.getAttribute("value-name"));
         
-        String numericPaddingStr = element.getAttribute("numeric-padding");
-        String incrementByStr = element.getAttribute("increment-by");
+        numericPaddingStr = element.getAttribute("numeric-padding");
+        incrementByStr = element.getAttribute("increment-by");
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -64,39 +64,46 @@ public class MakeNextSeqId extends MethodOperation {
         int numericPadding = 5;
         int incrementBy = 1;
         try {
-            numericPadding = Integer.parseInt(numericPaddingStr);
+            if (UtilValidate.isNotEmpty(numericPaddingStr)) {
+                numericPadding = Integer.parseInt(numericPaddingStr);
+            }
         } catch (Exception e) {
             Debug.logError(e, "numeric-padding format invalid for [" + numericPaddingStr + "]");
         }
         try {
-            incrementBy = Integer.parseInt(incrementByStr);
+            if (UtilValidate.isNotEmpty(incrementByStr)) {
+                incrementBy = Integer.parseInt(incrementByStr);
+            }
         } catch (Exception e) {
             Debug.logError(e, "increment-by format invalid for [" + incrementByStr + "]");
         }
 
         GenericValue value = (GenericValue) valueAcsr.get(methodContext);
-        
         if (UtilValidate.isEmpty(value.getString(seqFieldName))) {
+            value.remove(seqFieldName);
             GenericValue lookupValue = methodContext.getDelegator().makeValue(value.getEntityName(), null);
             lookupValue.setPKFields(value);
             try {
                 // get values in reverse order
                 List allValues = methodContext.getDelegator().findByAnd(value.getEntityName(), lookupValue, UtilMisc.toList("-" + seqFieldName));
+                //Debug.logInfo("Get existing values from entity " + value.getEntityName() + " with lookupValue: " + lookupValue + ", and the seqFieldName: " + seqFieldName + ", and the results are: " + allValues);
                 GenericValue first = EntityUtil.getFirst(allValues);
+                String newSeqId = null;
                 if (first != null) {
                     String currentSeqId = first.getString(seqFieldName);
                     int seqVal = Integer.parseInt(currentSeqId);
                     seqVal += incrementBy;
-                    String newSeqId = Integer.toString(seqVal);
-                    
-                    StringBuffer outStrBfr = new StringBuffer(newSeqId); 
-                    while (numericPadding > outStrBfr.length()) {
-                        outStrBfr.insert(0, '0');
-                    }
-                    newSeqId = outStrBfr.toString();
-                    
-                    value.set(seqFieldName, newSeqId);
+                    newSeqId = Integer.toString(seqVal);
+                } else {
+                    newSeqId = "1";
                 }
+                StringBuffer outStrBfr = new StringBuffer(newSeqId); 
+                while (numericPadding > outStrBfr.length()) {
+                    outStrBfr.insert(0, '0');
+                }
+                newSeqId = outStrBfr.toString();
+                    
+                value.set(seqFieldName, newSeqId);
             } catch (Exception e) {
                 Debug.logError(e, "Error making next seqId");
                 return true;
