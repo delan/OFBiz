@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.3 2003/09/04 18:47:15 jonesde Exp $
+ * $Id: ModelViewEntity.java,v 1.4 2003/09/24 12:07:53 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -364,7 +364,8 @@ public class ModelViewEntity extends ModelEntity {
             Iterator fieldnamesIterator = entFieldList.iterator();
             while (fieldnamesIterator.hasNext()) {
                 // now merge the lists, leaving out any that duplicate an existing alias name
-                String aliasName = (String) fieldnamesIterator.next();
+                String fieldName = (String) fieldnamesIterator.next();
+                String aliasName = fieldName;
                 if (UtilValidate.isNotEmpty(prefix)) {
                     StringBuffer newAliasBuffer = new StringBuffer(prefix);
                     //make sure the first letter is uppercase to delineate the field name
@@ -375,14 +376,42 @@ public class ModelViewEntity extends ModelEntity {
                 
                 ModelAlias existingAlias = this.getAlias(aliasName);
                 if (existingAlias != null) {
-                    //already exists, oh well... probably an override, but logInfo just in case
-                    Debug.logInfo("Throwing out field alias in view entity " + this.getEntityName() + " because one already exists with the name: " + aliasName, module);
+                    //log differently if this is part of a view-link key-map because that is a common case when a field will be auto-expanded multiple times
+                    boolean isInViewLink = false;
+                    Iterator viewLinkIter = this.getViewLinksIterator();
+                    while (viewLinkIter.hasNext() && !isInViewLink) {
+                        ModelViewLink modelViewLink = (ModelViewLink) viewLinkIter.next();
+                        boolean isRel = false;
+                        if (modelViewLink.getRelEntityAlias().equals(aliasAll.getEntityAlias())) {
+                            isRel = true;
+                        } else if (!modelViewLink.getEntityAlias().equals(aliasAll.getEntityAlias())) {
+                            // not the rel-entity-alias or the entity-alias, so move along
+                            continue;
+                        }
+                        Iterator keyMapIter = modelViewLink.getKeyMapsIterator();
+                        while (keyMapIter.hasNext() && !isInViewLink) {
+                            ModelKeyMap modelKeyMap = (ModelKeyMap) keyMapIter.next();
+                            if (!isRel && modelKeyMap.getFieldName().equals(fieldName)) {
+                                isInViewLink = true;
+                            } else if (isRel && modelKeyMap.getRelFieldName().equals(fieldName)) {
+                                isInViewLink = true;
+                            }
+                        }
+                    }
+                    
+                    //already exists, oh well... probably an override, but log just in case
+                    String warnMsg = "Throwing out field alias in view entity " + this.getEntityName() + " because one already exists with the name: " + aliasName;
+                    if (isInViewLink) {
+                        Debug.logVerbose(warnMsg, module);
+                    } else {
+                        Debug.logInfo(warnMsg, module);
+                    }
                     continue;
                 }
                 
                 ModelAlias expandedAlias = new ModelAlias();
                 expandedAlias.name = aliasName;
-                expandedAlias.field = expandedAlias.name;
+                expandedAlias.field = fieldName;
                 expandedAlias.entityAlias = aliasAll.getEntityAlias();
                 expandedAlias.isFromAliasAll = true;
                 expandedAlias.colAlias = ModelUtil.javaNameToDbName(UtilXml.checkEmpty(expandedAlias.name));
