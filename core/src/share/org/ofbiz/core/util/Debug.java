@@ -25,7 +25,7 @@
 package org.ofbiz.core.util;
 
 import java.io.*;
-import java.util.Date;
+import java.util.*;
 import java.text.DateFormat;
 
 import org.apache.log4j.*;
@@ -59,9 +59,17 @@ public final class Debug {
     protected static PrintStream printStream = System.out;
     protected static PrintWriter printWriter = new PrintWriter(printStream);
 
+    protected static boolean levelOnCache[] = new boolean[8];
+    protected static final boolean useLevelOnCache = true;
+    
     static {
         //initialize Log4J
         PropertyConfigurator.configure(FlexibleProperties.makeFlexibleProperties(UtilURL.fromResource("debug")));
+        
+        //initialize levelOnCache
+        for (int i=0; i<8; i++) {
+            levelOnCache[i] = (i == Debug.ALWAYS || UtilProperties.propertyValueEqualsIgnoreCase("debug", levelProps[i], "true"));
+        }
     }
 
     static Category root = Category.getRoot();
@@ -92,7 +100,7 @@ public final class Debug {
     }
 
     public static void log(int level, Throwable t, String msg, String module, String callingClass) {
-        if (level == Debug.ALWAYS || UtilProperties.propertyValueEqualsIgnoreCase("debug", levelProps[level], "true")) {
+        if (isOn(level)) {
             if (useLog4J) {
                 Category logger = getLogger(module);
                 logger.log(callingClass, levelObjs[level], msg, t);
@@ -121,8 +129,11 @@ public final class Debug {
     }
 
     public static boolean isOn(int level) {
-        return (level == Debug.ALWAYS ||
-                UtilProperties.propertyValueEqualsIgnoreCase("debug", levelProps[level], "true"));
+        if (useLevelOnCache) {
+            return levelOnCache[level];
+        } else {
+            return (level == Debug.ALWAYS || UtilProperties.propertyValueEqualsIgnoreCase("debug", levelProps[level], "true"));
+        }
     }
     public static void log(String msg) {
         log(Debug.ALWAYS, null, msg, null);
