@@ -8,11 +8,12 @@
 
     <!-- Order processing services -->
     <service name="processOrder" engine="workflow" location="TEST" invoke="ProcessOrder">
+        <description>Service for testing the workflow engine</description>
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="orderStatusId" type="String" mode="OUT"/>
     </service>
     <service name="storeOrder" engine="java" validate="false"
-    location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createOrder">
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createOrder">
         <description>Creates order entities</description>
         <attribute name="partyId" type="String" mode="IN"/>
 		<attribute name="affiliateId" type="String" mode="IN" optional="true"/>
@@ -38,7 +39,7 @@
         <attribute name="orderStatusId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="addOrderRole" engine="java"
-    location="org.ofbiz.commonapp.order.order.OrderServices" invoke="addRoleType">
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="addRoleType">
         <description>Adds a RoleType to an order</description>
         <attribute name="removeOld" type="String" mode="IN" optional="true"/>
         <attribute name="orderId" type="String" mode="IN"/>
@@ -46,11 +47,20 @@
         <attribute name="roleTypeId" type="String" mode="IN"/>
     </service>
     <service name="removeOrderRole" engine="java"
-    location="org.ofbiz.commonapp.order.order.OrderServices" invoke="removeRoleType">
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="removeRoleType">
         <description>Removes a RoleType from an order</description>
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="partyId" type="String" mode="IN"/>
         <attribute name="roleTypeId" type="String" mode="IN"/>
+    </service>
+    <service name="createOrderPaymentPreference" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createPaymentPreference">
+        <description>Creates an order payment preference</description>
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="paymentMethodTypeId" type="String" mode="IN"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
+        <attribute name="maxAmount" type="Double" mode="IN" optional="true"/>
+        <attribute name="orderPaymentPreferenceId" type="String" mode="OUT"/>
     </service>
 
     <!-- Customer Request Services -->

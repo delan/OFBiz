@@ -40,11 +40,13 @@ import org.ofbiz.core.service.*;
  * Created on January 18, 2001
  */
 public class PaymentServices {
-    /** Deletes a PaymentMethod entity according to the parameters passed in the context
+
+    /**
+     * Deletes a PaymentMethod entity according to the parameters passed in the context
      * <b>security check</b>: userLogin partyId must equal paymentMethod partyId, or must have PARTYMGR_DELETE permission
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+     * @param ctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
      */
     public static Map deletePaymentMethod(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -87,11 +89,12 @@ public class PaymentServices {
         return result;
     }
 
-    /** Creates CreditCard and PaymentMethod entities according to the parameters passed in the context
+    /**
+     * Creates CreditCard and PaymentMethod entities according to the parameters passed in the context
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+     * @param ctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
      */
     public static Map createCreditCard(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -178,11 +181,12 @@ public class PaymentServices {
         return result;
     }
     
-    /** Updates CreditCard and PaymentMethod entities according to the parameters passed in the context
+    /**
+     * Updates CreditCard and PaymentMethod entities according to the parameters passed in the context
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+     * @param ctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
      */
     public static Map updateCreditCard(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -302,11 +306,12 @@ public class PaymentServices {
         return result;
     }
 
-    /** Creates EftAccount and PaymentMethod entities according to the parameters passed in the context
+    /**
+     * Creates EftAccount and PaymentMethod entities according to the parameters passed in the context
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+     * @param ctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
      */
     public static Map createEftAccount(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -381,11 +386,12 @@ public class PaymentServices {
         return result;
     }
     
-    /** Updates EftAccount and PaymentMethod entities according to the parameters passed in the context
+    /**
+     * Updates EftAccount and PaymentMethod entities according to the parameters passed in the context
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+     * @param ctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
      */
     public static Map updateEftAccount(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -493,11 +499,12 @@ public class PaymentServices {
         return result;
     }
 
-    /** Creates a Payment entity according to the parameters passed in the context
+    /**
+     * Creates a Payment entity according to the parameters passed in the context
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+     * @param ctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
      */
     public static Map createPayment(DispatchContext ctx, Map context) {
         Map result = new HashMap();

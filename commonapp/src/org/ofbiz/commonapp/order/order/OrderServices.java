@@ -62,9 +62,9 @@ public class OrderServices {
         String shippingInstructions = (String) context.get("shippingInstructions");
         String billingAccountId = (String) context.get("billingAccountId");
         GenericValue order = delegator.makeValue("OrderHeader",
-                                                 UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER",
-                                                                "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
-                                                                "statusId", "ORDERED", "billingAccountId", billingAccountId));
+                UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER",
+                        "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
+                        "statusId", "ORDERED", "billingAccountId", billingAccountId));
         toBeStored.add(order);
 
 
@@ -72,9 +72,9 @@ public class OrderServices {
         Double cartDiscount = (Double) context.get("cartDiscount");
         if (cartDiscount.doubleValue() != 0.0) {
             toBeStored.add(delegator.makeValue("OrderAdjustment",
-                                               UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(),
-                                                              "orderAdjustmentTypeId", "DISCOUNT_ADJUSTMENT", "orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA,
-                                                              "percentage", cartDiscount)));
+                    UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(),
+                            "orderAdjustmentTypeId", "DISCOUNT_ADJUSTMENT", "orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA,
+                            "percentage", cartDiscount)));
         }
 
         List orderAdjustments = (List) context.get("orderAdjustments");
@@ -88,18 +88,18 @@ public class OrderServices {
         // set the shipping address
         String shippingContactMechId = (String) context.get("shippingContactMechId");
         toBeStored.add(delegator.makeValue("OrderContactMech",
-                                           UtilMisc.toMap("contactMechId", shippingContactMechId,
-                                                          "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
+                UtilMisc.toMap("contactMechId", shippingContactMechId,
+                        "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
 
         // set the shipment preference
         String shipmentMethodTypeId = (String) context.get("shipmentMethodTypeId");
         String carrierPartyId = (String) context.get("carrierPartyId");
         Boolean maySplit = (Boolean) context.get("maySplit");
         GenericValue orderShipmentPreference = delegator.makeValue("OrderShipmentPreference",
-                                                                   UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA,
-                                                                                  "shipmentMethodTypeId", shipmentMethodTypeId,
-                                                                                  "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER" /* XXX */,
-                                                                                  "shippingInstructions", shippingInstructions));
+                UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA,
+                        "shipmentMethodTypeId", shipmentMethodTypeId,
+                        "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER" /* XXX */,
+                        "shippingInstructions", shippingInstructions));
         orderShipmentPreference.set("maySplit", maySplit);
         toBeStored.add(orderShipmentPreference);
 
@@ -142,23 +142,24 @@ public class OrderServices {
         // ------- TODO Make this so if we pass credit card info a new ID is created -------
         // set the order status
         toBeStored.add(delegator.makeValue("OrderStatus",
-                                           UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
-                                                          "statusId", "ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
+                UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
+                        "statusId", "ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
 
         String paymentMethodId = (String) context.get("paymentMethodId");
         if (paymentMethodId != null && !paymentMethodId.equals("_OFFLINE_")) {
             toBeStored.add(delegator.makeValue("OrderPaymentPreference",
-                                               UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-                                                              "orderId", orderId, "paymentMethodTypeId", "CREDIT_CARD", "paymentMethodId", paymentMethodId)));
-        } if (paymentMethodId != null && paymentMethodId.equals("_OFFLINE_")) {
+                    UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
+                            "orderId", orderId, "paymentMethodTypeId", "CREDIT_CARD", "paymentMethodId", paymentMethodId)));
+        }
+        if (paymentMethodId != null && paymentMethodId.equals("_OFFLINE_")) {
             toBeStored.add(delegator.makeValue("OrderPaymentPreference",
-                                               UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-                                                              "orderId", orderId, "paymentMethodTypeId", "OFFLINE")));
+                    UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
+                            "orderId", orderId, "paymentMethodTypeId", "OFFLINE")));
         } else {
             //XXX CASH should not be assumed!!
             toBeStored.add(delegator.makeValue("OrderPaymentPreference",
-                                               UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-                                                              "orderId", orderId, "paymentMethodTypeId", "CASH", "paymentMethodId", paymentMethodId)));
+                    UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
+                            "orderId", orderId, "paymentMethodTypeId", "CASH", "paymentMethodId", paymentMethodId)));
         }
 
         try {
@@ -317,7 +318,7 @@ public class OrderServices {
             prefId = newId.toString();
 
         Map fields = UtilMisc.toMap("orderPaymentPreferenceId", prefId, "orderId", orderId, "paymentMethodTypeId",
-                                    paymentMethodTypeId, "paymentMethodId", paymentMethodId, "maxAmount", maxAmount);
+                paymentMethodTypeId, "paymentMethodId", paymentMethodId, "maxAmount", maxAmount);
         try {
             GenericValue v = delegator.makeValue("OrderPaymentPreference", fields);
             delegator.create(v);
@@ -326,6 +327,7 @@ public class OrderServices {
             result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not create OrderPaymentPreference (" + e.getMessage() + ").");
             return result;
         }
+        result.put("orderPaymentPreferenceId", prefId);
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
