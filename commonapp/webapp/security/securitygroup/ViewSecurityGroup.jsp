@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 08:43:50 MDT 2001
+ *@created    Fri Jul 27 01:37:24 MDT 2001
  *@version    1.0
  */
 %>
@@ -96,7 +96,7 @@ function ShowViewTab(lname)
 <%}%>
 
 <%if(securityGroup == null){%>
-<div style='width:100%;height:400px;overflow:visible;border-style:inset;'>
+<div style='width:100%;height:400px;overflow:visible;'>
 <%}else{%>
 <div style='width:100%;height:200px;overflow:auto;border-style:inset;'>
 <%}%>
@@ -234,7 +234,8 @@ function ShowTab(lname)
 <%-- Start Relation for UserLoginSecurityGroup, type: many --%>
 <%if(securityGroup != null){%>
   <%if(Security.hasEntityPermission("USER_LOGIN_SECURITY_GROUP", "_VIEW", session)){%>    
-    <%Iterator relatedIterator = UserLoginSecurityGroupHelper.findByGroupIdIterator(securityGroup.getGroupId());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(UserLoginSecurityGroupHelper.findByGroupId(securityGroup.getGroupId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(securityGroup.getUserLoginSecurityGroups());%>
   <DIV id=area1 style="VISIBILITY: visible; POSITION: absolute" width="100%">
     <div class=areaheader>
       <b></b> Related Entities: <b>UserLoginSecurityGroup</b> with (GROUP_ID: <%=securityGroup.getGroupId()%>)
@@ -321,7 +322,8 @@ Displaying <%=relatedLoopCount%> entities.
 <%-- Start Relation for SecurityGroupPermission, type: many --%>
 <%if(securityGroup != null){%>
   <%if(Security.hasEntityPermission("SECURITY_GROUP_PERMISSION", "_VIEW", session)){%>    
-    <%Iterator relatedIterator = SecurityGroupPermissionHelper.findByGroupIdIterator(securityGroup.getGroupId());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(SecurityGroupPermissionHelper.findByGroupId(securityGroup.getGroupId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(securityGroup.getSecurityGroupPermissions());%>
   <DIV id=area2 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
       <b></b> Related Entities: <b>SecurityGroupPermission</b> with (GROUP_ID: <%=securityGroup.getGroupId()%>)

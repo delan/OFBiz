@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 08:43:48 MDT 2001
+ *@created    Fri Jul 27 01:37:24 MDT 2001
  *@version    1.0
  */
 %>
@@ -98,7 +98,7 @@ function ShowViewTab(lname)
 <%}%>
 
 <%if(userLogin == null){%>
-<div style='width:100%;height:400px;overflow:visible;border-style:inset;'>
+<div style='width:100%;height:400px;overflow:visible;'>
 <%}else{%>
 <div style='width:100%;height:200px;overflow:auto;border-style:inset;'>
 <%}%>
@@ -283,7 +283,8 @@ function ShowTab(lname)
 <%-- Start Relation for Party, type: one --%>
 <%if(userLogin != null){%>
   <%if(Security.hasEntityPermission("PARTY", "_VIEW", session)){%>
-    <%Party partyRelated = PartyHelper.findByPrimaryKey(userLogin.getPartyId());%>
+    <%-- Party partyRelated = PartyHelper.findByPrimaryKey(userLogin.getPartyId()); --%>
+    <%Party partyRelated = userLogin.getParty();%>
   <DIV id=area1 style="VISIBILITY: visible; POSITION: absolute" width="100%">
     <div class=areaheader>
      <b></b> Related Entity: <b>Party</b> with (PARTY_ID: <%=userLogin.getPartyId()%>)
@@ -322,7 +323,8 @@ function ShowTab(lname)
 <%-- Start Relation for UserLoginSecurityGroup, type: many --%>
 <%if(userLogin != null){%>
   <%if(Security.hasEntityPermission("USER_LOGIN_SECURITY_GROUP", "_VIEW", session)){%>    
-    <%Iterator relatedIterator = UserLoginSecurityGroupHelper.findByUserLoginIdIterator(userLogin.getUserLoginId());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(UserLoginSecurityGroupHelper.findByUserLoginId(userLogin.getUserLoginId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(userLogin.getUserLoginSecurityGroups());%>
   <DIV id=area2 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
       <b></b> Related Entities: <b>UserLoginSecurityGroup</b> with (USER_LOGIN_ID: <%=userLogin.getUserLoginId()%>)
@@ -409,7 +411,8 @@ Displaying <%=relatedLoopCount%> entities.
 <%-- Start Relation for LoginAccountHistory, type: many --%>
 <%if(userLogin != null){%>
   <%if(Security.hasEntityPermission("LOGIN_ACCOUNT_HISTORY", "_VIEW", session)){%>    
-    <%Iterator relatedIterator = LoginAccountHistoryHelper.findByUserLoginIdIterator(userLogin.getUserLoginId());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(LoginAccountHistoryHelper.findByUserLoginId(userLogin.getUserLoginId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(userLogin.getLoginAccountHistorys());%>
   <DIV id=area3 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
       <b></b> Related Entities: <b>LoginAccountHistory</b> with (USER_LOGIN_ID: <%=userLogin.getUserLoginId()%>)

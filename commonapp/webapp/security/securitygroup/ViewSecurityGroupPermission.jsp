@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 08:43:50 MDT 2001
+ *@created    Fri Jul 27 01:37:25 MDT 2001
  *@version    1.0
  */
 %>
@@ -97,7 +97,7 @@ function ShowViewTab(lname)
 <%}%>
 
 <%if(securityGroupPermission == null){%>
-<div style='width:100%;height:400px;overflow:visible;border-style:inset;'>
+<div style='width:100%;height:400px;overflow:visible;'>
 <%}else{%>
 <div style='width:100%;height:200px;overflow:auto;border-style:inset;'>
 <%}%>
@@ -242,7 +242,8 @@ function ShowTab(lname)
 <%-- Start Relation for SecurityGroup, type: one --%>
 <%if(securityGroupPermission != null){%>
   <%if(Security.hasEntityPermission("SECURITY_GROUP", "_VIEW", session)){%>
-    <%SecurityGroup securityGroupRelated = SecurityGroupHelper.findByPrimaryKey(securityGroupPermission.getGroupId());%>
+    <%-- SecurityGroup securityGroupRelated = SecurityGroupHelper.findByPrimaryKey(securityGroupPermission.getGroupId()); --%>
+    <%SecurityGroup securityGroupRelated = securityGroupPermission.getSecurityGroup();%>
   <DIV id=area1 style="VISIBILITY: visible; POSITION: absolute" width="100%">
     <div class=areaheader>
      <b></b> Related Entity: <b>SecurityGroup</b> with (GROUP_ID: <%=securityGroupPermission.getGroupId()%>)
@@ -289,7 +290,8 @@ function ShowTab(lname)
 <%-- Start Relation for SecurityPermission, type: one --%>
 <%if(securityGroupPermission != null){%>
   <%if(Security.hasEntityPermission("SECURITY_PERMISSION", "_VIEW", session)){%>
-    <%SecurityPermission securityPermissionRelated = SecurityPermissionHelper.findByPrimaryKey(securityGroupPermission.getPermissionId());%>
+    <%-- SecurityPermission securityPermissionRelated = SecurityPermissionHelper.findByPrimaryKey(securityGroupPermission.getPermissionId()); --%>
+    <%SecurityPermission securityPermissionRelated = securityGroupPermission.getSecurityPermission();%>
   <DIV id=area2 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
      <b></b> Related Entity: <b>SecurityPermission</b> with (PERMISSION_ID: <%=securityGroupPermission.getPermissionId()%>)

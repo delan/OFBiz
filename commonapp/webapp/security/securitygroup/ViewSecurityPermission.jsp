@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 08:43:50 MDT 2001
+ *@created    Fri Jul 27 01:37:24 MDT 2001
  *@version    1.0
  */
 %>
@@ -96,7 +96,7 @@ function ShowViewTab(lname)
 <%}%>
 
 <%if(securityPermission == null){%>
-<div style='width:100%;height:400px;overflow:visible;border-style:inset;'>
+<div style='width:100%;height:400px;overflow:visible;'>
 <%}else{%>
 <div style='width:100%;height:200px;overflow:auto;border-style:inset;'>
 <%}%>
@@ -229,7 +229,8 @@ function ShowTab(lname)
 <%-- Start Relation for SecurityGroupPermission, type: many --%>
 <%if(securityPermission != null){%>
   <%if(Security.hasEntityPermission("SECURITY_GROUP_PERMISSION", "_VIEW", session)){%>    
-    <%Iterator relatedIterator = SecurityGroupPermissionHelper.findByPermissionIdIterator(securityPermission.getPermissionId());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(SecurityGroupPermissionHelper.findByPermissionId(securityPermission.getPermissionId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(securityPermission.getSecurityGroupPermissions());%>
   <DIV id=area1 style="VISIBILITY: visible; POSITION: absolute" width="100%">
     <div class=areaheader>
       <b></b> Related Entities: <b>SecurityGroupPermission</b> with (PERMISSION_ID: <%=securityPermission.getPermissionId()%>)

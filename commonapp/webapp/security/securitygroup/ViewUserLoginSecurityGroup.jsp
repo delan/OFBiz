@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 08:43:51 MDT 2001
+ *@created    Fri Jul 27 01:37:25 MDT 2001
  *@version    1.0
  */
 %>
@@ -98,7 +98,7 @@ function ShowViewTab(lname)
 <%}%>
 
 <%if(userLoginSecurityGroup == null){%>
-<div style='width:100%;height:400px;overflow:visible;border-style:inset;'>
+<div style='width:100%;height:400px;overflow:visible;'>
 <%}else{%>
 <div style='width:100%;height:200px;overflow:auto;border-style:inset;'>
 <%}%>
@@ -248,7 +248,8 @@ function ShowTab(lname)
 <%-- Start Relation for UserLogin, type: one --%>
 <%if(userLoginSecurityGroup != null){%>
   <%if(Security.hasEntityPermission("USER_LOGIN", "_VIEW", session)){%>
-    <%UserLogin userLoginRelated = UserLoginHelper.findByPrimaryKey(userLoginSecurityGroup.getUserLoginId());%>
+    <%-- UserLogin userLoginRelated = UserLoginHelper.findByPrimaryKey(userLoginSecurityGroup.getUserLoginId()); --%>
+    <%UserLogin userLoginRelated = userLoginSecurityGroup.getUserLogin();%>
   <DIV id=area1 style="VISIBILITY: visible; POSITION: absolute" width="100%">
     <div class=areaheader>
      <b></b> Related Entity: <b>UserLogin</b> with (USER_LOGIN_ID: <%=userLoginSecurityGroup.getUserLoginId()%>)
@@ -319,7 +320,8 @@ function ShowTab(lname)
 <%-- Start Relation for SecurityGroup, type: one --%>
 <%if(userLoginSecurityGroup != null){%>
   <%if(Security.hasEntityPermission("SECURITY_GROUP", "_VIEW", session)){%>
-    <%SecurityGroup securityGroupRelated = SecurityGroupHelper.findByPrimaryKey(userLoginSecurityGroup.getGroupId());%>
+    <%-- SecurityGroup securityGroupRelated = SecurityGroupHelper.findByPrimaryKey(userLoginSecurityGroup.getGroupId()); --%>
+    <%SecurityGroup securityGroupRelated = userLoginSecurityGroup.getSecurityGroup();%>
   <DIV id=area2 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
      <b></b> Related Entity: <b>SecurityGroup</b> with (GROUP_ID: <%=userLoginSecurityGroup.getGroupId()%>)
@@ -366,7 +368,8 @@ function ShowTab(lname)
 <%-- Start Relation for SecurityGroupPermission, type: many --%>
 <%if(userLoginSecurityGroup != null){%>
   <%if(Security.hasEntityPermission("SECURITY_GROUP_PERMISSION", "_VIEW", session)){%>    
-    <%Iterator relatedIterator = SecurityGroupPermissionHelper.findByGroupIdIterator(userLoginSecurityGroup.getGroupId());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(SecurityGroupPermissionHelper.findByGroupId(userLoginSecurityGroup.getGroupId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(userLoginSecurityGroup.getSecurityGroupPermissions());%>
   <DIV id=area3 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
       <b></b> Related Entities: <b>SecurityGroupPermission</b> with (GROUP_ID: <%=userLoginSecurityGroup.getGroupId()%>)
