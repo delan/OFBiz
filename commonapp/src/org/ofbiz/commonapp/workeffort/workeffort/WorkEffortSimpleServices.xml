@@ -51,23 +51,6 @@
         <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newWorkEffortStatus"/>
         <field-to-field field-name="partyId" map-name="userLogin" to-field-name="setByPartyId" to-map-name="newWorkEffortStatus"/>
         <create-value value-name="newWorkEffortStatus"/>
-
-        <if-not-empty field-name="partyId" map-name="userLogin">
-            <!-- add a party assignment for the creator of the event, use the list method and let the EE do the update or create... -->
-            <make-value value-name="newPartyRole" entity-name="PartyRole"/>
-            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="newPartyRole"/>
-            <string-to-field string="CAL_OWNER" field-name="roleTypeId" map-name="newPartyRole"/>
-            <field-to-list field-name="newPartyRole" list-name="newPartyRoleList"/>
-            <store-list list-name="newPartyRoleList"/>
-            
-            <make-value value-name="newWorkEffortPartyAssignment" entity-name="WorkEffortPartyAssignment"/>
-            <env-to-field env-name="workEffortId" map-name="newWorkEffortPartyAssignment"/>
-            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="newWorkEffortPartyAssignment"/>
-            <string-to-field string="CAL_OWNER" field-name="roleTypeId" map-name="newWorkEffortPartyAssignment"/>
-            <string-to-field string="CAL_ACCEPTED" field-name="statusId" map-name="newWorkEffortPartyAssignment"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newWorkEffortPartyAssignment"/>
-            <create-value value-name="newWorkEffortPartyAssignment"/>
-        </if-not-empty>
     </simple-method>
     <simple-method method-name="updateWorkEffort" short-description="Update Work Effort">
         <!-- check permissions before moving on: if update or delete logged in user must be associated OR have the corresponding UPDATE or DELETE permissions -->
@@ -145,5 +128,25 @@
 
         <!-- Delete actual main entity last -->
         <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="quickAssignPartyToWorkEffort" short-description="Quick Assign Party To WorkEffort as Owner">
+        <if-not-empty field-name="quickAssignPartyId" map-name="parameters">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <!-- add a party assignment for the creator of the event, use the list method and let the EE do the update or create... -->
+            <make-value value-name="newPartyRole" entity-name="PartyRole"/>
+            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="newPartyRole"/>
+            <string-to-field string="CAL_OWNER" field-name="roleTypeId" map-name="newPartyRole"/>
+            <field-to-list field-name="newPartyRole" list-name="newPartyRoleList"/>
+            <store-list list-name="newPartyRoleList"/>
+            
+            <make-value value-name="newWorkEffortPartyAssignment" entity-name="WorkEffortPartyAssignment"/>
+            <env-to-field env-name="workEffortId" map-name="newWorkEffortPartyAssignment"/>
+            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="newWorkEffortPartyAssignment"/>
+            <string-to-field string="CAL_OWNER" field-name="roleTypeId" map-name="newWorkEffortPartyAssignment"/>
+            <string-to-field string="CAL_ACCEPTED" field-name="statusId" map-name="newWorkEffortPartyAssignment"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newWorkEffortPartyAssignment"/>
+            <create-value value-name="newWorkEffortPartyAssignment"/>
+        </if-not-empty>
     </simple-method>
 </simple-methods>
