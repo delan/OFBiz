@@ -24,7 +24,6 @@
  */
 package org.ofbiz.pos.adaptor;
 
-import java.awt.event.KeyListener;
 
 /**
  * KeyboardReceiver - Interface for receiving keyboard data
