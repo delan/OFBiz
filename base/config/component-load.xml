@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Components
- *  $Id: component-load.xml,v 1.10 2003/12/13 13:06:56 jonesde Exp $
+ *  $Id: component-load.xml,v 1.11 2004/03/18 08:48:28 ajzeneski Exp $
 -->
 
 <component-loader>
@@ -31,6 +31,7 @@
 
     <load-component component-location="${ofbiz.home}/components/minerva"/>
     <load-component component-location="${ofbiz.home}/components/entity"/>
+    <load-component component-location="${ofbiz.home}/components/jetty"/>
     <load-component component-location="${ofbiz.home}/components/security"/>
     <load-component component-location="${ofbiz.home}/components/service"/>
     <load-component component-location="${ofbiz.home}/components/datafile"/>
