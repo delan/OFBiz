@@ -287,6 +287,7 @@ public abstract class ModelFormAction {
         protected FlexibleMapAccessor resultMapNameAcsr;
         protected FlexibleStringExpander autoFieldMapExdr;
         protected FlexibleStringExpander resultMapListIteratorNameExdr;
+        protected FlexibleStringExpander resultMapListNameExdr;
         protected Map fieldMap;
         
         public Service(ModelForm modelForm, Element serviceElement) {
@@ -295,6 +296,7 @@ public abstract class ModelFormAction {
             this.resultMapNameAcsr = UtilValidate.isNotEmpty(serviceElement.getAttribute("result-map-name")) ? new FlexibleMapAccessor(serviceElement.getAttribute("result-map-name")) : null;
             this.autoFieldMapExdr = new FlexibleStringExpander(serviceElement.getAttribute("auto-field-map"));
             this.resultMapListIteratorNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-list-iterator-name"));
+            this.resultMapListNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-list-name"));
             
             List fieldMapElementList = UtilXml.childElementList(serviceElement, "field-map");
             if (fieldMapElementList.size() > 0) {
@@ -349,6 +351,12 @@ public abstract class ModelFormAction {
                 if (obj != null && obj instanceof EntityListIterator) {
                 	context.put("listIteratorName", listIteratorName);
                     context.put(listIteratorName, obj);
+                }
+                String listName = resultMapListNameExdr.expandString(context);
+                List lst = (List)result.get(listName);
+                if (lst != null ) {
+                	context.put("listName", listName);
+                    context.put(listName, lst);
                 }
             } catch (GenericServiceException e) {
                 String errMsg = "Error calling service with name " + serviceNameExpanded + ": " + e.toString();
