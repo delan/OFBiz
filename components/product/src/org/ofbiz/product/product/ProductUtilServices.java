@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.5 2004/01/27 06:35:18 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.6 2004/01/27 08:26:51 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -123,7 +123,7 @@ public class ProductUtilServices {
                 }
             }
         } catch (GenericEntityException e) {
-            String errMsg = "Entity error running salesDiscontinuationDate: " + e.toString();
+            String errMsg = "Entity error running discVirtualsWithDiscVariants: " + e.toString();
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
@@ -162,7 +162,7 @@ public class ProductUtilServices {
             }
             Debug.logInfo("Completed - Removed category members for " + numSoFar + " sales discontinued products.", module);
         } catch (GenericEntityException e) {
-            String errMsg = "Entity error running salesDiscontinuationDate: " + e.toString();
+            String errMsg = "Entity error running removeCategoryMembersOfDiscProducts: " + e.toString();
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
@@ -224,8 +224,8 @@ public class ProductUtilServices {
                     // ProductCategoryMember
                     duplicateRelated(product, "ProductCategoryMember", variantProductId, nowTimestamp, true, delegator);
                     
-                    // ProductFeature
-                    duplicateRelated(product, "ProductFeature", variantProductId, nowTimestamp, true, delegator);
+                    // ProductFeatureAppl
+                    duplicateRelated(product, "ProductFeatureAppl", variantProductId, nowTimestamp, true, delegator);
                     
                     // ProductContent
                     duplicateRelated(product, "ProductContent", variantProductId, nowTimestamp, true, delegator);
@@ -283,8 +283,8 @@ public class ProductUtilServices {
                     // ProductCategoryMember
                     duplicateRelated(product, "ProductCategoryMember", variantProductId, nowTimestamp, false, delegator);
                     
-                    // ProductFeature
-                    duplicateRelated(product, "ProductFeature", variantProductId, nowTimestamp, false, delegator);
+                    // ProductFeatureAppl
+                    duplicateRelated(product, "ProductFeatureAppl", variantProductId, nowTimestamp, false, delegator);
                     
                     // ProductContent
                     duplicateRelated(product, "ProductContent", variantProductId, nowTimestamp, false, delegator);
@@ -310,7 +310,7 @@ public class ProductUtilServices {
             
             Debug.logInfo("Found virtual products with one valid variant: " + numWithOneValid + ", with one variant only: " + numWithOneOnly, module);
         } catch (GenericEntityException e) {
-            String errMsg = "Entity error running salesDiscontinuationDate: " + e.toString();
+            String errMsg = "Entity error running makeStandAloneFromSingleVariantVirtuals: " + e.toString();
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
@@ -318,7 +318,7 @@ public class ProductUtilServices {
         return ServiceUtil.returnSuccess();
     }
     
-    public static void duplicateRelated(GenericValue product, String relatedEntityName, String variantProductId, Timestamp nowTimestamp, boolean removeOld, GenericDelegator delegator) throws GenericEntityException {
+    protected static void duplicateRelated(GenericValue product, String relatedEntityName, String variantProductId, Timestamp nowTimestamp, boolean removeOld, GenericDelegator delegator) throws GenericEntityException {
         List relatedList = EntityUtil.filterByDate(product.getRelated(relatedEntityName), nowTimestamp);
         Iterator relatedIter = relatedList.iterator();
         while (relatedIter.hasNext()) {
@@ -376,7 +376,7 @@ public class ProductUtilServices {
             }
             Debug.logInfo("Completed - Image URLs set for " + numSoFar + " products.", module);
         } catch (GenericEntityException e) {
-            String errMsg = "Entity error running salesDiscontinuationDate: " + e.toString();
+            String errMsg = "Entity error running setAllProductImageNames: " + e.toString();
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
@@ -404,7 +404,7 @@ public class ProductUtilServices {
             }
             Debug.logInfo("Completed - Image URLs set for " + numSoFar + " products.", module);
         } catch (GenericEntityException e) {
-            String errMsg = "Entity error running salesDiscontinuationDate: " + e.toString();
+            String errMsg = "Entity error running clearAllVirtualProductImageNames: " + e.toString();
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
