@@ -82,7 +82,8 @@ public class GenericViewRenderer implements ViewRenderer {
         try {
             loadCustom();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            Debug.logError(e, "Problems loading custom settings", module);
+            throw new RuntimeException(e.toString());
         }                
     }
 
