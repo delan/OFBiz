@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
 -->
 
@@ -442,10 +442,8 @@
             <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="lookupPKMap"/>
         </if-empty>        
         <find-by-primary-key entity-name="WorkEffortAssoc" map-name="lookupPKMap" value-name="newEntity"/>
-        <if-not-empty field-name="workEffortIdFrom" map-name="newEntity">
-            <add-error>
-                <fail-property resource="WorkEffortUiLabels" property="WorkEffortWorkEffortAssocIdAlreadyExist"/>
-            </add-error>
+        <if-not-empty field-name="newEntity">
+            <add-error><fail-property resource="WorkEffortUiLabels" property="WorkEffortWorkEffortAssocIdAlreadyExist"/></add-error>
             <check-errors/>
         <else>
             <make-value value-name="newEntity" entity-name="WorkEffortAssoc"/>  
@@ -478,10 +476,8 @@
         <make-value value-name="lookupPKMap" entity-name="WorkEffortGoodStandard"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="WorkEffortGoodStandard" map-name="lookupPKMap" value-name="newEntity"/>
-        <if-not-empty field-name="workEffortIdFrom" map-name="newEntity">
-            <add-error>
-                <fail-property resource="WorkEffortUiLabels" property="WorkEffortWorkEffortGoodStandardAlreadyExist"/>
-            </add-error>
+        <if-not-empty field-name="newEntity">
+            <add-error><fail-property resource="WorkEffortUiLabels" property="WorkEffortWorkEffortGoodStandardAlreadyExist"/></add-error>
             <check-errors/>
         <else>
             <make-value value-name="newEntity" entity-name="WorkEffortGoodStandard"/>  
