@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.1
  */
 public class EntityEcaAction {
@@ -90,6 +90,12 @@ public class EntityEcaAction {
                 dispatcher.runAsync(serviceName, actionContext, persist);
             }
         } catch (GenericServiceException e) {
+            // check abortOnError and rollbackOnError
+            if (rollbackOnError) {
+                Debug.logError("Entity ECA action service failed and rollback-on-error is true, so setting rollback only.", module);
+                TransactionUtil.setRollbackOnly();
+            }
+
             if (this.abortOnError) {
                 throw new EntityEcaException("Error running Entity ECA action service", e);
             } else {
@@ -100,12 +106,6 @@ public class EntityEcaAction {
         // use the result to update the context fields.
         if (resultToValue) {
             value.setNonPKFields(actionResult);
-        }
-
-        // check abortOnError and rollbackOnError
-        if (rollbackOnError) {
-            Debug.logError("Entity ECA action service failed and rollback-on-error is true, so setting rollback only.", module);
-            TransactionUtil.setRollbackOnly();
         }
     }
 }
