@@ -28,9 +28,9 @@
 <p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>
 
 <#if cart?exists && 0 < cart.size()>
-  <#include "/order/orderheader.ftl">
+  ${pages.get("/order/orderheader.ftl")}
   <br>
-  <#include "/order/orderitems.ftl">  
+  ${pages.get("/order/orderitems.ftl")}
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="left">

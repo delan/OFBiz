@@ -29,9 +29,9 @@
   <form name="addOrderToCartForm" action="<@ofbizUrl>/addordertocart/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" method="GET">
     <input type="hidden" name="add_all" value="false">
     <input type="hidden" name="order_id" value="${orderHeader.orderId}">
-    <#include "/order/orderheader.ftl">
+    ${pages.get("/order/orderheader.ftl")}
     <br>
-    <#include "/order/orderitems.ftl">
+    ${pages.get("/order/orderitems.ftl")}
   </form>
 
 <#else>
