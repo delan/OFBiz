@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.27 2004/04/04 16:33:12 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.28 2004/04/05 14:03:39 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.security.Security;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.27 $
+ * @version    $Revision: 1.28 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -1253,7 +1253,7 @@ public class PaymentGatewayServices {
                     }
 
                     Map result = ServiceUtil.returnSuccess();
-                    result.put("paymentId", "10000");
+                    result.put("paymentId", paymentId);
                     return result;
                 } else {
                     return ServiceUtil.returnError("The refund failed");
