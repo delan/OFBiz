@@ -1470,7 +1470,7 @@ public class GenericDelegator {
         if (this.andCacheFieldSets != null) this.andCacheFieldSets.clear();
         if (this.primaryKeyCache != null) this.primaryKeyCache.clear();
         
-        if (distribute) {
+        if (distribute && this.distributedCacheClear != null) {
             this.distributedCacheClear.clearAllCaches();
         }
     }
