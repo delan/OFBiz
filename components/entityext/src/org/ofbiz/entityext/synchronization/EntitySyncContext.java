@@ -24,17 +24,23 @@
  */
 package org.ofbiz.entityext.synchronization;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -43,6 +49,8 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelViewEntity;
+import org.ofbiz.entity.serialize.SerializeException;
+import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GeneralServiceException;
@@ -50,6 +58,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.xml.sax.SAXException;
 
 /**
  * Entity Engine Sync Services
@@ -84,6 +93,7 @@ public class EntitySyncContext {
     public long splitMillis = defaultSyncSplitMillis;
     public Timestamp lastSuccessfulSynchTime;
     public List entityModelToUseList;
+    public Set entityNameToUseSet;
     public Timestamp currentRunStartTime;
     public Timestamp currentRunEndTime;
     
@@ -144,7 +154,8 @@ public class EntitySyncContext {
             
             this.splitMillis = getSplitMillis(entitySync);
             this.lastSuccessfulSynchTime = entitySync.getTimestamp("lastSuccessfulSynchTime");
-            this.entityModelToUseList = makeEntityModelToUseList(delegator, entitySync);
+            this.entityModelToUseList = this.makeEntityModelToUseList();
+            this.entityNameToUseSet = this.makeEntityNameToUseSet();
             
             // set start and end times for the first/current pass
             this.currentRunStartTime = getCurrentRunStartTime(lastSuccessfulSynchTime, entityModelToUseList, delegator);
@@ -234,6 +245,24 @@ public class EntitySyncContext {
             //long entityTotalCount = delegator.findCountByCondition(modelEntity.getEntityName(), null, null);
             //if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
         }
+        
+        // TEST SECTION: leave false for normal use
+        boolean logValues = false;
+        if (logValues) {
+            StringBuffer toCreateInfo = new StringBuffer();
+            Iterator valuesToCreateIter = valuesToCreate.iterator();
+            while (valuesToCreateIter.hasNext()) {
+                GenericValue valueToCreate = (GenericValue) valuesToCreateIter.next();
+                toCreateInfo.append("\n-->[");
+                toCreateInfo.append(valueToCreate.get(ModelEntity.CREATE_STAMP_TX_FIELD));
+                toCreateInfo.append(":");
+                toCreateInfo.append(valueToCreate.get(ModelEntity.CREATE_STAMP_FIELD));
+                toCreateInfo.append("] ");
+                toCreateInfo.append(valueToCreate.getPrimaryKey());
+            }
+            Debug.logInfo(toCreateInfo.toString(), module);
+        }
+        
         return valuesToCreate;
     }
 
@@ -282,6 +311,24 @@ public class EntitySyncContext {
             //long entityTotalCount = delegator.findCountByCondition(modelEntity.getEntityName(), null, null);
             //if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
         }
+
+        // TEST SECTION: leave false for normal use
+        boolean logValues = false;
+        if (logValues) {
+            StringBuffer toStoreInfo = new StringBuffer();
+            Iterator valuesToStoreIter = valuesToStore.iterator();
+            while (valuesToStoreIter.hasNext()) {
+                GenericValue valueToStore = (GenericValue) valuesToStoreIter.next();
+                toStoreInfo.append("\n-->[");
+                toStoreInfo.append(valueToStore.get(ModelEntity.STAMP_TX_FIELD));
+                toStoreInfo.append(":");
+                toStoreInfo.append(valueToStore.get(ModelEntity.STAMP_FIELD));
+                toStoreInfo.append("] ");
+                toStoreInfo.append(valueToStore.getPrimaryKey());
+            }
+            Debug.logInfo(toStoreInfo.toString(), module);
+        }
+        
         return valuesToStore;
     }
 
@@ -293,15 +340,64 @@ public class EntitySyncContext {
                 new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunStartTime), 
                 new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime)), EntityOperator.AND);
         try {
-            EntityListIterator removeEli = delegator.findListIteratorByCondition("EntitySyncRemove", findValCondition, null, UtilMisc.toList(ModelEntity.STAMP_FIELD));
-            GenericValue nextValue = null;
-            while ((nextValue = (GenericValue) removeEli.next()) != null) {
-                keysToRemove.add(nextValue);
+            EntityListIterator removeEli = delegator.findListIteratorByCondition("EntitySyncRemove", findValCondition, null, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD, ModelEntity.STAMP_FIELD));
+            GenericValue entitySyncRemove = null;
+            while ((entitySyncRemove = (GenericValue) removeEli.next()) != null) {
+                // pull the PK from the EntitySyncRemove in the primaryKeyRemoved field, de-XML-serialize it 
+                String primaryKeyRemoved = entitySyncRemove.getString("primaryKeyRemoved");
+                GenericEntity pkToRemove = null;
+                try {
+                    pkToRemove = (GenericEntity) XmlSerializer.deserialize(primaryKeyRemoved, delegator);
+                } catch (IOException e) {
+                    String errorMsg = "Error deserializing GenericPK to remove in Entity Sync Data for entitySyncId [" + entitySyncId + "] and entitySyncRemoveId [" + entitySyncRemove.getString("entitySyncRemoveId") + "]: " + e.toString();
+                    Debug.logError(e, errorMsg, module);
+                    throw new SyncDataErrorException(errorMsg, e);
+                } catch (SAXException e) {
+                    String errorMsg = "Error deserializing GenericPK to remove in Entity Sync Data for entitySyncId [" + entitySyncId + "] and entitySyncRemoveId [" + entitySyncRemove.getString("entitySyncRemoveId") + "]: " + e.toString();
+                    Debug.logError(e, errorMsg, module);
+                    throw new SyncDataErrorException(errorMsg, e);
+                } catch (ParserConfigurationException e) {
+                    String errorMsg = "Error deserializing GenericPK to remove in Entity Sync Data for entitySyncId [" + entitySyncId + "] and entitySyncRemoveId [" + entitySyncRemove.getString("entitySyncRemoveId") + "]: " + e.toString();
+                    Debug.logError(e, errorMsg, module);
+                    throw new SyncDataErrorException(errorMsg, e);
+                } catch (SerializeException e) {
+                    String errorMsg = "Error deserializing GenericPK to remove in Entity Sync Data for entitySyncId [" + entitySyncId + "] and entitySyncRemoveId [" + entitySyncRemove.getString("entitySyncRemoveId") + "]: " + e.toString();
+                    Debug.logError(e, errorMsg, module);
+                    throw new SyncDataErrorException(errorMsg, e);
+                }
+                
+                // set the stamp fields for future reference
+                pkToRemove.set(ModelEntity.STAMP_TX_FIELD, entitySyncRemove.get(ModelEntity.STAMP_TX_FIELD));
+                pkToRemove.set(ModelEntity.STAMP_FIELD, entitySyncRemove.get(ModelEntity.STAMP_FIELD));
+                pkToRemove.set(ModelEntity.CREATE_STAMP_TX_FIELD, entitySyncRemove.get(ModelEntity.CREATE_STAMP_TX_FIELD));
+                pkToRemove.set(ModelEntity.CREATE_STAMP_FIELD, entitySyncRemove.get(ModelEntity.CREATE_STAMP_FIELD));
+
+                if (this.entityNameToUseSet.contains(pkToRemove.getEntityName())) {
+                    keysToRemove.add(pkToRemove);
+                }
             }
             removeEli.close();
         } catch (GenericEntityException e) {
             throw new SyncDataErrorException("Error getting keys to remove from the datasource", e);
         }
+
+        // TEST SECTION: leave false for normal use
+        boolean logValues = false;
+        if (logValues) {
+            StringBuffer toRemoveInfo = new StringBuffer();
+            Iterator keysToRemoveIter = keysToRemove.iterator();
+            while (keysToRemoveIter.hasNext()) {
+                GenericEntity keyToRemove = (GenericEntity) keysToRemoveIter.next();
+                toRemoveInfo.append("\n-->[");
+                toRemoveInfo.append(keyToRemove.get(ModelEntity.STAMP_TX_FIELD));
+                toRemoveInfo.append(":");
+                toRemoveInfo.append(keyToRemove.get(ModelEntity.STAMP_FIELD));
+                toRemoveInfo.append("] ");
+                toRemoveInfo.append(keyToRemove);
+            }
+            Debug.logInfo(toRemoveInfo.toString(), module);
+        }
+        
         return keysToRemove;
     }
     
@@ -423,8 +519,18 @@ public class EntitySyncContext {
         if (Debug.infoOn()) Debug.logInfo("Finished runEntitySync: totalRows=" + totalRows + ", totalRowsToCreate=" + totalRowsToCreate + ", totalRowsToStore=" + totalRowsToStore + ", totalRowsToRemove=" + totalRowsToRemove, module);
     }
 
+    public Set makeEntityNameToUseSet() {
+        Set entityNameToUseSet = new HashSet();
+        Iterator entityModelToUseUpdateIter = this.entityModelToUseList.iterator();
+        while (entityModelToUseUpdateIter.hasNext()) {
+            ModelEntity modelEntity = (ModelEntity) entityModelToUseUpdateIter.next();
+            entityNameToUseSet.add(modelEntity.getEntityName());
+        }
+        return entityNameToUseSet;
+    }
+    
     /** prepare a list of all entities we want to synchronize: remove all view-entities and all entities that don't match the patterns attached to this EntitySync */
-    protected static List makeEntityModelToUseList(GenericDelegator delegator, GenericValue entitySync) throws GenericEntityException {
+    protected List makeEntityModelToUseList() throws GenericEntityException {
         List entityModelToUseList = new LinkedList();
         List entitySyncIncludes = entitySync.getRelated("EntitySyncInclude");
 
