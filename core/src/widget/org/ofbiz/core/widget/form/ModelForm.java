@@ -139,5 +139,143 @@ public class ModelForm {
             this.mapName = element.getAttribute("map-name");
         }
     }
-}
+    /**
+     * @return
+     */
+    public String getDefaultMapName() {
+        return defaultMapName;
+    }
 
+    /**
+     * @return
+     */
+    public String getDefaultTitleStyle() {
+        return defaultTitleStyle;
+    }
+
+    /**
+     * @return
+     */
+    public String getDefaultWidgetStyle() {
+        return defaultWidgetStyle;
+    }
+
+    /**
+     * @return
+     */
+    public String getListEntryName() {
+        return listEntryName;
+    }
+
+    /**
+     * @return
+     */
+    public String getListName() {
+        return listName;
+    }
+
+    /**
+     * @return
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @return
+     */
+    public String getTarget() {
+        return target;
+    }
+
+    /**
+     * @return
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @return
+     */
+    public String getTooltip() {
+        return tooltip;
+    }
+
+    /**
+     * @return
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * @param string
+     */
+    public void setDefaultMapName(String string) {
+        defaultMapName = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setDefaultTitleStyle(String string) {
+        defaultTitleStyle = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setDefaultWidgetStyle(String string) {
+        defaultWidgetStyle = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setListEntryName(String string) {
+        listEntryName = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setListName(String string) {
+        listName = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setName(String string) {
+        name = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setTarget(String string) {
+        target = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setTitle(String string) {
+        title = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setTooltip(String string) {
+        tooltip = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setType(String string) {
+        type = string;
+    }
+}
