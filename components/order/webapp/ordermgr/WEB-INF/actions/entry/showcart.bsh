@@ -52,6 +52,9 @@ if (updateParty != null) {
     context.put("updateParty", updateParty);
 }
 
+salesChannels = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "ORDER_SALES_CHANNEL"), UtilMisc.toList("sequenceId"));
+context.put("salesChannels", salesChannels);
+
 productStores = delegator.findAllCache("ProductStore", UtilMisc.toList("storeName"));
 context.put("productStores", productStores);
 
@@ -79,6 +82,11 @@ if (UtilValidate.isNotEmpty(productStoreId)) {
     } else {
         shoppingCart.setProductStoreId(null);
     }
+}
+
+salesChannelEnumId = request.getParameter("salesChannelEnumId");
+if (UtilValidate.isNotEmpty(salesChannelEnumId)) {
+    shoppingCart.setChannelType(salesChannelEnumId);
 }
 
 // Get the order mode

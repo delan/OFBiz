@@ -128,6 +128,23 @@ function setOrderType(po) {
           </td>
         </tr>
         <tr><td colspan="4">&nbsp;</td></tr>
+        <tr>
+          <td width='14%'>&nbsp;</td>
+          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>Sales Channel</div></td>
+          <td width='6%'>&nbsp;</td>
+          <td width='74%' valign='middle'>
+            <div class='tabletext' valign='top'>
+              <select class="selectBox" name="salesChannelEnumId">
+                <#assign currentChannel = shoppingCart.getChannelType()?default("")>               
+                <option value="">No Channel</option>
+                <#list salesChannels as salesChannel>
+                  <option value="${salesChannel.enumId}" <#if (salesChannel.enumId == currentChannel)>selected</#if>>${salesChannel.description}</option>
+                </#list>
+              </select>
+            </div>
+          </td>
+        </tr>
+        <tr><td colspan="4">&nbsp;</td></tr>
         <tr><td colspan="4">&nbsp;</td></tr>
         <#if partyId?exists>
           <#assign thisPartyId = partyId>
