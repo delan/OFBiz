@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -146,9 +146,14 @@ ${requestAttributes.virtualJavaScript?if_exists}
  //-->
  </script>
 
+${jsscript}
+<script language="JavaScript">
+<!--
+     function resetTotalPrice(name) {
+     }
+-->
+</script>
 <table border="0" width="100%" cellpadding="2" cellspacing='0'>
-
-  <tr><td colspan="2">PC CONFIGURATOR</td></tr>
 
   <#-- Category next/previous -->
   <#if requestAttributes.category?exists>
@@ -198,11 +203,15 @@ ${requestAttributes.virtualJavaScript?if_exists}
       </#if>
       
       <#-- for prices:
+              - if totalPrice is present, use it (totalPrice is the price calculated from the components)
               - if price < competitivePrice, show competitive or "Compare At" price
               - if price < listPrice, show list price
               - if price < defaultPrice and defaultPrice < listPrice, show default
               - if isSale show price with salePrice style and print "On Sale!"
       -->
+      <#if totalPrice?exists>
+        <div class="tabletext">${uiLabelMap.ProductAggregatedPrice}: <span class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=price.currencyUsed/></span></div>
+      <#else>
       <#if price.competitivePrice?exists && price.price?exists && price.price?double < price.competitivePrice?double>
         <div class="tabletext">${uiLabelMap.ProductCompareAtPrice}: <span class='basePrice'><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span></div>
       </#if>
@@ -227,6 +236,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <#assign priceSaved = price.listPrice?double - price.price?double>
         <#assign percentSaved = (priceSaved?double / price.listPrice?double) * 100>
         <div class="tabletext">${uiLabelMap.EcommerceSave}: <span class="basePrice"><@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/> (${percentSaved?int}%)</span></div>
+      </#if>
       </#if>
 
       <#-- Included quantities/pieces -->
@@ -284,7 +294,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <#else>
           <input type='hidden' name="product_id" value='${product.productId}'>
           <input type='hidden' name="add_product_id" value='${product.productId}'>
-          <#if !Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, product.productId?string, 1.0?double)>
+          <#if productNotAvailable?exists>
             <#if Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
               <div class='tabletext'><b>${uiLabelMap.ProductItemOutofStock}.</b></div>
               <#assign inStock = false>
@@ -314,8 +324,13 @@ ${requestAttributes.virtualJavaScript?if_exists}
               <nobr><b>Amount:</b></nobr>&nbsp;
               <input type="text" class="inputBox" size="5" name="add_amount" value="">
             </div>
-            <a href="javascript:addItem()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a>&nbsp;
-            <input type="text" class="inputBox" size="5" name="quantity" value="1">
+            <#if orderQuantityDisabled?exists>
+              <div class="tabletext">[${uiLabelMap.EcommerceProductNotConfigured}]&nbsp;
+              <input type="text" class="inputBox" size="5" name="quantity" value="0" disabled></div>
+            <#else>
+              <a href="javascript:addItem()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a>&nbsp;
+              <input type="text" class="inputBox" size="5" name="quantity" value="1" >
+            </#if>
           </#if>
           <#if requestParameters.category_id?exists>
             <input type='hidden' name='category_id' value='${requestParameters.category_id}'>
