@@ -38,9 +38,7 @@
 
         <field-to-field field-name="productId" map-name="parameters" to-map-name="newEntity"/>
         <if-empty field-name="productId" map-name="newEntity">
-            <sequenced-id-to-env sequence-name="Product" env-name="productId"/>
-            <to-string field-name="productId"/>
-            <env-to-field env-name="productId" map-name="newEntity"/>
+            <sequenced-id-to-env sequence-name="Product" env-name="newEntity.productId" to-string="true"/>
         <else>
             <check-id field-name="productId" map-name="newEntity"/>
             <check-errors/>
