@@ -112,7 +112,8 @@ public class MasterDAO
     try {
       ps = connection.prepareStatement(sql);
 
-      for(int i=0;i<entity.nopks.size();i++)
+      int i;
+      for(i=0;i<entity.nopks.size();i++)
       {
         EgField curField=(EgField)entity.nopks.elementAt(i);
         setValue(ps, i+1, curField, value);
@@ -120,7 +121,7 @@ public class MasterDAO
       for(int j=0;j<entity.pks.size();j++)
       {
         EgField curField=(EgField)entity.pks.elementAt(j);
-        setValue(ps, j+1, curField, value);
+        setValue(ps, i+j+1, curField, value);
       }
 
       ps.executeUpdate();
