@@ -81,7 +81,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                     <INPUT type='submit' value='Update' style='font-size: x-small;'>
                 </form>
             </td>
-            <td><div class='tabletext'>[${productPrice.lastModifiedByUserLogin}] on ${productPrice.lastModifiedDate}</div></td>
+            <td><div class='tabletext'>[${productPrice.lastModifiedByUserLogin?if_exists}] on ${productPrice.lastModifiedDate?if_exists}</div></td>
             <td align="center">
             <a href='<@ofbizUrl>/deleteProductPrice?productId=${productPrice.productId}&productPriceTypeId=${productPrice.productPriceTypeId}&currencyUomId=${productPrice.currencyUomId}&facilityGroupId=${productPrice.facilityGroupId}&fromDate=${Static["org.ofbiz.core.util.UtilFormatOut"].encodeQueryValue(productPrice.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">
             [Delete]</a>
