@@ -44,7 +44,7 @@
 <!ENTITY % CallJavaOperations "call-object-method | call-class-method | create-object">
 <!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field | webapp-property-to-field">
 <!ENTITY % ServiceOperations "field-to-result">
-<!ENTITY % EnvOperations "field-to-field | field-to-list | env-to-field | field-to-env | string-to-field | to-string | clear-field | iterate | first-from-list">
+<!ENTITY % EnvOperations "map-to-map | field-to-field | field-to-list | env-to-field | field-to-env | string-to-field | to-string | clear-field | iterate | first-from-list">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env | set-current-user-login">
 <!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and | filter-list-by-and | filter-list-by-date">
 <!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | remove-value | remove-related | remove-by-and | clear-cache-line | clear-entity-caches | set-pk-fields | set-nonpk-fields">
@@ -318,6 +318,11 @@ Error messages go on the error list and are handled with the check-errors tag.
 >
 
 <!-- Environment specific operations -->
+<!ELEMENT map-to-map EMPTY>
+<!ATTLIST map-to-map
+    map-name CDATA #REQUIRED
+    to-map-name CDATA #IMPLIED
+>
 <!ELEMENT field-to-field EMPTY>
 <!ATTLIST field-to-field
     map-name CDATA #IMPLIED

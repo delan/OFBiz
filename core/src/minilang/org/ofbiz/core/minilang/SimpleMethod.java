@@ -578,6 +578,8 @@ public class SimpleMethod {
                 } else if ("field-to-result".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.serviceops.FieldToResult(curOperElem, simpleMethod));
 
+                } else if ("map-to-map".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.envops.MapToMap(curOperElem, simpleMethod));
                 } else if ("field-to-field".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.FieldToField(curOperElem, simpleMethod));
                 } else if ("field-to-list".equals(nodeName)) {
