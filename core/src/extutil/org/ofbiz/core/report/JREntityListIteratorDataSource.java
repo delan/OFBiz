@@ -33,7 +33,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.ofbiz.core.entity.GenericEntity;
+import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.EntityListIterator;
+
+import org.ofbiz.core.util.Debug;
 
 /**
  * <code>JREntityListIteratorDataSource</code>
@@ -52,6 +55,9 @@ public class JREntityListIteratorDataSource implements JRDataSource {
     }
 
     public boolean next() throws JRException {
+        if (this.entityListIterator == null) {
+            return false;
+        }
         Object nextObj = this.entityListIterator.next();
         if (nextObj != null) {
             if (nextObj instanceof GenericEntity) {
@@ -61,6 +67,14 @@ public class JREntityListIteratorDataSource implements JRDataSource {
             }
             return true;
         } else {
+            // nothing left, close here...
+            try {
+                this.entityListIterator.close();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error closing EntityListIterator in Jasper Reports DataSource");
+                throw new JRException(e);
+            }
+            this.entityListIterator = null;
             return false;
         }
     }
