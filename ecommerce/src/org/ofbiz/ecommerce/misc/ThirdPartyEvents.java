@@ -2,7 +2,7 @@
  * $Id$
  */
 
-package src.org.ofbiz.ecommerce.misc;
+package org.ofbiz.ecommerce.misc;
 
 import java.util.*;
 import java.sql.*;
