@@ -65,15 +65,9 @@ public class PaymentEvents {
 
         if (crtInfo == null) {
             input.setFunction("CREDIT");
-            if (msrInfo != null) {
-                try {
-                    double amount = processAmount(trans, pos, null);
-                    Debug.log("Processing Credit Card Amount : " + amount, module);
-                } catch (GeneralException e) {
-                }
-            }
             pos.getOutput().print(Output.CREDNO);
         } else {
+            Debug.log("Credit Func Info : " + crtInfo[1], module);
             if (msrInfo == null) {
                 if (UtilValidate.isCreditCard(input.value())) {
                     input.setFunction("MSRINFO");
@@ -84,10 +78,12 @@ public class PaymentEvents {
                 }
             } else {
                 String msrInfoStr = msrInfo[1];
-                if (UtilValidate.isNotEmpty(msrInfoStr)) {
-                    msrInfoStr = msrInfoStr + "|" + input.value();
-                } else {
-                    msrInfoStr = input.value();
+                if (UtilValidate.isNotEmpty(input.value())) {
+                    if (UtilValidate.isNotEmpty(msrInfoStr)) {
+                        msrInfoStr = msrInfoStr + "|" + input.value();
+                    } else {
+                        msrInfoStr = input.value();
+                    }
                 }
                 input.setFunction("MSRINFO", msrInfoStr);
                 String[] msrInfoArr = msrInfoStr.split("\\|");
