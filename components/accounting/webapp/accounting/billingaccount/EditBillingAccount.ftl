@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -30,11 +30,11 @@
 ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
 
 <#if billingAccount?has_content>
-  <div class="head1">${uiLabelMap.AccountingUpdtBillAcc}</div>
+  <div class="head1">${uiLabelMap.AccountingUpdateBillingAccount}</div>
   <form name="billingform" method="post" action="<@ofbizUrl>/updateBillingAccount</@ofbizUrl>">
     <input type="hidden" name="billingAccountId" value="${billingAccount.billingAccountId}">
 <#else>
-  <div class="head1">${uiLabelMap.AccountingCreatBillAcc}</div>
+  <div class="head1">${uiLabelMap.AccountingCreateBillingAccount}</div>
   <form name="billingform" method="post" action="<@ofbizUrl>/createBillingAccount</@ofbizUrl>">
 </#if>
 
@@ -42,9 +42,9 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <#if billingAccount?has_content>
     <tr>
-      <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingAccId}</div></td>
+      <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingAccountId}</div></td>
       <td width="5">&nbsp;</td>
-      <td width="74%" valign="top"><div class="tabletext"><b>${billingAccount.billingAccountId?if_exists}</b> (cannot change without re-creating)</td>
+      <td width="74%" valign="top"><div class="tabletext"><b>${billingAccount.billingAccountId?if_exists}</b> (${uiLabelMap.CommonNotModifRecreat})</td>
     </tr>  
     </#if>      
     <tr>
@@ -58,7 +58,7 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
       <td width="74%"><input type="text" class="inputBox" size="20" name="contactMechId" value="${billingAccountData.contactMechId?if_exists}"></td>
     </tr>         
     <tr>
-      <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingAccLimit}</div></td>
+      <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingAccountLimit}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="10" name="accountLimit" value="${billingAccountData.accountLimit?default(0)?string("##0.00")}">

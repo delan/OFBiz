@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
  *@author     Arukala (arukala100@gmx.de)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
  */
 
@@ -53,8 +53,10 @@ controlPath = request.getAttribute("_CONTROL_PATH_");
 contextRoot = request.getAttribute("_CONTEXT_ROOT_");
 serverRoot = request.getAttribute("_SERVER_ROOT_URL_");
 
-/* reading of the uiLabel */
-// TODO: write an event to change the user's current locale
+/* reading of the localization information */
+availableLocales = Arrays.asList(Locale.getAvailableLocales());
+request.setAttribute("availableLocales",availableLocales);
+
 locale = UtilHttp.getLocale(request);
 request.setAttribute("locale",locale);
 uiLabelMap = UtilProperties.getResourceBundleMap("AccountingUiLabels", locale);
