@@ -186,10 +186,15 @@
                   </td>
                 </tr>
                 <tr>
-                  <td width="26%" align=right><div class="tabletext">Processor Service</div></td>
+                  <td width="26%" align=right><div class="tabletext">Processor Auth Service</div></td>
                   <td>&nbsp;</td>
-                  <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="webSitePayment" field="paymentService" fullattrs="true"/> size="30" maxlength="60"></td>                
-                </tr>             
+                  <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="webSitePayment" field="paymentAuthService" fullattrs="true"/> size="30" maxlength="60"></td>                
+                </tr>    
+                <tr>
+                  <td width="26%" align=right><div class="tabletext">Processor Capture Service</div></td>
+                  <td>&nbsp;</td>
+                  <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="webSitePayment" field="paymentCaptureService" fullattrs="true"/> size="30" maxlength="60"></td>                
+                </tr>                         
                 <tr>
                   <td width="26%" align=right><div class="tabletext">Processor Properties URL</div></td>
                   <td>&nbsp;</td>
