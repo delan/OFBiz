@@ -466,6 +466,7 @@
         <attribute name="serviceTypeEnum" type="String" mode="IN" optional="true"/>
         <attribute name="isFromAuth" type="Boolean" mode="IN" optional="false"/>
         <attribute name="payToPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
         <attribute name="captureAmount" type="Double" mode="IN" optional="false"/>
         <attribute name="captureResult" type="Boolean" mode="IN" optional="true"/>
         <attribute name="captureRefNum" type="String" mode="IN" optional="false"/>
