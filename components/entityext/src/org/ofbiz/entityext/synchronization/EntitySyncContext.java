@@ -248,7 +248,7 @@ public class EntitySyncContext {
         
         // TEST SECTION: leave false for normal use
         boolean logValues = false;
-        if (logValues) {
+        if (logValues && valuesToCreate.size() > 0) {
             StringBuffer toCreateInfo = new StringBuffer();
             Iterator valuesToCreateIter = valuesToCreate.iterator();
             while (valuesToCreateIter.hasNext()) {
@@ -314,7 +314,7 @@ public class EntitySyncContext {
 
         // TEST SECTION: leave false for normal use
         boolean logValues = false;
-        if (logValues) {
+        if (logValues && valuesToStore.size() > 0) {
             StringBuffer toStoreInfo = new StringBuffer();
             Iterator valuesToStoreIter = valuesToStore.iterator();
             while (valuesToStoreIter.hasNext()) {
@@ -383,7 +383,7 @@ public class EntitySyncContext {
 
         // TEST SECTION: leave false for normal use
         boolean logValues = false;
-        if (logValues) {
+        if (logValues && keysToRemove.size() > 0) {
             StringBuffer toRemoveInfo = new StringBuffer();
             Iterator keysToRemoveIter = keysToRemove.iterator();
             while (keysToRemoveIter.hasNext()) {
