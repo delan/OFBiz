@@ -176,7 +176,6 @@
         <attribute name="companyNameOnCard" type="String" mode="IN" optional="true"/>
         <attribute name="cardType" type="String" mode="IN" optional="false"/>
         <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
-        <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
         <attribute name="expireDate" type="String" mode="IN" optional="false"/>
         <attribute name="expMonth" type="String" mode="IN" optional="true"/>
@@ -204,7 +203,6 @@
         <attribute name="companyNameOnCard" type="String" mode="IN" optional="true"/>
         <attribute name="cardType" type="String" mode="IN" optional="false"/>
         <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
-        <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
         <attribute name="expireDate" type="String" mode="IN" optional="false"/>
         <attribute name="expMonth" type="String" mode="IN" optional="true"/>

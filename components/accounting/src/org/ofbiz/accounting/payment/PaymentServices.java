@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentServices.java,v 1.4 2003/11/24 17:54:34 ajzeneski Exp $
+ * $Id: PaymentServices.java,v 1.5 2003/11/29 19:58:52 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Payment maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class PaymentServices {
@@ -181,7 +181,6 @@ public class PaymentServices {
         newCc.set("companyNameOnCard", context.get("companyNameOnCard"));
         newCc.set("cardType", context.get("cardType"));
         newCc.set("cardNumber", context.get("cardNumber"));
-        newCc.set("cardSecurityCode", context.get("cardSecurityCode"));
         newCc.set("expireDate", context.get("expireDate"));
 
         newPm.set("paymentMethodId", newPmId.toString());
@@ -354,7 +353,6 @@ public class PaymentServices {
         newCc.set("companyNameOnCard", context.get("companyNameOnCard"));
         newCc.set("cardType", context.get("cardType"));
         newCc.set("cardNumber", context.get("cardNumber"));
-        newCc.set("cardSecurityCode", context.get("cardSecurityCode"));
         newCc.set("expireDate", context.get("expireDate"));
 
         GenericValue newPartyContactMechPurpose = null;
