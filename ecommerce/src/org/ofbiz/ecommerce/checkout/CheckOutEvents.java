@@ -218,6 +218,10 @@ public class CheckOutEvents {
 
         try {
             java.net.URL url = new java.net.URL(serverRoot + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
+            //url.set(url.getProtocol(), "127.0.0.1", url.getPort(), url.getAuthority(), url.getUserInfo(), url.getPath(), url.getQuery(), url.getRef());
+            Debug.logInfo("Original URL: " + url);
+            url = new URL(url.getProtocol(), "127.0.0.1", url.getPort(), url.getFile());
+            Debug.logInfo("About to get confirmorder page from the URL: " + url);
             HttpClient httpClient = new HttpClient(url);
             String content = httpClient.get();
             request.setAttribute("confirmorder", content);
@@ -285,16 +289,16 @@ public class CheckOutEvents {
                 Transport.send(mail);
                 return "success";
             } catch (Exception e) {
-                e.printStackTrace();
+                Debug.logError(e);
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
                 return "success"; //"error";
             }
         } catch (RuntimeException re) {
-            re.printStackTrace();
+            Debug.logError(re);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
             return "success"; //"error";
         } catch (Error e) {
-            e.printStackTrace();
+            Debug.logError(e);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
             return "success"; //"error";
         }
