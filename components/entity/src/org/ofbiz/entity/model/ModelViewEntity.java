@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.1 2003/08/16 22:05:48 ajzeneski Exp $
+ * $Id: ModelViewEntity.java,v 1.2 2003/08/19 21:11:04 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -341,8 +341,6 @@ public class ModelViewEntity extends ModelEntity {
      * Go through all aliasAlls and create an alias for each field of each member entity
      */
     private void expandAllAliasAlls(Map entityCache) {
-        List expandedAliasList = new ArrayList();
-
         Iterator aliasAllIter = aliasAlls.iterator();
         while (aliasAllIter.hasNext()) {
             ModelAliasAll aliasAll = (ModelAliasAll) aliasAllIter.next();
@@ -371,7 +369,7 @@ public class ModelViewEntity extends ModelEntity {
             while (fieldnamesIterator.hasNext()) {
                 // now merge the lists, leaving out any that duplicate an existing alias name
                 String aliasName = (String) fieldnamesIterator.next();
-                if (UtilValidate.isNotEmpty("prefix")) {
+                if (UtilValidate.isNotEmpty(prefix)) {
                     StringBuffer newAliasBuffer = new StringBuffer(prefix);
                     //make sure the first letter is uppercase to delineate the field name
                     newAliasBuffer.append(Character.toUpperCase(aliasName.charAt(0)));
@@ -390,7 +388,8 @@ public class ModelViewEntity extends ModelEntity {
                 expandedAlias.name = aliasName;
                 expandedAlias.field = expandedAlias.name;
                 expandedAlias.entityAlias = aliasAll.getEntityAlias();
-                expandedAliasList.add(expandedAlias);
+                expandedAlias.isFromAliasAll = true;
+                aliases.add(expandedAlias);
             }
         }
     }
@@ -443,6 +442,7 @@ public class ModelViewEntity extends ModelEntity {
         protected boolean groupBy = false;
         // is specified this alias is a calculated value; can be: min, max, sum, avg, count, count-distinct
         protected String function = null;
+        protected boolean isFromAliasAll = false;
 
         protected ModelAlias() {}
 
@@ -497,6 +497,10 @@ public class ModelViewEntity extends ModelEntity {
 
         public String getFunction() {
             return this.function;
+        }
+
+        public boolean getIsFromAliasAll() {
+            return this.isFromAliasAll;
         }
     }
 
