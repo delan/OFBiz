@@ -1,5 +1,0 @@
-olli: 2001-07-27
-- Removed all references from com.objectspace
-- Created needed classes and signaturs in package org.ofbiz.wrappers
-- Added org.ofbiz.designer to package path (example package "newdesigner" changed to "org.ofbiz.designer.newdesigner")
-- Resolved some dirty classes (Some classes was put together in on file %&$§#!)

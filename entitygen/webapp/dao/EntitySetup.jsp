@@ -1,1 +1,0 @@
-<%@ page import="org.ofbiz.entitygen.*" %><%String ejbName=request.getParameter("ejbName"); String defFileName=request.getParameter("defFileName"); EgEntity entity=DefReader.getEgEntity(defFileName,ejbName); int i;%>
