@@ -48,7 +48,7 @@ import com.ibm.bsf.util.IOUtils;
 public class BsfEventHandler implements EventHandler {
     
     public static final String module = BsfEventHandler.class.getName();    
-    public static UtilCache eventCache = new UtilCache("bsfEvents");
+    public static UtilCache eventCache = new UtilCache("webapp.BsfEvents");
 
     /**
      * @see org.ofbiz.core.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -112,7 +112,7 @@ public class BsfEventHandler implements EventHandler {
             
             // check the result
             if (result != null && !(result instanceof String)) {
-                throw new EventHandlerException("Event did not return a String result");           
+                throw new EventHandlerException("Event did not return a String result, it returned a " + result.getClass().getName());           
             }
             
             return (String) result;
