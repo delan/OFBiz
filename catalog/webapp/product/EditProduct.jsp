@@ -25,7 +25,7 @@
 --%>
 
 <%@ page import="java.util.*, java.io.*, java.net.URL" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.widgetimpl.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
@@ -69,6 +69,9 @@
 
     if("true".equalsIgnoreCase((String) request.getParameter("tryEntity"))) tryEntity = true;
     pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
+    
+    HtmlFormWrapper productFormWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "EditProduct", request, response);
+    productFormWrapper.putInContext("product", product);
 %>
 
 <SCRIPT language='JavaScript'>
@@ -426,6 +429,13 @@ function insertImageName(size,ext) {
     </td>
   </tr>
 </table>
+
+<hr/>
+
+<%=productFormWrapper.renderFormString()%>
+
+<hr/>
+
 
 </form>
     <%if (productId != null) {%>
