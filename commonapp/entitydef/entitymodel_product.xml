@@ -2349,6 +2349,32 @@
         <key-map field-name="facilityId"/>
       </relation>
     </entity>
+    <view-entity entity-name="ProductStoreFacilityByOrder"
+            package-name="org.ofbiz.commonapp.product.store"
+            title="Product Store Facility By Order">
+        <member-entity entity-alias="ORH" entity-name="OrderHeader"/>
+        <member-entity entity-alias="PSF" entity-name="ProductStoreFacility"/>
+        <member-entity entity-alias="PDS" entity-name="ProductStore"/>
+        <member-entity entity-alias="FAC" entity-name="Facility"/>        
+        <alias entity-alias="ORH" name="orderId"/>
+        <alias entity-alias="PSF" name="productStoreId"/>
+        <alias entity-alias="PSF" name="facilityId"/>
+        <alias entity-alias="PSF" name="fromDate"/>
+        <alias entity-alias="PSF" name="thruDate"/>
+        <alias entity-alias="PSF" name="sequenceNum"/>
+        <alias entity-alias="PDS" name="storeName"/>  
+        <alias entity-alias="FAC" name="facilityName"/>
+        <alias entity-alias="FAC" name="facilityTypeId"/>        
+        <view-link entity-alias="ORH" rel-entity-alias="PSF">
+            <key-map field-name="productStoreId"/>
+        </view-link>
+        <view-link entity-alias="PSF" rel-entity-alias="PDS">
+            <key-map field-name="productStoreId"/>
+        </view-link>
+        <view-link entity-alias="PSF" rel-entity-alias="FAC">
+            <key-map field-name="facilityId"/>
+        </view-link>        
+    </view-entity>
     <entity entity-name="ProductStorePaymentSetting"
             package-name="org.ofbiz.commonapp.product.store"
             title="Product Store Payment Settings Entity">
