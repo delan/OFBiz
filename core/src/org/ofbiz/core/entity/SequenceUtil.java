@@ -113,6 +113,7 @@ public class SequenceUtil
       String sql = null;
       try 
       {
+        connection.setAutoCommit(true);
         stmt = connection.createStatement();
         
         while(val1+bankSize != val2)

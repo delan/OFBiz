@@ -525,6 +525,7 @@ public class GenericDAO
     
     String sql = "DELETE FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?");
     try {
+      connection.setAutoCommit(true);
       ps = connection.prepareStatement(sql);
 
       for(int i=0;i<modelEntity.pks.size();i++)
@@ -577,6 +578,7 @@ public class GenericDAO
     if(fields != null || fields.size() > 0) sql = sql + " WHERE " + modelEntity.colNameString(whereFields, "=? AND ", "=?");
     
     try {
+      connection.setAutoCommit(true);
       ps = connection.prepareStatement(sql);
       
       if(fields != null || fields.size() > 0)
