@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -33,7 +33,7 @@
 
 <div class='insideHeaderText'>
 <#if (shoppingCartSize > 0)>
-  ${uiLabelMap.CartCartHas} <b>${shoppingCart.getTotalQuantity()}</b> ${uiLabelMap.CartCartHas}, <b>${shoppingCart.getGrandTotal()?string.currency}</b>
+  ${uiLabelMap.CartCartHas} <b>${shoppingCart.getTotalQuantity()}</b> ${uiLabelMap.CartItem}, <b>${shoppingCart.getGrandTotal()?string.currency}</b>
 <#else>
   ${uiLabelMap.CartShoppingCartEmpty}</b>
 </#if>
