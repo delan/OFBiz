@@ -178,6 +178,8 @@ function addToList() {
             </td> 
             <td>
                 <div class='tabletext'>
+                  <#if cartLine.getProductId()?exists>
+                    <#-- product item -->
                     <#-- <b>${cartLineIndex}</b> - -->
                     <a href='<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>' class='buttontext'>${cartLine.getProductId()} - 
                     ${cartLine.getName()?if_exists}</a> : ${cartLine.getDescription()?if_exists}
@@ -189,6 +191,11 @@ function addToList() {
                     <#if !isCatalogInventoryRequired && !isCatalogInventoryAvailable && itemProduct.inventoryMessage?has_content>
                         <b>(${itemProduct.inventoryMessage})</b>
                     </#if>
+                    
+                  <#else>
+                    <#-- this is a non-product item -->
+                    <b>${cartLine.getItemTypeDescription()?if_exists}</b> : ${cartLine.getName()?if_exists}
+                  </#if>                            
                 </div>
             </td>
             <td nowrap align="center">

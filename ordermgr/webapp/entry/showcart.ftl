@@ -198,7 +198,7 @@ function addToList() {
                     <#-- product item -->
                     <a href='<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>' class='buttontext'>${cartLine.getProductId()} - 
                     ${cartLine.getName()?if_exists}</a> : ${cartLine.getDescription()?if_exists}
-
+                    
                     <#if shoppingCart.getOrderType() == "SALES_ORDER">
                       <#-- only applies to sales orders, not purchase orders
                       <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
@@ -208,8 +208,8 @@ function addToList() {
                       <#if !isCatalogInventoryRequired && !isCatalogInventoryAvailable && itemProduct.inventoryMessage?has_content>
                           <b>(${itemProduct.inventoryMessage})</b>
                       </#if>
-                    </#if>
-                    
+                    </#if>   
+                                     
                   <#else>
                     <#-- this is a non-product item -->
                     <b>${cartLine.getItemTypeDescription()?if_exists}</b> : ${cartLine.getName()?if_exists}
