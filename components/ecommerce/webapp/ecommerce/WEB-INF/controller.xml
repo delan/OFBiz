@@ -1013,6 +1013,19 @@
         <response name="success" type="view" value="searchContent"/>
     </request-map>
 
+    <request-map uri="createPartyAsset">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyContent"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="viewprofile"/>
+    </request-map>
+    <request-map uri="removePartyAsset">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deactivateAllContentRoles"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="viewprofile"/>
+    </request-map>
+
     <!-- End of Request Mappings -->
 
     <!-- View Mappings -->

@@ -491,6 +491,68 @@ ${pages.get("/customer/messagelist.ftl")}
   </form>
 </TABLE>
 
+<br>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;File Manager</div>
+          </td>
+          <td valign="middle" align="right">
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+            <table width="100%" border="0" cellpadding="1">
+              <#if partyContent?has_content>
+                <#list partyContent as contentRole>
+                  <#assign content = contentRole.getRelatedOne("Content")>
+                  <#assign contentType = content.getRelatedOne("ContentType")>
+                  <#assign mimeType = content.getRelatedOne("MimeType")>
+                  <#assign status = content.getRelatedOne("StatusItem")>
+                  <tr>
+                    <td><a href="/content/control/img?imgId=${content.dataResourceId}" class="buttontext">${content.contentId}</a>
+                    <td><div class="tabletext">${content.contentName?if_exists}</div></td>
+                    <td><div class="tabletext">${contentType.description?if_exists}</div></td>
+                    <td><div class="tabletext">${mimeType.description?if_exists}</div></td>
+                    <td><div class="tabletext">${status.description?if_exists}</div></td>
+                    <td><div class="tabletext">${contentRole.fromDate?if_exists}</div></td>
+                    <td align="right">
+                      <a href="/content/control/img?imgId=${content.dataResourceId}" class="buttontext">[View]</a>
+                      <a href="<@ofbizUrl>/removePartyAsset?contentId=${contentRole.contentId}&partyId=${contentRole.partyId}&roleTypeId=${contentRole.roleTypeId}</@ofbizUrl>" class="buttontext">[Remove]</a>
+                    </td>
+                  </tr>
+                </#list>
+              <#else>
+                <div class="tabletext">You have no files.</div>
+              </#if>
+            </table>
+            <div>&nbsp;</div>
+            <div align="right" class="head3"><b><u>Upload New File</u></b>
+              <div>&nbsp;</div>
+              <form method="post" enctype="multipart/mixed" action="<@ofbizUrl>/createPartyAsset</@ofbizUrl>" style="margin: 0;">
+                <input type="hidden" name="dataCategoryId" value="PERSONAL">
+                <input type="hidden" name="contentTypeId" value="DOCUMENT">
+                <input type="hidden" name="statusId" value="CTNT_PUBLISHED">
+                <input type="file" name="uploadedFile" size="14">
+                <input type="submit" value="Upload">
+              </form>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+
 <#if surveys?has_content>
   <br>
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
