@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jun 29 12:51:09 MDT 2001
+ *@created    Wed Jul 04 01:03:22 MDT 2001
  *@version    1.0
  */
 %>
@@ -64,8 +64,11 @@
   SecurityGroupPermission securityGroupPermission = SecurityGroupPermissionHelper.findByPrimaryKey(groupId, permissionId);
 %>
 
-<b><u>View Entity: SecurityGroupPermission with (GROUP_ID, PERMISSION_ID: <%=groupId%>, <%=permissionId%>).</u></b>
 <br>
+<div style='color:yellow;width:100%;background-color:#330033;padding:3;'>
+  <b>View Entity: SecurityGroupPermission with (GROUP_ID, PERMISSION_ID: <%=groupId%>, <%=permissionId%>).</b>
+</div>
+
 <a href="<%=response.encodeURL("FindSecurityGroupPermission.jsp")%>" class="buttontext">[Find SecurityGroupPermission]</a>
 <%if(hasCreatePermission){%>
   <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp")%>" class="buttontext">[Create SecurityGroupPermission]</a>
@@ -123,6 +126,7 @@
     <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Edit SecurityGroupPermission]</a>
   <%}%>
 <%}%>
+<br>
 
   
   
@@ -130,16 +134,27 @@
 <%-- Start Relation for SecurityGroup, type: one --%>
 <%if(securityGroupPermission != null){%>
   <%if(Security.hasEntityPermission("SECURITY_GROUP", "_VIEW", session)){%>
-    <%SecurityGroup securityGroup = SecurityGroupHelper.findByPrimaryKey(securityGroupPermission.getGroupId());%>
-    <hr>
-    <b>Related Entity: SecurityGroup with (GROUP_ID: <%=securityGroupPermission.getGroupId()%>)</b>
+    <%SecurityGroup securityGroupRelated = SecurityGroupHelper.findByPrimaryKey(securityGroupPermission.getGroupId());%>
     <br>
+    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+     <b></b> Related Entity: <b>SecurityGroup</b> with (GROUP_ID: <%=securityGroupPermission.getGroupId()%>)
+    </div>
     <%if(securityGroupPermission.getGroupId() != null){%>
       
       <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + securityGroupPermission.getGroupId())%>" class="buttontext">[View SecurityGroup Details]</a>
+      
+    <%if(securityGroupRelated != null){%>
+      <%if(Security.hasEntityPermission("SECURITY_GROUP", "_EDIT", session)){%>
+        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + securityGroupPermission.getGroupId())%>" class="buttontext">[Edit SecurityGroup]</a>
+      <%}%>
+    <%}else{%>
+      <%if(Security.hasEntityPermission("SECURITY_GROUP", "_CREATE", session)){%>
+        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + securityGroupPermission.getGroupId())%>" class="buttontext">[Create SecurityGroup]</a>
+      <%}%>
+    <%}%>
     <%}%>
     <table border="0" cellspacing="2" cellpadding="2">
-    <%if(securityGroup == null){%>
+    <%if(securityGroupRelated == null){%>
     <tr bgcolor="<%=rowColor1%>"><td><h3>Specified SecurityGroup was not found.</h3></td></tr>
     <%}else{%>
 
@@ -148,7 +163,7 @@
     <td><b>GROUP_ID</b></td>
     <td>
     
-      <%=UtilFormatOut.checkNull(securityGroup.getGroupId())%>
+      <%=UtilFormatOut.checkNull(securityGroupRelated.getGroupId())%>
     
     </td>
   </tr>
@@ -158,12 +173,12 @@
     <td><b>DESCRIPTION</b></td>
     <td>
     
-      <%=UtilFormatOut.checkNull(securityGroup.getDescription())%>
+      <%=UtilFormatOut.checkNull(securityGroupRelated.getDescription())%>
     
     </td>
   </tr>
 
-    <%} //end if securityGroup == null %>
+    <%} //end if securityGroupRelated == null %>
     </table>
   <%}%>
 <%}%>
@@ -176,16 +191,27 @@
 <%-- Start Relation for SecurityPermission, type: one --%>
 <%if(securityGroupPermission != null){%>
   <%if(Security.hasEntityPermission("SECURITY_PERMISSION", "_VIEW", session)){%>
-    <%SecurityPermission securityPermission = SecurityPermissionHelper.findByPrimaryKey(securityGroupPermission.getPermissionId());%>
-    <hr>
-    <b>Related Entity: SecurityPermission with (PERMISSION_ID: <%=securityGroupPermission.getPermissionId()%>)</b>
+    <%SecurityPermission securityPermissionRelated = SecurityPermissionHelper.findByPrimaryKey(securityGroupPermission.getPermissionId());%>
     <br>
+    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+     <b></b> Related Entity: <b>SecurityPermission</b> with (PERMISSION_ID: <%=securityGroupPermission.getPermissionId()%>)
+    </div>
     <%if(securityGroupPermission.getPermissionId() != null){%>
       
       <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityPermission.jsp?" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[View SecurityPermission Details]</a>
+      
+    <%if(securityPermissionRelated != null){%>
+      <%if(Security.hasEntityPermission("SECURITY_PERMISSION", "_EDIT", session)){%>
+        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditSecurityPermission.jsp?" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[Edit SecurityPermission]</a>
+      <%}%>
+    <%}else{%>
+      <%if(Security.hasEntityPermission("SECURITY_PERMISSION", "_CREATE", session)){%>
+        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditSecurityPermission.jsp?" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[Create SecurityPermission]</a>
+      <%}%>
+    <%}%>
     <%}%>
     <table border="0" cellspacing="2" cellpadding="2">
-    <%if(securityPermission == null){%>
+    <%if(securityPermissionRelated == null){%>
     <tr bgcolor="<%=rowColor1%>"><td><h3>Specified SecurityPermission was not found.</h3></td></tr>
     <%}else{%>
 
@@ -194,7 +220,7 @@
     <td><b>PERMISSION_ID</b></td>
     <td>
     
-      <%=UtilFormatOut.checkNull(securityPermission.getPermissionId())%>
+      <%=UtilFormatOut.checkNull(securityPermissionRelated.getPermissionId())%>
     
     </td>
   </tr>
@@ -204,12 +230,12 @@
     <td><b>DESCRIPTION</b></td>
     <td>
     
-      <%=UtilFormatOut.checkNull(securityPermission.getDescription())%>
+      <%=UtilFormatOut.checkNull(securityPermissionRelated.getDescription())%>
     
     </td>
   </tr>
 
-    <%} //end if securityPermission == null %>
+    <%} //end if securityPermissionRelated == null %>
     </table>
   <%}%>
 <%}%>

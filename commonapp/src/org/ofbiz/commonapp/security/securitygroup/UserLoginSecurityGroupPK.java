@@ -27,7 +27,7 @@ import java.io.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jun 29 12:50:49 MDT 2001
+ *@created    Tue Jul 03 01:11:52 MDT 2001
  *@version    1.0
  */
 public class UserLoginSecurityGroupPK implements Serializable

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jun 29 16:05:17 MDT 2001
+ *@created    Wed Jul 04 01:03:20 MDT 2001
  *@version    1.0
  */
 %>
@@ -35,6 +35,7 @@
 <%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="org.ofbiz.commonapp.security.login.*" %>
 
+<%@ page import="org.ofbiz.commonapp.party.party.*" %>
 
 <%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
 <webevent:dispatch loginRequired="true" />
@@ -64,8 +65,11 @@
   LoginAccountHistory loginAccountHistory = LoginAccountHistoryHelper.findByPrimaryKey(userLoginId, userLoginSeqId);
 %>
 
-<b><u>View Entity: LoginAccountHistory with (USER_LOGIN_ID, USER_LOGIN_SEQ_ID: <%=userLoginId%>, <%=userLoginSeqId%>).</u></b>
 <br>
+<div style='color:yellow;width:100%;background-color:#330033;padding:3;'>
+  <b>View Entity: LoginAccountHistory with (USER_LOGIN_ID, USER_LOGIN_SEQ_ID: <%=userLoginId%>, <%=userLoginSeqId%>).</b>
+</div>
+
 <a href="<%=response.encodeURL("FindLoginAccountHistory.jsp")%>" class="buttontext">[Find LoginAccountHistory]</a>
 <%if(hasCreatePermission){%>
   <a href="<%=response.encodeURL("EditLoginAccountHistory.jsp")%>" class="buttontext">[Create LoginAccountHistory]</a>
@@ -201,6 +205,7 @@
     <a href="<%=response.encodeURL("EditLoginAccountHistory.jsp?" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + userLoginId + "&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_SEQ_ID=" + userLoginSeqId)%>" class="buttontext">[Edit LoginAccountHistory]</a>
   <%}%>
 <%}%>
+<br>
 
   
   
@@ -208,16 +213,27 @@
 <%-- Start Relation for UserLogin, type: one --%>
 <%if(loginAccountHistory != null){%>
   <%if(Security.hasEntityPermission("USER_LOGIN", "_VIEW", session)){%>
-    <%UserLogin userLogin = UserLoginHelper.findByPrimaryKey(loginAccountHistory.getUserLoginId());%>
-    <hr>
-    <b>Related Entity: UserLogin with (USER_LOGIN_ID: <%=loginAccountHistory.getUserLoginId()%>)</b>
+    <%UserLogin userLoginRelated = UserLoginHelper.findByPrimaryKey(loginAccountHistory.getUserLoginId());%>
     <br>
+    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+     <b></b> Related Entity: <b>UserLogin</b> with (USER_LOGIN_ID: <%=loginAccountHistory.getUserLoginId()%>)
+    </div>
     <%if(loginAccountHistory.getUserLoginId() != null){%>
       
       <a href="<%=response.encodeURL("/commonapp/security/login/ViewUserLogin.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + loginAccountHistory.getUserLoginId())%>" class="buttontext">[View UserLogin Details]</a>
+      
+    <%if(userLoginRelated != null){%>
+      <%if(Security.hasEntityPermission("USER_LOGIN", "_EDIT", session)){%>
+        <a href="<%=response.encodeURL("/commonapp/security/login/EditUserLogin.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + loginAccountHistory.getUserLoginId())%>" class="buttontext">[Edit UserLogin]</a>
+      <%}%>
+    <%}else{%>
+      <%if(Security.hasEntityPermission("USER_LOGIN", "_CREATE", session)){%>
+        <a href="<%=response.encodeURL("/commonapp/security/login/EditUserLogin.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + loginAccountHistory.getUserLoginId())%>" class="buttontext">[Create UserLogin]</a>
+      <%}%>
+    <%}%>
     <%}%>
     <table border="0" cellspacing="2" cellpadding="2">
-    <%if(userLogin == null){%>
+    <%if(userLoginRelated == null){%>
     <tr bgcolor="<%=rowColor1%>"><td><h3>Specified UserLogin was not found.</h3></td></tr>
     <%}else{%>
 
@@ -226,7 +242,7 @@
     <td><b>USER_LOGIN_ID</b></td>
     <td>
     
-      <%=UtilFormatOut.checkNull(userLogin.getUserLoginId())%>
+      <%=UtilFormatOut.checkNull(userLoginRelated.getUserLoginId())%>
     
     </td>
   </tr>
@@ -236,7 +252,7 @@
     <td><b>PARTY_ID</b></td>
     <td>
     
-      <%=UtilFormatOut.checkNull(userLogin.getPartyId())%>
+      <%=UtilFormatOut.checkNull(userLoginRelated.getPartyId())%>
     
     </td>
   </tr>
@@ -246,7 +262,7 @@
     <td><b>CONTACT_MECHANISM_ID</b></td>
     <td>
     
-      <%=UtilFormatOut.checkNull(userLogin.getContactMechanismId())%>
+      <%=UtilFormatOut.checkNull(userLoginRelated.getContactMechanismId())%>
     
     </td>
   </tr>
@@ -256,7 +272,7 @@
     <td><b>CURRENT_USER_ID</b></td>
     <td>
     
-      <%=UtilFormatOut.checkNull(userLogin.getCurrentUserId())%>
+      <%=UtilFormatOut.checkNull(userLoginRelated.getCurrentUserId())%>
     
     </td>
   </tr>
@@ -266,16 +282,63 @@
     <td><b>CURRENT_PASSWORD</b></td>
     <td>
     
-      <%=UtilFormatOut.checkNull(userLogin.getCurrentPassword())%>
+      <%=UtilFormatOut.checkNull(userLoginRelated.getCurrentPassword())%>
     
     </td>
   </tr>
 
-    <%} //end if userLogin == null %>
+    <%} //end if userLoginRelated == null %>
     </table>
   <%}%>
 <%}%>
 <%-- End Relation for UserLogin, type: one --%>
+  
+
+  
+  
+  
+<%-- Start Relation for Party, type: one --%>
+<%if(loginAccountHistory != null){%>
+  <%if(Security.hasEntityPermission("PARTY", "_VIEW", session)){%>
+    <%Party partyRelated = PartyHelper.findByPrimaryKey(loginAccountHistory.getPartyId());%>
+    <br>
+    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+     <b></b> Related Entity: <b>Party</b> with (PARTY_ID: <%=loginAccountHistory.getPartyId()%>)
+    </div>
+    <%if(loginAccountHistory.getPartyId() != null){%>
+      
+      <a href="<%=response.encodeURL("/commonapp/party/party/ViewParty.jsp?" + "PARTY_PARTY_ID=" + loginAccountHistory.getPartyId())%>" class="buttontext">[View Party Details]</a>
+      
+    <%if(partyRelated != null){%>
+      <%if(Security.hasEntityPermission("PARTY", "_EDIT", session)){%>
+        <a href="<%=response.encodeURL("/commonapp/party/party/EditParty.jsp?" + "PARTY_PARTY_ID=" + loginAccountHistory.getPartyId())%>" class="buttontext">[Edit Party]</a>
+      <%}%>
+    <%}else{%>
+      <%if(Security.hasEntityPermission("PARTY", "_CREATE", session)){%>
+        <a href="<%=response.encodeURL("/commonapp/party/party/EditParty.jsp?" + "PARTY_PARTY_ID=" + loginAccountHistory.getPartyId())%>" class="buttontext">[Create Party]</a>
+      <%}%>
+    <%}%>
+    <%}%>
+    <table border="0" cellspacing="2" cellpadding="2">
+    <%if(partyRelated == null){%>
+    <tr bgcolor="<%=rowColor1%>"><td><h3>Specified Party was not found.</h3></td></tr>
+    <%}else{%>
+
+  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
+  <tr bgcolor="<%=rowColor%>">
+    <td><b>PARTY_ID</b></td>
+    <td>
+    
+      <%=UtilFormatOut.checkNull(partyRelated.getPartyId())%>
+    
+    </td>
+  </tr>
+
+    <%} //end if partyRelated == null %>
+    </table>
+  <%}%>
+<%}%>
+<%-- End Relation for Party, type: one --%>
   
 
 

@@ -53,6 +53,72 @@
     <TD>Find</TD>
   </TR>
 
+  <%if(Security.hasEntityPermission("PARTY", "_VIEW", session)){%>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+      <TD>Party</TD>
+      <TD>
+        <%if(Security.hasEntityPermission("PARTY", "_CREATE", session)){%>
+          <a href="<%=response.encodeURL("/commonapp/party/party/EditParty.jsp")%>" class="buttontext">Create</a>
+        <%}%>
+      </TD>
+      <TD><a href="<%=response.encodeURL("/commonapp/party/party/FindParty.jsp")%>" class="buttontext">Find</a></TD>
+    </TR>
+  <%}%>
+  <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION", "_VIEW", session)){%>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+      <TD>PartyClassification</TD>
+      <TD>
+        <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION", "_CREATE", session)){%>
+          <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyClassification.jsp")%>" class="buttontext">Create</a>
+        <%}%>
+      </TD>
+      <TD><a href="<%=response.encodeURL("/commonapp/party/party/FindPartyClassification.jsp")%>" class="buttontext">Find</a></TD>
+    </TR>
+  <%}%>
+  <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_VIEW", session)){%>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+      <TD>PartyClassificationType</TD>
+      <TD>
+        <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_CREATE", session)){%>
+          <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyClassificationType.jsp")%>" class="buttontext">Create</a>
+        <%}%>
+      </TD>
+      <TD><a href="<%=response.encodeURL("/commonapp/party/party/FindPartyClassificationType.jsp")%>" class="buttontext">Find</a></TD>
+    </TR>
+  <%}%>
+  <%if(Security.hasEntityPermission("PARTY_TYPE", "_VIEW", session)){%>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+      <TD>PartyType</TD>
+      <TD>
+        <%if(Security.hasEntityPermission("PARTY_TYPE", "_CREATE", session)){%>
+          <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyType.jsp")%>" class="buttontext">Create</a>
+        <%}%>
+      </TD>
+      <TD><a href="<%=response.encodeURL("/commonapp/party/party/FindPartyType.jsp")%>" class="buttontext">Find</a></TD>
+    </TR>
+  <%}%>
+  <%if(Security.hasEntityPermission("PARTY_ATTRIBUTE", "_VIEW", session)){%>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+      <TD>PartyAttribute</TD>
+      <TD>
+        <%if(Security.hasEntityPermission("PARTY_ATTRIBUTE", "_CREATE", session)){%>
+          <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyAttribute.jsp")%>" class="buttontext">Create</a>
+        <%}%>
+      </TD>
+      <TD><a href="<%=response.encodeURL("/commonapp/party/party/FindPartyAttribute.jsp")%>" class="buttontext">Find</a></TD>
+    </TR>
+  <%}%>
+  <%if(Security.hasEntityPermission("PARTY_TYPE_ATTR", "_VIEW", session)){%>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+      <TD>PartyTypeAttr</TD>
+      <TD>
+        <%if(Security.hasEntityPermission("PARTY_TYPE_ATTR", "_CREATE", session)){%>
+          <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyTypeAttr.jsp")%>" class="buttontext">Create</a>
+        <%}%>
+      </TD>
+      <TD><a href="<%=response.encodeURL("/commonapp/party/party/FindPartyTypeAttr.jsp")%>" class="buttontext">Find</a></TD>
+    </TR>
+  <%}%>
   <%if(Security.hasEntityPermission("USER_LOGIN", "_VIEW", session)){%>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
       <TD>UserLogin</TD>

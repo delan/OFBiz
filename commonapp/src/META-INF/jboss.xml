@@ -32,6 +32,60 @@
 
   <enterprise-beans>
     <entity>
+      <ejb-name>Party</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.party.party.PartyHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PartyClassification</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.party.party.PartyClassificationHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PartyClassificationType</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.party.party.PartyClassificationTypeHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PartyType</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.party.party.PartyTypeHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PartyAttribute</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.party.party.PartyAttributeHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PartyTypeAttr</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.party.party.PartyTypeAttrHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
       <ejb-name>UserLogin</ejb-name>
       <jndi-name>org.ofbiz.commonapp.security.login.UserLoginHome</jndi-name>
       <configuration-name>Standard CMP EntityBean</configuration-name>

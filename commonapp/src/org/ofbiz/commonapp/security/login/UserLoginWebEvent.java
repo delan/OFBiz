@@ -32,7 +32,7 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jun 29 12:50:45 MDT 2001
+ *@created    Tue Jul 03 01:11:47 MDT 2001
  *@version    1.0
  */
 

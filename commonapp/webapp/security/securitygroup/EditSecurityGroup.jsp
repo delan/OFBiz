@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jun 29 12:51:08 MDT 2001
+ *@created    Wed Jul 04 01:03:20 MDT 2001
  *@version    1.0
  */
 %>
@@ -114,7 +114,7 @@
   <%if(hasUpdatePermission){%>
     <input type="hidden" name="UPDATE_MODE" value="UPDATE">
   
-    <input type="hidden" name="SECURITY_GROUP_GROUP_ID" value="<%=groupId%>">
+      <input type="hidden" name="SECURITY_GROUP_GROUP_ID" value="<%=groupId%>">
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
       <td>GROUP_ID</td>
       <td>

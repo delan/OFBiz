@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jun 29 12:51:08 MDT 2001
+ *@created    Wed Jul 04 01:03:21 MDT 2001
  *@version    1.0
  */
 %>
@@ -114,7 +114,7 @@
   <%if(hasUpdatePermission){%>
     <input type="hidden" name="UPDATE_MODE" value="UPDATE">
   
-    <input type="hidden" name="SECURITY_PERMISSION_PERMISSION_ID" value="<%=permissionId%>">
+      <input type="hidden" name="SECURITY_PERMISSION_PERMISSION_ID" value="<%=permissionId%>">
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
       <td>PERMISSION_ID</td>
       <td>

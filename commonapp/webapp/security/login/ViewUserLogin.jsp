@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jun 29 12:51:06 MDT 2001
+ *@created    Wed Jul 04 01:03:19 MDT 2001
  *@version    1.0
  */
 %>
@@ -35,6 +35,7 @@
 <%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="org.ofbiz.commonapp.security.login.*" %>
 
+<%@ page import="org.ofbiz.commonapp.party.party.*" %>
 <%@ page import="org.ofbiz.commonapp.security.securitygroup.*" %>
 
 <%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
@@ -63,8 +64,11 @@
   UserLogin userLogin = UserLoginHelper.findByPrimaryKey(userLoginId);
 %>
 
-<b><u>View Entity: UserLogin with (USER_LOGIN_ID: <%=userLoginId%>).</u></b>
 <br>
+<div style='color:yellow;width:100%;background-color:#330033;padding:3;'>
+  <b>View Entity: UserLogin with (USER_LOGIN_ID: <%=userLoginId%>).</b>
+</div>
+
 <a href="<%=response.encodeURL("FindUserLogin.jsp")%>" class="buttontext">[Find UserLogin]</a>
 <%if(hasCreatePermission){%>
   <a href="<%=response.encodeURL("EditUserLogin.jsp")%>" class="buttontext">[Create UserLogin]</a>
@@ -152,6 +156,54 @@
     <a href="<%=response.encodeURL("EditUserLogin.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginId)%>" class="buttontext">[Edit UserLogin]</a>
   <%}%>
 <%}%>
+<br>
+
+  
+  
+  
+<%-- Start Relation for Party, type: one --%>
+<%if(userLogin != null){%>
+  <%if(Security.hasEntityPermission("PARTY", "_VIEW", session)){%>
+    <%Party partyRelated = PartyHelper.findByPrimaryKey(userLogin.getPartyId());%>
+    <br>
+    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+     <b></b> Related Entity: <b>Party</b> with (PARTY_ID: <%=userLogin.getPartyId()%>)
+    </div>
+    <%if(userLogin.getPartyId() != null){%>
+      
+      <a href="<%=response.encodeURL("/commonapp/party/party/ViewParty.jsp?" + "PARTY_PARTY_ID=" + userLogin.getPartyId())%>" class="buttontext">[View Party Details]</a>
+      
+    <%if(partyRelated != null){%>
+      <%if(Security.hasEntityPermission("PARTY", "_EDIT", session)){%>
+        <a href="<%=response.encodeURL("/commonapp/party/party/EditParty.jsp?" + "PARTY_PARTY_ID=" + userLogin.getPartyId())%>" class="buttontext">[Edit Party]</a>
+      <%}%>
+    <%}else{%>
+      <%if(Security.hasEntityPermission("PARTY", "_CREATE", session)){%>
+        <a href="<%=response.encodeURL("/commonapp/party/party/EditParty.jsp?" + "PARTY_PARTY_ID=" + userLogin.getPartyId())%>" class="buttontext">[Create Party]</a>
+      <%}%>
+    <%}%>
+    <%}%>
+    <table border="0" cellspacing="2" cellpadding="2">
+    <%if(partyRelated == null){%>
+    <tr bgcolor="<%=rowColor1%>"><td><h3>Specified Party was not found.</h3></td></tr>
+    <%}else{%>
+
+  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
+  <tr bgcolor="<%=rowColor%>">
+    <td><b>PARTY_ID</b></td>
+    <td>
+    
+      <%=UtilFormatOut.checkNull(partyRelated.getPartyId())%>
+    
+    </td>
+  </tr>
+
+    <%} //end if partyRelated == null %>
+    </table>
+  <%}%>
+<%}%>
+<%-- End Relation for Party, type: one --%>
+  
 
   
   
@@ -160,9 +212,10 @@
 <%if(userLogin != null){%>
   <%if(Security.hasEntityPermission("USER_LOGIN_SECURITY_GROUP", "_VIEW", session)){%>    
     <%Iterator relatedIterator = UserLoginSecurityGroupHelper.findByUserLoginIdIterator(userLogin.getUserLoginId());%>
-    <hr>
-    <b>Related Entities: UserLoginSecurityGroup with (USER_LOGIN_ID: <%=userLogin.getUserLoginId()%>)</b>
     <br>
+    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+      <b></b> Related Entities: <b>UserLoginSecurityGroup</b> with (USER_LOGIN_ID: <%=userLogin.getUserLoginId()%>)
+    </div>
     <%boolean relatedCreatePerm = Security.hasEntityPermission("USER_LOGIN_SECURITY_GROUP", "_CREATE", session);%>
     <%boolean relatedUpdatePerm = Security.hasEntityPermission("USER_LOGIN_SECURITY_GROUP", "_UPDATE", session);%>
     <%boolean relatedDeletePerm = Security.hasEntityPermission("USER_LOGIN_SECURITY_GROUP", "_DELETE", session);%>
@@ -172,10 +225,14 @@
       String rowColorResult2 = "CCFFCC"; 
       String rowColorResult = "";
     %>
-    <%if(relatedCreatePerm){%>
       
+    <%if(relatedCreatePerm){%>
       <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditUserLoginSecurityGroup.jsp?" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLogin.getUserLoginId())%>" class="buttontext">[Create UserLoginSecurityGroup]</a>
     <%}%>
+    
+    <%String curFindString = "SEARCH_TYPE=UserLoginId";%>
+    <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + userLogin.getUserLoginId();%>
+    <a href="<%=response.encodeURL("/commonapp/security/securitygroup/FindUserLogin.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find UserLoginSecurityGroup]</a>
 
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr bgcolor="<%=rowColorResultHeader%>">
@@ -193,10 +250,12 @@
     <%
      if(relatedIterator != null && relatedIterator.hasNext())
      {
+      int relatedLoopCount = 0;
       while(relatedIterator != null && relatedIterator.hasNext())
       {
-        UserLoginSecurityGroup userLoginSecurityGroup = (UserLoginSecurityGroup)relatedIterator.next();
-        if(userLoginSecurityGroup != null)
+        relatedLoopCount++; if(relatedLoopCount > 10) break;
+        UserLoginSecurityGroup userLoginSecurityGroupRelated = (UserLoginSecurityGroup)relatedIterator.next();
+        if(userLoginSecurityGroupRelated != null)
         {
     %>
     <%rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="<%=rowColorResult%>">
@@ -204,7 +263,7 @@
       <td>
         <div class="tabletext">
     
-      <%=UtilFormatOut.checkNull(userLoginSecurityGroup.getUserLoginId())%>
+      <%=UtilFormatOut.checkNull(userLoginSecurityGroupRelated.getUserLoginId())%>
     
         &nbsp;</div>
       </td>
@@ -212,23 +271,23 @@
       <td>
         <div class="tabletext">
     
-      <%=UtilFormatOut.checkNull(userLoginSecurityGroup.getGroupId())%>
+      <%=UtilFormatOut.checkNull(userLoginSecurityGroupRelated.getGroupId())%>
     
         &nbsp;</div>
       </td>
   
       <td>
-        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewUserLoginSecurityGroup.jsp?" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLoginSecurityGroup.getUserLoginId() + "&" + "USER_LOGIN_SECURITY_GROUP_GROUP_ID=" + userLoginSecurityGroup.getGroupId())%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewUserLoginSecurityGroup.jsp?" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLoginSecurityGroupRelated.getUserLoginId() + "&" + "USER_LOGIN_SECURITY_GROUP_GROUP_ID=" + userLoginSecurityGroupRelated.getGroupId())%>" class="buttontext">[View]</a>
       </td>
       <%if(relatedUpdatePerm){%>
         <td>
-          <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditUserLoginSecurityGroup.jsp?" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLoginSecurityGroup.getUserLoginId() + "&" + "USER_LOGIN_SECURITY_GROUP_GROUP_ID=" + userLoginSecurityGroup.getGroupId())%>" class="buttontext">[Edit]</a>
+          <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditUserLoginSecurityGroup.jsp?" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLoginSecurityGroupRelated.getUserLoginId() + "&" + "USER_LOGIN_SECURITY_GROUP_GROUP_ID=" + userLoginSecurityGroupRelated.getGroupId())%>" class="buttontext">[Edit]</a>
         </td>
       <%}%>
       <%if(relatedDeletePerm){%>
         <td>
           <%-- <a href="<%=response.encodeURL("ViewPersonSecurityGroup.jsp?" + "PERSON_SECURITY_GROUP_USERNAME=" + username + "&" + "PERSON_SECURITY_GROUP_GROUP_ID=" + groupId + "&" + "WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + securityGroupPermission.getGroupId() + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[Delete]</a> --%>
-          <a href="<%=response.encodeURL("ViewUserLoginSecurityGroup.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginId + "&WEBEVENT=UPDATE_USER_LOGIN_SECURITY_GROUP&UPDATE_MODE=DELETE&" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLoginSecurityGroup.getUserLoginId() + "&" + "USER_LOGIN_SECURITY_GROUP_GROUP_ID=" + userLoginSecurityGroup.getGroupId())%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL("ViewUserLoginSecurityGroup.jsp?" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLoginSecurityGroupRelated.getUserLoginId() + "&" + "USER_LOGIN_SECURITY_GROUP_GROUP_ID=" + userLoginSecurityGroupRelated.getGroupId() + "&" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginId + "&WEBEVENT=UPDATE_USER_LOGIN_SECURITY_GROUP&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -242,9 +301,6 @@
 </tr>
 <%}%>
 </table>
-    <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditUserLoginSecurityGroup.jsp?" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLogin.getUserLoginId())%>" class="buttontext">[Create UserLoginSecurityGroup]</a>
-    <%}%>
   <%}%>
 <%}%>
 <%-- End Relation for UserLoginSecurityGroup, type: many --%>
@@ -257,9 +313,10 @@
 <%if(userLogin != null){%>
   <%if(Security.hasEntityPermission("LOGIN_ACCOUNT_HISTORY", "_VIEW", session)){%>    
     <%Iterator relatedIterator = LoginAccountHistoryHelper.findByUserLoginIdIterator(userLogin.getUserLoginId());%>
-    <hr>
-    <b>Related Entities: LoginAccountHistory with (USER_LOGIN_ID: <%=userLogin.getUserLoginId()%>)</b>
     <br>
+    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+      <b></b> Related Entities: <b>LoginAccountHistory</b> with (USER_LOGIN_ID: <%=userLogin.getUserLoginId()%>)
+    </div>
     <%boolean relatedCreatePerm = Security.hasEntityPermission("LOGIN_ACCOUNT_HISTORY", "_CREATE", session);%>
     <%boolean relatedUpdatePerm = Security.hasEntityPermission("LOGIN_ACCOUNT_HISTORY", "_UPDATE", session);%>
     <%boolean relatedDeletePerm = Security.hasEntityPermission("LOGIN_ACCOUNT_HISTORY", "_DELETE", session);%>
@@ -269,18 +326,23 @@
       String rowColorResult2 = "CCFFCC"; 
       String rowColorResult = "";
     %>
-    <%if(relatedCreatePerm){%>
       
+    <%if(relatedCreatePerm){%>
       <a href="<%=response.encodeURL("/commonapp/security/login/EditLoginAccountHistory.jsp?" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + userLogin.getUserLoginId())%>" class="buttontext">[Create LoginAccountHistory]</a>
     <%}%>
+    
+    <%String curFindString = "SEARCH_TYPE=UserLoginId";%>
+    <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + userLogin.getUserLoginId();%>
+    <a href="<%=response.encodeURL("/commonapp/security/login/FindUserLogin.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find LoginAccountHistory]</a>
 
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr bgcolor="<%=rowColorResultHeader%>">
   
-      <td><div class="tabletext"><b><nobr>PARTY_ID</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>USER_LOGIN_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>USER_LOGIN_SEQ_ID</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>FROM_DATE</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>THRU_DATE</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>PARTY_ID</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>USER_ID</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>PASSWORD</nobr></b></div></td>
       <td>&nbsp;</td>
@@ -294,10 +356,12 @@
     <%
      if(relatedIterator != null && relatedIterator.hasNext())
      {
+      int relatedLoopCount = 0;
       while(relatedIterator != null && relatedIterator.hasNext())
       {
-        LoginAccountHistory loginAccountHistory = (LoginAccountHistory)relatedIterator.next();
-        if(loginAccountHistory != null)
+        relatedLoopCount++; if(relatedLoopCount > 10) break;
+        LoginAccountHistory loginAccountHistoryRelated = (LoginAccountHistory)relatedIterator.next();
+        if(loginAccountHistoryRelated != null)
         {
     %>
     <%rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="<%=rowColorResult%>">
@@ -305,7 +369,7 @@
       <td>
         <div class="tabletext">
     
-      <%=UtilFormatOut.checkNull(loginAccountHistory.getPartyId())%>
+      <%=UtilFormatOut.checkNull(loginAccountHistoryRelated.getUserLoginId())%>
     
         &nbsp;</div>
       </td>
@@ -313,7 +377,7 @@
       <td>
         <div class="tabletext">
     
-      <%=UtilFormatOut.checkNull(loginAccountHistory.getUserLoginId())%>
+      <%=UtilFormatOut.checkNull(loginAccountHistoryRelated.getUserLoginSeqId())%>
     
         &nbsp;</div>
       </td>
@@ -324,9 +388,9 @@
       <%{
         String dateString = null;
         String timeString = null;
-        if(loginAccountHistory != null)
+        if(loginAccountHistoryRelated != null)
         {
-          java.util.Date date = loginAccountHistory.getFromDate();
+          java.util.Date date = loginAccountHistoryRelated.getFromDate();
           if(date  != null)
           {
             dateString = UtilDateTime.toDateString(date);
@@ -346,9 +410,9 @@
       <%{
         String dateString = null;
         String timeString = null;
-        if(loginAccountHistory != null)
+        if(loginAccountHistoryRelated != null)
         {
-          java.util.Date date = loginAccountHistory.getThruDate();
+          java.util.Date date = loginAccountHistoryRelated.getThruDate();
           if(date  != null)
           {
             dateString = UtilDateTime.toDateString(date);
@@ -365,7 +429,7 @@
       <td>
         <div class="tabletext">
     
-      <%=UtilFormatOut.checkNull(loginAccountHistory.getUserId())%>
+      <%=UtilFormatOut.checkNull(loginAccountHistoryRelated.getPartyId())%>
     
         &nbsp;</div>
       </td>
@@ -373,23 +437,31 @@
       <td>
         <div class="tabletext">
     
-      <%=UtilFormatOut.checkNull(loginAccountHistory.getPassword())%>
+      <%=UtilFormatOut.checkNull(loginAccountHistoryRelated.getUserId())%>
     
         &nbsp;</div>
       </td>
   
       <td>
-        <a href="<%=response.encodeURL("/commonapp/security/login/ViewLoginAccountHistory.jsp?" + "LOGIN_ACCOUNT_HISTORY_PARTY_ID=" + loginAccountHistory.getPartyId() + "&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + loginAccountHistory.getUserLoginId() + "&" + "LOGIN_ACCOUNT_HISTORY_FROM_DATE=" + loginAccountHistory.getFromDate())%>" class="buttontext">[View]</a>
+        <div class="tabletext">
+    
+      <%=UtilFormatOut.checkNull(loginAccountHistoryRelated.getPassword())%>
+    
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <a href="<%=response.encodeURL("/commonapp/security/login/ViewLoginAccountHistory.jsp?" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + loginAccountHistoryRelated.getUserLoginId() + "&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_SEQ_ID=" + loginAccountHistoryRelated.getUserLoginSeqId())%>" class="buttontext">[View]</a>
       </td>
       <%if(relatedUpdatePerm){%>
         <td>
-          <a href="<%=response.encodeURL("/commonapp/security/login/EditLoginAccountHistory.jsp?" + "LOGIN_ACCOUNT_HISTORY_PARTY_ID=" + loginAccountHistory.getPartyId() + "&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + loginAccountHistory.getUserLoginId() + "&" + "LOGIN_ACCOUNT_HISTORY_FROM_DATE=" + loginAccountHistory.getFromDate())%>" class="buttontext">[Edit]</a>
+          <a href="<%=response.encodeURL("/commonapp/security/login/EditLoginAccountHistory.jsp?" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + loginAccountHistoryRelated.getUserLoginId() + "&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_SEQ_ID=" + loginAccountHistoryRelated.getUserLoginSeqId())%>" class="buttontext">[Edit]</a>
         </td>
       <%}%>
       <%if(relatedDeletePerm){%>
         <td>
           <%-- <a href="<%=response.encodeURL("ViewPersonSecurityGroup.jsp?" + "PERSON_SECURITY_GROUP_USERNAME=" + username + "&" + "PERSON_SECURITY_GROUP_GROUP_ID=" + groupId + "&" + "WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + securityGroupPermission.getGroupId() + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[Delete]</a> --%>
-          <a href="<%=response.encodeURL("ViewLoginAccountHistory.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginId + "&WEBEVENT=UPDATE_LOGIN_ACCOUNT_HISTORY&UPDATE_MODE=DELETE&" + "LOGIN_ACCOUNT_HISTORY_PARTY_ID=" + loginAccountHistory.getPartyId() + "&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + loginAccountHistory.getUserLoginId() + "&" + "LOGIN_ACCOUNT_HISTORY_FROM_DATE=" + loginAccountHistory.getFromDate())%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL("ViewLoginAccountHistory.jsp?" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + loginAccountHistoryRelated.getUserLoginId() + "&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_SEQ_ID=" + loginAccountHistoryRelated.getUserLoginSeqId() + "&" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginId + "&WEBEVENT=UPDATE_LOGIN_ACCOUNT_HISTORY&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -403,9 +475,6 @@
 </tr>
 <%}%>
 </table>
-    <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL("/commonapp/security/login/EditLoginAccountHistory.jsp?" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + userLogin.getUserLoginId())%>" class="buttontext">[Create LoginAccountHistory]</a>
-    <%}%>
   <%}%>
 <%}%>
 <%-- End Relation for LoginAccountHistory, type: many --%>

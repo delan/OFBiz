@@ -27,7 +27,7 @@ import java.io.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jun 29 16:05:29 MDT 2001
+ *@created    Tue Jul 03 01:11:48 MDT 2001
  *@version    1.0
  */
 public class LoginAccountHistoryPK implements Serializable
