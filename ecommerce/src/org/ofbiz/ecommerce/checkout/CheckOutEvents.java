@@ -1,6 +1,12 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/09/14 19:13:24  epabst
+ * added method to ShoppingCart to make the order items
+ * added event for checking if the shopping cart is empty
+ * created new session attribute called SiteDefs.SERVER_ROOT_URL that contains something like:
+ * "http://myserver.com:1234"
+ *
  * Revision 1.9  2001/09/14 00:32:44  epabst
  * standardized order information for checkout and orderstatus.  Yet to do confirmorder and all of their product sections
  *
@@ -256,6 +262,11 @@ public class CheckOutEvents {
                 if (UtilValidate.isNotEmpty(ORDER_BCC)) {
                     mail.setRecipientBCC(ORDER_BCC);
                 }
+                String orderId = (String) request.getAttribute("order_id");
+                mail.setSubject(SiteDefs.SITE_NAME + " Order" + UtilFormatOut.ifNotEmpty(orderId, " #", "") + " Confirmation");
+                mail.setExtraHeader("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
+                mail.setMessage(content);
+                //XXX mail.setLogging(false);
                 mail.send();
                 return "success";
             } catch (Exception e) {
