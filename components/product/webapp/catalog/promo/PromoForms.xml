@@ -25,10 +25,10 @@
 
 <forms>
     <form name="EditProductPromo" type="single"
-            target="UpdateProductPromo" title="" default-map-name="productPromo"
+            target="updateProductPromo" title="" default-map-name="productPromo"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 
-        <alt-target use-when="productPromo==null" target="CreateProductPromo"/>
+        <alt-target use-when="productPromo==null" target="createProductPromo"/>
 
         <auto-fields-service service-name="updateProductPromo" map-name=""/>
 

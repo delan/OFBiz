@@ -673,12 +673,12 @@
     <request-map uri="EditProductPromo"><security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductPromo"/>
     </request-map>
-    <request-map uri="CreateProductPromo"><security https="true" auth="true"/>
+    <request-map uri="createProductPromo"><security https="true" auth="true"/>
         <event type="service" path="" invoke="createProductPromo"/>
         <response name="success" type="view" value="EditProductPromo"/>
         <response name="error" type="view" value="EditProductPromo"/>
     </request-map>
-    <request-map uri="UpdateProductPromo"><security https="true" auth="true"/>
+    <request-map uri="updateProductPromo"><security https="true" auth="true"/>
         <event type="service" path="" invoke="updateProductPromo"/>
         <response name="success" type="view" value="EditProductPromo"/>
         <response name="error" type="view" value="EditProductPromo"/>
