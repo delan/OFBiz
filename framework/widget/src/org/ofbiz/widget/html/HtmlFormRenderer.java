@@ -139,6 +139,10 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(displayField.getDescription(context));
         buffer.append("</span>");
 
+        if (displayField instanceof DisplayEntityField) {
+            this.makeHyperlinkString(buffer, ((DisplayEntityField) displayField).getSubHyperlink(), context);
+        }
+        
         this.appendTooltip(buffer, context, modelFormField);
 
         this.appendWhitespace(buffer);

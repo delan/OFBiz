@@ -1617,6 +1617,7 @@ public class ModelFormField {
         protected String entityName;
         protected String keyFieldName;
         protected boolean cache = true;
+        protected SubHyperlink subHyperlink;
 
         protected DisplayEntityField() {
             super();
@@ -1641,6 +1642,11 @@ public class ModelFormField {
 
             if (this.description == null || this.description.isEmpty()) {
                 this.setDescription("${description}");
+            }
+
+            Element subHyperlinkElement = UtilXml.firstChildElement(element, "sub-hyperlink");
+            if (subHyperlinkElement != null) {
+                this.subHyperlink = new SubHyperlink(subHyperlinkElement);
             }
         }
 
@@ -1680,6 +1686,13 @@ public class ModelFormField {
                 retVal = "&nbsp;";
             }
             return retVal;
+        }
+
+        public SubHyperlink getSubHyperlink() {
+            return this.subHyperlink;
+        }
+        public void setSubHyperlink(SubHyperlink newSubHyperlink) {
+            this.subHyperlink = newSubHyperlink;
         }
     }
 
