@@ -40,6 +40,7 @@ public class WfFactory {
    * @return An instance of the WfActivify Interface
    */
   public static WfActivity newWfActivity() throws WfException {
+      return null;
   }
   
   
@@ -48,6 +49,7 @@ public class WfFactory {
    * @return An instance of the WfAssignment Interface
    */
   public static WfAssignment newWfAssignment() throws WfException {
+      return null;
   }
   
   
@@ -56,6 +58,7 @@ public class WfFactory {
    * @return An instance of the WfProcess Interface.
    */
   public static WfProcess newWfProcess() throws WfException {
+      return null;
   }
   
   
@@ -64,6 +67,7 @@ public class WfFactory {
    * @return An instance of the WfProcessMgr Interface.
    */
   public static WfProcessMgr newWfProcessMgr() throws WfException {
+      return null;
   }
   
   /** Creates a new {@link WfRequester} instance.
@@ -71,6 +75,7 @@ public class WfFactory {
    * @return An instance of the WfRequester Interface.
    */
   public static WfRequester newWfRequester() throws WfException {
+      return null;
   }
   
   /** Creates a new {@link WfResource} instance.
@@ -78,5 +83,6 @@ public class WfFactory {
    * @return An instance of the WfResource Interface.
    */
   public static WfResource newWfResource() throws WfException {
+      return null;
   }
 }

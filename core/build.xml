@@ -64,7 +64,9 @@
 
         <property name="xerces.jar"    value="${env.CATALINA_HOME}/lib/xerces.jar:${env.CATALINA_HOME}/common/lib/xerces.jar" />
 
-        <property name="api-jars"      value="${servlet.jar}:${jdbc.jar}:${mail.jar}" />
+        <property name="log4j.jar"     value="../lib/log4j.jar"/>
+
+        <property name="api-jars"      value="${servlet.jar}:${jdbc.jar}:${mail.jar}:${log4j.jar}" />
         <property name="xml-jars"      value="${jaxp.jar}:${xerces.jar}" />
         <property name="classpath"     value="${env.CLASSPATH}:${lib.dir}:${api-jars}:${xml-jars}" />
         <echo message="classpath: ${classpath}" />                
@@ -105,6 +107,7 @@
       <mkdir dir="${build.dir}/webapp/META-INF" />
       <mkdir dir="${build.dir}/share/META-INF" />
       <mkdir dir="${build.dir}/crypto/META-INF" />
+      <mkdir dir="${build.dir}/workflow/META-INF" />
       <mkdir dir="${lib.dir}" />
     </target>
 	
@@ -125,13 +128,22 @@
     <target name="classes" depends="tld">
     	<javac destdir="${build.dir}/share" classpath="${classpath}">
     		<src path="${src.dir}/share" />
-    	</javac>
+        </javac>
+   
     	<javac destdir="${build.dir}/webapp" classpath="${classpath}:${build.dir}/share">
     		<src path="${src.dir}/webapp" />
-    	</javac>
-<!--    	<javac destdir="${build.dir}/crypto" classpath="${classpath}:${build.dir}/share">
+        </javac>
+    	
+    	<javac destdir="${build.dir}/workflow" classpath="${classpath}:${build.dir}/share:{$build.dir}/webapp">
+    		<src path="${src.dir}/workflow" />    
+        </javac>
+
+<!--
+  	<javac destdir="${build.dir}/crypto" classpath="${classpath}:${build.dir}/share">
     		<src path="${src.dir}/crypto" />
-    	</javac> -->
+        </javac>
+-->
+
     </target>
 
     <target name="jar" depends="classes">
@@ -139,6 +151,8 @@
             basedir="${build.dir}/share" />
         <jar jarfile="${lib.dir}/${name}-webapp.jar"
             basedir="${build.dir}/webapp" />
+        <jar jarfile="${lib.dir}/${name}-workflow.jar"
+            basedir="${build.dir}/workflow" />
         <jar jarfile="${lib.dir}/${name}-crypto.jar"
             basedir="${build.dir}/crypto" />
     </target>
@@ -175,6 +189,7 @@
             destdir="${doc.dir}/api">
             <sourcepath path="${src.dir}/share" />
             <sourcepath path="${src.dir}/webapp" />
+            <sourcepath path="${src.dir}/workflow" />
             <sourcepath path="${src.dir}/ejb" />
             <sourcepath path="${src.dir}/crypto" />
         </javadoc>
