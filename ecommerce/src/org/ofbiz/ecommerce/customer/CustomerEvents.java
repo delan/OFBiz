@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2001/09/02 09:30:22  jonesde
+ * Added initial edit person and enhanced validation for credit cards.
+ *
  * Revision 1.12  2001/09/02 05:20:22  jonesde
  * Initial pass on create/edit credit card functionality.
  *
@@ -179,18 +182,18 @@ public class CustomerEvents {
     newCmId = helper.getNextSeqId("ContactMech");
     if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
     tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "POSTAL_ADDRESS")));
-    Map addrFields = new HashMap();
-    addrFields.put("contactMechId", newCmId.toString());
-    addrFields.put("toName", firstName + " " + lastName);
-    addrFields.put("address1", address1);
-    addrFields.put("address2", address2);
-    addrFields.put("directions", directions);
-    addrFields.put("city", city);
-    addrFields.put("postalCode", postalCode);
-    addrFields.put("stateProvinceGeoId", state);
-    addrFields.put("countryGeoId", country);
-    //addrFields.put("postalCodeGeoId", postalCodeGeoId);
-    tempUserLogin.preStoreOther(helper.makeValue("PostalAddress", addrFields));
+    GenericValue newAddr = helper.makeValue("PostalAddress", null);
+    newAddr.set("contactMechId", newCmId.toString());
+    newAddr.set("toName", firstName + " " + lastName);
+    newAddr.set("address1", address1);
+    newAddr.set("address2", address2);
+    newAddr.set("directions", directions);
+    newAddr.set("city", city);
+    newAddr.set("postalCode", postalCode);
+    newAddr.set("stateProvinceGeoId", state);
+    newAddr.set("countryGeoId", country);
+    //newAddr.set("postalCodeGeoId", postalCodeGeoId);
+    tempUserLogin.preStoreOther(newAddr);
     tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", addressAllowSolicitation)));
     tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "fromDate", UtilDateTime.nowTimestamp())));
     
@@ -292,19 +295,19 @@ public class CustomerEvents {
           return "error";
         }
         
-        Map addrFields = new HashMap();
-        addrFields.put("contactMechId", newCmId.toString());
-        addrFields.put("toName", toName);
-        addrFields.put("attnName", attnName);
-        addrFields.put("address1", address1);
-        addrFields.put("address2", address2);
-        addrFields.put("directions", directions);
-        addrFields.put("city", city);
-        addrFields.put("postalCode", postalCode);
-        addrFields.put("stateProvinceGeoId", state);
-        addrFields.put("countryGeoId", country);
-        //addrFields.put("postalCodeGeoId", postalCodeGeoId);
-        tempContactMech.preStoreOther(helper.makeValue("PostalAddress", addrFields));
+        GenericValue newAddr = helper.makeValue("PostalAddress", null);
+        newAddr.set("contactMechId", newCmId.toString());
+        newAddr.set("toName", toName);
+        newAddr.set("attnName", attnName);
+        newAddr.set("address1", address1);
+        newAddr.set("address2", address2);
+        newAddr.set("directions", directions);
+        newAddr.set("city", city);
+        newAddr.set("postalCode", postalCode);
+        newAddr.set("stateProvinceGeoId", state);
+        newAddr.set("countryGeoId", country);
+        //newAddr.set("postalCodeGeoId", postalCodeGeoId);
+        tempContactMech.preStoreOther(newAddr);
       }
       else if("TELECOM_NUMBER".equals(contactMechTypeId)) {
         String countryCode = request.getParameter("CM_COUNTRY_CODE");
@@ -378,19 +381,19 @@ public class CustomerEvents {
           return "error";
         }
         
-        Map addrFields = new HashMap();
-        addrFields.put("contactMechId", newCmId.toString());
-        addrFields.put("toName", toName);
-        addrFields.put("attnName", attnName);
-        addrFields.put("address1", address1);
-        addrFields.put("address2", address2);
-        addrFields.put("directions", directions);
-        addrFields.put("city", city);
-        addrFields.put("postalCode", postalCode);
-        addrFields.put("stateProvinceGeoId", state);
-        addrFields.put("countryGeoId", country);
-        //addrFields.put("postalCodeGeoId", postalCodeGeoId);
-        partyContactMech.preStoreOther(helper.makeValue("PostalAddress", addrFields));
+        GenericValue newAddr = helper.makeValue("PostalAddress", null);
+        newAddr.set("contactMechId", newCmId.toString());
+        newAddr.set("toName", toName);
+        newAddr.set("attnName", attnName);
+        newAddr.set("address1", address1);
+        newAddr.set("address2", address2);
+        newAddr.set("directions", directions);
+        newAddr.set("city", city);
+        newAddr.set("postalCode", postalCode);
+        newAddr.set("stateProvinceGeoId", state);
+        newAddr.set("countryGeoId", country);
+        //newAddr.set("postalCodeGeoId", postalCodeGeoId);
+        partyContactMech.preStoreOther(newAddr);
       }
       else if("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))) {
         String countryCode = request.getParameter("CM_COUNTRY_CODE");
@@ -595,7 +598,10 @@ public class CustomerEvents {
   
   /** Updates a Person entity according to the parameters passed in the
    *  request object; will do a CREATE, UPDATE, or DELETE depending on the
-   *  value of the UPDATE_MODE parameter.
+   *  value of the UPDATE_MODE parameter. When doing an UPDATE the actual
+   *  row in the database is updated rather than creating a new one. For this
+   *  reason parameters can be left out of the request without resulting in
+   *  the corresponding fields values being set to null in the datasource.
    *@param request The HTTPRequest object for the current request
    *@param response The HTTPResponse object for the current request
    *@return String specifying the exit status of this event
@@ -666,24 +672,24 @@ public class CustomerEvents {
         doCreate = true;
       }
       
-      person.set("firstName", firstName);
-      person.set("middleName", middleName);
-      person.set("lastName", lastName);
-      person.set("personalTitle", personalTitle);
-      person.set("suffix", suffix);
+      person.set("firstName", firstName, false);
+      person.set("middleName", middleName, false);
+      person.set("lastName", lastName, false);
+      person.set("personalTitle", personalTitle, false);
+      person.set("suffix", suffix, false);
 
-      person.set("nickname", nickname);
-      person.set("gender", gender);
-      person.set("birthDate", birthDate);
-      person.set("height", height);
-      person.set("weight", weight);
-      person.set("mothersMaidenName", mothersMaidenName);
-      person.set("maritalStatus", maritalStatus);
-      person.set("socialSecurityNumber", socialSecurityNumber);
-      person.set("passportNumber", passportNumber);
-      person.set("passportExpireDate", passportExpireDate);
-      person.set("totalYearsWorkExperience", totalYearsWorkExperience);
-      person.set("comment", comment);
+      person.set("nickname", nickname, false);
+      person.set("gender", gender, false);
+      person.set("birthDate", birthDate, false);
+      person.set("height", height, false);
+      person.set("weight", weight, false);
+      person.set("mothersMaidenName", mothersMaidenName, false);
+      person.set("maritalStatus", maritalStatus, false);
+      person.set("socialSecurityNumber", socialSecurityNumber, false);
+      person.set("passportNumber", passportNumber, false);
+      person.set("passportExpireDate", passportExpireDate, false);
+      person.set("totalYearsWorkExperience", totalYearsWorkExperience, false);
+      person.set("comment", comment, false);
 
       if(doCreate)
       {
