@@ -91,8 +91,14 @@
     }
 
     if (orderHeaderList != null && orderHeaderList.size() > 0) pageContext.setAttribute("orderHeaderList", orderHeaderList);
-    Collection statusItems = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "ORDER_STATUS"), UtilMisc.toList("sequenceId"));
+
+    Collection statusItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", "ORDER_STATUS"), UtilMisc.toList("sequenceId"));
     if (statusItems != null) pageContext.setAttribute("statusItems", statusItems);
+
+    GenericValue listStatusItem = null;
+    if (UtilValidate.isNotEmpty(listStatusId)) {
+        listStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", listStatusId));
+    }
 
     int viewIndex = 0;
     int viewSize = 20;
@@ -186,10 +192,10 @@
                   <td width="25%" align=right><div class="tabletext">Current Status</div></td>
                   <td width="40%">
                     <select name="listStatusId" style="font-size: x-small;">
-                      <option><%=listStatusId == null?"Choose a status:":listStatusId%></option>
+                      <option><%=listStatusId == null ? "Choose a status:" : (listStatusItem == null ? listStatusId : listStatusItem.getString("description"))%></option>
                       <option value="<%=listStatusId == null?"":listStatusId%>">----</option>
                       <ofbiz:iterator name="statusItem" property="statusItems">
-                        <option><%=statusItem.getString("statusId")%></option>
+                        <option value='<%=statusItem.getString("statusId")%>'><%=statusItem.getString("description")%></option>
                       </ofbiz:iterator>
                     </select>
                   </td>
