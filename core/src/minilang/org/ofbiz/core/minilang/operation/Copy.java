@@ -42,7 +42,7 @@ import org.ofbiz.core.minilang.*;
  */
 public class Copy extends SimpleMapOperation {
     boolean replace = true;
-    boolean setIfNull = false;
+    boolean setIfNull = true;
     String toField;
 
     public Copy(Element element, SimpleMapProcess simpleMapProcess) {
@@ -54,8 +54,8 @@ public class Copy extends SimpleMapOperation {
 
         //if anything but false it will be true
         replace = !"false".equals(element.getAttribute("replace"));
-        //if anything but true it will be false
-        setIfNull = "true".equals(element.getAttribute("set-if-null"));
+        //if anything but false it will be true
+        setIfNull = !"false".equals(element.getAttribute("set-if-null"));
     }
 
     public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
