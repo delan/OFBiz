@@ -541,4 +541,36 @@ public class OrderServices {
         result.put("orderId", orderId);
         return result;
     }
+
+    /** Service to create a order header note. */
+    public static Map createOrderNote(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String noteString = (String) context.get("note");
+        String orderId = (String) context.get("orderId");
+        Map noteCtx = UtilMisc.toMap("note", noteString, "userLogin", userLogin);
+
+        // Store the note.
+        Map noteRes = org.ofbiz.commonapp.common.CommonServices.createNote(dctx, noteCtx);
+        if (noteRes.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))
+            return noteRes;
+
+        String noteId = (String) noteRes.get("noteId");
+        if (noteId == null || noteId.length() == 0)
+            ServiceUtil.returnError("Problem creating the note, no noteId returned.");
+
+        // Set the order info
+        try {
+            Map fields = UtilMisc.toMap("orderId", orderId, "noteId", noteId);
+            GenericValue v = delegator.makeValue("OrderHeaderNote", fields);
+            delegator.create(v);
+        } catch (GenericEntityException ee) {
+            Debug.logError(ee);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Problem associating note with order (" + ee.getMessage() + ").");
+        }
+
+        return result;
+    }
 }

@@ -528,7 +528,34 @@ public class PartyServices {
      * @return Map with the result of the service, the output parameters.
      */
     public static Map createPartyNote(DispatchContext dctx, Map context) {
-        return new HashMap();
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String noteString = (String) context.get("note");
+        String partyId = (String) context.get("partyId");
+        Map noteCtx = UtilMisc.toMap("note", noteString, "userLogin", userLogin);
+
+        // Store the note.
+        Map noteRes = org.ofbiz.commonapp.common.CommonServices.createNote(dctx, noteCtx);
+        if (noteRes.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))
+            return noteRes;
+
+        String noteId = (String) noteRes.get("noteId");
+        if (noteId == null || noteId.length() == 0)
+            ServiceUtil.returnError("Problem creating the note, no noteId returned.");
+
+        // Set the party info
+        try {
+            Map fields = UtilMisc.toMap("partyId", partyId, "noteId", noteId);
+            GenericValue v = delegator.makeValue("PartyNote", fields);
+            delegator.create(v);
+        } catch (GenericEntityException ee) {
+            Debug.logError(ee);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Problem associating note with party (" + ee.getMessage() + ").");
+        }
+
+        return result;
     }
 
     /**

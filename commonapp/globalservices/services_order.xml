@@ -12,6 +12,7 @@
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="orderStatusId" type="String" mode="OUT"/>
     </service>
+
     <service name="storeOrder" engine="java" validate="true" auth="true"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createOrder">
         <description>Creates order entities</description>
@@ -35,6 +36,7 @@
         <attribute name="paymentMethodTypeIds" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderId" type="String" mode="OUT"/>
     </service>
+
     <service name="changeOrderStatus" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="setOrderStatus">
         <description>Change the status of an existing order</description>
@@ -42,6 +44,7 @@
         <attribute name="statusId" type="String" mode="IN"/>
         <attribute name="orderStatusId" type="String" mode="OUT" optional="true"/>
     </service>
+
     <service name="addOrderRole" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="addRoleType">
         <description>Adds a RoleType to an order</description>
@@ -50,6 +53,7 @@
         <attribute name="partyId" type="String" mode="IN"/>
         <attribute name="roleTypeId" type="String" mode="IN"/>
     </service>
+
     <service name="removeOrderRole" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="removeRoleType">
         <description>Removes a RoleType from an order</description>
@@ -57,6 +61,7 @@
         <attribute name="partyId" type="String" mode="IN"/>
         <attribute name="roleTypeId" type="String" mode="IN"/>
     </service>
+
     <service name="createOrderPaymentPreference" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createPaymentPreference">
         <description>Creates an order payment preference</description>
@@ -65,6 +70,13 @@
         <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
         <attribute name="maxAmount" type="Double" mode="IN" optional="true"/>
         <attribute name="orderPaymentPreferenceId" type="String" mode="OUT"/>
+    </service>
+
+    <service name="createOrderNote" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createOrderNote" auth="true">
+        <description>Create a note item and associate with a order header</description>
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="note" type="String" mode="IN"/>
     </service>
 
     <!-- Customer Request Services -->
@@ -77,6 +89,7 @@
         <attribute name="responseRequiredDate" type="String" mode="IN" optional="false"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
     </service>
+
     <service name="createCustRequestAttribute" engine="simple"
             location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequestAttribute" auth="true">
         <description>Create CustRequestAttribute record</description>
@@ -84,6 +97,7 @@
         <attribute name="attrName" type="String" mode="IN" optional="false"/>
         <attribute name="attrValue" type="String" mode="IN" optional="false"/>
     </service>
+
     <service name="createCustRequestItem" engine="simple"
             location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequestItem" auth="true">
         <description>Create a CustRequestItem record</description>
@@ -94,6 +108,7 @@
         <attribute name="maximumAmount" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
     </service>
+
     <service name="createCustRequestRole" engine="simple"
             location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequestRole" auth="true">
         <description>Create a CustRequestRole record</description>

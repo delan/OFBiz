@@ -94,6 +94,13 @@
         <attribute name="response" type="String" mode="IN"/>
     </service>
 
+    <service name="createPartyNote" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createPartyNote" auth="true">
+        <description>Create a note item and associate with a party</description>
+        <attribute name="partyId" type="String" mode="IN"/>
+        <attribute name="note" type="String" mode="IN"/>
+    </service>
+
     <!-- Party Role services -->
     <service name="createPartyRole" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyRoleServices" invoke="createPartyRole" auth="true">
