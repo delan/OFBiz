@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Product Store List</property>
+    <property name="titleProperty">PageTitleEditProductStoreList</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="headerItem">store</property>
     <page-action name="/store/FindProductStore.bsh"/>

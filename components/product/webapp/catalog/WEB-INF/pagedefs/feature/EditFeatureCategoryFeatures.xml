@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Edit Feature Category Features</property>
+    <property name="titleProperty">PageTitleEditFeatureCategoryFeatures</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <content-action name="/feature/EditFeatureCategoryFeatures.bsh"/>
 </page>

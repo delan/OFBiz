@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Find Product Catalog</property>
+    <property name="titleProperty">PageTitleFindProductCatalog</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <content-action name="/catalog/FindProdCatalog.bsh"/>
 </page>

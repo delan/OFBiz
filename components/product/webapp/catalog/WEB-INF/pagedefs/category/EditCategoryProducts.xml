@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Edit Category Products</property>
+    <property name="titleProperty">PageTitleEditCategoryProducts</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="tabButtonItem">EditCategoryProducts</property>
     <content-action name="/category/EditCategoryProducts.bsh"/>

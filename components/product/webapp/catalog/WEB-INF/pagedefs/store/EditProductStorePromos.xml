@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Edit Product Store Promos</property>
+    <property name="titleProperty">PageTitleEditProductStorePromos</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="headerItem">store</property>
     <property name="tabButtonItem">EditProductStorePromos</property>    

@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Edit Category Rollup</property>
+    <property name="titleProperty">PageTitleEditCategoryRollup</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="tabButtonItem">EditCategoryRollup</property>
     <content-action name="/category/EditCategoryRollup.bsh"/>

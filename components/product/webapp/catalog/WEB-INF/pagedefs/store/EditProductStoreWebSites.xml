@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Product Store WebSites</property>
+    <property name="titleProperty">PageTitleEditProductStoreWebSites</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="headerItem">store</property>
     <property name="tabButtonItem">EditProductStoreWebSites</property>

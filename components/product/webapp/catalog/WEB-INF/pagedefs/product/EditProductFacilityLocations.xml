@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Edit Product Facility Locations</property>
+    <property name="titleProperty">PageTitleEditProductFacilityLocations</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="tabButtonItem">EditProductFacilityLocations</property>
     <content-action name="/product/EditProductFacilityLocations.bsh"/>

@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Edit Product Store Catalogs</property>
+    <property name="titleProperty">PageTitleEditProductStoreCatalogs</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="headerItem">store</property>
     <property name="tabButtonItem">EditProductStoreCatalogs</property>

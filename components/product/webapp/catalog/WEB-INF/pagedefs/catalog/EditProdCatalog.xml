@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Edit Product Catalog</property>
+    <property name="titleProperty">PageTitleEditProductCatalog</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <content-action name="/catalog/EditProdCatalog.bsh"/>
 </page>
