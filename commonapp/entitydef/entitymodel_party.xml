@@ -6,25 +6,25 @@
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included 
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org)
+ *@author David E. Jones (jonesde@ofbiz.org) 
  *@author Andy Zeneski (jaz@zsolv.com)
  *@version    1.0
  */
@@ -55,7 +55,7 @@
   <!-- org.ofbiz.commonapp.party.agreement -->
   <!-- ========================================================= -->
 
-    <entity entity-name="Addendum"
+    <entity entity-name="Addendum" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Addendum Entity">
       <field name="addendumId" type="id-ne"></field>
@@ -63,7 +63,7 @@
       <field name="agreementItemSeqId" type="id"></field>
       <field name="addendumCreationDate" type="date-time"></field>
       <field name="addendumEffectiveDate" type="date-time"></field>
-      <field name="addendumText" type="long-varchar"></field>
+      <field name="addendumText" type="long-varchar"></field>	
       <prim-key field="addendumId" />
       <relation type="one" rel-entity-name="Agreement">
         <key-map field-name="agreementId" />
@@ -73,7 +73,7 @@
         <key-map field-name="agreementItemSeqId" />
       </relation>
     </entity>
-    <entity entity-name="Agreement"
+    <entity entity-name="Agreement" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Entity">
       <field name="agreementId" type="id-ne"></field>
@@ -87,7 +87,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="description" type="description"></field>
-      <field name="textData" type="long-varchar"></field>
+      <field name="textData" type="long-varchar"></field>	
       <prim-key field="agreementId" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
@@ -134,13 +134,13 @@
         <key-map field-name="agreementId" />
       </relation>
     </entity>
-    <entity entity-name="AgreementAttribute"
+    <entity entity-name="AgreementAttribute" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Attribute Entity">
       <field name="agreementId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>
-      <prim-key field="agreementId" />
+      <field name="attrValue" type="value"></field>	
+      <prim-key field="agreementId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Agreement">
         <key-map field-name="agreementId" />
@@ -149,25 +149,25 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="AgreementGeographicalApplic"
+    <entity entity-name="AgreementGeographicalApplic" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Geographical Applicability Entity">
       <field name="agreementId" type="id-ne"></field>
       <field name="agreementItemSeqId" type="id-ne"></field>
-      <field name="geoId" type="id-ne"></field>
-      <prim-key field="agreementId" />
-      <prim-key field="agreementItemSeqId" />
+      <field name="geoId" type="id-ne"></field>	
+      <prim-key field="agreementId" />	
+      <prim-key field="agreementItemSeqId" />	
       <prim-key field="geoId" />
     </entity>
-    <entity entity-name="AgreementItem"
+    <entity entity-name="AgreementItem" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Item Entity">
       <field name="agreementId" type="id-ne"></field>
       <field name="agreementItemSeqId" type="id-ne"></field>
       <field name="agreementItemTypeId" type="id"></field>
       <field name="agreementText" type="long-varchar"></field>
-      <field name="agreementImage" type="blob"></field>
-      <prim-key field="agreementId" />
+      <field name="agreementImage" type="blob"></field>	
+      <prim-key field="agreementId" />	
       <prim-key field="agreementItemSeqId" />
       <relation type="one" rel-entity-name="Agreement">
         <key-map field-name="agreementId" />
@@ -187,15 +187,15 @@
         <key-map field-name="agreementItemSeqId" />
       </relation>
     </entity>
-    <entity entity-name="AgreementItemAttribute"
+    <entity entity-name="AgreementItemAttribute" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Item Attribute Entity">
       <field name="agreementId" type="id-ne"></field>
       <field name="agreementItemSeqId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>
-      <prim-key field="agreementId" />
-      <prim-key field="agreementItemSeqId" />
+      <field name="attrValue" type="value"></field>	
+      <prim-key field="agreementId" />	
+      <prim-key field="agreementItemSeqId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="AgreementItem">
         <key-map field-name="agreementId" />
@@ -205,13 +205,13 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="AgreementItemType"
+    <entity entity-name="AgreementItemType" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Item Type Entity">
       <field name="agreementItemTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="agreementItemTypeId" />
       <relation type="one" title="Parent" rel-entity-name="AgreementItemType">
         <key-map field-name="parentTypeId" rel-field-name="agreementItemTypeId" />
@@ -226,12 +226,12 @@
         <key-map field-name="agreementItemTypeId" />
       </relation>
     </entity>
-    <entity entity-name="AgreementItemTypeAttr"
+    <entity entity-name="AgreementItemTypeAttr" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Item Type Attribute Entity">
       <field name="agreementItemTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>
-      <prim-key field="agreementItemTypeId" />
+      <field name="attrName" type="id-long-ne"></field>	
+      <prim-key field="agreementItemTypeId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="AgreementItemType">
         <key-map field-name="agreementItemTypeId" />
@@ -243,37 +243,37 @@
         <key-map field-name="agreementItemTypeId" />
       </relation>
     </entity>
-    <entity entity-name="AgreementOrganizationApplic"
+    <entity entity-name="AgreementOrganizationApplic" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Organizational Applicability Entity">
       <field name="agreementId" type="id-ne"></field>
       <field name="agreementItemSeqId" type="id-ne"></field>
-      <field name="partyId" type="id-ne"></field>
-      <prim-key field="agreementId" />
-      <prim-key field="agreementItemSeqId" />
+      <field name="partyId" type="id-ne"></field>	
+      <prim-key field="agreementId" />	
+      <prim-key field="agreementItemSeqId" />	
       <prim-key field="partyId" />
     </entity>
-    <entity entity-name="AgreementProductApplic"
+    <entity entity-name="AgreementProductApplic" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Product Applicability Entity">
       <field name="agreementId" type="id-ne"></field>
       <field name="agreementItemSeqId" type="id-ne"></field>
-      <field name="productId" type="id-ne"></field>
-      <prim-key field="agreementId" />
-      <prim-key field="agreementItemSeqId" />
+      <field name="productId" type="id-ne"></field>	
+      <prim-key field="agreementId" />	
+      <prim-key field="agreementItemSeqId" />	
       <prim-key field="productId" />
     </entity>
-    <entity entity-name="AgreementRole"
+    <entity entity-name="AgreementRole" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Role Entity">
       <field name="agreementId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>
-      <prim-key field="agreementId" />
-      <prim-key field="partyId" />
+      <field name="roleTypeId" type="id-ne"></field>	
+      <prim-key field="agreementId" />	
+      <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
     </entity>
-    <entity entity-name="AgreementTerm"
+    <entity entity-name="AgreementTerm" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Term Entity">
       <field name="agreementTermId" type="id-ne"></field>
@@ -282,16 +282,16 @@
       <field name="agreementItemSeqId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="termValue" type="numeric"></field>
+      <field name="termValue" type="numeric"></field>	
       <prim-key field="agreementTermId" />
     </entity>
-    <entity entity-name="AgreementTermAttribute"
+    <entity entity-name="AgreementTermAttribute" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Term Attribute Entity">
       <field name="agreementTermId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>
-      <prim-key field="agreementTermId" />
+      <field name="attrValue" type="value"></field>	
+      <prim-key field="agreementTermId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="AgreementTerm">
         <key-map field-name="agreementTermId" />
@@ -300,13 +300,13 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="AgreementType"
+    <entity entity-name="AgreementType" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Type Entity">
       <field name="agreementTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="agreementTypeId" />
       <relation type="one" title="Parent" rel-entity-name="AgreementType">
         <key-map field-name="parentTypeId" rel-field-name="agreementTypeId" />
@@ -321,12 +321,12 @@
         <key-map field-name="agreementTypeId" />
       </relation>
     </entity>
-    <entity entity-name="AgreementTypeAttr"
+    <entity entity-name="AgreementTypeAttr" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Type Attribute Entity">
       <field name="agreementTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>
-      <prim-key field="agreementTypeId" />
+      <field name="attrName" type="id-long-ne"></field>	
+      <prim-key field="agreementTypeId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="AgreementType">
         <key-map field-name="agreementTypeId" />
@@ -338,13 +338,13 @@
         <key-map field-name="agreementTypeId" />
       </relation>
     </entity>
-    <entity entity-name="TermType"
+    <entity entity-name="TermType" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Term Type Entity">
       <field name="termTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="termTypeId" />
       <relation type="one" title="Parent" rel-entity-name="TermType">
         <key-map field-name="parentTypeId" rel-field-name="termTypeId" />
@@ -368,12 +368,12 @@
         <key-map field-name="termTypeId" />
       </relation>
     </entity>
-    <entity entity-name="TermTypeAttr"
+    <entity entity-name="TermTypeAttr" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Term Type Attribute Entity">
       <field name="termTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>
-      <prim-key field="termTypeId" />
+      <field name="attrName" type="id-long-ne"></field>	
+      <prim-key field="termTypeId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="TermType">
         <key-map field-name="termTypeId" />
@@ -408,7 +408,7 @@
   <!-- org.ofbiz.commonapp.party.communication -->
   <!-- ========================================================= -->
 
-    <entity entity-name="CommunicationEvent"
+    <entity entity-name="CommunicationEvent" 
             package-name="org.ofbiz.commonapp.party.communication"
             title="Communication Event Entity">
       <field name="communicationEventId" type="id-ne"></field>
@@ -423,7 +423,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="datetimeStarted" type="date-time"></field>
       <field name="datetimeEnded" type="date-time"></field>
-      <field name="note" type="comment"></field>
+      <field name="note" type="comment"></field>	
       <prim-key field="communicationEventId" />
       <relation type="one" rel-entity-name="CommunicationEventType">
         <key-map field-name="communicationEventTypeId" />
@@ -432,13 +432,13 @@
         <key-map field-name="communicationEventId" />
       </relation>
     </entity>
-    <entity entity-name="CommunicationEventPrpTyp"
+    <entity entity-name="CommunicationEventPrpTyp" 
             package-name="org.ofbiz.commonapp.party.communication"
             title="Communication Event Purpose Type Entity">
       <field name="communicationEventPrpTypId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="communicationEventPrpTypId" />
       <relation type="one" title="Parent" rel-entity-name="CommunicationEventPrpTyp">
         <key-map field-name="parentTypeId" rel-field-name="communicationEventPrpTypId" />
@@ -450,13 +450,13 @@
         <key-map field-name="communicationEventPrpTypId" />
       </relation>
     </entity>
-    <entity entity-name="CommunicationEventPurpose"
+    <entity entity-name="CommunicationEventPurpose" 
             package-name="org.ofbiz.commonapp.party.communication"
             title="Communication Event Purpose Entity">
       <field name="communicationEventPrpTypId" type="id-ne"></field>
       <field name="communicationEventId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="communicationEventPrpTypId" />
+      <field name="description" type="description"></field>	
+      <prim-key field="communicationEventPrpTypId" />	
       <prim-key field="communicationEventId" />
       <relation type="one" rel-entity-name="CommunicationEvent">
         <key-map field-name="communicationEventId" />
@@ -465,23 +465,23 @@
         <key-map field-name="communicationEventPrpTypId" />
       </relation>
     </entity>
-    <entity entity-name="CommunicationEventRole"
+    <entity entity-name="CommunicationEventRole" 
             package-name="org.ofbiz.commonapp.party.communication"
             title="Communication Event Role Entity">
       <field name="communicationEventId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>
-      <prim-key field="communicationEventId" />
-      <prim-key field="partyId" />
+      <field name="roleTypeId" type="id-ne"></field>	
+      <prim-key field="communicationEventId" />	
+      <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
     </entity>
-    <entity entity-name="CommunicationEventType"
+    <entity entity-name="CommunicationEventType" 
             package-name="org.ofbiz.commonapp.party.communication"
             title="Communication Event Type Entity">
       <field name="communicationEventTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="communicationEventTypeId" />
       <relation type="one" title="Parent" rel-entity-name="CommunicationEventType">
         <key-map field-name="parentTypeId" rel-field-name="communicationEventTypeId" />
@@ -493,23 +493,23 @@
         <key-map field-name="communicationEventTypeId" />
       </relation>
     </entity>
-    <entity entity-name="IssueCase"
+    <entity entity-name="IssueCase" 
             package-name="org.ofbiz.commonapp.party.communication"
             title="Issue Case Entity">
       <field name="issueCaseId" type="id-ne"></field>
       <field name="statusId" type="id"></field>
       <field name="description" type="description"></field>
-      <field name="startDatetime" type="date-time"></field>
+      <field name="startDatetime" type="date-time"></field>	
       <prim-key field="issueCaseId" />
     </entity>
-    <entity entity-name="IssueCaseRole"
+    <entity entity-name="IssueCaseRole" 
             package-name="org.ofbiz.commonapp.party.communication"
             title="Issue Case Role Entity">
       <field name="issueCaseId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>
-      <prim-key field="issueCaseId" />
-      <prim-key field="partyId" />
+      <field name="roleTypeId" type="id-ne"></field>	
+      <prim-key field="issueCaseId" />	
+      <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
     </entity>
 
@@ -517,12 +517,12 @@
   <!-- org.ofbiz.commonapp.party.contact -->
   <!-- ========================================================= -->
 
-    <entity entity-name="ContactMech"
+    <entity entity-name="ContactMech" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Entity">
       <field name="contactMechId" type="id-ne"></field>
       <field name="contactMechTypeId" type="id"></field>
-      <field name="infoString" type="long-varchar"></field>
+      <field name="infoString" type="long-varchar"></field>	
       <prim-key field="contactMechId" />
       <relation type="one" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId" />
@@ -558,13 +558,13 @@
         <key-map field-name="contactMechId" />
       </relation>
     </entity>
-    <entity entity-name="ContactMechAttribute"
+    <entity entity-name="ContactMechAttribute" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Attribute Entity">
       <field name="contactMechId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>
-      <prim-key field="contactMechId" />
+      <field name="attrValue" type="value"></field>	
+      <prim-key field="contactMechId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId" />
@@ -573,12 +573,12 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="ContactMechLink"
+    <entity entity-name="ContactMechLink" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Link Entity">
       <field name="contactMechIdFrom" type="id-ne"></field>
-      <field name="contactMechIdTo" type="id-ne"></field>
-      <prim-key field="contactMechIdFrom" />
+      <field name="contactMechIdTo" type="id-ne"></field>	
+      <prim-key field="contactMechIdFrom" />	
       <prim-key field="contactMechIdTo" />
       <relation type="one" title="From" rel-entity-name="ContactMech">
         <key-map field-name="contactMechIdFrom" rel-field-name="contactMechId" />
@@ -587,11 +587,11 @@
         <key-map field-name="contactMechIdTo" rel-field-name="contactMechId" />
       </relation>
     </entity>
-    <entity entity-name="ContactMechPurposeType"
+    <entity entity-name="ContactMechPurposeType" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Purpose Type Entity">
       <field name="contactMechPurposeTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="contactMechPurposeTypeId" />
       <relation type="many" rel-entity-name="PartyContactMechPurpose">
         <key-map field-name="contactMechPurposeTypeId" />
@@ -606,13 +606,13 @@
         <key-map field-name="contactMechPurposeTypeId" />
       </relation>
     </entity>
-    <entity entity-name="ContactMechType"
+    <entity entity-name="ContactMechType" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Type Entity">
       <field name="contactMechTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="contactMechTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ContactMechType">
         <key-map field-name="parentTypeId" rel-field-name="contactMechTypeId" />
@@ -633,12 +633,12 @@
         <key-map field-name="contactMechTypeId" />
       </relation>
     </entity>
-    <entity entity-name="ContactMechTypeAttr"
+    <entity entity-name="ContactMechTypeAttr" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Type Attribute Entity">
       <field name="contactMechTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>
-      <prim-key field="contactMechTypeId" />
+      <field name="attrName" type="id-long-ne"></field>	
+      <prim-key field="contactMechTypeId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId" />
@@ -650,13 +650,13 @@
         <key-map field-name="contactMechTypeId" />
       </relation>
     </entity>
-    <entity entity-name="ContactMechTypePurpose"
+    <entity entity-name="ContactMechTypePurpose" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Type Purpose Entity">
       <description>Defines which ContactMechPurposeType entites apply to which ContactMechType</description>
       <field name="contactMechTypeId" type="id-ne"></field>
-      <field name="contactMechPurposeTypeId" type="id-ne"></field>
-      <prim-key field="contactMechTypeId" />
+      <field name="contactMechPurposeTypeId" type="id-ne"></field>	
+      <prim-key field="contactMechTypeId" />	
       <prim-key field="contactMechPurposeTypeId" />
       <relation type="one" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId" />
@@ -665,7 +665,7 @@
         <key-map field-name="contactMechPurposeTypeId" />
       </relation>
     </entity>
-    <entity entity-name="CreditCardInfo"
+    <entity entity-name="CreditCardInfo" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Credit Card Information Entity">
       <field name="creditCardId" type="id-ne"></field>
@@ -678,7 +678,7 @@
       <field name="expireDate" type="credit-card-date"></field>
       <field name="nameOnCard" type="name"></field>
       <field name="companyNameOnCard" type="name"></field>
-      <field name="contactMechId" type="id-ne"></field>
+      <field name="contactMechId" type="id-ne"></field>	
       <prim-key field="creditCardId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
@@ -693,7 +693,7 @@
         <key-map field-name="creditCardId" rel-field-name="paymentInfoId" />
       </relation>
     </entity>
-    <entity entity-name="PartyContactMech"
+    <entity entity-name="PartyContactMech" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Party Contact Mechanism Entity">
       <field name="partyId" type="id-ne"></field>
@@ -703,9 +703,9 @@
       <field name="roleTypeId" type="id"></field>
       <field name="allowSolicitation" type="indicator"></field>
       <field name="extension" type="very-short"></field>
-      <field name="comments" type="comment"></field>
-      <prim-key field="partyId" />
-      <prim-key field="contactMechId" />
+      <field name="comments" type="comment"></field>	
+      <prim-key field="partyId" />	
+      <prim-key field="contactMechId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
@@ -725,17 +725,17 @@
         <key-map field-name="contactMechId" />
       </relation>
     </entity>
-    <entity entity-name="PartyContactMechPurpose"
+    <entity entity-name="PartyContactMechPurpose" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Party Contact Mechanism Purpose Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="contactMechId" type="id-ne"></field>
       <field name="contactMechPurposeTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <prim-key field="partyId" />
-      <prim-key field="contactMechId" />
-      <prim-key field="contactMechPurposeTypeId" />
+      <field name="thruDate" type="date-time"></field>	
+      <prim-key field="partyId" />	
+      <prim-key field="contactMechId" />	
+      <prim-key field="contactMechPurposeTypeId" />	
       <prim-key field="fromDate" />
       <relation type="many" rel-entity-name="PartyContactMech">
         <key-map field-name="partyId" />
@@ -751,7 +751,7 @@
         <key-map field-name="contactMechId" />
       </relation>
     </entity>
-    <entity entity-name="PostalAddress"
+    <entity entity-name="PostalAddress" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Postal Address Entity">
       <field name="contactMechId" type="id-ne"></field>
@@ -764,7 +764,7 @@
       <field name="postalCode" type="short-varchar"></field>
       <field name="countryGeoId" type="id"></field>
       <field name="stateProvinceGeoId" type="id"></field>
-      <field name="postalCodeGeoId" type="id"></field>
+      <field name="postalCodeGeoId" type="id"></field>	
       <prim-key field="contactMechId" />
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId" />
@@ -785,12 +785,12 @@
         <key-map field-name="postalCodeGeoId" rel-field-name="geoId" />
       </relation>
     </entity>
-    <entity entity-name="PostalAddressBoundary"
+    <entity entity-name="PostalAddressBoundary" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Postal Address Boundary Entity">
       <field name="contactMechId" type="id-ne"></field>
-      <field name="geoId" type="id-ne"></field>
-      <prim-key field="contactMechId" />
+      <field name="geoId" type="id-ne"></field>	
+      <prim-key field="contactMechId" />	
       <prim-key field="geoId" />
       <relation type="one" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId" />
@@ -799,24 +799,24 @@
         <key-map field-name="geoId" />
       </relation>
     </entity>
-    <entity entity-name="TelecomNumber"
+    <entity entity-name="TelecomNumber" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Telecommunications Number Entity">
       <field name="contactMechId" type="id-ne"></field>
       <field name="countryCode" type="very-short"></field>
       <field name="areaCode" type="very-short"></field>
-      <field name="contactNumber" type="short-varchar"></field>
+      <field name="contactNumber" type="short-varchar"></field>	
       <prim-key field="contactMechId" />
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId" />
       </relation>
     </entity>
-    <entity entity-name="ValidContactMechRole"
+    <entity entity-name="ValidContactMechRole" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Valid Contact Mechanism Role Entity">
       <field name="roleTypeId" type="id-ne"></field>
-      <field name="contactMechTypeId" type="id-ne"></field>
-      <prim-key field="roleTypeId" />
+      <field name="contactMechTypeId" type="id-ne"></field>	
+      <prim-key field="roleTypeId" />	
       <prim-key field="contactMechTypeId" />
       <relation type="one" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId" />
@@ -830,14 +830,14 @@
   <!-- org.ofbiz.commonapp.party.need -->
   <!-- ========================================================= -->
 
-    <entity entity-name="NeedType"
+    <entity entity-name="NeedType" 
             package-name="org.ofbiz.commonapp.party.need"
             title="Need Type Entity">
       <field name="needTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="needTypeId" />
     </entity>
-    <entity entity-name="PartyNeed"
+    <entity entity-name="PartyNeed" 
             package-name="org.ofbiz.commonapp.party.need"
             title="Party Need Entity">
       <field name="partyNeedId" type="id-ne"></field>
@@ -850,9 +850,9 @@
       <field name="productCategoryId" type="id"></field>
       <field name="visitId" type="id"></field>
       <field name="datetimeRecorded" type="date-time"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="partyNeedId" />
-      <prim-key field="partyId" />
+      <field name="description" type="description"></field>	
+      <prim-key field="partyNeedId" />	
+      <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
     </entity>
 
@@ -860,7 +860,7 @@
   <!-- org.ofbiz.commonapp.party.party -->
   <!-- ========================================================= -->
 
-    <entity entity-name="Affiliate"
+    <entity entity-name="Affiliate" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Affiliate Party Entity">
       <field name="partyId" type="id-ne"></field>
@@ -871,7 +871,7 @@
       <field name="sitePageViews" type="comment"></field>
       <field name="siteVisitors" type="comment"></field>
       <field name="dateTimeCreated" type="date-time"></field>
-      <field name="dateTimeApproved" type="date-time"></field>
+      <field name="dateTimeApproved" type="date-time"></field>	
       <prim-key field="partyId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
@@ -880,11 +880,11 @@
         <key-map field-name="partyId" />
       </relation>
     </entity>
-    <entity entity-name="Party"
+    <entity entity-name="Party" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Entity">
       <field name="partyId" type="id-ne"></field>
-      <field name="partyTypeId" type="id-ne"></field>
+      <field name="partyTypeId" type="id-ne"></field>	
       <prim-key field="partyId" />
       <relation type="one" rel-entity-name="PartyType">
         <key-map field-name="partyTypeId" />
@@ -962,13 +962,13 @@
         <key-map field-name="partyId" />
       </relation>
     </entity>
-    <entity entity-name="PartyAttribute"
+    <entity entity-name="PartyAttribute" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Attribute Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>
-      <prim-key field="partyId" />
+      <field name="attrValue" type="value"></field>	
+      <prim-key field="partyId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
@@ -977,16 +977,16 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="PartyClassification"
+    <entity entity-name="PartyClassification" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Classification Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="partyClassificationGroupId" type="id-ne"></field>
       <field name="partyClassificationTypeId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <prim-key field="partyId" />
-      <prim-key field="partyClassificationGroupId" />
+      <field name="thruDate" type="date-time"></field>	
+      <prim-key field="partyId" />	
+      <prim-key field="partyClassificationGroupId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
@@ -998,13 +998,13 @@
         <key-map field-name="partyClassificationGroupId" />
       </relation>
     </entity>
-    <entity entity-name="PartyClassificationGroup"
+    <entity entity-name="PartyClassificationGroup" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Classification Group Entity">
       <field name="partyClassificationGroupId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="partyClassificationGroupId" />
       <relation type="one" title="Parent" rel-entity-name="PartyClassificationGroup">
         <key-map field-name="parentTypeId" rel-field-name="partyClassificationGroupId" />
@@ -1016,13 +1016,13 @@
         <key-map field-name="partyClassificationGroupId" />
       </relation>
     </entity>
-    <entity entity-name="PartyClassificationType"
+    <entity entity-name="PartyClassificationType" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Classification Type Entity">
       <field name="partyClassificationTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="partyClassificationTypeId" />
       <relation type="one" title="Parent" rel-entity-name="PartyClassificationType">
         <key-map field-name="parentTypeId" rel-field-name="partyClassificationTypeId" />
@@ -1034,12 +1034,12 @@
         <key-map field-name="partyClassificationTypeId" />
       </relation>
     </entity>
-    <entity entity-name="PartyDataObject"
+    <entity entity-name="PartyDataObject" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Data Object Entity">
       <field name="partyId" type="id-ne"></field>
-      <field name="dataObjectId" type="id-ne"></field>
-      <prim-key field="partyId" />
+      <field name="dataObjectId" type="id-ne"></field>	
+      <prim-key field="partyId" />	
       <prim-key field="dataObjectId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
@@ -1048,18 +1048,18 @@
         <key-map field-name="dataObjectId" />
       </relation>
     </entity>
-    <entity entity-name="PartyGroup"
+    <entity entity-name="PartyGroup" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Group Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="groupName" type="name"></field>
-      <field name="federalTaxId" type="short-varchar"></field>
+      <field name="federalTaxId" type="short-varchar"></field>	
       <prim-key field="partyId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
     </entity>
-    <entity entity-name="PartyRelationship"
+    <entity entity-name="PartyRelationship" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Relationship Entity">
       <field name="partyIdFrom" type="id-ne"></field>
@@ -1071,11 +1071,11 @@
       <field name="statusId" type="id"></field>
       <field name="priorityTypeId" type="id"></field>
       <field name="partyRelationshipTypeId" type="id"></field>
-      <field name="comments" type="comment"></field>
-      <prim-key field="partyIdFrom" />
-      <prim-key field="partyIdTo" />
-      <prim-key field="roleTypeIdFrom" />
-      <prim-key field="roleTypeIdTo" />
+      <field name="comments" type="comment"></field>	
+      <prim-key field="partyIdFrom" />	
+      <prim-key field="partyIdTo" />	
+      <prim-key field="roleTypeIdFrom" />	
+      <prim-key field="roleTypeIdTo" />	
       <prim-key field="fromDate" />
       <relation type="one" title="From" rel-entity-name="Party">
         <key-map field-name="partyIdFrom" rel-field-name="partyId" />
@@ -1101,7 +1101,7 @@
         <key-map field-name="partyRelationshipTypeId" />
       </relation>
     </entity>
-    <entity entity-name="PartyRelationshipType"
+    <entity entity-name="PartyRelationshipType" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Relationship Type Entity">
       <field name="partyRelationshipTypeId" type="id-ne"></field>
@@ -1110,7 +1110,7 @@
       <field name="roleTypeIdValidFrom" type="id"></field>
       <field name="roleTypeIdValidTo" type="id"></field>
       <field name="description" type="description"></field>
-      <field name="partyRelationshipName" type="name"></field>
+      <field name="partyRelationshipName" type="name"></field>	
       <prim-key field="partyRelationshipTypeId" />
       <relation type="one" title="Parent" rel-entity-name="PartyRelationshipType">
         <key-map field-name="parentTypeId" rel-field-name="partyRelationshipTypeId" />
@@ -1128,12 +1128,12 @@
         <key-map field-name="roleTypeIdValidTo" rel-field-name="roleTypeId" />
       </relation>
     </entity>
-    <entity entity-name="PartyRole"
+    <entity entity-name="PartyRole" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Role Entity">
       <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>
-      <prim-key field="partyId" />
+      <field name="roleTypeId" type="id-ne"></field>	
+      <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
@@ -1180,28 +1180,28 @@
         <key-map field-name="roleTypeId" />
       </relation>
     </entity>
-    <entity entity-name="PartySurveyResponse" table-name="PARTY_SURVEY_RESPONSE"
+    <entity entity-name="PartySurveyResponse" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Survey Response Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="surveyId" type="id-long-ne"></field>
       <field name="surveyResponseId" type="id-long-ne"></field>
       <field name="surveyResponse" type="very-long"></field>
-      <field name="responseDateTime" type="date-time"></field>
-      <prim-key field="partyId" />
-      <prim-key field="surveyId" />
+      <field name="responseDateTime" type="date-time"></field>	
+      <prim-key field="partyId" />	
+      <prim-key field="surveyId" />	
       <prim-key field="surveyResponseId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
     </entity>
-    <entity entity-name="PartyType"
+    <entity entity-name="PartyType" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Type Entity">
       <field name="partyTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="partyTypeId" />
       <relation type="one" title="Parent" rel-entity-name="PartyType">
         <key-map field-name="parentTypeId" rel-field-name="partyTypeId" />
@@ -1225,12 +1225,12 @@
         <key-map field-name="partyTypeId" />
       </relation>
     </entity>
-    <entity entity-name="PartyTypeAttr"
+    <entity entity-name="PartyTypeAttr" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Type Attribute Entity">
       <field name="partyTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>
-      <prim-key field="partyTypeId" />
+      <field name="attrName" type="id-long-ne"></field>	
+      <prim-key field="partyTypeId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="PartyType">
         <key-map field-name="partyTypeId" />
@@ -1242,7 +1242,7 @@
         <key-map field-name="partyTypeId" />
       </relation>
     </entity>
-    <entity entity-name="Person"
+    <entity entity-name="Person" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Person Entity">
       <field name="partyId" type="id-ne"></field>
@@ -1262,7 +1262,7 @@
       <field name="passportNumber" type="short-varchar"></field>
       <field name="passportExpireDate" type="date"></field>
       <field name="totalYearsWorkExperience" type="floating-point"></field>
-      <field name="comments" type="comment"></field>
+      <field name="comments" type="comment"></field>	
       <prim-key field="partyId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
@@ -1271,23 +1271,23 @@
         <key-map field-name="partyId" />
       </relation>
     </entity>
-    <entity entity-name="PriorityType"
+    <entity entity-name="PriorityType" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Priority Type Entity">
       <field name="priorityTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="priorityTypeId" />
       <relation type="many" rel-entity-name="PartyRelationship">
         <key-map field-name="priorityTypeId" />
       </relation>
     </entity>
-    <entity entity-name="RoleType"
+    <entity entity-name="RoleType" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Role Type Entity">
       <field name="roleTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="roleTypeId" />
       <relation type="one" title="Parent" rel-entity-name="RoleType">
         <key-map field-name="parentTypeId" rel-field-name="roleTypeId" />
@@ -1314,12 +1314,12 @@
         <key-map field-name="roleTypeId" />
       </relation>
     </entity>
-    <entity entity-name="RoleTypeAttr"
+    <entity entity-name="RoleTypeAttr" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Role Type Attribute Entity">
       <field name="roleTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>
-      <prim-key field="roleTypeId" />
+      <field name="attrName" type="id-long-ne"></field>	
+      <prim-key field="roleTypeId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId" />
@@ -1336,6 +1336,6 @@
       <relation type="many" title="ValidTo" rel-entity-name="PartyRelationshipType">
         <key-map field-name="roleTypeId" rel-field-name="roleTypeIdValidTo" />
       </relation>
-    </entity>
+    </entity>  
 </entitymodel>
 
