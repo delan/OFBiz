@@ -32,6 +32,7 @@
     <classpath type="jar" location="lib/cybersource/*"/>
     <classpath type="jar" location="lib/worldpay/*"/>
     <classpath type="dir" location="lib/worldpay"/>
+
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/AccountingTypeData.xml"/>
@@ -39,12 +40,22 @@
     <entity-resource type="data" reader-name="seed" loader="main" location="data/AccountingSecurityData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoGeneralChartOfAccounts.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoOrganizationData.xml"/>
+
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_fixedasset.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_payment.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_agreement.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_payment.xml"/>
+
+    <service-resource type="model" loader="main" location="servicedef/services_clearcommerce.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_cybersource.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_pccharge.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_rita.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_valuelink.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_verisign.xml"/>
+
     <service-resource type="group" loader="main" location="servicedef/groups.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
+
     <webapp name="accounting"
         title="Accounting"
         server="default-server"
