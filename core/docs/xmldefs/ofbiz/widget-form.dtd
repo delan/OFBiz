@@ -31,26 +31,34 @@
 <!ENTITY % AllFields "display | text | textarea | date-time | drop-down | check | radio | submit | reset | hidden | ignored">
 
 <!ELEMENT forms ( form+ )>
+
+<!--
+	map-list-name: for list type and other multiple data/form types this is
+		the name of the list in the context to iterate over
+	list-entry-name: if specified each list entry will be put in the context
+		with this name; otherwise the list entry must be a Map and the entries
+		in the Map will be put into the context by name
+-->
 <!ELEMENT form ( auto-fields-service*, auto-fields-entity*, field* )>
 <!ATTLIST form
     name CDATA #REQUIRED
     type ( single | list ) #REQUIRED
     title CDATA #REQUIRED
     tooltip CDATA #IMPLIED
-    container-list-name #IMPLIED
-    expand-container-list-entry ( true | false ) "false"
+    map-list-name #IMPLIED
+    list-entry-name CDATA #IMPLIED
 >
 
 <!ELEMENT auto-fields-service EMPTY>
 <!ATTLIST auto-fields-service
     service-name CDATA #REQUIRED
-    container-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
 >
 
 <!ELEMENT auto-fields-entity EMPTY>
 <!ATTLIST auto-fields-entity
     entity-name CDATA #REQUIRED
-    container-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
 >
 
 <!--
@@ -101,6 +109,8 @@
     rows CDATA "3"
 >
 
+<!-- a special entry for date-time fields; may just have a default size text 
+	entry box and some sort of widget to make date entry/selection easier -->
 <!ELEMENT date-time EMPTY>
 
 <!-- this will look up options for the field in the given entity and for each result
