@@ -93,7 +93,7 @@ public class ShippingEvents {
                         
         double unitTotal = totalUnits * unitMultiplier;
         double handlingTotal = (unitTotal * unitHandling) + baseHandling;
-        if ( handlingTotal > handlingMax )
+        if ( (handlingMax > 0) && (handlingTotal > handlingMax) )
             return handlingMax;
         else
             return handlingTotal;
