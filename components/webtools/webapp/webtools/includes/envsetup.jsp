@@ -21,6 +21,15 @@
     String contextRoot = (String) request.getAttribute("_CONTEXT_ROOT_");
     String serverRoot = (String) request.getAttribute("_SERVER_ROOT_URL_");
 
+    /* reading of the localization information */
+    List availableLocales = UtilMisc.availableLocales();
+    request.setAttribute("availableLocales",availableLocales);
+
+    Locale locale = UtilHttp.getLocale(request);
+    request.setAttribute("locale",locale);
+    Map uiLabelMap = UtilProperties.getResourceBundleMap("WebtoolsUiLabels", locale);
+    request.setAttribute("uiLabelMap", uiLabelMap);
+
     Map layoutSettings = new HashMap();
     request.setAttribute("layoutSettings", layoutSettings);
     
