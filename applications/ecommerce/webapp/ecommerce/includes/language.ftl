@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,50 +23,29 @@
  *@version    $Rev$
  *@since      3.0
 -->
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#assign locale = Static["org.ofbiz.base.util.UtilHttp"].getLocale(session)>
-<#if requestAttributes.availableLocales?exists><#assign availableLocales = requestAttributes.availableLocales></#if>
 
-
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign='middle' align='center'>
-            <div class="boxhead">${uiLabelMap.CommonLanguageTitle}</div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td align='center'>
-            <form method="POST" name="chooseLanguage" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
-              <select name="locale" class="selectBox">
-                <#assign initialDisplayName = locale.getDisplayName(locale)>
-                <#if 18 < initialDisplayName?length>
-                  <assign initialDisplayName = initialDisplayName[0..15] + "...">
-                </#if>
-                <option value="${locale.toString()}">${initialDisplayName}</option>
-                <option value="${locale.toString()}">----</option>
-                <#list availableLocales as availableLocale>
-                  <#assign displayName = availableLocale.getDisplayName(locale)>
-                  <#if 18 < displayName?length>
-                    <#assign displayName = displayName[0..15] + "...">
-                  </#if>
-                  <option value="${availableLocale.toString()}">${displayName}</option>
-                </#list>
-              </select>
-              <div><a href="javascript:document.chooseLanguage.submit()" class="buttontext">${uiLabelMap.CommonChooseLanguage}</a></div>
-            </form>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<br>
+<div class="ecom-screenlet">
+    <div class="ecom-screenlet-header">
+        <div class="boxhead">${uiLabelMap.CommonLanguageTitle}</div>
+    </div>
+    <div class="ecom-screenlet-body" style="text-align: center;">
+        <form method="POST" name="chooseLanguage" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
+          <select name="locale" class="selectBox">
+            <#assign initialDisplayName = locale.getDisplayName(locale)>
+            <#if 18 < initialDisplayName?length>
+              <assign initialDisplayName = initialDisplayName[0..15] + "...">
+            </#if>
+            <option value="${locale.toString()}">${initialDisplayName}</option>
+            <option value="${locale.toString()}">----</option>
+            <#list availableLocales as availableLocale>
+              <#assign displayName = availableLocale.getDisplayName(locale)>
+              <#if 18 < displayName?length>
+                <#assign displayName = displayName[0..15] + "...">
+              </#if>
+              <option value="${availableLocale.toString()}">${displayName}</option>
+            </#list>
+          </select>
+          <div><a href="javascript:document.chooseLanguage.submit()" class="buttontext">${uiLabelMap.CommonChange}</a></div>
+        </form>
+    </div>
+</div>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,50 +23,28 @@
  *@version    $Rev$
  *@since      3.1
 -->
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#if sessionAttributes.lastViewedCategories?exists && sessionAttributes.lastViewedCategories?has_content>
-  <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-    <tr>
-      <td width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-          <tr>
-            <td valign="middle" align="center">
-              <div class="boxhead">${uiLabelMap.EcommerceLastCategories}...</div>
-            </td>
-            <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/clearLastViewed</@ofbizUrl>" class="lightbuttontextsmall">${uiLabelMap.CommonClear}</a>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-          <tr>
-            <td>
-              <table width='100%' cellspacing="0" cellpadding="0" border="0">
-                <#assign count = 0>
-                <#list sessionAttributes.lastViewedCategories as categoryId>
-                  <#if count < 9>
-                    <#assign category = delegator.findByPrimaryKeyCache("ProductCategory", Static["org.ofbiz.base.util.UtilMisc"].toMap("productCategoryId", categoryId))?if_exists>
-                    <#if category?has_content>
-                      <tr>
-                        <td>
-                          <span class="browsecategorytext">-&nbsp;</span>
-                          <a href="<@ofbizUrl>/category/~category_id=${categoryId}</@ofbizUrl>" class="browsecategorybutton">${category.description?if_exists}</a>
-                        </td>
-                      </tr>
-                    </#if>
-                  </#if>
-                  <#assign count = count + 1>
-                </#list>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-  <br>
+
+<#assign maxToShow = 8/>
+<#assign lastViewedCategories = sessionAttributes.lastViewedCategories/>
+<#if lastViewedCategories?has_content>
+    <#if (lastViewedCategories?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(lastViewedCategories?size-1)/></#if>
+    <div class="ecom-screenlet">
+        <div class="ecom-screenlet-header">
+            <div style="float: right;">
+                <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>" class="lightbuttontextsmall">[${uiLabelMap.CommonClear}]</a>
+            </div>
+            <div class="boxhead">${uiLabelMap.EcommerceLastCategories}</div>
+        </div>
+        <div class="ecom-screenlet-body">
+            <#list lastViewedCategories[0..limit] as categoryId>
+                <#assign category = delegator.findByPrimaryKeyCache("ProductCategory", Static["org.ofbiz.base.util.UtilMisc"].toMap("productCategoryId", categoryId))?if_exists>
+                <#if category?has_content>
+                    <div>
+                        <span class="browsecategorytext">-&nbsp;</span>
+                        <a href="<@ofbizUrl>/category/~category_id=${categoryId}</@ofbizUrl>" class="browsecategorybutton">${category.description?if_exists}</a>
+                    </div>
+                </#if>
+            </#list>
+        </div>
+    </div>
 </#if>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,47 +24,23 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if reorderProducts?has_content>
-  <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-    <tr>
-      <td width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-          <tr>
-            <td valign="middle" align="center">
-              <div class="boxhead">${uiLabelMap.ProductQuickReorder}...</div>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-          <tr>
-            <td>
-              <table width='100%' cellspacing="0" cellpadding="0" border="0">
-                <#list reorderProducts as miniProduct>
-                  <tr>
-                    <td>
-                      ${setRequestAttribute("miniProdQuantity", reorderQuantities.get(miniProduct.productId))}
-                      ${setRequestAttribute("miniProdFormName", "theminireorderprod" + miniProduct_index + "form")}
-                      ${setRequestAttribute("optProductId", miniProduct.productId)}
-                      <#if pages?exists>${pages.get("/catalog/miniproductsummary.ftl")}</#if>
-                      <#if screens?exists>${screens.render("component://ecommerce/widget/CatalogScreens.xml#miniproductsummary")}</#if>
-                    </td>
-                  </tr>
-                  <#if miniProduct_has_next>
-                    <tr><td><hr class='sepbar'></td></tr>
-                  </#if>
-                </#list>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-  <br>
+<div class="ecom-screenlet">
+    <div class="ecom-screenlet-header">
+        <div class="boxhead">${uiLabelMap.ProductQuickReorder}...</div>
+    </div>
+    <div class="ecom-screenlet-body">
+        <#list reorderProducts as miniProduct>
+          <div>
+              ${setRequestAttribute("miniProdQuantity", reorderQuantities.get(miniProduct.productId))}
+              ${setRequestAttribute("miniProdFormName", "theminireorderprod" + miniProduct_index + "form")}
+              ${setRequestAttribute("optProductId", miniProduct.productId)}
+              ${screens.render("component://ecommerce/widget/CatalogScreens.xml#miniproductsummary")}
+          </div>
+          <#if miniProduct_has_next>
+              <div><hr class='sepbar'></div>
+          </#if>
+        </#list>
+    </div>
+</div>
 </#if>
-

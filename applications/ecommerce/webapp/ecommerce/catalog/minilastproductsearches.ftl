@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -19,65 +19,43 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Rev$
- *@since      2.2
+ *@since      3.1
 -->
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#assign searchOptionsHistoryList = Static["org.ofbiz.product.product.ProductSearchSession"].getSearchOptionsHistoryList(session)>
+
+<#assign maxToShow = 4/>
+<#assign searchOptionsHistoryList = Static["org.ofbiz.product.product.ProductSearchSession"].getSearchOptionsHistoryList(session)/>
 <#if searchOptionsHistoryList?has_content>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-    <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-          <tr>
-            <td valign="middle" align="center">
-              <div class="boxhead">${uiLabelMap.EcommerceLastSearches}...</div>
-            </td>
-            <#if 4 < searchOptionsHistoryList?size>
-            <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/advancedsearch</@ofbizUrl>" class="lightbuttontextsmall">${uiLabelMap.CommonMore}</a>
-            </td>
-            </#if>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-          <tr>
-            <td>
-              <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                <#list searchOptionsHistoryList as searchOptions>
-                <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
-                  <#if searchOptions_index < 4>
-                    <tr>
-                      <td>
-                        <div class="tabletext">
-                          <b>Search #${searchOptions_index + 1}</b>
-                        </div>
-                        <div class="tabletext">
-                          <a href="<@ofbizUrl>/setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[Search]</a>
-                          <a href="<@ofbizUrl>/setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="buttontext">[Refine]</a>
-                        </div>
-                        <#assign constraintStrings = searchOptions.searchGetConstraintStrings(false, delegator)>
-                        <#list constraintStrings as constraintString>
-                          <div class="tabletext">&nbsp;-&nbsp;${constraintString}</div>
-                        </#list>
-                      </td>
-                    </tr>
-                    <#if searchOptions_has_next && searchOptions_index < 3>
-                      <tr><td><hr class="sepbar"/></td></tr>
-                    </#if>
-                  </#if>
-                </#list>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-  <br>
+    <#if (searchOptionsHistoryList?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(searchOptionsHistoryList?size-1)/></#if>
+    <div class="ecom-screenlet">
+        <div class="ecom-screenlet-header">
+            <div style="float: right;">
+                <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>" class="lightbuttontextsmall">[${uiLabelMap.CommonClear}]</a>
+                <#if (searchOptionsHistoryList?size > maxToShow)>
+                    <a href="<@ofbizUrl>advancedsearch</@ofbizUrl>" class="lightbuttontextsmall">[${uiLabelMap.CommonMore}]</a>
+                </#if>
+            </div>
+            <div class="boxhead">${uiLabelMap.EcommerceLastSearches}...</div>
+        </div>
+        <div class="ecom-screenlet-body">
+            <#list searchOptionsHistoryList[0..limit] as searchOptions>
+            <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
+                    <div class="tabletext">
+                      <b>Search #${searchOptions_index + 1}</b>
+                    </div>
+                    <div class="tabletext">
+                      <a href="<@ofbizUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[Search]</a>
+                      <a href="<@ofbizUrl>setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="buttontext">[Refine]</a>
+                    </div>
+                    <#assign constraintStrings = searchOptions.searchGetConstraintStrings(false, delegator)>
+                    <#list constraintStrings as constraintString>
+                      <div class="tabletext">&nbsp;-&nbsp;${constraintString}</div>
+                    </#list>
+                <#if searchOptions_has_next>
+                    <div><hr class="sepbar"/></div>
+                </#if>
+            </#list>
+        </div>
+    </div>
 </#if>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -23,9 +23,8 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if miniProduct?exists>
-    <a href="<@ofbizUrl>/product/~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext">${miniProductContentWrapper.get("PRODUCT_NAME")?default("No Name Available")}</a>
+    <a href="<@ofbizUrl>product/~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext">${miniProductContentWrapper.get("PRODUCT_NAME")?default("No Name Available")}</a>
     <div class="tabletext"><b>${miniProduct.productId}</b>
       <#if (priceResult.price?default(0) > 0 && miniProduct.requireAmount?default("N") == "N")>
         <#if "Y" = miniProduct.isVirtual?if_exists> from </#if><b><span class="<#if priceResult.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=priceResult.price isoCode=priceResult.currencyUsed/></span></b>
@@ -39,11 +38,11 @@
         <#-- check to see if salesDiscontinuationDate has passed -->
         <div class="tabletext" style="color: red;">${uiLabelMap.ProductNoLongerAvailable}</div>
     <#elseif miniProduct.isVirtual?default("N") == "Y">
-        <a href="<@ofbizUrl>/product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseVariations}...]</nobr></a>
+        <a href="<@ofbizUrl>product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseVariations}...]</nobr></a>
     <#elseif miniProduct.requireAmount?default("N") == "Y">
-        <a href="<@ofbizUrl>/product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseAmount}...]</nobr></a>
+        <a href="<@ofbizUrl>product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseAmount}...]</nobr></a>
     <#else>
-        <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}" style="margin: 0;">
+        <form method="POST" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}" style="margin: 0;">
             <input type="hidden" name="add_product_id" value="${miniProduct.productId}">
             <input type="hidden" name="quantity" value="${miniProdQuantity?default("1")}">
             <#if requestParameters.order_id?has_content><input type="hidden" name="order_id" value="${requestParameters.order_id}"></#if>
@@ -56,4 +55,3 @@
         </form>
     </#if>
 </#if>
-

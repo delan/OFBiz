@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,55 +23,33 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#if sessionAttributes.lastViewedProducts?exists && sessionAttributes.lastViewedProducts?has_content>
-  <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-    <tr>
-      <td width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-          <tr>
-            <td valign="middle" align="center">
-              <div class="boxhead">${uiLabelMap.EcommerceLastProducts}...</div>
-            </td>
-            <#if 4 < sessionAttributes.lastViewedProducts?size>
-            <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/lastviewedproducts</@ofbizUrl>" class="lightbuttontextsmall">${uiLabelMap.CommonMore}</a>
-            </td>
-            </#if>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-          <tr>
-            <td>
-              <table width='100%' cellspacing="0" cellpadding="0" border="0">
-                <#assign count = 0>
-                <#list sessionAttributes.lastViewedProducts as productId>
-                  <#if count < 4>
-                    <tr>
-                      <td>
-                        ${setRequestAttribute("miniProdQuantity", "1")}
-                        ${setRequestAttribute("optProductId", productId)}
-                        ${setRequestAttribute("miniProdFormName", "lastviewed" + productId_index + "form")}
-                        <#if pages?exists>${pages.get("/catalog/miniproductsummary.ftl")}</#if>
-                        <#if screens?exists>${screens.render("component://ecommerce/widget/CatalogScreens.xml#miniproductsummary")}</#if>
-                      </td>
-                    </tr>
-                    <#if productId_has_next && count < 3>
-                      <tr><td><hr class='sepbar'></td></tr>
-                    </#if>
-                  </#if>
-                  <#assign count = count + 1>
-                </#list>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-  <br>
+
+<#assign maxToShow = 4/>
+<#assign lastViewedProducts = sessionAttributes.lastViewedProducts/>
+<#if lastViewedProducts?has_content>
+    <#if (lastViewedProducts?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(lastViewedProducts?size-1)/></#if>
+    <div class="ecom-screenlet">
+        <div class="ecom-screenlet-header">
+            <div style="float: right;">
+                <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>" class="lightbuttontextsmall">[${uiLabelMap.CommonClear}]</a>
+                <#if (lastViewedProducts?size > maxToShow)>
+                    <a href="<@ofbizUrl>lastviewedproducts</@ofbizUrl>" class="lightbuttontextsmall">[${uiLabelMap.CommonMore}]</a>
+                </#if>
+            </div>
+            <div class="boxhead">${uiLabelMap.EcommerceLastProducts}</div>
+        </div>
+        <div class="ecom-screenlet-body">
+            <#list lastViewedProducts[0..limit] as productId>
+                <div>
+                    ${setRequestAttribute("miniProdQuantity", "1")}
+                    ${setRequestAttribute("optProductId", productId)}
+                    ${setRequestAttribute("miniProdFormName", "lastviewed" + productId_index + "form")}
+                    ${screens.render("component://ecommerce/widget/CatalogScreens.xml#miniproductsummary")}
+                </div>
+                <#if productId_has_next>
+                    <div><hr class='sepbar'/></div>
+                </#if>
+            </#list>
+        </div>
+    </div>
 </#if>

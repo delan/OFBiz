@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,31 +20,22 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Rev$
  *@since      3.1
 -->
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign=middle align=center>
-            <div class="boxhead">${uiLabelMap.MostRecentlyUsed}</div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-<#list mrvList as mrvArr>
-  <tr>
-    <td width='100%'>
-       <div class="browsecategorytext" style="margin-left: 10px">
-         -&nbsp;<a href="<@ofbizUrl>/viewcontent?contentId=${mrvArr[0]}</@ofbizUrl>" class="browsecategorybutton">${mrvArr[1]}</a>
-       </div>
-   
-    </td>
-  </tr>
-</#list>
-</table>
+<#if mrvList?has_content>
+    <div class="ecom-screenlet">
+        <div class="ecom-screenlet-header">
+            <div class="boxhead">${uiLabelMap.EcommerceLastContent}</div>
+        </div>
+        <div class="ecom-screenlet-body">
+            <#list mrvList as mrvArr>
+                <div class="browsecategorytext" style="margin-left: 10px">
+                  -&nbsp;<a href="<@ofbizUrl>/viewcontent?contentId=${mrvArr[0]}</@ofbizUrl>" class="browsecategorybutton">${mrvArr[1]}</a>
+                </div>
+            </#list>
+        </div>
+    </div>
+</#if>
