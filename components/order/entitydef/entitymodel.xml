@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  */
 -->
 
@@ -338,6 +338,9 @@
       </relation>
       <relation type="many" rel-entity-name="OrderHeaderNoteView">
         <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="UserLogin">
         <key-map field-name="createdBy" rel-field-name="userLoginId"/>

@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentWorker.java,v 1.3 2003/08/26 14:09:33 ajzeneski Exp $
+ * $Id: PaymentWorker.java,v 1.4 2003/08/26 16:08:03 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class PaymentWorker {
@@ -168,24 +168,12 @@ public class PaymentWorker {
         
         return results;
     }
-        
-    public static String getPaymentPartyId(GenericDelegator delegator, String productStoreId, String paymentMethodTypeId) {
-        GenericValue paymentSettings = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, paymentMethodTypeId, null, true);
-        String paymentConfig = paymentSettings != null && paymentSettings.get("paymentPropertiesPath") != null ? paymentSettings.getString("paymentPropertiesPath") : null;
-        if (paymentConfig == null) paymentConfig = "payment.properties";    
-        return UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
-    }
-    
-    public static GenericValue getPaymentAddress(GenericDelegator delegator, String productStoreId, String paymentMethodTypeId) {
-        GenericValue paymentSettings = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, paymentMethodTypeId, null, true);
-        String paymentConfig = paymentSettings != null && paymentSettings.get("paymentPropertiesPath") != null ? paymentSettings.getString("paymentPropertiesPath") : null;
-        if (paymentConfig == null) paymentConfig = "payment.properties";
-        String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");      
-        
+            
+    public static GenericValue getPaymentAddress(GenericDelegator delegator, String partyId) {                
         List paymentAddresses = null;        
         try {
             paymentAddresses = delegator.findByAnd("PartyContactMechPurpose", 
-                UtilMisc.toMap("partyId", payToPartyId, "contactMechPurposeTypeId", "PAYMENT_LOCATION"), 
+                UtilMisc.toMap("partyId", partyId, "contactMechPurposeTypeId", "PAYMENT_LOCATION"), 
                 UtilMisc.toList("-fromDate"));
             paymentAddresses = EntityUtil.filterByDate(paymentAddresses);                
         } catch (GenericEntityException e) {

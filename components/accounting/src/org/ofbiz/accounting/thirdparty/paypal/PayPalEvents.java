@@ -1,5 +1,5 @@
 /*
- * $Id: PayPalEvents.java,v 1.1 2003/08/18 19:37:43 jonesde Exp $
+ * $Id: PayPalEvents.java,v 1.2 2003/08/26 16:08:03 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,6 +56,7 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 
@@ -63,7 +64,7 @@ import org.ofbiz.service.LocalDispatcher;
  * PayPal Events
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class PayPalEvents {
@@ -96,20 +97,33 @@ public class PayPalEvents {
         // get the webSiteId
         String webSiteId = CatalogWorker.getWebSiteId(request);
         
-        // get the payment properties file
-        String configString = null;
+        // get the product store
+        GenericValue productStore = null;
         try {
-            GenericValue webSitePayment = delegator.findByPrimaryKey("WebSitePaymentSetting", UtilMisc.toMap("webSiteId", webSiteId, "paymentMethodTypeId", "EXT_PAYPAL"));
-            if (webSitePayment != null)
-                configString = webSitePayment.getString("paymentConfiguration");
+            productStore = orderHeader.getRelatedOne("ProductStore");
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, "Cannot find webSitePayment Settings", module);
+            Debug.logError(e, "Unable to get ProductStore from OrderHeader", module);
+            
         }
-        if (configString == null)
-        configString = "payment.properties";
+        if (productStore == null) {
+            Debug.logError("ProductStore is null", module);
+            request.setAttribute("_ERROR_MESSAGE_", "<li>Problems getting merchant configuration, please contact customer service.");
+            return "error";
+        }
         
+        // get the payment properties file       
+        GenericValue paymentConfig = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStore.getString("productStoreId"), "EXT_WORLDPAY", null, true);
+        String configString = null;
+        if (paymentConfig != null) {
+            configString = paymentConfig.getString("paymentPropertiesPath");    
+        }
+                
+        if (configString == null) {
+            configString = "payment.properties";
+        }
+                        
         // get the company name
-        String company = UtilProperties.getPropertyValue(configString, "payment.general.company");
+        String company = UtilFormatOut.checkEmpty(productStore.getString("companyName"), "");
         
         // create the item name
         String itemName = "Order #" + orderId + (company != null ? " from " + company : "");

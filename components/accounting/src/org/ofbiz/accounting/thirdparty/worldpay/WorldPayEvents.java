@@ -1,5 +1,5 @@
 /*
- * $Id: WorldPayEvents.java,v 1.1 2003/08/18 19:37:43 jonesde Exp $
+ * $Id: WorldPayEvents.java,v 1.2 2003/08/26 16:08:04 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ofbiz.accounting.payment.PaymentWorker;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -40,6 +42,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.LocalDispatcher;
 
 import com.worldpay.core.ArgumentException;
@@ -57,7 +60,7 @@ import com.worldpay.util.CurrencyAmount;
  * WorldPay Select Pro Events/Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class WorldPayEvents {
@@ -163,17 +166,30 @@ public class WorldPayEvents {
             Debug.logWarning(e, "Problems getting order email address", module);
         }
         
-        // get the payment properties file
-        String configString = null;
+        // get the product store
+        GenericValue productStore = null;
         try {
-            GenericValue webSitePayment = delegator.findByPrimaryKey("WebSitePaymentSetting", UtilMisc.toMap("webSiteId", webSiteId, "paymentMethodTypeId", "EXT_WORLDPAY"));
-            if (webSitePayment != null)
-                configString = webSitePayment.getString("paymentConfiguration");
+            productStore = orderHeader.getRelatedOne("ProductStore");
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, "Cannot find webSitePayment Settings", module);
+            Debug.logError(e, "Unable to get ProductStore from OrderHeader", module);
+            
         }
-        if (configString == null)
-        configString = "payment.properties";
+        if (productStore == null) {
+            Debug.logError("ProductStore is null", module);
+            request.setAttribute("_ERROR_MESSAGE_", "<li>Problems getting merchant configuration, please contact customer service.");
+            return "error";
+        }
+        
+        // get the payment properties file       
+        GenericValue paymentConfig = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStore.getString("productStoreId"), "EXT_WORLDPAY", null, true);
+        String configString = null;
+        if (paymentConfig != null) {
+            configString = paymentConfig.getString("paymentPropertiesPath");    
+        }
+                
+        if (configString == null) {
+            configString = "payment.properties";
+        }
             
         String instId = UtilProperties.getPropertyValue(configString, "payment.worldpay.instId", "NONE");
         String authMode = UtilProperties.getPropertyValue(configString, "payment.worldpay.authMode", "A");
@@ -182,8 +198,8 @@ public class WorldPayEvents {
         String hideContact = UtilProperties.getPropertyValue(configString, "payment.worldpay.hideContact", "N");
         String confirmTemplate = UtilProperties.getPropertyValue(configString, "payment.worldpay.confirmTemplate", "");
         String timeout = UtilProperties.getPropertyValue(configString, "payment.worldpay.timeout", "0");
-        String company = UtilProperties.getPropertyValue(configString, "payment.general.company", "");
-        String defCur = UtilProperties.getPropertyValue(configString, "payment.general.defaultCurrency", "USD");                
+        String company = UtilFormatOut.checkEmpty(productStore.getString("companyName"), "");
+        String defCur = UtilFormatOut.checkEmpty(productStore.getString("defaultCurrencyUomId"), "USD");                       
                            
         // order description
         String description = "Order #" + orderId;

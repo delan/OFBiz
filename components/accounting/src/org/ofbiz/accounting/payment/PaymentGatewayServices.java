@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.5 2003/08/26 14:11:11 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.6 2003/08/26 16:08:03 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class PaymentGatewayServices {    
@@ -216,7 +216,7 @@ public class PaymentGatewayServices {
         
         if (processorResult != null) {
             // pass the payTo partyId to the result processor; we just add it to the result context.
-            String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
+            String payToPartyId = getPayToPartyId(orh.getOrderHeader());
             processorResult.put("payToPartyId", payToPartyId);  
         
             // add paymentSettings to result; for use by later processors
@@ -243,6 +243,21 @@ public class PaymentGatewayServices {
             }            
         }
         return paymentSettings;        
+    }
+    
+    private static String getPayToPartyId(GenericValue orderHeader) {
+        String payToPartyId = "Company"; // default value
+        GenericValue productStore = null;
+        try {
+            productStore = orderHeader.getRelatedOne("ProductStore");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to get ProductStore from OrderHeader", module);
+            return null;
+        }
+        if (productStore != null && productStore.get("payToPartyId") != null) {
+            payToPartyId = productStore.getString("payToPartyId");
+        }
+        return payToPartyId;
     }
             
     private static Map makeAuthContext(OrderReadHelper orh, GenericValue paymentPreference, String paymentConfig, double authTotal) throws GeneralException {
@@ -732,7 +747,7 @@ public class PaymentGatewayServices {
         } 
             
         // pass the payTo partyId to the result processor; we just add it to the result context.        
-        String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
+        String payToPartyId = getPayToPartyId(orh.getOrderHeader());
         captureResult.put("payToPartyId", payToPartyId);  
         
         // add paymentSettings to result; for use by later processors
@@ -960,7 +975,7 @@ public class PaymentGatewayServices {
                 if (paymentConfig == null || paymentConfig.length() == 0) {
                     paymentConfig = "payment.properties";
                 }
-                String payFromPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
+                String payFromPartyId = getPayToPartyId(orderHeader);
                 
                 // handle the (reverse) payment                
                 Boolean refundResult = (Boolean) refundResponse.get("refundResult");
