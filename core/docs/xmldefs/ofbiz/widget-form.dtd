@@ -49,6 +49,8 @@
     list-name #IMPLIED
     list-entry-name CDATA #IMPLIED
     default-map-name CDATA #IMPLIED
+    default-entity-name CDATA #IMPLIED
+    default-service-name CDATA #IMPLIED
     default-title-style CDATA #IMPLIED
     default-widget-style CDATA #IMPLIED
 >
@@ -75,6 +77,12 @@
 	name: a unique name for this field
 	map-name: the name (or location) of the map that contains the data for this 
 		field in the form context
+	entity-name: used along with the field-name to look up the entity field definition
+		for any information that might be helpful when rendering the form field
+	field-name: see the description of entity-name
+	service-name: used along with the attribute-name to look up the service attribute 
+		definition for any information that might be helpful when rendering the form field
+	attribute-name: see the description of service-name
 	entry-name: defaults to the value of the name attribute; is used to 
 		specify the name of the entry in the map that contains the value to populate
 	parameter-name: defaults to the value of the name attribute; is the name of the 
@@ -105,8 +113,12 @@
 <!ATTLIST field
     name CDATA #REQUIRED
     map-name CDATA #IMPLIED
+    entity-name CDATA #IMPLIED
+    service-name CDATA #IMPLIED
     entry-name CDATA #IMPLIED
     parameter-name CDATA #IMPLIED
+    field-name CDATA #IMPLIED
+    attribute-name CDATA #IMPLIED
     title CDATA #IMPLIED
     tooltip CDATA #IMPLIED
     title-style CDATA #IMPLIED
@@ -137,7 +149,7 @@
 <!ELEMENT hyperlink EMPTY>
 <!ATTLIST hyperlink
     also-hidden ( true | false ) "true"
-    target ( true | false ) "true"
+    target CDATA #REQUIRED
     description CDATA #IMPLIED
 >
 
