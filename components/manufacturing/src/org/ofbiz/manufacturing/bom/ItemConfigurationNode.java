@@ -13,32 +13,34 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Date;
 
-
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
-
 import org.ofbiz.base.util.UtilMisc;
+
 
 /**
  *
- * @author  jacopo
+ * @author  Jacopo Cappellato
  */
+
 public class ItemConfigurationNode {
 
     private ItemConfigurationNode parentNode; // the parent node (null if it's not present)
     private ItemConfigurationNode substitutedNode; // The virtual node (if any) that this instance substitutes
+    private String productForRules;
     private GenericValue part; // the current part (from Part entity)
     private ArrayList children; // part's children (from PartBom entity)
     private ArrayList childrenNodes; // part's children nodes (ItemConfigurationNode)
     private int depth;
     private float quantity;
-    
+   
     public ItemConfigurationNode(GenericValue part) {
         this.part = part;
         children = new ArrayList();
         childrenNodes = new ArrayList();
         parentNode = null;
+        productForRules = null;
         // Now we initialize the fields used in breakdowns
         depth = 0;
         quantity = 0;
@@ -47,18 +49,17 @@ public class ItemConfigurationNode {
     public ItemConfigurationNode(String partId, GenericDelegator delegator) throws GenericEntityException {
         this(delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", partId)));
     }
-    
 
-    protected void loadChildren(String partBomTypeId, Date fromDate, List productFeatures, List productPartRules) throws GenericEntityException {
+    protected void loadChildren(String partBomTypeId, Date fromDate, List productFeatures) throws GenericEntityException {
         if (part == null) {
             throw new GenericEntityException("Part is null");
         }
         GenericDelegator delegator = part.getDelegator();
         List rows = delegator.findByAnd("ProductAssoc", 
-                                        UtilMisc.toMap("productId", part.get("productId"), 
+                                            UtilMisc.toMap("productId", part.get("productId"), 
                                                   //     "fromDate", fromDate,
                                                        "productAssocTypeId", partBomTypeId),
-                                        UtilMisc.toList("sequenceNum"));
+                                            UtilMisc.toList("sequenceNum"));
         if ((rows == null || rows.size() == 0) && substitutedNode != null) {
             // If no child is found and this is a substituted node
             // we try to search for substituted node's children.
@@ -76,76 +77,127 @@ public class ItemConfigurationNode {
         while(childrenIterator.hasNext()) {
             oneChild = (GenericValue)childrenIterator.next();
             // Configurator
-            oneChildNode = configurator(oneChild, productFeatures, productPartRules, delegator);
-
+System.out.println("");
+System.out.println("");
+System.out.println("*************************************************");
+System.out.println("Configuring component: " + oneChild);
+System.out.println("Product features: " + productFeatures);
+System.out.println("ROOT NODE: " + getRootNode().getProductForRules());
+            oneChildNode = configurator(oneChild, productFeatures, getRootNode().getProductForRules(), delegator);
             // If the node is null this means that the node has been discarded by the rules.
             if (oneChildNode != null) {
                 oneChildNode.setParentNode(this);
-                oneChildNode.loadChildren(partBomTypeId, fromDate, productFeatures, productPartRules);
+                oneChildNode.loadChildren(partBomTypeId, fromDate, productFeatures);
             }
             childrenNodes.add(oneChildNode);
         }
     }
-    
-    private ItemConfigurationNode configurator(GenericValue node, List productFeatures, List productPartRules, GenericDelegator delegator) throws GenericEntityException {
-        ItemConfigurationNode oneChildNode = new ItemConfigurationNode((String)node.get("productIdTo"), delegator);
-        // CONFIGURATOR
-        if (oneChildNode.isVirtual()) {
-            if (productFeatures != null && productPartRules != null) {
-                // If the part is VIRTUAL and
-                // productFeatures and productPartRules are not null
-                // we have to substitute the part with the right part's variant
-                Iterator rules = productPartRules.iterator();
-                ArrayList linkRules = new ArrayList();
-                GenericValue rule = null;
-                // First of all we select all the rules that apply to this link
-                while (rules.hasNext()) {
-                    rule = (GenericValue)rules.next();
-                    if (((String)rule.get("partIdFor")).equals((String)part.get("productId")) &&
-                    ((String)rule.get("partIdIn")).equals((String)oneChildNode.getPart().get("productId"))) {
-                        // The rule concerns this link
-                        linkRules.add(rule);
+
+    private ItemConfigurationNode substituteNode(ItemConfigurationNode oneChildNode, List productFeatures, List productPartRules, GenericDelegator delegator) throws GenericEntityException {
+        if (productPartRules != null) {
+            GenericValue rule = null;
+            for (int i = 0; i < productPartRules.size(); i++) {
+                rule = (GenericValue)productPartRules.get(i);
+                String ruleCondition = (String)rule.get("productFeature");
+                String ruleOperator = (String)rule.get("ruleOperator");
+                String newPart = (String)rule.get("productIdInSubst");
+System.out.println("Evaluating rule: " + rule);
+                GenericValue feature = null;
+                boolean ruleSatisfied = false;
+                if (ruleCondition == null || ruleCondition.equals("")) {
+                    ruleSatisfied = true;
+                } else {
+                    if (productFeatures != null) {
+                        for (int j = 0; j < productFeatures.size(); j++) {
+                            feature = (GenericValue)productFeatures.get(j);
+                            if (ruleCondition.equals((String)feature.get("productFeatureId"))) {
+                                ruleSatisfied = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+System.out.println("Rule satisfied: " + ruleSatisfied);                
+                if (ruleSatisfied && ruleOperator.equals("OR")) {
+                    ItemConfigurationNode tmpNode = oneChildNode;
+                    if (newPart == null || newPart.equals("")) {
+                        oneChildNode = null;
                     } else {
-                        // We try to see if this rule applies to the substituted node (if any)
-                        if (substitutedNode != null) {
-                            if (((String)rule.get("partIdFor")).equals((String)substitutedNode.getPart().get("productId")) &&
-                                ((String)rule.get("partIdIn")).equals((String)oneChildNode.getPart().get("productId"))) {
-                                // The rule concerns this link
-                                linkRules.add(rule);
-                            }       
-                        }
+                        oneChildNode = new ItemConfigurationNode(newPart, delegator);
+                        oneChildNode.setSubstitutedNode(tmpNode);
                     }
+                    break;
                 }
-                for (int i = 0; i < linkRules.size(); i++) {
-                    rule = (GenericValue)linkRules.get(i);
-                    String ruleCondition = (String)rule.get("productFeature");
-                    String ruleOperator = (String)rule.get("ruleOperator");
-                    String newPart = (String)rule.get("partIdInSubst");
-                    GenericValue feature = null;
-                    boolean ruleSatisfied = false;
-                    for (int j = 0; j < productFeatures.size(); j++) {
-                        feature = (GenericValue)productFeatures.get(j);
-                        if (ruleCondition == null || ruleCondition.equals("") || ruleCondition.equals((String)feature.get("productFeatureId"))) {
-                            ruleSatisfied = true;
-                            break;
-                        }
-                    }
-                    if (ruleSatisfied && ruleOperator.equals("OR")) {
-                        ItemConfigurationNode tmpNode = oneChildNode;
-                        if (newPart == null || newPart.equals("")) {
-                            oneChildNode = null;
-                        } else {
-                            oneChildNode = new ItemConfigurationNode(newPart, delegator);
-                            oneChildNode.setSubstitutedNode(tmpNode);
-                        }
-                        break;
-                    }
-                    // FIXME: implementare AND
-                }
-            }
+                // FIXME: implementare AND
+            } // end of for
+            
         }
         return oneChildNode;
     }
+    
+    private ItemConfigurationNode configurator(GenericValue node, List productFeatures, String productIdForRules, GenericDelegator delegator) throws GenericEntityException {
+        ItemConfigurationNode oneChildNode = new ItemConfigurationNode((String)node.get("productIdTo"), delegator);
+        ItemConfigurationNode newNode = oneChildNode;
+        // CONFIGURATOR
+        if (oneChildNode.isVirtual()) {
+System.out.println("Virtual NODE: " + oneChildNode);
+            // If the part is VIRTUAL and
+            // productFeatures and productPartRules are not null
+            // we have to substitute the part with the right part's variant
+            List productPartRules = delegator.findByAnd("ProductManufacturingRule",
+                                                    UtilMisc.toMap("productId", productIdForRules,
+                                                    "productIdFor", node.get("productId"),
+                                                    "productIdIn", node.get("productIdTo")));
+            if (substitutedNode != null) {
+                productPartRules.addAll(delegator.findByAnd("ProductManufacturingRule",
+                                                    UtilMisc.toMap("productId", productIdForRules,
+                                                    "productIdFor", substitutedNode.getPart().getString("productId"),
+                                                    "productIdIn", node.get("productIdTo"))));
+            }
+System.out.println("Tot spec rules: " + productPartRules);
+            newNode = substituteNode(oneChildNode, productFeatures, productPartRules, delegator);
+            if (newNode == oneChildNode) {
+System.out.println("NO rule FOUND!!!");
+                // If no substitution has been done (no valid rule applied),
+                // we try to search for a generic link-rule
+                List genericLinkRules = delegator.findByAnd("ProductManufacturingRule",
+                                                        UtilMisc.toMap("productId", "",
+                                                        "productIdFor", node.get("productId"),
+                                                        "productIdIn", node.get("productIdTo")));
+                if (substitutedNode != null) {
+                    genericLinkRules.addAll(delegator.findByAnd("ProductManufacturingRule",
+                                                        UtilMisc.toMap("productId", "",
+                                                        "productIdFor", substitutedNode.getPart().getString("productId"),
+                                                        "productIdIn", node.get("productIdTo"))));
+                }
+System.out.println("Tot gen link rules: " + genericLinkRules);
+                newNode = null;
+                newNode = substituteNode(oneChildNode, productFeatures, genericLinkRules, delegator);
+                if (newNode == oneChildNode) {
+                    // If no substitution has been done (no valid rule applied),
+                    // we try to search for a generic node-rule
+                    List genericNodeRules = delegator.findByAnd("ProductManufacturingRule",
+                                                            UtilMisc.toMap("productId", "",
+                                                            "productIdFor", "",
+                                                            "productIdIn", node.get("productIdTo")),
+                                                            UtilMisc.toList("ruleSeqId"));
+                    newNode = null;
+System.out.println("Tot gen node rules: " + genericLinkRules);
+                    newNode = substituteNode(oneChildNode, productFeatures, genericNodeRules, delegator);
+                    if (newNode == oneChildNode) {
+                        // If no substitution has been done (no valid rule applied),
+                        // we try to set the default (first) node-substitution
+                        if (genericNodeRules != null && genericNodeRules.size() > 0) {
+                            // FIXME
+                            //...
+                        }
+                    }
+                }
+            }
+        } // end of if (isVirtual())
+        return newNode;
+    }
+
     /** Getter for property parentNode.
      * @return Value of property parentNode.
      *
@@ -153,7 +205,10 @@ public class ItemConfigurationNode {
     public ItemConfigurationNode getParentNode() {
         return parentNode;
     }
-    
+
+    public ItemConfigurationNode getRootNode() {
+        return (parentNode != null? getParentNode(): this);
+    }
     /** Setter for property parentNode.
      * @param parentNode New value of property parentNode.
      *
@@ -161,7 +216,6 @@ public class ItemConfigurationNode {
     public void setParentNode(ItemConfigurationNode parentNode) {
         this.parentNode = parentNode;
     }
-    
     // ------------------------------------
     // Method used for TEST and DEBUG purposes
     public void print(StringBuffer sb, float quantity, int depth) {
@@ -171,7 +225,6 @@ public class ItemConfigurationNode {
         sb.append(part.get("productId"));
         sb.append(" - ");
         sb.append("" + quantity);
-        
         GenericValue oneChild = null;
         ItemConfigurationNode oneChildNode = null;
         depth++;
@@ -189,10 +242,8 @@ public class ItemConfigurationNode {
                 oneChildNode.print(sb, (quantity * bomQuantity), depth);
             }
         }
-        
     }
 
-    // Method used for TEST and DEBUG purposes
     public void print(ArrayList arr, float quantity, int depth) {
         // Now we set the depth and quantity of the current node
         // in this breakdown.
@@ -217,7 +268,6 @@ public class ItemConfigurationNode {
                 oneChildNode.print(arr, (quantity * bomQuantity), depth);
             }
         }
-        
     }
 
     // Method used for TEST and DEBUG purposes
@@ -242,9 +292,9 @@ public class ItemConfigurationNode {
     }
 
     protected boolean isVirtual() {
-        return part.get("productTypeId").equals("VIRTUAL");
+        return (part.get("isVirtual") != null? part.get("isVirtual").equals("Y"): false);
     }
-    
+
     public void isConfigured(ArrayList arr) {
         // First of all we visit the corrent node.
         if (isVirtual()) {
@@ -261,8 +311,8 @@ public class ItemConfigurationNode {
             }
         }
     }
+   
 
-    
     /** Getter for property quantity.
      * @return Value of property quantity.
      *
@@ -279,10 +329,11 @@ public class ItemConfigurationNode {
      * @return Value of property depth.
      *
      */
+
     public int getDepth() {
         return depth;
     }
-    
+  
     public GenericValue getPart() {
         return part;
     }
@@ -294,7 +345,7 @@ public class ItemConfigurationNode {
     public ItemConfigurationNode getSubstitutedNode() {
         return substitutedNode;
     }
-    
+  
     /** Setter for property substitutedNode.
      * @param substitutedNode New value of property substitutedNode.
      *
@@ -302,5 +353,26 @@ public class ItemConfigurationNode {
     public void setSubstitutedNode(ItemConfigurationNode substitutedNode) {
         this.substitutedNode = substitutedNode;
     }
+ 
+    public String getRootProductForRules() {
+        return getParentNode().getProductForRules();
+    }
+    
+    /** Getter for property productForRules.
+     * @return Value of property productForRules.
+     *
+     */
+    public String getProductForRules() {
+        return productForRules;
+    }
+    
+    /** Setter for property productForRules.
+     * @param productForRules New value of property productForRules.
+     *
+     */
+    public void setProductForRules(String productForRules) {
+        this.productForRules = productForRules;
+    }
     
 }
+
