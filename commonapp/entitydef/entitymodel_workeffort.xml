@@ -320,8 +320,8 @@
     <view-entity entity-name="WorkflowDataFieldsView" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Data Fields View Entity">	
-      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />	
-      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />
+      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />	
+      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />
       <alias entity-alias="WDF" name="dataFieldId" prim-key="true" />
       <alias entity-alias="WDF" name="dataFieldName" />
       <alias entity-alias="WDF" name="description" />
@@ -454,8 +454,8 @@
       <field name="graphConformanceEnumId" type="id"></field>
       <field name="priorityUomId" type="id"></field>
       <field name="costUomId" type="id"></field>
-      <field name="responsibleParticipantId" type="id"></field>
-      <field name="documentationContentId" type="id"></field>
+      <field name="responsibleListId" type="id"></field>
+      <field name="documentationUrl" type="url"></field>
       <field name="iconContentId" type="id"></field>
       <field name="importedFromUrl" type="url"></field>
       <field name="applicationListId" type="id"></field>
@@ -486,17 +486,14 @@
       <relation type="one" title="Cost" rel-entity-name="Uom">
         <key-map field-name="costUomId" rel-field-name="uomId" />
       </relation>
-      <relation type="one" title="Responsible" rel-entity-name="WorkflowParticipant">
-        <key-map field-name="responsibleParticipantId" rel-field-name="participantId" />
+      <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantList">
+        <key-map field-name="responsibleListId" rel-field-name="participantListId" />
       </relation>
-      <relation type="one" title="Documentation" rel-entity-name="Content">
-        <key-map field-name="documentationContentId" rel-field-name="contentId" />
+      <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantsView">
+        <key-map field-name="responsibleListId" rel-field-name="participantListId" />
       </relation>
       <relation type="one" title="Icon" rel-entity-name="Content">
         <key-map field-name="iconContentId" rel-field-name="contentId" />
-      </relation>
-      <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantsView">
-        <key-map field-name="responsibleParticipantId" rel-field-name="participantId" />
       </relation>
       <relation type="many" rel-entity-name="WorkflowDataFieldList">
         <key-map field-name="dataFieldListId" />
@@ -553,12 +550,6 @@
       <relation type="many" rel-entity-name="WorkflowParticipantList">
         <key-map field-name="participantId" />
       </relation>
-      <relation type="many" title="Responsible" rel-entity-name="WorkflowPackage">
-        <key-map field-name="participantId" rel-field-name="responsibleParticipantId" />
-      </relation>
-      <relation type="many" title="Responsible" rel-entity-name="WorkflowProcess">
-        <key-map field-name="participantId" rel-field-name="responsibleParticipantId" />
-      </relation>
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
@@ -582,6 +573,12 @@
       </relation>
       <relation type="many" rel-entity-name="WorkflowPackage">
         <key-map field-name="participantListId" />
+      </relation>
+      <relation type="many" title="Responsible" rel-entity-name="WorkflowProcess">
+        <key-map field-name="participantListId" rel-field-name="responsibleListId" />
+      </relation>
+      <relation type="many" title="Responsible" rel-entity-name="WorkflowPackage">
+        <key-map field-name="participantListId" rel-field-name="responsibleListId" />
       </relation>
     </entity>
     <entity entity-name="WorkflowParticipantType" 
@@ -628,17 +625,17 @@
       <relation type="one" rel-entity-name="WorkflowParticipantType">
         <key-map field-name="participantTypeId" />
       </relation>
-      <relation type="many" title="Responsible" rel-entity-name="WorkflowPackage">
-        <key-map field-name="participantId" rel-field-name="responsibleParticipantId" />
-      </relation>
       <relation type="many" rel-entity-name="WorkflowProcess">
         <key-map field-name="participantListId" />
       </relation>
-      <relation type="many" title="Responsible" rel-entity-name="WorkflowProcess">
-        <key-map field-name="participantId" rel-field-name="responsibleParticipantId" />
-      </relation>
       <relation type="many" rel-entity-name="WorkflowPackage">
         <key-map field-name="participantListId" />
+      </relation>
+      <relation type="many" title="Responsible" rel-entity-name="WorkflowProcess">
+        <key-map field-name="participantListId" rel-field-name="responsibleListId" />
+      </relation>
+      <relation type="many" title="Responsible" rel-entity-name="WorkflowPackage">
+        <key-map field-name="participantListId" rel-field-name="responsibleListId" />
       </relation>
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
@@ -666,12 +663,12 @@
       <field name="timeLimit" type="floating-point"></field>
       <field name="validFromDate" type="date-time"></field>
       <field name="validToDate" type="date-time"></field>
-      <field name="responsibleParticipantId" type="id"></field>
+      <field name="responsibleListId" type="id"></field>
       <field name="formalParamListId" type="id"></field>
       <field name="dataFieldListId" type="id"></field>
       <field name="participantListId" type="id"></field>
       <field name="applicationListId" type="id"></field>
-      <field name="documentationContentId" type="id"></field>
+      <field name="documentationUrl" type="url"></field>
       <field name="iconContentId" type="id"></field>
       <field name="durationUomId" type="id"></field>
       <field name="duration" type="floating-point"></field>
@@ -696,11 +693,11 @@
       <relation type="one" title="Publication" rel-entity-name="StatusItem">
         <key-map field-name="publicationStatusId" rel-field-name="statusId" />
       </relation>
-      <relation type="one" title="Responsible" rel-entity-name="WorkflowParticipant">
-        <key-map field-name="responsibleParticipantId" rel-field-name="participantId" />
+      <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantList">
+        <key-map field-name="responsibleListId" rel-field-name="participantListId" />
       </relation>
-      <relation type="one" title="Documentation" rel-entity-name="Content">
-        <key-map field-name="documentationContentId" rel-field-name="contentId" />
+      <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantsView">
+        <key-map field-name="responsibleListId" rel-field-name="participantListId" />
       </relation>
       <relation type="one" title="Icon" rel-entity-name="Content">
         <key-map field-name="iconContentId" rel-field-name="contentId" />
@@ -734,9 +731,6 @@
       </relation>
       <relation type="many" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="participantListId" />
-      </relation>
-      <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantsView">
-        <key-map field-name="responsibleParticipantId" rel-field-name="participantId" />
       </relation>
     </entity>
     <entity entity-name="WorkflowSpecification" 
