@@ -24,6 +24,7 @@
  *@since      2.1
 */
 
+import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.product.catalog.*;
 import org.ofbiz.commonapp.product.feature.*;
 

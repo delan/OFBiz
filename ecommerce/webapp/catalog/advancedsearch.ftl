@@ -32,7 +32,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td align=center>
-            <form name="keywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style='margin: 0;'>
+            <form name="advtokeywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style='margin: 0;'>
               <input type='hidden' name="VIEW_SIZE" value="10">
               <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId}">
               <div class='tabletext'>
@@ -41,7 +41,7 @@
               <div class='tabletext'>
                 Any<input type='RADIO' name='SEARCH_OPERATOR' value='OR' <#if searchOperator == "OR">checked</#if>>
                 All<input type='RADIO' name='SEARCH_OPERATOR' value='AND' <#if searchOperator == "AND">checked</#if>>
-                &nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">Find</a>
+                &nbsp;<a href="javascript:document.advtokeywordsearchform.submit()" class="buttontext">Find</a>
               </div>
             </form>
           </td>
