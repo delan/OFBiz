@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.33 2004/01/12 10:19:22 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.34 2004/01/14 06:10:18 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.33 $
+ * @version    $Revision: 1.34 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -235,70 +235,84 @@ public class ProductPromoWorker {
         String partyId = cart.getPartyId();
 
         // this is our safety net; we should never need to loop through the rules more than a certain number of times, this is that number and may have to be changed for insanely large promo sets...
-        int maxIterations = 1000;
+        long maxIterations = 2 * Math.round(cart.getTotalQuantity());
         // part of the safety net to avoid infinite iteration
-        int numberOfIterations = 0;
-        // repeat until no more rules to run: either all rules are run, or no changes to the cart in a loop
-        boolean cartChanged = true;
-        while (cartChanged) {
-            cartChanged = false;
-            numberOfIterations++;
-            if (numberOfIterations > maxIterations) {
-                Debug.logError("ERROR: While calculating promotions the promotion rules where run more than " + maxIterations + " times, so the calculation has been ended. This should generally never happen unless you have bad rule definitions (or LOTS of promos/rules).", module);
-                break;
-            }
+        long numberOfIterations = 0;
+        
+        // set a max limit on how many times each promo can be run, for cases where there is no use limit this will be the use limit
+        //default to 2 times the number of items in the cart
+        long maxUseLimit = 2 * Math.round(cart.getTotalQuantity());
+        
+        try {
+            // repeat until no more rules to run: either all rules are run, or no changes to the cart in a loop
+            boolean cartChanged = true;
+            while (cartChanged) {
+                cartChanged = false;
+                numberOfIterations++;
+                if (numberOfIterations > maxIterations) {
+                    Debug.logError("ERROR: While calculating promotions the promotion rules where run more than " + maxIterations + " times, so the calculation has been ended. This should generally never happen unless you have bad rule definitions.", module);
+                    break;
+                }
 
-            Iterator productPromoIter = productPromoList.iterator();
-            while (productPromoIter.hasNext()) {
-                GenericValue productPromo = (GenericValue) productPromoIter.next();
-                String productPromoId = productPromo.getString("productPromoId");
+                Iterator productPromoIter = productPromoList.iterator();
+                while (productPromoIter.hasNext()) {
+                    GenericValue productPromo = (GenericValue) productPromoIter.next();
+                    String productPromoId = productPromo.getString("productPromoId");
 
-                List productPromoRules = productPromo.getRelatedCache("ProductPromoRule", null, null);
-                if (productPromoRules != null && productPromoRules.size() > 0) {
-                    // always have a useLimit to avoid unlimited looping, default to 1 if no other is specified
-                    Long candidateUseLimit = getProductPromoUseLimit(productPromo, partyId, delegator);
-                    long useLimit = candidateUseLimit == null ? 1 : candidateUseLimit.longValue();
-                    if (Debug.verboseOn()) Debug.logVerbose("Running promotion [" + productPromoId + "], useLimit=" + useLimit + ", # of rules=" + productPromoRules.size(), module);
+                    List productPromoRules = productPromo.getRelatedCache("ProductPromoRule", null, null);
+                    if (productPromoRules != null && productPromoRules.size() > 0) {
+                        // always have a useLimit to avoid unlimited looping, default to 1 if no other is specified
+                        Long candidateUseLimit = getProductPromoUseLimit(productPromo, partyId, delegator);
+                        Long useLimit = candidateUseLimit;
+                        if (Debug.verboseOn()) Debug.logVerbose("Running promotion [" + productPromoId + "], useLimit=" + useLimit + ", # of rules=" + productPromoRules.size(), module);
 
-                    boolean requireCode = "Y".equals(productPromo.getString("requireCode"));
-                    // check if promo code required
-                    if (requireCode) {
-                        Set enteredCodes = cart.getProductPromoCodesEntered();
-                        if (enteredCodes.size() > 0) {
-                            // get all promo codes entered, do a query with an IN condition to see if any of those are related
-                            EntityCondition codeCondition = new EntityExpr(new EntityExpr("productPromoId", EntityOperator.EQUALS, productPromoId), EntityOperator.AND, new EntityExpr("productPromoCodeId", EntityOperator.IN, enteredCodes));
-                            // may want to sort by something else to decide which code to use if there is more than one candidate
-                            List productPromoCodeList = delegator.findByCondition("ProductPromoCode", codeCondition, null, UtilMisc.toList("productPromoCodeId"));
-                            Iterator productPromoCodeIter = productPromoCodeList.iterator();
-                            // support multiple promo codes for a single promo, ie if we run into a use limit for one code see if we can find another for this promo
-                            // check the use limit before each pass so if the promo use limit has been hit we don't keep on trying for the promo code use limit, if there is one of course
-                            while ((useLimit > cart.getProductPromoUseCount(productPromoId)) && productPromoCodeIter.hasNext()) {
-                                GenericValue productPromoCode = (GenericValue) productPromoCodeIter.next();
-                                String productPromoCodeId = productPromoCode.getString("productPromoCodeId");
-                                Long codeUseLimit = getProductPromoCodeUseLimit(productPromoCode, partyId, delegator);
-                                if (runProductPromoRules(cart, cartChanged, useLimit, true, productPromoCodeId, codeUseLimit, productPromo, productPromoRules, dispatcher, delegator, nowTimestamp)) {
-                                    cartChanged = true;
+                        boolean requireCode = "Y".equals(productPromo.getString("requireCode"));
+                        // check if promo code required
+                        if (requireCode) {
+                            Set enteredCodes = cart.getProductPromoCodesEntered();
+                            if (enteredCodes.size() > 0) {
+                                // get all promo codes entered, do a query with an IN condition to see if any of those are related
+                                EntityCondition codeCondition = new EntityExpr(new EntityExpr("productPromoId", EntityOperator.EQUALS, productPromoId), EntityOperator.AND, new EntityExpr("productPromoCodeId", EntityOperator.IN, enteredCodes));
+                                // may want to sort by something else to decide which code to use if there is more than one candidate
+                                List productPromoCodeList = delegator.findByCondition("ProductPromoCode", codeCondition, null, UtilMisc.toList("productPromoCodeId"));
+                                Iterator productPromoCodeIter = productPromoCodeList.iterator();
+                                // support multiple promo codes for a single promo, ie if we run into a use limit for one code see if we can find another for this promo
+                                // check the use limit before each pass so if the promo use limit has been hit we don't keep on trying for the promo code use limit, if there is one of course
+                                while ((useLimit == null || useLimit.longValue() > cart.getProductPromoUseCount(productPromoId)) && productPromoCodeIter.hasNext()) {
+                                    GenericValue productPromoCode = (GenericValue) productPromoCodeIter.next();
+                                    String productPromoCodeId = productPromoCode.getString("productPromoCodeId");
+                                    Long codeUseLimit = getProductPromoCodeUseLimit(productPromoCode, partyId, delegator);
+                                    if (runProductPromoRules(cart, cartChanged, useLimit, true, productPromoCodeId, codeUseLimit, maxUseLimit, productPromo, productPromoRules, dispatcher, delegator, nowTimestamp)) {
+                                        cartChanged = true;
+                                    }
+                                    
+                                    if (cart.getProductPromoUseCount(productPromoId) > maxUseLimit) {
+                                        Debug.logError("ERROR: While calculating promotions the promotion [" + productPromoId + "] action was applied more than " + maxUseLimit + " times, so the calculation has been ended. This should generally never happen unless you have bad rule definitions.", module);
+                                        break;
+                                    }
                                 }
                             }
+                        } else {
+                            if (runProductPromoRules(cart, cartChanged, useLimit, false, null, null, maxUseLimit, productPromo, productPromoRules, dispatcher, delegator, nowTimestamp)) {
+                                cartChanged = true;
+                            }
                         }
-                    } else {
-                        if (runProductPromoRules(cart, cartChanged, useLimit, false, null, null, productPromo, productPromoRules, dispatcher, delegator, nowTimestamp)) {
-                            cartChanged = true;
-                        }
+                    }
+                    
+                    // if this is an isolatedTestRun clear out adjustments and cart item promo use info
+                    if (isolatedTestRun) {
+                        cart.clearAllPromotionAdjustments();
+                        cart.clearCartItemUseInPromoInfo();
                     }
                 }
                 
-                // if this is an isolatedTestRun clear out adjustments and cart item promo use info
+                // if this is an isolatedTestRun, then only go through it once, never retry
                 if (isolatedTestRun) {
-                    cart.clearAllPromotionAdjustments();
-                    cart.clearCartItemUseInPromoInfo();
+                    cartChanged = false;
                 }
             }
-            
-            // if this is an isolatedTestRun, then only go through it once, never retry
-            if (isolatedTestRun) {
-                cartChanged = false;
-            }
+        } catch (UseLimitException e) {
+            Debug.logError(e, e.toString(), module);
         }
     }
 
@@ -434,12 +448,12 @@ public class ProductPromoWorker {
         }
     }
 
-    protected static boolean runProductPromoRules(ShoppingCart cart, boolean cartChanged, long useLimit, boolean requireCode, String productPromoCodeId, Long codeUseLimit,
-            GenericValue productPromo, List productPromoRules, LocalDispatcher dispatcher, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
+    protected static boolean runProductPromoRules(ShoppingCart cart, boolean cartChanged, Long useLimit, boolean requireCode, String productPromoCodeId, Long codeUseLimit, long maxUseLimit,
+            GenericValue productPromo, List productPromoRules, LocalDispatcher dispatcher, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException, UseLimitException {
         String productPromoId = productPromo.getString("productPromoId");
-        while ((useLimit > cart.getProductPromoUseCount(productPromoId)) &&
+        while ((useLimit == null || useLimit.longValue() > cart.getProductPromoUseCount(productPromoId)) &&
                 (!requireCode || UtilValidate.isNotEmpty(productPromoCodeId)) &&
-                (codeUseLimit == null || codeUseLimit.intValue() > cart.getProductPromoCodeUse(productPromoCodeId))) {
+                (codeUseLimit == null || codeUseLimit.longValue() > cart.getProductPromoCodeUse(productPromoCodeId))) {
             boolean promoUsed = false;
             double totalDiscountAmount = 0;
             double quantityLeftInActions = 0;
@@ -503,6 +517,11 @@ public class ProductPromoWorker {
             } else {
                 // the promotion was not used, don't try again until we finish a full pass and come back to see the promo conditions are now satisfied based on changes to the cart
                 break;
+            }
+
+            
+            if (cart.getProductPromoUseCount(productPromoId) > maxUseLimit) {
+                throw new UseLimitException("ERROR: While calculating promotions the promotion [" + productPromoId + "] action was applied more than " + maxUseLimit + " times, so the calculation has been ended. This should generally never happen unless you have bad rule definitions.");
             }
         }
 
@@ -1233,6 +1252,12 @@ public class ProductPromoWorker {
                     productIds.remove(productId);
                 }
             }
+        }
+    }
+    
+    protected static class UseLimitException extends Exception {
+        public UseLimitException(String str) {
+            super(str);
         }
     }
 }
