@@ -25,20 +25,33 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom' style='border-width: 1px 1px 0px 1px;'>
         <tr>
-          <td class="headerButtonLeft"><a href="javascript:document.webtoolsform.submit()" class="buttontext">WebTools</a></td>
-          <TD width="90%" align=center class='headerCenter'>App Links</TD>
-          <%if(security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", session)) {%>
-            <td class="headerButtonRight"><a href="javascript:document.workeffortform.submit()" class="buttontext">WorkEffort</a></td>
+          <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
+            <td class="headerButtonLeft"><a href="javascript:document.partyform.submit()" class="buttontext">Party</a></td>
           <%}%>
           <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
-            <td class="headerButtonRight"><a href="javascript:document.catalogform.submit()" class="buttontext">Catalog</a></td>
-          <%}%>
-          <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
-            <td class="headerButtonRight"><a href="javascript:document.partyform.submit()" class="buttontext">Party</a></td>
+            <td class="headerButtonLeft"><a href="javascript:document.catalogform.submit()" class="buttontext">Catalog</a></td>
           <%}%>
           <%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
-            <td class="headerButtonRight"><a href="javascript:document.orderform.submit()" class="buttontext">Order</a></td>
+            <td class="headerButtonLeft"><a href="javascript:document.orderform.submit()" class="buttontext">Order</a></td>
           <%}%>
+          <%if(security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", session)) {%>
+            <td class="headerButtonLeft"><a href="javascript:document.workeffortform.submit()" class="buttontext">WorkEffort</a></td>
+          <%}%>
+          <td class="headerButtonLeft"><a href="javascript:document.webtoolsform.submit()" class="buttontext">WebTools</a></td>
+          <%--
+          <ofbiz:if name="person">
+            <TD width="90%" align=right class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>
+          </ofbiz:if>
+          <ofbiz:unless name="person">
+            <ofbiz:if name="partyGroup">
+              <TD width="90%" align=right class='headerCenter'>Welcome<%EntityField.run("partyGroup", "groupName", "", "", pageContext);%>!</TD>
+            </ofbiz:if>
+            <ofbiz:unless name="partyGroup">
+              <TD width="90%" align=right class='headerCenter'>Welcome!</TD>
+            </ofbiz:unless>
+          </ofbiz:unless>
+          --%>
+          <TD width="90%" align=right class='headerCenter'>&nbsp;</TD>
         </tr>
       </table>
     </TD>
