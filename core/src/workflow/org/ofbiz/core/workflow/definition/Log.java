@@ -3,6 +3,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/11/11 21:47:32  rbb36
+ * added setInitialized( true ) to the remote logging method
+ *
  * Revision 1.3  2001/11/11 21:38:30  rbb36
  * Added logRemotely( host, port )
  *
@@ -113,13 +116,15 @@ public abstract class Log {
     public static int getFallbackConfig() { return( _fallbackConfig ); }
     
     // SETTERS
-    protected static void setInitialized( boolean initialized ) {
+    private static void setInitialized( boolean initialized ) {
         _initialized = initialized;
     }
     /**
      * IMHO, you should alter DEFAULT_CONFIG_URL in the source of
      * this file and <b>never call this method</b>, except when doing
-     * a reinitialization at runtime to debug a flakey process.
+     * a reinitialization at runtime to debug a flakey process. This
+     * makes development easiest for large teams, as you don't have
+     * to ensure that everyone is initializing the log correctly.
      */
     public static void setConfigUrl( URL url ) {
         _configUrl = url;
@@ -127,17 +132,13 @@ public abstract class Log {
     /**
      * IMHO, you should alter DEFAULT_CONFIG_URL in the source of
      * this file and <b>never call this method</b>, except when doing
-     * a reinitialization at runtime to debug a flakey process.
+     * a reinitialization at runtime to debug a flakey process. This
+     * makes development easiest for large teams, as you don't have
+     * to ensure that everyone is initializing the log correctly.
      */
     public static void setFallbackConfig( int fallback ) {
         _fallbackConfig = fallback;
     } 
-    
-    // --------------------------------------------------------
-    // CONSTRUCTORS
-    // --------------------------------------------------------
-    
-    private Log() {}
     
     // --------------------------------------------------------
     // PUBLIC API
@@ -173,29 +174,31 @@ public abstract class Log {
      * </tt></pre>
      * will use temporary logging for the suspect section.
      */
-    public synchronized static void reinitialize( URL url ) {
-        setInitialized( false );
-        final PrintStream err = System.err;
-        try { System.setErr( new PrintStream( new PipedOutputStream() ) ); }
-        catch( Exception e ) {}
-        
-        try {
-            // Initialize
-            if( url != null ) {
-                try {
-                    PropertyConfigurator.resetConfiguration();
-                    PropertyConfigurator.configure( url );
-                    setInitialized( true );
-                } catch( Exception e ) {
+    public static void reinitialize( URL url ) {
+        synchronized( Log.class ) {
+            final PrintStream err = System.err;
+            try { System.setErr( new PrintStream( new PipedOutputStream() ) ); }
+            catch( Exception e ) {}
+            
+            try {
+                // Initialize
+                if( url != null ) {
+                    try {
+                        setInitialized( false );
+                        PropertyConfigurator.resetConfiguration();
+                        PropertyConfigurator.configure( url );
+                        setInitialized( true );
+                    } catch( Exception e ) {
+                        fallbackInit();
+                    }
+                } else {
                     fallbackInit();
                 }
-            } else {
-                fallbackInit();
+            } finally {
+                // Restore System.err
+                try { System.setErr( err ); }
+                catch( Exception e ) {}
             }
-        } finally {
-            // Restore System.err
-            try { System.setErr( err ); }
-            catch( Exception e ) {}
         }
     }
     
@@ -206,26 +209,28 @@ public abstract class Log {
      * Be a good scout, please call Log.forceInit() when
      * you are through (or remind the user to do so).
      */
-    public static synchronized void logRemotely( String host, int port ) {
-        setInitialized( false );
-        final PrintStream err = System.err;
-        try { System.setErr( new PrintStream( new PipedOutputStream() ) ); }
-        catch( Exception e ) {}
-        
-        // Initialize
-        try {
-            final SocketAppender appender =
-                new SocketAppender( host, port );
-            BasicConfigurator.resetConfiguration();
-            Category.getRoot().setPriority( null );
-            Category.getRoot().addAppender( appender );
-            setInitialized( true );
-        } catch( Exception e ) {
-            forceInit();
-        } finally {
-            // Restore System.err
-            try { System.setErr( err ); }
+    public static void logRemotely( String host, int port ) {
+        synchronized( Log.class ) {
+            final PrintStream err = System.err;
+            try { System.setErr( new PrintStream( new PipedOutputStream() ) ); }
             catch( Exception e ) {}
+            
+            // Initialize
+            try {
+                final SocketAppender appender =
+                    new SocketAppender( host, port );
+                setInitialized( false );
+                BasicConfigurator.resetConfiguration();
+                Category.getRoot().setPriority( null );
+                Category.getRoot().addAppender( appender );
+                setInitialized( true );
+            } catch( Exception e ) {
+            } finally {
+                // Restore System.err
+                try { System.setErr( err ); }
+                catch( Exception e ) {}
+            }
+            if( ! getInitialized() ) { forceInit(); }
         }
     }
     
@@ -233,7 +238,7 @@ public abstract class Log {
     // INTERNAL API
     // ---------------------------------------------------------
     
-    protected static URL getBestConfigUrl() {
+    private static URL getBestConfigUrl() {
         final String cliUrlString =
             System.getProperty( "log4j.configuration" );
         final URL setUrl = getConfigUrl();
@@ -276,23 +281,29 @@ public abstract class Log {
     }
     
     protected static void cliInit() {
-        BasicConfigurator.resetConfiguration();
-        BasicConfigurator.configure();
-        setInitialized( true );
+        synchronized( Log.class ) {
+            setInitialized( false );
+            BasicConfigurator.resetConfiguration();
+            BasicConfigurator.configure();
+            setInitialized( true );
+        }
     }
     
     protected static void nullInit() {
-        BasicConfigurator.resetConfiguration();
-        final Appender nullAppender = new AppenderSkeleton() {
-                public void append( LoggingEvent event ) {}
-                public void doAppend( LoggingEvent event ) {}
-                public void close() {}
-                public boolean requiresLayout() { return( false ); }
-            };
-        nullAppender.setName( "NULL_APPENDER" );
-        Category.getRoot().removeAllAppenders();
-        Category.getRoot().setPriority( Priority.FATAL );
-        Category.getRoot().addAppender( nullAppender );
-        setInitialized( true );
+        synchronized( Log.class ) {
+            setInitialized( false );
+            BasicConfigurator.resetConfiguration();
+            final Appender nullAppender = new AppenderSkeleton() {
+                    public void append( LoggingEvent event ) {}
+                    public void doAppend( LoggingEvent event ) {}
+                    public void close() {}
+                    public boolean requiresLayout() { return( false ); }
+                };
+            nullAppender.setName( "NULL_APPENDER" );
+            Category.getRoot().removeAllAppenders();
+            Category.getRoot().setPriority( Priority.FATAL );
+            Category.getRoot().addAppender( nullAppender );
+            setInitialized( true );
+        }
     }
 }
