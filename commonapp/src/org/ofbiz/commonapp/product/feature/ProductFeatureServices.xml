@@ -109,6 +109,11 @@
         <field-to-field field-name="productFeatureTypeId" map-name="productFeature" to-map-name="clearMakeGroupCacheMap"/>
         <string-to-field string="STANDARD_FEATURE" field-name="productFeatureApplTypeId" map-name="clearMakeGroupCacheMap"/>
         <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearMakeGroupCacheMap"/>
+
+        <!-- the SELECTABLE_FEATURE cache -->
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="clearSelFeatCacheMap"/>
+        <string-to-field string="SELECTABLE_FEATURE" field-name="productFeatureApplTypeId" map-name="clearSelFeatCacheMap"/>
+        <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearSelFeatCacheMap"/>
     </simple-method>
     <simple-method method-name="updateFeatureToProductApplication" short-description="Update Feature to Product Application">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateFeatureToProductApplication you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -133,6 +138,11 @@
         <field-to-field field-name="productFeatureTypeId" map-name="productFeature" to-map-name="clearMakeGroupCacheMap"/>
         <string-to-field string="STANDARD_FEATURE" field-name="productFeatureApplTypeId" map-name="clearMakeGroupCacheMap"/>
         <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearMakeGroupCacheMap"/>
+
+        <!-- the SELECTABLE_FEATURE cache -->
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="clearSelFeatCacheMap"/>
+        <string-to-field string="SELECTABLE_FEATURE" field-name="productFeatureApplTypeId" map-name="clearSelFeatCacheMap"/>
+        <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearSelFeatCacheMap"/>
     </simple-method>
     <simple-method method-name="removeFeatureFromProduct" short-description="Remove Feature from Product">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeFeatureFromProduct you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -164,6 +174,11 @@
         <field-to-field field-name="productFeatureTypeId" map-name="productFeature" to-map-name="clearMakeGroupCacheMap"/>
         <string-to-field string="STANDARD_FEATURE" field-name="productFeatureApplTypeId" map-name="clearMakeGroupCacheMap"/>
         <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearMakeGroupCacheMap"/>
+
+        <!-- the SELECTABLE_FEATURE cache -->
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="clearSelFeatCacheMap"/>
+        <string-to-field string="SELECTABLE_FEATURE" field-name="productFeatureApplTypeId" map-name="clearSelFeatCacheMap"/>
+        <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearSelFeatCacheMap"/>
     </simple-method>
 
     <simple-method method-name="applyFeatureToProductFromTypeAndCode" short-description="Apply Feature to Product using Feature Type and ID Code">
