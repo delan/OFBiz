@@ -940,11 +940,7 @@ public class OrderServices {
     public static Map prepareOrderEmailData(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-        String orderId = (String) context.get("orderId");
-        Map extraFields = (Map) context.get("extraFields");
-        if (extraFields != null) {
-            result.putAll(extraFields);
-        }
+        String orderId = (String) context.get("orderId");        
         
         try {
             GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));                               
