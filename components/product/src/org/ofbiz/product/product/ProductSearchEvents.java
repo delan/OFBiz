@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -52,14 +52,13 @@ import org.ofbiz.product.product.ProductSearch.ResultSortOrder;
  * Product Search Related Events
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class ProductSearchEvents {
 
     public static final String module = ProductSearchEvents.class.getName();
     public static final String resource = "ProductUiLabels";
-    public static final String err_resource = "ProductErrorUiLabel";
 
     /** Removes the results of a search from the specified category
      *@param request The HTTPRequest object for the current request
@@ -254,106 +253,142 @@ public class ProductSearchEvents {
        return "success";
    }
 
-   /** Adds a feature to a seach results
-    *@param request The HTTPRequest object for the current request
-    *@param response The HTTPResponse object for the current request
-    *@return String specifying the exit status of this event
-    */
-   public static String searchAddFeature(HttpServletRequest request, HttpServletResponse response) {
-       GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-       Locale locale = UtilHttp.getLocale(request);
+    /** Adds a feature to search results
+     *@param request The HTTPRequest object for the current request
+     *@param response The HTTPResponse object for the current request
+     *@return String specifying the exit status of this event
+     */
+    public static String searchAddFeature(HttpServletRequest request, HttpServletResponse response) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        Locale locale = UtilHttp.getLocale(request);
 
-       String productFeatureId = request.getParameter("productFeatureId");
-       String fromDateStr = request.getParameter("fromDate");
-       String thruDateStr = request.getParameter("thruDate");
-       String amountStr = request.getParameter("amount");
-       String sequenceNumStr = request.getParameter("sequenceNum");
-       String productFeatureApplTypeId = request.getParameter("productFeatureApplTypeId");
-       String errMsg = null;
+        String productFeatureId = request.getParameter("productFeatureId");
+        String fromDateStr = request.getParameter("fromDate");
+        String thruDateStr = request.getParameter("thruDate");
+        String amountStr = request.getParameter("amount");
+        String sequenceNumStr = request.getParameter("sequenceNum");
+        String productFeatureApplTypeId = request.getParameter("productFeatureApplTypeId");
 
-       Timestamp thruDate = null;
-       Timestamp fromDate = null;
-       Double amount = null;
-       Long sequenceNum = null;
+        Timestamp thruDate = null;
+        Timestamp fromDate = null;
+        Double amount = null;
+        Long sequenceNum = null;
 
-       try {
-           if (UtilValidate.isNotEmpty(fromDateStr)) {
-               fromDate = Timestamp.valueOf(fromDateStr);
-           }
-           if (UtilValidate.isNotEmpty(thruDateStr)) {
-               thruDate = Timestamp.valueOf(thruDateStr);
-           }
-           if (UtilValidate.isNotEmpty(amountStr)) {
-               amount = Double.valueOf(amountStr);
-           }
-           if (UtilValidate.isNotEmpty(sequenceNumStr)) {
-               sequenceNum= Long.valueOf(sequenceNumStr);
-           }
-       } catch (RuntimeException e) {
-           String errorMsg = UtilProperties.getMessage(ProductSearchEvents.err_resource,
-                   "productSearchEvents.error_casting_types", locale) + " : " + e.toString();
+        try {
+            if (UtilValidate.isNotEmpty(fromDateStr)) {
+                fromDate = Timestamp.valueOf(fromDateStr);
+            }
+            if (UtilValidate.isNotEmpty(thruDateStr)) {
+                thruDate = Timestamp.valueOf(thruDateStr);
+            }
+            if (UtilValidate.isNotEmpty(amountStr)) {
+                amount = Double.valueOf(amountStr);
+            }
+            if (UtilValidate.isNotEmpty(sequenceNumStr)) {
+                sequenceNum= Long.valueOf(sequenceNumStr);
+            }
+        } catch (RuntimeException e) {
+            String errorMsg = UtilProperties.getMessage(resource, "productSearchEvents.error_casting_types", locale) + " : " + e.toString();
+            request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+            Debug.logError(e, errorMsg, module);
+            return "error";
+        }
 
-           request.setAttribute("_ERROR_MESSAGE_", errorMsg);
-           errMsg = "Error casting data types: " + e.toString();
-           Debug.logError(e, errMsg, module);
-           return "error";
-       }
+        EntityListIterator eli = getProductSearchResults(request);
+        if (eli == null) {
+            String errMsg = UtilProperties.getMessage(resource,"productsearchevents.no_results_found_probably_error_constraints", UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
+        }
 
-       EntityListIterator eli = getProductSearchResults(request);
-       if (eli == null) {
-           errMsg = UtilProperties.getMessage(resource,"productsearchevents.no_results_found_probably_error_constraints", UtilHttp.getLocale(request));
-           request.setAttribute("_ERROR_MESSAGE_", errMsg);
-           return "error";
-       }
+        try {
+            boolean beganTransaction = TransactionUtil.begin();
+            try {
+                GenericValue searchResultView = null;
+                int numAdded = 0;
+                while ((searchResultView = (GenericValue) eli.next()) != null) {
+                    String productId = searchResultView.getString("productId");
+                    GenericValue pfa=delegator.makeValue("ProductFeatureAppl", null);
+                    pfa.set("productId", productId);
+                    pfa.set("productFeatureId", productFeatureId);
+                    pfa.set("fromDate", fromDate);
+                    pfa.set("thruDate", thruDate);
+                    pfa.set("productFeatureApplTypeId", productFeatureApplTypeId);
+                    pfa.set("amount", amount);
+                    pfa.set("sequenceNum", sequenceNum);
+                    pfa.create();
+                    numAdded++;
+                }
+                Map messageMap = UtilMisc.toMap("numAdded", new Integer(numAdded), "productFeatureId", productFeatureId);
+                String eventMsg = UtilProperties.getMessage(resource, "productSearchEvents.added_param_features", messageMap, locale) + ".";
+                request.setAttribute("_EVENT_MESSAGE_", eventMsg);
+                eli.close();
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericEntityException e) {
+                String errorMsg = UtilProperties.getMessage(resource, "productSearchEvents.error_getting_results", locale) + " : " + e.toString();
+                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                Debug.logError(e, errorMsg, module);
+                TransactionUtil.rollback(beganTransaction);
+                return "error";
+            }
+        } catch (GenericTransactionException e) {
+            String errorMsg = UtilProperties.getMessage(resource, "productSearchEvents.error_getting_results", locale) + " : " + e.toString();
+            request.setAttribute("_ERROR_MESSAGE_", errorMsg);               
+            Debug.logError(e, errorMsg, module);
+            return "error";
+        }
 
-       try {
-           boolean beganTransaction = TransactionUtil.begin();
-           try {
+        return "success";
+    }
 
-               GenericValue searchResultView = null;
-               int numAdded=0;
-               while ((searchResultView = (GenericValue) eli.next()) != null) {
-                   String productId = searchResultView.getString("productId");
-                   GenericValue pfa=delegator.makeValue("ProductFeatureAppl", null);
-                   pfa.set("productId", productId);
-                   pfa.set("productFeatureId", productFeatureId);
-                   pfa.set("fromDate", fromDate);
-                   pfa.set("thruDate", thruDate);
-                   pfa.set("productFeatureApplTypeId", productFeatureApplTypeId);
-                   pfa.set("amount", amount);
-                   pfa.set("sequenceNum", sequenceNum);
-                   pfa.create();
-                   numAdded++;
-               }
-               Map messageMap = UtilMisc.toMap("numAdded", new Integer(numAdded));               
-               String eventMsg = UtilProperties.getMessage(ProductSearchEvents.err_resource,
-                       "productSearchEvents.added_param_features", locale) + ".";
+    /** REmoves a feature from search results
+     *@param request The HTTPRequest object for the current request
+     *@param response The HTTPResponse object for the current request
+     *@return String specifying the exit status of this event
+     */
+    public static String searchRemoveFeature(HttpServletRequest request, HttpServletResponse response) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        Locale locale = UtilHttp.getLocale(request);
 
-               request.setAttribute("_EVENT_MESSAGE_", eventMsg);
-               eli.close();
-               TransactionUtil.commit(beganTransaction);
-           } catch (GenericEntityException e) {
-               String errorMsg = UtilProperties.getMessage(ProductSearchEvents.err_resource,
-                       "productSearchEvents.error_getting_results", locale) + " : " + e.toString();
+        String productFeatureId = request.getParameter("productFeatureId");
 
-               request.setAttribute("_ERROR_MESSAGE_", errorMsg);
-               errMsg = "Error getting search results: " + e.toString();
-               Debug.logError(e, errMsg, module);
-               TransactionUtil.rollback(beganTransaction);
-               return "error";
-           }
-       } catch (GenericTransactionException e) {
-           String errorMsg = UtilProperties.getMessage(ProductSearchEvents.err_resource,
-                   "productSearchEvents.error_getting_results", locale) + " : " + e.toString();
+        EntityListIterator eli = getProductSearchResults(request);
+        if (eli == null) {
+            String errMsg = UtilProperties.getMessage(resource,"productsearchevents.no_results_found_probably_error_constraints", UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
+        }
 
-           request.setAttribute("_ERROR_MESSAGE_", errorMsg);               
-           errMsg = "Error getting search results: " + e.toString();
-           Debug.logError(e, errMsg, module);
-           return "error";
-       }
+        try {
+            boolean beganTransaction = TransactionUtil.begin();
+            try {
+                GenericValue searchResultView = null;
+                int numRemoved = 0;
+                while ((searchResultView = (GenericValue) eli.next()) != null) {
+                    String productId = searchResultView.getString("productId");
+                    numRemoved += delegator.removeByAnd("ProductFeatureAppl", UtilMisc.toMap("productId", productId, "productFeatureId", productFeatureId));
+                }
+                Map messageMap = UtilMisc.toMap("numRemoved", new Integer(numRemoved), "productFeatureId", productFeatureId);
+                String eventMsg = UtilProperties.getMessage(resource, "productSearchEvents.removed_param_features", messageMap, locale) + ".";
+                request.setAttribute("_EVENT_MESSAGE_", eventMsg);
+                eli.close();
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericEntityException e) {
+                String errorMsg = UtilProperties.getMessage(resource, "productSearchEvents.error_getting_results", locale) + " : " + e.toString();
+                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                Debug.logError(e, errorMsg, module);
+                TransactionUtil.rollback(beganTransaction);
+                return "error";
+            }
+        } catch (GenericTransactionException e) {
+            String errorMsg = UtilProperties.getMessage(resource, "productSearchEvents.error_getting_results", locale) + " : " + e.toString();
+            request.setAttribute("_ERROR_MESSAGE_", errorMsg);               
+            Debug.logError(e, errorMsg, module);
+            return "error";
+        }
 
-       return "success";
-   }
+        return "success";
+    }
 
     public static EntityListIterator getProductSearchResults(HttpServletRequest request) {
         HttpSession session = request.getSession();

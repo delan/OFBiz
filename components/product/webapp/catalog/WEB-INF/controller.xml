@@ -129,6 +129,12 @@
         <response name="success" type="view" value="keywordsearch"/>
         <response name="error" type="view" value="keywordsearch"/>
     </request-map>
+    <request-map uri="searchRemoveFeature">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductSearchEvents" invoke="searchRemoveFeature"/>
+        <response name="success" type="view" value="keywordsearch"/>
+        <response name="error" type="view" value="keywordsearch"/>
+    </request-map>
 
     <request-map uri="FindProductById">
         <security https="true" auth="true"/>
