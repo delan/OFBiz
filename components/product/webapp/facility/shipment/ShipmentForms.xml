@@ -172,7 +172,9 @@
         target="EditShipmentPlan" title="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <field name="action"><hidden value="search"/></field>
         <field name="shipmentId"><hidden/></field>
-        <field name="orderId" title="${uiLabelMap.ProductOrderId}" ><text/></field>
+        <field name="orderId" title="${uiLabelMap.ProductOrderId}">
+            <lookup target-form-name="LookupOrderHeaderAndShipInfo"/>
+        </field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>

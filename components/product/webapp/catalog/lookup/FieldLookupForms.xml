@@ -51,7 +51,7 @@
         </field>
     </form>
     <form name="listLookupProduct" 
-        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="display"
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-iterator-name="listIt" paginate-target="LookupProduct" 
         title="" type="list">
         <actions>
@@ -76,7 +76,7 @@
     </form>
     <form name="listLookupVirtualProduct" extends="listLookupProduct"
         default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
+        default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-name="entityList" paginate-target="LookupVirtualProduct" 
         title="" type="list">
         <actions>
@@ -114,7 +114,7 @@
     </form>
     <form name="listLookupProductFeature" 
         default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
+        default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-name="entityList" paginate-target="LookupProductFeature" 
         title="" type="list">
         <actions>
