@@ -299,7 +299,7 @@
     <!-- BOM request mappings -->
     <request-map uri="findBom">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="findBom"/>
+        <response name="success" type="view" value="BomSimulation"/>
     </request-map>
     <request-map uri="EditProductBom">
         <security https="true" auth="true"/>
@@ -523,10 +523,11 @@
     <view-map name="EditRoutingTaskAssoc" type="jpublish" page="/routing/EditRoutingTaskAssoc.ftl"/>
     <view-map name="EditRoutingProductLink" type="jpublish" page="/routing/EditRoutingProductLink.ftl"/>
     <!-- BOM view mappings -->
-    <view-map name="findBom" type="jpublish" page="/bom/findBom.ftl"/>
-    <view-map name="EditProductBom" type="jpublish" page="/bom/EditProductBom.ftl"/>
-    <view-map name="InitLowLevelCode" type="jpublish" page="/bom/InitLowLevelCode.ftl"/>
-    <view-map name="EditProductManufacturingRules" type="jpublish" page="/bom/EditProductManufacturingRules.ftl"/>
+    <view-map name="EditProductBom" page="component://manufacturing/widget/manufacturing/BomScreens.xml#EditProductBom" type="screen"/>
+    <view-map name="EditProductManufacturingRules" page="component://manufacturing/widget/manufacturing/BomScreens.xml#EditProductManufacturingRules" type="screen"/>
+    <view-map name="InitLowLevelCode" page="component://manufacturing/widget/manufacturing/BomScreens.xml#InitLowLevelCode" type="screen"/>
+    <view-map name="BomSimulation" page="component://manufacturing/widget/manufacturing/BomScreens.xml#BomSimulation" type="screen"/>
+
     <!-- Lookup request mappings -->
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
     <view-map name="LookupVirtualProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVirtualProduct" type="screen"/>
