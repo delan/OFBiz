@@ -154,7 +154,7 @@
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Order Amount (before adjustments)</div></td>
+                <td><div class="tabletext">Dollar Amounts (before adjustments)</div></td>
                 <td><div class="tabletext"><ofbiz:format type="C"><%=dayItemTotal%></ofbiz:format></div></td>
                 <td><div class="tabletext"><ofbiz:format type="C"><%=weekItemTotal%></ofbiz:format></div></td>
                 <td><div class="tabletext"><ofbiz:format type="C"><%=monthItemTotal%></ofbiz:format></div></td>
@@ -162,7 +162,7 @@
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Item Counts</div></td>
+                <td><div class="tabletext">Items Sold (includes promotions)</div></td>
                 <td><div class="tabletext"><%=dayItems == null ? 0 : dayItems.size()%></div></td>
                 <td><div class="tabletext"><%=weekItems == null ? 0 : weekItems.size()%></div></td>
                 <td><div class="tabletext"><%=monthItems == null ? 0 : monthItems.size()%></div></td>
