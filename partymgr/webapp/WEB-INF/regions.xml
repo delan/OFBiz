@@ -82,4 +82,21 @@
         <put section='title'>Create UserLogin</put>
         <put section='content' content='/party/createnewlogin.jsp'/>
     </define>
+
+    <define id='FindSecurityGroup' region='MAIN_REGION'>
+        <put section='title'>Find SecurityGroup</put>
+        <put section='content' content='/security/FindSecurityGroup.jsp'/>
+    </define>
+    <define id='EditSecurityGroup' region='MAIN_REGION'>
+        <put section='title'>Edit a SecurityGroup</put>
+        <put section='content' content='/security/EditSecurityGroup.jsp'/>
+    </define>
+    <define id='EditSecurityGroupPermissions' region='MAIN_REGION'>
+        <put section='title'>Edit SecurityGroup Permissions</put>
+        <put section='content' content='/security/EditSecurityGroupPermissions.jsp'/>
+    </define>
+    <define id='EditSecurityGroupUserLogins' region='MAIN_REGION'>
+        <put section='title'>Edit SecurityGroup UserLogins</put>
+        <put section='content' content='/security/EditSecurityGroupUserLogins.jsp'/>
+    </define>
 </regions>

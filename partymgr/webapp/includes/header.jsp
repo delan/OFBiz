@@ -40,7 +40,10 @@
           <ofbiz:if name="person">
             <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>
           </ofbiz:if>
-          <td class="headerButtonRight"><a href="<ofbiz:url>/findparty</ofbiz:url>" class="buttontext">Find</a></td> 
+          <td class="headerButtonRight"><a href="<ofbiz:url>/findparty</ofbiz:url>" class="buttontext">Find</a></td>
+          <%if(security.hasEntityPermission("SECURITY", "_VIEW", session)) {%>
+            <td class="headerButtonRight"><a href="<ofbiz:url>/FindSecurityGroup</ofbiz:url>" class="buttontext">Security</a></td>
+          <%}%>
         </TR>
       </TABLE>
     </TD>
