@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -43,14 +43,17 @@ boolean useValues = true;
 if (request.getAttribute("_ERROR_MESSAGE_") != null) useValues = false;
 
 String productId = request.getParameter("productId");
-if (productId != null) context.put("productId", productId);
+context.put("productId", productId);
 
 GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-if (product != null) context.put("product", product);
+context.put("product", product);
 
 if (product == null) useValues = false;
-Collection goodIdentifications = product.getRelated("GoodIdentification", null, UtilMisc.toList("goodIdentificationTypeId", "idValue"));
-if (goodIdentifications != null) context.put("goodIdentifications", goodIdentifications);
+
+if (product != null) {
+    Collection goodIdentifications = product.getRelated("GoodIdentification", null, UtilMisc.toList("goodIdentificationTypeId", "idValue"));
+    if (goodIdentifications != null) context.put("goodIdentifications", goodIdentifications);
+}
 
 Collection goodIdentificationTypes = delegator.findAllCache("GoodIdentificationType", UtilMisc.toList("description"));
 if (goodIdentificationTypes != null) context.put("goodIdentificationTypes", goodIdentificationTypes);

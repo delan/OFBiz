@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -45,8 +45,10 @@ context.put("productId", productId);
 product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 context.put("product", product);
 
-productFacilities = product.getRelated("ProductFacility", null, UtilMisc.toList("facilityId"));
-context.put("productFacilities", productFacilities);
+if (product != null) {
+    productFacilities = product.getRelated("ProductFacility", null, UtilMisc.toList("facilityId"));
+    context.put("productFacilities", productFacilities);
+}
 
 facilities = delegator.findAllCache("Facility", UtilMisc.toList("facilityName"));
 context.put("facilities", facilities);

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -43,16 +43,20 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
 boolean useValues = true;
 if (request.getAttribute("_ERROR_MESSAGE_") != null) useValues = false;
 
-String productId = request.getParameter("PRODUCT_ID");
+productId = request.getParameter("productId");
+if (productId == null) productId = request.getParameter("PRODUCT_ID");
 if (productId != null) context.put("productId", productId);
 
 GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-if (product != null) context.put("product", product);
+context.put("product", product);
 
 if (product == null) useValues = false;
-Collection productAttributes = product.getRelated("ProductAttribute", null, UtilMisc.toList("attrType", "attrName"));
-if (productAttributes != null)
+
+if (product != null) {
+    productAttributes = product.getRelated("ProductAttribute", null, UtilMisc.toList("attrType", "attrName"));
     context.put("productAttributes", productAttributes);
+}
 
 if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 context.put("useValues", useValues);
+
