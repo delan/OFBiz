@@ -23,7 +23,12 @@
             <form name="keywordsearchform" method="POST" action="<ofbiz:url>/keywordsearch</ofbiz:url>" style='margin: 0;'>
               <input type='hidden' name="VIEW_SIZE" value="10">
               <input type='hidden' name="SEARCH_CATEGORY_ID" value="<%=UtilFormatOut.checkNull(CatalogWorker.getCatalogSearchCategoryId(pageContext, CatalogWorker.getCurrentCatalogId(pageContext)))%>">
-              <input type='text' name="SEARCH_STRING" size="14" maxlength="50"><a href="javascript:document.keywordsearchform.submit()" class="buttontext">&nbsp;Find</a>
+              <input type='text' name="SEARCH_STRING" size="14" maxlength="50">
+              <div class='tabletext'>
+                Any<input type=RADIO name='SEARCH_OPERATOR' value='OR' checked>
+                All<input type=RADIO name='SEARCH_OPERATOR' value='AND'>
+                <a href="javascript:document.keywordsearchform.submit()" class="buttontext">&nbsp;Find</a>
+              </div>
             </form>
           </td>
         </tr>

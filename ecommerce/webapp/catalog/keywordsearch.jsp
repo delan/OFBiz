@@ -4,7 +4,9 @@
 <%@ page import="org.ofbiz.ecommerce.catalog.*, org.ofbiz.commonapp.product.product.*"%>
 
 <%String searchCategoryId = request.getParameter("SEARCH_CATEGORY_ID");%>
-<%ProductWorker.getKeywordSearchProducts(pageContext, "", searchCategoryId);%>
+<%String searchOperator = request.getParameter("SEARCH_OPERATOR");%>
+<%if (!"AND".equalsIgnoreCase(searchOperator) && !"OR".equalsIgnoreCase(searchOperator)) { searchOperator = "OR"; }%>
+<%ProductWorker.getKeywordSearchProducts(pageContext, "", searchCategoryId, true, true, searchOperator);%>
 <ofbiz:object name="viewIndex" property="viewIndex" type='java.lang.Integer' />
 <ofbiz:object name="viewSize" property="viewSize" type='java.lang.Integer' />
 <ofbiz:object name="lowIndex" property="lowIndex" type='java.lang.Integer' />
@@ -13,7 +15,10 @@
 <ofbiz:object name="keywordString" property="keywordString" type='java.lang.String' />
 
 <br>
-<div class='head1'>Search Results for "<%=UtilFormatOut.checkNull((String)pageContext.getAttribute("keywordString"))%>"</div>
+<div class='head1'>
+    Search Results for "<%=UtilFormatOut.checkNull((String)pageContext.getAttribute("keywordString"))%>" 
+    where <%="OR".equalsIgnoreCase(searchOperator)?"any keyword":"all keywords"%> matched.
+</div>
 
 <% String nextStr = "SEARCH_STRING="+keywordString+"&SEARCH_CATEGORY_ID="+searchCategoryId+"&VIEW_SIZE="+viewSize+"&VIEW_INDEX="+(viewIndex.intValue()+1);%>
 <% String prevStr = "SEARCH_STRING="+keywordString+"&SEARCH_CATEGORY_ID="+searchCategoryId+"&VIEW_SIZE="+viewSize+"&VIEW_INDEX="+(viewIndex.intValue()-1);%>
@@ -43,7 +48,7 @@
 </ofbiz:if>
 
 <center>
-  <table width='100%'>
+  <table width='100%' cellpadding='0' cellspacing='0'>
     <%int listIndex = lowIndex.intValue();%>
     <ofbiz:iterator name="product" property="searchProductList">
       <tr><td colspan="2"><hr class='sepbar'></td></tr>
