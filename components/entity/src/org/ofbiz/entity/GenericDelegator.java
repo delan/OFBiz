@@ -2152,7 +2152,14 @@ public class GenericDelegator implements DelegatorInterface {
             ModelField field = (ModelField) i.next();
             if (field.getEncrypt()) {
                 Object obj = entity.get(field.getName());
-                entity.dangerousSetNoCheckButFast(field, crypto.encrypt(entityName, obj));
+                if (obj != null) {
+                    if (obj instanceof String) {
+                        if (UtilValidate.isEmpty((String) obj)) {
+                            continue;
+                        }
+                    }
+                    entity.dangerousSetNoCheckButFast(field, crypto.encrypt(entityName, obj));
+                }
             }
         }
     }
@@ -2175,14 +2182,15 @@ public class GenericDelegator implements DelegatorInterface {
             ModelField field = (ModelField) i.next();
             if (field.getEncrypt()) {
                 String encHex = (String) entity.get(field.getName());
-                try {
-                    entity.dangerousSetNoCheckButFast(field, crypto.decrypt(entityName, encHex));
-                } catch (EntityCryptoException e) {
-                    // not fatal -- allow returning of the encrypted value
-                    Debug.logWarning(e, "Problem decrypting field [" + entityName + " / " + field.getName() + "]", module);
+                if (UtilValidate.isNotEmpty(encHex)) {
+                    try {
+                        entity.dangerousSetNoCheckButFast(field, crypto.decrypt(entityName, encHex));
+                    } catch (EntityCryptoException e) {
+                        // not fatal -- allow returning of the encrypted value
+                        Debug.logWarning(e, "Problem decrypting field [" + entityName + " / " + field.getName() + "]", module);
+                    }
                 }
             }
-
         }
     }
 

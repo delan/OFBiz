@@ -66,7 +66,7 @@
     <entity entity-name="EntityKeyStore"
             package-name="org.ofbiz.entity.crypto"
             title="Entity Key Entity">
-      <field name="keyName" type="id-long-ne"></field>
+      <field name="keyName" type="id-vlong-ne"></field>
       <field name="keyText" type="long-varchar"></field>
       <prim-key field="keyName"/>
     </entity>

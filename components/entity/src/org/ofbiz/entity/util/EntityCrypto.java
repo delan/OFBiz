@@ -25,47 +25,39 @@
 package org.ofbiz.entity.util;
 
 import java.security.NoSuchAlgorithmException;
-import java.security.InvalidKeyException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 import javax.crypto.SecretKey;
-import javax.crypto.KeyGenerator;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.BadPaddingException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.DESedeKeySpec;
-import javax.transaction.TransactionManager;
-import javax.transaction.Transaction;
-import javax.transaction.SystemException;
 import javax.transaction.InvalidTransactionException;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.crypto.DesCrypt;
+import org.ofbiz.base.crypto.HashCrypt;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilObject;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.EntityCryptoException;
-import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.transaction.TransactionUtil;
-import org.ofbiz.entity.transaction.TransactionFactory;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionFactory;
+import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
 public class EntityCrypto {
 
     public static final String module = EntityCrypto.class.getName();
-    protected static EntityCrypto crypto = null;
 
     protected GenericDelegator delegator = null;
     protected Map keyMap = null;
@@ -74,92 +66,49 @@ public class EntityCrypto {
     public EntityCrypto(GenericDelegator delegator) {
         this.delegator = delegator;
         this.keyMap = new HashMap();
+
+        // check the key table and make sure there
+        // make sure there are some dummy keys
+        synchronized(EntityCrypto.class) {
+            try {
+                long size = delegator.findCountByAnd("EntityKeyStore", null);
+                if (size == 0) {
+                    for (int i = 0; i < 20; i++) {
+                        String randomName = this.getRandomString();
+                        this.getKeyFromStore(randomName);
+                    }
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+        }
     }
 
     /** Encrypts a String into an encrypted hex encoded byte array */
     public String encrypt(String keyName, Object obj) throws EntityCryptoException {
-        return StringUtil.toHexString(this.encrypt(keyName, UtilObject.getBytes(obj)));
-    }
-
-    public byte[] encrypt(String keyName, byte[] bytes) throws EntityCryptoException {
-        Cipher cipher = this.getCipher(keyName, Cipher.ENCRYPT_MODE);
-        byte[] encBytes = null;
         try {
-            encBytes = cipher.doFinal(bytes);
-        } catch (IllegalStateException e) {
-            throw new EntityCryptoException(e);
-        } catch (IllegalBlockSizeException e) {
-            throw new EntityCryptoException(e);
-        } catch (BadPaddingException e) {
+            return StringUtil.toHexString(DesCrypt.encrypt(this.getKey(keyName), UtilObject.getBytes(obj)));
+        } catch (GeneralException e) {
             throw new EntityCryptoException(e);
         }
-        return encBytes;
     }
 
     /** Decrypts a hex encoded byte array into a String */
     public Object decrypt(String keyName, String str) throws EntityCryptoException {
-        return UtilObject.getObject(this.decrypt(keyName, StringUtil.fromHexString(str)));
-    }
-
-    public byte[] decrypt(String keyName, byte[] bytes) throws EntityCryptoException {
-        Cipher cipher = this.getCipher(keyName, Cipher.DECRYPT_MODE);
-        byte[] decBytes = null;
         try {
-            decBytes = cipher.doFinal(bytes);
-        } catch (IllegalStateException e) {
-            throw new EntityCryptoException(e);
-        } catch (IllegalBlockSizeException e) {
-            throw new EntityCryptoException(e);
-        } catch (BadPaddingException e) {
-            throw new EntityCryptoException(e);
-        }       
-        return decBytes;
-    }
-
-    // return a cipher for a key - DESede/CBC/NoPadding IV = 0
-    protected Cipher getCipher(String keyName, int mode) throws EntityCryptoException {
-        SecretKey key = this.getKey(keyName);
-        byte[] zeros = { 0, 0, 0, 0, 0, 0, 0, 0 };
-        IvParameterSpec iv = new IvParameterSpec(zeros);
-
-        // create the Cipher - DESede/CBC/NoPadding
-        Cipher encCipher = null;
-        try {
-            encCipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
-        } catch (NoSuchAlgorithmException e) {
-            Debug.logError(e, module);
-            return null;
-        } catch (NoSuchPaddingException e) {
-            Debug.logError(e, module);
-        }
-        try {
-            encCipher.init(mode, key, iv);
-        } catch (InvalidKeyException e) {
-            Debug.logError(e, "Invalid key", module);
-        } catch (InvalidAlgorithmParameterException e) {
-            Debug.logError(e, module);
-        }
-        return encCipher;
-    }
-
-    protected SecretKey generateKey() throws EntityCryptoException {
-        KeyGenerator keyGen = null;
-        try {
-            keyGen = KeyGenerator.getInstance("DESede");
-        } catch (NoSuchAlgorithmException e) {
+            return UtilObject.getObject(DesCrypt.decrypt(this.getKey(keyName), StringUtil.fromHexString(str)));
+        } catch (GeneralException e) {
             throw new EntityCryptoException(e);
         }
-
-        // generate the DES3 key
-        return keyGen.generateKey();
     }
 
-    protected SecretKey getKey(String keyName) throws EntityCryptoException {
-        SecretKey key = (SecretKey) keyMap.get(keyName);
+    protected SecretKey getKey(String name) throws EntityCryptoException {
+        SecretKey key = (SecretKey) keyMap.get(name);
         if (key == null) {
             synchronized(this) {
+                String keyName = HashCrypt.getDigestHash(name);
                 key = this.getKeyFromStore(keyName);
-                keyMap.put(keyName, key);
+                keyMap.put(name, key);
             }
         }
         return key;
@@ -173,7 +122,12 @@ public class EntityCrypto {
             throw new EntityCryptoException(e);
         }
         if (keyValue == null || keyValue.get("keyText") == null) {
-            SecretKey key = this.generateKey();
+            SecretKey key = null;
+            try {
+                key = DesCrypt.generateKey();
+            } catch (NoSuchAlgorithmException e) {
+                throw new EntityCryptoException(e);
+            }
             GenericValue newValue = delegator.makeValue("EntityKeyStore", null);
             newValue.set("keyText", StringUtil.toHexString(key.getEncoded()));
             newValue.set("keyName", keyName);
@@ -230,37 +184,18 @@ public class EntityCrypto {
             return key;
         } else {
             byte[] keyBytes = StringUtil.fromHexString(keyValue.getString("keyText"));
-            return this.getDesEdeKey(keyBytes);
+            try {
+                return DesCrypt.getDesKey(keyBytes);
+            } catch (GeneralException e) {
+                throw new EntityCryptoException(e);
+            }
         }
     }
 
-    protected SecretKey getDesEdeKey(byte[] rawKey) throws EntityCryptoException {
-        SecretKeyFactory skf = null;
-        try {
-            skf = SecretKeyFactory.getInstance("DESede");
-        } catch (NoSuchAlgorithmException e) {
-            throw new EntityCryptoException(e);
-        }
-
-        // load the raw key
-        if (rawKey.length > 0) {
-            DESedeKeySpec desedeSpec1 = null;
-            try {
-                desedeSpec1 = new DESedeKeySpec(rawKey);
-            } catch (InvalidKeyException e) {
-                throw new EntityCryptoException(e);
-            }
-
-            // create the SecretKey Object
-            SecretKey key = null;
-            try {
-                key = skf.generateSecret(desedeSpec1);
-            } catch (InvalidKeySpecException e) {
-                throw new EntityCryptoException(e);
-            }
-            return key;
-        } else {
-            throw new EntityCryptoException("Not a valid DESede key!");
-        }
+    protected String getRandomString() {
+        Random rand = new Random();
+        byte[] randomBytes = new byte[24];
+        rand.nextBytes(randomBytes);
+        return StringUtil.toHexString(randomBytes);
     }
 }
