@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -55,7 +55,7 @@
                     <#list otherSearchProdCatalogCategories as otherSearchProdCatalogCategory>
                       <#assign searchProductCategory = otherSearchProdCatalogCategory.getRelatedOneCache("ProductCategory")>
                       <#if searchProductCategory?exists>
-                        <option value="${searchProductCategory.productCategoryId}">${searchProductCategory.description?if_exists}</option>
+                        <option value="${searchProductCategory.productCategoryId}">${searchProductCategory.description?default("No Description " + searchProductCategory.productCategoryId)}</option>
                       </#if>
                     </#list>
                   </select>
@@ -88,7 +88,7 @@
                     <#list otherSearchProdCatalogCategories as otherSearchProdCatalogCategory>
                       <#assign searchProductCategory = otherSearchProdCatalogCategory.getRelatedOneCache("ProductCategory")>
                       <#if searchProductCategory?exists>
-                        <option value="${searchProductCategory.productCategoryId}">${searchProductCategory.description?if_exists}</option>
+                        <option value="${searchProductCategory.productCategoryId}">${searchProductCategory.description?default("No Description " + searchProductCategory.productCategoryId)}</option>
                       </#if>
                     </#list>
                   </select>

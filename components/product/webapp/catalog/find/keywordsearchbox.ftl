@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -58,11 +58,11 @@
                 <select class="selectBox" name="SEARCH_CATEGORY_ID">
                     <option value="">- Any Category -</option>
                     <#list productCategories as productCategory>
-                        <#assign displayDesc = productCategory.description>
+                        <#assign displayDesc = productCategory.description?default("No Description")>
                         <#if 18 < displayDesc?length>
                             <#assign displayDesc = displayDesc[0..15] + "...">
                         </#if>
-                        <option value="${productCategory.productCategoryId}">${displayDesc}</option>
+                        <option value="${productCategory.productCategoryId}">${displayDesc} [${productCategory.productCategoryId}]</option>
                     </#list>
                 </select>
               </div>
@@ -88,11 +88,11 @@
                 <select class="selectBox" name="SEARCH_CATEGORY_ID">
                     <option value="">- Any Category -</option>
                     <#list productCategories as productCategory>
-                        <#assign displayDesc = productCategory.description>
+                        <#assign displayDesc = productCategory.description?default("No Description")>
                         <#if 18 < displayDesc?length>
                             <#assign displayDesc = displayDesc[0..15] + "...">
                         </#if>
-                        <option value="${productCategory.productCategoryId}">${displayDesc}</option>
+                        <option value="${productCategory.productCategoryId}">${displayDesc} [${productCategory.productCategoryId}]</option>
                     </#list>
                 </select>
               </div>
