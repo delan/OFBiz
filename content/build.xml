@@ -24,7 +24,7 @@
  *  $Id$
 -->
 
-<project name="Open For Business Content Manager Component" default="jar-deploy" basedir=".">
+<project name="Open For Business Content Manager Component" default="war" basedir=".">
 
 
     <!-- ================================================================== -->
@@ -54,7 +54,7 @@
         <property name="pkg-dist.name"  value="${name}-pkg"/>
         <property name="commonapp.etc.dir" value="../commonapp/etc"/>
 		
-	<!-- Classpath setting -->
+	    <!-- Classpath setting -->
         <property name="corelib.dir"       value="../core/lib" />
         <property name="commonapplib.dir"  value="../commonapp/lib" />
         <property name="extlib.dir"        value="../lib" />

@@ -23,7 +23,7 @@
  *  This is the  Open for Business CommonApp component build script.
  *  $Id$
 -->
-<project basedir="." default="jar-deploy" name="Open For Business CommonApp Component">
+<project basedir="." default="war" name="Open For Business CommonApp Component">
 
 
     <!-- ================================================================== -->

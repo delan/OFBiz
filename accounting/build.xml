@@ -25,7 +25,7 @@
  *  $Id$
 -->
 
-<project name="Open For Business Accounting Manager Component" default="jar-deploy" basedir=".">
+<project name="Open For Business Accounting Manager Component" default="war" basedir=".">
 
 
     <!-- ================================================================== -->
@@ -42,23 +42,23 @@
         
         <property name="ofbiz.version" value=""/>
         
-        <property environment="env"                                 />
-        <property name="name"           value="accounting"          />
-        <property name="src.dir"        value="src"                 />
-        <property name="etc.dir"        value="etc"                 />
-        <property name="lib.dir"        value="lib"                 />
-        <property name="webapp.dir"     value="./webapp"            />
-        <property name="walib.dir"      value="${webapp.dir}/WEB-INF/lib" />
-        <property name="waclasses.dir"  value="${webapp.dir}/WEB-INF/classes" />
-        <property name="doc.dir"        value="docs"                />
-        <property name="build.dir"      value="build"               />
-        <property name="pkg-dist.name"  value="${name}-pkg"         />
-        <property name="commonapp.etc.dir" value="../commonapp/etc" />
+        <property environment="env"/>
+        <property name="name"           value="accounting"/>
+        <property name="src.dir"        value="src"/>
+        <property name="etc.dir"        value="etc"/>
+        <property name="lib.dir"        value="lib"/>
+        <property name="webapp.dir"     value="./webapp"/>
+        <property name="walib.dir"      value="${webapp.dir}/WEB-INF/lib"/>
+        <property name="waclasses.dir"  value="${webapp.dir}/WEB-INF/classes"/>
+        <property name="doc.dir"        value="docs"/>
+        <property name="build.dir"      value="build"/>
+        <property name="pkg-dist.name"  value="${name}-pkg"/>
+        <property name="commonapp.etc.dir" value="../commonapp/etc"/>
 		
-	<!-- Classpath setting -->
-        <property name="corelib.dir"       value="../core/lib" />
-        <property name="commonapplib.dir"  value="../commonapp/lib" />
-        <property name="extlib.dir"        value="../lib" />
+	    <!-- Classpath setting -->
+        <property name="corelib.dir"       value="../core/lib"/>
+        <property name="commonapplib.dir"  value="../commonapp/lib"/>
+        <property name="extlib.dir"        value="../lib"/>
 
         <property name="ofbcore-share.jar"    value="${corelib.dir}/ofbcore-share${ofbiz.version}.jar" />
         <property name="ofbcore-entity.jar"   value="${corelib.dir}/ofbcore-entity${ofbiz.version}.jar" />
@@ -69,6 +69,7 @@
         <property name="ofbcore-rules.jar"    value="${corelib.dir}/ofbcore-rules${ofbiz.version}.jar" />
         <property name="ofbcore-datafile.jar" value="${corelib.dir}/ofbcore-datafile${ofbiz.version}.jar" />
         <property name="ofbcore-minilang.jar" value="${corelib.dir}/ofbcore-minilang${ofbiz.version}.jar" />
+        
         <property name="ofb-jars1"    value="${ofbcore-share.jar}:${ofbcore-entity.jar}:${ofbcore-service.jar}:${ofbcore-extutil.jar}" />
         <property name="ofb-jars2"    value="${ofbcore-webapp.jar}:${ofbcore-workflow.jar}:${ofbcore-rules.jar}:${ofbcore-datafile.jar}:${ofbcore-minilang.jar}" />
 
@@ -96,7 +97,7 @@
 	    <property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}" />
         
         <property name="classpath"   value="${env.CLASSPATH}:${ofb-jars}:${api-jars}" />
-	<echo message="classpath: ${classpath}" />
+	    <echo message="classpath: ${classpath}" />
     </target>
 
 

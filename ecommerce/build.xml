@@ -25,7 +25,7 @@
  *  $Id$
 -->
 
-<project name="Open For Business E-Commerce Component" default="jar-deploy" basedir=".">
+<project name="Open For Business E-Commerce Component" default="war" basedir=".">
 
 
     <!-- ================================================================== -->
@@ -55,7 +55,7 @@
         <property name="waclasses.dir"  value="${webapp.dir}/WEB-INF/classes" />
         <property name="commonapp.etc.dir" value="../commonapp/etc" />
 
-	<!-- Classpath setting -->
+	    <!-- Classpath setting -->
         <property name="corelib.dir"       value="../core/lib" />
         <property name="commonapplib.dir"  value="../commonapp/lib" />
         <property name="extlib.dir"        value="../lib" />
@@ -96,10 +96,10 @@
         <property name="api-jars2"     value="${log4j.jar}:${tyrex.jar}:${castor.jar}:${velocity.jar}" />
         <property name="api-jars3"     value="${bsh.jar}:${axis.jar}:${clutil.jar}:${wsdl4j.jar}:${oro.jar}" />
 
-	<property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}" />
+	    <property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}" />
         
         <property name="classpath"   value="${env.CLASSPATH}:${ofb-jars}:${api-jars}" />
-	<echo message="classpath: ${classpath}" />
+	    <echo message="classpath: ${classpath}" />
     </target>
 
 
