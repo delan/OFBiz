@@ -40,6 +40,10 @@
     (see further down for the Simple Map Processor Section)
 -->
 
+<!ENTITY % SimpleMethodOperations "call-map-processor | check-errors | call-service | call-bsh |
+        field-to-request | field-to-session | field-to-result | field-to-field |
+        if-validate-method | if-compare | if-compare-field | if-regexp | if-not-empty">
+
 <!ELEMENT simple-methods ( simple-method+ )>
 
 <!--
@@ -57,7 +61,7 @@
     
     
 -->
-<!ELEMENT simple-method ( ( call-map-processor | check-errors | call-service | field-to-request | field-to-session | field-to-result )* )>
+<!ELEMENT simple-method ( (%SimpleMethodOperations;)* )>
 <!ATTLIST simple-method
     method-name CDATA #REQUIRED
     short-description CDATA #REQUIRED
@@ -101,7 +105,7 @@
     called in a service context. So, they are ONLY used when called in an event context.
 -->
 <!ELEMENT call-service ( error-prefix?, error-suffix?, success-prefix?, success-suffix?, message-prefix?, message-suffix?, default-message?, 
-                         results-to-map*, result-to-field*, result-to-request*, result-to-session*, result-to-result* )>
+                         (results-to-map | result-to-field | result-to-request | result-to-session | result-to-result)* )>
 <!ATTLIST call-service
     service-name CDATA #REQUIRED
     in-map-name CDATA #REQUIRED
@@ -171,6 +175,22 @@
         service-result-name CDATA #IMPLIED
     >
 
+<!-- TODO: handle call-bsh operation -->
+
+<!-- 
+Runs an external bsh script from the classpath if resource is specified and 
+then runs the inlined bsh script if any is specified.
+
+The bsh context is the current simple-method environment including maps, lists
+and special objects whose names are defined in the simple-method attributes.
+-->
+<!ELEMENT call-bsh (#PCDATA)>
+<!ATTLIST call-bsh
+    resource CDATA #IMPLIED
+>
+
+<!-- Operations to copy map fields in the current env to context specific containers -->
+    
 <!ELEMENT field-to-request EMPTY>
 <!ATTLIST field-to-request
     map-name CDATA #REQUIRED
@@ -189,6 +209,51 @@
     field-name CDATA #REQUIRED
     result-name CDATA #IMPLIED
 >
+<!-- TODO: handle field-to-field operation -->
+<!ELEMENT field-to-field EMPTY>
+<!ATTLIST field-to-field
+    map-name CDATA #REQUIRED
+    field-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
+    field-name CDATA #IMPLIED
+>
+
+<!-- TODO: handle if-* operations -->
+
+<!-- 
+Operations that conditionally execute blocks within them; they mimic the
+simple-map-processor process operations that validate incoming data
+-->
+
+<!-- if-validate-method calls a static Java method that takes a String and returns a boolean -->
+<!ELEMENT if-validate-method ( (%SimpleMethodOperations;)* )>
+<!ATTLIST if-validate-method
+    method CDATA #REQUIRED
+    class CDATA "org.ofbiz.core.util.UtilValidate"
+>
+
+<!ELEMENT if-compare ( (%SimpleMethodOperations;)* )>
+<!ATTLIST if-compare
+    operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
+    value CDATA #REQUIRED
+    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
+    format CDATA #IMPLIED
+>
+
+<!ELEMENT if-compare-field ( (%SimpleMethodOperations;)* )>
+<!ATTLIST if-compare-field
+    operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
+    field CDATA #REQUIRED
+    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
+    format CDATA #IMPLIED
+>
+
+<!ELEMENT if-regexp ( (%SimpleMethodOperations;)* )>
+<!ATTLIST if-regexp
+    expr CDATA #REQUIRED
+>
+
+<!ELEMENT if-not-empty ( (%SimpleMethodOperations;)* )>
 
 
 <!-- 
