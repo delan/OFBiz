@@ -44,79 +44,85 @@
     <a href='<ofbiz:url>/EditUtilCacheClear?UTIL_CACHE_NAME=<%=cacheName%></ofbiz:url>' class="buttontext">Clear this Cache</a>
     <br><a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
     <form method="POST" action='<ofbiz:url>/EditUtilCacheUpdate?UTIL_CACHE_NAME=<%=cacheName%></ofbiz:url>'>
-    <TABLE border='0' cellpadding='2' cellspacing='2'>
+    <table border="0" cellpadding="2" cellspacing="2">
     <%
       String rowColor1 = "viewManyTR2";
       String rowColor2 = "viewManyTR1";
       String rowColor = "";
     %>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-      <TD>Cache&nbsp;Name</TD>
-      <TD colspan="2"><%=UtilFormatOut.checkNull(utilCache.getName())%></TD>
-    </TR>
+      <td>Cache&nbsp;Name</td>
+      <TD colspan="2"><%=UtilFormatOut.checkNull(utilCache.getName())%></td>
+    </tr>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-      <TD>size</TD>
-      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.size())%></TD>
-    </TR>
+      <td>size</td>
+      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.size())%></td>
+    </tr>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-      <TD>hitCount</TD>
-      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getHitCount())%></TD>
-    </TR>
+      <td>hitCount</td>
+      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getHitCount())%></td>
+    </tr>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-      <TD>Miss Count Total</TD>
-      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getMissCountTotal())%></TD>
-    </TR>
+      <td>Miss Count Total</td>
+      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getMissCountTotal())%></td>
+    </tr>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-      <TD>Miss Count Not Found</TD>
-      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getMissCountNotFound())%></TD>
-    </TR>
+      <td>Miss Count Not Found</td>
+      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getMissCountNotFound())%></td>
+    </tr>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-      <TD>Miss Count Expired</TD>
-      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getMissCountExpired())%></TD>
-    </TR>
+      <td>Miss Count Expired</td>
+      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getMissCountExpired())%></td>
+    </tr>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-      <TD>Miss Count SoftRef Cleared</TD>
-      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getMissCountSoftRef())%></TD>
-    </TR>
+      <td>Miss Count SoftRef Cleared</td>
+      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getMissCountSoftRef())%></td>
+    </tr>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-      <TD>Remove Hit Count</TD>
-      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getRemoveHitCount())%></TD>
-    </TR>
+      <td>Remove Hit Count</td>
+      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getRemoveHitCount())%></td>
+    </tr>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-      <TD>Remove Miss Count</TD>
-      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getRemoveMissCount())%></TD>
-    </TR>
+      <td>Remove Miss Count</td>
+      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getRemoveMissCount())%></td>
+    </tr>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-      <TD>maxSize</TD>
-      <TD><%=UtilFormatOut.formatQuantity(utilCache.getMaxSize())%></TD>
-      <TD><input type="text" class='inputBox' size="15" maxlength="15" name="UTIL_CACHE_MAX_SIZE" value="<%=utilCache.getMaxSize()%>"></TD>
-    </TR>
+      <td>maxSize</td>
+      <td><%=UtilFormatOut.formatQuantity(utilCache.getMaxSize())%></td>
+      <td><input type="text" class='inputBox' size="15" maxlength="15" name="UTIL_CACHE_MAX_SIZE" value="<%=utilCache.getMaxSize()%>"></td>
+    </tr>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-      <TD>expireTime(ms)</TD>
-      <TD>
+      <td>expireTime(ms)</td>
+      <td>
         <%=UtilFormatOut.formatQuantity(utilCache.getExpireTime())%>
         <%long exp=utilCache.getExpireTime();%>
         <%long hrs=exp/(60*60*1000);exp=exp%(60*60*1000);%>
         <%long mins=exp/(60*1000);exp=exp%(60*1000);%>
         <%double secs=(double)exp/(1000.0);%>
         (<%=hrs+":"+mins+":"+secs%>)
-      </TD>
-      <TD><input type="text" class='inputBox' size="15" maxlength="15" name="UTIL_CACHE_EXPIRE_TIME" value="<%=utilCache.getExpireTime()%>"></TD>
-    </TR>
+      </td>
+      <td><input type="text" class='inputBox' size="15" maxlength="15" name="UTIL_CACHE_EXPIRE_TIME" value="<%=utilCache.getExpireTime()%>"></td>
+    </tr>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
 	  <%String softRefValue = (new Boolean(utilCache.getUseSoftReference())).toString();%>
-      <TD>useSoftReference?</TD>
-      <TD><%=softRefValue%></TD>
-      <TD>
+      <td>Use Soft Reference?</td>
+      <td><%=softRefValue%></td>
+      <td>
 		<select name="UTIL_CACHE_USE_SOFT_REFERENCE" class="selectBox">
 			<option <%="true".equals(softRefValue)?"selected":""%>>true</option>
 			<option <%="false".equals(softRefValue)?"selected":""%>>false</option>
 		</select>
-      </TD>
-    </TR>
+      </td>
+    </tr>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-      <TD colspan="3"><INPUT type="submit" value="Update"></TD>
-    </TR>
+	  <%String fileStoreValue = (new Boolean(utilCache.getUseFileSystemStore())).toString();%>
+      <td>Use File System Store?</td>
+      <td><%=fileStoreValue%></td>
+      <td>&nbsp;</td>
+    </tr>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
+      <TD colspan="3"><INPUT type="submit" value="Update"></td>
+    </tr>
     </TABLE>
     </form>
    <%}else{%>
