@@ -1,5 +1,5 @@
 /*
- * $Id: CategoryWorker.java,v 1.1 2003/08/17 18:04:21 ajzeneski Exp $
+ * $Id: CategoryWorker.java,v 1.2 2003/12/25 15:17:26 ajzeneski Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -35,13 +35,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilFormatOut;
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.product.ProductWorker;
 
@@ -50,7 +51,7 @@ import org.ofbiz.product.product.ProductWorker;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class CategoryWorker {
@@ -136,9 +137,13 @@ public class CategoryWorker {
     public static void getRelatedCategories(PageContext pageContext, String attributeName, String parentId, boolean limitView) {
         getRelatedCategories(pageContext.getRequest(), attributeName, parentId, limitView);
     }
-        
+
     public static void getRelatedCategories(ServletRequest request, String attributeName, String parentId, boolean limitView) {
-        ArrayList categories = getRelatedCategoriesRet(request, attributeName, parentId, limitView);
+        getRelatedCategories(request, attributeName, parentId, limitView, false);
+    }
+
+    public static void getRelatedCategories(ServletRequest request, String attributeName, String parentId, boolean limitView, boolean excludeEmpty) {
+        ArrayList categories = getRelatedCategoriesRet(request, attributeName, parentId, limitView, excludeEmpty);
 
         if (categories.size() > 0)
             request.setAttribute(attributeName, categories);
@@ -147,8 +152,12 @@ public class CategoryWorker {
     public static ArrayList getRelatedCategoriesRet(PageContext pageContext, String attributeName, String parentId, boolean limitView) {
         return getRelatedCategoriesRet(pageContext.getRequest(), attributeName, parentId, limitView);
     }
-    
+
     public static ArrayList getRelatedCategoriesRet(ServletRequest request, String attributeName, String parentId, boolean limitView) {
+        return getRelatedCategoriesRet(request, attributeName, parentId, limitView, false);
+    }
+
+    public static ArrayList getRelatedCategoriesRet(ServletRequest request, String attributeName, String parentId, boolean limitView, boolean excludeEmpty) {
         ArrayList categories = new ArrayList();        
 
         if (Debug.verboseOn()) Debug.logVerbose("[CatalogHelper.getRelatedCategories] ParentID: " + parentId, module);
@@ -182,11 +191,77 @@ public class CategoryWorker {
                     Debug.logWarning(e.getMessage(), module);
                     cv = null;
                 }
-                if (cv != null)
-                    categories.add(cv);
+                if (cv != null) {
+                    if (excludeEmpty) {
+                        if (!isCategoryEmpty(cv)) {
+                            Debug.log("Child : " + cv.getString("productCategoryId") + " is not empty.", module);
+                            categories.add(cv);
+                        }
+                    } else {
+                        categories.add(cv);
+                    }
+                }
             }
         }
         return categories;
+    }
+
+    public static boolean isCategoryEmpty(GenericValue category) {
+        boolean empty = true;
+        long members = categoryMemberCount(category);
+        Debug.log("Category : " + category.get("productCategoryId") + " has " + members  + " members", module);
+        if (members > 0) {
+            empty = false;
+        }
+
+        if (empty) {
+            long rollups = categoryRollupCount(category);
+            Debug.log("Category : " + category.get("productCategoryId") + " has " + rollups  + " rollups", module);
+            if (rollups > 0) {
+                empty = false;
+            }
+        }
+
+        return empty;
+    }
+
+    public static long categoryMemberCount(GenericValue category) {
+        if (category == null) return 0;
+        GenericDelegator delegator = category.getDelegator();
+        long count = 0;
+        try {
+            count = delegator.findCountByCondition("ProductCategoryMember", buildCountCondition("productCategoryId", category.getString("productCategoryId")), null);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return count;
+    }
+
+    public static long categoryRollupCount(GenericValue category) {
+        if (category == null) return 0;
+        GenericDelegator delegator = category.getDelegator();
+        long count = 0;
+        try {
+            count = delegator.findCountByCondition("ProductCategoryRollup", buildCountCondition("parentProductCategoryId", category.getString("productCategoryId")), null);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return count;
+    }
+
+    private static EntityCondition buildCountCondition(String fieldName, String fieldValue) {
+        List orCondList = new ArrayList();
+        orCondList.add(new EntityExpr("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp()));
+        orCondList.add(new EntityExpr("thruDate", EntityOperator.EQUALS, null));
+        EntityCondition orCond = new EntityConditionList(orCondList, EntityOperator.OR);
+
+        List andCondList = new ArrayList();
+        andCondList.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN, UtilDateTime.nowTimestamp()));
+        andCondList.add(new EntityExpr(fieldName, EntityOperator.EQUALS, fieldValue));
+        andCondList.add(orCond);
+        EntityCondition andCond = new EntityConditionList(andCondList, EntityOperator.AND);
+
+        return andCond;
     }
 
     public static void setTrail(PageContext pageContext, String currentCategory) {
