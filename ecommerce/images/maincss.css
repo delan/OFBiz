@@ -372,10 +372,24 @@ font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: gold;
-	border: none;
+border: none;
 }
 
 A.lightbuttontext:hover {
+color: yellow;
+text-decoration: underline;
+}
+
+A.lightbuttontextsmall {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 8px;
+font-weight: bold;
+text-decoration: none;
+color: gold;
+border: none;
+}
+
+A.lightbuttontextsmall:hover {
 color: yellow;
 text-decoration: underline;
 }
