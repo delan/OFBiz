@@ -300,6 +300,13 @@
         <attribute name="processResult" type="String" mode="OUT" optional="false"/>
     </service>
     
+    <service name="releaseOrderPayments" engine="java"
+            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="releaseOrderPayments" auth="false">
+        <description>Process (authorizes/re-authorizes) payments for an order</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="processResult" type="String" mode="OUT" optional="false"/>
+    </service>                   
+    
     <service name="capturePaymentsByInvoice" engine="java"
             location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="capturePaymentsByInvoice" auth="true">
         <description>Captures (settles) pre-authorized order payments by invoice</description>               
@@ -359,6 +366,15 @@
 	    <attribute name="captureResult" type="Boolean" mode="OUT" optional="true"/>
 	    <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>	    	    
 	</service>
+	
+	<service name="ccReleaseInterface" engine="interface" location="" invoke="">
+	    <description>Credit Card Release Interface</description>
+	    <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
+	    <attribute name="currency" type="String" mode="IN" optional="true"/>
+	    <attribute name="paymentConfig" type="String" mode="IN" optional="true"/>
+	    <attribute name="releaseResult" type="Boolean" mode="OUT" optional="true"/>
+	    <attribute name="releaseRefNum" type="String" mode="OUT" optional="true"/>	    	    
+	</service>	
 	
 	<service name="ccRefundInterface" engine="interface" location="" invoke="">
 	    <description>Credit Card Refund (Credit) Inteface</description>
@@ -434,6 +450,13 @@
             location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="testCapture">
         <description>Credit Card Test Capture</description>
         <implements service="ccCaptureInterface"/>
+    </service>
+    
+    <!-- Credit Card Release Services -->
+    <service name="testCCRelease" engine="java"
+            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="testRelease">
+        <description>Credit Card Test Release</description>
+        <implements service="ccReleaseInterface"/>
     </service>
     
     <!-- Credit Card Refund Services -->

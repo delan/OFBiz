@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.6 2003/08/25 20:34:53 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.7 2003/08/25 21:56:55 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 
@@ -611,7 +611,13 @@ public class OrderServices {
         Debug.log("Shippable Total : " + orh.getShippableTotal(), module);
         
         Map shippingEstMap = ShippingEvents.getShipEstimate(delegator, orh);
-        Double shippingTotal = (Double) shippingEstMap.get("shippingTotal");
+        
+        Double shippingTotal = null;
+        if (orh.getValidOrderItems() == null || orh.getValidOrderItems().size() == 0) {
+            shippingTotal = new Double(0.00);
+        } else {
+            shippingTotal = (Double) shippingEstMap.get("shippingTotal");    
+        }                
         Debug.log("New Shipping Total : " + shippingTotal, module);
         
         double currentShipping = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orh.getOrderItems(), orh.getAdjustments(), false, false, true);
