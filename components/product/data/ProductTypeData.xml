@@ -175,6 +175,7 @@
 
     <ProductFeatureType description="Accessory" hasTable="N" parentTypeId="" productFeatureTypeId="ACCESSORY"/>
     <ProductFeatureType description="Amount" hasTable="N" parentTypeId="" productFeatureTypeId="AMOUNT"/>
+    <ProductFeatureType description="Net Weight" hasTable="N" parentTypeId="AMOUNT" productFeatureTypeId="NET_WEIGHT"/>
     <ProductFeatureType description="Artist" hasTable="N" parentTypeId="" productFeatureTypeId="ARTIST"/>
     <ProductFeatureType description="Billing Feature" hasTable="N" parentTypeId="" productFeatureTypeId="BILLING_FEATURE"/>
     <ProductFeatureType description="Brand" hasTable="N" parentTypeId="" productFeatureTypeId="BRAND"/>

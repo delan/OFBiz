@@ -23,13 +23,7 @@
  */
 package org.ofbiz.product.product;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
 
@@ -347,6 +341,52 @@ public class ProductWorker {
         return "[" + alternativeOptionProductId + "]";
     }
 
+    /**
+     * gets productFeatures given a productFeatureApplTypeId
+     * @param delegator
+     * @param productId
+     * @param productFeatureApplTypeId - if null, returns ALL productFeatures, regardless of applType
+     * @return
+     */
+    public static List getProductFeaturesByApplTypeId(GenericDelegator delegator, String productId, String productFeatureApplTypeId) {
+        if (productId == null) {
+            return null;
+        }
+        try {
+            return getProductFeaturesByApplTypeId(delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId)), 
+                    productFeatureApplTypeId);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return null;
+    }
+
+    public static List getProductFeaturesByApplTypeId(GenericValue product, String productFeatureApplTypeId) {
+        if (product == null) {
+            return null;
+        }
+        List features = new ArrayList();
+        try {
+            if (product != null) {
+                List productAppls;
+                if (productFeatureApplTypeId == null) {
+                    productAppls = product.getRelated("ProductFeatureAppl");
+                } else {
+                    productAppls = product.getRelatedByAnd("ProductFeatureAppl",
+                            UtilMisc.toMap("productFeatureApplTypeId", productFeatureApplTypeId));
+                }
+                for (int i = 0; i < productAppls.size(); i++) {
+                    GenericValue productAppl = (GenericValue)productAppls.get(i);
+                    features.add(productAppl.getRelatedOne("ProductFeature"));
+                }
+                features = EntityUtil.orderBy(features, UtilMisc.toList("description"));
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return features;
+    }
+
     public static Map getOptionalProductFeatures(GenericDelegator delegator, String productId) {
         Map featureMap = new LinkedMap();
 
@@ -527,6 +567,31 @@ public class ProductWorker {
         }
 
         return productRating;
+    }
+
+    public static List getCurrentProductCategories(GenericDelegator delegator, String productId) {
+        GenericValue product = null;
+        try {
+            product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return getCurrentProductCategories(delegator, product);
+    }
+
+    public static List getCurrentProductCategories(GenericDelegator delegator, GenericValue product) {
+        if (product == null) {
+            return null;
+        }
+        List categories = new ArrayList();
+        try {
+            List categoryMembers = product.getRelated("ProductCategoryMember");
+            categoryMembers = EntityUtil.filterByDate(categoryMembers);
+            categories = EntityUtil.getRelated("ProductCategory", categoryMembers);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return categories;
     }
 }
 

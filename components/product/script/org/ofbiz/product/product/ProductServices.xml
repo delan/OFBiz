@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  -->
 
@@ -114,6 +114,53 @@
             </if-compare-field>
         </if-not-empty>
         -->
+    </simple-method>
+
+    <!--
+        update the name of a product - handles real , virtual and variant products
+    -->
+    <simple-method method-name="updateProductQuickAdminName" short-description="Update a Product Name from quick admin">
+        <if-not-empty field-name="productName" map-name="parameters">
+            <string-to-field string="updateProductQuickAdminName" field-name="callingMethodName"/>
+            <string-to-field string="UPDATE" field-name="checkAction"/>
+            <call-simple-method method-name="checkProductRelatedPermission"/>
+            <check-errors/>
+
+            <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupPKMap"/>
+            <find-by-primary-key entity-name="Product" map-name="lookupPKMap" value-name="lookedUpValue"/>
+            <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+            <if-not-empty field-name="isVirtual" map-name="parameters">
+                <field-to-field field-name="productName" map-name="lookedUpValue" to-field-name="internalName"  to-map-name="lookedUpValue"/>
+            </if-not-empty>
+
+            <now-timestamp-to-env env-name="lookedUpValue.lastModifiedDate"/>
+            <env-to-env env-name="userLogin.userLoginId" to-env-name="lookedUpValue.lastModifiedByUserLogin"/>
+
+            <store-value value-name="lookedUpValue"/>
+
+            <if-not-empty field-name="isVirtual" map-name="parameters">
+
+                <!-- get all variant products, to update their productNames -->
+                <field-to-field field-name="productId" map-name="parameters" to-map-name="variantProductAssocMap"/>
+                <string-to-field string="PRODUCT_VARIANT" field-name="productAssocTypeId" map-name="variantProductAssocMap" />
+
+                <!-- get all productAssocs, then get the actual product to update -->
+                <find-by-and entity-name="ProductAssoc" map-name="variantProductAssocMap" list-name="variantProductAssocs"/>
+                <iterate entry-name="variantProductAssoc" list-name="variantProductAssocs">
+                    <clear-field field-name="variantProduct"/>
+                    <field-to-field field-name="productIdTo" map-name="variantProductAssoc" to-field-name="productId" to-map-name="variantProduct"/>
+
+                    <find-by-primary-key entity-name="Product" map-name="variantProduct" value-name="variantProduct" />
+
+                    <field-to-field field-name="productName" map-name="parameters" to-map-name="variantProduct"/>
+                    <now-timestamp-to-env env-name="variantProduct.lastModifiedDate"/>
+                    <env-to-env env-name="userLogin.userLoginId" to-env-name="variantProduct.lastModifiedByUserLogin"/>
+                    <store-value value-name="variantProduct"/>
+
+                </iterate>
+            </if-not-empty>
+
+        </if-not-empty>
     </simple-method>
 
     <simple-method method-name="duplicateProduct" short-description="Duplicate a Product">
