@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.15 2004/07/31 12:17:39 jonesde Exp $
+ * $Id: ModelFormField.java,v 1.16 2004/08/01 03:28:12 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.2
  */
 public class ModelFormField {
@@ -1203,7 +1203,7 @@ public class ModelFormField {
             super();
         }
 
-        protected FlexibleStringExpander noCurrentSelectedKey;
+        protected FlexibleStringExpander noCurrentSelectedKey = null;
         protected List optionSources = new LinkedList();
 
         public FieldInfoWithOptions(int fieldSource, int fieldType, ModelFormField modelFormField) {
@@ -1262,10 +1262,13 @@ public class ModelFormField {
         }
 
         public String getNoCurrentSelectedKey(Map context) {
+            if (this.noCurrentSelectedKey == null) {
+                return null;
+            }
             return this.noCurrentSelectedKey.expandString(context);
         }
 
-        public void setNoCurrentSelectedKey(String string) {
+        public void setNoCurrentSelectedKey(String string) {            
             this.noCurrentSelectedKey = new FlexibleStringExpander(string);
         }
 
