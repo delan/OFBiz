@@ -31,15 +31,8 @@
  
 <simple-methods>
     <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">
-        <!--
-            Note: this implementation ignores the create.allow.password and 
-            default.customer.password properties in /WEB-INF/ecommerce.properties.
-            The trick is getting that resource out of the servlet application context...
-            
-            To use that feature, just set the follow string to false.
-        -->
-        <string-to-field string="true" field-name="create_allow_password"/>
-        <string-to-field string="ungssblepsswd" field-name="default_customer_password"/>
+        <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="create.allow.password" default="true" field-name="create_allow_password"/>
+        <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="default.customer.password" default="ungssblepsswd" field-name="default_customer_password"/>
 
         <now-timestamp-to-env env-name="now"/>
         <string-to-field string="CUSTOMER" field-name="roleTypeId" map-name="parameters"/>
@@ -57,7 +50,7 @@
                 <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-message message="Password is missing"/></not-empty></process>
                 <process field="CONFIRM_PASSWORD">
                     <compare-field operator="equals" field="PASSWORD"><fail-message message="Your passwords do not match"/></compare-field>
-                    <not-empty><fail-message message="You must enter your password twice"/></not-empty>
+                    <!-- This is checked below in the checkNewPassword method in the bsh block: <not-empty><fail-message message="You must enter your password twice"/></not-empty> -->
                     <copy to-field="currentPasswordVerify"/>
                 </process>
                 <process field="PASSWORD_HINT"><copy to-field="passwordHint"/></process>
@@ -85,7 +78,7 @@
             String password = (String) userLoginContext.get("currentPassword");
             String confirmPassword = (String) userLoginContext.get("currentPasswordVerify");
             String passwordHint = (String) userLoginContext.get("passwordHint");
-            org.ofbiz.commonapp.security.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, (List) error_list);
+            org.ofbiz.commonapp.security.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list);
         ]]></call-bsh>
                 
         <!-- Create the Person -->
@@ -100,9 +93,9 @@
             </simple-map-processor>
         </call-map-processor>
 
-        <!-- Create the PartyGroup -->
-        <call-map-processor in-map-name="parameters" out-map-name="partyGroupContext">
-            <simple-map-processor name="newPartyGroup">
+        <!-- Create the PartyRole -->
+        <call-map-processor in-map-name="parameters" out-map-name="partyRoleContext">
+            <simple-map-processor name="newPartyRole">
                 <process field="USERNAME"><copy to-field="partyId"/></process>
                 <process field="roleTypeId"><copy/></process>
             </simple-map-processor>
@@ -209,7 +202,7 @@
                 <process field="CUSTOMER_EMAIL">
                     <not-empty><fail-message message="Email is missing"/></not-empty>
                     <validate-method method="isEmail"><fail-message message="Email address not formatted correctly, must be like: name@domain"/></validate-method>
-                    <copy to-field="email"/>
+                    <copy to-field="emailAddress"/>
                 </process>
                 <process field="CUSTOMER_EMAIL_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
             </simple-map-processor>
@@ -218,8 +211,9 @@
         <!-- now that everything is validated & setup, check to see if there are errors, then call the services -->
         <check-errors/>
         <call-service service-name="createUserLogin" in-map-name="userLoginContext"/>
+        <set-current-user-login value-name="newUserLogin"/>
         <call-service service-name="createPerson" in-map-name="personContext"/>
-        <call-service service-name="createPartyGroup" in-map-name="partyGroupContext"/>
+        <call-service service-name="createPartyRole" in-map-name="partyRoleContext"/>
 
         <!-- shipping address -->
         <call-service service-name="createPostalAddress" in-map-name="addressContext">
@@ -279,6 +273,7 @@
 
         <!-- now finished, log in the user... -->
         <if-compare field-name="create_allow_password" operator="equals" value="true">
+            <call-bsh>org.ofbiz.core.util.Debug.logError("putting userlogin in session");</call-bsh>
             <field-to-session field-name="newUserLogin" session-name="_USER_LOGIN_"/>
         </if-compare>
     </simple-method>   
