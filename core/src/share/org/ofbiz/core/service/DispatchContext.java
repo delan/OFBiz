@@ -8,7 +8,7 @@ import java.net.*;
 import java.util.*;
 
 /**
- * <p><b>Title:</b> Global Service Dispatcher
+ * <p><b>Title:</b> Dispatcher Context
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -34,15 +34,18 @@ import java.util.*;
  * @version 1.0
  * Created on November 8, 2001
  */
-public class ServiceContext {
+public class DispatchContext {
     
     protected Map modelServices;
     protected Map attributes;
     protected Collection readers;
     protected ClassLoader loader;
     
-    /** Creates new ServiceContext */
-    public ServiceContext(Collection readers, ClassLoader loader) {
+    /** Creates new DispatchContext 
+     *@param readers a collection of reader URLs
+     *@param loader the classloader to use for dispatched services
+     */
+    public DispatchContext(Collection readers, ClassLoader loader) {
         this.readers = readers;
         this.loader = loader;
         this.attributes = new HashMap();

@@ -56,7 +56,7 @@ public class ServiceDispatcher {
      *@param delegator the local delegator
      *@return A reference to this global ServiceDispatcher
      */
-    public static ServiceDispatcher getInstance(String name, ServiceContext context, GenericDelegator delegator) {
+    public static ServiceDispatcher getInstance(String name, DispatchContext context, GenericDelegator delegator) {
         ServiceDispatcher sd = null;
         if ( dispatchers.containsKey(delegator) ) 
             sd = (ServiceDispatcher) dispatchers.get(delegator);        
@@ -71,7 +71,7 @@ public class ServiceDispatcher {
      *@param name the local dispatcher
      *@param loader the classloader of the local dispatcher
      */
-    public void register(String name, ServiceContext context) {
+    public void register(String name, DispatchContext context) {
         this.localContext.put(name,context);
     }
     
@@ -139,9 +139,9 @@ public class ServiceDispatcher {
     /** Gets the local dispatcher from a name 
      *@param String name of the loader to find.
      */
-    public ServiceContext getLocalContext(String name) {
+    public DispatchContext getLocalContext(String name) {
         if ( localContext.containsKey(name) )
-            return (ServiceContext) localContext.get(name);
+            return (DispatchContext) localContext.get(name);
         return null;
     }
 }

@@ -38,13 +38,13 @@ import org.ofbiz.core.service.scheduler.*;
  */
 public class LocalDispatcher {
     
-    protected ServiceContext ctx;
+    protected DispatchContext ctx;
     protected ServiceDispatcher dispatcher;
     protected String name;
     
     public LocalDispatcher(String name, GenericDelegator delegator, Collection readerURLs) {
         this.name = name;        
-        ctx = new ServiceContext(readerURLs,this.getClass().getClassLoader());
+        ctx = new DispatchContext(readerURLs,this.getClass().getClassLoader());
         dispatcher = ServiceDispatcher.getInstance(name, ctx, delegator);
     }
     
