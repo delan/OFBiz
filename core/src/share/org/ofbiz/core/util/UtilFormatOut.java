@@ -1,33 +1,25 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.3  2001/10/25 00:30:55  jonesde
- * Added little makeString function to get a string from object, handling nulls quietly
  *
- * Revision 1.2  2001/09/29 06:48:32  jonesde
- * Added checkEmpty methods
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * Revision 1.1  2001/09/28 22:56:44  jonesde
- * Big update for fromDate PK use, organization stuff
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
  *
- * Revision 1.5  2001/09/10 21:40:44  epabst
- * added formatPercentage
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
  *
- * Revision 1.4  2001/09/05 20:22:12  jonesde
- * Added another checknull with 4 params
- *
- * Revision 1.3  2001/08/31 17:44:04  epabst
- * added shopping cart code
- *
- * Revision 1.2  2001/08/30 20:55:40  jonesde
- * Added a simple function to only return pre and post text if the base string is not empty.
- *
- * Revision 1.1  2001/07/16 14:45:48  azeneski
- * Added the missing 'core' directory into the module.
- *
- * Revision 1.1  2001/07/15 16:36:18  azeneski
- * Initial Import
- *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package org.ofbiz.core.util;
@@ -36,27 +28,7 @@ import javax.servlet.http.*;
 import java.text.*;
 
 /**
- * <p><b>Title:</b> General output formatting functions - mainly for helping in JSPs
- * <p><b>Description:</b> Utility functions for formatting output
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
- *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * General output formatting functions - mainly for helping in JSPs
  *
  *@author     David E. Jones
  *@created    May 21, 2001

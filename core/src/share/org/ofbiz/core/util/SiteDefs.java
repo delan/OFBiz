@@ -1,96 +1,31 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.4  2002/02/02 19:50:31  azeneski
- * formatting changes (120cols)
  *
- * Revision 1.3  2001/12/30 04:48:58  jonesde
- * Added event message def
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * Revision 1.2  2001/10/19 22:17:32  jonesde
- * Changed servers.properties to entityengine.properties
- *
- * Revision 1.1  2001/09/28 22:56:44  jonesde
- * Big update for fromDate PK use, organization stuff
- *
- * Revision 1.16  2001/09/27 07:08:57  jonesde
- * Removed company specific stuff that shouldn't be there.
- *
- * Revision 1.15  2001/09/26 01:35:49  azeneski
- * Modification to set context root in request object.
- *
- * Revision 1.14  2001/09/19 08:32:02  jonesde
- * Initial checkin of refactored entity engine.
- *
- * Revision 1.13  2001/09/14 20:04:57  epabst
- * updated Site name
- *
- * Revision 1.12  2001/09/14 19:06:05  epabst
- * created new session attribute called SiteDefs.SERVER_ROOT_URL that contains something like:
- * "http://myserver.com:1234"
- *
- * Revision 1.11  2001/08/25 16:57:14  azeneski
- * *** empty log message ***
- *
- * Revision 1.10  2001/08/24 17:14:34  azeneski
- * Removed plain text attribute and created a defination in SiteDefs.
- * NOTE: Need to update all pages/events which use the old name!
- *
- * Revision 1.9  2001/08/17 07:39:03  jonesde
- * Added initialization to ControlServlet, and put security and helper into the application scope (ServletContext). Other small changes to support this.
- *
- * Revision 1.8  2001/07/29 01:57:31  azeneski
- * *** empty log message ***
- *
- * Revision 1.7  2001/07/23 18:05:00  azeneski
- * Fixed runaway thread in the job scheduler.
- *
- * Revision 1.6  2001/07/19 20:50:22  azeneski
- * Added the job scheduler to 'core' module.
- *
- * Revision 1.5  2001/07/19 14:19:31  azeneski
- * Added scheduler config variable to SiteDefs.
- *
- * Revision 1.4  2001/07/17 22:17:21  jonesde
- * Updates for improved login: no extra redirect, and can login staying on same page
- *
- * Revision 1.3  2001/07/17 08:51:37  jonesde
- * Updated for auth implementation & small fixes.
- *
- * Revision 1.2  2001/07/16 22:31:06  azeneski
- * Moved multi-site support to be handled by the webapp.
- *
- * Revision 1.1  2001/07/16 14:45:48  azeneski
- * Added the missing 'core' directory into the module.
- *
- * Revision 1.1  2001/07/15 16:36:18  azeneski
- * Initial Import
- *
- */
-
-package org.ofbiz.core.util;
-
-/**
- * <p><b>Title:</b> SiteDefs.java
- * <p><b>Description:</b> Holds general site wide variables.
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.util;
+
+/**
+ * Holds general site wide variables.
  *
  * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  * @version    1.0
