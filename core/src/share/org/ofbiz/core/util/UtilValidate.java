@@ -25,6 +25,7 @@
 package org.ofbiz.core.util;
 
 
+import java.util.Calendar;
 import java.util.Collection;
 
 
@@ -107,56 +108,62 @@ public class UtilValidate {
 
     /** U.S. phone numbers have 10 digits. They are formatted as 123 456 7890 or(123) 456-7890. */
     public static final int digitsInUSPhoneNumber = 10;
+    public static final int digitsInUSPhoneAreaCode = 3;
+    public static final int digitsInUSPhoneMainNumber = 7;
 
     /** non-digit characters which are allowed in ZIP Codes */
-    public static final String ZIPCodeDelimiters = "-";
+    public static final String ZipCodeDelimiters = "-";
 
     /** our preferred delimiter for reformatting ZIP Codes */
-    public static final String ZIPCodeDelimeter = "-";
+    public static final String ZipCodeDelimeter = "-";
 
     /** characters which are allowed in Social Security Numbers */
-    public static final String validZIPCodeChars = digits + ZIPCodeDelimiters;
+    public static final String validZipCodeChars = digits + ZipCodeDelimiters;
 
     /** U.S. ZIP codes have 5 or 9 digits. They are formatted as 12345 or 12345-6789. */
-    public static final int digitsInZIPCode1 = 5;
+    public static final int digitsInZipCode1 = 5;
 
     /** U.S. ZIP codes have 5 or 9 digits. They are formatted as 12345 or 12345-6789. */
-    public static final int digitsInZIPCode2 = 9;
+    public static final int digitsInZipCode2 = 9;
 
     /** non-digit characters which are allowed in credit card numbers */
-    public static final String creditCardDelimiters = " ";
+    public static final String creditCardDelimiters = " -";
 
     public static final String isNotEmptyMsg = "This field cannot be empty, please enter a value.";
-    public static final String isStateCodeMsg = "The State Code must be a valid two character U.S. state abbreviation(like CA for California). Please reenter it now.";
-    public static final String isZIPCodeMsg = "The ZIP Code must be a 5 or 9 digit U.S. ZIP Code(like 94043). Please reenter it now.";
-    public static final String isUSPhoneMsg = "The US Phone must be a 10 digit U.S. phone number(like 415-555-1212). Please reenter it now.";
-    public static final String isInternationalPhoneNumberMsg = "The World Phone must be a valid international phone number. Please reenter it now.";
-    public static final String isSSNMsg = "The SSN must be a 9 digit U.S. social security number(like 123-45-6789). Please reenter it now.";
+    public static final String isStateCodeMsg = "The State Code must be a valid two character U.S. state abbreviation(like CA for California).";
+    public static final String isContiguousStateCodeMsg = "The State Code must be a valid two character U.S. state abbreviation for one of the 48 contiguous United States (like CA for California).";
+    public static final String isZipCodeMsg = "The ZIP Code must be a 5 or 9 digit U.S. ZIP Code(like 94043).";
+    public static final String isUSPhoneMsg = "The US Phone must be a 10 digit U.S. phone number(like 415-555-1212).";
+    public static final String isUSPhoneAreaCodeMsg = "The Phone Number Area Code must be 3 digits.";
+    public static final String isUSPhoneMainNumberMsg = "The Phone Number must be 7 digits.";
+    public static final String isContiguousZipCodeMsg = "Zip Code is not a valid Zip Code for one of the 48 contiguous United States .";
+    public static final String isInternationalPhoneNumberMsg = "The World Phone must be a valid international phone number.";
+    public static final String isSSNMsg = "The SSN must be a 9 digit U.S. social security number(like 123-45-6789).";
     public static final String isEmailMsg = "The Email must be a valid email address(like john@email.com). Please re-enter it now.";
     public static final String isAnyCardMsg = "The credit card number is not a valid card number.";
     public static final String isCreditCardPrefixMsg = " is not a valid ";
-    public static final String isCreditCardSuffixMsg = " credit card number. Please reenter it now.";
-    public static final String isDayMsg = "The Day must be a day number between 1 and 31.  Please reenter it now.";
-    public static final String isMonthMsg = "The Month must be a month number between 1 and 12.  Please reenter it now.";
-    public static final String isYearMsg = "The Year must be a 2 or 4 digit year number.  Please reenter it now.";
+    public static final String isCreditCardSuffixMsg = " credit card number.";
+    public static final String isDayMsg = "The Day must be a day number between 1 and 31. ";
+    public static final String isMonthMsg = "The Month must be a month number between 1 and 12. ";
+    public static final String isYearMsg = "The Year must be a 2 or 4 digit year number. ";
     public static final String isDatePrefixMsg = "The Day, Month, and Year for ";
     public static final String isDateSuffixMsg = " do not form a valid date.  Please reenter them now.";
-    public static final String isHourMsg = "The Hour must be a number between 0 and 23.  Please reenter it now.";
-    public static final String isMinuteMsg = "The Hour must be a number between 0 and 59.  Please reenter it now.";
-    public static final String isSecondMsg = "The Hour must be a number between 0 and 59.  Please reenter it now.";
-    public static final String isTimeMsg = "The Time must be a valid time formed like: HH:MM or HH:MM:SS. Please reenter it now.";
-    public static final String isDateMsg = "The Date must be a valid date formed like: MM/YY, MM/YYYY, MM/DD/YY, or MM/DD/YYYY. Please reenter it now.";
-    public static final String isDateAfterToday = "The Date must be a valid date after today, and formed like: MM/YY, MM/YYYY, MM/DD/YY, or MM/DD/YYYY. Please reenter it now.";
-    public static final String isIntegerMsg = "The Number must be a valid unsigned whole decimal number. Please reenter it now.";
-    public static final String isSignedIntegerMsg = "The Number must be a valid signed whole decimal number. Please reenter it now.";
-    public static final String isLongMsg = "The Number must be a valid unsigned whole decimal number. Please reenter it now.";
-    public static final String isSignedLongMsg = "The Number must be a valid signed whole decimal number. Please reenter it now.";
-    public static final String isFloatMsg = "The Number must be a valid unsigned decimal number. Please reenter it now.";
-    public static final String isSignedFloatMsg = "The Number must be a valid signed decimal number. Please reenter it now.";
-    public static final String isSignedDoubleMsg = "The Number must be a valid signed decimal number. Please reenter it now.";
+    public static final String isHourMsg = "The Hour must be a number between 0 and 23.";
+    public static final String isMinuteMsg = "The Hour must be a number between 0 and 59.";
+    public static final String isSecondMsg = "The Hour must be a number between 0 and 59.";
+    public static final String isTimeMsg = "The Time must be a valid time formed like: HH:MM or HH:MM:SS.";
+    public static final String isDateMsg = "The Date must be a valid date formed like: MM/YY, MM/YYYY, MM/DD/YY, or MM/DD/YYYY.";
+    public static final String isDateAfterToday = "The Date must be a valid date after today, and formed like: MM/YY, MM/YYYY, MM/DD/YY, or MM/DD/YYYY.";
+    public static final String isIntegerMsg = "The Number must be a valid unsigned whole decimal number.";
+    public static final String isSignedIntegerMsg = "The Number must be a valid signed whole decimal number.";
+    public static final String isLongMsg = "The Number must be a valid unsigned whole decimal number.";
+    public static final String isSignedLongMsg = "The Number must be a valid signed whole decimal number.";
+    public static final String isFloatMsg = "The Number must be a valid unsigned decimal number.";
+    public static final String isSignedFloatMsg = "The Number must be a valid signed decimal number.";
+    public static final String isSignedDoubleMsg = "The Number must be a valid signed decimal number.";
 
     /** An array of ints representing the number of days in each month of the year.
-     *  Note: February valies depending on the year */
+     *  Note: February varies depending on the year */
     public static final int[] daysInMonth = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     /** Delimiter for USStateCodes String */
@@ -165,6 +172,9 @@ public class UtilValidate {
     /** Valid U.S. Postal Codes for states, territories, armed forces, etc.
      * See http://www.usps.gov/ncsc/lookups/abbr_state.txt. */
     public static final String USStateCodes = "AL|AK|AS|AZ|AR|CA|CO|CT|DE|DC|FM|FL|GA|GU|HI|ID|IL|IN|IA|KS|KY|LA|ME|MH|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|MP|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|VT|VI|VA|WA|WV|WI|WY|AE|AA|AE|AE|AP";
+
+    /** Valid contiguous U.S. postal codes */
+    public static final String ContiguousUSStateCodes = "AL|AZ|AR|CA|CO|CT|DE|DC|FL|GA|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY";
 
     public static boolean areEqual(Object obj, Object obj2) {
         if (obj == null) {
@@ -251,8 +261,7 @@ public class UtilValidate {
     /** Returns true if single character c(actually a string) is contained within string s. */
     public static boolean charInString(char c, String s) {
         return (s.indexOf(c) != -1);
-        // for(int i = 0; i < s.length; i++)
-        // {
+        // for(int i = 0; i < s.length; i++) {
         // if(s.charAt(i) == c) return true;
         // }
         // return false;
@@ -565,6 +574,22 @@ public class UtilValidate {
         return (isInteger(normalizedPhone) && normalizedPhone.length() == digitsInUSPhoneNumber);
     }
 
+    /** isUSPhoneAreaCode returns true if string s is a valid U.S. Phone Area Code.  Must be 3 digits. */
+    public static boolean isUSPhoneAreaCode(String s) {
+        if (isEmpty(s)) return defaultEmptyOK;
+        String normalizedPhone = stripCharsInBag(s, phoneNumberDelimiters);
+
+        return (isInteger(normalizedPhone) && normalizedPhone.length() == digitsInUSPhoneAreaCode);
+    }
+
+    /** isUSPhoneMainNumber returns true if string s is a valid U.S. Phone Main Number.  Must be 7 digits. */
+    public static boolean isUSPhoneMainNumber(String s) {
+        if (isEmpty(s)) return defaultEmptyOK;
+        String normalizedPhone = stripCharsInBag(s, phoneNumberDelimiters);
+
+        return (isInteger(normalizedPhone) && normalizedPhone.length() == digitsInUSPhoneMainNumber);
+    }
+
     /** isInternationalPhoneNumber returns true if string s is a valid
      *  international phone number.  Must be digits only; any length OK.
      *  May be prefixed by + character.
@@ -578,18 +603,39 @@ public class UtilValidate {
     }
 
     /** isZIPCode returns true if string s is a valid U.S. ZIP code.  Must be 5 or 9 digits only. */
-    public static boolean isZIPCode(String s) {
+    public static boolean isZipCode(String s) {
         if (isEmpty(s)) return defaultEmptyOK;
 
-        String normalizedZIP = stripCharsInBag(s, ZIPCodeDelimiters);
+        String normalizedZip = stripCharsInBag(s, ZipCodeDelimiters);
 
-        return (isInteger(normalizedZIP) && ((normalizedZIP.length() == digitsInZIPCode1) || (normalizedZIP.length() == digitsInZIPCode2)));
+        return (isInteger(normalizedZip) && ((normalizedZip.length() == digitsInZipCode1) || (normalizedZip.length() == digitsInZipCode2)));
+    }
+
+    /** Returns true if string s is a valid contiguous U.S. Zip code.  Must be 5 or 9 digits only. */
+    public static boolean isContiguousZipCode(String s) {
+        boolean retval = false;
+        if (isZipCode(s)) {
+            if (isEmpty(s)) retval = defaultEmptyOK;
+            else {
+                String normalizedZip = s.substring(0,5);
+                int iZip = Integer.parseInt(normalizedZip);
+                if ((iZip >= 96701 && iZip <= 96898) || (iZip >= 99501 && iZip <= 99950)) retval = false;
+                else retval = true;
+            }
+        }
+        return retval;
     }
 
     /** Return true if s is a valid U.S. Postal Code (abbreviation for state). */
     public static boolean isStateCode(String s) {
         if (isEmpty(s)) return defaultEmptyOK;
         return ((USStateCodes.indexOf(s) != -1) && (s.indexOf(USStateCodeDelimiter) == -1));
+    }
+
+    /** Return true if s is a valid contiguous U.S. Postal Code (abbreviation for state). */
+    public static boolean isContiguousStateCode(String s) {
+        if (isEmpty(s)) return defaultEmptyOK;
+        return ((ContiguousUSStateCodes.indexOf(s) != -1) && (s.indexOf(USStateCodeDelimiter) == -1));
     }
 
     /** Email address must be of form a@b.c -- in other words:
@@ -731,30 +777,43 @@ public class UtilValidate {
     /** isDate returns true if string argument date forms a valid date and is after today. */
     public static boolean isDateAfterToday(String date) {
         if (isEmpty(date)) return defaultEmptyOK;
-        String month;
-        String day;
-        String year;
-
         int dateSlash1 = date.indexOf("/");
         int dateSlash2 = date.lastIndexOf("/");
 
         if (dateSlash1 <= 0) return false;
+
+        java.util.Date passed = null;
         if (dateSlash1 == dateSlash2) {
-            // consider the day to be optional
-            month = date.substring(0, dateSlash1);
-            day = "28";
-            year = date.substring(dateSlash1 + 1);
+            // consider the day to be optional; use the first day of the following month for comparison since this is an is after test
+            String month = date.substring(0, dateSlash1);
+            String day = "28";
+            String year = date.substring(dateSlash1 + 1);
+            if (!isDate(year, month, day)) return false;
+
+            try {
+                int monthInt = Integer.parseInt(month);
+                int yearInt = Integer.parseInt(year);
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(yearInt, monthInt - 1, 0, 0, 0, 0);
+                calendar.add(Calendar.MONTH, 1);
+                passed = new java.util.Date(calendar.getTime().getTime());
+            } catch (Exception e) {
+                passed = null;
+            }
         } else {
-            month = date.substring(0, dateSlash1);
-            day = date.substring(dateSlash1 + 1, dateSlash2);
-            year = date.substring(dateSlash2 + 1);
+            String month = date.substring(0, dateSlash1);
+            String day = date.substring(dateSlash1 + 1, dateSlash2);
+            String year = date.substring(dateSlash2 + 1);
+            if (!isDate(year, month, day)) return false;
+            passed = UtilDateTime.toDate(month, day, year, "0", "0", "0");
         }
 
-        if (!isDate(year, month, day)) return false;
         java.util.Date now = UtilDateTime.nowDate();
-        java.util.Date passed = UtilDateTime.toDate(month, day, year, "0", "0", "0");
-
-        return passed.after(now);
+        if (passed != null) {
+            return passed.after(now);
+        } else {
+            return false;
+        }
     }
 
     /** isTime returns true if string arguments hour, minute, and second form a valid time. */
@@ -952,7 +1011,7 @@ public class UtilValidate {
 
         if (!isCreditCard(cc)) return false;
         if (isMasterCard(cc) || isVisa(cc) || isAmericanExpress(cc) || isDinersClub(cc) ||
-            isDiscover(cc) || isEnRoute(cc) || isJCB(cc))
+                isDiscover(cc) || isEnRoute(cc) || isJCB(cc))
             return true;
         return false;
     }
@@ -996,5 +1055,42 @@ public class UtilValidate {
         if ((cardType.equalsIgnoreCase("CARTEBLANCHE")) && (isCarteBlanche(cardNumber))) return true;
         if ((cardType.equalsIgnoreCase("ENROUTE")) && (isEnRoute(cardNumber))) return true;
         return false;
+    }
+
+
+    /** isNotPoBox returns true if address argument does not contain anything that looks like a a PO Box. */
+    public static boolean isNotPoBox(String s) {
+        if (isEmpty(s)) return defaultEmptyOK;
+
+        // strings to check from Greg's program
+        // "P.O. B"
+        // "P.o.B"
+        // "P.O B"
+        // "PO. B"
+        // "P O B"
+        // "PO B"
+        // "P.0. B"
+        // "P0 B"
+
+        String sl = s.toLowerCase();
+        if (sl.indexOf("p.o. b") != -1) return false;
+        if (sl.indexOf("p.o.b") != -1) return false;
+        if (sl.indexOf("p.o b") != -1) return false;
+        if (sl.indexOf("p o b") != -1) return false;
+        if (sl.indexOf("po b") != -1) return false;
+        if (sl.indexOf("pobox") != -1) return false;
+        if (sl.indexOf("po#") != -1) return false;
+        if (sl.indexOf("po #") != -1) return false;
+
+        // now with 0's for them sneaky folks
+        if (sl.indexOf("p.0. b") != -1) return false;
+        if (sl.indexOf("p.0.b") != -1) return false;
+        if (sl.indexOf("p.0 b") != -1) return false;
+        if (sl.indexOf("p 0 b") != -1) return false;
+        if (sl.indexOf("p0 b") != -1) return false;
+        if (sl.indexOf("p0box") != -1) return false;
+        if (sl.indexOf("p0#") != -1) return false;
+        if (sl.indexOf("p0 #") != -1) return false;
+        return true;
     }
 }
