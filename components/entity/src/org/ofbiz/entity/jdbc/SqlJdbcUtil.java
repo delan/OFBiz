@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.22 2004/07/07 05:03:40 doogie Exp $
+ * $Id: SqlJdbcUtil.java,v 1.23 2004/07/07 06:33:23 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,6 +50,7 @@ import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.GenericNotImplementedException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityConditionParam;
+import org.ofbiz.entity.condition.OrderByItem;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.datasource.GenericDAO;
 import org.ofbiz.entity.model.ModelEntity;
@@ -67,7 +68,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -375,32 +376,16 @@ public class SqlJdbcUtil {
             List orderByStrings = new LinkedList();
 
             for (int oi = 0; oi < orderBy.size(); oi++) {
-                String keyName = (String) orderBy.get(oi);
-                String ext = null;
-
-                // check for ASC/DESC
-                int spaceIdx = keyName.indexOf(" ");
-
-                if (spaceIdx > 0) {
-                    ext = keyName.substring(spaceIdx);
-                    keyName = keyName.substring(0, spaceIdx);
-                }
-                // optional way -/+
-                if (keyName.startsWith("-") || keyName.startsWith("+")) {
-                    ext = keyName.startsWith("-") ? " DESC" : " ASC";
-                    keyName = keyName.substring(1);
-                }
+                OrderByItem orderByItem = new OrderByItem((String) orderBy.get(oi));
+                String keyName = orderByItem.field;
 
                 for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                     ModelField curField = modelEntity.getField(fi);
                     String fieldName = curField.getName();
 
                     if (fieldName.equals(keyName)) {
-                        if (ext != null) {
-                            orderByStrings.add(fieldPrefix + modelEntity.getColNameOrAlias(fieldName) + ext);
-                        } else {
-                            orderByStrings.add(fieldPrefix + modelEntity.getColNameOrAlias(fieldName));
-                        }
+                        orderByItem.field = curField.getColName();
+                        orderByStrings.add(orderByItem.toString(fieldPrefix));
                     }
                 }
             }
