@@ -295,6 +295,7 @@ public class ModelFormField {
             dropDownField.setAllowEmpty(false);
             dropDownField.addOptionSource(new ModelFormField.SingleOption("Y", null, dropDownField));
             dropDownField.addOptionSource(new ModelFormField.SingleOption("N", null, dropDownField));
+            this.setFieldInfo(dropDownField);
             //ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
             //textField.setSize(1);
             //textField.setMaxlength(new Integer(1));
