@@ -96,6 +96,7 @@ context.put("featuresByType", featuresByType);
 
 productId = request.getParameter("productId");
 if (productId == null) productId = request.getParameter("PRODUCT_ID");
+if (productId == null) productId = request.getAttribute("productId");
 if (productId != null) context.put("productId", productId);
 
 product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));

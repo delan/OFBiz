@@ -29,6 +29,7 @@
 
     ${pages.get("/product/ProductTabBar.ftl")}
 
+  <#if product?has_content>
     <!--              Name update section -->
     <form action="<@ofbizUrl>updateProductQuickAdminName</@ofbizUrl>" method=POST style="margin: 0;" name="editProduct">
         <table border="0" cellpadding="2" cellspacing="0" class="tabletext">
@@ -397,6 +398,9 @@ function doPublish() {
 }
 
 </script>
+  <#else>
+    <h3>Product not found with ID [${productId?if_exists}]</h3>
+  </#if>
 <#else>
   <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
 </#if>
