@@ -47,7 +47,7 @@ ${pages.get("/mrp/MrpTabBar.ftl")}
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td><div class='boxhead'>${uiLabelMap.ManufacturingFindInventoryEventPlan}</div></td>
+          <td><div class='boxhead'>${uiLabelMap.ManufacturingImplosion}</div></td>
           <td align='right'>
             <div class="tabletext">
               <#if requestParameters.hideFields?default("N") == "Y">
@@ -117,13 +117,14 @@ document.lookupinventory.productId.focus();
   <tr>
     <td width='100%'>
       <#if inventoryList?exists>
+      <#if 0 < inventoryList?size>
        <#assign rowClass = "viewManyTR2">
          <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
            <td width="50%"><div class="boxhead">${uiLabelMap.CommonElementsFound}</div></td>
             <td width="50%">
              <div class="boxhead" align=right>
-              <#if 0 < inventoryList?size>             
+               
                 <#if 0 < viewIndex>
                   <a href="<@ofbizUrl>/FindInventoryEventPlan?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                 <#else>
@@ -137,41 +138,67 @@ document.lookupinventory.productId.focus();
                 <#else>
                   <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                 </#if>
-              </#if>
+             
               &nbsp;
             </div>
           </td>
         </tr>
       </table>
+
        <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
           <td width="25%" align="left"><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
-          <td width="25%" align="left"><div class="tableheadtext">${uiLabelMap.ProductProduct}</div></td>
-          <td width="15%" align="rigth"><div class="tableheadtext">${uiLabelMap.CommonQuantity}</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.CommonEventDate}</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.ManufacturingATPDate}</div></td>
+          <td width="15%" align="left"><div class="tableheadtext">${uiLabelMap.ProductProduct}</div></td>
+          <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.CommonQuantity}</div></td>
+	  <td width="5%" align="center">&nbsp</td>
+          <td width="15%" align="left"><div class="tableheadtext">${uiLabelMap.CommonEventDate}</div></td>
+          <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.ManufacturingATPDate}</div></td>
         </tr>
         <tr>
-	  <td colspan='5'><hr class='sepbar'>
+	  <td colspan='7'><hr class='sepbar'>
 	  </td>
 	</tr>
-	  <#list inventoryList[lowIndex..highIndex-1] as inven> 
-	   <#assign product = inven.getRelatedOne("Product")>
-	   <#assign inventoryEventPlannedType = inven.getRelatedOne("InventoryEventPlannedType")>
-	   <tr class='${rowClass}'>
-	    <td><div class='tabletext'>${inventoryEventPlannedType.description}</div></td>
-	    <td><div class='tabletext'> [${inven.productId}]&nbsp/&nbsp ${product.productName?if_exists}</div></td>
-	    <td><div class='tabletext'>${inventoryEventPlannedType.inOut} &nbsp ${inven.getString("eventQuantity")}</div></td>
-            <td><div class='tabletext'>${inven.getString("eventDate")}</div></td>
-	    <td>####</td>
-	   </tr>
-	  </#list>
+	  <#assign count = lowIndex>
+	  <#assign countProd = 0>
+	  <#assign productTmp = "">
+	   <#list inventoryList[lowIndex..highIndex-1] as inven>
+	    <#assign product = inven.getRelatedOne("Product")>
+	    <#if ! product.equals( productTmp )>
+	      <tr bgcolor="lightblue">  
+	       <td colspan='4' align="left">
+	        <div class='tabletext'><b>&nbsp&nbsp&nbsp&nbsp&nbsp QOH de l'article [${inven.productId}]&nbsp/&nbsp${product.productName?if_exists}</b></div>
+               </td>
+	       <td  colspan='3' align="right">
+	        <#assign qoh = qohProduct[countProd]>
+		<#assign countProd = countProd+1>
+		<big><b><div class='tabletext'>${qoh}</div></b><big>
+	       </td>
+              </tr>
+	    </#if>
+	    <#assign productTmp = product>
+	    <#assign inventoryEventPlannedType = inven.getRelatedOne("InventoryEventPlannedType")>
+	    <tr class="${rowClass}">
+	     <td><div class='tabletext'>${inventoryEventPlannedType.description}</div></td>
+	     <td><div class='tabletext'> [${inven.productId}]&nbsp/&nbsp ${product.productName?if_exists}</div></td>
+	     <td><div class='tabletext'align="right"> ${inven.getString("eventQuantity")}</div></td>
+	     <td>&nbsp</td>
+             <td><div class='tabletext'>${inven.getString("eventDate")}</div></td>
+	     <td align="right">
+	      <#list numberProductList[count..count] as atpDate> 
+		     <div class='tabletext'>${atpDate}&nbsp&nbsp</div>
+	      </#list>
+	      <#assign count=count+1>
+	     </td>
+	    </tr>
+           </#list>
+	  
        </table>
       <#else>
        <br>
        <div align="center">${uiLabelMap.CommonNoElementFound}</div>
        <br>
       </#if>
+    </#if>
     </td>
   </tr>
 </table>

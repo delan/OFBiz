@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Find Proposed Order</property>
+    <property name="formDefFile">/mrp/MrpForms.xml</property>    
+    <property name="singleFormName">findProposedOrder</property>    
+    <property name="listFormName">listProposedOrder</property>    
+    <property name="entityName">Requirement</property>    
+    <property name="listName">entityList</property>    
+    <property name="permission">CONTENTMGR</property>    
+    <property name="permissionType">none</property>    
+    <property name="showListIfSelection">N</property>  
+    <property name="listName">requirementList</property>
+    <property name="permission">MANUFACTURING</property>    
+    <property name="permissionType">none</property>    
+    <content-action name="/includes/formprep.bsh"/>
+    <content-action name="/mrp/findProposedOrder.bsh"/>
+    <content-action name="/includes/pagelistprep.bsh"/>
+</page>
