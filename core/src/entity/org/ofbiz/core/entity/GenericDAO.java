@@ -817,8 +817,11 @@ public class GenericDAO {
             firstModelField = firstModelEntity.getField(entityClause.getFirstField());
 
             test = where.toString();
-            if (i > 0)
+            if (i > 0) {
+                where.append(' ');
                 where.append(interFieldOperation);
+                where.append(' ');
+            }
             // if the next interFieldOperation is an OR, add a parenthesis.
             if (nextInterFieldOperation != null && nextInterFieldOperation.trim().equals("OR") && !paren) {
                 where.append(" ( ");
@@ -876,7 +879,7 @@ public class GenericDAO {
                 where.append(intraFieldOperation);
                 if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended intra field operation: " +
                         intraFieldOperation);
-                if (intraFieldOperation.indexOf("IN") > 0) {
+                if (intraFieldOperation.equals("IN")) {
                     if (verboseOn) Debug.logVerbose("[selectByClause] Intrafield operation is IN");
                     where.append(" (");
                 } else {
@@ -885,7 +888,7 @@ public class GenericDAO {
                 }
                 where.append(entityClause.getValue());
                 if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended value: " + entityClause.getValue());
-                if (intraFieldOperation.indexOf("IN") > 0) {
+                if (intraFieldOperation.equals("IN")) {
                     where.append(")");
                 } else {
                     where.append("' ");
