@@ -1,5 +1,5 @@
 /*
- * $Id: AndJoinEntry.java,v 1.2 2004/07/03 19:54:25 jonesde Exp $
+ * $Id: AndJoinEntry.java,v 1.3 2004/07/11 23:26:25 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * Persistance Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class AndJoinEntry implements AndJoinEntryInterface {
@@ -104,6 +104,14 @@ public class AndJoinEntry implements AndJoinEntryInterface {
 
     public String getProcessId() {
         return andJoin.getString("processId");
+    }
+
+    public void setActivitySetDefinitionId(String asdId) {
+        andJoin.set("activitySetDefId", asdId);
+    }
+
+    public String getActivitySetDefinitionId() {
+        return andJoin.getString("activitySetDefId");
     }
 
     public void setActivityDefinitionId(String adId) {

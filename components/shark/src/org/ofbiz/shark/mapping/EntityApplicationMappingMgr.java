@@ -1,5 +1,5 @@
 /*
- * $Id: EntityApplicationMappings.java,v 1.1 2004/04/22 15:41:05 ajzeneski Exp $
+ * $Id: EntityApplicationMappingMgr.java,v 1.1 2004/07/11 23:26:28 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,20 +24,22 @@
  */
 package org.ofbiz.shark.mapping;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
-import org.ofbiz.shark.container.SharkContainer;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.shark.container.SharkContainer;
+import org.ofbiz.shark.transaction.JtaTransaction;
 
-import org.enhydra.shark.api.internal.mappersistence.ApplicationMappings;
-import org.enhydra.shark.api.internal.mappersistence.ApplicationMap;
-import org.enhydra.shark.api.internal.working.CallbackUtilities;
+import org.enhydra.shark.api.ApplicationMappingTransaction;
 import org.enhydra.shark.api.RootException;
-import org.enhydra.shark.api.MappingTransaction;
+import org.enhydra.shark.api.TransactionException;
+import org.enhydra.shark.api.internal.appmappersistence.ApplicationMap;
+import org.enhydra.shark.api.internal.appmappersistence.ApplicationMappingManager;
+import org.enhydra.shark.api.internal.working.CallbackUtilities;
 
 /**
  * Shark Application Mappings Implementation
@@ -46,30 +48,30 @@ import org.enhydra.shark.api.MappingTransaction;
  * @version    $Revision: 1.1 $
  * @since      3.1
  */
-public class EntityApplicationMappings implements ApplicationMappings {
+public class EntityApplicationMappingMgr implements ApplicationMappingManager {
 
-    public static final String module = EntityApplicationMappings.class.getName();
+    public static final String module = EntityApplicationMappingMgr.class.getName();
     protected CallbackUtilities callBack = null;
 
     public void configure(CallbackUtilities callbackUtilities) throws RootException {
         this.callBack = callbackUtilities;
     }
 
-    public boolean saveApplicationMapping(MappingTransaction mappingTransaction, ApplicationMap applicationMap) throws RootException {
+    public boolean saveApplicationMapping(ApplicationMappingTransaction mappingTransaction, ApplicationMap applicationMap) throws RootException {
         ((EntityApplicationMap) applicationMap).store();
         return true;
     }
 
-    public boolean deleteApplicationMapping(MappingTransaction mappingTransaction, ApplicationMap applicationMap) throws RootException {
+    public boolean deleteApplicationMapping(ApplicationMappingTransaction mappingTransaction, ApplicationMap applicationMap) throws RootException {
         ((EntityApplicationMap) applicationMap).remove();
         return true;
     }
 
-    public boolean updateApplicationMapping(MappingTransaction mappingTransaction, ApplicationMap applicationMap) throws RootException {
+    public boolean updateApplicationMapping(ApplicationMappingTransaction mappingTransaction, ApplicationMap applicationMap) throws RootException {
         return saveApplicationMapping(mappingTransaction, applicationMap);
     }
 
-    public List getAllApplicationMappings(MappingTransaction mappingTransaction) throws RootException {
+    public List getAllApplicationMappings(ApplicationMappingTransaction mappingTransaction) throws RootException {
         GenericDelegator delegator = SharkContainer.getDelegator();
         List lookupList = null;
         try {
@@ -94,7 +96,7 @@ public class EntityApplicationMappings implements ApplicationMappings {
         return new EntityApplicationMap(SharkContainer.getDelegator());
     }
 
-    public boolean deleteApplicationMapping(MappingTransaction mappingTransaction, String packageId, String processDefId, String appDefId) throws RootException {
+    public boolean deleteApplicationMapping(ApplicationMappingTransaction mappingTransaction, String packageId, String processDefId, String appDefId) throws RootException {
         EntityApplicationMap app = (EntityApplicationMap) this.getApplicationMap(mappingTransaction, packageId, processDefId, appDefId);
         if (app != null && app.isLoaded()) {
             app.remove();
@@ -104,7 +106,11 @@ public class EntityApplicationMappings implements ApplicationMappings {
         }
     }
 
-    public ApplicationMap getApplicationMap(MappingTransaction mappingTransaction, String packageId, String processDefId, String appDefId) throws RootException {
+    public ApplicationMap getApplicationMap(ApplicationMappingTransaction mappingTransaction, String packageId, String processDefId, String appDefId) throws RootException {
         return EntityApplicationMap.getInstance(packageId, processDefId, appDefId);
+    }
+
+    public ApplicationMappingTransaction getApplicationMappingTransaction() throws TransactionException {
+        return new JtaTransaction();
     }
 }

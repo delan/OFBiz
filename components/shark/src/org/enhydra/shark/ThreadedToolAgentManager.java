@@ -1,5 +1,5 @@
 /*
- * $Id: ThreadedToolAgentManager.java,v 1.1 2004/04/22 15:40:55 ajzeneski Exp $
+ * $Id: ThreadedToolAgentManager.java,v 1.2 2004/07/11 23:26:22 ajzeneski Exp $
  *
  */
 package org.enhydra.shark;
@@ -20,12 +20,13 @@ import org.enhydra.shark.api.internal.toolagent.AppParameter;
 import org.enhydra.shark.api.internal.toolagent.SessionHandle;
 import org.enhydra.shark.api.internal.toolagent.ToolAgent;
 import org.enhydra.shark.api.internal.toolagent.ConnectFailed;
-import org.enhydra.shark.api.internal.mappersistence.MappingManager;
-import org.enhydra.shark.api.internal.mappersistence.ApplicationMap;
+import org.enhydra.shark.api.internal.toolagent.ToolAgentGeneralException;
+import org.enhydra.shark.api.internal.appmappersistence.ApplicationMap;
+import org.enhydra.shark.api.internal.appmappersistence.ApplicationMappingManager;
 import org.enhydra.shark.api.SharkTransaction;
 import org.enhydra.shark.api.RootException;
 import org.enhydra.shark.api.TransactionException;
-import org.enhydra.shark.api.MappingTransaction;
+import org.enhydra.shark.api.ApplicationMappingTransaction;
 import org.enhydra.shark.api.client.wfbase.BaseException;
 import org.enhydra.shark.api.client.wfmodel.InvalidData;
 import org.enhydra.shark.api.client.wfmodel.UpdateNotAllowed;
@@ -33,18 +34,16 @@ import org.enhydra.shark.api.client.wfmodel.CannotComplete;
 import org.enhydra.shark.xpdl.elements.Tool;
 import org.enhydra.shark.xpdl.elements.WorkflowProcess;
 import org.enhydra.shark.xpdl.elements.Application;
-import org.enhydra.shark.xpdl.elements.ExtendedAttributes;
 import org.enhydra.shark.xpdl.elements.ActualParameters;
 import org.enhydra.shark.xpdl.elements.FormalParameters;
 import org.enhydra.shark.xpdl.elements.FormalParameter;
 import org.enhydra.shark.xpdl.elements.ActualParameter;
 import org.enhydra.shark.xpdl.XMLComplexChoice;
 import org.enhydra.shark.xpdl.XMLComplexElement;
-import org.enhydra.shark.utilities.XPDLUtilities;
 
 /**
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      Mar 30, 2004
  */
 public class ThreadedToolAgentManager implements ToolAgentManager {
@@ -63,7 +62,7 @@ public class ThreadedToolAgentManager implements ToolAgentManager {
         createToolAgentList();
     }
 
-    public void executeActivity(SharkTransaction t, WfActivityInternal act) throws RootException {
+    public void executeActivity(SharkTransaction t, WfActivityInternal act) throws BaseException, ToolAgentGeneralException {
         ThreadedToolAgentManager.toolMonitors.add(new ToolRunnerManager(t, act));
     }
 
@@ -174,6 +173,7 @@ public class ThreadedToolAgentManager implements ToolAgentManager {
     class ToolRunnerManager implements Runnable {
 
         private String packageKey;
+        private String packageVer;
         private String processKey;
         private String activityKey;
         private String resource;
@@ -185,8 +185,9 @@ public class ThreadedToolAgentManager implements ToolAgentManager {
         private Thread thread;
         private boolean isRunning = false;
 
-        ToolRunnerManager(SharkTransaction trans, WfActivityInternal activity) throws BaseException {
+        public ToolRunnerManager(SharkTransaction trans, WfActivityInternal activity) throws BaseException {
             this.packageKey = activity.container(trans).package_id(trans);
+            this.packageVer = activity.container(trans).manager_version(trans);
             this.processKey = activity.container(trans).key(trans);
             this.packageKey = activity.container(trans).package_id(trans);
             this.activityKey = activity.key(trans);
@@ -206,8 +207,10 @@ public class ThreadedToolAgentManager implements ToolAgentManager {
         private Collection getToolObjs(SharkTransaction trans, WfActivityInternal activity) throws BaseException {
             WfProcessInternal pr = activity.container(trans);
             WorkflowProcess wp = SharkUtilities.getWorkflowProcess(pr.manager(trans).package_id(trans),
-                    pr.manager(trans).process_definition_id(trans));
-            return SharkUtilities.getActivityDefinition(trans, activity, wp).getTools().toCollection();
+                    pr.manager_version(trans), pr.manager(trans).process_definition_id(trans));
+
+            return SharkUtilities.getActivityDefinition(trans, activity, wp,
+                    activity.block_activity(trans)).getTools().toCollection();
         }
 
         private List getTools(SharkTransaction trans, WfActivityInternal activity) throws BaseException {
@@ -231,7 +234,7 @@ public class ThreadedToolAgentManager implements ToolAgentManager {
 
                     AppParameter[] params = null;
                     try {
-                        params = makeParameters(trans, tool, app, packageKey);
+                        params = makeParameters(trans, tool, app);
                     } catch (Exception e) {
                         throw new BaseException(e);
                     }
@@ -242,18 +245,18 @@ public class ThreadedToolAgentManager implements ToolAgentManager {
             return toolList;
         }
 
-        private AppParameter[] makeParameters(SharkTransaction transaction, Tool tool, Application app, String packageId) throws Exception {
+        private AppParameter[] makeParameters(SharkTransaction transaction, Tool tool, Application app) throws Exception {
             // build up the parameters
             List parameters = new ArrayList();
 
             // the extended attributes are always the first parameter passed to tool agent
-            String appPStr = XPDLUtilities.getExtendedAttributesString((ExtendedAttributes) app.get("ExtendedAttributes"));
+            String appPStr = app.getExtendedAttributesString();
             AppParameter param = new AppParameter("ExtendedAttributes", "ExtendedAttributes", AppParameter.MODE_IN, appPStr, String.class);
             parameters.add(param);
 
             ActualParameters aps = (ActualParameters) tool.get("ActualParameters");
             FormalParameters fps = (FormalParameters) ((XMLComplexChoice) app.get("Choice")).getChoosen();
-            Map m = SharkUtilities.createContextMap(transaction, context, aps, fps, packageId);
+            Map ctxMap = SharkUtilities.createContextMap(transaction, context, aps, fps, packageKey, packageVer);
 
             Iterator itFps = fps.toCollection().iterator();
             Iterator itAps = aps.toCollection().iterator();
@@ -262,7 +265,7 @@ public class ThreadedToolAgentManager implements ToolAgentManager {
                 ActualParameter ap = (ActualParameter) itAps.next();
                 String fpMode = fp.get("Mode").toValue().toString();
                 String fpId = fp.getID();
-                Object paramVal = m.get(fpId);
+                Object paramVal = ctxMap.get(fpId);
 
                 // JAWE's CLASSES DataField and FormalParameter RETURNS ITs
                 // Id ATTRIBUTE WHEN METHOD toString() is CALLED (when calling
@@ -278,22 +281,17 @@ public class ThreadedToolAgentManager implements ToolAgentManager {
         private ApplicationMap getApplicationMap(Application app, String applicationId) throws Exception {
             // find mapped procedure - but we can also live without mapping
             // manager (but we can't without ToolAgentFactory
-            MappingManager mm = SharkEngineManager.getInstance().getMapPersistenceManager();
+            ApplicationMappingManager mm = SharkEngineManager.getInstance().getApplicationMapPersistenceManager();
             ApplicationMap tad = null;
             if (mm != null) {
                 XMLComplexElement cOwn = app.getCollection().getOwner();
                 boolean isProcessApp = (cOwn instanceof WorkflowProcess);
-                MappingTransaction t = null;
+                ApplicationMappingTransaction t = null;
                 try {
-                    t = SharkUtilities.createMappingTransaction();
-                    tad =
-                            SharkEngineManager.
-                            getInstance().
-                            getMapPersistenceManager().getApplicationMappings().
-                            getApplicationMap(t,
-                                    app.getPackage().get("Id").toString(),
-                                    ((isProcessApp) ? cOwn.get("Id").toString() : null),
-                                    applicationId);
+                    t = SharkUtilities.createApplicationMappingTransaction();
+                    tad = SharkEngineManager.getInstance().getApplicationMapPersistenceManager().
+                            getApplicationMap(t, app.getPackage().get("Id").toString(),
+                                    ((isProcessApp) ? cOwn.get("Id").toString() : null), applicationId);
                 } catch (RootException e) {
                     throw e;
                 } finally {

@@ -22,19 +22,19 @@
         <td align="center"><div class="tabletext"><#if state == enabledCode>Y<#else>N</#if></div></td>
         <td align="center"><div class="tabletext">${mgr.how_many_process()}</div></td>
         <#if state == enabledCode>
-          <td align="center"><a href="<@ofbizUrl>/processes?disable=${mgr.name()}</@ofbizUrl>" class="buttontext">Disable</a></td>
+          <td align="center"><a href="<@ofbizUrl>/processes?disable=${mgr.name()?replace("#", "%23")}</@ofbizUrl>" class="buttontext">Disable</a></td>
         <#else>
-          <td align="center"><a href="<@ofbizUrl>/processes?enable=${mgr.name()}</@ofbizUrl>" class="buttontext">Enable</a></td>
+          <td align="center"><a href="<@ofbizUrl>/processes?enable=${mgr.name()?replace("#", "%23")}</@ofbizUrl>" class="buttontext">Enable</a></td>
         </#if>
         <td align="center">
           <#if mgr.category()?upper_case == "PUBLIC">
-            <a href="<@ofbizUrl>/processes?create=${mgr.name()}</@ofbizUrl>" class="buttontext">Create</a>
+            <a href="<@ofbizUrl>/processes?create=${mgr.name()?replace("#", "%23")}</@ofbizUrl>" class="buttontext">Create</a>
           <#else>
             &nbsp;
           </#if>
         </td>
         <#if (mgr.how_many_process() > 0)>
-          <td align="center"><a href="<@ofbizUrl>/processDetailList?manager=${mgr.name()}</@ofbizUrl>" class="buttontext">View</a></td>
+          <td align="center"><a href="<@ofbizUrl>/processDetailList?manager=${mgr.name()?replace("#", "%23")}</@ofbizUrl>" class="buttontext">View</a></td>
         <#else>
           <td>&nbsp;</td>
         </#if>

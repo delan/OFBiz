@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  */
 -->
 
@@ -123,16 +123,17 @@
     <entity entity-name="SharkGroupRollup"
             package-name="org.ofbiz.shark.auth"
             title="">
+      <field name="parentGroupName" type="id-vlong"></field>
       <field name="groupName" type="id-vlong"></field>
-      <field name="subGroupName" type="id-vlong"></field>
+      <prim-key field="parentGroupName"/>
       <prim-key field="groupName"/>
-      <prim-key field="subGroupName"/>
     </entity>
     <entity entity-name="SharkUser"
             package-name="org.ofbiz.shark.auth"
             title="">
       <field name="userName" type="id-vlong"></field>
-      <field name="realName" type="long-varchar"></field>
+      <field name="firstName" type="long-varchar"></field>
+      <field name="lastName" type="long-varchar"></field>
       <field name="passwd" type="long-varchar"></field>
       <field name="emailAddress" type="long-varchar"></field>
       <prim-key field="userName"/>
@@ -142,10 +143,11 @@
     <!-- org.ofbiz.shark.instance                                  -->
     <!-- ========================================================= -->
     <entity entity-name="WfActivity"
-            package-name="org.ofbiz.shark"
+            package-name="org.ofbiz.shark.instance"
             title="">
       <field name="activityId" type="id-vlong"></field>
       <field name="processId" type="id-vlong"></field>
+      <field name="setDefinitionId" type="id-long"></field>
       <field name="definitionId" type="id-long"></field>
       <field name="subFlowId" type="id-long"></field>
       <field name="blockId" type="id-long"></field>
@@ -160,7 +162,7 @@
       <prim-key field="activityId"/>
     </entity>
     <entity entity-name="WfActivityVariable"
-            package-name="org.ofbiz.shark"
+            package-name="org.ofbiz.shark.instance"
             title="">
       <field name="activityVariableId" type="id"></field>
       <field name="activityId" type="id-vlong"></field>
@@ -170,16 +172,17 @@
       <prim-key field="activityVariableId"/>
     </entity>
     <entity entity-name="WfAndJoin"
-            package-name="org.ofbiz.shark"
+            package-name="org.ofbiz.shark.instance"
             title="">
-      <field name="andJoinId" type="id"></field>
+      <field name="andJoinId" type="id-ne"></field>
       <field name="processId" type="id-vlong"></field>
       <field name="activityId" type="id-vlong"></field>
       <field name="activityDefId" type="id-vlong"></field>
+      <field name="activitySetDefId" type="id-vlong"></field>
       <prim-key field="andJoinId"/>
     </entity>
     <entity entity-name="WfAssignment"
-            package-name="org.ofbiz.shark"
+            package-name="org.ofbiz.shark.instance"
             title="">
       <field name="activityId" type="id-vlong"></field>
       <field name="processId" type="id-vlong"></field>
@@ -187,8 +190,19 @@
       <prim-key field="activityId"/>
       <prim-key field="userName"/>
     </entity>
+    <entity entity-name="WfDeadline"
+            package-name="org.ofbiz.shark.instance"
+            title="">
+      <field name="deadlineId" type="id-ne"></field>
+      <field name="processId" type="id-vlong"></field>
+      <field name="activityId" type="id-vlong"></field>
+      <field name="exceptionName" type="long-varchar"></field>
+      <field name="timeLimit" type="numeric"></field>
+      <field name="isSync" type="indicator"></field>
+      <prim-key field="deadlineId"/>
+    </entity>
     <entity entity-name="WfProcess"
-            package-name="org.ofbiz.shark"
+            package-name="org.ofbiz.shark.instance"
             title="">
       <field name="processId" type="id-vlong"></field>
       <field name="mgrName" type="id-vlong"></field>
@@ -205,7 +219,7 @@
       <prim-key field="processId"/>
     </entity>
     <entity entity-name="WfProcessMgr"
-            package-name="org.ofbiz.shark"
+            package-name="org.ofbiz.shark.instance"
             title="">
       <field name="mgrName" type="id-vlong"></field>
       <field name="packageId" type="id-long"></field>
@@ -216,7 +230,7 @@
       <prim-key field="mgrName"/>
     </entity>
     <entity entity-name="WfProcessVariable"
-            package-name="org.ofbiz.shark"
+            package-name="org.ofbiz.shark.instance"
             title="">
       <field name="processVariableId" type="id"></field>
       <field name="processId" type="id-vlong"></field>
@@ -225,7 +239,7 @@
       <prim-key field="processVariableId"/>
     </entity>
     <entity entity-name="WfResource"
-            package-name="org.ofbiz.shark"
+            package-name="org.ofbiz.shark.instance"
             title="">
       <field name="userName" type="id-vlong"></field>
       <field name="resourceName" type="id-vlong"></field>
@@ -260,6 +274,30 @@
       <field name="userName" type="id-vlong"></field>
       <field name="isGroupUser" type="indicator"></field>
       <prim-key field="participantMapId"/>
+    </entity>
+
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.shark.repository                                -->
+    <!-- ========================================================= -->
+    <entity entity-name="WfRepository"
+            package-name="org.ofbiz.shark.repository"
+            title="">
+      <field name="xpdlId" type="id-ne"></field>
+      <field name="xpdlVersion" type="id-vlong"></field>
+      <field name="xpdlData" type="blob"></field>
+      <field name="isHistorical" type="indicator"></field>
+      <prim-key field="xpdlId"/>
+      <prim-key field="xpdlVersion"/>
+    </entity>
+    <entity entity-name="WfRepositoryRef"
+            package-name="org.ofbiz.shark.repository"
+            title="">
+      <field name="xpdlId" type="id-ne"></field>
+      <field name="xpdlVersion" type="id-vlong"></field>
+        <field name="refXpdlId" type="id-ne"></field>
+      <prim-key field="xpdlId"/>
+      <prim-key field="xpdlVersion"/>
+      <prim-key field="refXpdlId"/>
     </entity>
 
     <!-- ========================================================= -->

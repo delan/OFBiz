@@ -1,5 +1,5 @@
 /*
- * $Id: EntityScriptMappings.java,v 1.1 2004/04/22 15:41:06 ajzeneski Exp $
+ * $Id: EntityScriptMappingMgr.java,v 1.1 2004/07/11 23:26:29 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,9 +24,11 @@
  */
 package org.ofbiz.shark.mapping;
 
-import org.enhydra.shark.api.internal.mappersistence.ScriptsMappings;
 import org.enhydra.shark.api.internal.working.CallbackUtilities;
+import org.enhydra.shark.api.internal.scriptmappersistence.ScriptMappingManager;
 import org.enhydra.shark.api.RootException;
+import org.enhydra.shark.api.ScriptMappingTransaction;
+import org.enhydra.shark.api.TransactionException;
 
 /**
  * Shark Script Mappings Implementation
@@ -35,12 +37,16 @@ import org.enhydra.shark.api.RootException;
  * @version    $Revision: 1.1 $
  * @since      3.1
  */
-public class EntityScriptMappings implements ScriptsMappings {
+public class EntityScriptMappingMgr implements ScriptMappingManager {
 
-    public static final String module = EntityScriptMappings.class.getName();
+    public static final String module = EntityScriptMappingMgr.class.getName();
     protected CallbackUtilities callBack = null;
 
     public void configure(CallbackUtilities callbackUtilities) throws RootException {
         this.callBack = callbackUtilities;
+    }
+
+    public ScriptMappingTransaction getScriptMappingTransaction() throws TransactionException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ProcessVariable.java,v 1.2 2004/07/03 19:54:26 jonesde Exp $
+ * $Id: ProcessVariable.java,v 1.3 2004/07/11 23:26:27 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -31,6 +31,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilObject;
 import org.ofbiz.shark.container.SharkContainer;
 
 import org.enhydra.shark.api.internal.instancepersistence.*;
@@ -39,10 +40,10 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * Persistance Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
-public class ProcessVariable extends AbstractVariable implements ProcessVariablePersistenceInterface {
+public class ProcessVariable implements ProcessVariablePersistenceInterface {
 
     public static final String module = ProcessVariable.class.getName();
 
@@ -118,13 +119,13 @@ public class ProcessVariable extends AbstractVariable implements ProcessVariable
     }
 
     public void setValue(Object val) {
-        byte[] value = this.getBytes(val);
+        byte[] value = UtilObject.getBytes(val);
         processVariable.setBytes("varValue", (value != null ? value : null));
     }
 
     public Object getValue() {
         byte[] value = processVariable.getBytes("varValue");
-        return this.getObject(value);                
+        return UtilObject.getObject(value);
     }
 
     public void store() throws GenericEntityException {

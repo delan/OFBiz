@@ -1,5 +1,5 @@
 /*
- * $Id: EntityParticipantMappings.java,v 1.1 2004/04/22 15:41:05 ajzeneski Exp $
+ * $Id: EntityParticipantMappingMgr.java,v 1.1 2004/07/11 23:26:28 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -32,13 +32,15 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.shark.container.SharkContainer;
+import org.ofbiz.shark.transaction.JtaTransaction;
 import org.ofbiz.base.util.UtilMisc;
 
-import org.enhydra.shark.api.internal.mappersistence.ParticipantMappings;
-import org.enhydra.shark.api.internal.mappersistence.ParticipantMap;
 import org.enhydra.shark.api.internal.working.CallbackUtilities;
+import org.enhydra.shark.api.internal.partmappersistence.ParticipantMap;
+import org.enhydra.shark.api.internal.partmappersistence.ParticipantMappingManager;
 import org.enhydra.shark.api.RootException;
-import org.enhydra.shark.api.MappingTransaction;
+import org.enhydra.shark.api.ParticipantMappingTransaction;
+import org.enhydra.shark.api.TransactionException;
 
 /**
  * Shark Participant Mappings Implementation
@@ -47,21 +49,22 @@ import org.enhydra.shark.api.MappingTransaction;
  * @version    $Revision: 1.1 $
  * @since      3.1
  */
-public class EntityParticipantMappings implements ParticipantMappings {
+public class EntityParticipantMappingMgr implements ParticipantMappingManager {
 
-    public static final String module = EntityParticipantMappings.class.getName();
+    public static final String module = EntityParticipantMappingMgr.class.getName();
+
     protected CallbackUtilities callBack = null;
 
     public void configure(CallbackUtilities callbackUtilities) throws RootException {
         this.callBack = callbackUtilities;
     }
 
-    public boolean saveParticipantMapping(MappingTransaction mappingTransaction, ParticipantMap participantMap) throws RootException {
+    public boolean saveParticipantMapping(ParticipantMappingTransaction mappingTransaction, ParticipantMap participantMap) throws RootException {
         ((EntityParticipantMap) participantMap).store();
         return true;
     }
 
-    public boolean deleteParticipantMapping(MappingTransaction mappingTransaction, ParticipantMap participantMap) throws RootException {
+    public boolean deleteParticipantMapping(ParticipantMappingTransaction mappingTransaction, ParticipantMap participantMap) throws RootException {
         if (!doesParticipantMappingExist(mappingTransaction, participantMap)) {
             return false;
         }
@@ -69,7 +72,7 @@ public class EntityParticipantMappings implements ParticipantMappings {
         return true;
     }
 
-    public List getAllParticipantMappings(MappingTransaction mappingTransaction) throws RootException {
+    public List getAllParticipantMappings(ParticipantMappingTransaction mappingTransaction) throws RootException {
         GenericDelegator delegator = SharkContainer.getDelegator();
         List lookupList = null;
         try {
@@ -90,7 +93,7 @@ public class EntityParticipantMappings implements ParticipantMappings {
         }
     }
 
-    public boolean doesParticipantMappingExist(MappingTransaction mappingTransaction, ParticipantMap participantMap) throws RootException {
+    public boolean doesParticipantMappingExist(ParticipantMappingTransaction mappingTransaction, ParticipantMap participantMap) throws RootException {
         List mappings = getParticipantMappings(mappingTransaction, participantMap.getPackageId(), participantMap.getProcessDefinitionId(), participantMap.getParticipantId());
         if (mappings != null && mappings.size() > 0) {
             return true;
@@ -102,7 +105,7 @@ public class EntityParticipantMappings implements ParticipantMappings {
         return new EntityParticipantMap(SharkContainer.getDelegator());
     }
 
-    public List getParticipantMappings(MappingTransaction mappingTransaction, String packageId, String processDefId, String participantId) throws RootException {
+    public List getParticipantMappings(ParticipantMappingTransaction mappingTransaction, String packageId, String processDefId, String participantId) throws RootException {
         GenericDelegator delegator = SharkContainer.getDelegator();
         List lookupList = null;
         try {
@@ -123,7 +126,7 @@ public class EntityParticipantMappings implements ParticipantMappings {
         }
     }
 
-    public List getParticipantMappings(MappingTransaction mappingTransaction, String userName) throws RootException {
+    public List getParticipantMappings(ParticipantMappingTransaction mappingTransaction, String userName) throws RootException {
         GenericDelegator delegator = SharkContainer.getDelegator();
         List lookupList = null;
         try {
@@ -144,7 +147,7 @@ public class EntityParticipantMappings implements ParticipantMappings {
         }
     }
 
-    public boolean deleteParticipantMappings(MappingTransaction mappingTransaction, String packageId, String processDefId, String participantId) throws RootException {
+    public boolean deleteParticipantMappings(ParticipantMappingTransaction mappingTransaction, String packageId, String processDefId, String participantId) throws RootException {
         List participants = this.getParticipantMappings(mappingTransaction, packageId, processDefId, participantId);
         if (participants != null) {
             Iterator i = participants.iterator();
@@ -158,7 +161,7 @@ public class EntityParticipantMappings implements ParticipantMappings {
         }
     }
 
-    public boolean deleteParticipantMappings(MappingTransaction mappingTransaction, String userName) throws RootException {
+    public boolean deleteParticipantMappings(ParticipantMappingTransaction mappingTransaction, String userName) throws RootException {
         List participants = this.getParticipantMappings(mappingTransaction, userName);
         if (participants != null) {
             Iterator i = participants.iterator();
@@ -172,7 +175,7 @@ public class EntityParticipantMappings implements ParticipantMappings {
         }
     }
 
-    public List getUsernames(MappingTransaction mappingTransaction, String packageId, String processDefId, String participantId) throws RootException {
+    public List getUsernames(ParticipantMappingTransaction mappingTransaction, String packageId, String processDefId, String participantId) throws RootException {
         List participants = this.getParticipantMappings(mappingTransaction, packageId, processDefId, participantId);
         List compiledList = new ArrayList();
         if (participants != null) {
@@ -183,5 +186,9 @@ public class EntityParticipantMappings implements ParticipantMappings {
             }
         }
         return compiledList;
+    }
+
+    public ParticipantMappingTransaction getParticipantMappingTransaction() throws TransactionException {
+        return new JtaTransaction();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityApplicationMap.java,v 1.1 2004/04/22 15:41:04 ajzeneski Exp $
+ * $Id: EntityApplicationMap.java,v 1.2 2004/07/11 23:26:28 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -30,14 +30,14 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.shark.container.SharkContainer;
 
-import org.enhydra.shark.api.internal.mappersistence.ApplicationMap;
+import org.enhydra.shark.api.internal.appmappersistence.ApplicationMap;
 import org.enhydra.shark.api.RootException;
 
 /**
  * Shark Application Map Implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class EntityApplicationMap implements ApplicationMap {
@@ -68,7 +68,7 @@ public class EntityApplicationMap implements ApplicationMap {
         this.application = delegator.makeValue("SharkApplicationMap", null);
     }
 
-    public static EntityApplicationMap getInstance(GenericValue application) throws RootException {
+    public static EntityApplicationMap getInstance(GenericValue application) {
         EntityApplicationMap app = new EntityApplicationMap(application);
         if (app.isLoaded()) {
             return app;
