@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
+ *  Copyright (c) 2002-2004 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -264,7 +264,7 @@ public class ProductServices {
                 Map invReqResult = dispatcher.runSync("isStoreInventoryAvailableOrNotRequired", UtilMisc.toMap("productStoreId", productStoreId, "productId", productIdTo, "quantity", new Double(1.0)));
                 if (ServiceUtil.isError(invReqResult)) {
                     return ServiceUtil.returnError("Error calling the isStoreInventoryRequired when building the variant product tree.", null, null, invReqResult);
-                } else if (!"Y".equals((String) invReqResult.get("availableOrNotRequired"))) {
+                } else if ("Y".equals((String) invReqResult.get("availableOrNotRequired"))) {
                     items.add(productIdTo);
                     if (productTo.getString("isVirtual") != null && productTo.getString("isVirtual").equals("Y")) {
                         virtualVariant.add(productIdTo);
