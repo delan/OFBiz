@@ -283,7 +283,11 @@
                 <td><div class="tabletext"><ofbiz:entityfield attribute="party" field="partyTypeId"/></div></td>
                 <td align="right">
                   <!-- this is all on one line so that no break will be inserted -->
-                  <a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>' class="buttontext">[View&nbsp;Profile]</a>&nbsp;<a href='/ordermgr/control/orderlist?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>' class="buttontext">[Orders]</a>&nbsp;
+                  <div class="tabletext"><nobr>
+                    <a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>' class="buttontext">[View&nbsp;Profile]</a>&nbsp;
+                    <a href='/ordermgr/control/orderlist?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>' class="buttontext">[Orders]</a>&nbsp;
+                    <a href='/ordermgr/control/salesentry?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>' class="buttontext">[New Order]</a>&nbsp;
+                  </nobr></div>
                 </td>
               </tr>
               <%pageContext.removeAttribute("lookupPerson");%>
