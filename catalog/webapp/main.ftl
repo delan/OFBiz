@@ -31,8 +31,7 @@
         <tr>
           <td align=left width='90%' >
             <div class='boxhead'>&nbsp;Catalog Administration Main Page</div>
-          </td>
-          <td align=right width='10%'>&nbsp;</td>
+          </td>          
         </tr>
       </table>
     </td>

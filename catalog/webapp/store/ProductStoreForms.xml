@@ -1,0 +1,90 @@
+
+<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
+
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<forms>
+	<form name="EditProductStore" type="single" 
+		target="updateProductStore" title="" default-map-name="productStore"
+		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+		
+		<alt-target use-when="productStore==null" target="createProductStore"/>
+		
+		<auto-fields-service service-name="updateProductStore" map-name=""/>
+		
+		<field use-when="productStore!=null" name="productStoreId" tooltip="This cannot be changed without re-creating the Product Store"><display/></field>
+		<field use-when="productStore==null&amp;&amp;productStoreId!=null" name="productStoreId" tooltip="Could not find ProductStore with ID [${productStoreId}]"><text size="20" maxlength="20"/></field>	
+
+		<field name="storeName"><text size="30" maxlength="60"/></field>
+		<field name="title"><text size="30" maxlength="60"/></field>
+		<field name="subtitle" title="Sub-title"><text size="60" maxlength="250"/></field>
+		
+		<field name="inventoryFacilityId" title="Inventory Facility" widget-style="selectBox">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
+					<entity-order-by field-name="facilityName"/>
+				</entity-options>
+			</drop-down>
+		</field>
+		<field use-when="productStore!=null&amp;&amp;productStore.getString(&quot;inventoryFacilityId&quot;)!=null" name="inventoryFacilityLink" title="&amp;nbsp;" widget-style="buttontext">
+			<hyperlink target="EditFacility?facilityId=${productStore.inventoryFacilityId}"
+				description="[Edit Facility ${productStore.inventoryFacilityId}]" also-hidden="false"/>
+		</field>
+
+		<field name="checkInventory" widget-style="selectBox">
+			<drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
+		</field>
+		<field name="requireInventory" title="Require Inventory for Purchase" widget-style="selectBox">
+			<drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>
+		</field>
+		<field name="reserveInventory" widget-style="selectBox">
+			<drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
+		</field>
+		<field name="reserveOrderEnumId" title="Reservation Order" widget-style="selectBox">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="INV_RES_ORDER"/>
+					<entity-order-by field-name="description"/>
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="oneInventoryFacility" widget-style="selectBox">
+			<drop-down allow-empty="true" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
+		</field>
+		<field name="useQuickAdd" widget-style="selectBox">
+			<drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
+		</field>
+
+		<field name="styleSheet"><text size="60" maxlength="250"/></field>
+		<field name="headerLogo"><text size="60" maxlength="250"/></field>
+		<!--
+		<field name="contentPathPrefix" tooltip="If specified will be prepended to image and other content paths. Should start with a slash but not end with one."><text size="60" maxlength="250"/></field>
+		<field name="templatePathPrefix" tooltip="If specified will be prepended to template paths. Should start with a slash but not end with one."><text size="60" maxlength="250"/></field>
+		-->
+		<field name="explodeOrderItems" widget-style="selectBox">
+		    <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>		        
+		</field>
+
+		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+	</form>	
+</forms>

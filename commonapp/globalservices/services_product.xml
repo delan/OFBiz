@@ -140,7 +140,7 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="catalogName" optional="false"/>
-        <override name="title" optional="false"/>
+        <override name="title" optional="false"/>        
     </service>
     <service name="updateProdCatalog" default-entity-name="ProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProdCatalog" auth="true">
@@ -1162,7 +1162,23 @@
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>        
-    </service>        
+    </service>
+    
+    <!-- Product Store Services -->
+    <service name="createProductStore" engine="simple"
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="createProductStore">
+        <description>Create a Product Store</description>
+        <auto-attributes entity-name="ProductStore" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="ProductStore" include="pk" mode="OUT" optional="false"/>
+        <override name="storeName" optional="false"/>        
+    </service> 
+    <service name="updateProductStore" engine="simple"
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="updateProductStore">
+        <description>Update a Product Store</description>
+        <auto-attributes entity-name="ProductStore" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="ProductStore" include="pk" mode="IN" optional="false"/>
+        <override name="storeName" optional="false"/>
+    </service>          
 
     <!-- Product View Services -->
     <service name="getProduct" engine="java"
