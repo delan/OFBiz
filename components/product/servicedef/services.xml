@@ -35,12 +35,16 @@
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="oldProductId" type="String" mode="IN" optional="false"/>
         <attribute name="duplicatePrices" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateIDs" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateContent" type="String" mode="IN" optional="true"/>
         <attribute name="duplicateCategoryMembers" type="String" mode="IN" optional="true"/>
         <attribute name="duplicateAssocs" type="String" mode="IN" optional="true"/>
         <attribute name="duplicateAttributes" type="String" mode="IN" optional="true"/>
         <attribute name="duplicateFeatureAppls" type="String" mode="IN" optional="true"/>
         <attribute name="duplicateInventoryItems" type="String" mode="IN" optional="true"/>
         <attribute name="removePrices" type="String" mode="IN" optional="true"/>
+        <attribute name="removeIDs" type="String" mode="IN" optional="true"/>
+        <attribute name="removeContent" type="String" mode="IN" optional="true"/>
         <attribute name="removeCategoryMembers" type="String" mode="IN" optional="true"/>
         <attribute name="removeAssocs" type="String" mode="IN" optional="true"/>
         <attribute name="removeAttributes" type="String" mode="IN" optional="true"/>
