@@ -1,5 +1,5 @@
 /*
- * $Id: ParametricSearch.java,v 1.4 2003/10/25 04:15:19 jonesde Exp $
+ * $Id: ParametricSearch.java,v 1.5 2003/10/25 11:24:53 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -47,7 +47,7 @@ import org.ofbiz.product.product.KeywordSearch;
  *  Utilities for parametric search based on features.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.1
  */
 public class ParametricSearch {
@@ -144,6 +144,7 @@ public class ParametricSearch {
         return outSb.toString();
     }
     
+    /* TODO: DEJ 20031025 delete this if not used in the near future
     public static void filterProductIdListByFeatures(List productIds, Map featureIdByType, GenericDelegator delegator) {
         if (productIds == null || productIds.size() == 0) return;
         //filter search results by features
@@ -184,4 +185,5 @@ public class ParametricSearch {
         filterProductIdListByFeatures(productIds, featureIdByType, delegator);
         return productIds;
     }
+     */
 }

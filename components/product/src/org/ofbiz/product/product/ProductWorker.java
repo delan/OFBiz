@@ -1,5 +1,5 @@
 /*
- * $Id: ProductWorker.java,v 1.7 2003/10/24 11:15:21 jonesde Exp $
+ * $Id: ProductWorker.java,v 1.8 2003/10/25 11:24:53 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.product.feature.ParametricSearch;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ProductWorker {
@@ -132,7 +132,7 @@ public class ProductWorker {
         return null;
     }
 
-    /**
+    /*
      * Puts the following into the pageContext attribute list with a prefix if specified:
      *  searchProductList, keywordString, viewIndex, viewSize, lowIndex, highIndex, listSize
      * Puts the following into the session attribute list:
@@ -140,11 +140,13 @@ public class ProductWorker {
      *@param pageContext The pageContext of the calling JSP
      *@param attributePrefix A prefix to put on each attribute name in the pageContext
      */
+    /* TODO: DEJ 20031025 delete this if not used in the near future
     public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix) {
         getKeywordSearchProducts(pageContext, attributePrefix, null);
     }
+     */
 
-    /**
+    /*
      * Puts the following into the pageContext attribute list with a prefix if specified:
      *  searchProductList, keywordString, viewIndex, viewSize, lowIndex, highIndex, listSize
      * Puts the following into the session attribute list:
@@ -153,11 +155,13 @@ public class ProductWorker {
      *@param attributePrefix A prefix to put on each attribute name in the pageContext
      *@param categoryId The keyword search group name for this search
      */
+    /* TODO: DEJ 20031025 delete this if not used in the near future
     public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String categoryId) {
         getKeywordSearchProducts(pageContext, attributePrefix, categoryId, false, false, false);
     }
+     */
                 
-    /**
+    /*
      * Puts the following into the pageContext attribute list with a prefix if specified:
      *  searchProductList, keywordString, viewIndex, viewSize, lowIndex, highIndex, listSize
      * Puts the following into the session attribute list:
@@ -166,6 +170,7 @@ public class ProductWorker {
      *@param attributePrefix A prefix to put on each attribute name in the pageContext
      *@param categoryId The keyword search group name for this search
      */    
+    /* TODO: DEJ 20031025 delete this if not used in the near future
     public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String categoryId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
         getKeywordSearchProducts(pageContext.getRequest(), attributePrefix, categoryId, anyPrefix, anySuffix, isAnd);
     } 
@@ -207,11 +212,11 @@ public class ProductWorker {
             if (Debug.infoOn()) Debug.logInfo("curFindString:" + curFindString + " resultArrayName:" + resultArrayName, module);
 
             // productIds will be pre-sorted
-            /*if (featureIdByType.size() > 0) {
-                productIds = ParametricSearch.parametricKeywordSearch(featureIdByType, keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, isAnd);
-            } else {
-                productIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, isAnd);
-            }*/
+            //if (featureIdByType.size() > 0) {
+            //    productIds = ParametricSearch.parametricKeywordSearch(featureIdByType, keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, isAnd);
+            //} else {
+            //    productIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, isAnd);
+            //}
             productIds = ProductSearch.parametricKeywordSearch(featureIdByType, keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, isAnd);
             
 
@@ -256,6 +261,7 @@ public class ProductWorker {
         request.setAttribute(attributePrefix + "featureIdByType", featureIdByType);
         if (products.size() > 0) request.setAttribute(attributePrefix + "searchProductList", products);
     }
+     */
 
     public static void getAssociatedProducts(PageContext pageContext, String productAttributeName, String assocPrefix) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
