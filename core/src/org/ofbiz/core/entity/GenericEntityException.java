@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/09/20 14:56:20  jonesde
+ * Added a bunch of improved error handling code.
+ *
  * Revision 1.2  2001/09/19 21:34:00  jonesde
  * Added field type init and datasource check on start.
  *
@@ -57,25 +60,25 @@ public class GenericEntityException extends Exception {
   
   /** Returns the detail message, including the message from the nested exception if there is one. */
   public String getMessage() {
-    if(nested != null) return this.getMessage() + " (" + nested.getMessage() + ")";
-    else return this.getMessage();
+    if(nested != null) return super.getMessage() + " (" + nested.getMessage() + ")";
+    else return super.getMessage();
   }
   
   /** Prints the composite message to System.err. */
   public void printStackTrace() {
-    this.printStackTrace();
+    super.printStackTrace();
     if(nested != null) nested.printStackTrace();
   }
 
   /** Prints the composite message and the embedded stack trace to the specified stream ps. */
   public void printStackTrace(PrintStream ps) {
-    this.printStackTrace(ps);
+    super.printStackTrace(ps);
     if(nested != null) nested.printStackTrace(ps);
   }
 
   /** Prints the composite message and the embedded stack trace to the specified print writer pw. */
   public void printStackTrace(PrintWriter pw) {
-    this.printStackTrace(pw);
+    super.printStackTrace(pw);
     if(nested != null) nested.printStackTrace(pw);
   }
 }

@@ -265,7 +265,9 @@ public class GenericDelegator {
    */
   public GenericValue findByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
     GenericHelper helper = getEntityHelper(primaryKey.getModelEntity());
-    GenericValue value = helper.findByPrimaryKey(primaryKey);
+    GenericValue value = null;
+    try { value = helper.findByPrimaryKey(primaryKey); }
+    catch(GenericEntityNotFoundException e) { value = null; }
     if(value != null) value.delegator = this;
     return value;
   }
