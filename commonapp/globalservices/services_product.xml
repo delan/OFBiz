@@ -446,175 +446,119 @@
     </service>
 
     <!-- Product Promotion Services -->
-    <service name="createProductPromo" engine="simple"
+    <service name="createProductPromo" default-entity-name="ProductPromo" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="createProductPromo" auth="true">
         <description>Create an ProductPromo</description>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="promoName" type="String" mode="IN" optional="false"/>
-        <attribute name="promoText" type="String" mode="IN" optional="true"/>
-        <attribute name="singleUse" type="String" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="promoName" optional="false"/>
     </service>
-    <service name="updateProductPromo" engine="simple"
+    <service name="updateProductPromo" default-entity-name="ProductPromo" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="updateProductPromo" auth="true">
         <description>Update an ProductPromo</description>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="promoName" type="String" mode="IN" optional="false"/>
-        <attribute name="promoText" type="String" mode="IN" optional="true"/>
-        <attribute name="singleUse" type="String" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="deleteProductPromo" engine="simple"
+    <service name="deleteProductPromo" default-entity-name="ProductPromo" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="deleteProductPromo" auth="true">
         <description>Delete an ProductPromo</description>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="createProductPromoRule" engine="simple"
+    <service name="createProductPromoRule" default-entity-name="ProductPromoRule" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="createProductPromoRule" auth="true">
         <description>Create an ProductPromo</description>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
-        <attribute name="ruleName" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="false"/>
     </service>
-    <service name="updateProductPromoRule" engine="simple"
+    <service name="updateProductPromoRule" default-entity-name="ProductPromoRule" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="updateProductPromoRule" auth="true">
         <description>Update an ProductPromo</description>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
-        <attribute name="ruleName" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="false"/>
     </service>
-    <service name="deleteProductPromoRule" engine="simple"
+    <service name="deleteProductPromoRule" default-entity-name="ProductPromoRule" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="deleteProductPromoRule" auth="true">
         <description>Delete an ProductPromo</description>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="createProductPromoCond" engine="simple"
+    <service name="createProductPromoCond" default-entity-name="ProductPromoCond" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="createProductPromoCond" auth="true">
         <description>Create an ProductPromo</description>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoCondSeqId" type="String" mode="IN" optional="false"/>
-        <attribute name="inputParamEnumId" type="String" mode="IN" optional="true"/>
-        <attribute name="operatorEnumId" type="String" mode="IN" optional="true"/>
-        <attribute name="condValue" type="String" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="updateProductPromoCond" engine="simple"
+    <service name="updateProductPromoCond" default-entity-name="ProductPromoCond" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="updateProductPromoCond" auth="true">
         <description>Update an ProductPromo</description>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoCondSeqId" type="String" mode="IN" optional="false"/>
-        <attribute name="inputParamEnumId" type="String" mode="IN" optional="true"/>
-        <attribute name="operatorEnumId" type="String" mode="IN" optional="true"/>
-        <attribute name="condValue" type="String" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="deleteProductPromoCond" engine="simple"
+    <service name="deleteProductPromoCond" default-entity-name="ProductPromoCond" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="deleteProductPromoCond" auth="true">
         <description>Delete an ProductPromo</description>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoCondSeqId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="createProductPromoAction" engine="simple"
+    <service name="createProductPromoAction" default-entity-name="ProductPromoAction" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="createProductPromoAction" auth="true">
         <description>Create an ProductPromo</description>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoActionSeqId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoActionTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="orderAdjustmentTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="actionLimit" type="Long" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+		<override name="productPromoActionTypeId" optional="false"/>
     </service>
-    <service name="updateProductPromoAction" engine="simple"
+    <service name="updateProductPromoAction" default-entity-name="ProductPromoAction" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="updateProductPromoAction" auth="true">
         <description>Update an ProductPromo</description>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoActionSeqId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoActionTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="orderAdjustmentTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="actionLimit" type="Long" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+		<override name="productPromoActionTypeId" optional="false"/>
     </service>
-    <service name="deleteProductPromoAction" engine="simple"
+    <service name="deleteProductPromoAction" default-entity-name="ProductPromoAction" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="deleteProductPromoAction" auth="true">
         <description>Delete an ProductPromo</description>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoActionSeqId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="addProductPromoToProdCatalog" engine="simple"
+    <service name="addProductPromoToProdCatalog" default-entity-name="ProdCatalogPromoAppl" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="addProductPromoToProdCatalog" auth="true">
         <description>Add ProductPromo To ProdCatalog</description>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+		<override name="fromDate" optional="true"/>
     </service>
-    <service name="updateProductPromoToProdCatalog" engine="simple"
+    <service name="updateProductPromoToProdCatalog" default-entity-name="ProdCatalogPromoAppl" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="updateProductPromoToProdCatalog" auth="true">
         <description>Add ProductPromo To ProdCatalog</description>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="removeProductPromoFromProdCatalog" engine="simple"
+    <service name="removeProductPromoFromProdCatalog" default-entity-name="ProdCatalogPromoAppl" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="removeProductPromoFromProdCatalog" auth="true">
         <description>Remove ProductPromo From ProdCatalog</description>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <!-- Product Inventory Services -->
-    <service name="interfaceInventoryItem" engine="interface" location="" invoke="">
-        <description>InventoryItem Interface</description>
-        <attribute name="inventoryItemTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="statusId" type="String" mode="IN" optional="true"/>
-        <attribute name="datetimeReceived" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="expireDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
-        <attribute name="containerId" type="String" mode="IN" optional="true"/>
-        <attribute name="lotId" type="String" mode="IN" optional="true"/>
-        <attribute name="locationSeqId" type="String" mode="IN" optional="true"/>
-        <attribute name="uomId" type="String" mode="IN" optional="true"/>
-        <attribute name="binNumber" type="String" mode="IN" optional="true"/>
-        <attribute name="comments" type="String" mode="IN" optional="true"/>
-        <attribute name="quantityOnHand" type="Double" mode="IN" optional="true"/>
-        <attribute name="availableToPromise" type="Double" mode="IN" optional="true"/>
-        <attribute name="serialNumber" type="String" mode="IN" optional="true"/>
-    </service>
-    <service name="createInventoryItem" engine="simple"
+    <service name="createInventoryItem" default-entity-name="InventoryItem" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="createInventoryItem" auth="true">
         <description>Create an InventoryItem</description>
-        <implements service="interfaceInventoryItem"/>
-        <attribute name="inventoryItemId" type="String" mode="OUT" optional="false"/>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+		<override name="inventoryItemTypeId" optional="false"/>
+		<override name="productId" optional="false"/>
     </service>
-    <service name="updateInventoryItem" engine="simple"
+    <service name="updateInventoryItem" default-entity-name="InventoryItem" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="updateInventoryItem" auth="true">
         <description>Update an InventoryItem</description>
-        <implements service="interfaceInventoryItem"/>
-        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
-        <attribute name="inventoryItemTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>        
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="deleteInventoryItem" engine="simple"
+    <service name="deleteInventoryItem" default-entity-name="InventoryItem" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="deleteInventoryItem" auth="true">
         <description>Delete an InventoryItem</description>
-        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <service name="getProductInventoryAvailable" engine="simple"
