@@ -51,7 +51,9 @@ import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.condition.EntityConditionList;
-import org.ofbiz.order.order.OrderChangeHelper;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.content.xui.XuiSession;
 
 /**
  * 
@@ -260,7 +262,8 @@ public class ManagerEvents {
             return;
         }
 
-        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        XuiSession session = pos.getSession();
+        PosTransaction trans = PosTransaction.getCurrentTx(session);
         if (!trans.isOpen()) {
             pos.showDialog("dialog/error/terminalclosed");
             return;
@@ -283,7 +286,7 @@ public class ManagerEvents {
             String orderId = input.value();
             GenericValue orderHeader = null;
             try {
-                orderHeader = pos.getSession().getDelegator().findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+                orderHeader = session.getDelegator().findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
             }
@@ -294,8 +297,18 @@ public class ManagerEvents {
             } else {
                 Timestamp orderDate = orderHeader.getTimestamp("orderDate");
                 if (orderDate.after(openDate)) {
-                    OrderChangeHelper.cancelOrder(pos.getSession().getDispatcher(), pos.getSession().getUserLogin(), orderId);
+                    LocalDispatcher dispatcher = session.getDispatcher();
+                    try {
+                        dispatcher.runSyncIgnore("quickReturnOrder", UtilMisc.toMap("orderId", orderId, "userLogin", session.getUserLogin()));
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, module);
+                        pos.showDialog("dialog/error/exception", e.getMessage());
+                    }
                     // todo print void receipt
+
+                    input.clear();
+                    pos.showDialog("dialog/error/salevoided");
+                    pos.refresh();
                 } else {
                     input.clear();
                     pos.showDialog("dialog/error/ordernotfound");

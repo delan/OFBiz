@@ -51,7 +51,6 @@ import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.pos.component.Journal;
 import org.ofbiz.pos.component.Output;
 import org.ofbiz.pos.device.DeviceLoader;
-import org.ofbiz.pos.adaptor.SyncCallbackAdaptor;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericDelegator;
@@ -491,13 +490,11 @@ public class PosTransaction implements Serializable {
 
     public double addPayment(String id, double amount, String refNum, String authCode) {
         trace("added payment", id + "/" + amount);
-        /*
-        Double currentAmt = cart.getPaymentAmount(id);
-        if (currentAmt != null) {
-            amount += currentAmt.doubleValue();
+        if ("CASH".equals(id)) {
+            // clear cash payments first; so there is only one
+            cart.clearPayment(id);
         }
-        */
-        cart.addPaymentAmount(id, new Double(amount), refNum, authCode, true, false);
+        cart.addPaymentAmount(id, new Double(amount), refNum, authCode, true, true, false);
         return this.getTotalDue();
     }
 
@@ -516,6 +513,11 @@ public class PosTransaction implements Serializable {
     public void clearPayment(int index) {
         trace("removing payment", "" + index);
         cart.clearPayment(index);
+    }
+
+    public void clearPayment(String id) {
+        trace("removing payment", id);
+        cart.clearPayment(id);
     }
 
     public int selectedPayments() {
