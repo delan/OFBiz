@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -66,7 +66,7 @@ public class Iterate extends MethodOperation {
         Object fieldVal = null;
 
         if (listAcsr.isEmpty()) {
-            Debug.logWarning("No list-name specified in iterate tag, doing nothing", module);
+            Debug.logWarning("No list-name specified in iterate tag, doing nothing: " + rawString(), module);
             return true;
         }
 
@@ -90,8 +90,7 @@ public class Iterate extends MethodOperation {
                 eli.close();
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
-                String errMsg = "ERROR: Error closing entityListIterator in " + simpleMethod.getShortDescription() + " [" + e.getMessage() + "]";
-
+                String errMsg = "ERROR: Error closing entityListIterator in " + simpleMethod.getShortDescription() + " [" + e.getMessage() + "]: " + rawString();
                 if (methodContext.getMethodType() == MethodContext.EVENT) {
                     methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                     methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
@@ -105,11 +104,11 @@ public class Iterate extends MethodOperation {
             Collection theList = (Collection) objList;
 
             if (theList == null) {
-                if (Debug.infoOn()) Debug.logInfo("List not found with name " + listAcsr + ", doing nothing", module);
+                if (Debug.infoOn()) Debug.logInfo("List not found with name " + listAcsr + ", doing nothing: " + rawString(), module);
                 return true;
             }
             if (theList.size() == 0) {
-                if (Debug.verboseOn()) Debug.logVerbose("List with name " + listAcsr + " has zero entries, doing nothing", module);
+                if (Debug.verboseOn()) Debug.logVerbose("List with name " + listAcsr + " has zero entries, doing nothing: " + rawString(), module);
                 return true;
             }
 
