@@ -32,6 +32,8 @@
     <#assign updateParty = requestParameters.updateParty>
 </#if>
 
+<#if shoppingCart?exists>
+
 <!-- Sales Order Entry -->
 <#if !(updateParty?exists) | shoppingCart.getOrderType() = "SALES_ORDER">
 <table border=0 align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -205,4 +207,6 @@
     </td>
   </tr>
 </table>
+</#if>
+
 </#if>

@@ -43,7 +43,10 @@ userLogin = session.getAttribute("userLogin");
 context.put("dispatcher",dispatcher);
 
 // Get the Cart
-shoppingCart = ShoppingCartEvents.getCartObject(request);
+shoppingCart = null;
+try {
+    shoppingCart = ShoppingCartEvents.getCartObject(request);
+} catch(Exception exc) {}
 context.put("shoppingCart", shoppingCart);
 
 salesChannels = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "ORDER_SALES_CHANNEL"), UtilMisc.toList("sequenceId"));
