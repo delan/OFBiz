@@ -1,5 +1,5 @@
 /*
- * $Id: NotEmpty.java,v 1.1 2003/08/17 06:06:11 ajzeneski Exp $
+ * $Id: NotEmpty.java,v 1.2 2004/04/04 07:04:25 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * Checks to see if the current field is empty (null or zero length)
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class NotEmpty extends SimpleMapOperation {
@@ -48,11 +48,11 @@ public class NotEmpty extends SimpleMapOperation {
             String fieldValue = (java.lang.String) obj;
 
             if (!UtilValidate.isNotEmpty(fieldValue)) {
-                addMessage(messages, loader);
+                addMessage(messages, loader, locale);
             }
         } else {
             if (obj == null)
-                addMessage(messages, loader);
+                addMessage(messages, loader, locale);
         }
     }
 }

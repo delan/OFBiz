@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleMapOperation.java,v 1.1 2003/08/17 06:06:11 ajzeneski Exp $
+ * $Id: SimpleMapOperation.java,v 1.2 2004/04/04 07:04:25 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * A single operation, does the specified operation on the given field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public abstract class SimpleMapOperation {
@@ -62,17 +62,19 @@ public abstract class SimpleMapOperation {
 
     public abstract void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader);
 
-    public void addMessage(List messages, ClassLoader loader) {
+    public void addMessage(List messages, ClassLoader loader, Locale locale) {
         if (!isProperty && message != null) {
             messages.add(message);
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message, module);
         } else if (isProperty && propertyResource != null && message != null) {
-            String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
+            // this one doesn't do the proper i18n: String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
+            String propMsg = UtilProperties.getMessage(propertyResource, message, locale);
 
-            if (propMsg == null || propMsg.length() == 0)
+            if (propMsg == null || propMsg.length() == 0) {
                 messages.add("Simple Map Processing error occurred, but no message was found, sorry.");
-            else
+            } else {
                 messages.add(propMsg);
+            }
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg, module);
         } else {
             messages.add("Simple Map Processing error occurred, but no message was found, sorry.");
