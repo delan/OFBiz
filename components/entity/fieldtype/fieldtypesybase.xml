@@ -3,7 +3,7 @@
 
 <!--
 /**
- *  $Id: fieldtypesybase.xml,v 1.2 2004/01/20 18:10:18 ajzeneski Exp $
+ *  $Id: fieldtypesybase.xml,v 1.3 2004/07/27 06:09:49 ajzeneski Exp $
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
@@ -41,10 +41,10 @@
     <field-type-def type="date" sql-type="DATETIME" java-type="java.sql.Date"></field-type-def> 
     <field-type-def type="time" sql-type="DATETIME" java-type="java.sql.Time"></field-type-def> 
 
-    <field-type-def type="currency-amount" sql-type="NUMERIC(18,2)" java-type="Double"><validate name="isSignedDouble" /></field-type-def> 
-    <field-type-def type="floating-point" sql-type="NUMERIC(18,6)" java-type="Double"><validate name="isSignedDouble" /></field-type-def> 
-    <field-type-def type="numeric" sql-type="NUMERIC(18,0)" java-type="Long"><validate name="isSignedLong" /></field-type-def> 
-    <field-type-def type="integer" sql-type="NUMERIC(9,0)" java-type="Integer"><validate name="isSignedLong" /></field-type-def> 
+    <field-type-def type="currency-amount" sql-type="NUMERIC(18,2)" java-type="Double"><validate method="isSignedDouble" /></field-type-def>
+    <field-type-def type="floating-point" sql-type="NUMERIC(18,6)" java-type="Double"><validate method="isSignedDouble" /></field-type-def>
+    <field-type-def type="numeric" sql-type="NUMERIC(18,0)" java-type="Long"><validate method="isSignedLong" /></field-type-def>
+    <field-type-def type="integer" sql-type="NUMERIC(9,0)" java-type="Integer"><validate method="isSignedLong" /></field-type-def>
 
     <field-type-def type="id" sql-type="VARCHAR(20)" java-type="String"></field-type-def> 
     <field-type-def type="id-long" sql-type="VARCHAR(60)" java-type="String"></field-type-def> 
@@ -62,12 +62,12 @@
     <field-type-def type="value" sql-type="VARCHAR(255)" java-type="String"></field-type-def> 
 
     <!-- Specialized Types --> 
-    <field-type-def type="credit-card-number" sql-type="VARCHAR(40)" java-type="String"><validate name="isAnyCard" /></field-type-def> 
-    <field-type-def type="credit-card-date" sql-type="VARCHAR(20)" java-type="String"><validate name="isDateAfterToday" /></field-type-def> 
-    <field-type-def type="email" sql-type="VARCHAR(255)" java-type="String"><validate name="isEmail" /></field-type-def> 
+    <field-type-def type="credit-card-number" sql-type="VARCHAR(40)" java-type="String"><validate method="isAnyCard" /></field-type-def>
+    <field-type-def type="credit-card-date" sql-type="VARCHAR(20)" java-type="String"><validate method="isDateAfterToday" /></field-type-def>
+    <field-type-def type="email" sql-type="VARCHAR(255)" java-type="String"><validate method="isEmail" /></field-type-def>
     <field-type-def type="url" sql-type="VARCHAR(255)" java-type="String"></field-type-def> 
-    <field-type-def type="id-ne" sql-type="VARCHAR(20)" java-type="String"><validate name="isNotEmpty" /></field-type-def> 
-    <field-type-def type="id-long-ne" sql-type="VARCHAR(60)" java-type="String"><validate name="isNotEmpty" /></field-type-def> 
-    <field-type-def type="id-vlong-ne" sql-type="VARCHAR(255)" java-type="String"><validate name="isNotEmpty" /></field-type-def> 
-    <field-type-def type="tel-number" sql-type="VARCHAR(60)" java-type="String"><validate name="isInternationalPhoneNumber" /></field-type-def> 
+    <field-type-def type="id-ne" sql-type="VARCHAR(20)" java-type="String"><validate method="isNotEmpty" /></field-type-def>
+    <field-type-def type="id-long-ne" sql-type="VARCHAR(60)" java-type="String"><validate method="isNotEmpty" /></field-type-def>
+    <field-type-def type="id-vlong-ne" sql-type="VARCHAR(255)" java-type="String"><validate method="isNotEmpty" /></field-type-def>
+    <field-type-def type="tel-number" sql-type="VARCHAR(60)" java-type="String"><validate method="isInternationalPhoneNumber" /></field-type-def>
 </fieldtypemodel>

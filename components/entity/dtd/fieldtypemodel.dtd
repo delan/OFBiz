@@ -41,5 +41,8 @@
 <!ATTLIST field-type-def java-type CDATA #REQUIRED>
 
 <!ELEMENT validate EMPTY>
-<!ATTLIST validate name CDATA #REQUIRED>
+<!ATTLIST validate
+    method CDATA #REQUIRED
+    class CDATA "org.ofbiz.base.util.UtilValidate"
+>
 
