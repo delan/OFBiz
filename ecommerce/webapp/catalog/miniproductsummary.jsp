@@ -11,17 +11,25 @@
     </b>
   </div>
   <%GenericValue miniProd = (GenericValue) pageContext.getAttribute("miniProduct");%>
-  <%if (!"Y".equals(miniProd.getString("isVirtual"))) {%>
-  <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="<%=miniProdFormName%>" style='margin: 0;'>
-    <input type='hidden' name="add_product_id" value='<%EntityField.run("miniProduct", "productId", pageContext);%>'>
-    <input type='hidden' name="quantity" value="<%=miniProdQuantity%>">
-    <%=UtilFormatOut.ifNotEmpty(request.getParameter("order_id"), "<input type='hidden' name='order_id' value='", "'>")%>
-    <%=UtilFormatOut.ifNotEmpty(request.getParameter("product_id"), "<input type='hidden' name='product_id' value='", "'>")%>
-    <%=UtilFormatOut.ifNotEmpty(request.getParameter("category_id"), "<input type='hidden' name='category_id' value='", "'>")%>
-    <%=UtilFormatOut.ifNotEmpty(request.getParameter("VIEW_INDEX"), "<input type='hidden' name='VIEW_INDEX' value='", "'>")%>
-    <%=UtilFormatOut.ifNotEmpty(request.getParameter("SEARCH_STRING"), "<input type='hidden' name='SEARCH_STRING' value='", "'>")%>
-    <%=UtilFormatOut.ifNotEmpty(request.getParameter("SEARCH_CATEGORY_ID"), "<input type='hidden' name='SEARCH_CATEGORY_ID' value='", "'>")%>
-    <a href="javascript:document.<%=miniProdFormName%>.submit()" class="buttontext"><nobr>[Add <%=miniProdQuantity%> to Cart]</nobr></a>
-  </form>
+  <%if (miniProd.get("introductionDate") != null && UtilDateTime.nowTimestamp().before(miniProd.getTimestamp("introductionDate"))) {%>
+      <%-- check to see if introductionDate hasn't passed yet --%>
+      <div class='tabletext' style='color: red;'>Not Yet Available</div>
+  <%} else if (miniProd.get("salesDiscontinuationDate") != null && UtilDateTime.nowTimestamp().after(miniProd.getTimestamp("salesDiscontinuationDate"))) {%>
+      <%-- check to see if salesDiscontinuationDate has passed --%>
+      <div class='tabletext' style='color: red;'>No Longer Available</div>
+  <%} else if ("Y".equals(miniProd.getString("isVirtual"))) {%>
+      &nbsp;
+  <%} else {%>
+      <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="<%=miniProdFormName%>" style='margin: 0;'>
+        <input type='hidden' name="add_product_id" value='<%EntityField.run("miniProduct", "productId", pageContext);%>'>
+        <input type='hidden' name="quantity" value="<%=miniProdQuantity%>">
+        <%=UtilFormatOut.ifNotEmpty(request.getParameter("order_id"), "<input type='hidden' name='order_id' value='", "'>")%>
+        <%=UtilFormatOut.ifNotEmpty(request.getParameter("product_id"), "<input type='hidden' name='product_id' value='", "'>")%>
+        <%=UtilFormatOut.ifNotEmpty(request.getParameter("category_id"), "<input type='hidden' name='category_id' value='", "'>")%>
+        <%=UtilFormatOut.ifNotEmpty(request.getParameter("VIEW_INDEX"), "<input type='hidden' name='VIEW_INDEX' value='", "'>")%>
+        <%=UtilFormatOut.ifNotEmpty(request.getParameter("SEARCH_STRING"), "<input type='hidden' name='SEARCH_STRING' value='", "'>")%>
+        <%=UtilFormatOut.ifNotEmpty(request.getParameter("SEARCH_CATEGORY_ID"), "<input type='hidden' name='SEARCH_CATEGORY_ID' value='", "'>")%>
+        <a href="javascript:document.<%=miniProdFormName%>.submit()" class="buttontext"><nobr>[Add <%=miniProdQuantity%> to Cart]</nobr></a>
+      </form>
   <%}%>
 </ofbiz:if>
