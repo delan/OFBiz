@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.25 2004/07/31 21:15:16 ajzeneski Exp $
+ * $Id: Start.java,v 1.26 2004/07/31 21:17:26 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  * @since 2.1
  */
 public class Start implements Runnable {
@@ -186,7 +186,8 @@ public class Start implements Runnable {
             classPath.addComponent(config.toolsJar);
         }
 
-        // load the libs from OFBIZ_HOME
+        // add OFBIZ_HOME to CP & load libs
+        classPath.addClasspath(config.ofbizHome);
         loadLibs(config.ofbizHome, false);
 
         // load the lib directory
