@@ -23,16 +23,16 @@
  */
 package org.ofbiz.base.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.IOException;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 /**
  * UtilObject
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class UtilObject {
@@ -67,7 +67,37 @@ public class UtilObject {
 
         return data;
     }
-
+    
+    public static long getByteCount(Object obj) {
+        OutputStreamByteCount osbc = null;
+        ObjectOutputStream oos = null;
+        byte[] data = null;
+        try {
+            osbc = new OutputStreamByteCount();
+            oos = new ObjectOutputStream(osbc);
+            oos.writeObject(obj);
+        } catch (IOException e) {
+            Debug.logError(e, module);
+        } finally {
+            try {
+                if (oos != null) {
+                    oos.flush();
+                    oos.close();
+                }
+                if (osbc != null) {
+                    osbc.close();
+                }
+            } catch (IOException e) {
+                Debug.logError(e, module);
+            }
+        }
+        if (osbc != null) {
+            return osbc.getByteCount();
+        } else {
+            return 0;
+        }
+    }
+    
     /** Deserialize a byte array back to an object */
     public static Object getObject(byte[] bytes) {
         ByteArrayInputStream bis = null;
