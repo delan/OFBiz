@@ -59,7 +59,7 @@ request.setAttribute("availableLocales",availableLocales);
 
 locale = UtilHttp.getLocale(request);
 request.setAttribute("locale",locale);
-uiLabelMap = UtilProperties.getResourceBundleMap("ManufacturingUiLabels", locale);
+uiLabelMap = UtilProperties.getResourceBundleMap("MarketingUILabels", locale);
 request.setAttribute("uiLabelMap", uiLabelMap);
 
 layoutSettings = new HashMap();
