@@ -24,16 +24,9 @@
 
 package org.ofbiz.core.util;
 
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Iterator;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
+import java.io.*;
+import java.util.*;
+import java.net.*;
 
 /**
  * Send HTTP GET/POST requests.
@@ -46,8 +39,8 @@ public class HttpClient {
 
     private String url = null;
     private boolean lineFeed = true;
-    private HashMap parameters = null;
-    private HashMap headers = null;
+    private Map parameters = null;
+    private Map headers = null;
     private URL requestUrl;
     private URLConnection con;
 
@@ -66,26 +59,26 @@ public class HttpClient {
     }
 
     /** Creates a new HttpClient object. */
-    public HttpClient(String url, HashMap parameters) {
+    public HttpClient(String url, Map parameters) {
         this.url = url;
         this.parameters = parameters;
     }
 
     /** Creates a new HttpClient object. */
-    public HttpClient(URL url, HashMap parameters) {
+    public HttpClient(URL url, Map parameters) {
         this.url = url.toExternalForm();
         this.parameters = parameters;
     }
 
     /** Creates a new HttpClient object. */
-    public HttpClient(String url, HashMap parameters, HashMap headers) {
+    public HttpClient(String url, Map parameters, Map headers) {
         this.url = url;
         this.parameters = parameters;
         this.headers = headers;
     }
 
     /** Creates a new HttpClient object. */
-    public HttpClient(URL url, HashMap parameters, HashMap headers) {
+    public HttpClient(URL url, Map parameters, Map headers) {
         this.url = url.toExternalForm();
         this.parameters = parameters;
         this.headers = headers;
@@ -107,7 +100,7 @@ public class HttpClient {
     }
 
     /** Set the parameters for this request. */
-    public void setParameters(HashMap parameters) {
+    public void setParameters(Map parameters) {
         this.parameters = parameters;
     }
 
@@ -119,7 +112,7 @@ public class HttpClient {
     }
 
     /** Set the headers for this request. */
-    public void setHeaders(HashMap headers) {
+    public void setHeaders(Map headers) {
         this.headers = headers;
     }
 
@@ -130,13 +123,13 @@ public class HttpClient {
         headers.put(name, value);
     }
 
-    /** Return a HashMap of headers. */
-    public HashMap getHeaders() {
+    /** Return a Map of headers. */
+    public Map getHeaders() {
         return headers;
     }
 
-    /** Return a HashMap of parameters. */
-    public HashMap getParameters() {
+    /** Return a Map of parameters. */
+    public Map getParameters() {
         return parameters;
     }
 
@@ -270,7 +263,7 @@ public class HttpClient {
         return in;
     }
 
-    private String encodeArgs(HashMap args) {
+    private String encodeArgs(Map args) {
         StringBuffer buf = new StringBuffer();
         Set names = args.keySet();
         Iterator i = names.iterator();
