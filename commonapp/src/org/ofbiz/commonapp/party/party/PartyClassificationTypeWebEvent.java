@@ -32,18 +32,17 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 17 02:08:27 MDT 2001
+ *@created    Wed Jul 18 12:02:46 MDT 2001
  *@version    1.0
  */
 
 public class PartyClassificationTypeWebEvent
 {
-  /**
-   *  An HTTP WebEvent handler that updates a PartyClassificationType entity
+  /** An HTTP WebEvent handler that updates a PartyClassificationType entity
    *
    * @param request The HTTP request object for the current JSP or Servlet request.
    * @param response The HTTP response object for the current JSP or Servlet request.
-   * @return Return a boolean which specifies whether or not the calling Servlet or JSP should generate its own content. This allows an event to override the default content.
+   * @return Returns a String specifying the outcome state of the event. This is used to decide which event to run next or which view to display. If null no event is run nor view displayed, allowing the event to call a forward on a RequestDispatcher.
    * @exception javax.servlet.ServletException Standard J2EE Servlet Exception
    * @exception java.rmi.RemoteException Standard RMI Remote Exception
    * @exception java.io.IOException Standard IO Exception
@@ -59,10 +58,7 @@ public class PartyClassificationTypeWebEvent
     if(updateMode == null || updateMode.length() <= 0)
     {
       request.getSession().setAttribute("ERROR_MESSAGE", "updatePartyClassificationType: Update Mode was not specified, but is required.");
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.warning", "true"))
-      {
-        System.out.println("updatePartyClassificationType: Update Mode was not specified, but is required.");
-      }
+      Debug.logWarning("updatePartyClassificationType: Update Mode was not specified, but is required.");
     }
     
     //check permissions before moving on...
@@ -131,10 +127,7 @@ public class PartyClassificationTypeWebEvent
     else
     {
       request.getSession().setAttribute("ERROR_MESSAGE", "updatePartyClassificationType: Update Mode specified (" + updateMode + ") was not valid.");
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.warning", "true"))
-      {
-        System.out.println("updatePartyClassificationType: Update Mode specified (" + updateMode + ") was not valid.");
-      }
+      Debug.logWarning("updatePartyClassificationType: Update Mode specified (" + updateMode + ") was not valid.");
     }
 
     return "success";

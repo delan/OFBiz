@@ -32,7 +32,7 @@ import org.ofbiz.commonapp.party.party.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 17 02:08:31 MDT 2001
+ *@created    Wed Jul 18 12:02:50 MDT 2001
  *@version    1.0
  */
 public class LoginAccountHistoryValue implements LoginAccountHistory

@@ -33,50 +33,45 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 17 02:08:26 MDT 2001
+ *@created    Wed Jul 18 12:02:45 MDT 2001
  *@version    1.0
  */
 public class PartyClassificationHelper
 {
 
-  /**
-   *  A static variable to cache the Home object for the PartyClassification EJB
-   */
-  public static PartyClassificationHome partyClassificationHome = null;
+  /** A static variable to cache the Home object for the PartyClassification EJB */
+  private static PartyClassificationHome partyClassificationHome = null;
 
-  /**
-   *  Initializes the partyClassificationHome, from a JNDI lookup, with a cached result,
-   *  checking for null each time.
+  /** Initializes the partyClassificationHome, from a JNDI lookup, with a cached result, checking for null each time. 
+   *@return The PartyClassificationHome instance for the default EJB server
    */
-  public static void init()
+  public static PartyClassificationHome getPartyClassificationHome()
   {
-    if(partyClassificationHome == null)
+    if(partyClassificationHome == null) //don't want to block here
     {
-      JNDIContext myJNDIContext = new JNDIContext();
-      InitialContext initialContext = myJNDIContext.getInitialContext();
-      try
-      {
-        Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.party.party.PartyClassificationHome");
-        partyClassificationHome = (PartyClassificationHome)MyNarrow.narrow(homeObject, PartyClassificationHome.class);
-      }
-      catch(Exception e1)
-      {
-        e1.printStackTrace();
-      }
-
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-      {
-        System.out.println("partyClassification home obtained " + partyClassificationHome);
+      synchronized(PartyClassificationHelper.class) 
+      { 
+        //must check if null again as one of the blocked threads can still enter 
+        if(partyClassificationHome == null) //now it's safe
+        {
+          JNDIContext myJNDIContext = new JNDIContext();
+          InitialContext initialContext = myJNDIContext.getInitialContext();
+          try
+          {
+            Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.party.party.PartyClassificationHome");
+            partyClassificationHome = (PartyClassificationHome)MyNarrow.narrow(homeObject, PartyClassificationHome.class);
+          }
+          catch(Exception e1) { Debug.logError(e1); }
+          Debug.logInfo("partyClassification home obtained " + partyClassificationHome);
+        }
       }
     }
+    return partyClassificationHome;
   }
 
 
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Remove the PartyClassification corresponding to the primaryKey specified by fields
    *@param  partyId                  Field of the PARTY_ID column.
    *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
    */
@@ -90,18 +85,12 @@ public class PartyClassificationHelper
     removeByPrimaryKey(primaryKey);
   }
 
-
-  /**
-   *  Description of the Method
-   *
+  /** Remove the PartyClassification corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
    */
   public static void removeByPrimaryKey(org.ofbiz.commonapp.party.party.PartyClassificationPK primaryKey)
   {
-    if(primaryKey == null)
-    {
-      return;
-    }
+    if(primaryKey == null) return;
     PartyClassification partyClassification = findByPrimaryKey(primaryKey);
     try
     {
@@ -110,133 +99,73 @@ public class PartyClassificationHelper
         partyClassification.remove();
       }
     }
-    catch(Exception e)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.warning", "true"))
-      {
-        e.printStackTrace();
-      }
-    }
-
+    catch(Exception e) { Debug.logWarning(e); }
 
   }
 
-
-  /**
-   *  Description of the Method
-   *
-
+  /** Find a PartyClassification by its Primary Key, specified by individual fields
    *@param  partyId                  Field of the PARTY_ID column.
    *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
-   *@return       Description of the Returned Value
+   *@return       The PartyClassification corresponding to the primaryKey
    */
   public static PartyClassification findByPrimaryKey(String partyId, String partyTypeId)
   {
-    if(partyId == null || partyTypeId == null)
-    {
-      return null;
-    }
+    if(partyId == null || partyTypeId == null) return null;
     PartyClassificationPK primaryKey = new PartyClassificationPK(partyId, partyTypeId);
     return findByPrimaryKey(primaryKey);
   }
 
-
-  /**
-   *  Description of the Method
-   *
+  /** Find a PartyClassification by its Primary Key
    *@param  primaryKey  The primary key to find by.
-   *@return             The PartyClassification of primaryKey
+   *@return             The PartyClassification corresponding to the primaryKey
    */
   public static PartyClassification findByPrimaryKey(org.ofbiz.commonapp.party.party.PartyClassificationPK primaryKey)
   {
     PartyClassification partyClassification = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("PartyClassificationHelper.findByPrimaryKey: Field is:" + primaryKey);
-    }
+    Debug.logInfo("PartyClassificationHelper.findByPrimaryKey: Field is:" + primaryKey);
 
-    if(primaryKey == null)
-    {
-      return null;
-    }
+    if(primaryKey == null) { return null; }
 
-    init();
 
     try
     {
-      partyClassification = (PartyClassification)MyNarrow.narrow(partyClassificationHome.findByPrimaryKey(primaryKey), PartyClassification.class);
+      partyClassification = (PartyClassification)MyNarrow.narrow(getPartyClassificationHome().findByPrimaryKey(primaryKey), PartyClassification.class);
       if(partyClassification != null)
       {
         partyClassification = partyClassification.getValueObject();
-
+      
       }
     }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
     return partyClassification;
   }
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Returned Value
+  /** Finds all PartyClassification entities, returning an Iterator
+   *@return    Iterator containing all PartyClassification entities
    */
   public static Iterator findAllIterator()
   {
     Collection collection = findAll();
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) return collection.iterator();
+    else return null;
   }
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Returned Value
+  /** Finds all PartyClassification entities
+   *@return    Collection containing all PartyClassification entities
    */
   public static Collection findAll()
   {
     Collection collection = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("PartyClassificationHelper.findAll");
-    }
-    init();
+    Debug.logInfo("PartyClassificationHelper.findAll");
 
-    try
-    {
-      collection = (Collection)MyNarrow.narrow(partyClassificationHome.findAll(), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection)MyNarrow.narrow(getPartyClassificationHome().findAll(), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
     return collection;
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Creates a PartyClassification
    *@param  partyId                  Field of the PARTY_ID column.
    *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
    *@param  partyClassificationTypeId                  Field of the PARTY_CLASSIFICATION_TYPE_ID column.
@@ -247,43 +176,21 @@ public class PartyClassificationHelper
   public static PartyClassification create(String partyId, String partyTypeId, String partyClassificationTypeId, java.util.Date fromDate, java.util.Date thruDate)
   {
     PartyClassification partyClassification = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("PartyClassificationHelper.create: partyId, partyTypeId: " + partyId + ", " + partyTypeId);
-    }
-    if(partyId == null || partyTypeId == null)
-    {
-      return null;
-    }
-    init();
+    Debug.logInfo("PartyClassificationHelper.create: partyId, partyTypeId: " + partyId + ", " + partyTypeId);
+    if(partyId == null || partyTypeId == null) { return null; }
 
-    try
-    {
-      partyClassification = (PartyClassification)MyNarrow.narrow(partyClassificationHome.create(partyId, partyTypeId, partyClassificationTypeId, fromDate, thruDate), PartyClassification.class);
-    }
+    try { partyClassification = (PartyClassification)MyNarrow.narrow(getPartyClassificationHome().create(partyId, partyTypeId, partyClassificationTypeId, fromDate, thruDate), PartyClassification.class); }
     catch(CreateException ce)
     {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        System.out.println("Could not create partyClassification with partyId, partyTypeId: " + partyId + ", " + partyTypeId);
-        ce.printStackTrace();
-      }
+      Debug.logError("Could not create partyClassification with partyId, partyTypeId: " + partyId + ", " + partyTypeId);
+      Debug.logError(ce);
       partyClassification = null;
     }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    catch(Exception fe) { Debug.logError(fe); }
     return partyClassification;
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Updates the corresponding PartyClassification
    *@param  partyId                  Field of the PARTY_ID column.
    *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
    *@param  partyClassificationTypeId                  Field of the PARTY_CLASSIFICATION_TYPE_ID column.
@@ -293,51 +200,25 @@ public class PartyClassificationHelper
    */
   public static PartyClassification update(String partyId, String partyTypeId, String partyClassificationTypeId, java.util.Date fromDate, java.util.Date thruDate) throws java.rmi.RemoteException
   {
-    if(partyId == null || partyTypeId == null)
-    {
-      return null;
-    }
+    if(partyId == null || partyTypeId == null) { return null; }
     PartyClassification partyClassification = findByPrimaryKey(partyId, partyTypeId);
     //Do not pass the value object to set on creation, we only want to populate it not attach it to the passed object
     PartyClassification partyClassificationValue = new PartyClassificationValue();
 
-
-  
-  
-  
-    if(partyClassificationTypeId != null)
-    {
-      partyClassificationValue.setPartyClassificationTypeId(partyClassificationTypeId);
-    }
-  
-    if(fromDate != null)
-    {
-      partyClassificationValue.setFromDate(fromDate);
-    }
-  
-    if(thruDate != null)
-    {
-      partyClassificationValue.setThruDate(thruDate);
-    }
+    if(partyClassificationTypeId != null) { partyClassificationValue.setPartyClassificationTypeId(partyClassificationTypeId); }
+    if(fromDate != null) { partyClassificationValue.setFromDate(fromDate); }
+    if(thruDate != null) { partyClassificationValue.setThruDate(thruDate); }
 
     partyClassification.setValueObject(partyClassificationValue);
     return partyClassification;
   }
 
-
-  
-  /**
-   *  Description of the Method
-   *
-
+  /** Removes/deletes the specified  PartyClassification
    *@param  partyId                  Field of the PARTY_ID column.
    */
   public static void removeByPartyId(String partyId)
   {
-    if(partyId == null)
-    {
-      return;
-    }
+    if(partyId == null) return;
     Iterator iterator = findByPartyIdIterator(partyId);
 
     while(iterator.hasNext())
@@ -345,94 +226,48 @@ public class PartyClassificationHelper
       try
       {
         PartyClassification partyClassification = (PartyClassification) iterator.next();
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-        {
-          System.out.println("Removing partyClassification with partyId:" + partyId);
-        }
+        Debug.logInfo("Removing partyClassification with partyId:" + partyId);
         partyClassification.remove();
       }
-      catch(Exception e)
-      {
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-        {
-          e.printStackTrace();
-        }
-      }
+      catch(Exception e) { Debug.logError(e); }
     }
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  partyId                  Field of the PARTY_ID column.
    *@return      Description of the Returned Value
    */
   public static Iterator findByPartyIdIterator(String partyId)
   {
     Collection collection = findByPartyId(partyId);
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) { return collection.iterator(); }
+    else { return null; }
   }
 
-  /**
-   *  Finds PartyClassification records by the following fieldters:
-   *
-
+  /** Finds PartyClassification records by the following parameters:
    *@param  partyId                  Field of the PARTY_ID column.
    *@return      Description of the Returned Value
    */
   public static Collection findByPartyId(String partyId)
   {
-    init();
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("findByPartyId: partyId:" + partyId);
-    }
+    Debug.logInfo("findByPartyId: partyId:" + partyId);
 
     Collection collection = null;
-    if(partyId == null)
-    {
-      return null;
-    }
+    if(partyId == null) { return null; }
 
-    try
-    {
-      collection = (Collection) MyNarrow.narrow(partyClassificationHome.findByPartyId(partyId), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection) MyNarrow.narrow(getPartyClassificationHome().findByPartyId(partyId), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
 
     return collection;
   }
 
-  
-  /**
-   *  Description of the Method
-   *
-
+  /** Removes/deletes the specified  PartyClassification
    *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
    */
   public static void removeByPartyTypeId(String partyTypeId)
   {
-    if(partyTypeId == null)
-    {
-      return;
-    }
+    if(partyTypeId == null) return;
     Iterator iterator = findByPartyTypeIdIterator(partyTypeId);
 
     while(iterator.hasNext())
@@ -440,94 +275,48 @@ public class PartyClassificationHelper
       try
       {
         PartyClassification partyClassification = (PartyClassification) iterator.next();
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-        {
-          System.out.println("Removing partyClassification with partyTypeId:" + partyTypeId);
-        }
+        Debug.logInfo("Removing partyClassification with partyTypeId:" + partyTypeId);
         partyClassification.remove();
       }
-      catch(Exception e)
-      {
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-        {
-          e.printStackTrace();
-        }
-      }
+      catch(Exception e) { Debug.logError(e); }
     }
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
    *@return      Description of the Returned Value
    */
   public static Iterator findByPartyTypeIdIterator(String partyTypeId)
   {
     Collection collection = findByPartyTypeId(partyTypeId);
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) { return collection.iterator(); }
+    else { return null; }
   }
 
-  /**
-   *  Finds PartyClassification records by the following fieldters:
-   *
-
+  /** Finds PartyClassification records by the following parameters:
    *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
    *@return      Description of the Returned Value
    */
   public static Collection findByPartyTypeId(String partyTypeId)
   {
-    init();
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("findByPartyTypeId: partyTypeId:" + partyTypeId);
-    }
+    Debug.logInfo("findByPartyTypeId: partyTypeId:" + partyTypeId);
 
     Collection collection = null;
-    if(partyTypeId == null)
-    {
-      return null;
-    }
+    if(partyTypeId == null) { return null; }
 
-    try
-    {
-      collection = (Collection) MyNarrow.narrow(partyClassificationHome.findByPartyTypeId(partyTypeId), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection) MyNarrow.narrow(getPartyClassificationHome().findByPartyTypeId(partyTypeId), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
 
     return collection;
   }
 
-  
-  /**
-   *  Description of the Method
-   *
-
+  /** Removes/deletes the specified  PartyClassification
    *@param  partyClassificationTypeId                  Field of the PARTY_CLASSIFICATION_TYPE_ID column.
    */
   public static void removeByPartyClassificationTypeId(String partyClassificationTypeId)
   {
-    if(partyClassificationTypeId == null)
-    {
-      return;
-    }
+    if(partyClassificationTypeId == null) return;
     Iterator iterator = findByPartyClassificationTypeIdIterator(partyClassificationTypeId);
 
     while(iterator.hasNext())
@@ -535,81 +324,41 @@ public class PartyClassificationHelper
       try
       {
         PartyClassification partyClassification = (PartyClassification) iterator.next();
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-        {
-          System.out.println("Removing partyClassification with partyClassificationTypeId:" + partyClassificationTypeId);
-        }
+        Debug.logInfo("Removing partyClassification with partyClassificationTypeId:" + partyClassificationTypeId);
         partyClassification.remove();
       }
-      catch(Exception e)
-      {
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-        {
-          e.printStackTrace();
-        }
-      }
+      catch(Exception e) { Debug.logError(e); }
     }
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  partyClassificationTypeId                  Field of the PARTY_CLASSIFICATION_TYPE_ID column.
    *@return      Description of the Returned Value
    */
   public static Iterator findByPartyClassificationTypeIdIterator(String partyClassificationTypeId)
   {
     Collection collection = findByPartyClassificationTypeId(partyClassificationTypeId);
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) { return collection.iterator(); }
+    else { return null; }
   }
 
-  /**
-   *  Finds PartyClassification records by the following fieldters:
-   *
-
+  /** Finds PartyClassification records by the following parameters:
    *@param  partyClassificationTypeId                  Field of the PARTY_CLASSIFICATION_TYPE_ID column.
    *@return      Description of the Returned Value
    */
   public static Collection findByPartyClassificationTypeId(String partyClassificationTypeId)
   {
-    init();
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("findByPartyClassificationTypeId: partyClassificationTypeId:" + partyClassificationTypeId);
-    }
+    Debug.logInfo("findByPartyClassificationTypeId: partyClassificationTypeId:" + partyClassificationTypeId);
 
     Collection collection = null;
-    if(partyClassificationTypeId == null)
-    {
-      return null;
-    }
+    if(partyClassificationTypeId == null) { return null; }
 
-    try
-    {
-      collection = (Collection) MyNarrow.narrow(partyClassificationHome.findByPartyClassificationTypeId(partyClassificationTypeId), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection) MyNarrow.narrow(getPartyClassificationHome().findByPartyClassificationTypeId(partyClassificationTypeId), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
 
     return collection;
   }
-
 
 
 }

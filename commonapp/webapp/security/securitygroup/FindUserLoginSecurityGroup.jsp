@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 17 02:16:54 MDT 2001
+ *@created    Wed Jul 18 08:43:50 MDT 2001
  *@version    1.0
  */
 %>
@@ -85,8 +85,8 @@
   String userLoginSecurityGroupArrayName = (String)session.getAttribute("CACHE_SEARCH_RESULTS_NAME");
   if(userLoginSecurityGroupArray == null || userLoginSecurityGroupArrayName == null || curFindString.compareTo(userLoginSecurityGroupArrayName) != 0 || viewIndex == 0)
   {
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("-=-=-=-=- Current Array not found in session, getting new one...");
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("-=-=-=-=- curFindString:" + curFindString + " userLoginSecurityGroupArrayName:" + userLoginSecurityGroupArrayName);
+    Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
+    Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " userLoginSecurityGroupArrayName:" + userLoginSecurityGroupArrayName);
 
     if(searchType.compareTo("all") == 0) userLoginSecurityGroupCollection = UserLoginSecurityGroupHelper.findAll();
 
@@ -114,7 +114,7 @@
   int arraySize = 0;
   if(userLoginSecurityGroupArray!=null) arraySize = userLoginSecurityGroupArray.length;
   if(arraySize<highIndex) highIndex=arraySize;
-  if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
+  //Debug.logInfo("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
 %>
 <h3 style=margin:0;>Find UserLoginSecurityGroups</h3>
 Note: you may use the '%' character as a wildcard, to replace any other letters.

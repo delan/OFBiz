@@ -33,58 +33,51 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 17 02:08:22 MDT 2001
+ *@created    Wed Jul 18 12:02:43 MDT 2001
  *@version    1.0
  */
 public class PartyHelper
 {
 
-  /**
-   *  A static variable to cache the Home object for the Party EJB
-   */
-  public static PartyHome partyHome = null;
+  /** A static variable to cache the Home object for the Party EJB */
+  private static PartyHome partyHome = null;
 
-  /**
-   *  Initializes the partyHome, from a JNDI lookup, with a cached result,
-   *  checking for null each time.
+  /** Initializes the partyHome, from a JNDI lookup, with a cached result, checking for null each time. 
+   *@return The PartyHome instance for the default EJB server
    */
-  public static void init()
+  public static PartyHome getPartyHome()
   {
-    if(partyHome == null)
+    if(partyHome == null) //don't want to block here
     {
-      JNDIContext myJNDIContext = new JNDIContext();
-      InitialContext initialContext = myJNDIContext.getInitialContext();
-      try
-      {
-        Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.party.party.PartyHome");
-        partyHome = (PartyHome)MyNarrow.narrow(homeObject, PartyHome.class);
-      }
-      catch(Exception e1)
-      {
-        e1.printStackTrace();
-      }
-
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-      {
-        System.out.println("party home obtained " + partyHome);
+      synchronized(PartyHelper.class) 
+      { 
+        //must check if null again as one of the blocked threads can still enter 
+        if(partyHome == null) //now it's safe
+        {
+          JNDIContext myJNDIContext = new JNDIContext();
+          InitialContext initialContext = myJNDIContext.getInitialContext();
+          try
+          {
+            Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.party.party.PartyHome");
+            partyHome = (PartyHome)MyNarrow.narrow(homeObject, PartyHome.class);
+          }
+          catch(Exception e1) { Debug.logError(e1); }
+          Debug.logInfo("party home obtained " + partyHome);
+        }
       }
     }
+    return partyHome;
   }
 
 
 
 
-  /**
-   *  Description of the Method
-   *
+  /** Remove the Party corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
    */
   public static void removeByPrimaryKey(java.lang.String primaryKey)
   {
-    if(primaryKey == null)
-    {
-      return;
-    }
+    if(primaryKey == null) return;
     Party party = findByPrimaryKey(primaryKey);
     try
     {
@@ -93,179 +86,97 @@ public class PartyHelper
         party.remove();
       }
     }
-    catch(Exception e)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.warning", "true"))
-      {
-        e.printStackTrace();
-      }
-    }
-
+    catch(Exception e) { Debug.logWarning(e); }
 
   }
 
 
-
-  /**
-   *  Description of the Method
-   *
+  /** Find a Party by its Primary Key
    *@param  primaryKey  The primary key to find by.
-   *@return             The Party of primaryKey
+   *@return             The Party corresponding to the primaryKey
    */
   public static Party findByPrimaryKey(java.lang.String primaryKey)
   {
     Party party = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("PartyHelper.findByPrimaryKey: Field is:" + primaryKey);
-    }
+    Debug.logInfo("PartyHelper.findByPrimaryKey: Field is:" + primaryKey);
 
-    if(primaryKey == null)
-    {
-      return null;
-    }
+    if(primaryKey == null) { return null; }
 
-    init();
 
     try
     {
-      party = (Party)MyNarrow.narrow(partyHome.findByPrimaryKey(primaryKey), Party.class);
+      party = (Party)MyNarrow.narrow(getPartyHome().findByPrimaryKey(primaryKey), Party.class);
       if(party != null)
       {
         party = party.getValueObject();
-
+      
       }
     }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
     return party;
   }
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Returned Value
+  /** Finds all Party entities, returning an Iterator
+   *@return    Iterator containing all Party entities
    */
   public static Iterator findAllIterator()
   {
     Collection collection = findAll();
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) return collection.iterator();
+    else return null;
   }
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Returned Value
+  /** Finds all Party entities
+   *@return    Collection containing all Party entities
    */
   public static Collection findAll()
   {
     Collection collection = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("PartyHelper.findAll");
-    }
-    init();
+    Debug.logInfo("PartyHelper.findAll");
 
-    try
-    {
-      collection = (Collection)MyNarrow.narrow(partyHome.findAll(), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection)MyNarrow.narrow(getPartyHome().findAll(), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
     return collection;
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Creates a Party
    *@param  partyId                  Field of the PARTY_ID column.
    *@return                Description of the Returned Value
    */
   public static Party create(String partyId)
   {
     Party party = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("PartyHelper.create: partyId: " + partyId);
-    }
-    if(partyId == null)
-    {
-      return null;
-    }
-    init();
+    Debug.logInfo("PartyHelper.create: partyId: " + partyId);
+    if(partyId == null) { return null; }
 
-    try
-    {
-      party = (Party)MyNarrow.narrow(partyHome.create(partyId), Party.class);
-    }
+    try { party = (Party)MyNarrow.narrow(getPartyHome().create(partyId), Party.class); }
     catch(CreateException ce)
     {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        System.out.println("Could not create party with partyId: " + partyId);
-        ce.printStackTrace();
-      }
+      Debug.logError("Could not create party with partyId: " + partyId);
+      Debug.logError(ce);
       party = null;
     }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    catch(Exception fe) { Debug.logError(fe); }
     return party;
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Updates the corresponding Party
    *@param  partyId                  Field of the PARTY_ID column.
    *@return                Description of the Returned Value
    */
   public static Party update(String partyId) throws java.rmi.RemoteException
   {
-    if(partyId == null)
-    {
-      return null;
-    }
+    if(partyId == null) { return null; }
     Party party = findByPrimaryKey(partyId);
     //Do not pass the value object to set on creation, we only want to populate it not attach it to the passed object
     Party partyValue = new PartyValue();
 
 
-  
-
     party.setValueObject(partyValue);
     return party;
   }
-
-
 
 
 }

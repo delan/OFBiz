@@ -119,7 +119,7 @@ public class Security
     UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN");
     if(userLogin == null) return false;
 
-    //System.out.println("hasEntityPermission: entity=" + entity + ", action=" + action);
+    //Debug.logInfo("hasEntityPermission: entity=" + entity + ", action=" + action);
     Iterator iterator = findUserLoginSecurityGroupByUserLoginId(userLogin.getUserLoginId());
     UserLoginSecurityGroup userLoginSecurityGroup = null;
 
@@ -127,7 +127,7 @@ public class Security
     {
       userLoginSecurityGroup = (UserLoginSecurityGroup)iterator.next();
       
-      //if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("hasEntityPermission: userLoginSecurityGroup=" + userLoginSecurityGroup.toString());
+      //Debug.logInfo("hasEntityPermission: userLoginSecurityGroup=" + userLoginSecurityGroup.toString());
 
       //always try _ADMIN first so that it will cache first, keeping the cache smaller
       if(securityGroupPermissionExists(userLoginSecurityGroup.getGroupId(), entity + "_ADMIN")) return true;

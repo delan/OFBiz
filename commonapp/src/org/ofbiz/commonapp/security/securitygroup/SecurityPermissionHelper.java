@@ -33,58 +33,51 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 17 02:08:33 MDT 2001
+ *@created    Wed Jul 18 12:02:52 MDT 2001
  *@version    1.0
  */
 public class SecurityPermissionHelper
 {
 
-  /**
-   *  A static variable to cache the Home object for the SecurityPermission EJB
-   */
-  public static SecurityPermissionHome securityPermissionHome = null;
+  /** A static variable to cache the Home object for the SecurityPermission EJB */
+  private static SecurityPermissionHome securityPermissionHome = null;
 
-  /**
-   *  Initializes the securityPermissionHome, from a JNDI lookup, with a cached result,
-   *  checking for null each time.
+  /** Initializes the securityPermissionHome, from a JNDI lookup, with a cached result, checking for null each time. 
+   *@return The SecurityPermissionHome instance for the default EJB server
    */
-  public static void init()
+  public static SecurityPermissionHome getSecurityPermissionHome()
   {
-    if(securityPermissionHome == null)
+    if(securityPermissionHome == null) //don't want to block here
     {
-      JNDIContext myJNDIContext = new JNDIContext();
-      InitialContext initialContext = myJNDIContext.getInitialContext();
-      try
-      {
-        Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.security.securitygroup.SecurityPermissionHome");
-        securityPermissionHome = (SecurityPermissionHome)MyNarrow.narrow(homeObject, SecurityPermissionHome.class);
-      }
-      catch(Exception e1)
-      {
-        e1.printStackTrace();
-      }
-
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-      {
-        System.out.println("securityPermission home obtained " + securityPermissionHome);
+      synchronized(SecurityPermissionHelper.class) 
+      { 
+        //must check if null again as one of the blocked threads can still enter 
+        if(securityPermissionHome == null) //now it's safe
+        {
+          JNDIContext myJNDIContext = new JNDIContext();
+          InitialContext initialContext = myJNDIContext.getInitialContext();
+          try
+          {
+            Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.security.securitygroup.SecurityPermissionHome");
+            securityPermissionHome = (SecurityPermissionHome)MyNarrow.narrow(homeObject, SecurityPermissionHome.class);
+          }
+          catch(Exception e1) { Debug.logError(e1); }
+          Debug.logInfo("securityPermission home obtained " + securityPermissionHome);
+        }
       }
     }
+    return securityPermissionHome;
   }
 
 
 
 
-  /**
-   *  Description of the Method
-   *
+  /** Remove the SecurityPermission corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
    */
   public static void removeByPrimaryKey(java.lang.String primaryKey)
   {
-    if(primaryKey == null)
-    {
-      return;
-    }
+    if(primaryKey == null) return;
     SecurityPermission securityPermission = findByPrimaryKey(primaryKey);
     try
     {
@@ -93,115 +86,62 @@ public class SecurityPermissionHelper
         securityPermission.remove();
       }
     }
-    catch(Exception e)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.warning", "true"))
-      {
-        e.printStackTrace();
-      }
-    }
-
+    catch(Exception e) { Debug.logWarning(e); }
 
   }
 
 
-
-  /**
-   *  Description of the Method
-   *
+  /** Find a SecurityPermission by its Primary Key
    *@param  primaryKey  The primary key to find by.
-   *@return             The SecurityPermission of primaryKey
+   *@return             The SecurityPermission corresponding to the primaryKey
    */
   public static SecurityPermission findByPrimaryKey(java.lang.String primaryKey)
   {
     SecurityPermission securityPermission = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("SecurityPermissionHelper.findByPrimaryKey: Field is:" + primaryKey);
-    }
+    Debug.logInfo("SecurityPermissionHelper.findByPrimaryKey: Field is:" + primaryKey);
 
-    if(primaryKey == null)
-    {
-      return null;
-    }
+    if(primaryKey == null) { return null; }
 
-    init();
 
     try
     {
-      securityPermission = (SecurityPermission)MyNarrow.narrow(securityPermissionHome.findByPrimaryKey(primaryKey), SecurityPermission.class);
+      securityPermission = (SecurityPermission)MyNarrow.narrow(getSecurityPermissionHome().findByPrimaryKey(primaryKey), SecurityPermission.class);
       if(securityPermission != null)
       {
         securityPermission = securityPermission.getValueObject();
-
+      
       }
     }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
     return securityPermission;
   }
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Returned Value
+  /** Finds all SecurityPermission entities, returning an Iterator
+   *@return    Iterator containing all SecurityPermission entities
    */
   public static Iterator findAllIterator()
   {
     Collection collection = findAll();
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) return collection.iterator();
+    else return null;
   }
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Returned Value
+  /** Finds all SecurityPermission entities
+   *@return    Collection containing all SecurityPermission entities
    */
   public static Collection findAll()
   {
     Collection collection = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("SecurityPermissionHelper.findAll");
-    }
-    init();
+    Debug.logInfo("SecurityPermissionHelper.findAll");
 
-    try
-    {
-      collection = (Collection)MyNarrow.narrow(securityPermissionHome.findAll(), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection)MyNarrow.narrow(getSecurityPermissionHome().findAll(), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
     return collection;
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Creates a SecurityPermission
    *@param  permissionId                  Field of the PERMISSION_ID column.
    *@param  description                  Field of the DESCRIPTION column.
    *@return                Description of the Returned Value
@@ -209,83 +149,44 @@ public class SecurityPermissionHelper
   public static SecurityPermission create(String permissionId, String description)
   {
     SecurityPermission securityPermission = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("SecurityPermissionHelper.create: permissionId: " + permissionId);
-    }
-    if(permissionId == null)
-    {
-      return null;
-    }
-    init();
+    Debug.logInfo("SecurityPermissionHelper.create: permissionId: " + permissionId);
+    if(permissionId == null) { return null; }
 
-    try
-    {
-      securityPermission = (SecurityPermission)MyNarrow.narrow(securityPermissionHome.create(permissionId, description), SecurityPermission.class);
-    }
+    try { securityPermission = (SecurityPermission)MyNarrow.narrow(getSecurityPermissionHome().create(permissionId, description), SecurityPermission.class); }
     catch(CreateException ce)
     {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        System.out.println("Could not create securityPermission with permissionId: " + permissionId);
-        ce.printStackTrace();
-      }
+      Debug.logError("Could not create securityPermission with permissionId: " + permissionId);
+      Debug.logError(ce);
       securityPermission = null;
     }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    catch(Exception fe) { Debug.logError(fe); }
     return securityPermission;
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Updates the corresponding SecurityPermission
    *@param  permissionId                  Field of the PERMISSION_ID column.
    *@param  description                  Field of the DESCRIPTION column.
    *@return                Description of the Returned Value
    */
   public static SecurityPermission update(String permissionId, String description) throws java.rmi.RemoteException
   {
-    if(permissionId == null)
-    {
-      return null;
-    }
+    if(permissionId == null) { return null; }
     SecurityPermission securityPermission = findByPrimaryKey(permissionId);
     //Do not pass the value object to set on creation, we only want to populate it not attach it to the passed object
     SecurityPermission securityPermissionValue = new SecurityPermissionValue();
 
-
-  
-  
-    if(description != null)
-    {
-      securityPermissionValue.setDescription(description);
-    }
+    if(description != null) { securityPermissionValue.setDescription(description); }
 
     securityPermission.setValueObject(securityPermissionValue);
     return securityPermission;
   }
 
-
-  
-  /**
-   *  Description of the Method
-   *
-
+  /** Removes/deletes the specified  SecurityPermission
    *@param  permissionId                  Field of the PERMISSION_ID column.
    */
   public static void removeByPermissionId(String permissionId)
   {
-    if(permissionId == null)
-    {
-      return;
-    }
+    if(permissionId == null) return;
     Iterator iterator = findByPermissionIdIterator(permissionId);
 
     while(iterator.hasNext())
@@ -293,81 +194,41 @@ public class SecurityPermissionHelper
       try
       {
         SecurityPermission securityPermission = (SecurityPermission) iterator.next();
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-        {
-          System.out.println("Removing securityPermission with permissionId:" + permissionId);
-        }
+        Debug.logInfo("Removing securityPermission with permissionId:" + permissionId);
         securityPermission.remove();
       }
-      catch(Exception e)
-      {
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-        {
-          e.printStackTrace();
-        }
-      }
+      catch(Exception e) { Debug.logError(e); }
     }
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  permissionId                  Field of the PERMISSION_ID column.
    *@return      Description of the Returned Value
    */
   public static Iterator findByPermissionIdIterator(String permissionId)
   {
     Collection collection = findByPermissionId(permissionId);
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) { return collection.iterator(); }
+    else { return null; }
   }
 
-  /**
-   *  Finds SecurityPermission records by the following fieldters:
-   *
-
+  /** Finds SecurityPermission records by the following parameters:
    *@param  permissionId                  Field of the PERMISSION_ID column.
    *@return      Description of the Returned Value
    */
   public static Collection findByPermissionId(String permissionId)
   {
-    init();
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("findByPermissionId: permissionId:" + permissionId);
-    }
+    Debug.logInfo("findByPermissionId: permissionId:" + permissionId);
 
     Collection collection = null;
-    if(permissionId == null)
-    {
-      return null;
-    }
+    if(permissionId == null) { return null; }
 
-    try
-    {
-      collection = (Collection) MyNarrow.narrow(securityPermissionHome.findByPermissionId(permissionId), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection) MyNarrow.narrow(getSecurityPermissionHome().findByPermissionId(permissionId), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
 
     return collection;
   }
-
 
 
 }

@@ -70,14 +70,11 @@ public class WebEventSecurity
       request.getSession().setAttribute(SiteDefs.PREVIOUS_REQUEST, request.getPathInfo());
       if(queryString != null) request.getSession().setAttribute(SiteDefs.PREVIOUS_PARAMS, queryString);
 
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-      {
-        System.out.println("WebEventSecurity.checkLogin: queryString=" + queryString);
-        System.out.println("WebEventSecurity.checkLogin: PathInfo=" + request.getPathInfo());
-        //System.out.println("WebEventSecurity.check: requestURI=" + requestURI);
-        //System.out.println("WebEventSecurity.check: servletPath=" + servletPath);
-        //System.out.println("WebEventSecurity.check: curPageURL=" + curPageURL);
-      }
+      Debug.logInfo("WebEventSecurity.checkLogin: queryString=" + queryString);
+      Debug.logInfo("WebEventSecurity.checkLogin: PathInfo=" + request.getPathInfo());
+      //Debug.logInfo("WebEventSecurity.check: requestURI=" + requestURI);
+      //Debug.logInfo("WebEventSecurity.check: servletPath=" + servletPath);
+      //Debug.logInfo("WebEventSecurity.check: curPageURL=" + curPageURL);
 
       return "error";
     }

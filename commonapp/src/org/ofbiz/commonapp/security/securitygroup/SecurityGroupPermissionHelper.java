@@ -33,50 +33,45 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 17 02:08:34 MDT 2001
+ *@created    Wed Jul 18 12:02:53 MDT 2001
  *@version    1.0
  */
 public class SecurityGroupPermissionHelper
 {
 
-  /**
-   *  A static variable to cache the Home object for the SecurityGroupPermission EJB
-   */
-  public static SecurityGroupPermissionHome securityGroupPermissionHome = null;
+  /** A static variable to cache the Home object for the SecurityGroupPermission EJB */
+  private static SecurityGroupPermissionHome securityGroupPermissionHome = null;
 
-  /**
-   *  Initializes the securityGroupPermissionHome, from a JNDI lookup, with a cached result,
-   *  checking for null each time.
+  /** Initializes the securityGroupPermissionHome, from a JNDI lookup, with a cached result, checking for null each time. 
+   *@return The SecurityGroupPermissionHome instance for the default EJB server
    */
-  public static void init()
+  public static SecurityGroupPermissionHome getSecurityGroupPermissionHome()
   {
-    if(securityGroupPermissionHome == null)
+    if(securityGroupPermissionHome == null) //don't want to block here
     {
-      JNDIContext myJNDIContext = new JNDIContext();
-      InitialContext initialContext = myJNDIContext.getInitialContext();
-      try
-      {
-        Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.security.securitygroup.SecurityGroupPermissionHome");
-        securityGroupPermissionHome = (SecurityGroupPermissionHome)MyNarrow.narrow(homeObject, SecurityGroupPermissionHome.class);
-      }
-      catch(Exception e1)
-      {
-        e1.printStackTrace();
-      }
-
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-      {
-        System.out.println("securityGroupPermission home obtained " + securityGroupPermissionHome);
+      synchronized(SecurityGroupPermissionHelper.class) 
+      { 
+        //must check if null again as one of the blocked threads can still enter 
+        if(securityGroupPermissionHome == null) //now it's safe
+        {
+          JNDIContext myJNDIContext = new JNDIContext();
+          InitialContext initialContext = myJNDIContext.getInitialContext();
+          try
+          {
+            Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.security.securitygroup.SecurityGroupPermissionHome");
+            securityGroupPermissionHome = (SecurityGroupPermissionHome)MyNarrow.narrow(homeObject, SecurityGroupPermissionHome.class);
+          }
+          catch(Exception e1) { Debug.logError(e1); }
+          Debug.logInfo("securityGroupPermission home obtained " + securityGroupPermissionHome);
+        }
       }
     }
+    return securityGroupPermissionHome;
   }
 
 
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Remove the SecurityGroupPermission corresponding to the primaryKey specified by fields
    *@param  groupId                  Field of the GROUP_ID column.
    *@param  permissionId                  Field of the PERMISSION_ID column.
    */
@@ -90,18 +85,12 @@ public class SecurityGroupPermissionHelper
     removeByPrimaryKey(primaryKey);
   }
 
-
-  /**
-   *  Description of the Method
-   *
+  /** Remove the SecurityGroupPermission corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
    */
   public static void removeByPrimaryKey(org.ofbiz.commonapp.security.securitygroup.SecurityGroupPermissionPK primaryKey)
   {
-    if(primaryKey == null)
-    {
-      return;
-    }
+    if(primaryKey == null) return;
     SecurityGroupPermission securityGroupPermission = findByPrimaryKey(primaryKey);
     try
     {
@@ -110,133 +99,73 @@ public class SecurityGroupPermissionHelper
         securityGroupPermission.remove();
       }
     }
-    catch(Exception e)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.warning", "true"))
-      {
-        e.printStackTrace();
-      }
-    }
-
+    catch(Exception e) { Debug.logWarning(e); }
 
   }
 
-
-  /**
-   *  Description of the Method
-   *
-
+  /** Find a SecurityGroupPermission by its Primary Key, specified by individual fields
    *@param  groupId                  Field of the GROUP_ID column.
    *@param  permissionId                  Field of the PERMISSION_ID column.
-   *@return       Description of the Returned Value
+   *@return       The SecurityGroupPermission corresponding to the primaryKey
    */
   public static SecurityGroupPermission findByPrimaryKey(String groupId, String permissionId)
   {
-    if(groupId == null || permissionId == null)
-    {
-      return null;
-    }
+    if(groupId == null || permissionId == null) return null;
     SecurityGroupPermissionPK primaryKey = new SecurityGroupPermissionPK(groupId, permissionId);
     return findByPrimaryKey(primaryKey);
   }
 
-
-  /**
-   *  Description of the Method
-   *
+  /** Find a SecurityGroupPermission by its Primary Key
    *@param  primaryKey  The primary key to find by.
-   *@return             The SecurityGroupPermission of primaryKey
+   *@return             The SecurityGroupPermission corresponding to the primaryKey
    */
   public static SecurityGroupPermission findByPrimaryKey(org.ofbiz.commonapp.security.securitygroup.SecurityGroupPermissionPK primaryKey)
   {
     SecurityGroupPermission securityGroupPermission = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("SecurityGroupPermissionHelper.findByPrimaryKey: Field is:" + primaryKey);
-    }
+    Debug.logInfo("SecurityGroupPermissionHelper.findByPrimaryKey: Field is:" + primaryKey);
 
-    if(primaryKey == null)
-    {
-      return null;
-    }
+    if(primaryKey == null) { return null; }
 
-    init();
 
     try
     {
-      securityGroupPermission = (SecurityGroupPermission)MyNarrow.narrow(securityGroupPermissionHome.findByPrimaryKey(primaryKey), SecurityGroupPermission.class);
+      securityGroupPermission = (SecurityGroupPermission)MyNarrow.narrow(getSecurityGroupPermissionHome().findByPrimaryKey(primaryKey), SecurityGroupPermission.class);
       if(securityGroupPermission != null)
       {
         securityGroupPermission = securityGroupPermission.getValueObject();
-
+      
       }
     }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
     return securityGroupPermission;
   }
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Returned Value
+  /** Finds all SecurityGroupPermission entities, returning an Iterator
+   *@return    Iterator containing all SecurityGroupPermission entities
    */
   public static Iterator findAllIterator()
   {
     Collection collection = findAll();
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) return collection.iterator();
+    else return null;
   }
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Returned Value
+  /** Finds all SecurityGroupPermission entities
+   *@return    Collection containing all SecurityGroupPermission entities
    */
   public static Collection findAll()
   {
     Collection collection = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("SecurityGroupPermissionHelper.findAll");
-    }
-    init();
+    Debug.logInfo("SecurityGroupPermissionHelper.findAll");
 
-    try
-    {
-      collection = (Collection)MyNarrow.narrow(securityGroupPermissionHome.findAll(), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection)MyNarrow.narrow(getSecurityGroupPermissionHome().findAll(), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
     return collection;
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Creates a SecurityGroupPermission
    *@param  groupId                  Field of the GROUP_ID column.
    *@param  permissionId                  Field of the PERMISSION_ID column.
    *@return                Description of the Returned Value
@@ -244,79 +173,43 @@ public class SecurityGroupPermissionHelper
   public static SecurityGroupPermission create(String groupId, String permissionId)
   {
     SecurityGroupPermission securityGroupPermission = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("SecurityGroupPermissionHelper.create: groupId, permissionId: " + groupId + ", " + permissionId);
-    }
-    if(groupId == null || permissionId == null)
-    {
-      return null;
-    }
-    init();
+    Debug.logInfo("SecurityGroupPermissionHelper.create: groupId, permissionId: " + groupId + ", " + permissionId);
+    if(groupId == null || permissionId == null) { return null; }
 
-    try
-    {
-      securityGroupPermission = (SecurityGroupPermission)MyNarrow.narrow(securityGroupPermissionHome.create(groupId, permissionId), SecurityGroupPermission.class);
-    }
+    try { securityGroupPermission = (SecurityGroupPermission)MyNarrow.narrow(getSecurityGroupPermissionHome().create(groupId, permissionId), SecurityGroupPermission.class); }
     catch(CreateException ce)
     {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        System.out.println("Could not create securityGroupPermission with groupId, permissionId: " + groupId + ", " + permissionId);
-        ce.printStackTrace();
-      }
+      Debug.logError("Could not create securityGroupPermission with groupId, permissionId: " + groupId + ", " + permissionId);
+      Debug.logError(ce);
       securityGroupPermission = null;
     }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    catch(Exception fe) { Debug.logError(fe); }
     return securityGroupPermission;
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Updates the corresponding SecurityGroupPermission
    *@param  groupId                  Field of the GROUP_ID column.
    *@param  permissionId                  Field of the PERMISSION_ID column.
    *@return                Description of the Returned Value
    */
   public static SecurityGroupPermission update(String groupId, String permissionId) throws java.rmi.RemoteException
   {
-    if(groupId == null || permissionId == null)
-    {
-      return null;
-    }
+    if(groupId == null || permissionId == null) { return null; }
     SecurityGroupPermission securityGroupPermission = findByPrimaryKey(groupId, permissionId);
     //Do not pass the value object to set on creation, we only want to populate it not attach it to the passed object
     SecurityGroupPermission securityGroupPermissionValue = new SecurityGroupPermissionValue();
 
 
-  
-  
-
     securityGroupPermission.setValueObject(securityGroupPermissionValue);
     return securityGroupPermission;
   }
 
-
-  
-  /**
-   *  Description of the Method
-   *
-
+  /** Removes/deletes the specified  SecurityGroupPermission
    *@param  groupId                  Field of the GROUP_ID column.
    */
   public static void removeByGroupId(String groupId)
   {
-    if(groupId == null)
-    {
-      return;
-    }
+    if(groupId == null) return;
     Iterator iterator = findByGroupIdIterator(groupId);
 
     while(iterator.hasNext())
@@ -324,94 +217,48 @@ public class SecurityGroupPermissionHelper
       try
       {
         SecurityGroupPermission securityGroupPermission = (SecurityGroupPermission) iterator.next();
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-        {
-          System.out.println("Removing securityGroupPermission with groupId:" + groupId);
-        }
+        Debug.logInfo("Removing securityGroupPermission with groupId:" + groupId);
         securityGroupPermission.remove();
       }
-      catch(Exception e)
-      {
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-        {
-          e.printStackTrace();
-        }
-      }
+      catch(Exception e) { Debug.logError(e); }
     }
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  groupId                  Field of the GROUP_ID column.
    *@return      Description of the Returned Value
    */
   public static Iterator findByGroupIdIterator(String groupId)
   {
     Collection collection = findByGroupId(groupId);
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) { return collection.iterator(); }
+    else { return null; }
   }
 
-  /**
-   *  Finds SecurityGroupPermission records by the following fieldters:
-   *
-
+  /** Finds SecurityGroupPermission records by the following parameters:
    *@param  groupId                  Field of the GROUP_ID column.
    *@return      Description of the Returned Value
    */
   public static Collection findByGroupId(String groupId)
   {
-    init();
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("findByGroupId: groupId:" + groupId);
-    }
+    Debug.logInfo("findByGroupId: groupId:" + groupId);
 
     Collection collection = null;
-    if(groupId == null)
-    {
-      return null;
-    }
+    if(groupId == null) { return null; }
 
-    try
-    {
-      collection = (Collection) MyNarrow.narrow(securityGroupPermissionHome.findByGroupId(groupId), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection) MyNarrow.narrow(getSecurityGroupPermissionHome().findByGroupId(groupId), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
 
     return collection;
   }
 
-  
-  /**
-   *  Description of the Method
-   *
-
+  /** Removes/deletes the specified  SecurityGroupPermission
    *@param  permissionId                  Field of the PERMISSION_ID column.
    */
   public static void removeByPermissionId(String permissionId)
   {
-    if(permissionId == null)
-    {
-      return;
-    }
+    if(permissionId == null) return;
     Iterator iterator = findByPermissionIdIterator(permissionId);
 
     while(iterator.hasNext())
@@ -419,81 +266,41 @@ public class SecurityGroupPermissionHelper
       try
       {
         SecurityGroupPermission securityGroupPermission = (SecurityGroupPermission) iterator.next();
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-        {
-          System.out.println("Removing securityGroupPermission with permissionId:" + permissionId);
-        }
+        Debug.logInfo("Removing securityGroupPermission with permissionId:" + permissionId);
         securityGroupPermission.remove();
       }
-      catch(Exception e)
-      {
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-        {
-          e.printStackTrace();
-        }
-      }
+      catch(Exception e) { Debug.logError(e); }
     }
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  permissionId                  Field of the PERMISSION_ID column.
    *@return      Description of the Returned Value
    */
   public static Iterator findByPermissionIdIterator(String permissionId)
   {
     Collection collection = findByPermissionId(permissionId);
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) { return collection.iterator(); }
+    else { return null; }
   }
 
-  /**
-   *  Finds SecurityGroupPermission records by the following fieldters:
-   *
-
+  /** Finds SecurityGroupPermission records by the following parameters:
    *@param  permissionId                  Field of the PERMISSION_ID column.
    *@return      Description of the Returned Value
    */
   public static Collection findByPermissionId(String permissionId)
   {
-    init();
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("findByPermissionId: permissionId:" + permissionId);
-    }
+    Debug.logInfo("findByPermissionId: permissionId:" + permissionId);
 
     Collection collection = null;
-    if(permissionId == null)
-    {
-      return null;
-    }
+    if(permissionId == null) { return null; }
 
-    try
-    {
-      collection = (Collection) MyNarrow.narrow(securityGroupPermissionHome.findByPermissionId(permissionId), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection) MyNarrow.narrow(getSecurityGroupPermissionHome().findByPermissionId(permissionId), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
 
     return collection;
   }
-
 
 
 }

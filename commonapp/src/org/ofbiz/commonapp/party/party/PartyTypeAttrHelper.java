@@ -33,50 +33,45 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 17 02:08:30 MDT 2001
+ *@created    Wed Jul 18 12:02:48 MDT 2001
  *@version    1.0
  */
 public class PartyTypeAttrHelper
 {
 
-  /**
-   *  A static variable to cache the Home object for the PartyTypeAttr EJB
-   */
-  public static PartyTypeAttrHome partyTypeAttrHome = null;
+  /** A static variable to cache the Home object for the PartyTypeAttr EJB */
+  private static PartyTypeAttrHome partyTypeAttrHome = null;
 
-  /**
-   *  Initializes the partyTypeAttrHome, from a JNDI lookup, with a cached result,
-   *  checking for null each time.
+  /** Initializes the partyTypeAttrHome, from a JNDI lookup, with a cached result, checking for null each time. 
+   *@return The PartyTypeAttrHome instance for the default EJB server
    */
-  public static void init()
+  public static PartyTypeAttrHome getPartyTypeAttrHome()
   {
-    if(partyTypeAttrHome == null)
+    if(partyTypeAttrHome == null) //don't want to block here
     {
-      JNDIContext myJNDIContext = new JNDIContext();
-      InitialContext initialContext = myJNDIContext.getInitialContext();
-      try
-      {
-        Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.party.party.PartyTypeAttrHome");
-        partyTypeAttrHome = (PartyTypeAttrHome)MyNarrow.narrow(homeObject, PartyTypeAttrHome.class);
-      }
-      catch(Exception e1)
-      {
-        e1.printStackTrace();
-      }
-
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-      {
-        System.out.println("partyTypeAttr home obtained " + partyTypeAttrHome);
+      synchronized(PartyTypeAttrHelper.class) 
+      { 
+        //must check if null again as one of the blocked threads can still enter 
+        if(partyTypeAttrHome == null) //now it's safe
+        {
+          JNDIContext myJNDIContext = new JNDIContext();
+          InitialContext initialContext = myJNDIContext.getInitialContext();
+          try
+          {
+            Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.party.party.PartyTypeAttrHome");
+            partyTypeAttrHome = (PartyTypeAttrHome)MyNarrow.narrow(homeObject, PartyTypeAttrHome.class);
+          }
+          catch(Exception e1) { Debug.logError(e1); }
+          Debug.logInfo("partyTypeAttr home obtained " + partyTypeAttrHome);
+        }
       }
     }
+    return partyTypeAttrHome;
   }
 
 
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Remove the PartyTypeAttr corresponding to the primaryKey specified by fields
    *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
    *@param  name                  Field of the NAME column.
    */
@@ -90,18 +85,12 @@ public class PartyTypeAttrHelper
     removeByPrimaryKey(primaryKey);
   }
 
-
-  /**
-   *  Description of the Method
-   *
+  /** Remove the PartyTypeAttr corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
    */
   public static void removeByPrimaryKey(org.ofbiz.commonapp.party.party.PartyTypeAttrPK primaryKey)
   {
-    if(primaryKey == null)
-    {
-      return;
-    }
+    if(primaryKey == null) return;
     PartyTypeAttr partyTypeAttr = findByPrimaryKey(primaryKey);
     try
     {
@@ -110,133 +99,73 @@ public class PartyTypeAttrHelper
         partyTypeAttr.remove();
       }
     }
-    catch(Exception e)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.warning", "true"))
-      {
-        e.printStackTrace();
-      }
-    }
-
+    catch(Exception e) { Debug.logWarning(e); }
 
   }
 
-
-  /**
-   *  Description of the Method
-   *
-
+  /** Find a PartyTypeAttr by its Primary Key, specified by individual fields
    *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
    *@param  name                  Field of the NAME column.
-   *@return       Description of the Returned Value
+   *@return       The PartyTypeAttr corresponding to the primaryKey
    */
   public static PartyTypeAttr findByPrimaryKey(String partyTypeId, String name)
   {
-    if(partyTypeId == null || name == null)
-    {
-      return null;
-    }
+    if(partyTypeId == null || name == null) return null;
     PartyTypeAttrPK primaryKey = new PartyTypeAttrPK(partyTypeId, name);
     return findByPrimaryKey(primaryKey);
   }
 
-
-  /**
-   *  Description of the Method
-   *
+  /** Find a PartyTypeAttr by its Primary Key
    *@param  primaryKey  The primary key to find by.
-   *@return             The PartyTypeAttr of primaryKey
+   *@return             The PartyTypeAttr corresponding to the primaryKey
    */
   public static PartyTypeAttr findByPrimaryKey(org.ofbiz.commonapp.party.party.PartyTypeAttrPK primaryKey)
   {
     PartyTypeAttr partyTypeAttr = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("PartyTypeAttrHelper.findByPrimaryKey: Field is:" + primaryKey);
-    }
+    Debug.logInfo("PartyTypeAttrHelper.findByPrimaryKey: Field is:" + primaryKey);
 
-    if(primaryKey == null)
-    {
-      return null;
-    }
+    if(primaryKey == null) { return null; }
 
-    init();
 
     try
     {
-      partyTypeAttr = (PartyTypeAttr)MyNarrow.narrow(partyTypeAttrHome.findByPrimaryKey(primaryKey), PartyTypeAttr.class);
+      partyTypeAttr = (PartyTypeAttr)MyNarrow.narrow(getPartyTypeAttrHome().findByPrimaryKey(primaryKey), PartyTypeAttr.class);
       if(partyTypeAttr != null)
       {
         partyTypeAttr = partyTypeAttr.getValueObject();
-
+      
       }
     }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
     return partyTypeAttr;
   }
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Returned Value
+  /** Finds all PartyTypeAttr entities, returning an Iterator
+   *@return    Iterator containing all PartyTypeAttr entities
    */
   public static Iterator findAllIterator()
   {
     Collection collection = findAll();
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) return collection.iterator();
+    else return null;
   }
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Returned Value
+  /** Finds all PartyTypeAttr entities
+   *@return    Collection containing all PartyTypeAttr entities
    */
   public static Collection findAll()
   {
     Collection collection = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("PartyTypeAttrHelper.findAll");
-    }
-    init();
+    Debug.logInfo("PartyTypeAttrHelper.findAll");
 
-    try
-    {
-      collection = (Collection)MyNarrow.narrow(partyTypeAttrHome.findAll(), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection)MyNarrow.narrow(getPartyTypeAttrHome().findAll(), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
     return collection;
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Creates a PartyTypeAttr
    *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
    *@param  name                  Field of the NAME column.
    *@return                Description of the Returned Value
@@ -244,79 +173,43 @@ public class PartyTypeAttrHelper
   public static PartyTypeAttr create(String partyTypeId, String name)
   {
     PartyTypeAttr partyTypeAttr = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("PartyTypeAttrHelper.create: partyTypeId, name: " + partyTypeId + ", " + name);
-    }
-    if(partyTypeId == null || name == null)
-    {
-      return null;
-    }
-    init();
+    Debug.logInfo("PartyTypeAttrHelper.create: partyTypeId, name: " + partyTypeId + ", " + name);
+    if(partyTypeId == null || name == null) { return null; }
 
-    try
-    {
-      partyTypeAttr = (PartyTypeAttr)MyNarrow.narrow(partyTypeAttrHome.create(partyTypeId, name), PartyTypeAttr.class);
-    }
+    try { partyTypeAttr = (PartyTypeAttr)MyNarrow.narrow(getPartyTypeAttrHome().create(partyTypeId, name), PartyTypeAttr.class); }
     catch(CreateException ce)
     {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        System.out.println("Could not create partyTypeAttr with partyTypeId, name: " + partyTypeId + ", " + name);
-        ce.printStackTrace();
-      }
+      Debug.logError("Could not create partyTypeAttr with partyTypeId, name: " + partyTypeId + ", " + name);
+      Debug.logError(ce);
       partyTypeAttr = null;
     }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    catch(Exception fe) { Debug.logError(fe); }
     return partyTypeAttr;
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Updates the corresponding PartyTypeAttr
    *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
    *@param  name                  Field of the NAME column.
    *@return                Description of the Returned Value
    */
   public static PartyTypeAttr update(String partyTypeId, String name) throws java.rmi.RemoteException
   {
-    if(partyTypeId == null || name == null)
-    {
-      return null;
-    }
+    if(partyTypeId == null || name == null) { return null; }
     PartyTypeAttr partyTypeAttr = findByPrimaryKey(partyTypeId, name);
     //Do not pass the value object to set on creation, we only want to populate it not attach it to the passed object
     PartyTypeAttr partyTypeAttrValue = new PartyTypeAttrValue();
 
 
-  
-  
-
     partyTypeAttr.setValueObject(partyTypeAttrValue);
     return partyTypeAttr;
   }
 
-
-  
-  /**
-   *  Description of the Method
-   *
-
+  /** Removes/deletes the specified  PartyTypeAttr
    *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
    */
   public static void removeByPartyTypeId(String partyTypeId)
   {
-    if(partyTypeId == null)
-    {
-      return;
-    }
+    if(partyTypeId == null) return;
     Iterator iterator = findByPartyTypeIdIterator(partyTypeId);
 
     while(iterator.hasNext())
@@ -324,94 +217,48 @@ public class PartyTypeAttrHelper
       try
       {
         PartyTypeAttr partyTypeAttr = (PartyTypeAttr) iterator.next();
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-        {
-          System.out.println("Removing partyTypeAttr with partyTypeId:" + partyTypeId);
-        }
+        Debug.logInfo("Removing partyTypeAttr with partyTypeId:" + partyTypeId);
         partyTypeAttr.remove();
       }
-      catch(Exception e)
-      {
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-        {
-          e.printStackTrace();
-        }
-      }
+      catch(Exception e) { Debug.logError(e); }
     }
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
    *@return      Description of the Returned Value
    */
   public static Iterator findByPartyTypeIdIterator(String partyTypeId)
   {
     Collection collection = findByPartyTypeId(partyTypeId);
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) { return collection.iterator(); }
+    else { return null; }
   }
 
-  /**
-   *  Finds PartyTypeAttr records by the following fieldters:
-   *
-
+  /** Finds PartyTypeAttr records by the following parameters:
    *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
    *@return      Description of the Returned Value
    */
   public static Collection findByPartyTypeId(String partyTypeId)
   {
-    init();
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("findByPartyTypeId: partyTypeId:" + partyTypeId);
-    }
+    Debug.logInfo("findByPartyTypeId: partyTypeId:" + partyTypeId);
 
     Collection collection = null;
-    if(partyTypeId == null)
-    {
-      return null;
-    }
+    if(partyTypeId == null) { return null; }
 
-    try
-    {
-      collection = (Collection) MyNarrow.narrow(partyTypeAttrHome.findByPartyTypeId(partyTypeId), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection) MyNarrow.narrow(getPartyTypeAttrHome().findByPartyTypeId(partyTypeId), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
 
     return collection;
   }
 
-  
-  /**
-   *  Description of the Method
-   *
-
+  /** Removes/deletes the specified  PartyTypeAttr
    *@param  name                  Field of the NAME column.
    */
   public static void removeByName(String name)
   {
-    if(name == null)
-    {
-      return;
-    }
+    if(name == null) return;
     Iterator iterator = findByNameIterator(name);
 
     while(iterator.hasNext())
@@ -419,81 +266,41 @@ public class PartyTypeAttrHelper
       try
       {
         PartyTypeAttr partyTypeAttr = (PartyTypeAttr) iterator.next();
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-        {
-          System.out.println("Removing partyTypeAttr with name:" + name);
-        }
+        Debug.logInfo("Removing partyTypeAttr with name:" + name);
         partyTypeAttr.remove();
       }
-      catch(Exception e)
-      {
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-        {
-          e.printStackTrace();
-        }
-      }
+      catch(Exception e) { Debug.logError(e); }
     }
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  name                  Field of the NAME column.
    *@return      Description of the Returned Value
    */
   public static Iterator findByNameIterator(String name)
   {
     Collection collection = findByName(name);
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) { return collection.iterator(); }
+    else { return null; }
   }
 
-  /**
-   *  Finds PartyTypeAttr records by the following fieldters:
-   *
-
+  /** Finds PartyTypeAttr records by the following parameters:
    *@param  name                  Field of the NAME column.
    *@return      Description of the Returned Value
    */
   public static Collection findByName(String name)
   {
-    init();
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("findByName: name:" + name);
-    }
+    Debug.logInfo("findByName: name:" + name);
 
     Collection collection = null;
-    if(name == null)
-    {
-      return null;
-    }
+    if(name == null) { return null; }
 
-    try
-    {
-      collection = (Collection) MyNarrow.narrow(partyTypeAttrHome.findByName(name), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection) MyNarrow.narrow(getPartyTypeAttrHome().findByName(name), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
 
     return collection;
   }
-
 
 
 }

@@ -31,7 +31,7 @@ import java.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 17 02:08:29 MDT 2001
+ *@created    Wed Jul 18 12:02:48 MDT 2001
  *@version    1.0
  */
 public class PartyTypeAttrBean implements EntityBean

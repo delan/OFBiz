@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 17 02:16:52 MDT 2001
+ *@created    Wed Jul 18 08:43:48 MDT 2001
  *@version    1.0
  */
 %>

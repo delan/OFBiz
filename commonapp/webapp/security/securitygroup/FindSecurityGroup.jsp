@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 17 02:16:53 MDT 2001
+ *@created    Wed Jul 18 08:43:49 MDT 2001
  *@version    1.0
  */
 %>
@@ -85,8 +85,8 @@
   String securityGroupArrayName = (String)session.getAttribute("CACHE_SEARCH_RESULTS_NAME");
   if(securityGroupArray == null || securityGroupArrayName == null || curFindString.compareTo(securityGroupArrayName) != 0 || viewIndex == 0)
   {
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("-=-=-=-=- Current Array not found in session, getting new one...");
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("-=-=-=-=- curFindString:" + curFindString + " securityGroupArrayName:" + securityGroupArrayName);
+    Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
+    Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " securityGroupArrayName:" + securityGroupArrayName);
 
     if(searchType.compareTo("all") == 0) securityGroupCollection = SecurityGroupHelper.findAll();
 
@@ -110,7 +110,7 @@
   int arraySize = 0;
   if(securityGroupArray!=null) arraySize = securityGroupArray.length;
   if(arraySize<highIndex) highIndex=arraySize;
-  if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
+  //Debug.logInfo("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
 %>
 <h3 style=margin:0;>Find SecurityGroups</h3>
 Note: you may use the '%' character as a wildcard, to replace any other letters.

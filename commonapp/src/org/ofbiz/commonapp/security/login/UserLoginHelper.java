@@ -33,58 +33,51 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 17 02:08:31 MDT 2001
+ *@created    Wed Jul 18 12:02:49 MDT 2001
  *@version    1.0
  */
 public class UserLoginHelper
 {
 
-  /**
-   *  A static variable to cache the Home object for the UserLogin EJB
-   */
-  public static UserLoginHome userLoginHome = null;
+  /** A static variable to cache the Home object for the UserLogin EJB */
+  private static UserLoginHome userLoginHome = null;
 
-  /**
-   *  Initializes the userLoginHome, from a JNDI lookup, with a cached result,
-   *  checking for null each time.
+  /** Initializes the userLoginHome, from a JNDI lookup, with a cached result, checking for null each time. 
+   *@return The UserLoginHome instance for the default EJB server
    */
-  public static void init()
+  public static UserLoginHome getUserLoginHome()
   {
-    if(userLoginHome == null)
+    if(userLoginHome == null) //don't want to block here
     {
-      JNDIContext myJNDIContext = new JNDIContext();
-      InitialContext initialContext = myJNDIContext.getInitialContext();
-      try
-      {
-        Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.security.login.UserLoginHome");
-        userLoginHome = (UserLoginHome)MyNarrow.narrow(homeObject, UserLoginHome.class);
-      }
-      catch(Exception e1)
-      {
-        e1.printStackTrace();
-      }
-
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-      {
-        System.out.println("userLogin home obtained " + userLoginHome);
+      synchronized(UserLoginHelper.class) 
+      { 
+        //must check if null again as one of the blocked threads can still enter 
+        if(userLoginHome == null) //now it's safe
+        {
+          JNDIContext myJNDIContext = new JNDIContext();
+          InitialContext initialContext = myJNDIContext.getInitialContext();
+          try
+          {
+            Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.security.login.UserLoginHome");
+            userLoginHome = (UserLoginHome)MyNarrow.narrow(homeObject, UserLoginHome.class);
+          }
+          catch(Exception e1) { Debug.logError(e1); }
+          Debug.logInfo("userLogin home obtained " + userLoginHome);
+        }
       }
     }
+    return userLoginHome;
   }
 
 
 
 
-  /**
-   *  Description of the Method
-   *
+  /** Remove the UserLogin corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
    */
   public static void removeByPrimaryKey(java.lang.String primaryKey)
   {
-    if(primaryKey == null)
-    {
-      return;
-    }
+    if(primaryKey == null) return;
     UserLogin userLogin = findByPrimaryKey(primaryKey);
     try
     {
@@ -93,115 +86,62 @@ public class UserLoginHelper
         userLogin.remove();
       }
     }
-    catch(Exception e)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.warning", "true"))
-      {
-        e.printStackTrace();
-      }
-    }
-
+    catch(Exception e) { Debug.logWarning(e); }
 
   }
 
 
-
-  /**
-   *  Description of the Method
-   *
+  /** Find a UserLogin by its Primary Key
    *@param  primaryKey  The primary key to find by.
-   *@return             The UserLogin of primaryKey
+   *@return             The UserLogin corresponding to the primaryKey
    */
   public static UserLogin findByPrimaryKey(java.lang.String primaryKey)
   {
     UserLogin userLogin = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("UserLoginHelper.findByPrimaryKey: Field is:" + primaryKey);
-    }
+    Debug.logInfo("UserLoginHelper.findByPrimaryKey: Field is:" + primaryKey);
 
-    if(primaryKey == null)
-    {
-      return null;
-    }
+    if(primaryKey == null) { return null; }
 
-    init();
 
     try
     {
-      userLogin = (UserLogin)MyNarrow.narrow(userLoginHome.findByPrimaryKey(primaryKey), UserLogin.class);
+      userLogin = (UserLogin)MyNarrow.narrow(getUserLoginHome().findByPrimaryKey(primaryKey), UserLogin.class);
       if(userLogin != null)
       {
         userLogin = userLogin.getValueObject();
-
+      
       }
     }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
     return userLogin;
   }
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Returned Value
+  /** Finds all UserLogin entities, returning an Iterator
+   *@return    Iterator containing all UserLogin entities
    */
   public static Iterator findAllIterator()
   {
     Collection collection = findAll();
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) return collection.iterator();
+    else return null;
   }
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Returned Value
+  /** Finds all UserLogin entities
+   *@return    Collection containing all UserLogin entities
    */
   public static Collection findAll()
   {
     Collection collection = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("UserLoginHelper.findAll");
-    }
-    init();
+    Debug.logInfo("UserLoginHelper.findAll");
 
-    try
-    {
-      collection = (Collection)MyNarrow.narrow(userLoginHome.findAll(), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection)MyNarrow.narrow(getUserLoginHome().findAll(), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
     return collection;
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Creates a UserLogin
    *@param  userLoginId                  Field of the USER_LOGIN_ID column.
    *@param  partyId                  Field of the PARTY_ID column.
    *@param  contactMechanismId                  Field of the CONTACT_MECHANISM_ID column.
@@ -212,43 +152,21 @@ public class UserLoginHelper
   public static UserLogin create(String userLoginId, String partyId, String contactMechanismId, String currentUserId, String currentPassword)
   {
     UserLogin userLogin = null;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("UserLoginHelper.create: userLoginId: " + userLoginId);
-    }
-    if(userLoginId == null)
-    {
-      return null;
-    }
-    init();
+    Debug.logInfo("UserLoginHelper.create: userLoginId: " + userLoginId);
+    if(userLoginId == null) { return null; }
 
-    try
-    {
-      userLogin = (UserLogin)MyNarrow.narrow(userLoginHome.create(userLoginId, partyId, contactMechanismId, currentUserId, currentPassword), UserLogin.class);
-    }
+    try { userLogin = (UserLogin)MyNarrow.narrow(getUserLoginHome().create(userLoginId, partyId, contactMechanismId, currentUserId, currentPassword), UserLogin.class); }
     catch(CreateException ce)
     {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        System.out.println("Could not create userLogin with userLoginId: " + userLoginId);
-        ce.printStackTrace();
-      }
+      Debug.logError("Could not create userLogin with userLoginId: " + userLoginId);
+      Debug.logError(ce);
       userLogin = null;
     }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    catch(Exception fe) { Debug.logError(fe); }
     return userLogin;
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Updates the corresponding UserLogin
    *@param  userLoginId                  Field of the USER_LOGIN_ID column.
    *@param  partyId                  Field of the PARTY_ID column.
    *@param  contactMechanismId                  Field of the CONTACT_MECHANISM_ID column.
@@ -258,55 +176,26 @@ public class UserLoginHelper
    */
   public static UserLogin update(String userLoginId, String partyId, String contactMechanismId, String currentUserId, String currentPassword) throws java.rmi.RemoteException
   {
-    if(userLoginId == null)
-    {
-      return null;
-    }
+    if(userLoginId == null) { return null; }
     UserLogin userLogin = findByPrimaryKey(userLoginId);
     //Do not pass the value object to set on creation, we only want to populate it not attach it to the passed object
     UserLogin userLoginValue = new UserLoginValue();
 
-
-  
-  
-    if(partyId != null)
-    {
-      userLoginValue.setPartyId(partyId);
-    }
-  
-    if(contactMechanismId != null)
-    {
-      userLoginValue.setContactMechanismId(contactMechanismId);
-    }
-  
-    if(currentUserId != null)
-    {
-      userLoginValue.setCurrentUserId(currentUserId);
-    }
-  
-    if(currentPassword != null)
-    {
-      userLoginValue.setCurrentPassword(currentPassword);
-    }
+    if(partyId != null) { userLoginValue.setPartyId(partyId); }
+    if(contactMechanismId != null) { userLoginValue.setContactMechanismId(contactMechanismId); }
+    if(currentUserId != null) { userLoginValue.setCurrentUserId(currentUserId); }
+    if(currentPassword != null) { userLoginValue.setCurrentPassword(currentPassword); }
 
     userLogin.setValueObject(userLoginValue);
     return userLogin;
   }
 
-
-  
-  /**
-   *  Description of the Method
-   *
-
+  /** Removes/deletes the specified  UserLogin
    *@param  partyId                  Field of the PARTY_ID column.
    */
   public static void removeByPartyId(String partyId)
   {
-    if(partyId == null)
-    {
-      return;
-    }
+    if(partyId == null) return;
     Iterator iterator = findByPartyIdIterator(partyId);
 
     while(iterator.hasNext())
@@ -314,94 +203,48 @@ public class UserLoginHelper
       try
       {
         UserLogin userLogin = (UserLogin) iterator.next();
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-        {
-          System.out.println("Removing userLogin with partyId:" + partyId);
-        }
+        Debug.logInfo("Removing userLogin with partyId:" + partyId);
         userLogin.remove();
       }
-      catch(Exception e)
-      {
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-        {
-          e.printStackTrace();
-        }
-      }
+      catch(Exception e) { Debug.logError(e); }
     }
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  partyId                  Field of the PARTY_ID column.
    *@return      Description of the Returned Value
    */
   public static Iterator findByPartyIdIterator(String partyId)
   {
     Collection collection = findByPartyId(partyId);
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) { return collection.iterator(); }
+    else { return null; }
   }
 
-  /**
-   *  Finds UserLogin records by the following fieldters:
-   *
-
+  /** Finds UserLogin records by the following parameters:
    *@param  partyId                  Field of the PARTY_ID column.
    *@return      Description of the Returned Value
    */
   public static Collection findByPartyId(String partyId)
   {
-    init();
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("findByPartyId: partyId:" + partyId);
-    }
+    Debug.logInfo("findByPartyId: partyId:" + partyId);
 
     Collection collection = null;
-    if(partyId == null)
-    {
-      return null;
-    }
+    if(partyId == null) { return null; }
 
-    try
-    {
-      collection = (Collection) MyNarrow.narrow(userLoginHome.findByPartyId(partyId), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection) MyNarrow.narrow(getUserLoginHome().findByPartyId(partyId), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
 
     return collection;
   }
 
-  
-  /**
-   *  Description of the Method
-   *
-
+  /** Removes/deletes the specified  UserLogin
    *@param  contactMechanismId                  Field of the CONTACT_MECHANISM_ID column.
    */
   public static void removeByContactMechanismId(String contactMechanismId)
   {
-    if(contactMechanismId == null)
-    {
-      return;
-    }
+    if(contactMechanismId == null) return;
     Iterator iterator = findByContactMechanismIdIterator(contactMechanismId);
 
     while(iterator.hasNext())
@@ -409,94 +252,48 @@ public class UserLoginHelper
       try
       {
         UserLogin userLogin = (UserLogin) iterator.next();
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-        {
-          System.out.println("Removing userLogin with contactMechanismId:" + contactMechanismId);
-        }
+        Debug.logInfo("Removing userLogin with contactMechanismId:" + contactMechanismId);
         userLogin.remove();
       }
-      catch(Exception e)
-      {
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-        {
-          e.printStackTrace();
-        }
-      }
+      catch(Exception e) { Debug.logError(e); }
     }
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  contactMechanismId                  Field of the CONTACT_MECHANISM_ID column.
    *@return      Description of the Returned Value
    */
   public static Iterator findByContactMechanismIdIterator(String contactMechanismId)
   {
     Collection collection = findByContactMechanismId(contactMechanismId);
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) { return collection.iterator(); }
+    else { return null; }
   }
 
-  /**
-   *  Finds UserLogin records by the following fieldters:
-   *
-
+  /** Finds UserLogin records by the following parameters:
    *@param  contactMechanismId                  Field of the CONTACT_MECHANISM_ID column.
    *@return      Description of the Returned Value
    */
   public static Collection findByContactMechanismId(String contactMechanismId)
   {
-    init();
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("findByContactMechanismId: contactMechanismId:" + contactMechanismId);
-    }
+    Debug.logInfo("findByContactMechanismId: contactMechanismId:" + contactMechanismId);
 
     Collection collection = null;
-    if(contactMechanismId == null)
-    {
-      return null;
-    }
+    if(contactMechanismId == null) { return null; }
 
-    try
-    {
-      collection = (Collection) MyNarrow.narrow(userLoginHome.findByContactMechanismId(contactMechanismId), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection) MyNarrow.narrow(getUserLoginHome().findByContactMechanismId(contactMechanismId), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
 
     return collection;
   }
 
-  
-  /**
-   *  Description of the Method
-   *
-
+  /** Removes/deletes the specified  UserLogin
    *@param  currentUserId                  Field of the CURRENT_USER_ID column.
    */
   public static void removeByCurrentUserId(String currentUserId)
   {
-    if(currentUserId == null)
-    {
-      return;
-    }
+    if(currentUserId == null) return;
     Iterator iterator = findByCurrentUserIdIterator(currentUserId);
 
     while(iterator.hasNext())
@@ -504,81 +301,41 @@ public class UserLoginHelper
       try
       {
         UserLogin userLogin = (UserLogin) iterator.next();
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-        {
-          System.out.println("Removing userLogin with currentUserId:" + currentUserId);
-        }
+        Debug.logInfo("Removing userLogin with currentUserId:" + currentUserId);
         userLogin.remove();
       }
-      catch(Exception e)
-      {
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-        {
-          e.printStackTrace();
-        }
-      }
+      catch(Exception e) { Debug.logError(e); }
     }
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  currentUserId                  Field of the CURRENT_USER_ID column.
    *@return      Description of the Returned Value
    */
   public static Iterator findByCurrentUserIdIterator(String currentUserId)
   {
     Collection collection = findByCurrentUserId(currentUserId);
-    if(collection != null)
-    {
-      return collection.iterator();
-    }
-    else
-    {
-      return null;
-    }
+    if(collection != null) { return collection.iterator(); }
+    else { return null; }
   }
 
-  /**
-   *  Finds UserLogin records by the following fieldters:
-   *
-
+  /** Finds UserLogin records by the following parameters:
    *@param  currentUserId                  Field of the CURRENT_USER_ID column.
    *@return      Description of the Returned Value
    */
   public static Collection findByCurrentUserId(String currentUserId)
   {
-    init();
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-    {
-      System.out.println("findByCurrentUserId: currentUserId:" + currentUserId);
-    }
+    Debug.logInfo("findByCurrentUserId: currentUserId:" + currentUserId);
 
     Collection collection = null;
-    if(currentUserId == null)
-    {
-      return null;
-    }
+    if(currentUserId == null) { return null; }
 
-    try
-    {
-      collection = (Collection) MyNarrow.narrow(userLoginHome.findByCurrentUserId(currentUserId), Collection.class);
-    }
-    catch(ObjectNotFoundException onfe)
-    {
-    }
-    catch(Exception fe)
-    {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
-      {
-        fe.printStackTrace();
-      }
-    }
+    try { collection = (Collection) MyNarrow.narrow(getUserLoginHome().findByCurrentUserId(currentUserId), Collection.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
 
     return collection;
   }
-
 
 
 }
