@@ -25,10 +25,10 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-form.dtd,v 1.6 2004/06/16 22:16:03 byersa Exp $
+ *  $Id: widget-form.dtd,v 1.7 2004/08/02 14:09:12 jonesde Exp $
 -->
 
-<!ENTITY % AllFields "display | hyperlink | lookup | text | textarea | date-time | drop-down | check | radio | submit | reset | hidden | ignored | file | text-find | date-find | range-find | password | image">
+<!ENTITY % AllFields "display | display-entity | hyperlink | lookup | text | textarea | date-time | drop-down | check | radio | submit | reset | hidden | ignored | file | text-find | date-find | range-find | password | image">
 
 <!ELEMENT forms ( form+ )>
 
@@ -152,6 +152,16 @@
 <!ATTLIST display
     also-hidden ( true | false ) "true"
     description CDATA #IMPLIED
+>
+
+<!-- this is just like display but looks up a description using the Entity Engine; note that if also-hidden is true then it uses the key as the value, not the shown description -->
+<!ELEMENT display-entity EMPTY>
+<!ATTLIST display-entity
+    entity-name CDATA #REQUIRED
+    key-field-name CDATA #IMPLIED
+    description CDATA "${description}"
+    cache ( true | false ) "true"
+    also-hidden ( true | false ) "true"
 >
 
 <!--

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.16 2004/08/01 03:28:12 ajzeneski Exp $
+ * $Id: ModelFormField.java,v 1.17 2004/08/02 14:09:12 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.2
  */
 public class ModelFormField {
@@ -144,6 +144,8 @@ public class ModelFormField {
                 this.induceFieldInfo(null); //no defaultFieldType specified here, will default to edit
             } else if ("display".equals(subElementName)) {
                 this.fieldInfo = new DisplayField(subElement, this);
+            } else if ("display-entity".equals(subElementName)) {
+                this.fieldInfo = new DisplayEntityField(subElement, this);
             } else if ("hyperlink".equals(subElementName)) {
                 this.fieldInfo = new HyperlinkField(subElement, this);
             } else if ("text".equals(subElementName)) {
@@ -1111,6 +1113,7 @@ public class ModelFormField {
         public static final int FILE = 17;
         public static final int PASSWORD = 18;
         public static final int IMAGE = 19;
+        public static final int DISPLAY_ENTITY = 20;
 
         // the numbering here represents the priority of the source;
         //when setting a new fieldInfo on a modelFormField it will only set
@@ -1142,6 +1145,7 @@ public class ModelFormField {
             fieldTypeByName.put("file", new Integer(17));
             fieldTypeByName.put("password", new Integer(18));
             fieldTypeByName.put("image", new Integer(19));
+            fieldTypeByName.put("display-entity", new Integer(20));
         }
 
         protected int fieldType;
@@ -1526,6 +1530,76 @@ public class ModelFormField {
          */
         public void setDescription(String string) {
             description = new FlexibleStringExpander(string);
+        }
+    }
+
+    public static class DisplayEntityField extends DisplayField {
+        protected String entityName;
+        protected String keyFieldName;
+        protected boolean cache = true;
+
+        protected DisplayEntityField() {
+            super();
+        }
+
+        public DisplayEntityField(ModelFormField modelFormField) {
+            super(modelFormField);
+            this.fieldType = FieldInfo.DISPLAY_ENTITY;
+        }
+
+        public DisplayEntityField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, modelFormField);
+            this.fieldType = FieldInfo.DISPLAY_ENTITY;
+        }
+
+        public DisplayEntityField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+
+            this.entityName = element.getAttribute("entity-name");
+            this.keyFieldName = element.getAttribute("key-field-name");
+            this.cache = !"false".equals(element.getAttribute("cache"));
+
+            if (this.description == null || this.description.isEmpty()) {
+                this.setDescription("${description}");
+            }
+        }
+
+        /**
+         * @return
+         */
+        public String getDescription(Map context) {
+            // rather than using the context to expand the string, lookup the given entity and use it to expand the string
+            GenericValue value = null;
+            String fieldKey = this.keyFieldName;
+            if (UtilValidate.isEmpty(fieldKey)) {
+                fieldKey = this.modelFormField.fieldName;
+            }
+            GenericDelegator delegator = this.modelFormField.modelForm.getDelegator();
+            String fieldValue = modelFormField.getEntry(context);
+            try {
+                if (this.cache) {
+                    value = delegator.findByPrimaryKeyCache(this.entityName, UtilMisc.toMap(fieldKey, fieldValue));
+                } else {
+                    value = delegator.findByPrimaryKey(this.entityName, UtilMisc.toMap(fieldKey, fieldValue));
+                }
+            } catch (GenericEntityException e) {
+                String errMsg = "Error getting value from the database for display of field [" + this.modelFormField.getName() + "] on form [" + this.modelFormField.modelForm.getName() + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
+            
+            String retVal = null;
+            if (value != null) {
+                retVal = this.description.expandString(value);
+            }
+            // try to get the entry for the field if description doesn't expand to anything
+            if (retVal == null || retVal.length() == 0) {
+                retVal = fieldValue;
+            }
+            if (retVal == null || retVal.length() == 0) {
+                retVal = "&nbsp;";
+            }
+            return retVal;
         }
     }
 

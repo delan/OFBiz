@@ -1,5 +1,5 @@
 /*
- * $Id: ModelForm.java,v 1.9 2004/07/08 06:19:28 jonesde Exp $
+ * $Id: ModelForm.java,v 1.10 2004/08/02 14:09:12 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.2
  */
 public class ModelForm {
@@ -651,7 +651,7 @@ public class ModelForm {
                 continue;
             }
 
-            if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
+            if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY_ENTITY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
                 // okay, now do the form cell
                 break;
             }
@@ -680,7 +680,7 @@ public class ModelForm {
             }
 
             // skip all of the display/hyperlink fields
-            if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.DISPLAY || fieldInfo.getFieldType() == ModelFormField.FieldInfo.HYPERLINK) {
+            if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.DISPLAY || fieldInfo.getFieldType() == ModelFormField.FieldInfo.DISPLAY_ENTITY || fieldInfo.getFieldType() == ModelFormField.FieldInfo.HYPERLINK) {
                 continue;
             }
 
@@ -732,7 +732,7 @@ public class ModelForm {
             }
 
             // skip all non-display and non-hyperlink fields
-            if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
+            if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY_ENTITY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
                 continue;
             }
 
@@ -785,7 +785,7 @@ public class ModelForm {
                         continue;
                     }
 
-                    if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
+                    if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY_ENTITY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
                         // okay, now do the form cell
                         break;
                     }
@@ -822,7 +822,7 @@ public class ModelForm {
                     }
 
                     // skip all of the display/hyperlink fields
-                    if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.DISPLAY || fieldInfo.getFieldType() == ModelFormField.FieldInfo.HYPERLINK) {
+                    if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.DISPLAY || fieldInfo.getFieldType() == ModelFormField.FieldInfo.DISPLAY_ENTITY || fieldInfo.getFieldType() == ModelFormField.FieldInfo.HYPERLINK) {
                         continue;
                     }
 
@@ -856,7 +856,7 @@ public class ModelForm {
                     }
 
                     // skip all non-display and non-hyperlink fields
-                    if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
+                    if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY_ENTITY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
                         continue;
                     }
 
@@ -895,6 +895,7 @@ public class ModelForm {
                     break;
 
                 case ModelFormField.FieldInfo.DISPLAY :
+                case ModelFormField.FieldInfo.DISPLAY_ENTITY :
                     ModelFormField.DisplayField displayField = (ModelFormField.DisplayField) fieldInfo;
                     if (displayField.getAlsoHidden() && modelFormField.shouldUse(context)) {
                         formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
