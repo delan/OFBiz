@@ -1,6 +1,10 @@
 /* 
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/25 02:02:00  jonesde
+ * Added newline character at the end of each downloaded line. All text was coming
+ * out on a single line.
+ *
  * Revision 1.1  2001/07/23 18:38:14  azeneski
  * Added in new HttpClient. Makes behind the scenes HTTP request (GET/POST)
  * and returns the output as a string.
@@ -146,16 +150,47 @@ public class HttpClient {
         return sendHttpRequest("get");
     }
     
+    /** Invoke HTTP request GET. */
+    public InputStream getStream() throws HttpClientException {
+        return sendHttpRequestStream("get");
+    }
+    
     /** Invoke HTTP request POST. */
     public String post() throws HttpClientException {
         return sendHttpRequest("post");
     }
+
+    /** Invoke HTTP request POST. */
+    public InputStream postStream() throws HttpClientException {
+        return sendHttpRequestStream("post");
+    }
     
     private String sendHttpRequest(String method) throws HttpClientException {
+      InputStream in = sendHttpRequestStream(method);
+      if(in == null) return null;
+
+      StringBuffer buf = new StringBuffer();      
+      try
+      {
+        BufferedReader post = new BufferedReader(new InputStreamReader(in));
+        String line = new String();
+        while ((line = post.readLine()) != null)
+        {
+            buf.append(line);
+            buf.append("\n");
+        }
+      }
+      catch ( Exception e ) {
+          throw new HttpClientException(e.getMessage());
+      }
+      return buf.toString();
+    }
+    
+    private InputStream sendHttpRequestStream(String method) throws HttpClientException {
         URL requestUrl;
         URLConnection con;
         String arguments = null;
-        StringBuffer buf = new StringBuffer();
+        InputStream in = null;
         
         if ( url == null ) 
             throw new HttpClientException("Cannot process a null URL.");
@@ -196,20 +231,13 @@ public class HttpClient {
                 out.close();
             }
             
-            InputStream in = con.getInputStream();
-            BufferedReader post = new BufferedReader(new InputStreamReader(in));
-            String line = new String();
-            while ((line = post.readLine()) != null)
-            {
-                buf.append(line);
-                buf.append("\n");
-            }
+            in = con.getInputStream();
         }
         catch ( Exception e ) {
             throw new HttpClientException(e.getMessage());
         }
         
-        return buf.toString();
+        return in;
     }
     
     private String encodeArgs( HashMap args ) {
