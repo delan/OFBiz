@@ -45,11 +45,11 @@ public class UtilDateTime {
     }
 
     /** 
-     * Return a string formatted as yyyymmddHHMMss      
+     * Return a string formatted as yyyyMMddHHmmss      
      * @return String formatted for right now
      */
     public static String nowDateString() {
-        SimpleDateFormat df = new SimpleDateFormat("yyyymmddHHMMss");
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
         return df.format(new Date());
     }                    
     
