@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceConfigUtil.java,v 1.5 2003/11/05 22:41:55 ajzeneski Exp $
+ * $Id: ServiceConfigUtil.java,v 1.6 2004/06/16 20:48:42 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ServiceConfigUtil {
@@ -73,7 +73,7 @@ public class ServiceConfigUtil {
         if (element == null) return null;
         return element.getAttribute(attrName);
     }
-    
+
     public static String getSendPool() {
         return getElementAttr("thread-pool", "send-to-pool");        
     }
@@ -117,5 +117,5 @@ public class ServiceConfigUtil {
             retryMin = 30;
         }
         return retryMin;
-    }
+    }    
 }

@@ -29,7 +29,7 @@
 -->
 
 <!-- ====================== Root Element ======================= -->
-<!ELEMENT service-config ( authorization, thread-pool, engine*, resource-loader*, global-services*, service-groups*, service-ecas*, jms-service* )>
+<!ELEMENT service-config ( authorization, thread-pool, engine*, startup-service*, resource-loader*, global-services*, service-groups*, service-ecas*, jms-service* )>
 
 <!ELEMENT authorization EMPTY>
 <!ATTLIST authorization
@@ -58,6 +58,14 @@
 <!ATTLIST engine
     name CDATA #REQUIRED
     class CDATA #REQUIRED
+>
+
+<!ELEMENT startup-service EMPTY>
+<!ATTLIST startup-service
+    name CDATA #REQUIRED
+    runtime-data-id CDATA #IMPLIED
+    runtime-delay CDATA "0"
+    run-in-pool CDATA #IMPLIED
 >
 
 <!ELEMENT resource-loader EMPTY>
