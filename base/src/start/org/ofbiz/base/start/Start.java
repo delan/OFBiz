@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.15 2004/03/30 23:38:28 ajzeneski Exp $
+ * $Id: Start.java,v 1.16 2004/05/04 15:36:42 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.15 $
+  *@version    $Revision: 1.16 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -90,11 +90,15 @@ public class Start implements Runnable {
     }
     
     public void startListenerThread() throws IOException {
-        this.serverSocket = new ServerSocket(config.adminPort, 1, config.adminAddress);
-        this.serverThread = new Thread(this, this.toString());
-        this.serverThread.setDaemon(false);
-        this.serverThread.start();
-        System.out.println("Admin socket listening on - " + config.adminAddress + ":" + config.adminPort);
+        if (config.adminPort > 0) {
+            this.serverSocket = new ServerSocket(config.adminPort, 1, config.adminAddress);
+            this.serverThread = new Thread(this, this.toString());
+            this.serverThread.setDaemon(false);
+            this.serverThread.start();
+            System.out.println("Admin socket listening on - " + config.adminAddress + ":" + config.adminPort);
+        } else {
+            System.out.println("Admin socket not configured; set to port 0");
+        }
     }
          
     public void run() {       
@@ -175,8 +179,12 @@ public class Start implements Runnable {
         Thread.currentThread().setContextClassLoader(classloader);
         
         // set the shutdown hook
-        setShutdownHook();
-        
+        if (config.useShutdownHook) {
+            setShutdownHook();
+        } else {
+            System.out.println("Shutdown hook disabled");
+        }
+
         // start the listener thread
         startListenerThread();
         
@@ -241,12 +249,22 @@ public class Start implements Runnable {
         }
         serverRunning = false;             
     }
-    
 
-    public void start() throws Exception {                
+    public void start() throws Exception {
         startServer();
     }
-    
+
+    public void startTestMode() throws Exception {
+        config.setTestMode();
+        startServer();
+        shutdownServer();
+        System.exit(0);
+    }
+
+    public String shutdown() throws Exception {
+        return sendSocketCommand(Start.SHUTDOWN_COMMAND);
+    }
+
     public String status() throws Exception {
         String status = null;
         try {
@@ -258,11 +276,7 @@ public class Start implements Runnable {
         }
         return status;                
     }
-        
-    public String shutdown() throws Exception {
-        return sendSocketCommand(Start.SHUTDOWN_COMMAND);        
-    }
-    
+
     private String sendSocketCommand(String command) throws IOException, ConnectException {
         Socket socket = new Socket(config.adminAddress, config.adminPort);        
                                                 
@@ -296,13 +310,17 @@ public class Start implements Runnable {
             System.out.println("-help, -? ----> This screen");
             System.out.println("-start -------> Start the server");
             System.out.println("-status ------> Status of the server");
-            System.out.println("-shutdown ----> Shutdown the server");            
+            System.out.println("-shutdown ----> Shutdown the server");
+            System.out.println("-test --------> Run the JUnit test script");
             System.out.println("[no config] --> Use default config");
             System.out.println("[no command] -> Start the server w/ default config");       
         } else if (firstArg.equals("-status")) {
             System.out.println("Current Status : " + start.status());                               
         } else if (firstArg.equals("-shutdown")) {
             System.out.println("Shutting down server : " + start.shutdown());
+        } else if (firstArg.equals("-test")) {
+            System.out.println("Starting server in test mode...");
+            start.startTestMode();
         } else {
             start.start();
         }                
@@ -310,6 +328,7 @@ public class Start implements Runnable {
     
     public static class Config {
         public String containerConfig;
+        public String testConfig;
         public InetAddress adminAddress;
         public int adminPort;
         public String adminKey;
@@ -320,6 +339,8 @@ public class Start implements Runnable {
         public String logDir;
         public List loaders;
         public String awtHeadless;
+        public boolean useShutdownHook = true;
+        private boolean configLoaded = false;
 
         private Properties getPropertiesFile(String config) throws IOException {
             InputStream propsStream = null;
@@ -403,13 +424,19 @@ public class Start implements Runnable {
                 logDir = ofbizHome + "/" + props.getProperty("ofbiz.log.dir", "logs");
             }
             
-            // container configuration
+            // container (normal) configuration
             containerConfig = System.getProperty("ofbiz.container.config");
             if (containerConfig == null) {
                 containerConfig = ofbizHome + "/" + props.getProperty("ofbiz.container.config", "base/config/ofbiz-containers.xml");
-            }           
-            
-            // get the admin server info 
+            }
+
+            // container (test) configuration
+            testConfig = System.getProperty("ofbiz.container.test-config");
+            if (testConfig == null) {
+                testConfig = ofbizHome + "/" + props.getProperty("ofbiz.container.test-config", "base/config/test-containers.xml");
+            }
+
+            // get the admin server info
             String serverHost = System.getProperty("ofbiz.admin.host");
             if (serverHost == null) {      
                 serverHost = props.getProperty("ofbiz.admin.host", "127.0.0.1");
@@ -473,7 +500,18 @@ public class Start implements Runnable {
                     currentPosition++;
                 }
             }
-        }        
+            configLoaded = true;
+        }
+
+        public void setTestMode() throws Exception {
+            if (!configLoaded) {
+                throw new Exception("Startup configuration not loaded; cannot adjust test mode settings!");
+            }
+
+            containerConfig = testConfig;
+            useShutdownHook = false;
+            adminPort = 0;
+        }
     }
 }
 

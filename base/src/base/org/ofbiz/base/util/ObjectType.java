@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectType.java,v 1.6 2004/05/01 13:28:12 jonesde Exp $
+ * $Id: ObjectType.java,v 1.7 2004/05/04 15:36:41 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a> 
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ObjectType {
@@ -873,6 +873,7 @@ public class ObjectType {
         try {
             convertedValue1 = ObjectType.simpleTypeConvert(value1, type, format, locale);
         } catch (GeneralException e) {
+            Debug.logError(e, module);
             messages.add("Could not convert value1 for comparison: " + e.getMessage());
             return null;
         }
@@ -882,6 +883,7 @@ public class ObjectType {
             try {
                 convertedValue2 = ObjectType.simpleTypeConvert(value2, type, format, locale);
             } catch (GeneralException e) {
+                Debug.logError(e, module);
                 messages.add("Could not convert value2 for comparison: " + e.getMessage());
                 return null;
             }
