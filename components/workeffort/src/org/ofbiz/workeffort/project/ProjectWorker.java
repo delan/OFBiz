@@ -1,5 +1,5 @@
 /*
- * $Id: ProjectWorker.java,v 1.2 2003/08/18 17:02:17 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.entity.condition.EntityOperator;
  * WorkEffortWorker - Worker class to reduce code in JSPs & make it more reusable
  *
  * @author     <a href="mailto:dustin@dscv.org">Dustin Caldwell</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ProjectWorker {
