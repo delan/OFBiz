@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.14 2004/06/02 17:50:11 byersa Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.15 2004/06/02 23:44:26 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {
@@ -195,7 +195,12 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target.getMenuTargetName(),"");
             //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target,"");
         if (target != null) {
-            String titleStyle = menuItem.getTitleStyle();
+            String titleStyle = null;
+            boolean isSelected = isSelected(menuItem);
+            if (isSelected)
+                titleStyle = menuItem.getSelectedStyle();
+            else
+                titleStyle = menuItem.getTitleStyle();
             String requestName = target.getRequestName();
             String description = target.getMenuTargetTitle(context);
             String targetType = target.getTargetType();
@@ -388,6 +393,17 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         Boolean hideIfSelected = menuItem.getHideIfSelected();
             //Debug.logInfo("in HtmlMenuRenderer, currentMenuItemName:" + currentMenuItemName + " currentItemName:" + currentItemName + " hideIfSelected:" + hideIfSelected,"");
         if (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName)) 
+            return true;
+        else
+            return false;
+    }
+
+    public boolean isSelected( ModelMenuItem menuItem) {
+
+        ModelMenu menu = menuItem.getModelMenu();
+        String currentMenuItemName = menu.getCurrentMenuItemName();
+        String currentItemName = menuItem.getName();
+        if (currentMenuItemName != null && currentMenuItemName.equals(currentItemName)) 
             return true;
         else
             return false;
