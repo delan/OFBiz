@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib
+        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+        "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+		
+<taglib>
+
+    <tlibversion>1.0</tlibversion>
+    <jspversion>1.1</jspversion>
+    <shortname>ofbiz</shortname>
+    <info>
+	Open For Business Catalog Tag Libraries
+    </info>
+	
+	<tag>
+	  <name>url</name>
+	  <tagclass>org.ofbiz.core.taglib.UrlTag</tagclass>
+	  <bodycontent>tagdependent</bodycontent>
+	  <info>
+	    Add control path and URL encode if necessary.
+	  </info>
+	</tag>
+	
+    <tag>
+	  <name>iterator</name>
+	  <tagclass>org.ofbiz.core.taglib.IteratorTag</tagclass>
+	  <teiclass>org.ofbiz.core.taglib.IteratorTEI</teiclass>
+	  <bodycontent>JSP</bodycontent>
+	  <info>
+	    Iterate through an embedded collection.
+	  </info>
+	  <attribute><name>name</name><required>true</required></attribute>	
+	  <attribute><name>property</name><required>false</required></attribute>
+	  <attribute><name>type</name><required>true</required></attribute>
+    </tag>
+	
+    <tag>
+	  <name>iterateNext</name>
+	  <tagclass>org.ofbiz.core.taglib.IterateNextTag</tagclass>
+	  <teiclass>org.ofbiz.core.taglib.IterateNextTEI</teiclass>
+	  <bodycontent>JSP</bodycontent>
+	  <info>
+	    Grab the next iteration of the parent iterator tag.
+	  </info>
+	  <attribute><name>name</name><required>false</required></attribute>	
+	  <attribute><name>type</name><required>false</required></attribute>
+
+    </tag>	
+	
+	<tag>
+	  <name>object</name>
+	  <tagclass>org.ofbiz.core.taglib.ObjectTag</tagclass>
+	  <teiclass>org.ofbiz.core.taglib.ObjectTEI</teiclass>
+	  <bodycontent>JSP</bodycontent>
+	  <info>
+	    Gets an object which was passed to the page.
+	  </info>
+	  <attribute><name>name</name><required>true</required></attribute>	
+	  <attribute><name>property</name><required>false</required></attribute>
+	  <attribute><name>type</name><required>true</required></attribute>
+    </tag>
+	
+</taglib>
