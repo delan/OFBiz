@@ -55,8 +55,13 @@ public class JPublishViewHandler implements ViewHandler {
     public void init(ServletContext context) throws ViewHandlerException {
         this.servletContext = context;
         this.wrapper = (JPublishWrapper) context.getAttribute("jpublishWrapper");
-        if (wrapper == null)
-            throw new ViewHandlerException("JPublishWrapper not found in ServletContext");
+        if (this.wrapper == null) {
+            this.wrapper = new JPublishWrapper(servletContext);            
+        }
+
+        // make sure it loaded
+        if (this.wrapper == null)
+            throw new ViewHandlerException("JPublishWrapper not created");
     }
 
     /**

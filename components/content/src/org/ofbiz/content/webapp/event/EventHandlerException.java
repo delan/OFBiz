@@ -28,7 +28,7 @@ package org.ofbiz.content.webapp.event;
  * EventHandlerException.java
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class EventHandlerException extends org.ofbiz.base.util.GeneralException {
@@ -37,6 +37,10 @@ public class EventHandlerException extends org.ofbiz.base.util.GeneralException 
         super(str, t);
     }
 
+    public EventHandlerException(Throwable t) {
+        super(t);
+    }
+    
     public EventHandlerException(String str) {
         super(str);
     }

@@ -51,7 +51,7 @@ import org.ofbiz.content.webapp.view.ViewHandlerException;
  *
  * @author     David M. Geary in the book "Advanced Java Server Pages"
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class Section extends Content {
@@ -132,7 +132,7 @@ public class Section extends Content {
                     // rather then using the view handler use the wrapper directly
                     ServletContext sctx = (ServletContext) request.getAttribute("servletContext");
                     if (sctx != null) {
-                        JPublishWrapper jp = (JPublishWrapper) sctx.getAttribute("jpublishWrapper");
+                        JPublishWrapper jp = this.getJPublishWrapper(sctx);
                         if (jp != null) {
                             String contentStr = "<!-- " + content + " Not Processed -->";
                             try {
@@ -175,6 +175,14 @@ public class Section extends Content {
         } catch (ViewHandlerException e) {
             throw new ServletException(e.getNonNestedMessage(), e.getNested());
         }
+    }
+
+    protected JPublishWrapper getJPublishWrapper(ServletContext ctx) {
+        JPublishWrapper wrapper = (JPublishWrapper) ctx.getAttribute("jpublishWrapper");
+        if (wrapper == null) {
+            wrapper = new JPublishWrapper(ctx);
+        }
+        return wrapper;
     }
 
     public String toString() {
