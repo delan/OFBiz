@@ -261,8 +261,8 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
 
     public void renderContentBegin(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException {
 
-        String editRequest = (String)context.get("directEditRequest");
-                Debug.logInfo("directEditRequest:" + editRequest, module);
+        String editRequest = content.getEditRequest(context);
+        Debug.logInfo("directEditRequest:" + editRequest, module);
         if (UtilValidate.isNotEmpty(editRequest)) {
             writer.write("<div");
     
@@ -285,7 +285,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
                     renderedContent = ContentWorker.renderContentAsTextCache(delegator, expandedContentId, context, null, locale, mimeTypeId);
             	}
                 if (UtilValidate.isEmpty(renderedContent)) {
-                    String editRequest = (String)context.get("directEditRequest");
+                    String editRequest = content.getEditRequest(context);
                     if (UtilValidate.isNotEmpty(editRequest)) {
                         ContentWorker.renderContentAsTextCache(delegator, "NOCONTENTFOUND", writer, context, null, locale, mimeTypeId);
                     }
@@ -307,28 +307,22 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
     public void renderContentEnd(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException {
 
                 //Debug.logInfo("renderContentEnd, context:" + context, module);
-        String editRequest = (String)context.get("directEditRequest");
-        String editRequestWithParams = editRequest + "?contentId=${currentValue.contentId}&drDataResourceId=${currentValue.drDataResourceId}&directEditRequest=${directEditRequest}&indirectEditRequest=${indirectEditRequest}&caContentIdTo=${currentValue.caContentIdTo}&caFromDate=${currentValue.caFromDate}&caContentAssocTypeId=${currentValue.caContentAssocTypeId}";
-        FlexibleStringExpander editRequestExdr = new FlexibleStringExpander(editRequestWithParams);
+        String editMode = "Edit";
+        String editRequest = content.getEditRequest(context);
+        if (editRequest != null && editRequest.toUpperCase().indexOf("IMAGE") > 0) {
+            editMode += " Image";
+        }
+    	Map params = (Map)context.get("parameters");
+        //String editRequestWithParams = editRequest + "?contentId=${currentValue.contentId}&drDataResourceId=${currentValue.drDataResourceId}&directEditRequest=${directEditRequest}&indirectEditRequest=${indirectEditRequest}&caContentIdTo=${currentValue.caContentIdTo}&caFromDate=${currentValue.caFromDate}&caContentAssocTypeId=${currentValue.caContentAssocTypeId}";
+        	
         if (UtilValidate.isNotEmpty(editRequest)) {
             String contentId = content.getContentId(context);
-            String editMode = "Edit";
-            String target = editRequestExdr.expandString(context);
-            /*
-            if (UtilValidate.isEmpty(contentId))
-                editMode = "Add";
-            if (editMode.equals("Edit")) {
-                target = editRequest + editMode + "?contentId=" + contentId;
-            } else {
-                target = editRequest + editMode;
-            }
-                */
             HttpServletResponse response = (HttpServletResponse) context.get("response");
             HttpServletRequest request = (HttpServletRequest) context.get("request");
             if (request != null && response != null) {
                 ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
-                String urlString = rh.makeLink(request, response, target, false, false, false);
+                String urlString = rh.makeLink(request, response, editRequest, false, false, false);
                 String linkString = "<a href=\"" + urlString + "\">" + editMode + "</a>";
                 writer.write(linkString);
             }
@@ -340,7 +334,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
 
     public void renderSubContentBegin(Writer writer, Map context, ModelScreenWidget.SubContent content) throws IOException {
 
-        String editRequest = (String)context.get("indirectEditRequest");
+        String editRequest = content.getEditRequest(context);
         if (UtilValidate.isNotEmpty(editRequest)) {
             writer.write("<div");
             writer.write(" class=\"editWrapper\">");
@@ -369,7 +363,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             try {
                 renderedContent = ContentWorker.renderSubContentAsTextCache(delegator, expandedContentId, expandedAssocName, null, context, locale, mimeTypeId, userLogin, fromDate);
                 if (UtilValidate.isEmpty(renderedContent)) {
-                    String editRequest = (String)context.get("indirectEditRequest");
+                    String editRequest = content.getEditRequest(context);
                     if (UtilValidate.isNotEmpty(editRequest)) {
                         ContentWorker.renderContentAsTextCache(delegator, "NOCONTENTFOUND", writer, context, null, locale, mimeTypeId);
                     }
@@ -390,9 +384,12 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
 
     public void renderSubContentEnd(Writer writer, Map context, ModelScreenWidget.SubContent content) throws IOException {
 
-        String editRequest = (String)context.get("indirectEditRequest");
-        String editRequestWithParams = editRequest + "?contentId=${currentValue.contentId}&drDataResourceId=${currentValue.drDataResourceId}&directEditRequest=${directEditRequest}&indirectEditRequest=${indirectEditRequest}&caContentIdTo=${currentValue.caContentIdTo}&caFromDate=${currentValue.caFromDate}&caContentAssocTypeId=${currentValue.caContentAssocTypeId}";
-        FlexibleStringExpander editRequestExdr = new FlexibleStringExpander(editRequestWithParams);
+        String editMode = "Edit";
+        String editRequest = content.getEditRequest(context);
+    	Map params = (Map)context.get("parameters");
+        if (editRequest != null && editRequest.toUpperCase().indexOf("IMAGE") > 0) {
+            editMode += " Image";
+        }
         if (UtilValidate.isNotEmpty(editRequest)) {
             HttpServletResponse response = (HttpServletResponse) context.get("response");
             HttpServletRequest request = (HttpServletRequest) context.get("request");
@@ -408,20 +405,9 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
                 } catch(GenericEntityException e) {
                     throw new IOException("Originally a GenericEntityException. " + e.getMessage());
                 }
-                String editMode = "Edit";
-                String target = editRequestExdr.expandString(context);
-                /*
-                if (UtilValidate.isEmpty(contentIdTo))
-                    editMode = "Add";
-                if (editMode.equals("Edit")) {
-                    target = editRequest + editMode + "?contentIdTo=" + contentIdTo;
-                } else {
-                    target = editRequest + editMode;
-                }
-                */
                 ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
-                String urlString = rh.makeLink(request, response, target, false, false, false);
+                String urlString = rh.makeLink(request, response, editRequest, false, false, false);
                 String linkString = "<a href=\"" + urlString + "\">" + editMode + "</a>";
                 writer.write(linkString);
             }

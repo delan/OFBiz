@@ -663,12 +663,14 @@ public abstract class ModelScreenWidget {
     public static class Content extends ModelScreenWidget {
         
         protected FlexibleStringExpander contentId;
+        protected FlexibleStringExpander editRequest;
         
         public Content(ModelScreen modelScreen, Element subContentElement) {
             super(modelScreen, subContentElement);
 
             // put the text attribute first, then the pcdata under the element, if both are there of course
             this.contentId = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("content-id")));
+            this.editRequest = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("edit-request")));
             return;
         }
 
@@ -689,12 +691,17 @@ public abstract class ModelScreenWidget {
             return this.contentId.expandString(context);
         }
         
+        public String getEditRequest(Map context) {
+            return this.editRequest.expandString(context);
+        }
+        
     }
 
     public static class SubContent extends ModelScreenWidget {
         
         protected FlexibleStringExpander contentId;
         protected FlexibleStringExpander assocName;
+        protected FlexibleStringExpander editRequest;
         
         public SubContent(ModelScreen modelScreen, Element subContentElement) {
             super(modelScreen, subContentElement);
@@ -702,6 +709,7 @@ public abstract class ModelScreenWidget {
             // put the text attribute first, then the pcdata under the element, if both are there of course
             this.contentId = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("content-id")));
             this.assocName = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("assoc-name")));
+            this.editRequest = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("edit-request")));
 
         }
 
@@ -723,6 +731,10 @@ public abstract class ModelScreenWidget {
         
         public String getAssocName(Map context) {
             return this.assocName.expandString(context);
+        }
+        
+        public String getEditRequest(Map context) {
+            return this.editRequest.expandString(context);
         }
         
     }
