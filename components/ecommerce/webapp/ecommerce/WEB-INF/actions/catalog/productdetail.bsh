@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.35 $
+ *@version    $Revision: 1.36 $
  *@since      2.1
  */
 
@@ -145,9 +145,9 @@ if (product != null) {
     if (categoryId != null) request.setAttribute("categoryId", categoryId);
 
     Map catNextPreviousResult = null;
-    if (categoryId != null) {
+    if (!UtilValidate.isEmpty(categoryId)) {
         catNextPreviousResult = dispatcher.runSync("getPreviousNextProducts", UtilMisc.toMap("categoryId", categoryId, "productId", productId));
-        if (catNextPreviousResult != null) {
+        if (catNextPreviousResult != null && catNextPreviousResult.get("category") != null) {
             request.setAttribute("category", catNextPreviousResult.get("category"));
             request.setAttribute("previousProductId", catNextPreviousResult.get("previousProductId"));
             request.setAttribute("nextProductId", catNextPreviousResult.get("nextProductId"));
