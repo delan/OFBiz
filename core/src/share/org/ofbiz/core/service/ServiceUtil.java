@@ -7,6 +7,8 @@ package org.ofbiz.core.service;
 import java.util.*;
 import javax.servlet.http.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.security.*;
 
 /**
  * <p><b>Title:</b> Generic Service Utility Class
@@ -36,6 +38,49 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class ServiceUtil {
+    /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
+    public static Map returnError(String errorMessage) {
+        Map result = new HashMap();
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+        result.put(ModelService.ERROR_MESSAGE, errorMessage);
+        return result;
+    }
+    
+    /** A small routine used all over to improve code efficiency, make a result map with the message and the success response code */
+    public static Map returnSuccess(String successMessage) {
+        Map result = new HashMap();
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        result.put(ModelService.SUCCESS_MESSAGE, successMessage);
+        return result;
+    }
+    
+    /** A small routine used all over to improve code efficiency, get the partyId and does a security check
+     *<b>security check</b>: userLogin partyId must equal partyId, or must have <secEntity><secOperation> permission
+     */
+    public static String getPartyIdCheckSecurity(GenericValue userLogin, Security security, Map context, Map result, String secEntity, String secOperation) {
+        String partyId = (String) context.get("partyId");
+        if (partyId == null || partyId.length() == 0) {
+            partyId = userLogin.getString("partyId");
+        }
+        
+        //partyId might be null, so check it
+        if (partyId == null || partyId.length() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Party ID missing");
+            return partyId;
+        }
+        
+        //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
+        if (!partyId.equals(userLogin.getString("partyId"))) {
+            if (!security.hasEntityPermission(secEntity, secOperation, userLogin)) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "You do not have permission to perform this operation for this party");
+                return partyId;
+            }
+        }
+        return partyId;
+    }
+    
     public static void getMessages(HttpServletRequest request, Map result, String defaultMessage, 
             String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix, String successPrefix, String successSuffix) {
         String errorMessage = ServiceUtil.makeErrorMessage(result, msgPrefix, msgSuffix, errorPrefix, errorSuffix);
