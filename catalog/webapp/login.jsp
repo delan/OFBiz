@@ -22,7 +22,8 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Andy Zeneski (jaz@jflow.net)
  *@created    May 22 2001
  *@version    1.0
  */
@@ -57,9 +58,30 @@
         <tr>
           <td align="center" valign="center" width='100%'>
               <form method="POST" action="<ofbiz:url>/login<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="loginform" style='margin: 0;'>
-                <div class="tabletext" align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
-                <div class="tabletext" align=center>Password:&nbsp;<input type="password" name="PASSWORD" value="" size="20"></div>
-                <div align=center><input type="submit" value="Login"></div>
+                <table width='100%' border='0' cellpadding='0' cellspacing='2'>
+                  <tr>
+                    <td align="right">
+                      <span class="tabletext">Username:&nbsp;</span>
+                    </td>
+                    <td>
+                      <input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="right">
+                      <span class="tabletext">Password:&nbsp;</span>
+                    </td>
+                    <td align="left">
+                      <input type="password" name="PASSWORD" value="" size="20">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" align="center">
+                      <a href="javascript:document.loginform.submit()" class="buttontext">[Login]</a>
+                      <!--<input type="submit" value="Login" style="font-size: x-small;">-->
+                    </td>
+                  </tr>
+                </table>
               </form>
           </td>
         </tr>
