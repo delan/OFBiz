@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.4 2003/08/17 01:44:14 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.5 2003/08/17 03:11:28 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,12 +26,14 @@ package org.ofbiz.base.container;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+import org.mortbay.http.NCSARequestLog;
 import org.mortbay.http.SocketListener;
 import org.mortbay.http.SunJsseListener;
 import org.mortbay.http.ajp.AJP13Listener;
@@ -44,13 +46,14 @@ import org.mortbay.util.ThreadedServer;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilURL;
 
 /**
  * JettyContainer - Container implementation for Jetty
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.4 $
+  *@version    $Revision: 1.5 $
  * @since      2.2
  */
 public class JettyContainer implements Container {
@@ -59,13 +62,19 @@ public class JettyContainer implements Container {
     private Map servers = new HashMap();
     
     private void init(String configFile) throws ContainerException {
-        // configure jetty logging
+        // configure jetty logging        
         Log log = Log.instance();
         log.disableLog();
-        log.add(new Log4jSink());
+        Log4jSink sink = new Log4jSink();
+        log.add(sink);
+        sink.setOptions(UtilURL.fromResource("debug.properties").toExternalForm());        
+        try {
+            sink.start();
+        } catch (Exception e) {
+            Debug.logWarning(e, module);            
+        }
 
-        // get the container
-        ContainerConfig.Container cc = ContainerConfig.getContainer("component-container", configFile);
+        // get the container        
         ContainerConfig.Container jc = ContainerConfig.getContainer("jetty-container", configFile);
                         
         // create the servers
@@ -76,93 +85,129 @@ public class JettyContainer implements Container {
         }
         
         // load the applications
-        Iterator components = cc.properties.values().iterator();
-        while (components.hasNext()) {
-            ContainerConfig.Container.Property prop = (ContainerConfig.Container.Property) components.next();
-            ComponentConfig component = null;
-            try {
-                component = ComponentConfig.getComponentConfig(prop.name, prop.value);
-            } catch (ComponentException e) {
-                Debug.logError("Unable to load component application [" + prop.name + "] component not found", module);                               
-            }
-            Iterator appInfos = component.getWebappInfos().iterator();
-            while (appInfos.hasNext()) {
-                ComponentConfig.WebappInfo appInfo = (ComponentConfig.WebappInfo) appInfos.next();
-                Server server = (Server) servers.get(appInfo.server);
-                if (server == null) {
-                    Debug.logWarning("Server with name [" + appInfo.server + "] not found; not mounting [" + appInfo.name + "]", module);
-                } else {
-                    try {
-                        String location = appInfo.location;
-                        if (!location.endsWith("/")) {
-                            location = location + "/";
+        Collection componentConfigs = ComponentConfig.getAllComponents();
+        if (componentConfigs != null) {
+            Iterator components = componentConfigs.iterator();
+            while (components.hasNext()) {
+                ComponentConfig component = (ComponentConfig) components.next();                
+                Iterator appInfos = component.getWebappInfos().iterator();
+                while (appInfos.hasNext()) {
+                    ComponentConfig.WebappInfo appInfo = (ComponentConfig.WebappInfo) appInfos.next();
+                    Server server = (Server) servers.get(appInfo.server);
+                    if (server == null) {
+                        Debug.logWarning("Server with name [" + appInfo.server + "] not found; not mounting [" + appInfo.name + "]", module);
+                    } else {
+                        try {
+                            String location = appInfo.location;
+                            if (!location.endsWith("/")) {
+                                location = location + "/";
+                            }
+                            server.addWebApplication(appInfo.mountPoint, location);
+                        } catch (IOException e) {
+                            Debug.logError(e, "Problem mounting application [" + appInfo.name + " / " + appInfo.location + "]", module);                        
                         }
-                        server.addWebApplication(appInfo.mountPoint, location);
-                    } catch (IOException e) {
-                        Debug.logError(e, "Problem mounting application [" + appInfo.name + " / " + appInfo.location + "]", module);                        
-                    }
-                }                    
-            }                        
+                    }                    
+                }                        
+            }
         }                
     }
     
     private Server createServer(ContainerConfig.Container.Property serverConfig) throws ContainerException {
-        Server server = new Server();
+        Server server = new Server();        
         
-        // configure the listeners
-        Iterator listeners = serverConfig.properties.values().iterator();
-        while (listeners.hasNext()) {
-            ContainerConfig.Container.Property listenerProps = 
-                    (ContainerConfig.Container.Property) listeners.next();
-            
-            Debug.logInfo(listenerProps.name + " = " + listenerProps.value, module);
-            if ("default".equals(listenerProps.getProperty("type").value)) {
-                SocketListener listener = new SocketListener();
-                setListenerOptions(listener, listenerProps);
-                if (listenerProps.getProperty("low-resource-persist-time") != null) {
-                    int value = 0;
-                    try {
-                        value = Integer.parseInt(listenerProps.getProperty("low-resource-persist-time").value);
-                    } catch (NumberFormatException e) {
-                        value = 0;
+        // configure the listeners/loggers
+        int listeners = 0;
+        Iterator properties = serverConfig.properties.values().iterator();
+        while (properties.hasNext()) {
+            ContainerConfig.Container.Property props = 
+                    (ContainerConfig.Container.Property) properties.next();
+                                
+            if ("listener".equals(props.value)) {                        
+                if ("default".equals(props.getProperty("type").value)) {
+                    SocketListener listener = new SocketListener();
+                    setListenerOptions(listener, props);
+                    if (props.getProperty("low-resource-persist-time") != null) {
+                        int value = 0;
+                        try {
+                            value = Integer.parseInt(props.getProperty("low-resource-persist-time").value);
+                        } catch (NumberFormatException e) {
+                            value = 0;
+                        }
+                        if (value > 0) {
+                            listener.setLowResourcePersistTimeMs(value);
+                        }
+                    }                
+                    server.addListener(listener);                                               
+                } else if ("sun-jsse".equals(props.getProperty("type").value)) {
+                    SunJsseListener listener = new SunJsseListener();
+                    setListenerOptions(listener, props);
+                    if (props.getProperty("keystore") != null) {
+                        listener.setKeystore(props.getProperty("keystore").value);    
                     }
-                    if (value > 0) {
-                        listener.setLowResourcePersistTimeMs(value);
+                    if (props.getProperty("password") != null) {
+                        listener.setKeystore(props.getProperty("password").value);    
+                    }                
+                    if (props.getProperty("key-password") != null) {
+                        listener.setKeystore(props.getProperty("key-password").value);    
                     }
-                }                
-                server.addListener(listener);                                               
-            } else if ("sun-jsse".equals(listenerProps.getProperty("type").value)) {
-                SunJsseListener listener = new SunJsseListener();
-                setListenerOptions(listener, listenerProps);
-                if (listenerProps.getProperty("keystore") != null) {
-                    listener.setKeystore(listenerProps.getProperty("keystore").value);    
+                    if (props.getProperty("low-resource-persist-time") != null) {
+                        int value = 0;
+                        try {
+                            value = Integer.parseInt(props.getProperty("low-resource-persist-time").value);
+                        } catch (NumberFormatException e) {
+                            value = 0;
+                        }
+                        if (value > 0) {
+                            listener.setLowResourcePersistTimeMs(value);
+                        }
+                    }                                               
+                    server.addListener(listener);
+                } else if ("ibm-jsse".equals(props.getProperty("type").value)) {
+                    throw new ContainerException("Listener not supported yet [" + props.getProperty("type").value + "]");
+                } else if ("nio".equals(props.getProperty("type").value)) {
+                    throw new ContainerException("Listener not supported yet [" + props.getProperty("type").value + "]");
+                } else if ("ajp13".equals(props.getProperty("type").value)) {
+                    AJP13Listener listener = new AJP13Listener();
+                    setListenerOptions(listener, props);
+                    server.addListener(listener);                
                 }
-                if (listenerProps.getProperty("password") != null) {
-                    listener.setKeystore(listenerProps.getProperty("password").value);    
-                }                
-                if (listenerProps.getProperty("key-password") != null) {
-                    listener.setKeystore(listenerProps.getProperty("key-password").value);    
+            } else if ("request-log".equals(props.value)) {
+                NCSARequestLog rl = new NCSARequestLog();
+                
+                if (props.getProperty("filename") != null) {
+                    rl.setFilename(props.getProperty("filename").value);
                 }
-                if (listenerProps.getProperty("low-resource-persist-time") != null) {
-                    int value = 0;
+                
+                if (props.getProperty("append") != null) {
+                    rl.setAppend("true".equalsIgnoreCase(props.getProperty("append").value));
+                }
+                
+                if (props.getProperty("buffered") != null) {
+                    rl.setBuffered("true".equalsIgnoreCase(props.getProperty("buffered").value));
+                }
+                
+                if (props.getProperty("extended") != null) {
+                    rl.setExtended("true".equalsIgnoreCase(props.getProperty("extended").value));
+                }
+                
+                if (props.getProperty("timezone") != null) {
+                    rl.setLogTimeZone(props.getProperty("timezone").value);
+                }
+                
+                if (props.getProperty("date-format") != null) {
+                    rl.setLogDateFormat(props.getProperty("date-format").value);
+                }
+                
+                if (props.getProperty("retain-days") != null) {
+                    int days = 90;
                     try {
-                        value = Integer.parseInt(listenerProps.getProperty("low-resource-persist-time").value);
+                        days = Integer.parseInt(props.getProperty("retain-days").value);
                     } catch (NumberFormatException e) {
-                        value = 0;
+                        days = 90;
                     }
-                    if (value > 0) {
-                        listener.setLowResourcePersistTimeMs(value);
-                    }
-                }                                               
-                server.addListener(listener);
-            } else if ("ibm-jsse".equals(listenerProps.getProperty("type").value)) {
-                throw new ContainerException("Listener not supported yet [" + listenerProps.getProperty("type").value + "]");
-            } else if ("nio".equals(listenerProps.getProperty("type").value)) {
-                throw new ContainerException("Listener not supported yet [" + listenerProps.getProperty("type").value + "]");
-            } else if ("ajp13".equals(listenerProps.getProperty("type").value)) {
-                AJP13Listener listener = new AJP13Listener();
-                setListenerOptions(listener, listenerProps);
-                server.addListener(listener);                
+                    rl.setRetainDays(days);                   
+                }
+                server.setRequestLog(rl);               
             }                       
         }
         return server;
@@ -244,13 +289,13 @@ public class JettyContainer implements Container {
             Iterator i = servers.values().iterator();
             while (i.hasNext()) {
                 Server server = (Server) i.next();
-                try {
-                    server.start();
+                try {                    
+                    server.start();                                                                              
                 } catch (MultiException e) {                    
                     throw new ContainerException(e);
                 }
             }
-        }                                
+        }                                        
         return true;
     }
         
