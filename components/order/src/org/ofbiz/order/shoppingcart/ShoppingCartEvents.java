@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.14 2004/06/01 12:43:15 jonesde Exp $
+ * $Id: ShoppingCartEvents.java,v 1.15 2004/06/01 13:17:57 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -451,16 +451,20 @@ public class ShoppingCartEvents {
         }
         
         if (cartLine.getIsPromo()) {
-            // note that there should just be one adjustment, the reversal of the GWP, so use that to get the promo action key 
+            // note that there should just be one promo adjustment, the reversal of the GWP, so use that to get the promo action key 
             Iterator checkOrderAdjustments = UtilMisc.toIterator(cartLine.getAdjustments());
-            if (checkOrderAdjustments != null && checkOrderAdjustments.hasNext()) {
+            while (checkOrderAdjustments != null && checkOrderAdjustments.hasNext()) {
                 GenericValue checkOrderAdjustment = (GenericValue) checkOrderAdjustments.next();
-                GenericPK productPromoActionPk = delegator.makeValidValue("ProductPromoAction", checkOrderAdjustment).getPrimaryKey();
-                cart.setDesiredAlternateGiftByAction(productPromoActionPk, alternateGwpProductId);
-                if (cart.getOrderType().equals("SALES_ORDER")) {
-                    org.ofbiz.order.shoppingcart.product.ProductPromoWorker.doPromotions(cart, dispatcher);
+                if (UtilValidate.isNotEmpty(checkOrderAdjustment.getString("productPromoId")) &&
+                        UtilValidate.isNotEmpty(checkOrderAdjustment.getString("productPromoRuleId")) &&
+                        UtilValidate.isNotEmpty(checkOrderAdjustment.getString("productPromoActionSeqId"))) {
+                    GenericPK productPromoActionPk = delegator.makeValidValue("ProductPromoAction", checkOrderAdjustment).getPrimaryKey();
+                    cart.setDesiredAlternateGiftByAction(productPromoActionPk, alternateGwpProductId);
+                    if (cart.getOrderType().equals("SALES_ORDER")) {
+                        org.ofbiz.order.shoppingcart.product.ProductPromoWorker.doPromotions(cart, dispatcher);
+                    }
+                    return "success";
                 }
-                return "success";
             }
         }
         
