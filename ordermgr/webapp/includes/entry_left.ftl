@@ -21,16 +21,14 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Revision$
- *@since      2.1
+ *@since      2.2
 -->
 
-  <td width='950' valign='top' align='left'>
-    ${pages.get("/entry/orderparty.ftl")}
-    <br>
-    ${pages.get("/entry/catalog/choosecatalog.ftl")}
-    <br>
-    ${pages.get("/entry/catalog/keywordsearchbox.ftl")}
-    <br>
-    ${pages.get("/entry/catalog/sidedeepcategory.ftl")}
-  </td>
-  <td width='5'>&nbsp;&nbsp;&nbsp;</td>
+<td width='950' valign=top align=left>
+  ${pages.get("/entry/orderparty.ftl")}
+  <br>
+  ${pages.get("/entry/catalog/sidedeepcategory.ftl")}
+  
+</td>
+
+<td width='5'>&nbsp;&nbsp;&nbsp;</td>
