@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchSession.java,v 1.13 2004/05/11 08:26:28 jonesde Exp $
+ * $Id: ProductSearchSession.java,v 1.14 2004/05/22 20:25:50 ajzeneski Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -63,14 +63,14 @@ import org.ofbiz.product.store.ProductStoreWorker;
  *  Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      3.0
  */
 public class ProductSearchSession {
 
     public static final String module = ProductSearchSession.class.getName();
 
-    public static class ProductSearchOptions {
+    public static class ProductSearchOptions implements java.io.Serializable {
         protected List constraintList = null;
         protected ResultSortOrder resultSortOrder = null;
         protected Integer viewIndex = null;

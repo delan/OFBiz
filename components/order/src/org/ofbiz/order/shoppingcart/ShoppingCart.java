@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.39 2004/03/05 19:45:54 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.40 2004/05/22 20:25:49 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,7 @@ package org.ofbiz.order.shoppingcart;
 import java.text.NumberFormat;
 import java.util.*;
 import java.sql.Timestamp;
+import java.io.Serializable;
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
@@ -44,10 +45,11 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.39 $
+ * @version    $Revision: 1.40 $
  * @since      2.0
  */
-public class ShoppingCart implements java.io.Serializable {
+public class ShoppingCart implements Serializable {
+
     public static final String module = ShoppingCart.class.getName();
 
     private List paymentMethodIds = new LinkedList();
@@ -72,7 +74,7 @@ public class ShoppingCart implements java.io.Serializable {
     private List cartLines = new ArrayList();
     private Map contactMechIdsMap = new HashMap();
 
-    public static class ProductPromoUseInfo {
+    public static class ProductPromoUseInfo implements Serializable {
         public String productPromoId;
         public String productPromoCodeId;
         public double totalDiscountAmount = 0;
@@ -90,6 +92,7 @@ public class ShoppingCart implements java.io.Serializable {
         public double getTotalDiscountAmount() { return this.totalDiscountAmount; }
         public double getQuantityLeftInActions() { return this.quantityLeftInActions; }
     }
+
     /** Contains a List for each productPromoId (key) containing a productPromoCodeId (or empty string for no code) for each use of the productPromoId */
     private List productPromoUseInfoList = new LinkedList();
     /** Contains the promo codes entered */
@@ -98,13 +101,15 @@ public class ShoppingCart implements java.io.Serializable {
 
     private transient GenericDelegator delegator = null;
     private String delegatorName = null;
-    private String productStoreId = null;
-    private String webSiteId = null;
 
-    private GenericValue userLogin = null;
-    private GenericValue autoUserLogin = null;
+    protected String productStoreId = null;
+    protected String webSiteId = null;
+    protected String orderPartyId = null;
 
-    private Locale locale;  // holds the locale from the user session
+    protected GenericValue userLogin = null;
+    protected GenericValue autoUserLogin = null;
+
+    protected Locale locale;  // holds the locale from the user session
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -344,7 +349,15 @@ public class ShoppingCart implements java.io.Serializable {
     public void setUserLogin(GenericValue userLogin, LocalDispatcher dispatcher) throws CartItemModifyException {
         this.userLogin = userLogin;
         this.handleNewUser(dispatcher);
-       }
+    }
+
+    protected void setUserLogin(GenericValue userLogin) {
+        if (this.userLogin == null) {
+            this.userLogin = userLogin;
+        } else {
+            throw new IllegalArgumentException("Cannot change UserLogin object with this method");
+        }
+    }
 
     public GenericValue getAutoUserLogin() {
         return this.autoUserLogin;
@@ -356,7 +369,15 @@ public class ShoppingCart implements java.io.Serializable {
             this.handleNewUser(dispatcher);
         }
     }
-    
+
+    protected void setAutoUserLogin(GenericValue autoUserLogin) {
+        if (this.autoUserLogin == null) {
+            this.autoUserLogin = autoUserLogin;
+        } else {
+            throw new IllegalArgumentException("Cannot change AutoUserLogin object with this method");
+        }
+    }
+
     public void handleNewUser(LocalDispatcher dispatcher) throws CartItemModifyException {
         String partyId = this.getPartyId();
         if (UtilValidate.isNotEmpty(partyId)) {
@@ -392,7 +413,7 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     public String getPartyId() {
-        String partyId = null;
+        String partyId = this.orderPartyId;
 
         if (partyId == null && getUserLogin() != null) {
             partyId = getUserLogin().getString("partyId");
