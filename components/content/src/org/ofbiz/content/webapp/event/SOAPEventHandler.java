@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.xml.soap.SOAPException;
 
 import org.ofbiz.base.util.Debug;
@@ -74,7 +73,6 @@ public class SOAPEventHandler implements EventHandler {
      *@throws EventHandlerException
      */
     public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
-        HttpSession session = request.getSession();
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         AxisServer axisServer;
 
@@ -149,7 +147,7 @@ public class SOAPEventHandler implements EventHandler {
                     RPCParam param = (RPCParam) p.next();
 
                     if (Debug.verboseOn()) Debug.logVerbose("[Reading Param]: " + param.getName(), module);
-                    serviceContext.put(param.getName(), param.getValue());
+                    serviceContext.put(param.getName(), param.getObjectValue());
                 }
                 try {
                     // verify the service is exported for remote execution and invoke it
