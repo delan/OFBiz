@@ -60,7 +60,7 @@ if (shoppingListId != null) {
     	shoppingListItemTotal = 0.0;
     	shoppingListChildTotal = 0.0;
     
-        shoppingListItems = shoppingList.getRelated("ShoppingListItem");
+        shoppingListItems = shoppingList.getRelatedCache("ShoppingListItem");
         if (shoppingListItems != null) {
 	        shoppingListItemDatas = new ArrayList(shoppingListItems.size());
 	        shoppingListItemIter = shoppingListItems.iterator();
@@ -78,7 +78,7 @@ if (shoppingListId != null) {
 	        	
 	        	productVariantAssocs = null;
                 if ("Y".equals(product.getString("isVirtual"))) {
-                    productVariantAssocs = product.getRelatedCache("ProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("sequenceNum"));
+                    productVariantAssocs = product.getRelatedCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("sequenceNum"));
                 }
                 
 	        	shoppingListItemData.put("shoppingListItem", shoppingListItem);
@@ -95,7 +95,7 @@ if (shoppingListId != null) {
         context.put("shoppingListType", shoppingListType);
 	
         // get the child shopping lists of the current list for the logged in user
-        childShoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "parentShoppingListId", shoppingListId), UtilMisc.toList("listName"));
+        childShoppingLists = delegator.findByAndCache("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "parentShoppingListId", shoppingListId), UtilMisc.toList("listName"));
         // now get prices for each child shopping list...
         if (childShoppingLists != null) {
 	        childShoppingListDatas = new ArrayList(childShoppingLists.size());
@@ -105,7 +105,7 @@ if (shoppingListId != null) {
 	        	childShoppingListData = new HashMap();
 
 				calcListPriceInMap = UtilMisc.toMap("shoppingListId", childShoppingList.get("shoppingListId"), "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, "userLogin", userLogin);
-	        	childShoppingListPriceMap = dispatcher.runSync("calculateShoppingListItemsTotalPrice", calcListPriceInMap);
+	        	childShoppingListPriceMap = dispatcher.runSync("calculateShoppingListDeepTotalPrice", calcListPriceInMap);
 	        	totalPrice = childShoppingListPriceMap.get("totalPrice");
                 shoppingListChildTotal += totalPrice;
 
