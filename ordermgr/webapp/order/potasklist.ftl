@@ -26,7 +26,6 @@
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
 
 <#if orderHeaderList?exists>
-<br>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
