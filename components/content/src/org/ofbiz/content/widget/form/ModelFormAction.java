@@ -293,8 +293,25 @@ public abstract class ModelFormAction {
             this.serviceNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("service-name"));
             this.resultMapNameAcsr = UtilValidate.isNotEmpty(serviceElement.getAttribute("result-map-name")) ? new FlexibleMapAccessor(serviceElement.getAttribute("result-map-name")) : null;
             this.autoFieldMapExdr = new FlexibleStringExpander(serviceElement.getAttribute("auto-field-map"));
-            this.resultMapListIteratorNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-list-iterator-name"));
-            this.resultMapListNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-list-name"));
+            if (UtilValidate.isEmpty(serviceElement.getAttribute("result-map-list-name"))) {
+                String lstNm = modelForm.getListName();
+                if (UtilValidate.isEmpty(lstNm)) {
+                    lstNm = ModelForm.DEFAULT_FORM_RESULT_LIST_NAME;
+                }
+                this.resultMapListNameExdr = new FlexibleStringExpander(lstNm);
+            } else {
+                this.resultMapListNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-list-name"));
+            }
+            
+            if (UtilValidate.isEmpty(serviceElement.getAttribute("result-map-list-iterator-name"))) {
+                String lstNm = modelForm.getListIteratorName();
+                if (UtilValidate.isEmpty(lstNm)) {
+                    lstNm = ModelForm.DEFAULT_FORM_RESULT_LIST_NAME;
+                }
+                this.resultMapListIteratorNameExdr = new FlexibleStringExpander(lstNm);
+            } else {
+                this.resultMapListIteratorNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-list-iterator-name"));
+            }
             
             List fieldMapElementList = UtilXml.childElementList(serviceElement, "field-map");
             if (fieldMapElementList.size() > 0) {
@@ -397,7 +414,14 @@ public abstract class ModelFormAction {
             
             // make list-name optional
             if (UtilValidate.isEmpty(entityAndElement.getAttribute("list-name"))) {
-                entityAndElement.setAttribute("list-name", "defaultFormResultList");
+                String lstNm = modelForm.getListName();
+                if (UtilValidate.isEmpty(lstNm)) {
+                    lstNm = modelForm.getListIteratorName();
+                }
+                if (UtilValidate.isEmpty(lstNm)) {
+                    lstNm = ModelForm.DEFAULT_FORM_RESULT_LIST_NAME;
+                }
+                entityAndElement.setAttribute("list-name", lstNm);
             }
             this.actualListName = entityAndElement.getAttribute("list-name");
             finder = new ByAndFinder(entityAndElement);
@@ -410,24 +434,10 @@ public abstract class ModelFormAction {
                 Object obj = context.get(this.actualListName);
 
                 if (obj != null && (obj instanceof EntityListIterator)) {
-                    String modelFormIteratorName = UtilFormatOut.checkEmpty(modelForm.getListIteratorName(), "formInfoList");
-                    this.modelForm.setListIteratorName(modelFormIteratorName);
+                    String modelFormIteratorName = modelForm.getListIteratorName();
                     context.put(modelFormIteratorName, obj);
-                    /*
-                    if (UtilValidate.isNotEmpty(modelFormListName)) {
-                        List tmp = new ArrayList();
-                        while (((ListIterator)obj).hasNext() ) {
-                            tmp.add(((ListIterator)obj).next());   
-                        }
-                        context.put(modelFormListName, tmp);
-                    } else {
-                        this.modelForm.setListIteratorName(modelFormIteratorName);
-                        context.put(modelFormIteratorName, (ListIterator)obj);
-                    }
-                    */
                 } else if (obj != null && obj instanceof List) {
-                    String modelFormListName = UtilFormatOut.checkEmpty(modelForm.getListName(), "formInfoList");
-                    this.modelForm.setListName(modelFormListName);
+                    String modelFormListName = modelForm.getListName();
                     context.put(modelFormListName, obj);
                 }
             } catch (GeneralException e) {
@@ -453,7 +463,14 @@ public abstract class ModelFormAction {
             
             // make list-name optional
             if (UtilValidate.isEmpty(entityConditionElement.getAttribute("list-name"))) {
-                entityConditionElement.setAttribute("list-name", "defaultFormResultList");
+                String lstNm = modelForm.getListName();
+                if (UtilValidate.isEmpty(lstNm)) {
+                    lstNm = modelForm.getListIteratorName();
+                }
+                if (UtilValidate.isEmpty(lstNm)) {
+                    lstNm = ModelForm.DEFAULT_FORM_RESULT_LIST_NAME;
+                }
+                entityConditionElement.setAttribute("list-name", lstNm);
             }
             this.actualListName = entityConditionElement.getAttribute("list-name");
             finder = new ByConditionFinder(entityConditionElement);
@@ -465,24 +482,10 @@ public abstract class ModelFormAction {
                 finder.runFind(context, this.modelForm.getDelegator(context));
                 Object obj = context.get(this.actualListName);
                 if (obj != null && (obj instanceof EntityListIterator)) {
-                    String modelFormIteratorName = UtilFormatOut.checkEmpty(modelForm.getListIteratorName(), "formInfoList");
-                    this.modelForm.setListIteratorName(modelFormIteratorName);
+                    String modelFormIteratorName = modelForm.getListIteratorName();
                     context.put(modelFormIteratorName, obj);
-                    /*
-                    if (UtilValidate.isNotEmpty(modelFormListName)) {
-                        List tmp = new ArrayList();
-                        while (((ListIterator)obj).hasNext() ) {
-                            tmp.add(((ListIterator)obj).next());   
-                        }
-                        context.put(modelFormListName, tmp);
-                    } else {
-                        this.modelForm.setListIteratorName(modelFormIteratorName);
-                        context.put(modelFormIteratorName, (ListIterator)obj);
-                    }
-                    */
                 } else if (obj != null && obj instanceof List) {
-                    String modelFormListName = UtilFormatOut.checkEmpty(modelForm.getListName(), "formInfoList");
-                    this.modelForm.setListName(modelFormListName);
+                    String modelFormListName = modelForm.getListName();
                     context.put(modelFormListName, obj);
                 }
             } catch (GeneralException e) {

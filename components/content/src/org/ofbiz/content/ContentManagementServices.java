@@ -24,6 +24,7 @@
 package org.ofbiz.content;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,6 +40,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.ContentServices;
 import org.ofbiz.content.content.ContentWorker;
@@ -184,6 +186,14 @@ public class ContentManagementServices {
         if (Debug.infoOn()) Debug.logInfo("in persist... mapKey(0):" + mapKey, null);
 
         List contentPurposeList = (List)context.get("contentPurposeList");
+        if (contentPurposeList == null)
+            contentPurposeList = new ArrayList();
+        
+        String contentPurposeString = (String)context.get("contentPurposeString");
+        if (UtilValidate.isNotEmpty(contentPurposeString)) {
+            List tmpPurposes = StringUtil.split(contentPurposeString, "|");
+            contentPurposeList.addAll(tmpPurposes);
+        }
         //if (Debug.infoOn()) Debug.logInfo("in persist... contentPurposeList(0):" + contentPurposeList, null);
         if (Debug.infoOn()) Debug.logInfo("in persist... textData(0):" + context.get("textData"), null);
         
@@ -1327,4 +1337,124 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
 		return result;
 	}
     
+    public static Map updateSubscription(DispatchContext dctx, Map context) throws GenericServiceException{
+		Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+		String partyId = (String)context.get("partyId");
+		String webPubPt = (String)context.get("webPubPt");
+		String roleTypeId = (String)context.get("roleTypeId");
+		Integer useTime = (Integer)context.get("useTime");
+		String useTimeUomId = (String)context.get("useTimeUomId");
+		GenericValue contentRole = null;
+        try {
+            List contentRoleList = delegator.findByAndCache("ContentRole", UtilMisc.toMap("partyId", partyId, "contentId", webPubPt, "roleTypeId", roleTypeId));
+            List listFiltered = EntityUtil.filterByDate(contentRoleList);
+            List listOrdered = EntityUtil.orderBy(listFiltered, UtilMisc.toList("fromDate DESC"));
+            if (listOrdered.size() > 0) {
+                  contentRole = (GenericValue)listOrdered.get(0);
+            }
+        } catch(GenericEntityException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        
+        if (contentRole == null) {
+            contentRole = delegator.makeValue("ContentRole", null);
+            contentRole.set("contentId", webPubPt);
+            contentRole.set("partyId", partyId);
+            contentRole.set("roleTypeId", roleTypeId);
+            contentRole.set("fromDate", UtilDateTime.nowTimestamp());
+        }
+        
+        Timestamp thruDate = (Timestamp)contentRole.get("thruDate");
+        if (thruDate == null) {
+            Timestamp fromDate = (Timestamp)contentRole.get("fromDate");
+            thruDate = fromDate;
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(thruDate);
+        int field = -1;
+        if (useTimeUomId.equals("TF_day") ) {
+            field = Calendar.DAY_OF_YEAR;   
+        } else {
+            field = Calendar.MONTH;   
+        }
+        calendar.add(field, useTime.intValue());
+        long date = calendar.getTimeInMillis();
+        thruDate = new Timestamp(date);
+        contentRole.set("thruDate", thruDate);
+        try {
+            contentRole.store();
+        } catch(GenericEntityException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
+		return result;
+	}
+    
+    public static Map updateSubscriptionByProduct(DispatchContext dctx, Map context) throws GenericServiceException{
+		Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+		String productId = (String)context.get("productId");
+		GenericValue productContent = null;
+       	try {
+        	List lst = delegator.findByAndCache("ProductContent", UtilMisc.toMap("productId", productId, "productContentTypeId", "ONLINE_ACCESS"));
+            List listFiltered = EntityUtil.filterByDate(lst, UtilDateTime.nowTimestamp(), "purchaseFromDate", "purchaseThruDate", true);
+            List listOrdered = EntityUtil.orderBy(lst, UtilMisc.toList("purchaseFromDate ASC", "purchaseThruDate ASC"));
+            List listThrusOnly = EntityUtil.filterOutByCondition(listOrdered, new EntityExpr("purchaseThruDate", EntityOperator.NOT_EQUAL, null));
+            if (listThrusOnly.size() > 0) {
+                productContent = (GenericValue)listThrusOnly.get(0);   
+            } else {
+                productContent = (GenericValue)listOrdered.get(0);   
+            }
+    	} catch(GenericEntityException e) {
+            Debug.logError(e.getMessage(), module);
+        	return ServiceUtil.returnError(e.getMessage());
+    	}
+    	if (productContent == null) {
+    	    String msg = "No ProductContent found for productId:" + productId;
+            Debug.logError(msg, module);
+            return ServiceUtil.returnError(msg); 
+        }
+        context.put("useTime", productContent.get("useTime"));
+        context.put("useTimeUomId", productContent.get("useTimeUomId"));
+    	ModelService subscriptionModel = dispatcher.getDispatchContext().getModelService("updateSubscription");
+    	Map ctx = subscriptionModel.makeValid(context, "IN");
+    	result = dispatcher.runSync("updateSubscription", ctx);
+		return result;
+	}
+    
+    public static Map updateSubscriptionByOrder(DispatchContext dctx, Map context) throws GenericServiceException{
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String orderId = (String)context.get("orderId");
+        GenericValue order = null;
+        try {
+            order = delegator.findByPrimaryKeyCache("ProductContent", UtilMisc.toMap("orderId", orderId));
+            if (order == null) {
+                String msg = "No Order found for orderId:" + orderId;
+                Debug.logError(msg, module);
+                return ServiceUtil.returnError(msg); 
+            }
+            List lst = order.getRelated("OrderItem");
+            Iterator iter = lst.iterator();
+    	    ModelService subscriptionModel = dispatcher.getDispatchContext().getModelService("updateSubscriptionByProduct");
+            while (iter.hasNext()) {
+                GenericValue orderItem = (GenericValue)iter.next();   
+                String productId = (String)context.get("productId");
+                List productContentList = delegator.findByAnd("ProductContent", UtilMisc.toMap("productId", productId, "productContentTypeId", "ONLINE_ACCESS"));
+                List productContentListFiltered = EntityUtil.filterByDate(productContentList);
+                if (productContentListFiltered.size() > 0) {
+                    context.put("productId", productId);
+    	            Map ctx = subscriptionModel.makeValid(context, "IN");
+                    Map thisResult = dispatcher.runSync("updateSubscriptionByProduct", ctx);   
+                }
+            }
+        } catch(GenericEntityException e) {
+            Debug.logError(e.getMessage(), module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return result;
+    }
+
 }

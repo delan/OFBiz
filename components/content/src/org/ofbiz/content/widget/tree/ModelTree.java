@@ -289,8 +289,8 @@ public class ModelTree {
 
     public static class ModelNode {
 
-        protected String screenName;
-        protected String screenLocation;
+        protected FlexibleStringExpander screenNameExdr;
+        protected FlexibleStringExpander screenLocationExdr;
         protected String shareScope;
         protected Label label;
         protected Link link;
@@ -332,8 +332,8 @@ public class ModelTree {
         
             Element screenElement = UtilXml.firstChildElement(nodeElement, "include-screen");
             if (screenElement != null) {
-                this.screenName =  screenElement.getAttribute("name");
-                this.screenLocation =  screenElement.getAttribute("location");
+                this.screenNameExdr =  new FlexibleStringExpander(screenElement.getAttribute("name"));
+                this.screenLocationExdr =  new FlexibleStringExpander(screenElement.getAttribute("location"));
                 this.shareScope =  screenElement.getAttribute("share-scope");
             }
             
@@ -399,6 +399,8 @@ public class ModelTree {
 				//if (Debug.infoOn()) Debug.logInfo(" context:" +
 				// context.entrySet(), module);
 				try {
+				    String screenName = screenNameExdr.expandString(context);
+				    String screenLocation = screenLocationExdr.expandString(context);
 					if (screenName != null && screenLocation != null) {
 						ScreenStringRenderer screenStringRenderer = treeStringRenderer .getScreenStringRenderer(context);
 						ModelScreen modelScreen = ScreenFactory .getScreenFromLocation(screenLocation, screenName);

@@ -65,6 +65,7 @@ import org.w3c.dom.Element;
 public class ModelForm {
 
     public static final String module = ModelForm.class.getName();
+    public static final String DEFAULT_FORM_RESULT_LIST_NAME = "defaultFormResultList";
 
     protected GenericDelegator delegator;
     protected LocalDispatcher dispatcher;
@@ -808,22 +809,30 @@ public class ModelForm {
 
     public void renderItemRows(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, boolean formPerItem) {
         this.rowCount = 0;
-        // if list is empty, do not render rows
-        ListIterator iter = getListIterator(context);
-
-        List items = null;
-        String listName = this.getListName();
-        if (UtilValidate.isNotEmpty(listName)) {
-            items = (List) context.get(listName);
+        String lookupName = getListIteratorName();
+        if (UtilValidate.isEmpty(lookupName)) {
+            lookupName = getListName();   
         }
-            
-        if (iter != null) {
+        if (UtilValidate.isEmpty(lookupName)) {
+            Debug.logError("No value for list or iterator name found.", module);
+            return;
+        }
+        Object obj = context.get(lookupName);
+        if (obj == null) {
+            Debug.logError("No object for list or iterator name:" + lookupName + " found.", module);
+            return;
+        }
+        // if list is empty, do not render rows
+        ListIterator iter = null;
+        List items = null;
+        if (obj instanceof ListIterator) {
+            iter = (ListIterator)obj;   
             setPaginate(true);
-        } else if (items != null) {
+        } else  if (obj instanceof List) {
+            items = (List)obj;
             iter = items.listIterator();
             setPaginate(false);
-        } 
-        //setListIterator(iter);
+        }
         // set low and high index
 
         getListLimits(context);
@@ -1102,7 +1111,11 @@ public class ModelForm {
      * @return
      */
     public String getListName() {
-        return this.listName;
+        String lstNm =  this.listName;
+        if (UtilValidate.isEmpty(lstNm)) {
+            lstNm = DEFAULT_FORM_RESULT_LIST_NAME;
+        }
+        return lstNm;
     }
 
     /**
@@ -1116,7 +1129,11 @@ public class ModelForm {
      * @return
      */
     public String getListIteratorName() {
-        return this.listIteratorName;
+        String listIterName =  this.listIteratorName;
+        if (UtilValidate.isEmpty(listIterName)) {
+            listIterName = this.getListName();   
+        }
+        return listIterName;
     }
 
     public ListIterator getListIterator(Map context) {
