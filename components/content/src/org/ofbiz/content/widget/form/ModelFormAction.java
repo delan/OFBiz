@@ -347,16 +347,6 @@ public abstract class ModelFormAction {
                 String listIteratorName = resultMapListIteratorNameExdr.expandString(context);
                 Object obj = result.get(listIteratorName);
                 if (obj != null && obj instanceof EntityListIterator) {
-                    try {
-                    boolean ok = ((EntityListIterator)obj).last();
-                    int lastIndex = -2;
-                    if (ok)
-                        lastIndex = ((EntityListIterator)obj).currentIndex();
-                        ok = ((EntityListIterator)obj).first();
-                    } catch (GenericEntityException e) {
-                		Debug.logError(e, module);
-                        throw new RuntimeException(e.getMessage());
-                    }
                 	context.put("listIteratorName", listIteratorName);
                     context.put(listIteratorName, obj);
                 }
