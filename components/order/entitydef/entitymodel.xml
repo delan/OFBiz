@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  */
 -->
 
@@ -692,6 +692,7 @@
       <field name="subscriptionId" type="id"></field>
       <field name="deploymentId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
+      <field name="cancelQuantity" type="floating-point"></field>
       <field name="selectedAmount" type="floating-point"></field>
       <field name="unitPrice" type="currency-amount"></field>
       <field name="unitListPrice" type="currency-amount"></field>
