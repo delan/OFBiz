@@ -105,12 +105,12 @@ public class SQLProcessor {
             return;
         }
         
-        Debug.logVerbose("SQLProcessor:commit() _manualTX=" + _manualTX, module);
+        if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:commit() _manualTX=" + _manualTX, module);
 
         if (_manualTX) {
             try {
                 _connection.commit();
-                Debug.logVerbose("SQLProcessor:commit() : called commit on connection", module);
+                if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:commit() : called commit on connection", module);
             } catch (SQLException sqle) {
                 rollback();
                 throw new GenericDataSourceException("SQL Exception occurred on commit", sqle);
@@ -126,16 +126,16 @@ public class SQLProcessor {
             return;
         }
         
-        Debug.logVerbose("SQLProcessor:rollback() _manualTX=" + _manualTX, module);
+        if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:rollback() _manualTX=" + _manualTX, module);
 
         try {
             if (_manualTX) {
                 _connection.rollback();
-                Debug.logVerbose("SQLProcessor:rollback() : _manualTX=" + _manualTX, module);
+                if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:rollback() : _manualTX=" + _manualTX, module);
             } else {
                 try {
                     TransactionUtil.setRollbackOnly();
-                    Debug.logVerbose("SQLProcessor:rollback() : _manualTX=" + _manualTX, module);
+                    if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:rollback() : _manualTX=" + _manualTX, module);
                 } catch (GenericTransactionException e) {
                     Debug.logError(e, "Error setting rollback only", module);
                     throw new GenericDataSourceException("Error setting rollback only", e);
@@ -162,7 +162,7 @@ public class SQLProcessor {
         if (_rs != null) {
             try {
                 _rs.close();
-                Debug.logVerbose("SQLProcessor: result close() _manualTX=" + _manualTX, module);
+                if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor: result close() _manualTX=" + _manualTX, module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
@@ -173,7 +173,7 @@ public class SQLProcessor {
         if (_ps != null) {
             try {
                 _ps.close();
-                Debug.logVerbose("SQLProcessor: preparedStatement close() _manualTX=" + _manualTX, module);
+                if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor: preparedStatement close() _manualTX=" + _manualTX, module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
@@ -184,7 +184,7 @@ public class SQLProcessor {
         if (_stmt != null) {
             try {
                 _stmt.close();
-                Debug.logVerbose("SQLProcessor: statement close() _manualTX=" + _manualTX, module);
+                if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor: statement close() _manualTX=" + _manualTX, module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
@@ -195,7 +195,7 @@ public class SQLProcessor {
         if ((_connection != null) && (_bDeleteConnection == true)) {
             try {
                 _connection.close();
-                Debug.logVerbose("SQLProcessor: connection close() _manualTX=" + _manualTX, module);
+                if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor: connection close() _manualTX=" + _manualTX, module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
@@ -220,7 +220,7 @@ public class SQLProcessor {
 
         try {
             _connection = ConnectionFactory.getConnection(helperName);
-            Debug.logVerbose("SQLProcessor:connection() : manualTx=" + _manualTX, module);
+            if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:connection() : manualTx=" + _manualTX, module);
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
         }
@@ -252,7 +252,7 @@ public class SQLProcessor {
             if (!_connection.getAutoCommit()) {
                 try {
                     _connection.setAutoCommit(false);
-                    Debug.logVerbose("SQLProcessor:setAutoCommit(false) : manualTx=" + _manualTX, module);
+                    if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:setAutoCommit(false) : manualTx=" + _manualTX, module);
                 } catch (SQLException sqle) {
                     _manualTX = false;
                 }
@@ -263,6 +263,7 @@ public class SQLProcessor {
 
         try {
             if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) {
+                if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.getConnection] : active transaction", module);
                 _manualTX = false;
             }
         } catch (GenericTransactionException e) {
@@ -271,7 +272,9 @@ public class SQLProcessor {
                 "transaction status: " + e.toString(), module);
         }
 
-        _bDeleteConnection = true;
+        if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.getConnection] : con=" + _connection, module);
+        
+        _bDeleteConnection = true;        
         return _connection;
     }
 
@@ -309,8 +312,10 @@ public class SQLProcessor {
             _ind = 1;
             if (specifyTypeAndConcur) {
                 _ps = _connection.prepareStatement(sql, resultSetType, resultSetConcurrency);
+                if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.prepareStatement] _ps=" + _ps, module);
             } else {
                 _ps = _connection.prepareStatement(sql);
+                if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.prepareStatement] (def) _ps=" + _ps, module);
             }
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
