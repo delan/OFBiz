@@ -1981,6 +1981,54 @@ rollback regardless of which method or object is responsible for beginning and e
 <hr class='sepbar'>
 <h3><a name='Conditional'>Conditional (If) Operations</a></h3>
 
+<p class='contenttext'><b><u>if</u></b></p>
+
+<p class='contenttext'>The <code>if</code> operation offers a flexible way of specifying combinations
+of conditions, alternate conditions, and operations to run on true evaluation of the conditions or to
+run otherwise.</p>
+
+<p class='contenttext'>The other if operations are meant for a specific, simple condition when used outside 
+of the condition sub-element of this operation. The attributes of the other if operations are the same when used
+inside this operation. In this case they are empty tags and do not have any sub-elements because the operations
+to run are under then <code>then</code> or <code>else</code> tags.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>condition</td><td>1</td>
+    <td>A simple element with no attributes that contains the condition that will be evaluated
+    to determine which sub-operations to execute. To combine the other if operations documented
+    below the <code>and</code>, <code>or</code>, <code>xor<code>, and <code>not</code> elements
+    can be used. The and, or, and xor elements can contain as many general if operations and 
+    modifyer/combination elements (ie and, or, xor, and not).</td>
+</tr>
+<tr>
+    <td>then</td><td>1</td>
+    <td>The then element is used to contain operations that will run if the
+    condition evaluate to true. A then tag must be included, but can be empty.</td>
+</tr>
+<tr>
+    <td>else-if</td><td>0 to many</td>
+    <td>The else-if element can be used to specify alternate conditional execution blocks.
+    Each else-if element must contain two sub-elements: <code>condition</code> and <code>then</code>.
+    These operations are used the same as the condition and then elements describes above.
+    If the condition of the parent if element is evaluated to false, each condition of the
+    else-if sub-elements will be evaluated, and the operations under the then element corresponding 
+    first condition that evaluates to true will be run.</td>
+</tr>
+<tr>
+    <td>else</td><td>0 or 1</td>
+    <td>The else element can be used to contain operations that will run if the
+    condition evaluates to false, and if no <code>else-if</code> sub-conditions 
+    evaluate to true. It can contain any simple-method operation. The else tag
+    must be placed as the last tag under the if tag.</td>
+</tr>
+</table>
+
 <p class='contenttext'><b><u>if-validate-method</u></b></p>
 
 <p class='contenttext'>The operations contained by the if-validate-method tag will only be executed
@@ -2029,7 +2077,7 @@ operations, including the conditional/if operations.</p>
     <td>else</td><td>0 or 1</td>
     <td>The else tag can be used to contain operations that will run if the
     condition fails, or in other words if the operations under the if tag do
-    not run. It can also contain any simple-method operation. The else tag
+    not run. It can contain any simple-method operation. The else tag
     must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
@@ -2093,7 +2141,7 @@ operations, including the conditional/if operations.</p>
     <td>else</td><td>0 or 1</td>
     <td>The else tag can be used to contain operations that will run if the
     condition fails, or in other words if the operations under the if tag do
-    not run. It can also contain any simple-method operation. The else tag
+    not run. It can contain any simple-method operation. The else tag
     must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
@@ -2164,7 +2212,7 @@ operations, including the conditional/if operations.</p>
     <td>else</td><td>0 or 1</td>
     <td>The else tag can be used to contain operations that will run if the
     condition fails, or in other words if the operations under the if tag do
-    not run. It can also contain any simple-method operation. The else tag
+    not run. It can contain any simple-method operation. The else tag
     must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
@@ -2211,7 +2259,7 @@ operations, including the conditional/if operations.</p>
     <td>else</td><td>0 or 1</td>
     <td>The else tag can be used to contain operations that will run if the
     condition fails, or in other words if the operations under the if tag do
-    not run. It can also contain any simple-method operation. The else tag
+    not run. It can contain any simple-method operation. The else tag
     must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
@@ -2254,7 +2302,7 @@ operations, including the conditional/if operations.</p>
     <td>else</td><td>0 or 1</td>
     <td>The else tag can be used to contain operations that will run if the
     condition fails, or in other words if the operations under the if tag do
-    not run. It can also contain any simple-method operation. The else tag
+    not run. It can contain any simple-method operation. The else tag
     must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
@@ -2297,7 +2345,7 @@ operations, including the conditional/if operations.</p>
     <td>else</td><td>0 or 1</td>
     <td>The else tag can be used to contain operations that will run if the
     condition fails, or in other words if the operations under the if tag do
-    not run. It can also contain any simple-method operation. The else tag
+    not run. It can contain any simple-method operation. The else tag
     must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
@@ -2341,7 +2389,7 @@ operations, including the conditional/if operations.</p>
     <td>else</td><td>0 or 1</td>
     <td>The else tag can be used to contain operations that will run if the
     condition fails, or in other words if the operations under the if tag do
-    not run. It can also contain any simple-method operation. The else tag
+    not run. It can contain any simple-method operation. The else tag
     must be placed as the last tag under the if-* tag.</td>
 </tr>
 </table>
