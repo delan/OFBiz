@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/09/28 21:51:21  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.6  2001/09/27 15:56:13  epabst
  * refactored code to use getRelatedByAnd, filterByDate
  *
@@ -86,6 +89,7 @@ public class ContactHelper {
             if (!includeOld) {
                 partyContactMechList = EntityUtil.filterByDate(partyContactMechList);
             }
+            partyContactMechList = EntityUtil.orderBy(partyContactMechList, UtilMisc.toList("fromDate DESC"));
             if (contactMechTypeId == null) {
                 return EntityUtil.getRelated("ContactMech", partyContactMechList);
             } else {
