@@ -40,6 +40,9 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
         target="updateContentType" title="" type="list">
+        <actions>
+          <entity-and entity-name="ContentType" use-cache="true" />
+        </actions>
         <auto-fields-service service-name="updateContentType"/>
         <field name="contentTypeId" title="ContentTypeId" widget-style="buttontext">
             <display/>
@@ -75,6 +78,9 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
         target="updateContentTypeAttr" title="" type="list">
+        <actions>
+        <entity-and entity-name="ContentTypeAttr" use-cache="true" />
+        </actions>
         <auto-fields-service service-name="createContentTypeAttr"/>
         <field name="contentTypeId" title="ContentTypeId" widget-style="buttontext">
             <display/>
@@ -104,6 +110,9 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
         target="updateContentAssocType" title="" type="list">
+        <actions>
+        <entity-and entity-name="ContentAssocType" use-cache="true" />
+        </actions>
         <auto-fields-service service-name="updateContentAssocType"/>
         <field name="contentAssocTypeId" title="ContentAssocTypeId" widget-style="buttontext">
             <display/>
@@ -133,6 +142,9 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
         target="updateContentPurposeType" title="" type="list">
+        <actions>
+        <entity-and entity-name="ContentPurposeType" use-cache="true" />
+        </actions>
         <auto-fields-service service-name="updateContentPurposeType"/>
         <field name="contentPurposeTypeId" title="ContentPurposeTypeId" widget-style="buttontext">
             <display/>
@@ -163,6 +175,9 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
         target="updateContentAssocPredicate" title="" type="list">
+        <actions>
+        <entity-and entity-name="ContentAssocPredicate" use-cache="true" />
+        </actions>
         <auto-fields-service service-name="updateContentAssocPredicate"/>
         <field name="contentAssocPredicateId"
             title="ContentAssocPredicateId" widget-style="buttontext">
@@ -193,6 +208,9 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
         target="updateContentOperation" title="" type="list">
+        <actions>
+        <entity-and entity-name="ContentOperation" use-cache="true" />
+        </actions>
         <auto-fields-service service-name="updateContentOperation"/>
         <field name="contentOperationId" title="ContentOperationId" widget-style="buttontext">
             <display/>
@@ -239,6 +257,9 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
         target="" title="" type="list">
+        <actions>
+        <entity-and entity-name="ContentPurposeOperation" use-cache="true" />
+        </actions>
         <auto-fields-service service-name="updateContentPurposeOperation" default-field-type="display"/>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentPurposeOperation?contentPurposeTypeId=${contentPurposeTypeId}&amp;contentOperationId=${contentOperationId}&amp;roleTypeId=${roleTypeId}&amp;statusId=${statusId}"/>
