@@ -173,7 +173,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         }
         
         // attempt to release the offline hold on the order (workflow)
-        OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId, orderPropertiesUrl); 
+        OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId); 
                 
         // call the existing confirm order events (calling direct)
         String confirm = CheckOutEvents.renderConfirmOrder(request, response);
@@ -233,10 +233,14 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         paymentPreference.set("authMessage", rawAuthMessage);
         paymentPreference.set("maxAmount", new Double(authAmount));
         
+        // create a payment record too
+        GenericValue payment = OrderChangeHelper.createPaymentFromPreference(paymentPreference, null, null, "Payment received via WorldPay");
+        
         try {
             paymentPreference.store();
+            payment.store();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot set payment preference info", module);
+            Debug.logError(e, "Cannot set payment preference/payment info", module);
             return false;
         } 
         return true;                  

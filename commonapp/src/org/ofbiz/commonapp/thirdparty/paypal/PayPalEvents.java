@@ -299,7 +299,7 @@ public class PayPalEvents {
                 
         if (okay) {
             // attempt to release the offline hold on the order (workflow)            
-            OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId, orderPropertiesUrl);   
+            OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId);   
             
             // call the existing confirm order events (calling direct)
             request.setAttribute("order_id", orderId);
@@ -350,7 +350,7 @@ public class PayPalEvents {
         
         // attempt to release the offline hold on the order (workflow)
         if (okay) 
-            OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId, orderPropertiesUrl);  
+            OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId);  
             
         request.setAttribute(SiteDefs.EVENT_MESSAGE, "<li>Previous PayPal order has been cancelled.");                                            
         return "success";        
@@ -410,11 +410,15 @@ public class PayPalEvents {
         paymentPreference.set("authFlag", paymentStatus.substring(0,1));
         paymentPreference.set("authMessage", paymentType);
         paymentPreference.set("maxAmount", new Double(paymentAmount));
+        
+        // create a payment record too
+        GenericValue payment = OrderChangeHelper.createPaymentFromPreference(paymentPreference, null, null, "Payment receive via PayPal");
                 
         try {
             paymentPreference.store();
+            payment.store();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot set payment preference info", module);
+            Debug.logError(e, "Cannot set payment preference/payment info", module);
             return false;
         } 
         return true;             

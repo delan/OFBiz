@@ -112,8 +112,67 @@ public class OrderChangeHelper {
             Debug.logError("Problems reversing inventory reservations for order #" + orderId, module);
         }                         
     }
+    
+    public static GenericValue createPaymentFromPreference(GenericValue orderPaymentPreference, String paymentRefNumber, String paymentFromId, String comments) {        
+        GenericDelegator delegator = orderPaymentPreference.getDelegator();
+        
+        // get the order header
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = orderPaymentPreference.getRelatedOne("OrderHeader");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot get OrderHeader from payment preference", module);
+        }
+        
+        // get the website payment settings for the order
+        GenericValue webSitePaymentSettings = null;
+        String paymentConfig = null;
+        if (orderHeader != null) {
+            try {
+                webSitePaymentSettings = delegator.findByPrimaryKey("WebSitePaymentSetting", 
+                    UtilMisc.toMap("webSiteId", orderHeader.getString("webSiteId"), 
+                        "paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId")));
+                if (webSitePaymentSettings != null)
+                    paymentConfig = webSitePaymentSettings.getString("paymentConfiguration");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Cannot get the WebSitePaymentSetting for the order header", module);
+            }
+        } else {
+            Debug.logWarning("No order header, cannot create payment", module);
+            return null;
+        }
+        
+        // set the default payment config
+        if (paymentConfig == null) paymentConfig = "payment.properties";
+        String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
+        
+        // create the payment
+        Long payId = delegator.getNextSeqId("Payment");
+        GenericValue payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", payId.toString()));
+        payment.set("paymentTypeId", "RECEIPT");
+        payment.set("paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId"));
+        payment.set("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
+        payment.set("amount", orderPaymentPreference.getDouble("maxAmount"));
+        payment.set("effectiveDate", UtilDateTime.nowTimestamp());        
+        payment.set("partyIdTo", payToPartyId); 
+        if (paymentRefNumber != null) { 
+            payment.set("paymentRefNum", paymentRefNumber);
+        } else {
+            payment.set("paymentRefNum", orderPaymentPreference.getString("authRefNum"));
+        }
+        if (paymentFromId != null) {
+            payment.set("partyIdFrom", paymentFromId);
+        } else {
+            payment.set("partyIdFrom", "_NA_"); 
+        }
+        if (comments != null) {
+            payment.set("comments", comments);        
+        }        
+             
+        return payment;
+    }
 
-    public static void relaeaseOfflineOrderHold(LocalDispatcher dispatcher, String orderId, URL orderPropertiesUrl) {
+    public static boolean relaeaseOfflineOrderHold(LocalDispatcher dispatcher, String orderId) {
         // get the delegator from the dispatcher
         GenericDelegator delegator = dispatcher.getDelegator();
         
@@ -127,21 +186,40 @@ public class OrderChangeHelper {
             workEffort = EntityUtil.getFirst(workEfforts);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems getting WorkEffort with order ref number: " + orderId, module);
+            return false;
         }        
-        
-        // attempt to release the order workflow from 'Hold' status (resume workflow)
+                
         if (workEffort != null) {
-            final String HEADER_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
+            // get the order header
+            String currentStatusId = null;
+            GenericValue orderHeader = null;
+            try {
+                orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problems getting the order header for: " + orderId, module);
+                return false;
+            }
+            // get the current order status to pass into the workflow
+            if (orderHeader != null) {
+                currentStatusId = orderHeader.getString("statusId");
+            } else {
+                Debug.logWarning("OrderHeader is empty, cannot continue", module);
+                return false;
+            }
+            // attempt to release the order workflow from 'Hold' status (resume workflow)                        
             String workEffortId = workEffort.getString("workEffortId");
             try {            
                 WorkflowClient client = new WorkflowClient(dispatcher.getDispatchContext());
                 // first send the new order status to the workflow
-                client.appendContext(workEffortId, UtilMisc.toMap("orderStatusId", HEADER_APPROVE_STATUS));
+                client.appendContext(workEffortId, UtilMisc.toMap("orderStatusId", currentStatusId));
                 // next resume the activity
                 client.resume(workEffortId);                 
             } catch (WfException e) {
-                Debug.logError(e, "Problem resuming workflow", module);                       
+                Debug.logError(e, "Problem resuming workflow", module);      
+                return false;                 
             }
-        }                
+            return true;
+        } 
+        return false;               
     }                   
 }

@@ -32,8 +32,6 @@ import javax.servlet.http.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.workflow.WfException;
-import org.ofbiz.core.workflow.client.*;
 import org.ofbiz.commonapp.order.order.*;
 
 /**
@@ -92,21 +90,7 @@ public class OrderManagerEvents {
                     toBeStored.add(ppref);
                     
                     // create a payment record
-                    Map payFields = UtilMisc.toMap("paymentId", delegator.getNextSeqId("Payment").toString());
-                    GenericValue payment = delegator.makeValue("Payment", payFields);
-                    payment.set("paymentTypeId", "RECEIPT");
-                    payment.set("paymentMethodTypeId", ppref.getString("paymentMethodTypeId"));
-                    payment.set("paymentPreferenceId", ppref.getString("orderPaymentPreferenceId"));
-                    payment.set("amount", ppref.getDouble("maxAmount"));
-                    payment.set("effectiveDate", ppref.get("authDate"));
-                    payment.set("comments", "Payment received offline and manually entered.");
-                    payment.set("partyIdTo", "Company"); // change this to be dynamic
-                    if (placingCustomer != null) {
-                        payment.set("partyIdFrom", placingCustomer.getString("partyId"));
-                    } else {
-                        payment.set("partyIdFrom", "_NA_"); 
-                    }
-                    toBeStored.add(payment);                    
+                    toBeStored.add(OrderChangeHelper.createPaymentFromPreference(ppref, null, placingCustomer.getString("partyId"), "Payment received offline and manually entered."));                                  
                 }
                 
                 // store the updated preferences and newly created payments
@@ -118,30 +102,8 @@ public class OrderManagerEvents {
                     return "error";
                 }
                 
-                // update the status of the order and items
-                try {
-                    // set the status on the order header
-                    Map statusFields = UtilMisc.toMap("orderId", orderId, "statusId", HEADER_APPROVE_STATUS, "userLogin", userLogin);
-                    Map statusResult = dispatcher.runSync("changeOrderStatus", statusFields);                               
-                    if (statusResult.containsKey(ModelService.ERROR_MESSAGE)) {
-                        Debug.logError("Problem adjust OrderHeader status : " + statusResult.get(ModelService.ERROR_MESSAGE), module);
-                        request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting the order status.");
-                        return "error";                                                                       
-                    }
-                        
-                    // set the status on the order item(s)
-                    Map itemStatusFields = UtilMisc.toMap("orderId", orderId, "statusId", ITEM_APPROVE_STATUS, "userLogin", userLogin);
-                    Map itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);                        
-                    if (itemStatusResult.containsKey(ModelService.ERROR_MESSAGE)) {
-                        Debug.logError("Problem adjust OrderItem status : " + itemStatusResult.get(ModelService.ERROR_MESSAGE), module);
-                        request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting the order status.");
-                        return "error";
-                    }                                                                                                                                                      
-               } catch (GenericServiceException e) {
-                   Debug.logError(e, "Service invocation error on changing order/item status", module);
-                   request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting the order status.");
-                   return "error";                  
-               }
+                // set the status of the order to approved
+                OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);             
             }
         }
         return "success";
@@ -162,10 +124,6 @@ public class OrderManagerEvents {
             Debug.logWarning(e, module);
         }
                 
-        // get some payment related strings from order.properties.
-        final String HEADER_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
-        final String ITEM_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
-
         String orderId = request.getParameter("orderId");
         String workEffortId = request.getParameter("workEffortId");
         
@@ -246,21 +204,7 @@ public class OrderManagerEvents {
                     toBeStored.add(paymentPreference);
                     
                     // create a payment record
-                    Map payFields = UtilMisc.toMap("paymentId", delegator.getNextSeqId("Payment").toString());
-                    GenericValue payment = delegator.makeValue("Payment", payFields);
-                    payment.set("paymentTypeId", "RECEIPT");
-                    payment.set("paymentMethodTypeId", paymentPreference.getString("paymentMethodTypeId"));
-                    payment.set("paymentPreferenceId", paymentPreference.getString("orderPaymentPreferenceId"));
-                    payment.set("amount", paymentPreference.getDouble("maxAmount"));
-                    payment.set("effectiveDate", now);
-                    payment.set("comments", "Payment received offline and manually entered.");
-                    payment.set("partyIdTo", "Company"); // change this to be dynamic
-                    if (placingCustomer != null) {
-                        payment.set("partyIdFrom", placingCustomer.getString("partyId"));
-                    } else {
-                        payment.set("partyIdFrom", "_NA_"); 
-                    }
-                    toBeStored.add(payment);                       
+                    toBeStored.add(OrderChangeHelper.createPaymentFromPreference(paymentPreference, null, placingCustomer.getString("partyId"), "Payment received offline and manually entered."));                               
                 }
             }
         }
@@ -291,43 +235,10 @@ public class OrderManagerEvents {
         }
                 
         // update the status of the order and items
-        try {
-            // set the status on the order header
-            Map statusFields = UtilMisc.toMap("orderId", orderId, "statusId", HEADER_APPROVE_STATUS, "userLogin", userLogin);
-            Map statusResult = dispatcher.runSync("changeOrderStatus", statusFields);                               
-            if (statusResult.containsKey(ModelService.ERROR_MESSAGE)) {
-                Debug.logError("Problem adjust OrderHeader status : " + statusResult.get(ModelService.ERROR_MESSAGE), module);
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting the order status.");
-                return "error";                                                                       
-            }
-                        
-            // set the status on the order item(s)
-            Map itemStatusFields = UtilMisc.toMap("orderId", orderId, "statusId", ITEM_APPROVE_STATUS, "userLogin", userLogin);
-            Map itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);                        
-            if (itemStatusResult.containsKey(ModelService.ERROR_MESSAGE)) {
-                Debug.logError("Problem adjust OrderItem status : " + itemStatusResult.get(ModelService.ERROR_MESSAGE), module);
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting the order status.");
-                return "error";
-            }                                                                                                                                                      
-        } catch (GenericServiceException e) {
-            Debug.logError(e, "Service invocation error on changing order/item status", module);
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting the order status.");
-            return "error";                  
-        }
+        OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
         
-        // release the order workflow from 'Hold' status (resume workflow)
-        try {
-            DispatchContext dctx = dispatcher.getDispatchContext();
-            WorkflowClient client = new WorkflowClient(dctx);
-            // first send the new order status to the workflow
-            client.appendContext(workEffortId, UtilMisc.toMap("orderStatusId", HEADER_APPROVE_STATUS));
-            // next resume the activity
-            client.resume(workEffortId);                 
-        } catch (WfException e) {
-            Debug.logError(e, "Problem resuming workflow", module);
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problem resuming workflow!");
-            return "error";
-        }
+        // attempt to release the order workflow from 'Hold' status (resume workflow)
+        OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId);
                     
         return "success";
     }    
