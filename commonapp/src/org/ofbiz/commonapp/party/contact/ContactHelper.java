@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/09/19 08:35:19  jonesde
+ * Initial checkin of refactored entity engine.
+ *
  * Revision 1.2  2001/09/13 18:32:55  epabst
  * format credit card uniformly
  *
@@ -42,6 +45,10 @@ import org.ofbiz.core.util.*;
  *@created Sep 12, 2001
  */
 public class ContactHelper {  
+    public static Collection getContactMech(GenericValue party, boolean includeOld) {
+        return getContactMech(party, null, includeOld);
+    }
+
     public static Collection getContactMech(GenericValue party, String contactMechTypeId, boolean includeOld) {
         Collection result = new LinkedList();
         Date now = new java.util.Date();
@@ -65,6 +72,39 @@ public class ContactHelper {
         return result;
     }
     
+
+    public static Collection getContactMech(GenericValue party, String contactMechPurposeTypeId, String contactMechTypeId, boolean includeOld) {
+        GenericDelegator delegator = party.getDelegator();
+        Iterator partyContactMechPurposeIter = null;
+        try {
+            partyContactMechPurposeIter = delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", party.getString("partyId"), "contactMechPurposeTypeId", contactMechPurposeTypeId), null).iterator();
+        } catch (GenericEntityException gee) {
+            Debug.logWarning(gee);
+            return Collections.EMPTY_LIST;
+        }
+        Collection result = new ArrayList();
+        java.util.Date now = new java.util.Date();
+        while(partyContactMechPurposeIter.hasNext()) {
+            GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposeIter.next();
+            if(includeOld || partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(now)){
+                try {
+                    GenericValue partyContactMech = partyContactMechPurpose.getRelatedOne("PartyContactMech");
+                    if(includeOld || partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(now)) {
+                        GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");
+                        if(contactMech != null) {
+                          if(contactMechTypeId == null || contactMechTypeId.equals(contactMech.get("contactMechTypeId"))) {
+                              result.add(contactMech);
+                          }//else wrong type
+                        }
+                    }
+                } catch (GenericEntityException gee) {
+                    Debug.logWarning(gee);
+                }
+            }
+        }
+        return result;
+    }
+
     public static String formatCreditCard(GenericValue creditCardInfo) {
         StringBuffer result = new StringBuffer(16);
         result.append(creditCardInfo.getString("cardType"));
