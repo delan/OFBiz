@@ -48,19 +48,6 @@
         <put section='content' content='/install.jsp'/>
     </define>
 
-    <define id='entityref' region='MAIN_REGION'>
-        <put section='title'>Entity Reference</put>
-        <put section='content' content='/entity/entityref.jsp'/>
-    </define>
-    <define id='entityref_list' region='MAIN_REGION'>
-        <put section='title'>Entity Reference List/Index</put>
-        <put section='content' content='/entity/entityref_list.jsp'/>
-    </define>
-    <define id='entityref_main' region='MAIN_REGION'>
-        <put section='title'>Entity Reference Main</put>
-        <put section='content' content='/entity/entityref_main.jsp'/>
-    </define>
-
     <define id='entitymaint' region='MAIN_REGION'>
         <put section='title'>Entity Data Maintenance</put>
         <put section='content' content='/entity/entitymaint.jsp'/>

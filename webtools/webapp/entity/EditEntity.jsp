@@ -31,9 +31,10 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
-<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <%
 if (security.hasPermission("ENTITY_MAINT", session)) {
@@ -190,16 +191,10 @@ if (security.hasPermission("ENTITY_MAINT", session)) {
   if (typesCol != null) types = new TreeSet(typesCol);
 %>
 
-<html>
-<head>
-  <title>Entity Editor</title>
-  <style>
-    A.listtext {font-family: Helvetica,sans-serif; font-size: 10pt; font-weight: bold; text-decoration: none; color: blue;}
-    A.listtext:hover {color:red;}
-  </style>
-</head>
-<body>
-
+<style>
+A.listtext {font-family: Helvetica,sans-serif; font-size: 10pt; font-weight: bold; text-decoration: none; color: blue;}
+A.listtext:hover {color:red;}
+</style>
 <H3>Entity Editor</H3>
 
 <%if (errorMsg.length() > 0) {%>
@@ -207,11 +202,11 @@ The following errors occurred:
 <ul><%=errorMsg%></ul>
 <%}%>
 
-<FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity")%>' style='margin: 0;'>
+<FORM method=POST action='<ofbiz:url>/view/EditEntity</ofbiz:url>' style='margin: 0;'>
   <INPUT type=TEXT size='30' name='entityName'>
   <INPUT type=SUBMIT value='Edit Specified Entity'>
 </FORM>
-<FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity")%>' style='margin: 0;'>
+<FORM method=POST action='<ofbiz:url>/view/EditEntity</ofbiz:url>' style='margin: 0;'>
   <SELECT name='entityName'>
     <OPTION selected>&nbsp;</OPTION>
     <%Iterator entIter1 = entSet.iterator();%>
@@ -222,7 +217,7 @@ The following errors occurred:
   <INPUT type=SUBMIT value='Edit Specified Entity'>
 </FORM>
 <hr>
-<FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?event=addEntity")%>' style='margin: 0;'>
+<FORM method=POST action='<ofbiz:url>/view/EditEntity?event=addEntity</ofbiz:url>' style='margin: 0;'>
   Entity Name (Java style): <INPUT type=TEXT size='60' name='entityName'><br>
   Entity Group: <INPUT type=TEXT size='60' name='entityGroup' value='org.ofbiz.commonapp'>
   <INPUT type=SUBMIT value='Create Entity'>
@@ -233,10 +228,10 @@ The following errors occurred:
 <%}else{%>
 
 <BR>
-<A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName)%>'>Reload Current Entity: <%=entityName%></A><BR>
+<A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%></ofbiz:url>'>Reload Current Entity: <%=entityName%></A><BR>
 <BR>
 
-<FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateEntity")%>' style='margin: 0;'>
+<FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=updateEntity</ofbiz:url>' style='margin: 0;'>
   <TABLE>
   <TR>
     <TD>Entity Name</TD>
@@ -321,7 +316,7 @@ The following errors occurred:
         <TD><%=field.getColName()%> (<%=field.getColName().length()%>)</TD>
         <TD><%=field.getType()%></TD>
         <TD>
-          <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&fieldName=" + field.getName() + "&event=updateField")%>' style='margin: 0;'>
+          <FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&fieldName=<%=field.getName()%>&event=updateField</ofbiz:url>' style='margin: 0;'>
             <INPUT type=CHECKBOX name='primaryKey'<%=field.getIsPk()?" checked":""%>>
             <SELECT name='fieldType'>
               <OPTION selected><%=field.getType()%></OPTION>
@@ -333,12 +328,12 @@ The following errors occurred:
             <INPUT type=submit value='Set'>
           </FORM>
         </TD>
-        <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&fieldName=" + field.getName() + "&event=removeField")%>'>Remove</A></TD>
+        <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&fieldName=<%=field.getName()%>&event=removeField</ofbiz:url>'>Remove</A></TD>
       </TR>
     <%}%>
   </TABLE>
 
-<FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=addField")%>'>
+<FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addField</ofbiz:url>'>
   Add new field with <u>Field Name (Java style)</u> and field type.<BR>
   <INPUT type=text size='40' maxlength='30' name='name'>
   <SELECT name='fieldType'>
@@ -360,8 +355,8 @@ The following errors occurred:
     <%ModelRelation relation = entity.getRelation(r);%>
     <%ModelEntity relEntity = reader.getModelEntity(relation.getRelEntityName());%>
     <tr bgcolor='#CCCCFF'>
-      <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateRelation&relNum=" + r)%>'>
-        <td align="left"><%=relation.getTitle()%><A class='listtext' href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + relation.getRelEntityName())%>'><%=relation.getRelEntityName()%></A></td>
+      <FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=updateRelation&relNum=<%=r%></ofbiz:url>'>
+        <td align="left"><%=relation.getTitle()%><A class='listtext' href='<ofbiz:url>/view/EditEntity?entityName=<%=relation.getRelEntityName()%></ofbiz:url>'><%=relation.getRelEntityName()%></A></td>
         <td>
           <INPUT type=TEXT name='title' value='<%=relation.getTitle()%>'>
           <SELECT name='type'>
@@ -374,14 +369,14 @@ The following errors occurred:
         <td>
           <INPUT type=SUBMIT value='Set'>
         </td>
-        <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&relNum=" + r + "&event=removeRelation")%>'>Remove</A></TD>
-        <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&relNum=" + r + "&event=addKeyMap")%>'>Add&nbsp;KeyMap</A></TD>
-        <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&relNum=" + r + "&event=addReverse")%>'>Add&nbsp;Reverse</A></TD>
+        <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&relNum=<%=r%>&event=removeRelation"%></ofbiz:url>'>Remove</A></TD>
+        <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&relNum=<%=r%>&event=addKeyMap"%></ofbiz:url>'>Add&nbsp;KeyMap</A></TD>
+        <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&relNum=<%=r%>&event=addReverse"%></ofbiz:url>'>Add&nbsp;Reverse</A></TD>
       </FORM>
     </tr>
     <%for (int km=0; km<relation.getKeyMapsSize(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.getKeyMap(km);%>
       <tr>
-        <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateKeyMap&relNum=" + r + "&kmNum=" + km)%>'>
+        <FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=updateKeyMap&relNum=<%=r%>&kmNum=<%=km%></ofbiz:url>'>
           <td></td>
           <td colspan='2'>
             Main:
@@ -404,14 +399,14 @@ The following errors occurred:
           <td>
             <INPUT type=SUBMIT value='Set'>
           </td>          
-          <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&relNum=" + r + "&kmNum=" + km + "&event=removeKeyMap")%>'>Remove</A></TD>
+          <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&relNum=<%=r%>&kmNum=<%=km%>&event=removeKeyMap"%></ofbiz:url>'>Remove</A></TD>
         </FORM>
       </tr>
     <%}%>			
   <%}%>
   </TABLE>
 
-<FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=addRelation")%>'>
+<FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addRelation"%></ofbiz:url>'>
   Add new relation with <u>Title</u>, <u>Related Entity Name</u> and relation type.<BR>
   <INPUT type=text size='40' maxlength='30' name='title'>
   <%-- <INPUT type=text size='40' maxlength='30' name='relEntityName'> --%>
@@ -430,21 +425,8 @@ The following errors occurred:
 </FORM>
 
 <%}%>
-
-</body>
-</html>
-
 <%} else {%>
-<html>
-<head>
-  <title>Entity Editor</title>
-</head>
-<body>
-
 <H3>Entity Editor</H3>
 
 ERROR: You do not have permission to use this page (ENTITY_MAINT needed)
-
-</body>
-</html>
 <%}%>

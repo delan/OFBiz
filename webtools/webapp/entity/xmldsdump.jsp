@@ -23,17 +23,36 @@
  * @version 1.0
 --%>
 
-<%@ include file="/includes/envsetup.jsp" %>
-
-<%@ page import="org.ofbiz.core.entity.model.*" %>
+<%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.w3c.dom.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="org.ofbiz.core.entity.model.*" %>
 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <%
   String filename = request.getParameter("filename");
   String[] entityName = request.getParameterValues("entityName");
   boolean checkAll = "true".equals(request.getParameter("checkAll"));
   boolean tobrowser = request.getParameter("tobrowser")!=null?true:false;
-
+%>
+<%if (tobrowser) {%>
+<%
+    session.setAttribute("xmlrawdump_entitylist", entityName);
+%>
+    <br>
+    <h2>XML Export from DataSource(s)</h2>
+    <div>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</div>
+    <hr>
+    <%if(security.hasPermission("ENTITY_MAINT", session)) {%>
+        <a href='<ofbiz:url>/xmldsrawdump</ofbiz:url>' class='buttontext' target='_blank'>Click Here to Get Data (or save to file)</a>
+    <%} else {%>
+      <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
+    <%}%>
+<%} else {%>
+<%
   ModelReader reader = delegator.getModelReader();
   Collection ec = reader.getEntityNames();
   TreeSet entityNames = new TreeSet(ec);
@@ -59,14 +78,6 @@
     }
   }
 %>
-
-<%if (tobrowser && document != null) {%>
-    <%response.setContentType("text/plain");%>
-    <%UtilXml.writeXmlDocument(response.getOutputStream(), document);%>
-<%} else {%>
-    <%@ include file="/includes/header.jsp" %>
-    <%@ include file="/includes/onecolumn.jsp" %> 
-    
     <br>
     <h2>XML Export from DataSource(s)</h2>
     <div>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</div>
@@ -91,14 +102,14 @@
       <hr>
     
       <h3>Export:</h3>
-      <FORM method=POST action='<%=response.encodeURL(controlPath + "/xmldsdump")%>'>
+      <FORM method=POST action='<ofbiz:url>/xmldsdump</ofbiz:url>'>
         <div>Filename: <INPUT type=text size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'></div>
         <div>OR Out to Browser: <INPUT type=checkbox name='tobrowser' <%=tobrowser?"checked":""%>></div>
         <br>
         <div>Entity Names:</div>
         <INPUT type=submit value='Export'>
-        <A href='<%=response.encodeURL(controlPath + "/xmldsdump?checkAll=true")%>'>Check All</A>
-        <A href='<%=response.encodeURL(controlPath + "/xmldsdump")%>'>Un-Check All</A>
+        <A href='<ofbiz:url>/xmldsdump?checkAll=true</ofbiz:url>' class='buttontext'>Check All</A>
+        <A href='<ofbiz:url>/xmldsdump</ofbiz:url>' class='buttontext'>Un-Check All</A>
         <TABLE>
           <TR>
             <%Iterator iter = entityNames.iterator();%>
@@ -119,15 +130,10 @@
         </TABLE>
     
         <INPUT type=submit value='Export'>
-        <A href='<%=response.encodeURL(controlPath + "/xmldsdump?checkAll=true")%>'>Check All</A>
-        <A href='<%=response.encodeURL(controlPath + "/xmldsdump")%>'>Un-Check All</A>
+        <A href='<ofbiz:url>/xmldsdump?checkAll=true</ofbiz:url>' class='buttontext'>Check All</A>
+        <A href='<ofbiz:url>/xmldsdump</ofbiz:url>' class='buttontext'>Un-Check All</A>
       </FORM>
     <%} else {%>
       <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
     <%}%>
-    
-    <%@ include file="/includes/onecolumnclose.jsp" %> 
-    <%@ include file="/includes/footer.jsp" %>
 <%}%>
-    
-

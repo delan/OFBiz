@@ -28,18 +28,14 @@
  */
 %>
 
-<%@ page import="java.text.*" %>
-<%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="org.ofbiz.core.security.*" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="java.text.*, java.util.*, java.net.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
-<%pageContext.setAttribute("PageName", "ViewGeneric"); %>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%String entityName = request.getParameter("entityName");%>
 <%ModelReader reader = delegator.getModelReader();%>
@@ -102,13 +98,13 @@ function ShowTab(lname)
   <b>View Entity: <%=entityName%> with PK: <%=findByPK.toString()%></b>
 </div>
 
-<a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName)%>" class="buttontext">[Find <%=entityName%>]</a>
+<a href='<ofbiz:url>/FindGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Find <%=entityName%>]</a>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?entityName=" + entityName)%>" class="buttontext">[Create New <%=entityName%>]</a>
+  <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Create New <%=entityName%>]</a>
 <%}%>
 <%if(value != null){%>
   <%if(hasDeletePermission){%>
-    <a href="<%=response.encodeURL(controlPath + "/UpdateGeneric?UPDATE_MODE=DELETE&" + curFindString)%>" class="buttontext">[Delete this <%=entityName%>]</a>
+    <a href='<ofbiz:url>/UpdateGeneric?UPDATE_MODE=DELETE&<%=curFindString%></ofbiz:url>' class="buttontext">[Delete this <%=entityName%>]</a>
   <%}%>
 <%}%>
 <br>
@@ -197,7 +193,7 @@ function ShowTab(lname)
     useValue = false;
   }
 %>
-<form action="<%=response.encodeURL(controlPath + "/UpdateGeneric?entityName=" + entityName)%>" method="POST" name="updateForm" style="margin:0;">
+<form action='<ofbiz:url>/UpdateGeneric?entityName=<%=entityName%></ofbiz:url>' method="POST" name="updateForm" style="margin:0;">
 <table cellpadding="2" cellspacing="2" border="0">
 
 <%if(value == null){%>
@@ -440,10 +436,10 @@ function ShowTab(lname)
       
     <%if(valueRelated == null){%>
       <%if(security.hasEntityPermission(relatedEntity.getTableName(), "_CREATE", session)){%>
-        <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?" + findString)%>" class="buttontext">[Create <%=relatedEntity.getEntityName()%>]</a>
+        <a href='<ofbiz:url>/ViewGeneric?<%=findString%></ofbiz:url>' class="buttontext">[Create <%=relatedEntity.getEntityName()%>]</a>
       <%}%>
     <%}else{%>
-      <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?" + findString)%>" class="buttontext">[View <%=relatedEntity.getEntityName()%>]</a>
+      <a href='<ofbiz:url>/ViewGeneric?<%=findString%></ofbiz:url>' class="buttontext">[View <%=relatedEntity.getEntityName()%>]</a>
     <%}%>
   <div style='width: 100%; overflow: visible; border-style: none;'>
     <table border="0" cellspacing="2" cellpadding="2">
@@ -518,9 +514,9 @@ function ShowTab(lname)
       }
     %>
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?" + UtilFormatOut.encodeQuery(findString))%>" class="buttontext">[Create <%=relatedEntity.getEntityName()%>]</a>
+      <a href='<ofbiz:url>/ViewGeneric?<%=UtilFormatOut.encodeQuery(findString)%></ofbiz:url>' class="buttontext">[Create <%=relatedEntity.getEntityName()%>]</a>
     <%}%>    
-    <a href="<%=response.encodeURL(controlPath + "/FindGeneric?find=true&" + UtilFormatOut.encodeQuery(findString))%>" class="buttontext">[Find <%=relatedEntity.getEntityName()%>]</a>
+    <a href='<ofbiz:url>/FindGeneric?find=true&<%=UtilFormatOut.encodeQuery(findString)%></ofbiz:url>' class="buttontext">[Find <%=relatedEntity.getEntityName()%>]</a>
 <%--
   <div style='width:100%;overflow:visible;border-style:none;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
@@ -620,7 +616,3 @@ Displaying <%=relatedLoopCount%> entities.
 <%}else{%>
   <h3>You do not have permission to view this page (<%=entity.getTableName()%>_ADMIN, or <%=entity.getTableName()%>_VIEW needed).</h3>
 <%}%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>
-

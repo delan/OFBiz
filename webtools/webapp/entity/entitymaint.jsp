@@ -28,13 +28,14 @@
  */
 %> 
 
-<%@ page import="org.ofbiz.core.util.*" %> 
+<%@ page import="java.util.*, java.net.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
-<% pageContext.setAttribute("PageName", "entitymaint"); %> 
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%
   ModelReader reader = delegator.getModelReader();
@@ -71,13 +72,13 @@
                     <TD colspan='3' align=center><div class='tabletext'>View Entity</div></TD>
               <%} else {%>
                   <%if (security.hasEntityPermission(entity.getTableName(), "_CREATE", session)){%>
-                    <TD><a href="<%=response.encodeURL(controlPath + "/ViewGeneric?entityName=" + entity.getEntityName())%>" class="buttontext">Create</a></TD>
+                    <TD><a href='<ofbiz:url>/ViewGeneric?entityName=<%=entity.getEntityName()%></ofbiz:url>' class="buttontext">Create</a></TD>
                   <%} else {%>
                     <TD><div class='tabletext'>Perm</div></TD>
                   <%}%>
                   <%if (security.hasEntityPermission(entity.getTableName(), "_VIEW", session)){%>
-                    <TD><a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entity.getEntityName())%>" class="buttontext">Find</a></TD>
-                    <TD><a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entity.getEntityName())%>&find=true&VIEW_SIZE=50&VIEW_INDEX=0" class="buttontext">Find All</a></TD>
+                    <TD><a href='<ofbiz:url>/FindGeneric?entityName=<%=entity.getEntityName()%></ofbiz:url>' class="buttontext">Find</a></TD>
+                    <TD><a href='<ofbiz:url>/FindGeneric?entityName=<%=entity.getEntityName()%>&find=true&VIEW_SIZE=50&VIEW_INDEX=0</ofbiz:url>' class="buttontext">Find All</a></TD>
                   <%} else {%>
                     <TD><div class='tabletext'>Perm</div></TD>
                     <TD><div class='tabletext'>Perm</div></TD>
@@ -109,5 +110,3 @@
 <%}else{%>
   <h3>You do not have permission to view this page (ENTITY_MAINT needed).</h3>
 <%}%>
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

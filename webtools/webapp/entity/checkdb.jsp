@@ -55,10 +55,6 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   }
 %>
 
-<html>
-<head><title>Check/Update Database</title></head>
-<body>
-
 <H3>Check/Update Database</H3>
 
 <form method=post action='<%=response.encodeURL(controlPath + "/view/checkdb")%>'>
@@ -77,21 +73,8 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   <LI><%=message%>
 <%}%>
 </UL>
-
-</body>
-</html>
-
 <%}else{%>
-<html>
-<head>
-  <title>Entity Editor</title>
-</head>
-<body>
-
 <H3>Entity Editor</H3>
 
 ERROR: You do not have permission to use this page (ENTITY_MAINT needed)
-
-</body>
-</html>
 <%}%>

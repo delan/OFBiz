@@ -9,8 +9,6 @@
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%
-  String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
-
   errorMessages = new LinkedList();
   String groupfile = request.getParameter("groupfile");
   String loadFile = request.getParameter("loadFile");
@@ -55,13 +53,13 @@
 %>
 <br>
 Specify the group name for the entity group whose data you want to load:<br>
-<form method=post action='<%=response.encodeURL(controlPath + "/install?groupfile=group")%>'>
+<form method=post action='<ofbiz:url>/install?groupfile=group</ofbiz:url>'>
   Group Name: <INPUT type=text name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
   <INPUT type=submit value='Load Data'>
 </form>
 <br>
 OR Specify the filename of a ".sql" or ".xml" file to load:<br>
-<form method=post action='<%=response.encodeURL(controlPath + "/install?groupfile=file")%>'>
+<form method=post action='<ofbiz:url>/install?groupfile=file</ofbiz:url>'>
   Server File Path/Name: <INPUT type=text name='loadFile' value='<%=loadFile!=null?loadFile:""%>' size='60'>
   <br>
   Group Name (required if .sql file): <INPUT type=text name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
@@ -86,7 +84,7 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
         <%}%>
         <LI><DIV class='tabletext'>Entity granularity security settings (auto generated, not in a file)</DIV>
       </UL>
-      <A href='<%=response.encodeURL(controlPath + "/install?loadfiles=true&groupfile=group&groupName=" + groupName)%>' class='buttontext'>[Yes, Load Now]</A>
+      <A href='<ofbiz:url>/install?loadfiles=true&groupfile=group&groupName=<%=groupName%></ofbiz:url>' class='buttontext'>[Yes, Load Now]</A>
     <%}else{%>
       <br>
       <DIV class='head1'>Open For Business Installation (Data Load) Page</DIV>

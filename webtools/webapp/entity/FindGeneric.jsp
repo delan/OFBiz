@@ -28,18 +28,14 @@
  */
 %>
 
-<%@ page import="java.text.*" %>
-<%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="org.ofbiz.core.security.*" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="java.text.*, java.util.*, java.net.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
-<%pageContext.setAttribute("PageName", "FindGeneric"); %>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%String entityName=request.getParameter("entityName");%>
 <%ModelReader reader = delegator.getModelReader();%>
@@ -129,7 +125,7 @@
 <h3 style='margin:0;'>Find <%=entity.getEntityName()%>s</h3>
 <%-- Note: you may use the '%' character as a wildcard for String fields. --%>
 <br>To find ALL <%=entity.getEntityName()%>s, leave all entries blank.
-<form method="post" action="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName)%>" style='margin:0;'>
+<form method="post" action='<ofbiz:url>/FindGeneric?entityName=<%=entityName%></ofbiz:url>' style='margin:0;'>
 <INPUT type=hidden name='find' value='true'>
 <table cellpadding="2" cellspacing="2" border="0">
   <%for (int fnum=0; fnum<entity.getFieldsSize(); fnum++) {%>
@@ -150,7 +146,7 @@
 <b><%=entity.getEntityName()%>s found by: <%=findByEntity.toString()%></b><br>
 <b><%=entity.getEntityName()%>s curFindString: <%=curFindString%></b><br>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?entityName=" + entityName)%>" class="buttontext">[Create New <%=entity.getEntityName()%>]</a>
+  <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Create New <%=entity.getEntityName()%>]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
@@ -158,13 +154,13 @@
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>
-          <a href="<%=response.encodeURL(controlPath + "/FindGeneric?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
+          <a href='<ofbiz:url>/FindGeneric?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=(viewIndex-1)%></ofbiz:url>' class="buttontext">[Previous]</a> |
         <% } %>
         <% if(arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
         <% if(arraySize>highIndex) { %>
-          | <a href="<%=response.encodeURL(controlPath + "/FindGeneric?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
+          | <a href='<ofbiz:url>/FindGeneric?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=(viewIndex+1)%></ofbiz:url>' class="buttontext">[Next]</a>
         <% } %>
         </b>
       </td>
@@ -207,11 +203,11 @@
             }
           }
         %>
-        <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?" + findString)%>" class="buttontext">[View]</a>
+        <a href='<ofbiz:url>/ViewGeneric?<%=findString%></ofbiz:url>' class="buttontext">[View]</a>
       </td>
       <%if (hasDeletePermission) {%>
         <td>
-          <a href="<%=response.encodeURL(controlPath + "/UpdateGeneric?" + findString + "&UPDATE_MODE=DELETE&" + curFindString)%>" class="buttontext">[Delete]</a>
+          <a href='<ofbiz:url>/UpdateGeneric?<%=findString%>&UPDATE_MODE=DELETE&<%=curFindString%></ofbiz:url>' class="buttontext">[Delete]</a>
         </td>
       <%}%>
     <%for (int fnum = 0; fnum < entity.getFieldsSize(); fnum++) {%>
@@ -263,25 +259,22 @@
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>
-          <a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName + "&" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
+          <a href='<ofbiz:url>/FindGeneric?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=(viewIndex-1)%></ofbiz:url>' class="buttontext">[Previous]</a> |
         <% } %>
         <% if(arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
         <% if(arraySize>highIndex) { %>
-          | <a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName + "&" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
+          | <a href='<ofbiz:url>/FindGeneric?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=(viewIndex+1)%></ofbiz:url>' class="buttontext">[Next]</a>
         <% } %>
         </b>
       </td>
     </tr>
-<% } %>
+<%}%>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?entityName=" + entityName)%>" class="buttontext">[Create New <%=entity.getEntityName()%>]</a>
+  <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Create New <%=entity.getEntityName()%>]</a>
 <%}%>
 <%}else{%>
   <h3>You do not have permission to view this page (<%=entity.getTableName()%>_ADMIN, or <%=entity.getTableName()%>_VIEW needed).</h3>
 <%}%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

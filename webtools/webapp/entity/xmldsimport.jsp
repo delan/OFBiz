@@ -23,14 +23,15 @@
  * @version 1.0
 --%>
 
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
-
-<%@ page import="org.ofbiz.core.entity.model.*" %>
+<%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.w3c.dom.*" %>
-<%@ page import="java.net.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="org.ofbiz.core.entity.model.*" %>
 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <%
   String filename = request.getParameter("filename");
   boolean isUrl = request.getParameter("IS_URL")!=null?true:false;
@@ -100,6 +101,3 @@
 <%}else{%>
   <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
 <%}%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %> 
-<%@ include file="/includes/footer.jsp" %>
