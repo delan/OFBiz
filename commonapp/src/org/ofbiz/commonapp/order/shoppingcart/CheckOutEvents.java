@@ -216,7 +216,7 @@ public class CheckOutEvents {
         String orderId = cart.getOrderId();
         
         // format the grandTotal
-        DecimalFormat formatter = new DecimalFormat("###.##");
+        DecimalFormat formatter = new DecimalFormat("##0.00");
         double grandTotalPrimitive = cart.getGrandTotal();
 		String grandTotalString = formatter.format(grandTotalPrimitive);               
         Double grandTotal = new Double(grandTotalPrimitive);

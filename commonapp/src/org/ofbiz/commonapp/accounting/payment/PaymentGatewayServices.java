@@ -96,7 +96,7 @@ public class PaymentGatewayServices {
                  
         // get the order amounts                                 
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
-        DecimalFormat formatter = new DecimalFormat("###.##");
+        DecimalFormat formatter = new DecimalFormat("##0.00");
         String grandTotalString = formatter.format(orh.getOrderGrandTotal());
         Double grandTotal = new Double(grandTotalString);
         double amountToBill = grandTotal.doubleValue();        
@@ -275,7 +275,7 @@ public class PaymentGatewayServices {
         }
         
         // format the decimal
-        DecimalFormat formatter = new DecimalFormat("###.##");
+        DecimalFormat formatter = new DecimalFormat("##0.00");
         String amountString = formatter.format(thisAmount);        
         Double processAmount = new Double(amountString);
         
