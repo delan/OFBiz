@@ -47,10 +47,7 @@ public class EntityExpr extends EntityCondition {
 
     public EntityExpr(String lhs, EntityOperator operator, Object rhs) {
         if (lhs == null) {
-            throw new IllegalArgumentException("The left EntityCondition argument cannot be null");
-        }
-        if (rhs == null) {
-            throw new IllegalArgumentException("The right EntityCondition argument cannot be null");
+            throw new IllegalArgumentException("The field name cannot be null");
         }
         if (operator == null) {
             throw new IllegalArgumentException("The operator argument cannot be null");
