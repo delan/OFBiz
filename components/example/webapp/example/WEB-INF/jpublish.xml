@@ -18,7 +18,7 @@
     </repository>
     <repository name="common" classname="org.jpublish.repository.filesystem.ExtendedFileSystemRepository">
         <config-dir>WEB-INF/pagedefs</config-dir>
-        <root>../../../common/webcommon</root>
+        <root>../../../../components/common/webcommon</root>
     </repository>
   		
     <!-- Define the character encoding map -->
