@@ -469,7 +469,17 @@ public class UtilCache {
             utilCache.clearExpired();
         }
     }
-
+    
+    /** Checks for a non-expired key in a specific cache */
+    public static boolean validKey(String cacheName, Object key) {
+        UtilCache cache = (UtilCache) utilCacheTable.get(cacheName);
+        if (cache != null) {
+            if (cache.containsKey(key))
+                return true;
+        }
+        return false;
+    }
+    
     public static class CacheLine {
         public Object valueRef = null;
         public long loadTime = 0;
