@@ -91,6 +91,7 @@ function removeSelected() {
     <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Items</a>
     <a href="<@ofbizUrl>/ReceiveInventory?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Inventory&nbsp;Receive</a>
     <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Xfers</a>
+    <a href="<@ofbizUrl>/ReceiveReturn?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="tabButton">Receive Return</a>
   </div>
 </#if>
 
