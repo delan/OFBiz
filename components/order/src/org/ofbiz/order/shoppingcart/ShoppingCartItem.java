@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.9 2003/11/19 21:50:11 ajzeneski Exp $
+ * $Id: ShoppingCartItem.java,v 1.10 2003/11/21 00:06:43 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -605,6 +605,35 @@ public class ShoppingCartItem implements java.io.Serializable {
             }
         } else {
             // non-product items have 0 weight
+            return 0;
+        }
+    }
+
+    /** Returns the item's size (height + width + depth) */
+    public double getSize() {
+        if (_product != null) {
+            Double height = getProduct().getDouble("height");
+            Double width = getProduct().getDouble("width");
+            Double depth = getProduct().getDouble("depth");
+
+            // if all are null, see if there is an associated virtual product and get the info of that product
+            if (height == null & width == null && depth == null) {
+                GenericValue parentProduct = this.getParentProduct();
+                if (parentProduct != null) {
+                    height = parentProduct.getDouble("height");
+                    width = getProduct().getDouble("width");
+                    depth = getProduct().getDouble("depth");
+                }
+            }
+
+            if (height == null) height = new Double(0);
+            if (width == null) width = new Double(0);
+            if (depth == null) depth = new Double(0);
+
+            double size = height.doubleValue() + width.doubleValue() + depth.doubleValue();
+            return size;
+        } else {
+            // non-product items have 0 size
             return 0;
         }
     }

@@ -1,5 +1,5 @@
 /*
- * $Id: ShippingEvents.java,v 1.6 2003/11/20 04:01:00 ajzeneski Exp $
+ * $Id: ShippingEvents.java,v 1.7 2003/11/21 00:06:43 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.common.geo.GeoWorker;
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ShippingEvents {
@@ -89,7 +89,7 @@ public class ShippingEvents {
             shipmentMethodTypeId = cart.getShipmentMethodTypeId();
             carrierPartyId = cart.getCarrierPartyId();            
         }         
-        return getShipEstimate(delegator, cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, cart.getShippingContactMechId(), cart.getProductStoreId(), cart.getFeatureIdQtyMap(), cart.getShippableWeight(), cart.getShippableQuantity(), cart.getShippableTotal());
+        return getShipEstimate(delegator, cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, cart.getShippingContactMechId(), cart.getProductStoreId(), cart.getShippableSizes(), cart.getFeatureIdQtyMap(), cart.getShippableWeight(), cart.getShippableQuantity(), cart.getShippableTotal());
     }
     
     public static Map getShipEstimate(GenericDelegator delegator, OrderReadHelper orh) {
@@ -105,10 +105,10 @@ public class ShippingEvents {
         }
         GenericValue shipAddr = orh.getShippingAddress();
         String contactMechId = shipAddr.getString("contactMechId");    
-        return getShipEstimate(delegator, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, contactMechId, orh.getProductStoreId(), orh.getFeatureIdQtyMap(), orh.getShippableWeight(), orh.getShippableQuantity(), orh.getShippableTotal());
+        return getShipEstimate(delegator, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, contactMechId, orh.getProductStoreId(), orh.getShippableSizes(), orh.getFeatureIdQtyMap(), orh.getShippableWeight(), orh.getShippableQuantity(), orh.getShippableTotal());
     }
     
-    public static Map getShipEstimate(GenericDelegator delegator, String orderTypeId, String shipmentMethodTypeId, String carrierPartyId, String shippingContactMechId, String productStoreId, Map featureMap, double shippableWeight, double shippableQuantity, double shippableTotal) {
+    public static Map getShipEstimate(GenericDelegator delegator, String orderTypeId, String shipmentMethodTypeId, String carrierPartyId, String shippingContactMechId, String productStoreId, List itemSizes, Map featureMap, double shippableWeight, double shippableQuantity, double shippableTotal) {
         String standardMessage = "A problem occurred calculating shipping. Fees will be calculated offline.";
         List errorMessageList = new ArrayList();                             
         StringBuffer errorMessage = new StringBuffer();
@@ -310,29 +310,32 @@ public class ShippingEvents {
 
         Debug.log("[ShippingEvents.getShipEstimate] Working with estimate [" + estimateIndex + "]: " + estimate, module);
 
+        // flat fees
         double orderFlat = 0.00;
-
         if (estimate.getDouble("orderFlatPrice") != null)
             orderFlat = estimate.getDouble("orderFlatPrice").doubleValue();
-        double orderItemFlat = 0.00;
 
+        double orderItemFlat = 0.00;
         if (estimate.getDouble("orderItemFlatPrice") != null)
             orderItemFlat = estimate.getDouble("orderItemFlatPrice").doubleValue();
-        double orderPercent = 0.00;
 
+        double orderPercent = 0.00;
         if (estimate.getDouble("orderPricePercent") != null)
             orderPercent = estimate.getDouble("orderPricePercent").doubleValue();
 
-        double weightUnit = 0.00;
+        // flat total
+        double flatTotal = orderFlat + orderItemFlat + orderPercent;
 
+        // spans
+        double weightUnit = 0.00;
         if (estimate.getDouble("weightUnitPrice") != null)
             weightUnit = estimate.getDouble("weightUnitPrice").doubleValue();
-        double qtyUnit = 0.00;
 
+        double qtyUnit = 0.00;
         if (estimate.getDouble("quantityUnitPrice") != null)
             qtyUnit = estimate.getDouble("quantityUnitPrice").doubleValue();
-        double priceUnit = 0.00;
 
+        double priceUnit = 0.00;
         if (estimate.getDouble("priceUnitPrice") != null)
             priceUnit = estimate.getDouble("priceUnitPrice").doubleValue();
 
@@ -340,9 +343,13 @@ public class ShippingEvents {
         double quantityAmount = shippableQuantity * qtyUnit;
         double priceAmount = shippableTotal * priceUnit;
 
+        // span total
+        double spanTotal = weightAmount + quantityAmount + priceAmount;
+
         double itemFlatAmount = shippableQuantity * orderItemFlat;
         double orderPercentage = shippableTotal * (orderPercent / 100);
 
+        // feature surcharges
         double featureSurcharge = 0.00;
         String featureGroupId = estimate.getString("productFeatureGroupId");
         Double featurePercent = estimate.getDouble("featurePercent");
@@ -375,7 +382,27 @@ public class ShippingEvents {
             }
         }
 
-        double shippingTotal = weightAmount + quantityAmount + priceAmount + orderFlat + itemFlatAmount + orderPercentage + featureSurcharge;
+        // size surcharges
+        double sizeSurcharge = 0.00;
+        Double sizeUnit = estimate.getDouble("oversizeUnit");
+        Double sizePrice = estimate.getDouble("oversizePrice");
+        if (sizeUnit != null && sizeUnit.doubleValue() > 0) {
+            if (itemSizes != null) {
+                Iterator isi = itemSizes.iterator();
+                while (isi.hasNext()) {
+                    Double size = (Double) isi.next();
+                    if (size != null && size.doubleValue() >= sizeUnit.doubleValue()) {
+                        sizeSurcharge += sizePrice.doubleValue();
+                    }
+                }
+            }
+        }
+
+        // surcharges total
+        double surchargeTotal = featureSurcharge + sizeSurcharge;
+
+        // shipping total
+        double shippingTotal = spanTotal + flatTotal + surchargeTotal;
 
         if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Setting shipping amount : " + shippingTotal, module);
 
