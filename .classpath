@@ -88,7 +88,6 @@
 	<classpathentry kind="lib" path="framework/webapp/lib/DataVision.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/batik.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/avalon-framework-cvs-20020806.jar"/>
-	<classpathentry kind="lib" path="framework/tests/lib/Tidy.jar"/>
 	<classpathentry kind="lib" path="framework/tests/lib/Quick4util.jar"/>
 	<classpathentry kind="lib" path="framework/tests/lib/Quick4rt.jar"/>
 	<classpathentry kind="lib" path="framework/tests/lib/jxweb.jar"/>
@@ -149,14 +148,14 @@
 	<classpathentry kind="lib" path="applications/accounting/lib/worldpay/cryptix.jar"/>
 	<classpathentry kind="lib" path="applications/accounting/lib/cybersource/cybssecurity.jar"/>
 	<classpathentry kind="lib" path="applications/accounting/lib/cybersource/cybsclients.jar"/>
-	<classpathentry kind="lib" path="framework/catalina/lib/server/tomcat-coyote.jar"/>
-	<classpathentry kind="lib" path="framework/catalina/lib/server/catalina.jar"/>
-	<classpathentry kind="lib" path="framework/catalina/lib/server/tomcat-http11.jar"/>
-	<classpathentry kind="lib" path="framework/catalina/lib/server/tomcat-util.jar"/>
-	<classpathentry kind="lib" path="framework/catalina/lib/server/catalina-cluster.jar"/>
-	<classpathentry kind="lib" path="framework/catalina/lib/server/servlets-common.jar"/>
-	<classpathentry kind="lib" path="framework/catalina/lib/server/jkshm.jar"/>
-	<classpathentry kind="lib" path="framework/catalina/lib/server/jkconfig.jar"/>
-	<classpathentry kind="lib" path="framework/catalina/lib/server/catalina-optional.jar"/>
+	<classpathentry kind="lib" path="base/lib/Tidy.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-util.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-http.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-coyote.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/servlets-default.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/catalina-optional.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/catalina.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/jmx.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/catalina-cluster.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
