@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.2 2003/08/17 04:56:26 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.3 2003/09/04 22:44:58 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, Serializable, Comparable, Cloneable {
@@ -412,6 +412,9 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
     /** go through the pks and for each one see if there is an entry in fields to set */
     public void setPKFields(Map fields, boolean setIfEmpty) {
+        if (fields == null) {
+            return;
+        }
         Iterator iter = this.getModelEntity().getPksIterator();
 
         while (iter != null && iter.hasNext()) {
@@ -454,6 +457,9 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
     /** go through the non-pks and for each one see if there is an entry in fields to set */
     public void setNonPKFields(Map fields, boolean setIfEmpty) {
+        if (fields == null) {
+            return;
+        }
         Iterator iter = this.getModelEntity().getNopksIterator();
 
         while (iter != null && iter.hasNext()) {
