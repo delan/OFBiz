@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.8 2004/01/08 22:10:13 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.9 2004/01/13 06:16:30 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletContext;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
@@ -62,7 +63,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -84,6 +85,7 @@ public class FreeMarkerWorker {
     public static LoopSubContentCacheTransform  loopSubContentCache = new LoopSubContentCacheTransform();
     public static TraverseSubContentCacheTransform  traverseSubContentCache = new TraverseSubContentCacheTransform();
     public static CheckPermissionTransform  checkPermission = new CheckPermissionTransform();
+    public static InjectNodeTrailCsvTransform  injectNodeTrailCsv = new InjectNodeTrailCsvTransform();
     
     public static void addAllOfbizTransforms(Map context) {
         BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
@@ -104,6 +106,7 @@ public class FreeMarkerWorker {
         context.put("loopSubContentCache", loopSubContentCache);
         context.put("traverseSubContentCache", traverseSubContentCache);
         context.put("checkPermission", checkPermission);
+        context.put("injectNodeTrailCsv", injectNodeTrailCsv);
     }
     
     public static Configuration makeDefaultOfbizConfig() throws TemplateException {
@@ -417,6 +420,8 @@ public class FreeMarkerWorker {
         String sep = ":";
         String eol = "\n";
         String spc = "";
+        if (lst == null)
+            return "";
         int sz = lst.size();
         for (int i=0; i<indent; i++) 
             spc += "  ";
@@ -447,7 +452,18 @@ public class FreeMarkerWorker {
         Map saveMap = new HashMap();
         for (int i=0; i<saveKeyNames.length; i++) {
             String key = (String)saveKeyNames[i];
-            saveMap.put(key, context.get(key));
+            Object o = context.get(key);
+            if (o instanceof Map)
+                o = new HashMap((Map)o);
+            else if (o instanceof List)
+                o = new ArrayList((List)o);
+            saveMap.put(key, o);
+if (key.equals("globalNodeTrail")) {
+    Debug.logInfo("saveValues,key:" + key + " csv:" + nodeTrailToCsv((List)o), "");
+}
+if (key.equals("nodeTrail")) {
+    Debug.logInfo("saveValues,key:" + key + " csv:" + nodeTrailToCsv((List)o), "");
+}
         }
         return saveMap;
     }
@@ -457,7 +473,14 @@ public class FreeMarkerWorker {
         Iterator it = keySet.iterator();
         while (it.hasNext()) {
             String key = (String)it.next();
+            Object o = saveValues.get(key);
             context.put(key, saveValues.get(key));
+if (key.equals("globalNodeTrail")) {
+    Debug.logInfo("reloadValues,key:" + key + " csv:" + nodeTrailToCsv((List)o), "");
+}
+if (key.equals("nodeTrail")) {
+    Debug.logInfo("reloadValues,key:" + key + " csv:" + nodeTrailToCsv((List)o), "");
+}
         }
         return;
     }
@@ -536,4 +559,45 @@ public class FreeMarkerWorker {
         return thisNode;
     }
 
+    public static String nodeTrailToCsv(List nodeTrail) {
+        
+        if (nodeTrail == null)
+            return "";
+        StringBuffer csv = new StringBuffer();
+        Iterator it = nodeTrail.iterator();
+        while (it.hasNext()) {
+            if (csv.length() > 0)
+                csv.append(",");
+            Map node = (Map)it.next();
+            String contentId = (String)node.get("contentId");
+            csv.append(contentId);
+        }
+        return csv.toString();
+    }
+
+    public static List csvToList(String csv, GenericDelegator delegator) {
+        
+        ArrayList outList = new ArrayList();
+        List contentIdList = StringUtil.split(csv, ",");
+        GenericValue content = null;
+        String contentId = null;
+        String contentName = null;
+        ArrayList values = null;
+        Iterator it = contentIdList.iterator();
+        while (it.hasNext()) {
+            contentId = (String)it.next();
+            try {
+                content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+            } catch(GenericEntityException e) {
+                Debug.logError(e.getMessage(), module);
+                return new ArrayList();
+            }
+            contentName = (String)content.get("contentName");
+            values = new ArrayList();
+            values.add(contentId);
+            values.add(contentName);
+            outList.add(values);    
+        }
+        return outList;
+    }
 }

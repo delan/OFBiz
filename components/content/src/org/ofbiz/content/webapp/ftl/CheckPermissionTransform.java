@@ -1,5 +1,5 @@
 /*
- * $Id: CheckPermissionTransform.java,v 1.2 2004/01/09 23:35:26 byersa Exp $
+ * $Id: CheckPermissionTransform.java,v 1.3 2004/01/13 06:16:29 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -51,14 +51,14 @@ import freemarker.template.TemplateModelException;
  * CheckPermissionTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since 3.0
  */
 public class CheckPermissionTransform implements TemplateTransformModel {
 
     public static final String module = CheckPermissionTransform.class.getName();
 
-    public static final String [] saveKeyNames = {};
+    public static final String [] saveKeyNames = {"globalNodeTrail", "nodeTrail"};
     public static final String [] removeKeyNames = {};
 
     /**
@@ -87,10 +87,10 @@ public class CheckPermissionTransform implements TemplateTransformModel {
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
         //templateCtx.put("buf", buf);
         if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)before save", templateCtx, 0),module);
-        FreeMarkerWorker.overrideWithArgs(templateCtx, args);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)after overrride", templateCtx, 0),module);
         final Map savedValues = FreeMarkerWorker.saveValues(templateCtx, saveKeyNames);
         if (Debug.verboseOn()) Debug.logVerbose("(C-0)savedValues: " + savedValues,module);
+        FreeMarkerWorker.overrideWithArgs(templateCtx, args);
+        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)after overrride", templateCtx, 0),module);
 
         return new LoopWriter(out) {
 

@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentCacheTransform.java,v 1.2 2004/01/09 23:35:27 byersa Exp $
+ * $Id: RenderSubContentCacheTransform.java,v 1.3 2004/01/13 06:16:30 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -47,7 +47,7 @@ import freemarker.template.TemplateTransformModel;
  * RenderSubContentCacheTransform - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).
@@ -55,7 +55,7 @@ import freemarker.template.TemplateTransformModel;
 public class RenderSubContentCacheTransform implements TemplateTransformModel {
 
     public static final String module = RenderSubContentCacheTransform.class.getName();
-    public static final String [] saveKeyNames = {"contentId", "subContentId", "mimeTypeId", "subContentDataResourceView", "wrapTemplateId", "templateContentId", "pickWhen", "followWhen", "returnAfterPickWhen", "returnBeforePickWhen", "globalNodeTrail"};
+    public static final String [] saveKeyNames = {"contentId", "subContentId", "mimeTypeId", "subContentDataResourceView", "wrapTemplateId", "templateContentId", "pickWhen", "followWhen", "returnAfterPickWhen", "returnBeforePickWhen", "globalNodeTrail", "nodeTrail", "passedGlobalNodeTrail"};
     public static final String [] removeKeyNames = {"templateContentId", "subDataResourceTypeId", "mapKey", "wrappedFTL"};
     
     /**
@@ -92,11 +92,24 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         List assocTypes = null;
         List trail = (List)templateCtx.get("globalNodeTrail");
         List passedGlobalNodeTrail = null;
-        if (trail != null) 
+        if (trail != null && trail.size() > 0) 
             passedGlobalNodeTrail = new ArrayList(trail);
         else
             passedGlobalNodeTrail = new ArrayList();
         if (UtilValidate.isNotEmpty(subContentId) || UtilValidate.isNotEmpty(contentId) ) {
+            String thisContentId = subContentId;
+            if (UtilValidate.isEmpty(thisContentId)) 
+                 thisContentId = contentId;
+
+            // Don't want to duplicate a node value
+            String passedContentId = null;
+            if (passedGlobalNodeTrail.size() > 0) {
+                Map nd = (Map)passedGlobalNodeTrail.get(passedGlobalNodeTrail.size() - 1);
+                passedContentId = (String)nd.get("contentId");
+            }
+            if (UtilValidate.isNotEmpty(thisContentId)
+                && ( UtilValidate.isEmpty(passedContentId) || !thisContentId.equals(passedContentId))) {
+            
             
                 try {
                     GenericValue view = ContentWorker.getSubContentCache(delegator, contentId, mapKey, subContentId, userLogin, assocTypes, fromDate);
@@ -108,8 +121,10 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                 } catch (GeneralException e3) {
                     throw new RuntimeException(e3.getMessage());
                 }
+            }
         }
         templateCtx.put("globalNodeTrail", passedGlobalNodeTrail);
+    Debug.logInfo("REnder, globalNodeTrail csv:" + FreeMarkerWorker.nodeTrailToCsv((List)passedGlobalNodeTrail), "");
         templateCtx.put("contentId", null);
         templateCtx.put("subContentId", null);
         int sz = passedGlobalNodeTrail.size();

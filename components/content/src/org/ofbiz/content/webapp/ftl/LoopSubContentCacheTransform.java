@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.2 2004/01/09 23:35:27 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.3 2004/01/13 06:16:30 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -49,15 +49,15 @@ import freemarker.template.TemplateModelException;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
 
     public static final String module = LoopSubContentCacheTransform.class.getName();
 
-    public static final String [] saveKeyNames = {"contentId", "subContentId", "mimeTypeId", "subContentDataResourceView", "wrapTemplateId", "contentTemplateId", "globalNodeTrail", "entityList", "viewSize", "viewIndex", "highIndex", "lowIndex", "listSize"};
-    public static final String [] removeKeyNames = {"wrapTemplateId", "entityList", "entityIndex", "textData", "dataResourceId","drDataResourceId", "subContentIdSub", "parentContent", "wrappedFTL"};
+    public static final String [] saveKeyNames = {"contentId", "subContentId", "mimeTypeId", "subContentDataResourceView", "wrapTemplateId", "contentTemplateId", "globalNodeTrail", "entityList", "viewSize", "viewIndex", "highIndex", "lowIndex", "listSize", "nodeTrail", "passedGlobalNodeTrail"};
+    public static final String [] removeKeyNames = {"wrapTemplateId", "entityList", "entityIndex", "textData", "dataResourceId","drDataResourceId", "subContentIdSub", "parentContent", "wrappedFTL", "trailCsv", "indent"};
 
     /**
      * A wrapper for the FreeMarkerWorker version.
@@ -133,11 +133,14 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, subContentId/Sub." + subContentIdSub, module);
 
         // This is what the FM template will see.
-        List globalNodeTrail = new ArrayList((List)ctx.get("globalNodeTrail"));
-        globalNodeTrail.add(FreeMarkerWorker.makeNode(view));
-        int indentSz = globalNodeTrail.size();
+        List passedGlobalNodeTrail = (List)ctx.get("passedGlobalNodeTrail");
+Debug.logInfo("passedGlobalNodeTrail(prepCtx):" + passedGlobalNodeTrail, "");
+        List trail = new ArrayList(passedGlobalNodeTrail);
+        trail.add(FreeMarkerWorker.makeNode(view));
+        int indentSz = trail.size();
         ctx.put("indent", new Integer(indentSz));
-        ctx.put("globalNodeTrail", globalNodeTrail);
+        ctx.put("globalNodeTrail", trail);
+    Debug.logInfo("prepCtx, globalNodeTrail csv:" + FreeMarkerWorker.nodeTrailToCsv((List)trail), "");
         if (electronicText != null)
             ctx.put("textData", electronicText.get("textData"));
         else
@@ -198,15 +201,20 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         }
         List trail = (List)templateCtx.get("globalNodeTrail");
         List passedGlobalNodeTrail = null;
-        if (trail != null) 
+        if (trail != null && trail.size() > 0) 
             passedGlobalNodeTrail = new ArrayList(trail);
         else
             passedGlobalNodeTrail = new ArrayList();
         if (UtilValidate.isNotEmpty(subContentId) || UtilValidate.isNotEmpty(contentId) ) {
-            if (UtilValidate.isEmpty(thisContentId)) 
-                thisContentId = subContentId;
 
-            if (UtilValidate.isNotEmpty(thisContentId)) {
+            // Don't want to duplicate a node value
+            String passedContentId = null;
+            if (passedGlobalNodeTrail.size() > 0) {
+                Map nd = (Map)passedGlobalNodeTrail.get(passedGlobalNodeTrail.size() - 1);
+                passedContentId = (String)nd.get("contentId");
+            }
+            if (UtilValidate.isNotEmpty(thisContentId)
+                && ( UtilValidate.isEmpty(passedContentId) || !thisContentId.equals(passedContentId))) {
             
                 try {
                     view = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", thisContentId));
@@ -217,7 +225,8 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 passedGlobalNodeTrail.add(FreeMarkerWorker.makeNode(view));
             }
         }
-        templateCtx.put("globalNodeTrail", passedGlobalNodeTrail);
+Debug.logInfo("passedGlobalNodeTrail(write):" + passedGlobalNodeTrail, "");
+        templateCtx.put("passedGlobalNodeTrail", passedGlobalNodeTrail);
         templateCtx.put("contentId", null);
         templateCtx.put("subContentId", null);
 
