@@ -20,61 +20,9 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
-
-<script language="JavaScript">
-<!--
-function toggle(e) {
-    e.checked = !e.checked;    
-}
-function checkToggle(e) {
-    var cform = document.returnItems;
-    if (e.checked) {      
-        var len = cform.elements.length;
-        var allchecked = true;
-        for (var i = 0; i < len; i++) {
-            var element = cform.elements[i];
-            var elementName = new java.lang.String(element.name);          
-            if (elementName.startsWith("_rowSubmit") && !element.checked) {       
-                allchecked = false;
-            }
-            cform.selectAll.checked = allchecked;            
-        }
-    } else {
-        cform.selectAll.checked = false;
-    }
-}
-function toggleAll(e) {
-    var cform = document.returnItems;
-    var len = cform.elements.length;
-    for (var i = 0; i < len; i++) {
-        var element = cform.elements[i];                   
-        var eName = new java.lang.String(element.name);                
-        if (eName.startsWith("_rowSubmit") && element.checked != e.checked) {
-            toggle(element);
-        } 
-    }     
-}
-function selectAll() {
-    var cform = document.returnItems;
-    var len = cform.elements.length;
-    for (var i = 0; i < len; i++) {
-        var element = cform.elements[i];                   
-        var eName = new java.lang.String(element.name);                
-        if ((element.name == "selectAll" || eName.startsWith("_rowSubmit")) && !element.checked) {
-            toggle(element);
-        } 
-    }     
-}
-function removeSelected() {
-    var cform = document.returnItems;
-    cform.removeSelected.value = true;
-    cform.submit();
-}
-//-->
-</script>
 
 <div class='tabContainer'>
     <a href="<@ofbizUrl>/returnMain?returnId=${requestParameters.returnId?if_exists}</@ofbizUrl>" class="tabButton">Return Header</a>  
