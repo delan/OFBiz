@@ -24,5 +24,5 @@
  *@since      2.1
 -->
 
-<#-- Render the categorylisting page -->
-${pages.get("/catalog/categorylisting.ftl")}
+<#-- Render the category page -->
+${pages.get("/catalog/category.ftl")}

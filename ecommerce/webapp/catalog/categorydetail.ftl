@@ -88,6 +88,7 @@
     <#else>
       <#assign endIndex = listSize - 1>
     </#if>
+    
     <#list productCategoryMembers[startIndex..endIndex] as productCategoryMember>              
       <tr><td><hr class='sepbar'></td></tr>
       <tr>

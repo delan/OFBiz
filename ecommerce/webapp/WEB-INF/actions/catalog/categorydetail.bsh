@@ -29,6 +29,10 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.commonapp.product.catalog.*;
 
+requestParameters = UtilHttp.getParameterMap(request);
+viewSize = requestParameters.get("VIEW_SIZE");
+viewIndex = requestParameters.get("VIEW_INDEX");
+
 // set the default view size
 defaultViewSize = request.getAttribute("defaultViewSize");
 if (defaultViewSize == null) {
@@ -44,12 +48,11 @@ if (limitViewObj != null) {
 }
 context.put("limitView", limitView);
 
-
 // get the product category & members
 dispatcher = request.getAttribute("dispatcher");
 catResult = dispatcher.runSync("getProductCategoryAndLimitedMembers", UtilMisc.toMap("productCategoryId", 
-        request.getAttribute("productCategoryId"), "viewIndexString", request.getParameter("VIEW_INDEX"),
-        "viewSizeString", request.getParameter("VIEW_SIZE"), "defaultViewSize", defaultViewSize, "limitView", limitView));
+        request.getAttribute("productCategoryId"), "viewIndexString", viewIndex,
+        "viewSizeString", viewSize, "defaultViewSize", defaultViewSize, "limitView", limitView));
        
 context.put("productCategoryId", request.getAttribute("productCategoryId"));
 if (catResult != null) {

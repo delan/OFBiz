@@ -28,8 +28,5 @@ import org.ofbiz.commonapp.product.catalog.*;
 
 catalogId = CatalogWorker.getCurrentCatalogId(request);
 promoCat = CatalogWorker.getCatalogPromotionsCategoryId(request, catalogId);
-
 request.setAttribute("productCategoryId", promoCat);
-request.setAttribute("defaultViewSize", new Integer(10)); // number of items to show
-request.setAttribute("limitView", new Boolean(true));
 

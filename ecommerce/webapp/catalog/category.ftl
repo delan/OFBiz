@@ -25,10 +25,9 @@
 -->
 
 <#if productCategory?has_content>
-  ${pages.get("/catalog/categorylisting.ftl")}
-<#else>
-  <#assign categoryId = requestAttributes.productCategoryId?if_exists>
-  <center><div class='head2'>Category not found for Category ID ${categoryId?if_exists}!</div></center>
+  ${pages.get(detailTemplate)}
+<#else>  
+  <center><div class='head2'>Category not found for Category ID ${requestParameters.category_id?if_exists}!</div></center>
 </#if>
 
 
