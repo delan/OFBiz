@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/09/26 15:17:42  epabst
+ * moved getFirst() method into new EntityUtil class
+ *
  * Revision 1.7  2001/09/20 22:47:21  jonesde
  * Fixed illegal use of getRelatedOne
  *
@@ -157,6 +160,18 @@ public class OrderReadHelper {
       else {
         return null;
       }
+    }
+    catch(GenericEntityException e) { Debug.logWarning(e); }
+    return null;
+  }
+  
+  public String getDistributorId() {
+    GenericDelegator delegator = orderHeader.getDelegator();
+    try {
+      GenericEntity distributorRole = EntityUtil.getFirst(delegator.findByAnd("OrderRole", UtilMisc.toMap(
+                                          "orderId", orderHeader.getString("orderId"),
+                                          "roleTypeId", "DISTRIBUTOR"), null));
+      return distributorRole == null ? null : distributorRole.getString("partyId");
     }
     catch(GenericEntityException e) { Debug.logWarning(e); }
     return null;
