@@ -502,6 +502,17 @@
                         </td>
                       </tr>
                   </#if>
+                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr>
+                        <td align="right" valign="top" width="15%">
+                          <div class="tabletext">&nbsp;</div>
+                        </td>
+                        <td width="5">&nbsp;</td>
+                        <td align="left" valign="top" width="80%">
+                            <div class="tabletext"><a href="<@ofbizUrl>/OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">View/Edit Delivery Schedule Info</a></div>
+                            <div class="tabletext"><a href="/facility/control/EditShipment?orderId=${orderId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">New Shipment</a></div>
+                        </td>
+                      </tr>
                   </table>
                 </td>
               </tr>

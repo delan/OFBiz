@@ -72,7 +72,9 @@ ${requestAttributes.virtualJavaScript?if_exists}
     <td align="right" valign="top">
       <div class="head2">${product.productName?if_exists}</div>
       <div class="tabletext">${product.description?if_exists}</div>
-      <div class="tabletext"><b>${product.productId?if_exists}</b></div>
+      <#if product.productId?has_content>
+        <div class="tabletext"><b>${product.productId}</b> <a href="/catalog/control/EditProduct?productId=${product.productId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[Edit&nbsp;Product]</a></div>
+      </#if>
       <#-- for prices:
               - if price < listPrice, show
               - if price < defaultPrice and defaultPrice < listPrice, show default

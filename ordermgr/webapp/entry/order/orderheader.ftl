@@ -31,7 +31,7 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;Order Confirmation<#if orderHeader?exists>&nbsp;#${orderHeader.orderId}</#if></div>
+                  <div class="boxhead">&nbsp;Order Confirmation<#if orderHeader?exists>&nbsp;#<a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a></#if></div>
                 </td>
                 <#if !orderHeader?exists>
                 <td align="right">
