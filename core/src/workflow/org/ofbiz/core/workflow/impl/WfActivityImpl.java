@@ -9,8 +9,8 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.workflow.*;
 
 /**
- * <p><b>Title:</b> WfExecutionObjectImpl
- * <p><b>Description:</b> Workflow Execution Object implementation
+ * <p><b>Title:</b> WfActivityImpl
+ * <p><b>Description:</b> Workflow Activity Object implementation
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -31,14 +31,14 @@ import org.ofbiz.core.workflow.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@author     David Ostrovsky (d.ostrovsky@gmx.de)
  *@created    November 15, 2001
  *@version    1.0
  */
 
-public class WfActivityImpl extends WfExecutionObjectImpl
-implements WfActivity
-{
+public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {
+    
     // Attribute instance 'process'
     private WfProcess process;
     
@@ -56,10 +56,7 @@ implements WfActivity
         super(valueObject);
         this.process = process;
         result = new HashMap();
-        assignments = new ArrayList();
-                        
-        // Set the default state
-        changeState("open.not_running.not_started");
+        assignments = new ArrayList();                                               
     }
     
     /** 

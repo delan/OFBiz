@@ -9,8 +9,8 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.workflow.*;
 
 /**
- * <p><b>Title:</b> WfExecutionObjectImpl
- * <p><b>Description:</b> Workflow Execution Object implementation
+ * <p><b>Title:</b> WfProcessImpl
+ * <p><b>Description:</b> Workflow Process Object implementation
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -37,27 +37,41 @@ import org.ofbiz.core.workflow.*;
  *@version    1.0
  */
 
-public class WfProcessImpl extends WfExecutionObjectImpl
-implements WfProcess {
+public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     
     private WfRequester requester;       
     private WfProcessMgr manager;
     private List steps;                
     private Map result;
+
+    /**
+     * Creates new WfProcessImpl
+     * @param valueObject The GenericValue object of this WfProcess.
+     * @param manager The WfProcessMgr invoking this process. 
+     */
+    public WfProcessImpl(GenericValue valueObject, WfProcessMgr manager) throws WfException {
+        this(valueObject,null,manager);
+    }
     
     /**
      * Creates new WfProcessImpl
-     * @param valueObject The GenericValue object of this WfProcess     
+     * @param valueObject The GenericValue object of this WfProcess.
+     * @param dataObject The GenericValue object of the stored runtime data.
+     * @param manager The WfProcessMgr invoking this process.
      */
-    public WfProcessImpl(GenericValue valueObject, WfProcessMgr manager) throws WfException {
-        super(valueObject);
+    public WfProcessImpl(GenericValue valueObject, GenericValue dataObject, WfProcessMgr manager) throws WfException {
+        super(valueObject,dataObject);
         this.manager = manager;
         this.requester = null;
         result = new HashMap();
         steps = new ArrayList();
-                        
+        makeSteps();
+    }
+    
+    // Build the steps from the definition
+    private void makeSteps() throws WfException {
         // Build up the activities (steps)
-        Collection activityEntities = null;
+        Collection activityEntities = null;        
         try {
             activityEntities = valueObject.getRelatedCache("WorkflowActivity"); 
         }
@@ -66,14 +80,34 @@ implements WfProcess {
         }
         if ( activityEntities != null ) {
             Iterator i = activityEntities.iterator();
-            while ( i.hasNext() )
-                steps.add(WfFactory.newWfActivity((GenericValue)i.next(),this));
-        }
-        
-        // Set the default state
-        changeState("open.not_running.not_started");
+            while ( i.hasNext() ) {
+                GenericValue value = (GenericValue) i.next();
+                GenericValue data = null;
+                
+                // Check for stored runtime info
+                if ( dataObject != null ) {
+                    Collection c = null;
+                    try {
+                        c = dataObject.getRelated("ParentWorkEffort");
+                    }
+                    catch ( GenericEntityException e ) {
+                        throw new WfException(e.getMessage(),e);
+                    }
+                    Iterator di = c.iterator();
+                    while ( di.hasNext() && data == null ) {
+                        GenericValue obj = (GenericValue) di.next();
+                        if ( obj.getString("workflowActivityId").equals(value.getString("activityId")) )
+                            data = obj;
+                    }
+                }
+                        
+                WfActivity activity = WfFactory.newWfActivity(value,this); // create the activity object
+                activity.setDispatcher(dispatcher,serviceLoader);               // set the dispatcher for the activity
+                steps.add(activity);
+            }
+        }                
     }
-
+        
     /**
      * Set the originator of this process.
      * @param newValue The Requestor of this process.
