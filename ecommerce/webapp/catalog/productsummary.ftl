@@ -80,7 +80,7 @@
               <br><a href="javascript:document.the${requestAttributes.listIndex?if_exists}form.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a>
             </form>
             
-            <#if requestAttributes.productCategoryMemeber?exists>
+            <#if requestAttributes.productCategoryMember?exists>
 			  <#assign prodCatMem = requestAttributes.productCategoryMember>
 			  <#if prodCatMem?exists && prodCatMem != null && prodCatMem.quantity?exists && 0.00 < prodCatMem.quantity?double>
                 <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.listIndex?if_exists}defaultform" style='margin: 0;'>
