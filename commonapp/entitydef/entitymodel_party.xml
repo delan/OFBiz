@@ -713,7 +713,7 @@
       <relation type="many" rel-entity-name="RespondingParty">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="many" rel-entity-name="Shipment">
+      <relation type="many" rel-entity-name="ShipmentContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>
@@ -1222,9 +1222,6 @@
       <relation type="many" rel-entity-name="ShipmentRouteSegment">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="many" rel-entity-name="Shipment">
-        <key-map field-name="partyId"/>
-      </relation>
       <relation type="many" rel-entity-name="PartyResume">
         <key-map field-name="partyId"/>
       </relation>
@@ -1284,6 +1281,12 @@
       </relation>
       <relation type="many" rel-entity-name="ContentRole">
         <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" title="To" rel-entity-name="Shipment">
+        <key-map field-name="partyId" rel-field-name="partyIdTo"/>
+      </relation>
+      <relation type="many" title="From" rel-entity-name="Shipment">
+        <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
       </relation>
     </entity>
     <view-entity entity-name="PartyAndContactMech"

@@ -225,6 +225,9 @@
       <field name="noteParty" type="id"></field>
       <field name="noteDateTime" type="date-time"></field>
       <prim-key field="noteId"/>
+      <relation type="many" rel-entity-name="WorkEffortNote">
+        <key-map field-name="noteId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
