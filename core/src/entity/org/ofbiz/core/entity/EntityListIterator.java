@@ -114,6 +114,7 @@ public class EntityListIterator implements ListIterator {
         }
 
         value.modified = false;
+        value.copyOriginalDbValues();
         value.setDelegator(this.delegator);
         this.haveMadeValue = true;
         return value;

@@ -39,8 +39,8 @@ import org.ofbiz.core.entity.jdbc.*;
  * Generic Entity Data Access Object - Handles persisntence for any defined entity.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  *@author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  *@author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  *@author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
@@ -115,6 +115,9 @@ public class GenericDAO {
             SqlJdbcUtil.setValues(sqlP, fieldsToSave, entity, modelFieldTypeReader);
             int retVal = sqlP.executeUpdate();
             entity.modified = false;
+            if (entity instanceof GenericValue) {
+                ((GenericValue) entity).copyOriginalDbValues();
+            }
             return retVal;
         } catch (GenericEntityException e) {
             throw new GenericEntityException("while inserting: " + entity.toString(), e);
@@ -207,6 +210,9 @@ public class GenericDAO {
             SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
             retVal = sqlP.executeUpdate();
             entity.modified = false;
+            if (entity instanceof GenericValue) {
+                ((GenericValue) entity).copyOriginalDbValues();
+            }
         } catch (GenericEntityException e) {
             throw new GenericEntityException("while updating: " + entity.toString(), e);
         } finally {
@@ -466,6 +472,9 @@ public class GenericDAO {
                 }
                 
                 entity.modified = false;
+                if (entity instanceof GenericValue) {
+                    ((GenericValue) entity).copyOriginalDbValues();
+                }
             } else {
                 //Debug.logWarning("[GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString());
                 throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
@@ -537,6 +546,9 @@ public class GenericDAO {
                 }
                 
                 entity.modified = false;
+                if (entity instanceof GenericValue) {
+                    ((GenericValue) entity).copyOriginalDbValues();
+                }
             } else {
                 //Debug.logWarning("[GenericDAO.select]: select failed, result set was empty.");
                 throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
@@ -690,6 +702,7 @@ public class GenericDAO {
                     SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, value, modelFieldTypeReader);
                 }
                 value.modified = false;
+                value.copyOriginalDbValues();
                 list.add(value);
             }
         } finally {
@@ -928,6 +941,7 @@ public class GenericDAO {
                 }
                 
                 value.modified = false;
+                value.copyOriginalDbValues();
                 list.add(value);
             }
         } finally {

@@ -43,6 +43,12 @@ public class GenericValue extends GenericEntity {
     public transient Map relatedCache = null;
     /** Hashtable to cache various related cardinality one entity collections */
     public transient Map relatedOneCache = null;
+    
+    /** This Map will contain the original field values from the database iff
+     * this GenericValue came from the database. If it was made manually it will
+     * no have this Map, ie it will be null to not take up memory.
+     */
+    protected Map originalDbValues = null;
 
     /** Creates new GenericValue */
     public GenericValue(ModelEntity modelEntity) {
@@ -73,11 +79,30 @@ public class GenericValue extends GenericEntity {
     }
 
     public void remove() throws GenericEntityException {
-        this.getDelegator().removeByPrimaryKey(getPrimaryKey());
+        this.getDelegator().removeValue(this);
     }
 
     public void refresh() throws GenericEntityException {
         this.getDelegator().refresh(this);
+    }
+    
+    public boolean originalDbValuesAvailable() {
+        return this.originalDbValues != null ? true : false;
+    }
+    
+    public Object getOriginalDbValue(String name) {
+        if (getModelEntity().getField(name) == null) {
+            throw new IllegalArgumentException("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName);
+        }
+        return originalDbValues.get(name);
+    }
+
+    /** This should only be called by the Entity Engine once a GenericValue has 
+     * been read from the database so that we have a copy of the original field 
+     * values from the Db.
+     */
+    public void copyOriginalDbValues() {
+        this.originalDbValues = new HashMap(this.fields);
     }
 
     /** Get the named Related Entity for the GenericValue from the persistent store

@@ -144,7 +144,6 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
     public Object get(String name) {
         if (getModelEntity().getField(name) == null) {
             throw new IllegalArgumentException("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName);
-            //Debug.logWarning("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName + ", but getting anyway...");
         }
         return fields.get(name);
     }
