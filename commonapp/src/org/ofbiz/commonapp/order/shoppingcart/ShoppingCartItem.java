@@ -363,9 +363,16 @@ public class ShoppingCartItem implements java.io.Serializable {
                 if (ModelService.RESPOND_ERROR.equals(priceResult.get(ModelService.RESPONSE_MESSAGE))) {
                     throw new CartItemModifyException("There was an error while calculating the price: " + priceResult.get(ModelService.ERROR_MESSAGE));
                 }
-            
-                if (priceResult.get("price") != null) this.basePrice = ((Double) priceResult.get("price")).doubleValue();
+                
                 if (priceResult.get("listPrice") != null) this.listPrice = ((Double) priceResult.get("listPrice")).doubleValue();
+                if (cart.getOrderType().equals("PURCHASE_ORDER")) {
+                    if (priceResult.get("averageCost") != null) 
+                        this.basePrice = ((Double) priceResult.get("averageCost")).doubleValue();
+                } else {                
+                    if (priceResult.get("price") != null) 
+                        this.basePrice = ((Double) priceResult.get("price")).doubleValue();
+                }
+                
                 this.orderItemPriceInfos = (List) priceResult.get("orderItemPriceInfos");
             } catch (GenericServiceException e) {
                 throw new CartItemModifyException("There was an error while calculating the price", e);
