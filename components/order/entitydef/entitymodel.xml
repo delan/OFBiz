@@ -4,7 +4,7 @@
 /**
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -254,6 +254,7 @@
       <field name="originFacilityId" type="id"></field>
       <field name="webSiteId" type="id"></field>
       <field name="productStoreId" type="id"></field>
+      <field name="needsInventoryIssuance" type="indicator"></field>
       <field name="remainingSubTotal" type="currency-amount"></field>
       <field name="grandTotal" type="currency-amount"></field>
       <prim-key field="orderId"/>
