@@ -96,7 +96,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="GeneralLedgerAccount" />	
     <entity-group group="org.ofbiz.commonapp" entity="GeneralLedgerAccountType" />	
     <entity-group group="org.ofbiz.commonapp" entity="GeneralLedgerBudgetXref" />	
-    <entity-group group="org.ofbiz.commonapp" entity="OrganizationGlAccount" />	
+    <entity-group group="org.ofbiz.commonapp" entity="OrganizationGlAccount" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.accounting.payment -->
@@ -124,7 +124,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="PaymentMethod" />	
     <entity-group group="org.ofbiz.commonapp" entity="PaymentMethodType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PaymentType" />	
-    <entity-group group="org.ofbiz.commonapp" entity="PaymentTypeAttr" />	
+    <entity-group group="org.ofbiz.commonapp" entity="PaymentTypeAttr" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.currency -->
@@ -294,7 +294,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="EmploymentApp" />	
     <entity-group group="org.ofbiz.commonapp" entity="EmploymentAppSourceType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyBenefit" />	
-    <entity-group group="org.ofbiz.commonapp" entity="PayCheck" />	
     <entity-group group="org.ofbiz.commonapp" entity="PayGrade" />	
     <entity-group group="org.ofbiz.commonapp" entity="PayHistory" />	
     <entity-group group="org.ofbiz.commonapp" entity="PayrollPreference" />	
