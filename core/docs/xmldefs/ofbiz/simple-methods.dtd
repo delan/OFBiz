@@ -40,25 +40,28 @@
     (see further down for the Simple Map Processor Section)
 -->
 
-<!ENTITY % CallOperations "call-map-processor | call-service | call-service-asynch | call-bsh | call-simple-method | check-errors">
+<!ENTITY % CallOperations "call-map-processor | call-service | call-service-asynch | call-bsh | call-simple-method | check-errors | return">
+<!ENTITY % CallJavaOperations "call-object-method | call-class-method | create-object">
 <!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field | webapp-property-to-field">
 <!ENTITY % ServiceOperations "field-to-result">
 <!ENTITY % EnvOperations "field-to-field | field-to-list | env-to-field | field-to-env | string-to-field | to-string | clear-field | iterate | first-from-list">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env | set-current-user-login">
 <!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and | filter-list-by-and | filter-list-by-date">
-<!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | remove-value | remove-related | remove-by-and | clear-cache-line | set-pk-fields | set-nonpk-fields">
+<!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | remove-value | remove-related | remove-by-and | clear-cache-line | clear-entity-caches | set-pk-fields | set-nonpk-fields">
 <!ENTITY % EntityListOperations "store-list | remove-list">
+<!ENTITY % EntityTxOperations "transaction-begin | transaction-commit | transaction-rollback">
 <!ENTITY % IfOperations "if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty | if-has-permission | check-permission">
 <!ENTITY % OtherOperations "property-to-field | log | calculate">
 
-<!ENTITY % SimpleMethodOperations "%CallOperations; | %EventOperations; |
+<!ENTITY % SimpleMethodOperations "%CallOperations; | %CallJavaOperations; | %EventOperations; |
         %ServiceOperations; | %EnvOperations; | %EntityMiscOperations; | %EntityFindOperations; |
-        %EntityValueOperations; | %EntityListOperations; | %IfOperations; | %OtherOperations;">
+        %EntityValueOperations; | %EntityListOperations; | %EntityTxOperations; | %IfOperations; | %OtherOperations;">
 
 <!ELEMENT field EMPTY>
 <!ATTLIST field
     field-name CDATA #REQUIRED
     map-name CDATA #IMPLIED
+    type CDATA #IMPLIED
 >
 <!ELEMENT string (#PCDATA)>
 <!ATTLIST string
@@ -238,6 +241,36 @@ Error messages go on the error list and are handled with the check-errors tag.
     error-list-name CDATA "error_list"
 >
 
+<!ELEMENT return EMPTY>
+<!ATTLIST return
+    response-code CDATA "success"
+>
+
+<!-- Operations to call Java methods and create Java objects -->
+
+<!ELEMENT call-object-method ( ( string | field )* )>
+<!ATTLIST call-object-method
+    obj-field-name CDATA #REQUIRED
+    obj-map-name CDATA #IMPLIED
+    method-name CDATA #REQUIRED
+    ret-field-name CDATA #IMPLIED
+    ret-map-name CDATA #IMPLIED
+>
+<!ELEMENT call-class-method ( ( string | field )* )>
+<!ATTLIST call-class-method
+    class-name CDATA #REQUIRED
+    method-name CDATA #REQUIRED
+    ret-field-name CDATA #IMPLIED
+    ret-map-name CDATA #IMPLIED
+>
+<!ELEMENT create-object ( ( string | field )* )>
+<!ATTLIST create-object
+    class-name CDATA #REQUIRED
+    field-name CDATA #IMPLIED
+    map-name CDATA #IMPLIED
+>
+
+
 <!-- Operations to copy map fields in the current env to context specific containers -->
 
 <!-- Event specific operations -->
@@ -345,6 +378,19 @@ These operations are used to interact with a data source through the entity
 engine and facilitate related operations.
 -->
 
+<!ELEMENT transaction-begin EMPTY>
+<!ATTLIST transaction-begin
+    began-transaction-name CDATA "beganTransaction"
+>
+<!ELEMENT transaction-commit EMPTY>
+<!ATTLIST transaction-commit
+    began-transaction-name CDATA "beganTransaction"
+>
+<!ELEMENT transaction-rollback EMPTY>
+<!ATTLIST transaction-rollback
+    began-transaction-name CDATA "beganTransaction"
+>
+
 <!ELEMENT now-timestamp-to-env EMPTY>
 <!ATTLIST now-timestamp-to-env
     env-name CDATA #REQUIRED
@@ -438,6 +484,8 @@ engine and facilitate related operations.
     entity-name CDATA #REQUIRED
     map-name CDATA #IMPLIED
 >
+<!ELEMENT clear-entity-caches EMPTY>
+
 <!ELEMENT set-pk-fields EMPTY>
 <!ATTLIST set-pk-fields
     value-name CDATA #REQUIRED

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.method.entityops;
+package org.ofbiz.core.minilang.method;
 
 
 import java.net.*;
@@ -33,44 +33,46 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
-import org.ofbiz.core.entity.*;
 
 
 /**
- * Uses the delegator to find an entity value by its primary key
+ * A type of MethodObject that represents a String constant value to be used as an Object
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 19, 2002
+ *@created    October 9, 2002
  *@version    1.0
  */
-public class FindByPrimaryKey extends MethodOperation {
-    String valueName;
-    String entityName;
-    String mapName;
-    boolean useCache;
+public class StringObject extends MethodObject {
+    String value;
+    String cdataValue;
 
-    public FindByPrimaryKey(Element element, SimpleMethod simpleMethod) {
+    public StringObject(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        valueName = element.getAttribute("value-name");
-        entityName = element.getAttribute("entity-name");
-        mapName = element.getAttribute("map-name");
-
-        useCache = "true".equals(element.getAttribute("use-cache"));
+        value = element.getAttribute("value");
+        cdataValue = UtilXml.elementValue(element);
     }
 
-    public boolean exec(MethodContext methodContext) {
-        try {
-            if (this.useCache) {
-                methodContext.putEnv(valueName, methodContext.getDelegator().findByPrimaryKeyCache(entityName, (Map) methodContext.getEnv(mapName)));
+    /** Get the name for the type of the object */
+    public String getTypeName() {
+        return "java.lang.String";
+    }
+    
+    public Class getTypeClass(ClassLoader loader) {
+        return java.lang.String.class;
+    }
+    
+    public Object getObject(MethodContext methodContext) {
+        boolean valueExists = UtilValidate.isNotEmpty(value);
+        boolean cdataValueExists = UtilValidate.isNotEmpty(cdataValue);
+        
+        if (valueExists && cdataValueExists) {
+            return value + cdataValue;
+        } else {
+            if (valueExists) {
+                return value;
             } else {
-                methodContext.putEnv(valueName, methodContext.getDelegator().findByPrimaryKey(entityName, (Map) methodContext.getEnv(mapName)));
+                return cdataValue;
             }
-        } catch (GenericEntityException e) {
-            Debug.logError(e);
-            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem finding the " + entityName + " entity: " + e.getMessage() + "]";
-            methodContext.setErrorReturn(errMsg, simpleMethod);
-            return false;
         }
-        return true;
     }
 }

@@ -94,6 +94,16 @@ public class MethodContext {
         if (this.loader == null)
             this.loader = Thread.currentThread().getContextClassLoader();
     }
+    
+    public void setErrorReturn(String errMsg, SimpleMethod simpleMethod) {
+        if (getMethodType() == MethodContext.EVENT) {
+            putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
+            putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
+        } else if (getMethodType() == MethodContext.SERVICE) {
+            putEnv(simpleMethod.getServiceErrorMessageName(), errMsg);
+            putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
+        }
+    }
 
     public int getMethodType() {
         return this.methodType;

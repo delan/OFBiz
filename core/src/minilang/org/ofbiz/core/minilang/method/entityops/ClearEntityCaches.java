@@ -37,40 +37,20 @@ import org.ofbiz.core.entity.*;
 
 
 /**
- * Uses the delegator to find an entity value by its primary key
+ * Clears all Entity Engine Caches
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 19, 2002
+ *@created    October 9th, 2002
  *@version    1.0
  */
-public class FindByPrimaryKey extends MethodOperation {
-    String valueName;
-    String entityName;
-    String mapName;
-    boolean useCache;
+public class ClearEntityCaches extends MethodOperation {
 
-    public FindByPrimaryKey(Element element, SimpleMethod simpleMethod) {
+    public ClearEntityCaches(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        valueName = element.getAttribute("value-name");
-        entityName = element.getAttribute("entity-name");
-        mapName = element.getAttribute("map-name");
-
-        useCache = "true".equals(element.getAttribute("use-cache"));
     }
 
     public boolean exec(MethodContext methodContext) {
-        try {
-            if (this.useCache) {
-                methodContext.putEnv(valueName, methodContext.getDelegator().findByPrimaryKeyCache(entityName, (Map) methodContext.getEnv(mapName)));
-            } else {
-                methodContext.putEnv(valueName, methodContext.getDelegator().findByPrimaryKey(entityName, (Map) methodContext.getEnv(mapName)));
-            }
-        } catch (GenericEntityException e) {
-            Debug.logError(e);
-            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem finding the " + entityName + " entity: " + e.getMessage() + "]";
-            methodContext.setErrorReturn(errMsg, simpleMethod);
-            return false;
-        }
+        methodContext.getDelegator().clearAllCaches();
         return true;
     }
 }

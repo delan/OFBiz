@@ -30,47 +30,49 @@ import java.text.*;
 import java.util.*;
 
 import org.w3c.dom.*;
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
-import org.ofbiz.core.entity.*;
 
 
 /**
- * Uses the delegator to find an entity value by its primary key
+ * Commits a transaction if beganTransaction is true, otherwise does nothing.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 19, 2002
+ *@created    October 9th, 2002
  *@version    1.0
  */
-public class FindByPrimaryKey extends MethodOperation {
-    String valueName;
-    String entityName;
-    String mapName;
-    boolean useCache;
+public class TransactionCommit extends MethodOperation {
+    String beganTransactionName;
 
-    public FindByPrimaryKey(Element element, SimpleMethod simpleMethod) {
+    public TransactionCommit(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        valueName = element.getAttribute("value-name");
-        entityName = element.getAttribute("entity-name");
-        mapName = element.getAttribute("map-name");
-
-        useCache = "true".equals(element.getAttribute("use-cache"));
+        beganTransactionName = element.getAttribute("began-transaction-name");
+        if (UtilValidate.isEmpty(beganTransactionName)) {
+            beganTransactionName = "beganTransaction";
+        }
     }
 
     public boolean exec(MethodContext methodContext) {
+        boolean beganTransaction = false;
+        
+        Boolean beganTransactionBoolean = (Boolean) methodContext.getEnv(beganTransactionName);
+        if (beganTransactionBoolean != null) {
+            beganTransaction = beganTransactionBoolean.booleanValue();
+        }
+        
         try {
-            if (this.useCache) {
-                methodContext.putEnv(valueName, methodContext.getDelegator().findByPrimaryKeyCache(entityName, (Map) methodContext.getEnv(mapName)));
-            } else {
-                methodContext.putEnv(valueName, methodContext.getDelegator().findByPrimaryKey(entityName, (Map) methodContext.getEnv(mapName)));
-            }
-        } catch (GenericEntityException e) {
-            Debug.logError(e);
-            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem finding the " + entityName + " entity: " + e.getMessage() + "]";
+            TransactionUtil.commit(beganTransaction);
+        } catch (GenericTransactionException e) {
+            Debug.logError(e, "Could not commit transaction in simple-method, returning error.");
+            
+            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [error committing a transaction: " + e.getMessage() + "]";
             methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;
         }
+        
+        methodContext.removeEnv(beganTransactionName);
         return true;
     }
 }

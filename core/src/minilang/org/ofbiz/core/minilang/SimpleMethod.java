@@ -546,6 +546,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallSimpleMapProcessor(curOperElem, simpleMethod));
                 } else if ("check-errors".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.callops.CheckErrors(curOperElem, simpleMethod));
+                } else if ("return".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.callops.Return(curOperElem, simpleMethod));
                 } else if ("call-service".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallService(curOperElem, simpleMethod));
                 } else if ("call-service-asynch".equals(nodeName)) {
@@ -555,6 +557,13 @@ public class SimpleMethod {
                 } else if ("call-simple-method".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallSimpleMethod(curOperElem, simpleMethod));
 
+                } else if ("call-object-method".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallObjectMethod(curOperElem, simpleMethod));
+                } else if ("call-class-method".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallClassMethod(curOperElem, simpleMethod));
+                } else if ("create-object".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.callops.CreateObject(curOperElem, simpleMethod));
+                    
                 } else if ("field-to-request".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.eventops.FieldToRequest(curOperElem, simpleMethod));
                 } else if ("field-to-session".equals(nodeName)) {
@@ -588,6 +597,13 @@ public class SimpleMethod {
                 } else if ("first-from-list".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.FirstFromList(curOperElem, simpleMethod));
 
+                } else if ("transaction-begin".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.TransactionBegin(curOperElem, simpleMethod));
+                } else if ("transaction-commit".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.TransactionCommit(curOperElem, simpleMethod));
+                } else if ("transaction-rollback".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.TransactionRollback(curOperElem, simpleMethod));
+                    
                 } else if ("now-timestamp-to-env".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.NowTimestampToEnv(curOperElem, simpleMethod));
                 } else if ("now-date-to-env".equals(nodeName)) {
@@ -622,6 +638,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.RemoveByAnd(curOperElem, simpleMethod));
                 } else if ("clear-cache-line".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.ClearCacheLine(curOperElem, simpleMethod));
+                } else if ("clear-entity-caches".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.ClearEntityCaches(curOperElem, simpleMethod));
                 } else if ("set-pk-fields".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.SetPkFields(curOperElem, simpleMethod));
                 } else if ("set-nonpk-fields".equals(nodeName)) {
