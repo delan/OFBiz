@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -155,7 +155,7 @@ function addToList() {
                     <select name="add_category_id" class="selectBox">
                       <option></option>
                       <#list productCategoryList as productCategory>
-                        <option value="${productCategory.productCategoryId}">${productCategory.description?if_exists}</option>
+                        <option value="${productCategory.productCategoryId}">${productCategory.description?default("No Description")}</option>
                       </#list>
                     </select>
                   </td>
