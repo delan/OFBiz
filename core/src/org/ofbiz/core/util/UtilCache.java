@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/16 14:45:48  azeneski
+ * Added the missing 'core' directory into the module.
+ *
  * Revision 1.1  2001/07/15 16:36:18  azeneski
  * Initial Import
  *
@@ -341,15 +344,15 @@ public class UtilCache
    * @param response The HTTP response object for the current JSP or Servlet request.
    * @return
    */  
-  public static boolean removeElementEvent(HttpServletRequest request, HttpServletResponse response)
+  public static String removeElementEvent(HttpServletRequest request, HttpServletResponse response)
   {
     String name = request.getParameter("UTIL_CACHE_NAME");
-    if(name==null) return true;
+    if(name==null) return "error";
     String numString = request.getParameter("UTIL_CACHE_ELEMENT_NUMBER");
-    if(numString==null) return true;
+    if(numString==null) return "error";
     int number;
     try { number = Integer.parseInt(numString); }
-    catch(Exception e) { return true; }
+    catch(Exception e) { return "error"; }
     
     UtilCache utilCache = (UtilCache)utilCacheTable.get(name);
     if(utilCache != null)
@@ -357,7 +360,7 @@ public class UtilCache
       Object key = utilCache.keyLRUList.get(number);
       if(key != null) utilCache.remove(key);
     }
-    return true;
+    return "success";
   }
 
   /** An HTTP WebEvent handler that clears the named cache
@@ -365,13 +368,13 @@ public class UtilCache
    * @param response The HTTP response object for the current JSP or Servlet request.
    * @return
    */  
-  public static boolean clearEvent(HttpServletRequest request, HttpServletResponse response)
+  public static String clearEvent(HttpServletRequest request, HttpServletResponse response)
   {
     String name = request.getParameter("UTIL_CACHE_NAME");
-    if(name==null) return true;
+    if(name==null) return "error";
     UtilCache utilCache = (UtilCache)utilCacheTable.get(name);
     if(utilCache != null) utilCache.clear();
-    return true;
+    return "success";
   }
 
   /** An HTTP WebEvent handler that updates the named cache
@@ -379,10 +382,10 @@ public class UtilCache
    * @param response The HTTP response object for the current JSP or Servlet request.
    * @return
    */  
-  public static boolean updateEvent(HttpServletRequest request, HttpServletResponse response)
+  public static String updateEvent(HttpServletRequest request, HttpServletResponse response)
   {
     String name = request.getParameter("UTIL_CACHE_NAME");
-    if(name==null) return true;
+    if(name==null) return "error";
     String maxSizeStr = request.getParameter("UTIL_CACHE_MAX_SIZE");
     String expireTimeStr = request.getParameter("UTIL_CACHE_EXPIRE_TIME");
     
@@ -396,6 +399,6 @@ public class UtilCache
       if(maxSize!=null) utilCache.setMaxSize(maxSize.longValue());
       if(expireTime!=null) utilCache.setExpireTime(expireTime.longValue());
     }
-    return true;
+    return "success";
   }
 }
