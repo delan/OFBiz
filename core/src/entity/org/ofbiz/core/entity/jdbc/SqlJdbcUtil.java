@@ -25,6 +25,7 @@ package org.ofbiz.core.entity.jdbc;
 
 import java.sql.*;
 import java.util.*;
+import java.io.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
@@ -489,7 +490,7 @@ public class SqlJdbcUtil {
             // checking to see if the object is null is really only necessary for the numbers
             int typeValue = getType(fieldType);
 
-            if (typeValue <= 4 || typeValue == 10) {
+            if (typeValue <= 4 || typeValue == 10 || typeValue == 11) {
                 switch (typeValue) {
                 case 1:
                     entity.dangerousSetNoCheckButFast(curField, rs.getString(ind));
@@ -508,7 +509,31 @@ public class SqlJdbcUtil {
                     break;
 
                 case 10:
-                    entity.dangerousSetNoCheckButFast(curField, rs.getObject(ind));
+                    Object obj = null;
+  
+                    Blob blobLocator = rs.getBlob(ind);
+                    InputStream binaryInput = blobLocator.getBinaryStream();
+     
+                    if (null != binaryInput) {
+                        try {
+                            ObjectInputStream in = new ObjectInputStream(binaryInput);
+                            obj = in.readObject();
+                            in.close();
+                        } catch (IOException ex) {
+                            throw new GenericDataSourceException("Unable to read BLOB data from input stream: ", ex);
+                        } catch (ClassNotFoundException ex) {
+                            throw new GenericDataSourceException("Class not found: Unable to cast BLOB data to an Java object: ", ex);
+                        }
+                    }
+
+                    binaryInput = null;
+                    entity.dangerousSetNoCheckButFast(curField, obj);
+                    break;
+                case 11:
+                    entity.dangerousSetNoCheckButFast(curField, rs.getBlob(ind));
+                    break;
+                case 12:
+                    entity.dangerousSetNoCheckButFast(curField, rs.getClob(ind));
                     break;
                 }
             } else {
@@ -643,7 +668,15 @@ public class SqlJdbcUtil {
                 break;
 
             case 10:
-                sqlP.setValue(fieldValue);
+                sqlP.setBinaryStream(fieldValue);
+                break;
+                
+            case 11:
+                sqlP.setValue((java.sql.Blob) fieldValue);
+                break;
+            
+            case 12:
+                sqlP.setValue((java.sql.Clob) fieldValue);
                 break;
             }
         } catch (SQLException sqle) {
@@ -673,6 +706,10 @@ public class SqlJdbcUtil {
         fieldTypeMap.put("Boolean", new Integer(9));
         fieldTypeMap.put("java.lang.Object", new Integer(10));
         fieldTypeMap.put("Object", new Integer(10));
+        fieldTypeMap.put("java.sql.Blob", new Integer(11));
+        fieldTypeMap.put("Blob", new Integer(11));
+        fieldTypeMap.put("java.sql.Clob", new Integer(11));
+        fieldTypeMap.put("Clob", new Integer(11));
     }
 
     public static int getType(String fieldType) throws GenericNotImplementedException {

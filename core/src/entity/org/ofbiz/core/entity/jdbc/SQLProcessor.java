@@ -24,6 +24,7 @@
 package org.ofbiz.core.entity.jdbc;
 
 import java.sql.*;
+import java.io.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
@@ -591,10 +592,73 @@ public class SQLProcessor {
      * @throws SQLException
      */
     public void setValue(Object field) throws SQLException {
-        if (field != null)
+        if (field != null) {
             _ps.setObject(_ind, field, Types.JAVA_OBJECT);
-        else
+        } else {
             _ps.setNull(_ind, Types.JAVA_OBJECT);
+        }
+        _ind++;
+    }
+
+    /**
+     * Set the next binding variable of the currently active prepared statement
+     * 
+     * @param field
+     * 
+     * @throws SQLException
+     */
+    public void setValue(Blob field) throws SQLException {
+        if (field != null) {
+            _ps.setBlob(_ind, field);
+        } else {
+            _ps.setNull(_ind, Types.JAVA_OBJECT);
+        }
+        _ind++;
+    }
+
+    /**
+     * Set the next binding variable of the currently active prepared statement
+     * 
+     * @param field
+     * 
+     * @throws SQLException
+     */
+    public void setValue(Clob field) throws SQLException {
+        if (field != null) {
+            _ps.setClob(_ind, field);
+        } else {
+            _ps.setNull(_ind, Types.JAVA_OBJECT);
+        }
+        _ind++;
+    }
+
+    /**
+     * Set the next binding variable of the currently active prepared statement
+     * to write the serialized data of 'field' to a BLOB.
+     * 
+     * @param field
+     * 
+     * @throws SQLException
+     */
+    public void setBinaryStream(Object field) throws SQLException {
+        if (field != null) {
+            try {
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(os);
+                oos.writeObject(field);
+                oos.close();
+    
+                byte[] buf = os.toByteArray();
+                os.close();
+                ByteArrayInputStream is = new ByteArrayInputStream(buf);
+                _ps.setBinaryStream(_ind, is, buf.length);
+                is.close();
+            } catch (IOException ex) {
+                throw new SQLException(ex.getMessage());
+            }
+        } else {
+            _ps.setNull(_ind, Types.JAVA_OBJECT);
+        }
 
         _ind++;
     }
