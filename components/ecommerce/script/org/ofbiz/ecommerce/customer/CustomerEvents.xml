@@ -294,7 +294,7 @@
         <!-- If password encryption is enabled, encrpyt it now -->
         <call-bsh><![CDATA[
             boolean useEncryption = "true".equals(org.ofbiz.base.util.UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
-            if (useEncryption) { newUserLogin.set("currentPassword", org.ofbiz.securityext.login.HashEncrypt.getHash((String) newUserLogin.get("currentPassword"))); }
+            if (useEncryption) { newUserLogin.set("currentPassword", org.ofbiz.base.crypto.HashCrypt.getDigestHash((String) newUserLogin.get("currentPassword"))); }
         ]]></call-bsh>
 
         <set-service-fields map-name="personContext" service-name="createPersonAndUserLogin" to-map-name="personUserLoginContext"/>
