@@ -273,7 +273,7 @@
   </TABLE>
 </#if>
 
-<#if associatedProducts?has_content && associatedProducts != "null">
+<#if associatedProducts?has_content>
   <BR>
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>

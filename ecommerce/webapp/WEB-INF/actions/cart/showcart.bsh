@@ -38,7 +38,9 @@ if (shoppingCart != null) {
 context.put("shoppingCart", shoppingCart);
 
 //Get Cart Associated Products Data
-context.put("associatedProducts", CatalogWorker.getRandomCartProductAssoc(request));
+associatedProducts = CatalogWorker.getRandomCartProductAssoc(request);
+if (associatedProducts != null) 
+    context.put("associatedProducts", associatedProducts);
 
 //Get Promo Text Data
 productPromos = ProductPromoWorker.getCatalogProductPromos(delegator, request);
