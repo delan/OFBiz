@@ -1,4 +1,4 @@
-/*
+<#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -19,15 +19,29 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Revision$
  *@since      2.1
- */
+-->
 
-session = request.getSession();
-String subPage = session.getAttribute("dataSubPage");
-if(subPage == null) subPage = "EditDataResourceType";
-String redirectUrl	= "/content/control/" + subPage;
+<#if hasPermission>
 
-response.sendRedirect(redirectUrl);
+${pages.get(page.getProperty("subMenu"))}
 
+<div class="head1">${page.getProperty("entityName")}</div>
+<br>
+<br>
+<#--
+<#assign queryWrapper = requestAttributes.queryWrapper />
+-->
+${queryWrapper.renderFormString()}
+<br>
+<#--
+<#assign listWrapper = requestAttributes.listWrapper />
+-->
+${listWrapper.renderFormString()}
+<br>
+
+<#else>
+ <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>
+</#if>

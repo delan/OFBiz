@@ -26,6 +26,7 @@
 
 import java.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.control.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.security.login.*;
 import org.ofbiz.commonapp.common.*;
@@ -33,10 +34,35 @@ import org.ofbiz.commonapp.common.*;
 userLogin = session.getAttribute(SiteDefs.USER_LOGIN);
 if (userLogin != null) request.setAttribute("userLogin", userLogin);
 
-context.put("contentSubPage", session.getAttribute("contentSubPage"));
-context.put("dataSubPage", session.getAttribute("dataSubPage"));
-context.put("contentSetupSubPage", session.getAttribute("contentSetupSubPage"));
-context.put("dataSetupSubPage", session.getAttribute("dataSetupSubPage"));
+// Set the menuHistory object with the info relating to this page
+// This counts on the convention of the page name being the same as the request id base name
+HashMap menuHistory	= session.getAttribute("menuHistory");
+if(menuHistory == null){
+	menuHistory	= new HashMap();
+	session.setAttribute("menuHistory", menuHistory);
+}
+String [] levels	= {"topItem", "headerItem", "pageItem"};
+String pageName		= page.getPageName();
+// This should not be necessary since Andy changed the logic, but it may get
+// changed back so that a trailing ".ftl" gets appended if there is no trailing "/"
+if(pageName.indexOf("/") != 0){
+    pageName	= "/" + pageName;
+}
+// prepend the right path info to the page name to turn it into a request
+RequestHandler rh = (RequestHandler) application.getAttribute(SiteDefs.REQUEST_HANDLER);
+String thisPath		= rh.makeLink(request, response, pageName);
+
+String menuPath		= null;
+// Skip top level for now
+// and pageItem is probably not used
+for(int i=1; i<levels.length; i++){
+	menuPath	= page.getProperty(levels[i]);
+	if(menuPath != null){
+		menuHistory.put(menuPath, thisPath);
+	}else{
+		break;
+	}
+}
 
 person = session.getAttribute(SiteDefs.PERSON);
 partyGroup = session.getAttribute(SiteDefs.PARTY_GROUP);

@@ -27,15 +27,19 @@
 <#assign security = requestAttributes.security>
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">
-<#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
-<#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
+<#assign headerItem = page.getProperty("headerItem") />
+<#assign selectedLeftClassMap = {headerItem?default("void") : "headerButtonLeftSelected"}>
+<#assign selectedRightClassMap = {headerItem?default("void") : "headerButtonRightSelected"}>
 
 <div class="apptitle">&nbsp;Content Manager Application&nbsp;</div>
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">Main</a></div>
   <div class="col"><a href="<@ofbizUrl>/FindWebSite</@ofbizUrl>" class="${selectedLeftClassMap.WebSite?default(unselectedLeftClassName)}">WebSites</a></div>
-  <div class="col"><a href="<@ofbizUrl>/RedirectContent</@ofbizUrl>" class="${selectedLeftClassMap.Content?default(unselectedLeftClassName)}">Content</a></div>
-  <div class="col"><a href="<@ofbizUrl>/RedirectData</@ofbizUrl>" class="${selectedLeftClassMap.DataResource?default(unselectedLeftClassName)}">DataResource</a></div>
+  <div class="col"><a href="<@ofbizUrl>/ContentMenu</@ofbizUrl>" class="${selectedLeftClassMap.Content?default(unselectedLeftClassName)}">Content</a></div>
+  <div class="col"><a href="<@ofbizUrl>/DataMenu</@ofbizUrl>" class="${selectedLeftClassMap.Data?default(unselectedLeftClassName)}">DataResource</a></div>
+
+  <div class="col"><a href="<@ofbizUrl>/ContentSetupMenu</@ofbizUrl>" class="${selectedLeftClassMap.ContentSetupMenu?default(unselectedLeftClassName)}">Content Setup</a></div>
+  <div class="col"><a href="<@ofbizUrl>/DataSetupMenu</@ofbizUrl>" class="${selectedLeftClassMap.DataResourceSetupMenu?default(unselectedLeftClassName)}">DataResource Setup</a></div>
 
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.login?default(unselectedRightClassName)}">Logout</a></div>

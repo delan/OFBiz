@@ -477,7 +477,7 @@
         <response name="error" type="view" value="EditMimeType"/>
     </request-map>
 
-    <!-- ================ Redirect Content Requests ================= -->
+    <!-- ================ Find/Lookup Requests ================= -->
     <request-map uri="FindContent">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="FindContent"/>
@@ -486,29 +486,32 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="FindDataResource"/>
     </request-map>
+    <request-map uri="FindDataResource.ftl">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="FindDataResource"/>
+    </request-map>
     <request-map uri="LookupDataResource">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupDataResource"/>
     </request-map>
-    <request-map uri="RedirectContent">
+
+
+    <!-- ================ Redirect Content Requests ================= -->
+    <request-map uri="ContentMenu">
         <security auth="true" https="true"/>
-        <event invoke="org/ofbiz/content/redirectContent.bsh" path="" type="bsf"/>
-        <response name="success" type="none"/>
+        <response name="success" type="view" value="ContentMenu"/>
     </request-map>
-    <request-map uri="RedirectData">
+    <request-map uri="DataMenu">
         <security auth="true" https="true"/>
-        <event invoke="org/ofbiz/content/redirectData.bsh" path="" type="bsf"/>
-        <response name="success" type="none"/>
+        <response name="success" type="view" value="DataMenu"/>
     </request-map>
-    <request-map uri="RedirectContentSetup">
+    <request-map uri="ContentSetupMenu">
         <security auth="true" https="true"/>
-        <event invoke="org/ofbiz/content/redirectContentSetup.bsh" path="" type="bsf"/>
-        <response name="success" type="none"/>
+        <response name="success" type="view" value="ContentSetupMenu"/>
     </request-map>
-    <request-map uri="RedirectDataSetup">
+    <request-map uri="DataSetupMenu">
         <security auth="true" https="true"/>
-        <event invoke="org/ofbiz/content/redirectDataSetup.bsh" path="" type="bsf"/>
-        <response name="success" type="none"/>
+        <response name="success" type="view" value="DataSetupMenu"/>
     </request-map>
 
 	<!-- Content requests -->
@@ -549,9 +552,7 @@
     
     <view-map name="FindContent" page="/content/FindContent.ftl" type="jpublish"/>
     <view-map name="EditContent" page="/content/EditContent.ftl" type="jpublish"/>
-    <view-map name="FindDataResource" page="/data/FindDataResource.ftl" type="jpublish"/>
     <view-map name="LookupDataResource" page="/data/LookupDataResource.ftl" type="jpublish"/>
-    <view-map name="RedirectContent" page="/contentsetup/RedirectContent.ftl" type="none"/>
     <view-map name="EditContentType" page="/contentsetup/EditContentType.ftl" type="jpublish"/>
     <view-map name="EditContentAssocType" page="/contentsetup/EditContentAssocType.ftl" type="jpublish"/>
     <view-map name="EditContentRole" page="/contentsetup/EditContentRole.ftl" type="jpublish"/>
@@ -568,5 +569,10 @@
     <view-map name="EditCharacterSet" page="/datasetup/EditCharacterSet.ftl" type="jpublish"/>
     <view-map name="EditFileExtension" page="/datasetup/EditFileExtension.ftl" type="jpublish"/>
     <view-map name="EditMimeType" page="/datasetup/EditMimeType.ftl" type="jpublish"/>
+
+    <view-map name="ContentMenu" page="/content/ContentMenu.ftl" type="jpublish"/>
+    <view-map name="ContentSetupMenu" page="/contentsetup/ContentSetupMenu.ftl" type="jpublish"/>
+    <view-map name="DataMenu" page="/data/DataMenu.ftl" type="jpublish"/>
+    <view-map name="DataSetupMenu" page="/datasetup/DataSetupMenu.ftl" type="jpublish"/>
     <!-- end of view mappings -->
 </site-conf>
