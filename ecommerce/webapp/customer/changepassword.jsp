@@ -42,7 +42,7 @@
   if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 %>
   <p class="head1">Change Password</p>
-+ donePage%></ofbiz:url>" name="changepasswordform">
+  <form method="post" action="<ofbiz:url>/updatepassword/<%=donePage%></ofbiz:url>" name="changepasswordform">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
       <td width="26%" align=right><div class="tabletext">Old Password</div></td>
@@ -65,7 +65,7 @@
   </table>
   </form>
 
-+ donePage%></ofbiz:url>" class="buttontext">[Back]</a>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Back]</a>
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Change]</a>
     <%--  <input type="image" value="[Save]" border="0" src="/commerce/images/btn_save.gif"> --%>
 
