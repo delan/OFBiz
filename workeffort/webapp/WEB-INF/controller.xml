@@ -259,6 +259,70 @@
     <request-map uri="upcoming"><security https="true" auth="true"/>
     	<response name="success" type="view" value="upcoming"/>
     </request-map>
+    
+    <!-- project management requests -->
+    <request-map uri="projectlist"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="projectlist"/>
+    </request-map>
+    
+    <request-map uri="editproject"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="editproject"/>
+    </request-map>
+    
+    <request-map uri="createproject"><security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffort"/>
+    	<response name="success" type="view" value="projectlist"/>
+        <response name="error" type="view" value="editproject"/>
+    </request-map>
+
+    <request-map uri="updateproject"><security https="true" auth="true"/>
+        <event type="service" invoke="updateWorkEffort"/>
+    	<response name="success" type="view" value="projectlist"/>
+        <response name="error" type="view" value="editproject"/>
+    </request-map>
+
+    <request-map uri="phaselist"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="phaselist"/>
+    </request-map>
+    
+    <request-map uri="editphase"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="editphase"/>
+    </request-map>
+    
+    <request-map uri="createphase"><security https="true" auth="true"/>
+        <event type="service" invoke="createPhase"/>
+    	<response name="success" type="view" value="phaselist"/>
+        <response name="error" type="view" value="editphase"/>
+    </request-map>
+
+    <request-map uri="updatephase"><security https="true" auth="true"/>
+        <event type="service" invoke="updateWorkEffort"/>
+    	<response name="success" type="view" value="phaselist"/>
+        <response name="error" type="view" value="editphase"/>
+    </request-map>
+    
+    <request-map uri="phasetasklist"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="phasetasklist"/>
+    </request-map>
+    
+    <request-map uri="editphasetask"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="editphasetask"/>
+    </request-map>
+    
+    <request-map uri="createphasetask"><security https="true" auth="true"/>
+        <event type="service" invoke="createPhaseTask"/>
+    	<response name="success" type="view" value="phasetasklist"/>
+        <response name="error" type="view" value="editphasetask"/>
+    </request-map>
+
+    <request-map uri="updatephasetask"><security https="true" auth="true"/>
+        <event type="service" invoke="updateWorkEffort"/>
+    	<response name="success" type="view" value="phasetasklist"/>
+        <response name="error" type="view" value="editphasetask"/>
+    </request-map>
+        
+    <!-- end project management requests -->
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -282,6 +346,17 @@
     <view-map name="week" type="region"/>
     <view-map name="month" type="region"/>
     <view-map name="upcoming" type="region"/>
+    
+    <!-- project management views -->
+    <view-map name="projectlist" type="region"/>
+    <view-map name="editproject" type="region"/>
+    <view-map name="phaselist" type="region"/>
+    <view-map name="editphase" type="region"/>
+    <view-map name="phasetasklist" type="region"/>
+    <view-map name="editphasetask" type="region"/>
+    
+    <!-- end project management views -->
+    
     <!-- end of view mappings -->
 </site-conf>
 
