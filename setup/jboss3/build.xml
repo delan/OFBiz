@@ -88,6 +88,7 @@
         <delete file="${conf.dir}/security.properties" />
         <delete file="${conf.dir}/security.xml" />
         <delete file="${conf.dir}/debug.properties" />
+		<delete file="${conf.dir}/jsse.properties" />        
         <delete file="${conf.dir}/cache.properties" />
         <delete file="${conf.dir}/general.properties" />
         <delete file="${conf.dir}/prodsearch.properties" />

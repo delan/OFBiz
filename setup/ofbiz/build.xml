@@ -201,6 +201,8 @@
         <delete file="${classes.dir}/security.properties" />
         <delete file="${classes.dir}/security.xml" />
         <delete file="${classes.dir}/debug.properties" />
+        <delete file="${classes.dir}/jsse.properties" />
+        <delete file="${classes.dir}/jsse.properties" />
         <delete file="${classes.dir}/cache.properties" />
         <delete file="${classes.dir}/general.properties" />
         <delete file="${classes.dir}/prodsearch.properties" />
@@ -503,6 +505,7 @@
         <copy file="commonapp/etc/cache.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/cybersource.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/debug.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/jsse.properties" toDir="${classes.dir}" />        
         <copy file="commonapp/etc/entityengine.xml" toDir="${classes.dir}" />
         <copy file="commonapp/etc/general.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/inventoryalerts.properties" toDir="${classes.dir}" />
@@ -619,6 +622,7 @@
         <copy file="commonapp/etc/entityengine.xml"          toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/security.properties"       toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/debug.properties"          toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/jsse.properties"           toDir="${ext.dir}/etc"/>        
         <copy file="commonapp/etc/cache.properties"          toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/general.properties"        toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/prodsearch.properties"     toDir="${ext.dir}/etc"/>
