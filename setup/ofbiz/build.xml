@@ -304,8 +304,6 @@
         <copy file="commonapp/etc/security.properties" toFile="${classes.dir}/security.properties" />
         <copy file="commonapp/etc/debug.properties" toFile="${classes.dir}/debug.properties" />
         <copy file="commonapp/etc/cache.properties" toFile="${classes.dir}/cache.properties" />
-        <copy file="commonapp/etc/poolman.xml" toFile="${classes.dir}/poolman.xml" />
-        <copy file="commonapp/etc/jndi.properties.poolman" toFile="${classes.dir}/jndi.properties" />
         <copy file="commonapp/etc/localdtds.properties" toFile="${classes.dir}/localdtds.properties" />
         <copy file="commonapp/etc/servicesengine.properties" toFile="${classes.dir}/servicesengine.properties" />
         <copy file="commonapp/etc/tyrexdomain.xml" toFile="${classes.dir}/tyrexdomain.xml" />
