@@ -175,6 +175,13 @@ public class PaymentWorker {
         return webSitePayment;                          
     }  
     
+    public static String getPaymentPartyId(GenericDelegator delegator, String webSiteId, String paymentMethodTypeId) {
+        GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, webSiteId, paymentMethodTypeId);
+        String paymentConfig = paymentSettings != null && paymentSettings.get("paymentConfiguration") != null ? paymentSettings.getString("paymentConfiguration") : null;
+        if (paymentConfig == null) paymentConfig = "payment.properties";    
+        return UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
+    }
+    
     public static GenericValue getPaymentAddress(GenericDelegator delegator, String webSiteId, String paymentMethodTypeId) {
         GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, webSiteId, paymentMethodTypeId);
         String paymentConfig = paymentSettings != null && paymentSettings.get("paymentConfiguration") != null ? paymentSettings.getString("paymentConfiguration") : null;

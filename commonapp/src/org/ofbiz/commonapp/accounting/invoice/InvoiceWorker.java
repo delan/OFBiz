@@ -62,7 +62,7 @@ public class InvoiceWorker {
                     amount = new Double(0.00);
                 if (quantity == null)
                     quantity = new Double(1);
-                invoiceTotal = amount.doubleValue() * quantity.doubleValue();
+                invoiceTotal += amount.doubleValue() * quantity.doubleValue();
             }
         }
         return invoiceTotal;        
@@ -104,7 +104,7 @@ public class InvoiceWorker {
     public static GenericValue getSendFromParty(GenericValue invoice) {
         List sendFromRoles = null;
         try {
-            sendFromRoles = invoice.getRelated("InvoiceRole", UtilMisc.toMap("roleTypeId", "SEND_FROM_COMPANY"), 
+            sendFromRoles = invoice.getRelated("InvoiceRole", UtilMisc.toMap("roleTypeId", "BILL_FROM_VENDOR"), 
                 UtilMisc.toList("-datetimePerformed"));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Trouble getting InvoiceRole list", module);            
@@ -130,7 +130,7 @@ public class InvoiceWorker {
       * @return GenericValue object of the PostalAddress
       */        
     public static GenericValue getBillToAddress(GenericValue invoice) {
-        return getAddressFromParty(getBillToParty(invoice), "BILLING_LOCATION");        
+        return getInvoiceAddressByType(invoice, "BILLING_LOCATION");        
     }
     
     /**
@@ -139,8 +139,30 @@ public class InvoiceWorker {
       * @return GenericValue object of the PostalAddress
       */        
     public static GenericValue getSendFromAddress(GenericValue invoice) {
-        return getAddressFromParty(getSendFromParty(invoice), "PAYRECEIVE_LOCATION");
+        return getInvoiceAddressByType(invoice, "PAYMENT_LOCATION");                
     }
+    
+    public static GenericValue getInvoiceAddressByType(GenericValue invoice, String contactMechPurposeTypeId) {
+        GenericDelegator delegator = invoice.getDelegator();
+        List locations = null;
+        try {
+            locations = invoice.getRelated("InvoiceContactMech", UtilMisc.toMap("contactMechPurposeTypeId", contactMechPurposeTypeId), null);
+        } catch (GenericEntityException e) {
+            Debug.logError("Touble getting InvoiceContactMech entity list", module);           
+        }
+        
+        GenericValue postalAddress = null;
+        if (locations != null) {
+            GenericValue purpose = EntityUtil.getFirst(locations);           
+            try {
+                postalAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", purpose.getString("contactMechId")));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Trouble getting PostalAddress for contactMechId: " + purpose.getString("contactMechId"), module);
+            }
+        }
+        
+        return postalAddress;
+    }    
     
     private static GenericValue getAddressFromParty(GenericValue party, String purposeTypeId) {
         if (party == null) return null;
