@@ -1,5 +1,5 @@
 /*
- * $Id: OrderChangeHelper.java,v 1.12 2004/07/03 19:54:23 jonesde Exp $
+ * $Id: OrderChangeHelper.java,v 1.13 2004/07/27 18:21:29 ajzeneski Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -40,6 +40,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.workflow.WfException;
 import org.ofbiz.workflow.client.WorkflowClient;
 
@@ -47,7 +48,7 @@ import org.ofbiz.workflow.client.WorkflowClient;
  * Order Helper - Helper Methods For Non-Read Actions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class OrderChangeHelper {
@@ -109,8 +110,23 @@ public class OrderChangeHelper {
             return false;
         }
         return true;
-    }        
-    
+    }
+
+    public static boolean completeOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) {
+        try {
+            OrderChangeHelper.createReceivedPayments(dispatcher, userLogin, orderId);
+            OrderChangeHelper.createOrderInvoice(dispatcher, userLogin, orderId);
+            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, "ORDER_COMPLETED", "ITEM_APPROVED", "ITEM_COMPLETED", null);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return false;
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return false;
+        }
+        return true;
+    }
+
     public static boolean cancelOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) {
         GenericValue productStore = OrderReadHelper.getProductStoreFromOrder(dispatcher.getDelegator(), orderId);
         String HEADER_STATUS = "ORDER_CANCELLED";
@@ -210,6 +226,57 @@ public class OrderChangeHelper {
         Map releaseResult = dispatcher.runSync("releaseOrderPayments", releaseFields);
         if (ModelService.RESPOND_ERROR.equals(releaseResult.get(ModelService.RESPONSE_MESSAGE))) {
             Debug.logError("Problems releasing payment authorizations for order #" + orderId, module);
+        }
+    }
+
+    public static void createReceivedPayments(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) throws GenericEntityException {
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = dispatcher.getDelegator().findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        if (orderHeader != null) {
+            OrderReadHelper orh = new OrderReadHelper(orderHeader);
+            GenericValue btp = orh.getBillToPerson();
+            String partyId = "_NA_";
+            if (btp != null) {
+                partyId = btp.getString("partyId");
+            }
+
+            List opps = orh.getPaymentPreferences();
+            Iterator oppi = opps.iterator();
+            while (oppi.hasNext()) {
+                GenericValue opp = (GenericValue) oppi.next();
+                if ("PAYMENT_RECEIVED".equals(opp.getString("statusId"))) {
+                    List payments = orh.getOrderPayments(opp);
+                    if (payments == null || payments.size() == 0) {
+                        // only do this one time; if we have payment already for this pref ignore.
+                        GenericValue payment = createPaymentFromPreference(opp, UtilDateTime.nowTimestamp().toString(), partyId, "");
+                        // value is not stored by this method
+                        dispatcher.getDelegator().create(payment);
+                    }
+                }
+            }
+        }
+    }
+
+    public static void createOrderInvoice(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) throws GenericServiceException {
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = dispatcher.getDelegator().findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        if (orderHeader != null) {
+            OrderReadHelper orh = new OrderReadHelper(orderHeader);
+            List items = orh.getOrderItems();
+
+            Map serviceParam = UtilMisc.toMap("orderId", orderId, "billItems", items, "userLogin", userLogin);
+            Map serviceRes = dispatcher.runSync("createInvoiceForOrder", serviceParam);
+            if (ServiceUtil.isError(serviceRes)) {
+                throw new GenericServiceException(ServiceUtil.getErrorMessage(serviceRes));
+            }
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.43 2004/07/18 16:15:17 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.44 2004/07/27 18:21:30 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -76,7 +76,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.43 $
+ * @version    $Revision: 1.44 $
  * @since      2.0
  */
 
@@ -1522,6 +1522,10 @@ public class OrderServices {
 
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
         String emailString = orh.getOrderEmailString();
+        if (UtilValidate.isEmpty(emailString)) {
+            Debug.logInfo("Customer is not setup to receive emails; no address(s) found [" + orderId + "]", module);
+            return ServiceUtil.returnError("No sendTo email address found");
+        }
 
         // prepare the parsed subject
         Map orderEmailData = prepareOrderEmailData(ctx, UtilMisc.toMap("orderId", orderId));

@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.27 2004/07/27 06:08:34 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.28 2004/07/27 18:21:30 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -66,7 +66,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.27 $
+ * @version    $Revision: 1.28 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -630,6 +630,10 @@ public class CheckOutHelper {
     }
 
     public Map processPayment(GenericValue productStore, GenericValue userLogin) throws GeneralException {
+        return processPayment(productStore, userLogin, false);
+    }
+
+    public Map processPayment(GenericValue productStore, GenericValue userLogin, boolean faceToFace) throws GeneralException {
         // Get some payment related strings
         String DECLINE_MESSAGE = productStore.getString("authDeclinedMessage");
         String ERROR_MESSAGE = productStore.getString("authErrorMessage");
@@ -707,7 +711,8 @@ public class CheckOutHelper {
                 } else if (authResp.equals("ERROR")) {
                     // service failed
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth failed due to processor trouble.", module);
-                    if ("Y".equalsIgnoreCase(RETRY_ON_ERROR)) {
+                    if (!faceToFace && "Y".equalsIgnoreCase(RETRY_ON_ERROR)) {
+                        // never do this for a face to face purchase regardless of store setting
                         return ServiceUtil.returnSuccess(ERROR_MESSAGE);
                     } else {
                         boolean ok = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
@@ -729,7 +734,8 @@ public class CheckOutHelper {
             } else {
                 // result returned null == service failed
                 if (Debug.verboseOn()) Debug.logVerbose("Payment auth failed due to processor trouble.", module);
-                if ("Y".equalsIgnoreCase(RETRY_ON_ERROR)) {
+                if (!faceToFace && "Y".equalsIgnoreCase(RETRY_ON_ERROR)) {
+                    // never do this for a face to face purchase regardless of store setting
                     return ServiceUtil.returnSuccess(ERROR_MESSAGE);
                 } else {
                     boolean ok = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
@@ -775,11 +781,18 @@ public class CheckOutHelper {
                     throw new GeneralException("Problem with order change; see above error");
                 }
             }
-            return ServiceUtil.returnSuccess();
         } else {
-            // Handle NO payment gateway as a success.
-            return ServiceUtil.returnSuccess();
+            // There is nothing to do, we just treat this as a success
         }
+
+        // check to see if we should auto-invoice/bill
+        if (faceToFace) {
+            boolean ok = OrderChangeHelper.completeOrder(dispatcher, userLogin, orderId);
+            if (!ok) {
+                throw new GeneralException("Problem with order change; see error logs");
+            }
+        }
+        return ServiceUtil.returnSuccess();
     }
 
     public Map checkOrderBlacklist(GenericValue userLogin) {
