@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
@@ -48,6 +49,8 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
+
+import org.w3c.dom.Element;
 
 /**
  * ContentPermissionServices Class
@@ -321,7 +324,7 @@ public class ContentPermissionServices {
         
         List targetOperationEntityList = delegator.findByConditionCache(modelOperationEntity.getEntityName(), opCond, null, null);
         Map entities = new HashMap();
-        String pkFieldName = getPkFieldName(entityName, modelEntity);
+        String pkFieldName = ContentWorker.getPkFieldName(entityName, modelEntity);
 
         //TODO: privilegeEnumId test
         /*
@@ -479,8 +482,8 @@ public class ContentPermissionServices {
                 
                 String entityId = entity.getString(pkFieldName);
                 List ownedContentIdList = new ArrayList();
-                ContentWorker.getContentOwners(delegator, entityId, ownedContentIdList);
-                List ownedContentRoleIds = ContentWorker.getUserRolesFromList(delegator, ownedContentIdList, partyId);
+                ContentWorker.getEntityOwners(delegator, entityId, ownedContentIdList, "Content", "ownerContentId");
+                List ownedContentRoleIds = ContentWorker.getUserRolesFromList(delegator, ownedContentIdList, partyId, "contentId", "partyId", "roleTypeId", "ContentRole");
                 String statusId = null;
                 if (hasStatusOp && hasStatusField) {
                     statusId = entity.getString("statusId");
@@ -552,6 +555,105 @@ public class ContentPermissionServices {
         
         return passed;
     }
+    public static boolean checkPermissionMethod(GenericDelegator delegator, GenericValue userLogin,  String entityName, List entityIdList, AuxiliaryValueGetter auxiliaryValueGetter, RelatedRoleGetter relatedRoleGetter, PermissionConditionGetter permissionConditionGetter ) throws GenericEntityException {
+
+        boolean passed = false;
+
+        String lcEntityName = entityName.toLowerCase();
+        String userLoginId = null;
+        String partyId = null;
+        boolean checkAncestors = false;
+        if (userLogin != null) {
+            userLoginId = userLogin.getString("userLoginId");
+            partyId = userLogin.getString("partyId");
+        }
+        boolean hasRoleOperation =  checkHasRoleOperations(userLoginId, permissionConditionGetter, delegator);
+        if( hasRoleOperation ) {
+            return true;
+        }
+        ModelEntity modelEntity = delegator.getModelEntity(entityName);
+        
+        // check permission for each id in passed list until success.
+        // Note that "quickCheck" id come first in the list
+        // Check with no roles or purposes on the chance that the permission fields contain _NA_ s.
+        String pkFieldName = ContentWorker.getPkFieldName(entityName, modelEntity);
+        List alreadyCheckedIds = new ArrayList();
+        Map entities = new HashMap();
+        Iterator iter = entityIdList.iterator();
+        //List purposeList = null;
+        //List roleList = null;
+        while (iter.hasNext()) {
+            GenericValue entity = getNextEntity(delegator, entityName, pkFieldName, iter.next(), entities);
+            if (entity == null) continue;
+            checkAncestors = false;
+            passed = hasMatch(entity, permissionConditionGetter, null, null, partyId, checkAncestors);
+            if (passed) {
+                break;
+            }
+       }
+        
+        if (passed) {
+            return true;
+        }
+        
+        if (auxiliaryValueGetter != null) {
+            // Check with just purposes next.
+            iter = entityIdList.iterator();
+            while (iter.hasNext()) {
+                GenericValue entity = getNextEntity(delegator, entityName, pkFieldName, iter.next(), entities);
+                if (entity == null) continue;
+                checkAncestors = false;
+                passed = hasMatch(entity, permissionConditionGetter, null, auxiliaryValueGetter, partyId, checkAncestors);
+                 
+                if (passed){
+                    break;
+                }
+            }
+        }
+        
+        if (passed) return true;
+        
+        // TODO: need to return some information here about why it failed
+        if (userLogin == null) return false;
+
+        // Check with roles.
+        if (relatedRoleGetter != null) {
+            // Check with just purposes next.
+            iter = entityIdList.iterator();
+            while (iter.hasNext()) {
+                GenericValue entity = getNextEntity(delegator, entityName, pkFieldName, iter.next(), entities);
+                if (entity == null) continue;
+                checkAncestors = false;
+                passed = hasMatch(entity, permissionConditionGetter, relatedRoleGetter, auxiliaryValueGetter, partyId, checkAncestors);
+                 
+                if (passed){
+                    break;
+                }
+            }
+        }
+        
+        if (passed)
+            return true;
+        
+        if (relatedRoleGetter != null) {
+            // Check with just purposes next.
+            iter = entityIdList.iterator();
+            while (iter.hasNext()) {
+                GenericValue entity = getNextEntity(delegator, entityName, pkFieldName, iter.next(), entities);
+                if (entity == null) continue;
+                String entityId = entity.getString(pkFieldName);
+                checkAncestors = true;
+                passed = hasMatch(entity, permissionConditionGetter, relatedRoleGetter, auxiliaryValueGetter, partyId, checkAncestors);
+                 
+                if (passed){
+                    break;
+                }
+            }
+        }
+        
+        
+        return passed;
+    }
     
 
     public static GenericValue getNextEntity(GenericDelegator delegator, String entityName, String pkFieldName, Object obj, Map entities) throws GenericEntityException {
@@ -570,6 +672,12 @@ public class ContentPermissionServices {
         return entity;
     }
  
+    public static boolean checkHasRoleOperations(String userLoginId,  ContentPermissionServices.PermissionConditionGetter permissionConditionGetter , GenericDelegator delegator) {
+    
+        List targetOperations = permissionConditionGetter.getOperationList();
+        return checkHasRoleOperations(userLoginId, targetOperations, delegator);
+    }
+    
     public static boolean checkHasRoleOperations(String userLoginId,  List targetOperations, GenericDelegator delegator) {
 
         //if (Debug.infoOn()) Debug.logInfo("targetOperations:" + targetOperations, module);
@@ -630,14 +738,6 @@ public class ContentPermissionServices {
         return hasRoleOperation;
     }
     
-    public static String getPkFieldName(String entityName, ModelEntity modelEntity) {
-        List pkFieldNames = modelEntity.getPkFieldNames();
-        String idFieldName = null;
-        if (pkFieldNames.size() > 0) {
-            idFieldName = (String)pkFieldNames.get(0);
-        }
-        return idFieldName;
-    }
     public static boolean hasMatch(String entityName, List targetOperations, List roles, boolean hasPurposeOp, List purposes, boolean hasStatusOp, String targStatusId) {
         boolean isMatch = false;
         int targPrivilegeSeq = 0;
@@ -669,6 +769,52 @@ public class ContentPermissionServices {
  
             if (purposesCond && statusCond && roleCond) {
                 
+                    isMatch = true;
+                    break;
+            }
+        }
+        return isMatch;
+    }
+    
+    public static boolean hasMatch(GenericValue entity, PermissionConditionGetter permissionConditionGetter, RelatedRoleGetter relatedRoleGetter, AuxiliaryValueGetter auxiliaryValueGetter, String partyId, boolean checkAncestors) throws GenericEntityException {
+    
+        String entityName = entity.getEntityName();
+        ModelEntity modelEntity = entity.getModelEntity();
+        GenericDelegator delegator = entity.getDelegator();
+        String pkFieldName = ContentWorker.getPkFieldName(entityName, modelEntity);
+        String entityId = entity.getString(pkFieldName);
+        boolean isMatch = false;
+        permissionConditionGetter.restart();
+        List auxiliaryValueList = null;
+        if (auxiliaryValueGetter != null) {
+           auxiliaryValueGetter.init(delegator, entityId);
+           auxiliaryValueList =   auxiliaryValueGetter.getList();
+        }
+        List roleValueList = null;
+        if (relatedRoleGetter != null) {
+            if (checkAncestors) {
+                relatedRoleGetter.initWithAncestors(delegator, entityId, partyId);
+            } else {
+                relatedRoleGetter.init(delegator, entityId, partyId);
+            }
+            roleValueList =   relatedRoleGetter.getList();
+        }
+        
+        String targStatusId = null;
+        if (modelEntity.getField("statusId") != null) {
+            targStatusId = entity.getString("statusId");   
+        }
+        
+        while (permissionConditionGetter.getNext() ) {
+            String roleConditionId = permissionConditionGetter.getRoleValue();
+            String auxiliaryConditionId = permissionConditionGetter.getAuxiliaryValue();
+            String statusConditionId = permissionConditionGetter.getStatusValue();
+
+            boolean auxiliaryCond = ( auxiliaryConditionId == null ||  auxiliaryConditionId.equals("_NA_") || (auxiliaryValueList != null && auxiliaryValueList.contains(auxiliaryConditionId) )  ); 
+            boolean statusCond = ( statusConditionId == null || statusConditionId.equals("_NA_") || (targStatusId != null && targStatusId.equals(statusConditionId) ) ); 
+            boolean roleCond = ( roleConditionId == null || roleConditionId.equals("_NA_") || (roleValueList != null && roleValueList.contains(roleConditionId) ) );
+ 
+            if (auxiliaryCond && statusCond && roleCond) {
                     isMatch = true;
                     break;
             }
@@ -837,397 +983,6 @@ public class ContentPermissionServices {
         return isMember;
     }
     
-/*
-    public static Map checkPermission(GenericValue content, List statusList,
-                                      GenericValue userLogin, List passedPurposes,
-                                      List targetOperations, List passedRoles,
-                                      GenericDelegator delegator ,
-                                      Security security, String entityAction,
-                                      String privilegeEnumId, String quickCheckContentId
-        ) {
-
-        //Debug.logInfo("passedPurposes(c):" + passedPurposes, "");
-        //Debug.logInfo("targetOperations(c):" + targetOperations, "");
-        Map result = new HashMap();
-        PermissionRecorder recorder = new PermissionRecorder();
-                //Debug.logInfo("recorder(a):" + recorder, "");
-        result.put("permissionRecorder", recorder);
-
-        List allowedHasRoleOperationList = null;
-        boolean hasRoleOperation = false;
-        String userLoginId = null; 
-        if (userLogin != null) {
-            userLoginId = userLogin.getString("userLoginId");
-        }
-        if (!(targetOperations == null) && userLoginId != null) {
-            hasRoleOperation = checkHasRoleOperations(userLoginId, targetOperations, delegator);
-        }
-        //if (Debug.infoOn()) Debug.logInfo("hasRoleOperation:" + hasRoleOperation, module);
-        if( hasRoleOperation ) {
-            result.put("permissionStatus", "granted");
-            return result;
-        }
-
-
-        if (content != null) {
-            String statusId = (String)content.get("statusId");
-            if (UtilValidate.isNotEmpty(statusId)) {
-                if (statusList == null)
-                    statusList = new ArrayList();
-                statusList.add(statusId);
-            }
-            if (UtilValidate.isEmpty(privilegeEnumId))
-                privilegeEnumId = (String)content.get("privilegeEnumId");
-        }
-        if (passedRoles == null) passedRoles = new ArrayList();
-        if (UtilValidate.isEmpty(privilegeEnumId))
-            privilegeEnumId = "_00_"; // minimum privilege. any request passes
-
-        if (recorder.isOn()) recorder.setUserLogin(userLogin);
-
-        if (targetOperations == null || targetOperations.size() == 0) {
-            //Debug.logWarning("No targetOperations.", module);
-        }
-    List roleIds = null;
-        String permissionStatus = null;
-        result.put("roleTypeList", passedRoles);
-        //if (Debug.infoOn()) Debug.logInfo("in permissionCheck, passedRoles(1):" + passedRoles, null);
-
-        // Get the ContentPurposeOperation table and save the result to be reused.
-        List purposeOperations = null;
-        try {
-            purposeOperations = delegator.findAllCache("ContentPurposeOperation");
-        } catch (GenericEntityException e) {
-            return ServiceUtil.returnError("Error in retrieving ContentPurposeOperations. " + e.getMessage());
-        }
-
-        List purposeIds = null;
-        // Do check before bothering to get related purposes.
-        String contentId = null;
-        if (content != null)
-            contentId = content.getString("contentId");
-        //if (content != null && Debug.infoOn()) Debug.logInfo("in checkPermission, contentId(1):" + content.get("contentId"), null);
-        boolean isMatch = publicMatches(purposeOperations, targetOperations, purposeIds, passedRoles, statusList, privilegeEnumId, recorder, contentId);
-        
-        if( isMatch ) {
-            result.put("permissionStatus", "granted");
-            return result;
-        }
-
-
-        // Combine any passed purposes with those linked to the Content entity
-        // Note that purposeIds is a list of contentPurposeTypeIds, not GenericValues
-        purposeIds = getRelatedPurposes(content, passedPurposes );
-        //if (Debug.infoOn()) Debug.logInfo("purposeIds:" + purposeIds, null);
-        if (purposeIds == null || purposeIds.size() == 0) {
-            //Debug.logWarning("No purposeIds.", module);
-        }
-
-        // Do check of non-RoleType conditions
-        //if (Debug.infoOn()) Debug.logInfo("in publicMatches, contentId(3):" + contentId, null);
-        isMatch = publicMatches(purposeOperations, targetOperations, purposeIds, passedRoles, statusList, privilegeEnumId, recorder, contentId);
-        
-        if( isMatch ) {
-            result.put("permissionStatus", "granted");
-            return result;
-        }
-
-        // Do entity permission check. This will pass users with administrative permissions.
-        if (userLogin != null ) {
-            isMatch = security.hasEntityPermission("CONTENTMGR", entityAction, userLogin);
-            recorder.setEntityPermCheckResult(isMatch);
-        }
-
-        if( isMatch ) {
-            result.put("permissionStatus", "granted");
-            return result;
-        }
-
-
-        if (content == null || content.isEmpty() ) {
-            //if (Debug.infoOn()) Debug.logInfo("content is null:" + content, null);
-            return result;
-        }
-
-        //if (Debug.infoOn()) Debug.logInfo("userLogin:" + userLogin, null);
-        if (userLogin != null ) {
-
-            Map thisResult = null;
-            if (UtilValidate.isNotEmpty(quickCheckContentId)) {
-                GenericValue quickCheckContent = null;
-                try {
-                    quickCheckContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", quickCheckContentId)); 
-                } catch (GenericEntityException e) {
-                    return ServiceUtil.returnError("Error getting quickCheck content: " + e.toString());
-                }
-                thisResult = checkPermissionWithRoles(quickCheckContent, purposeIds, passedRoles, targetOperations, purposeOperations, userLogin, delegator, statusList, privilegeEnumId, recorder );
-                result.put("roleTypeList", thisResult.get("roleTypeList"));
-                result.put("permissionStatus", thisResult.get("permissionStatus"));
-                permissionStatus = (String)thisResult.get("permissionStatus");
-            }
-    
-            if (permissionStatus == null || !permissionStatus.equals("granted")) {
-                // This is a recursive query that looks for any "owner" content in the 
-                // ancestoral path that might have ContentRole associations that
-                // make a ContentPurposeOperation condition match.
-                thisResult = checkPermissionWithRoles(content, purposeIds, passedRoles, targetOperations, purposeOperations, userLogin, delegator, statusList, privilegeEnumId, recorder );
-                result.put("roleTypeList", thisResult.get("roleTypeList"));
-                result.put("permissionStatus", thisResult.get("permissionStatus"));
-            }
-        }
-                    //Debug.logInfo("result(a):" + result, "");
-                    PermissionRecorder r = (PermissionRecorder)result.get("permissionRecorder");
-                    //Debug.logInfo("recorder(a):" + r, "");
-        return result;
-
-    }
-
-    public static Map checkPermissionWithRoles( GenericValue content, List passedPurposes, 
-                                           List passedRoles, 
-                                           List targetOperations, List purposeOperations,
-                                           GenericValue userLogin, GenericDelegator delegator, 
-                                           List statusList, String privilegeEnumId, PermissionRecorder recorder){ 
-
-        String permissionStatus = null;
-        Map result = new HashMap();
-        List roleIds = getUserRoles(content, userLogin, passedRoles, delegator);
-        result.put("roleTypeList", roleIds);
-        result.put("permissionStatus", permissionStatus);
-        String contentId = null;
-        if (content != null)
-            contentId = content.getString("contentId");
-        //if (Debug.infoOn()) Debug.logInfo("in publicMatches, contentId(2):" + contentId, null);
-        boolean isMatch = publicMatches(purposeOperations, targetOperations, passedPurposes, roleIds, statusList, privilegeEnumId, recorder, contentId);
-        if (isMatch) {
-            result.put("permissionStatus", "granted");
-            return result;
-        }
-
-        // recursively try if the "owner" Content has ContentRoles that allow a match
-        String ownerContentId = (String)content.get("ownerContentId");
-        //if (Debug.infoOn()) Debug.logInfo("ownerContentId:" + ownerContentId, null);
-        if (UtilValidate.isNotEmpty(ownerContentId)) {
-            GenericValue ownerContent = null;
-            try {
-                ownerContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", ownerContentId) );
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Owner content not found. ", module);
-            }
-            if (ownerContent != null) {
-                // Already been checked with old roles, so send only new roles to checkPermission.
-                Map result2 = checkPermissionWithRoles(ownerContent, passedPurposes, roleIds, 
-                             targetOperations, purposeOperations, userLogin,  delegator, statusList, privilegeEnumId, recorder );
-                result.put("roleTypeList", result2.get("roleTypeList"));
-                result.put("permissionStatus", result2.get("permissionStatus"));
-            }
-        }
-        return result;
-
-    }
-
-
-
-    public static List getUserRoles(GenericValue content, GenericValue userLogin, 
-                                    List passedRoles, GenericDelegator delegator) {
-
-        if(content == null) return passedRoles;
-            // TODO: Need to use ContentManagementWorker.getAuthorContent first
-
-        ArrayList roles = null;
-        if (passedRoles == null) {
-            roles = new ArrayList( );
-        } else {
-            roles = new ArrayList( passedRoles );
-        }
-
-        roles.remove("OWNER"); // always test with the owner of the current content
-        if ( content.get("createdByUserLogin") != null && userLogin != null) {
-            String userLoginId = (String)userLogin.get("userLoginId");
-            String userLoginIdCB = (String)content.get("createdByUserLogin");
-            //if (Debug.infoOn()) Debug.logInfo("userLoginId:" + userLoginId + ": userLoginIdCB:" + userLoginIdCB + ":", null);
-            if (userLoginIdCB.equals(userLoginId)) {
-                roles.add("OWNER");
-                //if (Debug.infoOn()) Debug.logInfo("in getUserRoles, passedRoles(0):" + passedRoles, null);
-            }
-        }
-        
-        String partyId = (String)userLogin.get("partyId");
-    List relatedRoles = null;
-        try {
-            List tmpRelatedRoles = content.getRelatedCache("ContentRole");
-            relatedRoles = EntityUtil.filterByDate(tmpRelatedRoles);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "No related roles found. ", module);
-        }
-        if(relatedRoles != null ) {
-            Iterator rolesIter = relatedRoles.iterator();
-            while (rolesIter.hasNext() ) {
-                GenericValue contentRole = (GenericValue)rolesIter.next();
-                String roleTypeId = (String)contentRole.get("roleTypeId");
-                String targPartyId = (String)contentRole.get("partyId");
-                if (targPartyId.equals(partyId)) {
-                    if (!roles.contains(roleTypeId))
-                        roles.add(roleTypeId);
-                } else { // Party may be of "PARTY_GROUP" type, in which case the userLogin may still possess this role
-                    GenericValue party = null;
-                    String partyTypeId = null;
-                    try {
-                        party = contentRole.getRelatedOne("Party");
-                        partyTypeId = (String)party.get("partyTypeId");
-                        if ( partyTypeId != null && partyTypeId.equals("PARTY_GROUP") ) {
-                           HashMap map = new HashMap();
-                         
-                           // At some point from/thru date will need to be added
-                           map.put("partyIdFrom", partyId);
-                           map.put("partyIdTo", targPartyId);
-                           if ( isGroupMember( map, delegator ) ) {
-                               if (!roles.contains(roleTypeId))
-                                   roles.add(roleTypeId);
-                           }
-                        }
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, "Error in finding related party. " + e.getMessage(), module);
-                    }
-                }
-            }
-        }
-        return roles;
-    }
-
-
-
-    public static boolean publicMatches(List purposeOperations, List targetOperations, List purposes, List roles, List targStatusList, String targPrivilegeEnumId, PermissionRecorder recorder, String contentId) {
-        boolean isMatch = false;
-        //if (Debug.infoOn()) Debug.logInfo("in publicMatches, contentId(1):" + contentId, null);
-        if (recorder.isOn()) recorder.startMatchGroup(targetOperations, purposes, roles, targStatusList, targPrivilegeEnumId, contentId);
-        int targPrivilegeSeq = 0;
-//        if (UtilValidate.isNotEmpty(targPrivilegeEnumId) && !targPrivilegeEnumId.equals("_NA_") && !targPrivilegeEnumId.equals("_00_") ) {
-            // need to do a lookup here to find the seq value of targPrivilegeEnumId.
-            // The lookup could be a static store or it could be done on Enumeration entity.
-//        }
-        boolean permissionDebug = false;
-        Iterator purposeOpsIter = purposeOperations.iterator();
-        while (purposeOpsIter.hasNext() ) {
-            GenericValue purposeOp = (GenericValue)purposeOpsIter.next();
-            String testRoleTypeId = (String)purposeOp.get("roleTypeId");
-            String testContentPurposeTypeId = (String)purposeOp.get("contentPurposeTypeId");
-            String testContentOperationId = (String)purposeOp.get("contentOperationId");
-            String testStatusId = (String)purposeOp.get("statusId");
-            String testPrivilegeEnumId = (String)purposeOp.get("privilegeEnumId");
-            int testPrivilegeSeq = 0;
-
-            boolean targetOpCond = ((targetOperations != null && targetOperations.contains(testContentOperationId)) || (testContentOperationId != null && testContentOperationId.equals("_NA_")));
-            boolean purposesCond = ( (purposes != null && purposes.contains(testContentPurposeTypeId) ) || testContentPurposeTypeId.equals("_NA_") ); 
-            boolean statusCond = ( testStatusId.equals("_NA_") || (targStatusList != null && targStatusList.contains(testStatusId) ) ); 
-            boolean privilegeCond = ( testPrivilegeEnumId.equals("_NA_") || testPrivilegeSeq <= targPrivilegeSeq || testPrivilegeEnumId.equals(targPrivilegeEnumId) ); 
-            boolean roleCond = ( testRoleTypeId.equals("_NA_") || (roles != null && roles.contains(testRoleTypeId) ) );
-
-            if (recorder.isOn()) {
-                recorder.record(purposeOp, targetOpCond, purposesCond, statusCond, privilegeCond, roleCond);
-            }
- 
-            if (targetOpCond && purposesCond && statusCond && privilegeCond && roleCond) {
-                
-                    isMatch = true;
-                    break;
-            }
-        }
-        return isMatch;
-    }
-
-
-
-    public static boolean isGroupMember( Map partyRelationshipValues, GenericDelegator delegator ) {
-        boolean isMember = false;
-        String partyIdFrom = (String)partyRelationshipValues.get("partyIdFrom") ;
-        String partyIdTo = (String)partyRelationshipValues.get("partyIdTo") ;
-        String roleTypeIdFrom = "PERMISSION_GROUP_MBR";
-        String roleTypeIdTo = "PERMISSION_GROUP";
-        Timestamp fromDate = UtilDateTime.nowTimestamp();
-        Timestamp thruDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), 1);
-
-        if (partyRelationshipValues.get("roleTypeIdFrom") != null ) {
-            roleTypeIdFrom = (String)partyRelationshipValues.get("roleTypeIdFrom") ;
-        }
-        if (partyRelationshipValues.get("roleTypeIdTo") != null ) {
-            roleTypeIdTo = (String)partyRelationshipValues.get("roleTypeIdTo") ;
-        }
-        if (partyRelationshipValues.get("fromDate") != null ) {
-            fromDate = (Timestamp)partyRelationshipValues.get("fromDate") ;
-        }
-        if (partyRelationshipValues.get("thruDate") != null ) {
-            thruDate = (Timestamp)partyRelationshipValues.get("thruDate") ;
-        }
-
-        EntityExpr partyFromExpr = new EntityExpr("partyIdFrom", EntityOperator.EQUALS, partyIdFrom);
-        EntityExpr partyToExpr = new EntityExpr("partyIdTo", EntityOperator.EQUALS, partyIdTo);
-       
-        EntityExpr relationExpr = new EntityExpr("partyRelationshipTypeId", EntityOperator.EQUALS,
-                                                       "CONTENT_PERMISSION");
-        //EntityExpr roleTypeIdFromExpr = new EntityExpr("roleTypeIdFrom", EntityOperator.EQUALS, "CONTENT_PERMISSION_GROUP_MEMBER");
-        //EntityExpr roleTypeIdToExpr = new EntityExpr("roleTypeIdTo", EntityOperator.EQUALS, "CONTENT_PERMISSION_GROUP");
-        EntityExpr fromExpr = new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,
-                                                       fromDate);
-        EntityCondition thruCond = new EntityConditionList(
-                        UtilMisc.toList(
-                            new EntityExpr("thruDate", EntityOperator.EQUALS, null),
-                            new EntityExpr("thruDate", EntityOperator.GREATER_THAN, thruDate) ),
-                        EntityOperator.OR);
-
-        // This method is simplified to make it work, these conditions need to be added back in.
-        //List joinList = UtilMisc.toList(fromExpr, thruCond, partyFromExpr, partyToExpr, relationExpr);
-        List joinList = UtilMisc.toList( partyFromExpr, partyToExpr);
-        EntityCondition condition = new EntityConditionList(joinList, EntityOperator.AND);
-
-        List partyRelationships = null;
-        try {
-            partyRelationships = delegator.findByCondition("PartyRelationship", condition, null, null);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Problem finding PartyRelationships. ", module);
-            return false;
-        }
-        if (partyRelationships.size() > 0) {
-           isMember = true;
-        }
-
-        return isMember;
-    }
-
-    public static List getRelatedPurposes(GenericValue content, List passedPurposes) {
-
-        if(content == null) return passedPurposes;
-
-        List purposeIds = null;
-        if (passedPurposes == null) {
-            purposeIds = new ArrayList( );
-        } else {
-            purposeIds = new ArrayList( passedPurposes );
-        }
-
-
-        if (content == null || content.get("contentId") == null ) {
-            return purposeIds;
-        }
-
-        List purposes = null;
-        try {
-            purposes = content.getRelatedCache("ContentPurpose");
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "No associated purposes found. ", module);
-        }
-
-        Iterator purposesIter = purposes.iterator();
-        while (purposesIter.hasNext() ) {
-            GenericValue val = (GenericValue)purposesIter.next();
-            purposeIds.add(val.get("contentPurposeTypeId"));
-        }
-        
-
-        return purposeIds;
-    }
-    */
-
-
 
     public static Map checkAssocPermission(DispatchContext dctx, Map context) {
 
@@ -1300,65 +1055,257 @@ public class ContentPermissionServices {
         return results;
     }
 
-/*
-    public static boolean checkHasRoleOperations(String userLoginId,  List targetOperations, GenericDelegator delegator) {
 
-        //if (Debug.infoOn()) Debug.logInfo("targetOperations:" + targetOperations, module);
-        //if (Debug.infoOn()) Debug.logInfo("userLoginId:" + userLoginId, module);
-        if (targetOperations == null)
-            return false;
-
-        if (userLoginId != null && targetOperations.contains("HAS_USER_ROLE"))
-            return true;
-
-        boolean hasRoleOperation = false;
-        Iterator targOpIter = targetOperations.iterator();
-        boolean hasNeed = false;
-        List newHasRoleList = new ArrayList();
-        while (targOpIter.hasNext()) {
-            String roleOp = (String)targOpIter.next();
-            int idx1 = roleOp.indexOf("HAS_");
-            if (idx1 == 0) {
-                String roleOp1 = roleOp.substring(4); // lop off "HAS_"
-                int idx2 = roleOp1.indexOf("_ROLE");
-                if (idx2 == (roleOp1.length() - 5)) {
-                    String roleOp2 = roleOp1.substring(0, roleOp1.indexOf("_ROLE") - 1); // lop off "_ROLE"
-                    //if (Debug.infoOn()) Debug.logInfo("roleOp2:" + roleOp2, module);
-                    newHasRoleList.add(roleOp2);
-                    hasNeed = true;
-                }
+    public interface PermissionConditionGetter {
+        
+    	public boolean getNext();
+        public String getRoleValue();
+        public String getOperationValue();
+        public String getStatusValue();
+        public int getPrivilegeValue() throws GenericEntityException;
+        public String getAuxiliaryValue();
+        public void init(GenericDelegator delegator) throws GenericEntityException;
+        public void restart();
+        public void setOperationList(String operationIdString);
+        public void setOperationList(List opList);
+        public List getOperationList();
+    }
+    
+    public static class StdPermissionConditionGetter implements PermissionConditionGetter {
+    
+        protected List entityList;
+        protected List operationList;
+        protected ListIterator iter;
+        protected GenericValue currentValue;
+        protected String operationFieldName;
+        protected String roleFieldName;
+        protected String statusFieldName;
+        protected String privilegeFieldName;
+        protected String auxiliaryFieldName;
+        protected String entityName;
+        
+        public StdPermissionConditionGetter () {
+            
+        	this.operationFieldName = "contentOperationId";
+        	this.roleFieldName = "roleTypeId";
+        	this.statusFieldName = "statusId";
+        	this.privilegeFieldName = "privilegeEnumId";
+        	this.auxiliaryFieldName = "contentPurposeTypeId";
+        	this.entityName = "ContentPurposeOperation";
+        }
+        
+        public StdPermissionConditionGetter ( String entityName, String operationFieldName, String roleFieldName, String statusFieldName, String auxiliaryFieldName, String privilegeFieldName) {
+            
+        	this.operationFieldName = operationFieldName;
+        	this.roleFieldName = roleFieldName ;
+        	this.statusFieldName = statusFieldName ;
+        	this.privilegeFieldName = privilegeFieldName ;
+        	this.auxiliaryFieldName = auxiliaryFieldName ;
+        	this.entityName = entityName;
+        }
+        
+        public StdPermissionConditionGetter ( Element getterElement) {
+            this.operationFieldName = getterElement.getAttribute("operation-field-name");
+            this.roleFieldName = getterElement.getAttribute("role-field-name");
+            this.statusFieldName = getterElement.getAttribute("status-field-name");
+            this.privilegeFieldName = getterElement.getAttribute("privilege-field-name");
+            this.auxiliaryFieldName = getterElement.getAttribute("auxiliary-field-name");
+            this.entityName = getterElement.getAttribute("entity-name");
+        }
+        
+    	public boolean getNext() {
+    		boolean hasNext = false;
+    		if (iter != null && iter.hasNext()) {
+                currentValue = (GenericValue)iter.next();
+                hasNext = true;
             }
+            return hasNext;
+        }
+        
+        public String getRoleValue() {
+            return this.currentValue.getString(this.roleFieldName);
         }
 
-        if (hasNeed) {
-            GenericValue uLogin = null;
-            try {
-                uLogin = delegator.findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
-                String partyId = uLogin.getString("partyId");
-                if (UtilValidate.isNotEmpty(partyId)) {
-                    List partyRoleList = delegator.findByAndCache("PartyRole", UtilMisc.toMap("partyId", partyId));
-                    Iterator partyRoleIter = partyRoleList.iterator();
-                    while (partyRoleIter.hasNext()) {
-                        GenericValue partyRole = (GenericValue)partyRoleIter.next();
-                        String roleTypeId = partyRole.getString("roleTypeId");
-                        targOpIter = newHasRoleList.iterator();
-                        while (targOpIter.hasNext()) {
-                            String thisRole = (String)targOpIter.next();
-                            if (roleTypeId.indexOf(thisRole) >= 0) {
-                                hasRoleOperation = true;
-                                break;
-                            }
-                        }
-                        if (hasRoleOperation)
-                            break;
+        public String getOperationValue() {
+            return this.currentValue.getString(this.operationFieldName);
+        }
+        public String getStatusValue() {
+            return this.currentValue.getString(this.statusFieldName);
+            
+        }
+        public int getPrivilegeValue() throws GenericEntityException {
+            int privilegeEnumSeq = -1;
+            String privilegeEnumId = null;
+            GenericDelegator delegator = currentValue.getDelegator();
+            
+            if (UtilValidate.isNotEmpty(privilegeFieldName)) {
+                privilegeEnumId = currentValue.getString(this.privilegeFieldName);   
+            }
+            if ( UtilValidate.isNotEmpty(privilegeEnumId)) {
+                GenericValue privEnum = delegator.findByPrimaryKeyCache("Enumeration", UtilMisc.toMap("enumId", privilegeEnumId));
+                if (privEnum != null) {
+                    String sequenceId = privEnum.getString("sequenceId");   
+                    try {
+                        privilegeEnumSeq = Integer.parseInt(sequenceId);
+                    } catch(NumberFormatException e) {
+                        // just leave it at -1   
                     }
                 }
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-                return hasRoleOperation;
+            }
+            return privilegeEnumSeq;
+            
+        }
+        public String getAuxiliaryValue() {
+            return this.currentValue.getString(this.auxiliaryFieldName);
+        }
+        
+        public void setOperationList(String operationIdString) {
+            
+            this.operationList = null;
+        	if (UtilValidate.isNotEmpty(operationIdString)) {
+                this.operationList = StringUtil.split(operationIdString, "|");
             }
         }
-        return hasRoleOperation;
+        
+        public void setOperationList(List operationList) {
+            this.operationList = operationList;
+        }
+        
+        public List getOperationList() {
+            return this.operationList;
+        }
+        
+        public void init( GenericDelegator delegator) throws GenericEntityException {
+            EntityCondition opCond = new EntityExpr(operationFieldName, EntityOperator.IN, this.operationList);
+            this.entityList = delegator.findByConditionCache(this.entityName, opCond, null, null);
+        }
+        
+        public void restart() {
+            this.iter = null;
+            if (this.entityList != null) {
+                this.iter = this.entityList.listIterator();   
+            }
+        }
     }
-    */
+    
+    public interface AuxiliaryValueGetter {
+        public void init(GenericDelegator delegator, String entityId) throws GenericEntityException;
+        public List getList();
+    }
+    
+    public static class StdAuxiliaryValueGetter implements AuxiliaryValueGetter {
+    
+        protected List entityList;
+        protected String auxiliaryFieldName;
+        protected String entityName;
+        protected String entityIdName;
+        
+        public StdAuxiliaryValueGetter () {
+            
+        	this.auxiliaryFieldName = "contentPurposeTypeId";
+        	this.entityName = "ContentPurpose";
+        	this.entityIdName = "contentId";
+        }
+        
+        public StdAuxiliaryValueGetter ( String entityName,  String auxiliaryFieldName, String entityIdName) {
+            
+        	this.auxiliaryFieldName = auxiliaryFieldName ;
+        	this.entityName = entityName;
+        	this.entityIdName = entityIdName;
+        }
+        
+        public StdAuxiliaryValueGetter ( Element getterElement) {
+        
+            this.auxiliaryFieldName = getterElement.getAttribute("auxiliary-field-name");
+            this.entityName = getterElement.getAttribute("entity-name");
+            this.entityIdName = getterElement.getAttribute("entity-id-name");
+        }
+        
+    	public List getList() {
+            return entityList;
+        }
+        
+        public void init(GenericDelegator delegator, String entityId) throws GenericEntityException {
+            
+            this.entityList = null;
+            if (UtilValidate.isEmpty(this.entityName)) {
+                return;   
+            }
+            List values = delegator.findByAndCache(this.entityName, UtilMisc.toMap(this.entityIdName, entityId));
+            this.entityList = new ArrayList();
+            Iterator iter = values.iterator();
+            while (iter.hasNext()) {
+                GenericValue entity = (GenericValue)iter.next();
+                this.entityList.add(entity.getString(this.auxiliaryFieldName)); 
+            }
+        }
+        
+    }
+    
+    public interface RelatedRoleGetter {
+        public void init(GenericDelegator delegator, String entityId, String partyId) throws GenericEntityException;
+        public void initWithAncestors(GenericDelegator delegator, String entityId, String partyId) throws GenericEntityException;
+        public List getList();
+    }
+    
+    public static class StdRelatedRoleGetter implements RelatedRoleGetter {
+    
+        protected List roleIdList;
+        protected String roleTypeFieldName;
+        protected String partyFieldName;
+        protected String entityName;
+        protected String roleEntityIdName;
+        protected String roleEntityName;
+        protected String ownerEntityFieldName;
+        
+        public StdRelatedRoleGetter () {
+            
+        	this.roleTypeFieldName = "roleTypeId";
+        	this.partyFieldName = "partyId";
+        	this.ownerEntityFieldName = "ownerContentId";
+        	this.entityName = "Content";
+        	this.roleEntityName = "ContentRole";
+        	this.roleEntityIdName = "contentId";
+        }
+        
+        public StdRelatedRoleGetter ( String entityName,  String roleTypeFieldName, String roleEntityIdName, String partyFieldName, String ownerEntityFieldName, String roleEntityName) {
+            
+        	this.roleTypeFieldName = roleTypeFieldName ;
+        	this.partyFieldName = partyFieldName ;
+        	this.ownerEntityFieldName = ownerEntityFieldName ;
+        	this.entityName = entityName;
+        	this.roleEntityName = roleEntityName;
+        	this.roleEntityIdName = roleEntityIdName;
+        }
+        
+        public StdRelatedRoleGetter ( Element getterElement) {
+        
+            this.roleTypeFieldName = getterElement.getAttribute("role-type-field-name");
+            this.partyFieldName = getterElement.getAttribute("party-field-name");
+            this.ownerEntityFieldName = getterElement.getAttribute("owner-entity-field-name");
+            this.entityName = getterElement.getAttribute("entity-name");
+            this.roleEntityName = getterElement.getAttribute("role-entity-name");
+            this.roleEntityIdName = getterElement.getAttribute("entity-id-name");
+        }
+        
+    	public List getList() {
+            return this.roleIdList;
+        }
+        
+        public void init(GenericDelegator delegator, String entityId, String partyId) throws GenericEntityException {
+            
+            this.roleIdList = ContentWorker.getUserRolesFromList(delegator, UtilMisc.toList(entityId), partyId, this.roleEntityIdName, this.partyFieldName, this.roleTypeFieldName, this.roleEntityName);
+           return;
+        }
+        
+        public void initWithAncestors(GenericDelegator delegator, String entityId, String partyId) throws GenericEntityException {
+            
+           List ownedContentIdList = new ArrayList();
+           ContentWorker.getEntityOwners(delegator, entityId, ownedContentIdList, this.entityName, this.ownerEntityFieldName);
+           this.roleIdList = ContentWorker.getUserRolesFromList(delegator, ownedContentIdList, partyId, this.roleEntityIdName, this.partyFieldName, this.roleTypeFieldName, this.roleEntityName);
+           return;
+        }
+        
+    }
+    
 }

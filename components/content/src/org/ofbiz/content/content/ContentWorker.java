@@ -63,6 +63,7 @@ import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.entity.model.ModelEntity;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -678,15 +679,26 @@ public class ContentWorker {
         return;
     }
     
-    public static void getContentOwners(GenericDelegator delegator, String contentId,  List contentOwnerList) throws GenericEntityException {
+    public static void getEntityOwners(GenericDelegator delegator, String entityId,  List contentOwnerList, String entityName, String ownerIdFieldName) throws GenericEntityException {
         
-        GenericValue ownerContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
-        String ownerContentId = ownerContent.getString("ownerContentId");
+        ModelEntity modelEntity = delegator.getModelEntity(entityName);
+        String pkFieldName = getPkFieldName(entityName, modelEntity);
+        GenericValue ownerContent = delegator.findByPrimaryKeyCache(entityName, UtilMisc.toMap(pkFieldName, entityId));
+        String ownerContentId = ownerContent.getString(ownerIdFieldName);
         if (UtilValidate.isNotEmpty(ownerContentId)) {
             contentOwnerList.add(ownerContentId);
-            getContentOwners(delegator, ownerContentId, contentOwnerList);   
+            getEntityOwners(delegator, ownerContentId, contentOwnerList, entityName, ownerIdFieldName );   
         }
         return;
+    }
+    
+    public static String getPkFieldName(String entityName, ModelEntity modelEntity) {
+        List pkFieldNames = modelEntity.getPkFieldNames();
+        String idFieldName = null;
+        if (pkFieldNames.size() > 0) {
+            idFieldName = (String)pkFieldNames.get(0);
+        }
+        return idFieldName;
     }
     
     public static int getPrivilegeEnumSeq(GenericDelegator delegator, String privilegeEnumId) throws GenericEntityException {
@@ -706,18 +718,18 @@ public class ContentWorker {
             return privilegeEnumSeq;
     }
     
-    public static List getUserRolesFromList(GenericDelegator delegator, List idList, String partyId) throws GenericEntityException {
+    public static List getUserRolesFromList(GenericDelegator delegator, List idList, String partyId, String entityIdFieldName, String partyIdFieldName, String roleTypeIdFieldName, String entityName) throws GenericEntityException {
         
-        EntityExpr expr = new EntityExpr("contentId", EntityOperator.IN, idList);
-        EntityExpr expr2 = new EntityExpr("partyId", EntityOperator.EQUALS, partyId);
+        EntityExpr expr = new EntityExpr(entityIdFieldName, EntityOperator.IN, idList);
+        EntityExpr expr2 = new EntityExpr(partyIdFieldName, EntityOperator.EQUALS, partyId);
         EntityConditionList condList = new EntityConditionList(UtilMisc.toList(expr, expr2), EntityOperator.AND);
-        List roleList = delegator.findByConditionCache("ContentRole", condList, null, null);
+        List roleList = delegator.findByConditionCache(entityName, condList, null, null);
         List roleListFiltered = EntityUtil.filterByDate(roleList);
         HashSet distinctSet = new HashSet();
         Iterator iter = roleListFiltered.iterator();
         while (iter.hasNext()) {
             GenericValue contentRole = (GenericValue)iter.next();
-            String roleTypeId = contentRole.getString("roleTypeId");
+            String roleTypeId = contentRole.getString(roleTypeIdFieldName);
             distinctSet.add(roleTypeId);
         }
         List distinctList = Arrays.asList(distinctSet.toArray());
