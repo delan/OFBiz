@@ -486,13 +486,32 @@ public class PartyServices {
         if (partyId == null)
             return ServiceUtil.returnError("Could not create survey response (no partyId sent)");
 
-        Map fields = UtilMisc.toMap("partyId", partyId, "surveyId", surveyId, "surveyResponseId", responseId,
+        Map gFields = UtilMisc.toMap("partyId", partyId, "surveyId", surveyId, "surveyResponseId", responseId);
+        Map sFields = UtilMisc.toMap("partyId", partyId, "surveyId", surveyId, "surveyResponseId", responseId,
                                     "surveyResponse", response, "responseDateTime", now);
+
+        // look for existing record to update
+        GenericValue getter = null;
         try {
-            GenericValue newValue = delegator.makeValue("PartySurveyResponse", fields);
-            delegator.create(newValue);
+            getter = delegator.findByPrimaryKey("PartySurveyResponse", gFields);
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError("Could not create survey response (write failure): " + e.getMessage());
+            return ServiceUtil.returnError("Cannot check survey response (read failure): " + e.getMessage());
+        }
+        if (getter != null) {
+            getter.set("surveyResponse", response);
+            getter.set("responseDateTime", now);
+            try {
+                getter.store();
+            } catch (GenericEntityException ge) {
+                return ServiceUtil.returnError("Cannot update survey response (write failure): " + ge.getMessage());
+            }
+        } else {
+            try {
+                GenericValue newValue = delegator.makeValue("PartySurveyResponse", sFields);
+                delegator.create(newValue);
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError("Cannot create survey response (write failure): " + e.getMessage());
+            }
         }
         return ServiceUtil.returnSuccess();
     }
