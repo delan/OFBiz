@@ -179,10 +179,10 @@ public class ControlServlet extends HttpServlet {
                 }
             }     
             // get the root path (sub-path) from init parameter
-            String initPath = getServletContext().getInitParameter("scriptLocationPath");
-            if ( initPath == null ) initPath = "/";                            
-            String rootPath = getServletContext().getRealPath(initPath);
-            dispatcher = new LocalDispatcher(getServletContext().getServletContextName(),rootPath,delegator,readers);                  
+            String scriptPath = getServletContext().getInitParameter("scriptLocationPath");
+            if ( scriptPath == null ) scriptPath = "/";
+            String rootPath = getServletContext().getRealPath("/");
+            dispatcher = new LocalDispatcher(getServletContext().getServletContextName(),rootPath,scriptPath,delegator,readers);                  
             getServletContext().setAttribute("dispatcher",dispatcher);
             if ( dispatcher == null )
                 Debug.logError("[ControlServlet.init] ERROR: dispatcher could not be initialized.");                         
