@@ -408,7 +408,7 @@
             title="Order Header And Roles View Entity">
       <member-entity entity-alias="OT" entity-name="OrderRole"/>
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
-      <alias entity-alias="OH" name="orderId" group-by="true"/>
+      <alias entity-alias="OH" name="orderId"/>
       <alias entity-alias="OT" name="partyId"/>
       <alias entity-alias="OT" name="roleTypeId"/>
       <alias entity-alias="OH" name="orderTypeId"/>
@@ -1275,7 +1275,7 @@
       <member-entity entity-alias="PS" entity-name="Person"/>
       <member-entity entity-alias="WE" entity-name="WorkEffort"/>
       <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
-      <alias entity-alias="OH" name="orderId" group-by="true"/>
+      <alias entity-alias="OH" name="orderId"/>
       <alias entity-alias="OH" name="orderTypeId"/>
       <alias entity-alias="OH" name="orderDate"/>
       <alias entity-alias="OH" name="entryDate"/>
