@@ -32,96 +32,50 @@ public class RecurrenceRule {
     public static final int MAX_MTH = 12;
     
     // GenericValue objects
-    GenericValue info;       
-    GenericValue rRule;
-    GenericValue eRule;
-    
-    // Parsed Date/Time lists
-    List rDateList;
-    List eDateList;
-    
+    protected GenericValue rule;       
+            
     // Parsed byXXX lists
-    List bySecondList;
-    List byMinuteList;
-    List byHourList;
-    List byDayList;
-    List byMonthDayList;
-    List byYearDayList;
-    List byWeekNoList;
-    List byMonthList;
-    List bySetPosList;
+    protected List bySecondList;
+    protected List byMinuteList;
+    protected List byHourList;
+    protected List byDayList;
+    protected List byMonthDayList;
+    protected List byYearDayList;
+    protected List byWeekNoList;
+    protected List byMonthList;
+    protected List bySetPosList;
     
     /** Creates a new RecurrenceRule object from a RecurrenceInfo entity. */
-    public RecurrenceRule(GenericValue info) throws RecurrenceRuleException {
-        this.info = info;
+    public RecurrenceRule(GenericValue rule) throws RecurrenceRuleException {
+        this.rule = rule;
         init();
     }
     
     /** Initializes the rules for this RecurrenceInfo object. */
-    public void init() throws RecurrenceRuleException {
-        
-        // Initialize the rules
-        try {
-            rRule = info.getRelatedOne("RecurrenceRule");
-            testRule(rRule);
-        }
-        catch ( GenericEntityException gee ) {
-            throw new RecurrenceRuleException("No recurrence rule associated with this entity.");
-        }
-        catch ( RuntimeException re ) {
-            throw new RecurrenceRuleException("Invalid RecurrenceRule.",re);
-        }
-        try {
-            eRule = info.getRelatedOne("ExceptionRecurrenceRule");
-            testRule(eRule);
-        }
-        catch ( GenericEntityException gee ) {
-            eRule = null;
-        }
-        catch ( RuntimeException re ) {
-            throw new RecurrenceRuleException("Invalid RecurrenceRule.",re);
-        }
-        
-        // Initialize the date/time lists.
-        rDateList = split(info.getString("recurrenceDateTimes"),",");
-        eDateList = split(info.getString("exceptionDateTimes"),",");
-        
-        // Initialize the byXXX lists.
-        bySecondList = split(info.getString("bySecondList"),",");
-        byMinuteList = split(info.getString("byMinuteList"),",");
-        byHourList = split(info.getString("byHourList"),",");
-        byDayList = split(info.getString("byDayList"),",");
-        byMonthDayList = split(info.getString("byMonthDayList"),",");
-        byYearDayList = split(info.getString("byYearDayList"),",");
-        byWeekNoList = split(info.getString("byWeekNoList"),",");
-        byMonthList = split(info.getString("byMonthList"),",");
-        bySetPosList = split(info.getString("bySetPosList"),",");
-        
-    }
-    
-    /** Tests the rule entites for proper configuration */
-    private void testRule(GenericValue rule) throws RuntimeException {
+    public void init() throws RecurrenceRuleException {        
+        // Check the validity of the rule
         String freq = rule.getString("frequency");
         if ( !checkFreq(freq) )
-            throw new RuntimeException("Recurrence FREQUENCY is a required parameter.");
-        if ( rule.get("until") != null && rule.get("count") != null )
-            throw new RuntimeException("Recurrence cannot have both UNTIL and COUNT properties.");
-        if ( rule.get("interval") != null && rule.getLong("interval").longValue() < 1 )
-            throw new RuntimeException("Recurrence INTERVAL must be a positive integer.");
+            throw new RecurrenceRuleException("Recurrence FREQUENCY is a required parameter.");
+        if ( rule.get("until") != null && rule.getInteger("count").intValue() > 0 )
+            throw new RecurrenceRuleException("Recurrence cannot have both UNTIL and COUNT properties.");
+        if ( rule.getInteger("interval").intValue() < 1 )
+            throw new RecurrenceRuleException("Recurrence INTERVAL must be a positive integer.");    
+                                       
+        // Initialize the byXXX lists
+        bySecondList = RecurrenceUtil.split(rule.getString("bySecondList"),",");
+        byMinuteList = RecurrenceUtil.split(rule.getString("byMinuteList"),",");
+        byHourList = RecurrenceUtil.split(rule.getString("byHourList"),",");
+        byDayList = RecurrenceUtil.split(rule.getString("byDayList"),",");
+        byMonthDayList = RecurrenceUtil.split(rule.getString("byMonthDayList"),",");
+        byYearDayList = RecurrenceUtil.split(rule.getString("byYearDayList"),",");
+        byWeekNoList = RecurrenceUtil.split(rule.getString("byWeekNoList"),",");
+        byMonthList = RecurrenceUtil.split(rule.getString("byMonthList"),",");
+        bySetPosList = RecurrenceUtil.split(rule.getString("bySetPosList"),",");        
     }
-    
+        
     /** Gets the end time of the recurrence rule or 0 if none. */
-    public long getRecurrenceEndTime() {
-        return getTime(rRule);
-    }
-    
-    /** Gets the end time of the exception rule or 0 of none, -1 if no exception rule defined. */
-    public long getExceptionEndTime() {
-        return getTime(eRule);
-    }
-    
-    /** Converts Timestamp to a long. */
-    private long getTime(GenericValue rule) {
+    public long getEndTime() {
         if ( rule == null )
             return -1;
         long time = 0;
@@ -134,26 +88,9 @@ public class RecurrenceRule {
         }
         return time;
     }
-    
-    /** Uses StringTokenizer to split the string. */
-    private List split(String str, String delim) {
-        List splitList = null;
-        StringTokenizer st; 
-        
-        if ( delim != null )
-            st = new StringTokenizer(str,delim);
-        else
-            st = new StringTokenizer(str);
-        if ( st.hasMoreTokens() )
-            splitList = new ArrayList();
-        
-        while ( st.hasMoreTokens() ) 
-            splitList.add(st.nextToken());
-        return splitList;
-    }
-            
+                                 
     /** Gets the current date/time. */
-    public long now() {
+    private long now() {
         return (new Date()).getTime();
     }
     
