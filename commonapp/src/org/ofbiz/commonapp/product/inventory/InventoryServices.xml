@@ -31,7 +31,10 @@
     <!-- InventoryItem methods -->
     <simple-method method-name="createInventoryItem" short-description="Create an InventoryItem">
     <!-- BIG NOTE and TODO: need some way of easily doing either the CATALOG_* or the FACILITY_* permissions, ie allowing both... -->
-        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createInventoryItem you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="CATALOG" action="_CREATE">
+        	<alt-permission permission="FACILITY" action="_CREATE"/>
+        	<fail-message message="Security Error: to run createInventoryItem you must have the CATALOG_CREATE, CATALOG_ADMIN, FACILITY_CREATE, or FACILITY_ADMIN permission"/>
+        </check-permission>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="InventoryItem"/>
@@ -45,7 +48,10 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateInventoryItem" short-description="Update an InventoryItem">
-        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateInventoryItem you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="CATALOG" action="_UPDATE">
+        	<alt-permission permission="FACILITY" action="_UPDATE"/>
+        	<fail-message message="Security Error: to run updateInventoryItem you must have the CATALOG_UPDATE, CATALOG_ADMIN, FACILITY_UPDATE, or FACILITY_ADMIN permission"/>
+        </check-permission>
         <check-errors/>
 
         <make-value entity-name="InventoryItem" value-name="lookupPKMap"/>
@@ -55,7 +61,10 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteInventoryItem" short-description="Delete an InventoryItem">
-        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteInventoryItem you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="CATALOG" action="_DELETE">
+        	<alt-permission permission="FACILITY" action="_DELETE"/>
+        	<fail-message message="Security Error: to run deleteInventoryItem you must have the CATALOG_DELETE, CATALOG_ADMIN, FACILITY_DELETE, or FACILITY_ADMIN permission"/>
+        </check-permission>
         <check-errors/>
 
         <make-value entity-name="InventoryItem" value-name="lookupPKMap"/>
@@ -66,7 +75,10 @@
 
     <!-- ProductFacility methods -->
     <simple-method method-name="createProductFacility" short-description="Create a ProductFacility">
-        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductFacility you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+		<string-to-field string="createProductFacility" field-name="callingMethodName"/>
+		<string-to-field string="CREATE" field-name="checkAction"/>
+		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/commonapp/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ProductFacility"/>
@@ -75,7 +87,10 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductFacility" short-description="Update a ProductFacility">
-        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductFacility you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+		<string-to-field string="updateProductFacility" field-name="callingMethodName"/>
+		<string-to-field string="UPDATE" field-name="checkAction"/>
+		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/commonapp/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value entity-name="ProductFacility" value-name="lookupPKMap"/>
@@ -85,7 +100,10 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteProductFacility" short-description="Delete a ProductFacility">
-        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductFacility you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+		<string-to-field string="deleteProductFacility" field-name="callingMethodName"/>
+		<string-to-field string="DELETE" field-name="checkAction"/>
+		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/commonapp/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value entity-name="ProductFacility" value-name="lookupPKMap"/>
@@ -159,7 +177,6 @@
         </iterate>
         <field-to-result result-name="alertResults" field-name="alertResults" />
         <field-to-request field-name="alertResults" request-name="alertResults" />
-        
     </simple-method>
     
     <simple-method method-name="emailInventoryAlerts" short-description="Email Inventory Alerts" login-required="false">
@@ -178,7 +195,6 @@
         <if-not-empty map-name="getInventoryResults" field-name="alertResults">
             <call-service service-name="sendMailFromUrl" in-map-name="emailParams"/>
         </if-not-empty>
-        
     </simple-method>
         
     <simple-method method-name="reserveProductInventory" short-description="Reserve Inventory for a Product">

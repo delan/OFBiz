@@ -334,7 +334,7 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
-	<!-- a methods to centralize product security code, meant to be called in-line with 
+	<!-- a method to centralize product security code, meant to be called in-line with 
 		call-simple-method, and the checkAction and callingMethodName attributes should be in the method context -->
     <simple-method method-name="checkProductRelatedPermission" short-description="Check Product Related Permission">
     	<if-empty field-name="callingMethodName">
@@ -366,6 +366,10 @@
     					<and>
     						<if-has-permission permission="CATALOG_ROLE" action="_${checkAction}"/>
     						<not><if-empty field-name="roleCategories"/></not>
+    					</and>
+    					<and>
+    						<not><if-empty field-name="alternatePermissionRoot"/></not>
+    						<if-has-permission permission="${alternatePermissionRoot}" action="_${checkAction}"/>
     					</and>
     				</or>
     			</not>

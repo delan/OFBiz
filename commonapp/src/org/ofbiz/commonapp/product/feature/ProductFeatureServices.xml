@@ -85,7 +85,9 @@
     </simple-method>
 
     <simple-method method-name="applyFeatureToProduct" short-description="Apply Feature to Product">
-        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run applyFeatureToProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+		<string-to-field string="applyFeatureToProduct" field-name="callingMethodName"/>
+		<string-to-field string="CREATE" field-name="checkAction"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/commonapp/product/product/ProductServices.xml"/>
         <check-errors/>
         
         <if-empty field-name="fromDate" map-name="parameters">
@@ -117,7 +119,9 @@
         <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearSelFeatCacheMap"/>
     </simple-method>
     <simple-method method-name="updateFeatureToProductApplication" short-description="Update Feature to Product Application">
-        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateFeatureToProductApplication you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+		<string-to-field string="updateFeatureToProductApplication" field-name="callingMethodName"/>
+		<string-to-field string="UPDATE" field-name="checkAction"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/commonapp/product/product/ProductServices.xml"/>
         <check-errors/>
         
         <field-to-field field-name="productId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
@@ -147,7 +151,9 @@
         <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearSelFeatCacheMap"/>
     </simple-method>
     <simple-method method-name="removeFeatureFromProduct" short-description="Remove Feature from Product">
-        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeFeatureFromProduct you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+		<string-to-field string="removeFeatureFromProduct" field-name="callingMethodName"/>
+		<string-to-field string="DELETE" field-name="checkAction"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/commonapp/product/product/ProductServices.xml"/>
         <check-errors/>
         
         <field-to-field field-name="productId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
@@ -185,7 +191,9 @@
     </simple-method>
 
     <simple-method method-name="applyFeatureToProductFromTypeAndCode" short-description="Apply Feature to Product using Feature Type and ID Code">
-        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run applyFeatureToProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+		<string-to-field string="applyFeatureToProductFromTypeAndCode" field-name="callingMethodName"/>
+		<string-to-field string="CREATE" field-name="checkAction"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/commonapp/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <!-- find the ProductFeatures by type and id code -->
