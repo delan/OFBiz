@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.4 2003/11/25 06:05:35 jonesde Exp $
+ * $Id: DataResourceWorker.java,v 1.5 2003/11/25 07:48:14 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,12 +31,14 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.DiskFileUpload;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 
@@ -45,7 +47,7 @@ import org.ofbiz.service.LocalDispatcher;
  * DataResourceWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  *
  * 
@@ -70,7 +72,7 @@ public class DataResourceWorker {
             currentDataCategoryId = (String)categoryTypeIds.get(sz - depth - 1);
         }
 
-        EntityExpr expr = null;
+        //EntityExpr expr = null;
         String matchValue = null;
         if (dataCategoryId != null  ) {
             //expr = new EntityExpr("parentCategoryId", EntityOperator.EQUALS, dataCategoryId);
@@ -182,7 +184,7 @@ Debug.logInfo("in uploadAndStoreImage, idField:" + idField, "");
         FileItem imageFi = null;
         for (int i=0; i < lst.size(); i++) {
             fi = (FileItem)lst.get(i);
-	    String fn = fi.getName();
+	    //String fn = fi.getName();
 	    String fieldName = fi.getFieldName();
 	    String fieldStr = fi.getString();
 Debug.logInfo("in uploadAndStoreImage, fieldName:" + fieldName, "");
@@ -284,7 +286,7 @@ Debug.logInfo("in uploadAndStoreImage, idFieldValue:" + idFieldValue, "");
 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         String dataResourceId = request.getParameter(imgFieldName);
-        GenericValue dataResource = null;
+        //never read: GenericValue dataResource = null;
         GenericValue imageDataResource = null;
         try {
             imageDataResource = delegator.findByPrimaryKey("ImageDataResource",
@@ -314,7 +316,7 @@ Debug.logInfo("in uploadAndStoreImage, idFieldValue:" + idFieldValue, "");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         String dataResourceId = request.getParameter(imgFieldName);
         GenericValue dataResource = null;
-        GenericValue imageDataResource = null;
+        // never read: GenericValue imageDataResource = null;
         try {
             dataResource = delegator.findByPrimaryKey("DataResource",
                              UtilMisc.toMap("dataResourceId", dataResourceId)); 

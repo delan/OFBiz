@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleMapAccessor.java,v 1.3 2003/09/21 05:58:51 jonesde Exp $
+ * $Id: FlexibleMapAccessor.java,v 1.4 2003/11/25 07:48:13 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import java.util.Map;
  * list elements. See individual Map operations for more information.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.1
  */
 public class FlexibleMapAccessor {
@@ -52,30 +52,30 @@ public class FlexibleMapAccessor {
         this.original = name;
         int dotIndex = name.lastIndexOf('.');
         if (dotIndex != -1) {
-            extName = name.substring(dotIndex+1);
+            this.extName = name.substring(dotIndex+1);
             String subName = name.substring(0, dotIndex);
-            subMapAccessor = new SubMapAccessor(subName);
+            this.subMapAccessor = new SubMapAccessor(subName);
         } else {
-            extName = name;
+            this.extName = name;
         }
-        int openBrace = extName.indexOf('[');
-        int closeBrace = (openBrace == -1 ? -1 : extName.indexOf(']', openBrace));
+        int openBrace = this.extName.indexOf('[');
+        int closeBrace = (openBrace == -1 ? -1 : this.extName.indexOf(']', openBrace));
         if (openBrace != -1 && closeBrace != -1) {
-            String liStr = extName.substring(openBrace+1, closeBrace);
+            String liStr = this.extName.substring(openBrace+1, closeBrace);
             //if brackets are empty, append to list
             if (liStr.length() == 0) {
                 this.isAddAtEnd = true;
             } else {
                 if (liStr.charAt(0) == '+') {
                     liStr = liStr.substring(1);
-                    listIndex = Integer.parseInt(liStr);
+                    this.listIndex = Integer.parseInt(liStr);
                     this.isAddAtIndex = true;
                 } else {
-                    listIndex = Integer.parseInt(liStr);
+                    this.listIndex = Integer.parseInt(liStr);
                 }
             }
-            extName = extName.substring(0, openBrace);
-            isListReference = true;
+            this.extName = this.extName.substring(0, openBrace);
+            this.isListReference = true;
         }
     }
     
@@ -93,6 +93,8 @@ public class FlexibleMapAccessor {
     
     /** Given the name based information in this accessor, get the value from the passed in Map. 
      *  Supports LocalizedMaps by getting a String or Locale object from the base Map with the key "locale", or by explicit locale parameter.
+     * @param base
+     * @return
      */
     public Object get(Map base) {
         return get(base, null);
@@ -103,6 +105,7 @@ public class FlexibleMapAccessor {
      *  Note that the localization functionality is only used when the lowest level sub-map implements the LocalizedMap interface
      * @param base Map to get value from
      * @param locale Optional locale parameter, if null will see if the base Map contains a "locale" key
+     * @return
      */
     public Object get(Map base, Locale locale) {
         if (base == null) {
@@ -118,15 +121,15 @@ public class FlexibleMapAccessor {
         
         Object ret = null;
         if (this.isListReference) {
-            List lst = (List) newBase.get(extName);
-            ret = lst.get(listIndex);
+            List lst = (List) newBase.get(this.extName);
+            ret = lst.get(this.listIndex);
         } else {
-            ret = getByLocale(extName, base, newBase, locale);
+            ret = getByLocale(this.extName, base, newBase, locale);
         }
         
         // in case the name has a dot like system env values
         if (ret == null) {
-            ret = getByLocale(original, base, base, locale);
+            ret = getByLocale(this.original, base, base, locale);
         }        
         
         return ret;
@@ -152,6 +155,8 @@ public class FlexibleMapAccessor {
      * otherwise the value will be set in the position of the number in the brackets.
      * If a "+" (plus sign) is included inside the square brackets before the index 
      * number the value will inserted/added at that point instead of set at the point.
+     * @param base
+     * @param value
      */
     public void put(Map base, Object value) {
         if (base == null) {
@@ -165,32 +170,35 @@ public class FlexibleMapAccessor {
             base = subBase;
         }
         if (this.isListReference) {
-            List lst = (List) base.get(extName);
+            List lst = (List) base.get(this.extName);
             //if brackets are empty, append to list
             if (this.isAddAtEnd) {
                 lst.add(value);
             } else {
                 if (this.isAddAtIndex) {
-                    lst.add(listIndex, value);
+                    lst.add(this.listIndex, value);
                 } else {
-                    lst.set(listIndex, value);
+                    lst.set(this.listIndex, value);
                 }
             }
         } else {
-            base.put(extName, value);
+            base.put(this.extName, value);
         }
     }
     
-    /** Given the name based information in this accessor, remove the value from the passed in Map. */
+    /** Given the name based information in this accessor, remove the value from the passed in Map. * @param base
+     * @param base the Map to remove from
+     * @return the object removed
+     */
     public Object remove(Map base) {
         if (this.subMapAccessor != null) {
             base = this.subMapAccessor.getSubMap(base);
         }
         if (this.isListReference) {
-            List lst = (List) base.get(extName);
-            return lst.remove(listIndex);
+            List lst = (List) base.get(this.extName);
+            return lst.remove(this.listIndex);
         } else {
-            return base.remove(extName);
+            return base.remove(this.extName);
         }
     }
     
@@ -207,19 +215,19 @@ public class FlexibleMapAccessor {
         public SubMapAccessor(String name) {
             int dotIndex = name.lastIndexOf('.');
             if (dotIndex != -1) {
-                extName = name.substring(dotIndex+1);
+                this.extName = name.substring(dotIndex+1);
                 String subName = name.substring(0, dotIndex);
-                subMapAccessor = new SubMapAccessor(subName);
+                this.subMapAccessor = new SubMapAccessor(subName);
             } else {
-                extName = name;
+                this.extName = name;
             }
-            int openBrace = extName.indexOf('[');
-            int closeBrace = (openBrace == -1 ? -1 : extName.indexOf(']', openBrace));
+            int openBrace = this.extName.indexOf('[');
+            int closeBrace = (openBrace == -1 ? -1 : this.extName.indexOf(']', openBrace));
             if (openBrace != -1 && closeBrace != -1) {
-                String liStr = extName.substring(openBrace+1, closeBrace);
-                listIndex = Integer.parseInt(liStr);
-                extName = extName.substring(0, openBrace);
-                isListReference = true;
+                String liStr = this.extName.substring(openBrace+1, closeBrace);
+                this.listIndex = Integer.parseInt(liStr);
+                this.extName = this.extName.substring(0, openBrace);
+                this.isListReference = true;
             }
         }
         
@@ -229,27 +237,27 @@ public class FlexibleMapAccessor {
                 base = this.subMapAccessor.getSubMap(base);
             }
             if (this.isListReference) {
-                List lst = (List) base.get(extName);
+                List lst = (List) base.get(this.extName);
                 if (lst == null) {
                     lst = new LinkedList();
-                    base.put(extName, lst);
+                    base.put(this.extName, lst);
                 }
                 
                 Map extMap = null;
-                if (lst.size() > listIndex) {
-                    extMap = (Map) lst.get(listIndex);
+                if (lst.size() > this.listIndex) {
+                    extMap = (Map) lst.get(this.listIndex);
                 }
                 if (extMap == null) {
                     extMap = new HashMap();
-                    lst.add(listIndex, extMap);
+                    lst.add(this.listIndex, extMap);
                 }
                 
                 return extMap;
             } else {
-                Map extMap = (Map) base.get(extName);
+                Map extMap = (Map) base.get(this.extName);
                 if (extMap == null) {
                     extMap = new HashMap();
-                    base.put(extName, extMap);
+                    base.put(this.extName, extMap);
                 }
                 return extMap;
             }

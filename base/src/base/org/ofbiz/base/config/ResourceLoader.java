@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceLoader.java,v 1.3 2003/08/20 23:02:13 jonesde Exp $
+ * $Id: ResourceLoader.java,v 1.4 2003/11/25 07:48:13 jonesde Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * Loads resources using dynamically specified resource loader classes
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.0
  */
 public abstract class ResourceLoader {
@@ -186,7 +186,10 @@ public abstract class ResourceLoader {
         this.envName = envName;
     }
 
-    /** Just a utility method to be used in loadResource by the implementing class */
+    /** Just a utility method to be used in loadResource by the implementing class * @param location
+     * @param location
+     * @return
+     */
     public String fullLocation(String location) {
         StringBuffer buf = new StringBuffer();
 
