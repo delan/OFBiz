@@ -115,17 +115,32 @@ public class ControlServlet extends HttpServlet {
         }
 
         // for convenience, and necessity with event handlers, make security and delegator available in the request:
-        GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
-        if (delegator == null) Debug.logError("[ControlServlet] ERROR: delegator not found in ServletContext", module);
+        //  try to get it from the session first so that we can have a delegator/dispatcher/security for a certain user if desired
+        GenericDelegator delegator = (GenericDelegator) session.getAttribute("delegator");
+        if (delegator == null) {
+            delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
+        }
+        if (delegator == null) {
+            Debug.logError("[ControlServlet] ERROR: delegator not found in ServletContext", module);
+        }
         request.setAttribute("delegator", delegator);
-
-        LocalDispatcher dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
-        if (dispatcher == null)
+        
+        LocalDispatcher dispatcher = (LocalDispatcher) session.getAttribute("dispatcher");
+        if (dispatcher == null) {
+            dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
+        }
+        if (dispatcher == null) {
             Debug.logError("[ControlServlet] ERROR: dispatcher not found in ServletContext", module);
+        }
         request.setAttribute("dispatcher", dispatcher);
 
-        Security security = (Security) getServletContext().getAttribute("security");
-        if (security == null) Debug.logError("[ControlServlet] ERROR: security not found in ServletContext", module);
+        Security security = (Security) session.getAttribute("security");
+        if (security == null) {
+            security = (Security) getServletContext().getAttribute("security");
+        }
+        if (security == null) {
+            Debug.logError("[ControlServlet] ERROR: security not found in ServletContext", module);
+        }
         request.setAttribute("security", security);
 
         // for use in Events the filesystem path of context root.
