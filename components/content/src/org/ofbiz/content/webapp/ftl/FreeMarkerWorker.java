@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.5 2003/12/23 13:50:40 jonesde Exp $
+ * $Id: FreeMarkerWorker.java,v 1.6 2003/12/30 05:28:25 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -74,6 +74,7 @@ public class FreeMarkerWorker {
     public static RenderSubContentTransform  renderSubContent = new RenderSubContentTransform();
     public static RenderWrappedTextTransform  renderWrappedText = new RenderWrappedTextTransform();
     public static LoopSubContentTransform  loopSubContent = new LoopSubContentTransform();
+    public static TraverseSubContentTransform  traverseSubContent = new TraverseSubContentTransform();
     
     public static void addAllOfbizTransforms(Map context) {
         BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
@@ -87,6 +88,7 @@ public class FreeMarkerWorker {
         context.put("editRenderSubContent", editRenderSubContent);
         context.put("renderSubContent", renderSubContent);
         context.put("loopSubContent", loopSubContent);
+        context.put("traverseSubContent", traverseSubContent);
         context.put("renderWrappedText", renderWrappedText);
     }
     
