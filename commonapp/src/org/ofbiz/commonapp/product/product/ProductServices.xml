@@ -26,6 +26,56 @@
  * Created on April 2, 2002
  -->
 <simple-methods>
+    <simple-method method-name="createProduct" short-description="Create an Product">
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="Product"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+
+        <!-- if setting the primaryProductCategoryId create a member entity too -->
+        <if-not-empty field-name="primaryProductCategoryId" map-name="newEntity">
+            <make-value entity-name="ProductCategoryMember" value-name="newMember"/>
+            <field-to-field field-name="productId" map-name="newEntity" to-field-name="productId" to-map-name="newMember"/>
+            <field-to-field field-name="primaryProductCategoryId" map-name="newEntity" to-field-name="productCategoryId" to-map-name="newMember"/>
+            <now-timestamp-to-env env-name="nowStamp"/>
+            <env-to-field env-name="nowStamp" field-name="fromDate" map-name="newMember"/>
+            <create-value value-name="newMember"/>
+            
+            <field-to-field field-name="productCategoryId" map-name="newMember" to-map-name="cacheClearMap"/>
+            <clear-cache-line entity-name="ProductCategoryMember" map-name="cacheClearMap"/>
+        </if-not-empty>
+    </simple-method>
+    <simple-method method-name="updateProduct" short-description="Update an Product">
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProduct you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="Product" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <!-- save this value before overwriting it so we can compare it later -->
+        <field-to-field field-name="primaryProductCategoryId" map-name="newEntity" to-map-name="saveIdMap"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+
+        <!-- if setting the primaryParentCategoryId, create a rollup entity too -->
+        <if-not-empty field-name="primaryProductCategoryId" map-name="newEntity">
+            <if-compare-field field-name="primaryProductCategoryId" map-name="newEntity" operator="equals" to-map-name="saveIdMap">
+                <!-- TODO: check to see if already exists in a valid data range... -->
+                <make-value entity-name="ProductCategoryMember" value-name="newMember"/>
+                <field-to-field field-name="productId" map-name="newEntity" to-field-name="productId" to-map-name="newMember"/>
+                <field-to-field field-name="primaryProductCategoryId" map-name="newEntity" to-field-name="productCategoryId" to-map-name="newMember"/>
+                <now-timestamp-to-env env-name="nowStamp"/>
+                <env-to-field env-name="nowStamp" field-name="fromDate" map-name="newMember"/>
+                <create-value value-name="newMember"/>
+
+                <field-to-field field-name="productCategoryId" map-name="newMember" to-map-name="cacheClearMap"/>
+                <clear-cache-line entity-name="ProductCategoryMember" map-name="cacheClearMap"/>
+            </if-compare-field>
+        </if-not-empty>
+    </simple-method>
     <simple-method method-name="duplicateProduct" short-description="Duplicate a Product">
         <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run duplicateProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>

@@ -7,6 +7,80 @@
     <version>1.0</version>
 
     <!-- Product Services -->
+    <service name="createProduct" engine="simple"
+                location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="createProduct" auth="true">
+        <description>Create a Product</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="primaryProductCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="manufacturerPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="introductionDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="salesDiscontinuationDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="supportDiscontinuationDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="productName" type="String" mode="IN" optional="false"/>
+        <attribute name="internalName" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="longDescription" type="String" mode="IN" optional="true"/>
+        <attribute name="smallImageUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="mediumImageUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="largeImageUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="detailImageUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="listPrice" type="Double" mode="IN" optional="true"/>
+        <attribute name="listPriceUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="defaultPrice" type="Double" mode="IN" optional="true"/>
+        <attribute name="defaultPriceUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="quantityIncluded" type="Double" mode="IN" optional="true"/>
+        <attribute name="quantityUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="piecesIncluded" type="Long" mode="IN" optional="true"/>
+        <attribute name="weightUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="weight" type="Double" mode="IN" optional="true"/>
+        <attribute name="taxable" type="String" mode="IN" optional="true"/>
+        <attribute name="taxCategory" type="String" mode="IN" optional="true"/>
+        <attribute name="taxVatCode" type="String" mode="IN" optional="true"/>
+        <attribute name="taxDutyCode" type="String" mode="IN" optional="true"/>
+        <attribute name="chargeShipping" type="String" mode="IN" optional="true"/>
+        <attribute name="autoCreateKeywords" type="String" mode="IN" optional="true"/>
+        <attribute name="isVirtual" type="String" mode="IN" optional="true"/>
+        <attribute name="isVariant" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProduct" engine="simple"
+                location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="updateProduct" auth="true">
+        <description>Update a Product</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="primaryProductCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="manufacturerPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="introductionDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="salesDiscontinuationDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="supportDiscontinuationDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="productName" type="String" mode="IN" optional="false"/>
+        <attribute name="internalName" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="longDescription" type="String" mode="IN" optional="true"/>
+        <attribute name="smallImageUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="mediumImageUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="largeImageUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="detailImageUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="listPrice" type="Double" mode="IN" optional="true"/>
+        <attribute name="listPriceUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="defaultPrice" type="Double" mode="IN" optional="true"/>
+        <attribute name="defaultPriceUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="quantityIncluded" type="Double" mode="IN" optional="true"/>
+        <attribute name="quantityUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="piecesIncluded" type="Long" mode="IN" optional="true"/>
+        <attribute name="weightUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="weight" type="Double" mode="IN" optional="true"/>
+        <attribute name="taxable" type="String" mode="IN" optional="true"/>
+        <attribute name="taxCategory" type="String" mode="IN" optional="true"/>
+        <attribute name="taxVatCode" type="String" mode="IN" optional="true"/>
+        <attribute name="taxDutyCode" type="String" mode="IN" optional="true"/>
+        <attribute name="chargeShipping" type="String" mode="IN" optional="true"/>
+        <attribute name="autoCreateKeywords" type="String" mode="IN" optional="true"/>
+        <attribute name="isVirtual" type="String" mode="IN" optional="true"/>
+        <attribute name="isVariant" type="String" mode="IN" optional="true"/>
+    </service>
     <service name="duplicateProduct" engine="simple"
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="duplicateProduct" auth="true">
         <description>Duplicate a Product using a new productId</description>
