@@ -604,14 +604,6 @@ public class DataResourceWorker {
                 templateRoot.put("subContentId", null);
             }
             
-            //String subContentId2 = (String)templateRoot.get("subContentId");
-
-            // get the full text of the DataResource
-            String templateText = getDataResourceTextCache(dataResource, mimeTypeId, locale, templateRoot, delegator);
-            // if (Debug.infoOn()) Debug.logInfo("in renderDataResourceAsText, templateText:" + templateText,"");
-            
-            //String subContentId3 = (String)templateRoot.get("subContentId");
-            
             templateRoot.put("mimeTypeId", null);
             
             if ("FTL".equals(dataTemplateTypeId)) {
@@ -623,6 +615,8 @@ public class DataResourceWorker {
                     templateRoot.put("globalNodeTrail", null); // Force getCurrentContent to query for subContent
                     //if (Debug.infoOn()) Debug.logInfo("in renderDataResourceAsTextCache, templateRoot :" + templateRoot ,"");
                     //StringWriter sw = new StringWriter();
+            		// get the full text of the DataResource
+                    String templateText = getDataResourceTextCache(dataResource, mimeTypeId, locale, templateRoot, delegator);
                     FreeMarkerWorker.renderTemplate("DataResource:" + dataResourceId, templateText, templateRoot, out);
                     //if (Debug.infoOn()) Debug.logInfo("in renderDataResourceAsText, sw:" + sw.toString(),"");
                     //out.write(sw.toString());
