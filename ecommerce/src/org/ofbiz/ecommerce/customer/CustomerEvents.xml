@@ -36,7 +36,7 @@
         <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="create.allow.password" default="true" field-name="create_allow_password"/>
         <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="default.customer.password" default="ungssblepsswd" field-name="default_customer_password"/>
 
-        <now-timestamp-to-env env-name="now"/>
+        <now-timestamp-to-env env-name="nowStamp"/>
         <string-to-field string="CUSTOMER" field-name="roleTypeId" map-name="parameters"/>
 
         <if-compare field-name="create_allow_password" operator="not-equals" value="true">
@@ -237,8 +237,18 @@
                     </simple-map-processor>
                </call-map-processor>
            </if-not-empty>
-       </if-compare>
+        </if-compare>
 
+        <!-- create the PartyDataSource entry to track where this info came from... -->
+        <make-value entity-name="PartyDataSource" value-name="partyDataSource"/>
+        <string-to-field string="ECOMMERCE_SITE" field-name="dataSourceId" map-name="partyDataSource"/>
+        <env-to-field env-name="nowStamp" field-name="fromDate" map-name="partyDataSource"/>
+        <string-to-field string="Y" field-name="isCreate" map-name="partyDataSource"/>
+        <!-- get the visit from the session to get the visitId -->
+        <session-to-field field-name="visit"/>
+        <field-to-field field-name="visitId" map-name="visit" to-map-name="partyDataSource"/>
+
+                
         <!-- now that everything is validated & setup, check to see if there are errors, then call the services -->
         <check-errors/>
 
@@ -247,6 +257,7 @@
         </call-service>
 
         <!-- now that we have the partyId, put it where it needs to go... -->
+        <field-to-field field-name="partyId" map-name="tempMap" to-map-name="partyDataSource"/>
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="userLoginContext"/>
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="personContext"/>
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="partyRoleContext"/>
@@ -266,8 +277,9 @@
         <!-- create the UserLogin manually to get around ordering and security constraints in the service -->
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="newUserLogin"/>
         <create-value value-name="newUserLogin"/>
-
         <set-current-user-login value-name="newUserLogin"/>
+        
+        <create-value value-name="partyDataSource"/>
         <call-service service-name="createPartyRole" in-map-name="partyRoleContext"/>
 
         <!-- shipping address -->
@@ -334,8 +346,10 @@
         <!-- now finished, log in the user... -->
         <if-compare field-name="create_allow_password" operator="equals" value="true">
             <field-to-session field-name="newUserLogin" session-name="userLogin"/>
-            <call-bsh><![CDATA[ org.ofbiz.core.stats.VisitHandler.setUserLogin(request.getSession(), newUserLogin, true); ]]></call-bsh>
-            <call-bsh><![CDATA[ org.ofbiz.commonapp.security.login.LoginEvents.autoLoginSet(request, response); ]]></call-bsh>
+            <call-bsh><![CDATA[ 
+                org.ofbiz.core.stats.VisitHandler.setUserLogin(request.getSession(), newUserLogin, true);
+                org.ofbiz.commonapp.security.login.LoginEvents.autoLoginSet(request, response);
+            ]]></call-bsh>
         </if-compare>
 
         <!-- tell the control servlet that we just logged in the user... -->
