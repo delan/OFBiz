@@ -719,7 +719,7 @@
         <key-map field-name="shipmentId"/>
         <key-map field-name="shipmentPackageSeqId"/>
       </view-link>
-      <view-link entity-alias="SPKG" rel-entity-alias="WTUOM">
+      <view-link entity-alias="SPKG" rel-entity-alias="WTUOM" rel-optional="true">
         <key-map field-name="weightUomId" rel-field-name="uomId"/>
       </view-link>
       <view-link entity-alias="SPKG" rel-entity-alias="SPRS">
