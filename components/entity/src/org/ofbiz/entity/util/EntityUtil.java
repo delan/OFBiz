@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.6 2003/12/14 06:17:52 jonesde Exp $
+ * $Id: EntityUtil.java,v 1.7 2004/02/12 20:34:12 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -173,7 +173,7 @@ public class EntityUtil {
                 fromDateField = datedValue.getModelEntity().getField(fromDateName);
                 if (fromDateField == null) throw new IllegalArgumentException("\"" + fromDateName + "\" is not a field of " + datedValue.getEntityName());
                 thruDateField = datedValue.getModelEntity().getField(thruDateName);
-                if (fromDateField == null) throw new IllegalArgumentException("\"" + thruDateName + "\" is not a field of " + datedValue.getEntityName());
+                if (thruDateField == null) throw new IllegalArgumentException("\"" + thruDateName + "\" is not a field of " + datedValue.getEntityName());
 
                 java.sql.Timestamp fromDate = (java.sql.Timestamp) datedValue.dangerousGetNoCheckButFast(fromDateField);
                 java.sql.Timestamp thruDate = (java.sql.Timestamp) datedValue.dangerousGetNoCheckButFast(thruDateField);
