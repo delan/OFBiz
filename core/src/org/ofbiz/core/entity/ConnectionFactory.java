@@ -37,7 +37,7 @@ public class ConnectionFactory {
   static Map dsCache = new Hashtable();
   public static Connection getConnection(String helperName) throws SQLException {
     String jndiName = UtilProperties.getPropertyValue("servers", helperName + ".jdbc.jndi.name");
-    if(jndiName != null) {
+    if(jndiName != null && jndiName.length() > 0) {
       DataSource ds;
       ds = (DataSource)dsCache.get(jndiName);
       if(ds != null) return ds.getConnection();
@@ -64,10 +64,12 @@ public class ConnectionFactory {
     if(usingPoolMan) {
       String poolManName = UtilProperties.getPropertyValue("servers", helperName + ".jdbc.poolman");
       //Debug.logInfo("Attempting to connect to '"+poolManName+"'");
-      Connection con = DriverManager.getConnection("jdbc:poolman://" + poolManName);
-      if ( con != null ) {
-        //Debug.logInfo("Connection to PoolMan established.");
-        return con;
+      if(poolManName != null && poolManName.length() > 0) {
+        Connection con = DriverManager.getConnection("jdbc:poolman://" + poolManName);
+        if ( con != null ) {
+          //Debug.logInfo("Connection to PoolMan established.");
+          return con;
+        }
       }
       usingPoolMan = false;
     }
