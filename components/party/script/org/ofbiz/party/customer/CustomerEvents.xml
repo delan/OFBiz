@@ -29,10 +29,10 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">
-    	<string-to-field field-name="require_email" string="false"/>
-    	<string-to-field field-name="require_phone" string="false"/>
-    	<string-to-field field-name="create_allow_password" string="false"/>
-    	<string-to-field field-name="default_customer_password" string="ungssblepsswd"/>
+        <string-to-field field-name="require_email" string="false"/>
+        <string-to-field field-name="require_phone" string="false"/>
+        <string-to-field field-name="create_allow_password" string="false"/>
+        <string-to-field field-name="default_customer_password" string="ungssblepsswd"/>
 
         <property-to-field resource="security" property="username.lowercase" default="false" field-name="username_lowercase"/>
         <property-to-field resource="security" property="password.lowercase" default="false" field-name="password_lowercase"/>
