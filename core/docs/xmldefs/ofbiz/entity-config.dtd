@@ -90,8 +90,8 @@
 <!ELEMENT entity-group-reader ( resource* )>
 <!ATTLIST entity-group-reader
     name CDATA #REQUIRED
-    loader CDATA #REQUIRED
-    location CDATA #REQUIRED
+    loader CDATA #IMPLIED
+    location CDATA #IMPLIED
 >
 
 <!ELEMENT field-type EMPTY>
