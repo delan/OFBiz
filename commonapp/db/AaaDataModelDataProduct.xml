@@ -6,7 +6,7 @@
 
   <EnumerationType description="Product Promotion Parent Enum Type" enumTypeId="PROD_PROMO" hasTable="N" parentTypeId=""/>
   <EnumerationType description="Product Promotion Input Parameter" enumTypeId="PROD_PROMO_IN_PARAM" hasTable="N" parentTypeId="PROD_PROMO"/>
-  <EnumerationType description="Product Promotion Condition" enumTypeId="PROD_PROMO_COND" hasTable="N" parentTypeId="PROD_PROMO"/>
+  <EnumerationType description="Product Promotion Condition" enumTypeId="PROD_PROMO_COND" hasTable="N" parentTypeId="PROD_PROMO"/>  
 
   <Enumeration description="Order Total" enumCode="ORDER_TOTAL" enumId="PPIP_ORDER_TOTAL" sequenceId="01" enumTypeId="PROD_PROMO_IN_PARAM"/>
   <Enumeration description="Product ID In Cart" enumCode="PRODUCT_ID_IC" enumId="PPIP_PRODUCT_ID_IC" sequenceId="02" enumTypeId="PROD_PROMO_IN_PARAM"/>
@@ -54,7 +54,13 @@
   <Enumeration description="LIFO Received" enumCode="LIFO_REC" enumId="INVRO_LIFO_REC" sequenceId="02" enumTypeId="INV_RES_ORDER"/>
   <Enumeration description="FIFO Expire" enumCode="FIFO_EXP" enumId="INVRO_FIFO_EXP" sequenceId="03" enumTypeId="INV_RES_ORDER"/>
   <Enumeration description="LIFO Expire" enumCode="LIFO_EXP" enumId="INVRO_LIFO_EXP" sequenceId="04" enumTypeId="INV_RES_ORDER"/>
-
+  
+  <EnumerationType description="Product Store Payment Service Type" enumTypeId="PRDS_PAYSVC" hasTable="N" parentTypeId=""/>
+  <Enumeration description="Payment Authorization Service" enumCode="PAY_AUTH" enumId="PRDS_PAY_AUTH" sequenceId="01" enumTypeId="PRDS_PAYSVC"/>
+  <Enumeration description="Payment Re-Authorization Service" enumCode="PAY_REAUTH" enumId="PRDS_PAY_REAUTH" sequenceId="02" enumTypeId="PRDS_PAYSVC"/>
+  <Enumeration description="Payment Capture Service" enumCode="PAY_CAPTURE" enumId="PRDS_PAY_CAPTURE" sequenceId="03" enumTypeId="PRDS_PAYSVC"/>
+  <Enumeration description="Payment Refund Service" enumCode="PAY_REFUND" enumId="PRDS_PAY_REFUND" sequenceId="04" enumTypeId="PRDS_PAYSVC"/>
+  
   <FacilityType description="Building" facilityTypeId="BUILDING" hasTable="N" parentTypeId=""/>
   <FacilityType description="Floor" facilityTypeId="FLOOR" hasTable="N" parentTypeId=""/>
   <FacilityType description="Office" facilityTypeId="OFFICE" hasTable="N" parentTypeId=""/>
