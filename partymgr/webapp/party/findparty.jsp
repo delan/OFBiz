@@ -21,7 +21,7 @@
     Collection parties = null;
 
     //cache by the search string
-    
+
     String lastSearchString = (String) session.getAttribute("LAST_SEARCH_STRING");
     Collection lastParties = (Collection) session.getAttribute("LAST_SEARCH_VALUES");
     if (lastParties != null && lastSearchString != null && lastSearchString.equals(searchString)) {
@@ -34,7 +34,7 @@
           <ofbiz:service name="getPartyFromName">
             <ofbiz:param name="firstName" attribute="first_name"/>
             <ofbiz:param name="lastName" attribute="last_name"/>
-          </ofbiz:service> 
+          </ofbiz:service>
         </ofbiz:if>
         <ofbiz:unless name="first_name">
           <ofbiz:if name="last_name">
@@ -181,9 +181,9 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td width="10%"><div class="head3">PartyID</div></td>
+          <td width="20%"><div class="head3">User Login</div></td>
           <td width="20%"><div class="head3">Last Name</div></td>
           <td width="20%"><div class="head3">First Name</div></td>
-          <td width="20%"><div class="head3">User Login</div></td>
           <td width="15%"><div class="head3">Type</div></td>
           <td width="15%">&nbsp;</td>
         </tr>
@@ -218,19 +218,6 @@
               %>
               <tr>
                 <td><a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="party" field="partyId"/></a></td>
-                <ofbiz:if name="person">
-                    <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="lastName"/></div></td>
-                    <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="firstName"/></div></td>
-                </ofbiz:if>
-                <ofbiz:unless name="person">
-                    <ofbiz:if name="partyGroup">
-                        <td colspan='2'><div class="tabletext"><ofbiz:entityfield attribute="partyGroup" field="groupName"/></div></td>
-                    </ofbiz:if>
-                    <ofbiz:unless name="partyGroup">
-                        <td><div class="tabletext">&nbsp;</div></td>
-                        <td><div class="tabletext">&nbsp;</div></td>
-                    </ofbiz:unless>
-                </ofbiz:unless>
                 <td>
                     <%
                         List userLogins = null;
@@ -250,6 +237,19 @@
                     %>
                     <div class="tabletext"><%=userLoginString%></div>
                 </td>
+                <ofbiz:if name="person">
+                    <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="lastName"/></div></td>
+                    <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="firstName"/></div></td>
+                </ofbiz:if>
+                <ofbiz:unless name="person">
+                    <ofbiz:if name="partyGroup">
+                        <td colspan='2'><div class="tabletext"><ofbiz:entityfield attribute="partyGroup" field="groupName"/></div></td>
+                    </ofbiz:if>
+                    <ofbiz:unless name="partyGroup">
+                        <td><div class="tabletext">&nbsp;</div></td>
+                        <td><div class="tabletext">&nbsp;</div></td>
+                    </ofbiz:unless>
+                </ofbiz:unless>
                 <td><div class="tabletext"><ofbiz:entityfield attribute="party" field="partyTypeId"/></div></td>
                 <td align="right">
                   <a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>' class="buttontext">[View Profile]</a>&nbsp;&nbsp;
