@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.25 $
+ *@version    $Revision: 1.26 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -83,28 +83,6 @@ ${requestAttributes.virtualJavaScript?if_exists}
 
     function getList(name, value, src) {
         currentFeatureIndex = findIndex(name);
-        var finalSelection = 0;
-
-        // set the drop down index for swatch selection
-        document.forms["addform"].elements[name].selectedIndex = (value*1)+1;
-
-        if (currentFeatureIndex < (OPT.length-1)) {
-            // eval the next list if there are more
-            eval("list" + OPT[currentFeatureIndex +1] + value + "()");
-
-            // set the product ID to NULL to trigger the alerts
-            document.addform.add_product_id.value = 'NULL';
-        } else {
-            // this is the final selection
-            // locate the sku
-            var sku = document.forms["addform"].elements[name].options[(value*1)+1].value;
-
-            // set the product ID
-            document.addform.add_product_id.value = sku;
-
-            // check for amount box
-            toggleAmt(checkAmtReq(sku));
-        }
 
         if (currentFeatureIndex == 0) {
             // set the images for the first selection
@@ -114,6 +92,29 @@ ${requestAttributes.virtualJavaScript?if_exists}
                     detailImageUrl = DET[value];
                 }
             }
+
+            // set the drop down index for swatch selection
+            document.forms["addform"].elements[name].selectedIndex = (value*1)+1;
+        }
+
+        if (currentFeatureIndex < (OPT.length-1)) {
+            // eval the next list if there are more
+            eval("list" + OPT[(currentFeatureIndex+1)] + value + "()");
+
+            // set the product ID to NULL to trigger the alerts
+            document.addform.add_product_id.value = 'NULL';
+        } else {
+            // this is the final selection -- locate the selected index of the last selection
+            var indexSelected = document.forms["addform"].elements[name].selectedIndex;
+
+            // using the selected index locate the sku
+            var sku = document.forms["addform"].elements[name].options[indexSelected].value;
+
+            // set the product ID
+            document.addform.add_product_id.value = sku;
+
+            // check for amount box
+            toggleAmt(checkAmtReq(sku));
         }
     }
  //-->
@@ -206,7 +207,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
             <p>&nbsp;</p>
             <#list requestAttributes.featureSet as currentType>
               <div class="tabletext">
-                <select name="FT${currentType}" class="selectBox" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
+                <select name="FT${currentType}" class="selectBox" onchange="javascript:getList(this.name, (this.value), 1);">
                   <option>${requestAttributes.featureTypes.get(currentType)}</option>
                 </select>
               </div>
