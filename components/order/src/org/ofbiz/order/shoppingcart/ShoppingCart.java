@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.42 2004/06/06 01:36:05 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.43 2004/06/17 06:11:34 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.42 $
+ * @version    $Revision: 1.43 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -148,16 +148,17 @@ public class ShoppingCart implements Serializable {
     }
 
     /** Creates new empty ShoppingCart object. */
-    public ShoppingCart(GenericDelegator delegator, String productStoreId, String webSiteId, String currencyUom) {
+    public ShoppingCart(GenericDelegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom) {
         this.delegator = delegator;
         this.delegatorName = delegator.getDelegatorName();
         this.productStoreId = productStoreId;
         this.webSiteId = webSiteId;
         this.currencyUom = currencyUom;
         this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
-        // make sure locale is initialized if nothing other than from jvm
-        // for a web shopping cart this would be set later by the webShoppingCart methods
-        this.locale = Locale.getDefault();
+        this.locale = locale;
+        if (this.locale == null) {
+            this.locale = Locale.getDefault();
+        }
 
         // set the default view cart on add for this store
         GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
