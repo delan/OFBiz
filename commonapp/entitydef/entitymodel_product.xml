@@ -963,6 +963,22 @@
         <key-map field-name="physicalInventoryId"/>
       </relation>
     </entity>
+    <entity entity-name="ProductFacility"
+            package-name="org.ofbiz.commonapp.product.inventory"
+            title="Product Facility Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="facilityId" type="id-ne"></field>
+      <field name="minimumStock" type="floating-point"></field>
+      <field name="reorderQuantity" type="floating-point"></field>
+      <prim-key field="productId"/>
+      <prim-key field="facilityId"/>
+      <relation type="one" fk-name="PROD_FAC_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FAC_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+    </entity>
     <entity entity-name="VarianceReason"
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Variance Reason Entity">
@@ -1414,22 +1430,6 @@
       </relation>
       <relation type="one" fk-name="PROD_CNT_CNT" rel-entity-name="Content">
         <key-map field-name="contentId"/>
-      </relation>
-    </entity>
-    <entity entity-name="ProductFacility"
-            package-name="org.ofbiz.commonapp.product.product"
-            title="Product Facility Entity">
-      <field name="productId" type="id-ne"></field>
-      <field name="facilityId" type="id-ne"></field>
-      <field name="minimumStock" type="floating-point"></field>
-      <field name="reorderQuantity" type="floating-point"></field>
-      <prim-key field="productId"/>
-      <prim-key field="facilityId"/>
-      <relation type="one" fk-name="PROD_FAC_PROD" rel-entity-name="Product">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="one" fk-name="PROD_FAC_FAC" rel-entity-name="Facility">
-        <key-map field-name="facilityId"/>
       </relation>
     </entity>
     <entity entity-name="ProductGlAccount"

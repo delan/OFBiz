@@ -602,6 +602,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="InventoryTransfer" />
     <entity-group group="org.ofbiz.commonapp" entity="Lot" />
     <entity-group group="org.ofbiz.commonapp" entity="PhysicalInventory" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFacility" />
     <entity-group group="org.ofbiz.commonapp" entity="VarianceReason" />
 
   <!-- ========================================================= -->
@@ -631,7 +632,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="ProductAssocType" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductContent" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductFacility" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductGlAccount" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductGlAccountType" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductKeyword" />
