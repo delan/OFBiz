@@ -52,17 +52,29 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
     private GenericDelegator delegator = null;
     private LocalDispatcher dispatcher = null;
     private URL orderPropertiesUrl = null;
-    private GenericValue userLogin = null;
+    private GenericValue userLogin = null;   
     
     protected void doRequest(SelectServletRequest request, SelectServletResponse response) throws ServletException, IOException {
         Debug.logInfo("Request receive from worldpay..", module);
-        // get the needed components
-        sctx = this.getServletContext();
-        delegator = this.getDelegator();
-        dispatcher = this.getDispatcher();
         
+        String webSiteId = getInitParameter("webSiteId");
+        String delegatorName = getInitParameter("entityDelegatorName");
+        String dispatchName = getInitParameter("localDispatcherName");
+        
+        Debug.logInfo("Got websiteId: " + webSiteId, module);
+        Debug.logInfo("Got delegatorName:" + delegatorName, module);
+        Debug.logInfo("Got dispatchName:" + dispatchName, module);
+        
+        // get the delegator
+        delegator = GenericDelegator.getGenericDelegator(delegatorName);
+        
+        // get the dispatcher
+        ServiceDispatcher serviceDisp = ServiceDispatcher.getInstance(dispatchName, delegator);
+        DispatchContext dctx = serviceDisp.getLocalContext(dispatchName);
+        dispatcher = dctx.getDispatcher();        
+                
         // get the properties file
-        String webSiteId = sctx.getInitParameter("webSiteId");
+        //String webSiteId = sctx.getInitParameter("webSiteId");
         String configString = null;
         try {
             GenericValue webSitePayment = delegator.findByPrimaryKey("WebSitePaymentSetting", UtilMisc.toMap("webSiteId", webSiteId, "paymentMethodTypeId", "EXT_WORLDPAY"));
@@ -217,70 +229,5 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot set payment preference info", module);
         }                   
-    }
-    
-    private LocalDispatcher getDispatcher() {
-        LocalDispatcher dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
-
-        if (dispatcher == null) {
-            GenericDelegator delegator = getDelegator();
-
-            if (delegator == null) {
-                Debug.logError("ERROR: delegator not defined.", module);
-                return null;
-            }
-            Collection readers = null;
-            String readerFiles = getServletContext().getInitParameter("serviceReaderUrls");
-
-            if (readerFiles != null) {
-                readers = new ArrayList();
-                List readerList = StringUtil.split(readerFiles, ";");
-                Iterator i = readerList.iterator();
-
-                while (i.hasNext()) {
-                    try {
-                        String name = (String) i.next();
-                        URL readerURL = getServletContext().getResource(name);
-
-                        if (readerURL != null)
-                            readers.add(readerURL);
-                    } catch (NullPointerException npe) {
-                        Debug.logInfo(npe, "ERROR: Null pointer exception thrown.", module);
-                    } catch (MalformedURLException e) {
-                        Debug.logError(e, "ERROR: cannot get URL from String.", module);
-                    }
-                }
-            }
-            // get the unique name of this dispatcher
-            String dispatcherName = getServletContext().getInitParameter("localDispatcherName");
-
-            if (dispatcherName == null)
-                Debug.logError("No localDispatcherName specified in the web.xml file", module);
-            dispatcher = new WebAppDispatcher(dispatcherName, delegator, readers);
-            getServletContext().setAttribute("dispatcher", dispatcher);
-            if (dispatcher == null)
-                Debug.logError("ERROR: dispatcher could not be initialized.", module);
-        }
-        return dispatcher;
-    }
-
-    private GenericDelegator getDelegator() {
-        GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
-
-        if (delegator == null) {
-            String delegatorName = getServletContext().getInitParameter(SiteDefs.ENTITY_DELEGATOR_NAME);
-
-            if (delegatorName == null || delegatorName.length() <= 0)
-                delegatorName = "default";
-            if (Debug.infoOn()) Debug.logInfo("Getting Entity Engine Delegator with delegator name " + delegatorName, module);
-            delegator = GenericDelegator.getGenericDelegator(delegatorName);
-            getServletContext().setAttribute("delegator", delegator);
-            if (delegator == null)
-                Debug.logError("ERROR: delegator factory returned null for delegatorName \"" + delegatorName + "\"", module);
-        }
-        return delegator;
-    }
-   
-   
-
+    }    
 }
