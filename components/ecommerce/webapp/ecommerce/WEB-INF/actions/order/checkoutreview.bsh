@@ -69,10 +69,15 @@ if (paymentMethodTypeIds != null && paymentMethodTypeIds.size() > 0) {
 webSiteId = CatalogWorker.getWebSiteId(request);
 
 productStore = ProductStoreWorker.getProductStore(request);
-payToPartyId = productStore.getString("payToPartyId");
 
-paymentAddress =  PaymentWorker.getPaymentAddress(delegator, payToPartyId);
+isDemoStore = !"N".equals(productStore.getString("isDemoStore"));
+context.put("isDemoStore", isDemoStore);
+
+payToPartyId = productStore.getString("payToPartyId");
+paymentAddress = PaymentWorker.getPaymentAddress(delegator, payToPartyId);
 if (paymentAddress != null) context.put("paymentAddress", paymentAddress);
+
+
 
 // TODO: FIXME!
 /*
