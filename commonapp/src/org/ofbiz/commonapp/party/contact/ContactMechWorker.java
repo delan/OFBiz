@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/01/24 05:14:12  jonesde
+ * Added credit card info related workers
+ *
  * Revision 1.1  2002/01/23 10:22:03  jonesde
  * Major refactoring of contact mech stuff, more things working too
  *
@@ -42,6 +45,104 @@ import org.ofbiz.core.util.*;
  *@created January 22, 2002
  */
 public class ContactMechWorker {
+    public static void getPartyOtherValues(PageContext pageContext, String partyId, String partyAttr, String personAttr, String partyGroupAttr) {
+        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+
+        try {
+            GenericValue party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+            if (party != null)
+                pageContext.setAttribute(partyAttr, party);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
+
+        try {
+            GenericValue person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
+            if (person != null)
+                pageContext.setAttribute(personAttr, person);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
+
+        try {
+            GenericValue partyGroup = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
+            if (partyGroup != null)
+                pageContext.setAttribute(partyGroupAttr, partyGroup);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
+    }
+    
+    public static void getPartyCreditCardInfos(PageContext pageContext, String partyId, boolean showOld, String creditCardInfosAttr) {
+        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        try {
+            Collection creditCardInfos = delegator.findByAnd("CreditCardInfo", UtilMisc.toMap("partyId", partyId));
+            if (!showOld) creditCardInfos = EntityUtil.filterByDate(creditCardInfos);
+            if (creditCardInfos != null)
+                pageContext.setAttribute(creditCardInfosAttr, creditCardInfos);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
+    }
+    
+    public static void getPartyContactMechValueMaps(PageContext pageContext, String partyId, boolean showOld, String partyContactMechValueMapsAttr) {
+        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        Collection partyContactMechValueMaps = new LinkedList();
+        
+        Iterator allPartyContactMechs = null;
+        try {
+            Collection tempCol = delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId));
+            if (!showOld) tempCol = EntityUtil.filterByDate(tempCol);
+            allPartyContactMechs = UtilMisc.toIterator(tempCol);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
+
+        while(allPartyContactMechs != null && allPartyContactMechs.hasNext()) {
+            GenericValue partyContactMech = (GenericValue) allPartyContactMechs.next();
+            GenericValue contactMech = null;
+            try {
+                contactMech = partyContactMech.getRelatedOne("ContactMech");
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+            if (contactMech != null) {
+                Map partyContactMechValueMap = new HashMap();
+                partyContactMechValueMaps.add(partyContactMechValueMap);
+                partyContactMechValueMap.put("contactMech", contactMech);
+                partyContactMechValueMap.put("partyContactMech", partyContactMech);
+
+                try {
+                    partyContactMechValueMap.put("contactMechType", contactMech.getRelatedOneCache("ContactMechType"));
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+
+                try {
+                    Collection partyContactMechPurposes = partyContactMech.getRelated("PartyContactMechPurpose");
+                    if (!showOld) partyContactMechPurposes = EntityUtil.filterByDate(partyContactMechPurposes);
+                    partyContactMechValueMap.put("partyContactMechPurposes", partyContactMechPurposes);
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+
+                try {
+                    if ("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
+                        partyContactMechValueMap.put("postalAddress", contactMech.getRelatedOne("PostalAddress"));
+                    } else if ("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))) {
+                        partyContactMechValueMap.put("telecomNumber", contactMech.getRelatedOne("TelecomNumber"));
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+            }
+        }
+        
+        if (partyContactMechValueMaps.size() > 0) {
+            pageContext.setAttribute(partyContactMechValueMapsAttr, partyContactMechValueMaps);
+        }
+    }
+
     public static void getContactMechAndRelated(PageContext pageContext, String partyId, String contactMechAttr, String contactMechIdAttr,
             String partyContactMechAttr, String partyContactMechPurposesAttr, String contactMechTypeIdAttr, String contactMechTypeAttr, String purposeTypesAttr,
             String postalAddressAttr, String telecomNumberAttr, String requestNameAttr, String tryEntityAttr, String contactMechTypesAttr) {
@@ -68,7 +169,6 @@ public class ContactMechWorker {
         try {
             partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId)));
         } catch (GenericEntityException e) {
-            //not much we can do, log the error and move along
             Debug.logWarning(e);
         }
         
@@ -80,7 +180,6 @@ public class ContactMechWorker {
             try {
                 partyContactMechPurposes = EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose"));
             } catch (GenericEntityException e) {
-                //not much we can do, log the error and move along
                 Debug.logWarning(e);
             }
             if (partyContactMechPurposes != null && partyContactMechPurposes.size() > 0)
@@ -91,7 +190,6 @@ public class ContactMechWorker {
         try {
             contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
         } catch (GenericEntityException e) {
-            //not much we can do, log the error and move along
             Debug.logWarning(e);
         }
 
@@ -114,7 +212,6 @@ public class ContactMechWorker {
                 if (contactMechType != null)
                     pageContext.setAttribute(contactMechTypeAttr, contactMechType);
             } catch (GenericEntityException e) {
-                //not much we can do, log the error and move along
                 Debug.logWarning(e);
             }
 
@@ -123,7 +220,6 @@ public class ContactMechWorker {
             try {
                 typePurposes = UtilMisc.toIterator(delegator.findByAnd("ContactMechTypePurpose", UtilMisc.toMap("contactMechTypeId", contactMechTypeId)));
             } catch (GenericEntityException e) {
-                //not much we can do, log the error and move along
                 Debug.logWarning(e);
             }
             while (typePurposes != null && typePurposes.hasNext()) {
@@ -132,7 +228,6 @@ public class ContactMechWorker {
                 try {
                     contactMechPurposeType = contactMechTypePurpose.getRelatedOne("ContactMechPurposeType");
                 } catch (GenericEntityException e) {
-                    //not much we can do, log the error and move along
                     Debug.logWarning(e);
                 }
                 if (contactMechPurposeType != null) {
@@ -174,7 +269,6 @@ public class ContactMechWorker {
             try {
                 if (contactMech != null) postalAddress = contactMech.getRelatedOne("PostalAddress");
             } catch (GenericEntityException e) {
-                //not much we can do, log the error and move along
                 Debug.logWarning(e);
             }
             if (postalAddress == null) tryEntity = false;
@@ -184,7 +278,6 @@ public class ContactMechWorker {
             try {
                 if (contactMech != null) telecomNumber = contactMech.getRelatedOne("TelecomNumber");
             } catch (GenericEntityException e) {
-                //not much we can do, log the error and move along
                 Debug.logWarning(e);
             }
             if (telecomNumber == null) tryEntity = false;
@@ -199,7 +292,6 @@ public class ContactMechWorker {
                 pageContext.setAttribute(contactMechTypesAttr, contactMechTypes);
             }
         } catch (GenericEntityException e) {
-            //not much we can do, log the error and move along
             Debug.logWarning(e);
         }
     }
@@ -232,7 +324,6 @@ public class ContactMechWorker {
             try {
                 creditCard = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
             } catch (GenericEntityException e) {
-                //not much we can do, log the error and move along
                 Debug.logWarning(e);
             }
         }
@@ -250,7 +341,6 @@ public class ContactMechWorker {
             try {
                 partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", curContactMechId)));
             } catch (GenericEntityException e) {
-                //not much we can do, log the error and move along
                 Debug.logWarning(e);
             }
             GenericValue curPartyContactMech = EntityUtil.getFirst(partyContactMechs);
@@ -261,7 +351,6 @@ public class ContactMechWorker {
                 try {
                     curContactMech = curPartyContactMech.getRelatedOne("ContactMech");
                 } catch (GenericEntityException e) {
-                    //not much we can do, log the error and move along
                     Debug.logWarning(e);
                 }
 
@@ -269,7 +358,6 @@ public class ContactMechWorker {
                 try {
                     curPartyContactMechPurposes = EntityUtil.filterByDate(curPartyContactMech.getRelated("PartyContactMechPurpose"));
                 } catch (GenericEntityException e) {
-                    //not much we can do, log the error and move along
                     Debug.logWarning(e);
                 }
                 if (curPartyContactMechPurposes != null && curPartyContactMechPurposes.size() > 0) {
@@ -283,7 +371,6 @@ public class ContactMechWorker {
                 try {
                     curPostalAddress = curContactMech.getRelatedOne("PostalAddress");
                 } catch (GenericEntityException e) {
-                    //not much we can do, log the error and move along
                     Debug.logWarning(e);
                 }
             }
@@ -304,7 +391,6 @@ public class ContactMechWorker {
         try {
             allPartyContactMechs = UtilMisc.toIterator(EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId))));
         } catch (GenericEntityException e) {
-            //not much we can do, log the error and move along
             Debug.logWarning(e);
         }
         while(allPartyContactMechs != null && allPartyContactMechs.hasNext()) {
@@ -313,7 +399,6 @@ public class ContactMechWorker {
             try {
                 contactMech = partyContactMech.getRelatedOne("ContactMech");
             } catch (GenericEntityException e) {
-                //not much we can do, log the error and move along
                 Debug.logWarning(e);
             }
             if (contactMech != null && "POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId")) && !contactMech.getString("contactMechId").equals(curContactMechId)) {
@@ -326,7 +411,6 @@ public class ContactMechWorker {
                     GenericValue postalAddress = contactMech.getRelatedOne("PostalAddress");
                     postalAddressInfo.put("postalAddress", postalAddress);
                 } catch (GenericEntityException e) {
-                    //not much we can do, log the error and move along
                     Debug.logWarning(e);
                 }
 
@@ -334,7 +418,6 @@ public class ContactMechWorker {
                     Collection partyContactMechPurposes = EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose"));
                     postalAddressInfo.put("partyContactMechPurposes", partyContactMechPurposes);
                 } catch (GenericEntityException e) {
-                    //not much we can do, log the error and move along
                     Debug.logWarning(e);
                 }
             }
