@@ -50,7 +50,7 @@ productId = request.getParameter("productId");
 product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 
 result = dispatcher.runSync("getProductFeaturesByType", UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE"));
-featureTypes = result.get("productFeaturesByType").keySet();
+featureTypes = result.get("productFeatureTypes");
 
 result = dispatcher.runSync("getVariantCombinations", UtilMisc.toMap("productId", productId));
 featureCombinationInfos = result.get("featureCombinations");
