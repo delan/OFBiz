@@ -37,9 +37,6 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <delegator name="sap" entity-model-reader="main" entity-group-reader="main">
         <group-map group-name="org.ofbiz.commonapp" datasource-name="localsapdb"/>
     </delegator>
-    <delegator name="remote" entity-model-reader="main" entity-group-reader="main">
-        <group-map group-name="org.ofbiz.commonapp" datasource-name="remote"/>
-    </delegator>
 
     <entity-model-reader name="main">
         <resource loader="mainfile" location="entitymodel.xml"/>
@@ -173,19 +170,19 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/SapDBDataSource"/> -->
     </datasource>
 
-    <datasource name="remote"
+    <datasource name="localp6spy"
             helper-class="org.ofbiz.core.entity.GenericHelperDAO"
-            field-type-name="postgres"
+            field-type-name="oracle"
             check-on-start="true"
             add-missing-on-start="true">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
         <inline-jdbc
-                jdbc-driver="org.postgresql.Driver"
-                jdbc-uri="jdbc:postgresql://192.168.0.1/demo"
+                jdbc-driver="com.p6spy.engine.spy.P6SpyDriver"
+                jdbc-uri="jdbc:oracle:oci8:@EDS2"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 isolation-level="Serializable"/>
-        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/PostgresDataSource"/> -->
+        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/OracleDataSource"/> -->
     </datasource>
 </entity-config>
