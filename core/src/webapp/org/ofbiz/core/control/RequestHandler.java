@@ -149,7 +149,14 @@ public class RequestHandler implements Serializable {
                     ServerHitBin.countEvent(cname + "." + eventMethod, request.getSession().getId(), eventStartTime,
                             System.currentTimeMillis() - eventStartTime, userLogin, delegator);
                 } catch (EventHandlerException e) {
-                    throw new RequestHandlerException(e.getMessage(), e);
+                    //check to see if there is an "error" response, if so go there and make an request error message
+                    String tryErrorMsg = rm.getRequestAttribute(requestUri, "error");
+                    if (tryErrorMsg != null) {
+                        eventReturnString = "error";
+                        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error calling event: " + e.toString());
+                    } else {
+                        throw new RequestHandlerException("Error calling event and no error repsonse was specified", e);
+                    }
                 }
             }
         }

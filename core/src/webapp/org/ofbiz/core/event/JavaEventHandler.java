@@ -81,7 +81,7 @@ public class JavaEventHandler implements EventHandler {
             return eventReturn;
         } catch (Exception e) {
             Debug.logError(e, "Problems Processing Event", module);
-            throw new EventHandlerException("Problems processing event: " + e.getMessage());
+            throw new EventHandlerException("Problems processing event: " + e.toString(), e);
         }
     }
 }
