@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  */
 -->
 
@@ -716,6 +716,7 @@
       <field name="workEffortIdFrom" type="id-ne"></field>
       <field name="workEffortIdTo" type="id-ne"></field>
       <field name="workEffortAssocTypeId" type="id-ne"></field>
+      <field name="sequenceNum" type="numeric"></field>
       <prim-key field="workEffortIdFrom"/>
       <prim-key field="workEffortIdTo"/>
       <prim-key field="workEffortAssocTypeId"/>
