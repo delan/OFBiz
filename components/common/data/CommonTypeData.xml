@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+  <DataSourceType dataSourceTypeId="PURCHASED_DATA" description="Purchased Data"/>
+  <DataSourceType dataSourceTypeId="WEBSITE_ENTRY" description="Website Data Entry"/>
+  <DataSourceType dataSourceTypeId="MAILING_LIST_SIGNUP" description="Mailing List Signup"/>
+  <DataSourceType dataSourceTypeId="CONTEST_SIGNUP" description="Contest Signup"/>
+  <DataSourceType dataSourceTypeId="ADMIN_ENTRY" description="Administrative Data Entry"/>
+
+  <DataSource dataSourceId="ECOMMERCE_SITE" dataSourceTypeId="WEBSITE_ENTRY" description="eCommerce Site Profile Maintenance"/>
+  <DataSource dataSourceId="GENERAL_MAILING" dataSourceTypeId="MAILING_LIST_SIGNUP" description="General Interest Mailing List Signup"/>
+  <DataSource dataSourceId="CSR_ENTRY" dataSourceTypeId="ADMIN_ENTRY" description="Customer Service Rep Data Entry"/>
+  <DataSource dataSourceId="GEN_ADMIN" dataSourceTypeId="ADMIN_ENTRY" description="General Administrative Data Entry"/>
+
+  <DataSourceType dataSourceTypeId="CONTENT_CREATION" description="Content and Data Resource Creation"/>
+  <DataSource dataSourceId="USER_ENTRY" dataSourceTypeId="CONTENT_CREATION" description="User Entry"/>
+  <DataSource dataSourceId="CONTEXT_INDUCTION" dataSourceTypeId="CONTENT_CREATION" description="Context Induction"/>
+
+  <GeoType description="City" geoTypeId="CITY" hasTable="N" parentTypeId=""/>
+  <GeoType description="State" geoTypeId="STATE" hasTable="N" parentTypeId=""/>
+  <GeoType description="Postal Code" geoTypeId="POSTAL_CODE" hasTable="N" parentTypeId=""/>
+  <GeoType description="Country" geoTypeId="COUNTRY" hasTable="N" parentTypeId=""/>
+  <GeoType description="County" geoTypeId="COUNTY" hasTable="N" parentTypeId=""/>
+  <GeoType description="County-City" geoTypeId="COUNTY_CITY" hasTable="N" parentTypeId=""/>
+  <GeoType description="Province" geoTypeId="PROVINCE" hasTable="N" parentTypeId=""/>
+  <GeoType description="Region" geoTypeId="REGION" hasTable="N" parentTypeId=""/>
+  <GeoType description="Territory" geoTypeId="TERRITORY" hasTable="N" parentTypeId=""/>
+  <GeoType description="Sales Territory" geoTypeId="SALES_TERRITORY" hasTable="N" parentTypeId="TERRITORY"/>
+  <GeoType description="Service Territory" geoTypeId="SERVICE_TERRITORY" hasTable="N" parentTypeId="TERRITORY"/>
+
+  <!-- sync status -->
+  <StatusType description="Synchronize" hasTable="N" parentTypeId="" statusTypeId="SYNCHRONIZE_STATUS"/>
+  <StatusItem description="Not-Synchronized" sequenceId="01" statusCode="NOT_SYNCHRONIZED" statusId="NOT_SYNCHRONIZED" statusTypeId="SYNCHRONIZE_STATUS"/>
+  <StatusItem description="Synchronized" sequenceId="02" statusCode="SYNCHRONIZED" statusId="SYNCHRONIZED" statusTypeId="SYNCHRONIZE_STATUS"/>
+
+  <UomType description="Currency" hasTable="N" parentTypeId="" uomTypeId="CURRENCY_MEASURE"/>
+  <UomType description="Time/Frequency" hasTable="N" parentTypeId="" uomTypeId="TIME_FREQ_MEASURE"/>
+  <UomType description="Length" hasTable="N" parentTypeId="" uomTypeId="LENGTH_MEASURE"/>
+  <UomType description="Area" hasTable="N" parentTypeId="" uomTypeId="AREA_MEASURE"/>
+  <UomType description="Liquid Volume" hasTable="N" parentTypeId="" uomTypeId="VOLUME_LIQ_MEASURE"/>
+  <UomType description="Dry Volume" hasTable="N" parentTypeId="" uomTypeId="VOLUME_DRY_MEASURE"/>
+  <UomType description="Weight" hasTable="N" parentTypeId="" uomTypeId="WEIGHT_MEASURE"/>
+  <UomType description="Energy" hasTable="N" parentTypeId="" uomTypeId="ENERGY_MEASURE"/>
+  <UomType description="Temperature" hasTable="N" parentTypeId="" uomTypeId="TEMP_MEASURE"/>
+  <UomType description="Other" hasTable="N" parentTypeId="" uomTypeId="OTHER_MEASURE"/>
+</entity-engine-xml>

@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+  <Facility facilityId="WebStoreWarehouse" facilityTypeId="WAREHOUSE" facilityName="Web Store Warehouse" description="Warehouse exclusively for the Web Store "/>
+  <ContactMech contactMechId="9200" contactMechTypeId="POSTAL_ADDRESS"/>
+  <ContactMech contactMechId="9201" contactMechTypeId="TELECOM_NUMBER"/>
+  <PostalAddress contactMechId="9200" toName="Company XYZ" attnName="ZJAA" address1="2003 Open Blvd" city="Orem" postalCode="84058" countryGeoId="USA" stateProvinceGeoId="UT"/>
+  <TelecomNumber contactMechId="9201" areaCode="801" contactNumber="555-5555"/>
+  <FacilityContactMech facilityId="WebStoreWarehouse" contactMechId="9200" fromDate="2001-01-01 12:00:00.0"/>
+  <FacilityContactMech facilityId="WebStoreWarehouse" contactMechId="9201" fromDate="2001-01-01 12:00:00.0"/>
+  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9200" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2001-01-01 12:00:00.0"/>
+  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9200" contactMechPurposeTypeId="SHIP_ORIG_LOCATION" fromDate="2001-01-01 12:00:00.0"/>
+  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2001-01-01 12:00:00.0"/>
+  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2001-01-01 12:00:00.0"/>
+
+  <ProductStore productStoreId="9000" storeName="OFBiz E-Commerce Store" title="Open For Commerce" subtitle="Part of the Open For Business Family of Open Source Software" inventoryFacilityId="WebStoreWarehouse" oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N" defaultLocaleString="USD" defaultCurrencyUomId="en_US" allowPassword="Y" explodeOrderItems="N" headerApprovedStatus="ORDER_PROCESSING" itemApprovedStatus="ITEM_CREATED" headerDeclinedStatus="ORDER_REJECTED" itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" declinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service." rejectedMessage="Your order has been rejected and your account has been disabled due to fraud." styleSheet="/images/maincss.css" headerLogo="/images/ofbiz_logo.jpg"/>
+  <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveCCProcessor"/>
+  <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_CAPTURE" paymentService="testCCCapture"/>
+  <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REAUTH" paymentService="alwaysApproveCCProcesso"/>
+  <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REFUND" paymentService="testCCRefund"/>
+  <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="EFT_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveEFTProcessor"/>  
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_CONFIRM" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailconfirmation.ftl" subject="OFBiz Demo - Order Confirmation #${orderId}" bccAddress="ofbiztest@yahoo.com" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_COMPLETE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailcomplete.ftl" subject="OFBiz Demo - Your Order Is Complete #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_BACKORDER" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailbackorder.ftl" subject="OFBiz Demo - Backorder Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_CHANGE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailorderchange.ftl" subject="OFBiz Demo - Order Change Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_PWD_RETRIEVE" templatePath="/commonapp/src/org/ofbiz/commonapp/security/login/passwordemail.ftl" subject="OFBiz Demo - Password Reminder (${userLoginId})" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreFacility productStoreId="9000" facilityId="WebStoreWarehouse" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="9000" fromDate="2001-01-01 12:00:00.0"/>
+  
+  <WebSite webSiteId="WebStore" siteName="eCommerce Web Site" productStoreId="9000"/>
+  <WebSite webSiteId="OrderEntry" siteName="Order Entry Web Site" productStoreId="9000"/>
+
+  <ProdCatalog prodCatalogId="DemoCatalog" catalogName="Demo Catalog" useQuickAdd="Y"/>
+  <ProdCatalog prodCatalogId="TestCatalog" catalogName="Test Catalog" useQuickAdd="N"/>
+  <ProductStoreCatalog productStoreId="9000" prodCatalogId="DemoCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+  <ProductStoreCatalog productStoreId="9000" prodCatalogId="TestCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+  
+  <ProductCategory description="Demo Browse Root"
+    longDescription="Demo Catalog Primary Browse Root Category" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategory description="Gizmos" longDescription="long description of Gizmos"
+    primaryParentCategoryId="CATALOG1" productCategoryId="100" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategory description="Widgets" longDescription="long description of Widgets"
+    primaryParentCategoryId="CATALOG1" productCategoryId="200" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategory description="Small Gizmos" longDescription="long description of Small Gizmos"
+    primaryParentCategoryId="100" productCategoryId="101" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategory description="Large Gizmos" longDescription="long description of Large Gizmos"
+    primaryParentCategoryId="100" productCategoryId="102" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategory description="Small Widgets" longDescription="long description of Small Widgets"
+    primaryParentCategoryId="200" productCategoryId="201" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategory description="Large Widgets" longDescription="long description of Large Widgets"
+    primaryParentCategoryId="200" productCategoryId="202" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategory description="Mini Widgets" longDescription="long description of Mini Widgets"
+    primaryParentCategoryId="201" productCategoryId="2011" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategory description="Other Mini Widgets" longDescription="long description of Other Mini Widgets"
+    primaryParentCategoryId="201" productCategoryId="2012" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategory description="Micro Widgets" longDescription="long description of Micro Widgets"
+    primaryParentCategoryId="2011" productCategoryId="20111" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategory description="Featured Products" productCategoryId="PROMOTIONS" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategory description="Demo Default Search"
+    longDescription="Catalog1 Search Products - only products in this category will show up in a search in catalog1"
+    productCategoryId="CATALOG1_SEARCH" productCategoryTypeId="SEARCH_CATEGORY"/>
+  <ProductCategory description="Main Quick Add"
+    longDescription="For quick orders, you have found the right place!" productCategoryId="CATALOG1_QUICKADD1" productCategoryTypeId="QUICKADD_CATEGORY"/>
+  <ProductCategory description="Widget Quick Add"
+    longDescription="Get all you widgets here!" productCategoryId="CATALOG1_QUICKADD2" productCategoryTypeId="QUICKADD_CATEGORY"/>
+
+  <ProductCategory description="Test Limited Admin Category"
+    longDescription="Test Limited Admin Category" productCategoryId="TSTLTDADMIN" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategoryRole productCategoryId="TSTLTDADMIN" partyId="ltdadmin" roleTypeId="LTD_ADMIN" fromDate="2001-01-01 12:00:00.0"/>
+
+  <ProductCategory description="Test Cross Sell Category"
+    longDescription="Test Cross Sell Category" productCategoryId="TSTCSL" productCategoryTypeId="CROSS_SELL_CATEGORY"/>
+
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1" fromDate="2001-01-01 12:00:00.0" 
+    sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_SEARCH" fromDate="2001-01-01 12:00:00.0" 
+    sequenceNum="1" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_QUICKADD1" fromDate="2001-01-01 12:00:00.0" 
+    sequenceNum="1" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_QUICKADD2" fromDate="2001-01-01 12:00:00.0" 
+    sequenceNum="2" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="PROMOTIONS" fromDate="2001-01-01 12:00:00.0" 
+    sequenceNum="1" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
+
+  <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="100" fromDate="2001-01-01 12:00:00.0" 
+    sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
+  <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="TSTLTDADMIN" fromDate="2001-01-01 12:00:00.0" 
+    sequenceNum="1" prodCatalogCategoryTypeId="PCCT_ADMIN_ALLW"/>
+                
+  <Product productId="GZ-1000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Tiny Gizmo" description="The smallest gizmo in town." longDescription="This gizmo is very small and runs on solar power." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>
+  <Product productId="GZ-1001" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Nan Gizmo" description="Indian style gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:57:27.248" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:57:27.248" lastModifiedByUserLogin="admin"/>
+  <Product productId="GZ-1004" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Rainbow Gizmo" description="The only multi-colored gizmo" longDescription="This is the original multi-colored gizmo, only available from OFBiz!" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:50:33.463" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:50:33.463" lastModifiedByUserLogin="admin"/>
+  <Product productId="GZ-1005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName=".NIT Gizmo" description="M$ gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 19:00:29.851" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:02:17.445" lastModifiedByUserLogin="admin">
+      <longDescription><![CDATA[This gizmo only works in certain areas and requires a lot of extra space to move around.<br><br>
+	<b>** Warning this gizmo is known to crash quite often</b>]]></longDescription>
+  </Product>
+  <Product productId="GZ-1006" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Open Gizmo" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 19:03:01.298" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:03:01.298" lastModifiedByUserLogin="admin"/>
+  <Product productId="GZ-2002" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Square Gizmo" description="A square gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:52:03.492" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:52:03.492" lastModifiedByUserLogin="admin"/>
+  <Product productId="GZ-2644" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Round Gizmo" description="Round Gizmo w/ Lights" longDescription="A small round gizmo with multi-colored lights. Works great in the dark. Small and compact." quantityIncluded="100.0" weight="7.0"/>
+  <Product productId="GZ-5005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Purple Gizmo" description="The stylish gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 19:05:51.323" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:05:51.323" lastModifiedByUserLogin="admin"/>
+  <Product productId="GZ-7000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Massive Gizmo" description="The biggest gizmo ever" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 19:11:58.441" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:11:58.441" lastModifiedByUserLogin="admin"/>
+  <Product productId="GZ-8544" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Big Gizmo" description="Big Gizmo w/ Legs" longDescription="A large gizmo with legs. Walks on its own. Does not require a power supply." quantityIncluded="100.0" weight="12.0"/>
+  <Product productId="GZ-9290" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="His/Her Gizmo" description="A set of his/her gizmos" longDescription="The his/her gizmo is a perfect gift for your favorite couple. Once you try it out you&apos;ll want a set for yourself!" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:54:49.751" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:54:49.751" lastModifiedByUserLogin="admin"/>
+  <Product productId="WG-1111" productTypeId="FINISHED_GOOD" primaryProductCategoryId="20111" productName="Micro Chrome Widget" description="Micro Widget - Chrome Colored" longDescription="This micro chrome widget makes a perfect gift. This one is so small that it floats in air." quantityIncluded="50.0" weight="2.0"/>
+  <Product productId="WG-5569" productTypeId="FINISHED_GOOD" primaryProductCategoryId="201" productName="Tiny Chrome Widget" description="Tiny Chrome Widget" longDescription="This tiny chrome widget makes a perfect gift. The shine will last forever. No pollishing required." quantityIncluded="50.0" weight="4.0"/>
+  <Product productId="WG-9943" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget" description="Giant Widget with Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y"/>
+  <Product productId="WG-9943-B3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget B3" description="Black Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVariant="Y"/>
+  <Product productId="WG-9943-B4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget B4" description="Black Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVariant="Y"/>
+  <Product productId="WG-9943-S3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget S3" description="Silver Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVariant="Y"/>
+  <Product productId="WG-9943-S4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget S4" description="Silver Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVariant="Y"/>
+    
+  <ProductPrice productId="GZ-1000" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:49:03.163" price="15.99" createdDate="2003-03-04 18:49:14.539" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:49:14.539" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1000" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:48:49.113" price="15.0" createdDate="2003-03-04 18:49:02.863" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:49:02.863" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1001" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:57:38.033" price="25.99" createdDate="2003-03-04 18:57:44.803" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:57:44.803" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1001" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:57:29.421" price="25.99" createdDate="2003-03-04 18:57:37.813" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:57:37.813" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1004" productPriceTypeId="AVERAGE_COST" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:50:35.866" price="29.99" createdDate="2003-03-04 18:50:45.0" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:50:45.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1004" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:50:45.25" price="25.99" createdDate="2003-03-04 18:50:54.383" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:50:54.383" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1005" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:00:47.616" price="2799.99" createdDate="2003-03-04 19:00:55.748" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:00:55.748" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1005" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:00:32.034" price="2799.0" createdDate="2003-03-04 19:00:47.386" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:00:47.386" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1006" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:03:12.745" price="1.99" createdDate="2003-03-04 19:03:20.065" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:03:20.065" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1006" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:03:03.151" price="5.99" createdDate="2003-03-04 19:03:12.524" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:03:12.524" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-2002" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:52:45.463" price="47.99" createdDate="2003-03-04 18:52:58.712" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:52:58.712" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-2002" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:52:37.181" price="48.0" createdDate="2003-03-04 18:52:45.192" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:52:45.192" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-2644" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="47.99"/>
+  <ProductPrice productId="GZ-2644" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="48.0"/>
+  <ProductPrice productId="GZ-5005" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:06:07.516" price="47.99" createdDate="2003-03-04 19:06:17.991" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:06:17.991" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-5005" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:05:56.39" price="48.0" createdDate="2003-03-04 19:06:07.286" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:06:07.286" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-7000" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:12:00.424" price="599.99" createdDate="2003-03-04 19:12:08.765" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:12:08.765" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-7000" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:12:09.006" price="999.99" createdDate="2003-03-04 19:12:22.736" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:12:22.736" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-8544" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="269.99"/>
+  <ProductPrice productId="GZ-8544" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="270.0"/>
+  <ProductPrice productId="GZ-9290" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:55:00.196" price="97.99" createdDate="2003-03-04 18:55:08.659" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:55:08.659" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-9290" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:54:52.065" price="99.99" createdDate="2003-03-04 18:54:59.976" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:54:59.976" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="WG-1111" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="59.99"/>
+  <ProductPrice productId="WG-1111" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="60.0"/>
+  <ProductPrice productId="WG-5569" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="59.99"/>
+  <ProductPrice productId="WG-5569" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="60.0"/>
+  <ProductPrice productId="WG-9943" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="549.99"/>
+  <ProductPrice productId="WG-9943" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="550.0"/>
+            
+  <ProductFeatureCategory productFeatureCategoryId="9000" description="Widget Features"/>
+  <ProductFeatureCategoryAppl productFeatureCategoryId="9000" productCategoryId="CATALOG1_SEARCH" fromDate="2001-01-01 12:00:00.0"/>
+  
+  <ProductFeature productFeatureId="9000" productFeatureCategoryId="9000" productFeatureTypeId="COLOR" description="Black"/>
+  <ProductFeature productFeatureId="9001" productFeatureCategoryId="9000" productFeatureTypeId="COLOR" description="Silver"/>
+  <ProductFeature productFeatureId="9002" productFeatureCategoryId="9000" productFeatureTypeId="SIZE" description="3-Wheel"/>
+  <ProductFeature productFeatureId="9003" productFeatureCategoryId="9000" productFeatureTypeId="SIZE" description="4-Wheel"/>
+
+  <ProductFeatureAppl productId="WG-9943" productFeatureId="9000"
+    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+  <ProductFeatureAppl productId="WG-9943" productFeatureId="9001"
+    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+  <ProductFeatureAppl productId="WG-9943" productFeatureId="9002"
+    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="3"/>
+  <ProductFeatureAppl productId="WG-9943" productFeatureId="9003"
+    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="4"/>
+  
+  <ProductFeatureAppl productId="WG-9943-B3" productFeatureId="9000"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+  <ProductFeatureAppl productId="WG-9943-B3" productFeatureId="9002"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+  <ProductFeatureAppl productId="WG-9943-B4" productFeatureId="9000"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+  <ProductFeatureAppl productId="WG-9943-B4" productFeatureId="9003"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+  <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="9001"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+  <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="9002"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+  <ProductFeatureAppl productId="WG-9943-S4" productFeatureId="9001"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+  <ProductFeatureAppl productId="WG-9943-S4" productFeatureId="9003"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
+    productIdTo="WG-9943-B3" quantity="1.0" reason=""/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
+    productIdTo="WG-9943-B4" quantity="1.0" reason=""/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
+    productIdTo="WG-9943-S3" quantity="1.0" reason=""/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
+    productIdTo="WG-9943-S4" quantity="1.0" reason=""/>
+  
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_UPGRADE" productId="WG-5569"
+    productIdTo="WG-9943" quantity="1.0" reason="A little bit more expensive, but worth every penny!"/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_UPGRADE" productId="WG-1111"
+    productIdTo="WG-5569" quantity="1.0" reason="If you like chrome, but want it a little bigger, this is the one for you!"/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_UPGRADE" productId="GZ-2644"
+    productIdTo="GZ-8544" quantity="1.0" reason="A whole lot more features for the buck."/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-5569"
+    productIdTo="GZ-2644" quantity="1.0" reason="These two are much more useful together."/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_COMPLEMENT" productId="GZ-2644"
+    productIdTo="WG-5569" quantity="1.0" reason="These two are much more useful together."/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
+    productIdTo="GZ-2644" quantity="1.0" reason="This makes it look much better."/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
+    productIdTo="GZ-8544" quantity="1.0" reason="This makes it look much better."/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
+    productIdTo="WG-1111" quantity="1.0" reason="This makes it look much better."/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
+    productIdTo="WG-5569" quantity="1.0" reason="This makes it look much better."/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_OBSOLESCENCE" productId="GZ-8544"
+    productIdTo="WG-9943" quantity="1.0" reason="The Giant Widget is much better than the Big Gizmo, so much so that it makes the Big Gizmo obsolete."/>
+
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1000" fromDate="2003-03-04 18:49:31.464"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1001" fromDate="2003-03-04 18:57:49.099"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1004" fromDate="2003-03-04 18:51:06.45"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1005" fromDate="2003-03-04 19:01:01.075"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1006" fromDate="2003-03-04 19:03:36.369"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-2002" fromDate="2003-03-04 18:53:05.622"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-2644" fromDate="2003-03-04 18:46:32.667"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-5005" fromDate="2003-03-04 19:06:23.619"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-7000" fromDate="2003-03-04 19:12:32.389"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-8544" fromDate="2003-03-04 18:46:46.557"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-9290" fromDate="2003-03-04 18:55:14.547"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-1000" fromDate="2003-03-04 18:49:27.748"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-1001" fromDate="2003-03-04 18:57:55.168"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-2002" fromDate="2003-03-04 18:53:15.256"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-5005" fromDate="2003-03-04 19:06:30.89"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-1004" fromDate="2003-03-04 18:51:11.097"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-1005" fromDate="2003-03-04 19:01:06.293"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-1006" fromDate="2003-03-04 19:03:40.915"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-7000" fromDate="2003-03-04 19:12:29.045"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-8544" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-9290" fromDate="2003-03-04 18:55:19.344"/>
+  <ProductCategoryMember productCategoryId="201" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="20111" productId="WG-1111" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="202" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="GZ-8544" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-1111" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-1111" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="GZ-8544" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-1111" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="PROMOTIONS" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="PROMOTIONS" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-1000" fromDate="2003-03-04 18:49:31.464"/>
+  <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-1001" fromDate="2003-03-04 18:57:49.099"/>
+  <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-1004" fromDate="2003-03-04 18:51:06.45"/>
+  <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-1005" fromDate="2003-03-04 19:01:01.075"/>
+  <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-1006" fromDate="2003-03-04 19:03:36.369"/>
+  <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-2002" fromDate="2003-03-04 18:53:05.622"/>
+  <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-2644" fromDate="2003-03-04 18:46:32.667"/>
+  <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-5005" fromDate="2003-03-04 19:06:23.619"/>
+  <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-7000" fromDate="2003-03-04 19:12:32.389"/>
+  <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-8544" fromDate="2003-03-04 18:46:46.557"/>
+  <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-9290" fromDate="2003-03-04 18:55:14.547"/>
+        
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="100"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="100" productCategoryId="101"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="100" productCategoryId="102"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="200"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="200" productCategoryId="201"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="200" productCategoryId="202"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="201" productCategoryId="2011"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="201" productCategoryId="2012"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="2011" productCategoryId="20111"/>
+
+  <!-- some default product facility settings -->  
+  <ProductFacility productId="GZ-2644" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="5" daysToShip="15"/>
+  <ProductFacility productId="GZ-8544" facilityId="WebStoreWarehouse" minimumStock="10" reorderQuantity="50" daysToShip="1"/>
+  <ProductFacility productId="WG-1111" facilityId="WebStoreWarehouse" minimumStock="1" reorderQuantity="10" daysToShip="1"/>
+  <ProductFacility productId="WG-5569" facilityId="WebStoreWarehouse" minimumStock="1" reorderQuantity="50" daysToShip="2"/>
+  <ProductFacility productId="WG-9943-B3" facilityId="WebStoreWarehouse" minimumStock="1" reorderQuantity="10" daysToShip="1"/>
+  <ProductFacility productId="WG-9943-B4" facilityId="WebStoreWarehouse" minimumStock="1" reorderQuantity="10" daysToShip="1"/>
+  <ProductFacility productId="WG-9943-S3" facilityId="WebStoreWarehouse" minimumStock="1" reorderQuantity="10" daysToShip="1"/>
+  <ProductFacility productId="WG-9943-S4" facilityId="WebStoreWarehouse" minimumStock="1" reorderQuantity="10" daysToShip="1"/>
+  
+  <!-- some default invnetory quantities, things are a bit lame without these... -->
+  <InventoryItem availableToPromise="500" quantityOnHand="500" facilityId="WebStoreWarehouse" inventoryItemId="9000" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-2644" />
+  <InventoryItem availableToPromise="5" quantityOnHand="5" facilityId="WebStoreWarehouse" inventoryItemId="9001" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-8544" />
+  <InventoryItem availableToPromise="50" quantityOnHand="50" facilityId="WebStoreWarehouse" inventoryItemId="9002" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-1111" />
+  <InventoryItem availableToPromise="10" quantityOnHand="10" facilityId="WebStoreWarehouse" inventoryItemId="9003" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-5569" />
+  <InventoryItem availableToPromise="10" quantityOnHand="10" facilityId="WebStoreWarehouse" inventoryItemId="9010" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-9943-B3" />
+  <InventoryItem availableToPromise="10" quantityOnHand="10" facilityId="WebStoreWarehouse" inventoryItemId="9011" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-9943-B4" />
+  <InventoryItem availableToPromise="10" quantityOnHand="10" facilityId="WebStoreWarehouse" inventoryItemId="9012" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-9943-S3" />
+  <InventoryItem availableToPromise="10" quantityOnHand="10" facilityId="WebStoreWarehouse" inventoryItemId="9013" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-9943-S4" />
+    
+  <!-- a default promotion to play with -->
+  <ProductPromo productPromoId="testpromo1" promoName="Test Promo 1" singleUse="N"
+    promoText="Spend more than $100 on your favorite widgets and gizmos and get a free &lt;a href=&apos;/ecommerce/control/product?category_id=20111&amp;product_id=WG-1111&apos; class=&apos;buttontext&apos;&gt;Micro Chrome Widget&lt;/a&gt;!"/>
+  <ProductPromoRule productPromoId="testpromo1" productPromoRuleId="rule1" ruleName="Rule 1: Free Widget" />
+  <ProductPromoCond inputParamEnumId="PPIP_ORDER_TOTAL" operatorEnumId="PPC_GT" condValue="100" 
+    productPromoId="testpromo1" productPromoRuleId="rule1" productPromoCondSeqId="2" />
+  <ProductPromoAction productPromoId="testpromo1" productPromoRuleId="rule1" productPromoActionSeqId="2" 
+    orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" productId="WG-1111" productPromoActionTypeId="PROMO_GWP" quantity="1.0" />
+
+  <ProductStorePromoAppl fromDate="2001-01-01 12:00:00.0" productStoreId="9000" productPromoId="testpromo1" />
+
+  <!-- a default pricing rule to play with; take 20% off all products in the PROMOTIONS category -->
+  <ProductPriceRule productPriceRuleId="tr1" ruleName="Test Rule 1" isSale="Y"/>
+  <ProductPriceAction amount="-20.0" productPriceActionSeqId="1"
+    productPriceActionTypeId="PRICE_POL" productPriceRuleId="tr1"/>
+  <ProductPriceCond condValue="PROMOTIONS"
+    inputParamEnumId="PRIP_PROD_CAT_ID" operatorEnumId="PRC_EQ"
+    productPriceCondSeqId="1" productPriceRuleId="tr1"/>
+</entity-engine-xml>
