@@ -580,6 +580,7 @@
       <member-entity entity-alias="WPL" entity-name="WorkflowParticipantList"/>
       <alias entity-alias="WP" name="participantId"/>
       <alias entity-alias="WP" name="partyId"/>
+      <alias entity-alias="WP" name="roleTypeId"/>
       <alias entity-alias="WP" name="participantName"/>
       <alias entity-alias="WP" name="description"/>
       <alias entity-alias="WP" name="participantTypeId"/>
