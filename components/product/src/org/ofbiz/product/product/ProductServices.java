@@ -1,5 +1,5 @@
 /*
- * $Id: ProductServices.java,v 1.3 2003/08/26 16:01:46 jonesde Exp $
+ * $Id: ProductServices.java,v 1.4 2004/01/13 20:27:36 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -51,7 +51,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ProductServices {
@@ -564,7 +564,7 @@ public class ProductServices {
             try {
                 Map fields = UtilMisc.toMap("productId", productId, "productFeatureTypeId", feature,
                         "productFeatureApplTypeId", "STANDARD_FEATURE");
-                List sort = UtilMisc.toList("sequenceNum");
+                List sort = UtilMisc.toList("sequenceNum", "description");
 
                 // get the features and filter out expired dates
                 features = delegator.findByAndCache("ProductFeatureAndAppl", fields, sort);
