@@ -115,7 +115,10 @@ public class ProductServices {
     public static Map prodMakeFeatureTree(DispatchContext dctx, Map context) {
         // * String productId      -- Parent (virtual) product ID
         // * List featureOrder     -- Order of features
+        // * String prodCatalogId      -- Product Catalog ID for Inventory
+        String prodCatalogId = (String) context.get("prodCatalogId");
         GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         Map result = new HashMap();
         List featureOrder = new LinkedList((Collection) context.get("featureOrder"));
         if (featureOrder == null || featureOrder.size() == 0) {
@@ -132,8 +135,14 @@ public class ProductServices {
         }
         List items = new ArrayList();
         Iterator i = variants.iterator();
-        while (i.hasNext())
-            items.add(((GenericValue) i.next()).get("productIdTo"));
+        while (i.hasNext()) {
+            String productIdTo = (String) ((GenericValue) i.next()).get("productIdTo");
+            
+            //check inventory for each item
+            if (org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, productIdTo, 1.0, delegator, dispatcher)) {
+                items.add(productIdTo);
+            }
+        }
 
         String productId = (String) context.get("productId");
 
@@ -314,10 +323,11 @@ public class ProductServices {
 
         try {
             Collection c = null;
-            if (productIdTo == null)
+            if (productIdTo == null) {
                 c = product.getRelatedByAndCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", type));
-            else
+            } else {
                 c = product.getRelatedByAndCache("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", type));
+            }
             c = EntityUtil.filterByDate(c);
             result.put("assocProducts", c);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -338,10 +348,12 @@ public class ProductServices {
         Map group = new OrderedMap();
         String orderKey = (String) order.get(index);
 
-        if (index < 0)
+        if (index < 0) {
             throw new IllegalArgumentException("Invalid index '" + index + "' min index '0'");
-        if (index + 1 > order.size())
+        }
+        if (index + 1 > order.size()) {
             throw new IllegalArgumentException("Invalid index '" + index + "' max index '" + (order.size() - 1) + "'");
+        }
 
         // loop through items and make the lists
         Iterator itemIterator = items.iterator();
