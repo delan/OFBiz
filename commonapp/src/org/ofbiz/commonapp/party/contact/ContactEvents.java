@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/12/23 06:29:42  jonesde
+ * Replaced preStoreOther stuff with storeAll
+ *
  * Revision 1.1  2001/10/19 16:44:42  azeneski
  * Moved Party/ContactMech/Login events to more appropiate packages.
  * 
@@ -116,14 +119,12 @@ public class ContactEvents {
                 newAddr.set("countryGeoId", country);
                 //newAddr.set("postalCodeGeoId", postalCodeGeoId);
                 toBeStored.add(newAddr);
-            }
-            else if("TELECOM_NUMBER".equals(contactMechTypeId)) {
+            } else if("TELECOM_NUMBER".equals(contactMechTypeId)) {
                 String countryCode = request.getParameter("CM_COUNTRY_CODE");
                 String areaCode = request.getParameter("CM_AREA_CODE");
                 String contactNumber = request.getParameter("CM_CONTACT_NUMBER");
                 toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", countryCode, "areaCode", areaCode, "contactNumber", contactNumber)));
-            }
-            else if("EMAIL_ADDRESS".equals(contactMechTypeId)) {
+            } else if("EMAIL_ADDRESS".equals(contactMechTypeId)) {
                 String infoString = request.getParameter("CM_INFO_STRING");
                 if(!UtilValidate.isEmail(infoString)) errMsg += "<li>" + UtilValidate.isEmailMsg;
                 if(errMsg.length() > 0) {
@@ -142,24 +143,23 @@ public class ContactEvents {
                         cmPurposeTypeId = "OTHER_EMAIL";
                     }
                     toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", cmPurposeTypeId, "fromDate", now)));
-                } catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); }
-            }
-            else {
+                } catch(GenericEntityException e) {
+                    Debug.logWarning(e.getMessage());
+                }
+            } else {
                 String infoString = request.getParameter("CM_INFO_STRING");
                 tempContactMech.set("infoString", infoString);
             }
             
             try { 
                 delegator.storeAll(toBeStored);
-            }
-            catch(GenericEntityException e) {
+            } catch(GenericEntityException e) {
                 errMsg = "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.";
                 request.setAttribute("ERROR_MESSAGE", errMsg);
                 return "error";
             }
             request.setAttribute("CONTACT_MECH_ID", newCmId.toString());
-        }
-        else if("DELETE".equals(updateMode)) {
+        } else if("DELETE".equals(updateMode)) {
             //never delete a contact mechanism, just put a to date on the link to the party
             String contactMechId = request.getParameter("CONTACT_MECH_ID");
             GenericValue partyContactMech = null;
@@ -167,21 +167,23 @@ public class ContactEvents {
                 //try to find a PartyContactMech with a valid date range
                 Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), null));
                 partyContactMech = EntityUtil.getOnly(partyContactMechs);
+            } catch(GenericEntityException e) {
+                Debug.logWarning(e.getMessage()); partyContactMech = null;
+            } catch(IllegalArgumentException e) {
+                Debug.logWarning(e.getMessage()); partyContactMech = null;
             }
-            catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); partyContactMech = null; }
-            catch(IllegalArgumentException e) { Debug.logWarning(e.getMessage()); partyContactMech = null; }
             if(partyContactMech == null) {
                 request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete contact info (read failure or not found: party-contact mech) . Please contact customer service.");
                 return "error";
             }
             partyContactMech.set("thruDate", UtilDateTime.nowTimestamp());
-            try { partyContactMech.store(); }
-            catch(GenericEntityException e) {
+            try {
+                partyContactMech.store();
+            } catch(GenericEntityException e) {
                 request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete contact info (write failure) . Please contact customer service.");
                 return "error";
             }
-        }
-        else if("UPDATE".equals(updateMode)) {
+        } else if("UPDATE".equals(updateMode)) {
             Collection toBeStored = new LinkedList();
             
             boolean isModified = false;
@@ -195,9 +197,11 @@ public class ContactEvents {
                 //try to find a PartyContactMech with a valid date range
                 Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), null));
                 partyContactMech = EntityUtil.getOnly(partyContactMechs);
+            } catch(GenericEntityException e) {
+                Debug.logWarning(e.getMessage()); contactMech = null; partyContactMech = null;
+            } catch(IllegalArgumentException e) {
+                Debug.logWarning(e.getMessage()); partyContactMech = null;
             }
-            catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); contactMech = null; partyContactMech = null; }
-            catch(IllegalArgumentException e) { Debug.logWarning(e.getMessage()); partyContactMech = null; }
             if(contactMech == null) {
                 request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not find specified contact info (read error). Please contact customer service.");
                 return "error";
@@ -252,8 +256,7 @@ public class ContactEvents {
                     isModified = true;
                 }
                 relatedEntityToSet.set("contactMechId", newCmId.toString());
-            }
-            else if("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))) {
+            } else if("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))) {
                 String countryCode = request.getParameter("CM_COUNTRY_CODE");
                 String areaCode = request.getParameter("CM_AREA_CODE");
                 String contactNumber = request.getParameter("CM_CONTACT_NUMBER");
@@ -272,8 +275,7 @@ public class ContactEvents {
                 }
                 relatedEntityToSet.set("contactMechId", newCmId.toString());
                 newPartyContactMech.set("extension", extension);
-            }
-            else if("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
+            }  else if("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
                 String infoString = request.getParameter("CM_INFO_STRING");
                 if(!UtilValidate.isEmail(infoString)) errMsg += "<li>" + UtilValidate.isEmailMsg;
                 if(errMsg.length() > 0) {
@@ -282,8 +284,7 @@ public class ContactEvents {
                     return "error";
                 }
                 newContactMech.set("infoString", infoString);
-            }
-            else {
+            } else {
                 String infoString = request.getParameter("CM_INFO_STRING");
                 newContactMech.set("infoString", infoString);
             }
@@ -312,8 +313,7 @@ public class ContactEvents {
                         tempVal.set("contactMechId", newCmId.toString());
                         toBeStored.add(tempVal);
                     }
-                }
-                catch(GenericEntityException e) {
+                } catch(GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
                     request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
                     return "error";
@@ -327,15 +327,13 @@ public class ContactEvents {
                 partyContactMech.set("thruDate", now);
                 try { 
                     delegator.storeAll(toBeStored);
-                }
-                catch(GenericEntityException e) {
+                } catch(GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
                     request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
                     return "error";
                 }
                 request.setAttribute("CONTACT_MECH_ID", newCmId.toString());
-            }
-            else {
+            } else {
                 String cmId = contactMech.getString("contactMechId");
                 String newCmPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");
                 if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0) {
@@ -354,8 +352,7 @@ public class ContactEvents {
                 request.setAttribute("CONTACT_MECH_ID", cmId);
             }
             
-        }
-        else {
+        } else {
             errMsg = "<li>ERROR: Specified Update Mode (" + updateMode + ") is not valid. Please contact customer service.";
             request.setAttribute("ERROR_MESSAGE", errMsg);
             return "error";
@@ -386,15 +383,13 @@ public class ContactEvents {
         try {
             Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null));
             tempVal = EntityUtil.getFirst(allPCMPs);
-        }
-        catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); tempVal = null; }
+        } catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); tempVal = null; }
         
         if(tempVal != null) {
             //exists already with valid date, show warning
             request.setAttribute("ERROR_MESSAGE", "<li>Could not create new purpose, a purpose with that type already exists.");
             return "error";
-        }
-        else {
+        } else {
             //no entry with a valid date range exists, create new with open thruDate
             GenericValue newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp()));
             try {
@@ -403,8 +398,7 @@ public class ContactEvents {
                     request.setAttribute("ERROR_MESSAGE", errMsg);
                     return "error";
                 }
-            }
-            catch(GenericEntityException e) {
+            } catch(GenericEntityException e) {
                 Debug.logWarning(e.getMessage());
                 request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not add purpose to contact mechanism (write failure). Please contact customer service.");
                 return "error";
@@ -431,8 +425,9 @@ public class ContactEvents {
         
         String fromDateStr = request.getParameter("FROM_DATE");
         Timestamp fromDate = null;
-        try { fromDate = Timestamp.valueOf(fromDateStr); }
-        catch(Exception e) {
+        try {
+            fromDate = Timestamp.valueOf(fromDateStr);
+        } catch(Exception e) {
             request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete purpose from contact mechanism, from date \"" + fromDateStr + "\" was not valid. Please contact customer service.");
             return "error";
         }
@@ -445,16 +440,16 @@ public class ContactEvents {
                 request.setAttribute("ERROR_MESSAGE", errMsg);
                 return "error";
             }
-        }
-        catch(GenericEntityException e) {
+        } catch(GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete purpose from contact mechanism (read failure). Please contact customer service.");
             return "error";
         }
         
         pcmp.set("thruDate", UtilDateTime.nowTimestamp());
-        try { pcmp.store(); }
-        catch(GenericEntityException e) {
+        try {
+            pcmp.store();
+        } catch(GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete purpose from contact mechanism (write failure) . Please contact customer service.");
             return "error";
@@ -534,8 +529,7 @@ public class ContactEvents {
                     newCc.set("fromDate", now);
                     isModified = true;
                 }
-            }
-            else {
+            } else {
                 //is CREATE, set values
                 newCc.set("creditCardId", newCcId.toString());
                 newCc.set("fromDate", now);
@@ -551,8 +545,10 @@ public class ContactEvents {
                 try {
                     Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null));
                     tempVal = EntityUtil.getFirst(allPCMPs);
+                } catch(GenericEntityException e) {
+                    Debug.logWarning(e.getMessage());
+                    tempVal = null;
                 }
-                catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); tempVal = null; }
                 
                 if(tempVal == null) {
                     //no value found, create a new one
@@ -577,12 +573,9 @@ public class ContactEvents {
                     return "error";
                 }
             }
-            else {
-                request.setAttribute("CREDIT_CARD_ID", newCc.getString("creditCardId"));
-            }
+            request.setAttribute("CREDIT_CARD_ID", newCc.getString("creditCardId"));
             
-        }
-        else if("DELETE".equals(updateMode)) {
+        } else if("DELETE".equals(updateMode)) {
             //never delete a credit card, just put a to date on the link to the party
             String creditCardId = request.getParameter("CREDIT_CARD_ID");
             GenericValue creditCardInfo = null;
@@ -595,14 +588,14 @@ public class ContactEvents {
             }
             
             creditCardInfo.set("thruDate", now);
-            try { creditCardInfo.store(); }
-            catch(GenericEntityException e) {
+            try {
+                creditCardInfo.store(); 
+            } catch(GenericEntityException e) {
                 Debug.logWarning(e.getMessage());
                 request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete credit card info (write failure). Please contact customer service.");
                 return "error";
             }
-        }
-        else {
+        } else {
             errMsg = "<li>ERROR: Specified Update Mode (" + updateMode + ") is not valid. Please contact customer service.";
             request.setAttribute("ERROR_MESSAGE", errMsg);
             return "error";

@@ -43,7 +43,7 @@
   if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 
   String creditCardId = request.getParameter("CREDIT_CARD_ID");
-  if(creditCardId == null) creditCardId = (String)request.getAttribute("CREDIT_CARD_ID");
+  if(request.getAttribute("CREDIT_CARD_ID") != null) creditCardId = (String)request.getAttribute("CREDIT_CARD_ID");
 
   Iterator partyContactMechIterator = UtilMisc.toIterator(EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId")), null)));
   GenericValue creditCard = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
