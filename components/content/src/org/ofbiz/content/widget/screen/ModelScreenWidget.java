@@ -722,6 +722,7 @@ public abstract class ModelScreenWidget {
         protected FlexibleStringExpander contentId;
         protected FlexibleStringExpander editRequest;
         protected FlexibleStringExpander editContainerStyle;
+        protected FlexibleStringExpander enableEditName;
         protected boolean xmlEscape = false;
         
         public Content(ModelScreen modelScreen, Element subContentElement) {
@@ -731,6 +732,7 @@ public abstract class ModelScreenWidget {
             this.contentId = new FlexibleStringExpander(subContentElement.getAttribute("content-id"));
             this.editRequest = new FlexibleStringExpander(subContentElement.getAttribute("edit-request"));
             this.editContainerStyle = new FlexibleStringExpander(subContentElement.getAttribute("edit-container-style"));
+            this.enableEditName = new FlexibleStringExpander(subContentElement.getAttribute("enable-edit-name"));
             this.xmlEscape = "true".equals(subContentElement.getAttribute("xml-escape"));
             return;
         }
@@ -760,6 +762,10 @@ public abstract class ModelScreenWidget {
             return this.editContainerStyle.expandString(context);
         }
         
+        public String getEnableEditName(Map context) {
+            return this.enableEditName.expandString(context);
+        }
+        
         public boolean xmlEscape() {
             return this.xmlEscape;
         }
@@ -772,6 +778,7 @@ public abstract class ModelScreenWidget {
         protected FlexibleStringExpander assocName;
         protected FlexibleStringExpander editRequest;
         protected FlexibleStringExpander editContainerStyle;
+        protected FlexibleStringExpander enableEditName;
         protected boolean xmlEscape = false;
         
         public SubContent(ModelScreen modelScreen, Element subContentElement) {
@@ -782,6 +789,7 @@ public abstract class ModelScreenWidget {
             this.assocName = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("assoc-name")));
             this.editRequest = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("edit-request")));
             this.editContainerStyle = new FlexibleStringExpander(subContentElement.getAttribute("edit-container-style"));
+            this.enableEditName = new FlexibleStringExpander(subContentElement.getAttribute("enable-edit-name"));
             this.xmlEscape = "true".equals(subContentElement.getAttribute("xml-escape"));
 
         }
@@ -812,6 +820,10 @@ public abstract class ModelScreenWidget {
         
         public String getEditContainerStyle(Map context) {
             return this.editContainerStyle.expandString(context);
+        }
+        
+        public String getEnableEditName(Map context) {
+            return this.enableEditName.expandString(context);
         }
         
         public boolean xmlEscape() {

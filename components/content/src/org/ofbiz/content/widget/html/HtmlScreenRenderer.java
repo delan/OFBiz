@@ -268,8 +268,10 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
 
         String editRequest = content.getEditRequest(context);
         String editContainerStyle = content.getEditContainerStyle(context);
+        String enableEditName = content.getEnableEditName(context);
+        String enableEditValue = (String)context.get(enableEditName);
         Debug.logInfo("directEditRequest:" + editRequest, module);
-        if (UtilValidate.isNotEmpty(editRequest)) {
+        if (UtilValidate.isNotEmpty(editRequest) && "true".equals(enableEditValue)) {
             writer.write("<div");
             writer.write(" class=\"" + editContainerStyle + "\"> ");
             appendWhitespace(writer);
@@ -318,13 +320,15 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
         String editMode = "Edit";
         String editRequest = content.getEditRequest(context);
         String editContainerStyle = content.getEditContainerStyle(context);
+        String enableEditName = content.getEnableEditName(context);
+        String enableEditValue = (String)context.get(enableEditName);
         if (editRequest != null && editRequest.toUpperCase().indexOf("IMAGE") > 0) {
             editMode += " Image";
         }
     	Map params = (Map)context.get("parameters");
         //String editRequestWithParams = editRequest + "?contentId=${currentValue.contentId}&drDataResourceId=${currentValue.drDataResourceId}&directEditRequest=${directEditRequest}&indirectEditRequest=${indirectEditRequest}&caContentIdTo=${currentValue.caContentIdTo}&caFromDate=${currentValue.caFromDate}&caContentAssocTypeId=${currentValue.caContentAssocTypeId}";
         	
-        if (UtilValidate.isNotEmpty(editRequest)) {
+        if (UtilValidate.isNotEmpty(editRequest) && "true".equals(enableEditValue)) {
             String contentId = content.getContentId(context);
             HttpServletResponse response = (HttpServletResponse) context.get("response");
             HttpServletRequest request = (HttpServletRequest) context.get("request");
@@ -350,7 +354,9 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
 
         String editRequest = content.getEditRequest(context);
         String editContainerStyle = content.getEditContainerStyle(context);
-        if (UtilValidate.isNotEmpty(editRequest) && UtilValidate.isNotEmpty(editContainerStyle) ) {
+        String enableEditName = content.getEnableEditName(context);
+        String enableEditValue = (String)context.get(enableEditName);
+        if (UtilValidate.isNotEmpty(editRequest) && "true".equals(enableEditValue)) {
             writer.write("<div");
             writer.write(" class=\"" + editContainerStyle + "\"> ");
     
@@ -404,13 +410,15 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
         String editMode = "Edit";
         String editRequest = content.getEditRequest(context);
         String editContainerStyle = content.getEditContainerStyle(context);
+        String enableEditName = content.getEnableEditName(context);
+        String enableEditValue = (String)context.get(enableEditName);
         String expandedContentId = content.getContentId(context);
         String expandedAssocName = content.getAssocName(context);
     	Map params = (Map)context.get("parameters");
         if (editRequest != null && editRequest.toUpperCase().indexOf("IMAGE") > 0) {
             editMode += " Image";
         }
-        if (UtilValidate.isNotEmpty(editRequest)) {
+        if (UtilValidate.isNotEmpty(editRequest) && "true".equals(enableEditValue)) {
             HttpServletResponse response = (HttpServletResponse) context.get("response");
             HttpServletRequest request = (HttpServletRequest) context.get("request");
             if (request != null && response != null) {
