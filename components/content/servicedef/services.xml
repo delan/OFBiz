@@ -1328,4 +1328,19 @@
     <attribute mode="IN" name="contentId" optional="true" type="String"/>
   </service>
 
+    <service name="updateOrRemove" engine="java"
+            location="org.ofbiz.content.ContentManagementServices" invoke="updateOrRemove" auth="true" validate="false">
+        <description>Update or remove a child entity based on value of "action"</description>
+        <attribute name="entityName" type="String" mode="IN" optional="false"/>
+        <attribute name="action" type="String" mode="IN" optional="true"/>
+        <attribute name="pkFieldCount" type="String" mode="IN" optional="false"/>
+        <attribute name="fieldName0" type="String" mode="IN" optional="true"/>
+        <attribute name="fieldValue1" type="String" mode="IN" optional="true"/>
+        <attribute name="fieldName2" type="String" mode="IN" optional="true"/>
+        <attribute name="fieldValue2" type="String" mode="IN" optional="true"/>
+        <attribute name="fieldName3" type="String" mode="IN" optional="true"/>
+        <attribute name="fieldValue3" type="String" mode="IN" optional="true"/>
+        <attribute name="fieldName1" type="String" mode="IN" optional="true"/>
+        <attribute name="fieldValue0" type="String" mode="IN" optional="true"/>
+    </service>
 </services>
