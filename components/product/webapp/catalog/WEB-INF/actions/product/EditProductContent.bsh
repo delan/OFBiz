@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
  */
 
@@ -50,14 +50,15 @@ URL catalogPropertiesURL = application.getResource("/WEB-INF/catalog.properties"
 if (catalogPropertiesURL != null) context.put("catalogPropertiesURL", catalogPropertiesURL.toString());
 
 String productId = request.getParameter("productId");
-if (productId != null) context.put("productId", productId);
+context.put("productId", productId);
 
 GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-if (product != null) context.put("product", product);
+context.put("product", product);
 
 // Start ProductContent stuff
-productContent = product.getRelated("ProductContent", null, UtilMisc.toList("productContentId"));
-if (productContent != null) context.put("productContent", productContent);
+productContent = null;
+if (product != null) productContent = product.getRelated("ProductContent", null, UtilMisc.toList("productContentId"));
+context.put("productContent", productContent);
 
 List productContentDatas = new LinkedList();
 Iterator productContentIter = productContent.iterator();
@@ -88,7 +89,7 @@ if (product == null) tryEntity = false;
 if("true".equalsIgnoreCase((String) request.getParameter("tryEntity"))) tryEntity = true;
 context.put("tryEntity", tryEntity);
 
-
+// UPLOADING STUFF
 
 Object forLock = new Object();
 String contentType = null;
