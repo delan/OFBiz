@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySaxReader.java,v 1.4 2004/04/23 01:48:43 doogie Exp $
+ * $Id: EntitySaxReader.java,v 1.5 2004/04/30 16:49:54 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.xml.sax.XMLReader;
  * SAX XML Parser Content Handler for Entity Engine XML files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler {
@@ -289,7 +289,11 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                     try {
                         // treat empty strings as nulls
                         if (value != null && value.length() > 0) {
-                            currentValue.setString(name, value);
+                        	if (currentValue.getModelEntity().isField(name)) {
+                                currentValue.setString(name, value);
+                        	} else {
+                                Debug.logWarning("Ignoring invalid field name [" + name + "] found for the entity: " + currentValue.getEntityName() + " with value=" + value, module);
+                        	}
                         }
                     } catch (Exception e) {
                         Debug.logWarning(e, "Could not set field " + name + " to the value " + value, module);
