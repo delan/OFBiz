@@ -1,5 +1,5 @@
 /*
- * $Id: SOAPClientEngine.java,v 1.1 2003/08/17 05:12:39 ajzeneski Exp $
+ * $Id: SOAPClientEngine.java,v 1.2 2004/03/13 04:55:22 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.base.util.Debug;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:">Andy Chen</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public final class SOAPClientEngine extends GenericAsyncEngine {
@@ -131,10 +131,11 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
             call.setOperationName(modelService.invoke);
         }
         
-        Iterator iter = inModelParamList.iterator();
         int i = 0;
         
+        call.setOperation(call.getOperationName().getLocalPart());
         Vector vParams=new Vector();
+        Iterator iter = inModelParamList.iterator();
         while (iter.hasNext()) {
             ModelParam p = (ModelParam) iter.next();
             
