@@ -108,6 +108,7 @@ public class SQLProcessor {
         if (_manualTX) {
             try {
                 _connection.commit();
+                Debug.logVerbose("SQLProcessor:commit()", module);
             } catch (SQLException sqle) {
                 rollback();
                 throw new GenericDataSourceException("SQL Exception occurred on commit", sqle);
@@ -126,11 +127,13 @@ public class SQLProcessor {
         try {
             if (_manualTX) {
                 _connection.rollback();
+                Debug.logVerbose("SQLProcessor:rollback() : _manualTX=" + _manualTX, module);
             } else {
                 try {
                     TransactionUtil.setRollbackOnly();
+                    Debug.logVerbose("SQLProcessor:rollback() : _manualTX=" + _manualTX, module);
                 } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Error setting rollback only");
+                    Debug.logError(e, "Error setting rollback only", module);
                     throw new GenericDataSourceException("Error setting rollback only", e);
                 }
             }
@@ -155,6 +158,7 @@ public class SQLProcessor {
         if (_rs != null) {
             try {
                 _rs.close();
+                Debug.logVerbose("SQLProcessor: result close()", module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
@@ -165,6 +169,7 @@ public class SQLProcessor {
         if (_ps != null) {
             try {
                 _ps.close();
+                Debug.logVerbose("SQLProcessor: preparedStatement close()", module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
@@ -175,6 +180,7 @@ public class SQLProcessor {
         if (_stmt != null) {
             try {
                 _stmt.close();
+                Debug.logVerbose("SQLProcessor: statement close()", module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
@@ -185,6 +191,7 @@ public class SQLProcessor {
         if ((_connection != null) && (_bDeleteConnection == true)) {
             try {
                 _connection.close();
+                Debug.logVerbose("SQLProcessor: connection close()", module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
@@ -209,6 +216,7 @@ public class SQLProcessor {
 
         try {
             _connection = ConnectionFactory.getConnection(helperName);
+            Debug.logVerbose("SQLProcessor:connection() : manualTx=" + _manualTX, module);
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
         }
@@ -237,9 +245,16 @@ public class SQLProcessor {
                             
         // always try to set auto commit to false, but if we can't then later on we won't commit
         try {
-            _connection.setAutoCommit(false);
-        } catch (SQLException sqle) {
-            _manualTX = false;
+            if (!_connection.getAutoCommit()) {
+                try {
+                    _connection.setAutoCommit(false);
+                    Debug.logVerbose("SQLProcessor:setAutoCommit(false) : manualTx=" + _manualTX, module);
+                } catch (SQLException sqle) {
+                    _manualTX = false;
+                }
+            }
+        } catch (SQLException e) {
+            throw new GenericDataSourceException("Cannot get autoCommit status from connection", e);            
         }
 
         try {
