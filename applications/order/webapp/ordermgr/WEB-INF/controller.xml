@@ -251,59 +251,59 @@
     </request-map>
 
     <!-- Order Entry Requests -->
-    <request-map uri="initorderentry">
+    <request-map uri="orderentry">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="checkinits"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="initializeOrderEntry"/>
+        <response name="init" type="view" value="checkinits"/>
+        <response name="agreements" type="view" value="orderagreements"/>
+        <response name="cart" type="view" value="showcart"/>
+        <response name="error" type="view" value="checkinits"/>
     </request-map>
     <request-map uri="orderagreements">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderagreements"/>
     </request-map>
-    <request-map uri="orderentry">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="orderentry"/>
-    </request-map>
     <request-map uri="setOrderAgreement">
         <security https="true" auth="true"/>
          <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="selectAgreement"/>
-        <response name="success" type="view" value="orderentry"/>
-        <response name="error" type="view" value="orderentry"/>
+        <response name="success" type="request" value="orderentry"/>
+        <response name="error" type="request" value="orderentry"/>
     </request-map>
     <request-map uri="setOrderCurrency">
         <security https="true" auth="true"/>
          <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setCurrency"/>
-        <response name="success" type="view" value="orderentry"/>
-        <response name="error" type="view" value="orderentry"/>
+        <response name="success" type="request" value="orderentry"/>
+        <response name="error" type="request" value="orderentry"/>
     </request-map>
     <request-map uri="additem">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
-        <response name="success" type="view" value="orderentry"/>
-        <response name="error" type="view" value="orderentry"/>
+        <response name="success" type="request" value="orderentry"/>
+        <response name="error" type="request" value="orderentry"/>
     </request-map>
     <request-map uri="addRequirementsToCart">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCartBulkRequirements"/>
-        <response name="success" type="view" value="orderentry"/>
-        <response name="error" type="view" value="orderentry"/>
+        <response name="success" type="request" value="orderentry"/>
+        <response name="error" type="request" value="orderentry"/>
     </request-map>
     <request-map uri="addseperator">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>
-        <response name="success" type="view" value="orderentry"/>
-        <response name="error" type="view" value="orderentry"/>
+        <response name="success" type="request" value="orderentry"/>
+        <response name="error" type="request" value="orderentry"/>
     </request-map>
     <request-map uri="modifycart">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="modifyCart"/>
-        <response name="success" type="view" value="orderentry"/>
-        <response name="error" type="view" value="orderentry"/>
+        <response name="success" type="request" value="orderentry"/>
+        <response name="error" type="request" value="orderentry"/>
     </request-map>
     <request-map uri="emptycart">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="destroyCart"/>
-        <response name="success" type="view" value="orderentry"/>
-        <response name="error" type="view" value="orderentry"/>
+        <response name="success" type="request" value="orderentry"/>
+        <response name="error" type="request" value="orderentry"/>
     </request-map>
 
     <request-map uri="setDesiredAlternateGwpProductId">
@@ -326,9 +326,11 @@
         <response name="success" type="view" value="advancedsearch"/>
     </request-map>
     <request-map uri="keywordsearch">
-        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="checkDoKeywordOverride"/>
         <response name="success" type="view" value="keywordsearch"/>
+        <response name="none" type="none" value=""/>
     </request-map>
+
     <request-map uri="addtocartbulk">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCartBulk"/>
@@ -355,7 +357,7 @@
         <response name="term" type="view" value="orderTerm"/>
         <response name="sales" type="request" value="calcShipping"/>
         <response name="po" type="view" value="confirm"/>
-        <response name="error" type="view" value="orderentry"/>
+        <response name="error" type="request" value="orderentry"/>
     </request-map>
 
     <!-- ================================================================= -->
@@ -382,13 +384,13 @@
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.shipping.ShippingEvents" invoke="getShipEstimate"/>
         <response name="success" type="request" value="calcTax"/>
-        <response name="error" type="view" value="orderentry"/>
+        <response name="error" type="request" value="orderentry"/>
     </request-map>
     <request-map uri="calcTax">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="calcTax"/>
         <response name="success" type="view" value="confirm"/>
-        <response name="error" type="view" value="orderentry"/>
+        <response name="error" type="request" value="orderentry"/>
     </request-map>
 
     <request-map uri="setCustomer">
@@ -731,17 +733,20 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupVariantProduct"/>
     </request-map>
+    <request-map uri="choosecatalog">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="orderentry"/>
+    </request-map>
 
     <!-- end of request mappings -->
-
+    
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/>
-    <view-map name="login" type="jpublish" page="/login.ftl"/>
+    <view-map name="login" type="screen" page="component://order/widget/ordermgr/CommonScreens.xml#login"/>
 
     <view-map name="orderstats" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderStats"/>
     <view-map name="findorders" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/>
-    <!-- <view-map name="OrderDeliveryScheduleInfo" type="jpublish" page="/order/OrderDeliveryScheduleInfo.ftl"/> -->
     <view-map name="OrderDeliveryScheduleInfo" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderDeliveryScheduleInfo"/>
     <view-map name="orderview" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderHeaderView"/>
     <view-map name="createnewnote" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderNewNote"/>
@@ -749,24 +754,26 @@
     <view-map name="ordertasklist" type="screen" page="component://order/widget/ordermgr/OrderTaskScreens.xml#OrderTaskList"/>
     <view-map name="viewimage" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#ViewImage"/>
     
-    <view-map name="orderentry" type="jpublish" page="/entry/orderentry.ftl"/>
-    <view-map name="checkinits" type="jpublish" page="/entry/checkinits.ftl"/>
-    <view-map name="orderagreements" type="jpublish" page="/entry/orderagreements.ftl"/>
-    <view-map name="keywordsearch" type="jpublish" page="/entry/catalog/keywordsearch.ftl"/>
-    <view-map name="advancedsearch" type="jpublish" page="/entry/catalog/advancedsearch.ftl"/>
-    <view-map name="category" type="jpublish" page="/entry/catalog/category.ftl"/>
-    <view-map name="setAdditionalParty" type="jpublish" page="/entry/setAdditionalParty.ftl"/>
-    <view-map name="product" type="jpublish" page="/entry/catalog/product.ftl"/>
-    <view-map name="custsetting" type="jpublish" page="/entry/custsettings.ftl"/>
-    <view-map name="shipsetting" type="jpublish" page="/entry/shipsettings.ftl"/>
-    <view-map name="billsetting" type="jpublish" page="/entry/billsettings.ftl"/>
-    <view-map name="optionsetting" type="jpublish" page="/entry/optionsettings.ftl"/>
-    <view-map name="confirm" type="jpublish" page="/entry/confirmorder.ftl"/>
-    <view-map name="ordercomplete" type="jpublish" page="/entry/ordercomplete.ftl"/>
-    <view-map name="orderTerm" type="jpublish" page="/entry/orderterms.ftl"/>
+    <view-map name="showcart" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#ShowCart"/>
+    <view-map name="checkinits" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#CheckInits"/>
+    <view-map name="orderagreements" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#OrderAgreements"/>
+    <view-map name="keywordsearch" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#keywordsearch"/>
+    <view-map name="advancedsearch" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#advancedsearch"/>
 
-    <view-map name="showAllPromotions" type="jpublish" page="/entry/showAllPromotions.ftl"/>
-    <view-map name="showPromotionDetails" type="jpublish" page="/entry/showPromotionDetails.ftl"/>
+    <view-map name="category" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#category"/>
+    <view-map name="product" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#product"/>
+
+    <view-map name="custsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#CustSettings"/>
+    <view-map name="shipsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#ShipSettings"/>
+    <view-map name="billsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#BillSettings"/>
+    <view-map name="optionsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#OptionSettings"/>
+    <view-map name="confirm" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#ConfirmOrder"/>
+    <view-map name="ordercomplete" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#OrderComplete"/>
+    <view-map name="orderTerm" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#OrderTerms"/>
+    <view-map name="setAdditionalParty" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#SetAdditionalParty"/>
+
+    <view-map name="showAllPromotions" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#showAllPromotions"/>
+    <view-map name="showPromotionDetails" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#showPromotionDetails"/>
 
     <view-map name="findreturn" type="screen" page="component://order/widget/ordermgr/OrderReturnScreens.xml#OrderFindReturn"/>
     <view-map name="returnlist" type="screen" page="component://order/widget/ordermgr/OrderReturnScreens.xml#OrderReturnList"/>
