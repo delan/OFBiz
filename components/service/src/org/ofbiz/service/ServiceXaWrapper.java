@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceXaWrapper.java,v 1.1 2003/11/13 21:13:45 ajzeneski Exp $
+ * $Id: ServiceXaWrapper.java,v 1.2 2003/11/13 22:36:08 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import java.util.Map;
  * ServiceXaWrapper - XA Resource wrapper for running services on commit() or rollback()
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class ServiceXaWrapper extends GenericXaResource {
@@ -126,43 +126,45 @@ public class ServiceXaWrapper extends GenericXaResource {
             throw new XAException(XAException.XAER_NOTA);
         }
 
-        // suspend this transaction
-        TransactionManager tm = TransactionFactory.getTransactionManager();
-        Transaction parentTransaction = null;
-        try {
-            parentTransaction = tm.suspend();
-        } catch (SystemException e) {
-            throw new XAException(XAException.XA_RBOTHER);
-        }
-
-        // invoke the service
-        boolean serviceError = false;
-        try {
-            this.dctx.getDispatcher().runSyncIgnore(this.commitService, this.commitContext);
-        } catch (GenericServiceException e) {
-            Debug.logError(e, "Problem calling sync service : " + this.commitService + " / " + this.commitContext, module);
-            serviceError = true; // don't throw the exception until we resume the transaction
-        }
-
-        // resume the transaction
-        if (parentTransaction != null) {
+        if (this.commitService != null) {
+            // suspend this transaction
+            TransactionManager tm = TransactionFactory.getTransactionManager();
+            Transaction parentTransaction = null;
             try {
-                tm.resume(parentTransaction);
-            } catch (InvalidTransactionException e) {
-                Debug.logError(e, module);
-                throw new XAException(XAException.XA_RBOTHER);
-            } catch (IllegalStateException e) {
-                Debug.logError(e, module);
-                throw new XAException(XAException.XA_RBOTHER);
+                parentTransaction = tm.suspend();
             } catch (SystemException e) {
-                Debug.logError(e, module);
                 throw new XAException(XAException.XA_RBOTHER);
             }
-        }
 
-        // now throw the exception
-        if (serviceError) {
-            throw new XAException(XAException.XA_RBOTHER);
+            // invoke the service
+            boolean serviceError = false;
+            try {
+                this.dctx.getDispatcher().runSyncIgnore(this.commitService, this.commitContext);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problem calling sync service : " + this.commitService + " / " + this.commitContext, module);
+                serviceError = true; // don't throw the exception until we resume the transaction
+            }
+
+            // resume the transaction
+            if (parentTransaction != null) {
+                try {
+                    tm.resume(parentTransaction);
+                } catch (InvalidTransactionException e) {
+                    Debug.logError(e, module);
+                    throw new XAException(XAException.XA_RBOTHER);
+                } catch (IllegalStateException e) {
+                    Debug.logError(e, module);
+                    throw new XAException(XAException.XA_RBOTHER);
+                } catch (SystemException e) {
+                    Debug.logError(e, module);
+                    throw new XAException(XAException.XA_RBOTHER);
+                }
+            }
+
+            // now throw the exception
+            if (serviceError) {
+                throw new XAException(XAException.XA_RBOTHER);
+            }
         }
 
         this.xid = null;
@@ -181,11 +183,14 @@ public class ServiceXaWrapper extends GenericXaResource {
         if (this.xid == null || !this.xid.equals(xid)) {
             throw new XAException(XAException.XAER_NOTA);
         }
-        // invoke the service
-        try {
-            this.dctx.getDispatcher().runAsync(this.rollbackService, this.rollbackContext, true);
-        } catch (GenericServiceException e) {
-            Debug.logError(e, "Problem calling async service : " + this.rollbackService + " / " + this.rollbackContext, module);
+
+        if (this.rollbackService != null) {
+            // invoke the service
+            try {
+                this.dctx.getDispatcher().runAsync(this.rollbackService, this.rollbackContext, true);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problem calling async service : " + this.rollbackService + " / " + this.rollbackContext, module);
+            }
         }
 
         this.xid = null;
