@@ -1,5 +1,5 @@
 /*
- * $Id: CallSimpleMapProcessor.java,v 1.1 2003/08/17 06:06:13 ajzeneski Exp $
+ * $Id: CallSimpleMapProcessor.java,v 1.2 2004/04/08 17:25:11 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.minilang.operation.*;
  * An event operation that calls a simple map processor inlined or from a separate file
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class CallSimpleMapProcessor extends MethodOperation {
@@ -89,8 +89,7 @@ public class CallSimpleMapProcessor extends MethodOperation {
             try {
                 org.ofbiz.minilang.SimpleMapProcessor.runSimpleMapProcessor(
                     xmlResource, processorName, inMap, outMap, messages,
-                    (methodContext.getRequest() != null ? methodContext.getRequest().getLocale() : null),
-                    methodContext.getLoader());
+                    methodContext.getLocale(), methodContext.getLoader());
             } catch (MiniLangException e) {
                 messages.add("Error running SimpleMapProcessor in XML file \"" + xmlResource + "\": " + e.toString());
             }
