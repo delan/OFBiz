@@ -48,7 +48,7 @@ import org.ofbiz.core.util.StringUtil;
  * @version    $Revision$
  * @since      2.0
  */
-public class ContextSecurityFilter extends ControlServlet implements Filter {
+public class ContextSecurityFilter implements Filter {
 
     public static final String module = ContextSecurityFilter.class.getName();
 
