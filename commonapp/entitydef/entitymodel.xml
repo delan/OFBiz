@@ -766,25 +766,6 @@
         <key-map field-name="dataCategoryId"/>
       </relation>
     </entity>
-    <entity entity-name="DataResourceMetaData"
-            package-name="org.ofbiz.commonapp.content.data"
-            title="Data Resource Meta-Data Predicate Entity">
-      <field name="dataResourceId" type="id-ne"></field>
-      <field name="metaDataPredicateId" type="id-ne"></field>
-      <field name="metaDataValue" type="value"></field>
-      <field name="dataSourceId" type="id"></field>
-      <prim-key field="dataResourceId"/>
-      <prim-key field="metaDataPredicateId"/>
-      <relation type="one" fk-name="DATA_MD_DATREC" rel-entity-name="DataResource">
-        <key-map field-name="dataResourceId"/>
-      </relation>
-      <relation type="one" fk-name="DATA_MD_DMDPRD" rel-entity-name="MetaDataPredicate">
-        <key-map field-name="metaDataPredicateId"/>
-      </relation>
-      <relation type="one" fk-name="DATA_MD_DTSRC" rel-entity-name="DataSource">
-        <key-map field-name="dataSourceId"/>
-      </relation>
-    </entity>
     <entity entity-name="DataResource"
             package-name="org.ofbiz.commonapp.content.data"
             title="Data Object Entity">
@@ -858,6 +839,25 @@
       </relation>
       <relation type="many" rel-entity-name="DataResourceTypeAttr">
         <key-map field-name="attrName"/>
+      </relation>
+    </entity>
+    <entity entity-name="DataResourceMetaData"
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Data Resource Meta-Data Predicate Entity">
+      <field name="dataResourceId" type="id-ne"></field>
+      <field name="metaDataPredicateId" type="id-ne"></field>
+      <field name="metaDataValue" type="value"></field>
+      <field name="dataSourceId" type="id"></field>
+      <prim-key field="dataResourceId"/>
+      <prim-key field="metaDataPredicateId"/>
+      <relation type="one" fk-name="DATA_MD_DATREC" rel-entity-name="DataResource">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one" fk-name="DATA_MD_DMDPRD" rel-entity-name="MetaDataPredicate">
+        <key-map field-name="metaDataPredicateId"/>
+      </relation>
+      <relation type="one" fk-name="DATA_MD_DTSRC" rel-entity-name="DataSource">
+        <key-map field-name="dataSourceId"/>
       </relation>
     </entity>
     <entity entity-name="DataResourcePurpose"
