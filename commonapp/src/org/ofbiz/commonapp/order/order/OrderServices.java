@@ -1434,9 +1434,9 @@ public class OrderServices {
             Iterator flIt = filteredList.iterator();
             while (flIt.hasNext()) {
                 GenericValue taxLookup = (GenericValue) flIt.next();
-                Debug.logInfo("Testing " + itemAmount + " with : " + taxLookup, module);
+                //Debug.logInfo("Testing " + itemAmount + " with : " + taxLookup, module);
                 if (itemAmount >= taxLookup.getDouble("minPurchase").doubleValue()) {                
-                    Debug.logInfo("TaxLookup: " + taxLookup, module);
+                    //Debug.logInfo("TaxLookup: " + taxLookup, module);
                     
                     double taxRate = taxLookup.get("salesTaxPercentage") != null ? taxLookup.getDouble("salesTaxPercentage").doubleValue() : 0;
                     double taxable = 0.00;
