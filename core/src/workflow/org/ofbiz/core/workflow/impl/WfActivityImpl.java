@@ -43,8 +43,7 @@ import org.ofbiz.core.workflow.*;
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {
     
     private WfProcess process;
-    private List assignments;
-    private Map result;
+    private List assignments;    
     
     /**
      * Creates new WfProcessImpl
@@ -54,8 +53,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      */
     public WfActivityImpl(GenericValue valueObject, GenericValue dataObject, WfProcess process) throws WfException {
         super(valueObject,dataObject);
-        this.process = process;
-        result = new HashMap();
+        this.process = process;        
         assignments = new ArrayList();
         GenericValue performer = null;
         try {
@@ -137,8 +135,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @throws InvalidData Data is invalid
      */
     public void setResult(Map newResult) throws WfException, InvalidData {
-        result.putAll(newResult);  // Add the result to the existing result or update existing keys
-        setSerializedData("resultDataId",newResult);        
+        context.putAll(newResult);  // Add the result to the existing result or update existing keys
+        setSerializedData(context);        
     }
     
     /**
@@ -157,7 +155,19 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @return
      */
     public Map result() throws WfException, ResultNotAvailable {
-        return result;
+        // Get the results from the signature.
+        Map resultSig = container().manager().resultSignature();
+        Map results = new HashMap();
+        if ( resultSig != null ) {
+            Set resultKeys = resultSig.keySet();
+            Iterator i = resultKeys.iterator();
+            while ( i.hasNext() ) {
+                Object key = i.next();
+                if ( context.containsKey(key) )
+                    results.put(key,context.get(key));
+            }
+        }                        
+        return results;
     }
     
     /**
@@ -237,24 +247,26 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         while ( i.hasNext() ) {
             GenericValue thisTool = (GenericValue) i.next();
             String toolId = thisTool.getString("toolId");
-            String params = thisTool.getString("actualParameters");
+            String params = thisTool.getString("actualParameters");            
             waiters.add(this.runService(toolId,params));
         }
         
         while ( waiters.size() > 0 ) {
             Iterator wi = waiters.iterator();
+            Collection remove = new ArrayList();
             while ( wi.hasNext() ) {
                 GenericResultWaiter thw = (GenericResultWaiter) wi.next();
-                if ( thw.isCompleted() ) {
+                if ( thw.isCompleted() ) {                    
                     try {
                         this.setResult(thw.getResult());
-                        waiters.remove(thw);
-                    }
+                        remove.add(thw);                        
+                    }                    
                     catch ( IllegalStateException e ) {
                         throw new WfException("Unknown error",e);
                     }
-                }
+                }                
             }
+            waiters.removeAll(remove);
         }
         
         this.complete();
@@ -303,7 +315,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     // Finishes an automatic activity
     private void finishActivity() throws WfException, CannotComplete {
         try {
-            container().receiveResults(this,result);
+            container().receiveResults(this,result());
         }
         catch ( InvalidData e ) {
             throw new CannotComplete("Invalid result data was passed",e);

@@ -119,7 +119,7 @@ public class Job implements Comparable, Serializable {
     }
     
     /** Receives notification when this Job is running. */
-    public void receiveNotice(Map result) {        
+    public void receiveNotice(Map result) {           
         if ( result != null && requester != null ) {
             requester.receiveResult(result);
         }

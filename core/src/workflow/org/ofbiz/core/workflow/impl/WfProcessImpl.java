@@ -57,7 +57,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         this.manager = manager;
         this.requester = null;
         this.result = new HashMap();
-        this.activeSteps = new ArrayList();        
+        this.activeSteps = new ArrayList();
     }
     
     /**
@@ -108,7 +108,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         }
         if ( start == null )
             throw new CannotStart("No initial activity set");
-               
+        
         startActivity(start);
     }
     
@@ -176,9 +176,18 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @return Result Map.
      */
     public Map result() throws WfException, ResultNotAvailable {
-        if (result == null)
-            throw new ResultNotAvailable("Result is null");
-        return result;
+        Map resultSig = manager().resultSignature();
+        Map results = new HashMap();
+        if ( resultSig != null ) {
+            Set resultKeys = resultSig.keySet();
+            Iterator i = resultKeys.iterator();
+            while ( i.hasNext() ) {
+                Object key = i.next();
+                if ( context.containsKey(key) )
+                    results.put(key,context.get(key));
+            }
+        }
+        return results;
     }
     
     /**
@@ -197,8 +206,8 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @throws WfException
      */
     public void receiveResults(WfActivity activity, Map results) throws WfException, InvalidData {
-        result.putAll(results);  // Add the result to the existing result or update existing keys
-        setSerializedData("resultDataId",results);
+        context.putAll(results);  // Add the result to the existing result or update existing keys
+        setSerializedData(context);
     }
     
     /**
@@ -209,6 +218,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     public void activityComplete(WfActivity activity) throws WfException {
         if ( !activity.state().equals("closed.completed") )
             throw new WfException("Activity state is not completed");
+        Debug.logInfo("Activity: " + activity.name() + " is complete");
         queueNext(activity);
     }
     
@@ -219,7 +229,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     // Queues the next activities for processing
     private void queueNext(WfActivity fromActivity) throws WfException {
         List nextTrans = getTransFrom(fromActivity);
-        if ( nextTrans.size() > 0 ) {                                                
+        if ( nextTrans.size() > 0 ) {
             Iterator i = nextTrans.iterator();
             while ( i.hasNext() ) {
                 GenericValue trans = (GenericValue) i.next();
@@ -349,6 +359,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             }
         }
         
+        Debug.logInfo("Transitions: " + transList.size());
         return transList;
     }
     
@@ -364,26 +375,26 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
     
     // Evaluate the transition condition
-    private boolean evalCondition(String condition) {       
-        Interpreter bsh = new Interpreter();        
+    private boolean evalCondition(String condition) {
+        Interpreter bsh = new Interpreter();
         Object o = null;
         if ( condition == null || condition.equals("") )
-            return true;        
+            return true;
         try {
             // Set the context for the condition
-            Set keySet = context.keySet();            
-            Iterator i = keySet.iterator();            
+            Set keySet = context.keySet();
+            Iterator i = keySet.iterator();
             while ( i.hasNext() ) {
                 Object key = i.next();
-                Object value = context.get(key);                
-                bsh.set((String)key,value);            
-            }            
+                Object value = context.get(key);
+                bsh.set((String)key,value);
+            }
             // evaluate the condition
             o = bsh.eval(condition);
         }
         catch ( EvalError e ) {
             return false;
-        }        
+        }
         if ( o instanceof Number )
             return ( ((Number)o).doubleValue()  == 0 ) ? false : true;
         else
@@ -391,7 +402,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
     
     // Complete this workflow
-    private void finishProcess() throws WfException {        
+    private void finishProcess() throws WfException {
         changeState("closed.completed");
         WfEventAudit audit = WfFactory.newWfEventAudit(this,null);     // this will need to be updated
         try {

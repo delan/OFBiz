@@ -61,10 +61,10 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public WfExecutionObjectImpl(GenericValue valueObject, GenericValue dataObject) throws WfException {
         this.valueObject = valueObject;
         this.dataObject = dataObject;
+        this.context = new HashMap();
         this.dispatcher = null;
         this.serviceLoader = null;
-        this.history = null;
-        this.context = null;
+        this.history = null;        
         loadRuntime();
     }
     
@@ -92,7 +92,8 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
                     dataMap.put("workflowActivityId",valueObject.getString("activityId"));
                 dataObject = getDelegator().makeValue("WorkEffort",dataMap);
                 if ( dataObject != null )
-                    dataObject.store();
+                    getDelegator().create(dataObject);
+                Debug.logInfo("Created new runtime object (Workeffort)");
             }
             catch ( GenericEntityException e ) {
                 throw new WfException(e.getMessage(),e);
@@ -314,8 +315,8 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public void setProcessContext(Map newValue)
     throws WfException, InvalidData, UpdateNotAllowed {
-        this.context = newValue;
-        setSerializedData("contextDataId",newValue);        
+        this.context = newValue;                
+        setSerializedData(newValue);        
     }
     
     /**
@@ -535,28 +536,24 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @param value The value to serialize and set
      * @throws WfException
      */
-    protected void setSerializedData(String field, Map value) throws WfException, InvalidData {
-        String relationName = null;
-        if ( field.equals("resultDataId") )
-            relationName = "ResultRuntimeData";
-        else if ( field.equals("contextDataId") )
-            relationName = "ContextRuntimeData";
-        else                     
-            throw new WfException("Invalid entity field name");
-        
-        try {
-            GenericValue runtimeData = null;
-            if ( dataObject.get(field) == null ) {
+    protected void setSerializedData(Map value) throws WfException, InvalidData {
+        GenericValue runtimeData = null;
+        try {        
+            if ( dataObject.get("runtimeDataId") == null ) {
                 String seqId = getDelegator().getNextSeqId("RuntimeData").toString();
                 runtimeData = getDelegator().makeValue("RuntimeData",UtilMisc.toMap("runtimeDataId",seqId));
-                dataObject.set(field,seqId);
-                dataObject.store();
+                getDelegator().create(runtimeData);
+                dataObject.set("runtimeDataId",seqId);
+                dataObject.store();                
             }
             else {
-                runtimeData = dataObject.getRelatedOne(relationName);
+                runtimeData = dataObject.getRelatedOne("RuntimeData");                
             }
-            runtimeData.set("runtimeInfo",XmlSerializer.serialize(context));
-            runtimeData.store();
+            //String serialized = XmlSerializer.serialize(value);
+            //System.out.println(serialized);
+            
+            runtimeData.set("runtimeInfo",XmlSerializer.serialize(value));
+            runtimeData.store();            
         }
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);

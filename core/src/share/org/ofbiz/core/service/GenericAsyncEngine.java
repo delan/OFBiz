@@ -129,7 +129,7 @@ public abstract class GenericAsyncEngine implements GenericEngine {
         
         // Schedule the job.
         try {
-            dispatcher.getJobManager().addJob(job,context);
+            dispatcher.getJobManager().addJob(job,context,requester);
         }
         catch ( JobSchedulerException jse ) {
             throw new GenericServiceException("Cannot schedule job.",jse);
