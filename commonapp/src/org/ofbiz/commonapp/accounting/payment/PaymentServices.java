@@ -522,14 +522,13 @@ public class PaymentServices {
         
         Timestamp now = UtilDateTime.nowTimestamp();
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE");
-        if (result.size() > 0)
-            return result;
-        
-        if (partyId != context.get("partyIdFrom") && partyId != context.get("partyIdTo")) {
-            return ServiceUtil.returnError("ERROR: You must be either the to or from party to Create a Payment");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE");
+        if (result.size() > 0) {
+            if (partyId != context.get("partyIdFrom") && partyId != context.get("partyIdTo")) {
+                return ServiceUtil.returnError("ERROR: To Create a Payment you must either be the to or from party or have the PAY_INFO_CREATE or PAY_INFO_ADMIN permissions.");
+            }
         }
-
+        
         Long newPmId = delegator.getNextSeqId("Payment");
         if(newPmId == null) {
             return ServiceUtil.returnError("ERROR: Could not Create Payment (id generation failure)");
@@ -548,7 +547,7 @@ public class PaymentServices {
         payment.set("comments", context.get("comments"));
 
         try {
-            payment.store();
+            payment.create();
         } catch(GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("ERROR: Could not Create Payment (write failure): " + e.getMessage());
