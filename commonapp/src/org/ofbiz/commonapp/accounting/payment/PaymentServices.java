@@ -89,6 +89,85 @@ public class PaymentServices {
         return result;
     }
 
+	private static PaymentGateway getDefaultPaymentGateway()
+		throws InstantiationException, IllegalAccessException, ClassNotFoundException
+	{
+		String gatewayClassName = UtilProperties.getPropertyValue("payment.properties", "defaultGatewayClass");
+		Class gatewayClass = Class.forName(gatewayClassName);
+		return (PaymentGateway)gatewayClass.newInstance();
+	}
+	
+	public static Map authorizePayment(DispatchContext ctx, Map context)
+	{
+		Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+
+        String currency = (String) context.get("currency");
+
+        String orderId = (String) context.get("orderId");
+		try
+		{
+			PaymentGateway gateway = getDefaultPaymentGateway();
+			GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", 
+				UtilMisc.toMap("orderId", orderId));
+			List payments = PaymentInfo.getPaymentsForOrder(orderHeader, PaymentGateway.PAYMENT_NOT_AUTHORIZED);
+			boolean paymentFailed = false;
+			for (Iterator iter = payments.iterator(); iter.hasNext();)
+			{
+				PaymentInfo payment = (PaymentInfo)iter.next();
+				if (currency != null)
+				{
+					payment.setCurrency(currency);
+				}
+				if (!gateway.authorize(payment))
+				{
+					paymentFailed = true;
+				}
+			}
+			if (paymentFailed)
+			{
+				result.put("authResponse", "FAILED");
+			}
+			else
+			{
+				result.put("authResponse", "SUCCESS");
+			}
+			return result;
+		}
+		catch (Exception e)
+		{
+			return ServiceUtil.returnError("Error authorizing payment: " + e.getMessage());
+		}
+	}
+	
+	public static Map capturePayment(DispatchContext ctx, Map context)
+	{
+		Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+
+        String orderId = (String) context.get("orderId");
+		try
+		{
+			PaymentGateway gateway = getDefaultPaymentGateway();
+			GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", 
+				UtilMisc.toMap("orderId", orderId));
+			List payments = PaymentInfo.getPaymentsForOrder(orderHeader, PaymentGateway.PAYMENT_AUTHORIZED);
+			for (Iterator iter = payments.iterator(); iter.hasNext();)
+			{
+				PaymentInfo payment = (PaymentInfo)iter.next();
+				if (!gateway.capture(payment))
+				{
+					return ServiceUtil.returnError(payment.getPaymentPreference().getString("authMessage"));
+				}
+			}
+			return ServiceUtil.returnSuccess();
+		}
+		catch (Exception e)
+		{
+			return ServiceUtil.returnError("Error authorizing payment: " + e.getMessage());
+		}
+	}
+	
     /**
      * Creates CreditCard and PaymentMethod entities according to the parameters passed in the context
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PAY_INFO_CREATE permission

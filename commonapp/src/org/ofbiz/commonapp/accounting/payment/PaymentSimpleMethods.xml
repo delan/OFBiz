@@ -98,6 +98,43 @@
             <result-to-request result-name="newPaymentMethodId" request-name="paymentMethodId"/></call-service>
     </simple-method>
 
+    <simple-method method-name="captureAll" short-description="Capture Payments for Orders" login-required="false">
+        <field-to-field field-name="orderStatusId" map-name="parameters" to-map-name="orderLookup" />
+        <field-to-field field-name="currency" map-name="parameters" to-map-name="captureParams" />
+        <string-to-field string="PAYMENT_AUTHORIZED" field-name="paymentStatusId" map-name="orderLookup" />
+        <find-by-and entity-name="OrderHeaderAndPaymentPref" map-name="orderLookup" list-name="orderHeaderAndPaymentPrefs" />
+        <iterate entry-name="orderHeaderAndPaymentPref" list-name="orderHeaderAndPaymentPrefs" >
+            <field-to-field map-name="orderHeaderAndPaymentPref" field-name="orderId" to-map-name="captureParams" />
+            <call-service service-name="capturePayment" in-map-name="captureParams" error-code="ignore-error">
+                <result-to-field map-name="captureResult" result-name="responseMessage" />
+            </call-service>
+            <if-compare map-name="captureResult" operator="equals" field-name="responseMessage" value="error">
+                <field-to-list map-name="orderHeaderAndPaymentPref" field-name="orderId" list-name="badOrders" />
+            </if-compare>
+        </iterate>
+        <if-not-empty field-name="badOrders">
+            <string-to-field string="mail.smtp.host" field-name="sendType" map-name="emailParams" />
+
+            <call-bsh><![CDATA[
+            emailParams.put("sendVia", org.ofbiz.core.util.UtilProperties.getPropertyValue("payment.properties", "mailhost"));
+            ]]></call-bsh>
+            <call-bsh><![CDATA[
+            emailParams.put("sendTo", org.ofbiz.core.util.UtilProperties.getPropertyValue("payment.properties", "sendTo"));
+            ]]></call-bsh>  
+            <call-bsh><![CDATA[
+            emailParams.put("sendFrom", org.ofbiz.core.util.UtilProperties.getPropertyValue("payment.properties", "sendFrom"));
+            ]]></call-bsh> 
+            <call-bsh><![CDATA[
+            emailParams.put("subject", org.ofbiz.core.util.UtilProperties.getPropertyValue("payment.properties", "subject"));        
+            ]]></call-bsh>               
+            <call-bsh><![CDATA[
+            String body = "Bad orders: " + org.ofbiz.core.Util.StringUtils.join(badOrders, ", ");
+            emailParams.put("body", body);
+            ]]></call-bsh>   
+            <call-service service-name="sendMail" in-map-name="emailParams"/>
+        </if-not-empty>       
+     </simple-method>        
+            
     <simple-method method-name="setPaymentMethodAddress" short-description="Set the initial payment method address">
         <make-value value-name="lookupPKMap" entity-name="PaymentMethod"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
@@ -119,4 +156,5 @@
             </if-compare-field>
         </if-compare>
     </simple-method>
+
 </simple-methods>
