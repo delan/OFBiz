@@ -53,7 +53,7 @@ function lookupBom() {
     <a name="topform"/>
     <table border="0" cellpadding="2" cellspacing="0">
         <tr>
-            <td align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingPartBOMType}:</div></td>
+            <td align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingBomType}:</div></td>
             <td>&nbsp;</td>
             <td>
             <select class="selectBox" name="productAssocTypeId" size=1>
@@ -101,7 +101,7 @@ function lookupBom() {
     <#if !(productAssoc?exists)>
             <input type=hidden name="UPDATE_MODE" value="CREATE">
             <tr>
-            <td align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingPartBOMType}:</div></td>
+            <td align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingBomType}:</div></td>
             <td>&nbsp;</td>
             <td>
                 <select class="selectBox" name="productAssocTypeId" size=1>
@@ -164,7 +164,7 @@ function lookupBom() {
             <td><b>${productIdTo?if_exists}</b></td>
         </tr>
         <tr>
-            <td align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingPartBOMType}:</div></td>
+            <td align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingBomType}:</div></td>
             <td>&nbsp;</td>
             <td><b><#if curProductAssocType?exists>${(curProductAssocType.description)?if_exists}<#else> ${productAssocTypeId?if_exists}</#if></b></td>
         </tr>
@@ -235,12 +235,12 @@ function lookupBom() {
         
         <table border="1" cellpadding="2" cellspacing="0">
             <tr>
-            <td><div class="tabletext"><b>${uiLabelMap.ManufacturingPartId}</b></div></td>
-            <td><div class="tabletext"><b>${uiLabelMap.ManufacturingPartName}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductProductId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductProductName}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonThruDate}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonSequenceNum}</b></div></td>
-            <td><div class="tabletext"><b>${uiLabelMap.ManufacturingQuantity}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonQuantity}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ManufacturingScrapFactor}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ManufacturingRoutingTask}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -276,11 +276,11 @@ function lookupBom() {
         <div class="head2">${uiLabelMap.ManufacturingProductComponentOf}</div>
         <table border="1" cellpadding="2" cellspacing="0">
             <tr>
-            <td><div class="tabletext"><b>${uiLabelMap.ManufacturingPartId}</b></div></td>
-            <td><div class="tabletext"><b>${uiLabelMap.ManufacturingPartName}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductProductId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductProductName}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonThruDate}</b></div></td>
-            <td><div class="tabletext"><b>${uiLabelMap.ManufacturingQuantity}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonQuantity}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
             </tr>
             <#list assocToProducts as assocToProduct>
