@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.6 2003/10/17 16:51:38 ajzeneski Exp $
+ * $Id: LoginEvents.java,v 1.7 2003/12/07 18:50:34 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,6 +31,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.ServletContext;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FlexibleStringExpander;
@@ -39,6 +40,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -59,7 +61,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -133,9 +135,11 @@ public class LoginEvents {
         }
 
         // user is logged in; check to see if there is an entry in the loggedInSessions Map, if not log out this user
+        // also check if they have permission for this login attempt; if not log them out as well.
         if (userLogin != null) {
             boolean loggedInSession = isLoggedInSession(userLogin, request);
-            if (!loggedInSession) {
+            boolean hasBasePermission = hasBasePermission(userLogin, request);
+            if (!loggedInSession || !hasBasePermission) {
                 doBasicLogout(userLogin, request);
                 userLogin = null;
                 // have to reget this because the old session object will be invalid
@@ -190,9 +194,6 @@ public class LoginEvents {
      * @param response The HTTP response object for the current JSP or Servlet request.
      * @return Return a boolean which specifies whether or not the calling Servlet or
      *         JSP should generate its own content. This allows an event to override the default content.
-     * @exception javax.servlet.ServletException Standard J2EE Servlet Exception
-     * @exception java.rmi.RemoteException Standard RMI Remote Exception
-     * @exception java.io.IOException Standard IO Exception
      */
     public static String login(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
@@ -228,8 +229,11 @@ public class LoginEvents {
             GenericValue userLogin = (GenericValue) result.get("userLogin");
             Map userLoginSession = (Map) result.get("userLoginSession");
 
-            if (userLogin != null) {
+            if (userLogin != null && hasBasePermission(userLogin, request)) {
                 doBasicLogin(userLogin, request);
+            } else {
+                request.setAttribute("_ERROR_MESSAGE_", "<b>Unable to login in to this application.</b><br>");
+                return "error";
             }
 
             if (userLoginSession != null) {
@@ -703,5 +707,31 @@ public class LoginEvents {
         if (userLogin != null) {
             loggedInSessions.remove(userLogin.get("userLoginId"));
         }
+    }
+
+    protected static boolean hasBasePermission(GenericValue userLogin, HttpServletRequest request) {
+        ServletContext context = (ServletContext) request.getAttribute("servletContext");
+        Security security = (Security) request.getAttribute("security");
+        HttpSession session = request.getSession();
+
+        String serverId = (String) context.getAttribute("_serverId");
+        String contextPath = request.getContextPath();
+
+        ComponentConfig.WebappInfo info = ComponentConfig.getWebAppInfo(serverId, contextPath);
+        if (security != null) {
+            if (info != null) {
+                String permission = info.getBasePermission();
+                if (!"NONE".equals(permission) && !security.hasEntityPermission(permission, "_VIEW", userLogin)) {
+                    return false;
+                }
+            } else {
+                Debug.logInfo("No webapp configuration found for : " + serverId + " / " + contextPath, module);
+            }
+        } else {
+            Debug.logWarning("Received a null Security object from HttpServletRequest", module);
+        }
+
+        return true;
+
     }
 }
