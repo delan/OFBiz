@@ -1362,4 +1362,180 @@ public class OrderServices {
         
         return adjustments;
     }  
+    
+    public static Map processRefundReturn(DispatchContext ctx, Map context) {    
+        LocalDispatcher dispatcher = ctx.getDispatcher();   
+        GenericDelegator delegator = ctx.getDelegator();
+        String returnId = (String) context.get("returnId");
+        
+        GenericValue returnHeader = null;
+        List returnItems = null;
+        try {
+            returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
+            if (returnHeader != null) {
+                returnItems = returnHeader.getRelatedByAnd("ReturnItem", UtilMisc.toMap("returnItemTypeId", "RTN_REFUND"));
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems looking up return information", module);
+            return ServiceUtil.returnError("Error getting ReturnHeader/Item information");
+        }
+        
+        if (returnHeader != null && returnItems != null && returnItems.size() > 0) {
+            Map itemsByOrder = new HashMap();
+            Map totalByOrder = new HashMap();
+            groupReturnItemsByOrder(returnItems, itemsByOrder, totalByOrder);
+            
+            // process each one by order
+            Set itemSet = itemsByOrder.entrySet();
+            Iterator itemByOrderIt = itemSet.iterator();
+            while (itemByOrderIt.hasNext()) {
+                Map.Entry entry = (Map.Entry) itemByOrderIt.next();
+                String orderId = (String) entry.getKey();
+                List items = (List) entry.getValue();
+                Double orderTotal = (Double) totalByOrder.get(orderId);
+                
+                // get order header & payment prefs
+                GenericValue orderHeader = null;
+                List orderPayPrefs = null;
+                try {
+                    orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+                    // sort these desending by maxAmount                     
+                    orderPayPrefs = orderHeader.getRelated("OrderPaymentPreference", null, UtilMisc.toList("-maxAmount"));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Cannot get Order details for #" + orderId, module);
+                    continue;
+                }
+                
+                // get the payment prefs to use (will use them in order of amount charged)
+                List prefsToUse = new ArrayList();
+                Map prefsAmount = new HashMap();
+                double neededAmount = orderTotal.doubleValue();
+                if (orderPayPrefs != null && orderPayPrefs.size() > 0) {                    
+                    Iterator payPrefIter = orderPayPrefs.iterator();                                   
+                    do {
+                        GenericValue pref = (GenericValue) payPrefIter.next();
+                        Double maxAmount = pref.getDouble("maxAmount");
+                        if (maxAmount == null || maxAmount.doubleValue() == 0.00) {                        
+                            prefsToUse.add(pref);
+                            prefsAmount.put(pref, orderTotal);
+                            neededAmount = 0.00;
+                        } else if (maxAmount.doubleValue() > orderTotal.doubleValue()) {
+                            prefsToUse.add(pref);
+                            prefsAmount.put(pref, orderTotal);
+                            neededAmount = 0.00;
+                        } else {
+                            prefsToUse.add(pref);                            
+                            if (maxAmount.doubleValue() > neededAmount) {                                 
+                                prefsAmount.put(pref, new Double(maxAmount.doubleValue() - neededAmount));
+                            } else {
+                                prefsAmount.put(pref, maxAmount);
+                            }
+                            neededAmount -= maxAmount.doubleValue();
+                        }                    
+                    } while (neededAmount > 0 && payPrefIter.hasNext());
+                }
+                
+                if (neededAmount != 0) {
+                    Debug.logError("Was not able to find needed payment preferences for the order RTN: " + returnId + " ORD: " + orderId, module);
+                    continue;
+                }
+                
+                Map prefSplitMap = new HashMap();              
+                if (prefsToUse == null || prefsToUse.size() == 0) {
+                    Debug.logError("We didn't find any possible payment prefs to use for RTN: " + returnId + " ORD: " + orderId, module);
+                    continue;
+                } else if (prefsToUse.size() > 1) {
+                    // we need to spit the items up to log which pref it was refunded to
+                    // TODO: add the split of items for multiple payment prefs
+                } else {
+                    // single payment / single refund
+                    prefSplitMap.put(prefsToUse.get(0), items);                   
+                }
+                    
+                // now process all items for each preference
+                Set prefItemSet = prefSplitMap.entrySet();
+                Iterator prefItemIt = prefItemSet.iterator();
+                while (prefItemIt.hasNext()) {
+                    Map.Entry prefItemEntry = (Map.Entry) prefItemIt.next();
+                    GenericValue orderPayPref = (GenericValue) prefItemEntry.getKey();
+                    List itemList = (List) prefItemEntry.getValue();
+                    
+                    Double thisRefundAmount = (Double) prefsAmount.get(orderPayPref);
+                    // TODO: do the refund & get a paymentId
+                    
+                    // create a new response entry
+                    String responseId = delegator.getNextSeqId("ReturnItemResponse").toString();
+                    GenericValue response = delegator.makeValue("OrderItemResponse", UtilMisc.toMap("returnItemResponseId", responseId));
+                    response.set("orderPaymentPreferenceId", orderPayPref.getString("orderPaymentPreferenceId"));
+                    response.set("responseAmount", thisRefundAmount);
+                    response.set("responseDate", UtilDateTime.nowTimestamp());
+                    // response.set("paymentId", paymentId);
+                    try {
+                        delegator.create(response);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Problems creating new ReturnItemResponse entity", module);
+                        return ServiceUtil.returnError("Problems creating ReturnItemResponse entity");
+                    }
+                    
+                    // set the response on each item
+                    Iterator itemsIter = itemList.iterator();
+                    while (itemsIter.hasNext()) {
+                        GenericValue item = (GenericValue) itemsIter.next();
+                        item.set("returnItemResponseId", responseId);
+                        try {
+                            item.store();
+                        } catch (GenericEntityException e) {
+                            Debug.logError("Problem storing returnItemResponseId on the ReturnItem entity", module);
+                            return ServiceUtil.returnError("Problem storing ReturnItem (returnItemResponseId)");
+                        }
+                    }
+                }                                                       
+            }
+        } 
+             
+        return ServiceUtil.returnSuccess();
+    }
+    
+    public static void groupReturnItemsByOrder(List returnItems, Map itemsByOrder, Map totalByOrder) {                     
+        Iterator itemIt = returnItems.iterator();
+        while (itemIt.hasNext()) {
+            GenericValue item = (GenericValue) itemIt.next();
+            String orderId = item.getString("orderId");                
+            if (orderId != null) {
+                if (itemsByOrder != null) {
+                    List orderList = (List) itemsByOrder.get(orderId);
+                    Double totalForOrder = null;
+                    if (totalByOrder != null) {
+                        totalForOrder = (Double) totalByOrder.get(orderId);
+                    }
+                    if (orderList == null) {
+                        orderList = new ArrayList();
+                    }
+                    if (totalForOrder == null) {
+                        totalForOrder = new Double(0.00);
+                    }
+                    
+                    // add to the items list
+                    orderList.add(item);
+                    itemsByOrder.put(orderId, orderList);
+                    
+                    if (totalByOrder != null) {
+                        // add on the total for this line
+                        Double quantity = item.getDouble("returnQuantity");
+                        Double amount = item.getDouble("returnPrice");
+                        if (quantity == null) {
+                            quantity = new Double(0);
+                        }
+                        if (amount == null) {
+                            amount = new Double(0.00);
+                        }
+                        double thisTotal = amount.doubleValue() * quantity.doubleValue();
+                        double existingTotal = totalForOrder.doubleValue();
+                        Double newTotal = new Double(existingTotal + thisTotal);
+                        totalByOrder.put(orderId, newTotal);
+                    }
+                }
+            }
+        }   
+    }     
 }
