@@ -148,8 +148,7 @@
       <field name="cost" type="currency-amount"></field>
       <field name="duration" type="floating-point"></field>
       <field name="workingTime" type="floating-point"></field>
-      <field name="waitingTime" type="floating-point"></field>	
-      <prim-key field="activityId" />
+      <field name="waitingTime" type="floating-point"></field>
       <relation type="one" title="StartMode" rel-entity-name="Enumeration">
         <key-map field-name="startModeEnumId" rel-field-name="enumId" />
       </relation>
@@ -170,6 +169,9 @@
       </relation>
       <relation type="many" title="To" rel-entity-name="WorkflowTransition">
         <key-map field-name="activityId" rel-field-name="toActivityId" />
+      </relation>
+      <relation type="one" rel-entity-name="RuntimeData">
+        <key-map field-name="runtimeDataId" />
       </relation>
     </entity>
     <entity entity-name="WorkflowApplication" 
@@ -398,7 +400,6 @@
       <field name="codepage" type="short-varchar"></field>
       <field name="countryGeoId" type="id"></field>
       <field name="publicationStatusId" type="id"></field>
-      
       <field name="timeLimit" type="floating-point"></field>
       <field name="validFromDate" type="date-time"></field>
       <field name="validToDate" type="date-time"></field>
@@ -409,8 +410,7 @@
       <field name="durationUomId" type="id"></field>
       <field name="duration" type="floating-point"></field>
       <field name="workingTime" type="floating-point"></field>
-      <field name="waitingTime" type="floating-point"></field>	
-      <prim-key field="processId" />
+      <field name="waitingTime" type="floating-point"></field>
       <relation type="one" title="Country" rel-entity-name="Geo">
         <key-map field-name="countryGeoId" rel-field-name="geoId" />
       </relation>
@@ -431,6 +431,9 @@
       </relation>
       <relation type="one" title="Duration" rel-entity-name="Uom">
         <key-map field-name="durationUomId" rel-field-name="uomId" />
+      </relation>
+      <relation type="one" rel-entity-name="RuntimeData">
+        <key-map field-name="runtimeDataId" />
       </relation>
     </entity>
     <entity entity-name="WorkflowSpecification" 
