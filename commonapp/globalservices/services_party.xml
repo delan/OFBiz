@@ -90,7 +90,8 @@
         <description>Create a Survey Response record</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="surveyId" type="String" mode="IN"/>
-        <attribute name="response" type="String" mode="IN"/>
+        <attribute name="responseId" type="String" mode="IN"/>
+        <attribute name="responseMessage" type="String" mode="IN"/>
     </service>
 
     <!-- Party Role services -->
