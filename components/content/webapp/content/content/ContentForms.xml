@@ -49,12 +49,6 @@
                     entity-name="StatusItem" key-field-name="statusId"/>
             </drop-down>
         </field>
-        <field name="isTemplate">
-            <drop-down allow-empty="true">
-                <option key="Y" description="Yes" />
-                <option key="N" description="No" />
-            </drop-down>
-        </field>
         <field name="submitButton" title="Find" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -108,12 +102,6 @@
             <drop-down allow-empty="true">
                 <entity-options description="${description}"
                     entity-name="StatusItem" key-field-name="statusId"/>
-            </drop-down>
-        </field>
-        <field name="isTemplate">
-            <drop-down allow-empty="true">
-                <option key="Y" description="Yes" />
-                <option key="N" description="No" />
             </drop-down>
         </field>
         <field name="submitButton" title="Update" widget-style="standardSubmit">
@@ -182,12 +170,6 @@
                     entity-name="StatusItem" key-field-name="statusId"/>
             </drop-down>
         </field>
-        <field name="isTemplate">
-            <drop-down allow-empty="true">
-                <option key="Y" description="Yes" />
-                <option key="N" description="No" />
-            </drop-down>
-        </field>
         <field name="findContent" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Find"  target="FindContent"/>
         </field>
@@ -209,7 +191,7 @@
         name="listLookupContent"  
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" target="" paginate-target="LookupContent" 
+        list-name="entityList" target="" paginate-target="/LookupContent" 
         title="" type="list">
         <auto-fields-entity entity-name="Content" default-field-type="display"/>
         <field name="contentId" title="&amp;nbsp;" widget-style="buttontext">
@@ -223,11 +205,11 @@
 -->
     </form>
     <form 
-        name="lruLookupContent" 
+        name="mruLookupContent" 
         default-entity-name="Content"
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="lruList" 
+        list-name="mruList" 
         target="" title="" type="list">
         <field name="contentId" title="Id" widget-style="buttontext">
                 
@@ -245,10 +227,20 @@
         name="EditContentAssoc" 
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
+        default-map-name="contentAssocValue"
         target="updateContentAssoc" title="" type="single">
-        <auto-fields-service service-name="createContentAssoc"/>
+        <auto-fields-entity entity-name="ContentAssoc"/>
+        <field name="contentId" title="" widget-style="buttontext">
+            <display />
+        </field>
         <field name="contentIdTo" title="" widget-style="buttontext">
-            <hyperlink also-hidden="false" target-type="plain" description="${contentIdTo}" target="javascript:set_value('${contentIdTo}')"/>
+            <display />
+        </field>
+        <field name="contentAssocTypeId" title="" widget-style="buttontext">
+            <display />
+        </field>
+        <field name="fromDate" title="" widget-style="buttontext">
+            <display />
         </field>
         <field name="submitButton" title="Update" widget-style="standardSubmit">
             <submit button-type="button"/>
@@ -258,7 +250,7 @@
         name="AddContentAssoc" 
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="AddContentAssoc" title="" type="single">
+        target="createContentAssoc" title="" type="single">
         <auto-fields-service service-name="createContentAssoc"/>
         <field name="contentId" title="" widget-style="buttontext" >
 	    <display description="${contentId}"/>
@@ -303,7 +295,7 @@
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}"/>
         </field>
         <field name="editLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="editContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}"/>
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
         </field>
     </form>
     <form 
@@ -322,6 +314,9 @@
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}"/>
+        </field>
+        <field name="editLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
         </field>
     </form>
 
@@ -512,10 +507,10 @@
         </field>
     </form>
     <form 
-        name="lruLookupPerson" 
+        name="mruLookupPerson" 
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="lruList" 
+        list-name="mruList" 
         target="" title="" type="list">
         <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
                 
