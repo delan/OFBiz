@@ -34,6 +34,14 @@ shipmentId = request.getParameter("shipmentId");
 orderId = request.getParameter("orderId");
 shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
 
+if (shipment != null) {
+    context.put("originFacility", shipment.getRelatedOne("OriginFacility"));
+}
+
+if (UtilValidate.isEmpty(orderId) && shipment != null) {
+    orderId = shipment.get("primaryOrderId");
+}
+
 if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
     orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
 	context.put("orderHeader", orderHeader);
@@ -44,7 +52,7 @@ if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
     while (orderItemIter.hasNext()) {
     	orderItem = orderItemIter.next();
     	product = orderItem.getRelatedOne("Product");
-    	orderItemInventoryResList = orderItem.getRelated("OrderItemInventoryRes", UtilMisc.toMap("facilityId", shipment.get("originFacilityId")), UtilMisc.toList("quantity"));
+    	orderItemInventoryResList = orderItem.getRelated("OrderItemInventoryRes", null, UtilMisc.toList("reservedDatetime"));
     	
     	orderItemInventoryResDatas = new LinkedList();
     	orderItemInventoryResIter = orderItemInventoryResList.iterator();
@@ -52,9 +60,27 @@ if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
             orderItemInventoryRes = orderItemInventoryResIter.next();
             itemIssuances = orderItemInventoryRes.getRelated("ItemIssuance");
             
+            totalQuantityIssued = 0;
+            itemIssuanceIter = itemIssuances.iterator();
+            while (itemIssuanceIter.hasNext()) {
+                itemIssuance = itemIssuanceIter.next();
+                if (itemIssuance.get("quantity") != null) {
+                    totalQuantityIssued += itemIssuance.getDouble("quantity");
+                }
+            }
+            
+            quantityLeftToIssue = 0;
+            if (orderItemInventoryRes.get("quantity") != null) {
+                quantityLeftToIssue = orderItemInventoryRes.getDouble("quantity") - totalQuantityIssued;
+            }
+            
             orderItemInventoryResData = new HashMap();
             orderItemInventoryResData.put("orderItemInventoryRes", orderItemInventoryRes);
             orderItemInventoryResData.put("itemIssuances", itemIssuances);
+            orderItemInventoryResData.put("resStatus", orderItemInventoryRes.getRelated("StatusItem"));
+            orderItemInventoryResData.put("inventoryItem", orderItemInventoryRes.getRelated("InventoryItem"));
+            orderItemInventoryResData.put("totalQuantityIssued", totalQuantityIssued);
+            orderItemInventoryResData.put("quantityLeftToIssue", quantityLeftToIssue);
             orderItemInventoryResDatas.add(orderItemInventoryResData);
     	}
     	
