@@ -505,11 +505,23 @@
             <remove-value value-name="lookedUpValue"/>
         </if-not-empty>
     </simple-method>
-    <simple-method method-name="createWorkEffortInventoryAssign" short-description="Create WorkEffortInventoryAssign">
-        <string-to-field string="Create WorkEffortInventoryAssign" field-name="operationName"/>
-        <make-value value-name="newEntity" entity-name="WorkEffortInventoryAssign"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <create-value value-name="newEntity"/>
+    <simple-method method-name="assignInventoryToWorkEffort" short-description="Create or update WorkEffortInventoryAssign">
+        <string-to-field string="Create or update WorkEffortInventoryAssign" field-name="operationName"/>
+        <make-value value-name="lookupPKMap" entity-name="WorkEffortInventoryAssign"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="WorkEffortInventoryAssign" map-name="lookupPKMap" value-name="foundEntity"/>
+        <if-not-empty field-name="foundEntity">
+            <calculate field-name="foundEntity.quantity" type="Double">
+                <calcop field-name="foundEntity.quantity" operator="add"/>
+                <calcop field-name="parameters.quantity" operator="get"/>
+            </calculate>
+            <store-value value-name="foundEntity"/>
+        <else>
+            <make-value value-name="newEntity" entity-name="WorkEffortInventoryAssign"/>
+            <set-pk-fields map-name="parameters" value-name="newEntity"/>
+            <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+            <create-value value-name="newEntity"/>
+        </else>
+        </if-not-empty>
     </simple-method>
 </simple-methods>
