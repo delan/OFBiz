@@ -37,7 +37,11 @@ public class GenericDAO
 {
   String serverName;
   
-  public GenericDAO(String serverName) { this.serverName = serverName; }
+  public GenericDAO(String serverName) 
+  { 
+    this.serverName = serverName;
+    initGenericDAO();
+  }
     
   public Connection getConnection() throws SQLException { return ConnectionFactory.getConnection(serverName); }
   

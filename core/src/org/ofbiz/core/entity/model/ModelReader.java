@@ -50,12 +50,12 @@ import org.ofbiz.core.util.*;
 
 public class ModelReader
 {
-  //public static UtilCache documentCache = new UtilCache("entity-document-cache");
+  //public UtilCache documentCache = new UtilCache("EntityDocumentCache", 0, 0);
   public static UtilCache fieldTypeCache = null;
   public static UtilCache entityCache = null;
 
-  public static String fieldTypeFileName = "f:\\ofbiz\\work\\ofbiz\\commonapp\\entitydef\\fieldtypemysql.xml";
-  public static String entityFileName = "f:\\ofbiz\\work\\ofbiz\\commonapp\\entitydef\\entitymodel.xml";
+  public static String fieldTypeFileName = UtilProperties.getPropertyValue("servers", "xml.field.type");
+  public static String entityFileName = UtilProperties.getPropertyValue("servers", "xml.entity");
   
   public static UtilCache getFieldTypeCache()
   {
@@ -66,7 +66,7 @@ public class ModelReader
         //must check if null again as one of the blocked threads can still enter 
         if(fieldTypeCache == null) //now it's safe
         {
-          fieldTypeCache = new UtilCache("generic-field-type-cache");
+          fieldTypeCache = new UtilCache("GenericFieldTypeCache", 0, 0);
 
           UtilTimer utilTimer = new UtilTimer();
           utilTimer.timerString("Before getDocument");
@@ -114,7 +114,7 @@ public class ModelReader
         //must check if null again as one of the blocked threads can still enter 
         if(entityCache == null) //now it's safe
         {
-          entityCache = new UtilCache("generic-entity-cache");
+          entityCache = new UtilCache("GenericEntityCache", 0, 0);
 
           UtilTimer utilTimer = new UtilTimer();
           utilTimer.timerString("Before getDocument");
