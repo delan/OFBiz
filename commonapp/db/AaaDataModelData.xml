@@ -431,6 +431,8 @@
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="COM_EVENT_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="EMPLOYMENT_APP_STTS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="INVENTORY_ITEM_STTS"/>
+  <StatusType description="" hasTable="N" parentTypeId="INVENTORY_ITEM_STTS" statusTypeId="INV_SERIALIZED_STTS"/>
+  <StatusType description="" hasTable="N" parentTypeId="INVENTORY_ITEM_STTS" statusTypeId="INV_NON_SER_STTS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="INVOICE_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="POSITION_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="REQUIREMENT_STATUS"/>
@@ -443,6 +445,9 @@
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WEB_CONTENT_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_ASSIGN"/>
 
+  <StatusItem description="Available" sequenceId="01" statusCode="AVAILABLE" statusId="INV_AVAILABLE" statusTypeId="INV_SERIALIZED_STTS"/>
+  <StatusItem description="Promised" sequenceId="02" statusCode="PROMISED" statusId="INV_PROMISED" statusTypeId="INV_SERIALIZED_STTS"/>
+  <StatusItem description="Delivered" sequenceId="03" statusCode="DELIVERED" statusId="INV_DELIVERED" statusTypeId="INV_SERIALIZED_STTS"/>
   <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ORDERED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Paid" sequenceId="02" statusCode="PAID" statusId="PAID" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Processing" sequenceId="03" statusCode="PROCESSING" statusId="PROCESSING" statusTypeId="ORDER_STATUS"/>
@@ -470,6 +475,10 @@
   <StatusItem description="Under Test"  sequenceId="02" statusCode="UNDER_TEST" statusId="WPS_UNDER_TEST" statusTypeId="WORKFLOW_PUB_STATUS"/>
   <StatusItem description="Released"  sequenceId="03" statusCode="RELEASED" statusId="WPS_RELEASED" statusTypeId="WORKFLOW_PUB_STATUS"/>
 
+  <StatusValidChange condition="" statusId="INV_AVAILABLE" statusIdTo="INV_PROMISED" transitionName="Promise"/>
+  <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_AVAILABLE" transitionName="Cancel Promise"/>
+  <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_DELIVERED" transitionName="Deliver"/>
+  <StatusValidChange condition="" statusId="INV_DELIVERED" statusIdTo="INV_AVAILABLE" transitionName="Return"/>
   <StatusValidChange condition="" statusId="ORDERED" statusIdTo="PAID" transitionName="Payment Received"/>
   <StatusValidChange condition="" statusId="PAID" statusIdTo="PROCESSING" transitionName="Processing Order"/>
   <StatusValidChange condition="" statusId="PAID" statusIdTo="SCHEDULED" transitionName="Schedule Shipment"/>
