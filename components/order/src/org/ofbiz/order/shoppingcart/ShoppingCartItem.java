@@ -24,8 +24,8 @@
 package org.ofbiz.order.shoppingcart;
 
 import java.sql.Timestamp;
-import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.Arrays;
 
+import org.apache.commons.collections.set.ListOrderedSet;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -59,8 +59,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-
-import org.apache.commons.collections.set.ListOrderedSet;
 
 /**
  * <p><b>Title:</b> ShoppingCartItem.java
@@ -1502,15 +1500,18 @@ public class ShoppingCartItem implements java.io.Serializable {
             return false;
         }
 
-        if (!this.getReservStart().equals(reservStart)) {
+        if ((this.reservStart == null && reservStart != null) || (this.reservStart != null && reservStart == null)) {
+            return false;
+        }
+        if (this.reservStart != null && reservStart != null && !this.reservStart.equals(reservStart)) {
             return false;
         }
         
-        if (this.getReservLength() != reservLength) {
+        if (this.reservLength != reservLength) {
             return false;
         }
                
-        if (this.getReservPersons() != reservPersons) {
+        if (this.reservPersons != reservPersons) {
             return false;
         }
                
