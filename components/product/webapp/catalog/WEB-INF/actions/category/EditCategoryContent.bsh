@@ -1,0 +1,112 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     David E. Jones
+ *@author     Arukala
+ *@author     Brad Steiner
+ *@version    $Revision: 1.1 $
+ *@since      2.2
+ */
+
+import java.util.*;
+import java.sql.*;
+import java.io.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.content.widget.html.*;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+
+if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}    
+nowTimestamp = UtilDateTime.nowTimestamp();
+context.put("nowTimestamp", nowTimestamp);
+
+String nowTimestampString = nowTimestamp.toString();
+context.put("nowTimestampString", nowTimestampString);
+
+URL catalogPropertiesURL = application.getResource("/WEB-INF/catalog.properties");
+if (catalogPropertiesURL != null) context.put("catalogPropertiesURL", catalogPropertiesURL.toString());
+
+String productCategoryId = request.getParameter("productCategoryId");
+context.put("productCategoryId", productCategoryId);
+
+GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
+context.put("productCategory", productCategory);
+
+if (productCategoryId == null || productCategoryId.length() == 0) productCategoryId = (String) request.getAttribute("productCategoryId");
+productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
+productCategoryType = null;
+if (productCategory == null) {
+    useValues = false;
+} else {
+    productCategoryType = productCategory.getRelatedOne("ProductCategoryType");
+}
+//ProductCategoryTypes
+productCategoryTypes = delegator.findAll("ProductCategoryType");
+context.put("productCategoryType", productCategoryType);
+context.put("productCategoryTypes", productCategoryTypes);
+
+// Start CategoryContent stuff
+
+categoryContent = null;
+if (productCategory != null) categoryContent = productCategory.getRelated("ProductCategoryContent", null, UtilMisc.toList("productCategoryContentId"));
+context.put("categoryContent", categoryContent);
+
+List categoryContentDatas = new LinkedList();
+Iterator categoryContentIter = categoryContent.iterator();
+while (categoryContentIter.hasNext()) {
+    GenericValue categoryContent = (GenericValue) categoryContentIter.next();
+    GenericValue content = categoryContent.getRelatedOne("Content");
+    categoryContentDatas.add(UtilMisc.toMap("categoryContent", categoryContent, "content", content));
+}
+
+
+HtmlFormWrapper updateCategoryContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "UpdateCategoryContentAssoc", request, response);
+context.put("updateCategoryContentWrapper", updateCategoryContentWrapper);
+updateCategoryContentWrapper.putInContext("categoryContentDatas", categoryContentDatas);
+
+HtmlFormWrapper prepareAddCategoryContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "PrepareAddCategoryContentAssoc", request, response);
+context.put("prepareAddCategoryContentWrapper", prepareAddCategoryContentWrapper);
+
+prepareAddCategoryContentWrapper.putInContext("productCategory", productCategory);
+
+
+HtmlFormWrapper addCategoryContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "AddCategoryContentAssoc", request, response);
+context.put("addCategoryContentWrapper", addCategoryContentWrapper);
+
+addCategoryContentWrapper.putInContext("productCategory", productCategory);
+
+context.put("categoryContentList", categoryContentDatas);
+
+// End ProductContent stuff
+
+boolean tryEntity = true;
+if (request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
+if (product == null) tryEntity = false;
+if("true".equalsIgnoreCase((String) request.getParameter("tryEntity"))) tryEntity = true;
+context.put("tryEntity", tryEntity);
+
+// UPLOADING STUFF

@@ -1,0 +1,162 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     David E. Jones
+ *@author     Brad Steiner
+ *@author     Arukala
+ *@version    $Revision: 1.1 $
+ *@since      2.2
+ */
+
+import java.util.*;
+import java.io.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.util.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.content.widget.html.*;
+import javax.servlet.HttpServletRequest;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+dispatcher = request.getAttribute("dispatcher");
+userLogin = request.getAttribute("userLogin");
+
+
+if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+
+productCategoryId = request.getParameter("productCategoryId");
+context.put("productCategoryId", productCategoryId);
+
+contentId = request.getParameter("contentId");
+if("".equals(contentId)) contentId = null;
+
+prodCatContentTypeId = request.getParameter("prodCatContentTypeId");
+fromDate = request.getParameter("fromDate");
+if("".equals(fromDate)) fromDate = null;
+
+description = request.getParameter("description");
+if("".equals(description)) description = null;
+
+categoryContent = delegator.findByPrimaryKey("ProductCategoryContent", UtilMisc.toMap("contentId", contentId, "productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId, "fromDate", fromDate));
+if(categoryContent == null) {
+    categoryContent = new HashMap();
+    categoryContent.put("productCategoryId", productCategoryId);
+    categoryContent.put("contentId", contentId);
+    categoryContent.put("prodCatContentTypeId", prodCatContentTypeId);
+    categoryContent.put("fromDate", fromDate);
+    categoryContent.put("thruDate", request.getParameter("thruDate"));
+    categoryContent.put("purchaseFromDate", request.getParameter("purchaseFromDate"));
+    categoryContent.put("purchaseThruDate", request.getParameter("purchaseThruDate"));
+    categoryContent.put("useDaysLimit", request.getParameter("useDaysLimit"));
+    categoryContent.put("useCountLimit", request.getParameter("useCountLimit"));
+}
+context.put("categoryContent", categoryContent);
+
+
+categoryContentData = new HashMap();
+categoryContentData.putAll(categoryContent);
+
+
+Map content = null;
+
+context.put("contentId", contentId);
+if(contentId != null) {
+    content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
+    context.put("content", content);
+} else {
+    content = new HashMap();
+    if(description != null) content.put("description", description);
+}
+
+productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
+context.put("productCategory", productCategory);
+
+HtmlFormWrapper updateCategoryContentWrapper = null;
+
+//Email
+if ("FULFILLMENT_EMAIL".equals(prodCatContentTypeId)) {
+    emailData = new HashMap();
+    if (contentId != null && content != null) {
+        subjectDr = content.getRelatedOne("DataResource");
+        if (subjectDr != null) {
+            subject = subjectDr.getRelatedOne("ElectronicText");
+            emailData.put("subject", subject.get("textData"));
+            emailData.put("subjectDataResourceId", subject.get("dataResourceId"));
+        }
+        serviceCtx = UtilMisc.toMap("userLogin", userLogin, "contentId", contentId, "mapKeys", UtilMisc.toList("plainBody", "htmlBody"));
+        result = dispatcher.runSync("findAssocContent", serviceCtx);
+        contentAssocs = result.get("contentAssocs");
+        if (contentAssocs != null) {
+            for (java.util.Iterator iterator = contentAssocs.iterator(); iterator.hasNext(); ) {
+                contentAssoc  = iterator.next();
+                bodyContent = contentAssoc.getRelatedOne("ToContent");
+                bodyDr = bodyContent.getRelatedOne("DataResource");
+                body = bodyDr.getRelatedOne("ElectronicText");
+                emailData.put(contentAssoc.get("mapKey"), body.get("textData"));
+                emailData.put(contentAssoc.get("mapKey")+"DataResourceId", body.get("dataResourceId"));
+            }
+        }
+    }
+
+    updateCategoryContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "EditProductContentEmail", request, response);
+    updateCategoryContentWrapper.putInContext("emailData", emailData);
+    context.put("emailData", emailData);
+} else if ("DIGITAL_DOWNLOAD".equals(prodCatContentTypeId)) {
+    downloadData = new HashMap();
+    if (contentId != null && content != null) {
+        downloadDr = content.getRelatedOne("DataResource");
+        if (subjectDr != null) {
+            download = downloadDr.getRelatedOne("OtherDataResource");
+            downloadData.put("file", download.get("dataResourceContent"));
+            downloadData.put("fileDataResourceId", download.get("dataResourceId"));
+        }
+    }
+    updateCategoryContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "EditProductContentDownload", request, response);
+    updateCategoryContentWrapper.putInContext("downloadData", downloadData);
+} else if ("FULFILLMENT_EXTERNAL".equals(prodCatContentTypeId)) {
+    updateCategoryContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "EditProductContentExternal", request, response);
+} else {
+    //Assume it is a generic simple text content
+    textData = new HashMap();
+    if (contentId != null && content != null) {
+        textDr = content.getRelatedOne("DataResource");
+        if (textDr != null) {
+            text = textDr.getRelatedOne("ElectronicText");
+            textData.put("text", text.get("textData"));
+            textData.put("textDataResourceId", text.get("dataResourceId"));
+        }
+    }
+    updateCategoryContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "EditCategoryContentSimpleText", request, response);
+    updateCategoryContentWrapper.putInContext("textData", textData);
+
+}
+
+context.put("updateCategoryContentWrapper", updateCategoryContentWrapper);
+updateCategoryContentWrapper.putInContext("categoryContentData", categoryContentData);
+//updateCategoryContentWrapper.putInContext("content", content);
+context.put("categoryContentData", categoryContentData);
+updateCategoryContentWrapper.putInContext("content", content);
+updateCategoryContentWrapper.putInContext("contentId", contentId);
+//context.put("log", log);
