@@ -145,7 +145,14 @@ esac
 CLASSPATH=$WL_HOME:$WL_HOME/lib/weblogic_sp.jar:$WL_HOME/lib/weblogic.jar
 
 # get all of the ofbiz jars
-CLASSPATH=$CLASSPATH:$OFBIZ_HOME/core/lib/ofbcore-share.jar:$OFBIZ_HOME/core/lib/ofbcore-workflow.jar:$OFBIZ_HOME/core/lib/ofbcore-rules.jar
+CLASSPATH=$CLASSPATH:$OFBIZ_HOME/core/lib/ofbcore-share.jar
+CLASSPATH=$CLASSPATH:$OFBIZ_HOME/core/lib/ofbcore-entity.jar
+CLASSPATH=$CLASSPATH:$OFBIZ_HOME/core/lib/ofbcore-service.jar
+CLASSPATH=$CLASSPATH:$OFBIZ_HOME/core/lib/ofbcore-extutil.jar
+CLASSPATH=$CLASSPATH:$OFBIZ_HOME/core/lib/ofbcore-workflow.jar
+CLASSPATH=$CLASSPATH:$OFBIZ_HOME/core/lib/ofbcore-rules.jar
+CLASSPATH=$CLASSPATH:$OFBIZ_HOME/core/lib/ofbcore-datafile.jar
+CLASSPATH=$CLASSPATH:$OFBIZ_HOME/core/lib/ofbcore-minilang.jar
 CLASSPATH=$CLASSPATH:$OFBIZ_HOME/commonapp/lib/commonapp.jar
 # get all of the ofbiz config files
 CLASSPATH=$CLASSPATH:$OFBIZ_HOME/commonapp/etc
