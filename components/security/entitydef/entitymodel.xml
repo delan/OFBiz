@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  */
 -->
 
@@ -43,17 +43,17 @@
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
-  <!--  - org.ofbiz.securityext.login -->
+  <!--  - org.ofbiz.security.login -->
   <!--  - org.ofbiz.security.securitygroup -->
   <!-- ========================================================= -->
 
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.securityext.login -->
+  <!-- org.ofbiz.security.login -->
   <!-- ========================================================= -->
 
     <entity entity-name="UserLogin"
-            package-name="org.ofbiz.securityext.login"
+            package-name="org.ofbiz.security.login"
             title="User Login Entity">
       <field name="userLoginId" type="id-vlong-ne"></field>
       <field name="partyId" type="id"></field>
@@ -83,7 +83,7 @@
       </relation>
     </entity>
     <entity entity-name="UserLoginHistory"
-            package-name="org.ofbiz.securityext.login"
+            package-name="org.ofbiz.security.login"
             never-cache="true"
             title="User Login History Entity">
       <field name="userLoginId" type="id-vlong-ne"></field>
@@ -103,7 +103,7 @@
       </relation>
     </entity>
     <entity entity-name="UserLoginSession"
-            package-name="org.ofbiz.securityext.login"
+            package-name="org.ofbiz.security.login"
             never-cache="true"
             title="User Login History Entity">
       <field name="userLoginId" type="id-vlong-ne"></field>
