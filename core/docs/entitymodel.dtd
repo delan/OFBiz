@@ -41,6 +41,8 @@
     <!ATTLIST entity
 	package-name CDATA #REQUIRED >
     <!ATTLIST entity
+	dependent-on CDATA #IMPLIED >
+    <!ATTLIST entity
 	title CDATA #IMPLIED >
     <!ATTLIST entity
 	copyright CDATA #IMPLIED >
@@ -79,10 +81,4 @@
     <!ATTLIST key-map
 	field-name CDATA #REQUIRED >
     <!ATTLIST key-map
-	col-name CDATA #IMPLIED >
-    <!-- this is only required if the field-name in the related table is different from the name in this table -->
-    <!ATTLIST key-map
 	rel-field-name CDATA #IMPLIED >
-    <!-- this is only required if the col-name in the related table is different from the col-name in this table -->
-    <!ATTLIST key-map
-	rel-col-namee CDATA #IMPLIED >
