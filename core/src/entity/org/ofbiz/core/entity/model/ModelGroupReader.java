@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity.model;
 
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
@@ -47,6 +48,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.config.*;
 
+
 /**
  * Generic Entity - Entity Group Definition Reader
  *
@@ -67,6 +69,7 @@ public class ModelGroupReader {
 
     public static ModelGroupReader getModelGroupReader(String delegatorName) {
         Element rootElement = null;
+
         try {
             rootElement = EntityConfigUtil.getXmlRootElement();
         } catch (GenericEntityException e) {
@@ -77,6 +80,7 @@ public class ModelGroupReader {
 
         String tempModelName = delegatorElement.getAttribute("entity-group-reader");
         ModelGroupReader reader = (ModelGroupReader) readers.get(tempModelName);
+
         if (reader == null) //don't want to block here
         {
             synchronized (ModelGroupReader.class) {
@@ -94,6 +98,7 @@ public class ModelGroupReader {
     public ModelGroupReader(String modelName) {
         this.modelName = modelName;
         Element rootElement = null;
+
         try {
             rootElement = EntityConfigUtil.getXmlRootElement();
         } catch (GenericEntityException e) {
@@ -120,8 +125,9 @@ public class ModelGroupReader {
 
                     UtilTimer utilTimer = new UtilTimer();
                     //utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocument");
-                    
+
                     Document document = null;
+
                     try {
                         document = entityGroupResourceHandler.getDocument();
                     } catch (GenericConfigException e) {
@@ -133,10 +139,12 @@ public class ModelGroupReader {
                     }
 
                     Hashtable docElementValues = null;
+
                     docElementValues = new Hashtable();
 
                     //utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocumentElement");
                     Element docElement = document.getDocumentElement();
+
                     if (docElement == null) {
                         groupCache = null;
                         return null;
@@ -145,6 +153,7 @@ public class ModelGroupReader {
                     Node curChild = docElement.getFirstChild();
 
                     int i = 0;
+
                     if (curChild != null) {
                         utilTimer.timerString("[ModelGroupReader.getGroupCache] Before start of entity loop");
                         do {
@@ -152,13 +161,15 @@ public class ModelGroupReader {
                                 Element curEntity = (Element) curChild;
                                 String entityName = UtilXml.checkEmpty(curEntity.getAttribute("entity"));
                                 String groupName = UtilXml.checkEmpty(curEntity.getAttribute("group"));
+
                                 if (groupName == null || entityName == null) continue;
                                 groupNames.add(groupName);
                                 groupCache.put(entityName, groupName);
                                 //utilTimer.timerString("  After entityEntityName -- " + i + " --");
                                 i++;
                             }
-                        } while ((curChild = curChild.getNextSibling()) != null);
+                        }
+                        while ((curChild = curChild.getNextSibling()) != null);
                     } else
                         Debug.logWarning("[ModelGroupReader.getGroupCache] No child nodes found.");
                     utilTimer.timerString("[ModelGroupReader.getGroupCache] FINISHED - Total Entity-Groups: " + i + " FINISHED");
@@ -174,6 +185,7 @@ public class ModelGroupReader {
      */
     public String getEntityGroupName(String entityName) {
         Map gc = getGroupCache();
+
         if (gc != null)
             return (String) gc.get(entityName);
         else
@@ -195,12 +207,15 @@ public class ModelGroupReader {
     public Collection getEntityNamesByGroup(String groupName) {
         Map gc = getGroupCache();
         Collection enames = new LinkedList();
+
         if (groupName == null || groupName.length() <= 0) return enames;
         if (gc == null || gc.size() < 0) return enames;
         Set gcEntries = gc.entrySet();
         Iterator gcIter = gcEntries.iterator();
+
         while (gcIter.hasNext()) {
             Map.Entry entry = (Map.Entry) gcIter.next();
+
             if (groupName.equals(entry.getValue())) enames.add(entry.getKey());
         }
         return enames;
@@ -209,11 +224,13 @@ public class ModelGroupReader {
     protected Document getDocument(String filename) {
         if (filename == null) return null;
         Document document = null;
+
         try {
             document = UtilXml.readXmlDocument(UtilURL.fromFilename(filename));
         } catch (SAXException sxe) {
             // Error generated during parsing)
             Exception x = sxe;
+
             if (sxe.getException() != null) x = sxe.getException();
             x.printStackTrace();
         } catch (ParserConfigurationException pce) {

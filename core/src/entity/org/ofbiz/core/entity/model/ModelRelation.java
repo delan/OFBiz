@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity.model;
 
+
 import java.util.*;
 
 import org.w3c.dom.Document;
@@ -33,6 +34,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * Generic Entity - Relation model class
@@ -46,19 +48,22 @@ public class ModelRelation {
 
     /** the title, gives a name/description to the relation */
     protected String title = "";
+
     /** the type: either "one" or "many" or "one-nofk" */
     protected String type = "";
+
     /** the name of the related entity */
     protected String relEntityName = "";
+
     /** keyMaps defining how to lookup the relatedTable using columns from this table */
     protected Vector keyMaps = new Vector();
+
     /** the main entity of this relation */
     protected ModelEntity mainEntity = null;
 
     /** Default Constructor */
-    public ModelRelation() {
-    }
-    
+    public ModelRelation() {}
+
     /** XML Constructor */
     public ModelRelation(ModelEntity mainEntity, Element relationElement) {
         this.mainEntity = mainEntity;
@@ -68,10 +73,13 @@ public class ModelRelation {
         this.relEntityName = UtilXml.checkEmpty(relationElement.getAttribute("rel-entity-name"));
 
         NodeList keyMapList = relationElement.getElementsByTagName("key-map");
+
         for (int i = 0; i < keyMapList.getLength(); i++) {
             Element keyMapElement = (Element) keyMapList.item(i);
+
             if (keyMapElement.getParentNode() == relationElement) {
                 ModelKeyMap keyMap = new ModelKeyMap(keyMapElement);
+
                 if (keyMap != null) {
                     this.keyMaps.add(keyMap);
                 }
@@ -80,29 +88,67 @@ public class ModelRelation {
     }
 
     /** the title, gives a name/description to the relation */
-    public String getTitle() { return this.title; }
-    public void setTitle(String title) { this.title = title; }
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     /** the type: either "one" or "many" or "one-nofk" */
-    public String getType() { return this.type; }
-    public void setType(String type) { this.type = type; }
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     /** the name of the related EJB/entity */
-    public String getRelEntityName() { return this.relEntityName; }
-    public void setRelEntityName(String relEntityName) { this.relEntityName = relEntityName; }
+    public String getRelEntityName() {
+        return this.relEntityName;
+    }
+
+    public void setRelEntityName(String relEntityName) {
+        this.relEntityName = relEntityName;
+    }
+
     /** the main entity of this relation */
-    public ModelEntity getMainEntity() { return this.mainEntity; }
-    public void setMainEntity(ModelEntity mainEntity) { this.mainEntity = mainEntity; }
+    public ModelEntity getMainEntity() {
+        return this.mainEntity;
+    }
+
+    public void setMainEntity(ModelEntity mainEntity) {
+        this.mainEntity = mainEntity;
+    }
 
     /** keyMaps defining how to lookup the relatedTable using columns from this table */
-    public Iterator getKeyMapsIterator() { return this.keyMaps.iterator(); }
-    public int getKeyMapsSize() { return this.keyMaps.size(); }
-    public ModelKeyMap getKeyMap(int index) { return (ModelKeyMap) this.keyMaps.get(index); }
-    public void addKeyMap(ModelKeyMap keyMap) { this.keyMaps.add(keyMap); }
-    public ModelKeyMap removeKeyMap(int index) { return (ModelKeyMap) this.keyMaps.remove(index); }
-    
+    public Iterator getKeyMapsIterator() {
+        return this.keyMaps.iterator();
+    }
+
+    public int getKeyMapsSize() {
+        return this.keyMaps.size();
+    }
+
+    public ModelKeyMap getKeyMap(int index) {
+        return (ModelKeyMap) this.keyMaps.get(index);
+    }
+
+    public void addKeyMap(ModelKeyMap keyMap) {
+        this.keyMaps.add(keyMap);
+    }
+
+    public ModelKeyMap removeKeyMap(int index) {
+        return (ModelKeyMap) this.keyMaps.remove(index);
+    }
+
     /** Find a KeyMap with the specified fieldName */
     public ModelKeyMap findKeyMap(String fieldName) {
         for (int i = 0; i < keyMaps.size(); i++) {
             ModelKeyMap keyMap = (ModelKeyMap) keyMaps.elementAt(i);
+
             if (keyMap.fieldName.equals(fieldName)) return keyMap;
         }
         return null;
@@ -112,6 +158,7 @@ public class ModelRelation {
     public ModelKeyMap findKeyMapByRelated(String relFieldName) {
         for (int i = 0; i < keyMaps.size(); i++) {
             ModelKeyMap keyMap = (ModelKeyMap) keyMaps.elementAt(i);
+
             if (keyMap.relFieldName.equals(relFieldName)) return keyMap;
         }
         return null;
@@ -119,11 +166,13 @@ public class ModelRelation {
 
     public String keyMapString(String separator, String afterLast) {
         String returnString = "";
+
         if (keyMaps.size() < 1) {
             return "";
         }
 
         int i = 0;
+
         for (; i < keyMaps.size() - 1; i++) {
             returnString = returnString + ((ModelKeyMap) keyMaps.elementAt(i)).fieldName + separator;
         }
@@ -133,11 +182,13 @@ public class ModelRelation {
 
     public String keyMapUpperString(String separator, String afterLast) {
         String returnString = "";
+
         if (keyMaps.size() < 1) {
             return "";
         }
 
         int i = 0;
+
         for (; i < keyMaps.size() - 1; i++) {
             returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.elementAt(i)).fieldName) + separator;
         }
@@ -147,41 +198,45 @@ public class ModelRelation {
 
     public String keyMapRelatedUpperString(String separator, String afterLast) {
         String returnString = "";
+
         if (keyMaps.size() < 1) {
             return "";
         }
 
         int i = 0;
+
         for (; i < keyMaps.size() - 1; i++) {
             returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.elementAt(i)).relFieldName) + separator;
         }
         returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.elementAt(i)).relFieldName) + afterLast;
         return returnString;
     }
-/*
-  public String keyMapColumnString(String separator, String afterLast) {
-    String returnString = "";
-    if(keyMaps.size() < 1) { return ""; }
 
-    int i = 0;
-    for(; i < keyMaps.size() - 1; i++) {
-      returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).colName + separator;
-    }
-    returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).colName + afterLast;
-    return returnString;
-  }
-*/
-/*
-  public String keyMapRelatedColumnString(String separator, String afterLast) {
-    String returnString = "";
-    if(keyMaps.size() < 1) { return ""; }
+    /*
+     public String keyMapColumnString(String separator, String afterLast) {
+     String returnString = "";
+     if(keyMaps.size() < 1) { return ""; }
 
-    int i = 0;
-    for(; i < keyMaps.size() - 1; i++) {
-      returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).relColName + separator;
-    }
-    returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).relColName + afterLast;
-    return returnString;
-  }
-*/
+     int i = 0;
+     for(; i < keyMaps.size() - 1; i++) {
+     returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).colName + separator;
+     }
+     returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).colName + afterLast;
+     return returnString;
+     }
+     */
+
+    /*
+     public String keyMapRelatedColumnString(String separator, String afterLast) {
+     String returnString = "";
+     if(keyMaps.size() < 1) { return ""; }
+
+     int i = 0;
+     for(; i < keyMaps.size() - 1; i++) {
+     returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).relColName + separator;
+     }
+     returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).relColName + afterLast;
+     return returnString;
+     }
+     */
 }

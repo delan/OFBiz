@@ -24,10 +24,12 @@
 
 package org.ofbiz.core.entity.model;
 
+
 import java.io.*;
 import java.util.*;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * Generic Entity - General Utilities
@@ -77,6 +79,7 @@ public class ModelUtil {
         String fieldName = null;
         int end = columnName.indexOf("_");
         int start = 0;
+
         if (end > 0) {
             fieldName = columnName.substring(start, end).toLowerCase();
             start = end + 1;
@@ -102,10 +105,13 @@ public class ModelUtil {
         if (javaName == null) return null;
         if (javaName.length() <= 0) return "";
         StringBuffer dbName = new StringBuffer();
+
         dbName.append(Character.toUpperCase(javaName.charAt(0)));
         int namePos = 1;
+
         while (namePos < javaName.length()) {
             char curChar = javaName.charAt(namePos);
+
             if (Character.isUpperCase(curChar)) dbName.append('_');
             dbName.append(Character.toUpperCase(curChar));
             namePos++;
@@ -133,8 +139,10 @@ public class ModelUtil {
         String retString = new String(mainString);
         int loc = 0;
         int i = retString.indexOf(oldString, loc);
+
         while (i >= 0) {
             StringBuffer querySb = new StringBuffer(retString);
+
             querySb.replace(i, i + oldString.length(), newString);
             retString = querySb.toString();
 

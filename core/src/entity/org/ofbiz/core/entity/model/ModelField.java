@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity.model;
 
+
 import java.util.*;
 
 import org.w3c.dom.Document;
@@ -34,6 +35,7 @@ import org.w3c.dom.NodeList;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Generic Entity - Field model class
@@ -47,18 +49,21 @@ public class ModelField {
 
     /** The name of the Field */
     protected String name = "";
+
     /** The type of the Field */
     protected String type = "";
+
     /** The col-name of the Field */
     protected String colName = "";
+
     /** boolean which specifies whether or not the Field is a Primary Key */
     protected boolean isPk = false;
+
     /** validators to be called when an update is done */
     protected Vector validators = new Vector();
 
     /** Default Constructor */
-    public ModelField() {
-    }
+    public ModelField() {}
 
     /** XML Constructor */
     public ModelField(Element fieldElement) {
@@ -68,12 +73,14 @@ public class ModelField {
         this.isPk = false; //is set elsewhere
 
         NodeList validateList = fieldElement.getElementsByTagName("validate");
+
         for (int i = 0; i < validateList.getLength(); i++) {
             Element element = (Element) validateList.item(i);
+
             this.validators.add(UtilXml.checkEmpty(element.getAttribute("name")));
         }
     }
-    
+
     /** DB Names Constructor */
     public ModelField(GenericDAO.ColumnCheckInfo ccInfo, ModelFieldTypeReader modelFieldTypeReader) {
         this.colName = ccInfo.columnName.toUpperCase();
@@ -89,23 +96,57 @@ public class ModelField {
         else
             this.isPk = false;
     }
-    
+
     /** The name of the Field */
-    public String getName() { return this.name; }
-    public void setName(String name) { this.name = name; }
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /** The type of the Field */
-    public String getType() { return this.type; }
-    public void setType(String type) { this.type = type; }
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     /** The col-name of the Field */
-    public String getColName() { return this.colName; }
-    public void setColName(String colName) { this.colName = colName; }
+    public String getColName() {
+        return this.colName;
+    }
+
+    public void setColName(String colName) {
+        this.colName = colName;
+    }
+
     /** boolean which specifies whether or not the Field is a Primary Key */
-    public boolean getIsPk() { return this.isPk; }
-    public void setIsPk(boolean isPk) { this.isPk = isPk; }
+    public boolean getIsPk() {
+        return this.isPk;
+    }
+
+    public void setIsPk(boolean isPk) {
+        this.isPk = isPk;
+    }
 
     /** validators to be called when an update is done */
-    public String getValidator(int index) { return (String) this.validators.get(index); }
-    public int getValidatorsSize() { return this.validators.size(); }
-    public void addValidator(String validator) { this.validators.add(validator); }
-    public String removeValidator(int index) { return (String) this.validators.remove(index); }
+    public String getValidator(int index) {
+        return (String) this.validators.get(index);
+    }
+
+    public int getValidatorsSize() {
+        return this.validators.size();
+    }
+
+    public void addValidator(String validator) {
+        this.validators.add(validator);
+    }
+
+    public String removeValidator(int index) {
+        return (String) this.validators.remove(index);
+    }
 }

@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity.model;
 
+
 import java.util.*;
 
 import org.w3c.dom.Document;
@@ -34,6 +35,7 @@ import org.w3c.dom.NodeList;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
+
 
 /**
  * Generic Entity - Entity model class
@@ -55,6 +57,7 @@ public class ModelEntity implements Comparable {
 
     /** The entity-name of the Entity */
     protected String entityName = "";
+
     /** The table-name of the Entity */
     protected String tableName = "";
 
@@ -67,21 +70,28 @@ public class ModelEntity implements Comparable {
     //Strings to go in the comment header.
     /** The title for documentation purposes */
     protected String title = "";
+
     /** The description for documentation purposes */
     protected String description = "";
+
     /** The copyright for documentation purposes */
     protected String copyright = "";
+
     /** The author for documentation purposes */
     protected String author = "";
+
     /** The version for documentation purposes */
     protected String version = "";
 
     /** A Vector of the Field objects for the Entity */
     protected Vector fields = new Vector();
+
     /** A Vector of the Field objects for the Entity, one for each Primary Key */
     protected Vector pks = new Vector();
+
     /** A Vector of the Field objects for the Entity, one for each NON Primary Key */
     protected Vector nopks = new Vector();
+
     /** relations defining relationships between this entity and other entities */
     protected Vector relations = new Vector();
 
@@ -90,9 +100,8 @@ public class ModelEntity implements Comparable {
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
-    public ModelEntity() {
-    }
-    
+    public ModelEntity() {}
+
     /** XML Constructor */
     public ModelEntity(ModelReader reader, Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
         this.modelReader = reader;
@@ -102,21 +111,25 @@ public class ModelEntity implements Comparable {
 
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before fields");
         NodeList fieldList = entityElement.getElementsByTagName("field");
+
         for (int i = 0; i < fieldList.getLength(); i++) {
             ModelField field = reader.createModelField((Element) fieldList.item(i), docElement, docElementValues);
+
             if (field != null) this.fields.add(field);
         }
 
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before prim-keys");
         NodeList pkList = entityElement.getElementsByTagName("prim-key");
+
         for (int i = 0; i < pkList.getLength(); i++) {
             ModelField field = reader.findModelField(this, ((Element) pkList.item(i)).getAttribute("field"));
+
             if (field != null) {
                 this.pks.add(field);
                 field.isPk = true;
             } else {
                 Debug.logError("[ModelReader.createModelEntity] ERROR: Could not find field \"" +
-                               ((Element) pkList.item(i)).getAttribute("field") + "\" specified in a prim-key", module);
+                    ((Element) pkList.item(i)).getAttribute("field") + "\" specified in a prim-key", module);
             }
         }
 
@@ -124,6 +137,7 @@ public class ModelEntity implements Comparable {
         this.nopks = new Vector();
         for (int ind = 0; ind < this.fields.size(); ind++) {
             ModelField field = (ModelField) this.fields.elementAt(ind);
+
             if (!field.isPk) this.nopks.add(field);
         }
 
@@ -136,14 +150,16 @@ public class ModelEntity implements Comparable {
         this.tableName = tableName.toUpperCase();
         this.entityName = ModelUtil.dbNameToClassName(this.tableName);
         Iterator columns = colList.iterator();
+
         while (columns.hasNext()) {
             GenericDAO.ColumnCheckInfo ccInfo = (GenericDAO.ColumnCheckInfo) columns.next();
             ModelField newField = new ModelField(ccInfo, modelFieldTypeReader);
+
             this.fields.add(newField);
         }
         this.updatePkLists();
     }
-    
+
     protected void populateBasicInfo(Element entityElement, Element docElement, Hashtable docElementValues) {
         this.entityName = UtilXml.checkEmpty(entityElement.getAttribute("entity-name"));
         this.tableName = UtilXml.checkEmpty(entityElement.getAttribute("table-name"), ModelUtil.javaNameToDbName(this.entityName));
@@ -173,60 +189,119 @@ public class ModelEntity implements Comparable {
 
     protected void populateRelated(ModelReader reader, Element entityElement) {
         NodeList relationList = entityElement.getElementsByTagName("relation");
+
         for (int i = 0; i < relationList.getLength(); i++) {
             Element relationElement = (Element) relationList.item(i);
+
             if (relationElement.getParentNode() == entityElement) {
                 ModelRelation relation = reader.createRelation(this, relationElement);
+
                 if (relation != null) this.relations.add(relation);
             }
         }
     }
 
     // ===== GETTERS/SETTERS =====
-    
-    public ModelReader getModelReader() { return modelReader; }
+
+    public ModelReader getModelReader() {
+        return modelReader;
+    }
 
     /** The entity-name of the Entity */
-    public String getEntityName() { return this.entityName; }
-    public void setEntityName(String entityName) { this.entityName = entityName; }
+    public String getEntityName() {
+        return this.entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
+    }
+
     /** The table-name of the Entity */
-    public String getTableName() { return this.tableName; }
-    public void setTableName(String tableName) { this.tableName = tableName; }
+    public String getTableName() {
+        return this.tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
 
     /** The package-name of the Entity */
-    public String getPackageName() { return this.packageName; }
-    public void setPackageName(String packageName) { this.packageName = packageName; }
+    public String getPackageName() {
+        return this.packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
 
     /** The entity-name of the Entity that this Entity is dependent on, if empty then no dependency */
-    public String getDependentOn() { return this.dependentOn; }
-    public void setDependentOn(String dependentOn) { this.dependentOn = dependentOn; }
+    public String getDependentOn() {
+        return this.dependentOn;
+    }
+
+    public void setDependentOn(String dependentOn) {
+        this.dependentOn = dependentOn;
+    }
 
     //Strings to go in the comment header.
     /** The title for documentation purposes */
-    public String getTitle() { return this.title; }
-    public void setTitle(String title) { this.title = title; }
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     /** The description for documentation purposes */
-    public String getDescription() { return this.description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     /** The copyright for documentation purposes */
-    public String getCopyright() { return this.copyright; }
-    public void setCopyright(String copyright) { this.copyright = copyright; }
+    public String getCopyright() {
+        return this.copyright;
+    }
+
+    public void setCopyright(String copyright) {
+        this.copyright = copyright;
+    }
+
     /** The author for documentation purposes */
-    public String getAuthor() { return this.author; }
-    public void setAuthor(String author) { this.author = author; }
+    public String getAuthor() {
+        return this.author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
     /** The version for documentation purposes */
-    public String getVersion() { return this.version; }
-    public void setVersion(String version) { this.version = version; }
+    public String getVersion() {
+        return this.version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
     /** An indicator to specify if this entity requires locking for updates */
-    public boolean getDoLock() { return this.doLock; }
-    public void setDoLock(boolean doLock) { this.doLock = doLock; }
+    public boolean getDoLock() {
+        return this.doLock;
+    }
+
+    public void setDoLock(boolean doLock) {
+        this.doLock = doLock;
+    }
 
     public boolean lock() {
         if (doLock && isField(STAMP_FIELD)) {
             return true;
-        }
-        else {
+        } else {
             doLock = false;
             return false;
         }
@@ -237,6 +312,7 @@ public class ModelEntity implements Comparable {
         nopks = new Vector();
         for (int i = 0; i < fields.size(); i++) {
             ModelField field = (ModelField) fields.get(i);
+
             if (field.isPk)
                 pks.add(field);
             else
@@ -248,6 +324,7 @@ public class ModelEntity implements Comparable {
         if (fieldName == null) return false;
         for (int i = 0; i < fields.size(); i++) {
             ModelField field = (ModelField) fields.get(i);
+
             if (field.name.equals(fieldName)) return true;
         }
         return false;
@@ -256,32 +333,68 @@ public class ModelEntity implements Comparable {
     public boolean areFields(Collection fieldNames) {
         if (fieldNames == null) return false;
         Iterator iter = fieldNames.iterator();
+
         while (iter.hasNext()) {
             String fieldName = (String) iter.next();
+
             if (!isField(fieldName)) return false;
         }
         return true;
     }
 
-    public int getPksSize() { return this.pks.size(); }
-    public ModelField getPk(int index) { return (ModelField) this.pks.get(index); }
-    public Iterator getPksIterator() { return this.pks.iterator(); }
-    public Vector getPksCopy() { return new Vector(this.pks); }
-    
-    public int getNopksSize() { return this.nopks.size(); }
-    public ModelField getNopk(int index) { return (ModelField) this.nopks.get(index); }
-    public Iterator getNopksIterator() { return this.nopks.iterator(); }
-    public Vector getNopksCopy() { return new Vector(this.nopks); }
-    
-    public int getFieldsSize() { return this.fields.size(); }
-    public ModelField getField(int index) { return (ModelField) this.fields.get(index); }
-    public Iterator getFieldsIterator() { return this.fields.iterator(); }
-    public Vector getFieldsCopy() { return new Vector(this.fields); }
-    
+    public int getPksSize() {
+        return this.pks.size();
+    }
+
+    public ModelField getPk(int index) {
+        return (ModelField) this.pks.get(index);
+    }
+
+    public Iterator getPksIterator() {
+        return this.pks.iterator();
+    }
+
+    public Vector getPksCopy() {
+        return new Vector(this.pks);
+    }
+
+    public int getNopksSize() {
+        return this.nopks.size();
+    }
+
+    public ModelField getNopk(int index) {
+        return (ModelField) this.nopks.get(index);
+    }
+
+    public Iterator getNopksIterator() {
+        return this.nopks.iterator();
+    }
+
+    public Vector getNopksCopy() {
+        return new Vector(this.nopks);
+    }
+
+    public int getFieldsSize() {
+        return this.fields.size();
+    }
+
+    public ModelField getField(int index) {
+        return (ModelField) this.fields.get(index);
+    }
+
+    public Iterator getFieldsIterator() {
+        return this.fields.iterator();
+    }
+
+    public Vector getFieldsCopy() {
+        return new Vector(this.fields);
+    }
+
     public ModelField getField(String fieldName) {
         if (fieldName == null) return null;
         for (int i = 0; i < fields.size(); i++) {
             ModelField field = (ModelField) fields.get(i);
+
             if (field.name.equals(fieldName)) return field;
         }
         return null;
@@ -290,28 +403,30 @@ public class ModelEntity implements Comparable {
     public void addField(ModelField field) {
         if (field == null) return;
         this.fields.add(field);
-        
+
         if (field.isPk)
             pks.add(field);
         else
             nopks.add(field);
     }
-    
+
     public ModelField removeField(int index) {
         ModelField field = null;
+
         field = (ModelField) fields.remove(index);
         if (field == null) return null;
-        
+
         if (field.isPk)
             pks.remove(field);
         else
             nopks.remove(field);
         return field;
     }
-    
+
     public ModelField removeField(String fieldName) {
         if (fieldName == null) return null;
         ModelField field = null;
+
         for (int i = 0; i < fields.size(); i++) {
             field = (ModelField) fields.get(i);
             if (field.name.equals(fieldName)) {
@@ -340,29 +455,45 @@ public class ModelEntity implements Comparable {
 
     public List getFieldNamesFromFieldVector(Vector modelFields) {
         List nameList = new Vector(modelFields.size());
+
         if (modelFields == null || modelFields.size() <= 0) return nameList;
         for (int i = 0; i < modelFields.size(); i++) {
             ModelField field = (ModelField) modelFields.get(i);
+
             nameList.add(field.name);
         }
         return nameList;
     }
 
-    public int getRelationsSize() { return this.relations.size(); }
-    public ModelRelation getRelation(int index) { return (ModelRelation) this.relations.get(index); }
-    public Iterator getRelationsIterator() { return this.relations.iterator(); }
+    public int getRelationsSize() {
+        return this.relations.size();
+    }
+
+    public ModelRelation getRelation(int index) {
+        return (ModelRelation) this.relations.get(index);
+    }
+
+    public Iterator getRelationsIterator() {
+        return this.relations.iterator();
+    }
 
     public ModelRelation getRelation(String relationName) {
         if (relationName == null) return null;
         for (int i = 0; i < relations.size(); i++) {
             ModelRelation relation = (ModelRelation) relations.get(i);
+
             if (relationName.equals(relation.title + relation.relEntityName)) return relation;
         }
         return null;
     }
-    
-    public void addRelation(ModelRelation relation) { this.relations.add(relation); }
-    public ModelRelation removeRelation(int index) { return (ModelRelation) this.relations.remove(index); }
+
+    public void addRelation(ModelRelation relation) {
+        this.relations.add(relation);
+    }
+
+    public ModelRelation removeRelation(int index) {
+        return (ModelRelation) this.relations.remove(index);
+    }
 
     public String nameString(Vector flds) {
         return nameString(flds, ", ", "");
@@ -370,11 +501,13 @@ public class ModelEntity implements Comparable {
 
     public String nameString(Vector flds, String separator, String afterLast) {
         String returnString = "";
+
         if (flds.size() < 1) {
             return "";
         }
 
         int i = 0;
+
         for (; i < flds.size() - 1; i++) {
             returnString = returnString + ((ModelField) flds.elementAt(i)).name + separator;
         }
@@ -384,11 +517,13 @@ public class ModelEntity implements Comparable {
 
     public String typeNameString(Vector flds) {
         String returnString = "";
+
         if (flds.size() < 1) {
             return "";
         }
 
         int i = 0;
+
         for (; i < flds.size() - 1; i++) {
             returnString = returnString + ((ModelField) flds.elementAt(i)).type + " " + ((ModelField) flds.elementAt(i)).name + ", ";
         }
@@ -434,11 +569,13 @@ public class ModelEntity implements Comparable {
 
     public String fieldsStringList(Vector flds, String eachString, String separator, boolean appendIndex, boolean onlyNonPK) {
         String returnString = "";
+
         if (flds.size() < 1) {
             return "";
         }
 
         int i = 0;
+
         for (; i < flds.size(); i++) {
             if (onlyNonPK && ((ModelField) flds.elementAt(i)).isPk) continue;
             returnString = returnString + eachString;
@@ -454,11 +591,13 @@ public class ModelEntity implements Comparable {
 
     public String colNameString(Vector flds, String separator, String afterLast) {
         String returnString = "";
+
         if (flds.size() < 1) {
             return "";
         }
 
         int i = 0;
+
         for (; i < flds.size() - 1; i++) {
             returnString = returnString + ((ModelField) flds.elementAt(i)).colName + separator;
         }
@@ -472,11 +611,13 @@ public class ModelEntity implements Comparable {
 
     public String classNameString(Vector flds, String separator, String afterLast) {
         String returnString = "";
+
         if (flds.size() < 1) {
             return "";
         }
 
         int i = 0;
+
         for (; i < flds.size() - 1; i++) {
             returnString = returnString + ModelUtil.upperFirstChar(((ModelField) flds.elementAt(i)).name) + separator;
         }
@@ -486,10 +627,12 @@ public class ModelEntity implements Comparable {
 
     public String finderQueryString(Vector flds) {
         String returnString = "";
+
         if (flds.size() < 1) {
             return "";
         }
         int i = 0;
+
         for (; i < flds.size() - 1; i++) {
             returnString = returnString + ((ModelField) flds.elementAt(i)).colName + " like {" + i + "} AND ";
         }
@@ -499,10 +642,12 @@ public class ModelEntity implements Comparable {
 
     public String httpArgList(Vector flds) {
         String returnString = "";
+
         if (flds.size() < 1) {
             return "";
         }
         int i = 0;
+
         for (; i < flds.size() - 1; i++) {
             returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.elementAt(i)).colName + "=\" + " + ((ModelField) flds.elementAt(i)).name + " + \"&\" + ";
         }
@@ -512,11 +657,13 @@ public class ModelEntity implements Comparable {
 
     public String httpArgListFromClass(Vector flds) {
         String returnString = "";
+
         if (flds.size() < 1) {
             return "";
         }
 
         int i = 0;
+
         for (; i < flds.size() - 1; i++) {
             returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + ".get" + ModelUtil.upperFirstChar(((ModelField) flds.elementAt(i)).name) + "() + \"&\" + ";
         }
@@ -526,11 +673,13 @@ public class ModelEntity implements Comparable {
 
     public String httpArgListFromClass(Vector flds, String entityNameSuffix) {
         String returnString = "";
+
         if (flds.size() < 1) {
             return "";
         }
 
         int i = 0;
+
         for (; i < flds.size() - 1; i++) {
             returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + entityNameSuffix + ".get" + ModelUtil.upperFirstChar(((ModelField) flds.elementAt(i)).name) + "() + \"&\" + ";
         }
@@ -540,48 +689,55 @@ public class ModelEntity implements Comparable {
 
     public String httpRelationArgList(Vector flds, ModelRelation relation) {
         String returnString = "";
+
         if (flds.size() < 1) {
             return "";
         }
 
         int i = 0;
+
         for (; i < flds.size() - 1; i++) {
             ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.elementAt(i)).name);
+
             if (keyMap != null)
                 returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
             else
                 Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField) flds.elementAt(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type);
         }
         ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.elementAt(i)).name);
+
         if (keyMap != null)
             returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "()";
         else
             Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField) flds.elementAt(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type);
         return returnString;
     }
-/*
-  public String httpRelationArgList(ModelRelation relation) {
-    String returnString = "";
-    if(relation.keyMaps.size() < 1) { return ""; }
 
-    int i = 0;
-    for(; i < relation.keyMaps.size() - 1; i++) {
-      ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.elementAt(i);
-      if(keyMap != null)
-        returnString = returnString + "\"" + tableName + "_" + keyMap.relColName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
-    }
-    ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.elementAt(i);
-    returnString = returnString + "\"" + tableName + "_" + keyMap.relColName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "()";
-    return returnString;
-  }
-*/
+    /*
+     public String httpRelationArgList(ModelRelation relation) {
+     String returnString = "";
+     if(relation.keyMaps.size() < 1) { return ""; }
+
+     int i = 0;
+     for(; i < relation.keyMaps.size() - 1; i++) {
+     ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.elementAt(i);
+     if(keyMap != null)
+     returnString = returnString + "\"" + tableName + "_" + keyMap.relColName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
+     }
+     ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.elementAt(i);
+     returnString = returnString + "\"" + tableName + "_" + keyMap.relColName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "()";
+     return returnString;
+     }
+     */
     public String typeNameStringRelatedNoMapped(Vector flds, ModelRelation relation) {
         String returnString = "";
+
         if (flds.size() < 1) {
             return "";
         }
 
         int i = 0;
+
         if (relation.findKeyMapByRelated(((ModelField) flds.elementAt(i)).name) == null)
             returnString = returnString + ((ModelField) flds.elementAt(i)).type + " " + ((ModelField) flds.elementAt(i)).name;
         i++;
@@ -596,61 +752,65 @@ public class ModelEntity implements Comparable {
 
     public String typeNameStringRelatedAndMain(Vector flds, ModelRelation relation) {
         String returnString = "";
+
         if (flds.size() < 1) {
             return "";
         }
 
         int i = 0;
+
         for (; i < flds.size() - 1; i++) {
             ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.elementAt(i)).name);
+
             if (keyMap != null)
                 returnString = returnString + keyMap.fieldName + ", ";
             else
                 returnString = returnString + ((ModelField) flds.elementAt(i)).name + ", ";
         }
         ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.elementAt(i)).name);
+
         if (keyMap != null)
             returnString = returnString + keyMap.fieldName;
         else
             returnString = returnString + ((ModelField) flds.elementAt(i)).name;
         return returnString;
     }
-    
+
     public int compareTo(Object obj) {
         ModelEntity otherModelEntity = (ModelEntity) obj;
 
         /* This DOESN'T WORK, so forget it... using two passes
-        //sort list by fk dependencies
-        
-        if (this.getEntityName().equals(otherModelEntity.getEntityName())) {
-            return 0;
-        }
+         //sort list by fk dependencies
+         
+         if (this.getEntityName().equals(otherModelEntity.getEntityName())) {
+         return 0;
+         }
 
-        //look through relations for dependencies from this entity to the other
-        Iterator relationsIter = this.getRelationsIterator();
-        while (relationsIter.hasNext()) {
-            ModelRelation modelRelation = (ModelRelation) relationsIter.next();
+         //look through relations for dependencies from this entity to the other
+         Iterator relationsIter = this.getRelationsIterator();
+         while (relationsIter.hasNext()) {
+         ModelRelation modelRelation = (ModelRelation) relationsIter.next();
 
-            if ("one".equals(modelRelation.getType()) && modelRelation.getRelEntityName().equals(otherModelEntity.getEntityName())) {
-                //this entity is dependent on the other entity, so put that entity earlier in the list
-                return -1;
-            }
-        }
-        
-        //look through relations for dependencies from the other to this entity
-        Iterator otherRelationsIter = otherModelEntity.getRelationsIterator();
-        while (otherRelationsIter.hasNext()) {
-            ModelRelation modelRelation = (ModelRelation) otherRelationsIter.next();
+         if ("one".equals(modelRelation.getType()) && modelRelation.getRelEntityName().equals(otherModelEntity.getEntityName())) {
+         //this entity is dependent on the other entity, so put that entity earlier in the list
+         return -1;
+         }
+         }
+         
+         //look through relations for dependencies from the other to this entity
+         Iterator otherRelationsIter = otherModelEntity.getRelationsIterator();
+         while (otherRelationsIter.hasNext()) {
+         ModelRelation modelRelation = (ModelRelation) otherRelationsIter.next();
 
-            if ("one".equals(modelRelation.getType()) && modelRelation.getRelEntityName().equals(this.getEntityName())) {
-                //the other entity is dependent on this entity, so put that entity later in the list
-                return 1;
-            }
-        }
-        
-        return 0;
+         if ("one".equals(modelRelation.getType()) && modelRelation.getRelEntityName().equals(this.getEntityName())) {
+         //the other entity is dependent on this entity, so put that entity later in the list
+         return 1;
+         }
+         }
+         
+         return 0;
          */
-        
+
         return this.getEntityName().compareTo(otherModelEntity.getEntityName());
     }
 }

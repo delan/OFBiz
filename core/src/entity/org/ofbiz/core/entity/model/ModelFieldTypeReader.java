@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity.model;
 
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
@@ -46,6 +47,7 @@ import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.config.*;
+
 
 /**
  * Generic Entity - Field Type Definition Reader
@@ -72,6 +74,7 @@ public class ModelFieldTypeReader {
 
     public static ModelFieldTypeReader getModelFieldTypeReader(String helperName) {
         Element rootElement = null;
+
         try {
             rootElement = EntityConfigUtil.getXmlRootElement();
         } catch (GenericEntityException e) {
@@ -82,6 +85,7 @@ public class ModelFieldTypeReader {
 
         String tempModelName = datasourceElement.getAttribute("field-type-name");
         ModelFieldTypeReader reader = (ModelFieldTypeReader) readers.get(tempModelName);
+
         if (reader == null) //don't want to block here
         {
             synchronized (ModelFieldTypeReader.class) {
@@ -99,6 +103,7 @@ public class ModelFieldTypeReader {
     public ModelFieldTypeReader(String modelName) {
         this.modelName = modelName;
         Element rootElement = null;
+
         try {
             rootElement = EntityConfigUtil.getXmlRootElement();
         } catch (GenericEntityException e) {
@@ -126,6 +131,7 @@ public class ModelFieldTypeReader {
                     //utilTimer.timerString("Before getDocument");
 
                     Document document = null;
+
                     try {
                         document = fieldTypeResourceHandler.getDocument();
                     } catch (GenericConfigException e) {
@@ -138,6 +144,7 @@ public class ModelFieldTypeReader {
 
                     //utilTimer.timerString("Before getDocumentElement");
                     Element docElement = document.getDocumentElement();
+
                     if (docElement == null) {
                         fieldTypeCache = null;
                         return null;
@@ -147,6 +154,7 @@ public class ModelFieldTypeReader {
                     Node curChild = docElement.getFirstChild();
 
                     int i = 0;
+
                     if (curChild != null) {
                         utilTimer.timerString("Before start of field type loop");
                         do {
@@ -157,6 +165,7 @@ public class ModelFieldTypeReader {
                                 String fieldTypeName = UtilXml.checkEmpty(curFieldType.getAttribute("type"), "[No type name]");
                                 //utilTimer.timerString("  After fieldTypeName -- " + i + " --");
                                 ModelFieldType fieldType = createModelFieldType(curFieldType, docElement, null);
+
                                 //utilTimer.timerString("  After createModelFieldType -- " + i + " --");
                                 if (fieldType != null) {
                                     fieldTypeCache.put(fieldTypeName, fieldType);
@@ -167,7 +176,8 @@ public class ModelFieldTypeReader {
                                 }
 
                             }
-                        } while ((curChild = curChild.getNextSibling()) != null);
+                        }
+                        while ((curChild = curChild.getNextSibling()) != null);
                     } else
                         Debug.logWarning("No child nodes found.", module);
                     utilTimer.timerString("FINISHED - Total Field Types: " + i + " FINISHED");
@@ -182,6 +192,7 @@ public class ModelFieldTypeReader {
      */
     public Collection getFieldTypeNames() {
         Map ftc = getFieldTypeCache();
+
         return ftc.keySet();
     }
 
@@ -190,6 +201,7 @@ public class ModelFieldTypeReader {
      */
     public Collection getFieldTypes() {
         Map ftc = getFieldTypeCache();
+
         return ftc.values();
     }
 
@@ -199,6 +211,7 @@ public class ModelFieldTypeReader {
      */
     public ModelFieldType getModelFieldType(String fieldTypeName) {
         Map ftc = getFieldTypeCache();
+
         if (ftc != null)
             return (ModelFieldType) ftc.get(fieldTypeName);
         else
@@ -216,11 +229,13 @@ public class ModelFieldTypeReader {
     protected Document getDocument(String filename) {
         if (filename == null) return null;
         Document document = null;
+
         try {
             document = UtilXml.readXmlDocument(UtilURL.fromFilename(filename));
         } catch (SAXException sxe) {
             // Error generated during parsing)
             Exception x = sxe;
+
             if (sxe.getException() != null) x = sxe.getException();
             x.printStackTrace();
         } catch (ParserConfigurationException pce) {

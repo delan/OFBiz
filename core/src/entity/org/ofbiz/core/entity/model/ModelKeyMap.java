@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity.model;
 
+
 import org.w3c.dom.Document;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
@@ -31,6 +32,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * Generic Entity - KeyMap model class
@@ -43,12 +45,12 @@ public class ModelKeyMap {
 
     /** name of the field in this entity */
     protected String fieldName = "";
+
     /** name of the field in related entity */
     protected String relFieldName = "";
 
     /** Default Constructor */
-    public ModelKeyMap() {
-    }
+    public ModelKeyMap() {}
 
     /** XML Constructor */
     public ModelKeyMap(Element keyMapElement) {
@@ -58,9 +60,20 @@ public class ModelKeyMap {
     }
 
     /** name of the field in this entity */
-    public String getFieldName() { return this.fieldName; }
-    public void setFieldName(String fieldName) { this.fieldName = fieldName; }
+    public String getFieldName() {
+        return this.fieldName;
+    }
+
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
     /** name of the field in related entity */
-    public String getRelFieldName() { return this.relFieldName; }
-    public void setRelFieldName(String relFieldName) { this.relFieldName = relFieldName; }
+    public String getRelFieldName() {
+        return this.relFieldName;
+    }
+
+    public void setRelFieldName(String relFieldName) {
+        this.relFieldName = relFieldName;
+    }
 }

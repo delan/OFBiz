@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity.model;
 
+
 import java.util.*;
 
 import org.w3c.dom.Document;
@@ -33,6 +34,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import org.ofbiz.core.util.*;
+
 
 /**
  * This class extends ModelEntity and provides additional information appropriate to view entities
@@ -45,14 +47,16 @@ public class ModelViewEntity extends ModelEntity {
 
     /** Contains member-entity alias name definitions: key is alias, value is entity-name */
     protected Map memberEntityNames = new HashMap();
+
     /** Contains member-entity ModelEntities: key is alias, value is ModelEntity; populated with fields */
     protected Map memberModelEntities = null;
 
     /** List of aliases with information in addition to what is in the standard field list */
     protected Vector aliases = new Vector();
+
     /** List of view links to define how entities are connected (or "joined") */
     protected Vector viewLinks = new Vector();
-    
+
     public ModelViewEntity(ModelReader reader, Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
         this.modelReader = reader;
 
@@ -61,13 +65,15 @@ public class ModelViewEntity extends ModelEntity {
 
         if (utilTimer != null) utilTimer.timerString("  createModelViewEntity: before \"member-entity\"s");
         NodeList membEntList = entityElement.getElementsByTagName("member-entity");
+
         for (int i = 0; i < membEntList.getLength(); i++) {
             Element membEnt = (Element) membEntList.item(i);
             String alias = UtilXml.checkEmpty(membEnt.getAttribute("entity-alias"));
             String name = UtilXml.checkEmpty(membEnt.getAttribute("entity-name"));
+
             if (name.length() <= 0 || alias.length() <= 0) {
                 Debug.logWarning("[ModelReader.createModelViewEntity] Warning: entity-alias or " +
-                                 "entity-name missing on member-entity element", module);
+                    "entity-name missing on member-entity element", module);
             } else {
                 this.addMemberEntityName(alias, name);
             }
@@ -77,9 +83,11 @@ public class ModelViewEntity extends ModelEntity {
         // after loading all entities to go back and fill in all of the ModelField entries
         if (utilTimer != null) utilTimer.timerString("  createModelViewEntity: before aliases");
         NodeList aliasList = entityElement.getElementsByTagName("alias");
+
         for (int i = 0; i < aliasList.getLength(); i++) {
             ModelViewEntity.ModelAlias alias = this.makeModelAlias();
             Element aliasElement = (Element) aliasList.item(i);
+
             alias.entityAlias = UtilXml.checkEmpty(aliasElement.getAttribute("entity-alias"));
             alias.name = UtilXml.checkEmpty(aliasElement.getAttribute("name"));
             alias.field = UtilXml.checkEmpty(aliasElement.getAttribute("field"), alias.name);
@@ -88,16 +96,20 @@ public class ModelViewEntity extends ModelEntity {
         }
 
         NodeList viewLinkList = entityElement.getElementsByTagName("view-link");
+
         for (int i = 0; i < viewLinkList.getLength(); i++) {
             Element viewLinkElement = (Element) viewLinkList.item(i);
             ModelViewEntity.ModelViewLink viewLink = this.makeModelViewLink();
+
             viewLink.entityAlias = UtilXml.checkEmpty(viewLinkElement.getAttribute("entity-alias"));
             viewLink.relEntityAlias = UtilXml.checkEmpty(viewLinkElement.getAttribute("rel-entity-alias"));
 
             NodeList keyMapList = viewLinkElement.getElementsByTagName("key-map");
+
             for (int j = 0; j < keyMapList.getLength(); j++) {
                 Element keyMapElement = (Element) keyMapList.item(j);
                 ModelKeyMap keyMap = new ModelKeyMap(keyMapElement);
+
                 if (keyMap != null) viewLink.keyMaps.add(keyMap);
             }
             this.viewLinks.add(viewLink);
@@ -109,11 +121,11 @@ public class ModelViewEntity extends ModelEntity {
         //before finishing, make sure the table name is null, this should help bring up errors early...
         this.tableName = null;
     }
-    
+
     public Map getMemberEntityNames() {
         return this.memberEntityNames;
     }
-    
+
     public ModelEntity getMemberModelEntity(String alias) {
         if (this.memberModelEntities == null) {
             this.memberModelEntities = new HashMap();
@@ -127,30 +139,54 @@ public class ModelViewEntity extends ModelEntity {
     }
 
     /** List of aliases with information in addition to what is in the standard field list */
-    public ModelAlias getAlias(int index) { return (ModelAlias) this.aliases.get(index); }
-    public int getAliasesSize() { return this.aliases.size(); }
-    public Iterator getAliasesIterator() { return this.aliases.iterator(); }
-    public Vector getAliasesCopy() { return new Vector(this.aliases); }
-    
+    public ModelAlias getAlias(int index) {
+        return (ModelAlias) this.aliases.get(index);
+    }
+
+    public int getAliasesSize() {
+        return this.aliases.size();
+    }
+
+    public Iterator getAliasesIterator() {
+        return this.aliases.iterator();
+    }
+
+    public Vector getAliasesCopy() {
+        return new Vector(this.aliases);
+    }
+
     /** List of view links to define how entities are connected (or "joined") */
-    public ModelViewLink getViewLink(int index) { return (ModelViewLink) this.viewLinks.get(index); }
-    public int getViewLinksSize() { return this.viewLinks.size(); }
-    public Iterator getViewLinksIterator() { return this.viewLinks.iterator(); }
-    public Vector getViewLinksCopy() { return new Vector(this.viewLinks); }
-    
+    public ModelViewLink getViewLink(int index) {
+        return (ModelViewLink) this.viewLinks.get(index);
+    }
+
+    public int getViewLinksSize() {
+        return this.viewLinks.size();
+    }
+
+    public Iterator getViewLinksIterator() {
+        return this.viewLinks.iterator();
+    }
+
+    public Vector getViewLinksCopy() {
+        return new Vector(this.viewLinks);
+    }
+
     public void populateFields(Map entityCache) {
         if (this.memberModelEntities == null) {
             this.memberModelEntities = new HashMap();
         }
         Iterator meIter = memberEntityNames.entrySet().iterator();
+
         while (meIter.hasNext()) {
             Map.Entry entry = (Map.Entry) meIter.next();
 
             String aliasedEntityName = (String) entry.getValue();
             ModelEntity aliasedEntity = (ModelEntity) entityCache.get(aliasedEntityName);
+
             if (aliasedEntity == null) {
                 Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelEntity for entity name: " +
-                               aliasedEntityName);
+                    aliasedEntityName);
                 continue;
             }
             memberModelEntities.put(entry.getKey(), aliasedEntity);
@@ -161,13 +197,15 @@ public class ModelViewEntity extends ModelEntity {
 
             String aliasedEntityName = (String) memberEntityNames.get(alias.entityAlias);
             ModelEntity aliasedEntity = (ModelEntity) entityCache.get(aliasedEntityName);
+
             if (aliasedEntity == null) {
                 Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelEntity for entity name: " +
-                               aliasedEntityName);
+                    aliasedEntityName);
                 continue;
             }
 
             ModelField field = new ModelField();
+
             field.name = alias.name;
             field.isPk = alias.isPk;
 
@@ -178,9 +216,10 @@ public class ModelViewEntity extends ModelEntity {
                 this.nopks.add(field);
 
             ModelField aliasedField = aliasedEntity.getField(alias.field);
+
             if (aliasedField == null) {
                 Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelField for field name \"" +
-                               alias.field + "\" on entity with name: " + aliasedEntityName);
+                    alias.field + "\" on entity with name: " + aliasedEntityName);
                 continue;
             }
             field.type = aliasedField.type;
@@ -202,31 +241,57 @@ public class ModelViewEntity extends ModelEntity {
         protected String name = "";
         protected String field = "";
         protected boolean isPk = false;
-        
-        public ModelAlias() {
+
+        public ModelAlias() {}
+
+        public String getEntityAlias() {
+            return this.entityAlias;
         }
 
-        public String getEntityAlias() { return this.entityAlias; }
-        public String getName() { return this.name; }
-        public String getField() { return this.field; }
-        public boolean getIsPk() { return this.isPk; }
+        public String getName() {
+            return this.name;
+        }
+
+        public String getField() {
+            return this.field;
+        }
+
+        public boolean getIsPk() {
+            return this.isPk;
+        }
     }
+
 
     public class ModelViewLink {
         protected String entityAlias = "";
         protected String relEntityAlias = "";
         protected Vector keyMaps = new Vector();
-        
-        public ModelViewLink() {
+
+        public ModelViewLink() {}
+
+        public String getEntityAlias() {
+            return this.entityAlias;
         }
 
-        public String getEntityAlias() { return this.entityAlias; }
-        public String getRelEntityAlias() { return this.relEntityAlias; }
+        public String getRelEntityAlias() {
+            return this.relEntityAlias;
+        }
 
-        public ModelKeyMap getKeyMap(int index) { return (ModelKeyMap) this.keyMaps.get(index); }
-        public int getKeyMapsSize() { return this.keyMaps.size(); }
-        public Iterator getKeyMapsIterator() { return this.keyMaps.iterator(); }
-        public Vector getKeyMapsCopy() { return new Vector(this.keyMaps); }
+        public ModelKeyMap getKeyMap(int index) {
+            return (ModelKeyMap) this.keyMaps.get(index);
+        }
+
+        public int getKeyMapsSize() {
+            return this.keyMaps.size();
+        }
+
+        public Iterator getKeyMapsIterator() {
+            return this.keyMaps.iterator();
+        }
+
+        public Vector getKeyMapsCopy() {
+            return new Vector(this.keyMaps);
+        }
     }
 }
 
