@@ -1,5 +1,5 @@
 /*
- * $Id: JotmFactory.java,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ * $Id: JotmFactory.java,v 1.2 2003/08/17 04:56:27 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,16 +33,16 @@ import javax.transaction.UserTransaction;
 
 import org.objectweb.jotm.Jotm;
 import org.objectweb.transaction.jta.TMService;
-import org.ofbiz.entity.ConnectionFactory;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.config.EntityConfigUtil;
-import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.jdbc.ConnectionFactory;
 
 /**
  * JotmFactory - Central source for JOTM JTA objects
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class JotmFactory implements TransactionFactoryInterface {

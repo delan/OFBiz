@@ -1,5 +1,5 @@
 /*
- * $Id: EntityTypeUtil.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: EntityTypeUtil.java,v 1.1 2003/08/17 04:56:26 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -22,11 +22,16 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.entity;
+package org.ofbiz.entity.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
-import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
 
 /**
  * Makes it easier to deal with entities that follow the

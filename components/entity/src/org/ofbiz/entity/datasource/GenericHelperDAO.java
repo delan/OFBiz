@@ -1,5 +1,5 @@
 /*
- * $Id: GenericHelperDAO.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: GenericHelperDAO.java,v 1.1 2003/08/17 04:56:27 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -22,12 +22,24 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.entity;
+package org.ofbiz.entity.datasource;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.model.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericPK;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelRelation;
+import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityListIterator;
 
 /**
  * Generic Entity Helper Class

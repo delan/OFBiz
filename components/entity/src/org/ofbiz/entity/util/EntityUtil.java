@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: EntityUtil.java,v 1.1 2003/08/17 04:56:26 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -22,12 +22,25 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.entity;
+package org.ofbiz.entity.util;
 
 
-import java.util.*;
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.model.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.model.ModelField;
 
 
 /**

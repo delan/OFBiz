@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySaxReader.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: EntitySaxReader.java,v 1.1 2003/08/17 04:56:26 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -22,16 +22,27 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.entity;
+package org.ofbiz.entity.util;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.xml.parsers.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.xml.sax.*;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
-import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 /**
  * SAX XML Parser Content Handler for Entity Engine XML files

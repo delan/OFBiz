@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: GenericDelegator.java,v 1.2 2003/08/17 04:56:26 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,20 +24,50 @@
  */
 package org.ofbiz.entity;
 
-import java.util.*;
-import java.net.*;
-
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.model.*;
-import org.ofbiz.entity.config.*;
-import org.ofbiz.entity.eca.*;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.config.EntityConfigUtil;
+import org.ofbiz.entity.datasource.GenericHelper;
+import org.ofbiz.entity.datasource.GenericHelperFactory;
+import org.ofbiz.entity.eca.EntityEcaHandler;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
+import org.ofbiz.entity.model.ModelFieldType;
+import org.ofbiz.entity.model.ModelFieldTypeReader;
+import org.ofbiz.entity.model.ModelGroupReader;
+import org.ofbiz.entity.model.ModelKeyMap;
+import org.ofbiz.entity.model.ModelReader;
+import org.ofbiz.entity.model.ModelRelation;
+import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.util.DistributedCacheClear;
+import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.SequenceUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 /**
  * Generic Data Source Delegator Class
@@ -45,7 +75,7 @@ import org.w3c.dom.Node;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {

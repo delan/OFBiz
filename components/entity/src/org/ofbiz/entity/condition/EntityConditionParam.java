@@ -1,5 +1,5 @@
 /*
- * $Id: EntityWhereString.java,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ * $Id: EntityConditionParam.java,v 1.1 2003/08/17 04:56:25 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -22,44 +22,42 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.entity;
+package org.ofbiz.entity.condition;
 
-import java.util.*;
+import java.io.Serializable;
 
-import org.ofbiz.entity.model.*;
+import org.ofbiz.entity.model.ModelField;
 
 /**
- * <p>Encapsulates SQL expressions used for where clause snippets. 
- *  NOTE: This is UNSAFE and BREAKS the idea behind the Entity Engine where
- *  you avoid directly specifying SQL. So, KEEP IT MINIMAL and preferrably replace
- *  it when the feature you are getting at is implemented in a more automatic way for you.</p>
- *
- * <p>By minimal I mean use this in conjunction with other EntityConditions like the
- *  EntityExpr, EntityExprList and EntityFieldMap objects which more cleanly 
- *  encapsulate where conditions and don't require you to directly write SQL.</p>
+ * Represents a single parameter to be used in the preparedStatement
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Revision: 1.1 $
  * @since      2.0
  */
-public class EntityWhereString extends EntityCondition {
+public class EntityConditionParam implements Serializable {
+    protected ModelField modelField;
+    protected Object fieldValue;
 
-    protected String sqlString;
+    protected EntityConditionParam() {}
 
-    protected EntityWhereString() {}
-
-    public EntityWhereString(String sqlString) {
-        this.sqlString = sqlString;
+    public EntityConditionParam(ModelField modelField, Object fieldValue) {
+        if (modelField == null) {
+            throw new IllegalArgumentException("modelField cannot be null");
+        }
+        this.modelField = modelField;
+        this.fieldValue = fieldValue;
     }
 
-    public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
-        return sqlString;
+    public ModelField getModelField() {
+        return modelField;
     }
 
-    public void checkCondition(ModelEntity modelEntity) throws GenericModelException {// no nothing, this is always assumed to be fine... could do funky SQL syntax checking, but hey this is a HACK anyway
+    public Object getFieldValue() {
+        return fieldValue;
     }
 
     public String toString() {
-        return "[WhereString::" + this.sqlString + "]";
+        return modelField.getColName() + "=" + fieldValue.toString();
     }
 }

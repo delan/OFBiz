@@ -1,5 +1,5 @@
 /*
- * $Id: SequenceUtil.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: SequenceUtil.java,v 1.1 2003/08/17 04:56:26 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -21,14 +21,28 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.entity;
+package org.ofbiz.entity.util;
 
-import java.sql.*;
-import java.util.*;
-import javax.transaction.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Hashtable;
+import java.util.Map;
 
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.model.*;
+import javax.transaction.InvalidTransactionException;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.jdbc.ConnectionFactory;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionFactory;
+import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
  * Sequence Utility to get unique sequences from named sequence banks

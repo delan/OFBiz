@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ * $Id: SqlJdbcUtil.java,v 1.2 2003/08/17 04:56:27 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,14 +23,38 @@
  */
 package org.ofbiz.entity.jdbc;
 
-import java.sql.*;
-import java.util.*;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.config.*;
-import org.ofbiz.entity.model.*;
-import org.ofbiz.entity.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.GenericDataSourceException;
+import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericModelException;
+import org.ofbiz.entity.GenericNotImplementedException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityConditionParam;
+import org.ofbiz.entity.config.EntityConfigUtil;
+import org.ofbiz.entity.datasource.GenericDAO;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
+import org.ofbiz.entity.model.ModelFieldType;
+import org.ofbiz.entity.model.ModelFieldTypeReader;
+import org.ofbiz.entity.model.ModelKeyMap;
+import org.ofbiz.entity.model.ModelViewEntity;
 
 /**
  * GenericDAO Utility methods for general tasks
@@ -40,7 +64,7 @@ import org.ofbiz.entity.*;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class SqlJdbcUtil {

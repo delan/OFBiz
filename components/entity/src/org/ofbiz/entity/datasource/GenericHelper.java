@@ -20,11 +20,22 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.entity;
+package org.ofbiz.entity.datasource;
 
 
-import java.util.*;
-import org.ofbiz.entity.model.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericPK;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelRelation;
+import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityListIterator;
 
 
 /**

@@ -1,5 +1,5 @@
 /*
- * $Id: SQLProcessor.java,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ * $Id: SQLProcessor.java,v 1.2 2003/08/17 04:56:27 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,18 +23,32 @@
  */
 package org.ofbiz.entity.jdbc;
 
-import java.sql.*;
-import java.io.*;
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.ofbiz.entity.*;
-import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericDataSourceException;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
  * SQLProcessor - provides utitlity functions to ease database access
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class SQLProcessor {
