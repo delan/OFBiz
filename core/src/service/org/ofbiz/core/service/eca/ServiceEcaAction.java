@@ -41,7 +41,7 @@ public class ServiceEcaAction {
 
     protected String serviceName;
     protected String serviceMode;
-    protected boolean updateContext;
+    protected boolean resultToContext;
     protected boolean ignoreError;
     protected boolean persist;
 
@@ -51,17 +51,15 @@ public class ServiceEcaAction {
         this.serviceName = action.getAttribute("service");
         this.serviceMode = action.getAttribute("mode");
         // default is true, so anything but false is true
-        this.updateContext = !"false".equals(action.getAttribute("update-context"));
+        this.resultToContext = !"false".equals(action.getAttribute("result-to-context"));
         this.ignoreError = !"false".equals(action.getAttribute("ignore-error"));
-        this.persist = !"false".equals(action.getAttribute("persist"));
+        this.persist = "true".equals(action.getAttribute("persist"));
     }
 
     public void runAction(String selfService, DispatchContext dctx, Map context, Map result) throws GenericServiceException {
         if (this.serviceName.equals(selfService)) {
             throw new GenericServiceException("Cannot invoke self on ECA.");
         }
-
-        Map newContext = new HashMap(context);
 
         // pull out context parameters needed for this service.
         Map actionContext = dctx.getModelService(serviceName).makeValid(context, ModelService.IN_PARAM);
@@ -75,7 +73,7 @@ public class ServiceEcaAction {
         }
 
         // use the result to update the context fields.
-        if (updateContext) {
+        if (resultToContext) {
             context.putAll(dctx.getModelService(selfService).makeValid(actionResult, ModelService.IN_PARAM));
         }
 

@@ -64,19 +64,6 @@ public class GenericHelperDAO implements GenericHelper {
         return value;
     }
 
-    /** Creates a Entity in the form of a GenericValue and write it to the database
-     *@return GenericValue instance containing the new instance
-     */
-    public GenericValue create(GenericPK primaryKey) throws GenericEntityException {
-        if (primaryKey == null) {
-            return null;
-        }
-        GenericValue genericValue = new GenericValue(primaryKey);
-
-        genericDAO.insert(genericValue);
-        return genericValue;
-    }
-
     /** Find a Generic Entity by its Primary Key
      *@param primaryKey The primary key to find by.
      *@return The GenericValue corresponding to the primaryKey
