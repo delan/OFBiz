@@ -93,7 +93,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
 
     public void renderLabel(Writer writer, Map context, ModelScreenWidget.Label label) throws IOException {
         // open tag
-                Debug.logInfo("renderLabel, depth:" + context.get("depth"), module);
+        if (Debug.verboseOn()) Debug.logVerbose("renderLabel, depth:" + context.get("depth"), module);
         writer.write("<span");
         String id = label.getId(context);
         if (UtilValidate.isNotEmpty(id)) {
@@ -265,12 +265,13 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderContentBegin(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException {
-
         String editRequest = content.getEditRequest(context);
         String editContainerStyle = content.getEditContainerStyle(context);
         String enableEditName = content.getEnableEditName(context);
         String enableEditValue = (String)context.get(enableEditName);
-        Debug.logInfo("directEditRequest:" + editRequest, module);
+        
+        if (Debug.verboseOn()) Debug.logVerbose("directEditRequest:" + editRequest, module);
+        
         if (UtilValidate.isNotEmpty(editRequest) && "true".equals(enableEditValue)) {
             writer.write("<div");
             writer.write(" class=\"" + editContainerStyle + "\"> ");
@@ -285,7 +286,9 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             String expandedContentId = content.getContentId(context);
             String renderedContent = null;
             GenericDelegator delegator = (GenericDelegator) context.get("delegator");
-                Debug.logInfo("expandedContentId:" + expandedContentId, module);
+
+            if (Debug.verboseOn()) Debug.logVerbose("expandedContentId:" + expandedContentId, module);
+            
             try {
             	if (UtilValidate.isNotEmpty(expandedContentId)) {
                     renderedContent = ContentWorker.renderContentAsTextCache(delegator, expandedContentId, context, null, locale, mimeTypeId);
@@ -296,8 +299,9 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
                         ContentWorker.renderContentAsTextCache(delegator, "NOCONTENTFOUND", writer, context, null, locale, mimeTypeId);
                     }
                 } else {
-                    if (content.xmlEscape())
+                    if (content.xmlEscape()) {
                         renderedContent = UtilFormatOut.encodeXmlValue(renderedContent);
+                    }
                     
                     writer.write(renderedContent);
                 }
