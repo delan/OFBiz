@@ -36,12 +36,12 @@
 <% if(security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)) { %>
 
 <%!
-	public static double calcItemTotal(List items) {
+	public static double calcItemTotal(List headers) {
 		double total = 0.00;
-		Iterator i = items.iterator();
+		Iterator i = headers.iterator();
 		while (i.hasNext()) {
-			GenericValue item = (GenericValue) i.next();
-			total += (item.getDouble("quantity").doubleValue() * item.getDouble("unitPrice").doubleValue());
+			GenericValue header = (GenericValue) i.next();			
+			total += (header.get("grandTotal") != null ? header.getDouble("grandTotal").doubleValue() : 0.00);
 		}
 		return total;
 	}
@@ -95,15 +95,19 @@
 	List yearCancelled = EntityUtil.filterByAnd(yearList, UtilMisc.toMap("statusId", "ORDER_CANCELLED"));
 	List yearRejected = EntityUtil.filterByAnd(yearList, UtilMisc.toMap("statusId", "ORDER_REJECTED"));
 	
-	// order totals
+	// order totals and item counts	
 	List dayItems = delegator.findByAnd("OrderHeaderAndItems", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
-	double dayItemTotal = calcItemTotal(dayItems);
+	List dayHeaders = delegator.findByAnd("OrderHeader", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
+	double dayItemTotal = calcItemTotal(dayHeaders);
 	List weekItems = delegator.findByAnd("OrderHeaderAndItems", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, weekBegin)));
-	double weekItemTotal = calcItemTotal(weekItems);
+	List weekHeaders = delegator.findByAnd("OrderHeader", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, weekBegin)));
+	double weekItemTotal = calcItemTotal(weekHeaders);
 	List monthItems = delegator.findByAnd("OrderHeaderAndItems", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthBegin)));
-	double monthItemTotal = calcItemTotal(monthItems);
+	List monthHeaders = delegator.findByAnd("OrderHeader", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthBegin)));
+	double monthItemTotal = calcItemTotal(monthHeaders);
 	List yearItems = delegator.findByAnd("OrderHeaderAndItems", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, yearBegin)));
-	double yearItemTotal = calcItemTotal(yearItems);
+	List yearHeaders = delegator.findByAnd("OrderHeader", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, yearBegin)));
+	double yearItemTotal = calcItemTotal(yearHeaders);
 	
 	// order state report
 	List waitingPayment = delegator.findByAnd("OrderHeader", UtilMisc.toMap("statusId", "ORDER_ORDERED"));
@@ -154,7 +158,7 @@
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Dollar Amounts (before adjustments)</div></td>
+                <td><div class="tabletext">Gross Dollar Amounts (including adjustments)</div></td>
                 <td><div class="tabletext"><ofbiz:format type="C"><%=dayItemTotal%></ofbiz:format></div></td>
                 <td><div class="tabletext"><ofbiz:format type="C"><%=weekItemTotal%></ofbiz:format></div></td>
                 <td><div class="tabletext"><ofbiz:format type="C"><%=monthItemTotal%></ofbiz:format></div></td>
@@ -162,7 +166,7 @@
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Items Sold (includes promotions)</div></td>
+                <td><div class="tabletext">Gross Items Sold (includes promotions)</div></td>
                 <td><div class="tabletext"><%=dayItems == null ? 0 : dayItems.size()%></div></td>
                 <td><div class="tabletext"><%=weekItems == null ? 0 : weekItems.size()%></div></td>
                 <td><div class="tabletext"><%=monthItems == null ? 0 : monthItems.size()%></div></td>
