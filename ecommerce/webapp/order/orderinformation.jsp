@@ -40,7 +40,7 @@
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
-  <td width='45%' valign=top align=left>
+  <td width='50%' valign=top align=left>
 
   <ofbiz:if name="orderHeader">
     <table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
@@ -197,8 +197,8 @@
     </table>
 
 </td>
-<td width='5'>&nbsp;&nbsp;&nbsp;</td>
-<td width='45%' valign=top align=left>
+<td bgcolor="white" width="1">&nbsp;&nbsp;</td>
+<td width='50%' valign=top align=left>
 
 
     <table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
