@@ -115,8 +115,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             use-pk-constraint-names="false">
         <read-data reader-name="main"/>
         <inline-jdbc
-                jdbc-driver="com.ihost.cs.jdbc.CloudscapeDriver"
-                jdbc-uri="jdbc:cloudscape:data/derby/ofbiz; create=true"
+                jdbc-driver="org.apache.derby.jdbc.EmbeddedDriver"
+                jdbc-uri="jdbc:derby:data/derby/ofbiz;create=true"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"/>
