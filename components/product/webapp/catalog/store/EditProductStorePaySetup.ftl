@@ -20,23 +20,24 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+*@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
   ${pages.get("/store/ProductStoreTabBar.ftl")}
-  <div class="head1">Product Store Payment Settings <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
-  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[New Product Store]</a>
+  <div class="head1">${uiLabelMap.ProductProductStorePaymentSettings} <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [${uiLabelMap.CommonId}:${productStoreId?if_exists}]</span></div>
+  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>
   <br>
   <br>   
   
   <table border="1" cellpadding="2" cellspacing="0" width="100%">
     <tr>
-      <td nowrap><div class="tableheadtext">Payment Method</td>
-      <td nowrap><div class="tableheadtext">Service Type</div></td>
-      <td nowrap><div class="tableheadtext">Service Name</div></td>
-      <td nowrap><div class="tableheadtext">Payment Props</div></td>         
+      <td nowrap><div class="tableheadtext">${uiLabelMap.AccountingPaymentMethod}</td>
+      <td nowrap><div class="tableheadtext">${uiLabelMap.ProductServiceType}</div></td>
+      <td nowrap><div class="tableheadtext">${uiLabelMap.ProductServiceName}</div></td>
+      <td nowrap><div class="tableheadtext">${uiLabelMap.AccountingPaymentProps}</div></td>         
       <td nowrap><div class="tabletext">&nbsp;</div></td>
     </tr>
     <#list paymentSettings as setting>
@@ -48,7 +49,7 @@
         <td><div class="tabletext">${setting.paymentService}</div></td>
         <td><div class="tabletext">${setting.paymentPropertiesPath?default("[global]")}</div></td>
         <td align="center" nowrap>
-          <div class="tabletext"><#if security.hasEntityPermission("CATALOG", "_DELETE", session)><a href="<@ofbizUrl>/storeRemovePaySetting?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[Delete]</a></#if> <a href="<@ofbizUrl>/EditProductStorePaySetup?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[Edit]</a></div>
+          <div class="tabletext"><#if security.hasEntityPermission("CATALOG", "_DELETE", session)><a href="<@ofbizUrl>/storeRemovePaySetting?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></#if> <a href="<@ofbizUrl>/EditProductStorePaySetup?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div>
         </td>        
       </tr>
     </#list>
@@ -67,7 +68,7 @@
       <form method="get" name="addrate" action="<@ofbizUrl>${requestName}</@ofbizUrl>">
         <input type="hidden" name="productStoreId" value="${productStoreId}">
         <tr>
-          <td><span class="tableheadtext">Payment Method Type</span></td>
+          <td><span class="tableheadtext">${uiLabelMap.AccountingPaymentMethodType}</span></td>
           <td>
             <select name="paymentMethodTypeId" class="selectBox"> 
               <#if editSetting?has_content>
@@ -82,7 +83,7 @@
           </td>
         </tr>
         <tr>
-          <td><span class="tableheadtext">Service Type</span></td>          	
+          <td><span class="tableheadtext">${uiLabelMap.ProductServiceType}</span></td>          	
           <td>
             <select name="paymentServiceTypeEnumId" class="selectBox"> 
               <#if editSetting?has_content>
@@ -97,11 +98,11 @@
           </td>
         </tr>
         <tr>
-          <td><span class="tableheadtext">Service Name</span></td>      
+          <td><span class="tableheadtext">${uiLabelMap.ProductServiceName}</span></td>      
           <td><input type="text" size="30" name="paymentService" class="inputBox" value="${(editSetting.paymentService)?if_exists}"></td>      
         </tr>
         <tr>
-          <td><span class="tableheadtext">Payment Properties</span></td>
+          <td><span class="tableheadtext">${uiLabelMap.AccountingPaymentProperties}</span></td>
           <td><input type="text" size="30" name="paymentPropertiesPath" class="inputBox" value="${(editSetting.paymentPropertiesPath)?if_exists}"></td>      
         </tr>               
         <tr>
@@ -111,6 +112,6 @@
     </#if>
   </table>  
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>
 

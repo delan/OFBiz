@@ -21,23 +21,25 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.3 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
+
   ${pages.get("/store/ProductStoreTabBar.ftl")}
-  <div class="head1">Promotions <span class='head2'>for <#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
-  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[New Product Store]</a>
+  <div class="head1">${uiLabelMap.ProductPromotions} <span class='head2'>${uiLabelMap.CommonFor} <#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [${uiLabelMap.CommonId}:${productStoreId?if_exists}]</span></div>
+  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>
   <br>
   <br>
 
     <#if productStoreId?exists && productStore?exists>
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
-            <td><div class="tabletext"><b>Promo&nbsp;Name&nbsp;[ID]</b></div></td>
-            <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-            <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductPromoNameId}]</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
+            <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
         </tr>
         <#assign line = 0>
@@ -59,12 +61,12 @@
                     <input type=text size="25" name="thruDate" value="${(productStorePromoAppl.thruDate)?if_exists}" class="inputBox" style="<#if (hasExpired) >color: red;</#if>">
                     <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productStorePromoAppl.thruDate)?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
                     <input type=text size="5" name="sequenceNum" value="${(productStorePromoAppl.sequenceNum)?if_exists}" class="inputBox">
-                    <INPUT type=submit value="Update" style="font-size: x-small;">
+                    <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                 </FORM>
             </td>
             <td align="center">
             <a href="<@ofbizUrl>/deleteProductStorePromoAppl?productStoreId=${(productStorePromoAppl.productStoreId)?if_exists}&productPromoId=${(productStorePromoAppl.productPromoId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productStorePromoAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
-            [Delete]</a>
+            [${uiLabelMap.CommonDelete}]</a>
             </td>
         </tr>
         </#list>
@@ -74,7 +76,7 @@
         <input type="hidden" name="productStoreId" value="${productStoreId?if_exists}">
         <input type="hidden" name="tryEntity" value="true">
         
-        <div class="head2">Add Store Promo (select Promo, enter optional From Date):</div>
+        <div class="head2">${uiLabelMap.ProductAddStorePromoOptionalDate}:</div>
         <br>
         <select name="productPromoId" class="selectBox">
         <#list productPromos as productPromo>
@@ -83,9 +85,9 @@
         </select>
         <input type=text size="25" name="fromDate" class="inputBox">
         <a href="javascript:call_cal(document.addNewForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-        <input type="submit" value="Add">
+        <input type="submit" value="${uiLabelMap.CommonAdd}">
         </form>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>
