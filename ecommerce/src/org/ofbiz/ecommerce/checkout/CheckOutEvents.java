@@ -218,9 +218,9 @@ public class CheckOutEvents {
 
         try {
             java.net.URL url = new java.net.URL(serverRoot + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
-            //url.set(url.getProtocol(), "127.0.0.1", url.getPort(), url.getAuthority(), url.getUserInfo(), url.getPath(), url.getQuery(), url.getRef());
-            Debug.logInfo("Original URL: " + url);
-            url = new URL(url.getProtocol(), "127.0.0.1", url.getPort(), url.getFile());
+            //as nice as it would be to run this through localhost, we can't because the page has to have the correct host so the urls will be created for the email, etc
+            //Debug.logInfo("Original URL: " + url);
+            //url = new URL(url.getProtocol(), "127.0.0.1", url.getPort(), url.getFile());
             Debug.logInfo("About to get confirmorder page from the URL: " + url);
             HttpClient httpClient = new HttpClient(url);
             String content = httpClient.get();
