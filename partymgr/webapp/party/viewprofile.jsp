@@ -35,14 +35,17 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.*, org.ofbiz.commonapp.party.party.*" %>
 <%@ page import="org.ofbiz.commonapp.accounting.payment.*" %>
-<ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />  
 
 <%
-    PartyWorker.getPartyOtherValues(pageContext, userLogin.getString("partyId"), "party", "person", "partyGroup");
+    String partyId = request.getParameter("party_id"); 
+    if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
+    else request.getSession().setAttribute("partyId", partyId);
+
+    PartyWorker.getPartyOtherValues(pageContext, partyId, "party", "person", "partyGroup");
     boolean showOld = "true".equals(request.getParameter("SHOW_OLD"));
     pageContext.setAttribute("showOld", new Boolean(showOld));
-    ContactMechWorker.getPartyContactMechValueMaps(pageContext, userLogin.getString("partyId"), showOld, "partyContactMechValueMaps");
-    PaymentWorker.getPartyPaymentMethodValueMaps(pageContext, userLogin.getString("partyId"), showOld, "paymentMethodValueMaps");
+    ContactMechWorker.getPartyContactMechValueMaps(pageContext, partyId, showOld, "partyContactMechValueMaps");
+    PaymentWorker.getPartyPaymentMethodValueMaps(pageContext, partyId, showOld, "paymentMethodValueMaps");
 %>
 <%EntityField entityField = new EntityField(pageContext);%>
 
@@ -370,7 +373,7 @@
               <tr>
                 <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>User Name</b></div></td>
                 <td width="5">&nbsp;</td>
-                <td align="left" valign="top" width="90%"><div class="tabletext"><%entityField.run("userLogin", "userLoginId");%></div></td>
+                <%-- <td align="left" valign="top" width="90%"><div class="tabletext"><%entityField.run("userLogin", "userLoginId");%></div></td> --%>
               </tr>
             </table>
           </td>
@@ -381,5 +384,6 @@
 </TABLE>
 </ofbiz:if>
 <ofbiz:unless name="party">
-    No party found for current user with user name: <%entityField.run("userLogin", "userLoginId");%>
+    No party found with the partyId of: <%=partyId%>
 </ofbiz:unless>
+

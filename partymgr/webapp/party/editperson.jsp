@@ -32,12 +32,20 @@
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
-<ofbiz:object name="person" property="person" type="org.ofbiz.core.entity.GenericValue" />  
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%
+    String partyId = request.getParameter("party_id");
+    if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
+    else request.getSession().setAttribute("partyId", partyId);
+
+    GenericValue party = delegator.findByPrimaryKeyCache("Party", UtilMisc.toMap("partyId", partyId));
+    GenericValue lookupPerson = party.getRelatedOneCache("Person");
+    if (lookupPerson != null) pageContext.setAttribute("person", lookupPerson);
+
     boolean tryEntity = true;
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
-    if(person == null)
+    if(lookupPerson == null)
         tryEntity = false;
     pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 
