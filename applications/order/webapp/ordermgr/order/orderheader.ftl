@@ -193,6 +193,21 @@
                       </td>
                     </tr>
                     </#if>
+
+                    <#if orderContentWrapper.get("IMAGE_URL")?has_content>
+                    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderImage}</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                        <div class="tabletext">
+                          <a href="<@ofbizUrl>/viewimage?orderId=${orderId}&orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="buttontext">${uiLabelMap.OrderViewImage}</a>
+                        </div>
+                      </td>
+                    </tr>
+                    </#if>
                   </table>
                 </td>
               </tr>

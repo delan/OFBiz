@@ -153,4 +153,15 @@
             </widgets>
         </section>
     </screen>
+    <screen name="ViewImage">
+        <section>
+            <actions>
+                <set field="title" value="View order Image"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/viewimage.bsh"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://order/webapp/ordermgr/order/viewimage.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
 </screens>
