@@ -78,9 +78,9 @@
   <%if (curInventoryItemType != null) pageContext.setAttribute("curInventoryItemType", curInventoryItemType);%>
   <%boolean isQuantity = inventoryItem.get("quantityOnHand") != null && (inventoryItem.get("serialNumber") == null || inventoryItem.getString("serialNumber").length() == 0);%>
   <tr valign="middle">
-    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></div></td>
-    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="curInventoryItemType" field="description"/></div></td>
-    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/></div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="curInventoryItemType" field="description"/></div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/></div></td>
     <%if (UtilValidate.isNotEmpty(inventoryItem.getString("facilityId")) && UtilValidate.isNotEmpty(inventoryItem.getString("containerId"))) {%>
         <td><div class='tabletext' style='color: red;'>Error: facility (<ofbiz:entityfield attribute="inventoryItem" field="facilityId"/>) 
             AND container (<ofbiz:entityfield attribute="inventoryItem" field="containerId"/>) specified</div></td>
@@ -93,8 +93,9 @@
     <%} else {%>
         <td>&nbsp;</td>
     <%}%>
-    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="inventoryItem" field="lotId"/></div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="lotId"/></div></td>
     <%if ("NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
+        <td>
         <%-- Don't want to allow this here, manual inventory level adjustments should be logged, etc --%>
         <%-- <FORM method=POST action='<ofbiz:url>/UpdateInventoryItem</ofbiz:url>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId" fullattrs="true"/>>
@@ -106,16 +107,15 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="containerId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="lotId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="uomId" fullattrs="true"/>>
-        <td>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="inventoryItem" field="availableToPromise" fullattrs="true"/>>
             / <input type=text size='5' <ofbiz:inputvalue entityAttr="inventoryItem" field="quantityOnHand" fullattrs="true"/>>
             <INPUT type=submit value='Set ATP/QOH'>
-        </td>
         </FORM> --%>
             <div class='tabletext'><ofbiz:inputvalue entityAttr="inventoryItem" field="availableToPromise" fullattrs="false"/>
             / <ofbiz:inputvalue entityAttr="inventoryItem" field="quantityOnHand" fullattrs="false"/></div>
+        </td>
     <%} else if ("SERIALIZED_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
-            <td><div class='tabletext'><ofbiz:inputvalue entityAttr="inventoryItem" field="serialNumber"/></div></td>
+            <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="serialNumber"/></div></td>
     <%} else {%>
         <td><div class='tabletext' style='color: red;'>Error: type <ofbiz:entityfield attribute="inventoryItem" field="inventoryItemTypeId"/> unknown, 
             serialNumber (<ofbiz:entityfield attribute="inventoryItem" field="serialNumber"/>) 
