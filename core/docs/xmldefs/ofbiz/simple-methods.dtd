@@ -186,7 +186,7 @@
 <!--
 Calls a service asynchronously and ignores the result, so no return messages 
 are used; that doesn't mean no errors will result, but they would just be
-system errors like database failures, etc.
+system errors like database failures, etc which all have system error messages.
 -->
 <!ELEMENT call-service-asynch EMPTY>
 <!ATTLIST call-service-asynch
