@@ -181,7 +181,7 @@
         <attribute name="routingId" type="String" mode="IN"/>
         <attribute name="workEffortName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="msgResult" type="List" mode="OUT" optional="false"/>
+        <attribute name="productionRunId" type="String" mode="OUT" optional="false"/>
     </service>
 
     <!-- MRP services -->
@@ -196,11 +196,11 @@
     <service name="updateProductManufacturingRule" engine="simple"
             location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="updateProductManufacturingRule">
         <description>Update a Product Manufacturing Rule</description>
-        <attribute name="ruleId" type="String" mode="IN" optional="false"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
-        <attribute name="productIdIn" type="String" mode="IN" optional="false"/>
-        <attribute name="productIdFor" type="String" mode="IN" optional="true"/>
-        <attribute name="productIdInSubst" type="String" mode="IN" optional="true"/>
+        <attribute name="ruleId" form-label="${uiLabelMap.ManufacturingRuleId}"  type="String" mode="IN" optional="false"/>
+        <attribute name="productId" form-label="${uiLabelMap.ProductProductId}" type="String" mode="IN" optional="true"/>
+        <attribute name="productIdIn" form-label="${uiLabelMap.ProductProductIdIn}" type="String" mode="IN" optional="false"/>
+        <attribute name="productIdFor" form-label="${uiLabelMap.ProductProductIdFor}" type="String" mode="IN" optional="true"/>
+        <attribute name="productIdInSubst" form-label="${uiLabelMap.ProductProductIdInSubst}" type="String" mode="IN" optional="true"/>
         <attribute name="productFeature" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="Double" mode="IN" optional="true"/>
         <attribute name="ruleOperator" type="String" mode="IN" optional="true"/>
