@@ -209,6 +209,29 @@
         <echo message="[build] ===== Done Building (Compile) =====" />
     </target>
 
+    <!--  nocore target for building entire system without core.
+          useful when using an IDE (netbeans) that will not let go of core jar files -->
+    <target name="nocore" depends="ofbiz-init">
+<!--        <echo message="[build] ===== Building core =====" />
+        <ant dir="core" inheritAll="false" />-->
+        <echo message="[build] ===== Building commonapp =====" />
+        <ant dir="commonapp" inheritAll="false" />
+        <echo message="[build] ===== Building ecommerce =====" />
+        <ant dir="ecommerce" inheritAll="false" />
+        <echo message="[build] ===== Building catalog =====" />
+        <ant dir="catalog" inheritAll="false" />
+        <echo message="[build] ===== Building partymgr =====" />
+        <ant dir="partymgr" inheritAll="false" />
+        <echo message="[build] ===== Building ordermgr =====" />
+        <ant dir="ordermgr" inheritAll="false" />
+        <echo message="[build] ===== Building webtools =====" />
+        <ant dir="webtools" inheritAll="false" />
+        <echo message="[build] ===== Building workeffort =====" />
+        <ant dir="workeffort" inheritAll="false" />
+
+        <echo message="[build] ===== Done Building (Compile), Ignored Core =====" />
+    </target>
+    
     <target name="war" depends="build">
         <echo message="[war] ===== Building commonapp =====" />
         <ant dir="commonapp" target="war" inheritAll="false" />
