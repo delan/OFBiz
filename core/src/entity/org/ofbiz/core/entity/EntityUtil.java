@@ -196,7 +196,7 @@ public class EntityUtil {
     }
 
     /**
-     *returns the values that match the exprs in list
+     *returns the values that match all of the exprs in list
      *
      *@param values List of GenericValues
      *@param exprs the expressions that must validate to true
@@ -302,6 +302,76 @@ public class EntityUtil {
         }
         return result;
     }
+    
+    /**
+     *returns the values that match any of the exprs in list
+     *
+     *@param values List of GenericValues
+     *@param exprs the expressions that must validate to true
+     *@return List of GenericValue's that match the values in fields
+     */
+    public static List filterByOr(List values, List exprs) {
+        if (values == null) return null;
+        if (exprs == null || exprs.size() == 0) {           
+            return values;
+        }
+
+        List result = new ArrayList();
+        Iterator iter = values.iterator();
+
+        while (iter.hasNext()) {
+            GenericValue value = (GenericValue) iter.next();
+            Iterator exprIter = exprs.iterator();
+            boolean include = false;
+
+            while (exprIter.hasNext()) {
+                EntityExpr expr = (EntityExpr) exprIter.next();
+                Object lhs = value.get((String) expr.getLhs());
+                Object rhs = expr.getRhs();
+
+                int operatorId = expr.getOperator().getId();
+                switch (operatorId) {
+                    case EntityOperator.ID_EQUALS:
+                        if (lhs.equals(rhs)) {
+                            include = true;                         
+                        }                        
+                        break;
+                    case EntityOperator.ID_NOT_EQUAL:
+                        if (!lhs.equals(rhs)) {
+                            include = true;
+                        }                        
+                        break;
+                    case EntityOperator.ID_GREATER_THAN:
+                        if (((Comparable) lhs).compareTo(rhs) > 0) {
+                            include = true;
+                        }                        
+                        break;
+                    case EntityOperator.ID_GREATER_THAN_EQUAL_TO:
+                        if (((Comparable) lhs).compareTo(rhs) >= 0) {
+                            include = true;
+                        }                        
+                        break;
+                    case EntityOperator.ID_LESS_THAN:
+                        if (((Comparable) lhs).compareTo(rhs) < 0) {
+                            include = true;
+                        }                        
+                        break;
+                    case EntityOperator.ID_LESS_THAN_EQUAL_TO:
+                        if (((Comparable) lhs).compareTo(rhs) <= 0) {
+                            include = true;
+                        }                        
+                        break;                  
+                    default:
+                        throw new IllegalArgumentException("The " + expr.getOperator().getCode() + " with id " + expr.getOperator().getId() + " operator is not yet supported by filterByOr");
+                }
+                if (include) break;
+            }
+            if (include) {
+                result.add(value);
+            }
+        }
+        return result;
+    }    
 
     /**
      *returns the values in the order specified
