@@ -1461,15 +1461,34 @@ public class OrderServices {
                     List itemList = (List) prefItemEntry.getValue();
                     
                     Double thisRefundAmount = (Double) prefsAmount.get(orderPayPref);
-                    // TODO: do the refund & get a paymentId
-                    
+                    String paymentId = null;
+                    try {
+                        if (orderPayPref.getString("paymentMethodTypeId").equals("CREDIT_CARD")) {
+                            // TODO: handle credit card refund -- get paymentId
+                            throw new GenericServiceException("Not implemented");
+                        } else if (orderPayPref.getString("paymentMethodTypeId").equals("EFT_ACCOUNT")) {
+                            // TODO: handle eft account refund -- get paymentId
+                            throw new GenericServiceException("Not implemented");
+                        } else {
+                            // add additional electronic payment method types above this
+                            // this is a manual refund
+                            // TODO: send to accounts payable
+                        }
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, "Problems processing electronic refund", module);
+                        return ServiceUtil.returnError("Problems processing electronic refund");
+                    }
+                                        
                     // create a new response entry
                     String responseId = delegator.getNextSeqId("ReturnItemResponse").toString();
                     GenericValue response = delegator.makeValue("OrderItemResponse", UtilMisc.toMap("returnItemResponseId", responseId));
                     response.set("orderPaymentPreferenceId", orderPayPref.getString("orderPaymentPreferenceId"));
                     response.set("responseAmount", thisRefundAmount);
                     response.set("responseDate", UtilDateTime.nowTimestamp());
-                    // response.set("paymentId", paymentId);
+                    if (paymentId != null) {
+                        // a null payment ID means no electronic refund was available; manual refund needed                   
+                        response.set("paymentId", paymentId);
+                    }
                     try {
                         delegator.create(response);
                     } catch (GenericEntityException e) {
