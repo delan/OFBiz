@@ -64,6 +64,11 @@
     <welcome-file>/main.jsp</welcome-file>
   </welcome-file-list>
 
+  <taglib> 
+     <taglib-uri>ofbizTags</taglib-uri>
+     <taglib-location>/WEB-INF/taglib.tld</taglib-location> 
+  </taglib> 
+
   <error-page>
     <error-code>403</error-code>
     <location>/error/error403.jsp</location>
