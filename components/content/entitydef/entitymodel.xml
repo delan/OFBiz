@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.30 $
+ * @version    $Revision: 1.31 $
  */
 -->
 
@@ -143,6 +143,9 @@
           <key-map field-name="contentId"/>
       </relation>
       <relation type="many" rel-entity-name="ContentAssocDataResourceViewFrom">
+        <key-map field-name="contentId" rel-field-name="contentIdStart" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentAssocDataResourceViewTo">
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
       </relation>
     </entity>
@@ -389,10 +392,12 @@
       <field name="contentOperationId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
+      <field name="privilegeEnumId" type="id-ne"></field>
       <prim-key field="contentPurposeTypeId"/>
       <prim-key field="contentOperationId"/>
       <prim-key field="roleTypeId"/>
       <prim-key field="statusId"/>
+      <prim-key field="privilegeEnumId"/>
       <relation type="one" fk-name="CONTENT_PRO_TYPE" rel-entity-name="ContentPurposeType">
         <key-map field-name="contentPurposeTypeId"/>
       </relation>
@@ -404,6 +409,9 @@
       </relation>
       <relation type="one" fk-name="CONTENT_PRO_STI" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="CONTENT_PRO_PEI" rel-entity-name="Enumeration">
+        <key-map field-name="privilegeEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
     <entity entity-name="ContentPurposeType"
@@ -500,6 +508,9 @@
         <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
       </relation>
       <relation type="many" rel-entity-name="ContentAssocDataResourceViewFrom">
+        <key-map field-name="contentId" rel-field-name="contentIdStart" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentAssocDataResourceViewTo">
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
       </relation>
     </view-entity>
