@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Patrick Lykins (patrick.lykins@gabes.net)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      3.0
  */
 
@@ -87,8 +87,20 @@ if (surveyQuestion != null && surveyQuestion.get("surveyQuestionTypeId") != null
     context.put("createSurveyOptionWrapper", createSurveyOptionWrapper);
 }
 
+surveyQuestionCategoryId = request.getParameter("surveyQuestionCategoryId");
+surveyQuestionCategory = null;
+categoryQuestions = null;
+if (!UtilValidate.isEmpty(surveyQuestionCategoryId)) {
+    surveyQuestionCategory = delegator.findByPrimaryKey("SurveyQuestionCategory", UtilMisc.toMap("surveyQuestionCategoryId", surveyQuestionCategoryId));
+    if (surveyQuestionCategory != null) {
+        categoryQuestions = surveyQuestionCategory.getRelated("SurveyQuestion");
+    }
+}
+context.put("surveyQuestionCategory", surveyQuestionCategory);
+context.put("categoryQuestions", categoryQuestions);
 
-
+questionCategories = delegator.findAll("SurveyQuestionCategory", UtilMisc.toList("description"));
+context.put("questionCategories", questionCategories);
 
 
 
