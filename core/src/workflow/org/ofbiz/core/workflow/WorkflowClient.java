@@ -2,7 +2,7 @@
  * $Id$
  */
 
-package org.ofbiz.core.workflow;
+package workflow.org.ofbiz.core.workflow;
 
 import java.util.*;
 import org.ofbiz.core.entity.*;
@@ -10,8 +10,8 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> Workflow Client Services
- * <p><b>Description:</b> Services for client interaction with workflow API
+ * <p><b>Title:</b> Workflow Client
+ * <p><b>Description:</b> 'Services' and 'Workers' for interaction with Workflow API
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -36,10 +36,10 @@ import org.ofbiz.core.util.*;
  *@created    December 5, 2001
  *@version    1.0
  */
-public class WorkflowClientServices {
+public class WorkflowClient {
     
     // -------------------------------------------------------------------
-    // Service methods
+    // Client 'Services' Methods
     // -------------------------------------------------------------------
     
     /** Marks an activity as complete */
@@ -91,14 +91,21 @@ public class WorkflowClientServices {
         boolean removeOldAssign = context.get("removeOldAssignements").equals("true") ? true : false;
         
         WfActivity activity = getActivity(delegator,workEffortId);
-        // do the assignement
+        try {
+            WfResource resource = WfFactory.getWfResource(null,null,partyId,null);
+            activity.assign(resource,removeOldAssign ? false : true);
+        }
+        catch ( WfException e ) {
+            result.put("responseMessage","error");
+            result.put("errorMessage",e.getMessage());
+        }
         
         return result;        
     }
     
     
     // -------------------------------------------------------------------
-    // Helper methods for geting objects
+    // Client 'Worker' Methods
     // -------------------------------------------------------------------
     
     /**

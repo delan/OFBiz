@@ -98,4 +98,12 @@ public interface WfActivity extends WfExecutionObject {
      */
     public void activate() throws WfException, CannotStart, AlreadyRunning;
     
+    /** 
+     * Assign this activity to a resource
+     * @param WfResource to assign this activity to
+     * @param append Append to end if existing list (true) or replace existing (false)
+     * @throws WfException
+     */
+    public void assign(WfResource resource, boolean append) throws WfException;    
+    
 } // interface WfActivity

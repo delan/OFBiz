@@ -53,8 +53,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      */
     public WfActivityImpl(GenericValue valueObject, GenericValue dataObject, WfProcess process) throws WfException {
         super(valueObject,dataObject,process.runtimeKey());
-        this.process = process;        
-        assignments = new ArrayList();
+        this.process = process;             
         GenericValue performer = null;     
         if ( valueObject.get("performerParticipantId") != null ) {
             try {
@@ -67,8 +66,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         
         if ( performer != null ) {
             WfResource resource = WfFactory.getWfResource(performer);
-            WfAssignment assign = WfFactory.getWfAssignment(this,resource);
-            assignments.add(assign);
+            this.assign(resource,false);            
         }          
     }
     
@@ -94,6 +92,20 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             this.assignActivity();
     }
     
+    /** 
+     * Assign this activity to a resource
+     * @param WfResource to assign this activity to
+     * @param append Append to end if existing list (true) or replace existing (false)
+     * @throws WfException
+     */
+    public void assign(WfResource resource, boolean append) throws WfException {
+        if ( !append )
+            assignments = new ArrayList();
+        
+        WfAssignment assign = WfFactory.getWfAssignment(this,resource);
+        assignments.add(assign);
+    }
+        
     /**
      * Complete this activity.
      * @throws WfException General workflow exception.
