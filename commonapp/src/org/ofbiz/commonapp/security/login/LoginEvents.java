@@ -298,6 +298,7 @@ public class LoginEvents {
                 //multiply by 100,000 to usually make a 5 digit number
                 passwordToSend = "auto" + ((long)(randNum * 100000));
                 supposedUserLogin.set("currentPassword", passwordToSend);
+                supposedUserLogin.set("passwordHint", "Auto-Generated Password");
                 supposedUserLogin.store();
             } else {
                 passwordToSend = supposedUserLogin.getString("currentPassword");
@@ -354,7 +355,11 @@ public class LoginEvents {
             return "error";
         }
         
-        request.setAttribute(SiteDefs.EVENT_MESSAGE, "Your password has been sent to you.  Please check your Email.");
+        if (useEncryption) {
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, "A new password has been created and sent to you.  Please check your Email.");
+        } else {
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Your password has been sent to you.  Please check your Email.");
+        }
         return "success";
     }
 }
