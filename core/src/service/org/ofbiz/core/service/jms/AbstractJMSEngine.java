@@ -44,6 +44,8 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractJMSEngine implements GenericEngine {
 
+    public static final String module = AbstractJMSEngine.class.getName();
+
     protected ServiceDispatcher dispatcher;
 
     public AbstractJMSEngine(ServiceDispatcher dispatcher) {
@@ -73,6 +75,7 @@ public abstract class AbstractJMSEngine implements GenericEngine {
             throw new GenericServiceException("JMS service cannot have required OUT parameters; no parameters will be returned.");
         String xmlContext = null;
         try {
+            if (Debug.verboseOn()) Debug.logVerbose("Serializing Context --> " + context, module);
             xmlContext = XmlSerializer.serialize(context);
         } catch (Exception e) {
             throw new GenericServiceException("Cannot serialize context.", e);

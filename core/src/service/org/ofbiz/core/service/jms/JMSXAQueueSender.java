@@ -49,6 +49,8 @@ public class JMSXAQueueSender extends AbstractJMSEngine {
     private QueueSession session = null;
     private QueueSender sender = null;
 
+    public static final String module = JMSXAQueueSender.class.getName();
+
     public JMSXAQueueSender(ServiceDispatcher dispatcher) {
         super(dispatcher);
     }
@@ -84,6 +86,8 @@ public class JMSXAQueueSender extends AbstractJMSEngine {
 
             if (TransactionUtil.getStatus() != TransactionUtil.STATUS_ACTIVE)
                 session.commit();
+
+            Debug.logInfo("Message sent.", module);
 
             // close the connections
             sender.close();

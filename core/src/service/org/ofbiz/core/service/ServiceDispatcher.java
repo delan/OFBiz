@@ -30,9 +30,13 @@ import java.util.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.job.*;
+import org.ofbiz.core.service.jms.*;
 import org.ofbiz.core.service.config.*;
 import org.ofbiz.core.service.engine.*;
 import org.ofbiz.core.security.*;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * Global Service Dispatcher
@@ -50,14 +54,17 @@ public class ServiceDispatcher {
     protected Security security;
     protected Map localContext;
     protected JobManager jm;
+    protected List jmsListeners;
 
     public ServiceDispatcher(GenericDelegator delegator) {
         Debug.logInfo("[ServiceDispatcher] : Creating new instance.", module);
         this.delegator = delegator;
         this.localContext = new HashMap();
         this.jm = new JobManager(this, this.delegator);
-        if (delegator != null)
+        if (delegator != null) {
             this.security = new Security(delegator);
+            jmsListeners = loadListeners(this);
+        }
     }
 
     /**
@@ -81,13 +88,14 @@ public class ServiceDispatcher {
      */
     public static ServiceDispatcher getInstance(String name, DispatchContext context, GenericDelegator delegator) {
         ServiceDispatcher sd = null;
-        sd = (ServiceDispatcher) dispatchers.get(delegator);
+        sd = (ServiceDispatcher) dispatchers.get(delegator.getDelegatorName());
         if (sd == null) {
             synchronized (ServiceDispatcher.class) {
-                sd = (ServiceDispatcher) dispatchers.get(delegator);
+                if (Debug.verboseOn()) Debug.logVerbose("[ServiceDispatcher.getInstance] : No instance found (" + delegator.getDelegatorName() + ").", module);
+                sd = (ServiceDispatcher) dispatchers.get(delegator.getDelegatorName());
                 if (sd == null) {
                     sd = new ServiceDispatcher(delegator);
-                    dispatchers.put(delegator, sd);
+                    dispatchers.put(delegator.getDelegatorName(), sd);
                 }
             }
         }
@@ -353,4 +361,34 @@ public class ServiceDispatcher {
         GenericValue value = (GenericValue) result.get("userLogin");
         return value;
     }
+
+    // Load the JMS listeners
+    private List loadListeners(ServiceDispatcher dispatcher) {
+        List listeners = new ArrayList();
+        try {
+            Element rootElement = ServiceConfigUtil.getXmlRootElement();
+            NodeList nodeList = rootElement.getElementsByTagName("jms-service");
+            Debug.logInfo("[ServiceDispatcher] : Loading JMS Listeners.", module);
+            Debug.logInfo("NodeList length: " + nodeList.getLength());
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                try {
+                    Element element = (Element) nodeList.item(i);
+                    Object o = JMSListenerFactory.getMessageListener(element, dispatcher);
+                    if (o != null)
+                        listeners.add(o);
+                } catch (GenericServiceException gse) {
+                    Debug.logError(gse, "Cannot load message listener for position [" + i + "].", module);
+                } catch (Exception e) {
+                    Debug.logError(e, "Uncaught exception.", module);
+                }
+                Debug.logInfo("Finished with node : " + i);
+            }
+        } catch (org.ofbiz.core.config.GenericConfigException gce) {
+            Debug.logError(gce, "Cannot get serviceengine.xml root element.", module);
+        } catch (Exception e) {
+            Debug.logError(e, "Uncaught exception.", module);
+        }
+        return listeners;
+    }
+
 }

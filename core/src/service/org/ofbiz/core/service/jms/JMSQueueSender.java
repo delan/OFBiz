@@ -47,6 +47,8 @@ public class JMSQueueSender extends AbstractJMSEngine {
     private QueueSession session = null;
     private QueueSender sender = null;
 
+    public static final String module = JMSQueueSender.class.getName();
+
     public JMSQueueSender(ServiceDispatcher dispatcher) {
         super(dispatcher);
     }
@@ -74,6 +76,7 @@ public class JMSQueueSender extends AbstractJMSEngine {
             // create/send the message
             Message message = makeMessage(session, modelService, context);
             sender.send(message);
+            Debug.logInfo("Sent JMS Message.", module);
 
             // close the connections
             sender.close();
