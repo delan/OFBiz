@@ -105,7 +105,7 @@
               <%UtilCache.CacheLine line = (UtilCache.CacheLine) entry.getValue();%>
               <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
               <tr class="<%=rowColor%>">
-                <TD><%=key.toString()%></TD>
+                <TD><%=key%></TD>
                 <TD>
                   <%long expireTime = utilCache.getExpireTime();%>
                   <%if(line != null && line.loadTime > 0){%>
