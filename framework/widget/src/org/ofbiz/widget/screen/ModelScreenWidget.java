@@ -76,6 +76,8 @@ public abstract class ModelScreenWidget {
     }
     
     public abstract void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException;
+
+    public abstract String rawString();
     
     public static List readSubWidgets(ModelScreen modelScreen, List subElementList) {
         List subWidgets = new LinkedList();
@@ -123,13 +125,45 @@ public abstract class ModelScreenWidget {
     }
     
     public static void renderSubWidgetsString(List subWidgets, Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
-        if (subWidgets == null)
+        if (subWidgets == null) {
             return;
+        }
         Iterator subWidgetIter = subWidgets.iterator();
         while (subWidgetIter.hasNext()) {
             ModelScreenWidget subWidget = (ModelScreenWidget) subWidgetIter.next();
-            if (Debug.verboseOn()) Debug.logVerbose("Rendering screen widget " + subWidget.getClass().getName(), module);
+            if (Debug.verboseOn()) Debug.logVerbose("Rendering screen " + subWidget.modelScreen.name + " widget " + subWidget.getClass().getName(), module);
+
+            Map parameters = (Map) context.get("parameters");
+            boolean insertWidgetBoundaryComments = "true".equals(parameters==null?null:parameters.get("widgetVerbose"));
+            StringBuffer widgetDescription = null;
+            if (insertWidgetBoundaryComments) {
+                widgetDescription = new StringBuffer(); 
+                widgetDescription.append("Widget [screen:");
+                widgetDescription.append(subWidget.modelScreen.name);
+                widgetDescription.append("] ");
+                widgetDescription.append(subWidget.rawString());
+                
+                try {
+                    writer.write("<!-- === BEGIN ");
+                    writer.write(widgetDescription.toString());
+                    writer.write(" -->\n");
+                } catch (IOException e) {
+                    throw new GeneralException("Error adding verbose sub-widget HTML/XML comments:", e);
+                }
+            }
+            
+            // render the sub-widget itself
             subWidget.renderWidgetString(writer, context, screenStringRenderer);
+            
+            if (insertWidgetBoundaryComments) {
+                try {
+                    writer.write("\n<!-- === END   ");
+                    writer.write(widgetDescription.toString());
+                    writer.write(" -->\n");
+                } catch (IOException e) {
+                    throw new GeneralException("Error adding verbose sub-widget HTML/XML comments:", e);
+                }
+            }
         }
     }
 
@@ -241,6 +275,10 @@ public abstract class ModelScreenWidget {
         public String getName() {
             return name;
         }
+
+        public String rawString() {
+            return "<section" + (UtilValidate.isNotEmpty(this.name)?" name=\"" + this.name + "\"":"") + ">";
+        }
     }
 
     public static class Container extends ModelScreenWidget {
@@ -280,6 +318,10 @@ public abstract class ModelScreenWidget {
         
         public String getStyle(Map context) {
             return this.styleExdr.expandString(context);
+        }
+
+        public String rawString() {
+            return "<container id=\"" + this.idExdr.getOriginal() + "\" style=\"" + this.styleExdr.getOriginal() + "\">";
         }
     }
 
@@ -375,6 +417,10 @@ public abstract class ModelScreenWidget {
             // defaults to false, so anything but true is false
             return "true".equals(shareScopeString);
         }
+
+        public String rawString() {
+            return "<include-screen name=\"" + this.nameExdr.getOriginal() + "\" location=\"" + this.locationExdr.getOriginal() + "\" share-scope=\"" + this.shareScopeExdr.getOriginal() + "\"/>";
+        }
     }
 
     public static class DecoratorScreen extends ModelScreenWidget {
@@ -458,6 +504,10 @@ public abstract class ModelScreenWidget {
         public String getLocation(Map context) {
             return this.locationExdr.expandString(context);
         }
+
+        public String rawString() {
+            return "<decorator-screen name=\"" + this.nameExdr.getOriginal() + "\" location=\"" + this.locationExdr.getOriginal() + "\"/>";
+        }
     }
 
     public static class DecoratorSection extends ModelScreenWidget {
@@ -475,6 +525,10 @@ public abstract class ModelScreenWidget {
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
             // render sub-widgets
             renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
+        }
+
+        public String rawString() {
+            return "<decorator-section name=\"" + this.name + "\">";
         }
     }
     
@@ -494,6 +548,10 @@ public abstract class ModelScreenWidget {
             } else {
                 sections.render(this.name);
             }
+        }
+
+        public String rawString() {
+            return "<decorator-section-include name=\"" + this.name + "\">";
         }
     }
     
@@ -535,6 +593,10 @@ public abstract class ModelScreenWidget {
         
         public String getStyle(Map context) {
             return this.styleExdr.expandString(context);
+        }
+
+        public String rawString() {
+            return "<label id=\"" + this.idExdr.getOriginal() + "\" style=\"" + this.styleExdr.getOriginal() + "\" text=\"" + this.textExdr.getOriginal() + "\"/>";
         }
     }
 
@@ -622,6 +684,10 @@ public abstract class ModelScreenWidget {
             String shareScopeString = this.shareScopeExdr.expandString(context);
             // defaults to false, so anything but true is false
             return "true".equals(shareScopeString);
+        }
+
+        public String rawString() {
+            return "<include-form name=\"" + this.nameExdr.getOriginal() + "\" location=\"" + this.locationExdr.getOriginal() + "\" share-scope=\"" + this.shareScopeExdr.getOriginal() + "\"/>";
         }
     }
 
@@ -712,6 +778,10 @@ public abstract class ModelScreenWidget {
             // defaults to false, so anything but true is false
             return "true".equals(shareScopeString);
         }
+
+        public String rawString() {
+            return "<include-tree name=\"" + this.nameExdr.getOriginal() + "\" location=\"" + this.locationExdr.getOriginal() + "\" share-scope=\"" + this.shareScopeExdr.getOriginal() + "\"/>";
+        }
     }
 
     public static class PlatformSpecific extends ModelScreenWidget {
@@ -729,6 +799,10 @@ public abstract class ModelScreenWidget {
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
             subWidget.renderWidgetString(writer, context, screenStringRenderer);
+        }
+
+        public String rawString() {
+            return "<platform-specific>" + (this.subWidget==null?"":this.subWidget.rawString());
         }
     }
 
@@ -801,10 +875,13 @@ public abstract class ModelScreenWidget {
             return this.xmlEscape;
         }
         
+        public String rawString() {
+            // may want to expand this a bit more
+            return "<content content-id=\"" + this.contentId.getOriginal() + "\" xml-escape=\"" + this.xmlEscape + "\"/>";
+        }
     }
 
     public static class SubContent extends ModelScreenWidget {
-        
         protected FlexibleStringExpander contentId;
         protected FlexibleStringExpander assocName;
         protected FlexibleStringExpander editRequest;
@@ -860,7 +937,11 @@ public abstract class ModelScreenWidget {
         public boolean xmlEscape() {
             return this.xmlEscape;
         }
-        
+
+        public String rawString() {
+            // may want to expand this a bit more
+            return "<sub-content content-id=\"" + this.contentId.getOriginal() + "\" assoc-name=\"" + this.assocName.getOriginal() + "\" xml-escape=\"" + this.xmlEscape + "\"/>";
+        }
     }
 
     public static class Menu extends ModelScreenWidget {
@@ -926,6 +1007,10 @@ public abstract class ModelScreenWidget {
         
         public String getLocation(Map context) {
             return this.locationExdr.expandString(context);
+        }
+
+        public String rawString() {
+            return "<include-menu name=\"" + this.nameExdr.getOriginal() + "\" location=\"" + this.locationExdr.getOriginal() + "\"/>";
         }
     }
     
@@ -1023,33 +1108,33 @@ public abstract class ModelScreenWidget {
             return this.image;
         }
 
-        public void setText( String val ) {
+        public void setText(String val) {
             String textAttr = UtilFormatOut.checkNull(val);
             this.textExdr = new FlexibleStringExpander(textAttr);
         }
-        public void setId( String val ) {
+        public void setId(String val) {
             this.idExdr = new FlexibleStringExpander(val);
         }
-        public void setStyle( String val ) {
+        public void setStyle(String val) {
             this.styleExdr = new FlexibleStringExpander(val);
         }
-        public void setTarget( String val ) {
+        public void setTarget(String val) {
             this.targetExdr = new FlexibleStringExpander(val);
         }
-        public void setName( String val ) {
+        public void setName(String val) {
             this.nameExdr = new FlexibleStringExpander(val);
         }
-        public void setTargetWindow( String val ) {
+        public void setTargetWindow(String val) {
             this.targetWindowExdr = new FlexibleStringExpander(val);
         }
-        public void setPrefix( String val ) {
+        public void setPrefix(String val) {
             this.prefixExdr = new FlexibleStringExpander(val);
         }
-        public void setUrlMode( String val ) {
+        public void setUrlMode(String val) {
             if (UtilValidate.isNotEmpty(val))
                 this.urlMode = val;
         }
-        public void setFullPath( String val ) {
+        public void setFullPath(String val) {
             String sFullPath = val;
             if (sFullPath != null && sFullPath.equalsIgnoreCase("true"))
                 this.fullPath = true;
@@ -1057,7 +1142,7 @@ public abstract class ModelScreenWidget {
                 this.fullPath = false;
         }
 
-        public void setSecure( String val ) {
+        public void setSecure(String val) {
             String sSecure = val;
             if (sSecure != null && sSecure.equalsIgnoreCase("true"))
                 this.secure = true;
@@ -1065,21 +1150,24 @@ public abstract class ModelScreenWidget {
                 this.secure = false;
         }
 
-        public void setEncode( String val ) {
+        public void setEncode(String val) {
             String sEncode = val;
             if (sEncode != null && sEncode.equalsIgnoreCase("true"))
                 this.encode = true;
             else
                 this.encode = false;
         }
-        public void setImage( Image img ) {
+        public void setImage(Image img) {
             this.image = img;
         }
-            
+
+        public String rawString() {
+            // may want to add more to this
+            return "<link id=\"" + this.idExdr.getOriginal() + "\" style=\"" + this.styleExdr.getOriginal() + "\" text=\"" + this.textExdr.getOriginal() + "\" target=\"" + this.targetExdr.getOriginal() + "\" name=\"" + this.nameExdr.getOriginal() + "\" url-mode=\"" + this.urlMode + "\"/>";
+        }
     }
 
     public static class Image extends ModelScreenWidget {
-
         protected FlexibleStringExpander srcExdr;
         protected FlexibleStringExpander idExdr;
         protected FlexibleStringExpander styleExdr;
@@ -1087,9 +1175,8 @@ public abstract class ModelScreenWidget {
         protected FlexibleStringExpander heightExdr;
         protected FlexibleStringExpander borderExdr;
         protected String urlMode = "content";
-        
 
-        public Image( ModelScreen modelScreen, Element imageElement) {
+        public Image(ModelScreen modelScreen, Element imageElement) {
             super(modelScreen, imageElement);
 
             setSrc(imageElement.getAttribute("src"));
@@ -1099,7 +1186,6 @@ public abstract class ModelScreenWidget {
             setHeight(imageElement.getAttribute("height"));
             setBorder(UtilFormatOut.checkEmpty(imageElement.getAttribute("border"), "0"));
             setUrlMode(UtilFormatOut.checkEmpty(imageElement.getAttribute("url-mode"), "content"));
-
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
@@ -1140,34 +1226,37 @@ public abstract class ModelScreenWidget {
             return this.urlMode;
         }
         
-        public void setSrc( String val ) {
+        public void setSrc(String val) {
             String textAttr = UtilFormatOut.checkNull(val);
             this.srcExdr = new FlexibleStringExpander(textAttr);
         }
-        public void setId( String val ) {
+        public void setId(String val) {
             this.idExdr = new FlexibleStringExpander(val);
         }
-        public void setStyle( String val ) {
+        public void setStyle(String val) {
             this.styleExdr = new FlexibleStringExpander(val);
         }
-        public void setWidth( String val ) {
+        public void setWidth(String val) {
             this.widthExdr = new FlexibleStringExpander(val);
         }
-        public void setHeight( String val ) {
+        public void setHeight(String val) {
             this.heightExdr = new FlexibleStringExpander(val);
         }
-        public void setBorder( String val ) {
+        public void setBorder(String val) {
             this.borderExdr = new FlexibleStringExpander(val);
         }
-        public void setUrlMode( String val ) {
-            if (UtilValidate.isEmpty(val))
+        public void setUrlMode(String val) {
+            if (UtilValidate.isEmpty(val)) {
                 this.urlMode = "content";
-            else
+            } else {
                 this.urlMode = val;
+            }
         }
-            
-    }
-    
 
+        public String rawString() {
+            // may want to add more to this
+            return "<image id=\"" + this.idExdr.getOriginal() + "\" style=\"" + this.styleExdr.getOriginal() + "\" src=\"" + this.srcExdr.getOriginal() + "\" url-mode=\"" + this.urlMode + "\"/>";
+        }
+    }
 }
 

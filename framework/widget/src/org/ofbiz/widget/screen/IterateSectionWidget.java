@@ -378,6 +378,9 @@ public class IterateSectionWidget extends ModelScreenWidget {
 
     }
 
-
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<iterate-section/>";
+    }
 }
 
