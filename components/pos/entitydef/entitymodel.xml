@@ -63,7 +63,26 @@
             title="Pos Terminal Log">
       <field name="posTerminalLogId" type="id-ne"></field>
       <field name="posTerminalId" type="id-ne"></field>
+      <field name="transactionId" type="id"></field>
+      <field name="orderId" type="id"></field>
+      <field name="returnId" type="id"></field>
+      <field name="userLoginId" type="id-vlong"/>
+      <field name="statusId" type="id"></field>
+      <field name="logStartDateTime" type="date-time"/>
+      <field name="logEndDateTime" type="date-time"/>
       <prim-key field="posTerminalLogId"/>
+      <relation type="one" fk-name="POS_LOG_POS" rel-entity-name="PosTerminal">
+          <key-map field-name="posTerminalId"/>
+      </relation>
+      <relation type="one" fk-name="POS_LOG_ORDER" rel-entity-name="OrderHeader">
+          <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="POS_LOG_RETURN" rel-entity-name="ReturnHeader">
+          <key-map field-name="returnId"/>
+      </relation>
+      <relation type="one" fk-name="POS_LOG_STTS" rel-entity-name="StatusItem">
+          <key-map field-name="statusId"/>
+      </relation>
     </entity>
     <entity entity-name="PosTerminalState"
             package-name="org.ofbiz.pos.terminal"

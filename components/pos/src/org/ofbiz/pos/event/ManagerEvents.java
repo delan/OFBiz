@@ -53,6 +53,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.content.xui.XuiSession;
 
 /**
@@ -298,14 +299,24 @@ public class ManagerEvents {
                 Timestamp orderDate = orderHeader.getTimestamp("orderDate");
                 if (orderDate.after(openDate)) {
                     LocalDispatcher dispatcher = session.getDispatcher();
+                    Map returnResp = null;
                     try {
-                        dispatcher.runSyncIgnore("quickReturnOrder", UtilMisc.toMap("orderId", orderId, "userLogin", session.getUserLogin()));
+                        returnResp = dispatcher.runSync("quickReturnOrder", UtilMisc.toMap("orderId", orderId, "userLogin", session.getUserLogin()));
                     } catch (GenericServiceException e) {
                         Debug.logError(e, module);
                         pos.showDialog("dialog/error/exception", e.getMessage());
+                        pos.refresh();
+                        return;
                     }
+                    if (returnResp != null && ServiceUtil.isError(returnResp)) {
+                        pos.showDialog("dialog/error/exception", ServiceUtil.getErrorMessage(returnResp));
+                        pos.refresh();
+                        return;
+                    }
+
                     // todo print void receipt
 
+                    trans.setTxAsReturn((String) returnResp.get("returnId"));
                     input.clear();
                     pos.showDialog("dialog/error/salevoided");
                     pos.refresh();

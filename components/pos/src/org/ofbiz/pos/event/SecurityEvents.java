@@ -54,7 +54,7 @@ public class SecurityEvents {
     public static void logout(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         XuiSession session = pos.getSession();
-        trans.voidSale();
+        trans.nonLoggingClear();
         session.logout();
         pos.showPage("pospanel");
         PosScreen.currentScreen.setLock(true);
