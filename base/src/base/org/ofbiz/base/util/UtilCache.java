@@ -1,5 +1,5 @@
 /*
- * $Id: UtilCache.java,v 1.7 2004/05/01 13:14:37 jonesde Exp $
+ * $Id: UtilCache.java,v 1.8 2004/07/07 08:11:46 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -23,12 +23,14 @@
  */
 package org.ofbiz.base.util;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -44,7 +46,7 @@ import java.util.WeakHashMap;
  * </ul>
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class UtilCache {
@@ -172,12 +174,29 @@ public class UtilCache {
         }
     }
 
+    public static String getPropertyParam(ResourceBundle res, String[] propNames, String parameter) {
+        String value = null;
+        for (int i = 0; i < propNames.length && value == null; i++ ) {
+            try {
+                value = res.getString(propNames[i] + '.' + parameter);
+            } catch (MissingResourceException e) {}
+        }
+        if (value == null) {
+            throw new MissingResourceException("Can't find resource for bundle", res.getClass().getName(), Arrays.asList(propNames) + "." + parameter);
+        }
+        return value;
+    }
+
     protected void setPropertiesParams(String cacheName) {
+        setPropertiesParams(new String[] {cacheName});
+    }
+
+    public void setPropertiesParams(String[] propNames) {
         ResourceBundle res = ResourceBundle.getBundle("cache");
 
         if (res != null) {
             try {
-                String value = res.getString(cacheName + ".maxSize");
+                String value = getPropertyParam(res, propNames, "maxSize");
                 Long longValue = new Long(value);
 
                 if (longValue != null) {
@@ -185,7 +204,7 @@ public class UtilCache {
                 }
             } catch (Exception e) {}
             try {
-                String value = res.getString(cacheName + ".expireTime");
+                String value = getPropertyParam(res, propNames, "expireTime");
                 Long longValue = new Long(value);
 
                 if (longValue != null) {
@@ -194,7 +213,7 @@ public class UtilCache {
             } catch (Exception e) {}
 
             try {
-                String value = res.getString(cacheName + ".useSoftReference");
+                String value = getPropertyParam(res, propNames, "useSoftReference");
 
                 if (value != null) {
                     useSoftReference = "true".equals(value);
@@ -208,9 +227,15 @@ public class UtilCache {
      * @param value The value of the element
      */
     public synchronized Object put(Object key, Object value) {
-        if (key == null)
-            return null;
+        return put(key, value, expireTime);
+    }
 
+    /** Puts or loads the passed element into the cache
+     * @param key The key for the element, used to reference it in the hastables and LRU linked list
+     * @param value The value of the element
+     * @param expireTime how long to keep this key in the cache
+     */
+    public synchronized Object put(Object key, Object value, long expireTime) {
         if (maxSize > 0) {
             // when maxSize is changed, the setter will take care of filling the LRU list
             if (cacheLineTable.containsKey(key)) {
@@ -247,10 +272,6 @@ public class UtilCache {
      * @return The value of the element specified by the key
      */
     public Object get(Object key) {
-        if (key == null) {
-            missCount++;
-            return null;
-        }
         UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
 
         if (hasExpired(line)) {
@@ -282,11 +303,6 @@ public class UtilCache {
      * @return The value of the removed element specified by the key
      */
     public synchronized Object remove(Object key) {
-        if (key == null) {
-            missCount++;
-            return null;
-        }
-        
         UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.remove(key);
         if (line != null) {
             if (maxSize > 0) keyLRUList.remove(key);
@@ -474,8 +490,6 @@ public class UtilCache {
      * @return True is the element corresponding to the specified key has expired, otherwise false
      */
     public boolean hasExpired(Object key) {
-        if (key == null) return false;
-
         UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
 
         return hasExpired(line);
