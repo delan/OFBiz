@@ -47,8 +47,9 @@ public class GenericHelperDAO implements GenericHelper {
    */
   public GenericValue create(GenericValue value) throws GenericEntityException {
     if(value == null) { return null; }
-    if(!genericDAO.insert(value)) return null;
-    return value;
+    GenericValue newValue = new GenericValue(value);
+    genericDAO.insert(newValue);
+    return newValue;
   }
   
   /** Creates a Entity in the form of a GenericValue and write it to the database
@@ -57,7 +58,7 @@ public class GenericHelperDAO implements GenericHelper {
   public GenericValue create(GenericPK primaryKey) throws GenericEntityException {
     if(primaryKey == null) { return null; }
     GenericValue genericValue = new GenericValue(primaryKey);
-    if(!genericDAO.insert(genericValue)) return null;
+    genericDAO.insert(genericValue);
     return genericValue;
   }
   
@@ -78,8 +79,7 @@ public class GenericHelperDAO implements GenericHelper {
   public void removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
     if(primaryKey == null) return;
     Debug.logInfo("Removing GenericPK: " + primaryKey.toString());
-    try { genericDAO.delete(primaryKey); }
-    catch(Exception e) { Debug.logWarning(e); }
+    genericDAO.delete(primaryKey);
   }
   
   /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
@@ -99,14 +99,7 @@ public class GenericHelperDAO implements GenericHelper {
    */
   public void removeByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException {
     if(modelEntity == null || fields == null) { return; }
-    Iterator iterator = UtilMisc.toIterator(findByAnd(modelEntity, fields, null));
-    
-    while(iterator != null && iterator.hasNext()) {
-      GenericValue generic = (GenericValue)iterator.next();
-      Debug.logInfo("Removing GenericValue: " + generic.toString());
-      try { generic.remove(); }
-      catch(Exception e) { Debug.logError(e); }
-    }
+    genericDAO.deleteByAnd(modelEntity, fields);
   }
   
   /** Store the Entity from the GenericValue to the persistent store
@@ -114,7 +107,7 @@ public class GenericHelperDAO implements GenericHelper {
    */
   public void store(GenericValue value) throws GenericEntityException {
     if(value == null) { return; }
-    if(!genericDAO.update(value)) Debug.logError("[GenericHelperDAO.store] Could not store GenericValue: " + value.toString());
+    genericDAO.update(value);
   }
   
   /** Store the Entities from the Collection GenericValue instances to the persistent store.
