@@ -37,12 +37,12 @@
     location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="updateWorkEffort">
 	  <description>Update a WorkEffort Entity</description>
 	  <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
-	  <attribute name="workEffortTypeId" type="String" mode="IN" optional="false"/>
-	  <attribute name="currentStatusId" type="String" mode="IN" optional="false"/>
+	  <attribute name="workEffortTypeId" type="String" mode="IN" optional="true"/>
+	  <attribute name="currentStatusId" type="String" mode="IN" optional="true"/>
 	  <attribute name="universalId" type="String" mode="IN" optional="true"/>
 	  <attribute name="scopeEnumId" type="String" mode="IN" optional="true"/>
 	  <attribute name="priority" type="Long" mode="IN" optional="true"/>
-	  <attribute name="workEffortName" type="String" mode="IN" optional="false"/>
+	  <attribute name="workEffortName" type="String" mode="IN" optional="true"/>
 	  <attribute name="description" type="String" mode="IN" optional="true"/>
 	  <attribute name="locationDesc" type="String" mode="IN" optional="true"/>
 	  <attribute name="estimatedStartDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
