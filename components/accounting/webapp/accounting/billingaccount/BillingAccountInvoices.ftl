@@ -20,22 +20,23 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
 
-<div class="head1">Billing Account Invoices</div>
+<div class="head1">${uiLabelMap.AccountingBillingAccountInvoices}</div>
 
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0"> 
   <tr>
-    <td><div class="tableheadtext">Invoice #</div></td>
-    <td><div class="tableheadtext">Invoice Date</div></td>
-    <td><div class="tableheadtext">Due Date</div><td>
-    <td align="right"><div class="tableheadtext">Total</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingInvoice} #</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingInvoiceDate}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingDueDate}</div><td>
+    <td align="right"><div class="tableheadtext">${uiLabelMap.AccountingTotal}</div></td>
     <td>&nbsp;</td>
   </tr> 
   <tr><td colspan="5"><hr class="sepbar"></td></tr>
@@ -46,7 +47,7 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
     <td><div class="tabletext">${invoice.dueDate?if_exists}</div></td>
     <td align="right"><div class="tabletext">${invoice.invoiceTotal?string.currency}</div></td>
     <td align="right">
-      <a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class="buttontext">[Edit]</a>
+      <a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
     </td>
   </tr>
   </#list>

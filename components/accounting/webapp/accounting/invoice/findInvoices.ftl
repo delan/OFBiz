@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <script language="JavaScript">
 <!-- //
@@ -47,14 +49,14 @@ function lookupInvoices() {
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td><div class='boxhead'>Find Invoices</div></td>
+          <td><div class='boxhead'>${uiLabelMap.AccountingFindInvoices}</div></td>
           <td align='right'>
             <div class="tabletext">
               <#if requestParameters.hideFields?default("N") == "Y">
-                <a href="<@ofbizUrl>/findInvoices?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
+                <a href="<@ofbizUrl>/findInvoices?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
               <#else>
-                <#if invoiceList?exists><a href="<@ofbizUrl>/findInvoices?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
-                <a href="javascript:lookupInvoices();" class="submenutextright">Lookup Invoices(s)</a>                
+                <#if invoiceList?exists><a href="<@ofbizUrl>/findInvoices?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingHideFields}</a></#if>
+                <a href="javascript:lookupInvoices();" class="submenutextright">${uiLabelMap.AccountingLookupInvoices }(s)</a>                
               </#if>
             </div>
           </td>
@@ -66,12 +68,12 @@ function lookupInvoices() {
           <td align='center' width='100%'>
             <table border='0' cellspacing='0' cellpadding='2'>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Invoice ID:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.AccountingInvoiceID}:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='invoiceId'></td>
               </tr>              
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Status:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.AccountingStatus}:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <select name='invoiceStatusId' class='selectBox'> 
@@ -79,7 +81,7 @@ function lookupInvoices() {
                     <option value="${currentStatus.statusId}">${currentStatus.description}</option>
                     <option value="${currentStatus.statusId}">---</option>
                     </#if>                                     
-                    <option value="ANY">Any Invoice Status</option>                   
+                    <option value="ANY">${uiLabelMap.AccountingAnyInvoiceStatus}</option>                   
                     <#list invoiceStatuses as invoiceStatus>
                       <option value="${invoiceStatus.statusId}">${invoiceStatus.description}</option>
                     </#list>
@@ -88,7 +90,7 @@ function lookupInvoices() {
               </tr>                            
               <tr>
                 <td width='25%' align='right'>
-                  <div class='tableheadtext'>Date Filter:</div>
+                  <div class='tableheadtext'>${uiLabelMap.AccountingDateFilter}:</div>
                 </td>
                 <td width='5%'>&nbsp;</td>
                 <td>
@@ -97,14 +99,14 @@ function lookupInvoices() {
                       <td>                        
                         <input type='text' size='25' class='inputBox' name='minDate' value='${requestParameters.minDate?if_exists}'>
                         <a href="javascript:call_cal(document.lookupinvoice.minDate, '${fromDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-                        <span class='tabletext'>From</span>
+                        <span class='tabletext'>${uiLabelMap.CommonFrom}</span>
                       </td>
                     </tr>
                     <tr>                  
                       <td>                       
                         <input type='text' size='25' class='inputBox' name='maxDate' value='${requestParameters.maxDate?if_exists}'>
                         <a href="javascript:call_cal(document.lookupinvoice.maxDate, '${thruDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>                   
-                        <span class='tabletext'>Thru</span>
+                        <span class='tabletext'>${uiLabelMap.CommonThru}</span>
                       </td>
                     </tr>
                   </table>
@@ -133,22 +135,22 @@ document.lookupinvoice.invoiceId.focus();
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td width="50%"><div class="boxhead">Invoices Found</div></td>
+          <td width="50%"><div class="boxhead">${uiLabelMap.AccountingInvoicesFound}</div></td>
           <td width="50%">
             <div class="boxhead" align=right>
               <#if 0 < invoiceList?size>             
                 <#if 0 < viewIndex>
-                  <a href="<@ofbizUrl>/findInvoices?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
+                  <a href="<@ofbizUrl>/findInvoices?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                 <#else>
-                  <span class="submenutextdisabled">Previous</span>
+                  <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                 </#if>
                 <#if 0 < listSize>
                   <span class="submenutextinfo">${lowIndex+1} - ${highIndex} of ${listSize}</span>
                 </#if>
                 <#if highIndex < listSize>
-                  <a href="<@ofbizUrl>/findInvoices?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
+                  <a href="<@ofbizUrl>/findInvoices?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
                 <#else>
-                  <span class="submenutextrightdisabled">Next</span>
+                  <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                 </#if>
               </#if>
               &nbsp;
@@ -158,12 +160,12 @@ document.lookupinvoice.invoiceId.focus();
       </table>
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
-          <td width="5%" align="left"><div class="tableheadtext">Type</div></td>
-          <td width="5%" align="left"><div class="tableheadtext">Invoice #</div></td>
-          <td width="10%" align="right"><div class="tableheadtext">Invoice Total</div></td>
+          <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.AccountingType}</div></td>
+          <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.AccountingInvoice} #</div></td>
+          <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.AccountingInvoiceTotal}</div></td>
           <td width="5%" align="left"><div class="tableheadtext">&nbsp;</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Status</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Invoice Date</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.AccountingStatus}</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.AccountingInvoiceDate}</div></td>
           <td width="10%">&nbsp;</td>
         </tr>
         <tr>
@@ -184,7 +186,7 @@ document.lookupinvoice.invoiceId.focus();
               <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
               <td><div class="tabletext"><nobr>${invoice.invoiceDate?default("N/A").toString()}</nobr></div></td>                            
               <td align='right'>
-                <a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>View</a>
+                <a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>${uiLabelMap.CommonView}</a>
               </td>
             </tr>
             <#-- toggle the row color -->
@@ -196,7 +198,7 @@ document.lookupinvoice.invoiceId.focus();
           </#list>          
         <#else>
           <tr>
-            <td colspan='4'><div class='head3'>No invoices found.</div></td>
+            <td colspan='4'><div class='head3'>${uiLabelMap.AccountingNoInvoicesFound}.</div></td>
           </tr>        
         </#if>
         <#if lookupErrorMessage?exists>
@@ -211,5 +213,5 @@ document.lookupinvoice.invoiceId.focus();
         
 </#if> 
 <#else>
-  <h3>You do not have permission to view this page. ("ACCOUNTING_VIEW" or "ACCOUNTING_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.AccountingViewPermissionError}</h3>
 </#if>

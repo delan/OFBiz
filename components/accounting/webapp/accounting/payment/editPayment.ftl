@@ -20,12 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<div class="head1">Edit Payment</div>
-<a href="<@ofbizUrl>/editPayment</@ofbizUrl>" class="buttontext">[Create Payment]</a>
+<div class="head1">${uiLabelMap.AccountingEditPayment}</div>
+<a href="<@ofbizUrl>/editPayment</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingCreatePayment}]</a>
 <br>
 
 <#if payment?has_content>
@@ -39,7 +41,7 @@
     <#if payment?exists>
       <tr>
         <td width='14%'>&nbsp;</td>
-        <td width='6%' align='right' nowrap><div class="tabletext">Payment ID:</div></td>
+        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingPaymentID}:</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <b>${payment.paymentId}</b>
@@ -48,7 +50,7 @@
     </#if>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">Payment Type:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingPaymentType}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <select name="paymentTypeId" class="selectBox">
@@ -66,7 +68,7 @@
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">Payment Method Id:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingPaymentMethodId}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <select name="paymentMethodTypeId" class="selectBox">
@@ -84,7 +86,7 @@
     </tr>  
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">Status:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingStatus}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <select name="statusId" class="selectBox">
@@ -102,7 +104,7 @@
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">Payment Preference Id:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingPaymentPreferenceId}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <input type='text' class='inputBox' name='paymentPreferenceId' value='${(payment.paymentPreferenceId)?if_exists}'>
@@ -110,7 +112,7 @@
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">Payment Method Id:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingPaymentMethodId}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <input type='text' class='inputBox' name='paymentMethodId' value='${(payment.paymentMethodId)?if_exists}'>
@@ -118,7 +120,7 @@
     </tr>        
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">From Party Id:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingFromPartyId}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <input type='text' class='inputBox' name='partyIdTo' value='${(payment.partyIdTo)?if_exists}'>
@@ -126,7 +128,7 @@
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">To Party Id:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingToPartyId}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <input type='text' class='inputBox' name='partyIdFrom' value='${(payment.partyIdFrom)?if_exists}'>
@@ -134,7 +136,7 @@
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">Reference Number:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingReferenceNumber}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <input type='text' class='inputBox' name='paymentRefNum' value='${(payment.paymentRefNum)?if_exists}'>
@@ -142,7 +144,7 @@
     </tr>  
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">Amount:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingAmount}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <#assign amount = (payment.amount?string("##0.00"))?if_exists>
@@ -151,7 +153,7 @@
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">Effective Date:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingEffectiveDate}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <#if (payment.effectiveDate)?exists>
@@ -163,7 +165,7 @@
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">Comments:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingComments}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <input type='text' size='60' class='inputBox' name='comments' value='${(payment.comments)?if_exists}'>
@@ -175,7 +177,7 @@
         <td width='6%'>&nbsp;</td>
         <td width='6%'>&nbsp;</td>   
         <td width='74%'>
-          <input type="submit" class="smallSubmit" value="Update">      
+          <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonUpdate}">      
         </td>
       </tr>     
   <#else>  
@@ -184,7 +186,7 @@
       <td width='6%'>&nbsp;</td>
       <td width='6%'>&nbsp;</td>   
       <td width='74%'>
-        <input type="submit" class="smallSubmit" value="Create New">      
+        <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonCreateNew}">      
       </td>
     </tr>     
   </#if>                 

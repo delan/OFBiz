@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <script language="JavaScript">
 <!-- //
@@ -47,16 +49,16 @@ function lookupPayment() {
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td><div class='boxhead'>Find Payments</div></td>
+          <td><div class='boxhead'>${uiLabelMap.AccountingFindPayments}</div></td>
           <td align='right'>
             <div class="tabletext">
               <#if requestParameters.hideFields?default("N") == "Y">
-                <a href="<@ofbizUrl>/findPayment?hideFields=N${paramList}</@ofbizUrl>" class="submenutext">Show Lookup Fields</a>
+                <a href="<@ofbizUrl>/findPayment?hideFields=N${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonShowLookupFields}</a>
               <#else>
-                <#if invoiceList?exists><a href="<@ofbizUrl>/findPayment?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
-                <a href="javascript:lookupPayment();" class="submenutext">Lookup Payment(s)</a>
+                <#if invoiceList?exists><a href="<@ofbizUrl>/findPayment?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingHideFields}</a></#if>
+                <a href="javascript:lookupPayment();" class="submenutext">${uiLabelMap.AccountingLookupPayment}(s)</a>
               </#if>
-              <a href="<@ofbizUrl>/editPayment</@ofbizUrl>" class="submenutextright">New Payment</a>
+              <a href="<@ofbizUrl>/editPayment</@ofbizUrl>" class="submenutextright">${uiLabelMap.AccountingNewPayment}</a>
             </div>
           </td>
         </tr>
@@ -67,12 +69,12 @@ function lookupPayment() {
           <td align='center' width='100%'>
             <table border='0' cellspacing='0' cellpadding='2'>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Payment ID:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.AccountingPaymentID}:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='paymentId'></td>
               </tr> 
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Payment Method Type:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.AccountingPaymentMethodType}:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <select name='paymentMethodTypeId' class='selectBox'> 
@@ -80,7 +82,7 @@ function lookupPayment() {
                     <option value="${currentMethod.paymentMethodTypeId}">${currentMethod.description}</option>
                     <option value="${currentMethod.paymentMethodTypeId}">---</option>
                     </#if>                                     
-                    <option value="ANY">Any Payment Method</option>                   
+                    <option value="ANY">${uiLabelMap.AccountingAnyPaymentMethod}</option>                   
                     <#list paymentMethodTypes as paymentMethodType>
                       <option value="${paymentMethodType.paymentMethodTypeId}">${paymentMethodType.description}</option>
                     </#list>
@@ -88,7 +90,7 @@ function lookupPayment() {
                 </td>
               </tr>                           
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Status:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.AccountingStatus}:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <select name='paymentStatusId' class='selectBox'> 
@@ -96,7 +98,7 @@ function lookupPayment() {
                     <option value="${currentStatus.statusId}">${currentStatus.description}</option>
                     <option value="${currentStatus.statusId}">---</option>
                     </#if>                                     
-                    <option value="ANY">Any Payment Status</option>                   
+                    <option value="ANY">${uiLabelMap.AccountingAnyPaymentStatus}</option>                   
                     <#list paymentStatuses as paymentStatus>
                       <option value="${paymentStatus.statusId}">${paymentStatus.description}</option>
                     </#list>
@@ -104,18 +106,18 @@ function lookupPayment() {
                 </td>
               </tr> 
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>From Party:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.AccountingFromParty}:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='fromPartyId' value='${fromPartyId?if_exists}'></td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>To Party:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.AccountingToParty}:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='toPartyId' value='${toPartyId?if_exists}'></td>
               </tr>                                                     
               <tr>
                 <td width='25%' align='right'>
-                  <div class='tableheadtext'>Date Filter:</div>
+                  <div class='tableheadtext'>${uiLabelMap.AccountingDateFilter}:</div>
                 </td>
                 <td width='5%'>&nbsp;</td>
                 <td>
@@ -124,14 +126,14 @@ function lookupPayment() {
                       <td>                        
                         <input type='text' size='25' class='inputBox' name='minDate' value='${requestParameters.minDate?if_exists}'>
                         <a href="javascript:call_cal(document.lookupinvoice.minDate, '${fromDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-                        <span class='tabletext'>From</span>
+                        <span class='tabletext'>${uiLabelMap.CommonFrom}</span>
                       </td>
                     </tr>
                     <tr>                  
                       <td>                       
                         <input type='text' size='25' class='inputBox' name='maxDate' value='${requestParameters.maxDate?if_exists}'>
                         <a href="javascript:call_cal(document.lookupinvoice.maxDate, '${thruDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>                   
-                        <span class='tabletext'>Thru</span>
+                        <span class='tabletext'>${uiLabelMap.CommonThru}</span>
                       </td>
                     </tr>
                   </table>
@@ -160,22 +162,22 @@ document.lookuppayment.paymentId.focus();
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td width="50%"><div class="boxhead">Payment(s) Found</div></td>
+          <td width="50%"><div class="boxhead">${uiLabelMap.AccountingPaymentsFound}</div></td>
           <td width="50%">
             <div class="boxhead" align=right>
               <#if 0 < paymentList?size>             
                 <#if 0 < viewIndex>
-                  <a href="<@ofbizUrl>/findPayment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
+                  <a href="<@ofbizUrl>/findPayment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                 <#else>
-                  <span class="submenutextdisabled">Previous</span>
+                  <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                 </#if>
                 <#if 0 < listSize>
                   <span class="submenutextinfo">${lowIndex+1} - ${highIndex} of ${listSize}</span>
                 </#if>
                 <#if highIndex < listSize>
-                  <a href="<@ofbizUrl>/findPayment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
+                  <a href="<@ofbizUrl>/findPayment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
                 <#else>
-                  <span class="submenutextrightdisabled">Next</span>
+                  <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                 </#if>
               </#if>
               &nbsp;
@@ -185,14 +187,14 @@ document.lookuppayment.paymentId.focus();
       </table>
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
-          <td align="left"><div class="tableheadtext">Payment #</div></td>
-          <td align="left"><div class="tableheadtext">Type</div></td>
-          <td align="left"><div class="tableheadtext">Method</div></td>
-          <td align="left"><div class="tableheadtext">Status</div></td>
-          <td align="left"><div class="tableheadtext">From Party</div></td>
-          <td align="left"><div class="tableheadtext">To Party</div></td>
-          <td align="left"><div class="tableheadtext">Effective</div></td>
-          <td align="right"><div class="tableheadtext">Amount</div></td>
+          <td align="left"><div class="tableheadtext">${uiLabelMap.AccountingPayment} #</div></td>
+          <td align="left"><div class="tableheadtext">${uiLabelMap.AccountingType}</div></td>
+          <td align="left"><div class="tableheadtext">${uiLabelMap.AccountingMethod}</div></td>
+          <td align="left"><div class="tableheadtext">${uiLabelMap.AccountingStatus}</div></td>
+          <td align="left"><div class="tableheadtext">${uiLabelMap.AccountingFromParty}</div></td>
+          <td align="left"><div class="tableheadtext">${uiLabelMap.AccountingToParty}</div></td>
+          <td align="left"><div class="tableheadtext">${uiLabelMap.AccountingEffective}</div></td>
+          <td align="right"><div class="tableheadtext">${uiLabelMap.AccountingAmount}</div></td>
           <td width="5%">&nbsp;</td>
         </tr>
         <tr>
@@ -224,7 +226,7 @@ document.lookuppayment.paymentId.focus();
           </#list>          
         <#else>
           <tr>
-            <td colspan='4'><div class='head3'>No payments found.</div></td>
+            <td colspan='4'><div class='head3'>${uiLabelMap.AccountingNoPaymentsfound}.</div></td>
           </tr>        
         </#if>
         <#if lookupErrorMessage?exists>
@@ -239,5 +241,5 @@ document.lookuppayment.paymentId.focus();
         
 </#if> 
 <#else>
-  <h3>You do not have permission to view this page. ("ACCOUNTING_VIEW" or "ACCOUNTING_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.AccountingViewPermissionError}</h3>
 </#if>
