@@ -41,7 +41,7 @@ import org.ofbiz.base.util.collections.MapComparator;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class UtilMisc {
@@ -285,6 +285,28 @@ public class UtilMisc {
             list.add(data[i]);
         }
         return list;
+    }
+    
+    public static long toLong(Object value) {
+        if (value != null) {
+            if (value instanceof Long) {
+                return ((Long) value).longValue();
+            } else if (value instanceof String) {
+                return Long.parseLong((String) value);
+            }
+        }
+        return 0;
+    }
+
+    public static double toDouble(Object value) {
+        if (value != null) {
+            if (value instanceof Double) {
+                return ((Double) value).doubleValue();
+            } else if (value instanceof String) {
+                return Double.parseDouble((String) value);
+            }
+        }
+        return 0.0;
     }
 
     /**
