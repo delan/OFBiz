@@ -52,31 +52,42 @@ public class TyrexFactory implements TransactionFactoryInterface {
 
     static {
 
-        /* For Tyrex version 0.9.8.5 */
-        /* This is not used because we are now using the tyrex.config file
-        try {
-            String resourceName = "tyrexdomain.xml";
-            URL url = UtilURL.fromResource(resourceName);
-
-            if (url != null) {
-                td = TransactionDomain.createDomain(url.toString());
-            } else {
-                Debug.logError("ERROR: Could not create Tyrex Transaction Domain (resource not found):" + resourceName);
-            }
-        } catch (tyrex.tm.DomainConfigurationException e) {
-            Debug.logError("Could not create Tyrex Transaction Domain (configuration):");
-            Debug.logError(e);
-        }
-        */
-        
         td = TransactionDomain.getDomain(DOMAIN_NAME);
+        
+        if (td == null) {
+            //probably because there was no tyrexdomain.xml file, try another method:
+            
+            /* For Tyrex version 0.9.8.5 */
+            try {
+                String resourceName = "tyrexdomain.xml";
+                URL url = UtilURL.fromResource(resourceName);
+
+                if (url != null) {
+                    td = TransactionDomain.createDomain(url.toString());
+                } else {
+                    Debug.logError("ERROR: Could not create Tyrex Transaction Domain (resource not found):" + resourceName);
+                }
+            } catch (tyrex.tm.DomainConfigurationException e) {
+                Debug.logError("Could not create Tyrex Transaction Domain (configuration):");
+                Debug.logError(e);
+            }
+            
+            if (td != null) {
+                Debug.logImportant("Got TyrexDomain from classpath (NO tyrex.config file found)");
+            }
+        } else {
+            Debug.logImportant("Got TyrexDomain from tyrex.config location");
+        }
+        
         if (td != null) {
             try {
                 td.recover();
             } catch (tyrex.tm.RecoveryException e) {
-                Debug.logError("Could not create Tyrex Transaction Domain (recovery):");
+                Debug.logError("Could not complete recovery phase of Tyrex TransactionDomain creation");
                 Debug.logError(e);
             }
+        } else {
+            Debug.logError("Could not get Tyrex TransactionDomain for domain " +  DOMAIN_NAME);
         }
         /* For Tyrex version 0.9.7.0 * /
          tyrex.resource.ResourceLimits rls = new tyrex.resource.ResourceLimits();
@@ -85,10 +96,12 @@ public class TyrexFactory implements TransactionFactoryInterface {
     }
 
     public static Resources getResources() {
-        if (td != null)
+        if (td != null) {
             return td.getResources();
-        else
+        } else {
+            Debug.logWarning("No Tyrex TransactionDomain, not returning resources");
             return null;
+        }
     }
     
     public static DataSource getDataSource(String dsName) {
@@ -106,16 +119,20 @@ public class TyrexFactory implements TransactionFactoryInterface {
     }
     
     public TransactionManager getTransactionManager() {
-        if (td != null)
+        if (td != null) {
             return td.getTransactionManager();
-        else
+        } else {
+            Debug.logWarning("No Tyrex TransactionDomain, not returning TransactionManager");
             return null;
+        }
     }
 
     public UserTransaction getUserTransaction() {
-        if (td != null)
+        if (td != null) {
             return td.getUserTransaction();
-        else
+        } else {
+            Debug.logWarning("No Tyrex TransactionDomain, not returning UserTransaction");
             return null;
+        }
     }
 }
