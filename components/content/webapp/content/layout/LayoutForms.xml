@@ -109,6 +109,9 @@
         extends="LayoutSubContentMaster"
         target="updateLayoutSubContent"
         title="" type="single">
+        <field name="contentId" >
+            <display/>
+        </field>
         <field name="contentIdTo" >
             <hidden value="TEMPLATE_MASTER"/>
         </field>
@@ -161,6 +164,9 @@
         extends="LayoutSubContentMaster"
         target="createLayoutSubContent"
         title="" type="single">
+        <field name="contentId" >
+            <text/>
+        </field>
         <field name="drDataResourceTypeId" >
             <drop-down no-current-selected-key="LOCAL_FILE">
                 <option key="LOCAL_FILE" description="Absolute File"/>
@@ -280,8 +286,8 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         default-map-name="currentValue"
         title="" type="single">
+            
         <field name="contentId" position="1" >
-            <display/>
         </field>
         <field name="contentTypeIdDisplay"  title="Content Type" position="2" map-name="dummy">
             <display description="DOCUMENT"/>
@@ -584,6 +590,9 @@
         extends="LayoutSubContentMaster"
         target="updateLayoutSubContent"
         title="" type="single">
+        <field name="contentId" position="1" >
+            <display/>
+        </field>
         <field name="drDataResourceTypeId" >
             <drop-down no-current-selected-key="ELECTRONIC_TEXT">
                 <option key="LOCAL_FILE" description="Absolute File"/>
@@ -634,6 +643,9 @@
         extends="LayoutSubContentMaster"
         target="createLayoutSubContent"
         title="" type="single">
+        <field name="contentId" position="1" >
+            <text/>
+        </field>
         <field name="drDataResourceTypeId" >
             <drop-down no-current-selected-key="ELECTRONIC_TEXT">
                 <option key="LOCAL_FILE" description="Absolute File"/>
