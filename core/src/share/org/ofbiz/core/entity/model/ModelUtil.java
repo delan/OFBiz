@@ -149,4 +149,8 @@ public class ModelUtil
     }
     return retString;
   }
+  
+  public static String induceFieldType(String sqlTypeName, int length, int precision, ModelFieldTypeReader fieldTypeReader) {
+    return "invalid";
+  }
 }

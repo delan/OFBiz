@@ -744,109 +744,13 @@ public class GenericDAO {
     UtilTimer timer = new UtilTimer();
     timer.timerString("[GenericDAO.checkDb] Start - Before Get Table List");
     
-    Connection connection = null;
-    try { connection = getConnection(); }
-    catch(SQLException sqle) {
-      String message = "Unable to esablish a connection with the database... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
-      if(messages != null) messages.add(message);
-      return;
-    }
-    
-    DatabaseMetaData dbData = null;
-    try { dbData = connection.getMetaData(); }
-    catch(SQLException sqle) {
-      String message = "Unable to get database meta data... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
-      if(messages != null) messages.add(message);
-      return;
-    }
-    
+    timer.timerString("[GenericDAO.checkDb] Before Get Database Meta Data");
     //get ALL tables from this database
-    TreeSet tableNames = new TreeSet();
-    ResultSet tableSet = null;
-    try { tableSet = dbData.getTables(null, null, null, null); }
-    catch(SQLException sqle) {
-      String message = "Unable to get list of table information... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
-      if(messages != null) messages.add(message);
-      return;
-    }
-    
-    try {
-      while(tableSet.next()) {
-        try {
-          String tableName = tableSet.getString("TABLE_NAME");
-          String tableType = tableSet.getString("TABLE_TYPE");
-          //String remarks = tableSet.getString("REMARKS");
-          tableNames.add(tableName.toUpperCase());
-          //Debug.logInfo("[GenericDAO.checkDb] Found table named \"" + tableName + "\" of type \"" + tableType + "\" with remarks: " + remarks);
-        }
-        catch(SQLException sqle) {
-          String message = "Error getting table information... Error was:" + sqle.toString();
-          Debug.logError("[GenericDAO.checkDb] " + message);
-          if(messages != null) messages.add(message);
-          continue;
-        }
-      }
-    }
-    catch(SQLException sqle) {
-      String message = "Error getting next table information... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
-      if(messages != null) messages.add(message);
-      return;
-    }
-    
-    try{ tableSet.close(); }
-    catch(SQLException sqle) {
-      String message = "Unable to close ResultSet for table list, continuing anyway... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
-      if(messages != null) messages.add(message);
-    }
-    
+    TreeSet tableNames = this.getTableNames(messages);
+    timer.timerString("[GenericDAO.checkDb] After Get All Table Names");
+
     //get ALL column info, put into hashmap by table name
-    timer.timerString("[GenericDAO.checkDb] Before Get All Column Info");
-    Map colInfo = new HashMap();
-    try {
-      ResultSet rsCols = dbData.getColumns(null, null, null, null);
-      while(rsCols.next()) {
-        try {
-          ColumnCheckInfo ccInfo = new ColumnCheckInfo();
-          ccInfo.tableName = rsCols.getString("TABLE_NAME").toUpperCase();
-          ccInfo.columnName = rsCols.getString("COLUMN_NAME").toUpperCase();
-          ccInfo.typeName = rsCols.getString("TYPE_NAME").toUpperCase();
-          ccInfo.columnSize = rsCols.getInt("COLUMN_SIZE");
-          ccInfo.decimalDigits = rsCols.getInt("DECIMAL_DIGITS");
-          ccInfo.isNullable = rsCols.getString("IS_NULLABLE").toUpperCase();
-          
-          List tableColInfo = (List)colInfo.get(ccInfo.tableName);
-          if(tableColInfo == null) {
-            tableColInfo = new Vector();
-            colInfo.put(ccInfo.tableName, tableColInfo);
-          }
-          tableColInfo.add(ccInfo);
-        }
-        catch(SQLException sqle) {
-          String message = "Error getting column info for column. Error was:" + sqle.toString();
-          Debug.logError("[GenericDAO.checkDb] " + message);
-          if(messages != null) messages.add(message);
-          continue;
-        }
-      }
-      
-      try{ rsCols.close(); }
-      catch(SQLException sqle) {
-        String message = "Unable to close ResultSet for column list, continuing anyway... Error was:" + sqle.toString();
-        Debug.logError("[GenericDAO.checkDb] " + message);
-        if(messages != null) messages.add(message);
-      }
-    }
-    catch(SQLException sqle) {
-      String message = "Error getting column meta data for Error was:" + sqle.toString() + ". Not checking columns.";
-      Debug.logError("[GenericDAO.checkDb] " + message);
-      if(messages != null) messages.add(message);
-      colInfo = null;
-    }
+    Map colInfo = this.getColumnInfo(messages);
     timer.timerString("[GenericDAO.checkDb] After Get All Column Info");
     
     //-make sure all entities have a corresponding table
@@ -1005,15 +909,212 @@ public class GenericDAO {
       if(messages != null) messages.add(message);
     }
     
+    timer.timerString("[GenericDAO.checkDb] Finished Checking Entity Database");
+  }
+  
+  /** Creates a list of ModelEntity objects based on meta data from the database */
+  public List induceModelFromDb(Collection messages) {
+    //get ALL tables from this database
+    TreeSet tableNames = this.getTableNames(messages);
+
+    //get ALL column info, put into hashmap by table name
+    Map colInfo = this.getColumnInfo(messages);
+
+    //go through each table and make a ModelEntity object, add to list
+    //for each entity make corresponding ModelField objects
+    //then print out XML for the entities/fields
+    List newEntList = new LinkedList();
+    
+    //iterate over the table names is alphabetical order
+    Iterator tableNamesIter = new TreeSet(colInfo.keySet()).iterator();
+    while(tableNamesIter.hasNext()) {
+      String tableName = (String)tableNamesIter.next();
+      Vector colList = (Vector)colInfo.get(tableName);
+
+      ModelEntity newEntity = new ModelEntity();
+      newEntity.tableName = tableName.toUpperCase();
+      newEntity.entityName = ModelUtil.dbNameToClassName(newEntity.tableName);
+      newEntList.add(newEntity);
+
+      Iterator columns = colList.iterator();
+      while(columns.hasNext()) {
+        ColumnCheckInfo ccInfo = (ColumnCheckInfo)columns.next();
+        ModelField newField = new ModelField();
+        newEntity.fields.add(newField);
+        newField.colName = ccInfo.columnName.toUpperCase();
+        newField.name =  ModelUtil.dbNameToVarName(newField.colName);
+        
+        //figure out the type according to the typeName, columnSize and decimalDigits
+        newField.type = ModelUtil.induceFieldType(ccInfo.typeName, ccInfo.columnSize, ccInfo.decimalDigits, this.modelFieldTypeReader);
+        
+        //how do we find out if it is a primary key? for now, if not nullable, assume it is a pk
+        //this is a bad assumption, but since this output must be edited by hand later anyway, oh well
+        if("NO".equals(ccInfo.isNullable)) newField.isPk = true;
+        else newField.isPk = false;
+      }
+      newEntity.updatePkLists();
+    }
+    
+    return newEntList;
+  }
+  
+  public TreeSet getTableNames(Collection messages) {
+    Connection connection = null;
+    try { connection = getConnection(); }
+    catch(SQLException sqle) {
+      String message = "Unable to esablish a connection with the database... Error was:" + sqle.toString();
+      Debug.logError("[GenericDAO.checkDb] " + message);
+      if(messages != null) messages.add(message);
+      return null;
+    }
+    
+    DatabaseMetaData dbData = null;
+    try { dbData = connection.getMetaData(); }
+    catch(SQLException sqle) {
+      String message = "Unable to get database meta data... Error was:" + sqle.toString();
+      Debug.logError("[GenericDAO.checkDb] " + message);
+      if(messages != null) messages.add(message);
+      return null;
+    }
+    
+    //get ALL tables from this database
+    TreeSet tableNames = new TreeSet();
+    ResultSet tableSet = null;
+    try { tableSet = dbData.getTables(null, null, null, null); }
+    catch(SQLException sqle) {
+      String message = "Unable to get list of table information... Error was:" + sqle.toString();
+      Debug.logError("[GenericDAO.checkDb] " + message);
+      if(messages != null) messages.add(message);
+
+      try{ connection.close(); }
+      catch(SQLException sqle2) {
+        String message2 = "Unable to close database connection, continuing anyway... Error was:" + sqle2.toString();
+        Debug.logError("[GenericDAO.checkDb] " + message2);
+        if(messages != null) messages.add(message2);
+      }
+      return null;
+    }
+    
+    try {
+      while(tableSet.next()) {
+        try {
+          String tableName = tableSet.getString("TABLE_NAME");
+          String tableType = tableSet.getString("TABLE_TYPE");
+          //String remarks = tableSet.getString("REMARKS");
+          tableNames.add(tableName.toUpperCase());
+          //Debug.logInfo("[GenericDAO.checkDb] Found table named \"" + tableName + "\" of type \"" + tableType + "\" with remarks: " + remarks);
+        }
+        catch(SQLException sqle) {
+          String message = "Error getting table information... Error was:" + sqle.toString();
+          Debug.logError("[GenericDAO.checkDb] " + message);
+          if(messages != null) messages.add(message);
+          continue;
+        }
+      }
+    }
+    catch(SQLException sqle) {
+      String message = "Error getting next table information... Error was:" + sqle.toString();
+      Debug.logError("[GenericDAO.checkDb] " + message);
+      if(messages != null) messages.add(message);
+      return tableNames;
+    }
+    finally {
+      try{ tableSet.close(); }
+      catch(SQLException sqle) {
+        String message = "Unable to close ResultSet for table list, continuing anyway... Error was:" + sqle.toString();
+        Debug.logError("[GenericDAO.checkDb] " + message);
+        if(messages != null) messages.add(message);
+      }
+
+      try{ connection.close(); }
+      catch(SQLException sqle) {
+        String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
+        Debug.logError("[GenericDAO.checkDb] " + message);
+        if(messages != null) messages.add(message);
+      }
+    }
+    
+    return tableNames;
+  }
+    
+  public Map getColumnInfo(Collection messages) {
+    Connection connection = null;
+    try { connection = getConnection(); }
+    catch(SQLException sqle) {
+      String message = "Unable to esablish a connection with the database... Error was:" + sqle.toString();
+      Debug.logError("[GenericDAO.checkDb] " + message);
+      if(messages != null) messages.add(message);
+      return null;
+    }
+    
+    DatabaseMetaData dbData = null;
+    try { dbData = connection.getMetaData(); }
+    catch(SQLException sqle) {
+      String message = "Unable to get database meta data... Error was:" + sqle.toString();
+      Debug.logError("[GenericDAO.checkDb] " + message);
+      if(messages != null) messages.add(message);
+
+      try{ connection.close(); }
+      catch(SQLException sqle2) {
+        String message2 = "Unable to close database connection, continuing anyway... Error was:" + sqle2.toString();
+        Debug.logError("[GenericDAO.checkDb] " + message2);
+        if(messages != null) messages.add(message2);
+      }
+      return null;
+    }
+    
+    Map colInfo = new HashMap();
+    try {
+      ResultSet rsCols = dbData.getColumns(null, null, null, null);
+      while(rsCols.next()) {
+        try {
+          ColumnCheckInfo ccInfo = new ColumnCheckInfo();
+          ccInfo.tableName = rsCols.getString("TABLE_NAME").toUpperCase();
+          ccInfo.columnName = rsCols.getString("COLUMN_NAME").toUpperCase();
+          ccInfo.typeName = rsCols.getString("TYPE_NAME").toUpperCase();
+          ccInfo.columnSize = rsCols.getInt("COLUMN_SIZE");
+          ccInfo.decimalDigits = rsCols.getInt("DECIMAL_DIGITS");
+          ccInfo.isNullable = rsCols.getString("IS_NULLABLE").toUpperCase();
+          
+          List tableColInfo = (List)colInfo.get(ccInfo.tableName);
+          if(tableColInfo == null) {
+            tableColInfo = new Vector();
+            colInfo.put(ccInfo.tableName, tableColInfo);
+          }
+          tableColInfo.add(ccInfo);
+        }
+        catch(SQLException sqle) {
+          String message = "Error getting column info for column. Error was:" + sqle.toString();
+          Debug.logError("[GenericDAO.checkDb] " + message);
+          if(messages != null) messages.add(message);
+          continue;
+        }
+      }
+      
+      try{ rsCols.close(); }
+      catch(SQLException sqle) {
+        String message = "Unable to close ResultSet for column list, continuing anyway... Error was:" + sqle.toString();
+        Debug.logError("[GenericDAO.checkDb] " + message);
+        if(messages != null) messages.add(message);
+      }
+    }
+    catch(SQLException sqle) {
+      String message = "Error getting column meta data for Error was:" + sqle.toString() + ". Not checking columns.";
+      Debug.logError("[GenericDAO.checkDb] " + message);
+      if(messages != null) messages.add(message);
+      colInfo = null;
+    }
+
     try{ connection.close(); }
     catch(SQLException sqle) {
       String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
       Debug.logError("[GenericDAO.checkDb] " + message);
       if(messages != null) messages.add(message);
     }
-    timer.timerString("[GenericDAO.checkDb] Finished Checking Entity Database");
+    
+    return colInfo;
   }
-  
+
   class ColumnCheckInfo {
     public String tableName;
     public String columnName;
