@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 
@@ -67,7 +67,7 @@
   <#if partyId?exists>
     <tr>
       <td colspan="2" align="right" nowrap>
-        <a href="<@ofbizUrl>/viewCommunicationEvent?partyIdFrom=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewCommunication}]</a>
+        <a href="<@ofbizUrl>/viewCommunicationEvent?partyIdFrom=${partyId}&partyId=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewCommunication}]</a>
       </td>
     </tr>
   </#if>
