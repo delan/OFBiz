@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.36 2003/12/05 18:55:19 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.37 2004/01/07 12:39:30 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.36 $
+ * @version    $Revision: 1.37 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -1049,7 +1049,7 @@ public class ShoppingCart implements java.io.Serializable {
     public void addFreeShippingProductPromoAction(GenericValue productPromoAction) {
         if (productPromoAction == null) return;
         // is this a free shipping action?
-        if (!"PROMO_FREE_SHIPPING".equals(productPromoAction.getString("productPromoActionTypeId"))) return;
+        if (!"PROMO_FREE_SHIPPING".equals(productPromoAction.getString("productPromoActionEnumId"))) return; // Changed 1-5-04 by Si Chen
 
         // to easily make sure that no duplicate exists, do a remove first
         this.removeFreeShippingProductPromoAction(productPromoAction.getPrimaryKey());
