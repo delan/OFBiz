@@ -50,7 +50,7 @@
         <tr>
           <td><div class='boxhead'>Find Orders</div></td>
           <td align='right'>
-            <a href="javascript:document.PicklistOptions.submit();" class="submenutext">Create Pick List</a>
+            <a href="javascript:document.PicklistOptions.submit();" class="submenutextright">Create Pick List</a>
           </td>
         </tr>
       </table>
