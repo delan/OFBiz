@@ -412,7 +412,7 @@ public class PriceServices {
         
         result.put("orderItemPriceInfos", orderItemPriceInfos);
         result.put("isSale", new Boolean(isSale));
-        utilTimer.timerString("Finished price calc productId=" + productId, module);
+        utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);
         return result;
     }
 
