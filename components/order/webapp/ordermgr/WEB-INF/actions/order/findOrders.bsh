@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -29,6 +29,7 @@ import java.sql.Timestamp;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.transaction.*;
 import org.ofbiz.base.util.*;
 
 delegator = request.getAttribute("delegator");
@@ -276,30 +277,48 @@ if (lookupFlag != null) {
         // set distinct on so we only get one row per order
         EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
 
-        // using list iterator
-        EntityListIterator ohli = delegator.findListIteratorByCondition(entityName, mainCond, null, fieldsToSelect, orderBy, findOpts);
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
 
-        // get the indexes for the partial list
-        lowIndex = (((viewIndex - 1) * viewSize) + 1);
-        highIndex = viewIndex * viewSize;
-
-        // attempt to get the full size
-        ohli.last();
-        orderHeaderListSize = ohli.currentIndex();
-        if (highIndex > orderHeaderListSize) {
-            highIndex = orderHeaderListSize;
+            // using list iterator
+            EntityListIterator ohli = delegator.findListIteratorByCondition(entityName, mainCond, null, fieldsToSelect, orderBy, findOpts);
+    
+            // get the indexes for the partial list
+            lowIndex = (((viewIndex - 1) * viewSize) + 1);
+            highIndex = viewIndex * viewSize;
+    
+            // attempt to get the full size
+            ohli.last();
+            orderHeaderListSize = ohli.currentIndex();
+            if (highIndex > orderHeaderListSize) {
+                highIndex = orderHeaderListSize;
+            }
+    
+            // get the partial list for this page
+            ohli.first();
+            if (orderHeaderListSize > 0) {
+                orderHeaderList = ohli.getPartialList(lowIndex, viewSize);
+            } else {
+                orderHeaderList = new ArrayList();
+            }
+    
+            // close the iterator
+            ohli.close();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
-
-        // get the partial list for this page
-        ohli.first();
-        if (orderHeaderListSize > 0) {
-            orderHeaderList = ohli.getPartialList(lowIndex, viewSize);
-        } else {
-            orderHeaderList = new ArrayList();
-        }
-
-        // close the iterator
-        ohli.close();
     } else {
         orderHeaderList = new ArrayList();
         orderHeaderListSize = 0;

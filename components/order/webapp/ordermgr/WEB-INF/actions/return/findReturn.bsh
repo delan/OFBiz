@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -30,6 +30,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.transaction.*;
 
 delegator = request.getAttribute("delegator");
 
@@ -176,30 +177,48 @@ if (lookupFlag != null) {
         // set distinct on so we only get one row per order
         EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
 
-        // using list iterator
-        EntityListIterator orli = delegator.findListIteratorByCondition(entityName, mainCond, null, null, orderBy, findOpts);
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
 
-        // get the indexes for the partial list
-        lowIndex = (((viewIndex - 1) * viewSize) + 1);
-        highIndex = viewIndex * viewSize;
-
-        // attempt to get the full size
-        orli.last();
-        returnHeaderListSize = orli.currentIndex();
-        if (highIndex > returnHeaderListSize) {
-            highIndex = returnHeaderListSize;
+            // using list iterator
+            EntityListIterator orli = delegator.findListIteratorByCondition(entityName, mainCond, null, null, orderBy, findOpts);
+    
+            // get the indexes for the partial list
+            lowIndex = (((viewIndex - 1) * viewSize) + 1);
+            highIndex = viewIndex * viewSize;
+    
+            // attempt to get the full size
+            orli.last();
+            returnHeaderListSize = orli.currentIndex();
+            if (highIndex > returnHeaderListSize) {
+                highIndex = returnHeaderListSize;
+            }
+    
+            // get the partial list for this page
+            orli.first();
+            if (returnHeaderListSize > 0) {
+                returnHeaderList = orli.getPartialList(lowIndex, viewSize);
+            } else {
+                returnHeaderList = new ArrayList();
+            }
+    
+            // close the list iterator
+            orli.close();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
-
-        // get the partial list for this page
-        orli.first();
-        if (returnHeaderListSize > 0) {
-            returnHeaderList = orli.getPartialList(lowIndex, viewSize);
-        } else {
-            returnHeaderList = new ArrayList();
-        }
-
-        // close the list iterator
-        orli.close();
     } else {
         returnHeaderList = new ArrayList();
         returnHeaderListSize = 0;

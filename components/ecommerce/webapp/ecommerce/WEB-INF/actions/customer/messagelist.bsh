@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.1
  */
 
@@ -36,9 +36,6 @@ if (userLogin != null) {
     orderBy = UtilMisc.toList("-entryDate");
     condition = new EntityExpr("partyIdTo", EntityOperator.EQUALS, partyId);
 
-    eli = delegator.findListIteratorByCondition("CommunicationEvent", condition, null, null, orderBy, null);
-    messages = eli.getCompleteList();
-
+    messages = delegator.findByCondition("CommunicationEvent", condition, null, null, orderBy, null);
     context.put("messages", messages);
-    eli.close();
 }

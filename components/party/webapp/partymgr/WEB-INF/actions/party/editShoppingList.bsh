@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1.1
  */
  
@@ -54,7 +54,7 @@ if (shoppingListId == null || shoppingListId.equals(""))
 
 //get the party for listid if it exists    
 if(partyId == null && shoppingListId != null){
-	partyId = delegator.findByPrimaryKey("ShoppingList",UtilMisc.toMap("shoppingListId",shoppingListId)).getString("partyId");
+    partyId = delegator.findByPrimaryKey("ShoppingList",UtilMisc.toMap("shoppingListId",shoppingListId)).getString("partyId");
 }
 context.put("partyId", partyId);
 
@@ -87,20 +87,20 @@ if (shoppingListId != null) {
 
         shoppingListItems = shoppingList.getRelatedCache("ShoppingListItem");
         if (shoppingListItems != null) {
-	        shoppingListItemDatas = new ArrayList(shoppingListItems.size());
-	        shoppingListItemIter = shoppingListItems.iterator();
-	        while (shoppingListItemIter.hasNext()) {
-	        	shoppingListItem = shoppingListItemIter.next();
-	        	shoppingListItemData = new HashMap();
-	        	product = shoppingListItem.getRelatedOneCache("Product");
+            shoppingListItemDatas = new ArrayList(shoppingListItems.size());
+            shoppingListItemIter = shoppingListItems.iterator();
+            while (shoppingListItemIter.hasNext()) {
+                shoppingListItem = shoppingListItemIter.next();
+                shoppingListItemData = new HashMap();
+                product = shoppingListItem.getRelatedOneCache("Product");
 
-	        	calcPriceInMap = UtilMisc.toMap("product", product, "quantity", shoppingListItem.get("quantity"), "currencyUomId", currencyUomId, "userLogin", userLogin);
+                calcPriceInMap = UtilMisc.toMap("product", product, "quantity", shoppingListItem.get("quantity"), "currencyUomId", currencyUomId, "userLogin", userLogin);
                 calcPriceOutMap = dispatcher.runSync("calculateProductPrice", calcPriceInMap);
                 price = calcPriceOutMap.get("price");
                 totalPrice = price * shoppingListItem.getDouble("quantity");
                 shoppingListItemTotal += totalPrice;
 
-	        	productVariantAssocs = null;
+                productVariantAssocs = null;
                 if ("Y".equals(product.getString("isVirtual"))) {
                     productVariantAssocs = product.getRelatedCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("sequenceNum"));
                 }
@@ -111,36 +111,33 @@ if (shoppingListId != null) {
                 shoppingListItemData.put("totalPrice", totalPrice);
                 shoppingListItemData.put("productVariantAssocs", productVariantAssocs);
                 shoppingListItemDatas.add(shoppingListItemData);
-	        }
-	        context.put("shoppingListItemDatas", shoppingListItemDatas);
+            }
+            context.put("shoppingListItemDatas", shoppingListItemDatas);
         }
         
         shoppingListType = shoppingList.getRelatedOne("ShoppingListType");
         context.put("shoppingListType", shoppingListType);
-	
+    
         // get the child shopping lists of the current list for the logged in user
         childShoppingLists = delegator.findByAndCache("ShoppingList", UtilMisc.toMap("partyId", partyId, "parentShoppingListId", shoppingListId), UtilMisc.toList("listName"));
         // now get prices for each child shopping list...
         if (childShoppingLists != null) {
-	        childShoppingListDatas = new ArrayList(childShoppingLists.size());
-	        childShoppingListIter = childShoppingLists.iterator();
-	        while (childShoppingListIter.hasNext()) {
-	        	childShoppingList = childShoppingListIter.next();
-	        	childShoppingListData = new HashMap();
+            childShoppingListDatas = new ArrayList(childShoppingLists.size());
+            childShoppingListIter = childShoppingLists.iterator();
+            while (childShoppingListIter.hasNext()) {
+                childShoppingList = childShoppingListIter.next();
+                childShoppingListData = new HashMap();
 
-				calcListPriceInMap = UtilMisc.toMap("shoppingListId", childShoppingList.get("shoppingListId"), "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, "userLogin", userLogin);
-	        	childShoppingListData.put("childShoppingList", childShoppingList);
-	        	childShoppingListDatas.add(childShoppingListData);
-	        }
-	        context.put("childShoppingListDatas", childShoppingListDatas);
-	    }
+                calcListPriceInMap = UtilMisc.toMap("shoppingListId", childShoppingList.get("shoppingListId"), "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, "userLogin", userLogin);
+                childShoppingListData.put("childShoppingList", childShoppingList);
+                childShoppingListDatas.add(childShoppingListData);
+            }
+            context.put("childShoppingListDatas", childShoppingListDatas);
+        }
 
         // get the parent shopping list if there is one
         parentShoppingList = shoppingList.getRelatedOne("ParentShoppingList");
         context.put("parentShoppingList", parentShoppingList);
     }
 }
-
-
-
  
