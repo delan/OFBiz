@@ -101,8 +101,7 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title" value="Show Promotion Details"/>
-                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showPromotionDetails.bsh"/>-->
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/showPromotionDetails.bsh"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/cart/showPromotionDetails.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderEntryDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
