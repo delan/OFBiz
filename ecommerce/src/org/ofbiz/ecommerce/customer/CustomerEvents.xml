@@ -361,9 +361,9 @@
 
         <!-- now finished, log in the user... -->
         <if-compare field-name="create_allow_password" operator="equals" value="true">
-            <call-bsh><![CDATA[ 
+            <call-bsh><![CDATA[
                 org.ofbiz.commonapp.security.login.LoginEvents.doBasicLogin(newUserLogin, request);
-                org.ofbiz.core.stats.VisitHandler.setUserLogin(request.getSession(), newUserLogin, true);
+                org.ofbiz.commonapp.security.login.LoginEvents.autoLoginSet(request, response);
             ]]></call-bsh>
         </if-compare>
 
