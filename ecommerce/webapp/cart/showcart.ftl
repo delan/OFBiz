@@ -252,7 +252,7 @@ function addToList() {
         </tr>        
         <tr>
           <td colspan="6" align="center" valign="bottom">
-            <div class="tabletext"><input type="checkbox" onChange="javascript:document.cartform.submit()" name="always_showcart" <#if shoppingCart.viewCartOnAdd()>checked</#if>>&nbsp;Always view cart after adding an item.</div>
+            <div class="tabletext"><input type="checkbox" onChange="javascript:document.cartform.submit()" name="alwaysShowcart" <#if shoppingCart.viewCartOnAdd()>checked</#if>>&nbsp;Always view cart after adding an item.</div>
           </td>
         </tr>        
       </table>    

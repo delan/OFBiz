@@ -456,7 +456,7 @@ public class ShoppingCartEvents {
             }
         }
 
-        if (paramMap.containsKey("always_showcart")) {
+        if (paramMap.containsKey("alwaysShowcart")) {
             cart.setViewCartOnAdd(true);
         } else {
             cart.setViewCartOnAdd(false);
