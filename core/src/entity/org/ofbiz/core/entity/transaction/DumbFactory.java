@@ -112,4 +112,6 @@ public class DumbFactory implements TransactionFactoryInterface {
             return null;
         }
     }
+    
+    public void shutdown() {}    
 }

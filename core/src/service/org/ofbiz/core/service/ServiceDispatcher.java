@@ -610,6 +610,8 @@ public class ServiceDispatcher {
         jlf.closeListeners();
         // shutdown the job scheduler
         jm.finalize();
+        // shutdown the TM
+        TransactionFactory.shutdown();
     }
     
     // checks if parameters were passed for authentication

@@ -106,4 +106,12 @@ public class JotmFactory implements TransactionFactoryInterface {
             return null;
         }
     }
+    
+    public void shutdown() {
+        JotmConnectionFactory.closeAll();
+        if (jotm != null) {
+            jotm.stop();
+            jotm = null;
+        }           
+    }
 }

@@ -27,7 +27,9 @@ package org.ofbiz.core.entity.transaction;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.enhydra.jdbc.pool.StandardXAPoolDataSource;
 import org.enhydra.jdbc.standard.StandardXADataSource;
@@ -138,5 +140,15 @@ public class JotmConnectionFactory {
                                                       
             return pds.getConnection();
         }                
-    }                                                                     
+    }
+    
+    public static void closeAll() {
+        Set cacheKeys = dsCache.keySet();
+        Iterator i = cacheKeys.iterator();
+        while (i.hasNext()) {
+            String helperName = (String) i.next();
+            StandardXAPoolDataSource pds = (StandardXAPoolDataSource) dsCache.remove(helperName);
+            pds.shutdown(true);   
+        }                                                                             
+    }
 }

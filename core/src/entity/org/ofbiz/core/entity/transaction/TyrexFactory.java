@@ -197,4 +197,12 @@ public class TyrexFactory implements TransactionFactoryInterface {
             return null;
         }
     }
+    
+    public void shutdown() {
+        TyrexConnectionFactory.closeAll();
+        if (td != null) {
+            td.terminate();
+            td = null;
+        }                
+    }
 }

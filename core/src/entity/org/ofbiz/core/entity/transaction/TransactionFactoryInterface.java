@@ -46,4 +46,6 @@ public interface TransactionFactoryInterface {
     public String getTxMgrName();
     
     public Connection getConnection(String helperName) throws SQLException, GenericEntityException;
+    
+    public void shutdown();
 }

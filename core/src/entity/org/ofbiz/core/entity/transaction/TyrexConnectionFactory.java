@@ -88,5 +88,15 @@ public class TyrexConnectionFactory {
 
         return null;
     }
+    
+    public static void closeAll() {
+        Set cacheKeys = dsCache.keySet();
+        Iterator i = cacheKeys.iterator();
+        while (i.hasNext()) {
+            String helperName = (String) i.next();
+            EnabledDataSource ed = (EnabledDataSource) dsCache.remove(helperName);
+            ed = null;   
+        }                                                                             
+    }    
 }
 

@@ -98,4 +98,8 @@ public class TransactionFactory {
     public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
         return getTransactionFactory().getConnection(helperName);
     }
+    
+    public static void shutdown() {
+        getTransactionFactory().shutdown();
+    }
 }

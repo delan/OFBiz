@@ -243,4 +243,6 @@ public class JNDIFactory implements TransactionFactoryInterface {
         }
         return null;
     }
+    
+    public void shutdown() {}
 }
