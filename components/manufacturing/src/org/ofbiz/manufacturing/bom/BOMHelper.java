@@ -146,7 +146,7 @@ public class BOMHelper {
                 Debug.logError("Production Run for order item (" + orderItem.getString("orderId") + "/" + orderItem.getString("orderItemSeqId") + ") not created.", module);
                 continue;
             }
-            Map result = dispatcher.runSync("createProductionRunsForOrder", UtilMisc.toMap("productId", orderItem.getString("productId"), "quantity", shipmentPlan.getDouble("quantity"), "orderId", shipmentPlan.getString("orderId"), "orderItemSeqId", shipmentPlan.getString("orderItemSeqId"), "userLogin", userLogin));
+            Map result = dispatcher.runSync("createProductionRunsForOrder", UtilMisc.toMap("productId", orderItem.getString("productId"), "quantity", shipmentPlan.getDouble("quantity"), "orderId", shipmentPlan.getString("orderId"), "orderItemSeqId", shipmentPlan.getString("orderItemSeqId"), "shipmentId", shipmentId, "userLogin", userLogin));
         }
         } catch (Exception e) {
             // if there is an exception for either, the other probably wont work
