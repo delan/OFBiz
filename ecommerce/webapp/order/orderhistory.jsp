@@ -33,6 +33,7 @@
 
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.util.*" %>
+<%@ page import="org.ofbiz.commonapp.order.order.*" %>
 <%@ page import="org.ofbiz.ecommerce.order.*" %>
 
 <% pageContext.setAttribute("PageName", "orderhistory"); %>
@@ -90,7 +91,8 @@
       <%-- XXX should be most recent first --%>
       <%while (orderHeaderIter.hasNext()) {%>
         <%GenericValue orderHeader = (GenericValue) orderHeaderIter.next();%>
-        <%String orderStatusString = OrderHelper.getOrderStatusString(orderHeader);%>
+	<%OrderReadHelper order = new OrderReadHelper(orderHeader); %>
+        <%String orderStatusString = order.getStatusString();%>
         <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
         <tr>
           <td>
@@ -100,7 +102,7 @@
             <div class="tabletext"><%=orderHeader.getString("orderId")%></div>
           </td>
           <td>
-            <div class="tabletext"><%=UtilFormatOut.formatPrice(OrderHelper.getOrderTotalPrice(orderHeader))%></div>
+            <div class="tabletext"><%=UtilFormatOut.formatPrice(order.getTotalPrice())%></div>
           </td>
           <td>
             <div class="tabletext"><%=orderStatusString%></div>
