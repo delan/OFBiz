@@ -40,6 +40,8 @@
 <br>
 <p class='tabletext'>If you already have an account, <a href='<ofbiz:url>/checkLogin/main</ofbiz:url>' class='buttontext'>log in here</a>.</p>
 
+<form method="post" action="<ofbiz:url>/createcustomer<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="newuserform" style='margin:0;'>
+	
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -57,7 +59,6 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-<form method="post" action="<ofbiz:url>/createcustomer<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="newuserform" style='margin:0;'>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Title</font></div></td>
