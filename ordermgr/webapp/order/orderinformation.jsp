@@ -93,7 +93,7 @@
                         <ofbiz:if name="orderHeader">
                             <form name="statusUpdate" method="get" action="<ofbiz:url>/changeOrderStatus</ofbiz:url>">
                                <input type="hidden" name="orderId" value="<%=orderHeader.getString("orderId")%>">        
-                               <select name="statusId">
+                               <select name="statusId" style="font-size: x-small;">
                                  <option value="<%=orderHeader.getString("statusId")%>"><%=orderHeader.getString("statusId")%></option>
                                  <option value="<%=orderHeader.getString("statusId")%>">----</option>
                                  <ofbiz:iterator name="status" property="statusChange">

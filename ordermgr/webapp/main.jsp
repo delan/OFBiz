@@ -47,8 +47,8 @@
           </TD>
           <TD align=right width='30%'>            
               <FORM name="lookup" action="<ofbiz:url>/orderview</ofbiz:url>" method="GET">
-                  <input type="text" name="order_id" size="9">&nbsp;
-                  <a href="javascript:document.lookup.submit();" class="lightbuttontext">[LookUp Order]</a>            
+                  <input type="text" name="order_id" size="9" style="font-size: x-small;">&nbsp;
+                  <a href="javascript:document.lookup.submit();" class="lightbuttontext">[Lookup Order]</a>
               </FORM>
           </TD>
         </tr>

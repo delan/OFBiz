@@ -114,7 +114,7 @@
           <TD align=right width='35%'>
             <ofbiz:unless name="PARTY_MODE">
               <FORM name="liststatus" action="<ofbiz:url>/orderlist</ofbiz:url>" method="POST">
-                <select name="listStatusId">
+                <select name="listStatusId" style="font-size: x-small;">
                   <option><%=listStatusId%></option>
                   <option value="<%=listStatusId%>">----</option>
                   <!-- <option>ALL_ORDERS</option> is this really a good idea? -->
@@ -130,7 +130,7 @@
           </TD>
           <TD align=right width='25%'>
               <FORM name="lookup" action="<ofbiz:url>/orderview</ofbiz:url>" method="POST">
-                  <input type="text" name="order_id" size="9">&nbsp;<a href="javascript:document.lookup.submit();" class="lightbuttontext">[Lookup&nbsp;Order]</a>
+                  <input type="text" name="order_id" size="9" style="font-size: x-small;">&nbsp;<a href="javascript:document.lookup.submit();" class="lightbuttontext">[Lookup&nbsp;Order]</a>
               </FORM>
           </TD>
         </tr>
