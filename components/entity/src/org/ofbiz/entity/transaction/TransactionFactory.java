@@ -1,5 +1,5 @@
 /*
- * $Id: TransactionFactory.java,v 1.2 2004/04/22 22:42:15 doogie Exp $
+ * $Id: TransactionFactory.java,v 1.3 2004/04/30 22:28:52 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.entity.jdbc.CursorConnection;
  * TransactionFactory - central source for JTA objects
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class TransactionFactory {
@@ -110,16 +110,16 @@ public class TransactionFactory {
 
     public static Connection getCursorConnection(String helperName, Connection con) {
         EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
-
         if (datasourceInfo == null) {
             Debug.logWarning("Could not find configuration for " + helperName + " datasource.", module);
             return con;
-        }
-
-        try {
-            if (datasourceInfo.resultFetchSize > 1) con = CursorConnection.newCursorConnection(con, datasourceInfo.cursorName, datasourceInfo.resultFetchSize);
-        } catch (Exception ex) {
-            Debug.logWarning(ex, "Error creating the cursor connection proxy " + helperName + " datasource.", module);
+        } else if (datasourceInfo.useProxyCursor) {
+            try {
+                if (datasourceInfo.resultFetchSize > 1)
+                    con = CursorConnection.newCursorConnection(con, datasourceInfo.cursorName, datasourceInfo.resultFetchSize);
+            } catch (Exception ex) {
+                Debug.logWarning(ex, "Error creating the cursor connection proxy " + helperName + " datasource.", module);
+            }
         }
         return con;
     }

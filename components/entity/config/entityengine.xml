@@ -139,9 +139,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             field-type-name="postgres72"
             check-on-start="true"
             add-missing-on-start="true"
-            use-fk-initially-deferred="false"
+            use-fk-initially-deferred="false"            
             join-style="ansi">
-            <!-- use this attribute to make the EntityListIterator more effective for pgsql 7.4 and later: 
+            <!-- use this attribute to make the EntityListIterator more effective for pgjdbc 7.5devel and later:
                 result-fetch-size="50"
             -->
         <read-data reader-name="main"/>

@@ -1,7 +1,7 @@
 /*
- * $Id: ExecQueryCallbackFunctionIF.java,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ * $Id: ExecQueryCallbackFunctionIF.java,v 1.2 2004/04/30 22:28:50 ajzeneski Exp $
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,20 +21,16 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.entity.jdbc;
 
-
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * @author  <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
- * @version 1.0
+ *
+ * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
+ * @version    $Revision: 1.2 $
+ * @since      3.0
  */
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 
 public interface ExecQueryCallbackFunctionIF {
     public boolean processNextRow(ResultSet rs) throws SQLException;

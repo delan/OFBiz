@@ -1,5 +1,5 @@
 /*
- * $Id: SQLProcessor.java,v 1.10 2004/04/22 22:42:14 doogie Exp $
+ * $Id: SQLProcessor.java,v 1.11 2004/04/30 22:28:50 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,14 +35,16 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericDataSourceException;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
  * SQLProcessor - provides utitlity functions to ease database access
  * 
- * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.10 $
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class SQLProcessor {
@@ -370,6 +372,7 @@ public class SQLProcessor {
     public ResultSet executeQuery() throws GenericDataSourceException {
         try {
             // if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.executeQuery] ps=" + _ps.toString(), module);
+            this.setFetchSize(_ps); // set the result fetch size
             _rs = _ps.executeQuery();
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
@@ -756,6 +759,21 @@ public class SQLProcessor {
             if (SQLProcessor.CONNECTION_TEST_LIST.size() > SQLProcessor.MAX_CONNECTIONS) {
                 SQLProcessor.CONNECTION_TEST_LIST.remove(0);    
             }
+        }
+    }
+
+    protected void setFetchSize(Statement stmt) throws SQLException {
+        // do not set fetch size when using the cursor connection
+        if (_connection instanceof CursorConnection) return;
+        // otherwise only set if the size is > -1 (0 is sometimes used to note ALL rows)
+        EntityConfigUtil.DatasourceInfo ds = EntityConfigUtil.getDatasourceInfo(helperName);
+        if (ds != null) {
+            int fetchSize = ds.resultFetchSize;
+            if (fetchSize > -1) {
+                stmt.setFetchSize(fetchSize);
+            }
+        } else {
+            Debug.logWarning("DatasourceInfo is null, not setting fetch size!", module);
         }
     }
 }
