@@ -691,18 +691,32 @@ public class ObjectType {
         } else if ("Date".equals(type)) {
             java.sql.Date value1Date = (java.sql.Date) convertedValue1;
             java.sql.Date value2Date = (java.sql.Date) convertedValue2;
-
             result = value1Date.compareTo(value2Date);
         } else if ("Time".equals(type)) {
             java.sql.Time value1Time = (java.sql.Time) convertedValue1;
             java.sql.Time value2Time = (java.sql.Time) convertedValue2;
-
             result = value1Time.compareTo(value2Time);
         } else if ("Timestamp".equals(type)) {
             java.sql.Timestamp value1Timestamp = (java.sql.Timestamp) convertedValue1;
             java.sql.Timestamp value2Timestamp = (java.sql.Timestamp) convertedValue2;
-
             result = value1Timestamp.compareTo(value2Timestamp);
+        } else if ("Boolean".equals(type)) {
+            Boolean value1Boolean = (Boolean) convertedValue1;
+            Boolean value2Boolean = (Boolean) convertedValue2;
+            if ("equals".equals(operator)) {
+                if ((value1Boolean.booleanValue() && value2Boolean.booleanValue()) || (!value1Boolean.booleanValue() && !value2Boolean.booleanValue()))
+                    result = 0;
+                else
+                    result = 1;
+            } else if ("not-equals".equals(operator)) {
+                if ((!value1Boolean.booleanValue() && value2Boolean.booleanValue()) || (value1Boolean.booleanValue() && !value2Boolean.booleanValue()))
+                    result = 0;
+                else
+                    result = 1;
+            } else {
+                messages.add("Can only compare Booleans using the operators 'equals' or 'not-equals'");
+                return null;
+            }
         } else if ("Object".equals(type)) {
             if (convertedValue1.equals(convertedValue2)) {
                 result = 0;
