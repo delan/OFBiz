@@ -1,5 +1,5 @@
 /*
- * $Id: ContactMechWorker.java,v 1.1 2003/08/17 17:57:35 ajzeneski Exp $
+ * $Id: ContactMechWorker.java,v 1.2 2003/11/20 22:37:54 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Worker methods for Contact Mechanisms
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ContactMechWorker {
@@ -938,5 +938,35 @@ public class ContactMechWorker {
             results.put("curPostalAddress", curPostalAddress);
         }
         return results;
-    }    
+    }
+
+    public static boolean isUspsAddress(GenericValue postalAddress) {
+        if (postalAddress == null) {
+            // null postal address is not a USPS address
+            return false;
+        }
+        if (!"PostalAddress".equals(postalAddress.getEntityName())) {
+            // not a postal address not a USPS address
+            return false;
+        }
+
+        return false;
+    }
+
+    public static boolean isCompanyAddress(GenericValue postalAddress, String companyPartyId) {
+        if (postalAddress == null) {
+            // null postal address is not an internal address
+            return false;
+        }
+        if (!"PostalAddress".equals(postalAddress.getEntityName())) {
+            // not a postal address not an internal address
+            return false;
+        }
+        if (companyPartyId == null) {
+            // no partyId not an internal address
+            return false;
+        }
+
+        return false;
+    }
 }
