@@ -1,27 +1,27 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -29,14 +29,14 @@
     <#if illegalInventoryItem?exists>
         <div class="errorMessage">${illegalInventoryItem}</div>
     </#if>
-    
+
 	${pages.get("/facility/FacilityTabBar.ftl")}
-    
+
     <div class="head1">Inventory Transfer <span class="head2">from&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [ID:${facilityId?if_exists}]</span></div>
     <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>
-    
+
     <table border="0" cellpadding="2" cellspacing="0">
-    
+
     <#if !(inventoryItem?exists)>
         <form method="post" action="<@ofbizUrl>/TransferInventoryItem</@ofbizUrl>" style="margin: 0;">
         <table border="0" cellpadding="2" cellspacing="0">
@@ -60,11 +60,11 @@
             <form method="post" action="<@ofbizUrl>/UpdateInventoryTransfer</@ofbizUrl>" name="transferform" style="margin: 0;">
             <input type="hidden" name="inventoryTransferId" value="${inventoryTransferId?if_exists}">
         </#if>
-        
+
         <script language="JavaScript">
-            function setNow(field) { eval('document.transferform.${field}.value="${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}"'); }
+            function setNow(field) { eval('document.transferform.' + field + '.value="${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}"'); }
         </script>
-        
+
         <table border="0" cellpadding="2" cellspacing="0">
         <input type="hidden" name="inventoryItemId" value="${inventoryItemId?if_exists}">
         <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
@@ -77,13 +77,13 @@
             <b>${inventoryItemId}</b>
             </td>
         </tr>
-    
+
         <tr>
             <td width="14%">&nbsp;</td>
             <td width="6%" align="right" nowrap><div class="tabletext">InventoryItem Type Id</div></td>
             <td width="6%">&nbsp;</td>
-            <td width="74%"> 
-            <#if inventoryItemType?exists>                   
+            <td width="74%">
+            <#if inventoryItemType?exists>
                 <div class="tabletext">${(inventoryItemType.description)?if_exists}</div>
             </#if>
             </td>
@@ -92,12 +92,12 @@
             <td width="14%">&nbsp;</td>
             <td width="6%" align="right" nowrap><div class="tabletext">Product Id</div></td>
             <td width="6%">&nbsp;</td>
-            <td width="74%">            
+            <td width="74%">
                 <#if inventoryItem?exists && (inventoryItem.productId)?exists>
                     <a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)?if_exists}" class="buttontext">${(inventoryItem.productId)?if_exists}</a>
                 </#if>
             </td>
-        </tr>    
+        </tr>
         <tr>
             <td width="14%">&nbsp;</td>
             <td width="6%" align="right" nowrap><div class="tabletext">Status</div></td>
@@ -107,10 +107,10 @@
                 <div class="tabletext">${(inventoryStatus.description)?if_exists}</div>
             <#else>
                 <div class="tabletext">--</div>
-            </#if>                  
+            </#if>
             </td>
-        </tr>     
-        
+        </tr>
+
         <tr>
             <td width="14%">&nbsp;</td>
             <td width="6%" align="right" nowrap><div class="tabletext">Comments</div></td>
@@ -123,7 +123,7 @@
             </#if>
             </td>
         </tr>
-        
+
         <tr>
             <td width="14%">&nbsp;</td>
             <td width="6%" align="right" nowrap><div class="tabletext">Serial# | ATP/QOH</div></td>
@@ -132,17 +132,17 @@
                 <td width="74%">
                     <div class="tabletext">${(inventoryItem.availableToPromise)?if_exists}&nbsp;
                     /&nbsp;${(inventoryItem.quantityOnHand)?if_exists}</div>
-                </td>      
-            <#elseif inventoryItem?exists && inventoryItem.inventoryItemTypeId.equals("SERIALIZED_INV_ITEM")>           
-                <td width="74%"><div class="tabletext">${(inventoryItem.serialNumber)?if_exists}</div></td>      
-            <#elseif inventoryItem?exists>            
+                </td>
+            <#elseif inventoryItem?exists && inventoryItem.inventoryItemTypeId.equals("SERIALIZED_INV_ITEM")>
+                <td width="74%"><div class="tabletext">${(inventoryItem.serialNumber)?if_exists}</div></td>
+            <#elseif inventoryItem?exists>
                 <td width="74%"><div class="tabletext" style="color: red;">Error: type ${(inventoryItem.inventoryItemTypeId)?if_exists} unknown; specify a type.</div></td>
             </#if>
         </tr>
     </#if>
-        
+
     <tr>
-        <td width="14%">&nbsp;</td>    
+        <td width="14%">&nbsp;</td>
         <td colspan="3"><hr class="sepbar"></td>
     </tr>
     <tr>
@@ -159,7 +159,7 @@
             <option value="${(statusItem.statusId)?if_exists}">${(statusItem.description)?if_exists}</option>
             </#list>
         </select>
-        </td>        
+        </td>
     </tr>
     <tr>
         <td width="14%">&nbsp;</td>
@@ -177,11 +177,11 @@
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <span class="tabletext">Select a Facility:</span>
-            <select name="facilityIdTo" class="selectBox">           
+            <select name="facilityIdTo" class="selectBox">
                 <#list facilities as nextFacility>
                 <option value="${(nextFacility.facilityId)?if_exists}">${(nextFacility.facilityName)?if_exists} [${(nextFacility.facilityId)?if_exists}]</option>
                 </#list>
-            </select>            
+            </select>
             <br>
             <span class="tabletext">OR enter a Container ID:</span>
             <input type="text" name="containerIdTo" value="${(inventoryTransfer.containerIdTo)?if_exists}" size="20" maxlength="20" class="inputBox">
@@ -194,7 +194,7 @@
             <td width="74%">
             <input type="text" size="20" name="locationSeqIdTo" value="${(inventoryTransfer.locationSeqIdTo)?if_exists}" maxlength="20" class="inputBox">
             </td>
-        </tr>      
+        </tr>
         <tr>
             <td width="14%">&nbsp;</td>
             <td width="6%" align="right" nowrap><div class="tabletext">Comments</div></td>
@@ -202,7 +202,7 @@
             <td width="74%">
             <input type="text" name="comments" size="60" maxlength="250" class="inputBox">
             </td>
-        </tr>  
+        </tr>
         <tr>
             <td width="14%">&nbsp;</td>
             <td width="6%" align="right" nowrap><div class="tabletext">Quantity To Transfer</div></td>
@@ -242,7 +242,7 @@
             <td width="74%">
             <input type="text" size="20" name="locationSeqIdTo" value="${(inventoryTransfer.locationSeqIdTo)?if_exists}" maxlength="20" class="inputBox">
             </td>
-        </tr>  
+        </tr>
         <tr>
             <td width="14%">&nbsp;</td>
             <td width="6%" align="right" nowrap><div class="tabletext">Comments</div></td>
@@ -250,7 +250,7 @@
             <td width="74%">
             <input type="text" name="comments" value=${(inventoryTransfer.comments)?if_exists}" size="60" maxlength="250" class="inputBox">
             </td>
-        </tr>     
+        </tr>
     </#if>
     <tr>
         <td colspan="2">&nbsp;</td>
