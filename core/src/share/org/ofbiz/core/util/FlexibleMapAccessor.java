@@ -89,9 +89,17 @@ public class FlexibleMapAccessor {
     
     /** Given the name based information in this accessor, get the value from the passed in Map. */
     public Object get(Map base) {
+        if (base == null) {
+            return null;
+        }
         if (this.subMapAccessor != null) {
             base = this.subMapAccessor.getSubMap(base);
         }
+        
+        if (base == null) {
+            return null;
+        }
+        
         if (this.isListReference) {
             List lst = (List) base.get(extName);
             return lst.get(listIndex);
@@ -107,6 +115,9 @@ public class FlexibleMapAccessor {
      * number the value will inserted/added at that point instead of set at the point.
      */
     public void put(Map base, Object value) {
+        if (base == null) {
+            throw new IllegalArgumentException("Cannot put a value in a null base Map");
+        }
         if (this.subMapAccessor != null) {
             base = this.subMapAccessor.getSubMap(base);
         }
