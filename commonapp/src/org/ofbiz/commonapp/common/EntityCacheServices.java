@@ -106,11 +106,20 @@ public class EntityCacheServices implements DistributedCacheClear {
         GenericDelegator delegator = dctx.getDelegator();
 
         if (context.containsKey("value")) {
-            delegator.clearCacheLine((GenericValue) context.get("value"), false);
+            GenericValue value = (GenericValue) context.get("value");
+            if (Debug.infoOn()) Debug.logInfo("Got a clear cache line by value service call; entityName: " + value.getEntityName());
+            if (Debug.verboseOn()) Debug.logVerbose("Got a clear cache line by value service call; value: " + value);
+            delegator.clearCacheLine(value, false);
         } else if (context.containsKey("dummyPK")) {
-            delegator.clearCacheLineFlexible((GenericEntity) context.get("dummyPK"), false);
+            GenericEntity dummyPK = (GenericEntity) context.get("dummyPK");
+            if (Debug.infoOn()) Debug.logInfo("Got a clear cache line by dummyPK service call; entityName: " + dummyPK.getEntityName());
+            if (Debug.verboseOn()) Debug.logVerbose("Got a clear cache line by dummyPK service call; dummyPK: " + dummyPK);
+            delegator.clearCacheLineFlexible(dummyPK, false);
         } else if (context.containsKey("primaryKey")) {
-            delegator.clearCacheLine((GenericPK) context.get("primaryKey"), false);
+            GenericPK primaryKey = (GenericPK) context.get("primaryKey");
+            if (Debug.infoOn()) Debug.logInfo("Got a clear cache line by primaryKey service call; entityName: " + primaryKey.getEntityName());
+            if (Debug.verboseOn()) Debug.logVerbose("Got a clear cache line by primaryKey service call; primaryKey: " + primaryKey);
+            delegator.clearCacheLine(primaryKey, false);
         }
         return ServiceUtil.returnSuccess();
     }
