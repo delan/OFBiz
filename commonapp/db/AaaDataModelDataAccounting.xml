@@ -104,6 +104,7 @@
   <StatusItem description="Authorized" sequenceId="02" statusCode="AUTHORIZED" statusId="PAYMENT_AUTHORIZED" statusTypeId="PAYMENT_PREF_STATUS"/>
   <StatusItem description="Settled" sequenceId="03" statusCode="SETTLED" statusId="PAYMENT_SETTLED" statusTypeId="PAYMENT_PREF_STATUS"/>
   <StatusItem description="Declined" sequenceId="04" statusCode="DECLINED" statusId="PAYMENT_DECLINED" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="PAYMENT_CANCELLED" statusTypeId="PAYMENT_PREF_STATUS"/>
   <StatusValidChange condition="" statusId="PAYMENT_NOT_RECEIVED" statusIdTo="PAYMENT_RECEIVED" transitionName="Payment Received"/>
   <StatusValidChange condition="" statusId="PAYMENT_NOT_AUTH" statusIdTo="PAYMENT_AUTHORIZED" transitionName="Payment Authorized"/>
   <StatusValidChange condition="" statusId="PAYMENT_AUTHORIZED" statusIdTo="PAYMENT_SETTLED" transitionName="Payment Settled"/>
