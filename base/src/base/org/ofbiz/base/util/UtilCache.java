@@ -1,5 +1,5 @@
 /*
- * $Id: UtilCache.java,v 1.5 2004/05/01 11:26:06 jonesde Exp $
+ * $Id: UtilCache.java,v 1.6 2004/05/01 12:16:07 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import java.util.Set;
  * </ul>
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class UtilCache {
@@ -458,6 +458,10 @@ public class UtilCache {
 
     public Collection getCacheLineValues() {
         return cacheLineTable.values();
+    }
+
+    public Set entrySet() {
+        return cacheLineTable.entrySet();
     }
 
     /** Returns a boolean specifying whether or not the element corresponding to the key has expired.
