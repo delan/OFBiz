@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.1
 -->
 <#assign forumRootId = "WebStoreCONTENT" />
@@ -80,6 +80,6 @@
     </td>
   </tr>
 </table>
-        <br>
+<br>
 
 
