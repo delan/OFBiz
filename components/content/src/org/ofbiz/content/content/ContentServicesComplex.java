@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServicesComplex.java,v 1.4 2003/12/05 21:04:51 byersa Exp $
+ * $Id: ContentServicesComplex.java,v 1.5 2003/12/15 11:55:58 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.content.content.ContentWorker;
  * ContentServicesComplex Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  *
  * 
@@ -70,103 +70,6 @@ public class ContentServicesComplex {
 
     public static final String module = ContentServicesComplex.class.getName();
 
-    /**
-     * createContentAndAssoc
-     * A combination method that will create all or one of the following
-     * a Content entity, a ContentAssoc related to the Content and 
-     * the ElectronicText that may be associated with the Content.
-     * The keys for determining if each entity is created is the presence
-     * of the contentTypeId, contentAssocTypeId and dataResourceTypeId.
-     */
-    public static Map createContentAndAssoc(DispatchContext dctx, Map context) {
-        //Debug.logInfo("CREATING CONTENTANDASSOC:" + context, null);
-        HashMap result = new HashMap();
-        Security security = dctx.getSecurity();
-        GenericDelegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-
-        // get user info for multiple use
-        GenericValue userLogin = (GenericValue) context.get("userLogin"); 
-        String userLoginId = (String)userLogin.get("userLoginId");
-        String createdByUserLogin = userLoginId;
-        String lastModifiedByUserLogin = userLoginId;
-        Timestamp createdDate = UtilDateTime.nowTimestamp();
-        Timestamp lastModifiedDate = UtilDateTime.nowTimestamp();
-        String contentId = null;
-
-        context.put("entityOperation", "_CREATE");
-        List contentPurposeList = (List)context.get("contentPurposeList");
-        String entityOperation = (String)context.get("entityOperation");
-        List targetOperations = new ArrayList();
-        targetOperations.add("CREATE_CONTENT");
-        context.put("targetOperationList", targetOperations);
-        context.put("userLogin", userLogin);
-        String permissionStatus = ContentWorker.callContentPermissionCheck(delegator,
-                                     dispatcher, context);
-
-        //Debug.logInfo("permissionStatus:" + permissionStatus, null);
-        if (permissionStatus == null || !permissionStatus.equals("granted") ) {
-            return ServiceUtil.returnError("Permission not granted");
-        }
-
-        // If dataResourceTypeId exists, then create DataResource and return dataResourceId
-        String dataResourceId = null;
-        String dataResourceTypeId = (String)context.get("dataResourceTypeId");
-        //Debug.logInfo("dataResourceTypeId:" + dataResourceTypeId, null);
-        if (dataResourceTypeId != null && dataResourceTypeId.length() > 0 ) {
-            Map thisResult = DataServices.createDataResourceMethod(dctx, context);
-            dataResourceId = (String)thisResult.get("dataResourceId");
-        //Debug.logInfo("dataResourceId:" + dataResourceId, null);
-            result.put("dataResourceId", dataResourceId);
-            context.put("dataResourceId", dataResourceId);
-        }
-
-        // If textData exists, then create DataResource and return dataResourceId
-        String textData = (String)context.get("textData");
-        //Debug.logInfo("textData:" + textData, null);
-        if (textData != null && textData.length() > 0 ) {
-            Map thisResult = DataServices.createElectronicTextMethod(dctx, context);
-        }
-
-        // If contentTypeId exists, create Content and get contentId
-        String contentTypeId = (String)context.get("contentTypeId");
-        if (contentTypeId != null && contentTypeId.length() > 0 ) {
-        //Debug.logInfo("CREATING CONTENT:" + contentTypeId, null);
-            Map thisResult = ContentServices.createContentMethod(dctx, context);
-            contentId = (String)thisResult.get("contentId");
-            result.put("contentId", contentId);
-            context.put("contentId", contentId);
-        
-
-            if (contentId != null) {
-                try {
-                    if (contentPurposeList != null) {
-                        for (int i=0; i < contentPurposeList.size(); i++) {
-                            String contentPurposeTypeId = (String)contentPurposeList.get(i);
-                            GenericValue contentPurpose = delegator.makeValue("ContentPurpose",
-                                   UtilMisc.toMap("contentId", contentId, 
-                                                  "contentPurposeTypeId", contentPurposeTypeId) );
-                            contentPurpose.create();
-                        }
-                    }
-                } catch(GenericEntityException e) {
-                    return ServiceUtil.returnError(e.getMessage());
-                }
-            }
-
-        }
-
-        // If parentContentIdTo or parentContentIdFrom exists, create association with newly created content
-        String contentAssocTypeId = (String)context.get("contentAssocTypeId");
-        //Debug.logInfo("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
-        if (contentAssocTypeId != null && contentAssocTypeId.length() > 0 ) {
-        //Debug.logInfo("CREATING contentASSOC context:" +  context, null);
-            Map thisResult = ContentServices.createContentAssocMethod(dctx, context);
-            result.put("contentIdTo", thisResult.get("contentIdTo"));
-            result.put("contentIdFrom", thisResult.get("contentIdFrom"));
-       }
-       return result;
-    }
 
    /*
     * A service that returns a list of ContentAssocDataResourceViewFrom/To views that are

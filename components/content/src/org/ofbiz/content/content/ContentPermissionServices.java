@@ -1,5 +1,5 @@
 /*
- * $Id: ContentPermissionServices.java,v 1.4 2003/11/08 22:58:55 byersa Exp $
+ * $Id: ContentPermissionServices.java,v 1.5 2003/12/15 11:55:58 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -248,7 +248,7 @@ public class ContentPermissionServices {
         if (ownerContentId != null && ownerContentId.length() > 0 ) {
             GenericValue ownerContent = null;
             try {
-                ownerContent = delegator.findByPrimaryKeyCache("Content", 
+                ownerContent = delegator.findByPrimaryKey("Content", 
                                                  UtilMisc.toMap("contentId", ownerContentId) );
 //Debug.logInfo("ownerContent:" + ownerContent, null);
             } catch (GenericEntityException e) {
@@ -311,7 +311,7 @@ public class ContentPermissionServices {
                     GenericValue party = null;
                     String partyTypeId = null;
                     try {
-                        party = contentRole.getRelatedOneCache("Party");
+                        party = contentRole.getRelatedOne("Party");
                         partyTypeId = (String)party.get("partyTypeId");
                         if ( partyTypeId != null && partyTypeId.equals("PARTY_GROUP") ) {
                            HashMap map = new HashMap();
@@ -491,17 +491,17 @@ public class ContentPermissionServices {
         if (entityAction == null) entityAction = "_ADMIN";
 	List roleIds = null;
 
-//Debug.logInfo("contentIdTo:" + contentIdTo, null);
-//Debug.logInfo("contentIdFrom:" + contentIdFrom, null);
+Debug.logInfo("in checkAssocPerm, contentIdTo:" + contentIdTo, null);
+Debug.logInfo("in checkAssocPerm, contentIdFrom:" + contentIdFrom, null);
         GenericValue contentTo = null;
         GenericValue contentFrom = null;
         try {
-                contentTo = delegator.findByPrimaryKeyCache("Content", 
+                contentTo = delegator.findByPrimaryKey("Content", 
                                                  UtilMisc.toMap("contentId", contentIdTo) );
-                contentFrom = delegator.findByPrimaryKeyCache("Content", 
+                contentFrom = delegator.findByPrimaryKey("Content", 
                                                  UtilMisc.toMap("contentId", contentIdFrom) );
-//Debug.logInfo("contentTo:" + contentTo, null);
-//Debug.logInfo("contentFrom:" + contentFrom, null);
+Debug.logInfo("in checkAssocPerm, contentTo:" + contentTo, null);
+Debug.logInfo("in checkAssocPerm, contentFrom:" + contentFrom, null);
         } catch (GenericEntityException e) {
             Debug.logError(e, " content To or From not found. ", module);
             return ServiceUtil.returnError("Error in retrieving content To or From. " + e.getMessage());
