@@ -1,5 +1,5 @@
 /*
- * $Id: XmlSerializer.java,v 1.1 2003/08/17 04:21:40 ajzeneski Exp $
+ * $Id: XmlSerializer.java,v 1.2 2003/08/17 04:26:06 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,26 +23,46 @@
  */
 package org.ofbiz.entity.serialize;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Stack;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.WeakHashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
+
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericPK;
+import org.ofbiz.entity.GenericValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.*;
+import org.xml.sax.SAXException;
 
 /**
  * <p><b>Title:</b> XmlSerializer
  * <p><b>Description:</b> Simple XML serialization/deserialization routines with embedded type information
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class XmlSerializer {
