@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/20 04:18:39  jonesde
+ * Added return on null to url from filename/path method
+ *
  * Revision 1.1  2001/10/13 22:37:37  jonesde
  * Added UtilURL and changed FlexibleProperties and UtilProperties to be URL-centric
  *
@@ -41,45 +44,52 @@ import java.io.*;
  *@version    1.0
  */
 public class UtilURL {
-  public static URL fromClass(Class contextClass) {
-    String resourceName=contextClass.getName();
-    int dotIndex = resourceName.lastIndexOf('.');
-    if(dotIndex!=-1) resourceName = resourceName.substring(0,dotIndex);
-    resourceName += ".properties";
-
-    return fromResource(contextClass, resourceName);
-  }
-  
-  public static URL fromResource(String resourceName) {
-    return fromResource(null, resourceName);
-  }
-  
-  public static URL fromResource(Class contextClass, String resourceName) {
-    URL url = null;
-    if(contextClass != null && url == null) url = contextClass.getResource(resourceName);
-    if(contextClass != null && url == null) url = contextClass.getResource(resourceName + ".properties");
-
-    UtilURL utilURL = new UtilURL();
-    Class utilURLClass = utilURL.getClass();
+    public static URL fromClass(Class contextClass) {
+        String resourceName=contextClass.getName();
+        int dotIndex = resourceName.lastIndexOf('.');
+        if(dotIndex!=-1) resourceName = resourceName.substring(0,dotIndex);
+        resourceName += ".properties";
+        
+        return fromResource(contextClass, resourceName);
+    }
     
-    if(url == null) url = utilURLClass.getClassLoader().getResource(resourceName);
-    if(url == null) url = utilURLClass.getClassLoader().getResource(resourceName + ".properties");
-
-    if(url == null) url = ClassLoader.getSystemResource(resourceName);
-    if(url == null) url = ClassLoader.getSystemResource(resourceName + ".properties");
-
-    if(url == null) url = fromFilename(resourceName);
+    public static URL fromResource(String resourceName) {
+        return fromResource(null, resourceName);
+    }
     
-    //Debug.log("[fromResource] got URL " + url + " from resourceName " + resourceName);
-    return url;
-  }
-  
-  public static URL fromFilename(String filename) {
-    if(filename == null) return null;
-    File file = new File(filename);
-    URL url = null;
-    try { if(file.exists()) url = file.toURL(); }
-    catch(java.net.MalformedURLException e) { Debug.log(e); url = null; }
-    return url;
-  }
+    public static URL fromResource(Class contextClass, String resourceName) {
+        if (contextClass == null)
+            return fromResource(resourceName, null);
+        else
+            return fromResource(resourceName, contextClass.getClassLoader());
+    }
+    
+    public static URL fromResource(String resourceName, ClassLoader loader) {
+        URL url = null;
+        if(loader != null && url == null) url = loader.getResource(resourceName);
+        if(loader != null && url == null) url = loader.getResource(resourceName + ".properties");
+        
+        UtilURL utilURL = new UtilURL();
+        Class utilURLClass = utilURL.getClass();
+        
+        if(url == null) url = utilURLClass.getClassLoader().getResource(resourceName);
+        if(url == null) url = utilURLClass.getClassLoader().getResource(resourceName + ".properties");
+        
+        if(url == null) url = ClassLoader.getSystemResource(resourceName);
+        if(url == null) url = ClassLoader.getSystemResource(resourceName + ".properties");
+        
+        if(url == null) url = fromFilename(resourceName);
+        
+        //Debug.log("[fromResource] got URL " + url + " from resourceName " + resourceName);
+        return url;
+    }
+    
+    public static URL fromFilename(String filename) {
+        if(filename == null) return null;
+        File file = new File(filename);
+        URL url = null;
+        try { if(file.exists()) url = file.toURL(); }
+        catch(java.net.MalformedURLException e) { Debug.log(e); url = null; }
+        return url;
+    }
 }

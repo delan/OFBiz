@@ -42,19 +42,21 @@ public class SimpleEvent {
         runSimpleEvent(xmlResource, eventName, request, null);
     }
 
-    public static void runSimpleEvent(String xmlResource, String eventName, HttpServletRequest request, Class contextClass) throws MiniLangException {
-        URL xmlURL = UtilURL.fromResource(contextClass, xmlResource);
+    public static void runSimpleEvent(String xmlResource, String eventName, HttpServletRequest request, ClassLoader loader) throws MiniLangException {
+        URL xmlURL = UtilURL.fromResource(xmlResource, loader);
         if (xmlURL == null) {
             throw new MiniLangException("Could not find SimpleEvent XML document in resource: " + xmlResource);
         }
                     
-        runSimpleEvent(xmlURL, eventName, request, contextClass);
+        runSimpleEvent(xmlURL, eventName, request, loader);
     }
 
-    public static void runSimpleEvent(URL xmlURL, String eventName, HttpServletRequest request, Class contextClass) throws MiniLangException {
-        SimpleEvent simpleEvent = getSimpleEvent(xmlURL, eventName);
-        simpleEvent.exec(request, contextClass);
+    public static void runSimpleEvent(URL xmlURL, String eventName, HttpServletRequest request, ClassLoader loader) throws MiniLangException {
+        if (loader == null)
+            loader = Thread.currentThread().getContextClassLoader();
         
+        SimpleEvent simpleEvent = getSimpleEvent(xmlURL, eventName);
+        simpleEvent.exec(request, loader);
     }
 
     protected static SimpleEvent getSimpleEvent(URL xmlURL, String eventName) throws MiniLangException {
@@ -114,11 +116,11 @@ public class SimpleEvent {
         return eventName;
     }
 
-    public void exec(HttpServletRequest request, Class contextClass) {
+    public void exec(HttpServletRequest request, ClassLoader loader) {
         Iterator eventOpsIter = eventOperations.iterator();
         while (eventOpsIter.hasNext()) {
             EventOperation eventOperation = (EventOperation) eventOpsIter.next();
-            eventOperation.exec(request, contextClass);
+            eventOperation.exec(request, loader);
         }
     }
 
@@ -153,7 +155,7 @@ public class SimpleEvent {
             this.simpleEvent = simpleEvent;
         }
         
-        public abstract void exec(HttpServletRequest request, Class contextClass);
+        public abstract void exec(HttpServletRequest request, ClassLoader loader);
     }
     
     /* ==================================================================== */
@@ -171,7 +173,41 @@ public class SimpleEvent {
             this.className = element.getAttribute("class");
         }
         
-        public void exec(HttpServletRequest request, Class contextClass) {
+        public void exec(HttpServletRequest request, ClassLoader loader) {
+        }
+    }
+    
+    public static class FlexibleMessage {
+        String message = null;
+        String propertyResource = null;
+        boolean isProperty = false;
+
+        public FlexibleMessage(Element element) {
+            if (element.getAttribute("resource") != null) {
+                this.propertyResource = element.getAttribute("resource");
+                this.message = element.getAttribute("property");
+                this.isProperty = true;
+            } else if (UtilXml.elementValue(element) != null) {
+                this.message = UtilXml.elementValue(element);
+                this.isProperty = false;
+            }
+        }
+
+        public String getMessage(ClassLoader loader) {
+            if (!isProperty && message != null) {
+                return message;
+                //Debug.logInfo("[FlexibleMessage.getMessage] Adding message: " + message);
+            } else if (isProperty && propertyResource != null && message != null) {
+                String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
+                if (propMsg == null || propMsg.length() == 0)
+                    return "Simple Map Processing error occurred, but no message was found, sorry.";
+                else
+                    return propMsg;
+                //Debug.logInfo("[FlexibleMessage.getMessage] Adding property message: " + propMsg);
+            } else {
+                return "Simple Map Processing error occurred, but no message was found, sorry.";
+                //Debug.logInfo("[FlexibleMessage.getMessage] ERROR: No message found");
+            }
         }
     }
 }

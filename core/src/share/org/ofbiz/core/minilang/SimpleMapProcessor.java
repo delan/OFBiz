@@ -43,22 +43,25 @@ public class SimpleMapProcessor {
         runSimpleMapProcessor(xmlResource, inMap, results, messages, locale, null);
     }
 
-    public static void runSimpleMapProcessor(String xmlResource, Map inMap, Map results, List messages, Locale locale, Class contextClass) throws MiniLangException {
-        URL xmlURL = UtilURL.fromResource(contextClass, xmlResource);
+    public static void runSimpleMapProcessor(String xmlResource, Map inMap, Map results, List messages, Locale locale, ClassLoader loader) throws MiniLangException {
+        URL xmlURL = UtilURL.fromResource(xmlResource, loader);
         if (xmlURL == null) {
             throw new MiniLangException("Could not find SimpleMapProcessor XML document in resource: " + xmlResource);
         }
                     
-        runSimpleMapProcessor(xmlURL, inMap, results, messages, locale, contextClass);
+        runSimpleMapProcessor(xmlURL, inMap, results, messages, locale, loader);
     }
 
-    public static void runSimpleMapProcessor(URL xmlURL, Map inMap, Map results, List messages, Locale locale, Class contextClass) throws MiniLangException {
+    public static void runSimpleMapProcessor(URL xmlURL, Map inMap, Map results, List messages, Locale locale, ClassLoader loader) throws MiniLangException {
+        if (loader == null)
+            loader = Thread.currentThread().getContextClassLoader();
+        
         List simpleMapProcesses = getSimpleMapProcesses(xmlURL);
         if (simpleMapProcesses != null && simpleMapProcesses.size() > 0) {
             Iterator strPrsIter = simpleMapProcesses.iterator();
             while (strPrsIter.hasNext()) {
                 SimpleMapProcess simpleMapProcess = (SimpleMapProcess) strPrsIter.next();
-                simpleMapProcess.exec(inMap, results, messages, locale, contextClass);
+                simpleMapProcess.exec(inMap, results, messages, locale, loader);
             }
         }
     }
@@ -120,11 +123,11 @@ public class SimpleMapProcessor {
             return field;
         }
         
-        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
             Iterator strOpsIter = simpleMapOperations.iterator();
             while (strOpsIter.hasNext()) {
                 SimpleMapOperation simpleMapOperation = (SimpleMapOperation) strOpsIter.next();
-                simpleMapOperation.exec(inMap, results, messages, locale, contextClass);
+                simpleMapOperation.exec(inMap, results, messages, locale, loader);
             }
         }
         
@@ -182,18 +185,21 @@ public class SimpleMapProcessor {
             this.fieldName = simpleMapProcess.getFieldName();
         }
         
-        public abstract void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass);
+        public abstract void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader);
         
-        public void addMessage(List messages, Class contextClass) {
+        public void addMessage(List messages, ClassLoader loader) {
             if (!isProperty && message != null) {
                 messages.add(message);
                 //Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message);
             } else if (isProperty && propertyResource != null && message != null) {
-                String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(contextClass, propertyResource), message);
-                messages.add(propMsg);
+                String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
+                if (propMsg == null || propMsg.length() == 0)
+                    messages.add("Simple Map Processing error occurred, but no message was found, sorry.");
+                else
+                    messages.add(propMsg);
                 //Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg);
             } else {
-                messages.add("String Processing error occurred, but no message was found, sorry.");
+                messages.add("Simple Map Processing error occurred, but no message was found, sorry.");
                 //Debug.logInfo("[SimpleMapOperation.addMessage] ERROR: No message found");
             }
         }
@@ -214,7 +220,7 @@ public class SimpleMapProcessor {
             this.className = element.getAttribute("class");
         }
         
-        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
             Object obj = inMap.get(fieldName);
             
             if (!(obj instanceof java.lang.String)) {
@@ -224,6 +230,10 @@ public class SimpleMapProcessor {
                 return;
             }
             
+            if (loader == null) {
+                loader = this.getClass().getClassLoader();
+            }
+            
             String fieldValue = (java.lang.String) obj;
             
             Class[] paramTypes = new Class[] {String.class};
@@ -231,7 +241,7 @@ public class SimpleMapProcessor {
 
             Class valClass;
             try {
-                valClass = contextClass.forName(className);
+                valClass = loader.loadClass(className);
             } catch(ClassNotFoundException cnfe) {
                 String msg = "Could not find validation class: " + className;
                 messages.add(msg);
@@ -260,7 +270,7 @@ public class SimpleMapProcessor {
             }
 
             if(!resultBool.booleanValue()) {
-                addMessage(messages, contextClass);
+                addMessage(messages, loader);
             }
         }
     }
@@ -286,7 +296,7 @@ public class SimpleMapProcessor {
             }
         }
         
-        public void doCompare(Object value1, Object value2, List messages, Locale locale, Class contextClass) {
+        public void doCompare(Object value1, Object value2, List messages, Locale locale, ClassLoader loader) {
             //Debug.logInfo("[BaseCompare.doCompare] Comparing value1: \"" + value1 + "\", value2:\"" + value2 + "\"");
             
             int result = 0;
@@ -323,7 +333,7 @@ public class SimpleMapProcessor {
                 String str1 = (String) convertedValue1;
                 String str2 = (String) convertedValue2;
                 if (str1.indexOf(str2) < 0)
-                    addMessage(messages, contextClass);
+                    addMessage(messages, loader);
             }
             
             if ("String".equals(type)) {
@@ -364,28 +374,28 @@ public class SimpleMapProcessor {
             //Debug.logInfo("[BaseCompare.doCompare] Got Compare result: " + result + ", operator: " + operator);
             if ("less".equals(operator)) {
                 if (result >= 0)
-                    addMessage(messages, contextClass);
+                    addMessage(messages, loader);
             } else if ("greater".equals(operator)) {
                 if (result <= 0)
-                    addMessage(messages, contextClass);
+                    addMessage(messages, loader);
             } else if ("less-equals".equals(operator)) {
                 if (result > 0)
-                    addMessage(messages, contextClass);
+                    addMessage(messages, loader);
             } else if ("greater-equals".equals(operator)) {
                 if (result < 0)
-                    addMessage(messages, contextClass);
+                    addMessage(messages, loader);
             } else if ("equals".equals(operator)) {
                 if (result != 0)
-                    addMessage(messages, contextClass);
+                    addMessage(messages, loader);
             } else if ("not-equals".equals(operator)) {
                 if (result == 0)
-                    addMessage(messages, contextClass);
+                    addMessage(messages, loader);
             } else {
                 messages.add("Specified compare operator \"" + operator + "\" not known.");
             }
         }
         
-        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
         }
         
     }
@@ -398,10 +408,10 @@ public class SimpleMapProcessor {
             this.value = element.getAttribute("value");
         }
         
-        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
             Object fieldValue = inMap.get(fieldName);
             
-            doCompare(fieldValue, value, messages, locale, contextClass);
+            doCompare(fieldValue, value, messages, locale, loader);
         }
     }
 
@@ -413,11 +423,11 @@ public class SimpleMapProcessor {
             this.compareName = element.getAttribute("field");
         }
         
-        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
             Object compareValue = inMap.get(compareName);
             Object fieldValue = inMap.get(fieldName);
             
-            doCompare(fieldValue, compareValue, messages, locale, contextClass);
+            doCompare(fieldValue, compareValue, messages, locale, loader);
         }
     }
 
@@ -437,7 +447,7 @@ public class SimpleMapProcessor {
             }
         }
         
-        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
             Object obj = inMap.get(fieldName);
             
             if (!(obj instanceof java.lang.String)) {
@@ -455,7 +465,7 @@ public class SimpleMapProcessor {
             }
             
             if (!matcher.matches(fieldValue, pattern)) {
-                addMessage(messages, contextClass);
+                addMessage(messages, loader);
             }
         }
     }
@@ -465,17 +475,17 @@ public class SimpleMapProcessor {
             super(element, simpleMapProcess);
         }
         
-        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
             Object obj = inMap.get(fieldName);
             
             if (obj instanceof java.lang.String) {
                 String fieldValue = (java.lang.String) obj;
                 if (!UtilValidate.isNotEmpty(fieldValue)) {
-                    addMessage(messages, contextClass);
+                    addMessage(messages, loader);
                 }
             } else {
                 if (obj == null)
-                    addMessage(messages, contextClass);
+                    addMessage(messages, loader);
             }
         }
     }
@@ -494,7 +504,7 @@ public class SimpleMapProcessor {
             replace = "true".equals(element.getAttribute("replace"));
         }
         
-        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
             Object fieldValue = inMap.get(fieldName);
             
             if (fieldValue == null)
@@ -533,7 +543,7 @@ public class SimpleMapProcessor {
             this.format = element.getAttribute("format");
         }
         
-        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
             Object fieldObject = inMap.get(fieldName);
             
             if (fieldObject == null) {
