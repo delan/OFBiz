@@ -97,14 +97,15 @@ public class ServiceDispatcher {
     public static ServiceDispatcher getInstance(String name, DispatchContext context, GenericDelegator delegator) {
         ServiceDispatcher sd = null;
 
-        sd = (ServiceDispatcher) dispatchers.get(delegator.getDelegatorName());
+        String dispatcherKey = delegator != null ? delegator.getDelegatorName() : "null";
+        sd = (ServiceDispatcher) dispatchers.get(dispatcherKey);
         if (sd == null) {
             synchronized (ServiceDispatcher.class) {
                 if (Debug.verboseOn()) Debug.logVerbose("[ServiceDispatcher.getInstance] : No instance found (" + delegator.getDelegatorName() + ").", module);
-                sd = (ServiceDispatcher) dispatchers.get(delegator.getDelegatorName());
+                sd = (ServiceDispatcher) dispatchers.get(dispatcherKey);
                 if (sd == null) {
                     sd = new ServiceDispatcher(delegator);
-                    dispatchers.put(delegator.getDelegatorName(), sd);
+                    dispatchers.put(dispatcherKey, sd);
                 }
             }
         }
