@@ -62,6 +62,9 @@
         <field name="autoApproveReviews" widget-style="selectBox">
             <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>
         </field>
+        <field name="isImmediatelyFulfilled" widget-style="selectBox">
+            <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>
+        </field>
         <field name="checkInventory" widget-style="selectBox">
             <drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
         </field>
