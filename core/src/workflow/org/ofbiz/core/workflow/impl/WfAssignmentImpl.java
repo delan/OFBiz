@@ -105,6 +105,14 @@ public class WfAssignmentImpl implements WfAssignment {
         }
     }
     
+    /** Set the results of this assignment
+     * @param Map The results of the assignement
+     * @throws WfException
+     */
+    public void setResult(Map results) throws WfException {    
+        activity.setResult(results);
+    }
+                
     /** Mark this assignment as complete     
      * @throws WfException
      */

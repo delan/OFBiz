@@ -48,8 +48,12 @@ public class WorkflowClient {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         String workEffortId = (String) context.get("workEffortId");
+        Map actResults = (Map) context.get("results");
+        
         try {
             WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
+            if ( actResults != null && actResults.size() > 0 )
+                activity.setResult(actResults);
             activity.complete();
         }
         catch ( WfException e ) {
@@ -147,9 +151,12 @@ public class WorkflowClient {
         String partyId = (String) context.get("partyId");
         String roleType = (String) context.get("roleTypeId");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
+        Map actResults = (Map) context.get("results");
         
         try {
             WfAssignment assign = WfFactory.getWfAssignment(delegator,workEffortId,partyId,roleType,fromDate);
+            if ( actResults != null && actResults.size() > 0 )
+                assign.setResult(actResults);
             assign.complete();
         }
         catch ( WfException we ) {

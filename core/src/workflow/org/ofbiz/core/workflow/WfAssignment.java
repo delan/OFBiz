@@ -58,6 +58,12 @@ public interface WfAssignment {
      */
     public void accept() throws WfException;
     
+    /** Set the results of this assignment
+     * @param Map The results of the assignement
+     * @throws WfException
+     */
+    public void setResult(java.util.Map results) throws WfException;
+    
     /** Mark this assignment as complete
      * @throws WfException
      */
