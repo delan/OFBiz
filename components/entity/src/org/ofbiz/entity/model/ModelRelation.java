@@ -1,5 +1,5 @@
 /*
- * $Id: ModelRelation.java,v 1.6 2004/07/07 05:17:16 doogie Exp $
+ * $Id: ModelRelation.java,v 1.7 2004/07/09 19:40:18 doogie Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Relation model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ModelRelation extends ModelChild {
@@ -140,13 +140,15 @@ public class ModelRelation extends ModelChild {
         this.fkName = fkName;
     }
 
-    /** the main entity of this relation */
+    /** @deprecated
+      * the main entity of this relation */
     public ModelEntity getMainEntity() {
-        return this.mainEntity;
+        return getModelEntity();
     }
 
+    /** @deprecated */
     public void setMainEntity(ModelEntity mainEntity) {
-        this.mainEntity = mainEntity;
+        setModelEntity(mainEntity);
     }
 
     /** keyMaps defining how to lookup the relatedTable using columns from this table */
