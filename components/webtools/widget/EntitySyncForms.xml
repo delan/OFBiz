@@ -26,6 +26,7 @@
         <actions>
             <entity-condition entity-name="EntitySync" cache="false">
                 <!-- No conditions, is a find all -->
+                <order-by field-name="runStatusId"/>
                 <order-by field-name="entitySyncId"/>
             </entity-condition>
         </actions>
