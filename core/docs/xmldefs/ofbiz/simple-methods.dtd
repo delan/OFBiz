@@ -465,7 +465,7 @@ engine and facilitate related operations.
 <!ATTLIST get-related
     value-name CDATA #REQUIRED
     relation-name CDATA #REQUIRED
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     order-by-list-name CDATA #IMPLIED
     use-cache ( true | false ) "false"
     list-name CDATA #REQUIRED
