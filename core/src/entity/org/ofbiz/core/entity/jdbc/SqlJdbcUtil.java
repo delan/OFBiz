@@ -86,7 +86,7 @@ public class SqlJdbcUtil {
 
                     if (i == 0) {
                         // this is the first referenced member alias, so keep track of it for future use...
-                        restOfStatement.append(linkEntity.getTableName());
+                        restOfStatement.append(makeViewTable(linkEntity, joinStyle));
                         restOfStatement.append(" ");
                         restOfStatement.append(viewLink.getEntityAlias());
 
@@ -106,7 +106,7 @@ public class SqlJdbcUtil {
                         restOfStatement.append(" JOIN ");
                     }
 
-                    restOfStatement.append(relLinkEntity.getTableName());
+                    restOfStatement.append(makeViewTable(relLinkEntity, joinStyle));
                     restOfStatement.append(" ");
                     restOfStatement.append(viewLink.getRelEntityAlias());
                     restOfStatement.append(" ON ");
@@ -142,6 +142,25 @@ public class SqlJdbcUtil {
 
                 sql.append(openParens.toString());
                 sql.append(restOfStatement.toString());
+                
+                // handle tables not included in view-link
+                Iterator meIter = modelViewEntity.getMemberModelMemberEntities().entrySet().iterator();
+                boolean fromEmpty = restOfStatement.length() == 0;
+                
+                while (meIter.hasNext()) {
+                    Map.Entry entry = (Map.Entry) meIter.next();
+                    ModelEntity fromEntity = modelViewEntity.getMemberModelEntity((String) entry.getKey());
+                    
+                    if (!joinedAliasSet.contains((String) entry.getKey())) {
+                        if (!fromEmpty) sql.append(", ");
+                        fromEmpty = false;
+
+                        sql.append(makeViewTable(fromEntity, joinStyle));
+                        sql.append(" ");
+                        sql.append((String) entry.getKey());
+                    }
+                }
+
 
             } else if ("theta-oracle".equals(joinStyle) || "theta-mssql".equals(joinStyle)) {
                 // FROM clause
@@ -151,7 +170,7 @@ public class SqlJdbcUtil {
                     Map.Entry entry = (Map.Entry) meIter.next();
                     ModelEntity fromEntity = modelViewEntity.getMemberModelEntity((String) entry.getKey());
 
-                    sql.append(fromEntity.getTableName());
+                    sql.append(makeViewTable(fromEntity, joinStyle));
                     sql.append(" ");
                     sql.append((String) entry.getKey());
                     if (meIter.hasNext()) sql.append(", ");
@@ -285,7 +304,8 @@ public class SqlJdbcUtil {
                         whereString.append(viewLink.getRelEntityAlias());
                         whereString.append(".");
                         whereString.append(relLinkField.getColName());
-                    }
+                        //whereString.append(filterColName(relLinkField.getColName()));
+                   }
                 }
             } else {
                 throw new GenericModelException("The join-style " + joinStyle + " is not yet supported");
@@ -355,6 +375,43 @@ public class SqlJdbcUtil {
         }
         if (Debug.verboseOn()) Debug.logVerbose("makeOrderByClause: " + sql.toString(), module);
         return sql.toString();
+    }
+
+    public static String makeViewTable(ModelEntity modelEntity, String joinStyle) throws GenericEntityException {
+        if (modelEntity instanceof ModelViewEntity) {
+            StringBuffer sql = new StringBuffer("(SELECT ");
+            List fields = modelEntity.getFieldsCopy();
+            if (fields.size() > 0) {
+                String colname = ((ModelField) fields.get(0)).getColName();
+                sql.append(colname);
+                sql.append(" AS ");
+                sql.append(filterColName(colname));
+                for (int i = 1; i < fields.size(); i++) {
+                    colname = ((ModelField) fields.get(i)).getColName();
+                    sql.append(", ");
+                    sql.append(colname);
+                    sql.append(" AS ");
+                    sql.append(filterColName(colname));
+                }
+            }
+            sql.append(makeFromClause(modelEntity, joinStyle));
+            sql.append(makeViewWhereClause(modelEntity, joinStyle));
+            ModelViewEntity modelViewEntity = (ModelViewEntity)modelEntity;
+            String groupByString = modelViewEntity.colNameString(modelViewEntity.getGroupBysCopy(), ", ", "");
+            if (UtilValidate.isNotEmpty(groupByString)) {
+                sql.append(" GROUP BY ");
+                sql.append(groupByString);
+            }
+            
+            sql.append(")");
+            return sql.toString();
+        } else {
+            return modelEntity.getTableName();
+        }
+    }
+
+    public static String filterColName(String colName) {
+        return colName.replace('.', '_').replace('(','_').replace(')','_');
     }
 
     /* ====================================================================== */
