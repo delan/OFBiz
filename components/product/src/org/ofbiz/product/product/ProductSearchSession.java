@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchSession.java,v 1.5 2003/11/28 19:28:57 jonesde Exp $
+ * $Id: ProductSearchSession.java,v 1.6 2004/01/25 04:00:34 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -48,7 +48,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  *  Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class ProductSearchSession {
@@ -258,32 +258,65 @@ public class ProductSearchSession {
         }
 
         // if there is another category, add a constraint for it
-        String searchCategoryId = (String) parameters.get("SEARCH_CATEGORY_ID");
-        String searchSubCategories = (String) parameters.get("SEARCH_SUB_CATEGORIES");
-        if (UtilValidate.isNotEmpty(searchCategoryId)) {
+        if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_CATEGORY_ID"))) {
+            String searchCategoryId = (String) parameters.get("SEARCH_CATEGORY_ID");
+            String searchSubCategories = (String) parameters.get("SEARCH_SUB_CATEGORIES");
+            searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories)), session);
+            constraintsChanged = true;
+        }
+        if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_CATEGORY_ID2"))) {
+            String searchCategoryId = (String) parameters.get("SEARCH_CATEGORY_ID2");
+            String searchSubCategories = (String) parameters.get("SEARCH_SUB_CATEGORIES2");
+            searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories)), session);
+            constraintsChanged = true;
+        }
+        if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_CATEGORY_ID3"))) {
+            String searchCategoryId = (String) parameters.get("SEARCH_CATEGORY_ID3");
+            String searchSubCategories = (String) parameters.get("SEARCH_SUB_CATEGORIES3");
             searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories)), session);
             constraintsChanged = true;
         }
 
         // if keywords were specified, add a constraint for them
-        String keywordString = (String) parameters.get("SEARCH_STRING");
-        String searchOperator = (String) parameters.get("SEARCH_OPERATOR");
-        if (searchOperator == null) {
-            searchOperator = (String) session.getAttribute("searchOperator");
-        } else {
-            session.setAttribute("searchOperator", searchOperator);
+        if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_STRING"))) {
+            String keywordString = (String) parameters.get("SEARCH_STRING");
+            String searchOperator = (String) parameters.get("SEARCH_OPERATOR");
+            searchAddConstraint(new ProductSearch.KeywordConstraint(keywordString, true, true, null, "AND".equals(searchOperator)), session);
+            constraintsChanged = true;
         }
-        if (UtilValidate.isNotEmpty(keywordString)) {
+        if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_STRING2"))) {
+            String keywordString = (String) parameters.get("SEARCH_STRING2");
+            String searchOperator = (String) parameters.get("SEARCH_OPERATOR2");
+            searchAddConstraint(new ProductSearch.KeywordConstraint(keywordString, true, true, null, "AND".equals(searchOperator)), session);
+            constraintsChanged = true;
+        }
+        if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_STRING3"))) {
+            String keywordString = (String) parameters.get("SEARCH_STRING3");
+            String searchOperator = (String) parameters.get("SEARCH_OPERATOR3");
             searchAddConstraint(new ProductSearch.KeywordConstraint(keywordString, true, true, null, "AND".equals(searchOperator)), session);
             constraintsChanged = true;
         }
 
+        // get independently defined features, ie not with a type parameter
+        if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_FEAT"))) {
+            searchAddConstraint(new ProductSearch.FeatureConstraint((String) parameters.get("SEARCH_FEAT")), session);
+            constraintsChanged = true;
+        }
+        if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_FEAT2"))) {
+            searchAddConstraint(new ProductSearch.FeatureConstraint((String) parameters.get("SEARCH_FEAT2")), session);
+            constraintsChanged = true;
+        }
+        if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_FEAT3"))) {
+            searchAddConstraint(new ProductSearch.FeatureConstraint((String) parameters.get("SEARCH_FEAT3")), session);
+            constraintsChanged = true;
+        }
+        
         // if features were selected add a constraint for each
         Map featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(parameters);
         if (featureIdByType.size() > 0) {
             constraintsChanged = true;
+            searchAddFeatureIdConstraints(featureIdByType.values(), session);
         }
-        searchAddFeatureIdConstraints(featureIdByType.values(), session);
 
         // set the sort order
         String sortOrder = (String) parameters.get("sortOrder");
