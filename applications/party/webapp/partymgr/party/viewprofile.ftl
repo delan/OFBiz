@@ -46,7 +46,7 @@
         <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}&SHOW_OLD=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyShowOld}]</a>
       </#if>
 </div>
-<br>
+<br/>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -150,7 +150,7 @@
 </TABLE>
 <#-- ============================================================= -->
 <#if monthsToInclude?exists && totalSubRemainingAmount?exists && totalOrders?exists>
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -177,7 +177,7 @@
 </TABLE>
 </#if>
 <#-- ============================================================= -->
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -235,14 +235,14 @@
               <#if "POSTAL_ADDRESS" = contactMech.contactMechTypeId>
                   <#assign postalAddress = contactMechMap.postalAddress>
                   <div class="tabletext">
-                    <#if postalAddress.toName?has_content><b>${uiLabelMap.PartyAddrToName}:</b> ${postalAddress.toName}<br></#if>
-                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName}<br></#if>
-                    ${postalAddress.address1?if_exists}<br>
-                    <#if postalAddress.address2?has_content><br></#if>
+                    <#if postalAddress.toName?has_content><b>${uiLabelMap.PartyAddrToName}:</b> ${postalAddress.toName}<br/></#if>
+                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName}<br/></#if>
+                    ${postalAddress.address1?if_exists}<br/>
+                    <#if postalAddress.address2?has_content>${postalAddress.address2}<br/></#if>
                     ${postalAddress.city?if_exists},
                     ${postalAddress.stateProvinceGeoId?if_exists}
                     ${postalAddress.postalCode?if_exists}
-                    <#if postalAddress.countryGeoId?has_content><br>${postalAddress.countryGeoId}</#if>
+                    <#if postalAddress.countryGeoId?has_content><br/>${postalAddress.countryGeoId}</#if>
                   </div>
                   <#if (postalAddress?has_content && !postalAddress.countryGeoId?has_content) || postalAddress.countryGeoId = "USA">
                       <#assign addr1 = postalAddress.address1?if_exists>
@@ -310,7 +310,7 @@
   </TR>
 </TABLE>
 <#-- ============================================================= -->
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -459,7 +459,7 @@
 </TABLE>
 
 <#-- AVS Strings -->
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -496,7 +496,7 @@
 </TABLE>
 
 <#-- UserLogins -->
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -562,7 +562,7 @@
 </TABLE>
 
 <#-- Visits -->
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -622,7 +622,7 @@
 
 <#-- Current Cart -->
 <#if isCustomer?exists>
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -684,7 +684,7 @@
 </#if>
 
 <#-- Party Notes -->
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
