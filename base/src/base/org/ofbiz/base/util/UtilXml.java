@@ -1,5 +1,5 @@
 /*
- * $Id: UtilXml.java,v 1.4 2004/04/30 00:24:03 jonesde Exp $
+ * $Id: UtilXml.java,v 1.5 2004/07/07 16:23:10 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Utilities methods to simplify dealing with JAXP & DOM XML parsing
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class UtilXml {
@@ -177,13 +177,21 @@ public class UtilXml {
         return readXmlDocument(url.openStream(), validate, url.toString());
     }
 
+    /**
+     * @deprecated
+     */
     public static Document readXmlDocument(InputStream is)
-        throws SAXException, ParserConfigurationException, java.io.IOException {
+            throws SAXException, ParserConfigurationException, java.io.IOException {
         return readXmlDocument(is, true, null);
     }
 
+    public static Document readXmlDocument(InputStream is, String docDescription)
+            throws SAXException, ParserConfigurationException, java.io.IOException {
+        return readXmlDocument(is, true, docDescription);
+    }
+
     public static Document readXmlDocument(InputStream is, boolean validate, String docDescription)
-        throws SAXException, ParserConfigurationException, java.io.IOException {
+            throws SAXException, ParserConfigurationException, java.io.IOException {
         if (is == null) {
             Debug.logWarning("[UtilXml.readXmlDocument] InputStream was null, doing nothing", module);
             return null;
@@ -247,7 +255,7 @@ public class UtilXml {
      *  Also creates a Text node with the given value and appends it to the new elements child node list.
      */
     public static Element addChildElementValue(Element element, String childElementName,
-        String childElementValue, Document document) {
+            String childElementValue, Document document) {
         Element newElement = addChildElement(element, childElementName, document);
 
         newElement.appendChild(document.createTextNode(childElementValue));
@@ -258,7 +266,7 @@ public class UtilXml {
      *  Also creates a CDATASection node with the given value and appends it to the new elements child node list.
      */
     public static Element addChildElementCDATAValue(Element element, String childElementName,
-        String childElementValue, Document document) {
+            String childElementValue, Document document) {
         Element newElement = addChildElement(element, childElementName, document);
 
         newElement.appendChild(document.createCDATASection(childElementValue));

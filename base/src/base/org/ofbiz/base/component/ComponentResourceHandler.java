@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentResourceHandler.java,v 1.4 2003/08/20 23:01:41 jonesde Exp $
+ * $Id: ComponentResourceHandler.java,v 1.5 2004/07/07 16:23:10 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * Contains resource information and provides for loading data
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class ComponentResourceHandler implements ResourceHandler {
@@ -68,7 +68,7 @@ public class ComponentResourceHandler implements ResourceHandler {
 
     public Document getDocument() throws GenericConfigException {
         try {
-            return UtilXml.readXmlDocument(this.getStream());
+            return UtilXml.readXmlDocument(this.getStream(), this.getFullLocation());
         } catch (org.xml.sax.SAXException e) {
             throw new GenericConfigException("Error reading " + this.toString(), e);
         } catch (javax.xml.parsers.ParserConfigurationException e) {
