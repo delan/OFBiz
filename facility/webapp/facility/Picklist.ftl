@@ -205,7 +205,7 @@
     	<#-- wrongQuantityReservedList: List of Maps with reservedQuantity and orderItem -->
     	<#-- insufficientQohList: List of Maps with inventoryItem and quantityNeeded -->
         <#assign rowClass = "viewManyTR2">
-          <#list insufficientQohList as insufficientQoh>
+          <#list insufficientQohList?if_exists as insufficientQoh>
             <#assign inventoryItem = insufficientQoh.inventoryItem>
             <#assign quantityNeeded = insufficientQoh.quantityNeeded>
               <tr class="${rowClass}">

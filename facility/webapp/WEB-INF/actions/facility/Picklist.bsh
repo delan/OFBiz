@@ -31,6 +31,7 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 dispatcher = request.getAttribute("dispatcher");
+delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
 
 facilityId = request.getParameter("facilityId");
