@@ -496,7 +496,7 @@
         <response name="success" type="view" value="ordercomplete"/>
     </request-map>
 
-     <request-map uri="setSessionLocale">
+    <request-map uri="setSessionLocale">
         <event type="java" path="org.ofbiz.base.util.UtilHttp" invoke="setSessionLocale"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
