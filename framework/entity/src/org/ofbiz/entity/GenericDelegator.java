@@ -504,7 +504,7 @@ public class GenericDelegator implements DelegatorInterface {
         if (entity == null) {
             throw new IllegalArgumentException("[GenericDelegator.makePK] could not find entity for entityName: " + entityName);
         }
-        GenericPK pk = new GenericPK(entity, fields);
+        GenericPK pk = GenericPK.create(entity, fields);
 
         pk.setDelegator(this);
         return pk;
@@ -2114,7 +2114,7 @@ public class GenericDelegator implements DelegatorInterface {
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
-        GenericPK dummyPK = new GenericPK(relatedEntity, fields);
+        GenericPK dummyPK = GenericPK.create(relatedEntity, fields);
         dummyPK.setDelegator(this);
         return dummyPK;
     }

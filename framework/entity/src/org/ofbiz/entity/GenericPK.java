@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,6 +25,8 @@ package org.ofbiz.entity;
 
 import java.util.Map;
 
+import javolution.realtime.ObjectFactory;
+
 import org.ofbiz.entity.model.ModelEntity;
 
 /**
@@ -36,29 +38,40 @@ import org.ofbiz.entity.model.ModelEntity;
  */
 public class GenericPK extends GenericEntity {
 
+    protected static final ObjectFactory genericPKFactory = new ObjectFactory() {
+        protected Object create() {
+            return new GenericPK();
+        }
+    };
+    
     protected GenericPK() { }
     
     /** Creates new GenericPK */
-    public GenericPK(ModelEntity modelEntity) {
-        init(modelEntity);
+    public static GenericPK create(ModelEntity modelEntity) {
+        GenericPK newPK = (GenericPK) genericPKFactory.object();
+        newPK.init(modelEntity);
+        return newPK;
     }
 
     /** Creates new GenericPK from existing Map */
-    public GenericPK(ModelEntity modelEntity, Map fields) {
-        init(modelEntity, fields);
+    public static GenericPK create(ModelEntity modelEntity, Map fields) {
+        GenericPK newPK = (GenericPK) genericPKFactory.object();
+        newPK.init(modelEntity, fields);
+        return newPK;
     }
 
     /** Creates new GenericPK from existing GenericPK */
-    public GenericPK(GenericPK value) {
-        init(value);
+    public static GenericPK create(GenericPK value) {
+        GenericPK newPK = (GenericPK) genericPKFactory.object();
+        newPK.init(value);
+        return newPK;
     }
 
     /** Clones this GenericPK, this is a shallow clone & uses the default shallow HashMap clone
      *@return Object that is a clone of this GenericPK
      */
     public Object clone() {
-        GenericPK newEntity = new GenericPK(this);
-
+        GenericPK newEntity = GenericPK.create(this);
         newEntity.setDelegator(internalDelegator);
         return newEntity;
     }
