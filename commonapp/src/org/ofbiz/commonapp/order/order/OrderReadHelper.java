@@ -157,7 +157,13 @@ public class OrderReadHelper {
         Set orderStatusIdSet = new HashSet();
         Iterator orderStatusIter = orderStatusList.iterator();
         while (orderStatusIter.hasNext()) {
-            orderStatusIdSet.add(((GenericValue) orderStatusIter.next()).getString("statusCode"));
+            try {
+                GenericValue os = (GenericValue) orderStatusIter.next();
+                GenericValue si = (GenericValue) os.getRelatedOneCache("StatusItem");
+                orderStatusIdSet.add(si.getString("description"));
+            } catch (GenericEntityException gee) {
+                Debug.logWarning(gee);
+            }
         }
         Iterator orderStatusIdIter = orderStatusIdSet.iterator();
         String orderStatusIds;
@@ -254,7 +260,7 @@ public class OrderReadHelper {
                 } else {
                     if (includeOther) includeAdjustment = true;
                 }
-                
+
                 if (includeAdjustment) {
                     adjTotal += OrderReadHelper.calcOrderAdjustment(orderAdjustment, subTotal);
                 }
@@ -275,7 +281,7 @@ public class OrderReadHelper {
     }
 
     // ================= Order Item Adjustments =================
-    
+
     public double getOrderItemsSubTotal() {
         double result = 0.0;
         Iterator itemIter = UtilMisc.toIterator(getOrderItems());
@@ -293,10 +299,10 @@ public class OrderReadHelper {
             return 0.0;
         }
         double result = unitPrice.doubleValue() * quantity.doubleValue();
-        
+
         //subtotal also includes non tax and shipping adjustments; tax and shipping will be calculated using this adjusted value
         result += getOrderItemAdjustments(orderItem, true, false, false);
-        
+
         return result;
     }
 
@@ -330,18 +336,18 @@ public class OrderReadHelper {
     }
 
     //Order Item Adjs Utility Methods
-    
+
     public static double calcItemAdjustments(GenericValue orderItem, Collection adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
         return calcItemAdjustments(orderItem.getDouble("quantity"), orderItem.getDouble("unitPrice"), adjustments, includeOther, includeTax, includeShipping);
     }
-    
+
     public static double calcItemAdjustments(Double quantity, Double unitPrice, Collection adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
         double adjTotal = 0.0;
         if (adjustments != null && adjustments.size() > 0) {
             Iterator adjIt = adjustments.iterator();
             while (adjIt.hasNext()) {
                 GenericValue orderAdjustment = (GenericValue) adjIt.next();
-                
+
                 boolean includeAdjustment = false;
                 if ("SALES_TAX".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
                     if (includeTax) includeAdjustment = true;
@@ -350,7 +356,7 @@ public class OrderReadHelper {
                 } else {
                     if (includeOther) includeAdjustment = true;
                 }
-                
+
                 if (includeAdjustment) {
                     adjTotal += OrderReadHelper.calcItemAdjustment(orderAdjustment, quantity, unitPrice);
                 }
@@ -362,7 +368,7 @@ public class OrderReadHelper {
     public static double calcItemAdjustment(GenericValue itemAdjustment, GenericValue item) {
         return calcItemAdjustment(itemAdjustment, item.getDouble("quantity"), item.getDouble("unitPrice"));
     }
-    
+
     public static double calcItemAdjustment(GenericValue itemAdjustment, Double quantity, Double unitPrice) {
         double adjustment = 0.0;
         if (itemAdjustment.get("amount") != null) {
