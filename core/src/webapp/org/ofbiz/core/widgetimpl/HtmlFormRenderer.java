@@ -111,7 +111,16 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(displayField.getDescription(context));
         buffer.append("</span>");
         
-        // TODO: render the tooltip, in other methods too
+        // render the tooltip, in other methods too
+        buffer.append("<span");
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
+            buffer.append(" class=\"");
+            buffer.append(modelFormField.getWidgetStyle());
+            buffer.append("\"");
+        }
+        buffer.append(">-[");
+        buffer.append(modelFormField.getTooltip(context));
+        buffer.append("]-</span>");
         
         this.appendWhitespace(buffer);
     }
@@ -369,20 +378,55 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderCheckField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.CheckField)
      */
     public void renderCheckField(StringBuffer buffer, Map context, CheckField checkField) {
-        // TODO Auto-generated method stub
-        buffer.append("<!-- Sorry, check box fields have not been implemented yet -->");
-        
+        this.renderOptionalInputs(buffer, context, checkField, "checkbox");
         this.appendWhitespace(buffer);
     }
-
+    
     /* (non-Javadoc)
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderRadioField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.RadioField)
      */
     public void renderRadioField(StringBuffer buffer, Map context, RadioField radioField) {
-        // TODO Auto-generated method stub
-        buffer.append("<!-- Sorry, radio button fields have not been implemented yet -->");
-        
+        this.renderOptionalInputs(buffer, context, radioField, "radio");
         this.appendWhitespace(buffer);
+    }
+
+    protected void renderOptionalInputs(StringBuffer buffer, Map context, ModelFormField.FieldInfoWithOptions fieldInfoWithOptions, String inputType) {
+        ModelFormField modelFormField = fieldInfoWithOptions.getModelFormField();
+        ModelForm modelForm = modelFormField.getModelForm();
+        List allOptionValues = fieldInfoWithOptions.getAllOptionValues(context, modelForm.getDelegator());
+        String currentValue = modelFormField.getEntry(context);
+
+        // list out all options according to the option list
+        Iterator optionValueIter = allOptionValues.iterator();
+        while (optionValueIter.hasNext()) {
+            ModelFormField.OptionValue optionValue = (ModelFormField.OptionValue) optionValueIter.next();
+            buffer.append("<div");
+            String className = modelFormField.getWidgetStyle();
+            if (UtilValidate.isNotEmpty(className)) {
+                buffer.append(" class=\"");
+                buffer.append(className);
+                buffer.append('"');
+            }
+            buffer.append(">");
+
+            buffer.append("<input type=\"");
+            buffer.append(inputType);
+            buffer.append('"');
+
+            // if current value should be selected in the list, select it
+            if (UtilValidate.isNotEmpty(currentValue) && currentValue.equals(optionValue.getKey())) {
+                buffer.append(" checked");
+            }
+            buffer.append(" name=\"");
+            buffer.append(modelFormField.getParameterName());
+            buffer.append('"');
+            buffer.append(" value=\"");
+            buffer.append(optionValue.getKey());
+            buffer.append("\"/>");
+            
+            buffer.append(optionValue.getDescription());
+            buffer.append("</div>");
+        }
     }
 
     /* (non-Javadoc)
