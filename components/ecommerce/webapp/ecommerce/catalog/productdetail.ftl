@@ -20,11 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.15 $
+ *@version    $Revision: 1.16 $
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#-- variable setup -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign product = requestAttributes.product?if_exists>
 <#assign price = requestAttributes.priceMap?if_exists>
 <#assign nowTimestamp = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()>

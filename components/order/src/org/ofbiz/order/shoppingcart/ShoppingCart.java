@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.30 2003/11/26 10:07:22 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.31 2003/11/28 18:48:46 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.30 $
+ * @version    $Revision: 1.31 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -1087,7 +1087,7 @@ public class ShoppingCart implements java.io.Serializable {
      * @param productPromoCodeId The promotion code to check and add
      * @return String that is null if valid, and added to cart, or an error message of the code was not valid and not added to the cart. 
      */
-    public String addProductPromoCode(String productPromoCodeId) {
+    public String addProductPromoCode(String productPromoCodeId, LocalDispatcher dispatcher) {
         if (this.productPromoCodes.contains(productPromoCodeId)) {
             return "The promotion code [" + productPromoCodeId + "] has already been entered.";
         }
@@ -1095,6 +1095,8 @@ public class ShoppingCart implements java.io.Serializable {
         String checkResult = ProductPromoWorker.checkCanUsePromoCode(productPromoCodeId, this.getPartyId(), this.getDelegator());
         if (checkResult == null) {
             this.productPromoCodes.add(productPromoCodeId);
+            // new promo code, re-evaluate promos
+            ProductPromoWorker.doPromotions(this, dispatcher);
             return null;
         } else {
             return checkResult;
@@ -1384,6 +1386,24 @@ public class ShoppingCart implements java.io.Serializable {
         return allInfos;
     }
 
+    public List makeProductPromoUses() {
+        List productPromoUses = new ArrayList(this.productPromoUseInfoList.size());
+        String partyId = this.getPartyId();
+        int sequenceValue = 0;
+        Iterator productPromoUseInfoIter = this.productPromoUseInfoList.iterator();
+        while (productPromoUseInfoIter.hasNext()) {
+            ProductPromoUseInfo productPromoUseInfo = (ProductPromoUseInfo) productPromoUseInfoIter.next();
+            GenericValue productPromoUse = this.getDelegator().makeValue("ProductPromoUse", null);
+            productPromoUse.set("promoSequenceId", UtilFormatOut.formatPaddedNumber(sequenceValue, 5));
+            productPromoUse.set("productPromoId", productPromoUseInfo.getProductPromoId());
+            productPromoUse.set("productPromoCodeId", productPromoUseInfo.getProductPromoCodeId());
+            productPromoUse.set("partyId", partyId);
+            productPromoUses.add(productPromoUse);
+            sequenceValue++;
+        }
+        return productPromoUses;
+    }
+        
     /** make a list of SurveyResponse object to update with order information set */
     public List makeAllOrderItemSurveyResponses() {
         List allInfos = new LinkedList();
@@ -1469,6 +1489,7 @@ public class ShoppingCart implements java.io.Serializable {
         result.put("orderItems", this.makeOrderItems(explodeItems, dispatcher));
         result.put("orderAdjustments", this.makeAllAdjustments());
         result.put("orderItemPriceInfos", this.makeAllOrderItemPriceInfos());
+        result.put("orderProductPromoUses", this.makeProductPromoUses());
 
         result.put("orderContactMechs", this.makeAllOrderContactMechs());
         result.put("orderItemContactMechs", this.makeAllOrderItemContactMechs());
