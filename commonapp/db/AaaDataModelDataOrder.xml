@@ -69,7 +69,7 @@
   <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ITEM_CANCELLED" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_APPROVED" transitionName="Approve Order"/>
   <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_REJECTED" transitionName="Reject Order"/>
-  <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_COMPLETED" transitionName="Comlpete Order"/>
+  <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_COMPLETED" transitionName="Complete Order"/>
   <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_BACKORDERED" transitionName="Back Order"/>
   <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_BACKORDERED" transitionName="Back Order"/>
   <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>

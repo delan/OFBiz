@@ -328,6 +328,7 @@
             %>
               <tr class="<%=rowClass%>">
                 <td><a href="<ofbiz:url>/orderview?order_id=<%EntityField.run("orderHeader", "orderId", pageContext);%></ofbiz:url>" class='buttontext'><%EntityField.run("orderHeader", "orderId", pageContext);%></a>
+                </td>
                 <td>
                   <ofbiz:if name="placingParty">
                     <%EntityField.run("placingParty", "lastName", pageContext);%>
