@@ -232,7 +232,7 @@ if (orderHeader != null) {
     context.put("orderAdjustmentTypes", adjustmentTypes);    
 
     notes = delegator.findByAnd("OrderHeaderNoteView", UtilMisc.toMap("orderId", orderId), UtilMisc.toList("-noteDateTime"));
-    context.put("notes", notes);   
+    context.put("orderNotes", notes);   
 
     cmvm = ContactMechWorker.getOrderContactMechValueMaps(delegator, orderId);
     context.put("orderContactMechValueMaps", cmvm);       
