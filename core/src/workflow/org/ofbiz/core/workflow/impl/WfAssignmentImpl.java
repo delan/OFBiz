@@ -34,9 +34,9 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfAssignmentImpl - Workflow Assignment Object implementation
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    December 19, 2001
- *@version    $Revision$
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class WfAssignmentImpl implements WfAssignment {
 

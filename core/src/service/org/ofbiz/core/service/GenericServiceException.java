@@ -22,18 +22,15 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
-
 package org.ofbiz.core.service;
-
 
 /**
  * Generic Service Exception
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    October 20, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class GenericServiceException extends org.ofbiz.core.util.GeneralException {
 

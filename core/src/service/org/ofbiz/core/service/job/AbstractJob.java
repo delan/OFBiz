@@ -22,22 +22,19 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service.job;
-
 
 import java.util.*;
 
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * Abstract Service Job - Invokes a service
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- * @created    March 7, 2002
- * @version    1.2
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public abstract class AbstractJob implements Job {
 

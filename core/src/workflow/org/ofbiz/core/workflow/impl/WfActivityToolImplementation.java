@@ -35,10 +35,10 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfActivityToolImplementation.java
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
- *@author     Oswin Ondarza and Manuel Soto
- *@created    Oct 22, 2002
- *@version    $Revision$
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @author     Oswin Ondarza and Manuel Soto
+ * @version    $Revision$
+ * @since      2.0
  */
 public class WfActivityToolImplementation extends WfActivityAbstractImplementation {
 

@@ -31,9 +31,9 @@ import java.util.List;
 /**
  * WfProcessMgr - Workflow Process Manager Interface
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    October 29, 2001
- *@version    $Revision$
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public interface WfProcessMgr {
 

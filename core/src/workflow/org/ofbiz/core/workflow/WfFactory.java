@@ -34,9 +34,9 @@ import org.ofbiz.core.workflow.impl.*;
 /**
  * WfFactory - Workflow Factory Class
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    October 31, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class WfFactory {
 

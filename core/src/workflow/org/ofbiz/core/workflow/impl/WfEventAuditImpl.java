@@ -33,9 +33,9 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfEventAuditImpl - Workflow Event Audit implementation
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    December 3, 2001
- *@version    $Revision$
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class WfEventAuditImpl implements WfEventAudit {
 

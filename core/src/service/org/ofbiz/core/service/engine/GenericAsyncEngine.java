@@ -24,7 +24,6 @@
  */
 package org.ofbiz.core.service.engine;
 
-
 import java.io.*;
 import java.util.*;
 
@@ -40,9 +39,9 @@ import org.ofbiz.core.util.*;
 /**
  * Generic Asynchronous Engine
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    November 2, 2001
- *@version    1.1
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public abstract class GenericAsyncEngine implements GenericEngine {
 

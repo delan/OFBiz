@@ -22,18 +22,15 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow;
-
 
 /**
  * ResultNotAvailable Workflow Exception
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    October 29, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
-
 public final class ResultNotAvailable extends WfException {
 
     public ResultNotAvailable() {}

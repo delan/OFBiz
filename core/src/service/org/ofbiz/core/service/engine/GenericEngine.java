@@ -24,7 +24,6 @@
  */
 package org.ofbiz.core.service.engine;
 
-
 import java.util.*;
 
 import org.ofbiz.core.util.*;
@@ -33,10 +32,10 @@ import org.ofbiz.core.service.*;
 /**
  * Generic Engine Interface
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    October 20, 2001
- *@version    1.1
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public interface GenericEngine {
 

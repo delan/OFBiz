@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.service.jms;
-
 
 import java.util.*;
 import javax.naming.*;
@@ -32,13 +30,12 @@ import javax.jms.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * JmsTopicListener - Topic (Pub/Sub) Message Listener.
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @created    Jul 18, 2002
- * @version    1.0
+ * @version    $Revision$
+ * @since      2.0
  */
 public class JmsTopicListener extends AbstractJmsListener {
 

@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service.eca;
-
 
 import java.util.*;
 import org.w3c.dom.*;
@@ -32,13 +30,12 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
 
-
 /**
  * EventAction
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @created    Jul 27, 2002
- * @version    1.0
+ * @version    $Revision$
+ * @since      2.0
  */
 public class EventAction {
 

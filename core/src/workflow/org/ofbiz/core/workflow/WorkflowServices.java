@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow;
-
 
 import java.util.*;
 import java.sql.Timestamp;
@@ -34,13 +32,12 @@ import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * Workflow Services - 'Services' and 'Workers' for interaction with Workflow API
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    December 5, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class WorkflowServices {
 

@@ -34,8 +34,8 @@ import org.ofbiz.core.util.*;
  * JobInvoker
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @created    March 3, 2002
  * @version    $Revision$
+ * @since      2.0
  */
 public class JobInvoker implements Runnable {
 

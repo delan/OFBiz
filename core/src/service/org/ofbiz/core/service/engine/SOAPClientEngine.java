@@ -35,9 +35,9 @@ import org.ofbiz.core.service.*;
 /**
  * Generic Service SOAP Interface
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    December 7, 2001
- *@version    1.1
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public final class SOAPClientEngine extends GenericAsyncEngine {
 

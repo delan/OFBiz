@@ -35,11 +35,11 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfActivityImpl - Workflow Activity Object implementation
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@author     David Ostrovsky (d.ostrovsky@gmx.de)
- *@author     Oswin Ondarza and Manuel Soto
- *@created    December 18, 2001
- *@version    $Revision$
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     David Ostrovsky (d.ostrovsky@gmx.de)
+ * @author     Oswin Ondarza and Manuel Soto 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {
 
@@ -161,12 +161,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 // party is a group
                 Collection partyRelations = null;
                 try {
-                    Map fields =
-                        UtilMisc.toMap(
-                            "partyIdFrom",
-                            performer.getString("partyId"),
-                            "partyRelationshipTypeId",
-                            "GROUP_ROLLUP");
+                    Map fields = UtilMisc.toMap("partyIdFrom", performer.getString("partyId"), 
+                            "partyRelationshipTypeId", "GROUP_ROLLUP");                                                                                                                                       
                     partyRelations = getDelegator().findByAnd("PartyRelationship", fields);
                 } catch (GenericEntityException e) {
                     throw new WfException(e.getMessage(), e);

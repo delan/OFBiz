@@ -31,9 +31,9 @@ import java.util.Map;
 /**
  * WfActivity - Workflow Activity Interface
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    October 29, 2001
- *@version    $Revision$
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public interface WfActivity extends WfExecutionObject {
 

@@ -33,8 +33,8 @@ import org.ofbiz.core.service.*;
  * GroupModel.java
  * 
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @created    Oct 18, 2002
  * @version    $Revision$
+ * @since      2.0
  */
 public class GroupModel {
     

@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow;
-
 
 import java.io.*;
 import java.net.*;
@@ -37,13 +35,12 @@ import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.client.*;
 
-
 /**
  * Workflow Client - Client API to the Workflow Engine.
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    March 5, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class WorkflowClient {
 

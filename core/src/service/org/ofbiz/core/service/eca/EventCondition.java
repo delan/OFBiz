@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service.eca;
-
 
 import java.util.*;
 import java.net.*;
@@ -35,13 +33,12 @@ import org.ofbiz.core.config.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * EventCondition
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @created    Jul 27, 2002
- * @version    1.0
+ * @version    $Revision$
+ * @since      2.0
  */
 public class EventCondition {
 

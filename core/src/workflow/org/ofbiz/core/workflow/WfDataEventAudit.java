@@ -22,21 +22,17 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow;
 
-
 import java.util.Map;
-
 
 /**
  * WfDataEventAudit - Workflow Data Event Audit Interface
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    October 29, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
-
 public interface WfDataEventAudit {
 
     /**

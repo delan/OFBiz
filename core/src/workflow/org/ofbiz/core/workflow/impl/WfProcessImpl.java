@@ -33,10 +33,10 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfProcessImpl - Workflow Process Object implementation
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@author     David Ostrovsky (d.ostrovsky@gmx.de)
- *@created    December 18, 2001
- *@version    $Revision$
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
 

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow.impl;
-
 
 import java.util.*;
 
@@ -32,13 +30,12 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
-
 /**
  * WfRequesterImpl - Workflow Requester implementation
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    November 15, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class WfRequesterImpl implements WfRequester {
     

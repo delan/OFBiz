@@ -39,10 +39,10 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfExecutionObjectImpl - Workflow Execution Object implementation
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@author     David Ostrovsky (d.ostrovsky@gmx.de)
- *@created    December 18, 2001
- *@version    $Revision$
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
+ * @version    $Revision$
+ * @since      2.0
  */
 public abstract class WfExecutionObjectImpl implements WfExecutionObject {
 

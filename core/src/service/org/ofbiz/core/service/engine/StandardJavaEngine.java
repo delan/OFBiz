@@ -33,9 +33,9 @@ import org.ofbiz.core.service.*;
 /**
  * Standard Java Static Method Service Engine
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    November 2, 2001
- *@version    1.1
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public final class StandardJavaEngine extends GenericAsyncEngine {
 

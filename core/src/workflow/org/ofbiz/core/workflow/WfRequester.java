@@ -33,11 +33,10 @@ import org.ofbiz.core.service.GenericRequester;
 /**
  * WfRequester - Workflow Requester Interface
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    October 29, 2001
- *@version    $Revision$
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
-
 public interface WfRequester {
 
     /**

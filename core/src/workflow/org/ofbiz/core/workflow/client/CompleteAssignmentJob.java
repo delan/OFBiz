@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001,  2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow.client;
-
 
 import java.util.*;
 
@@ -33,19 +31,18 @@ import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
-
 /**
  * Workflow Client API - Complete Assignment Async-Job
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    March 5, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class CompleteAssignmentJob extends AbstractJob {
 
     protected WfAssignment assign;
     protected Map result;
-
+    
     public CompleteAssignmentJob(WfAssignment assign, Map result) {
         super(assign.toString());
         this.assign = assign;
@@ -53,6 +50,9 @@ public class CompleteAssignmentJob extends AbstractJob {
         runtime = new Date().getTime();
     }
 
+    /**
+     * @see org.ofbiz.core.service.job.Job#exec()
+     */
     public void exec() {
         try {
             if (result != null && result.size() > 0)
@@ -64,7 +64,7 @@ public class CompleteAssignmentJob extends AbstractJob {
         }
         finish();
     }
-
+   
     protected void finish() {
         runtime = -1;
     }

@@ -22,7 +22,6 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service.eca;
 
 import java.util.*;
@@ -37,8 +36,8 @@ import org.ofbiz.core.service.config.*;
  * ECAUtil
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @created    Jul 27, 2002
  * @version    $Revision$
+ * @since      2.0
  */
 public class ECAUtil {
 

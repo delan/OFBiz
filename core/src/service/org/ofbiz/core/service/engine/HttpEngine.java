@@ -38,8 +38,8 @@ import org.ofbiz.core.util.*;
  * HttpEngine.java
  * 
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @created    Oct 17, 2002
- * @version    2.0
+ * @version    $Revision$
+ * @since      2.0
  */
 public class HttpEngine extends GenericAsyncEngine {
     

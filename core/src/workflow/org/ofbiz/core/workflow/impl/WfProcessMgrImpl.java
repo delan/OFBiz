@@ -33,10 +33,10 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfProcessMgrImpl - Workflow Process Manager implementation
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@author     David Ostrovsky (d.ostrovsky@gmx.de)
- *@created    November 19, 2001
- *@version    $Revision$
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     David Ostrovsky (d.ostrovsky@gmx.de)
+ * @version    $Revision$
+ * @since      2.0
  */
 public class WfProcessMgrImpl implements WfProcessMgr {
 

@@ -33,9 +33,9 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfResourceImpl - Workflow Resource Object implementation
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    November 15, 2001
- *@version    $Revision$
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class WfResourceImpl implements WfResource {
 

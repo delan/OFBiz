@@ -30,9 +30,9 @@ import org.ofbiz.core.util.*;
 /**
  * WorkflowUtil - Workflow Engine Utilities
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    Oct 22, 2002
- *@version    $Revision$
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public final class WfUtil {
     

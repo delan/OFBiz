@@ -36,8 +36,8 @@ import org.ofbiz.core.util.*;
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @author     <a href="mailto:">Magnus Rosenquist</a>
- * @created    March 7, 2002
  * @version    $Revision$
+ * @since      2.0
  */
 public class JobPoller implements Runnable {
 
