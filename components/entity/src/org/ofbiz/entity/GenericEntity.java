@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.18 2004/01/24 22:07:52 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.19 2004/01/26 23:26:07 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.18 $
+ *@version    $Revision: 1.19 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -793,6 +793,17 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
                 // check each character, if line-feed or carriage-return is found set needsCdata to true; also look for invalid characters
                 for (int i = 0; i < value.length(); i++) {
                     char curChar = value.charAt(i);
+                    /* Some common character for these invalid values, have seen these are mostly from MS Word, but may be part of some standard:
+                     5 = ...
+                     18 = apostrophe
+                     19 = left quotation mark
+                     20 = right quotation mark
+                     22 = –
+                     23 = -
+                     25 = tm
+                     * 
+                     */                            
+                    
                     switch (curChar) {
                     case '\'':
                         value.replace(i, i+1, "&apos;");
@@ -817,6 +828,27 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
                         break;
                     case 0x9: // tab
                         // do nothing, just catch here so it doesn't get into the default
+                        break;
+                    case 0x5: // elipses (...)
+                        value.replace(i, i+1, "...");
+                        break;
+                    case 0x12: // apostrophe
+                        value.replace(i, i+1, "'");
+                        break;
+                    case 0x13: // left quote
+                        value.replace(i, i+1, "\"");
+                        break;
+                    case 0x14: // right quote
+                        value.replace(i, i+1, "\"");
+                        break;
+                    case 0x16: // big(?) dash -
+                        value.replace(i, i+1, "-");
+                        break;
+                    case 0x17: // dash -
+                        value.replace(i, i+1, "-");
+                        break;
+                    case 0x19: // tm
+                        value.replace(i, i+1, "tm");
                         break;
                     default:
                         if (curChar < 0x20) {
