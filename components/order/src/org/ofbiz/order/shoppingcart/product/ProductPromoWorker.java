@@ -672,7 +672,7 @@ public class ProductPromoWorker {
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("Checking promotion condition: " + productPromoCond, module);
-        int compare = 0;
+        Integer compareBase = null;
 
         if ("PPIP_PRODUCT_AMOUNT".equals(inputParamEnumId)) {
             // for this type of promo force the operatorEnumId = PPC_EQ, effectively ignore that setting because the comparison is implied in the code
@@ -716,10 +716,10 @@ public class ProductPromoWorker {
             if (amountNeeded > 0) {
                 // failed, reset the entire rule, ie including all other conditions that might have been done before
                 cart.resetPromoRuleUse(productPromoCond.getString("productPromoId"), productPromoCond.getString("productPromoRuleId"));
-                compare = -1;
+                compareBase = new Integer(-1);
             } else {
                 // we got it, the conditions are in place...
-                compare = 0;
+                compareBase = new Integer(0);
                 // NOTE: don't confirm promo rule use here, wait until actions are complete for the rule to do that
             }
         } else if ("PPIP_PRODUCT_TOTAL".equals(inputParamEnumId)) {
@@ -749,7 +749,7 @@ public class ProductPromoWorker {
 
             // Debug.logInfo("Doing Amount Not Counted Cond with Value after finding applicable cart lines: " + amountNeeded, module);
             
-            compare = new Double(amountAvailable).compareTo(amountNeeded);
+            compareBase = new Integer(new Double(amountAvailable).compareTo(amountNeeded));
         } else if ("PPIP_PRODUCT_QUANT".equals(inputParamEnumId)) {
             // for this type of promo force the operatorEnumId = PPC_EQ, effectively ignore that setting because the comparison is implied in the code
             operatorEnumId = "PPC_EQ";
@@ -780,10 +780,10 @@ public class ProductPromoWorker {
             if (quantityNeeded > 0) {
                 // failed, reset the entire rule, ie including all other conditions that might have been done before
                 cart.resetPromoRuleUse(productPromoCond.getString("productPromoId"), productPromoCond.getString("productPromoRuleId"));
-                compare = -1;
+                compareBase = new Integer(-1);
             } else {
                 // we got it, the conditions are in place...
-                compare = 0;
+                compareBase = new Integer(0);
                 // NOTE: don't confirm rpomo rule use here, wait until actions are complete for the rule to do that
             }
 
@@ -793,7 +793,7 @@ public class ProductPromoWorker {
 
             if (candidateProductId == null) {
                 // if null, then it's not in the cart
-                compare = 1;
+                compareBase = new Integer(1);
             } else {
                 // Debug.logInfo("Testing to see if productId \"" + candidateProductId + "\" is in the cart", module);
                 List productCartItems = cart.findAllCartItems(candidateProductId);
@@ -807,10 +807,10 @@ public class ProductPromoWorker {
 
                 if (productCartItems.size() > 0) {
                     //Debug.logError("Item with productId \"" + candidateProductId + "\" IS in the cart", module);
-                    compare = 0;
+                    compareBase = new Integer(0);
                 } else {
                     //Debug.logError("Item with productId \"" + candidateProductId + "\" IS NOT in the cart", module);
-                    compare = 1;
+                    compareBase = new Integer(1);
                 }
             }
         } else if ("PPIP_CATEGORY_ID_IC".equals(inputParamEnumId)) {
@@ -825,7 +825,7 @@ public class ProductPromoWorker {
                 }
             }
 
-            compare = 1;
+            compareBase = new Integer(1);
             // NOTE: this technique is efficient for a smaller number of items in the cart, if there are a lot of lines
             //in the cart then a non-cached query with a set of productIds using the IN operator would be better
             Iterator productIdIter = productIds.iterator();
@@ -839,7 +839,7 @@ public class ProductPromoWorker {
                 if (productCategoryMembers != null && productCategoryMembers.size() > 0) {
                     // if any product is in category, set true and break
                     // then 0 (equals), otherwise 1 (not equals)
-                    compare = 0;
+                    compareBase = new Integer(0);
                     break;
                 }
             }
@@ -850,12 +850,12 @@ public class ProductPromoWorker {
                 // condition always fails if we don't know how many days since account created
                 return false;
             }
-            compare = acctDays.compareTo(Double.valueOf(condValue));
+            compareBase = new Integer(acctDays.compareTo(Double.valueOf(condValue)));
         } else if ("PPIP_PARTY_ID".equals(inputParamEnumId)) {
             if (partyId != null) {
-                compare = partyId.compareTo(condValue);
+                compareBase = new Integer(partyId.compareTo(condValue));
             } else {
-                compare = 1;
+                compareBase = new Integer(1);
             }
 
             /* These aren't supported yet, ie TODO (low priority)
@@ -870,17 +870,17 @@ public class ProductPromoWorker {
 
                 // then 0 (equals), otherwise 1 (not equals)
                 if (partyRole != null) {
-                    compare = 0;
+                    compareBase = new Integer(0);
                 } else {
-                    compare = 1;
+                    compareBase = new Integer(1);
                 }
             } else {
-                compare = 1;
+                compareBase = new Integer(1);
             }
         } else if ("PPIP_ORDER_TOTAL".equals(inputParamEnumId)) {
             Double orderSubTotal = new Double(cart.getSubTotalForPromotions());
             if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderSubTotal=" + orderSubTotal, module);
-            compare = orderSubTotal.compareTo(Double.valueOf(condValue));
+            compareBase = new Integer(orderSubTotal.compareTo(Double.valueOf(condValue)));
         } else if ("PPIP_ORST_HIST".equals(inputParamEnumId)) {
             // description="Order sub-total X in last Y Months"
             if (partyId != null && userLogin != null) {
@@ -894,10 +894,11 @@ public class ProductPromoWorker {
                     Map result = dispatcher.runSync("getOrderedSummaryInformation", serviceIn);
                     if (ServiceUtil.isError(result)) {
                         Debug.logError("Error calling getOrderedSummaryInformation service for the PPIP_ORST_HIST ProductPromo condition input value: " + ServiceUtil.getErrorMessage(result), module);
+                        return false;
                     } else {
                         Double orderSubTotal = (Double) result.get("totalSubRemainingAmount");
                         if (Debug.verboseOn()) Debug.logVerbose("Doing order history sub-total compare: orderSubTotal=" + orderSubTotal + ", for the last " + monthsToInclude + " months.", module);
-                        compare = orderSubTotal.compareTo(Double.valueOf(condValue));
+                        compareBase = new Integer(orderSubTotal.compareTo(Double.valueOf(condValue)));
                     }
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Error getting order history sub-total in the getOrderedSummaryInformation service, evaluating condition to false.", module);
@@ -911,24 +912,28 @@ public class ProductPromoWorker {
             return false;
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("Condition compare done, compare=" + compare, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Condition compare done, compareBase=" + compareBase, module);
 
-        if ("PPC_EQ".equals(operatorEnumId)) {
-            if (compare == 0) return true;
-        } else if ("PPC_NEQ".equals(operatorEnumId)) {
-            if (compare != 0) return true;
-        } else if ("PPC_LT".equals(operatorEnumId)) {
-            if (compare < 0) return true;
-        } else if ("PPC_LTE".equals(operatorEnumId)) {
-            if (compare <= 0) return true;
-        } else if ("PPC_GT".equals(operatorEnumId)) {
-            if (compare > 0) return true;
-        } else if ("PPC_GTE".equals(operatorEnumId)) {
-            if (compare >= 0) return true;
-        } else {
-            Debug.logWarning("An un-supported productPromoCond condition was used: " + operatorEnumId + ", returning false, ie check failed", module);
-            return false;
+        if (compareBase != null) {
+            int compare = compareBase.intValue();
+            if ("PPC_EQ".equals(operatorEnumId)) {
+                if (compare == 0) return true;
+            } else if ("PPC_NEQ".equals(operatorEnumId)) {
+                if (compare != 0) return true;
+            } else if ("PPC_LT".equals(operatorEnumId)) {
+                if (compare < 0) return true;
+            } else if ("PPC_LTE".equals(operatorEnumId)) {
+                if (compare <= 0) return true;
+            } else if ("PPC_GT".equals(operatorEnumId)) {
+                if (compare > 0) return true;
+            } else if ("PPC_GTE".equals(operatorEnumId)) {
+                if (compare >= 0) return true;
+            } else {
+                Debug.logWarning("An un-supported productPromoCond condition was used: " + operatorEnumId + ", returning false, ie check failed", module);
+                return false;
+            }
         }
+        // default to not meeting the condition
         return false;
     }
     
