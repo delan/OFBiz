@@ -33,7 +33,7 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:52 MDT 2001
+ *@created    Fri Jul 27 01:18:34 MDT 2001
  *@version    1.0
  */
 public class SecurityPermissionHelper
@@ -117,16 +117,6 @@ public class SecurityPermissionHelper
     return securityPermission;
   }
 
-  /** Finds all SecurityPermission entities, returning an Iterator
-   *@return    Iterator containing all SecurityPermission entities
-   */
-  public static Iterator findAllIterator()
-  {
-    Collection collection = findAll();
-    if(collection != null) return collection.iterator();
-    else return null;
-  }
-
   /** Finds all SecurityPermission entities
    *@return    Collection containing all SecurityPermission entities
    */
@@ -187,7 +177,7 @@ public class SecurityPermissionHelper
   public static void removeByPermissionId(String permissionId)
   {
     if(permissionId == null) return;
-    Iterator iterator = findByPermissionIdIterator(permissionId);
+    Iterator iterator = UtilMisc.toIterator(findByPermissionId(permissionId));
 
     while(iterator.hasNext())
     {
@@ -199,17 +189,6 @@ public class SecurityPermissionHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  permissionId                  Field of the PERMISSION_ID column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByPermissionIdIterator(String permissionId)
-  {
-    Collection collection = findByPermissionId(permissionId);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds SecurityPermission records by the following parameters:

@@ -33,7 +33,7 @@ import org.ofbiz.commonapp.security.securitygroup.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:49 MDT 2001
+ *@created    Fri Jul 27 01:18:34 MDT 2001
  *@version    1.0
  */
 public class UserLoginValue implements UserLogin

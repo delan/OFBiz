@@ -33,7 +33,7 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:49 MDT 2001
+ *@created    Fri Jul 27 01:18:34 MDT 2001
  *@version    1.0
  */
 public class UserLoginHelper
@@ -117,16 +117,6 @@ public class UserLoginHelper
     return userLogin;
   }
 
-  /** Finds all UserLogin entities, returning an Iterator
-   *@return    Iterator containing all UserLogin entities
-   */
-  public static Iterator findAllIterator()
-  {
-    Collection collection = findAll();
-    if(collection != null) return collection.iterator();
-    else return null;
-  }
-
   /** Finds all UserLogin entities
    *@return    Collection containing all UserLogin entities
    */
@@ -196,7 +186,7 @@ public class UserLoginHelper
   public static void removeByPartyId(String partyId)
   {
     if(partyId == null) return;
-    Iterator iterator = findByPartyIdIterator(partyId);
+    Iterator iterator = UtilMisc.toIterator(findByPartyId(partyId));
 
     while(iterator.hasNext())
     {
@@ -208,17 +198,6 @@ public class UserLoginHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  partyId                  Field of the PARTY_ID column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByPartyIdIterator(String partyId)
-  {
-    Collection collection = findByPartyId(partyId);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds UserLogin records by the following parameters:
@@ -245,7 +224,7 @@ public class UserLoginHelper
   public static void removeByContactMechanismId(String contactMechanismId)
   {
     if(contactMechanismId == null) return;
-    Iterator iterator = findByContactMechanismIdIterator(contactMechanismId);
+    Iterator iterator = UtilMisc.toIterator(findByContactMechanismId(contactMechanismId));
 
     while(iterator.hasNext())
     {
@@ -257,17 +236,6 @@ public class UserLoginHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  contactMechanismId                  Field of the CONTACT_MECHANISM_ID column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByContactMechanismIdIterator(String contactMechanismId)
-  {
-    Collection collection = findByContactMechanismId(contactMechanismId);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds UserLogin records by the following parameters:
@@ -294,7 +262,7 @@ public class UserLoginHelper
   public static void removeByCurrentUserId(String currentUserId)
   {
     if(currentUserId == null) return;
-    Iterator iterator = findByCurrentUserIdIterator(currentUserId);
+    Iterator iterator = UtilMisc.toIterator(findByCurrentUserId(currentUserId));
 
     while(iterator.hasNext())
     {
@@ -306,17 +274,6 @@ public class UserLoginHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  currentUserId                  Field of the CURRENT_USER_ID column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByCurrentUserIdIterator(String currentUserId)
-  {
-    Collection collection = findByCurrentUserId(currentUserId);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds UserLogin records by the following parameters:

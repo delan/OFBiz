@@ -33,7 +33,7 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:53 MDT 2001
+ *@created    Fri Jul 27 01:18:35 MDT 2001
  *@version    1.0
  */
 public class UserLoginSecurityGroupHelper
@@ -141,16 +141,6 @@ public class UserLoginSecurityGroupHelper
     return userLoginSecurityGroup;
   }
 
-  /** Finds all UserLoginSecurityGroup entities, returning an Iterator
-   *@return    Iterator containing all UserLoginSecurityGroup entities
-   */
-  public static Iterator findAllIterator()
-  {
-    Collection collection = findAll();
-    if(collection != null) return collection.iterator();
-    else return null;
-  }
-
   /** Finds all UserLoginSecurityGroup entities
    *@return    Collection containing all UserLoginSecurityGroup entities
    */
@@ -210,7 +200,7 @@ public class UserLoginSecurityGroupHelper
   public static void removeByUserLoginId(String userLoginId)
   {
     if(userLoginId == null) return;
-    Iterator iterator = findByUserLoginIdIterator(userLoginId);
+    Iterator iterator = UtilMisc.toIterator(findByUserLoginId(userLoginId));
 
     while(iterator.hasNext())
     {
@@ -222,17 +212,6 @@ public class UserLoginSecurityGroupHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  userLoginId                  Field of the USER_LOGIN_ID column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByUserLoginIdIterator(String userLoginId)
-  {
-    Collection collection = findByUserLoginId(userLoginId);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds UserLoginSecurityGroup records by the following parameters:
@@ -259,7 +238,7 @@ public class UserLoginSecurityGroupHelper
   public static void removeByGroupId(String groupId)
   {
     if(groupId == null) return;
-    Iterator iterator = findByGroupIdIterator(groupId);
+    Iterator iterator = UtilMisc.toIterator(findByGroupId(groupId));
 
     while(iterator.hasNext())
     {
@@ -271,17 +250,6 @@ public class UserLoginSecurityGroupHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  groupId                  Field of the GROUP_ID column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByGroupIdIterator(String groupId)
-  {
-    Collection collection = findByGroupId(groupId);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds UserLoginSecurityGroup records by the following parameters:

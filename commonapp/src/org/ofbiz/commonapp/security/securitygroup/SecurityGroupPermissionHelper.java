@@ -33,7 +33,7 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:53 MDT 2001
+ *@created    Fri Jul 27 01:18:35 MDT 2001
  *@version    1.0
  */
 public class SecurityGroupPermissionHelper
@@ -141,16 +141,6 @@ public class SecurityGroupPermissionHelper
     return securityGroupPermission;
   }
 
-  /** Finds all SecurityGroupPermission entities, returning an Iterator
-   *@return    Iterator containing all SecurityGroupPermission entities
-   */
-  public static Iterator findAllIterator()
-  {
-    Collection collection = findAll();
-    if(collection != null) return collection.iterator();
-    else return null;
-  }
-
   /** Finds all SecurityGroupPermission entities
    *@return    Collection containing all SecurityGroupPermission entities
    */
@@ -210,7 +200,7 @@ public class SecurityGroupPermissionHelper
   public static void removeByGroupId(String groupId)
   {
     if(groupId == null) return;
-    Iterator iterator = findByGroupIdIterator(groupId);
+    Iterator iterator = UtilMisc.toIterator(findByGroupId(groupId));
 
     while(iterator.hasNext())
     {
@@ -222,17 +212,6 @@ public class SecurityGroupPermissionHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  groupId                  Field of the GROUP_ID column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByGroupIdIterator(String groupId)
-  {
-    Collection collection = findByGroupId(groupId);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds SecurityGroupPermission records by the following parameters:
@@ -259,7 +238,7 @@ public class SecurityGroupPermissionHelper
   public static void removeByPermissionId(String permissionId)
   {
     if(permissionId == null) return;
-    Iterator iterator = findByPermissionIdIterator(permissionId);
+    Iterator iterator = UtilMisc.toIterator(findByPermissionId(permissionId));
 
     while(iterator.hasNext())
     {
@@ -271,17 +250,6 @@ public class SecurityGroupPermissionHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  permissionId                  Field of the PERMISSION_ID column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByPermissionIdIterator(String permissionId)
-  {
-    Collection collection = findByPermissionId(permissionId);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds SecurityGroupPermission records by the following parameters:

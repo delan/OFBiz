@@ -33,7 +33,7 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:51 MDT 2001
+ *@created    Fri Jul 27 01:18:34 MDT 2001
  *@version    1.0
  */
 public class SecurityGroupHelper
@@ -115,16 +115,6 @@ public class SecurityGroupHelper
     catch(ObjectNotFoundException onfe) { }
     catch(Exception fe) { Debug.logError(fe); }
     return securityGroup;
-  }
-
-  /** Finds all SecurityGroup entities, returning an Iterator
-   *@return    Iterator containing all SecurityGroup entities
-   */
-  public static Iterator findAllIterator()
-  {
-    Collection collection = findAll();
-    if(collection != null) return collection.iterator();
-    else return null;
   }
 
   /** Finds all SecurityGroup entities
