@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -181,6 +181,47 @@
             </table>
           </td>
         </tr>
+        <#-- terms -->
+        <#if terms?has_content>
+        <tr>
+          <td width='100%'>
+            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+              <tr>
+                <td valign="middle" align="left">
+                  <div class="boxhead">&nbsp;${uiLabelMap.AccountingInvoiceTerms}</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td width='100%'>
+            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+              <tr>
+                <td>
+                  <table width="100%" border="0" cellpadding="1">
+                    <#list terms as term>
+                      <#assign termType = term.getRelatedOne("TermType")>
+                      <tr>
+                        <td align="right" valign="top" width="15%">
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingTerm}</b></div>
+                        </td>
+                        <td width="5">&nbsp;</td>
+                        <td align="left" valign="top" width="80%">
+                          <div class="tabletext">
+                            ${termType.description} <#if term.termValue?has_content> - ${term.termValue}</#if>
+                          </div>
+                        </td>
+                      </tr>
+                    </#list>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        </#if>
+
       </table>
     </td>
   </tr>
