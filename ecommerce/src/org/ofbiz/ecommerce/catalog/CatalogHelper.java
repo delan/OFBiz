@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.22  2001/09/25 23:05:22  jonesde
+ * Added cross sell, up sell, and obsolete product association support.
+ *
  * Revision 1.21  2001/09/25 14:42:12  epabst
  * added password hint
  * added getCurrentPartyContactMechList helper method
@@ -96,6 +99,8 @@ import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericEntityException;
 
 import org.ofbiz.commonapp.product.product.KeywordSearch;
+
+import org.ofbiz.ecommerce.shoppingcart.*;
 
 /**
  * <p><b>Title:</b> CatalogHelper.java
@@ -431,5 +436,30 @@ public class CatalogHelper {
     catch(GenericEntityException e) {
       Debug.logWarning(e);
     }
-  }  
+  }
+
+  public static void getRandomCartProductAssoc(PageContext pageContext, String assocsAttrName) {
+    GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
+    ShoppingCart cart = (ShoppingCart)pageContext.getSession().getAttribute("_SHOPPING_CART_");
+    if(cart == null || cart.size() <= 0) return;
+    
+    try {
+      TreeSet cartAssocs = new TreeSet();
+      
+      Iterator cartiter = cart.iterator();
+      while(cartiter != null && cartiter.hasNext()) {
+        ShoppingCartItem item = (ShoppingCartItem)cartiter.next();
+        Collection upgradeProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", item.getProductId(), "productAssocTypeId", "PRODUCT_UPGRADE"), null);
+        //Collection complementProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_COMPLEMENT"), null);
+
+        //if(upgradeProducts != null && upgradeProducts.size() > 0) pageContext.setAttribute(assocPrefix + "upgrade", upgradeProducts);
+        //if(complementProducts != null && complementProducts.size() > 0) pageContext.setAttribute(assocPrefix + "complement", complementProducts);
+      }
+
+      pageContext.setAttribute(assocsAttrName, (Collection)cartAssocs);
+    }
+    catch(GenericEntityException e) {
+      Debug.logWarning(e);
+    }
+  }
 }
