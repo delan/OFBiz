@@ -27,9 +27,14 @@
  *  $Id$
 -->
 
-<!ELEMENT ofbiz-component ( resource-loader+, transaction-manager-jndi? )>
+<!ELEMENT ofbiz-component ( depends-on*, resource-loader+, classpath*, entity-resource*, service-resource*, webapp* )>
 <!ATTLIST ofbiz-component 
     name CDATA #REQUIRED
+>
+
+<!ELEMENT depends-on EMPTY>
+<!ATTLIST depends-on
+    component-name CDATA #REQUIRED
 >
 
 <!ELEMENT resource-loader EMPTY>
@@ -74,10 +79,10 @@
 
 <!--
 <ofbiz-component name="core">
-    <resource-loader name="maincomponent" class="component"/>
-    <resource-loader name="mainfile" class="file" prepend-env="ofbiz.home" prefix=""/>
-    <resource-loader name="maincp" class="classpath"/>
-    <resource-loader name="mainurl" class="url"/>
+    <resource-loader name="maincomponent" type="component"/>
+    <resource-loader name="mainfile" type="file" prepend-env="ofbiz.home" prefix=""/>
+    <resource-loader name="maincp" type="classpath"/>
+    <resource-loader name="mainurl" type="url"/>
 
     <classpath type="jar" loader="maincomponent" location="lib/product.jar"/>
     <classpath type="dir" loader="maincomponent" location="classes"/>
