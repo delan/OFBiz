@@ -155,6 +155,7 @@
             <exclude name="org/ofbiz/commonapp/thirdparty/verisign/**"/>
             <exclude name="org/ofbiz/commonapp/thirdparty/taxware/**"/> 
             <exclude name="org/ofbiz/commonapp/thirdparty/paymentech/**"/> 
+            <exclude name="org/ofbiz/commonapp/thirdparty/worldpay/**"/>
         </javac>
         <!-- also copy all .xml, .bsh & .logic files to classpath directory -->
         <copy todir="${build.dir}/jar">

@@ -1,0 +1,248 @@
+/*
+ * $Id$
+ *
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
+package org.ofbiz.commonapp.thirdparty.worldpay;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import javax.servlet.*;
+
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
+import org.ofbiz.core.util.*;
+
+import com.worldpay.select.*;
+import com.worldpay.select.merchant.*;
+
+/**
+ * WorldPay Select Pro Response Servlet
+ *
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
+ */
+public class SelectRespServlet extends SelectServlet implements SelectDefs {
+    
+    public static final String module = SelectRespServlet.class.getName();
+    
+    private ServletContext sctx = null;
+    private GenericDelegator delegator = null;
+    private LocalDispatcher dispatcher = null;
+    private URL orderPropertiesUrl = null;
+    private GenericValue userLogin = null;
+    
+    protected void doRequest(SelectServletRequest request, SelectServletResponse response) throws ServletException, IOException {
+        // get the needed components
+        sctx = this.getServletContext();
+        delegator = this.getDelegator();
+        dispatcher = this.getDispatcher();
+        
+        // load the order.properties file.        
+        try {
+            orderPropertiesUrl = sctx.getResource("/WEB-INF/order.properties");
+        } catch (MalformedURLException e) {
+            Debug.logWarning(e, "Problems loading order.properties", module);
+        }    
+        
+        String orderId = request.getParameter(SelectDefs.SEL_cartId);
+        String transStatus = request.getParameter(SelectDefs.SEL_transStatus);
+        if (transStatus.equalsIgnoreCase("Y")) {
+            // order was approved
+            approveOrder(orderId);           
+        } else {
+            // order was cancelled
+            cancelOrder(orderId);
+        }
+        setPaymentPreferences(orderId, request);
+                  
+    }
+        
+    private void approveOrder(String orderId) {        
+        // get some payment related strings from order.properties.
+        final String HEADER_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
+        final String ITEM_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
+        
+        try {
+            // set the status on the order header
+            Map statusFields = UtilMisc.toMap("orderId", orderId, "statusId", HEADER_APPROVE_STATUS, "userLogin", userLogin);
+            Map statusResult = dispatcher.runSync("changeOrderStatus", statusFields);                               
+            if (statusResult.containsKey(ModelService.ERROR_MESSAGE)) {
+                Debug.logError("Problems adjusting order header status for order #" + orderId, module);                            
+            }
+                        
+            // set the status on the order item(s)
+            Map itemStatusFields = UtilMisc.toMap("orderId", orderId, "statusId", ITEM_APPROVE_STATUS, "userLogin", userLogin);
+            Map itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);                        
+            if (itemStatusResult.containsKey(ModelService.ERROR_MESSAGE)) {
+                Debug.logError("Problems adjusting order item status for order #" + orderId, module);
+            }
+                                                                                                                
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
+        }
+    }
+    
+    private void cancelOrder(String orderId) {
+        // get some payment related strings from order.properties.
+        final String HEADER_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.declined.status", "ORDER_REJECTED");
+        final String ITEM_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.declined.status", "ITEM_REJECTED");
+        
+        try {
+            // set the status on the order header
+            Map statusFields = UtilMisc.toMap("orderId", orderId, "statusId", HEADER_DECLINE_STATUS, "userLogin", userLogin);
+            Map statusResult = dispatcher.runSync("changeOrderStatus", statusFields);                               
+            if (statusResult.containsKey(ModelService.ERROR_MESSAGE)) {
+                Debug.logError("Problems adjusting order header status for order #" + orderId, module);                            
+            }
+                        
+            // set the status on the order item(s)
+            Map itemStatusFields = UtilMisc.toMap("orderId", orderId, "statusId", ITEM_DECLINE_STATUS, "userLogin", userLogin);
+            Map itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);                        
+            if (itemStatusResult.containsKey(ModelService.ERROR_MESSAGE)) {
+                Debug.logError("Problems adjusting order item status for order #" + orderId, module);
+            }
+                        
+            // cancel the inventory reservations
+            Map cancelInvFields = UtilMisc.toMap("orderId", orderId, "userLogin", userLogin);
+            Map cancelInvResult = dispatcher.runSync("cancelOrderInventoryReservation", cancelInvFields);
+            if (ModelService.RESPOND_ERROR.equals((String) cancelInvResult.get(ModelService.RESPONSE_MESSAGE))) {
+                Debug.logError("Problems reversing inventory reservations for order #" + orderId, module);
+            }                                                         
+                                           
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Service invocation error, status/reservations were not updated for order #" + orderId, module);
+        }
+    }
+    
+    private void setPaymentPreferences(String orderId, ServletRequest request) {
+        List paymentPrefs = null;
+        try {
+            Map paymentFields = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_NOT_RECEIVED");
+            paymentPrefs = delegator.findByAnd("OrderPaymentPreference", paymentFields);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot get payment preferences for order #" + orderId, module);
+        }
+        if (paymentPrefs != null && paymentPrefs.size() > 0) {
+            Iterator i = paymentPrefs.iterator();
+            while (i.hasNext()) {
+                GenericValue pref = (GenericValue) i.next();
+                setPaymentPreference(pref, request);
+            }
+        }
+    }
+        
+    private void setPaymentPreference(GenericValue paymentPreference, ServletRequest request) {
+        String transId = request.getParameter(SelectDefs.SEL_transId);       
+        String transTime = request.getParameter(SelectDefs.SEL_transTime);
+        String transStatus = request.getParameter(SelectDefs.SEL_transStatus);
+        String avsCode = request.getParameter("AVS");
+        String authCode = request.getParameter(SelectDefs.SEL_authCode);
+        String authAmount = request.getParameter(SelectDefs.SEL_authAmount); 
+        String rawAuthMessage = request.getParameter(SelectDefs.SEL_rawAuthMessage);
+        
+        if (transStatus.equalsIgnoreCase("Y")) {
+            paymentPreference.set("authCode", authCode);
+            paymentPreference.set("statusId", "PAYMENT_RECEIVED");
+        } else {
+            paymentPreference.set("statusId", "PAYMENT_CANCELLED");
+        }
+        paymentPreference.set("avsCode", avsCode);
+        paymentPreference.set("authRefNum", transId);
+        paymentPreference.set("authDate", transTime);
+        paymentPreference.set("authFlag", transStatus);
+        paymentPreference.set("authMessage", rawAuthMessage);
+        
+        try {
+            paymentPreference.store();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot set payment preference info", module);
+        }                   
+    }
+    
+    private LocalDispatcher getDispatcher() {
+        LocalDispatcher dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
+
+        if (dispatcher == null) {
+            GenericDelegator delegator = getDelegator();
+
+            if (delegator == null) {
+                Debug.logError("ERROR: delegator not defined.", module);
+                return null;
+            }
+            Collection readers = null;
+            String readerFiles = getServletContext().getInitParameter("serviceReaderUrls");
+
+            if (readerFiles != null) {
+                readers = new ArrayList();
+                List readerList = StringUtil.split(readerFiles, ";");
+                Iterator i = readerList.iterator();
+
+                while (i.hasNext()) {
+                    try {
+                        String name = (String) i.next();
+                        URL readerURL = getServletContext().getResource(name);
+
+                        if (readerURL != null)
+                            readers.add(readerURL);
+                    } catch (NullPointerException npe) {
+                        Debug.logInfo(npe, "ERROR: Null pointer exception thrown.", module);
+                    } catch (MalformedURLException e) {
+                        Debug.logError(e, "ERROR: cannot get URL from String.", module);
+                    }
+                }
+            }
+            // get the unique name of this dispatcher
+            String dispatcherName = getServletContext().getInitParameter("localDispatcherName");
+
+            if (dispatcherName == null)
+                Debug.logError("No localDispatcherName specified in the web.xml file", module);
+            dispatcher = new WebAppDispatcher(dispatcherName, delegator, readers);
+            getServletContext().setAttribute("dispatcher", dispatcher);
+            if (dispatcher == null)
+                Debug.logError("ERROR: dispatcher could not be initialized.", module);
+        }
+        return dispatcher;
+    }
+
+    private GenericDelegator getDelegator() {
+        GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
+
+        if (delegator == null) {
+            String delegatorName = getServletContext().getInitParameter(SiteDefs.ENTITY_DELEGATOR_NAME);
+
+            if (delegatorName == null || delegatorName.length() <= 0)
+                delegatorName = "default";
+            if (Debug.infoOn()) Debug.logInfo("Getting Entity Engine Delegator with delegator name " + delegatorName, module);
+            delegator = GenericDelegator.getGenericDelegator(delegatorName);
+            getServletContext().setAttribute("delegator", delegator);
+            if (delegator == null)
+                Debug.logError("ERROR: delegator factory returned null for delegatorName \"" + delegatorName + "\"", module);
+        }
+        return delegator;
+    }
+   
+   
+
+}
