@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.8 2003/10/19 04:08:43 jonesde Exp $
+ * $Id: ModelViewEntity.java,v 1.9 2003/10/19 09:27:49 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,11 +35,23 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
     public static final String module = ModelViewEntity.class.getName();
+
+    public static Map functionPrefixMap = new HashMap();
+    static {
+        functionPrefixMap.put("min", "MIN(");
+        functionPrefixMap.put("max", "MAX(");
+        functionPrefixMap.put("sum", "SUM(");
+        functionPrefixMap.put("avg", "AVG(");
+        functionPrefixMap.put("count", "COUNT(");
+        functionPrefixMap.put("count-distinct", "COUNT(DISTINCT ");
+        functionPrefixMap.put("upper", "UPPER(");
+        functionPrefixMap.put("lower", "LOWER(");
+    }
 
     /** Contains member-entity alias name definitions: key is alias, value is ModelMemberEntity */
     protected Map memberModelMemberEntities = new HashMap();
@@ -360,29 +372,16 @@ public class ModelViewEntity extends ModelEntity {
             }
 
             if (UtilValidate.isNotEmpty(alias.function)) {
-                if ("min".equals(alias.function)) {
-                    field.colName = "MIN(" + field.colName + ")";
-                } else if ("max".equals(alias.function)) {
-                    field.colName = "MAX(" + field.colName + ")";
-                } else if ("sum".equals(alias.function)) {
-                    field.colName = "SUM(" + field.colName + ")";
-                } else if ("avg".equals(alias.function)) {
-                    field.colName = "AVG(" + field.colName + ")";
-                } else if ("count".equals(alias.function)) {
-                    field.colName = "COUNT(" + field.colName + ")";
-                } else if ("count-distinct".equals(alias.function)) {
-                    field.colName = "COUNT(DISTINCT " + field.colName + ")";
-                } else if ("upper".equals(alias.function)) {
-                    field.colName = "UPPER(" + field.colName + ")";
-                } else if ("lower".equals(alias.function)) {
-                    field.colName = "LOWER(" + field.colName + ")";
-                } else {
+                String prefix = (String) functionPrefixMap.get(alias.function);
+                if (prefix == null) {
                     Debug.logWarning("Specified alias function [" + alias.function + "] not valid; must be: min, max, sum, avg, count or count-distinct; using a column name with no function function", module);
+                } else {
+                    field.colName = prefix + field.colName + ")";
                 }
             }
         }
     }
-
+    
     /**
      * Go through all aliasAlls and create an alias for each field of each member entity
      */
@@ -670,23 +669,41 @@ public class ModelViewEntity extends ModelEntity {
     public static class ComplexAliasField implements ComplexAliasMember {
         protected String entityAlias = "";
         protected String field = "";
+        protected String function = null;
         
         public ComplexAliasField(String entityAlias , String field) {
             this.entityAlias = entityAlias;
             this.field = field;
         }
 
+        public ComplexAliasField(String entityAlias , String field, String function) {
+            this.entityAlias = entityAlias;
+            this.field = field;
+            this.function = function;
+        }
+
         public ComplexAliasField(Element complexAliasFieldElement) {
             this.entityAlias = complexAliasFieldElement.getAttribute("entity-alias");
             this.field = complexAliasFieldElement.getAttribute("field");
+            this.function = complexAliasFieldElement.getAttribute("function");
         }
 
         public void makeAliasColName(StringBuffer colNameBuffer, StringBuffer fieldTypeBuffer, ModelViewEntity modelViewEntity, ModelReader modelReader) {
             ModelEntity modelEntity = modelViewEntity.getAliasedEntity(entityAlias, modelReader);
             ModelField modelField = modelViewEntity.getAliasedField(modelEntity, field, modelReader);
-            colNameBuffer.append(entityAlias);
-            colNameBuffer.append('.');
-            colNameBuffer.append(modelField.getColName());
+            
+            String colName = entityAlias + "." + modelField.getColName();
+            
+            if (UtilValidate.isNotEmpty(function)) {
+                String prefix = (String) functionPrefixMap.get(function);
+                if (prefix == null) {
+                    Debug.logWarning("Specified alias function [" + function + "] not valid; must be: min, max, sum, avg, count or count-distinct; using a column name with no function function", module);
+                } else {
+                    colName = prefix + colName + ")";
+                }
+            }
+            
+            colNameBuffer.append(colName);
             
             //set fieldTypeBuffer if not already set
             if (fieldTypeBuffer.length() == 0) {

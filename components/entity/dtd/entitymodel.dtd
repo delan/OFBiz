@@ -125,7 +125,8 @@
 <!ELEMENT complex-alias-field EMPTY>
 <!ATTLIST complex-alias-field
     entity-alias CDATA #REQUIRED
-    field CDATA #REQUIRED>
+    field CDATA #REQUIRED
+    function ( min | max | sum | avg | count | count-distinct | upper | lower ) #IMPLIED>
 <!ELEMENT view-link ( key-map+ )>
 <!ATTLIST view-link
     entity-alias CDATA #REQUIRED
