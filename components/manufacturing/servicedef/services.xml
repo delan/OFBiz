@@ -247,12 +247,6 @@
         <attribute name="workEffortGoodStandard" type="GenericValue" mode="IN" optional="true"/>
         <attribute name="reserveOrderEnumId" type="String" mode="IN" optional="true"/>
     </service>
-    <service name="createWorkEffortInventoryAssign" default-entity-name="WorkEffortInventoryAssign" engine="simple"
-            location="org/ofbiz/manufacturing/jobshopmgt/ProductionRunServices.xml" invoke="createWorkEffortInventoryAssign" auth="true">
-        <description>Create WorkEffortInventoryAssign</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
     <service name="productionRunProduce" engine="java"
             location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="productionRunProduce" auth="true">
         <description>
