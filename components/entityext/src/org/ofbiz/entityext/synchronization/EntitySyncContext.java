@@ -339,6 +339,8 @@ public class EntitySyncContext {
                 
                 // if we didn't find anything for this entity, find the next value's Timestamp and keep track of it
                 if (valuesPerEntity == 0) {
+                    Timestamp startCheckStamp = new Timestamp(System.currentTimeMillis() - syncEndBufferMillis);
+                    
                     EntityCondition findNextCondition = new EntityConditionList(UtilMisc.toList(
                             new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.NOT_EQUAL, null),
                             new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunEndTime)), 
@@ -347,17 +349,21 @@ public class EntitySyncContext {
                     // get the first element and it's tx time value...
                     GenericValue firstVal = (GenericValue) eliNext.next();
                     eliNext.close();
+                    Timestamp nextTxTime;
                     if (firstVal != null) {
-                        Timestamp nextTxTime = firstVal.getTimestamp(ModelEntity.CREATE_STAMP_TX_FIELD);
-                        if (this.nextCreateTxTime == null || nextTxTime.before(this.nextCreateTxTime)) {
-                            this.nextCreateTxTime = nextTxTime;
-                            Debug.logInfo("EntitySync: Set nextCreateTxTime to [" + nextTxTime + "]", module);
-                        }
-                        Timestamp curEntityNextTxTime = (Timestamp) this.nextEntityCreateTxTime.get(modelEntity.getEntityName());
-                        if (curEntityNextTxTime == null || nextTxTime.before(curEntityNextTxTime)) {
-                            this.nextEntityCreateTxTime.put(modelEntity.getEntityName(), nextTxTime);
-                            Debug.logInfo("EntitySync: Set nextEntityCreateTxTime to [" + nextTxTime + "] for the entity [" + modelEntity.getEntityName() + "]", module);
-                        }
+                        nextTxTime = firstVal.getTimestamp(ModelEntity.CREATE_STAMP_TX_FIELD);
+                    } else {
+                        // no results? well, then it's safe to say that up to the pre-querytime (minus the buffer, as usual) we are okay
+                        nextTxTime = startCheckStamp;
+                    }
+                    if (this.nextCreateTxTime == null || nextTxTime.before(this.nextCreateTxTime)) {
+                        this.nextCreateTxTime = nextTxTime;
+                        Debug.logInfo("EntitySync: Set nextCreateTxTime to [" + nextTxTime + "]", module);
+                    }
+                    Timestamp curEntityNextTxTime = (Timestamp) this.nextEntityCreateTxTime.get(modelEntity.getEntityName());
+                    if (curEntityNextTxTime == null || nextTxTime.before(curEntityNextTxTime)) {
+                        this.nextEntityCreateTxTime.put(modelEntity.getEntityName(), nextTxTime);
+                        Debug.logInfo("EntitySync: Set nextEntityCreateTxTime to [" + nextTxTime + "] for the entity [" + modelEntity.getEntityName() + "]", module);
                     }
                 }
             } catch (GenericEntityException e) {
@@ -368,7 +374,7 @@ public class EntitySyncContext {
         }
         
         if (entitiesSkippedForKnownNext > 0) {
-            if (Debug.infoOn()) Debug.logInfo("In assembleValuestoCreate skipped [" + entitiesSkippedForKnownNext + "/" + entityModelToUseList + "] entities for the time period ending at [" + currentRunEndTime + "] because of next known create times", module);
+            if (Debug.infoOn()) Debug.logInfo("In assembleValuesToCreate skipped [" + entitiesSkippedForKnownNext + "/" + entityModelToUseList + "] entities for the time period ending at [" + currentRunEndTime + "] because of next known create times", module);
         }
         
         // TEST SECTION: leave false for normal use
@@ -452,6 +458,8 @@ public class EntitySyncContext {
 
                 // if we didn't find anything for this entity, find the next value's Timestamp and keep track of it
                 if (valuesPerEntity == 0) {
+                    Timestamp startCheckStamp = new Timestamp(System.currentTimeMillis() - syncEndBufferMillis);
+                    
                     EntityCondition findNextCondition = new EntityConditionList(UtilMisc.toList(
                             new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.NOT_EQUAL, null), 
                             new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunEndTime),
@@ -462,17 +470,21 @@ public class EntitySyncContext {
                     // get the first element and it's tx time value...
                     GenericValue firstVal = (GenericValue) eliNext.next();
                     eliNext.close();
+                    Timestamp nextTxTime;
                     if (firstVal != null) {
-                        Timestamp nextTxTime = firstVal.getTimestamp(ModelEntity.STAMP_TX_FIELD);
-                        if (this.nextUpdateTxTime == null || nextTxTime.before(this.nextUpdateTxTime)) {
-                            this.nextUpdateTxTime = nextTxTime;
-                            Debug.logInfo("EntitySync: Set nextUpdateTxTime to [" + nextTxTime + "]", module);
-                        }
-                        Timestamp curEntityNextTxTime = (Timestamp) this.nextEntityUpdateTxTime.get(modelEntity.getEntityName());
-                        if (curEntityNextTxTime == null || nextTxTime.before(curEntityNextTxTime)) {
-                            this.nextEntityUpdateTxTime.put(modelEntity.getEntityName(), nextTxTime);
-                            Debug.logInfo("EntitySync: Set nextEntityUpdateTxTime to [" + nextTxTime + "] for the entity [" + modelEntity.getEntityName() + "]", module);
-                        }
+                        nextTxTime = firstVal.getTimestamp(ModelEntity.CREATE_STAMP_TX_FIELD);
+                    } else {
+                        // no results? well, then it's safe to say that up to the pre-querytime (minus the buffer, as usual) we are okay
+                        nextTxTime = startCheckStamp;
+                    }
+                    if (this.nextUpdateTxTime == null || nextTxTime.before(this.nextUpdateTxTime)) {
+                        this.nextUpdateTxTime = nextTxTime;
+                        Debug.logInfo("EntitySync: Set nextUpdateTxTime to [" + nextTxTime + "]", module);
+                    }
+                    Timestamp curEntityNextTxTime = (Timestamp) this.nextEntityUpdateTxTime.get(modelEntity.getEntityName());
+                    if (curEntityNextTxTime == null || nextTxTime.before(curEntityNextTxTime)) {
+                        this.nextEntityUpdateTxTime.put(modelEntity.getEntityName(), nextTxTime);
+                        Debug.logInfo("EntitySync: Set nextEntityUpdateTxTime to [" + nextTxTime + "] for the entity [" + modelEntity.getEntityName() + "]", module);
                     }
                 }
             } catch (GenericEntityException e) {
@@ -483,7 +495,7 @@ public class EntitySyncContext {
         }
 
         if (entitiesSkippedForKnownNext > 0) {
-            if (Debug.infoOn()) Debug.logInfo("In assembleValuestoUpdate skipped [" + entitiesSkippedForKnownNext + "/" + entityModelToUseList + "] entities for the time period ending at [" + currentRunEndTime + "] because of next known update times", module);
+            if (Debug.infoOn()) Debug.logInfo("In assembleValuesToStore skipped [" + entitiesSkippedForKnownNext + "/" + entityModelToUseList + "] entities for the time period ending at [" + currentRunEndTime + "] because of next known update times", module);
         }
         
         // TEST SECTION: leave false for normal use
