@@ -104,6 +104,13 @@ public class ModelService {
 
         Debug.logVerbose("[ModelService.validate] : Validating context - " + test, module);
 
+        // do not validate results with errors
+        if (mode.equals(OUT_PARAM) && test != null && test.containsKey(RESPONSE_MESSAGE) &&
+                test.get(RESPONSE_MESSAGE).equals(RESPOND_ERROR)) {
+            Debug.logVerbose("[ModelService.validate] : response was an error, not validating.", module);
+            return;
+        }
+
         // get the info values
         Collection values = contextInfo.values();
 
@@ -142,7 +149,6 @@ public class ModelService {
                          requiredTest.size() + " / " + requiredInfo.size(), module);
         Debug.logVerbose("[ModelService.validate] : (" + mode + ") Optional - " +
                          optionalTest.size() + " / " + optionalInfo.size(), module);
-
 
         try {
             validate(requiredInfo, requiredTest, true);
