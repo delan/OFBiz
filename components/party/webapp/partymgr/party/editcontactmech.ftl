@@ -97,14 +97,16 @@
                       (Since:${partyContactMechPurpose.fromDate.toString()})
                       <#if partyContactMechPurpose.thruDate?has_content>(Expires: ${partyContactMechPurpose.thruDate.toString()}</#if>
                     &nbsp;</div></td>
-                  <td bgcolor='white'><div><a href='<@ofbizUrl>/deletePartyContactMechPurpose?partyId=${partyId}&contactMechId=${contactMechId}&contactMechPurposeTypeId=${partyContactMechPurpose.contactMechPurposeTypeId}&fromDate=${partyContactMechPurpose.fromDate.toString()}&DONE_PAGE=${donePage}&useValues=true</@ofbizUrl>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
+                  <td bgcolor='white'><div><a href='<@ofbizUrl>/deletePartyContactMechPurpose?partyId=${partyId}&contactMechId=${contactMechId}&contactMechPurposeTypeId=${partyContactMechPurpose.contactMechPurposeTypeId}&fromDate=${partyContactMechPurpose.fromDate.toString()}&DONE_PAGE=${donePage?replace("=","%3d")}&useValues=true</@ofbizUrl>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
                 </tr>
               </#list>
 				</#if>              
               <#if mechMap.purposeTypes?has_content>
               <tr>
-                <form method=POST action='<@ofbizUrl>/createPartyContactMechPurpose?DONE_PAGE=${donePage}&useValues=true</@ofbizUrl>' name='newpurposeform'>
+                <form method=POST action='<@ofbizUrl>/createPartyContactMechPurpose</@ofbizUrl>' name='newpurposeform'>
                 <input type=hidden name='partyId' value='${partyId}'>
+                <input type=hidden name='DONE_PAGE' value='${donePage}'>
+                <input type=hidden name='useValues' value='true'>
                 <input type=hidden name='contactMechId' value='${contactMechId?if_exists}'>
                   <td bgcolor='white'>
                     <select name='contactMechPurposeTypeId' class="selectBox">
