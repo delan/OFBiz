@@ -44,7 +44,7 @@
 	<a href='<ofbiz:url>/FindUtilCacheClearAllExpired</ofbiz:url>' class='buttontext'>[Clear Expired From All]</a>
     <a href='<ofbiz:url>/ForceGarbageCollection</ofbiz:url>' class='buttontext'>[Run GC]</a>
 </div>
-<div class="tabletext"><u><b>Memory:</b></u> [<b>TOTAL:</b> <%=rt.totalMemory()%>] [<b>FREE:</b> <%=rt.freeMemory()%>] [<b>MAX:</b> <%=rt.maxMemory()%>]</span></div>
+<div class="tabletext"><u><b>Memory:</b></u> [<b>TOTAL:</b> <%=rt.totalMemory()%>] [<b>FREE:</b> <%=rt.freeMemory()%>] [<b>USED:</b> <%=(rt.totalMemory() - rt.freeMemory())%>] [<b>MAX:</b> <%=rt.maxMemory()%>]</span></div>
 
 <br>
 <TABLE border='0' cellpadding='2' cellspacing='2'>
