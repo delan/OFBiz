@@ -154,6 +154,7 @@
         <description>Create ShipmentPackageContent</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="shipmentPackageSeqId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateShipmentPackageContent" default-entity-name="ShipmentPackageContent" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="updateShipmentPackageContent" auth="true">
