@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServices.java,v 1.6 2004/07/09 06:11:41 ajzeneski Exp $
+ * $Id: LoginServices.java,v 1.7 2004/08/17 01:17:08 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class LoginServices {
@@ -223,7 +223,6 @@ public class LoginServices {
                             // if failed logins over amount in properties file, disable account
                             String mflStr = UtilProperties.getPropertyValue("security.properties", "max.failed.logins");
                             long maxFailedLogins = 3;
-
                             try {
                                 maxFailedLogins = Long.parseLong(mflStr);
                             } catch (Exception e) {
@@ -268,16 +267,24 @@ public class LoginServices {
 
                             if ("true".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history"))) {
                                 boolean createHistory = true;
-
+                                
+                                // only save info on service auth if option set to true to do so
                                 if (isServiceAuth && !"true".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history.on.service.auth"))) {
                                     createHistory = false;
                                 }
 
                                 if (createHistory) {
+                                    Map ulhCreateMap = UtilMisc.toMap("userLoginId", username, "visitId", visitId,
+                                            "fromDate", UtilDateTime.nowTimestamp(),
+                                            "partyId", userLogin.get("partyId"), "successfulLogin", successfulLogin);
+
+                                    // ONLY save the password if it was incorrect
+                                    if ("N".equals(successfulLogin) && !"false".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history.incorrect.password"))) {
+                                        ulhCreateMap.put("passwordUsed", password);
+                                    }
+                                    
                                     try {
-                                        delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username, "visitId", visitId,
-                                                "fromDate", UtilDateTime.nowTimestamp(), "passwordUsed", password,
-                                                "partyId", userLogin.get("partyId"), "successfulLogin", successfulLogin));
+                                        delegator.create("UserLoginHistory", ulhCreateMap);
                                     } catch (GenericEntityException e) {
                                         Debug.logWarning(e, "", module);
                                     }
