@@ -147,13 +147,13 @@
       <prim-key field="shipmentMethodTypeId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
-      <relation type="one" rel-entity-name="ShipmentMethodType">
+      <relation type="one" fk-name="CARR_SHMETH_TYPE" rel-entity-name="ShipmentMethodType">
         <key-map field-name="shipmentMethodTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="CARR_SHMETH_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="CARR_SHMETH_PROLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
@@ -195,7 +195,7 @@
       <field name="handlingInstructions" type="long-varchar"></field>
       <field name="lastUpdated" type="date-time"></field>
       <prim-key field="shipmentId"/>
-      <relation type="one" rel-entity-name="ShipmentType">
+      <relation type="one" fk-name="SHPMNT_TYPE" rel-entity-name="ShipmentType">
         <key-map field-name="shipmentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentTypeAttr">
@@ -216,7 +216,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="shipmentId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="Shipment">
+      <relation type="one" fk-name="SHPMNT_ATTR" rel-entity-name="Shipment">
         <key-map field-name="shipmentId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentTypeAttr">
@@ -244,37 +244,37 @@
       <field name="orderPricePercent" type="floating-point"></field>
       <field name="orderItemFlatPrice" type="currency-amount"></field>
       <prim-key field="shipmentCostEstimateId"/>
-      <relation type="one" rel-entity-name="CarrierShipmentMethod">
+      <relation type="one" fk-name="SHPMNT_CE_CSHMTH" rel-entity-name="CarrierShipmentMethod">
         <key-map field-name="shipmentMethodTypeId"/>
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="SHPMNT_CE_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="SHPMNT_CE_PROLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="RoleType">
+      <relation type="one" fk-name="SHPMNT_CE_ROLET" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="Uom">
+      <relation type="one" fk-name="SHPMNT_CE_UOM" rel-entity-name="Uom">
         <key-map field-name="weightUomId" rel-field-name="uomId"/>
       </relation>
-      <relation type="one" title="To" rel-entity-name="Geo">
+      <relation type="one" fk-name="SHPMNT_CE_TGEO" title="To" rel-entity-name="Geo">
         <key-map field-name="geoIdTo" rel-field-name="geoId"/>
       </relation>
-      <relation type="one" title="From" rel-entity-name="Geo">
+      <relation type="one" fk-name="SHPMNT_CE_FGEO" title="From" rel-entity-name="Geo">
         <key-map field-name="geoIdFrom" rel-field-name="geoId"/>
       </relation>
-      <relation type="one" title="Weight" rel-entity-name="QuantityBreak">
+      <relation type="one" fk-name="SHPMNT_CE_WHT_QB" title="Weight" rel-entity-name="QuantityBreak">
         <key-map field-name="weightBreakId" rel-field-name="quantityBreakId"/>
       </relation>
-      <relation type="one" title="Quantity" rel-entity-name="QuantityBreak">
+      <relation type="one" fk-name="SHPMNT_CE_QNT_QB" title="Quantity" rel-entity-name="QuantityBreak">
         <key-map field-name="quantityBreakId"/>
       </relation>
-      <relation type="one" title="Price" rel-entity-name="QuantityBreak">
+      <relation type="one" fk-name="SHPMNT_CE_PRC_QB" title="Price" rel-entity-name="QuantityBreak">
         <key-map field-name="priceBreakId" rel-field-name="quantityBreakId"/>
       </relation>
     </entity>
@@ -349,7 +349,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="shipmentTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="ShipmentType">
+      <relation type="one" fk-name="SHPMNT_TYPPAR" title="Parent" rel-entity-name="ShipmentType">
         <key-map field-name="parentTypeId" rel-field-name="shipmentTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="ShipmentType">
@@ -369,7 +369,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="shipmentTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="ShipmentType">
+      <relation type="one" fk-name="SHPMNT_TYPATR" rel-entity-name="ShipmentType">
         <key-map field-name="shipmentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentAttribute">

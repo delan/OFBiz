@@ -85,7 +85,7 @@
       <prim-key field="partyId"/>
       <prim-key field="partyQualTypeId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="PartyQualType">
+      <relation type="one" fk-name="PARTY_QUAL_TYPE" rel-entity-name="PartyQualType">
         <key-map field-name="partyQualTypeId"/>
       </relation>
     </entity>
@@ -97,7 +97,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="partyQualTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="PartyQualType">
+      <relation type="one" fk-name="PARTY_QUAL_TPAR" title="Parent" rel-entity-name="PartyQualType">
         <key-map field-name="parentTypeId" rel-field-name="partyQualTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="PartyQualType">

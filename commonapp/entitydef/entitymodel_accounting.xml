@@ -63,7 +63,7 @@
       <field name="standardTimePeriodId" type="id"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="budgetId"/>
-      <relation type="one" rel-entity-name="BudgetType">
+      <relation type="one" fk-name="BUDGET_TYPE" rel-entity-name="BudgetType">
         <key-map field-name="budgetTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="BudgetTypeAttr">
@@ -81,7 +81,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="budgetId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="Budget">
+      <relation type="one" fk-name="BUDGET_ATTR_BDGT" rel-entity-name="Budget">
         <key-map field-name="budgetId"/>
       </relation>
       <relation type="many" rel-entity-name="BudgetTypeAttr">
@@ -99,7 +99,7 @@
       <field name="justification" type="long-varchar"></field>
       <prim-key field="budgetId"/>
       <prim-key field="budgetItemSeqId"/>
-      <relation type="one" rel-entity-name="BudgetItemType">
+      <relation type="one" fk-name="BUDGET_ITEM_TYPE" rel-entity-name="BudgetItemType">
         <key-map field-name="budgetItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="BudgetItemTypeAttr">
@@ -120,7 +120,7 @@
       <prim-key field="budgetId"/>
       <prim-key field="budgetItemSeqId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="BudgetItem">
+      <relation type="one" fk-name="BUDGET_ITEM_ATTR" rel-entity-name="BudgetItem">
         <key-map field-name="budgetId"/>
         <key-map field-name="budgetItemSeqId"/>
       </relation>
@@ -136,7 +136,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="budgetItemTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="BudgetItemType">
+      <relation type="one" fk-name="BUDGET_ITM_TYPPAR" title="Parent" rel-entity-name="BudgetItemType">
         <key-map field-name="parentTypeId" rel-field-name="budgetItemTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="BudgetItemType">
@@ -156,7 +156,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="budgetItemTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="BudgetItemType">
+      <relation type="one" fk-name="BUDGET_ITMTYPATTR" rel-entity-name="BudgetItemType">
         <key-map field-name="budgetItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="BudgetItemAttribute">
@@ -266,7 +266,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="budgetTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="BudgetType">
+      <relation type="one" fk-name="BUDGET_TYPE_PAR" title="Parent" rel-entity-name="BudgetType">
         <key-map field-name="parentTypeId" rel-field-name="budgetTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="BudgetType">
@@ -286,7 +286,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="budgetTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="BudgetType">
+      <relation type="one" fk-name="BUDGET_TYPE_ATTR" rel-entity-name="BudgetType">
         <key-map field-name="budgetTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="BudgetAttribute">
@@ -331,7 +331,7 @@
       <field name="dateNextService" type="date-time"></field>
       <field name="productionCapacity" type="floating-point"></field>
       <prim-key field="fixedAssetId"/>
-      <relation type="one" rel-entity-name="FixedAssetType">
+      <relation type="one" fk-name="FIXEDAST_TYPE" rel-entity-name="FixedAssetType">
         <key-map field-name="fixedAssetTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="FixedAssetTypeAttr">
@@ -352,7 +352,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="fixedAssetId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="FixedAsset">
+      <relation type="one" fk-name="FIXEDAST_ATTR" rel-entity-name="FixedAsset">
         <key-map field-name="fixedAssetId"/>
       </relation>
       <relation type="many" rel-entity-name="FixedAssetTypeAttr">
@@ -377,7 +377,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="fixedAssetTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="FixedAssetType">
+      <relation type="one" fk-name="FIXEDAST_TYPPAR" title="Parent" rel-entity-name="FixedAssetType">
         <key-map field-name="parentTypeId" rel-field-name="fixedAssetTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="FixedAssetType">
@@ -397,7 +397,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="fixedAssetTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="FixedAssetType">
+      <relation type="one" fk-name="FIXEDAST_TYPATTR" rel-entity-name="FixedAssetType">
         <key-map field-name="fixedAssetTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="FixedAssetAttribute">
@@ -441,7 +441,7 @@
       <field name="invoiceMessage" type="long-varchar"></field>
       <field name="description" type="description"></field>
       <prim-key field="invoiceId"/>
-      <relation type="one" rel-entity-name="InvoiceType">
+      <relation type="one" fk-name="INVOICE_TYPE" rel-entity-name="InvoiceType">
         <key-map field-name="invoiceTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="InvoiceTypeAttr">
@@ -462,7 +462,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="invoiceId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="Invoice">
+      <relation type="one" fk-name="INVOICE_ATTR" rel-entity-name="Invoice">
         <key-map field-name="invoiceId"/>
       </relation>
       <relation type="many" rel-entity-name="InvoiceTypeAttr">
@@ -485,7 +485,7 @@
       <field name="description" type="description"></field>
       <prim-key field="invoiceId"/>
       <prim-key field="invoiceItemSeqId"/>
-      <relation type="one" rel-entity-name="InvoiceItemType">
+      <relation type="one" fk-name="INVOICE_ITEM_TYPE" rel-entity-name="InvoiceItemType">
         <key-map field-name="invoiceItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="InvoiceItemTypeAttr">
@@ -510,7 +510,7 @@
       <prim-key field="invoiceId"/>
       <prim-key field="invoiceItemSeqId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="InvoiceItem">
+      <relation type="one" fk-name="INVOICE_ITEM" rel-entity-name="InvoiceItem">
         <key-map field-name="invoiceId"/>
         <key-map field-name="invoiceItemSeqId"/>
       </relation>
@@ -526,7 +526,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="invoiceItemTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="InvoiceItemType">
+      <relation type="one" fk-name="INVOICE_ITEM_TPAR" title="Parent" rel-entity-name="InvoiceItemType">
         <key-map field-name="parentTypeId" rel-field-name="invoiceItemTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="InvoiceItemType">
@@ -546,7 +546,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="invoiceItemTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="InvoiceItemType">
+      <relation type="one" fk-name="INVOICE_ITEM_TATR" rel-entity-name="InvoiceItemType">
         <key-map field-name="invoiceItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="InvoiceItemAttribute">
@@ -596,7 +596,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="invoiceTermId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="InvoiceTerm">
+      <relation type="one" fk-name="INVOICE_TRM_ATTR" rel-entity-name="InvoiceTerm">
         <key-map field-name="invoiceTermId"/>
       </relation>
       <relation type="many" rel-entity-name="TermTypeAttr">
@@ -611,7 +611,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="invoiceTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="InvoiceType">
+      <relation type="one" fk-name="INVOICE_TYPE_PAR" title="Parent" rel-entity-name="InvoiceType">
         <key-map field-name="parentTypeId" rel-field-name="invoiceTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="InvoiceType">
@@ -631,7 +631,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="invoiceTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="InvoiceType">
+      <relation type="one" fk-name="INVOICE_TYPE_ATTR" rel-entity-name="InvoiceType">
         <key-map field-name="invoiceTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="InvoiceAttribute">
@@ -667,7 +667,7 @@
       <field name="transactionDate" type="date-time"></field>
       <field name="entryDate" type="date-time"></field>
       <prim-key field="acctgTransId"/>
-      <relation type="one" rel-entity-name="AcctgTransType">
+      <relation type="one" fk-name="ACCTTX_TYPE" rel-entity-name="AcctgTransType">
         <key-map field-name="acctgTransTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="AcctgTransTypeAttr">
@@ -676,19 +676,19 @@
       <relation type="many" rel-entity-name="AcctgTransAttribute">
         <key-map field-name="acctgTransId"/>
       </relation>
-      <relation type="one" rel-entity-name="ItemVarianceAcctgTrans">
+      <relation type="one-nofk" rel-entity-name="ItemVarianceAcctgTrans">
         <key-map field-name="acctgTransId"/>
       </relation>
-      <relation type="one" rel-entity-name="SalesAcctgTrans">
+      <relation type="one-nofk" rel-entity-name="SalesAcctgTrans">
         <key-map field-name="acctgTransId"/>
       </relation>
-      <relation type="one" rel-entity-name="ExternalAcctgTrans">
+      <relation type="one-nofk" rel-entity-name="ExternalAcctgTrans">
         <key-map field-name="acctgTransId"/>
       </relation>
-      <relation type="one" rel-entity-name="InternalAcctgTrans">
+      <relation type="one-nofk" rel-entity-name="InternalAcctgTrans">
         <key-map field-name="acctgTransId"/>
       </relation>
-      <relation type="one" rel-entity-name="PaymentAcctgTrans">
+      <relation type="one-nofk" rel-entity-name="PaymentAcctgTrans">
         <key-map field-name="acctgTransId"/>
       </relation>
     </entity>
@@ -700,7 +700,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="acctgTransId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="AcctgTrans">
+      <relation type="one" fk-name="ACCTTX_ATTR" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId"/>
       </relation>
       <relation type="many" rel-entity-name="AcctgTransTypeAttr">
@@ -728,7 +728,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="acctgTransTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="AcctgTransType">
+      <relation type="one" fk-name="ACCTTX_TYPE_PAR" title="Parent" rel-entity-name="AcctgTransType">
         <key-map field-name="parentTypeId" rel-field-name="acctgTransTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="AcctgTransType">
@@ -748,7 +748,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="acctgTransTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="AcctgTransType">
+      <relation type="one" fk-name="ACCTTX_TYPE_ATTR" rel-entity-name="AcctgTransType">
         <key-map field-name="acctgTransTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="AcctgTransAttribute">
@@ -765,7 +765,7 @@
       <field name="acctgTransId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
       <prim-key field="acctgTransId"/>
-      <relation type="one" rel-entity-name="AcctgTrans">
+      <relation type="one" fk-name="ACCTTX_EXTR" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId"/>
       </relation>
     </entity>
@@ -805,7 +805,7 @@
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
       <prim-key field="acctgTransId"/>
-      <relation type="one" rel-entity-name="AcctgTrans">
+      <relation type="one" fk-name="ACCTTX_INTR" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId"/>
       </relation>
     </entity>
@@ -830,7 +830,7 @@
       <field name="acctgTransId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
       <prim-key field="acctgTransId"/>
-      <relation type="one" rel-entity-name="AcctgTrans">
+      <relation type="one" fk-name="ACCTTX_SLSACT" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId"/>
       </relation>
     </entity>
@@ -860,10 +860,10 @@
       <relation type="many" rel-entity-name="PaymentApplication">
         <key-map field-name="billingAccountId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="BILLACCT_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one" rel-entity-name="PostalAddress">
+      <relation type="one" fk-name="BILLACCT_PADDR" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>
@@ -879,13 +879,13 @@
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="BillingAccount">
+      <relation type="one" fk-name="BILLACCT_ROLE" rel-entity-name="BillingAccount">
         <key-map field-name="billingAccountId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="BILLACCT_RL_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="RoleType">
+      <relation type="one" fk-name="BILLACCT_RL_ROLE" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
@@ -901,13 +901,13 @@
       <field name="companyNameOnCard" type="name"></field>
       <field name="contactMechId" type="id-ne"></field>
       <prim-key field="paymentMethodId"/>
-      <relation type="one" rel-entity-name="PaymentMethod">
+      <relation type="one" fk-name="CREDCART_PMNTMETH" rel-entity-name="PaymentMethod">
         <key-map field-name="paymentMethodId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="CREDCART_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one" rel-entity-name="PostalAddress">
+      <relation type="one" fk-name="CREDCART_PADDR" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderPaymentPreference">
@@ -945,13 +945,13 @@
       <field name="companyNameOnAccount" type="name"></field>
       <field name="contactMechId" type="id-ne"></field>
       <prim-key field="paymentMethodId"/>
-      <relation type="one" rel-entity-name="PaymentMethod">
+      <relation type="one" fk-name="EFTACCT_PMETH" rel-entity-name="PaymentMethod">
         <key-map field-name="paymentMethodId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="EFTACCT_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one" rel-entity-name="PostalAddress">
+      <relation type="one" fk-name="EFTACCT_PADDR" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderPaymentPreference">
@@ -968,7 +968,7 @@
       <field name="finAccountTypeId" type="id"></field>
       <field name="finAccountName" type="name"></field>
       <prim-key field="finAccountId"/>
-      <relation type="one" rel-entity-name="FinAccountType">
+      <relation type="one" fk-name="FINACCT_TYPE" rel-entity-name="FinAccountType">
         <key-map field-name="finAccountTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="FinAccountTypeAttr">
@@ -992,7 +992,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="finAccountId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="FinAccount">
+      <relation type="one" fk-name="FINACCT_ATTR" rel-entity-name="FinAccount">
         <key-map field-name="finAccountId"/>
       </relation>
       <relation type="many" rel-entity-name="FinAccountTypeAttr">
@@ -1022,7 +1022,7 @@
       <field name="transactionDate" type="date-time"></field>
       <field name="entryDate" type="date-time"></field>
       <prim-key field="finAccountTransId"/>
-      <relation type="one" rel-entity-name="FinAccountTransType">
+      <relation type="one" fk-name="FINACCT_TX_TYPE" rel-entity-name="FinAccountTransType">
         <key-map field-name="finAccountTransTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="FinAccountTransTypeAttr">
@@ -1040,7 +1040,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="finAccountTransId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="FinAccountTrans">
+      <relation type="one" fk-name="FINACCT_TX_ATTR" rel-entity-name="FinAccountTrans">
         <key-map field-name="finAccountTransId"/>
       </relation>
       <relation type="many" rel-entity-name="FinAccountTransTypeAttr">
@@ -1055,7 +1055,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="finAccountTransTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="FinAccountTransType">
+      <relation type="one" fk-name="FINACCT_TX_TYPPAR" title="Parent" rel-entity-name="FinAccountTransType">
         <key-map field-name="parentTypeId" rel-field-name="finAccountTransTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="FinAccountTransType">
@@ -1075,7 +1075,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="finAccountTransTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="FinAccountTransType">
+      <relation type="one" fk-name="FINACCT_TX_TYPATR" rel-entity-name="FinAccountTransType">
         <key-map field-name="finAccountTransTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="FinAccountTransAttribute">
@@ -1093,7 +1093,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="finAccountTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="FinAccountType">
+      <relation type="one" fk-name="FINACCT_TYPE_PAR" title="Parent" rel-entity-name="FinAccountType">
         <key-map field-name="parentTypeId" rel-field-name="finAccountTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="FinAccountType">
@@ -1113,7 +1113,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="finAccountTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="FinAccountType">
+      <relation type="one" fk-name="FINACCT_TYPE_ATTR" rel-entity-name="FinAccountType">
         <key-map field-name="finAccountTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="FinAccountAttribute">
@@ -1137,7 +1137,7 @@
       <field name="amount" type="currency-amount"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="paymentId"/>
-      <relation type="one" rel-entity-name="PaymentType">
+      <relation type="one" fk-name="PAYMENT_TYPE" rel-entity-name="PaymentType">
         <key-map field-name="paymentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="PaymentTypeAttr">
@@ -1146,7 +1146,7 @@
       <relation type="many" rel-entity-name="PaymentAttribute">
         <key-map field-name="paymentId"/>
       </relation>
-      <relation type="one" rel-entity-name="PaymentMethod">
+      <relation type="one" fk-name="PAYMENT_PMETH" rel-entity-name="PaymentMethod">
         <key-map field-name="paymentMethodId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="CreditCard">
@@ -1162,7 +1162,7 @@
       <field name="acctgTransId" type="id-ne"></field>
       <field name="paymentId" type="id-ne"></field>
       <prim-key field="acctgTransId"/>
-      <relation type="one" rel-entity-name="AcctgTrans">
+      <relation type="one" fk-name="PAYMENT_ACCT_TRNS" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId"/>
       </relation>
     </entity>
@@ -1185,7 +1185,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="paymentId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="Payment">
+      <relation type="one" fk-name="PAYMENT_ATTR" rel-entity-name="Payment">
         <key-map field-name="paymentId"/>
       </relation>
       <relation type="many" rel-entity-name="PaymentTypeAttr">
@@ -1212,7 +1212,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <prim-key field="paymentMethodId"/>
-      <relation type="one" rel-entity-name="PaymentMethodType">
+      <relation type="one" fk-name="PAYMETH_TYPE" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="CreditCard">
@@ -1221,7 +1221,7 @@
       <relation type="one-nofk" rel-entity-name="EftAccount">
         <key-map field-name="paymentMethodId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="PAYMETH_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderPaymentPreference">
@@ -1252,7 +1252,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="paymentTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="PaymentType">
+      <relation type="one" fk-name="PAYMENT_TYPE_PAR" title="Parent" rel-entity-name="PaymentType">
         <key-map field-name="parentTypeId" rel-field-name="paymentTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="PaymentType">
@@ -1272,7 +1272,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="paymentTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="PaymentType">
+      <relation type="one" fk-name="PAYMETH_TYPE_ATTR" rel-entity-name="PaymentType">
         <key-map field-name="paymentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="PaymentAttribute">

@@ -66,10 +66,10 @@
       <field name="finishDateTime" type="date-time"></field>
       <prim-key field="jobName"/>
       <prim-key field="runTime"/>
-      <relation type="one" rel-entity-name="RecurrenceInfo">
+      <relation type="one" fk-name="JOB_SNDBX_RECINFO" rel-entity-name="RecurrenceInfo">
         <key-map field-name="recurrenceInfoId"/>
       </relation>
-      <relation type="one" rel-entity-name="RuntimeData">
+      <relation type="one" fk-name="JOB_SNDBX_RNTMDTA" rel-entity-name="RuntimeData">
         <key-map field-name="runtimeDataId"/>
       </relation>
     </entity>
@@ -87,10 +87,10 @@
       <relation type="many" rel-entity-name="WorkEffort">
         <key-map field-name="recurrenceInfoId"/>
       </relation>
-      <relation type="one" rel-entity-name="RecurrenceRule">
+      <relation type="one" fk-name="REC_INFO_RCRLE" rel-entity-name="RecurrenceRule">
         <key-map field-name="recurrenceRuleId"/>
       </relation>
-      <relation type="one" title="Exception" rel-entity-name="RecurrenceRule">
+      <relation type="one" fk-name="REC_INFO_EX_RCRLE" title="Exception" rel-entity-name="RecurrenceRule">
         <key-map field-name="exceptionRuleId" rel-field-name="recurrenceRuleId"/>
       </relation>
     </entity>
@@ -293,10 +293,10 @@
       <field name="noteId" type="id"></field>
       <field name="serviceLoaderName" type="name"></field>
       <prim-key field="workEffortId"/>
-      <relation type="one" rel-entity-name="WorkEffortType">
+      <relation type="one" fk-name="WK_EFFRT_TYPE" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId"/>
       </relation>
-      <relation type="one" title="Parent" rel-entity-name="WorkEffort">
+      <relation type="one" fk-name="WK_EFFRT_PARENT" title="Parent" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortParentId" rel-field-name="workEffortId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortTypeAttr">
@@ -308,28 +308,28 @@
       <relation type="many" rel-entity-name="WorkOrderItemFulfillment">
         <key-map field-name="workEffortId"/>
       </relation>
-      <relation type="one" title="Current" rel-entity-name="StatusItem">
+      <relation type="one" fk-name="WK_EFFRT_CURSTTS" title="Current" rel-entity-name="StatusItem">
         <key-map field-name="currentStatusId" rel-field-name="statusId"/>
       </relation>
-      <relation type="one" title="Scope" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="WK_EFFRT_SC_ENUM" title="Scope" rel-entity-name="Enumeration">
         <key-map field-name="scopeEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="one" rel-entity-name="FixedAsset">
+      <relation type="one" fk-name="WK_EFFRT_FXDASST" rel-entity-name="FixedAsset">
         <key-map field-name="fixedAssetId"/>
       </relation>
-      <relation type="one" rel-entity-name="Facility">
+      <relation type="one" fk-name="WK_EFFRT_FACILITY" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
-      <relation type="one" title="Money" rel-entity-name="Uom">
+      <relation type="one" fk-name="WK_EFFRT_MON_UOM" title="Money" rel-entity-name="Uom">
         <key-map field-name="moneyUomId" rel-field-name="uomId"/>
       </relation>
-      <relation type="one" rel-entity-name="RecurrenceInfo">
+      <relation type="one" fk-name="WK_EFFRT_RECINFO" rel-entity-name="RecurrenceInfo">
         <key-map field-name="recurrenceInfoId"/>
       </relation>
-      <relation type="one" rel-entity-name="RuntimeData">
+      <relation type="one" fk-name="WK_EFFRT_RNTMDTA" rel-entity-name="RuntimeData">
         <key-map field-name="runtimeDataId"/>
       </relation>
-      <relation type="one" rel-entity-name="NoteData">
+      <relation type="one" fk-name="WK_EFFRT_NOTE" rel-entity-name="NoteData">
         <key-map field-name="noteId"/>
       </relation>
       <relation type="many" title="From" rel-entity-name="WorkEffortAssoc">
@@ -347,14 +347,14 @@
       <relation type="many" rel-entity-name="WorkEffortStatus">
         <key-map field-name="workEffortId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowPackage">
+      <relation type="one" fk-name="WK_EFFRT_WFLW_PKG" rel-entity-name="WorkflowPackage">
         <key-map field-name="workflowPackageId" rel-field-name="packageId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowProcess">
+      <relation type="one" fk-name="WK_EFFRT_WFLW_PRC" rel-entity-name="WorkflowProcess">
         <key-map field-name="workflowPackageId" rel-field-name="packageId"/>
         <key-map field-name="workflowProcessId" rel-field-name="processId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowActivity">
+      <relation type="one" fk-name="WK_EFFRT_WFLW_ACT" rel-entity-name="WorkflowActivity">
         <key-map field-name="workflowPackageId" rel-field-name="packageId"/>
         <key-map field-name="workflowProcessId" rel-field-name="processId"/>
         <key-map field-name="workflowActivityId" rel-field-name="activityId"/>
@@ -413,26 +413,26 @@
       <view-link entity-alias="WE" rel-entity-alias="WEPA">
         <key-map field-name="workEffortId"/>
       </view-link>
-      <relation type="one" rel-entity-name="WorkEffort">
+      <relation type="one-nofk" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkEffortPartyAssignment">
+      <relation type="one-nofk" rel-entity-name="WorkEffortPartyAssignment">
         <key-map field-name="workEffortId"/>
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
         <key-map field-name="fromDate"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="Person">
+      <relation type="one-nofk" rel-entity-name="Person">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyRole">
+      <relation type="one-nofk" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
     </view-entity>
@@ -444,7 +444,7 @@
       <field name="workEffortAssocTypeId" type="id"></field>
       <prim-key field="workEffortIdFrom"/>
       <prim-key field="workEffortIdTo"/>
-      <relation type="one" rel-entity-name="WorkEffortAssocType">
+      <relation type="one" fk-name="WK_EFFRTASSC_TYP" rel-entity-name="WorkEffortAssocType">
         <key-map field-name="workEffortAssocTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortAssocTypeAttr">
@@ -454,10 +454,10 @@
         <key-map field-name="workEffortIdFrom"/>
         <key-map field-name="workEffortIdTo"/>
       </relation>
-      <relation type="one" title="From" rel-entity-name="WorkEffort">
+      <relation type="one" fk-name="WK_EFFRTASSC_FWE" title="From" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortIdFrom" rel-field-name="workEffortId"/>
       </relation>
-      <relation type="one" title="To" rel-entity-name="WorkEffort">
+      <relation type="one" fk-name="WK_EFFRTASSC_TWE" title="To" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortIdTo" rel-field-name="workEffortId"/>
       </relation>
     </entity>
@@ -471,7 +471,7 @@
       <prim-key field="workEffortIdFrom"/>
       <prim-key field="workEffortIdTo"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="WorkEffortAssoc">
+      <relation type="one" fk-name="WK_EFFRTASSC_ATTR" rel-entity-name="WorkEffortAssoc">
         <key-map field-name="workEffortIdFrom"/>
         <key-map field-name="workEffortIdTo"/>
       </relation>
@@ -487,7 +487,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="workEffortAssocTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="WorkEffortAssocType">
+      <relation type="one" fk-name="WK_EFFRTASSC_TPAR" title="Parent" rel-entity-name="WorkEffortAssocType">
         <key-map field-name="parentTypeId" rel-field-name="workEffortAssocTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="WorkEffortAssocType">
@@ -507,7 +507,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="workEffortAssocTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="WorkEffortAssocType">
+      <relation type="one" fk-name="WK_EFFRTASSC_TATR" rel-entity-name="WorkEffortAssocType">
         <key-map field-name="workEffortAssocTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortAssocAttribute">
@@ -525,7 +525,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="workEffortId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="WorkEffort">
+      <relation type="one" fk-name="WK_EFFRT_ATTR_WE" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortTypeAttr">
@@ -550,7 +550,7 @@
       <field name="parentCategoryId" type="id"></field>
       <field name="categoryName" type="name"></field>
       <prim-key field="workEffortCategoryId"/>
-      <relation type="one" title="Parent" rel-entity-name="WorkEffortCategory">
+      <relation type="one" fk-name="WK_EFFRT_CAT_PAR" title="Parent" rel-entity-name="WorkEffortCategory">
         <key-map field-name="parentCategoryId" rel-field-name="workEffortCategoryId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="WorkEffortCategory">
@@ -567,10 +567,10 @@
       <field name="workEffortCategoryId" type="id-ne"></field>
       <prim-key field="workEffortId"/>
       <prim-key field="workEffortCategoryId"/>
-      <relation type="one" rel-entity-name="WorkEffortCategory">
+      <relation type="one" fk-name="WK_EFFRT_CATM_CAT" rel-entity-name="WorkEffortCategory">
         <key-map field-name="workEffortCategoryId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkEffort">
+      <relation type="one" fk-name="WK_EFFRT_CATM_WEF" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
       </relation>
     </entity>
@@ -692,26 +692,26 @@
       <view-link entity-alias="PREL" rel-entity-alias="WEPA">
         <key-map field-name="partyIdTo" rel-field-name="partyId"/>
       </view-link>
-      <relation type="one" rel-entity-name="WorkEffort">
+      <relation type="one-nofk" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkEffortPartyAssignment">
+      <relation type="one-nofk" rel-entity-name="WorkEffortPartyAssignment">
         <key-map field-name="workEffortId"/>
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
         <key-map field-name="fromDate"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="Person">
+      <relation type="one-nofk" rel-entity-name="Person">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyRole">
+      <relation type="one-nofk" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
     </view-entity>
@@ -773,26 +773,26 @@
       <view-link entity-alias="PR" rel-entity-alias="WEPA">
         <key-map field-name="roleTypeId"/>
       </view-link>
-      <relation type="one" rel-entity-name="WorkEffort">
+      <relation type="one-nofk" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkEffortPartyAssignment">
+      <relation type="one-nofk" rel-entity-name="WorkEffortPartyAssignment">
         <key-map field-name="workEffortId"/>
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
         <key-map field-name="fromDate"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="Person">
+      <relation type="one-nofk" rel-entity-name="Person">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyRole">
+      <relation type="one-nofk" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
     </view-entity>
@@ -814,29 +814,29 @@
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="WorkEffort">
+      <relation type="one" fk-name="WKEFF_PA_WE" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="WKEFF_PA_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="Person">
+      <relation type="one-nofk" rel-entity-name="Person">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="WKEFF_PA_PROLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="RoleType">
+      <relation type="one" fk-name="WKEFF_PA_ROLE" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="Facility">
+      <relation type="one" fk-name="WKEFF_PA_FACILITY" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
-      <relation type="one" rel-entity-name="StatusItem">
+      <relation type="one" fk-name="WKEFF_PA_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
-      <relation type="one" title="Expectation" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="WKEFF_PA_EXP_ENUM" title="Expectation" rel-entity-name="Enumeration">
         <key-map field-name="expectationEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
@@ -861,13 +861,13 @@
       <prim-key field="workEffortId"/>
       <prim-key field="statusId"/>
       <prim-key field="statusDatetime"/>
-      <relation type="one" rel-entity-name="WorkEffort">
+      <relation type="one" fk-name="WKEFF_STTS_WE" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
       </relation>
-      <relation type="one" rel-entity-name="StatusItem">
+      <relation type="one" fk-name="WKEFF_STTS_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
-      <relation type="one" title="SetBy" rel-entity-name="Party">
+      <relation type="one" fk-name="WKEFF_STTS_SB_PTY" title="SetBy" rel-entity-name="Party">
         <key-map field-name="setByPartyId" rel-field-name="partyId"/>
       </relation>
     </entity>
@@ -880,7 +880,7 @@
       <prim-key field="processWorkEffortId"/>
       <prim-key field="toActivityId"/>
       <prim-key field="transitionId"/>
-      <relation type="one" rel-entity-name="WorkEffort">
+      <relation type="one" fk-name="WKEFF_TXBX_WE" rel-entity-name="WorkEffort">
         <key-map field-name="processWorkEffortId" rel-field-name="workEffortId"/>
       </relation>
     </entity>
@@ -892,7 +892,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="workEffortTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="WorkEffortType">
+      <relation type="one" fk-name="WK_EFFRT_TYPE_PAR" title="Parent" rel-entity-name="WorkEffortType">
         <key-map field-name="parentTypeId" rel-field-name="workEffortTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="WorkEffortType">
@@ -912,7 +912,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="workEffortTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="WorkEffortType">
+      <relation type="one" fk-name="WK_EFFRT_TYPE_ATR" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortAttribute">

@@ -90,13 +90,13 @@
       <prim-key field="packageId"/>
       <prim-key field="processId"/>
       <prim-key field="activityId"/>
-      <relation type="one" title="StartMode" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="WFLW_ACT_SM_ENUM" title="StartMode" rel-entity-name="Enumeration">
         <key-map field-name="startModeEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="one" title="FinishMode" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="WFLW_ACT_FM_ENUM" title="FinishMode" rel-entity-name="Enumeration">
         <key-map field-name="finishModeEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="one" title="Performer" rel-entity-name="WorkflowParticipant">
+      <relation type="one" fk-name="WFLW_ACT_PF_WFPT" title="Performer" rel-entity-name="WorkflowParticipant">
         <key-map field-name="performerParticipantId" rel-field-name="participantId"/>
       </relation>
       <relation type="many" title="From" rel-entity-name="WorkflowTransition">
@@ -112,16 +112,16 @@
       <relation type="many" title="Performer" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="performerParticipantId" rel-field-name="participantId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowProcess">
+      <relation type="one" fk-name="WFLW_ACT_WFLW_PRC" rel-entity-name="WorkflowProcess">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowActivityLoop">
+      <relation type="one-nofk" rel-entity-name="WorkflowActivityLoop">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="activityId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowActivitySubFlow">
+      <relation type="one-nofk" rel-entity-name="WorkflowActivitySubFlow">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="activityId"/>
@@ -131,12 +131,12 @@
         <key-map field-name="processId"/>
         <key-map field-name="activityId"/>
       </relation>
-      <relation type="one" title="BlockBegin" rel-entity-name="WorkflowActivity">
+      <relation type="one" fk-name="WFLW_ACT_BLB_ACT" title="BlockBegin" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="blockBeginActivityId" rel-field-name="activityId"/>
       </relation>
-      <relation type="one" title="BlockEnd" rel-entity-name="WorkflowActivity">
+      <relation type="one" fk-name="WFLW_ACT_BLE_ACT" title="BlockEnd" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="blockEndActivityId" rel-field-name="activityId"/>
@@ -151,10 +151,10 @@
         <key-map field-name="processId"/>
         <key-map field-name="activityId" rel-field-name="blockEndActivityId"/>
       </relation>
-      <relation type="one" title="Join" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="WFLW_ACT_JN_ENUM" title="Join" rel-entity-name="Enumeration">
         <key-map field-name="joinTypeEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="one" title="Split" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="WFLW_ACT_SPT_ENUM" title="Split" rel-entity-name="Enumeration">
         <key-map field-name="splitTypeEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowTransitionRef">
@@ -174,7 +174,7 @@
       <prim-key field="packageId"/>
       <prim-key field="processId"/>
       <prim-key field="activityId"/>
-      <relation type="one" rel-entity-name="WorkflowActivity">
+      <relation type="one" fk-name="WFLW_ALP_ACT" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="activityId"/>
@@ -192,12 +192,12 @@
       <prim-key field="packageId"/>
       <prim-key field="processId"/>
       <prim-key field="activityId"/>
-      <relation type="one" rel-entity-name="WorkflowActivity">
+      <relation type="one" fk-name="WFLW_ASF_ACT" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="activityId"/>
       </relation>
-      <relation type="one" title="SubFlow" rel-entity-name="WorkflowProcess">
+      <relation type="one" fk-name="WFLW_ASF_WF_PROC" title="SubFlow" rel-entity-name="WorkflowProcess">
         <key-map field-name="packageId"/>
         <key-map field-name="subFlowProcessId" rel-field-name="processId"/>
       </relation>
@@ -217,7 +217,7 @@
       <prim-key field="processId"/>
       <prim-key field="activityId"/>
       <prim-key field="toolId"/>
-      <relation type="one" rel-entity-name="WorkflowActivity">
+      <relation type="one" fk-name="WFLW_ATL_ACT" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="activityId"/>
@@ -235,10 +235,10 @@
       <prim-key field="packageId"/>
       <prim-key field="processId"/>
       <prim-key field="applicationId"/>
-      <relation type="one" rel-entity-name="WorkflowPackage">
+      <relation type="one" fk-name="WFLW_APPL_PKG" rel-entity-name="WorkflowPackage">
         <key-map field-name="packageId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowProcess">
+      <relation type="one" fk-name="WFLW_APPL_PROC" rel-entity-name="WorkflowProcess">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
       </relation>
@@ -267,7 +267,7 @@
       <relation type="many" rel-entity-name="WorkflowTypeDeclaration">
         <key-map field-name="complexTypeInfoId"/>
       </relation>
-      <relation type="one" title="DataType" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="WFLW_CXTI_DT_ENUM" title="DataType" rel-entity-name="Enumeration">
         <key-map field-name="dataTypeEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
@@ -288,16 +288,16 @@
       <prim-key field="packageId"/>
       <prim-key field="processId"/>
       <prim-key field="dataFieldId"/>
-      <relation type="one" title="DataType" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="WFLW_DFLD_DT_ENUM" title="DataType" rel-entity-name="Enumeration">
         <key-map field-name="dataTypeEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowComplexTypeInfo">
+      <relation type="one" fk-name="WFLW_DFLD_CXTI" rel-entity-name="WorkflowComplexTypeInfo">
         <key-map field-name="complexTypeInfoId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowPackage">
+      <relation type="one" fk-name="WFLW_DFLD_PKG" rel-entity-name="WorkflowPackage">
         <key-map field-name="packageId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowProcess">
+      <relation type="one" fk-name="WFLW_DFLD_PROC" rel-entity-name="WorkflowProcess">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
       </relation>
@@ -319,20 +319,20 @@
       <prim-key field="processId"/>
       <prim-key field="applicationId"/>
       <prim-key field="formalParamId"/>
-      <relation type="one" title="Mode" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="WFLW_FPRM_MD_ENUM" title="Mode" rel-entity-name="Enumeration">
         <key-map field-name="modeEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="one" title="DataType" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="WFLW_FPRM_DT_ENUM" title="DataType" rel-entity-name="Enumeration">
         <key-map field-name="dataTypeEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowComplexTypeInfo">
+      <relation type="one" fk-name="WFLW_FPRM_CXTI" rel-entity-name="WorkflowComplexTypeInfo">
         <key-map field-name="complexTypeInfoId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowProcess">
+      <relation type="one" fk-name="WFLW_FPRM_PROC" rel-entity-name="WorkflowProcess">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowApplication">
+      <relation type="one" fk-name="WFLW_FPRM_APPL" rel-entity-name="WorkflowApplication">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="applicationId"/>
@@ -367,22 +367,22 @@
       <relation type="many" title="External" rel-entity-name="WorkflowPackageExternal">
         <key-map field-name="packageId" rel-field-name="externalPackageId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowSpecification">
+      <relation type="one" fk-name="WFLW_FPRM_SPEC" rel-entity-name="WorkflowSpecification">
         <key-map field-name="specificationId"/>
       </relation>
-      <relation type="one" title="Country" rel-entity-name="Geo">
+      <relation type="one" fk-name="WFLW_FPRM_CT_GEO" title="Country" rel-entity-name="Geo">
         <key-map field-name="countryGeoId" rel-field-name="geoId"/>
       </relation>
-      <relation type="one" title="Publication" rel-entity-name="StatusItem">
+      <relation type="one" fk-name="WFLW_FPRM_PBSTTS" title="Publication" rel-entity-name="StatusItem">
         <key-map field-name="publicationStatusId" rel-field-name="statusId"/>
       </relation>
-      <relation type="one" title="GraphConformance" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="WFLW_FPRM_GC_ENUM" title="GraphConformance" rel-entity-name="Enumeration">
         <key-map field-name="graphConformanceEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="one" title="Priority" rel-entity-name="Uom">
+      <relation type="one" fk-name="WFLW_FPRM_PR_UOM" title="Priority" rel-entity-name="Uom">
         <key-map field-name="priorityUomId" rel-field-name="uomId"/>
       </relation>
-      <relation type="one" title="Cost" rel-entity-name="Uom">
+      <relation type="one" fk-name="WFLW_FPRM_CST_UOM" title="Cost" rel-entity-name="Uom">
         <key-map field-name="costUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantList">
@@ -414,10 +414,10 @@
       <field name="externalPackageId" type="id-long-ne"></field>
       <prim-key field="packageId"/>
       <prim-key field="externalPackageId"/>
-      <relation type="one" title="Main" rel-entity-name="WorkflowPackage">
+      <relation type="one" fk-name="WFLW_PKGE_MPKG" title="Main" rel-entity-name="WorkflowPackage">
         <key-map field-name="packageId"/>
       </relation>
-      <relation type="one" title="External" rel-entity-name="WorkflowPackage">
+      <relation type="one" fk-name="WFLW_PKGE_EPKG" title="External" rel-entity-name="WorkflowPackage">
         <key-map field-name="externalPackageId" rel-field-name="packageId"/>
       </relation>
     </entity>
@@ -434,23 +434,23 @@
       <relation type="many" title="Performer" rel-entity-name="WorkflowActivity">
         <key-map field-name="participantId" rel-field-name="performerParticipantId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowParticipantType">
+      <relation type="one" fk-name="WFLW_PART_TYPE" rel-entity-name="WorkflowParticipantType">
         <key-map field-name="participantTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowParticipantList">
         <key-map field-name="participantId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="WFLW_PART_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="Person">
+      <relation type="one" fk-name="WFLW_PART_PERSON" rel-entity-name="Person">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="WFLW_PART_PROLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="RoleType">
+      <relation type="one" fk-name="WFLW_PART_ROLET" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
@@ -462,7 +462,7 @@
       <field name="participantIndex" type="numeric"></field>
       <prim-key field="participantListId"/>
       <prim-key field="participantId"/>
-      <relation type="one" rel-entity-name="WorkflowParticipant">
+      <relation type="one" fk-name="WFLW_PTLST_PTCPNT" rel-entity-name="WorkflowParticipant">
         <key-map field-name="participantId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowProcess">
@@ -509,17 +509,17 @@
       <view-link entity-alias="WP" rel-entity-alias="WPL">
         <key-map field-name="participantId"/>
       </view-link>
-      <relation type="one" rel-entity-name="WorkflowParticipant">
+      <relation type="one-nofk" rel-entity-name="WorkflowParticipant">
         <key-map field-name="participantId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowParticipantList">
+      <relation type="one-nofk" rel-entity-name="WorkflowParticipantList">
         <key-map field-name="participantListId"/>
         <key-map field-name="participantId"/>
       </relation>
       <relation type="many" title="Performer" rel-entity-name="WorkflowActivity">
         <key-map field-name="participantId" rel-field-name="performerParticipantId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowParticipantType">
+      <relation type="one-nofk" rel-entity-name="WorkflowParticipantType">
         <key-map field-name="participantTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowProcess">
@@ -534,10 +534,10 @@
       <relation type="many" title="Responsible" rel-entity-name="WorkflowPackage">
         <key-map field-name="participantListId" rel-field-name="responsibleListId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="Person">
+      <relation type="one-nofk" rel-entity-name="Person">
         <key-map field-name="partyId"/>
       </relation>
     </view-entity>
@@ -568,14 +568,14 @@
       <field name="defaultStartActivityId" type="id-long"></field>
       <prim-key field="packageId"/>
       <prim-key field="processId"/>
-      <relation type="one" rel-entity-name="WorkflowPackage">
+      <relation type="one" fk-name="WFLW_PROC_PKG" rel-entity-name="WorkflowPackage">
         <key-map field-name="packageId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
       </relation>
-      <relation type="one" title="DefaultStart" rel-entity-name="WorkflowActivity">
+      <relation type="one" fk-name="WFLW_PROC_DS_ACT" title="DefaultStart" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="defaultStartActivityId" rel-field-name="activityId"/>
@@ -584,10 +584,10 @@
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
       </relation>
-      <relation type="one" title="Country" rel-entity-name="Geo">
+      <relation type="one" fk-name="WFLW_PROC_CT_GEO" title="Country" rel-entity-name="Geo">
         <key-map field-name="countryGeoId" rel-field-name="geoId"/>
       </relation>
-      <relation type="one" title="Publication" rel-entity-name="StatusItem">
+      <relation type="one" fk-name="WFLW_PROC_PB_STTS" title="Publication" rel-entity-name="StatusItem">
         <key-map field-name="publicationStatusId" rel-field-name="statusId"/>
       </relation>
       <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantList">
@@ -596,7 +596,7 @@
       <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="responsibleListId" rel-field-name="participantListId"/>
       </relation>
-      <relation type="one" title="Duration" rel-entity-name="Uom">
+      <relation type="one" fk-name="WFLW_PROC_DUR_UOM" title="Duration" rel-entity-name="Uom">
         <key-map field-name="durationUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowParticipantList">
@@ -646,24 +646,24 @@
       <prim-key field="packageId"/>
       <prim-key field="processId"/>
       <prim-key field="transitionId"/>
-      <relation type="one" rel-entity-name="WorkflowProcess">
+      <relation type="one" fk-name="WFLW_TRNS_PROC" rel-entity-name="WorkflowProcess">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
       </relation>
-      <relation type="one" title="From" rel-entity-name="WorkflowActivity">
+      <relation type="one" fk-name="WFLW_TRNS_FACT" title="From" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="fromActivityId" rel-field-name="activityId"/>
       </relation>
-      <relation type="one" title="To" rel-entity-name="WorkflowActivity">
+      <relation type="one" fk-name="WFLW_TRNS_TACT" title="To" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="toActivityId" rel-field-name="activityId"/>
       </relation>
-      <relation type="one" title="ConditionType" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="WFLW_TRNS_CT_ENUM" title="ConditionType" rel-entity-name="Enumeration">
         <key-map field-name="conditionTypeEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="one" title="LoopType" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="WFLW_TRNS_LT_ENUM" title="LoopType" rel-entity-name="Enumeration">
         <key-map field-name="loopTypeEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowTransitionRef">
@@ -683,12 +683,12 @@
       <prim-key field="processId"/>
       <prim-key field="activityId"/>
       <prim-key field="transitionId"/>
-      <relation type="one" rel-entity-name="WorkflowActivity">
+      <relation type="one" fk-name="WFLW_TSRF_ACT" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="activityId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowTransition">
+      <relation type="one" fk-name="WFLW_TSRF_TRANS" rel-entity-name="WorkflowTransition">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="transitionId"/>
@@ -705,13 +705,13 @@
       <field name="complexTypeInfoId" type="id"></field>
       <prim-key field="packageId"/>
       <prim-key field="typeId"/>
-      <relation type="one" title="DataType" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="WFLW_TDCL_DR_ENUM" title="DataType" rel-entity-name="Enumeration">
         <key-map field-name="dataTypeEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowComplexTypeInfo">
+      <relation type="one" fk-name="WFLW_TDCL_CXTI" rel-entity-name="WorkflowComplexTypeInfo">
         <key-map field-name="complexTypeInfoId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkflowPackage">
+      <relation type="one" fk-name="WFLW_TDCL_PKG" rel-entity-name="WorkflowPackage">
         <key-map field-name="packageId"/>
       </relation>
     </entity>
