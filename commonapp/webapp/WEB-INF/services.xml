@@ -16,6 +16,15 @@
       <attribute name="resp" type="String" mode="OUT"/>
   </service>
   
+  <!-- Security services -->
+  <service name="userLogin" engine="java"
+    location="org.ofbiz.commonapp.security.login" invoke="userLogin"/>
+	  <description>Authenticate a username/password; create a UserLogin object</description>
+	  <attribute name="login.username" type="String" mode="IN"/>
+	  <attribute name="login.password" type="String" mode="OUT"/>
+	  <attribute name="userLoginObject" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
+  </service>
+  
   <!-- Workflow services -->
   <service name="assignActivity" engine="java" 
     location="org.ofbiz.core.workflow.WorkflowClient" invoke="assignActivity">
