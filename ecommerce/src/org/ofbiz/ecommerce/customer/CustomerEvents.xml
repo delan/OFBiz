@@ -302,7 +302,11 @@
                     <result-to-field result-name="contactMechId" map-name="addressPurposeContext"/>
                 </call-service>
                 <field-to-field field-name="partyId" map-name="tempMap" to-map-name="addressPurposeContext"/>
+                <!-- create the shipping location -->
                 <string-to-field string="SHIPPING_LOCATION" field-name="contactMechPurposeTypeId" map-name="addressPurposeContext"/>
+                <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
+                <!-- also consider this address the general correspondence address -->
+                <string-to-field string="GENERAL_LOCATION" field-name="contactMechPurposeTypeId" map-name="addressPurposeContext"/>
                 <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
             </else>
         </if-compare>
