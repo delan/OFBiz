@@ -42,7 +42,7 @@
 
 <!ENTITY % SimpleMethodOperations "call-map-processor | check-errors | call-service | call-bsh |
         field-to-request | field-to-session | field-to-result | field-to-field |
-        if-validate-method | if-compare | if-compare-field | if-regexp | if-not-empty">
+        if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty">
 
 <!ELEMENT simple-methods ( simple-method+ )>
 
@@ -231,12 +231,16 @@ simple-map-processor process operations that validate incoming data
 <!-- if-validate-method calls a static Java method that takes a String and returns a boolean -->
 <!ELEMENT if-validate-method ( (%SimpleMethodOperations;)* )>
 <!ATTLIST if-validate-method
+    map-name CDATA #REQUIRED
+    field-name CDATA #REQUIRED
     method CDATA #REQUIRED
     class CDATA "org.ofbiz.core.util.UtilValidate"
 >
 
 <!ELEMENT if-compare ( (%SimpleMethodOperations;)* )>
 <!ATTLIST if-compare
+    map-name CDATA #REQUIRED
+    field-name CDATA #REQUIRED
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
     value CDATA #REQUIRED
     type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
@@ -245,18 +249,32 @@ simple-map-processor process operations that validate incoming data
 
 <!ELEMENT if-compare-field ( (%SimpleMethodOperations;)* )>
 <!ATTLIST if-compare-field
+    map-name CDATA #REQUIRED
+    field-name CDATA #REQUIRED
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
-    field CDATA #REQUIRED
+    to-map-name CDATA #IMPLIED
+    to-field-name CDATA #IMPLIED
     type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
     format CDATA #IMPLIED
 >
 
 <!ELEMENT if-regexp ( (%SimpleMethodOperations;)* )>
 <!ATTLIST if-regexp
+    map-name CDATA #REQUIRED
+    field-name CDATA #REQUIRED
     expr CDATA #REQUIRED
 >
 
+<!ELEMENT if-empty ( (%SimpleMethodOperations;)* )>
+<!ATTLIST if-empty
+    map-name CDATA #REQUIRED
+    field-name CDATA #REQUIRED
+>
 <!ELEMENT if-not-empty ( (%SimpleMethodOperations;)* )>
+<!ATTLIST if-not-empty
+    map-name CDATA #REQUIRED
+    field-name CDATA #REQUIRED
+>
 
 
 <!-- 
