@@ -12,42 +12,45 @@
 %>
 
 <ofbiz:unless name="productValue">
-  <center><h2>Product Not Found!</h2></center>
+  <center><h2>Product not found for Product ID "<%=UtilFormatOut.checkNull(request.getParameter("product_id"))%>"!</h2></center>
 </ofbiz:unless>
+
 <ofbiz:if name="productValue">
-  <br><br>
-  <ofbiz:object name="product" property="productValue">
-    <center>
-      <table border=1>
-        <tr>
-          <td>ProductID:</td>
-          <td><%= product.getString("productId") %></td>
-        </tr>
-        <tr>
-          <td>Name:</td>
-          <td><%= product.getString("name") %></td>
-        </tr>
-        <tr>
-          <td>Description:</td>
-          <td><%= product.getString("description") %></td>
-        </tr>
-        <tr>
-          <td>Price:</td>
-          <td><ofbiz:format type="c"><%= product.getDouble("defaultPrice") %></ofbiz:format></td>
-        </tr>		
-        <tr>
-          <td colspan="2" align="center">
-            <form method="post" action="<ofbiz:url>/additem</ofbiz:url>">
-              <input type="hidden" name="product_id" value="<%= product.getString("productId") %>">
-              <input type="hidden" name="quantity" value="1">
-              <input type="submit" value="Add To Cart">
-            </form>
-          </td>
-        </tr>
-      </table>
-    </center>
-  </ofbiz:object>
+  <ofbiz:object name="product" property="productValue" />
+  <br>
+  <table border="0" width="100%" cellpadding="3">
+    <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
+    <tr>
+      <td align="left" valign="top" width="0">
+        <%String largeImageUrl = product.getString("largeImageUrl");%>
+        <% if(largeImageUrl != null && largeImageUrl.length() > 0) { %>
+          <img src="<%=largeImageUrl%>" hspace="5" border="1">
+        <% } %>
+      </td>
+
+      <td align="right" valign="top">
+        <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="addform" style='margin: 0;'>
+          <input type='hidden' name="product_id" value="<%=product.getString("productId")%>">
+          <input type="text" size="5" name="quantity" value="1">
+          <%=UtilFormatOut.ifNotEmpty(request.getParameter("category_id"), "<input type='hidden' name='category_id' value='", "'>")%>
+          <a href="javascript:document.addform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a>
+        </form>
+        <br>
+        <div class="head2"><%=product.getString("name")%></div>
+        <div class="tabletext"><%=product.getString("description")%></div>
+        <div class="tabletext"><b><%=product.getString("productId")%></b></div>
+        <div class="tabletext"><b>Our price: <font color="#126544"><%=UtilFormatOut.formatPrice(product.getDouble("defaultPrice"))%></font></b>
+           (Reg. <%=UtilFormatOut.formatPrice(product.getDouble("defaultPrice"))%>)</div>
+      </td>
+    </tr>
+    <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
+    <tr>
+      <td colspan="2"><div class="tabletext"><%=product.getString("longDescription")%></div></td>
+    </tr>
+    <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
+  </table>
 </ofbiz:if>
+
 
 <%@ include file="/includes/rightcolumn.jsp" %> 
 <%@ include file="/includes/footer.jsp" %>

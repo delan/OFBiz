@@ -71,6 +71,7 @@
   <table>
     <%int listIndex = lowIndex.intValue();%>
     <ofbiz:iterator name="product" property="productList">
+      <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
       <tr>
         <td>
           <%@ include file="/catalog/productsummary.jsp" %>
@@ -83,6 +84,7 @@
 
 <ofbiz:if name="productList">
 <table border="0" width="100%" cellpadding="2">
+    <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
     <tr>
       <td align=right>
         <b>
