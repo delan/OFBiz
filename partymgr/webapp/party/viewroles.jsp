@@ -42,7 +42,8 @@
     if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
     else request.getSession().setAttribute("partyId", partyId);
 
-    Collection partyRoles = delegator.findByAnd("RoleTypeAndParty", UtilMisc.toMap("partyId", partyId));
+	List partyRoleExprs = UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, partyId), new EntityExpr("roleTypeId", EntityOperator.NOT_EQUAL, "_NA_"));
+    List partyRoles = delegator.findByAnd("RoleTypeAndParty", partyRoleExprs, UtilMisc.toList("description"));
     if (partyRoles != null && partyRoles.size() > 0) pageContext.setAttribute("partyRoles", partyRoles);
 
     Collection roles = delegator.findAll("RoleType", UtilMisc.toList("description", "roleTypeId"));

@@ -111,8 +111,11 @@
         <a href="<ofbiz:url>/viewprofile?SHOW_OLD=true</ofbiz:url>" class="buttontext">[Show Old]</a>&nbsp;&nbsp;
       </ofbiz:unless>
       <% if(security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)) { %>
-        <a href="/ordermgr/control/orderlist?partyId=<%=partyId%>" class="buttontext">[Orders]</a>&nbsp;&nbsp;
-      <%}%>
+        <a href="/ordermgr/control/orderlist?partyId=<%=partyId%>" target="ordermgr" class="buttontext">[Orders]</a>&nbsp;&nbsp;
+      <% } %>
+      <% if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) { %>
+        <a href="/ordermgr/control/salesentry?partyId=<%=partyId%>" target="ordermgr" class="buttontext">[New Order]</a>&nbsp;&nbsp;
+      <% } %>      
     </td>
   </tr>
 </table>
