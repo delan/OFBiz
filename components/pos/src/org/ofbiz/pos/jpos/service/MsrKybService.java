@@ -258,6 +258,8 @@ public class MsrKybService extends BaseService implements jpos.services.MSRServi
             // parse the tracks from the character string
             String track1 = str.substring(0, str.indexOf(";"));
             String track2 = str.substring((str.indexOf(";") + 1), str.length() - 1);
+            Debug.log("Track1 - " + track1, module);
+            Debug.log("Track2 - " + track2, module);
 
             // track 1 data
             int firstCarrot = track1.indexOf("^", 2);
@@ -280,7 +282,7 @@ public class MsrKybService extends BaseService implements jpos.services.MSRServi
             String tr2OptData = track2.substring(track2.indexOf("=") + 5, track2.length() - 2);
             String tr2EndChar = track2.substring(track2.length() - 2, track2.length() - 1);
             String tr2LrcCode = track2.substring(track2.length() - 1, track2.length());
-            Debug.log("Track 1 - Act#:" + tr2AcctNum + " Exp:" + tr2ExpDate, module);
+            Debug.log("Track 2 - Act#:" + tr2AcctNum + " Exp:" + tr2ExpDate, module);
 
             // see if we need to remove the sentinels
             if (this.sendSentinels) {
