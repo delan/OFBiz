@@ -81,6 +81,16 @@ public class RegexpCondition implements Conditional {
     }
 
     public boolean checkCondition(MethodContext methodContext) {
+        String fieldString = getFieldString(methodContext);
+
+        if (matcher.matches(fieldString, pattern)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    protected String getFieldString(MethodContext methodContext) {
         String fieldString = null;
         Object fieldVal = null;
 
@@ -105,11 +115,22 @@ public class RegexpCondition implements Conditional {
         }
         // always use an empty string by default
         if (fieldString == null) fieldString = "";
+        
+        return fieldString;
+    }
 
-        if (matcher.matches(fieldString, pattern)) {
-            return true;
-        } else {
-            return false;
+    public void prettyPrint(StringBuffer messageBuffer, MethodContext methodContext) {
+        messageBuffer.append("regexp[");
+        messageBuffer.append("[");
+        if (!this.mapAcsr.isEmpty()) {
+            messageBuffer.append(this.mapAcsr);
+            messageBuffer.append(".");
         }
+        messageBuffer.append(this.fieldAcsr);
+        messageBuffer.append("=");
+        messageBuffer.append(getFieldString(methodContext));
+        messageBuffer.append("] matches ");
+        messageBuffer.append(this.expr);
+        messageBuffer.append("]");
     }
 }

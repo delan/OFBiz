@@ -24,6 +24,7 @@
 package org.ofbiz.minilang.method.conditional;
 
 import java.util.*;
+
 import org.w3c.dom.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.minilang.*;
@@ -69,23 +70,7 @@ public class CompareCondition implements Conditional {
         String type = methodContext.expandString(this.type);
         String format = methodContext.expandString(this.format);
         
-        Object fieldVal = null;
-        if (!mapAcsr.isEmpty()) {
-            Map fromMap = (Map) mapAcsr.get(methodContext);
-            if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using empty string for comparison", module);
-            } else {
-                fieldVal = fieldAcsr.get(fromMap, methodContext);
-            }
-        } else {
-            // no map name, try the env
-            fieldVal = fieldAcsr.get(methodContext);
-        }
-
-        // always use an empty string by default
-        if (fieldVal == null) {
-            fieldVal = "";
-        }
+        Object fieldVal = getFieldVal(methodContext);
 
         List messages = new LinkedList();
         Boolean resultBool = BaseCompare.doRealCompare(fieldVal, value, operator, type, format, messages, null, methodContext.getLoader());
@@ -112,5 +97,55 @@ public class CompareCondition implements Conditional {
         if (resultBool != null) return resultBool.booleanValue();
         
         return false;
+    }
+    
+    protected Object getFieldVal(MethodContext methodContext) {
+        Object fieldVal = null;
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
+            if (fromMap == null) {
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using empty string for comparison", module);
+            } else {
+                fieldVal = fieldAcsr.get(fromMap, methodContext);
+            }
+        } else {
+            // no map name, try the env
+            fieldVal = fieldAcsr.get(methodContext);
+        }
+
+        // always use an empty string by default
+        if (fieldVal == null) {
+            fieldVal = "";
+        }
+        return fieldVal;
+    }
+
+    public void prettyPrint(StringBuffer messageBuffer, MethodContext methodContext) {
+        String value = methodContext.expandString(this.value);
+        String operator = methodContext.expandString(this.operator);
+        String type = methodContext.expandString(this.type);
+        String format = methodContext.expandString(this.format);
+        Object fieldVal = getFieldVal(methodContext);
+        
+        messageBuffer.append("[");
+        if (!this.mapAcsr.isEmpty()) {
+            messageBuffer.append(this.mapAcsr);
+            messageBuffer.append(".");
+        }
+        messageBuffer.append(this.fieldAcsr);
+        messageBuffer.append("=");
+        messageBuffer.append(fieldVal);
+        messageBuffer.append("] ");
+
+        messageBuffer.append(operator);
+
+        messageBuffer.append(" ");
+        messageBuffer.append(value);
+        messageBuffer.append(" as ");
+        messageBuffer.append(type);
+        if (UtilValidate.isNotEmpty(format)) {
+            messageBuffer.append(":");
+            messageBuffer.append(format);
+        }
     }
 }

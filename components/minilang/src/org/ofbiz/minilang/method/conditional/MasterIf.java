@@ -105,11 +105,13 @@ public class MasterIf extends MethodOperation {
     }
 
     public String rawString() {
-        // TODO: something more than the empty tag
-        return "<if/>";
+        return expandedString(null);
     }
+
     public String expandedString(MethodContext methodContext) {
-        // TODO: something more than a stub/dummy
-        return this.rawString();
+        // TODO: fill in missing details, if needed
+        StringBuffer messageBuf = new StringBuffer();
+        this.condition.prettyPrint(messageBuf, methodContext);
+        return "<if><condition>" + messageBuf + "</condition></if>";
     }
 }

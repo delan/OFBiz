@@ -55,19 +55,7 @@ public class EmptyCondition implements Conditional {
     public boolean checkCondition(MethodContext methodContext) {
         // only run subOps if element is empty/null
         boolean runSubOps = false;
-        Object fieldVal = null;
-
-        if (!mapAcsr.isEmpty()) {
-            Map fromMap = (Map) mapAcsr.get(methodContext);
-            if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", running operations", module);
-            } else {
-                fieldVal = fieldAcsr.get(fromMap, methodContext);
-            }
-        } else {
-            // no map name, try the env
-            fieldVal = fieldAcsr.get(methodContext);
-        }
+        Object fieldVal = getFieldVal(methodContext);
 
         if (fieldVal == null) {
             runSubOps = true;
@@ -94,5 +82,35 @@ public class EmptyCondition implements Conditional {
         }
         
         return runSubOps;
+    }
+    
+    protected Object getFieldVal(MethodContext methodContext) {
+        Object fieldVal = null;
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
+            if (fromMap == null) {
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", running operations", module);
+            } else {
+                fieldVal = fieldAcsr.get(fromMap, methodContext);
+            }
+        } else {
+            // no map name, try the env
+            fieldVal = fieldAcsr.get(methodContext);
+        }
+        return fieldVal;
+    }
+
+    public void prettyPrint(StringBuffer messageBuffer, MethodContext methodContext) {
+        messageBuffer.append("empty[");
+        if (!this.mapAcsr.isEmpty()) {
+            messageBuffer.append(this.mapAcsr);
+            messageBuffer.append(".");
+        }
+        messageBuffer.append(this.fieldAcsr);
+        if (methodContext != null) {
+            messageBuffer.append("=");
+            messageBuffer.append(getFieldVal(methodContext));
+        }
+        messageBuffer.append("]");
     }
 }
