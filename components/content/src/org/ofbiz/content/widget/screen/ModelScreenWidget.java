@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenWidget.java,v 1.10 2004/08/14 07:35:13 jonesde Exp $
+ * $Id: ModelScreenWidget.java,v 1.11 2004/08/16 19:37:59 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      3.1
  */
 public abstract class ModelScreenWidget {
@@ -551,7 +551,7 @@ public abstract class ModelScreenWidget {
                 throw new IllegalArgumentException("Could not find a formStringRenderer in the context, and could not find HTTP request/response objects need to create one.");
             }
             
-                Debug.logInfo("before renderFormString, context:" + context, module);
+                //Debug.logInfo("before renderFormString, context:" + context, module);
             StringBuffer renderBuffer = new StringBuffer();
             modelForm.renderFormString(renderBuffer, context, formStringRenderer);
             try {

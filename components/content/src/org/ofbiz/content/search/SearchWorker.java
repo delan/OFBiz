@@ -1,5 +1,5 @@
 /*
- * $Id: SearchWorker.java,v 1.13 2004/08/12 18:05:14 byersa Exp $
+ * $Id: SearchWorker.java,v 1.14 2004/08/16 19:37:58 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.content.ContentWorker;
  * SearchWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  * @since 3.1
  * 
  *  
@@ -198,8 +198,10 @@ public class SearchWorker {
 		IndexWriter writer = null;
 		try {
 		   	writer = new IndexWriter(indexAllPath, new StandardAnalyzer(), false);
+	                if (Debug.infoOn()) Debug.logInfo("Used old directory:" + indexAllPath, module);
 		} catch(FileNotFoundException e) {
 		   	writer = new IndexWriter(indexAllPath, new StandardAnalyzer(), true);
+	                if (Debug.infoOn()) Debug.logInfo("Created new directory:" + indexAllPath, module);
 		}
 		
 		indexContent(delegator, context, content, writer);

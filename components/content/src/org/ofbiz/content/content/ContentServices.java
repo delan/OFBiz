@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.27 2004/06/11 00:32:49 byersa Exp $
+ * $Id: ContentServices.java,v 1.28 2004/08/16 19:37:57 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  * @since 2.2
  * 
  *  
@@ -273,7 +273,7 @@ public class ContentServices {
      */
     public static Map createContentAssocMethod(DispatchContext dctx, Map context) throws GenericServiceException, GenericEntityException {
 
-        List targetOperationList = ContentWorker.prepTargetOperationList(context, "_UPDATE");
+        List targetOperationList = ContentWorker.prepTargetOperationList(context, "_CREATE");
         List contentPurposeList = ContentWorker.prepContentPurposeList(context);
         context.put("targetOperationList", targetOperationList);
         context.put("contentPurposeList", contentPurposeList);
@@ -397,6 +397,9 @@ public class ContentServices {
         result.put("contentIdFrom", contentIdFrom);
         result.put("fromDate", contentAssoc.get("fromDate"));
         result.put("contentAssocTypeId", contentAssoc.get("contentAssocTypeId"));
+        Debug.logInfo("result:" + result, module);
+        Debug.logInfo("contentAssoc:" + contentAssoc, module);
+
         return result;
     }
 

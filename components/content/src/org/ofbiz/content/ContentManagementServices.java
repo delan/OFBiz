@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,12 +29,20 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityUtil;
+
+
 
 /**
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      3.0
  *
  * 
@@ -237,11 +246,10 @@ public class ContentManagementServices {
                         }
                     } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
                     } else {
+                    	// assume ELECTRONIC_TEXT
                         if (UtilValidate.isNotEmpty(textData)) {
                             context.put("dataResourceId", dataResourceId);
                             thisResult = DataServices.createElectronicTextMethod(dctx, context);
-                        } else {
-                            return ServiceUtil.returnError("'textData' empty when trying to create database text.");
                         }
                     }
                 } else {
@@ -278,6 +286,7 @@ public class ContentManagementServices {
                 }
                 result.put("dataResourceId", dataResourceId);
                 context.put("dataResourceId", dataResourceId);
+                context.put("drDataResourceId", dataResourceId);
         }
 
         // Do update and create permission checks on Content if warranted.
@@ -317,6 +326,7 @@ public class ContentManagementServices {
             }
             result.put("contentId", contentId);
             context.put("contentId", contentId);
+            context.put("caContentId", contentId);
 
         
 
@@ -382,6 +392,7 @@ public class ContentManagementServices {
 
             result.put("contentIdTo", thisResult.get("contentIdTo"));
             result.put("contentIdFrom", thisResult.get("contentIdFrom"));
+            result.put("contentId", thisResult.get("contentIdFrom"));
             result.put("contentAssocTypeId", thisResult.get("contentAssocTypeId"));
             result.put("fromDate", thisResult.get("fromDate"));
        }
@@ -389,6 +400,7 @@ public class ContentManagementServices {
        context.put("contentId", origContentId);
        context.put("dataResourceId", origDataResourceId);
        context.remove("dataResource");
+       Debug.logInfo("result:" + result, module);
        return result;
     }
 
@@ -623,5 +635,46 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             return ServiceUtil.returnError(e.getMessage());
         }
         return results; 
+    }
+    
+    public static Map resequence(DispatchContext dctx, Map context) throws GenericServiceException{
+
+        HashMap result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        String contentIdTo = (String)context.get("contentIdTo");
+        Integer seqInc = (Integer)context.get("seqInc");
+        if (seqInc == null)
+        	seqInc = new Integer(100);
+        int seqIncrement = seqInc.intValue();
+        List typeList = (List)context.get("typeList");
+        if (typeList == null)
+        	typeList = UtilMisc.toList("PUBLISH_LINK", "SUB_CONTENT");
+        List condList = new ArrayList();
+        Iterator iterType = typeList.iterator();
+        while (iterType.hasNext()) {
+        	String type = (String)iterType.next();
+        	condList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, type));
+        }
+        
+        EntityCondition conditionType = new EntityConditionList(condList, EntityOperator.OR);
+        EntityCondition conditionMain = new EntityConditionList(UtilMisc.toList( new EntityExpr("contentIdTo", EntityOperator.EQUALS, contentIdTo), conditionType), EntityOperator.AND);
+         try {
+             List listAll = delegator.findByConditionCache("ContentAssoc", conditionMain, null, UtilMisc.toList("sequenceNum", "fromDate", "createdDate"));
+             List listFiltered = EntityUtil.filterByDate(listAll);
+             Iterator iter = listFiltered.iterator();
+             int seqNum = seqIncrement;
+             while (iter.hasNext()) {
+             	GenericValue contentAssoc = (GenericValue)iter.next();
+             	contentAssoc.put("sequenceNum", new Integer(seqNum));
+             	contentAssoc.store();
+             	seqNum += seqIncrement;
+             }
+        } catch(GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());         	
+         }
+         
+       
+        return result;
     }
 }

@@ -40,7 +40,7 @@ import org.ofbiz.service.ServiceAuthException;
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -496,7 +496,33 @@ public class UploadContentAndImage {
             }
             String returnedContentId = (String)ftlResults.get("contentId");
             if (Debug.infoOn()) Debug.logInfo("returnedContentId:" + returnedContentId, module);
-            //request.setAttribute("contentId", returnedContentId);
+            request.setAttribute("contentId", ftlResults.get("contentId"));
+            request.setAttribute("caContentIdTo", ftlResults.get("contentIdTo"));
+            request.setAttribute("caContentIdStart", ftlResults.get("contentIdTo"));
+            request.setAttribute("caContentAssocTypeId", ftlResults.get("contentAssocTypeId"));
+            request.setAttribute("caFromDate", ftlResults.get("fromDate"));
+            request.setAttribute("drDataResourceId", ftlResults.get("dataResourceId"));
+            request.setAttribute("caContentId", ftlResults.get("contentId"));
+            
+            Map resequenceContext = new HashMap();
+            resequenceContext.put("contentIdTo", ftlResults.get("contentIdTo"));
+            resequenceContext.put("userLogin", userLogin);
+            try {
+                ftlResults = dispatcher.runSync("resequence", resequenceContext);
+            } catch(ServiceAuthException e) {
+                String msg = e.getMessage();
+                request.setAttribute("_ERROR_MESSAGE_", msg);
+                List errorMsgList = (List)request.getAttribute("_EVENT_MESSAGE_LIST_");
+                if (Debug.infoOn()) Debug.logInfo("[UploadContentStuff]errorMsgList:" + errorMsgList, module);
+                if (Debug.infoOn()) Debug.logInfo("[UploadContentStuff]msg:" + msg, module);
+                if (errorMsgList == null) {
+                    errorMsgList = new ArrayList();
+                    request.setAttribute("errorMessageList", errorMsgList);
+                }
+                errorMsgList.add(msg);
+                return "error";
+            }
+            
             return "success";
     }
 
