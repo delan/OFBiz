@@ -102,11 +102,11 @@
     <location>/error/error.jsp</location>
   </error-page>
 
-  <taglib> 
+  <taglib>
      <taglib-uri>ofbizTags</taglib-uri>
      <taglib-location>/WEB-INF/ofbiz.tld</taglib-location> 
   </taglib> 
-  <taglib> 
+  <taglib>
      <taglib-uri>regions</taglib-uri>
      <taglib-location>/WEB-INF/regions.tld</taglib-location> 
   </taglib> 
