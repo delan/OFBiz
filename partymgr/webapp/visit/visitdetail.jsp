@@ -48,6 +48,31 @@
 	if (visit != null) pageContext.setAttribute("visit", visit);
 	if (serverHits != null) pageContext.setAttribute("serverHits", serverHits);
 	String rowClass = "";
+	
+    int viewIndex = 0;
+    int viewSize = 20;
+    int highIndex = 0;
+    int lowIndex = 0;
+    int listSize = 0;
+
+    try {
+        viewIndex = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_INDEX")).intValue();
+    } catch (Exception e) {
+        viewIndex = 0;
+    }
+    try {
+        viewSize = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_SIZE")).intValue();
+    } catch (Exception e) {
+        viewSize = 20;
+    }
+    if (serverHits != null) {
+        listSize = serverHits.size();
+    }
+    lowIndex = viewIndex * viewSize;
+    highIndex = (viewIndex + 1) * viewSize;
+    if (listSize < highIndex) {
+        highIndex = listSize;
+    }		
 %>
 
 <div class='head1'>Visit Detail</div>
@@ -155,6 +180,27 @@
 <br>
 <div class="head1">Hit Tracker</div>
 <br>
+
+<ofbiz:if name="serverHits" size="0">
+  <table border="0" width="100%" cellpadding="2">
+    <tr>
+      <td align=right>
+        <b>
+        <%if (viewIndex > 0) {%>
+          <a href="<ofbiz:url><%="/visitdetail?visitId=" + visitId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+        <%}%>
+        <%if (listSize > 0) {%>
+          <span class="tabletext"><%=lowIndex+1%> - <%=highIndex%> of <%=listSize%></span>
+        <%}%>
+        <%if (listSize > highIndex) {%>
+          | <a href="<ofbiz:url><%="/visitdetail?visitId=" + visitId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+        <%}%>
+        </b>
+      </td>
+    </tr>
+  </table>
+</ofbiz:if>
+
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
     <td><div class="tableheadtext">ContentID</div></td>
@@ -167,7 +213,7 @@
   <tr>
     <td colspan="6"><hr class="sepbar"></td>
   </tr>
-  <ofbiz:iterator name="hit" property="serverHits">
+  <ofbiz:iterator name="hit" property="serverHits" offset="<%=lowIndex%>" limit="<%=viewSize%>">
   <tr class="<%=rowClass = rowClass.equals("viewManyTR1") ? "viewManyTR2" : "viewManyTR1"%>">
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(hit.getString("contentId"))%></div></td>
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(hit.getString("hitTypeId"))%></div></td>
@@ -178,6 +224,26 @@
   </tr>
   </ofbiz:iterator>
 </table>  
+
+<ofbiz:if name="serverHits" size="0">
+  <table border="0" width="100%" cellpadding="2">
+    <tr>
+      <td align=right>
+        <b>
+        <%if (viewIndex > 0) {%>
+          <a href="<ofbiz:url><%="/visitdetail?visitId=" + visitId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+        <%}%>
+        <%if (listSize > 0) {%>
+          <span class="tabletext"><%=lowIndex+1%> - <%=highIndex%> of <%=listSize%></span>
+        <%}%>
+        <%if (listSize > highIndex) {%>
+          | <a href="<ofbiz:url><%="/visitdetail?visitId=" + visitId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+        <%}%>
+        </b>
+      </td>
+    </tr>
+  </table>
+</ofbiz:if>
 
 <%if (security.hasPermission("SEND_CONTROL_APPLET", session)) {%>
 <br>

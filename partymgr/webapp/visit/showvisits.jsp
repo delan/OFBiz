@@ -36,40 +36,100 @@
 
 <%
 	String partyId = request.getParameter("party_id");
+	String showAll = request.getParameter("showAll");
+	String sort = request.getParameter("sort");
+	if (showAll == null || showAll.equals("")) showAll = "false";
 	List visitList = null;
+	
+	List sortList = UtilMisc.toList("-fromDate");
+	if (sort != null) sortList.add(0, sort);
+	
 	if (partyId != null) {
-		visitList = delegator.findByAnd("Visit", UtilMisc.toMap("partyId", partyId), UtilMisc.toList("-fromDate"));	
+		visitList = delegator.findByAnd("Visit", UtilMisc.toMap("partyId", partyId), sortList);	
+	} else if (showAll.equalsIgnoreCase("true")) {
+		visitList = delegator.findAll("Visit", sortList);
 	} else {
 		// show active visits
 		List exprs = UtilMisc.toList(new EntityExpr("thruDate", EntityOperator.EQUALS, null));
-		visitList = delegator.findByAnd("Visit", exprs, UtilMisc.toList("-fromDate"));		
+		visitList = delegator.findByAnd("Visit", exprs, sortList);		
 	}
 	if (visitList != null) pageContext.setAttribute("visitList", visitList);
 	String rowClass = "";
+	
+    int viewIndex = 0;
+    int viewSize = 20;
+    int highIndex = 0;
+    int lowIndex = 0;
+    int listSize = 0;
+
+    try {
+        viewIndex = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_INDEX")).intValue();
+    } catch (Exception e) {
+        viewIndex = 0;
+    }
+    try {
+        viewSize = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_SIZE")).intValue();
+    } catch (Exception e) {
+        viewSize = 20;
+    }
+    if (visitList != null) {
+        listSize = visitList.size();
+    }
+    lowIndex = viewIndex * viewSize;
+    highIndex = (viewIndex + 1) * viewSize;
+    if (listSize < highIndex) {
+        highIndex = listSize;
+    }	
 %>
 		
 
 <div class="head1"><%= partyId == null ? "Active" : "Party"%>&nbsp;Visit&nbsp;Listing</div>
+<%if (partyId == null && showAll.equalsIgnoreCase("true")) {%>
+<a href="<ofbiz:url>/showvisits?showAll=false</ofbiz:url>" class="buttontext">[Show Active]</a>
+<%} else if (partyId == null) {%>
+<a href="<ofbiz:url>/showvisits?showAll=true</ofbiz:url>" class="buttontext">[Show All]</a>
+<%}%> 
 <br>
+
+<ofbiz:if name="visitList" size="0">
+  <table border="0" width="100%" cellpadding="2">
+    <tr>
+      <td align=right>
+        <b>
+        <%if (viewIndex > 0) {%>
+          <a href="<ofbiz:url><%="/showvisits?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%><%=UtilFormatOut.ifNotEmpty(sort, "&sort=","")%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%>&showAll=<%=new Boolean(showAll).toString()%></ofbiz:url>" class="buttontext">[Previous]</a> |
+        <%}%>
+        <%if (listSize > 0) {%>
+          <span class="tabletext"><%=lowIndex+1%> - <%=highIndex%> of <%=listSize%></span>
+        <%}%>
+        <%if (listSize > highIndex) {%>
+          | <a href="<ofbiz:url><%="/showvisits?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%><%=UtilFormatOut.ifNotEmpty(sort, "&sort=","")%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%>&showAll=<%=new Boolean(showAll).toString()%></ofbiz:url>" class="buttontext">[Next]</a>
+        <%}%>
+        </b>
+      </td>
+    </tr>
+  </table>
+</ofbiz:if>
+
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
-    <td><div class="tableheadtext">VisitId</div></td>
+    <td><a href="<ofbiz:url>/showvisits?sort=visitId&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">VisitId</a></td>
     <% if (partyId == null) { %>
-    <td><div class="tableheadtext">PartyId</div></td>
+    <td><a href="<ofbiz:url>/showvisits?sort=partyId&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">PartyId</a></td>
     <% } else { %>
-    <td><div class="tableheadtext">UserLoginId</div></td>
+    <td><a href="<ofbiz:url>/showvisits?sort=userLoginId&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">UserLoginId</a></td>
     <% } %>
-    <td><div class="tableheadtext">New User</div></td>
-    <td><div class="tableheadtext">WebApp</div></td>
-    <td><div class="tableheadtext">Client IP</div></td>
-    <td><div class="tableheadtext">From Date</div></td>
-    <td><div class="tableheadtext">Thru Date</div></td>
+    <td><a href="<ofbiz:url>/showvisits?sort=userCreated&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">New User</a></td>
+    <td><a href="<ofbiz:url>/showvisits?sort=webappName&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">WebApp</a></td>
+    <td><a href="<ofbiz:url>/showvisits?sort=clientIpAddress&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">Client IP</a></td>
+    <td><a href="<ofbiz:url>/showvisits?sort=fromDate&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">From Date</a></td>
+    <td><a href="<ofbiz:url>/showvisits?sort=thruDate&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">Thru Date</a></td>
   </tr>
   <tr>
     <td colspan="7"><hr class="sepbar"></td>
   </tr>
   
-  <ofbiz:iterator name="visit" property="visitList">
+  <ofbiz:iterator name="visit" property="visitList" offset="<%=lowIndex%>" limit="<%=viewSize%>">
   <tr class="<%=rowClass = rowClass.equals("viewManyTR1") ? "viewManyTR2" : "viewManyTR1"%>">
     <td><a href="<ofbiz:url>/visitdetail?visitId=<%=UtilFormatOut.checkNull(visit.getString("visitId"))%></ofbiz:url>" class="buttontext"><%=UtilFormatOut.checkNull(visit.getString("visitId"))%></a></td>
     <% if (partyId == null) { %>
@@ -85,6 +145,26 @@
   </tr>
   </ofbiz:iterator>
 </table>
+
+<ofbiz:if name="visitList" size="0">
+  <table border="0" width="100%" cellpadding="2">
+    <tr>
+      <td align=right>
+        <b>
+        <%if (viewIndex > 0) {%>
+          <a href="<ofbiz:url><%="/showvisits?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%><%=UtilFormatOut.ifNotEmpty(sort, "&sort=","")%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%>&showAll=<%=new Boolean(showAll).toString()%></ofbiz:url>" class="buttontext">[Previous]</a> |
+        <%}%>
+        <%if (listSize > 0) {%>
+          <span class="tabletext"><%=lowIndex+1%> - <%=highIndex%> of <%=listSize%></span>
+        <%}%>
+        <%if (listSize > highIndex) {%>
+          | <a href="<ofbiz:url><%="/showvisits?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%><%=UtilFormatOut.ifNotEmpty(sort, "&sort=","")%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%>&showAll=<%=new Boolean(showAll).toString()%></ofbiz:url>" class="buttontext">[Next]</a>
+        <%}%>
+        </b>
+      </td>
+    </tr>
+  </table>
+</ofbiz:if>
 
 <%}else{%>
   <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
