@@ -326,7 +326,7 @@ public class WorkflowClient {
                 foundOk = true;
         }
         
-        return false;
+        return foundOk;
     }
     
 }
