@@ -457,8 +457,10 @@
     <entity-group group="org.ofbiz.commonapp" entity="Party" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyAttribute" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyClassification" />	
+    <entity-group group="org.ofbiz.commonapp" entity="PartyClassificationGroup" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyClassificationType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyDataObject" />	
+    <entity-group group="org.ofbiz.commonapp" entity="PartyGroup" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyRelationship" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyRelationshipType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyRole" />	

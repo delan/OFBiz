@@ -863,12 +863,19 @@
     <entity entity-name="Party" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Entity">
-      <field name="partyId" type="id-ne"></field>	
+      <field name="partyId" type="id-ne"></field>
+      <field name="partyTypeId" type="id-ne"></field>	
       <prim-key field="partyId" />
-      <relation type="many" rel-entity-name="PartyClassification">
-        <key-map field-name="partyId" />
+      <relation type="one" rel-entity-name="PartyType">
+        <key-map field-name="partyTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="PartyTypeAttr">
+        <key-map field-name="partyTypeId" />
       </relation>
       <relation type="many" rel-entity-name="PartyAttribute">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="many" rel-entity-name="PartyClassification">
         <key-map field-name="partyId" />
       </relation>
       <relation type="many" rel-entity-name="UserLogin">
@@ -881,6 +888,9 @@
         <key-map field-name="partyId" rel-field-name="partyIdTo" />
       </relation>
       <relation type="many" rel-entity-name="PartyDataObject">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="PartyGroup">
         <key-map field-name="partyId" />
       </relation>
       <relation type="one" rel-entity-name="Person">
@@ -948,27 +958,39 @@
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Classification Entity">
       <field name="partyId" type="id-ne"></field>
-      <field name="partyTypeId" type="id-ne"></field>
+      <field name="partyClassificationGroupId" type="id-ne"></field>
       <field name="partyClassificationTypeId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="partyId" />	
-      <prim-key field="partyTypeId" />	
+      <prim-key field="partyClassificationGroupId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
-      <relation type="one" rel-entity-name="PartyType">
-        <key-map field-name="partyTypeId" />
-      </relation>
       <relation type="one" rel-entity-name="PartyClassificationType">
         <key-map field-name="partyClassificationTypeId" />
       </relation>
-      <relation type="many" rel-entity-name="PartyTypeAttr">
-        <key-map field-name="partyTypeId" />
+      <relation type="one" rel-entity-name="PartyClassificationGroup">
+        <key-map field-name="partyClassificationGroupId" />
       </relation>
-      <relation type="many" rel-entity-name="PartyAttribute">
-        <key-map field-name="partyId" />
+    </entity>
+    <entity entity-name="PartyClassificationGroup" 
+            package-name="org.ofbiz.commonapp.party.party"
+            title="Party Classification Group Entity">
+      <field name="partyClassificationGroupId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="partyClassificationGroupId" />
+      <relation type="one" title="Parent" rel-entity-name="PartyClassificationGroup">
+        <key-map field-name="parentTypeId" rel-field-name="partyClassificationGroupId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="PartyClassificationGroup">
+        <key-map field-name="partyClassificationGroupId" rel-field-name="parentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="PartyClassification">
+        <key-map field-name="partyClassificationGroupId" />
       </relation>
     </entity>
     <entity entity-name="PartyClassificationType" 
@@ -1001,6 +1023,17 @@
       </relation>
       <relation type="one" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId" />
+      </relation>
+    </entity>
+    <entity entity-name="PartyGroup" 
+            package-name="org.ofbiz.commonapp.party.party"
+            title="Party Group Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="groupName" type="name"></field>
+      <field name="federalTaxId" type="short-varchar"></field>	
+      <prim-key field="partyId" />
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
       </relation>
     </entity>
     <entity entity-name="PartyRelationship" 
@@ -1142,10 +1175,10 @@
       <relation type="many" title="Sibling" rel-entity-name="PartyType">
         <key-map field-name="parentTypeId" />
       </relation>
-      <relation type="many" rel-entity-name="PartyTypeAttr">
+      <relation type="many" rel-entity-name="Party">
         <key-map field-name="partyTypeId" />
       </relation>
-      <relation type="many" rel-entity-name="PartyClassification">
+      <relation type="many" rel-entity-name="PartyTypeAttr">
         <key-map field-name="partyTypeId" />
       </relation>
       <relation type="many" rel-entity-name="PriceComponent">
@@ -1168,7 +1201,7 @@
       <relation type="many" rel-entity-name="PartyAttribute">
         <key-map field-name="attrName" />
       </relation>
-      <relation type="many" rel-entity-name="PartyClassification">
+      <relation type="many" rel-entity-name="Party">
         <key-map field-name="partyTypeId" />
       </relation>
     </entity>
