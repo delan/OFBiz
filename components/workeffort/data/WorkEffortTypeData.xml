@@ -167,6 +167,7 @@
   <WorkEffortType description="Activity" hasTable="N" parentTypeId="" workEffortTypeId="ACTIVITY"/>
   <WorkEffortType description="Task" hasTable="N" parentTypeId="" workEffortTypeId="TASK"/>
   <WorkEffortType description="Event" hasTable="N" parentTypeId="" workEffortTypeId="EVENT"/>
+  <WorkEffortType description="Available" hasTable="N" parentTypeId="" workEffortTypeId="AVAILABLE"/>
   <WorkEffortType description="Program" hasTable="N" parentTypeId="" workEffortTypeId="PROGRAM"/>
   <WorkEffortType description="Project" hasTable="N" parentTypeId="" workEffortTypeId="PROJECT"/>
   <WorkEffortType description="Phase" hasTable="N" parentTypeId="" workEffortTypeId="PHASE"/>
