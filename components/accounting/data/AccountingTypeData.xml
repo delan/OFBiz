@@ -57,6 +57,7 @@
     <GlAccountClass description="Asset" glAccountClassId="ASSET" parentClassId=""/>
     <GlAccountClass description="Liability" glAccountClassId="LIABILITY" parentClassId=""/>
     <GlAccountClass description="Equity" glAccountClassId="EQUITY" parentClassId=""/>
+    <GlAccountClass description="Distributed Equity" glAccountClassId="DISTRIBUTION" parentClassId=""/>
     <GlAccountClass description="Income" glAccountClassId="INCOME" parentClassId=""/>
     <GlAccountClass description="Expense" glAccountClassId="EXPENSE" parentClassId=""/>
     <GlAccountClass description="Non-Posting" glAccountClassId="NON_POSTING" parentClassId=""/>
@@ -67,6 +68,7 @@
     <GlAccountType description="Bank Settlement" glAccountTypeId="BANK_STLMNT_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Current Asset" glAccountTypeId="CURRENT_ASSET" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Fixed Asset" glAccountTypeId="FIXED_ASSET" hasTable="N" parentTypeId=""/>
+    <GlAccountType description="Other Asset" glAccountTypeId="OTHER_ASSET" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Credit Card" glAccountTypeId="CREDIT_CARD" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Current Liability" glAccountTypeId="CURRENT_LIABILITY" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Long Term Liability" glAccountTypeId="LONG_TERM_LIABILITY" hasTable="N" parentTypeId=""/>
@@ -76,8 +78,12 @@
     <GlAccountType description="Tax" glAccountTypeId="TAX_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Profit Loss" glAccountTypeId="PROFIT_LOSS_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Sales" glAccountTypeId="SALES_ACCOUNT" hasTable="N" parentTypeId=""/>
+    <GlAccountType description="Discounts" glAccountTypeId="DISCOUNTS_ACCOUNT" hasTable="N" parentTypeId=""/>
+    <GlAccountType description="Cost of Goods Sold" glAccountTypeId="COGS_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Purchase" glAccountTypeId="PURCHASE_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Inventory Change" glAccountTypeId="INV_CHANGE_ACCOUNT" hasTable="N" parentTypeId=""/>
+    <GlAccountType description="Operating Expense" glAccountTypeId="OPERATING_EXPENSE" hasTable="N" parentTypeId=""/>
+    <GlAccountType description="Other Expense" glAccountTypeId="OPERATING_EXPENSE" hasTable="N" parentTypeId=""/>
 
     <GlResourceType description="Money" glResourceTypeId="MONEY"/>
     <GlResourceType description="Raw Materials" glResourceTypeId="RAW_MATERIALS"/>
