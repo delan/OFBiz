@@ -44,23 +44,23 @@
                     <tr>
                       <td align=right valign=top><div class='tabletext'><nobr>Project Status:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top>${projectWorkEffortStatus.description?if_exists}</td>
+                      <td valign=top>${(projectWorkEffortStatus.description)?if_exists}</td>
                     </tr>
                     <tr>
                       <td align=right valign=top><div class='tabletext'><nobr>Description:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top>${projectWorkEffort.description}
+                      <td valign=top>${(projectWorkEffort.description)?if_exists}
                     </tr>
                     <tr>
                       <td align=right valign=top><div class='tabletext'><nobr>Start Date/Time:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top>${projectWorkEffort.estimatedStartDate?if_exists}
+                      <td valign=top>${(projectWorkEffort.estimatedStartDate)?if_exists}
                       </td>
                     </tr>
                     <tr>
                       <td align=right valign=top><div class='tabletext'><nobr>End Date/Time:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top>${projectWorkEffort.estimatedCompletionDate?if_exists}
+                      <td valign=top>${(projectWorkEffort.estimatedCompletionDate)?if_exists}
                       </td>
                     </tr>
           </table>
@@ -76,7 +76,7 @@
           <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
             <tr>
               <TD align=left>
-                <div class='boxhead'>&nbsp;<b>Phase:</b>&nbsp;${phaseWorkEffort.workEffortName}</div>
+                <div class='boxhead'>&nbsp;<b>Phase:</b>&nbsp;${(phaseWorkEffort.workEffortName)?if_exists}</div>
               </TD>
             </tr>
           </table>
@@ -88,23 +88,23 @@
                     <tr>
                       <td align=right valign=top><div class='tabletext'><nobr>Phase Status:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top>${phaseWorkEffortStatus.description}</td>
+                      <td valign=top>${(phaseWorkEffortStatus.description)?if_exists}</td>
                     </tr>
                     <tr>
                       <td align=right valign=top><div class='tabletext'><nobr>Description:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top>${phaseWorkEffort.description?if_exists}
+                      <td valign=top>${(phaseWorkEffort.description)?if_exists}
                     </tr>
                     <tr>
                       <td align=right valign=top><div class='tabletext'><nobr>Start Date/Time:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top>${phaseWorkEffort.estimatedStartDate?if_exists}
+                      <td valign=top>${(phaseWorkEffort.estimatedStartDate)?if_exists}
                       </td>
                     </tr>
                     <tr>
                       <td align=right valign=top><div class='tabletext'><nobr>End Date/Time:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top>${phaseWorkEffort.estimatedCompletionDate?if_exists}
+                      <td valign=top>${(phaseWorkEffort.estimatedCompletionDate)?if_exists}
                       </td>
                     </tr>
           </table>
@@ -149,8 +149,8 @@
                   <TR>
                     <TD><DIV class='tabletext'>${workEffort.workEffortName}</DIV></TD>
                     <TD><DIV class='tabletext'>${workEffort.description}</DIV></TD>
-                    <TD><DIV class='tabletext'>${workEffort.estimatedStartDate}</DIV></TD>
-                    <TD><DIV class='tabletext'>${workEffort.priority}</DIV></TD>
+                    <TD><DIV class='tabletext'>${workEffort.estimatedStartDate?if_exists}</DIV></TD>
+                    <TD><DIV class='tabletext'>${workEffort.priority?if_exists}</DIV></TD>
                     <#assign currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.core.util.UtilMisc"].toMap("statusId", workEffort.currentStatusId))>                    
                     <TD><DIV class='tabletext'>${(currentStatusItem.description)?if_exists}</DIV></TD>
                     <TD align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/editphasetask?workEffortId=${workEffort.workEffortId}&phaseWorkEffortId=${phaseWorkEffortId}</@ofbizUrl>'>
