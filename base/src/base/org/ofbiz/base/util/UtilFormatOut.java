@@ -1,5 +1,5 @@
 /*
- * $Id: UtilFormatOut.java,v 1.7 2004/08/16 16:52:03 ajzeneski Exp $
+ * $Id: UtilFormatOut.java,v 1.8 2004/08/16 18:20:09 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import java.util.Currency;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class UtilFormatOut {
@@ -72,7 +72,7 @@ public class UtilFormatOut {
 
     public static Double formatPriceNumber(double price) {
         try {
-            return (Double) priceDecimalFormat.parse(formatPrice(price));
+            return new Double(priceDecimalFormat.parse(formatPrice(price)).doubleValue());
         } catch (ParseException e) {
             Debug.logError(e, module);
             return null;
