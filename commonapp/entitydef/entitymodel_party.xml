@@ -692,8 +692,7 @@
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="many" rel-entity-name="PartyContactMechPurpose">
-        <key-map field-name="partyId"/>
+      <relation type="one-nofk" rel-entity-name="TelecomNumber">
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>
@@ -746,6 +745,19 @@
       <view-link entity-alias="CM" rel-entity-alias="PR">
         <key-map field-name="contactMechId"/>
       </view-link>
+      <relation type="many" rel-entity-name="PartyContactMech">
+        <key-map field-name="partyId"/>
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ContactMechPurposeType">
+        <key-map field-name="contactMechPurposeTypeId"/>
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
     </view-entity>
     <entity entity-name="PostalAddress"
             package-name="org.ofbiz.commonapp.party.contact"
