@@ -847,9 +847,9 @@ public class OrderReadHelper {
         }
         if (product != null) {
             if (ProductWorker.shippingApplies(product)) {
-                Double height = product.getDouble("productHeight");
-                Double width = product.getDouble("productWidth");
-                Double depth = product.getDouble("productDepth");
+                Double height = product.getDouble("shippingHeight");
+                Double width = product.getDouble("shippingWidth");
+                Double depth = product.getDouble("shippingDepth");
                 String isVariant = product.getString("isVariant");
                 if (height == null && width == null && depth == null && isVariant != null && "Y".equals(isVariant)) {
                     // get the virtual product and check its values
@@ -864,16 +864,16 @@ public class OrderReadHelper {
                         Debug.logError(e, "Problem getting virtual product");
                     }
                     if (virtual != null) {
-                        height = virtual.getDouble("productHeight");
-                        width = virtual.getDouble("productWidth");
-                        depth = virtual.getDouble("productDepth");
+                        height = virtual.getDouble("shippingHeight");
+                        width = virtual.getDouble("shippingWidth");
+                        depth = virtual.getDouble("shippingDepth");
                     }
                 }
 
                 if (height == null) height = new Double(0);
                 if (width == null) width = new Double(0);
                 if (depth == null) depth = new Double(0);
-                size = (height.doubleValue() * width.doubleValue() * depth.doubleValue());
+                size = ((height.doubleValue() * 2) + (width.doubleValue() * 2) + depth.doubleValue());
             }
         }
 
