@@ -85,7 +85,7 @@ public class DBCPConnectionFactory {
                 // Now we'll create the PoolableConnectionFactory, which wraps
                 // the "real" Connections created by the ConnectionFactory with
                 // the classes that implement the pooling functionality.
-                PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
+                //PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,connectionPool,null,null,false,true);
 
                 // Finally, we create the PoolingDriver itself,
                 // passing in the object pool we created.

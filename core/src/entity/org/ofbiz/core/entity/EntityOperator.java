@@ -86,6 +86,10 @@ public class EntityOperator implements java.io.Serializable {
     public String toString() {
         return codeString;
     }
+    
+    public int hashCode() {
+        return this.codeString.hashCode();
+    }
 
     public boolean equals(Object obj) {
         EntityOperator otherOper = (EntityOperator) obj;

@@ -206,7 +206,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     public void endPrefixMapping(String prefix) throws org.xml.sax.SAXException {}
 
     public void ignorableWhitespace(char[] values, int offset, int count) throws org.xml.sax.SAXException {
-        String value = new String(values, offset, count);
+        // String value = new String(values, offset, count);
         // Debug.logInfo("ignorableWhitespace: value=" + value);
     }
 
@@ -241,7 +241,9 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
 
             try {
                 currentValue = delegator.makeValue(entityName, null);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Debug.logError(e);
+            }
 
             if (currentValue != null) {
                 int length = attributes.getLength();

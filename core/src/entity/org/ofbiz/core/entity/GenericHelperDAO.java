@@ -61,7 +61,7 @@ public class GenericHelperDAO implements GenericHelper {
             return null;
         }
         int retVal = genericDAO.insert(value);
-        //Debug.logInfo("Insert Return Value : " + retVal, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Insert Return Value : " + retVal, module);
         return value;
     }
 

@@ -116,7 +116,6 @@ public class DatabaseUtil {
         while (modelEntityIter.hasNext()) {
             curEnt++;
             ModelEntity entity = (ModelEntity) modelEntityIter.next();
-            String entityName = entity.getEntityName();
 
             // if this is a view entity, do not check it...
             if (entity instanceof ModelViewEntity) {
@@ -415,7 +414,9 @@ public class DatabaseUtil {
 
             // Debug.logVerbose("Ref Info Map: " + refTableInfoMap);
 
-            if (refTableInfoMap == null) {// uh oh, something happened while getting info...
+            if (refTableInfoMap == null) {
+                // uh oh, something happened while getting info...
+                if (Debug.verboseOn()) Debug.logVerbose("Ref Table Info Map is null");
             } else {
                 Iterator refModelEntityIter = modelEntityList.iterator();
 
@@ -517,7 +518,9 @@ public class DatabaseUtil {
 
             // Debug.logVerbose("Ref Info Map: " + refTableInfoMap);
 
-            if (tableIndexListMap == null) {// uh oh, something happened while getting info...
+            if (tableIndexListMap == null) {
+                // uh oh, something happened while getting info...
+                if (Debug.verboseOn()) Debug.logVerbose("Ref Table Info Map is null");
             } else {
                 Iterator refModelEntityIter = modelEntityList.iterator();
 
@@ -1400,13 +1403,19 @@ public class DatabaseUtil {
             }
         } finally {
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
-            } catch (SQLException sqle) {}
+                }
+            } catch (SQLException sqle) {
+                Debug.logError(sqle);
+            }
             try {
-                if (connection != null)
+                if (connection != null) {
                     connection.close();
-            } catch (SQLException sqle) {}
+                }
+            } catch (SQLException sqle) {
+                Debug.logError(sqle);
+            }
         }
         return null;
     }
@@ -1503,13 +1512,19 @@ public class DatabaseUtil {
             return "SQL Exception while executing the following:\n" + sqlBuf.toString() + "\nError was: " + sqle.toString();
         } finally {
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
-            } catch (SQLException sqle) {}
+                }
+            } catch (SQLException sqle) {
+                Debug.logError(sqle);
+            }
             try {
-                if (connection != null)
+                if (connection != null) {
                     connection.close();
-            } catch (SQLException sqle) {}
+                }
+            } catch (SQLException sqle) {
+                Debug.logError(sqle);
+            }
         }
         return null;
     }
@@ -1655,11 +1670,15 @@ public class DatabaseUtil {
             try {
                 if (stmt != null)
                     stmt.close();
-            } catch (SQLException sqle) {}
+            } catch (SQLException sqle) {
+                Debug.logError(sqle);
+            }
             try {
                 if (connection != null)
                     connection.close();
-            } catch (SQLException sqle) {}
+            } catch (SQLException sqle) {
+                Debug.logError(sqle);
+            }
         }
         return null;
     }
@@ -1722,11 +1741,15 @@ public class DatabaseUtil {
             try {
                 if (stmt != null)
                     stmt.close();
-            } catch (SQLException sqle) {}
+            } catch (SQLException sqle) {
+                Debug.logError(sqle);
+            }
             try {
                 if (connection != null)
                     connection.close();
-            } catch (SQLException sqle) {}
+            } catch (SQLException sqle) {
+                Debug.logError(sqle);
+            }
         }
         return null;
     }
@@ -1822,11 +1845,15 @@ public class DatabaseUtil {
             try {
                 if (stmt != null)
                     stmt.close();
-            } catch (SQLException sqle) {}
+            } catch (SQLException sqle) {
+                Debug.logError(sqle);
+            }
             try {
                 if (connection != null)
                     connection.close();
-            } catch (SQLException sqle) {}
+            } catch (SQLException sqle) {
+                Debug.logError(sqle);
+            }
         }
         return null;
     }
@@ -1893,11 +1920,15 @@ public class DatabaseUtil {
             try {
                 if (stmt != null)
                     stmt.close();
-            } catch (SQLException sqle) {}
+            } catch (SQLException sqle) {
+                Debug.logError(sqle);
+            }
             try {
                 if (connection != null)
                     connection.close();
-            } catch (SQLException sqle) {}
+            } catch (SQLException sqle) {
+                Debug.logError(sqle);
+            }
         }
         return null;
     }
@@ -1995,13 +2026,19 @@ public class DatabaseUtil {
             return "SQL Exception while executing the following:\n" + deleteIndexSql + "\nError was: " + sqle.toString();
         } finally {
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
-            } catch (SQLException sqle) {}
+                }
+            } catch (SQLException sqle) {
+                Debug.logError(sqle);
+            }
             try {
-                if (connection != null)
+                if (connection != null) {
                     connection.close();
-            } catch (SQLException sqle) {}
+                }
+            } catch (SQLException sqle) {
+                Debug.logError(sqle);
+            }
         }
         return null;
     }

@@ -24,13 +24,21 @@
 
 package org.ofbiz.core.entity;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.ofbiz.core.entity.jdbc.SqlJdbcUtil;
 import org.ofbiz.core.entity.model.ModelEntity;
-import org.ofbiz.core.entity.model.ModelRelation;
 import org.ofbiz.core.entity.model.ModelField;
 import org.ofbiz.core.entity.model.ModelFieldTypeReader;
-
-import java.util.*;
+import org.ofbiz.core.entity.model.ModelRelation;
+import org.ofbiz.core.util.Debug;
 
 /**
  * Partial GenericHelper implementation that is entirely memory-based,
@@ -40,7 +48,7 @@ import java.util.*;
  * @author <a href="mailto:plightbo@.com">Pat Lightbody</a>
  */
 public class MemoryHelper implements GenericHelper {
-    private static HashMap cache = new HashMap();
+    private static Map cache = new HashMap();
 
     public static void clearCache() {
         cache = new HashMap();
@@ -138,6 +146,7 @@ public class MemoryHelper implements GenericHelper {
                         return true;
                     }
                 } catch (Exception e) {
+                    Debug.logError(e);
                 }
             }
         }

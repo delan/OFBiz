@@ -48,7 +48,6 @@ public class EntityClause {
     private EntityOperator interFieldOperation = null;
     private EntityOperator intraFieldOperation = null;
 
-    private boolean useValueForSecondEntity = false;
     private Object value = null;
     public EntityClause() {}
 

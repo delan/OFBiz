@@ -192,7 +192,7 @@ public class SQLProcessor {
             _stmt = null;
         }
 
-        if ((_connection != null) && (_bDeleteConnection == true)) {
+        if ((_connection != null) && _bDeleteConnection) {
             try {
                 _connection.close();
                 if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor: connection close() _manualTX=" + _manualTX, module);

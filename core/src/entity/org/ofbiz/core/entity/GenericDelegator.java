@@ -59,7 +59,7 @@ public class GenericDelegator implements DelegatorInterface {
     protected EntityConfigUtil.DelegatorInfo delegatorInfo = null;
 
     /** set this to true for better performance; set to false to be able to reload definitions at runtime throught the cache manager */
-    public final boolean keepLocalReaders = true;
+    public static final boolean keepLocalReaders = true;
     protected ModelReader modelReader = null;
     protected ModelGroupReader modelGroupReader = null;
 
@@ -836,13 +836,13 @@ public class GenericDelegator implements DelegatorInterface {
         GenericValue dummyValue = new GenericValue(modelEntity); 
         Map ecaEventMap = this.getEcaEntityEventMap(modelEntity.getEntityName());
 
-        this.evalEcaRules(EntityEcaHandler.EV_CACHE_CHECK, EntityEcaHandler.OP_FIND, dummyValue, null, false, false);
+        this.evalEcaRules(EntityEcaHandler.EV_CACHE_CHECK, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
         List lst = this.getFromAndCache(modelEntity, fields);
 
         if (lst == null) {
             lst = findByAnd(modelEntity, fields, orderBy);
             if (lst != null) {
-                this.evalEcaRules(EntityEcaHandler.EV_CACHE_PUT, EntityEcaHandler.OP_FIND, dummyValue, null, false, false);
+                this.evalEcaRules(EntityEcaHandler.EV_CACHE_PUT, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
                 this.putInAndCache(modelEntity, fields, lst);
             }
             return lst;
@@ -1267,7 +1267,6 @@ public class GenericDelegator implements DelegatorInterface {
      * @throws IllegalArgumentException if the list found has more than one item
      */
     public GenericValue getRelatedOne(String relationName, GenericValue value) throws GenericEntityException {
-        ModelEntity modelEntity = value.getModelEntity();
         ModelRelation relation = value.getModelEntity().getRelation(relationName);
 
         if (relation == null) {

@@ -58,7 +58,6 @@ public class SqlJdbcUtil {
                 if ("ansi-no-parenthesis".equals(datasourceInfo.joinStyle)) {
                     useParenthesis = false;
                 }
-                String firstMemberAlias = null;
 
                 // FROM clause: in this case will be a bunch of joins that correspond with the view-links
 
@@ -263,7 +262,7 @@ public class SqlJdbcUtil {
 
     public static String makeViewWhereClause(ModelEntity modelEntity, String joinStyle) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
-            StringBuffer whereString = new StringBuffer("");
+            StringBuffer whereString = new StringBuffer();
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
 
             if ("ansi".equals(joinStyle) || "ansi-no-parenthesis".equals(joinStyle)) {
@@ -695,7 +694,7 @@ public class SqlJdbcUtil {
         }
     }
 
-    protected static HashMap fieldTypeMap = new HashMap();
+    protected static Map fieldTypeMap = new HashMap();
     static {
         fieldTypeMap.put("java.lang.String", new Integer(1));
         fieldTypeMap.put("String", new Integer(1));

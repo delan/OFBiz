@@ -948,7 +948,6 @@ public class GenericDAO {
             selectFields = modelEntity.getFieldsCopy();
         }
 
-        GenericValue dummyValue = new GenericValue(modelEntity);
         StringBuffer sqlBuffer = new StringBuffer("SELECT ");
 
         if (findOptions.getDistinct()) {

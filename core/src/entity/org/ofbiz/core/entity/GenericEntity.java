@@ -610,7 +610,6 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
                 } else {
                     element.setAttribute(name, value);
                 }
-            } else {// do nothing will null values
             }
         }
 
@@ -653,7 +652,6 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
                     writer.print(UtilFormatOut.encodeXmlValue(value));
                     writer.print("\"");
                 }
-            } else {// do nothing will null values
             }
         }
 
@@ -693,27 +691,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         if (obj == null) return false;
 
         // from here, use the compareTo method since it is more efficient:
-        if (this.compareTo(obj) == 0) {
-            return true;
-        } else {
-            return false;
-        }
-
-        /*
-         if (this.getClass().equals(obj.getClass())) {
-         GenericEntity that = (GenericEntity) obj;
-         if (this.getEntityName() != null && !this.getEntityName().equals(that.getEntityName())) {
-         //if (Debug.infoOn()) Debug.logInfo("[GenericEntity.equals] Not equal: This entityName \"" + this.getEntityName() + "\" is not equal to that entityName \"" + that.getEntityName() + "\"");
-         return false;
-         }
-         if (this.fields.equals(that.fields)) {
-         return true;
-         } else {
-         //if (Debug.infoOn()) Debug.logInfo("[GenericEntity.equals] Not equal: Fields of this entity: \n" + this.toString() + "\n are not equal to fields of that entity:\n" + that.toString());
-         }
-         }
-         return false;
-         */
+        return this.compareTo(obj) == 0;
     }
 
     /** Creates a hashCode for the entity, using the default String hashCode and Map hashCode, overrides the default hashCode
