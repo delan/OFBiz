@@ -1070,10 +1070,9 @@ public class ProductionRunServices {
         if (lastTask == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunTaskNotExists", locale));
         }
-        // FIXME: PHANTOM flag?
         String productType = productionRun.getProductProduced().getString("productTypeId");
-        if ("PHANTOM".equals("productTypeId")) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductIsPhantom", locale));
+        if ("WIP".equals("productTypeId")) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductIsWIP", locale));
         }
         Double quantityProduced = productionRun.getGenericValue().getDouble("quantityProduced");
         if (quantityProduced == null) {

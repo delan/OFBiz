@@ -347,7 +347,7 @@ public class BOMServices {
         String productId = (String) context.get("productId");
         Double quantity = (Double) context.get("quantity");
         String fromDateStr = (String) context.get("fromDate");
-        Boolean excludePhantoms = (Boolean) context.get("excludePhantoms");
+        Boolean excludeWIPs = (Boolean) context.get("excludeWIPs");
         
         if (quantity == null) {
             quantity = new Double(1);
@@ -362,8 +362,8 @@ public class BOMServices {
         if (fromDate == null) {
             fromDate = new Date();
         }
-        if (excludePhantoms == null) {
-            excludePhantoms = new Boolean(true);
+        if (excludeWIPs == null) {
+            excludeWIPs = new Boolean(true);
         }
         
         //
@@ -374,7 +374,7 @@ public class BOMServices {
         try {
             tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_SINGLE_LEVEL, delegator, dispatcher);
             tree.setRootQuantity(quantity.doubleValue());
-            tree.print(components, excludePhantoms.booleanValue());
+            tree.print(components, excludeWIPs.booleanValue());
             if (components.size() > 0) components.remove(0);
         } catch(GenericEntityException gee) {
             return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
