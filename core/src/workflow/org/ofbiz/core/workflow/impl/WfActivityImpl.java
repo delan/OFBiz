@@ -42,8 +42,8 @@ import org.ofbiz.core.workflow.*;
 
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {
     
-    private WfProcess process;
-    private List assignments;    
+    protected WfProcess process;
+    protected List assignments;    
     
     /**
      * Creates new WfActivityImpl
@@ -98,13 +98,22 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @throws CannotComplete Cannot complete the activity
      */
     public void complete() throws WfException, CannotComplete {
-        String mode = valueObject.getString("finishModeEnumId");
-        if ( mode == null )
-            throw new CannotComplete("Finish mode cannot be null");
-        
-        // Default mode is MANUAL -- only finish if we are automatic
-        if ( mode.equals("WAM_AUTOMATIC") )
-            this.finishActivity();
+        try {
+            container().receiveResults(this,result());
+        }
+        catch ( InvalidData e ) {
+            throw new CannotComplete("Invalid result data was passed",e);
+        }
+        try {
+            changeState("closed.completed");
+        }
+        catch ( InvalidState is ) {
+            throw new CannotComplete(is.getMessage(),is);
+        }
+        catch ( TransitionNotAllowed tna ) {
+            throw new CannotComplete(tna.getMessage(),tna);
+        }
+        container().activityComplete(this);
     }
     
     /**
@@ -172,7 +181,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     
     /**
      * Retrieve all assignments of this activity.
-     * @param maxNumber the high limit of number of assignment in result set.
+     * @param maxNumber the high limit of number of assignment in result set (0 for all).
      * @throws WfException General workflow exception.
      * @return  List of WfAssignment objects.
      */
@@ -193,6 +202,17 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     
     public String executionObjectType() {
         return "WfActivity";
+    }
+
+    // Checks to see if we can complete    
+    public void checkComplete() throws WfException, CannotComplete {
+        String mode = valueObject.getString("finishModeEnumId");
+        if ( mode == null )
+            throw new CannotComplete("Finish mode cannot be null");
+        
+        // Default mode is MANUAL -- only finish if we are automatic
+        if ( mode.equals("WAM_AUTOMATIC") )
+            this.complete();                
     }
     
     // Assigns the activity to a task list
@@ -219,7 +239,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if ( type.equals("WAT_NO") )
             return;                   // NO implementation requires MANUAL FinishMode
         else if ( type.equals("WAT_ROUTE") )
-            this.complete();     // ROUTE goes directly to complete status
+            this.checkComplete();     // ROUTE goes directly to complete status
         else if ( type.equals("WAT_TOOL") )
             this.runTool();       // TOOL will invoke a procedure (service) or an application
         else if ( type.equals("WAT_SUBFLOW") )
@@ -240,7 +260,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new WfException(e.getMessage(),e);
         }
         if ( tools == null )
-            this.complete();  // Null tools mean nothing to do (same as route?)
+            this.checkComplete();  // Null tools mean nothing to do (same as route?)
         
         List waiters = new ArrayList();
         Iterator i = tools.iterator();
@@ -269,7 +289,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             waiters.removeAll(remove);
         }
         
-        this.complete();
+        this.checkComplete();
     }
     
     // Runs a LOOP activity
@@ -309,29 +329,9 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             this.setResult(subResult);
         }
         
-        this.complete();
+        this.checkComplete();
     }
-    
-    // Finishes an automatic activity
-    private void finishActivity() throws WfException, CannotComplete {
-        try {
-            container().receiveResults(this,result());
-        }
-        catch ( InvalidData e ) {
-            throw new CannotComplete("Invalid result data was passed",e);
-        }
-        try {
-            changeState("closed.completed");
-        }
-        catch ( InvalidState is ) {
-            throw new CannotComplete(is.getMessage(),is);
-        }
-        catch ( TransitionNotAllowed tna ) {
-            throw new CannotComplete(tna.getMessage(),tna);
-        }
-        container().activityComplete(this);
-    }
-    
+            
     // Invoke the procedure (service) -- This will include sub-workflows
     private GenericResultWaiter runService(String serviceName, String params) throws WfException {
         DispatchContext dctx = dispatcher.getLocalContext(serviceLoader);
