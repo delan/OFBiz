@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.11 2004/04/20 21:01:20 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.12 2004/04/30 13:18:31 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -41,7 +41,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.minilang.MiniLangException;
 
-import freemarker.template.Environment;
+import freemarker.core.Environment;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateTransformModel;
 import freemarker.template.TransformControl;
@@ -50,7 +50,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {

@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizCurrencyTransform.java,v 1.3 2004/02/10 15:06:19 ajzeneski Exp $
+ * $Id: OfbizCurrencyTransform.java,v 1.4 2004/04/30 13:18:31 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,13 +38,14 @@ import org.ofbiz.base.util.UtilHttp;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.NumberModel;
 import freemarker.template.*;
+import freemarker.core.Environment;
 
 /**
  * OfbizCurrencyTransform - Freemarker Transform for content links
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:ray.barlow@makeyour-point.com">Ray Barlow</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class OfbizCurrencyTransform implements TemplateTransformModel {
