@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentServices.java,v 1.5 2003/11/29 19:58:52 ajzeneski Exp $
+ * $Id: PaymentServices.java,v 1.6 2004/02/06 00:31:27 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Payment maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class PaymentServices {
@@ -435,7 +435,7 @@ public class PaymentServices {
         } else {
             result.put("newPaymentMethodId", paymentMethodId);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-            if (!contactMechId.equals("_NEW_")) {
+            if (contactMechId == null || !contactMechId.equals("_NEW_")) {
                 result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating credit card");
             }
 
