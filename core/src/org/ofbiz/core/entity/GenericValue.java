@@ -118,11 +118,15 @@ public class GenericValue extends GenericEntity {
   /** PreStore the Entity instance so that on the next create or update, this will be updated in the same transaction
    *@param entity GenericValue instance that will be set or created if modified
    */
-  public void preStoreOther(GenericValue entity) { otherToStore.add(entity); }
+  public void preStoreOther(GenericValue entity) { getOtherToStore().add(entity); }
   /** PreStore the Entity instances so that on the next create or update, these will be updated in the same transaction
    *@param entities Collection of GenericValue instances that will be set or created if modified
    */
-  public void preStoreOthers(Collection entities) { otherToStore.addAll(entities); }
+  public void preStoreOthers(Collection entities) { getOtherToStore().addAll(entities); }
+  protected Collection getOtherToStore() { 
+    if(otherToStore == null) otherToStore = new LinkedList();
+    return otherToStore;
+  }
   
   /** Get the GenericHelper implementation instance that created this value object and that is repsonsible for it.
    *@return GenericHelper object
