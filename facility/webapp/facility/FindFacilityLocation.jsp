@@ -42,11 +42,11 @@
 	
 	itemId = (String) session.getAttribute("inventoryItemId");
 	GenericValue facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
-	UtilMisc.parametersToAttributes(request);
+	UtilHttp.parametersToAttributes(request);
 
 	List foundLocations = null;
 	if (lookup != null) {
-		Map paramMap = UtilMisc.getParameterMap(request);
+		Map paramMap = UtilHttp.getParameterMap(request);
 		paramMap.remove("look_up");
 		Iterator i = paramMap.keySet().iterator();
 		while (i.hasNext()) {

@@ -85,8 +85,8 @@ public class TaskEvents {
         RequestHandler rh = (RequestHandler) ctx.getAttribute(SiteDefs.REQUEST_HANDLER);
         
         if (addToOrderRole(request)) {
-            try {
-                EventHandler eh = EventFactory.getEventHandler(rh, "service");
+            try {                
+                EventHandler eh = rh.getEventFactory().getEventHandler("service");
                 eh.invoke("", "wfAcceptRoleAssignment", request, response); 
             } catch (EventHandlerException e) {
                 Debug.logError(e, "Invocation error", module);
@@ -105,7 +105,7 @@ public class TaskEvents {
         
         if (addToOrderRole(request)) {
             try {
-                EventHandler eh = EventFactory.getEventHandler(rh, "service");
+                EventHandler eh = rh.getEventFactory().getEventHandler("service");
                 eh.invoke("", "wfDelegateAndAcceptAssignmet", request, response); 
             } catch (EventHandlerException e) {
                 Debug.logError(e, "Invocation error", module);

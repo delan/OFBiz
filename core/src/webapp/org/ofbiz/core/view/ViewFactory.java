@@ -38,56 +38,53 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class ViewFactory {
-
-    protected static Map handlers = new HashMap();
+    
     public static final String module = ViewFactory.class.getName();
-
-    public static ViewHandler getViewHandler(ServletContext context, String type) throws ViewHandlerException {
-        RequestHandler rh = (RequestHandler) context.getAttribute(SiteDefs.REQUEST_HANDLER);
-
-        return getViewHandler(context, rh, type);
+        
+    protected RequestHandler requestHandler = null;
+    protected RequestManager requestManager = null;
+    protected ServletContext context = null;
+    protected Map handlers = null;
+    
+    public ViewFactory(RequestHandler requestHandler) {
+        handlers = new HashMap();
+        this.requestHandler = requestHandler;
+        this.requestManager = requestHandler.getRequestManager();
+        this.context = requestHandler.getServletContext();
     }
-
-    public static ViewHandler getViewHandler(RequestHandler rh, String type) throws ViewHandlerException {
-        return getViewHandler(rh.getServletContext(), rh, type);
-    }
-
-    public static ViewHandler getViewHandler(ServletContext context, RequestHandler rh, String type) throws ViewHandlerException {
+    
+    public ViewHandler getViewHandler(String type) throws ViewHandlerException {
         if (type == null || type.length() == 0) {
             type = "default";
         }
-        
-        // get the context specific handlers
-        Map contextHandlers = (Map) handlers.get(context.getInitParameter("webSiteId"));    
-        
+                            
         // check if we are new / empty and add the default handler in
-        if (contextHandlers == null || contextHandlers.size() == 0) {
-            contextHandlers = new HashMap();
+        if (handlers.size() == 0) {            
             try {
                 ViewHandler h = (ViewHandler) ObjectType.getInstance("org.ofbiz.core.view.JspViewHandler");
                 h.init(context);
-                contextHandlers.put("default", h);
+                handlers.put("default", h);
             } catch (Exception e) {
                 Debug.logError(e, "[viewFactory.getDefault]: Cannot load default handler.", module);
             }
         }
         
         // get the view handler by type from the contextHandlers 
-        ViewHandler handler = (ViewHandler) contextHandlers.get(type);
+        ViewHandler handler = (ViewHandler) handlers.get(type);
 
         // if none found lets create it and add it in
         if (handler == null) {
             synchronized (ViewFactory.class) {
-                handler = (ViewHandler) contextHandlers.get(type);
+                handler = (ViewHandler) handlers.get(type);
                 if (handler == null) {
-                    String handlerClass = rh.getRequestManager().getHandlerClass(type, RequestManager.VIEW_HANDLER_KEY);
+                    String handlerClass = requestManager.getHandlerClass(type, RequestManager.VIEW_HANDLER_KEY);
                     if (handlerClass == null)
                         throw new ViewHandlerException("Unknown handler type: " + type);
                         
                     try {
                         handler = (ViewHandler) ObjectType.getInstance(handlerClass);
                         handler.init(context);
-                        contextHandlers.put(type, handler);
+                        handlers.put(type, handler);
                     } catch (ClassNotFoundException cnf) {
                         throw new ViewHandlerException("Cannot load handler class", cnf);
                     } catch (InstantiationException ie) {
@@ -99,10 +96,7 @@ public class ViewFactory {
             }
             if (handler == null) {
                 throw new ViewHandlerException("No handler found for type: " + type);
-            }
-            
-            // lets store the updates in the master map
-            handlers.put(context.getInitParameter("webSiteId"), contextHandlers);          
+            }                               
         }
         return handler;
     }

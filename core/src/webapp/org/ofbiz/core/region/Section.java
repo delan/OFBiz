@@ -30,6 +30,7 @@ import javax.servlet.*;
 import javax.servlet.jsp.*;
 import javax.servlet.http.*;
 
+import org.ofbiz.core.control.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.view.*;
 
@@ -132,11 +133,12 @@ public class Section extends Content {
 
     protected void viewHandlerRender(String typeToUse, HttpServletRequest request, HttpServletResponse response) throws ServletException {
         ServletContext context = (ServletContext) request.getAttribute("servletContext");
+        RequestHandler requestHandler = (RequestHandler) context.getAttribute(SiteDefs.REQUEST_HANDLER);
 
         // see if the type is defined in the controller.xml file
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + content + "] of type [" + typeToUse + "]");
-            ViewHandler vh = ViewFactory.getViewHandler(context, typeToUse);
+            ViewHandler vh = requestHandler.getViewFactory().getViewHandler(typeToUse);
             // use the default content-type and encoding for the ViewHandler -- may want to change this.
             vh.render(name, content, info, null, null, request, response);
         } catch (ViewHandlerException e) {

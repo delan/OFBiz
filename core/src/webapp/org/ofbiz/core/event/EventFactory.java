@@ -40,29 +40,33 @@ import org.ofbiz.core.util.*;
  */
 public class EventFactory {
 
-    protected static Map handlers = new HashMap();
+    protected RequestHandler requestHandler = null;
+    protected RequestManager requestManager = null;
+    protected ServletContext context = null;
+    protected Map handlers = null;
 
-    public static EventHandler getEventHandler(RequestHandler rh, String type) throws EventHandlerException {
-        // get the context specific handlers
-        ServletContext context = rh.getServletContext();
-        Map contextHandlers = (Map) handlers.get(context.getInitParameter("webSiteId"));
-        if (contextHandlers == null)
-            contextHandlers = new HashMap();
-        
+    public EventFactory(RequestHandler requestHandler) {
+        handlers = new HashMap();
+        this.requestHandler = requestHandler;
+        this.requestManager = requestHandler.getRequestManager();
+        this.context = requestHandler.getServletContext();
+    }
+
+    public EventHandler getEventHandler(String type) throws EventHandlerException {                    
         // attempt to get a pre-loaded handler
-        EventHandler handler = (EventHandler) contextHandlers.get(type);
+        EventHandler handler = (EventHandler) handlers.get(type);
 
         if (handler == null) {
             synchronized (EventHandler.class) {
-                handler = (EventHandler) contextHandlers.get(type);
+                handler = (EventHandler) handlers.get(type);
                 if (handler == null) {
-                    String handlerClass = rh.getRequestManager().getHandlerClass(type, RequestManager.EVENT_HANDLER_KEY);
+                    String handlerClass = requestManager.getHandlerClass(type, RequestManager.EVENT_HANDLER_KEY);
                     if (handlerClass == null)
                         throw new EventHandlerException("Unknown handler");
-                        
+
                     try {
                         handler = (EventHandler) ObjectType.getInstance(handlerClass);
-                        contextHandlers.put(type, handler);
+                        handlers.put(type, handler);
                     } catch (ClassNotFoundException cnf) {
                         throw new EventHandlerException("Cannot load handler class", cnf);
                     } catch (InstantiationException ie) {
@@ -73,27 +77,19 @@ public class EventFactory {
                 }
             }
             if (handler == null)
-                throw new EventHandlerException("Invalid handler");
-            
-            // lets store the updates in the master map
-            handlers.put(context.getInitParameter("webSiteId"), contextHandlers);
+                throw new EventHandlerException("Invalid handler");           
         }
         return handler;
     }
-    
-    public static String runRequestEvent(HttpServletRequest request, HttpServletResponse response, String requestUri) throws EventHandlerException {
+
+    public static String runRequestEvent(HttpServletRequest request, HttpServletResponse response, String requestUri)
+            throws EventHandlerException {
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         RequestHandler handler = (RequestHandler) application.getAttribute(SiteDefs.REQUEST_HANDLER);
         RequestManager rm = handler.getRequestManager();
         String eventType = rm.getEventType(requestUri);
         String eventPath = rm.getEventPath(requestUri);
         String eventMethod = rm.getEventMethod(requestUri);
-        if (eventType != null && eventPath != null && eventMethod != null) {
-            EventHandler eh = EventFactory.getEventHandler(handler, eventType);
-            return eh.invoke(eventPath, eventMethod, request, response);
-        } else {
-            throw new EventHandlerException("Invocation error; cannot locate event details.");
-        }
-    }        
+        return handler.runEvent(request, response, eventType, eventPath, eventMethod);        
+    }
 }
-
