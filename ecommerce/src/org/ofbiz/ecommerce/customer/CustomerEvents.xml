@@ -257,6 +257,12 @@
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="mobilePhoneContext"/>
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="emailContext"/>
         
+        <!-- If password encryption is enabled, encrpyt it now -->
+        <call-bsh><![CDATA[
+            boolean useEncryption = "true".equals(org.ofbiz.core.util.UtilProperties.getPropertyValue("security", "password.encrypt"));
+            if (useEncryption) { newUserLogin.set("currentPassword", org.ofbiz.commonapp.security.login.HashEncrypt.getHash((String) newUserLogin.get("currentPassword"))); }
+        ]]></call-bsh>
+
         <!-- create the UserLogin manually to get around ordering and security constraints in the service -->
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="newUserLogin"/>
         <create-value value-name="newUserLogin"/>
