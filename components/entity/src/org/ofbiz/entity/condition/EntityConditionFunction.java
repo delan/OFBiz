@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionFunction.java,v 1.3 2004/04/23 01:39:42 doogie Exp $
+ * $Id: EntityConditionFunction.java,v 1.4 2004/04/23 01:42:15 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -74,6 +74,10 @@ public abstract class EntityConditionFunction extends EntityCondition {
         return
             this.idInt == otherFunc.idInt
             && ( this.condition != null ? condition.equals( otherFunc.condition ) : otherFunc.condition != null );
+    }
+
+    public int hashCode() {
+        return idInt ^ condition.hashCode();
     }
 
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {

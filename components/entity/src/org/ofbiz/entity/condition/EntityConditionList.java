@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionList.java,v 1.3 2003/11/07 00:33:56 jonesde Exp $
+ * $Id: EntityConditionList.java,v 1.4 2004/04/23 01:42:15 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.ModelEntity;
  * Encapsulates a list of EntityConditions to be used as a single EntityCondition combined as specified
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class EntityConditionList extends EntityCondition {
@@ -110,5 +110,15 @@ public class EntityConditionList extends EntityCondition {
             return result.matches;
         }
         return false;
+    }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof EntityConditionList)) return false;
+        EntityConditionList other = (EntityConditionList) obj;
+        return conditionList.equals(other.conditionList) && operator.equals(other.operator);
+    }
+
+    public int hashCode() {
+        return conditionList.hashCode() & operator.hashCode();
     }
 }

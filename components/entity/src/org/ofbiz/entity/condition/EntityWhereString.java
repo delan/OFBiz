@@ -1,5 +1,5 @@
 /*
- * $Id: EntityWhereString.java,v 1.4 2003/11/07 00:33:56 jonesde Exp $
+ * $Id: EntityWhereString.java,v 1.5 2004/04/23 01:42:16 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.model.ModelEntity;
  *  encapsulate where conditions and don't require you to directly write SQL.</p>
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class EntityWhereString extends EntityCondition {
@@ -64,4 +64,14 @@ public class EntityWhereString extends EntityCondition {
 	public boolean entityMatches(GenericEntity entity) {
 		throw new UnsupportedOperationException("Cannot do entityMatches on a WhereString, ie no SQL evaluation in EE; Where String is: " + sqlString);
 	}
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof EntityWhereString)) return false;
+        EntityWhereString other = (EntityWhereString) obj;
+        return equals(sqlString, other.sqlString);
+    }
+
+    public int hashCode() {
+        return hashCode(sqlString);
+    }
 }
