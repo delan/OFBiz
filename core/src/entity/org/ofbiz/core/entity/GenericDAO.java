@@ -180,11 +180,10 @@ public class GenericDAO {
             GenericEntity entityCopy = new GenericEntity(entity);
             
             select(entityCopy, connection);
-            if ((entity.get(ModelEntity.STAMP_FIELD) != null) &&
-            (!entity.get(ModelEntity.STAMP_FIELD).equals(entityCopy.get(ModelEntity.STAMP_FIELD)))) {
+            Object stampField = entity.get(ModelEntity.STAMP_FIELD);
+            if ((stampField != null) && (!stampField.equals(entityCopy.get(ModelEntity.STAMP_FIELD)))) {
                 String lockedTime = entityCopy.getTimestamp(ModelEntity.STAMP_FIELD).toString();
-                
-                throw new EntityLockedException("Version locked (" + lockedTime + ")");
+                throw new EntityLockedException("You tried to update an old version of this data. Version locked: (" + lockedTime + ")");
             }
         }
         
