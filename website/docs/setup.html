@@ -1,6 +1,6 @@
 <html>
 <head>
-<!--  $Id: setup.html,v 1.7 2004/03/10 04:50:13 jonesde Exp $ -->
+<!--  $Id: setup.html,v 1.8 2004/03/13 02:04:47 jonesde Exp $ -->
 <title>The Open For Business Project: General Setup</title>
 </head>
 
@@ -14,25 +14,23 @@
   Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a> <br>
 <a href="http://sf.net/projects/ofbiz"> <img src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></a> <br>
   Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-  Last Updated: March 9, 2004 (NOTE: Not fully reviewed and updated, some content may still be out of date.)<br>
+  Last Updated: March 12, 2004<br>
 <h3 align="left"><a name="Table of Contents">Table of Contents</a></h3>
 <ul>
   <li><a href="#Introduction">Introduction</a></li>
   <li><a href="#Quick_Easy_Setup">Quick &amp; Easy Setup</a></li>
   <li><a href="#Building">Building From CVS</a></li>
-  <li><a href="#External_Packages_Setup">External Packages Setup</a></li>
-  <li><a href="#Paths">Paths</a></li>
-  <li><a href="#File_Locations">File Locations and Building</a></li>
-  <li><a href="#Running">Running</a></li>
   <li><a href="#Database_Setup">Database Setup</a></li>
-  <li><a href="#DeployOptions">Alternative Deployment Options</a></li>
+  <li><a href="#J2EE_Containers">J2EE Containers</a></li>
 </ul>
 
 <hr>
 <h3><a name="Introduction">Introduction</a></h3>
 <hr>
-<p>This document describes an initial setup process and configuration options
-for the Open For Business Project.</p>
+<p>This document describes an initial setup process and basic configuration options
+for the Open For Business Project. For more detail see related documents such
+as the OFBiz Framework Configuration Guide, the Entity Engine Configuration Guide,
+the Service Engine Configuration Guide, and other related documents.</p>
 <br>
 
 <hr>
@@ -47,11 +45,11 @@ options and explanations, see the rest of this document.</p>
   <li>Download the OFBiz Apps archive and unzip it in the directory of your choice.
     This should create one sub-directory: <b>ofbiz</b>. This will be the OFBIZ_HOME location.</li>
   <li>Start OFBiz with embedded Jetty by going into the <b>ofbiz</b> directory and then running
-    <b>&quot;%JAVA_HOME%\bin\java -jar ofbiz.jar&quot;</b> for Windows,
-    or <b>&quot;$JAVA_HOME/bin/java -jar ofbiz.jar&quot;</b> for Linux/Unix.</li>
-  <li>Open a browser and go to <b><a href='http://127.0.0.1:8080/ecommerce'>http://127.0.0.1:8080/ecommerce</a></b> for the ecommerce application or
-      <b><a href='http://127.0.0.1:8080/webtools'>http://127.0.0.1:8080/webtools</a></b> for the WebTools application or
-      <b><a href='http://127.0.0.1:8080/catalog'>http://127.0.0.1:8080/catalog</a></b> for the Catalog Manager application.</li>
+    <b>&quot;startofbiz.bat&quot;</b> (or &quot;%JAVA_HOME%\bin\java -jar ofbiz.jar&quot;) for Windows,
+    or <b>&quot;./startofbiz.sh&quot;</b> (or &quot;$JAVA_HOME/bin/java -jar ofbiz.jar&quot;) for Linux/Unix.</li>
+  <li>Open a browser and go to <b><a href='http://127.0.0.1:8080/ecommerce/control/main'>http://127.0.0.1:8080/ecommerce</a></b> for the ecommerce application or
+      <b><a href='https://127.0.0.1:8443/webtools/control/main'>https://127.0.0.1:8443/webtools</a></b> for the WebTools application or
+      <b><a href='https://127.0.0.1:8443/catalog/control/main'>https://127.0.0.1:8443/catalog</a></b> for the Catalog Manager application.</li>
   <li>Have fun with it! You are running on a Java database, which isn't the best for deployment, but it's great for a demo...</li>
   <li>For more detailed options and configuration information, read on!</li>
 </ol>
@@ -76,151 +74,11 @@ click install at the bottom and then follow the instructions to load the seed da
 If you are running into funny errors after updating from CVS in the future, give this a try first.</p>
 
 <hr>
-<h3><a name="External_Packages_Setup">External Packages Setup</a></h3>
-<hr>
-
-<p>You will also need the Java 2 1.4 JDK (aka J2SDK, NOT just the JRE) from
-<a href="http://java.sun.com" target="_blank">java.sun.com</a>.</p>
-
-<p>Open For Business can be run with either a simple servlet engine alone (like
-Tomcat) or with a full J2EE container (like Orion or JBoss &amp; Jetty together).
-A full J2EE application server is also useful for services other than the basic
-EJB container, such as JNDI, connection pooling, transaction management,
-various resource and configuration management conveniences and so forth. Many
-other J2EE application servers are available for these sorts of features, and
-Open For Business should be easily adaptable to various ones.</p>
-
-<p>Jetty is the current default application server for Open For Business.
-JTA (distributed transaction) support is currently done with JOTM,
-but could also be provided by JBoss or another J2EE application server.</p>
-
-<p>Jetty can be downloaded at <a href="http://jetty.mortbay.com">jetty.mortbay.com</a>,
-and you will generally want the latest version of the Jetty 4
-series. The latest version of OFBiz has been tested on Jetty 4.2.9. If
-you download an OFBiz package with these included, you of course don't need to
-download them again. It should run in place, as is.</p>
-<p>You can download JBoss, a complete J2EE application server from <a href="http://sf.net/projects/jboss" target="_blank">sf.net/projects/jboss</a>,
-you will generally want the most recent version. </p>
-
-<p>Things will be much easier if you have Ant installed, which can also be
-downloaded from the <a href="http://ant.apache.org/bindownload.cgi" target="_blank">ant.apache.org</a> site listed above.
-Instructions are available on the Ant site for installing the
-application. Just make sure that 'ant' is on the system execution path and can be run from
-the command line.</p>
-
-<p>To run the Ant scripts, and Jetty, make sure the various
-environment variables are set as described below.</p>
-
-<hr>
-<h3><a name="Paths">Paths</a></h3>
-<hr>
-<p>The last step is to make sure the directories are correct, especially the JDK path. This is
-done by making sure the various environment variables are set. These directories
-are setup as follows:</p>
-
-<table cellpadding='2' cellspacing='0' border='1'>
-  <tr>
-    <td><b>Environment Name</b></td>
-    <td><b>Example</b></td>
-    <td><b>Description</b></td>
-  </tr>
-  <tr><td>JAVA_HOME</td><td>/usr/local/java or c:\jdk1.4.1_02</td>
-    <td>where the Java 2 SDK is installed</td></tr>
-  <tr><td>ANT_HOME</td><td>/usr/local/ant or c:\tools\ant</td>
-    <td>where Ant is installed, should contain bin, docs, lib, etc; this is optional and is only needed if you want to build</td></tr>
-  <tr><td>OFBIZ_HOME</td><td>/ofbiz/work/ofbiz</td>
-    <td>where OFBiz is installed; contains all of the OFBiz CVS modules like core, commonapp, webtools, lib, ecommerce, and so forth; this setting is optional and is only required if you are running OFBiz from a directory different from the OFBiz home directory</td></tr>
-  <tr><td>CATALINA_HOME</td><td>/ofbiz/work/catalina</td>
-    <td>where Tomcat4/Catalina is installed, should contain bin, lib, common, work, and so forth; this setting is optional and only needs to be used for automated Tomcat setup since Tomcat has special file copying needs...</td></tr>
-</table>
-<br>
-<hr>
-<h3><a name="File_Locations">File Locations</a></h3>
-<hr>
-
-<p>If you have just checked out the OFBiz modules from CVS you will beed to copy the Ant
-build.xml file from OFBIZ_HOME/setup/ofbiz/build.xml to OFBIZ_HOME. All of the jar files needed
-to build OFBiz are included in the 'lib' module. Some of these need to be included on the classpath
-when running, but not all. Some are only included to make it easier to build the project and to
-provide a consistent platform to work from.</p>
-
-<p>Here is a list of the directories that need to be, or whose contents need to be, on the classpath for running:</p>
-
-<table cellpadding='2' cellspacing='0' border='1'>
-  <tr>
-    <td><b>Location</b></td>
-  </tr>
-  <tr><td>ofbiz/lib/common</td></tr>
-  <tr><td>ofbiz/lib/datavision</td></tr>
-  <tr><td>ofbiz/lib/jasperreports</td></tr>
-  <tr><td>ofbiz/lib/jotm</td></tr>
-  <tr><td>ofbiz/lib/scripting</td></tr>
-  <tr><td>ofbiz/lib/share</td></tr>
-  <tr><td>ofbiz/lib/weka</td></tr>
-  <tr><td>ofbiz/lib/worldpay</td></tr>
-  <tr><td>ofbiz/core/lib</td></tr>
-  <tr><td>ofbiz/commonapp/lib</td></tr>
-  <tr><td>ofbiz/commonapp/etc</td></tr>
-</table>
-
-<p>In addition to these certain less complete app servers will need some addition classes from
-the <code>ofbiz/lib/compile</code> directory. For instance, Jetty needs: <code>xerces.jar</code>,
-<code>activation.jar</code>, <code>mail.jar</code>, and <code>jdbc2_0-stdext.jar</code>.
-
-<p>If this list looks worrysome to you don't worry too much about it. We have startup scripts and
-config files for various app servers to set up these paths and with the embedded Jetty startup
-class everything is done "auto-magically".
-
-<p>There may be additional JARs and other resources that you need to put on your classpath, such as
-JDBC drivers. We do include JDBC drivers for Postgres, MySQL, SAP DB and of Hypersonic SQL, which
-comes with it.</p>
-
-<hr>
-<h3><a name="Running">Running</a></h3>
-<hr>
-<p>To setup the path to the OFBiz directory and pass it into the Java application
-the -D argument on the Java command line must be used. To make this easier ofbiz.sh and ofbiz.bat have
-been provided which set some things up before calling catalina.sh or catalina.bat, respectively.
-These ofbiz scripts should be put in <b>catalina/bin</b>, and you can
-use the run, start, stop, etc. parameters on the command line.</p>
-
-<p>The default data can be loaded by going to the following URL:
-<a href="http://localhost:8080/webtools/control/main">http://localhost:8080/webtools/control/main</a>,
-and then click on the link for data loading, or go to
-<a href="http://localhost:8080/webtools/control/install">http://localhost:8080/webtools/control/install</a>
-directly. Since there can be multiple servers depending on the name of the
-entity group, you must enter the entity group name so the JSP knows which files
-to load to which server, as setup in the entityengine.xml file. This JSP loads all
-.sql and .xml files in the directories specified in the
-entityengine.xml file for the given group name. The default group name for all
-of the default entities in OFBiz is &quot;org.ofbiz.commonapp&quot;, which you
-will notice pre-populated in the form on the install page. Just click on
-&quot;Load Data&quot;, and after reviewing the summary of what it will do, click
-on &quot;Yes, Load Now&quot;, and be patient as the data is loaded into your
-database.</p>
-
-<p>That data loader can load XML Entity Engine files or SQL files.
-For SQL files the data loader page expects ';' separated SQL INSERT statements. These
-INSERT statements should list all of the column names for each value. INSERT
-statements are generally pretty generic, so this should work for most databases.
-These statements are run through JDBC, and use the JDBC data mappings for
-genericity.</p>
-
-<p>Go to <a href="http://localhost:8080/webtools/control/main">http://localhost:8080/webtools/</a>
-for the Web Tools.
-For secured areas of the site, the default admin
-account information is in an XML data loader file. The default is 'admin' for
-the username, and 'ofbiz' for the password. Be patient when you hit each page
-for the first time, they all need to be compiled when it is run initially.</p>
-
-<p>The other applications can be reached at similar looking URLs. For instance,
-the ecommerce application can be accessed at <a href="http://localhost:8080/ecommerce/control/main">http://localhost:8080/ecommerce/</a>.
-<hr>
 <h3><a name="Database_Setup">Database Setup</a></h3>
 <hr>
 
 <p>Database setup is done in the entityengine.xml file. There are many
-options there which are described in the Entity Engine Guide.</p>
+options there which are described in the Entity Engine Configuration Guide.</p>
 
 <p>The OFBiz Apps archive comes with Hypersonic SQL, a Java database that
 runs in memory. This database is good for demonstration purposes because it is
@@ -228,21 +86,17 @@ easy to setup and use. It is not meant to handle large data sets and does not
 provide the same performance or scalability that a major database would.</p>
 
 <p>There are many open source databases that will scale well and deliver good performance.
-The two most popular are MySQL and PostgreSQL. Postgres is a very full featured
-database with transaction support, foreign keys, stored procedures, et cetera. MySQL is known
-for performing very well but the transaction support is limited (and improving) and
-there is no support for stored procedures. The stored procedures issue is not
-a big deal for OFBiz as it stands now because they are not used, but transaction
-support is VERY important for production business systems. Another good open source
-option is SAP DB, and it deserves special mention. SAP decided to start making it easier
+The two most popular are MySQL Max DB (was SAP DB) and PostgreSQL. Postgres is a very full featured
+database with transaction support, foreign keys, stored procedures, et cetera. Max DB (SAP DB) is another good open source
+and it deserves special mention. SAP decided to start making it easier
 for users to use commercial databases instead of their own and open sourced their
-database, SAP DB. While maybe not as good as Oracle or other commercial DBs it
-has many development and production features and performs well.</p>
+database, SAP DB. While maybe not as good in some ways as Oracle or some other commercial DBs it
+has many development and production features and performs very well with a very complete and advanced feature set.</p>
 
 <p>Commercial databases are also supported. If you have database licenses for other
 needs, or have major in-house familiarity with and support for a certain commercial
 database, then there is no reason not to take advantage of that. OFBiz has been tested
-with Oracle and should work fine with any database that has a JDBC driver.</p>
+with Oracle, Sybase, SQL Server and others and should work fine with any database that has a JDBC driver.</p>
 
 <p>There is no need to run any SQL scripts to create the tables or populate them
 with the default data. The entity engine can create missing tables or fields
@@ -252,93 +106,32 @@ entity engine.</p>
 <p>For the table creation routine to work properly, the field types must be set
 up by specifying the corresponding fieldtypeXXX.xml (where XXX is the database
 name) file for the server in the entityengine.xml file. These fieldtypeXXX.xml
-files are located in the <b>ofbiz/commonapp/entitydef</b> directory,
-along with the entitymodel*.xml files which contain database independent entity
-definitions.</p>
+files are located in the <b>ofbiz/components/entity/fieldtype</b> directory.</p>
 <p>Default data can be loaded automatically once the server has been started by
-going to a JSP, which is listed below in the Running section.</p>
+going to a JSP, which is described above (ie the install page in WebTools).</p>
 
 <hr>
-<h3><a name="DeployOptions">Alternative Deployment Options</a></h3>
+<h3><a name="J2EE_Containers">J2EE Containers</a></h3>
 <hr>
-<p>Future releases of The Open For Business Project will support alternative deployment
-options, for use with application servers other then Jetty/JOTM.
-The <i>webapp</i> directory in each module is a fully self sufficient web application.
-Each of these may be packaged into a WAR file and deployed normally. Please
-keep in mind the OFBiz required libraries must be in the global classpath. An
-alternative method of deploying with Catalina would be not to modify the server.xml
-file, but instead place the required files in the /lib and /classes directory
-as described above and deploy the WAR files in the /webapps directory.</p>
 
-<p>Sample configuration files and start scripts for various app servers are
-available in the setup module of OFBiz (see ofbiz/setup in the distro). Open For
-Business uses a few primary components of J2EE and needs a container for these
-components. The components needed for OFBiz include Servlet 2.3, JSP 1.2, and
-a JTA implementation with a JDBC XA Wrapper and Connection Pool.</p>
+<p>OFBiz comes and runs by default with Jetty for a Servlet/JSP container and
+JOTM for a transaction (JTA) manager. A patched version of Minerva (included in CVS)
+is the current preference for a transaction aware connection pool, though as
+other options are made available that may change.</p>
 
-<p>The following configurations have been tested and are included:</p>
-<table border='1' cellpadding='2' cellspacing='0'>
-    <tr>
-        <td><b>Servlet/JSP&nbsp;Container</b></td>
-        <td><b>JTA&nbsp;&amp;&nbsp;XA&nbsp;JDBC&nbsp;Container</b></td>
-        <td><b>Comments</b></td>
-    </tr>
-    <tr>
-        <td><a href='http://jetty.mortbay.com'>Jetty 4 (current: 4.2.9)</a></td>
-        <td><a href='http://objectweb.org/jotm'>JOTM 1.4 (or most recent)</a></td>
-        <td>Default config; freely available; easy to configure/deploy</td>
-    </tr>
-<!-- these haven't been there since the reorganization for the 3.0 directory structure was done
-    <tr>
-        <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later (prefer
-        4.1.18 or later, much faster, more stable, etc) - Catalina</a></td>
-        <td><a href='http://objectweb.org/jotm'>JOTM 1.4 (or most recent)</a></td>
-        <td>Default config; freely available; requires copying many files to deploy</td>
-    </tr>
-    <tr>
-        <td><a href='http://jakarta.apache.org'>Jetty</a></td>
-        <td><a href='http://www.jboss.org'>JBoss 2.4.4 or later, or many earlier too</a></td>
-        <td>Freely available; similar to Catalina/JOTM, but can interoperate
-            with other JBoss resources like EJBs, etc</td>
-    </tr>
-    <tr>
-        <td><a href='http://www.caucho.com'>Caucho Resin 2.1.4</a></td>
-        <td><a href='http://objectweb.org/jotm'>JOTM 1.4 (or most recent)</a></td>
-        <td>Resin $500/server, Tyrex free; runs faster than Tomcat or Jetty
-        (or used to, Jasper has been sped up a lot, and both Tomcat and Jetty use it)</td>
-    </tr>
-    <tr>
-        <td><a href='http://www.orionserver.com'>Orion 1.6.0 or later</a></td>
-        <td><a href='http://www.orionserver.com'>Orion 1.6.0 or later</a></td>
-        <td>Orion $1,500/server; OFBiz can interoperate with other Orion resources;
-            one of the fastest and best scaling container we have tested</td>
-    </tr>
-    <tr>
-        <td><a href='http://www.macromedia.com/software/jrun/'>JRun 4</a></td>
-        <td><a href='http://www.macromedia.com/software/jrun/'>JRun 4</a></td>
-        <td>$899/CPU; A good option all around. Has many features and appears to
-            be even faster than Orion on the serlvet/JSP side, but slower on the
-            transaction management side.</td>
-    </tr>
-    <tr>
-        <td><a href='http://www.bea.com'>BEA Weblogic 6.1</a></td>
-        <td><a href='http://www.bea.com'>BEA Weblogic 6.1</a></td>
-        <td>Weblogic ~$10,000/CPU (used to be, I don't know how much it is now),
-            OFBiz can interoperate with other Weblogic resources, but is slower
-            than Resin or Orion (this may not be true with the Weblogic 7 series
-            which has been optimized a lot, we plan to do a sample config for
-            version 7 sometime, but it should work fine if you'd like to try it doing you own config)</td>
-    </tr>
--->
-</table>
+<p>OFBiz can also be configured to run in different containers, but there may
+be issues with certain quirks that other containers have, especially with
+servlet containers. We have always been able to find work-arounds for these,
+but they also seem to keep on appearing, so that is just something to watch for.</p>
 
-<!--
-<p>Full testing and deployment instructions for WebSphere, iPlanet,
-ServletExec, and others are forthcoming in future releases. If you are interested
-in helping with this please contact one of the project admins.</p>
--->
+<p>We are not maintaining sample configurations in CVS any more because it became
+too difficult to keep up with changes in new versions for a dozen different app
+servers. We may eventually start this again if there is sufficient demand and
+corresponding contributions. If you are looking for a good commercial J2EE app
+server, Orion is a good place to start, but we recommend trying out Jetty and JOTM
+and see if they meet your needs.</p>
 
-<p>&nbsp;</p>
 </body>
 
 </html>
+
