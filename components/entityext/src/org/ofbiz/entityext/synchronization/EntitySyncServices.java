@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.19 2003/12/15 21:26:15 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.20 2003/12/16 07:11:24 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -190,8 +190,8 @@ public class EntitySyncServices {
                     currentRunEndTime = syncEndStamp;
                 }
                 
-                // TODO: make sure the following message is commented out before commit:
-                Debug.logInfo("Doing runEntitySync split, currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
+                // make sure the following message is commented out before commit:
+                //Debug.logInfo("Doing runEntitySync split, currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
                 
                 totalSplits++;
                 
@@ -213,14 +213,21 @@ public class EntitySyncServices {
                             new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime)), EntityOperator.AND);
                     EntityListIterator eli = delegator.findListIteratorByCondition(modelEntity.getEntityName(), findValCondition, null, UtilMisc.toList(ModelEntity.STAMP_FIELD));
                     GenericValue nextValue = null;
+                    //long valuesPerEntity = 0;
                     while ((nextValue = (GenericValue) eli.next()) != null) {
                         // find first value in valuesToStore list, starting with the current insertBefore value, that has a STAMP_FIELD after the nextValue.STAMP_FIELD
                         while (insertBefore < valuesToStore.size() && ((GenericValue) valuesToStore.get(insertBefore)).getTimestamp(ModelEntity.STAMP_FIELD).before(nextValue.getTimestamp(ModelEntity.STAMP_FIELD))) {
                             insertBefore++;
                         }
                         valuesToStore.add(insertBefore, nextValue);
+                        //valuesPerEntity++;
                     }
                     eli.close();
+                    
+                    // definately remove this message and related data gathering
+                    //long preCount = delegator.findCountByCondition(modelEntity.getEntityName(), findValCondition, null);
+                    //long entityTotalCount = delegator.findCountByCondition(modelEntity.getEntityName(), null, null);
+                    //if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
                 }
                 
                 // get all removed items from the given time range, add to list for those
