@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -74,7 +74,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <table width="100%" border='0' cellpadding='2' cellspacing='0'>
       <#if !returnItems?exists || returnItems?size == 0>
         <tr>
-          <td colspan="2"><div class="tableheadtext">There are no items in the Return to receive.</div></td>
+          <td colspan="2"><div class="tableheadtext">There are no items to receive.</div></td>
         </tr>
       <#else>
         <tr>

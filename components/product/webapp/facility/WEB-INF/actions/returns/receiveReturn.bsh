@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
  
@@ -42,7 +42,11 @@ returnItems = null;
 if (returnId != null) {
     returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));    
     if (returnHeader != null) {
-        returnItems = returnHeader.getRelated("ReturnItem");        
+    	if (returnHeader.getString("statusId").equals("RETURN_ACCEPTED")) {
+            returnItems = returnHeader.getRelated("ReturnItem");
+        } else {
+            request.setAttribute("_ERROR_MESSAGE_", "<li>This return is not yet accepted or already received.");
+        }
     }
 }
 
