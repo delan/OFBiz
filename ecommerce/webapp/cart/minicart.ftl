@@ -77,7 +77,7 @@
                 </tr>
                 <tr>
                   <td colspan="3">
-                    <a href="<transform ofbizUrl>/view/showcart</transform>" class="buttontext">[View&nbsp;Cart]&nbsp;</a><a href="<transform ofbizUrl>/checkoutoptions</transform>" class="buttontext">[Checkout]</a>
+                    <a href="<transform ofbizUrl>/view/showcart</transform>" class="buttontext">[View&nbsp;Cart]</a>&nbsp;<a href="<transform ofbizUrl>/checkoutoptions</transform>" class="buttontext">[Checkout]</a>
                   </td>
                 </tr>
               <#else>
