@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 
@@ -237,15 +237,15 @@ document.lookuporder.order_id.focus();
           <td width="50%">
             <div class="boxhead" align=right>
               <#if 0 < orderHeaderList?size>
-                <#if 0 < viewIndex>
+                <#if (viewIndex > 1)>
                   <a href="<@ofbizUrl>/findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
                 <#else>
                   <span class="submenutextdisabled">Previous</span>
                 </#if>
-                <#if 0 < listSize>
-                  <span class="submenutextinfo">${lowIndex+1} - ${highIndex} of ${listSize}</span>
+                <#if (orderHeaderListSize > 0)>
+                  <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${orderHeaderListSize}</span>
                 </#if>
-                <#if highIndex < listSize>
+                <#if (orderHeaderListSize > highIndex)>
                   <a href="<@ofbizUrl>/findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
                 <#else>
                   <span class="submenutextrightdisabled">Next</span>
@@ -275,7 +275,7 @@ document.lookuporder.order_id.focus();
         </tr>
         <#if orderHeaderList?has_content>
           <#assign rowClass = "viewManyTR2">
-          <#list orderHeaderList[lowIndex..highIndex-1] as orderHeader>
+          <#list orderHeaderList as orderHeader>
             <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
             <#assign statusItem = orderHeader.getRelatedOneCache("StatusItem")>
             <#assign orderType = orderHeader.getRelatedOneCache("OrderType")>

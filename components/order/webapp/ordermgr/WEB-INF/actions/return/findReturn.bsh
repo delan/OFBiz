@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
  */
 
@@ -71,6 +71,23 @@ toTs = new Timestamp(toCal.getTimeInMillis());
 toStr = toTs.toString();
 context.put("thruDateStr", toStr);
 
+// set the page parameters
+viewIndex = 1;
+try {
+    viewIndex = Integer.valueOf((String) request.getParameter("VIEW_INDEX")).intValue();
+} catch (Exception e) {
+    viewIndex = 1;
+}
+context.put("viewIndex", viewIndex);
+
+viewSize = 2;
+try {
+    viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
+} catch (Exception e) {
+    viewSize = 2;
+}
+context.put("viewSize", viewSize);
+
 // get the lookup flag
 lookupFlag = request.getParameter("lookupFlag");
 
@@ -78,6 +95,9 @@ lookupFlag = request.getParameter("lookupFlag");
 paramList = "";
 
 returnHeaderList = null;
+returnHeaderListSize = 0;
+lowIndex = 0;
+highIndex = 0;
 
 if (lookupFlag != null) {
     showAll = request.getParameter("showAll") != null ? request.getParameter("showAll") : "N";
@@ -155,19 +175,40 @@ if (lookupFlag != null) {
         // sorting by return entry date newest first
         List orderBy = UtilMisc.toList("-entryDate");
 
-        // using list iterator
-        EntityListIterator ohli = delegator.findListIteratorByCondition(entityName, mainCond, null, null, orderBy, null);
+        // set distinct on so we only get one row per order
+        EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
 
-        // converting to normal list; should replace with and add list iterator code to the view
-        returnHeaderList = ohli.getCompleteList();
+        // using list iterator
+        EntityListIterator orli = delegator.findListIteratorByCondition(entityName, mainCond, null, null, orderBy, findOpts);
+
+        // get the indexes for the partial list
+        lowIndex = (((viewIndex - 1) * viewSize) + 1);
+        highIndex = viewIndex * viewSize;
+
+        // attempt to get the full size
+        orli.last();
+        returnHeaderListSize = orli.currentIndex();
+        if (highIndex > returnHeaderListSize) {
+            highIndex = returnHeaderListSize;
+        }
+
+        // get the partial list for this page
+        orli.first();
+        if (returnHeaderListSize > 0) {
+            returnHeaderList = orli.getPartialList(lowIndex, viewSize);
+        } else {
+            returnHeaderList = new ArrayList();
+        }
 
         // close the list iterator
-        ohli.close();
+        orli.close();
     } else {
         returnHeaderList = new ArrayList();
+        returnHeaderListSize = 0;
     }
 
     context.put("returnHeaderList", returnHeaderList);
+    context.put("returnHeaderListSize", returnHeaderListSize);
 
     if (lookupErrorMessage != null) {
         context.put("lookupErrorMessage", lookupErrorMessage);
@@ -175,35 +216,5 @@ if (lookupFlag != null) {
 }
 
 context.put("paramList", paramList);
-
-// set the page parameters
-viewIndex = 0;
-try {
-    viewIndex = Integer.valueOf((String) request.getParameter("VIEW_INDEX")).intValue();
-} catch (Exception e) {
-    viewIndex = 0;
-}
-
-viewSize = 20;
-try {
-    viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
-} catch (Exception e) {
-    viewSize = 20;
-}
-
-listSize = 0;
-if (returnHeaderList != null) {
-    listSize = returnHeaderList.size();
-}
-
-lowIndex = viewIndex * viewSize;
-highIndex = (viewIndex + 1) * viewSize;
-
-if (listSize < highIndex) {
-    highIndex = listSize;
-}
-context.put("viewIndex", viewIndex);
-context.put("listSize", listSize);
 context.put("highIndex", highIndex);
 context.put("lowIndex", lowIndex);
-context.put("viewSize", viewSize);
