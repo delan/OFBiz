@@ -2,18 +2,19 @@
 <!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
- * Copyright (c) 2001 The Open For Business Project and repective authors.
- * Permission is hereby granted, free of charge, to any person obtaining a
+ *  Copyright (c) 2002, 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
@@ -21,14 +22,15 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on April 2, 2002
- -->
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Revision$
+ * @since      2.0
+-->
 <simple-methods>
     <simple-method method-name="createWebSite" short-description="Create an WebSite">
         <check-permission permission="CATALOG" action="_CREATE">
-        	<alt-permission permission="CONTENT" action="_CREATE"/>
+        	<alt-permission permission="CONTENTMGR" action="_CREATE"/>
         	<fail-message message="Security Error: to run createWebSite you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/>
         </check-permission>
         <check-errors/>
@@ -41,7 +43,7 @@
     </simple-method>
     <simple-method method-name="updateWebSite" short-description="Update an WebSite">
         <check-permission permission="CATALOG" action="_UPDATE">
-        	<alt-permission permission="CONTENT" action="_UPDATE"/>
+        	<alt-permission permission="CONTENTMGR" action="_UPDATE"/>
         	<fail-message message="Security Error: to run updateWebSite you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/>
         </check-permission>
         <check-errors/>
@@ -86,7 +88,7 @@
     
     <!-- Party and WebSite services -->
     <simple-method method-name="addWebSiteRole" short-description="Add WebSite Role">
-        <check-permission permission="CONTENT" action="_CREATE">
+        <check-permission permission="CONTENTMGR" action="_CREATE">
         	<alt-permission permission="PARTYMGR" action="_CREATE"/>
         	<fail-message message="Security Error: to run addWebSiteRole you must have the CONTENT_CREATE or CONTENT_ADMIN permission"/>
         </check-permission>
@@ -104,7 +106,7 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateWebSiteRole" short-description="Update WebSite Role">
-        <check-permission permission="CONTENT" action="_UPDATE">
+        <check-permission permission="CONTENTMGR" action="_UPDATE">
         	<alt-permission permission="PARTYMGR" action="_UPDATE"/>
         	<fail-message message="Security Error: to run updateWebSiteRole you must have the CONTENT_UPDATE or CONTENT_ADMIN permission"/>
         </check-permission>
@@ -117,7 +119,7 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="removeWebSiteRole" short-description="Remove WebSite Role">
-        <check-permission permission="CONTENT" action="_DELETE">
+        <check-permission permission="CONTENTMGR" action="_DELETE">
         	<alt-permission permission="PARTYMGR" action="_DELETE"/>
         	<fail-message message="Security Error: to run removeWebSiteRole you must have the CONTENT_DELETE or CONTENT_ADMIN permission"/>
         </check-permission>
