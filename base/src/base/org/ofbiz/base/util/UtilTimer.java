@@ -1,5 +1,5 @@
 /*
- * $Id: UtilTimer.java,v 1.2 2003/08/18 18:32:07 ajzeneski Exp $
+ * $Id: UtilTimer.java,v 1.3 2003/08/20 23:46:03 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ package org.ofbiz.base.util;
  * and the time since the start are reported in each call to timerString.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class UtilTimer {
@@ -55,7 +55,7 @@ public class UtilTimer {
      * @return A String with the timing information, the timer String
      */
     public String timerString(String message) {
-        return timerString(message, null);
+        return timerString(message, this.getClass().getName());
     }
 
     /** Creates a string with information including the passed message, the last passed message and the time since the last call, and the time since the beginning
