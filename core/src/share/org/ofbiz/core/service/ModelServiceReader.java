@@ -82,11 +82,11 @@ public class ModelServiceReader {
                     
                     UtilTimer utilTimer = new UtilTimer();
                     
-                    utilTimer.timerString("Before getDocument in file " + readerURL);
+                    //utilTimer.timerString("Before getDocument in file " + readerURL);
                     Document document = getDocument(readerURL);
                     if(document == null) { modelServices = null; return null; }
                     
-                    utilTimer.timerString("Before getDocumentElement in file " + readerURL);
+                    //utilTimer.timerString("Before getDocumentElement in file " + readerURL);
                     Element docElement = document.getDocumentElement();
                     if(docElement == null) { modelServices = null; return null; }
                     docElement.normalize();
@@ -99,7 +99,7 @@ public class ModelServiceReader {
                             if(curChild.getNodeType() == Node.ELEMENT_NODE && "service".equals(curChild.getNodeName())) {
                                 i++;
                                 Element curService = (Element)curChild;
-                                String serviceName = checkEmpty(curService.getAttribute("name"));
+                                String serviceName = UtilXml.checkEmpty(curService.getAttribute("name"));
                                 
                                 //check to see if service with same name has already been read
                                 if(modelServices.containsKey(serviceName)) {
@@ -157,10 +157,10 @@ public class ModelServiceReader {
     protected ModelService createModelService(Element serviceElement) {
         ModelService service = new ModelService();
         
-        service.name = checkEmpty(serviceElement.getAttribute("name"));
-        service.engineName = checkEmpty(serviceElement.getAttribute("engine"));
-        service.location = checkEmpty(serviceElement.getAttribute("location"));
-        service.invoke = checkEmpty(serviceElement.getAttribute("invoke"));
+        service.name = UtilXml.checkEmpty(serviceElement.getAttribute("name"));
+        service.engineName = UtilXml.checkEmpty(serviceElement.getAttribute("engine"));
+        service.location = UtilXml.checkEmpty(serviceElement.getAttribute("location"));
+        service.invoke = UtilXml.checkEmpty(serviceElement.getAttribute("invoke"));
         service.export = checkBoolean(serviceElement.getAttribute("export"));
         service.validate = checkBoolean(serviceElement.getAttribute("validate"));
         service.contextInfo = new HashMap();
@@ -220,51 +220,12 @@ public class ModelServiceReader {
         for ( int i = 0; i < attrList.getLength(); i++ ) {
             Element attribute = (Element) attrList.item(i);
             ModelParam param = new ModelParam();
-            param.name = checkEmpty(attribute.getAttribute("name"));
-            param.type = checkEmpty(attribute.getAttribute("type"));
-            param.mode = checkEmpty(attribute.getAttribute("mode"));
+            param.name = UtilXml.checkEmpty(attribute.getAttribute("name"));
+            param.type = UtilXml.checkEmpty(attribute.getAttribute("type"));
+            param.mode = UtilXml.checkEmpty(attribute.getAttribute("mode"));
             param.optional = checkBoolean(attribute.getAttribute("optional"));
             contextMap.put(param.name,param);
         }
-    }
-    
-    protected String childElementValue(Element element, String childElementName) {
-        if(element == null || childElementName == null) return null;
-        //get the value of the first element with the given name
-        Node node = element.getFirstChild();
-        if(node != null) {
-            do {
-                if(node.getNodeType() == Node.ELEMENT_NODE && childElementName.equals(node.getNodeName())) {
-                    Element childElement = (Element)node;
-                    return elementValue(childElement);
-                }
-            } while((node = node.getNextSibling()) != null);
-        }
-        return null;
-    }
-    
-    protected String elementValue(Element element) {
-        Node textNode = element.getFirstChild();
-        if(textNode == null) return null;
-        //should be of type text
-        return textNode.getNodeValue();
-    }
-    
-    protected String checkEmpty(String string) {
-        if(string != null && string.length() > 0) return string;
-        else return "";
-    }
-    
-    protected String checkEmpty(String string1, String string2) {
-        if(string1 != null && string1.length() > 0) return string1;
-        else if(string2 != null && string2.length() > 0) return string2;
-        else return "";
-    }
-    protected String checkEmpty(String string1, String string2, String string3) {
-        if(string1 != null && string1.length() > 0) return string1;
-        else if(string2 != null && string2.length() > 0) return string2;
-        else if(string3 != null && string3.length() > 0) return string3;
-        else return "";
     }
     
     protected boolean checkBoolean(String string) {
