@@ -1,5 +1,5 @@
 /*
- * $Id: JobManager.java,v 1.3 2003/08/28 17:37:19 ajzeneski Exp $
+ * $Id: JobManager.java,v 1.4 2003/08/28 19:34:57 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
@@ -45,6 +46,9 @@ import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericDispatcher;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.calendar.RecurrenceInfo;
 import org.ofbiz.service.calendar.RecurrenceInfoException;
@@ -53,21 +57,20 @@ import org.ofbiz.service.calendar.RecurrenceInfoException;
  * JobManager
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class JobManager {
 
     public static final String module = JobManager.class.getName();
+    public static final String dispatcherName = "JobDispatcher";
 
-    protected GenericDelegator delegator;
-    protected ServiceDispatcher dispatcher;
+    protected GenericDelegator delegator;    
     protected JobPoller jp;
 
     /** Creates a new JobManager object. */
-    public JobManager(ServiceDispatcher dispatcher, GenericDelegator delegator) {
-        this.dispatcher = dispatcher;
-        this.delegator = delegator;
+    public JobManager(GenericDelegator delegator) {                
+        this.delegator = delegator;        
         jp = new JobPoller(this);
     }
 
@@ -78,8 +81,14 @@ public class JobManager {
     }
 
     /** Returns the ServiceDispatcher. */
-    public ServiceDispatcher getDispatcher() {
-        return this.dispatcher;
+    public LocalDispatcher getDispatcher() {
+        LocalDispatcher thisDispatcher = null;
+        try {
+            thisDispatcher = GenericDispatcher.getLocalDispatcher(dispatcherName, delegator);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);                     
+        }        
+        return thisDispatcher;
     }
 
     /** Returns the GenericDelegator. */
@@ -122,12 +131,11 @@ public class JobManager {
                 Iterator i = jobEnt.iterator();
 
                 while (i.hasNext()) {
-                    GenericValue v = (GenericValue) i.next();
-                    String loader = v.getString("loaderName");
-                    DispatchContext dctx = dispatcher.getLocalContext(loader);
+                    GenericValue v = (GenericValue) i.next();                    
+                    DispatchContext dctx = getDispatcher().getDispatchContext();
 
                     if (dctx == null) {
-                        // ignore jobs which are designed to work on a specific loader
+                        Debug.logError("Unable to locate DispatchContext object; not running job!", module);                        
                         continue;
                     }
                     Job job = new PersistedServiceJob(dctx, v, null); // todo fix the requester
@@ -158,9 +166,8 @@ public class JobManager {
      *@param interval The interval of the frequency recurrence
      *@param count The number of times to repeat
      */
-    public void schedule(String loader, String serviceName, Map context, long startTime,
-            int frequency, int interval, int count) throws JobManagerException {
-        schedule(loader, serviceName, context, startTime, frequency, interval, count, 0);
+    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count) throws JobManagerException {
+        schedule(serviceName, context, startTime, frequency, interval, count, 0);
     }
     
     /** 
@@ -173,9 +180,8 @@ public class JobManager {
      *@param interval The interval of the frequency recurrence
      *@param endTime The time in milliseconds the service should expire
      */
-    public void schedule(String loader, String serviceName, Map context, long startTime,
-            int frequency, int interval, long endTime) throws JobManagerException {
-        schedule(loader, serviceName, context, startTime, frequency, interval, -1, endTime);
+    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, long endTime) throws JobManagerException {
+        schedule(serviceName, context, startTime, frequency, interval, -1, endTime);
     }    
         
     /** 
@@ -189,8 +195,7 @@ public class JobManager {
      *@param count The number of times to repeat
      *@param endTime The time in milliseconds the service should expire
      */
-    public void schedule(String loader, String serviceName, Map context, long startTime,
-            int frequency, int interval, int count, long endTime) throws JobManagerException {
+    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws JobManagerException {
         String dataId = null;
         String infoId = null;
         String jobName = new String(new Long((new Date().getTime())).toString());
@@ -221,8 +226,7 @@ public class JobManager {
             throw new JobManagerException(e.getMessage(), e);
         }
         Map jFields = UtilMisc.toMap("jobName", jobName, "runTime", new java.sql.Timestamp(startTime),
-                "serviceName", serviceName, "loaderName", loader,
-                "recurrenceInfoId", infoId, "runtimeDataId", dataId);
+                "serviceName", serviceName, "recurrenceInfoId", infoId, "runtimeDataId", dataId);
 
         GenericValue jobV = null;
 
