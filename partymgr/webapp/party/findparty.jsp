@@ -5,6 +5,7 @@
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
 
@@ -104,22 +105,35 @@
       </table>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
-          <td width="15%"><div class="head3">PartyID</div></td>
-          <td width="25%"><div class="head3">Last Name</div></td>
-          <td width="15%"><div class="head3">First Name</div></td>
+          <td width="10%"><div class="head3">PartyID</div></td>
+          <td width="20%"><div class="head3">Last Name</div></td>
+          <td width="20%"><div class="head3">First Name</div></td>
+          <td width="20%"><div class="head3">User Login</div></td>
           <td width="15%"><div class="head3">Type</div></td>
-          <td width="30%">&nbsp;</td>
+          <td width="15%">&nbsp;</td>
         </tr>
         <tr>
-          <td colspan='4'><hr class='sepbar'></td>
+          <td colspan='6'><hr class='sepbar'></td>
         </tr>
         <ofbiz:if name="parties">
             <ofbiz:iterator name="party" property="parties">
               <tr>
-                <td><div class="tabletext"><ofbiz:entityfield attribute="party" field="partyId"/></div></td>
+                <td><a href="<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>" class="buttontext"><ofbiz:entityfield attribute="party" field="partyId"/></a></td>
                 <ofbiz:service name="getPerson">
                   <ofbiz:param name="partyId" map="party" attribute="partyId"/>
                 </ofbiz:service>
+                <%
+                    List userLogins = (List) delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", party.getString("partyId")));
+                    StringBuffer sb = new StringBuffer();
+                    Iterator uli = userLogins.iterator();
+                    while (uli.hasNext()) {
+                        GenericValue v = (GenericValue) uli.next();
+                        sb.append(v.getString("userLoginId"));
+                        if (uli.hasNext())
+                            sb.append(", ");
+                    }
+                    String userLoginString = sb.toString();
+                %>
                 <ofbiz:unless name="person">
                   <td><div class="tabletext">&nbsp;</div></td>
                   <td><div class="tabletext">&nbsp;</div></td>
@@ -128,6 +142,7 @@
                   <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="lastName"/></div></td>
                   <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="firstName"/></div></td>
                 </ofbiz:if>
+                <td><div class="tabletext"><%=userLoginString%></div></td>
                 <td><div class="tabletext"><ofbiz:entityfield attribute="party" field="partyTypeId"/></div></td>
                 <td align="right">
                   <a href="<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>" class="buttontext">[View Profile]</a>&nbsp;&nbsp;
