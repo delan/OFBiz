@@ -46,7 +46,6 @@
     <classpathentry exported="true" kind="lib" path="common/logkit-1.0.jar"/>
     <classpathentry exported="true" kind="lib" path="scripting/bsf.jar"/>
     <classpathentry exported="true" kind="lib" path="share/batik.jar"/>
-    <classpathentry exported="true" kind="lib" path="wspublisher/EdenLib.jar"/>
     <classpathentry exported="true" kind="lib" path="scripting/jacl.jar"/>
     <classpathentry exported="true" kind="lib" path="scripting/js.jar"/>
     <classpathentry exported="true" kind="lib" path="scripting/jython.jar"/>
@@ -60,10 +59,6 @@
     <classpathentry exported="true" kind="lib" path="share/lucene-1.2.jar"/>
     <classpathentry exported="true" kind="lib" path="share/saaj.jar"/>
     <classpathentry exported="true" kind="lib" path="share/xalan.jar"/>
-    <classpathentry exported="true" kind="lib" path="wspublisher/HTTPClient.jar"/>
-    <classpathentry exported="true" kind="lib" path="wspublisher/jazzy-dev.jar"/>
-    <classpathentry exported="true" kind="lib" path="wspublisher/tidy.jar"/>
-    <classpathentry exported="true" kind="lib" path="wspublisher/wspublisher.jar"/>
     <classpathentry exported="true" kind="lib" path="jotm/carol.jar"/>
     <classpathentry exported="true" kind="lib" path="jotm/commons-cli.jar"/>
     <classpathentry exported="true" kind="lib" path="jotm/enhydra-jdbc.jar"/>
@@ -77,5 +72,7 @@
     <classpathentry exported="true" kind="lib" path="jotm/ow_util_log_file.jar"/>
     <classpathentry exported="true" kind="lib" path="jotm/ow_util_log_wrp_log4j.jar"/>
     <classpathentry exported="true" kind="lib" path="jasperreports/jasperreports-applet.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/EdenLib.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/JPublish.jar"/>
     <classpathentry kind="output" path=""/>
 </classpath>
