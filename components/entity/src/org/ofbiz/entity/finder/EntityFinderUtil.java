@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
@@ -137,6 +138,7 @@ public class EntityFinderUtil {
         protected FlexibleMapAccessor envNameAcsr;
         protected FlexibleStringExpander valueExdr;
         protected boolean ignoreIfNull;
+        protected boolean ignoreIfEmpty;
         
         public ConditionExpr(Element conditionExprElement) {
             this.fieldNameExdr = new FlexibleStringExpander(conditionExprElement.getAttribute("field-name"));
@@ -144,6 +146,7 @@ public class EntityFinderUtil {
             this.envNameAcsr = new FlexibleMapAccessor(conditionExprElement.getAttribute("env-name"));
             this.valueExdr = new FlexibleStringExpander(conditionExprElement.getAttribute("value"));
             this.ignoreIfNull = "true".equals(conditionExprElement.getAttribute("ignore-if-null"));
+            this.ignoreIfEmpty = "true".equals(conditionExprElement.getAttribute("ignore-if-empty"));
         }
         
         public EntityCondition createCondition(Map context, String entityName, GenericDelegator delegator) {
@@ -162,10 +165,13 @@ public class EntityFinderUtil {
             // now to a type conversion for the target fieldName
             value = modelEntity.convertFieldValue(fieldName, value, delegator);
             
+            if (Debug.verboseOn()) Debug.logVerbose("Got value for fieldName [" + fieldName + "]: " + value, module);
+
             if (this.ignoreIfNull && value == null) {
                 return null;
-            } else {
-                if (Debug.verboseOn()) Debug.logVerbose("Got value for fieldName [" + fieldName + "]: " + value, module);
+            }
+            if (this.ignoreIfEmpty && ObjectType.isEmpty(value)) {
+                return null;
             }
             
             String operatorName = operatorExdr.expandString(context);
