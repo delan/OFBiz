@@ -50,12 +50,12 @@
           <td>
               <table width="100%" border="0" cellpadding="1" cellspacing='0'>
                 <tr align=left valign=bottom>
-                  <th width="35%" align="left">Product</th>
-                  <th width="30%" align="left">Status</th>
-                  <th width="5%" align="right">Quantity</th>
-                  <th width="10%" align="right">Unit Price</th>
-                  <th width="10%" align="right">&nbsp;Adjustments</th>
-                  <th width="10%" align="right">Subtotal</th>
+                  <th width="35%" align="left"><div class="tabletext"><b>Product</b></div></th>
+                  <th width="30%" align="left"><div class="tabletext"><b>Status</b></div></th>
+                  <th width="5%" align="right"><div class="tabletext"><b>Quantity</b></div></th>
+                  <th width="10%" align="right"><div class="tabletext"><b>Unit Price</b></div></th>
+                  <th width="10%" align="right"><div class="tabletext"><b>Adjustments</b></div></th>
+                  <th width="10%" align="right"><div class="tabletext"><b>Subtotal</b></div></th>
                 </tr>
              <%if (orderItemList != null) pageContext.setAttribute("orderItemList", orderItemList);%>
              <ofbiz:iterator name="orderItem" property="orderItemList">

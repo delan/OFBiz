@@ -130,7 +130,7 @@
           </TD>
           <TD align=right width='25%'>
               <FORM name="lookup" action="<ofbiz:url>/orderview</ofbiz:url>" method="POST">
-                  <input type="text" name="order_id" size="9">&nbsp;<a href="javascript:document.lookup.submit();" class="lightbuttontext">[LookUp&nbsp;Order]</a>            
+                  <input type="text" name="order_id" size="9">&nbsp;<a href="javascript:document.lookup.submit();" class="lightbuttontext">[Lookup&nbsp;Order]</a>
               </FORM>
           </TD>
         </tr>
@@ -176,26 +176,26 @@
       <td>
         <table width="100%" cellpadding="3" cellspacing="0" border="0">
           <tr class="viewOneTR1">
-            <td width="25%"><div class="tabletext"><b>Date</b></div></td>
             <td width="15%"><div class="tabletext"><b>Order&nbsp;#</b></div></td>
-            <%-- <td width="25%"><div class="tabletext"><b>Amount</b></div></td> --%>
-            <td width="25%"><div class="tabletext"><b>Status</b></div></td>
+            <td width="25%"><div class="tabletext"><b>Amount</b></div></td>
+            <%--<td width="25%"><div class="tabletext"><b>Status</b></div></td>--%>
+            <td width="25%"><div class="tabletext"><b>Date</b></div></td>
             <td width="10%"><div class="tabletext">&nbsp;</div></td>
           </tr>
           <%String rowClass = "viewManyTR2";%>
           <ofbiz:iterator name="orderHeader" property="orderHeaderList" offset="<%=lowIndex%>" limit="<%=viewSize%>">
               <%OrderReadHelper order = new OrderReadHelper(orderHeader); %>
-              <%//pageContext.setAttribute("totalPrice", new Double(order.getTotalPrice()));%>
+              <%pageContext.setAttribute("totalPrice", new Double(order.getTotalPrice()));%>
               <%String orderStatus = order.getStatusString();%>
               <%rowClass = rowClass.equals("viewManyTR2") ? "viewManyTR1" : "viewManyTR2";%>
               <tr class="<%=rowClass%>">
-                <td><div class="tabletext"><nobr><%EntityField.run("orderHeader", "orderDate", pageContext);%></nobr></div></td>
-                <td><div class="tabletext"><%EntityField.run("orderHeader", "orderId", pageContext);%></div></td>
-                <%-- <td><div class="tabletext"><ofbiz:field attribute="totalPrice" type="currency"/></div></td> --%>
-                <td>
-                  <%-- <div class="tabletext"><%EntityField.run("orderHeader", "statusId", pageContext);%></div> --%>
+                <td><a href="<ofbiz:url>/orderview?order_id=<%EntityField.run("orderHeader", "orderId", pageContext);%></ofbiz:url>" class='buttontext'><%EntityField.run("orderHeader", "orderId", pageContext);%></a>
+                <td><div class="tabletext"><ofbiz:field attribute="totalPrice" type="currency"/></div></td>
+                <%--<td>
+                  <div class="tabletext"><%EntityField.run("orderHeader", "statusId", pageContext);%>
                   <div class="tabletext"><%=orderStatus%></div>
-                </td>
+                </td>--%>
+                <td><div class="tabletext"><nobr><%EntityField.run("orderHeader", "orderDate", pageContext);%></nobr></div></td>
                 <td align=right>
                   <a href="<ofbiz:url>/orderview?order_id=<%EntityField.run("orderHeader", "orderId", pageContext);%></ofbiz:url>" class='buttontext'>[View]</a>
                 </td>
