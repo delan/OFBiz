@@ -239,6 +239,7 @@ public class SimpleEvent {
     /** An event operation that calls a simple map processor minilang file */
     public static class SimpleMapProcessor extends EventOperation {
         String xmlResource;
+        String processorName;
         String inMapName;
         String outMapName;
         String errorListName;
@@ -246,6 +247,7 @@ public class SimpleEvent {
         public SimpleMapProcessor(Element element, SimpleEvent simpleEvent) {
             super(element, simpleEvent);
             xmlResource = element.getAttribute("xml-resource");
+            processorName = element.getAttribute("processor-name");
             inMapName = element.getAttribute("in-map-name");
             outMapName = element.getAttribute("out-map-name");
             errorListName = element.getAttribute("error-list-name");
@@ -273,7 +275,7 @@ public class SimpleEvent {
             }
             
             try {
-                org.ofbiz.core.minilang.SimpleMapProcessor.runSimpleMapProcessor(xmlResource, inMap, outMap, messages, request.getLocale());
+                org.ofbiz.core.minilang.SimpleMapProcessor.runSimpleMapProcessor(xmlResource, processorName, inMap, outMap, messages, request.getLocale());
             } catch (MiniLangException e) {
                 messages.add("Error running SimpleMapProcessor in XML file \"" + xmlResource + "\": " + e.toString());
             }

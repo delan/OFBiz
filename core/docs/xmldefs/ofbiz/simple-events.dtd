@@ -47,6 +47,7 @@
 <!ELEMENT simple-map-processor EMPTY>
 <!ATTLIST simple-map-processor
     xml-resource CDATA #REQUIRED
+    processor-name CDATA #REQUIRED
     in-map-name CDATA #REQUIRED
     out-map-name CDATA #REQUIRED
     error-list-name CDATA "_error_list_"

@@ -37,26 +37,26 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class SimpleMapProcessor {
-    protected static UtilCache simpleMapProcessors = new UtilCache("SimpleMapProcessors", 0, 0);
+    protected static UtilCache simpleMapProcessorsCache = new UtilCache("SimpleMapProcessors", 0, 0);
     
-    public static void runSimpleMapProcessor(String xmlResource, Map inMap, Map results, List messages, Locale locale) throws MiniLangException {
-        runSimpleMapProcessor(xmlResource, inMap, results, messages, locale, null);
+    public static void runSimpleMapProcessor(String xmlResource, String name, Map inMap, Map results, List messages, Locale locale) throws MiniLangException {
+        runSimpleMapProcessor(xmlResource, name, inMap, results, messages, locale, null);
     }
 
-    public static void runSimpleMapProcessor(String xmlResource, Map inMap, Map results, List messages, Locale locale, ClassLoader loader) throws MiniLangException {
+    public static void runSimpleMapProcessor(String xmlResource, String name, Map inMap, Map results, List messages, Locale locale, ClassLoader loader) throws MiniLangException {
         URL xmlURL = UtilURL.fromResource(xmlResource, loader);
         if (xmlURL == null) {
             throw new MiniLangException("Could not find SimpleMapProcessor XML document in resource: " + xmlResource);
         }
                     
-        runSimpleMapProcessor(xmlURL, inMap, results, messages, locale, loader);
+        runSimpleMapProcessor(xmlURL, name, inMap, results, messages, locale, loader);
     }
 
-    public static void runSimpleMapProcessor(URL xmlURL, Map inMap, Map results, List messages, Locale locale, ClassLoader loader) throws MiniLangException {
+    public static void runSimpleMapProcessor(URL xmlURL, String name, Map inMap, Map results, List messages, Locale locale, ClassLoader loader) throws MiniLangException {
         if (loader == null)
             loader = Thread.currentThread().getContextClassLoader();
         
-        List simpleMapProcesses = getSimpleMapProcesses(xmlURL);
+        List simpleMapProcesses = getSimpleMapProcesses(xmlURL, name);
         if (simpleMapProcesses != null && simpleMapProcesses.size() > 0) {
             Iterator strPrsIter = simpleMapProcesses.iterator();
             while (strPrsIter.hasNext()) {
@@ -66,13 +66,13 @@ public class SimpleMapProcessor {
         }
     }
 
-    protected static List getSimpleMapProcesses(URL xmlURL) throws MiniLangException {
-        List simpleMapProcesses = (List) simpleMapProcessors.get(xmlURL);
-        if (simpleMapProcesses == null) {
+    protected static List getSimpleMapProcesses(URL xmlURL, String name) throws MiniLangException {
+        Map simpleMapProcessors = (Map) simpleMapProcessorsCache.get(xmlURL);
+        if (simpleMapProcessors == null) {
             synchronized (SimpleMapProcessor.class) {
-                simpleMapProcesses = (List) simpleMapProcessors.get(xmlURL);
-                if (simpleMapProcesses == null) {
-                    simpleMapProcesses = new LinkedList();
+                simpleMapProcessors = (Map) simpleMapProcessorsCache.get(xmlURL);
+                if (simpleMapProcessors == null) {
+                    simpleMapProcessors = new HashMap();
                     
                     //read in the file
                     Document document = null;
@@ -91,22 +91,34 @@ public class SimpleMapProcessor {
                     }
                     
                     Element rootElement = document.getDocumentElement();
-                    List simpleMapProcessElements = UtilXml.childElementList(rootElement, "process");
-                    
-                    Iterator strProcIter = simpleMapProcessElements.iterator();
-                    while (strProcIter.hasNext()) {
-                        Element simpleMapProcessElement = (Element) strProcIter.next();
-                        SimpleMapProcessor.SimpleMapProcess strProc = new SimpleMapProcessor.SimpleMapProcess(simpleMapProcessElement);
-                        simpleMapProcesses.add(strProc);
+                    List simpleMapProcessorElements = UtilXml.childElementList(rootElement, "simple-map-processor");
+                    Iterator strProcorIter = simpleMapProcessorElements.iterator();
+                    while (strProcorIter.hasNext()) {
+                        Element simpleMapProcessorElement = (Element) strProcorIter.next();
+                        List simpleMapProcesses = new LinkedList();
+                        simpleMapProcessors.put(simpleMapProcessorElement.getAttribute("name"), simpleMapProcesses);
+
+                        List simpleMapProcessElements = UtilXml.childElementList(simpleMapProcessorElement, "process");
+                        Iterator strProcIter = simpleMapProcessElements.iterator();
+                        while (strProcIter.hasNext()) {
+                            Element simpleMapProcessElement = (Element) strProcIter.next();
+                            SimpleMapProcessor.SimpleMapProcess strProc = new SimpleMapProcessor.SimpleMapProcess(simpleMapProcessElement);
+                            simpleMapProcesses.add(strProc);
+                        }
                     }
                     
                     //put it in the cache
-                    simpleMapProcessors.put(xmlURL, simpleMapProcesses);
+                    simpleMapProcessorsCache.put(xmlURL, simpleMapProcessors);
                 }
             }
         }
         
-        return simpleMapProcesses;
+        List simpleMapProcessList = (List) simpleMapProcessors.get(name);
+        if (simpleMapProcessList == null) {
+            throw new MiniLangException("Could not find SimpleMapProcessor named " + name + " in XML document: " + xmlURL.toString());
+        }
+
+        return simpleMapProcessList;
     }
     
     /** A complete string process for a given field; contains multiple string operations */

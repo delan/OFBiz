@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   To refer to this DTD in your XML file, use the following declaration:
-<!DOCTYPE simple-map-processor PUBLIC "-//OFBiz//DTD Simple Map Processor//EN" "http://www.ofbiz.org/dtds/simple-map-processor.dtd">
+<!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Map Processors//EN" "http://www.ofbiz.org/dtds/simple-map-processors.dtd">
 -->
 
 <!--
@@ -28,7 +28,12 @@
 *This is the DTD for the Open For Business Simple Map Processor definition XML file.
 -->
 
+<!ELEMENT simple-map-processors ( simple-map-processor* )>
+
 <!ELEMENT simple-map-processor ( process* )>
+<!ATTLIST simple-map-processor
+    name CDATA #REQUIRED
+>
 <!ELEMENT process ( ( validate-method | compare | compare-field | regexp | not-empty | equals | copy | convert )* )>
 <!ATTLIST process
     field CDATA #REQUIRED
