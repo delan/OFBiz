@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <script language="JavaScript">
 <!--
@@ -30,15 +32,16 @@
     function processOrder() {
         if (clicked == 0) {
             clicked++;
-            window.location.replace("<@ofbizUrl>/processorder</@ofbizUrl>");
+            //window.location.replace("<@ofbizUrl>/processorder</@ofbizUrl>");
+            document.processForm.processButton.disabled=true;
+            document.processForm.processButton.value="${uiLabelMap.OrderSubmittingOrder}";
+            document.processForm.submit();
         } else {
             alert("You order is being processed, this may take a moment.");
         }
     }
 // -->
 </script>
-
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <p class="head1">${uiLabelMap.OrderFinalCheckoutReview}</p>
 <p>${uiLabelMap.OrderDemoFrontNote}.</p>
@@ -53,7 +56,10 @@
         <a href="<@ofbizUrl>/${requestParameters.BACK_PAGE?default("setBilling")}</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.CommonBackToOptions}]</a>
       </td>
       <td align="right">
-        <a href="javascript:processOrder();" class="buttontextbig">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a>
+        <form type="POST" action="<@ofbizUrl>/processorder</@ofbizUrl>" name="processForm">
+          <input type="button" name="processButton" value="[${uiLabelMap.OrderSubmitOrder}]" onClick="processOrder();" class="mediumSubmit">
+        </form>
+        <#-- doesn't work with Safari, seems to work with IE, Mozilla <a href="#" onclick="processOrder();" class="buttontextbig">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a> -->
       </td>
     </tr>
   </table>

@@ -1,9 +1,9 @@
-<#if requestAttributes.errorMsgReq?exists>
+<#if requestAttributes.errorMsgReq?has_content>
 <br><div class='errorMessage'>${requestAttributes.errorMsgReq}</div><br>
 </#if>
-<#if requestAttributes.errorMsgSes?exists>
+<#if requestAttributes.errorMsgSes?has_content>
 <br><div class='errorMessage'>${requestAttributes.errorMsgSes}</div><br>
 </#if>
-<#if requestAttributes.eventMsgReq?exists>
+<#if requestAttributes.eventMsgReq?has_content>
 <br><div class='eventMessage'>${requestAttributes.eventMsgReq}</div><br>
 </#if>
