@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.29 2004/06/10 00:10:05 byersa Exp $
+ * $Id: ContentWorker.java,v 1.30 2004/06/16 02:36:26 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  * @since 2.2
  * 
  *  
@@ -1018,8 +1018,8 @@ public class ContentWorker {
             String thisLocaleString = (String) view.get("localeString");
             thisLocaleString = (thisLocaleString != null) ? thisLocaleString : "";
             if (Debug.infoOn()) Debug.logInfo("renderContentAsTextCache, thisLocaleString(2):" + thisLocaleString, "");
-            //if (Debug.infoOn()) Debug.logInfo("thisLocaleString" + thisLocaleString, "");
-            if (targetLocaleString != null && !targetLocaleString.equalsIgnoreCase(thisLocaleString)) {
+            if (Debug.infoOn()) Debug.logInfo("renderContentAsTextCache, targetLocaleString(2):" + targetLocaleString, "");
+            if (UtilValidate.isNotEmpty(targetLocaleString) && !targetLocaleString.equalsIgnoreCase(thisLocaleString)) {
                 GenericValue localeView = findAlternateLocaleContent(delegator, view, locale);
                 if (localeView != null)
                     view = localeView;
@@ -1051,18 +1051,26 @@ public class ContentWorker {
             if (UtilValidate.isNotEmpty(dataResourceId) || view != null) {
                 StringWriter sw = new StringWriter();
                 DataResourceWorker.renderDataResourceAsTextCache(delegator, dataResourceId, sw, templateContext, view, locale, mimeTypeId);
+                String s = sw.toString();
+                if (UtilValidate.isNotEmpty(s))
+                    s = s.trim();
+                if (Debug.infoOn()) Debug.logInfo("renderTextAsStringCache, s:" + s, "");
                 
+                if (Debug.infoOn()) Debug.logInfo("renderContentAsTextCache, dataResourceId(2):" + dataResourceId, "");
+                if (Debug.infoOn()) Debug.logInfo("renderTextAsStringCache, view(3):" + view, "");
                 String reqdType = null;
                 try {
                     reqdType = DataResourceWorker.getDataResourceMimeType(delegator, dataResourceId, view);
                 } catch(GenericEntityException e) {
                     throw new GeneralException(e.getMessage());
                 }
+                if (Debug.infoOn()) Debug.logInfo("renderContentAsTextCache, reqdType(2):" + reqdType, "");
                 if (UtilValidate.isNotEmpty(reqdType)) {
                     if (reqdType.toLowerCase().indexOf("xml") >= 0) {
-                        StringReader sr = new StringReader(sw.toString());
+                        StringReader sr = new StringReader(s);
                         try {
                             NodeModel nodeModel = NodeModel.parse(new InputSource(sr));
+                            if (Debug.infoOn()) Debug.logInfo("renderTextAsStringCache, doc:" + nodeModel, "");
                             templateContext.put("doc", nodeModel);
                         } catch(SAXException e) {
                             throw new GeneralException(e.getMessage());
