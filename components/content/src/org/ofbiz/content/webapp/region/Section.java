@@ -1,5 +1,5 @@
 /*
- * $Id: Section.java,v 1.2 2003/09/14 05:36:48 jonesde Exp $
+ * $Id: Section.java,v 1.3 2004/05/25 21:06:37 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 Sun Microsystems Inc., published in "Advanced Java Server Pages" by Prentice Hall PTR
  * Copyright (c) 2001-2002 The Open For Business Project - www.ofbiz.org
@@ -51,7 +51,7 @@ import org.ofbiz.content.webapp.view.ViewHandlerException;
  *
  * @author     David M. Geary in the book "Advanced Java Server Pages"
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class Section extends Content {
@@ -110,7 +110,7 @@ public class Section extends Content {
                 } else {
                     response.getWriter().print(content);
                 }
-            } else if ("default".equals(type) || "region".equals(type) || "resource".equals(type)) {
+            } else if ("default".equals(type) || "region".equals(type) || "resource".equals(type) || "jpublish".equals(type)) {
                 // if type is resource then we won't even look up the region
 
                 // if this is default or region, check to see if the content points to a valid region name
