@@ -24,7 +24,9 @@
  *@since      3.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
 <script language="JavaScript">
 <!-- //
@@ -33,11 +35,6 @@ function lookupInventory() {
 }
 // -->
 </script>
-
-
-<#if security.hasEntityPermission("MANUFACTURING", "_VIEW", session)>
-
-${pages.get("/mrp/MrpTabBar.ftl")}
 
 <form method='post' name="lookupinventory" action="<@ofbizUrl>/FindInventoryEventPlan</@ofbizUrl>">
 <input type='hidden' name='lookupFlag' value='Y'>
@@ -201,8 +198,4 @@ document.lookupinventory.productId.focus();
     </td>
   </tr>
 </table>
-</#if>
-<#else>
-  <h3>${uiLabelMap.ManufacturingViewPermissionError}</h3>
-
 </#if>

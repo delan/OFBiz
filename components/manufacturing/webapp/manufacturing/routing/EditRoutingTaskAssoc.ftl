@@ -23,8 +23,13 @@
  *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign locale = requestAttributes.locale>
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
+<#if (requestAttributes.locale)?exists>
+    <#assign locale = requestAttributes.locale>
+</#if>
+
 <script language="JavaScript">
 <!-- //
 function copyAndAddRoutingTask() {
@@ -38,9 +43,6 @@ function addRoutingTask() {
 // -->
 </script>
 
-
-
-${pages.get("/routing/RoutingDetailTabBar.ftl")}
 <div class="head1">${uiLabelMap.ManufacturingEditRoutingTaskAssoc}&nbsp;
 </div>
 <div class="tableheadtext">${routing.workEffortId}[${routing.workEffortName}]</div>

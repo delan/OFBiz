@@ -30,6 +30,9 @@
     <form name="ListCalendarWeek" type="list" 
             target="UpdateCalendarWeek" title="" list-name="calendarWeeks"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext" >
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <field name="calendarWeekId" title="${uiLabelMap.ManufacturingCalendarWeekId}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -46,6 +49,9 @@
     <form name="ListCalendarExceptionDay" type="list" 
             target="UpdateCalendarExceptionDay" title="" list-name="calendarExceptionDays"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext" >
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <auto-fields-service service-name="updateCalendarExceptionDay" map-name="calendarExceptionDay"/>
         <field name="calendarId"><hidden/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field> 
@@ -64,6 +70,9 @@
      <form name="UpdateCalendarExceptionDay" type="single" 
             target="UpdateCalendarExceptionDay" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <auto-fields-service service-name="updateCalendarExceptionDay" map-name="calendarExceptionDay"/> 
         <field name="calendarId" ><hidden/></field>
         <field name="exceptionDateStartTime" title="${uiLabelMap.ManufacturingExceptionDateStartTime}" ><display/></field>
@@ -81,6 +90,9 @@
      <form name="AddCalendarExceptionDay" type="single" 
             target="CreateCalendarExceptionDay" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <auto-fields-service service-name="createCalendarExceptionDay" map-name="calendarExceptionDay"/>
         <field name="calendarId" map-name="techDataCalendar"><hidden/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" ></field>
@@ -94,6 +106,9 @@
             target="UpdateCalendarExceptionWeek" title="" list-name="calendarExceptionWeeksDatas"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext"
             >
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <auto-fields-service service-name="updateCalendarExceptionWeek" map-name="calendarExceptionWeek"/>
         <field name="calendarId"><hidden/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display /></field>
@@ -112,6 +127,9 @@
      <form name="UpdateCalendarExceptionWeek" type="single" 
             target="UpdateCalendarExceptionWeek" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <auto-fields-service service-name="updateCalendarExceptionWeek" map-name="calendarExceptionWeek"/>
         <field name="calendarId" ><hidden/></field>
         <field name="exceptionDateStart" title="${uiLabelMap.ManufacturingExceptionDateStart}" ><display/></field>
@@ -133,6 +151,9 @@
      <form name="AddCalendarExceptionWeek" type="single" 
             target="CreateCalendarExceptionWeek" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <auto-fields-service service-name="createCalendarExceptionWeek" map-name="calendarExceptionWeek"/>
         <field name="calendarId" map-name="techDatacalendar"><hidden/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" ></field>
