@@ -427,6 +427,13 @@ public class DataServices {
         return result;
     }
 
+    /**
+     * Because sometimes a DataResource will exist, but no ElectronicText has been created,
+     * this method will create an ElectronicText if it does not exist.
+     * @param dctx
+     * @param context
+     * @return
+     */
     public static Map updateElectronicTextMethod(DispatchContext dctx, Map context) {
         HashMap result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
@@ -438,13 +445,26 @@ public class DataServices {
         if (Debug.infoOn()) Debug.logInfo("in updateElectronicText, permissionStatus:" + permissionStatus, module);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             String dataResourceId = (String) context.get("dataResourceId");
+            if (UtilValidate.isEmpty(dataResourceId)) {
+                    String errMsg = "dataResourceId is null.";
+                    Debug.logError(errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                
+            }
             String textData = (String) context.get("textData");
             if (Debug.infoOn()) Debug.logInfo("in updateElectronicText, textData:" + textData, module);
             if (textData != null && textData.length() > 0) {
                 try {
                     electronicText = delegator.findByPrimaryKey("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
-                    electronicText.put("textData", textData);
-                    electronicText.store();
+                    if (electronicText != null) {
+                    	electronicText.put("textData", textData);
+                    	electronicText.store();
+                    } else {
+                    	electronicText = delegator.makeValue("ElectronicText", null);
+                    	electronicText.put("dataResourceId", dataResourceId);
+                    	electronicText.put("textData", textData);
+                    	electronicText.create();
+                    }
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e, module);
                     return ServiceUtil.returnError("electronicText.update.read_failure" + e.getMessage());

@@ -109,6 +109,7 @@
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeTypeId" optional="true" type="String"/>
         <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
         <attribute mode="INOUT" name="contentId" optional="true" type="String"/>
         <override name="contentTypeId" optional="false"/>
@@ -121,6 +122,7 @@
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeTypeId" optional="true" type="String"/>
         <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
     </service>
     <service name="removeContent" default-entity-name="Content" engine="simple"
@@ -172,6 +174,7 @@
 
     <!--Content Assoc services.-->
     <service name="checkAssocPermission"
+        transaction-timout="72000" 
         auth="true" engine="java" invoke="checkAssocPermission"
         location="org.ofbiz.content.content.ContentPermissionServices" >
         <description>Check for permission to perform operation on Content</description>
@@ -221,6 +224,7 @@
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeString" optional="true" type="String"/>
         <attribute mode="IN" name="deactivateExisting" optional="true" type="String"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdFrom" optional="true" type="String"/>
     </service>
@@ -231,6 +235,7 @@
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdFrom" optional="true" type="String"/>
     </service>
@@ -240,6 +245,7 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdFrom" optional="true" type="String"/>
     </service>
@@ -412,6 +418,7 @@
         <attribute mode="INOUT" name="dataResourceId" optional="true" type="String"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
         <attribute mode="OUT" name="dataResource" optional="true" type="GenericValue"/>
     </service>
     <service name="updateDataResource" engine="java"
@@ -423,6 +430,7 @@
         <attribute mode="IN" name="dataResourceId" optional="false" type="String"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
         <attribute mode="OUT" name="dataResource" optional="true" type="GenericValue"/>
     </service>
     <service name="removeDataResource" engine="simple"
@@ -433,6 +441,7 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
     </service>
     <service name="createDataResourceAndText" engine="java"
             location="org.ofbiz.content.data.DataServices"
@@ -444,6 +453,7 @@
         <attribute mode="IN" name="textData" optional="true" type="String"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
     </service>
     <service name="updateDataResourceAndText" engine="java"
             location="org.ofbiz.content.data.DataServices"
@@ -455,6 +465,7 @@
         <attribute mode="IN" name="textData" optional="true" type="String"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
     </service>
 
     <!--DataResourceType services.-->
@@ -801,17 +812,20 @@
         <description>Create a ElectronicText</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
     </service>
     <service name="updateElectronicText" default-entity-name="ElectronicText" engine="java"
         location="org.ofbiz.content.data.DataServices" invoke="updateElectronicText" auth="true">
         <description>Update a ElectronicText</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
     </service>
     <service name="removeElectronicText" default-entity-name="ElectronicText" engine="simple"
         location="org/ofbiz/content/data/DataServices.xml" invoke="removeElectronicText" auth="true">
         <description>Remove ElectronicText</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
     </service>
     <service name="getElectronicText" engine="simple"
             location="org/ofbiz/content/data/DataServices.xml" invoke="getElectronicText" default-entity-name="ElectronicText" auth="false" >
@@ -1260,7 +1274,7 @@
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
     </service>
     <service name="deactivateAssocs" engine="java"
-            location="org.ofbiz.content.content.ContentServices" invoke="deactivateAssocs" auth="false">
+            location="org.ofbiz.content.content.ContentServices" invoke="deactivateAssocs" auth="true">
         <description>Supply thruDate to all ContentAssoc that come "before" current one</description>
         <attribute mode="IN" name="contentIdTo" optional="false" type="String"/>
         <attribute mode="IN" name="mapKey" optional="true" type="String"/>
@@ -1269,6 +1283,16 @@
         <attribute mode="IN" name="contentAssocTypeId" optional="false" type="String"/>
         <attribute mode="IN" name="fromDate" optional="true" type="Timestamp"/>
         <attribute mode="OUT" name="deactivatedList" optional="false" type="List"/>
+    </service>
+
+    <service name="deactivateContentAssoc" engine="java"
+        transaction-timout="72000" 
+            location="org.ofbiz.content.content.ContentServices" invoke="deactivateContentAssoc" auth="true">
+        <description>Set thruDate to now for ContentAssoc entity</description>
+        <attribute mode="IN" name="contentIdTo" optional="true" type="String"/>
+        <attribute mode="IN" name="contentId" optional="true" type="String"/>
+        <attribute mode="IN" name="contentAssocTypeId" optional="true" type="String"/>
+        <attribute mode="IN" name="fromDate" optional="true" type="Timestamp"/>
     </service>
 
     <!-- SubContent Render Services -->
@@ -1389,6 +1413,14 @@
     <description>Moves dataResource to separate content associated with current content so that node can have only children, no content of its own</description>
     <attribute mode="IN" name="contentId" optional="false" type="String"/>
     <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
+  </service>
+
+  <service auth="true" engine="java" name="updatePageType" validate="true"
+        transaction-timout="72000" 
+        location="org.ofbiz.content.ContentManagementServices" invoke="updatePageType">
+    <description>Change contentTypeId to OUTLINE/PAGE/SUBPAGE_NODE</description>
+    <attribute mode="IN" name="contentId" optional="false" type="String"/>
+    <attribute mode="IN" name="pageMode" optional="true" type="String"/>
   </service>
 
 </services>

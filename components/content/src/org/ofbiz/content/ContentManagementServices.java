@@ -745,13 +745,13 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             	content.set("createdByUserLogin", userLoginId);
 	            
             	contentClone.set("contentId", null);
-            	Map serviceIn = new HashMap();
-            	serviceIn.putAll(contentClone);
+            	ModelService modelService = dctx.getModelService("persistContentAndAssoc");
+            	Map serviceIn = modelService.makeValid(contentClone, "IN");
             	serviceIn.put("userLogin", userLogin);
             	serviceIn.put("caContentIdTo", contentId);
             	serviceIn.put("caContentAssocTypeId", "SUB_CONTENT");
             	try {
-                	result = dispatcher.runSync("persistContentAndAssoc", serviceIn);
+                	Map thisResult = dispatcher.runSync("persistContentAndAssoc", serviceIn);
             	} catch(ServiceAuthException e) {
                 	return ServiceUtil.returnError(e.getMessage());             
             	}
@@ -864,11 +864,11 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
     public static Map updatePageType(DispatchContext dctx, Map context) throws GenericServiceException{
         
         GenericDelegator delegator = dctx.getDelegator();
-    	Map results = null;
+    	Map results = new HashMap();
     	String pageMode = (String)context.get("pageMode");
     	String contentId = (String)context.get("contentId");
         String contentTypeId = "PAGE_NODE";
-        if (pageMode != null && pageMode.equalsIgnoreCase("outline"))
+        if (pageMode != null && pageMode.toLowerCase().indexOf("outline") >= 0)
         	contentTypeId = "OUTLINE_NODE";
         GenericValue thisContent = null;
         try {
@@ -877,7 +877,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
                 ServiceUtil.returnError("No entity found for id=" + contentId);
             thisContent.set("contentTypeId", contentTypeId);
             thisContent.store();
-            List kids = ContentWorker.getAssociatedContent(thisContent, "from", null, UtilMisc.toList("SUB_CONTENT"), null, null);
+            List kids = ContentWorker.getAssociatedContent(thisContent, "from", UtilMisc.toList("SUB_CONTENT"), null, null, null);
             Iterator iter = kids.iterator();
             while (iter.hasNext()) {
             	GenericValue kidContent = (GenericValue)iter.next();
@@ -898,31 +898,31 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
     public static void updatePageNodeChildren(GenericValue content) throws GenericEntityException {
         
     	String contentTypeId = content.getString("contentTypeId");
-    	String newContentTypeId = null;
-        if (contentTypeId == null || contentTypeId.equals("DOCUMENT")) {
-            newContentTypeId = "SUBPAGE_NODE";
-        } else if (contentTypeId.equals("OUTLINE_NODE")) {
-            newContentTypeId = "PAGE_NODE";
-        }
+    	String newContentTypeId = "SUBPAGE_NODE";
+//        if (contentTypeId == null || contentTypeId.equals("DOCUMENT")) {
+//            newContentTypeId = "SUBPAGE_NODE";
+//        } else if (contentTypeId.equals("OUTLINE_NODE")) {
+//            newContentTypeId = "PAGE_NODE";
+//        }
             
         content.put("contentTypeId", newContentTypeId);
         content.store();
         
-        if (contentTypeId == null || contentTypeId.equals("OUTLINE_DOCUMENT") || contentTypeId.equals("DOCUMENT")) {
-            List kids = ContentWorker.getAssociatedContent(content, "from", null, UtilMisc.toList("SUB_CONTENT"), null, null);
+        //if (contentTypeId == null || contentTypeId.equals("OUTLINE_DOCUMENT") || contentTypeId.equals("DOCUMENT")) {
+            List kids = ContentWorker.getAssociatedContent(content, "from", UtilMisc.toList("SUB_CONTENT"), null, null, null);
             Iterator iter = kids.iterator();
             while (iter.hasNext()) {
             	GenericValue kidContent = (GenericValue)iter.next();
             	updatePageNodeChildren(kidContent);
             }
-        }
+        //}
         return;
     }
 
     public static void updateOutlineNodeChildren(GenericValue content) throws GenericEntityException {
     	
-    	String newContentTypeId = null;
     	String contentTypeId = content.getString("contentTypeId");
+    	String newContentTypeId = contentTypeId;
     	String dataResourceId = content.getString("dataResourceId");
     	Long branchCount = (Long)content.get("childBranchCount");
         if (contentTypeId == null || contentTypeId.equals("DOCUMENT")) {
@@ -937,8 +937,9 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         content.put("contentTypeId", newContentTypeId);
         content.store();
         
-        if (contentTypeId == null || contentTypeId.equals("DOCUMENT")) {
-            List kids = ContentWorker.getAssociatedContent(content, "from", null, UtilMisc.toList("SUB_CONTENT"), null, null);
+        if (contentTypeId == null || contentTypeId.equals("DOCUMENT") || contentTypeId.equals("OUTLINE_NODE")) {
+        //if (contentTypeId == null || contentTypeId.equals("DOCUMENT")) {
+            List kids = ContentWorker.getAssociatedContent(content, "from", UtilMisc.toList("SUB_CONTENT"), null, null, null);
             Iterator iter = kids.iterator();
             while (iter.hasNext()) {
             	GenericValue kidContent = (GenericValue)iter.next();

@@ -433,14 +433,16 @@ public class UploadContentAndImage {
             ftlContext.put("targetOperationList",targetOperationList);
 
             ftlContext.put("userLogin", userLogin);
-            String caSequenceNum = (String)passedParams.get("caSequenceNum");
-            if (UtilValidate.isNotEmpty(caSequenceNum)) {
-            	Long sequenceNum = null;
-            	try {
-            	    sequenceNum = new Long(caSequenceNum);
-                } catch(NumberFormatException e) {
-                }
-                passedParams.put("caSequenceNum", sequenceNum);
+            Object objSequenceNum = passedParams.get("caSequenceNum");
+            if (objSequenceNum != null ) {
+            	if (objSequenceNum instanceof String) {
+            		Long sequenceNum = null;
+            		try {
+            	    	sequenceNum = new Long((String)objSequenceNum);
+                	} catch(NumberFormatException e) {
+                	}
+                    passedParams.put("caSequenceNum", sequenceNum);
+               	}
             }
 
             GenericValue contentAssocDataResourceViewFrom = delegator.makeValue("ContentAssocDataResourceViewFrom",null);
