@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -44,9 +44,9 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
                 </#if>
                 <#if (listSize > 0)>
-                    ${lowIndex+1} - ${highIndex+1} of ${listSize}
+                    ${lowIndex+1} - ${highIndex} of ${listSize}
                 </#if>
-                <#if (listSize > highIndex+1)>
+                <#if (listSize > highIndex)>
                 | <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[Next]</a>
                 </#if>
                 </b>
@@ -71,7 +71,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <td>&nbsp;</td>
             <td>&nbsp;</td>
         </tr>
-        <#list facilityInventoryItems[lowIndex..highIndex] as inventoryItem>
+        <#list facilityInventoryItems[lowIndex..highIndex-1] as inventoryItem>
         <#assign curInventoryItemType = inventoryItem.getRelatedOne("InventoryItemType")>
         <#assign facilityLocation = inventoryItem.getRelatedOne("FacilityLocation")?if_exists>
         <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists>
@@ -123,9 +123,9 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
                 </#if>
                 <#if (listSize > 0)>
-                ${lowIndex+1} - ${highIndex+1} of ${listSize}
+                ${lowIndex+1} - ${highIndex} of ${listSize}
                 </#if>
-                <#if (listSize > highIndex+1)>
+                <#if (listSize > highIndex)>
                 | <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[Next]</a>
                 </#if>
                 </b>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      3.0
  */
 
@@ -39,31 +39,25 @@ if(security.hasEntityPermission("FACILITY", "_VIEW", session)) {
 } else {
     context.put("hasPermission", Boolean.FALSE);
 }
-String facilityId = request.getParameter("facilityId");
-if (facilityId != null) context.put("facilityId", facilityId);
 
-GenericValue facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
-if (facility != null) context.put("facility", facility);
-
-String nowTimestampString = UtilDateTime.nowTimestamp().toString();
-context.put("nowTimestampString", nowTimestampString);
+nowTimestampString = UtilDateTime.nowTimestamp().toString();
 
 //default this to true, ie only show active
 boolean activeOnly = !"false".equals(request.getParameter("activeOnly"));
-context.put("activeOnly", activeOnly);
 
 boolean useValues = true;
 if (request.getAttribute("_ERROR_MESSAGE_") != null) useValues = false;
 
+
+facilityId = request.getParameter("facilityId");
+
+facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
 if (facility == null) useValues = false;
 
-List facilityGroupMembers = facility.getRelated("FacilityGroupMember", null, UtilMisc.toList("sequenceNum", "facilityGroupId"));
+facilityGroupMembers = facility.getRelated("FacilityGroupMember", null, UtilMisc.toList("sequenceNum", "facilityGroupId"));
 if (activeOnly) facilityGroupMembers = EntityUtil.filterByDate(facilityGroupMembers, true);
 
-if (facilityGroupMembers != null) context.put("facilityGroupMembers", facilityGroupMembers);
-
-List facilityGroups = delegator.findAll("FacilityGroup", UtilMisc.toList("description"));
-if (facilityGroups != null) context.put("facilityGroups", facilityGroups);
+facilityGroups = delegator.findAll("FacilityGroup", UtilMisc.toList("description"));
 
 if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 
@@ -78,28 +72,32 @@ try {
 } catch (Exception e) {
     viewIndex = 0;
 }
-context.put("viewIndex", viewIndex);
 
 try {
     viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
 } catch (Exception e) {
     viewSize = 20;
 }
-context.put("viewSize", viewSize);
 
 if (facilityGroupMembers != null) {
     listSize = facilityGroupMembers.size();
 }
-context.put("listSize", listSize);
 
 lowIndex = viewIndex * viewSize;
 highIndex = (viewIndex + 1) * viewSize;
 if (listSize < highIndex) {
-    if (listSize > 0) { 
-        highIndex = listSize-1;
-    } else {
-        highIndex = 0;
-    }
-}    
+    highIndex = listSize;
+}
+
+context.put("nowTimestampString", nowTimestampString);
+context.put("activeOnly", activeOnly);
+context.put("facilityId", facilityId);
+context.put("facility", facility);
+context.put("facilityGroupMembers", facilityGroupMembers);
+context.put("facilityGroups", facilityGroups);
+
+context.put("viewIndex", viewIndex);
+context.put("viewSize", viewSize);
+context.put("listSize", listSize);
 context.put("lowIndex", lowIndex);
 context.put("highIndex", highIndex);

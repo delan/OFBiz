@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -51,9 +51,9 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Previous]</a> |
                 </#if>
                 <#if (listSize > 0)>
-                ${lowIndex+1} - ${highIndex+1} of ${listSize}
+                ${lowIndex+1} - ${highIndex} of ${listSize}
                 </#if>
-                <#if (listSize > highIndex+1)>
+                <#if (listSize > highIndex)>
                 | <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Next]</a>
                 </#if>
                 </b>
@@ -71,7 +71,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </tr>
         <#if (facilityGroupMembers.size() > 0)>
             <#assign line = 0>
-            <#list facilityGroupMembers[lowIndex..highIndex] as facilityGroupMember>
+            <#list facilityGroupMembers[lowIndex..highIndex-1] as facilityGroupMember>
             <#assign line = line + 1>
             <#assign facilityGroup = facilityGroupMember.getRelatedOne("FacilityGroup")>
             <tr valign="middle">
@@ -115,9 +115,9 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                     <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Previous]</a> |
                     </#if>
                     <#if (listSize > 0)>
-                    ${lowIndex+1} - ${highIndex+1} of ${listSize}
+                    ${lowIndex+1} - ${highIndex} of ${listSize}
                     </#if>
-                    <#if (listSize > highIndex+1)>
+                    <#if (listSize > highIndex)>
                     | <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Next]</a>
                     </#if>
                     </b>
