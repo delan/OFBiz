@@ -103,7 +103,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
             Debug.logInfo("HtmlTreeExpandCollapseRenderer, hasChildren(1):" + hasChildren, module);
 
         // check to see if this node needs to be expanded.
-        if (hasChildren && node.getModelTree().isExpandCollapse()) {
+        if (hasChildren && node.isExpandCollapse()) {
             String targetEntityId = null;
             List targetNodeTrail = node.getModelTree().getTrailList();
             if (depth < targetNodeTrail.size()) {
@@ -124,7 +124,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
     
             int openDepth = node.getModelTree().getOpenDepth();
             if (targetEntityId == null || !targetEntityId.equals(entityId)) {
-                if( node.getModelTree().showPeers(depth)) {
+                if( node.showPeers(depth)) {
                 	context.put("processChildren", new Boolean(false));
                 	//expandCollapseLink.setText("&nbsp;+&nbsp;");
                 	currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
@@ -342,8 +342,6 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
         }
         writer.write("/>");
         
-        
-        appendWhitespace(writer);
     }
 
     public void appendWhitespace(Writer writer) throws IOException {

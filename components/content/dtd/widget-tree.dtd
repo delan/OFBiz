@@ -35,7 +35,7 @@
 <!ATTLIST tree
     name CDATA #REQUIRED
     root-node-name CDATA #REQUIRED
-    render-style (simple | follow-trail | show-peers | expand-collapse) "simple"
+    default-render-style (simple | follow-trail | show-peers | expand-collapse) "simple"
     default-wrap-style CDATA #REQUIRED
     expand-collapse-request CDATA #IMPLIED
     trail-name CDATA #IMPLIED
@@ -48,6 +48,7 @@
 <!ATTLIST node
     name CDATA #REQUIRED
     wrap-style CDATA #REQUIRED
+    render-style (simple | follow-trail | show-peers | expand-collapse) #IMPLIED
 >
 
     <!ELEMENT include-screen EMPTY>
