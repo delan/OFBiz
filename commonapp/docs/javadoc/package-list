@@ -2,8 +2,7 @@ net.matuschek.http
 net.matuschek.http.connection
 net.matuschek.http.cookie
 net.matuschek.util
-org.ofbiz.commonapp.common
+org.ofbiz.commonapp.party.party
 org.ofbiz.commonapp.security
 org.ofbiz.commonapp.security.login
 org.ofbiz.commonapp.security.securitygroup
-org.ofbiz.commonapp.webevent
