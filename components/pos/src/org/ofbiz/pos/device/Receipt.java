@@ -31,6 +31,8 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import jpos.JposException;
 import jpos.POSPrinterConst;
@@ -68,11 +70,16 @@ public class Receipt extends GenericDevice implements DialogCallback {
 
     protected static final String PAPER_CUT = ESC + "|100fP";
 
-    protected String[] receiptTemplate = null;
-    protected int priceLength = 7;
-    protected int qtyLength = 5;
-    protected int descLength = 25;
-    protected int pridLength = 25;
+    protected SimpleDateFormat[] dateFormat = null;
+    protected String[] storeReceiptTmpl = null;
+    protected String[] custReceiptTmpl = null;
+
+    protected String[] dateFmtStr = { "EEE, d MMM yyyy HH:mm:ss z", "EEE, d MMM yyyy HH:mm:ss z" };
+    protected int[] priceLength = { 7, 7 };
+    protected int[] qtyLength = { 5, 5 };
+    protected int[] descLength = { 25, 25 };
+    protected int[] pridLength = { 25, 25 };
+    protected int[] infoLength = { 34, 34 };
 
     protected PosTransaction lastTransaction = null;
 
@@ -111,10 +118,14 @@ public class Receipt extends GenericDevice implements DialogCallback {
     }
 
     public void reprintReceipt() {
-        this.printReceipt(lastTransaction);
+        this.reprintReceipt(false);
     }
 
-    public void printReceipt(PosTransaction trans) {
+    public void reprintReceipt(boolean reprintStoreCopy) {
+        this.printReceipt(lastTransaction, reprintStoreCopy);
+    }
+
+    public void printReceipt(PosTransaction trans, boolean printStoreCopy) {
         Debug.log("Print Receipt Requested : " + trans.getTransactionId(), module);
         POSPrinter printer = (POSPrinter) control;
         this.lastTransaction = trans;
@@ -127,17 +138,36 @@ public class Receipt extends GenericDevice implements DialogCallback {
             Debug.logError(e, module);
         }
 
-        String[] receiptTemplate = this.readTemplate();
+        if (printStoreCopy) {
+            String[] storeReceipt = this.readStoreTemplate();
+            int payments = trans.getNumberOfPayments();
+            for (int i = 0; i < payments; i++) {
+                Map info = trans.getPaymentInfo(i);
+                if (info.containsKey("cardNumber")) {
+                    this.printReceipt(trans, storeReceipt, 1, info);
+                }
+            }
+        }
 
-        if (receiptTemplate != null) {
-            for (int i = 0; i < receiptTemplate.length; i++) {
-                if (receiptTemplate[i] != null) {
-                    if ("[ORDER_BARCODE]".equals(receiptTemplate[i])) {
+        // print the customer receipt
+        String[] custReceipt = this.readCustomerTemplate();
+        this.printReceipt(trans, custReceipt, 0, null);
+    }
+
+    private void printReceipt(PosTransaction trans, String[] template, int type, Map payInfo) {
+        if (template != null) {
+            for (int i = 0; i < template.length; i++) {
+                if (template[i] != null) {
+                    if ("[ORDER_BARCODE]".equals(template[i])) {
                         this.printBarcode(trans.getOrderId());
-                    } else if (receiptTemplate[i].startsWith("[LOOP]")) {                    
-                        this.printDetail(receiptTemplate[i], trans);
+                    } else if (template[i].startsWith("[DLOOP]")) {
+                        this.printDetail(template[i], trans, type);
+                    } else if (template[i].startsWith("[PLOOP]")) {
+                        this.printPayInfo(template[i], trans, type);
+                    } else if (payInfo != null) {
+                        this.printPayInfo(template[i], trans, type, payInfo);
                     } else {
-                        this.printInfo(receiptTemplate[i], trans);
+                        this.printInfo(template[i], trans, type);
                     }
                 }
             }
@@ -148,78 +178,115 @@ public class Receipt extends GenericDevice implements DialogCallback {
         }
     }
 
-    private synchronized String[] readTemplate() {
-        if (this.receiptTemplate == null) {
-            this.receiptTemplate = new String[5];
-            int currentPart = 0;
-
-            URL fileUrl = UtilURL.fromResource("receipt.txt");
-            StringBuffer buf = new StringBuffer();
-
-            try {
-                InputStream in = fileUrl.openStream();
-                BufferedReader dis = new BufferedReader(new InputStreamReader(in));
-
-                String line;
-                while ((line = dis.readLine()) != null) {
-                    if (line.trim().startsWith("#")) {
-                        String[] code = line.trim().split("\\=");
-                        if ("#description.length".equals(code[0])) {
-                            try {
-                                this.descLength = Integer.parseInt(code[1]);
-                            } catch (NumberFormatException e) {
-                                Debug.logWarning(e, module);
-                            }
-                        } else if ("#productId.length".equals(code[0])) {
-                            try {
-                                this.pridLength = Integer.parseInt(code[1]);
-                            } catch (NumberFormatException e) {
-                                Debug.logWarning(e, module);
-                            }
-                        } else if ("#price.length".equals(code[0])) {
-                            try {
-                                this.priceLength = Integer.parseInt(code[1]);
-                            } catch (NumberFormatException e) {
-                                Debug.logWarning(e, module);
-                            }
-                        } else if ("#quantity.length".equals(code[0])) {
-                            try {
-                                this.qtyLength = Integer.parseInt(code[1]);
-                            } catch (NumberFormatException e) {
-                                Debug.logWarning(e, module);
-                            }
-                        }
-                    } else if (line.trim().startsWith("[BEGIN LOOP]")) {
-                        this.receiptTemplate[currentPart++] = buf.toString();
-                        buf = new StringBuffer();
-                        buf.append("[LOOP]");
-                    } else if (line.trim().startsWith("[END LOOP]")) {
-                        this.receiptTemplate[currentPart++] = buf.toString();
-                        buf = new StringBuffer();
-                    } else if (line.trim().startsWith("[ORDER BARCODE]")) {
-                        this.receiptTemplate[currentPart++] = buf.toString();
-                        this.receiptTemplate[currentPart++] = "[ORDER_BARCODE]";
-                        buf = new StringBuffer();
-                    } else {
-                        if (UtilValidate.isEmpty(line)) {
-                            line = " ";
-                        }
-                        buf.append(line + "\n");
-                    }
-                }
-                in.close();
-            } catch (IOException e) {
-                Debug.logError(e, "Unable to open receipt template", module);
-            }
-
-            this.receiptTemplate[currentPart] = buf.toString();
+    private synchronized String[] readStoreTemplate() {
+        if (this.storeReceiptTmpl == null) {
+            this.storeReceiptTmpl = new String[7];
+            this.readCustomerTemplate(storeReceiptTmpl, "storereceipt.txt", 1);
         }
 
-        return this.receiptTemplate;
+        return this.storeReceiptTmpl;
     }
 
-    private void printInfo(String template, PosTransaction trans) {
-        Map expandMap = this.makeCodeExpandMap(trans);
+    private synchronized String[] readCustomerTemplate() {
+        if (this.custReceiptTmpl == null) {
+            this.custReceiptTmpl = new String[7];
+            this.readCustomerTemplate(custReceiptTmpl, "custreceipt.txt", 0);
+        }
+
+        return this.custReceiptTmpl;
+    }
+
+    private String[] readCustomerTemplate(String[] template, String resource, int type) {
+        int currentPart = 0;
+
+        URL fileUrl = UtilURL.fromResource(resource);
+        StringBuffer buf = new StringBuffer();
+
+        try {
+            InputStream in = fileUrl.openStream();
+            BufferedReader dis = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = dis.readLine()) != null) {
+                if (line.trim().startsWith("#")) {
+                    String[] code = line.trim().split("\\=");
+                    if ("#description.length".equals(code[0])) {
+                        try {
+                            this.descLength[type] = Integer.parseInt(code[1]);
+                        } catch (NumberFormatException e) {
+                            Debug.logWarning(e, module);
+                        }
+                    } else if ("#productId.length".equals(code[0])) {
+                        try {
+                            this.pridLength[type] = Integer.parseInt(code[1]);
+                        } catch (NumberFormatException e) {
+                            Debug.logWarning(e, module);
+                        }
+                    } else if ("#price.length".equals(code[0])) {
+                        try {
+                            this.priceLength[type] = Integer.parseInt(code[1]);
+                        } catch (NumberFormatException e) {
+                            Debug.logWarning(e, module);
+                        }
+                    } else if ("#quantity.length".equals(code[0])) {
+                        try {
+                            this.qtyLength[type] = Integer.parseInt(code[1]);
+                        } catch (NumberFormatException e) {
+                            Debug.logWarning(e, module);
+                        }
+                    } else if ("#infoString.length".equals(code[0])) {
+                        try {
+                            this.infoLength[type] = Integer.parseInt(code[1]);
+                        } catch (NumberFormatException e) {
+                            Debug.logWarning(e, module);
+                        }
+                    } else if ("#dateFormat".equals(code[0])) {
+                        this.dateFmtStr[type] = code[1];
+                    }
+                } else if (line.trim().startsWith("[BEGIN ITEM LOOP]")) {
+                    template[currentPart++] = buf.toString();
+                    buf = new StringBuffer();
+                    buf.append("[DLOOP]");
+                } else if (line.trim().startsWith("[END ITEM LOOP]")) {
+                    template[currentPart++] = buf.toString();
+                    buf = new StringBuffer();
+                } else if (line.trim().startsWith("[BEGIN PAY LOOP]")) {
+                    template[currentPart++] = buf.toString();
+                    buf = new StringBuffer();
+                    buf.append("[PLOOP]");
+                } else if (line.trim().startsWith("[END PAY LOOP]")) {
+                    template[currentPart++] = buf.toString();
+                    buf = new StringBuffer();
+                } else if (line.trim().startsWith("[ORDER BARCODE]")) {
+                    template[currentPart++] = buf.toString();
+                    template[currentPart++] = "[ORDER_BARCODE]";
+                    buf = new StringBuffer();
+                } else {
+                    if (UtilValidate.isEmpty(line)) {
+                        line = " ";
+                    }
+                    buf.append(line + "\n");
+                }
+            }
+            in.close();
+        } catch (IOException e) {
+            Debug.logError(e, "Unable to open receipt template", module);
+        }
+
+        template[currentPart] = buf.toString();
+        return template;
+    }
+
+    private synchronized SimpleDateFormat getDateFormat(int type) {
+        if (dateFormat == null) {
+            dateFormat = new SimpleDateFormat[2];
+            dateFormat[type] = new SimpleDateFormat(this.dateFmtStr[type]);
+        }
+        return dateFormat[type];
+    }
+
+    private void printInfo(String template, PosTransaction trans, int type) {
+        Map expandMap = this.makeCodeExpandMap(trans, type);
         String toPrint = FlexibleStringExpander.expandString(template, expandMap);
         String[] lines = toPrint.split("\\n");
         for (int i = 0; i < lines.length; i++) {
@@ -227,23 +294,23 @@ public class Receipt extends GenericDevice implements DialogCallback {
         }
     }
 
-    private void printDetail(String loop, PosTransaction trans) {
-        String loopStr = loop.substring(6);
+    private void printDetail(String loop, PosTransaction trans, int type) {
+        String loopStr = loop.substring(7);
         int size = trans.size();
         for (int i = 0; i < size; i++) {
-            Map expandMap = this.makeCodeExpandMap(trans);
+            Map expandMap = this.makeCodeExpandMap(trans, type);
             expandMap.putAll(trans.getItemInfo(i));
             // adjust the padding
-            expandMap.put("description", padString((String) expandMap.get("description"), descLength, true));
-            expandMap.put("productId", padString((String) expandMap.get("productId"), pridLength, true));
-            expandMap.put("basePrice", padString((String) expandMap.get("basePrice"), priceLength, false));
-            expandMap.put("subtotal", padString((String) expandMap.get("subtotal"), priceLength, false));
-            expandMap.put("quantity", padString((String) expandMap.get("quantity"), qtyLength, false));
-            expandMap.put("adjustments", padString((String) expandMap.get("adjustments"), priceLength, false));
+            expandMap.put("description", padString((String) expandMap.get("description"), descLength[type], true));
+            expandMap.put("productId", padString((String) expandMap.get("productId"), pridLength[type], true));
+            expandMap.put("basePrice", padString((String) expandMap.get("basePrice"), priceLength[type], false));
+            expandMap.put("subtotal", padString((String) expandMap.get("subtotal"), priceLength[type], false));
+            expandMap.put("quantity", padString((String) expandMap.get("quantity"), qtyLength[type], false));
+            expandMap.put("adjustments", padString((String) expandMap.get("adjustments"), priceLength[type], false));
             String toPrint = FlexibleStringExpander.expandString(loopStr, expandMap);
             if (toPrint.indexOf("\\n") > -1) {
                 String[] lines = toPrint.split("\\n");
-                for (int x = 0; i < lines.length; x++) {
+                for (int x = 0; x < lines.length; x++) {
                     this.println(lines[x]);
                 }
             } else {
@@ -252,20 +319,51 @@ public class Receipt extends GenericDevice implements DialogCallback {
         }
     }
 
-    private Map makeCodeExpandMap(PosTransaction trans) {
+    private void printPayInfo(String loop, PosTransaction trans, int type) {
+        String loopStr = loop.substring(7);
+        int size = trans.getNumberOfPayments();
+        for (int i = 0; i < size; i++) {
+            Map payInfoMap = trans.getPaymentInfo(i);
+            this.printPayInfo(loopStr, trans, type, payInfoMap);
+        }
+    }
+
+    private void printPayInfo(String template, PosTransaction trans, int type, Map payInfo) {
+        Map expandMap = this.makeCodeExpandMap(trans, type);
+        expandMap.putAll(payInfo);
+        // adjust the padding
+        expandMap.put("infoString", padString((String) expandMap.get("infoString"), infoLength[type], false));
+        expandMap.put("amount", padString((String) expandMap.get("amount"), priceLength[type], false));
+        String toPrint = FlexibleStringExpander.expandString(template, expandMap);
+        if (toPrint.indexOf("\\n") > -1) {
+            String[] lines = toPrint.split("\\n");
+            for (int x = 0; x < lines.length; x++) {
+                this.println(lines[x]);
+            }
+        } else {
+            this.println(toPrint);
+        }
+    }
+
+    private Map makeCodeExpandMap(PosTransaction trans, int type) {
         Map expandMap = new HashMap();
+        SimpleDateFormat fmt = this.getDateFormat(type);
+        String dateString = fmt.format(new Date());
+
         expandMap.put("DOUBLE_HEIGHT", TEXT_DOUBLE_HEIGHT);
         expandMap.put("CENTER", ALIGN_CENTER);
         expandMap.put("BOLD", TEXT_BOLD);
         expandMap.put("LF", LF);
         expandMap.put("transactionId", trans.getTransactionId());
         expandMap.put("userId", trans.getUserId());
+        expandMap.put("orderId", trans.getOrderId());
+        expandMap.put("dateStamp", dateString);
         expandMap.put("drawerNo", new Integer(trans.getDrawerNumber()).toString());
-        expandMap.put("taxTotal", UtilFormatOut.formatPrice(trans.getTaxTotal()));
-        expandMap.put("grandTotal", this.padString(UtilFormatOut.formatPrice(trans.getGrandTotal()), priceLength, false));
-        expandMap.put("totalPayments", this.padString(UtilFormatOut.formatPrice(trans.getPaymentTotal()), priceLength, false));
+        expandMap.put("taxTotal", this.padString(UtilFormatOut.formatPrice(trans.getTaxTotal()), priceLength[type], false));
+        expandMap.put("grandTotal", this.padString(UtilFormatOut.formatPrice(trans.getGrandTotal()), priceLength[type], false));
+        expandMap.put("totalPayments", this.padString(UtilFormatOut.formatPrice(trans.getPaymentTotal()), priceLength[type], false));
         expandMap.put("change", this.padString((trans.getTotalDue() < 0 ?
-                UtilFormatOut.formatPrice(trans.getTotalDue() * -1) : "0.00"), priceLength, false));
+                UtilFormatOut.formatPrice(trans.getTotalDue() * -1) : "0.00"), priceLength[type], false));
 
         return expandMap;
     }

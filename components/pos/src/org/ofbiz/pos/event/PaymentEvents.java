@@ -204,7 +204,7 @@ public class PaymentEvents {
             Debug.log("Processing [" + paymentMethodTypeId + "] Amount : " + amount, module);
 
             // add the payment
-            trans.addPayment(paymentMethodTypeId, amount, "N/A");
+            trans.addPayment(paymentMethodTypeId, amount, "N/A", null);
         } catch (GeneralException e) {
             // errors handled
         }
@@ -227,7 +227,7 @@ public class PaymentEvents {
             Debug.log("Processing [" + paymentMethodTypeId + "] Amount : " + amount, module);
 
             // add the payment
-            trans.addPayment(paymentMethodTypeId, amount, refNum);
+            trans.addPayment(paymentMethodTypeId, amount, refNum, null);
         } catch (GeneralException e) {
             // errors handled
         }
@@ -283,7 +283,7 @@ public class PaymentEvents {
                 } catch (Exception e) {
                 }
                 if (index > -1) {
-                    trans.setPaymentRefNum(index, refNum);
+                    trans.setPaymentRefNum(index, refNum, refNum);
                     pos.refresh();
                 }
             }

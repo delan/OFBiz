@@ -155,6 +155,10 @@ public class PosTransaction {
         return UtilFormatOut.formatPriceNumber(cart.getGrandTotal()).doubleValue();
     }
 
+    public int getNumberOfPayments() {
+        return cart.selectedPayments();
+    }
+
     public double getPaymentTotal() {
         return UtilFormatOut.formatPriceNumber(cart.getPaymentTotal()).doubleValue();
     }
@@ -182,6 +186,62 @@ public class PosTransaction {
                 UtilFormatOut.formatPrice(item.getOtherAdjustments()) : "");
 
         return itemInfo;
+    }
+
+    public Map getPaymentInfo(int index) {
+        ShoppingCart.CartPaymentInfo inf = cart.getPaymentInfo(index);
+        GenericValue infValue = inf.getValueObject(session.getDelegator());
+        Map payInfo = new HashMap();
+
+        if ("PAYMENT_METHOD_TYPE".equals(infValue.getEntityName())) {
+            payInfo.put("description", infValue.getString("description"));
+            payInfo.put("infoString", "");
+            payInfo.put("amount", UtilFormatOut.formatPrice(inf.amount));
+        } else {
+            String paymentMethodTypeId = infValue.getString("paymentMethodTypeId");
+            GenericValue pmt = null;
+            try {
+                 pmt = infValue.getRelatedOne("PaymentMethodType");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+            if (pmt != null) {
+                payInfo.put("description", pmt.getString("description"));
+                payInfo.put("amount", UtilFormatOut.formatPrice(inf.amount));
+            }
+
+            if ("CREDIT_CARD".equals(paymentMethodTypeId)) {
+                GenericValue cc = null;
+                try {
+                    cc = infValue.getRelatedOne("CreditCard");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+                String nameOnCard = cc.getString("firstNameOnCard") + " " + cc.getString("lastNameOnCard");
+                nameOnCard.trim();
+
+                String cardNum = cc.getString("cardNumber");
+                cardNum = cardNum.substring(0, 2);
+                cardNum = cardNum + "****";
+                cardNum = cardNum + cardNum.substring(cardNum.length() - 4);
+
+                String expDate = cc.getString("expireDate");
+                String infoString = (nameOnCard.length() > 0 ? nameOnCard + " " : "") + cardNum + " " + expDate;
+                payInfo.put("infoString", infoString);
+                payInfo.putAll(cc);
+
+
+            } else if ("GIFT_CARD".equals(paymentMethodTypeId)) {
+                GenericValue gc = null;
+                try {
+                    gc = infValue.getRelatedOne("GiftCard");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+            }
+        }
+
+        return payInfo;
     }
 
     public double getItemQuantity(String productId) {
@@ -301,10 +361,10 @@ public class PosTransaction {
     }
 
     public double addPayment(String id, double amount) {
-        return this.addPayment(id, amount, null);
+        return this.addPayment(id, amount, null, null);
     }
 
-    public double addPayment(String id, double amount, String refNum) {
+    public double addPayment(String id, double amount, String refNum, String authCode) {
         trace("added payment", id + "/" + amount);
         /*
         Double currentAmt = cart.getPaymentAmount(id);
@@ -312,14 +372,15 @@ public class PosTransaction {
             amount += currentAmt.doubleValue();
         }
         */
-        cart.addPaymentAmount(id, new Double(amount), refNum, true, false);
+        cart.addPaymentAmount(id, new Double(amount), refNum, authCode, true, false);
         return this.getTotalDue();
     }
 
-    public void setPaymentRefNum(int paymentIndex, String refNum) {
-        trace("setting payment index reference number", paymentIndex + " / " + refNum);
+    public void setPaymentRefNum(int paymentIndex, String refNum, String authCode) {
+        trace("setting payment index reference number", paymentIndex + " / " + refNum + " / " + authCode);
         ShoppingCart.CartPaymentInfo inf = cart.getPaymentInfo(paymentIndex);
-        inf.refNum = refNum;
+        inf.refNum[0] = refNum;
+        inf.refNum[1] = authCode;
     }
 
     public void clearPayments() {
@@ -383,7 +444,7 @@ public class PosTransaction {
         DeviceLoader.drawer[drawerIdx].openDrawer();
 
         // print the receipt
-        DeviceLoader.receipt.printReceipt(this);
+        DeviceLoader.receipt.printReceipt(this, false);
 
         // clear the tx
         cart.clear();
