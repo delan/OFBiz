@@ -220,7 +220,7 @@ function addToList() {
                     <a href='<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>' class='buttontext'>${cartLine.getProductId()} - 
                     ${cartLine.getName()?if_exists}</a> : ${cartLine.getDescription()?if_exists}
                     
-                    <#if !shoppingCart.getOrderType() == "PURCHASE_ORDER">
+                    <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
                       <#-- only applies to sales orders, not purchase orders
                       <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
                       <#assign itemProduct = cartLine.getProduct()>
@@ -251,7 +251,7 @@ function addToList() {
                 <#if cartLine.getIsPromo()>
                   ${cartLine.getBasePrice()?string.currency}
                 <#else>
-                  <input size="6" class='inputBox' type="text" name="price_${cartLineIndex}" value="${cartLine.getBasePrice()}">
+                  <input size="6" class='inputBox' type="text" name="price_${cartLineIndex}" value="${cartLine.getBasePrice()?string}">
                 </#if>
               </div>
             </td>
