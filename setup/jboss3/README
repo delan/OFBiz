@@ -1,0 +1,85 @@
+
+These config files and startup scripts are tested on JBoss RC3, but will
+likely work on newer versions depending on how much changes in JBoss.
+
+JBoss with embedded Tomcat must be placed in the same directory as the 
+OFBiz root directory. In other words a certain directory must have the 
+jboss and ofbiz directories under it.
+
+To install all related files, edit $OFBIZ_HOME/build.properties and change the 
+values as followed:
+
+ofbiz.home=<your_ofbiz_home_directory>
+server=jboss3
+server.home=<your_jboss3_home_directory>
+
+Now execute ant:
+
+ant -f xbuild.xml install - to install required files
+ant -f xbuild.xml deploy  - to deploy all required files, jars and ear.
+
+Make sure the entityengine.xml file in jboss/server/ofbiz/conf is configured
+as you want it, that is where this configuration will look for it. Make sure
+it is getting the JTA UserTransaction object and the JDBC connection from JNDI.
+(Default values already set).
+
+Adjust the datasource-name value for your database setup:
+
+<!-- Adjust the datasource-name to your database setup: This example makes use of Postgres72 -->  
+  <delegator name="default" entity-model-reader="main" entity-group-reader="main">
+    <group-map group-name="org.ofbiz.commonapp" datasource-name="localpostgres72"/>
+</delegator>
+
+
+Next copy the database service definition for your database from jboss/docs/examples/jca
+to the jboss/server/ofbiz/deploy directory.
+Adjust the required parameters in the <your_database>-service.xml.
+Be aware, that this example configuration assumes, that your Datasource JNDI name is 
+DefaultDS. Therefore change the following parameter to DefaultDS in XXX-service.xml:
+
+  <attribute name="JndiName">DefaultDS</attribute>
+
+In each XXX-service.xml a brief example is given, which values have to be added into 
+jboss/server/ofbiz/conf/login-config.xml. Follow the instructions there.
+ 
+Next edit jboss/server/ofbiz/conf/standardjaws.xml and set your values for datasource
+and type-mapping:
+
+Example for PostgreSQL:
+
+<jaws>
+   <datasource>java:/DefaultDS</datasource>
+   <type-mapping>PostgreSQL</type-mapping>
+...
+
+Next edit jboss/server/ofbiz/conf/standardjbosscmp-jdbc.xml and set your values for 
+datasource and datasource-mapping:
+
+Example for PostgreSQL:
+
+<jbosscmp-jdbc>
+   
+   <defaults>
+      <datasource>java:/DefaultDS</datasource>
+      <datasource-mapping>PostgreSQL</datasource-mapping>
+...
+
+Copy your jdbc driver jar to the jboss/server/ofbiz/deploy directory.
+
+Go into jboss/bin and run the ofbiz.sh script. It uses the ofbiz config that
+you just created.
+
+This JBoss configuration uses Tomcat or Jetty for the front end. 
+
+JBoss is used by OFBiz instead of Tyrex for JTA and XA JDBC connection pooling.
+This enables OFBiz and the Entity Engine to be used in the same context as EJBs
+and other resources deployed inside JBoss. It also allows for future expansion
+with JMS and the many other services that JBoss provides. Actually you can use
+Tyrex as the transaction manager for JBoss, but in that case you will still be
+using it through JBoss to make sure you use the SAME transaction manager that
+JBoss is using. So, this config gets the JDBC connection and JTA UserTransaction
+objects from JBoss.
+
+-Rainer Hermanns
+hermanns@aixcept.de
+

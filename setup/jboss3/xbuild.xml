@@ -1,0 +1,397 @@
+<?xml version="1.0"?>
+
+<!--
+ *  Copyright (c) 2001 The Open For Business Project and respected authors.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  This is the  Open for Business CORE component build script.
+ *  $Id$
+-->
+
+<project name="Open For Business Main Build" default="install" basedir=".">
+
+  <!-- Give user a chance to override without editing this file
+       (and without typing -D each time they invoke a target) -->
+
+  <!-- Allow any user specific values to override the defaults -->
+  <property file="${user.home}/build.properties" />
+  <!-- Allow user defaults for this build -->
+  <property file="build.properties" />
+  <!-- Set default values for the project -->
+  <property file="project.properties" />
+
+  <!-- ================================================================== -->
+  <!-- D E L E G A T O R S                                                -->
+  <!--                                                                    -->
+  <!-- JBoss 3 is tested... Catalina should work out of the box...        -->
+  <!-- All other application servers have no build.xml file yet           -->
+  <!-- ================================================================== -->
+
+    <target name="ofbiz:install-catalina">
+        <echo message="[install] ===== installing catalina =====" />
+        <ant antfile="setup/catalina/build.xml" target="ofbiz:install"/>
+    </target>
+    
+    <target name="ofbiz:clean-catalina">
+        <echo message="[clean] ===== cleaning up catalina =====" />
+        <ant antfile="setup/catalina/build.xml" target="ofbiz:clean"/>
+    </target>
+    
+    <target name="ofbiz:deploy-catalina">
+        <echo message="[deploy] ===== deploying catalina =====" />
+        <ant antfile="setup/catalina/build.xml" target="ofbiz:deploy"/>
+    </target>
+    
+    <target name="ofbiz:int-deploy-catalina">
+        <echo message="[deploy] ===== deploying catalina =====" />
+        <ant antfile="setup/catalina/build.xml" target="ofbiz:int-deploy"/>
+    </target>
+
+
+
+    <target name="ofbiz:install-jboss3">
+      <ant antfile="setup/jboss3/build.xml" target="ofbiz:install"/>
+    </target>
+
+    <target name="ofbiz:clean-jboss3">
+        <echo message="[clean] ===== cleaning up jboss3 =====" />
+        <ant antfile="setup/jboss3/build.xml" target="ofbiz:clean"/>
+    </target>
+    
+    <target name="ofbiz:deploy-jboss3">
+        <echo message="[deploy] ===== deploying jboss3 =====" />
+        <ant antfile="setup/jboss3/build.xml" target="ofbiz:deploy"/>
+    </target>
+
+     <target name="ofbiz:int-deploy-jboss3">
+        <echo message="[deploy] ===== deploying jboss3 =====" />
+        <ant antfile="setup/jboss3/build.xml" target="ofbiz:int-deploy"/>
+    </target>
+
+   
+    <!-- ================================================================== -->
+    <!-- Initialization of all property settings                            -->
+    <!-- ================================================================== -->
+
+    <target name="ofbiz-init">
+        <property environment="env" />
+        <property name="home.dir"       value="${ofbiz.home}" />
+        <property name="classes.dir"    value="${home.dir}/classes" />
+        <property name="lib.dir"        value="${home.dir}/lib" />
+        <property name="j2eedeploy.dir" value="${home.dir}/j2eedeploy" />
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Removes all created files and directories                          -->
+    <!-- ================================================================== -->
+
+    <target name="clean" depends="sub-clean">
+        <antcall target="ofbiz:clean-${server}"/>
+    </target>
+
+    <target name="ofbiz-clean" depends="ofbiz-init,sub-clean">
+        <delete dir="${classes.dir}" />
+        <delete dir="${lib.dir}" />
+        <delete dir="${j2eedeploy.dir}" />
+    </target>
+
+    <target name="sub-clean" depends="">
+        <echo message="[clean] ===== Cleaning core =====" />
+        <ant dir="core" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning commonapp =====" />
+        <ant dir="commonapp" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning ecommerce =====" />
+        <ant dir="ecommerce" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning catalog =====" />
+        <ant dir="catalog" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning partymgr =====" />
+        <ant dir="partymgr" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning ordermgr =====" />
+        <ant dir="ordermgr" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning webtools =====" />
+        <ant dir="webtools" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning workeffort =====" />
+        <ant dir="workeffort" target="clean" inheritAll="false" />
+
+        <echo message="[clean] ===== Done Cleaning =====" />
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Makes sure the needed directory structure is in place              -->
+    <!-- ================================================================== -->
+
+    <target name="ofbiz-prepare" depends="ofbiz-init">
+        <mkdir dir="${classes.dir}" />
+        <mkdir dir="${lib.dir}" />
+        <mkdir dir="${j2eedeploy.dir}" />
+    </target>
+
+
+
+    <!-- ================================================================== -->
+    <!-- Build Modules                                                     -->
+    <!-- ================================================================== -->
+
+    <target name="build" depends="">
+        <echo message="[build] ===== Building core =====" />
+        <ant dir="core" inheritAll="false" />
+        <echo message="[build] ===== Building commonapp =====" />
+        <ant dir="commonapp" inheritAll="false" />
+        <echo message="[build] ===== Building ecommerce =====" />
+        <ant dir="ecommerce" inheritAll="false" />
+        <echo message="[build] ===== Building catalog =====" />
+        <ant dir="catalog" inheritAll="false" />
+        <echo message="[build] ===== Building partymgr =====" />
+        <ant dir="partymgr" inheritAll="false" />
+        <echo message="[build] ===== Building ordermgr =====" />
+        <ant dir="ordermgr" inheritAll="false" />
+        <echo message="[build] ===== Building webtools =====" />
+        <ant dir="webtools" inheritAll="false" />
+        <echo message="[build] ===== Building workeffort =====" />
+        <ant dir="workeffort" inheritAll="false" />
+
+        <echo message="[build] ===== Done Building (Compile) =====" />
+    </target>
+
+    <target name="war" depends="build">
+        <echo message="[war] ===== Building commonapp =====" />
+        <ant dir="commonapp" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building ecommerce =====" />
+        <ant dir="ecommerce" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building catalog =====" />
+        <ant dir="catalog" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building partymgr =====" />
+        <ant dir="partymgr" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building ordermgr =====" />
+        <ant dir="ordermgr" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building webtools =====" />
+        <ant dir="webtools" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building workeffort =====" />
+        <ant dir="workeffort" target="war" inheritAll="false" />
+
+        <echo message="[build] ===== Done Building (WAR) =====" />
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build JavaDocs                                                     -->
+    <!-- ================================================================== -->
+
+    <target name="docs" depends="">
+        <echo message="[docs] ===== Javadoc core =====" />
+        <ant dir="core" target="docs" />
+        <echo message="[docs] ===== Javadoc commonapp =====" />
+        <ant dir="commonapp" target="docs" />
+        <echo message="[docs] ===== Javadoc ecommerce =====" />
+        <ant dir="ecommerce" target="docs" />
+        <echo message="[docs] ===== Javadoc catalog =====" />
+        <ant dir="catalog" target="docs" />
+        <echo message="[docs] ===== Javadoc partymgr =====" />
+        <ant dir="partymgr" target="docs" />
+        <echo message="[docs] ===== Javadoc ordermgr =====" />
+        <ant dir="ordermgr" target="docs" />
+        <echo message="[docs] ===== Javadoc workeffort =====" />
+        <ant dir="workeffort" target="docs" />
+
+        <echo message="[docs] ===== Done Building (Docs) =====" />
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Update the apps conf files                                         -->
+    <!-- ================================================================== -->
+
+    <target name="copy-tld" depends="">
+        <echo message="[tld] ===== Copy TLD ====="/>
+        <copy file="core/etc/ofbiz.tld" toDir="webtools/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="commonapp/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="commonapp/empty_webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="ecommerce/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="catalog/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="ordermgr/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="partymgr/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="workeffort/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="webtools/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="commonapp/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="commonapp/empty_webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="ecommerce/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="catalog/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="ordermgr/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="partymgr/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="workeffort/webapp/WEB-INF"/>
+        <echo message="[tld] ===== Done Copying ====="/>
+    </target>
+    <target name="update-apps" depends="copy-tld"/>
+
+    <!-- ================================================================== -->
+    <!-- Install the app to the specified server                            -->
+    <!-- ================================================================== -->
+
+    <target name="install">
+        <antcall target="ofbiz:install-${server}"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Deploy the app                                                     -->
+    <!-- ================================================================== -->
+
+    <target name="deploy" depends="build">
+        <antcall target="ofbiz:deploy-${server}"/>
+    </target>
+    
+    <target name="deploy-ext" depends="build, war">
+        <antcall target="ofbiz:init-${server}"/>
+        <antcall target="ofbiz:deploy-ext-${server}"/>
+    </target>
+    
+    <target name="ofbiz-deploy" depends="build, ofbiz-prepare, ofbiz-init">
+        <antcall target="ofbiz:int-deploy-${server}"/>
+    </target>
+
+    <target name="ofbiz-deploy-ext" depends="build, ofbiz-prepare, ofbiz-init, war">
+        <antcall target="ofbiz:int-deploy-${server}"/>
+        <antcall target="int-deploy-ext" />
+    </target>
+
+    <target name="ejbdeploy" depends="deploy">
+        <copy file="core/lib/ofbcore-ejb.jar"
+            toFile="${j2eedeploy.dir}/ofbcore-ejb.jar" />
+    </target>
+
+    <!-- Copy all files necessary for EXTERNAL running -->
+    <target name="int-deploy-ext" depends="">
+        <mkdir dir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/entitymodel.xml"
+            toFile="${home.dir}/commonapp/entitydef/entitymodel.xml" />
+        <copy file="commonapp/entitydef/fieldtypemysql.xml"
+            toFile="${home.dir}/commonapp/entitydef/fieldtypemysql.xml" />
+
+        <copy file="ecommerce/lib/ecommerce-ext.war"
+            toFile="${j2eedeploy.dir}/ecommerce-ext.war" />
+
+        <copy file="catalog/lib/catalog-ext.war"
+            toFile="${j2eedeploy.dir}/catalog-ext.war" />
+        <copy file="partymgr/lib/partymgr-ext.war"
+            toFile="${j2eedeploy.dir}/partymgr-ext.war" />
+        <copy file="ordermgr/lib/ordermgr-ext.war"
+            toFile="${j2eedeploy.dir}/ordermgr-ext.war" />
+        <copy file="workeffort/lib/workeffort-ext.war"
+            toFile="${j2eedeploy.dir}/workeffort-ext.war" />
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Deploy the app (External)                                          -->
+    <!-- ================================================================== -->
+
+    <target name="ext" depends="war">
+        <property name="ext-build.dir" value="ext-build"/>
+        <property name="ext.dir" value="${ext-build.dir}/ofbiz"/>
+        <mkdir dir="${ext.dir}/commonapp/globalservices"/>
+        <mkdir dir="${ext.dir}/commonapp/entitydef"/>
+        <mkdir dir="${ext.dir}/commonapp/db"/>
+        <mkdir dir="${ext.dir}/lib/ext"/>
+        <mkdir dir="${ext.dir}/service"/>
+        <mkdir dir="${ext.dir}/entity"/>
+        <mkdir dir="${ext.dir}/etc"/>
+        <mkdir dir="${ext.dir}/webapps"/>
+
+        <copy file="lib/common/castor-0.9.3.9.jar"           toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/hsqldb.jar"                   toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/jdbc7.1-1.3.jar"              toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/log4j.jar"                    toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/mm.mysql-2.0.8-bin.jar"       toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/ots-jts_1.0.jar"              toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/tyrex-0.9.8.5.jar"            toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/share/axis.jar"                      toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/share/bsh-1.2b3.jar"                 toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/share/clutil.jar"                    toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/share/wsdl4j.jar"                    toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/share/jakarta-oro-2.0.4.jar"         toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/share/velocity-1.2.jar"              toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/share/velocity-dep-1.2.jar"          toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/compile/jdbc2_0-stdext.jar"          toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/compile/activation.jar"              toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/compile/mail.jar"                    toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/compile/xerces.jar"                  toDir="${ext.dir}/lib/ext"/>
+
+        <copy file="core/lib/ofbcore-share.jar"              toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-entity.jar"             toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-service.jar"            toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-extutil.jar"            toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-workflow.jar"           toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-rules.jar"              toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-datafile.jar"           toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-minilang.jar"           toDir="${ext.dir}/lib"/>
+        <copy file="commonapp/lib/commonapp.jar"             toDir="${ext.dir}/lib"/>
+
+        <copy file="webtools/lib/webtools.war"               toDir="${ext.dir}/webapps"/>
+        <copy file="commonapp/lib/commonapp.war"             toDir="${ext.dir}/webapps"/>
+        <copy file="ecommerce/lib/ecommerce.war"             toDir="${ext.dir}/webapps"/>
+        <copy file="ecommerce/lib/images.war"                toDir="${ext.dir}/webapps"/>
+        <copy file="catalog/lib/catalog.war"                 toDir="${ext.dir}/webapps"/>
+        <copy file="partymgr/lib/partymgr.war"               toDir="${ext.dir}/webapps"/>
+        <copy file="ordermgr/lib/ordermgr.war"               toDir="${ext.dir}/webapps"/>
+        <copy file="workeffort/lib/workeffort.war"           toDir="${ext.dir}/webapps"/>
+
+        <copy file="commonapp/etc/serverstats.properties"    toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/entityengine.xml"          toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/security.properties"       toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/debug.properties"          toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/cache.properties"          toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/localdtds.properties"      toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/serviceengine.xml"         toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/tyrexdomain.xml"           toDir="${ext.dir}/etc"/>
+
+        <copy toDir="${ext.dir}/commonapp/entitydef">
+          <fileset dir="commonapp/entitydef"/>
+        </copy>
+
+        <copy toDir="${ext.dir}/commonapp/globalservices">
+          <fileset dir="commonapp/globalservices"/>
+        </copy>
+
+        <copy toDir="${ext.dir}/commonapp/db">
+          <fileset dir="commonapp/db"/>
+        </copy>
+
+        <jar jarfile="ofbext.jar" basedir="${ext-build.dir}"/>
+        <delete dir="${ext-build.dir}"/>
+    </target>
+
+    <target name="ear" depends="war">
+        <property name="eartemp.dir" value="eartemp" />
+        <mkdir dir="${eartemp.dir}/META-INF" />
+        <copy file="commonapp/earetc/application.xml"
+            toFile="${eartemp.dir}/META-INF/application.xml" />
+
+        <copy file="webtools/lib/webtools.war" toFile="${eartemp.dir}/webtools.war" />
+        <copy file="commonapp/lib/commonapp.war" toFile="${eartemp.dir}/commonapp.war" />
+
+        <copy file="ecommerce/lib/ecommerce.war" toFile="${eartemp.dir}/ecommerce.war" />
+        <copy file="ecommerce/lib/images.war" toFile="${eartemp.dir}/images.war" />
+
+        <copy file="catalog/lib/catalog.war" toFile="${eartemp.dir}/catalog.war" />
+        <copy file="partymgr/lib/partymgr.war" toFile="${eartemp.dir}/partymgr.war" />
+        <copy file="ordermgr/lib/ordermgr.war" toFile="${eartemp.dir}/ordermgr.war" />
+        <copy file="workeffort/lib/workeffort.war" toFile="${eartemp.dir}/workeffort.war" />
+
+        <jar jarfile="./ofbiz.ear" basedir="${eartemp.dir}" />
+        <delete dir="${eartemp.dir}" />
+    </target>
+
+</project>

@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+
+<!--
+ *  Copyright (c) 2001 The Open For Business Project and respected authors.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  This is the  Open for Business CORE component build script.
+ *  $Id$
+-->
+
+<project name="Open For Business Main Build" default="deploy" basedir=".">
+
+    <!-- ================================================================== -->
+    <!-- Install OFBIZ Components in JBoss & Tomcat                         -->
+    <!-- ================================================================== -->
+
+    <target name="ofbiz:install">
+        <property environment="env" />
+        <property name="jboss3.dir" value="${server.home}" />
+        <property name="conf.dir"     value="${jboss3.dir}/server/ofbiz/conf" />
+        <property name="j2eedeploy.dir"  value="${jboss3.dir}/server/ofbiz/deploy" />
+
+        <mkdir dir="${jboss3.dir}/server/ofbiz"/>
+        <mkdir dir="${jboss3.dir}/server/ofbiz/deploy"/>
+        <mkdir dir="${jboss3.dir}/server/ofbiz/conf"/>
+
+
+        <copy todir="${conf.dir}">
+            <fileset dir="${jboss3.dir}/server/default/conf"/>
+        </copy>
+
+        <copy todir="${j2eedeploy.dir}">
+            <fileset dir="${jboss3.dir}/server/default/deploy"/>
+        </copy>
+
+        <copy file="setup/jboss3/bin/ofbiz.sh" toDir="${jboss3.dir}/bin" />
+        <copy file="setup/jboss3/bin/ofbiz.bat" toDir="${jboss3.dir}/bin" /> 
+
+        <copy file="setup/jboss3/server/ofbiz/conf/debug.properties" toDir="${conf.dir}" />
+        <copy file="setup/jboss3/server/ofbiz/deploy/entityengine.xml" toDir="${j2eedeploy.dir}" />
+
+        <copy file="lib/common/jdbc7.1-1.3.jar" toDir="${j2eedeploy.dir}"/>
+        <copy file="lib/common/mm.mysql-2.0.8-bin.jar" toDir="${j2eedeploy.dir}"/>
+        <copy file="lib/common/ots-jts_1.0.jar" toDir="${j2eedeploy.dir}"/>
+        <copy file="lib/share/bsh-1.2b3.jar" toDir="${j2eedeploy.dir}"/>
+        <copy file="lib/share/clutil.jar" toDir="${j2eedeploy.dir}"/>
+        <copy file="lib/share/jakarta-oro-2.0.4.jar" toDir="${j2eedeploy.dir}"/>
+
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Initialization of all property settings                            -->
+    <!-- ================================================================== -->
+    <target name="ofbiz:init">
+        <property environment="env" />
+        <property name="jboss3.dir"    value="${server.home}" />
+        <property name="home.dir"        value="${ofbiz.home}" />
+
+        <property name="conf.dir"     value="${jboss3.dir}/server/ofbiz/conf" />
+        <property name="j2eedeploy.dir"  value="${jboss3.dir}/server/ofbiz/deploy" />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Removes all created files and directories                          -->
+    <!-- ================================================================== -->
+
+    <target name="ofbiz:clean" depends="ofbiz:init">
+        <delete file="${conf.dir}/serverstats.properties" />
+        <delete file="${conf.dir}/entityengine.xml" />
+        <delete file="${conf.dir}/security.properties" />
+        <delete file="${conf.dir}/debug.properties" />
+        <delete file="${conf.dir}/cache.properties" />
+        <delete file="${conf.dir}/localdtds.properties" />
+        <delete file="${conf.dir}/serviceengine.xml" />
+
+        <delete dir="${conf.dir}/org/ofbiz/commonapp" />
+
+        <delete file="${j2eedeploy.dir}/ofbcore-share.jar" />
+        <delete file="${j2eedeploy.dir}/ofbcore-entity.jar" />
+        <delete file="${j2eedeploy.dir}/ofbcore-service.jar" />
+        <delete file="${j2eedeploy.dir}/ofbcore-extutil.jar" />
+        <delete file="${j2eedeploy.dir}/ofbcore-workflow.jar" />
+        <delete file="${j2eedeploy.dir}/ofbcore-rules.jar" />
+        <delete file="${j2eedeploy.dir}/ofbcore-datafile.jar" />
+        <delete file="${j2eedeploy.dir}/ofbcore-minilang.jar" />
+
+        <delete file="${j2eedeploy.dir}/commonapp.jar" />
+
+        <delete file="${j2eedeploy.dir}/ofbcore-ejb.jar" />
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Deploy the app                                                     -->
+    <!-- ================================================================== -->
+    <target name="ofbiz:deploy" depends="ofbiz:init">
+        <echo message="[deploy] ===== deploying OFBiz for JBoss3 =====" />
+        <antcall target="ofbiz:int-deploy" />
+    </target>
+
+    <target name="ofbiz:deploy-ext" depends="ofbiz:init">
+        <echo message="[TODO] ===== Target 'deploy-ext' not implemented for JBoss3 =====" />
+        <!-- <antcall target="ofbiz:int-deploy" /> -->
+    </target>
+
+
+    <target name="ofbiz:int-deploy">
+
+        <ant dir="." target="ear" inheritAll="false" />
+
+        <copy file="commonapp/etc/serverstats.properties" toFile="${conf.dir}/serverstats.properties" />
+        <copy file="commonapp/etc/entityengine.xml" toFile="${conf.dir}/entityengine.xml" />
+        <copy file="commonapp/etc/security.properties" toFile="${conf.dir}/security.properties" />
+        <copy file="commonapp/etc/cache.properties" toFile="${conf.dir}/cache.properties" />
+        <copy file="commonapp/etc/localdtds.properties" toFile="${conf.dir}/localdtds.properties" />
+        <copy file="commonapp/etc/serviceengine.xml" toFile="${conf.dir}/serviceengine.xml" />
+        <copy file="commonapp/etc/tyrexdomain.xml" toFile="${conf.dir}/tyrexdomain.xml" />
+
+        <copy file="core/lib/ofbcore-share.jar" toFile="${j2eedeploy.dir}/ofbcore-share.jar" />
+        <copy file="core/lib/ofbcore-entity.jar" toFile="${j2eedeploy.dir}/ofbcore-entity.jar" />
+        <copy file="core/lib/ofbcore-service.jar" toFile="${j2eedeploy.dir}/ofbcore-service.jar" />
+        <copy file="core/lib/ofbcore-extutil.jar" toFile="${j2eedeploy.dir}/ofbcore-extutil.jar" />
+        <copy file="core/lib/ofbcore-workflow.jar" toFile="${j2eedeploy.dir}/ofbcore-workflow.jar" />
+        <copy file="core/lib/ofbcore-rules.jar" toFile="${j2eedeploy.dir}/ofbcore-rules.jar" />
+        <copy file="core/lib/ofbcore-datafile.jar" toFile="${j2eedeploy.dir}/ofbcore-datafile.jar" />
+        <copy file="core/lib/ofbcore-minilang.jar" toFile="${j2eedeploy.dir}/ofbcore-minilang.jar" />
+
+        <copy file="commonapp/lib/commonapp.jar" toFile="${j2eedeploy.dir}/commonapp.jar" />
+
+        <copy file="ofbiz.ear" toFile="${j2eedeploy.dir}/ofbiz.ear" />
+    </target>
+
+</project>
