@@ -9,12 +9,10 @@
 <ofbiz:service name="getProductFeatureSet">
     <ofbiz:param name='productId' value='<%=request.getParameter("product_id")%>'/>
 </ofbiz:service>
-<%Debug.logInfo("Got feature list..");%>
 <ofbiz:service name="getProductVariantTree">
     <ofbiz:param name='productId' value='<%=request.getParameter("product_id")%>'/>
     <ofbiz:param name='featureOrder' attribute='featureSet'/>
 </ofbiz:service>
-<%Debug.logInfo("Got tree..");%>
 
 <%
   List featureOrder = new LinkedList((Collection) pageContext.getAttribute("featureSet"));
@@ -37,10 +35,11 @@
             Object value = map.get(key);
             Debug.logInfo("" + key + " value: " + value);
             String optValue = null;
-            if (order.indexOf(current) == (order.size()-1))
+            if (order.indexOf(current) == (order.size()-1)) {
                 optValue = ((String) ((List)value).iterator().next());
-            else
+            } else {
                 optValue = prefix + "" + ct;
+            }
             buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options[" + (ct + 1) + "] = new Option(\"" + key + "\",\"" + optValue + "\");");
             ct++;
         }
@@ -130,9 +129,19 @@ function fixList(list) {
     return;
   if (currentOrderIndex < (OPT.length - 1)) {
     eval("list" + OPT[currentOrderIndex+1] + list.options[list.selectedIndex].value + "()");
+    document.addform.add_product_id.value = 'NULL';
   } else {
     //document.addform.product_id.value = list.options[list.selectedIndex].value;
     document.addform.add_product_id.value = list.options[list.selectedIndex].value;
+  }
+}
+
+function addItem() {
+  if (document.addform.add_product_id.value == 'NULL') {
+    alert("Please select from the list of options.");
+    return;
+  } else {
+    document.addform.submit();
   }
 }
 
@@ -184,7 +193,7 @@ function fixList(list) {
           <%-- Variant Selection --%>
           <ofbiz:if name="variantTree" size="0">
             <%Debug.logInfo("FeatureOrder: " + featureOrder.size() + " / " + featureOrder);%>
-            <ofbiz:iterator name="currentType" property="featureOrder" type="java.lang.String">
+            <ofbiz:iterator name="currentType" property="featureSet" type="java.lang.String">
               <%Debug.logInfo("CurrentType: " + currentType);%>
               <div class="tabletext">
                 <select name="<%=currentType%>" onChange="fixList(this)">
@@ -192,18 +201,17 @@ function fixList(list) {
                 </select>
               </div>
             </ofbiz:iterator>
+              <input type='hidden' name="product_id" value='<ofbiz:entityfield attribute="productValue" field="productId"/>'>
+              <input type='hidden' name="add_product_id" value='NULL'>
           </ofbiz:if>
           <ofbiz:unless name="variantTree" size="0">
-            <%-- some hidden field w/ productId --%>
+            <input type='hidden' name="product_id" value='<ofbiz:entityfield attribute="productValue" field="productId"/>'>
+            <input type='hidden' name="add_product_id" value='<ofbiz:entityfield attribute="productValue" field="productId"/>'>
           </ofbiz:unless>
           <%-- End of Variant Selection --%>
 
           <p>&nbsp;</p>
-
-          <input type='hidden' name="product_id" value='<ofbiz:entityfield attribute="productValue" field="productId"/>'>
-          <input type='hidden' name="add_product_id" value='<ofbiz:entityfield attribute="productValue" field="productId"/>'>
-
-          <a href="javascript:document.addform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a>&nbsp;
+          <a href="javascript:addItem()" class="buttontext"><nobr>[Add to Cart]</nobr></a>&nbsp;
           <input type="text" size="5" name="quantity" value="1">
 
           <%=UtilFormatOut.ifNotEmpty(request.getParameter("category_id"), "<input type='hidden' name='category_id' value='", "'>")%>
