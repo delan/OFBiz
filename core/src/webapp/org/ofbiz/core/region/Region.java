@@ -48,8 +48,6 @@ import org.ofbiz.core.util.*;
  */
 public class Region extends Content {
 
-    public static final String regionsFileName = "/WEB-INF/regions.xml";
-
     private Map sections = new HashMap();
     protected String id;
 

@@ -32,6 +32,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.TagSupport;
+import org.ofbiz.core.util.*;
 
 /**
  * Tag to put a section in a region
@@ -62,7 +63,7 @@ public class PutTag extends BodyTagSupport {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         URL regionFile = null;
         try {
-            regionFile = pageContext.getServletContext().getResource(Region.regionsFileName);
+            regionFile = pageContext.getServletContext().getResource(SiteDefs.REGIONS_CONFIG_LOCATION);
         } catch (java.net.MalformedURLException e) {
             throw new IllegalArgumentException("regions.xml file URL invalid: " + e.getMessage());
         }

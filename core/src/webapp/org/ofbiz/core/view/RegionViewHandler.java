@@ -50,13 +50,13 @@ public class RegionViewHandler implements ViewHandler {
         this.context = context;
 
         try {
-            regionFile = context.getResource(Region.regionsFileName);
+            regionFile = context.getResource(SiteDefs.REGIONS_CONFIG_LOCATION);
         } catch (java.net.MalformedURLException e) {
             throw new IllegalArgumentException("regions.xml file URL invalid: " + e.getMessage());
         }
         
         if (regionFile == null) {
-            Debug.logWarning("No " + Region.regionsFileName + " file found in this webapp");
+            Debug.logWarning("No " + SiteDefs.REGIONS_CONFIG_LOCATION + " file found in this webapp");
         } else {
             Debug.logVerbose("Loading regions from XML file in: " + regionFile);
             RegionManager.getRegions(regionFile);

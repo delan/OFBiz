@@ -30,6 +30,7 @@ import java.net.*;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
+import org.ofbiz.core.util.*;
 
 /**
  * Base tag for other region tags, uses "/WEB-INF/regions.xml" file
@@ -55,7 +56,7 @@ public class RegionTag extends TagSupport {
     protected boolean findRegionByKey() throws JspException {
         URL regionFile = null;
         try {
-            regionFile = pageContext.getServletContext().getResource(Region.regionsFileName);
+            regionFile = pageContext.getServletContext().getResource(SiteDefs.REGIONS_CONFIG_LOCATION);
         } catch (java.net.MalformedURLException e) {
             throw new IllegalArgumentException("regions.xml file URL invalid: " + e.getMessage());
         }

@@ -50,10 +50,10 @@ public class RequestManager implements Serializable {
     public RequestManager(ServletContext context) {
         /** Loads the site configuration from servlet context parameter. */
         try {
-            configFileUrl = context.getResource(context.getInitParameter(SiteDefs.SITE_CONFIG));
+            configFileUrl = context.getResource(SiteDefs.CONTROLLER_CONFIG_LOCATION);
         } catch (Exception e) {
             Debug.logError(e, "[RequestManager.constructor] Error Finding XML Config File: " +
-                              context.getInitParameter(SiteDefs.SITE_CONFIG), module);
+                              SiteDefs.CONTROLLER_CONFIG_LOCATION, module);
         }
         //do quick inits:
         ConfigXMLReader.getConfigMap(configFileUrl);

@@ -45,8 +45,11 @@ public final class SiteDefs {
     /** Required context init parameter to specify the entity delegator name as defined in entityengine.xml */
     public static final String ENTITY_DELEGATOR_NAME = "entityDelegatorName";
 
-    /** Required context init parameter to locate site specific configuration */
-    public static final String SITE_CONFIG = "siteConfigurationFile";
+    /** Location of controller configuration XML file */
+    public static final String CONTROLLER_CONFIG_LOCATION = "/WEB-INF/controller.xml";
+    /** Location of regions configuration XML file */
+    public static final String REGIONS_CONFIG_LOCATION = "/WEB-INF/regions.xml";
+
 
     /** Required context init parameter to locate scheduler configuration */
     public static final String SCHEDULER_CONFIG = "schedulerConfigurationFile";

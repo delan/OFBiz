@@ -30,6 +30,7 @@ import java.net.*;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
+import org.ofbiz.core.util.*;
 
 /**
  * Tag to define a region
@@ -61,7 +62,7 @@ public class RegionDefinitionTag extends RegionTag {
     public int doEndTag() throws JspException {
         URL regionFile = null;
         try {
-            regionFile = pageContext.getServletContext().getResource(Region.regionsFileName);
+            regionFile = pageContext.getServletContext().getResource(SiteDefs.REGIONS_CONFIG_LOCATION);
         } catch (java.net.MalformedURLException e) {
             throw new IllegalArgumentException("regions.xml file URL invalid: " + e.getMessage());
         }
