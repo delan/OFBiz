@@ -1,5 +1,5 @@
 /*
- * $Id: WebShoppingCart.java,v 1.3 2003/09/04 03:21:55 ajzeneski Exp $
+ * $Id: WebShoppingCart.java,v 1.4 2003/10/30 19:29:41 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
+import org.ofbiz.base.util.UtilHttp;
 
 /**
  * <p><b>Title:</b> WebShoppingCart.java
@@ -43,7 +44,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class WebShoppingCart extends ShoppingCart {
@@ -58,6 +59,7 @@ public class WebShoppingCart extends ShoppingCart {
     /** Creates new empty ShoppingCart object. */
     public WebShoppingCart(HttpServletRequest request) {
         super((GenericDelegator)request.getAttribute("delegator"), ProductStoreWorker.getProductStoreId(request), CatalogWorker.getWebSiteId(request));
+        super.setLocale(UtilHttp.getLocale(request));
         this.session = request.getSession();
     }
     
