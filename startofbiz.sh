@@ -14,7 +14,11 @@ OFBIZ_LOG=logs/console.log
 rm -f $OFBIZ_LOG
 
 # VM args
-VMARGS="-Xmx128M -Dofbiz.admin.port=$ADMIN_PORT -Dofbiz.admin.key=$ADMIN_KEY"
+ADMIN="-Dofbiz.admin.port=$ADMIN_PORT -Dofbiz.admin.key=$ADMIN_KEY"
+#DEBUG="-Dsun.rmi.server.exceptionTrace=true"
+#RMIIF="-Djava.rmi.server.hostname=<set your IP address here>"
+MEMIF="-Xms128M -Xmx128M"
+VMARGS="$MEMIF $DEBUG $RMIIF $ADMIN"
 
 # Worldpay Config
 #VMARGS="-Xbootclasspath/p:components/accounting/lib/cryptix.jar $VMARGS"
