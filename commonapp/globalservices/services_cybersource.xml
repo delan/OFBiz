@@ -7,7 +7,7 @@
     <version>1.0</version>
 
     <service name="authCC" engine="java"
-            location="org.ofbiz.commonapp.thirdparty.cybersource" invoke="authorizeCC">
+            location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="authorizeCC">
         <description>Authorize Credit Cart</description>
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="paymentMethodId" type="String" mode="IN"/>
@@ -15,7 +15,7 @@
     </service>
 
     <service name="billCC" engine="java"
-            location="org.ofbiz.commonapp.thirdparty.cybersource" invoke="billCC">
+            location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="billCC">
         <description>Bill (Settle) Credit Card Authorization</description>
         <attribute name="orderId" type="String" mode="IN"/>
     </service>
