@@ -867,6 +867,17 @@
         <response name="error" type="view" value="profilesurvey"/>
     </request-map>
 
+    <request-map uri="contactus">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="contactus"/>
+    </request-map>
+    <request-map uri="contactsubmit">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCommunicationEvent"/>
+        <response name="success" type="view" value="contactus"/>
+        <response name="error" type="view" value="contactus"/>
+    </request-map>
+
     <request-map uri="defaultcontent">
         <security https="true" auth="false"/>
         <response name="success" type="view" value="defaultcontent"/>
@@ -965,6 +976,7 @@
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="jpublish" page="/main.ftl"/>
     <view-map name="login" type="jpublish" page="/login.ftl"/>
+    <view-map name="contactus" type="jpublish" page="/contactus.ftl"/>
     <view-map name="survey" type="jpublish" page="/survey.ftl"/>
     <view-map name="passwordemail" page="/customer/passwordemail.jsp"/>
 
