@@ -89,15 +89,15 @@ public class BOMHelper {
      * @return the ProductAssoc generic value for a duplicate productIdKey
      * ancestor if present, null otherwise.
      */    
-    public static GenericValue searchDuplicatedAncestor(String productId, String productIdKey, String bomType, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
-        return searchDuplicatedAncestor(productId, productIdKey, null, bomType, inDate, delegator, dispatcher);
+    public static GenericValue searchDuplicatedAncestor(String productId, String productIdKey, String bomType, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException {
+        return searchDuplicatedAncestor(productId, productIdKey, null, bomType, inDate, delegator, dispatcher, userLogin);
     }
     
-    private static GenericValue searchDuplicatedAncestor(String productId, String productIdKey, ArrayList productIdKeys, String bomType, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
+    private static GenericValue searchDuplicatedAncestor(String productId, String productIdKey, ArrayList productIdKeys, String bomType, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException {
         // If the date is null, set it to today.
         if (inDate == null) inDate = new Date();
         if (productIdKeys == null) {
-            BOMTree tree = new BOMTree(productIdKey, bomType, inDate, delegator, dispatcher);
+            BOMTree tree = new BOMTree(productIdKey, bomType, inDate, delegator, dispatcher, userLogin);
             productIdKeys = tree.getAllProductsId();
             productIdKeys.add(productIdKey);
         }
@@ -115,7 +115,7 @@ public class BOMHelper {
                     return oneNode;
                 }
             }
-            duplicatedNode = searchDuplicatedAncestor(oneNode.getString("productId"), productIdKey, productIdKeys, bomType, inDate, delegator, dispatcher);
+            duplicatedNode = searchDuplicatedAncestor(oneNode.getString("productId"), productIdKey, productIdKeys, bomType, inDate, delegator, dispatcher, userLogin);
             if (duplicatedNode != null) {
                 break;
             }

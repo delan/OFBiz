@@ -44,8 +44,11 @@
         <field name="fromDate" title="${uiLabelMap.ManufacturingFromDate}">
             <date-time/>
         </field>
-        <field name="rootQuantity" title="${uiLabelMap.CommonQuantity}">
+        <field name="quantity" title="${uiLabelMap.CommonQuantity}">
             <text default-value="1"/>
+        </field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}">
+            <text default-value="0"/>
         </field>
         <field name="type">
             <drop-down>

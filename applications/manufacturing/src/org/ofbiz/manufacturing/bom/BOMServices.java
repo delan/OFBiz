@@ -265,6 +265,8 @@ public class BOMServices {
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        
         String productId = (String) context.get("productId");
         String productIdKey = (String) context.get("productIdTo");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
@@ -274,7 +276,7 @@ public class BOMServices {
         }
         GenericValue duplicatedProductAssoc = null;
         try {
-            duplicatedProductAssoc = BOMHelper.searchDuplicatedAncestor(productId, productIdKey, bomType, fromDate, delegator, dispatcher);
+            duplicatedProductAssoc = BOMHelper.searchDuplicatedAncestor(productId, productIdKey, bomType, fromDate, delegator, dispatcher, userLogin);
         } catch(GenericEntityException gee) {
             return ServiceUtil.returnError("Error running duplicated ancestor search: " + gee.getMessage());
         }
@@ -298,11 +300,13 @@ public class BOMServices {
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
         String productId = (String) context.get("productId");
         String fromDateStr = (String) context.get("fromDate");
         String bomType = (String) context.get("bomType");
         Integer type = (Integer) context.get("type");
         Double quantity = (Double) context.get("quantity");
+        Double amount = (Double) context.get("amount");
         if (type == null) {
             type = new Integer(0);
         }
@@ -320,12 +324,15 @@ public class BOMServices {
         
         BOMTree tree = null;
         try {
-            tree = new BOMTree(productId, bomType, fromDate, type.intValue(), delegator, dispatcher);
+            tree = new BOMTree(productId, bomType, fromDate, type.intValue(), delegator, dispatcher, userLogin);
         } catch(GenericEntityException gee) {
             return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
         }
         if (tree != null && quantity != null) {
             tree.setRootQuantity(quantity.doubleValue());
+        }
+        if (tree != null && amount != null) {
+            tree.setRootAmount(amount.doubleValue());
         }
         result.put("tree", tree);
 
@@ -346,15 +353,21 @@ public class BOMServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
-
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        
         String productId = (String) context.get("productId");
         Double quantity = (Double) context.get("quantity");
+        Double amount = (Double) context.get("amount");
         String fromDateStr = (String) context.get("fromDate");
         Boolean excludeWIPs = (Boolean) context.get("excludeWIPs");
         
         if (quantity == null) {
             quantity = new Double(1);
         }
+        if (amount == null) {
+            amount = new Double(0);
+        }
+
         Date fromDate = null;
         if (UtilValidate.isNotEmpty(fromDateStr)) {
             try {
@@ -375,8 +388,9 @@ public class BOMServices {
         BOMTree tree = null;
         ArrayList components = new ArrayList();
         try {
-            tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_SINGLE_LEVEL, delegator, dispatcher);
+            tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_SINGLE_LEVEL, delegator, dispatcher, userLogin);
             tree.setRootQuantity(quantity.doubleValue());
+            tree.setRootAmount(amount.doubleValue());
             tree.print(components, excludeWIPs.booleanValue());
             if (components.size() > 0) components.remove(0);
         } catch(GenericEntityException gee) {
@@ -416,12 +430,17 @@ public class BOMServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productId = (String) context.get("productId");
         Double quantity = (Double) context.get("quantity");
+        Double amount = (Double) context.get("amount");
         String fromDateStr = (String) context.get("fromDate");
         GenericValue userLogin = (GenericValue)context.get("userLogin");
 
         if (quantity == null) {
             quantity = new Double(1);
         }
+        if (amount == null) {
+            amount = new Double(0);
+        }
+
         Date fromDate = null;
         if (UtilValidate.isNotEmpty(fromDateStr)) {
             try {
@@ -437,8 +456,9 @@ public class BOMServices {
         ArrayList components = new ArrayList();
         ArrayList notAssembledComponents = new ArrayList();
         try {
-            tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher);
+            tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher, userLogin);
             tree.setRootQuantity(quantity.doubleValue());
+            tree.setRootAmount(amount.doubleValue());
             tree.print(components);
         } catch(GenericEntityException gee) {
             return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
@@ -739,7 +759,8 @@ public class BOMServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
-
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        
         String productId = (String) context.get("productId");
         Double quantity = (Double) context.get("quantity");
         String fromDateStr = (String) context.get("fromDate");
@@ -764,7 +785,7 @@ public class BOMServices {
         BOMTree tree = null;
         ArrayList components = new ArrayList();
         try {
-            tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher);
+            tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher, userLogin);
             tree.setRootQuantity(quantity.doubleValue());
             tree.getProductsInPackages(components);
         } catch(GenericEntityException gee) {
