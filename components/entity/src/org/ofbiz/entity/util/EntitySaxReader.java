@@ -86,10 +86,11 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     protected int valuesPerWrite = 100;
     protected int valuesPerMessage = 1000;
     protected int transactionTimeout = 7200;
-    boolean useTryInsertMethod = false;
+    protected boolean useTryInsertMethod = false;
+    protected boolean maintainTxStamps = false;
 
     protected List valuesToWrite = new ArrayList(valuesPerWrite);
-    
+
     protected boolean isParseForTemplate = false;
     protected String templatePath = null;
     protected Node rootNodeForTemplate = null;
@@ -136,6 +137,14 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
             TransactionUtil.setTransactionTimeout(transactionTimeout);
             this.transactionTimeout = transactionTimeout;
         }
+    }
+
+    public boolean getMaintainTxStamps() {
+        return this.maintainTxStamps;
+    }
+
+    public void setMaintainTxStamps(boolean maintainTxStamps) {
+        this.maintainTxStamps = maintainTxStamps;
     }
 
     public long parse(String content) throws SAXException, java.io.IOException {
@@ -419,7 +428,10 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                 currentValue = delegator.makeValue(entityName, null);
                 // TODO: do we really want this? it makes it so none of the values imported have create/update timestamps set 
                 // DEJ 10/16/04 I think they should all be stamped, so commenting this out
-                //currentValue.setIsFromEntitySync(true);
+                // JAZ 12/10/04 I think it should be specified when creating the reader
+                if (this.maintainTxStamps) {
+                    currentValue.setIsFromEntitySync(true);
+                }
             } catch (Exception e) {
                 Debug.logError(e, module);
             }

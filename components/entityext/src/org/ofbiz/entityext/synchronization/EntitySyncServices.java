@@ -225,8 +225,12 @@ public class EntitySyncServices {
             result.put("toRemoveAlreadyDeleted", new Long(toRemoveAlreadyDeleted));
             return result;
         } catch (GenericEntityException e) {
-            String errorMsg = "Error saving Entity Sync Data for entitySyncId [" + entitySyncId + "]: " + e.toString();
+            String errorMsg = "Exception saving Entity Sync Data for entitySyncId [" + entitySyncId + "]: " + e.toString();
             Debug.logError(e, errorMsg, module);
+            return ServiceUtil.returnError(errorMsg);
+        } catch (Throwable t) {
+            String errorMsg = "Error saving Entity Sync Data for entitySyncId [" + entitySyncId + "]: " + t.toString();
+            Debug.logError(t, errorMsg, module);
             return ServiceUtil.returnError(errorMsg);
         }
     }
