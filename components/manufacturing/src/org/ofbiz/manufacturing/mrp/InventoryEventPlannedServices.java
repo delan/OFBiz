@@ -45,57 +45,88 @@ import org.ofbiz.service.ServiceUtil;
  * InventoryEventPlannedServices - InventoryEventPlanned related Services
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class InventoryEventPlannedServices {
     
     public static final String module = InventoryEventPlannedServices.class.getName();
-
-/**
- * 
- * Transform parameters used to created a requirement to parameters needed to created an InventoryEventPlanned.
- * This service is call by ECA to create an InventoryEventPlanned when a proposed Order is created.
- * 
- * @param ctx 
- * @param context: a map containing the parameters used to create an requirement (see the servcie definition) 
- * @return result: a map containing the parameters needed for the InventoryEventPlannedCreate services
- */
+    
+    /**
+     *
+     * Transform parameters used to created a requirement to parameters needed to created an InventoryEventPlanned.
+     * This service is call by ECA to create an InventoryEventPlanned when a proposed Order is created.
+     *
+     * @param ctx
+     * @param context: a map containing the parameters used to create an requirement (see the servcie definition)
+     * @return result: a map containing the parameters needed for the InventoryEventPlannedCreate services
+     */
     public static Map prepParamFromRequirement(DispatchContext ctx, Map context) {
- 		// No permission checking because this services is call from other services/
-		Map result = new HashMap();
+        // No permission checking because this services is call from other services/
+        Map result = new HashMap();
         
-		result.put("productId", context.get("productId"));
+        result.put("productId", context.get("productId"));
         result.put("eventDate", context.get("requiredByDate"));
         if (context.get("requirementTypeId").equals("MRP_PRO_PROD_ORDER"))
-                 result.put("inventoryEventPlanTypeId","PROP_MANUF_O_RECP");
-        else if (context.get("requirementTypeId").equals("MRP_PRO_PURCH_ORDER")) 
-                result.put("inventoryEventPlanTypeId","PROP_PUR_O_RECP");
+            result.put("inventoryEventPlanTypeId","PROP_MANUF_O_RECP");
+        else if (context.get("requirementTypeId").equals("MRP_PRO_PURCH_ORDER"))
+            result.put("inventoryEventPlanTypeId","PROP_PUR_O_RECP");
         else {
             Debug.logError("Error : createInventoryEventPlanned from Requirement with requirementTypeId = "+context.get("requirementTypeId"), module);
             return ServiceUtil.returnError("Error createInventoryEventPlanned from Requirement, invalid parameters");
         }
         result.put("eventQuantity", context.get("quantity"));
         return result;
-    } 
+    }
     /**
-     * 
-     *  Create an InventoryEventPlanned. 
-     *  Make an update if a record exist with same key,  (adding the eventQuantity to the exiting record) 
-     * 
-     * @param ctx 
-     * @param context: a map containing the parameters used to create an InventoryEventPlanned (see the servcie definition) 
+     *
+     *  Create an InventoryEventPlanned.
+     *  Make an update if a record exist with same key,  (adding the eventQuantity to the exiting record)
+     *
+     * @param ctx
+     * @param context: a map containing the parameters used to create an InventoryEventPlanned (see the servcie definition)
      * @return result: a map with service status
      */
     public static Map createInventoryEventPlanned(DispatchContext ctx, Map context) {
         GenericDelegator delegator = ctx.getDelegator();
-         // No permission checking because this services is call from other services/
-        Map parameters = UtilMisc.toMap(
-            "productId",context.get("productId"),
-            "eventDate",context.get("eventDate"),
-            "inventoryEventPlanTypeId",context.get("inventoryEventPlanTypeId")); 
+        // No permission checking because this services is call from other services/
+        Map parameters = UtilMisc.toMap("productId", context.get("productId"),
+                                        "eventDate", context.get("eventDate"),
+                                        "inventoryEventPlanTypeId",context.get("inventoryEventPlanTypeId"));
+        Double quantity = (Double)context.get("eventQuantity");
         GenericValue inventoryEventPlanned = null;
-        // test if a record exist with same key 
+        try {
+            createOrUpdateInventoryEventPlanned(parameters, quantity, delegator);
+        } catch (GenericEntityException e) {
+            Debug.logError(e,"Error : delegator.findByPrimaryKey(\"InventoryEventPlanned\", parameters =)"+parameters, module);
+            return ServiceUtil.returnError("Problem, on database access, for more detail look at the log");
+        }
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static void createOrUpdateInventoryEventPlanned(Map inventoryEventPlannedKeyMap, Double newQuantity, GenericDelegator delegator) throws GenericEntityException {
+        GenericValue inventoryEventPlanned = null;
+        inventoryEventPlanned = delegator.findByPrimaryKey("InventoryEventPlanned", inventoryEventPlannedKeyMap);
+        if (inventoryEventPlanned == null) {
+            inventoryEventPlanned = delegator.makeValue("InventoryEventPlanned", inventoryEventPlannedKeyMap);
+            inventoryEventPlanned.put("eventQuantity", newQuantity);
+            inventoryEventPlanned.create();
+        } else {
+            double qties = newQuantity.doubleValue() + ((Double)inventoryEventPlanned.get("eventQuantity")).doubleValue();
+            inventoryEventPlanned.put("eventQuantity", new Double(qties));
+            inventoryEventPlanned.store();
+        }
+    }
+
+    /*
+    public static Map createInventoryEventPlanned(DispatchContext ctx, Map context) {
+        GenericDelegator delegator = ctx.getDelegator();
+        // No permission checking because this services is call from other services/
+        Map parameters = UtilMisc.toMap("productId", context.get("productId"),
+                                        "eventDate", context.get("eventDate"),
+                                        "inventoryEventPlanTypeId",context.get("inventoryEventPlanTypeId"));
+        GenericValue inventoryEventPlanned = null;
+        // test if a record exist with same key
         try {
             inventoryEventPlanned = delegator.findByPrimaryKey("InventoryEventPlanned", parameters);
         } catch (GenericEntityException e) {
@@ -120,8 +151,9 @@ public class InventoryEventPlannedServices {
             } catch (GenericEntityException e) {
                 Debug.logError(e,"Error : InventoryEventPlanned.store() parameters = "+inventoryEventPlanned, module);
                 return ServiceUtil.returnError("Problem, cannot update InventoryEventPlanned, for more detail look at the log");
-            }                   
+            }
         }
         return ServiceUtil.returnSuccess();
     }
+     */
 }
