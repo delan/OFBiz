@@ -92,6 +92,8 @@ public final class SiteDefs {
 
     /** Session attribute name for UserLogin entity of current logged in user, if one is logged in */
     public static final String USER_LOGIN = "_USER_LOGIN_";
+    /** Session attribute name for Person entity of current logged in user, if one is logged in and it is a person */
+    public static final String PERSON = "_PERSON_";
 
     /** Session attributes for the client's initial connect variables */
     public static final String CLIENT_REFERER = "_CLIENT_REFERER_";
