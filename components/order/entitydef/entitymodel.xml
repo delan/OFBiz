@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  */
 -->
 
@@ -1558,6 +1558,7 @@
       <field name="returnItemSeqId" type="id-ne"></field>
       <field name="returnReasonId" type="id"></field>
       <field name="returnTypeId" type="id"></field>
+      <field name="description" type="description"></field>
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="statusId" type="id"></field>
