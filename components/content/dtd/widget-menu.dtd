@@ -25,13 +25,13 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-menu.dtd,v 1.7 2004/08/12 18:00:33 byersa Exp $
+ *  $Id: widget-menu.dtd,v 1.8 2004/08/18 16:15:49 byersa Exp $
 -->
 
 
 <!ELEMENT menus ( menu+ )>
 
-<!ELEMENT menu ( menu-item* )>
+<!ELEMENT menu ( if-entity-permission?, menu-item* )>
 <!ATTLIST menu
     name CDATA #REQUIRED
     type ( simple | cascade ) "simple"
@@ -58,7 +58,7 @@
 >
 
 
-<!ELEMENT menu-item (img?, link?, target* )>
+<!ELEMENT menu-item (if-entity-permission?, img?, link?, target* )>
 <!ATTLIST menu-item
     name CDATA #REQUIRED
     title CDATA #IMPLIED
@@ -140,5 +140,13 @@
         full-path ( true | false ) "false"
         secure ( true | false ) "false"
         encode ( true | false ) "false"
+    >
+
+    <!ELEMENT if-entity-permission EMPTY>
+    <!-- entity-id and target-operation can have multiple pipe separated values. Don't use spaces. -->
+    <!ATTLIST if-entity-permission
+        entity-name CDATA #REQUIRED
+        entity-id CDATA #REQUIRED
+        target-operation CDATA #REQUIRED
     >
 
