@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordIndex.java,v 1.7 2004/01/22 12:53:28 jonesde Exp $
+ * $Id: KeywordIndex.java,v 1.8 2004/01/22 13:16:47 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Does indexing in preparation for a keyword search.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class KeywordIndex {
@@ -169,6 +169,7 @@ public class KeywordIndex {
                 StringTokenizer tokener = new StringTokenizer(str, separators, false);
 
                 while (tokener.hasMoreTokens()) {
+                    // make sure it is lower case before doing anything else
                     String token = tokener.nextToken().toLowerCase();
                     
                     // when cleaning up the tokens the ordering is inportant: check stop words, remove stems, then get rid of 1 character tokens (1 digit okay)
@@ -188,6 +189,11 @@ public class KeywordIndex {
                                 token = token.substring(0, token.length() - stem.length());
                             }
                         }
+                    }
+                    
+                    // get rid of all length 0 tokens now
+                    if (token.length() == 0) {
+                        continue;
                     }
                     
                     // get rid of all length 1 character only tokens, pretty much useless
@@ -210,8 +216,7 @@ public class KeywordIndex {
         Iterator kiter = keywords.entrySet().iterator();
         while (kiter.hasNext()) {
             Map.Entry entry = (Map.Entry) kiter.next();
-            String keyword = ((String) entry.getKey()).toLowerCase();
-            GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", keyword, "relevancyWeight", entry.getValue()));
+            GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", entry.getKey(), "relevancyWeight", entry.getValue()));
             toBeStored.add(productKeyword);
         }
         if (toBeStored.size() > 0) {
