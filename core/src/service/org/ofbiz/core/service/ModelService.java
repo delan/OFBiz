@@ -440,9 +440,9 @@ public class ModelService {
                     List groupedServices = group.getServices();
                     Iterator i = groupedServices.iterator();
                     while (i.hasNext()) {
-                        String s = (String) i.next();
-                        implServices.add(s);
-                        Debug.logVerbose("Adding service [" + s + "] as interface of: [" + this.name + "]", module);
+                        GroupServiceModel sm = (GroupServiceModel) i.next();
+                        implServices.add(sm.getName());
+                        Debug.logVerbose("Adding service [" + sm.getName() + "] as interface of: [" + this.name + "]", module);
                     }
                 }                
             }
