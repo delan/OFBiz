@@ -767,7 +767,7 @@
 
     <view-map name="paysetup" type="screen" page="component://order/widget/ordermgr/OrderSetupScreens.xml#OrderPaymentSetup"/>
 
-    <view-map name="orderreportlist" type="screen" page="component://order/widget/ordermgr/OrderReport.xml#OrderReportList"/>
+    <view-map name="orderreportlist" type="screen" page="component://order/widget/ordermgr/OrderReportScreens.xml#OrderReportList"/>
     <view-map name="orderreportjasper" type="jasperreportspdf" page="/reports/orderreport.xml" content-type="application/pdf" encoding="none"/>
     <view-map name="orderitemreportjasper" type="jasperreportspdf" page="/reports/orderitemreport.xml" content-type="application/pdf" encoding="none"/>
 
