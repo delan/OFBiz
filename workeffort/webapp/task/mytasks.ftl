@@ -62,7 +62,7 @@
                     <tr><td colspan='8'><HR class='sepbar'></td></tr>
                     <#list activities as workEffort>
                       <tr>
-                        <td><div class='tabletext'>${workEffort.estimatedStartDate}</div></td>
+                        <td><div class='tabletext'>${workEffort.estimatedStartDate.toString()}</div></td>
                         <td><div class='tabletext'>${workEffort.priority}</div></td>
                         <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
                         <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
@@ -102,7 +102,7 @@
                     <tr><td colspan='8'><HR class='sepbar'></td></tr>
                     <#list roleActivities as workEffort>
                       <tr>
-                        <td><div class='tabletext'>${workEffort.estimatedStartDate}</div></td>
+                        <td><div class='tabletext'>${workEffort.estimatedStartDate.toString()}</div></td>
                         <td><div class='tabletext'>${workEffort.priority}</div></td>
                         <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
                         <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
@@ -142,7 +142,7 @@
                     <tr><td colspan='8'><HR class='sepbar'></td></tr>
                     <#list groupActivities as workEffort>
                       <tr>
-                        <td><div class='tabletext'>${workEffort.estimatedStartDate}</div></td>
+                        <td><div class='tabletext'>${workEffort.estimatedStartDate.toString()}</div></td>
                         <td><div class='tabletext'>${workEffort.priority}</div></td>
                         <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
                         <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
@@ -178,7 +178,7 @@
                 <tr><td colspan='5'><HR class='sepbar'></td></tr>
                 <#list tasks as workEffort>
                   <tr>
-                    <td><div class='tabletext'>${workEffort.estimatedStartDate}</div></td>
+                    <td><div class='tabletext'>${workEffort.estimatedStartDate.toString()}</div></td>
                     <td><div class='tabletext'>${workEffort.priority?if_exists}</div></td>
                     <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.core.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
                     <td><A class='buttontext' href='<@ofbizUrl>/task?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
