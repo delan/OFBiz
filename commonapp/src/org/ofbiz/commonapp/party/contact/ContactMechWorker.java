@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/01/24 11:53:37  jonesde
+ * Moved party specific worker from party/contact to party/party
+ *
  * Revision 1.3  2002/01/24 11:11:20  jonesde
  * Added workers for viewprofile
  *
@@ -133,51 +136,52 @@ public class ContactMechWorker {
         if (donePage == null || donePage.length() <= 0) donePage="viewprofile";
         pageContext.setAttribute(donePageAttr, donePage);
 
-        String contactMechId = request.getParameter("contactMechId");
-        if (request.getAttribute("contactMechId") != null)
-            contactMechId = (String) request.getAttribute("contactMechId");
-        if (contactMechId != null)
-            pageContext.setAttribute(contactMechIdAttr, contactMechId);
-        
-        
-        //try to find a PartyContactMech with a valid date range
-        Collection partyContactMechs = null;
-        try {
-            partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId)));
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-        }
-        
-        GenericValue partyContactMech = EntityUtil.getFirst(partyContactMechs);
-        if (partyContactMech != null) {
-            pageContext.setAttribute(partyContactMechAttr, partyContactMech);
-
-            Collection partyContactMechPurposes = null;
-            try {
-                partyContactMechPurposes = EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose"));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e);
-            }
-            if (partyContactMechPurposes != null && partyContactMechPurposes.size() > 0)
-                pageContext.setAttribute(partyContactMechPurposesAttr, partyContactMechPurposes);
-        }
-
-        GenericValue contactMech = null;
-        try {
-            contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-        }
-
         String contactMechTypeId = null;
-        if (contactMech != null) {
-            pageContext.setAttribute(contactMechAttr, contactMech);
-            contactMechTypeId = contactMech.getString("contactMechTypeId");
-        }
-        
         if (request.getParameter("preContactMechTypeId") != null) {
             contactMechTypeId = request.getParameter("preContactMechTypeId");
             tryEntity = false;
+        }
+        
+        String contactMechId = request.getParameter("contactMechId");
+        if (request.getAttribute("contactMechId") != null)
+            contactMechId = (String) request.getAttribute("contactMechId");
+
+        GenericValue contactMech = null;
+        if (contactMechId != null) {
+            pageContext.setAttribute(contactMechIdAttr, contactMechId);
+
+            //try to find a PartyContactMech with a valid date range
+            Collection partyContactMechs = null;
+            try {
+                partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId)));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+
+            GenericValue partyContactMech = EntityUtil.getFirst(partyContactMechs);
+            if (partyContactMech != null) {
+                pageContext.setAttribute(partyContactMechAttr, partyContactMech);
+
+                Collection partyContactMechPurposes = null;
+                try {
+                    partyContactMechPurposes = EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose"));
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+                if (partyContactMechPurposes != null && partyContactMechPurposes.size() > 0)
+                    pageContext.setAttribute(partyContactMechPurposesAttr, partyContactMechPurposes);
+            }
+
+            try {
+                contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+
+            if (contactMech != null) {
+                pageContext.setAttribute(contactMechAttr, contactMech);
+                contactMechTypeId = contactMech.getString("contactMechTypeId");
+            }
         }
         
         if (contactMechTypeId != null) {
@@ -218,7 +222,11 @@ public class ContactMechWorker {
         if (contactMech == null) {
             //create
             if ("POSTAL_ADDRESS".equals(contactMechTypeId)) {
-                requestName = "createPostalAddress";
+                if (request.getParameter("contactMechPurposeTypeId") != null) {
+                    requestName = "createPostalAddressAndPurpose";
+                } else {
+                    requestName = "createPostalAddress";
+                }
             } else if ("TELECOM_NUMBER".equals(contactMechTypeId)) {
                 requestName = "createTelecomNumber";
             } else if ("EMAIL_ADDRESS".equals(contactMechTypeId)) {
@@ -247,7 +255,6 @@ public class ContactMechWorker {
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
             }
-            if (postalAddress == null) tryEntity = false;
             if (postalAddress != null) pageContext.setAttribute(postalAddressAttr, postalAddress);
         } else if ("TELECOM_NUMBER".equals(contactMechTypeId)) {
             GenericValue telecomNumber = null;
@@ -256,14 +263,14 @@ public class ContactMechWorker {
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
             }
-            if (telecomNumber == null) tryEntity = false;
             if (telecomNumber != null) pageContext.setAttribute(telecomNumberAttr, telecomNumber);
         }
 
+        if ("true".equals(request.getParameter("useValues"))) tryEntity = true;
         pageContext.setAttribute(tryEntityAttr, new Boolean(tryEntity));
 
         try {
-            Collection contactMechTypes = delegator.findAll("ContactMechType", null);
+            Collection contactMechTypes = delegator.findAllCache("ContactMechType", null);
             if (contactMechTypes != null) {
                 pageContext.setAttribute(contactMechTypesAttr, contactMechTypes);
             }

@@ -56,6 +56,21 @@
             <default-message>Contact Mechanism successfully deleted.</default-message></service>
     </simple-event>
 
+    <simple-event event-name="createPostalAddressAndPurpose" short-description="Create Contact Mechanism">
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+                processor-name="postalAddress" in-map-name="parameters" out-map-name="addressContext"/>
+        <check-errors/>
+        <service service-name="createPostalAddress" in-map-name="addressContext">
+            <default-message>Postal Address successfully created.</default-message>
+            <result-to-field result-name="contactMechId" map-name="parameters"/>
+            <result-to-request result-name="contactMechId"/></service>
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+                processor-name="createPartyContactMechPurpose" in-map-name="parameters" out-map-name="purposeContext"/>
+        <check-errors/>
+        <service service-name="createPartyContactMechPurpose" in-map-name="purposeContext">
+            <default-message>Postal Address successfully created.</default-message></service>
+    </simple-event>
+
     <simple-event event-name="createPostalAddress" short-description="Create Contact Mechanism">
         <simple-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
                 processor-name="postalAddress" in-map-name="parameters" out-map-name="context"/>
