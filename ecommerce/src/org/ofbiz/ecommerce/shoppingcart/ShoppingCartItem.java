@@ -56,7 +56,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this._product = product;
         this.productId = _product.getString("productId");        
         this.quantity = quantity;
-        this.attributes = features;
+        this.features = features;
         this.discountAmount = 0.00;
         this.itemComment = null;        
         this.type = 0;
@@ -79,10 +79,23 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.itemComment = itemComment;
     }
         
+    /** Sets an item features. */
+    public void setFeature(String name, String value) {
+        features.put(name,value);
+    }
+    /** Return a specific features. */
+    public String getFeature(String name) {
+        return (String) features.get(name);
+    }        
+    
     /** Sets an item attribute. */
     public void setAttribute(String name, String value) {
         attributes.put(name,value);
     }
+    /** Return a specific attribute. */
+    public String getAttribute(String name) {
+        return (String) attributes.get(name);
+    }        
     
     /** Returns true if shipping charges apply to this item. */
     public boolean shippingApplies() {
@@ -92,11 +105,6 @@ public class ShoppingCartItem implements java.io.Serializable {
         else
             return shipCharge.booleanValue();      
     }
-    
-    /** Return a specific attribute. */
-    public String getAttribute(String name) {
-        return (String) attributes.get(name);
-    }        
     
     /** Returns the item's productId. */
     public String getProductId() {
@@ -180,17 +188,31 @@ public class ShoppingCartItem implements java.io.Serializable {
     public boolean equals(ShoppingCartItem item) {
         if (item == null) 
             return false;
-        if (item.getProductId().equals(getProductId())) {
-            if (getFeatures() != null ) {
-                if (item.getFeatures() != null) {
-                    if (item.getFeatures().equals(getFeatures()))
-                        return true;
-                }
-            } 
-            else if (item.getFeatures() == null) 
-                return true;
+        if (!item.getProductId().equals(getProductId())) {
+            return false;
         }
-        return false;
+
+        if (this.features != null && item.features == null ||
+                this.features == null && item.features != null) {
+            return false;
+        }
+        if (this.features != null && item.features != null) {
+            if (!item.features.equals(this.features)) {
+                return false;
+            }
+        }
+
+        if (this.attributes != null && item.attributes == null ||
+                this.attributes == null && item.attributes != null) {
+            return false;
+        }
+        if (this.attributes != null && item.attributes != null) {
+            if (!item.attributes.equals(this.attributes)) {
+                return false;
+            }
+        }
+
+        return true;
     }      
     
     // Gets the Product entity if its not there
