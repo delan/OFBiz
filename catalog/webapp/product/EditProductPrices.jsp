@@ -33,8 +33,7 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
-    URL catalogPropertiesURL = application.getResource("/WEB-INF/catalog.properties");
-    String defaultCurrencyUomId = UtilProperties.getPropertyValue(catalogPropertiesURL, "currency.uom.id.default");
+    String defaultCurrencyUomId = UtilProperties.getPropertyValue("general", "currency.uom.id.default");
     if (UtilValidate.isEmpty(defaultCurrencyUomId)) defaultCurrencyUomId = "USD";
 
     boolean useValues = true;

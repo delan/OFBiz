@@ -70,10 +70,10 @@ public class PriceServices {
         String productId = product.getString("productId");
         String prodCatalogId = (String) context.get("prodCatalogId");
 
-        //if currency uom is null, assume USD (USD: American Dollar) for now
+        //if currency uom is null get from properties file, if still null assume USD (USD: American Dollar) for now
         String currencyUomId = (String) context.get("currencyUomId");
         if (currencyUomId == null || currencyUomId.length() == 0) {
-            currencyUomId = "USD";
+            currencyUomId = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD");
         }
 
         //if this product is variant, find the virtual product and apply checks to it as well
