@@ -10,6 +10,7 @@ Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
 <hr>
 <h3>Table of Contents</h3>
 <ul>
+  <li><a href="#2.0Beta3">Release 2.0 Beta 3 - November 2, 2002</a>
   <li><a href="#2.0Beta2">Release 2.0 Beta 2 - July 2, 2002</a>
   <li><a href="#2.0Beta1">Release 2.0 Beta 1 - March 19, 2002</a>
   <li><a href="#2.0Alpha2">Release 2.0 Alpha 2 - February 11, 2002</a>
@@ -22,6 +23,98 @@ Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
   <li><a href="#2001.06.01">Release 2001.06.01</a>
   <li><a href="#2001.05.28">Release 2001.05.28</a>
   <li><a href="#2001.05.24">Release 2001.05.24</a>
+</ul>
+
+<hr>
+<h3><a name="2.0Beta3">Release 2.0 Beta 3 - November 2, 2002</a></h3>
+<hr>
+<h4>Overview</h4>
+<p>It's amazing that another four months have passed since we did the last OFBiz release.
+August through October are always the big crunch times for e-commerce sites hoping to go
+live before Christmas, and this has resulted in some significant improvements in the
+feature set and stability of OFBiz. In addition to all of the e-commerce features that
+got pushed forward, or along with them really, we have started getting into marketing and
+many extensions have been added to the WorkEffort and Party Managers.</p>
+
+<p>Some of the future directions mentioned before are starting to take place, but there is
+a lot left to do there. Note that we are not planning on getting all of these done for the 
+2.0 final release, in fact we aren't planning anything really huge for 2.0 final. Actually,
+we are planning on going to a new versioning scheme where the initial "stable" 2.0 release
+will be 2.0.0, and then we will do minor and major version increments as seems appropriate
+given the work done since the previous release.</p>
+
+<p>There are a few more third party packages included in this release: 
+the JasperReports and DataVision reporting tools with ViewHandler implementations for the web controller and
+the WEKA data analysis package which is really best used as a stand alone Java GUI application hitting a database or exported data files directly.
+There will be more third party packages and more use of these packages as the project continues.</p>
+
+<p>We have tested a number of additional app servers for production, and because of the difficulties we
+have had with Tyrex as a transaction manager we recommend using something else. The best commercial
+options we found were Orion (www.orionserver.com) and JRun4 (www.macromedia.com). In addition to
+these commercial products the newer versions of Tomcat (in the 4.1.X series) are running extremely
+well and are close to Orion and Resin in speed. For Tomcat you can run with Tyrex if it is sufficient
+for you, but you may want to consider using parts of JBoss for transaction management, JMS, etc. Adjustments
+have been made to OFBiz to be able to handle various quirks and funny things in these and other app servers.</p>
+
+<h4>New Features & Improvements</h4>
+<p>New features and improvements include:</p>
+<ul>
+    <li>e-Commerce related
+    <ul>
+    	<li>expanded use of product features and order adjustments
+    	<li>improved payment processing options and capabilities; it's also easier to add new payment processors
+    	<li>numerous keyword search improvements (weighted keywords and improved indexing, order by total weight, stop words, suffix removal, etc)
+    	<li>
+    </ul>
+    <li>NEW Marketing features
+    <ul>
+    	<li>marketing manager for data sources, marketing campaigns, tracking codes, and contact lists (mail, phone, email, etc)
+    	<li>optional events automatically handle passed tracking codes and attach them to visits and orders and maintain information needed for affiliates, internal tracking,etc.
+    	<li>note that much of this functionality is not yet complete
+    </ul>
+	<li>Web Controller related
+	<ul>
+		<li>implemented visit tracking and attached all server hits, orders, keyword search results, etc to visits
+		<li>events can be run at the start of each visit in addition to before or after each request hit
+	</ul>
+	<li>Service Engine related
+	<ul>
+		<li>Service ECA (Event-Condition-Action) rules that can trigger other services at various points of a call to a service and under specific conditions
+		<li>More distributed service options: improved JMS and HTTP direct without SOAP
+		<li>Service Groups that are services which simply call a group of other services in flexible ways
+		<li>Interface services that are used to simply define a set of parameter attributes and are not implemented directly
+		<li>Services can extend other services, inheriting all parameter attributes from the services extended
+		<li>Improved scheduling options
+	</ul>
+	<li>Entity Engine related
+	<ul>
+		<li>distributed cache clearing using the distributed call mechanisms of the Service Engine (JMS, HTTP, SOAP, etc)
+		<li>fixed transaction issues with sequence id generator, now runs in own transaction to avoid deadlocks on this commonly used entity
+		<li>expanded view-entities
+		<ul>
+			<li>optional member entities (uses left joins)
+			<li>grouping by aliased fields
+			<li>functions on aliased fields (such as count, sum, min, max, avg, etc)
+		</ul>
+		<li>addition query options including lists of expressions and other conditions combinable in many ways, introduced generic EntityCondition
+		<li>EntityListIterator based find method are now available on the delegator and can be used to handle large result sets
+	</ul>
+	<li>Workflow Engine related
+	<ul>
+		<li>a great deal of refactoring and bug fixing has been done, including the integration of many contributions
+	</ul>
+	<li>MiniLang simple-method related
+	<ul>
+		<li>many new tags/operations have been added and expanded
+		<li>method call operations have been added for calling static or class methods, passing general parameters and handling return values; these run much faster than BeanShell and address most situations where BeanShel would otherwise be necessary; also makes it easy to write code in Java and invoke it from and MiniLang simple-method
+		<li>log and return operations have added to make these common tasks easier
+	</ul>
+	<li>General Core features
+	<ul>
+		<li>some i18n/l10n features have been added to UtilProperties and other areas to help get the ball rolling for internationalization which is getting an increasing amount of attention
+		<li>the Service Engine and MiniLang components now make the Locale available for use with localized messages
+		<li>a best practice static method now exists for getting the Locale either from an attribute in the user's session, or if not there then the request, if not there then the default
+	</ul>
 </ul>
 
 <hr>
