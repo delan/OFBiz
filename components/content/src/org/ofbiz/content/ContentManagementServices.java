@@ -328,7 +328,7 @@ public class ContentManagementServices {
                         }
                         if (hasData) {
                             fileContext.put("rootDir", context.get("rootDir"));
-                            fileContext.put("dataResourcetype", dataResourceTypeId);
+                            fileContext.put("dataResourceTypeId", dataResourceTypeId);
                             fileContext.put("objectInfo", dataResource.get("objectInfo"));
                             thisResult = dispatcher.runSync("createFile", fileContext);
                             errorMsg = ServiceUtil.getErrorMessage(thisResult);
