@@ -1,5 +1,6 @@
 <html>
 <head>
+<!--  $Id$ -->
 <title>The Open For Business Project: General Setup</title>
 </head>
 
@@ -7,29 +8,33 @@
 
 <h2 align="center">The Open For Business Project: General Setup</h2>
 
-<p><br>
+<br>
   Written By: David E. Jones and Andy Zeneski<br>
-  Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a> or <a href="mailto:jaz@zsolv.com">jaz@zsolv.com</a> 
-  <br>
-  Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a> 
-  <br>
-  Last Updated: September 24, 2001 <br>
-  $Id$ </p>
+  Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a> or <a href="mailto:jaz@zsolv.com">jaz@zsolv.com</a> <br>
+  Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a> <br>
+  Last Updated: January 14, 2002 <br>
 <h3 align="left"><a name="Table of Contents">Table of Contents</a></h3>
 <ul>
   <li><a href="#Introduction">Introduction</a></li>
   <li><a href="#Quick &amp; Easy Setup">Quick &amp; Easy Setup</a></li>
-  <li><a href="#Database Setup">Database Setup</a></li>
-  <li><a href="#Tomcat Setup">Tomcat and other Open Source Components Setup</a></li>
-  <li><a href="#OFBiz Setup">OFBiz Setup</a></li>
+  <li><a href="#External Packages Setup">External Packages Setup</a></li>
+  <li><a href="#Paths">Paths</a></li>
+  <li><a href="#File Locations">File Locations and Building</a></li>
   <li><a href="#Running">Running</a></li>
+  <li><a href="#Database Setup">Database Setup</a></li>
   <li><a href="#DeployOptions">Alternative Deployment Options</a></li>
 </ul>
 
+<hr>
 <h3><a name="Introduction">Introduction</a></h3>
-<p>This document describes an initial setup process for the Open For Business Project.</p>
+<hr>
+<p>This document describes an initial setup process and configuration options 
+for the Open For Business Project.</p>
+<br>
 
+<hr>
 <h3><a name="Quick &amp; Easy Setup">Quick &amp; Easy Setup</a></h3>
+<hr>
 
 <p>You can get up and running quickly by downloading the OFBiz Complete
 distribution and following some simple instructions. For more
@@ -49,149 +54,170 @@ options and explanations, see the rest of this document.</p>
   <li>For more detailed options and configuration information, read on!</li>
 </ol>
 
-<h3><a name="Database Setup">Database Setup</a></h3>
-<p>MySQL is one available, open source, database for OFBiz. It will run with most any SQL database 
-  which have JDBC drivers available, however MySQL is the default supported database 
-  and will be used in the examples following. For other databases, the SQL table 
-  creation and data loading files will have to be changed, and the jaws.xml deployment 
-  descriptor may have to be changed, but that is all.</p>
-<p>You can download MySQL from <a href="http://www.mysql.com" target="_blank">www.mysql.com</a>,
-get the most recent stable version.</p>
-<p>You will also need the MySQL JDBC driver, get the most recent stable version
-from Mark Matthews on his SourceForge site at <a href="http://mmmysql.sourceforge.net/">http://mmmysql.sourceforge.net/</a>.
-If you download the jar files there, you can't just put it in <b>catalina/lib</b>
-because it has all of the source and docs and is not
-just the driver jar. Open up the jar and get the jar in the base path of the
-archive and use that, it is the real binary jar driver file.</p>
-<p>To use the default settings in the OFBiz configuration files, create a
-database called &quot;ofbiz&quot; and start the MySQL server with a username of
-&quot;mysqldb&quot; and a password of &quot;mysqldb&quot;. If you use different
-settings, change them in the jboss.jcml file in the jboss/conf/ofbiz directory
-(after you copy it there, of course, see below).</p>
-<p>The JDBC driver mm.mysql-2.0.4-bin.jar is used most easily by putting it in
-the jboss/lib/ext directory, after you have installed JBoss. Or, put it on the
-JBOSS_CLASSPATH explicitly in your startup script.</p>
-<p>There is no need to run any SQL scripts to create the tables or populate them
-with the default data. The entity engine can create missing tables or fields
-when the server starts up and does so if the appropriate property is set in the
-entityengine.properties file. This is the file that configures the servers for the
-entity engine.</p>
-<p>For the table creation routine to work properly, the field types must be set
-up by specifying the corresponding fieldtypeXXX.xml (where XXX is the database
-name) file for the server in the entityengine.properties file. These fieldtypeXXX.xml
-files are located in the <b>ofbiz/commonapp/entitydef</b> directory,
-along with the entitymodel.xml file which contains database independent entity
-definitions.</p>
-<p>Default data can be loaded automatically once the server has been started by
-going to a JSP, which is listed below in the Running section.&nbsp;</p>
+<hr>
+<h3><a name="External Packages Setup">External Packages Setup</a></h3>
+<hr>
 
-<h3><a name="Tomcat Setup">Tomcat and other Open Source Components Setup</a></h3>
+<p>You will also need the Java 2 version 1.3 or 1.4 JDK (or just the JRE) from <a href="http://java.sun.com" target="_blank">java.sun.com</a>,
+as can be expected.</p>
+
 <p>Open For Business can be run with either a simple servlet engine alone (like
-Tomcat) or with a full J2EE container (like JBoss &amp; Tomcat together). This
+Tomcat) or with a full J2EE container (like Weblogic or JBoss &amp; Tomcat together). This
 is accomplished through the entity engine which can run straight to JDBC or
-through an EJB container. JBoss is also useful for services other than the basic
-Entity Bean containment, such as session beans, JNDI, connection pooling,
+through an EJB container. A full J2EE application server is also useful for services other than the basic
+EJB container, such as JNDI, connection pooling,
 various resource and configuration management conveniences and so forth. Many
 other J2EE application servers are available for these sorts of features, and
 Open For Business should be easily adaptable to various ones.</p>
+
 <p>Tomcat 4.0 is the current default application server for Open For Business.
 At the moment the EJB components are optional and simply provide deployment
-flexibility, so an EJB container is not needed. Tomcat 4.0 has a number of the
-nice services mentioned above that are part of JBoss, and meets our needs in
-most cases. In the future we will likely need JMS and EJB services provided by
+flexibility, so an EJB container is not needed. In the future we will likely need 
+JMS and EJB services provided by
 an application like JBoss, but for now we will keep distributions as simple as
-possible. Build and deployment scripts are still included for JBoss deployment
-in the ant build.xml file. Note that there are a few changes in the Servlet 2.3
-and JSP 1.2 specifications that required minor modifications in the OFBiz code
-as we upgraded to Tomcat 4.0 and started using the new APIs. These should be
-pretty easy to see if you compile with the Tomcat 3.X jar files because certain
-fields in the new API will not be found.</p>
-<p> The default servlet
-container running with JBoss is Tomcat, but Jetty could easily be used instead.
-A sample configuration file for Tomcat is included, but the only things in there
-are the webapp contexts to mount. An application server other than JBoss could
-be used fairly easily by changing the EJB deployment descriptors and re-creating the EJB JAR file.
-Everything in OFBiz is standard J2EE so there shouldn't be many problems with
-this.</p>
-<p>You can download JBoss-Tomcat from <a href="http://sf.net/projects/jboss" target="_blank">sf.net/projects/jboss</a>,
-you will generally want the most recent version. Tomcat without JBoss can be downloaded at <a href="http://jakarta.apache.org/site/binindex.html">jakarta.apache.org/site/binindex.html</a>,
-and there again you will generally want the latest version of the Tomcat 4
+possible. JTA (distributed transaction) support is currently done with Tyrex from Exolab, 
+but could also be provided by JBoss or another J2EE application server.</p>
+
+<p>Tomcat can be downloaded at <a href="http://jakarta.apache.org/site/binindex.html">jakarta.apache.org/site/binindex.html</a>,
+and you will generally want the latest version of the Tomcat 4
 series. The latest version of OFBiz has been tested on Tomcat 4.0.1. If
 you download an OFBiz package with these included, you of course don't need to
 download them again, and you don't have to worry about copying the configuration
 files later on. It should pretty much run in place.</p>
-<p>Since Tomcat does not come with a database connection pool utility (as far as
-I can tell), we also recommend the use of PoolMan for database connection
-pooling. PoolMan can be downloaded at <a href="http://www.codestudio.com/">www.codestudio.com</a>.
-Configuration for PoolMan for OFBiz is included with the project.&nbsp; There
-are really only two files: <b>jndi.properties</b> &amp; <b>poolman.xml</b>, and
-they need to be on the global classpath (ie in <b>catalina/classes</b>), they
-are in <b>ofbiz/commonapp/etc</b>. The default <b>ofbiz/build.xml</b> ant script
-will do this, of course the CATALINA_HOME environment variable must be set.
-There is also a jar file from the PoolMan distribution that needs to be moved
-from poolman/lib to tomcat/lib, or placed on the classpath in some other way.
-These two files are <b>poolman.jar</b>. Catalina (Tomcat 4) uses Xerces for
-its XML parser, so no additional JAR file will be needed for that with Tomcat 4.
-Otherwise, xerces.jar would be needed.</p>
-<p>Things will be much simpler if you have Ant installed, which can also be
-downloaded from the jakarta.apache.org site listed above where Tomcat is
-also available. Instructions are available on the Ant site for installing the
+<p>You can download JBoss, a complete J2EE application server from <a href="http://sf.net/projects/jboss" target="_blank">sf.net/projects/jboss</a>,
+you will generally want the most recent version. </p>
+
+<p>Things will be much easier if you have Ant installed, which can also be
+downloaded from the <a href="http://jakarta.apache.org/site/binindex.html">jakarta.apache.org</a> site listed above.
+Instructions are available on the Ant site for installing the
 application. Just make sure that 'ant' is on the system path and can be run from
 the command line.</p>
+
 <p>To run the Ant scripts, and Tomcat, make sure the various
-environment variables are set (JAVA_HOME, ANT_HOME, CATALINA_HOME, and
+environment variables are set as described below (JAVA_HOME, ANT_HOME, CATALINA_HOME, and
 yes, even OFBIZ_HOME).</p>
-<p>You will also need the Java 2 version 1.3 or 1.4 JDK (or just the JRE) from <a href="http://java.sun.com" target="_blank">java.sun.com</a>,
-as can be expected.</p>
 
-<h3><a name="OFBiz Setup">OFBiz Setup</a></h3>
-
-<p>The easiest way to install OFBiz is to put everything in the default path of <b>/ofbiz/work</b>,
-which will be referred to as the <b>&lt;main&gt;</b> directory in this section.
-There is really only one file that has hard paths in it, and everything else is
-relative. That file in the distribution is <b>ofbiz/commonapp/etc/entityengine.properties</b>.
-When you are done with this section just replace all instances of &quot;<b>/ofbiz/work</b>&quot;
-with whatever root, or <b>&lt;main&gt;</b>,&nbsp; path you use.</p>
-<p><b>USING Tomcat 4 (catalina)</b>: The Tomcat 4 archive contains a folder
-called something like &quot;jakarta-tomcat-4.0&quot;. Move that folder to the
-above mentioned <b>&lt;main&gt;</b> directory, and rename it from &quot;jakarta-tomcat-4.0&quot;
-to &quot;catalina&quot;. With the default path you will have a <b>/ofbiz/work/catalina</b>
-directory.</p>
-<p>Unzip the OFBiz zip file and move the <b>ofbiz</b> directory to the <b>&lt;main&gt;</b>
-directory, so that it is a
-sibling of the <b>catalina</b> or <b>jboss</b> and <b>tomcat</b>
- directories, ie <b>&lt;main&gt;/ofbiz</b>.</p>
-<p>The setup files are all in the 'setup' module, in <b>&lt;main&gt;/ofbiz/setup</b>. This setup
-folder replicates the structure of the <b>&lt;main&gt;</b> directory, the one that
-catalina and ofbiz go under as described above. Moving the configuration files
-can be done manually, or with the ant build script in <b>&lt;main&gt;/ofbiz/setup/ofbiz/build.xml</b>.
-Simply copy that build file into &lt;main&gt;/ofbiz and then in that directory
-run 'ant install'. That ant script can also be used to build all of the modules
-in OFBiz by simply running 'ant'. The next two paragraphs explain how to manually
-put the Catalina configuration files in place.</p>
-<p><b>USING Tomcat 4 (catalina)</b>: copy the server.xml file from <b>ofbiz/setup/catalina/conf/server.xml</b>
-to <b>catalina/conf/server.xml</b>. As usual, you may want to create a backup
-copy of the <b>server.xml</b> file in <b>catalina/conf</b> before writing over
-it.</p>
-<p>Remember to move the JDBC driver(s) to <b>catalina/lib</b>.</p>
-<h3><a name="Running">Running</a></h3>
-
+<hr>
+<h3><a name="Paths">Paths</a></h3>
+<hr>
 <p>The last step is to make sure the directories are correct, especially the JDK path. This is
 done by making sure the various environment variables are set (JAVA_HOME,
-ANT_HOME, CATALINA_HOME or JBOSS_HOME &amp; TOMCAT_HOME, and yes, even
-OFBIZ_HOME). These directories
+ANT_HOME, CATALINA_HOME, OFBIZ_HOME). These directories
 are setup as follows:</p>
-<ul>
-  <li>JAVA_HOME=&lt;wherever Java is installed...&gt;</li>
-  <li>ANT_HOME=&lt;wherver Ant is installed, should be the parent directory of
-    'bin' where the 'ant' scripts live</li>
-  <li>CATALINA_HOME=<b>&lt;main&gt;/catalina</b></li>
-  <li>OFBIZ_HOME=<b>&lt;main&gt;/ofbiz</b></li>
-</ul>
-<p><b>USING Tomcat 4 (catalina)</b>: Start tomcat/catalina however you prefer to
-do it. The startup &amp; shutdown scripts are in <b>catalina/bin</b>, or you can
-use the catalina.bat or catalina.sh scripts with the run, start, stop, etc.
-parameters on the command line.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+  <tr>
+    <td><b>Environment Name</b></td>
+    <td><b>Example</b></td>
+    <td><b>Description</b></td>
+  </tr>
+  <tr><td>JAVA_HOME</td><td>/usr/local/java or c:\jdk1.3.1_02</td>
+    <td>where the Java 2 SDK is installed</td></tr>
+  <tr><td>ANT_HOME</td><td>/usr/local/ant or c:\tools\ant</td>
+    <td>where Ant is installed, should contain bin, docs, lib, etc</td></tr>
+  <tr><td>CATALINA_HOME</td><td>/ofbiz/work/catalina</td>
+    <td>where Tomcat4/Catalina is installed, should contain bin, lib, common, work, and so forth</td></tr>
+  <tr><td>OFBIZ_HOME</td><td>/ofbiz/work/ofbiz</td>
+    <td>where OFBiz is installed; contains all of the OFBiz CVS modules like core, commonapp, webtools, lib, ecommerce, and so forth</td></tr>
+</table>
+<br>
+<hr>
+<h3><a name="File Locations">File Locations and Building</a></h3>
+<hr>
+
+<p>Catalina comes with a number of jar files in place, but some jar and other files 
+need to be copied into the catalina directory from the ofbiz directories. This can be done
+most easily by making sure the environment variables are all set, then going to the
+OFBIZ_HOME directory and running "ant install" to copy the 3rd party jars and server.xml file
+and just plain "ant" to build and deploy the OFBiz jar and configuration files. </p>
+
+<p>If you have just checked out the OFBiz modules from CVS you will beed to copy the Ant 
+build.xml file from OFBIZ_HOME/setup/ofbiz/build.xml to OFBIZ_HOME. All of the jar files needed
+to build OFBiz are included in the 'lib' module. Some of these need to be copied to
+the catalina/lib and catalina/common/lib directories, but not all. Some are only
+included to make it easier to build the project.</p>
+
+<p>Here is a list of all of the files, their original locations, and where
+in the catalina directory they need be copied to.</p>
+
+<h4>3rd Party Libraries</h4>
+<table cellpadding='2' cellspacing='0' border='1'>
+  <tr>
+    <td><b>Filename</b></td>
+    <td><b>Original Location</b></td>
+    <td><b>Destination Location</b></td>
+  </tr>
+  <tr><td>castor-0.9.3.9.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
+  <tr><td>tyrex-0.9.8.5.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
+  <tr><td>tyrex-0.9.7.0.jar</td><td>catalina/common/lib</td><td>REMOVE (comes with catalina)</td></tr>
+  <tr><td>ots-jts_1.0.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
+  <tr><td>log4j.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
+  <tr><td>poolman.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
+  <tr><td>axis.jar</td><td>ofbiz/lib/share</td><td>catalina/lib</td></tr>
+  <tr><td>clutil.jar</td><td>ofbiz/lib/share</td><td>catalina/lib</td></tr>
+  <tr><td>wsdl4j.jar</td><td>ofbiz/lib/share</td><td>catalina/lib</td></tr>
+  <tr><td>bsh-1.2b3.jar</td><td>ofbiz/lib/share</td><td>catalina/lib</td></tr>
+  <tr><td>jakarta-oro-2.0.4.jar</td><td>ofbiz/lib/share</td><td>catalina/lib</td></tr>
+</table>
+
+<h4>JDBC Drivers</h4>
+<p>JDBC Drivers need to be put in <b>catalina/common/lib</b> so that Tyrex or Poolman
+can find them. If you need any additional ones put them there.</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+  <tr>
+    <td><b>Filename</b></td>
+    <td><b>Original Location</b></td>
+    <td><b>Destination Location</b></td>
+  </tr>
+  <tr><td>hsqldb.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
+  <tr><td>jdbc7.1-1.3.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
+  <tr><td>mm.mysql-2.0.8-bin.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
+</table>
+
+<h4>OFBiz Libraries</h4>
+<table cellpadding='2' cellspacing='0' border='1'>
+  <tr>
+    <td><b>Filename</b></td>
+    <td><b>Original Location</b></td>
+    <td><b>Destination Location</b></td>
+  </tr>
+  <tr><td>ofbcore-share.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
+  <tr><td>ofbcore-rules.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
+  <tr><td>ofbcore-workflow.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
+  <tr><td>ofbcommonapp.jar</td><td>ofbiz/commonapp/lib</td><td>catalina/lib</td></tr>
+</table>
+
+<h4>OFBiz Configuration Files</h4>
+<table cellpadding='2' cellspacing='0' border='1'>
+  <tr>
+    <td><b>Filename</b></td>
+    <td><b>Original Location</b></td>
+    <td><b>Destination Location</b></td>
+  </tr>
+  <tr><td>entityengine.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>servicesengine.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>security.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>debug.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>cache.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>poolman.xml</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>jndi.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>localdtds.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>tyrexdomain.xml</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+</table>
+
+<p>NOTE: Poolman is not being used right now, instead we are using Tyrex for
+connection pooling and JTA support. The config files have been left in place just
+in case anyone wants to change the configuration to use it (ie entityengine.properties).</p>
+
+<hr>
+<h3><a name="Running">Running</a></h3>
+<hr>
+<p>To setup the path to the OFBiz directory and pass it into the Java application
+the -D argument on the Java command line must be used. To make this easier ofbiz.sh and ofbiz.bat have
+been provided which set some things up before calling catalina.sh or catalina.bat, respectively.
+These ofbiz scripts should be put in <b>catalina/bin</b>, and you can
+use the run, start, stop, etc. parameters on the command line.</p>
+
 <p>The default data can be loaded by going to the following URL: <a href="http://localhost:8080/commonapp/control/main">http://localhost:8080/commonapp/control/main</a>,
 and then click on the link for data loading, or go to <a href="http://localhost:8080/commonapp/control/main">http://localhost:8080/commonapp/control/install</a>
 directly. Since there can be multiple servers depending on the name of the
@@ -203,23 +229,77 @@ will notice pre-populated in the form on the install page. Just click on
 &quot;Load Data&quot;, and after reviewing the summary of what it will do, click
 on &quot;Yes, Load Now&quot;, and be patient as the data is loaded into you
 database.</p>
-<p>The data loader page expects ';' separated SQL INSERT statements. These
+
+<p>That data loader can load XML Entity Engine files or SQL files.
+For SQL files the data loader page expects ';' separated SQL INSERT statements. These
 INSERT statements should list all of the column names for each value. INSERT
 statements are generally pretty generic, so this should work for most databases.
 These statements are run through JDBC, and use the JDBC data mappings for
 genericity.</p>
-<p>To access the site, go to <a href="http://localhost:8080/commonapp/control/main">http://localhost:8080/commonapp/control/main</a>
-for the Common Application Components, or the entity oriented administration
-tools. Although it has been deprecated, you may go to <a href="http://localhost:8080/entitygen/entitygen.jsp">http://localhost:8080/entitygen/entitygen.jsp</a>
-for the Entity Code Generator. For secured areas of the site, the default admin
-account information is in the SQL data loader file. The default is 'admin' for
-the username, and 'ofbiz' for the password. Be patient when you hit each page
-for the first time, they all need to be compiled when it is run freshly.</p>
-<p>The other applications can be reached at similar looking URLs. For instance,
-the ecommerce application can be accessed at <a href="http://localhost:8080/commonapp/control/main">http://localhost:8080/ecommerce/control/main</a>,
-or since it has an index.jsp that forwards for convenience, you can go to <a href="http://localhost:8080/commonapp/control/main">http://localhost:8080/ecommerce</a>.</p>
 
+<p>Go to <a href="http://localhost:8080/webtools/control/main">http://localhost:8080/webtools/</a>
+for the Web Tools. 
+For secured areas of the site, the default admin
+account information is in an XML data loader file. The default is 'admin' for
+the username, and 'ofbiz' for the password. Be patient when you hit each page
+for the first time, they all need to be compiled when it is run initially.</p>
+
+<p>The other applications can be reached at similar looking URLs. For instance,
+the ecommerce application can be accessed at <a href="http://localhost:8080/ecommerce/control/main">http://localhost:8080/ecommerce/</a>.
+<hr>
+<h3><a name="Database Setup">Database Setup</a></h3>
+<hr>
+
+<p>Database setup is done in the entityengine.properties file. There are many
+options there which are described in the Entity Engine Guide.</p>
+
+<p>The OFBiz Complete archive comes with Hypersonic SQL, a Java database that
+runs in memory. This database is good for demonstration purposes because it is
+easy to setup and use. It is not meant to handle large data sets and does not
+provide the same performance or scalability that a major database would.</p>
+
+<p>There are many open source databases that will scale well and deliver good performance.
+The two most popular are MySQL and PostgreSQL. Postgres is a very full featured
+database with transaction support, stored procedures, et cetera. MySQL is known
+for performing very well but the transaction support is limited (and improving) and
+there is no support for stored procedures. The stored procedures issue is not
+a big deal for OFBiz as it stands now because they are not used, but transaction
+support is VERY important for production business systems. Another good open source
+option is SAP DB, which deserves special mention. SAP decided to start encouraging
+users to use commercial databases instead of their own and open sourced their
+database, SAP DB. While maybe not as good as Oracle or other commercial DBs it
+has many features and performs well.</p>
+
+<p>Commercial databases are also supported. If you have database licenses for other
+needs, or have major in-house familiarity with and support for a certain commercial
+database, then there is no reason not to take advantage of that. OFBiz has been tested
+with Oracle and should work fine with any database that has a JDBC driver.</p>
+
+<p>You can download MySQL from <a href="http://www.mysql.com/" target="_blank">www.mysql.com</a>,
+get the most recent stable version. You will also need the MySQL JDBC driver, get the most recent stable version
+from Mark Matthews on his SourceForge site at <a href="http://mmmysql.sourceforge.net/" target="_blank">mmmysql.sourceforge.net</a>.
+If you download the jar files there, you can't just put it in <b>catalina/lib</b>
+because it has all of the source and docs and is not
+just the driver jar. Open up the jar and get the jar in the base path of the
+archive and use that, it is the real binary jar driver file.</p>
+
+<p>There is no need to run any SQL scripts to create the tables or populate them
+with the default data. The entity engine can create missing tables or fields
+when the server starts up and does so if the appropriate property is set in the
+entityengine.properties file. This is the file that configures the servers for the
+entity engine.</p>
+<p>For the table creation routine to work properly, the field types must be set
+up by specifying the corresponding fieldtypeXXX.xml (where XXX is the database
+name) file for the server in the entityengine.properties file. These fieldtypeXXX.xml
+files are located in the <b>ofbiz/commonapp/entitydef</b> directory,
+along with the entitymodel*.xml files which contain database independent entity
+definitions.</p>
+<p>Default data can be loaded automatically once the server has been started by
+going to a JSP, which is listed below in the Running section.</p>
+
+<hr>
 <h3><a name="DeployOptions">Alternative Deployment Options</a></h3>
+<hr>
 <p>Future releases of The Open For Business Project will support alternative deployment 
   options, for use with application servers other then Jakarta Tomcat and JBoss. 
   The <i>webapp</i> directory in each module is a fully self sufficient web application. 
@@ -230,7 +310,7 @@ or since it has an index.jsp that forwards for convenience, you can go to <a hre
   as described above and deploy the WAR files in the /webapps directory. <br>
   <br>
   Full testing and deployment instructions for WebSphere, WebLogic, iPlanet, Orion, 
-  JRun and ServletExec are forthcoming in future releases. If you are interested 
+  JRun, ServletExec, and others are forthcoming in future releases. If you are interested 
   in helping with this please contact one of the project administrators.</p>
 
 <p>&nbsp;</p>
