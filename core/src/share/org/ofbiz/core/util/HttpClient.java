@@ -254,9 +254,9 @@ public class HttpClient {
                 contentType = contentType.toUpperCase();
                 int charsetEqualsLoc = contentType.indexOf("=", contentType.indexOf("CHARSET"));
                 int afterSemiColon = contentType.indexOf(";", charsetEqualsLoc);
-                if (afterSemiColon >= 0) {
+                if (charsetEqualsLoc >= 0 && afterSemiColon >= 0) {
                     charset = contentType.substring(charsetEqualsLoc + 1, afterSemiColon);
-                } else {
+                } else if (charsetEqualsLoc >= 0) {
                     charset = contentType.substring(charsetEqualsLoc + 1);
                 }
                 
