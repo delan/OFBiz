@@ -223,28 +223,28 @@
   <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_OBSOLESCENCE" productId="GZ-8544"
     productIdTo="WG-9943" quantity="1.0" reason="The Giant Widget is much better than the Big Gizmo, so much so that it makes the Big Gizmo obsolete."/>
 
-  <ProductCategoryMember productCategoryId="100" productId="GZ-1000" fromDate="2003-03-04 18:49:31.464"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-1001" fromDate="2003-03-04 18:57:49.099"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-1004" fromDate="2003-03-04 18:51:06.45"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-1005" fromDate="2003-03-04 19:01:01.075"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-1006" fromDate="2003-03-04 19:03:36.369"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-2002" fromDate="2003-03-04 18:53:05.622"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-2644" fromDate="2003-03-04 18:46:32.667"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-5005" fromDate="2003-03-04 19:06:23.619"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-7000" fromDate="2003-03-04 19:12:32.389"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-8544" fromDate="2003-03-04 18:46:46.557"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-9290" fromDate="2003-03-04 18:55:14.547"/>
-  <ProductCategoryMember productCategoryId="101" productId="GZ-1000" fromDate="2003-03-04 18:49:27.748"/>
-  <ProductCategoryMember productCategoryId="101" productId="GZ-1001" fromDate="2003-03-04 18:57:55.168"/>
-  <ProductCategoryMember productCategoryId="101" productId="GZ-2002" fromDate="2003-03-04 18:53:15.256"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1000" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1001" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1004" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1005" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1006" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-2002" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-5005" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-7000" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-8544" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-9290" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-1000" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-1001" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-2002" fromDate="2001-01-01 12:00:00.0"/>
   <ProductCategoryMember productCategoryId="101" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="101" productId="GZ-5005" fromDate="2003-03-04 19:06:30.89"/>
-  <ProductCategoryMember productCategoryId="102" productId="GZ-1004" fromDate="2003-03-04 18:51:11.097"/>
-  <ProductCategoryMember productCategoryId="102" productId="GZ-1005" fromDate="2003-03-04 19:01:06.293"/>
-  <ProductCategoryMember productCategoryId="102" productId="GZ-1006" fromDate="2003-03-04 19:03:40.915"/>
-  <ProductCategoryMember productCategoryId="102" productId="GZ-7000" fromDate="2003-03-04 19:12:29.045"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-5005" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-1004" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-1005" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-1006" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-7000" fromDate="2001-01-01 12:00:00.0"/>
   <ProductCategoryMember productCategoryId="102" productId="GZ-8544" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="102" productId="GZ-9290" fromDate="2003-03-04 18:55:19.344"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-9290" fromDate="2001-01-01 12:00:00.0"/>
   <ProductCategoryMember productCategoryId="201" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
   <ProductCategoryMember productCategoryId="20111" productId="WG-1111" fromDate="2001-01-01 12:00:00.0"/>
   <ProductCategoryMember productCategoryId="202" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
@@ -355,10 +355,10 @@
     <ProductPromoCond productPromoId="9012" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_ORDER_TOTAL" operatorEnumId="PPC_GTE" condValue="50"/>
     <ProductPromoCond productPromoId="9013" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_PRODUCT_QUANT" operatorEnumId="PPC_EQ" condValue="3"/>
     <ProductPromoCond productPromoId="9014" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_PRODUCT_QUANT" operatorEnumId="PPC_EQ" condValue="1"/>
-    <ProductPromoCategory productPromoId="9013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="200" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="Y"/>
-    <ProductPromoCategory productPromoId="9013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="201" productPromoApplEnumId="PPPA_EXCLUDE" includeSubCategories="Y"/>
-    <ProductPromoCategory productPromoId="9013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="20111" productPromoApplEnumId="PPPA_ALWAYS" includeSubCategories="N"/>
-    <ProductPromoCategory productPromoId="9016" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="101" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="N"/>
+    <ProductPromoCategory productPromoId="9013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="200" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="Y"/>
+    <ProductPromoCategory productPromoId="9013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="201" andGroupId="_NA_" productPromoApplEnumId="PPPA_EXCLUDE" includeSubCategories="Y"/>
+    <ProductPromoCategory productPromoId="9013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="20111" andGroupId="_NA_" productPromoApplEnumId="PPPA_ALWAYS" includeSubCategories="N"/>
+    <ProductPromoCategory productPromoId="9016" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="101" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="N"/>
     <ProductPromoProduct productPromoId="9010" productPromoRuleId="01" productPromoActionSeqId="01" productPromoCondSeqId="_NA_" productId="GZ-1005" productPromoApplEnumId="PPPA_INCLUDE"/>
     <ProductPromoProduct productPromoId="9010" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productId="GZ-1006" productPromoApplEnumId="PPPA_INCLUDE"/>
     <ProductPromoProduct productPromoId="9014" productPromoRuleId="01" productPromoActionSeqId="01" productPromoCondSeqId="_NA_" productId="GZ-5005" productPromoApplEnumId="PPPA_INCLUDE"/>
