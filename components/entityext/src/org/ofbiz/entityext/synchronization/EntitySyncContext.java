@@ -1150,6 +1150,15 @@ public class EntitySyncContext {
         this.saveResultsReportedFromDataStore();
     }
 
+    /**
+     * Static method to obtain a list of entity names which will be synchronized
+     */
+    public static Set getEntitySyncModelNamesToUse(LocalDispatcher dispatcher, String entitySyncId) throws SyncDataErrorException, SyncAbortException {
+        DispatchContext dctx = dispatcher.getDispatchContext();
+        EntitySyncContext ctx = new EntitySyncContext(dctx, UtilMisc.toMap("entitySyncId", entitySyncId));
+        return ctx.makeEntityNameToUseSet();
+    }
+
     /** This class signifies an abort condition, so the state and such of the EntitySync value in the datasource should not be changed */
     public static class SyncAbortException extends GeneralServiceException {
         public SyncAbortException() {
