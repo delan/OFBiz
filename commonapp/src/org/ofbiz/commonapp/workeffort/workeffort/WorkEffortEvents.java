@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/12/23 06:29:42  jonesde
+ * Replaced preStoreOther stuff with storeAll
+ *
  * Revision 1.6  2001/12/16 13:08:31  jonesde
  * Finished first pass of party assignment stuff
  *
@@ -403,10 +406,7 @@ public class WorkEffortEvents {
             try {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
-                createWorkEffort = null;
-            }
-            if (createWorkEffort == null) {
+                Debug.logWarning(e);
                 request.setAttribute("ERROR_MESSAGE", "Could not create new WorkEffort (write error)");
                 return "error";
             }
@@ -589,21 +589,21 @@ public class WorkEffortEvents {
                 if ("CAL_ACCEPTED".equals(statusId)) {
                     //accept the activity assignment
                     try {
-                        Map results = dispatcher.runSync("acceptActivity", context);
+                        Map results = dispatcher.runSync("acceptAssignment", context);
                     } catch (GenericServiceException e) {
                         Debug.logWarning(e);
                     }
                 } else if ("CAL_COMPLETED".equals(statusId)) {
                     //complete the activity assignment
                     try {
-                        Map results = dispatcher.runSync("completeActivity", context);
+                        Map results = dispatcher.runSync("completeAssignment", context);
                     } catch (GenericServiceException e) {
                         Debug.logWarning(e);
                     }
                 } else if ("CAL_DECLINED".equals(statusId)) {
                     //decline the activity assignment
                     try {
-                        Map results = dispatcher.runSync("declineActivity", context);
+                        Map results = dispatcher.runSync("declineAssignment", context);
                     } catch (GenericServiceException e) {
                         Debug.logWarning(e);
                     }
