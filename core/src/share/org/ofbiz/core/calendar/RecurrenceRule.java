@@ -191,6 +191,7 @@ public class RecurrenceRule {
     
     /** Returns the interval of the frequency as an int.*/
     public int getIntervalInt() {
+        //Debug.logInfo("[RecurrenceInfo.getInterval] : " + getInterval());
         return (int) getInterval();
     }
     
@@ -210,7 +211,7 @@ public class RecurrenceRule {
         if ( getEndTime() >= RecurrenceUtil.now() )
             return 0;
         // Test the recurrence limit.
-        if ( currentCount > getCount() )        
+        if ( currentCount >= getCount() )        
             return 0;
         
         boolean isSeeking = true;
@@ -263,6 +264,7 @@ public class RecurrenceRule {
         
         long nextStartTime = startTime;
         while ( nextStartTime < fromTime ) {
+            //Debug.logInfo("[RecurrenceInfo.getNextFreq] : Updating time - " + getFrequency());
             switch(getFrequency()) {
                 case SECONDLY:
                     cal.add(Calendar.SECOND,getIntervalInt());

@@ -105,7 +105,7 @@ public abstract class GenericAsyncEngine implements GenericEngine {
             
             // Create the job info
             String jobName = new String(new Long((new Date().getTime())).toString());
-            Map jFields = UtilMisc.toMap("jobName",jobName,"serviceName",modelService.name,"loaderName",loader,"recurrenceInfoId",infoId);
+            Map jFields = UtilMisc.toMap("jobName",jobName,"serviceName",modelService.name,"loaderName",loader,"recurrenceInfoId",infoId,"runtimeDataId",dataId);
             job = dispatcher.getDelegator().makeValue("JobSandbox",jFields);
             job.preStoreOther(runtimeData);
             job.preStoreOther(info);
