@@ -1646,7 +1646,7 @@
       </relation>
     </entity>
     <entity entity-name="ProductReview"
-            package-name="org,ofbiz.commonapp.product.product"
+            package-name="org.ofbiz.commonapp.product.product"
             title="Product Review Entity">
         <field name="productReviewId" type="id-ne"></field>
         <field name="productId" type="id-ne"></field>
