@@ -672,6 +672,54 @@ public class OrderReadHelper {
         return featureMap;
     }
 
+    public boolean shippingApplies() {
+        boolean shippingApplies = false;
+        List validItems = this.getValidOrderItems();
+        if (validItems != null) {
+            Iterator i = validItems.iterator();
+            while (i.hasNext()) {
+                GenericValue item = (GenericValue) i.next();
+                GenericValue product = null;
+                try {
+                    product = item.getRelatedOne("Product");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Problem getting Product from OrderItem; returning 0", module);
+                }
+                if (product != null) {
+                    if (ProductWorker.shippingApplies(product)) {
+                        shippingApplies = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return shippingApplies;
+    }
+
+    public boolean taxApplies() {
+        boolean taxApplies = false;
+        List validItems = this.getValidOrderItems();
+        if (validItems != null) {
+            Iterator i = validItems.iterator();
+            while (i.hasNext()) {
+                GenericValue item = (GenericValue) i.next();
+                GenericValue product = null;
+                try {
+                    product = item.getRelatedOne("Product");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Problem getting Product from OrderItem; returning 0", module);
+                }
+                if (product != null) {
+                    if (ProductWorker.taxApplies(product)) {
+                        taxApplies = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return taxApplies;
+    }
+
     public double getShippableTotal(String shipGroupSeqId) {
         double shippableTotal = 0.00;
         List validItems = getValidOrderItems(shipGroupSeqId);

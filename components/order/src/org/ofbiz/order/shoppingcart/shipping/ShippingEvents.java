@@ -76,6 +76,13 @@ public class ShippingEvents {
     }
 
     public static Map getShipGroupEstimate(LocalDispatcher dispatcher, GenericDelegator delegator, ShoppingCart cart, int groupNo) {
+        // check for shippable items
+        if (!cart.shippingApplies()) {
+            Map responseResult = ServiceUtil.returnSuccess();
+            responseResult.put("shippingTotal", new Double(0.00));
+            return responseResult;
+        }
+
         String shipmentMethodTypeId = cart.getShipmentMethodTypeId(groupNo);
         String carrierPartyId = cart.getCarrierPartyId(groupNo);
 
@@ -85,6 +92,13 @@ public class ShippingEvents {
     }
 
     public static Map getShipEstimate(LocalDispatcher dispatcher, GenericDelegator delegator, OrderReadHelper orh, String shipGroupSeqId) {
+        // check for shippable items
+        if (!orh.shippingApplies()) {
+            Map responseResult = ServiceUtil.returnSuccess();
+            responseResult.put("shippingTotal", new Double(0.00));
+            return responseResult;
+        }
+
         GenericValue shipGroup = orh.getOrderItemShipGroup(shipGroupSeqId);
         String shipmentMethodTypeId = shipGroup.getString("shipmentMethodTypeId");
         String carrierRoleTypeId = shipGroup.getString("carrierRoleTypeId");
