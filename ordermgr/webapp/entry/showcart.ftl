@@ -101,11 +101,11 @@ function addToList() {
             <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style='margin: 0;'>
               <input type='text' class='inputBox' size='20' name="add_product_id" value="${requestParameters.add_product_id?if_exists}">
               <input type='text' class='inputBox' size='5' name="quantity" value="${requestParameters.quantity?default("1")}">
-              <input type='submit' value="Add To Order">
-              <#-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a> -->
+              <input type='submit' value="Add To Order">              
             </form>
           </td>
         </tr>
+        <#if modeStr?default("sales")?lower_case == "purchase">
         <tr><td><hr class="sepbar"></td></tr>
         <tr>
           <td>
@@ -117,11 +117,11 @@ function addToList() {
               </select>
               <input type='text' class='inputBox' size='40' name="add_product_desc" value="${requestParameters.add_product_description?if_exists}">
               <input type='text' class='inputBox' size="5" name="quantity" value="${requestParameters.quantity?default("1")}">
-              <input type='submit' value="Add To Order">
-              <#-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a> -->
+              <input type='submit' value="Add To Order">              
             </form>
           </td>
-        </tr>        
+        </tr>  
+        </#if>      
       </table>
     </TD>
   </TR>
@@ -171,14 +171,7 @@ function addToList() {
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
           <tr><td colspan="7"><hr class='sepbar'></td></tr>
           <tr>
-            <td>
-                <#if cartLine.getShoppingListId()?exists>
-                  <#assign itemsFromList = true>
-                  <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@ofbizUrl>" class="buttontext">L</a>&nbsp;&nbsp;
-                <#else>
-                  &nbsp;
-                </#if>
-            </td> 
+            <td>&nbsp;</td>         
             <td>
                 <div class='tabletext'>
                     <#-- <b>${cartLineIndex}</b> - -->
@@ -235,16 +228,10 @@ function addToList() {
             <hr size=1 class='sepbar'>
             <div class='tabletext'><b>${shoppingCart.getGrandTotal()?string.currency}</b></div>
           </td>
-        </tr>
-        <#if itemsFromList>
-        <tr>
-          <td valign="bottom" colspan="6"><div class="tabletext">L - Items from a shopping list; update quantities from list page.</td>
-        </tr>
-        <#else>
+        </tr>       
         <tr>
           <td colspan="6">&nbsp;</td>
-        </tr>
-        </#if>         
+        </tr>      
       </table>    
     </FORM>
   <#else>
