@@ -21,7 +21,7 @@
   <SecurityPermission description="Update with the Entity Data Maintenance pages." permissionId="ENTITY_DATA_UPDATE"/>
   <SecurityPermission description="Delete with the Entity Data Maintenance pages." permissionId="ENTITY_DATA_DELETE"/>
   <SecurityPermission description="ALL with the Entity Data Maintenance pages." permissionId="ENTITY_DATA_ADMIN"/>
-  
+
   <SecurityPermission description="View operations on the Catalog." permissionId="CATALOG_VIEW"/>
   <SecurityPermission description="Create operations on the Catalog." permissionId="CATALOG_CREATE"/>
   <SecurityPermission description="Update operations on the Catalog." permissionId="CATALOG_UPDATE"/>
@@ -39,6 +39,11 @@
   <SecurityPermission description="Update operations in the Order Manager." permissionId="ORDERMGR_UPDATE"/>
   <SecurityPermission description="Delete operations in the Order Manager." permissionId="ORDERMGR_DELETE"/>
   <SecurityPermission description="ALL operations in the Order Manager." permissionId="ORDERMGR_ADMIN"/>
+
+  <SecurityPermission description="View operations in the Shipping Rate Editor." permissionId="SHIPRATE_VIEW"/>
+  <SecurityPermission description="Create operations in the Shipping Rate Editor." permissionId="SHIPRATE_CREATE"/>
+  <SecurityPermission description="Delete operations in the Shipping Rate Editor." permissionId="SHIPRATE_DELETE"/>
+  <SecurityPermission description="ALL operations in the Shipping Rate Editor." permissionId="SHIPRATE_ADMIN"/>
 
   <SecurityPermission description="View Payment Information." permissionId="PAY_INFO_VIEW"/>
   <SecurityPermission description="Create Payment Information." permissionId="PAY_INFO_CREATE"/>
@@ -97,6 +102,11 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_UPDATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="ORDERMGR_ADMIN"/>
+
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SHIPRATE_CREATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SHIPRATE_DELETE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SHIPRATE_VIEW"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="SHIPRATE_ADMIN"/>
 
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_DELETE"/>
