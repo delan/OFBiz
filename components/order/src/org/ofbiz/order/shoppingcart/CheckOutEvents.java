@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.21 2003/12/12 23:07:07 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.22 2003/12/30 20:14:11 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -85,10 +85,10 @@ public class CheckOutEvents {
         String itemSeqId = request.getParameter("item_seq");
         Locale locale = UtilHttp.getLocale(request);
 
-        Map fields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", itemSeqId, "statusId", "ITEM_CANCELLED", "userLogin", userLogin);
+        Map fields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", itemSeqId, "userLogin", userLogin);
         Map result = null;
         try {
-                result = dispatcher.runSync("changeOrderItemStatus", fields);
+                result = dispatcher.runSync("cancelOrderItem", fields);
         } catch (GenericServiceException e) {
                 Debug.logError(e, module);
                 request.setAttribute("_ERROR_MESSAGE_", "<li>Cannot cancel item at this time; please try again.");
