@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleServletAccessor.java,v 1.1 2003/08/17 06:06:13 ajzeneski Exp $
+ * $Id: FlexibleServletAccessor.java,v 1.2 2003/11/25 07:48:14 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import javax.servlet.http.HttpSession;
  * list elements. See individual Map operations for more information.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class FlexibleServletAccessor {
@@ -91,13 +91,21 @@ public class FlexibleServletAccessor {
         return this.empty;
     }
 
-    /** Based on name get from ServletRequest or from List in ServletRequest */
+    /** Based on name get from ServletRequest or from List in ServletRequest
+     * @param request request to get the value from
+     * @param expandContext the context to use for name expansion
+     * @return the object corresponding to this getter class
+     */
     public Object get(ServletRequest request, Map expandContext) {
         AttributeAccessor aa = new AttributeAccessor(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         return aa.get(request);
     }
 
-    /** Based on name get from HttpSession or from List in HttpSession */
+    /** Based on name get from HttpSession or from List in HttpSession
+     * @param session
+     * @param expandContext
+     * @return
+     */
     public Object get(HttpSession session, Map expandContext) {
         AttributeAccessor aa = new AttributeAccessor(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         return aa.get(session);
@@ -108,6 +116,9 @@ public class FlexibleServletAccessor {
      * otherwise the value will be set in the position of the number in the brackets.
      * If a "+" (plus sign) is included inside the square brackets before the index 
      * number the value will inserted/added at that point instead of set at the point.
+     * @param request
+     * @param value
+     * @param expandContext
      */
     public void put(ServletRequest request, Object value, Map expandContext) {
         AttributeAccessor aa = new AttributeAccessor(name, expandContext, this.attributeName, this.fma, this.needsExpand);
@@ -119,30 +130,46 @@ public class FlexibleServletAccessor {
      * otherwise the value will be set in the position of the number in the brackets.
      * If a "+" (plus sign) is included inside the square brackets before the index 
      * number the value will inserted/added at that point instead of set at the point.
+     * @param session
+     * @param value
+     * @param expandContext
      */
     public void put(HttpSession session, Object value, Map expandContext) {
         AttributeAccessor aa = new AttributeAccessor(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         aa.put(session, value);
     }
     
-    /** Based on name remove from ServletRequest or from List in ServletRequest */
+    /** Based on name remove from ServletRequest or from List in ServletRequest
+     * @param request
+     * @param expandContext
+     * @return
+     */
     public Object remove(ServletRequest request, Map expandContext) {
         AttributeAccessor aa = new AttributeAccessor(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         return aa.remove(request);
     }
     
-    /** Based on name remove from HttpSession or from List in HttpSession */
+    /** Based on name remove from HttpSession or from List in HttpSession
+     * @param session
+     * @param expandContext
+     * @return
+     */
     public Object remove(HttpSession session, Map expandContext) {
         AttributeAccessor aa = new AttributeAccessor(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         return aa.remove(session);
     }
     
-    /** The equals and hashCode methods are imnplemented just case this object is ever accidently used as a Map key */    
+    /** The equals and hashCode methods are imnplemented just case this object is ever accidently used as a Map key * 
+     * @return
+     */    
     public int hashCode() {
         return this.name.hashCode();
     }
 
-    /** The equals and hashCode methods are imnplemented just case this object is ever accidently used as a Map key */    
+    /** The equals and hashCode methods are imnplemented just case this object is ever accidently used as a Map key 
+     * @param obj
+     * @return
+     */    
     public boolean equals(Object obj) {
         if (obj instanceof FlexibleServletAccessor) {
             FlexibleServletAccessor flexibleServletAccessor = (FlexibleServletAccessor) obj;
@@ -159,7 +186,9 @@ public class FlexibleServletAccessor {
         }
     }
 
-    /** To be used for a string representation of the accessor, returns the original name. */    
+    /** To be used for a string representation of the accessor, returns the original name. 
+     * @return
+     */    
     public String toString() {
         return this.name;
     }

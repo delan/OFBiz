@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectType.java,v 1.3 2003/09/14 05:38:50 jonesde Exp $
+ * $Id: ObjectType.java,v 1.4 2003/11/25 07:48:14 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import java.util.Map;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ObjectType {
@@ -55,6 +55,8 @@ public class ObjectType {
     /** 
      * Loads a class with the current thread's context classloader
      * @param className The name of the class to load
+     * @return The requested class
+     * @throws ClassNotFoundException
      */
     public static Class loadClass(String className) throws ClassNotFoundException {
         // small block to speed things up by putting using preloaded classes for common objects, this turns out to help quite a bit...
@@ -68,6 +70,9 @@ public class ObjectType {
     /** 
      * Loads a class with the current thread's context classloader
      * @param className The name of the class to load
+     * @param loader The ClassLoader to su
+     * @return The requested class
+     * @throws ClassNotFoundException
      */
     public static Class loadClass(String className, ClassLoader loader) throws ClassNotFoundException {
         // small block to speed things up by putting using preloaded classes for common objects, this turns out to help quite a bit...
@@ -101,6 +106,10 @@ public class ObjectType {
     /** 
      * Returns an instance of the specified class
      * @param className Name of the class to instantiate
+     * @return An instance of the named class
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
      */
     public static Object getInstance(String className) throws ClassNotFoundException,
             InstantiationException, IllegalAccessException {
@@ -115,6 +124,8 @@ public class ObjectType {
      * Tests if an object properly implements the specified interface
      * @param obj Object to test
      * @param interfaceName Name of the interface to test against
+     * @return boolean indicating whether interfaceName is an interface of the obj
+     * @throws ClassNotFoundException
      */
     public static boolean interfaceOf(Object obj, String interfaceName) throws ClassNotFoundException {
         Class interfaceClass = loadClass(interfaceName);
@@ -126,6 +137,7 @@ public class ObjectType {
      * Tests if an object properly implements the specified interface
      * @param obj Object to test
      * @param interfaceObject to test against
+     * @return boolean indicating whether interfaceObject is an interface of the obj
      */
     public static boolean interfaceOf(Object obj, Object interfaceObject) {
         Class interfaceClass = interfaceObject.getClass();
@@ -137,6 +149,7 @@ public class ObjectType {
      * Tests if an object properly implements the specified interface
      * @param obj Object to test
      * @param interfaceClass Class to test against
+     * @return boolean indicating whether interfaceClass is an interface of the obj
      */
     public static boolean interfaceOf(Object obj, Class interfaceClass) {
         Class objectClass = obj.getClass();
@@ -156,6 +169,8 @@ public class ObjectType {
      * Tests if an object is an instance of or a sub-class of the parent
      * @param obj Object to test
      * @param parentName Name of the parent class to test against
+     * @return
+     * @throws ClassNotFoundException
      */
     public static boolean isOrSubOf(Object obj, String parentName) throws ClassNotFoundException {
         Class parentClass = loadClass(parentName);
@@ -167,6 +182,7 @@ public class ObjectType {
      * Tests if an object is an instance of or a sub-class of the parent
      * @param obj Object to test
      * @param parentObject Object to test against
+     * @return
      */
     public static boolean isOrSubOf(Object obj, Object parentObject) {
         Class parentClass = parentObject.getClass();
@@ -178,6 +194,7 @@ public class ObjectType {
      * Tests if an object is an instance of or a sub-class of the parent
      * @param obj Object to test
      * @param parentClass Class to test against
+     * @return
      */
     public static boolean isOrSubOf(Object obj, Class parentClass) {
         Class objectClass = obj.getClass();
@@ -193,6 +210,7 @@ public class ObjectType {
      * Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
      * @param typeObject Object to test against
+     * @return
      */
     public static boolean instanceOf(Object obj, Object typeObject) {
         Class typeClass = typeObject.getClass();
@@ -203,7 +221,8 @@ public class ObjectType {
     /** 
      * Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
-     * @param typeObject Object to test against
+     * @param typeName name to test against
+     * @return
      */
     public static boolean instanceOf(Object obj, String typeName) {
         return instanceOf(obj, typeName, null);
@@ -212,7 +231,9 @@ public class ObjectType {
     /** 
      * Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
-     * @param typeObject Object to test against
+     * @param typeName Object to test against
+     * @param loader
+     * @return
      */
     public static boolean instanceOf(Object obj, String typeName, ClassLoader loader) {
         Class infoClass = null;
@@ -252,11 +273,10 @@ public class ObjectType {
      * Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
      * @param typeClass Class to test against
+     * @return
      */
     public static boolean instanceOf(Object obj, Class typeClass) {
         if (obj == null) return true;
-        Class objectClass = obj.getClass();
-
         if (typeClass.isInterface()) {
             return interfaceOf(obj, typeClass);
         } else {
@@ -272,6 +292,8 @@ public class ObjectType {
      * @param type Name of type to convert to
      * @param format Optional (can be null) format string for Date, Time, Timestamp
      * @param locale Optional (can be null) Locale for formatting and parsing Double, Float, Long, Integer
+     * @return
+     * @throws GeneralException
      */
     public static Object simpleTypeConvert(Object obj, String type, String format, Locale locale) throws GeneralException {
         if (obj == null)
@@ -439,7 +461,6 @@ public class ObjectType {
                                 df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
                             }
                             Date fieldDate = df.parse(str);
-
                             return new java.sql.Timestamp(fieldDate.getTime());
                         } catch (ParseException e1) {
                             throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
@@ -449,7 +470,6 @@ public class ObjectType {
                     try {
                         SimpleDateFormat sdf = new SimpleDateFormat(format);
                         java.util.Date fieldDate = sdf.parse(str);
-
                         return new java.sql.Timestamp(fieldDate.getTime());
                     } catch (ParseException e) {
                         throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
@@ -465,10 +485,11 @@ public class ObjectType {
             if ("String".equals(type) || "java.lang.String".equals(type)) {
                 NumberFormat nf = null;
 
-                if (locale == null)
+                if (locale == null) {
                     nf = NumberFormat.getNumberInstance();
-                else
+                } else {
                     nf = NumberFormat.getNumberInstance(locale);
+                }
                 return nf.format(dbl.doubleValue());
             } else if ("Double".equals(type) || "java.lang.Double".equals(type)) {
                 return obj;

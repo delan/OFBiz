@@ -1,5 +1,5 @@
 /*
- * $Id: ModelGroupReader.java,v 1.3 2003/08/17 08:46:58 jonesde Exp $
+ * $Id: ModelGroupReader.java,v 1.4 2003/11/25 07:48:14 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.w3c.dom.Node;
  * Generic Entity - Entity Group Definition Reader
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ModelGroupReader {
@@ -98,7 +98,7 @@ public class ModelGroupReader {
         Iterator resourceElementIter = entityGroupReaderInfo.resourceElements.iterator();
         while (resourceElementIter.hasNext()) {
             Element resourceElement = (Element) resourceElementIter.next();
-            entityGroupResourceHandlers.add(new MainResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, resourceElement));
+            this.entityGroupResourceHandlers.add(new MainResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, resourceElement));
         }
 
         // get all of the component resource group stuff, ie specified in each ofbiz-component.xml file
@@ -107,7 +107,7 @@ public class ModelGroupReader {
         while (componentResourceInfoIter.hasNext()) {
             ComponentConfig.EntityResourceInfo componentResourceInfo = (ComponentConfig.EntityResourceInfo) componentResourceInfoIter.next();
             if (modelName.equals(componentResourceInfo.readerName)) {
-                entityGroupResourceHandlers.add(componentResourceInfo.createResourceHandler());
+                this.entityGroupResourceHandlers.add(componentResourceInfo.createResourceHandler());
             }
         }
 
@@ -116,20 +116,20 @@ public class ModelGroupReader {
     }
 
     public Map getGroupCache() {
-        if (groupCache == null) // don't want to block here
+        if (this.groupCache == null) // don't want to block here
         {
             synchronized (ModelGroupReader.class) {
                 // must check if null again as one of the blocked threads can still enter
-                if (groupCache == null) {
+                if (this.groupCache == null) {
                     // now it's safe
-                    groupCache = new HashMap();
-                    groupNames = new TreeSet();
+                    this.groupCache = new HashMap();
+                    this.groupNames = new TreeSet();
 
                     UtilTimer utilTimer = new UtilTimer();
                     // utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocument");
 
                     int i = 0;
-                    Iterator entityGroupResourceHandlerIter = entityGroupResourceHandlers.iterator();
+                    Iterator entityGroupResourceHandlerIter = this.entityGroupResourceHandlers.iterator();
                     while (entityGroupResourceHandlerIter.hasNext()) {
                         ResourceHandler entityGroupResourceHandler = (ResourceHandler) entityGroupResourceHandlerIter.next();
                         Document document = null;
@@ -140,7 +140,7 @@ public class ModelGroupReader {
                             Debug.logError(e, "Error loading entity group model", module);
                         }
                         if (document == null) {
-                            groupCache = null;
+                            this.groupCache = null;
                             return null;
                         }
 
@@ -161,8 +161,8 @@ public class ModelGroupReader {
                                     String groupName = UtilXml.checkEmpty(curEntity.getAttribute("group"));
 
                                     if (groupName == null || entityName == null) continue;
-                                    groupNames.add(groupName);
-                                    groupCache.put(entityName, groupName);
+                                    this.groupNames.add(groupName);
+                                    this.groupCache.put(entityName, groupName);
                                     // utilTimer.timerString("  After entityEntityName -- " + i + " --");
                                     i++;
                                 }
@@ -175,7 +175,7 @@ public class ModelGroupReader {
                 }
             }
         }
-        return groupCache;
+        return this.groupCache;
     }
 
     /** Gets a group name based on a definition from the specified XML Entity Group descriptor file.
@@ -196,11 +196,12 @@ public class ModelGroupReader {
      */
     public Collection getGroupNames() {
         getGroupCache();
-        if (groupNames == null) return null;
-        return new ArrayList(groupNames);
+        if (this.groupNames == null) return null;
+        return new ArrayList(this.groupNames);
     }
 
     /** Creates a Collection with names of all of the entities for a given group
+     * @param groupName
      * @return A Collection of entityName Strings
      */
     public Collection getEntityNamesByGroup(String groupName) {
