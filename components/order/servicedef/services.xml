@@ -739,6 +739,7 @@
         <attribute name="statusId" type="String" mode="IN" optional="true"/> <!-- defaults to ORDER_COMPLETED -->
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="monthsToInclude" type="Integer" mode="IN" optional="true"/> <!-- if monthsToInclude specified along with fromDate/thruDate, will override fromDate/thruDate -->
         <attribute name="totalOrders" type="Long" mode="OUT" optional="false"/>
         <attribute name="totalGrandAmount" type="Long" mode="OUT" optional="false"/>
         <attribute name="totalSubRemainingAmount" type="Long" mode="OUT" optional="false"/>
