@@ -83,8 +83,12 @@ public class JavaEventHandler implements EventHandler {
     }
 
     private String invoke(Class[] paramTypes, Object[] params) throws EventHandlerException {
-        if (eventPath == null || eventMethod == null)
+        if (eventClass == null) {
+            throw new EventHandlerException("Error invoking event, the class " + eventPath + " was not found");
+        }
+        if (eventPath == null || eventMethod == null) {
             throw new EventHandlerException("Invalid event method or path; call initialize()");
+        }
 
         Debug.logVerbose("[Processing]: JAVA Event", module);
         try {

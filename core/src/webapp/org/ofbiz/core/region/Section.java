@@ -56,7 +56,7 @@ public class Section extends Content {
     protected final String info;
     protected URL regionFile;
     
-    protected static Boolean doFlushOnRenderPageContext = null;
+    protected static Boolean doFlushOnRender = null;
     
     public Section(String name, String info, String content, String type, URL regionFile) {
         super(content, type);
@@ -71,18 +71,25 @@ public class Section extends Content {
     
     public void render(PageContext pageContext) throws JspException {
         //this check to see if we should flush is done because on most servers this 
-        // will just slow things down and not solve any problems, but on Tomcat it is necessary
-        if (doFlushOnRenderPageContext == null) {
+        // will just slow things down and not solve any problems, but on Tomcat, Orion, etc it is necessary
+        if (doFlushOnRender == null) {
             boolean doflush = false;
-            if (pageContext.getServletContext().getServerInfo().startsWith("Apache Tomcat")) {
+            String serverInfo = pageContext.getServletContext().getServerInfo();
+            Debug.logInfo("serverInfo: " + serverInfo);
+            if (serverInfo.indexOf("Apache Tomcat") >= 0) {
                 Debug.logImportant("Apache Tomcat detected, enabling the flush on the region render from PageContext");
                 doflush = true;
+            } else if (serverInfo.indexOf("Orion") >= 0) {
+                Debug.logImportant("Orion detected, enabling the flush on the region render from PageContext");
+                doflush = true;
             }
-            doFlushOnRenderPageContext = new Boolean(doflush);
+            doFlushOnRender = new Boolean(doflush);
         }
         
         try {
-            if (doFlushOnRenderPageContext.booleanValue()) pageContext.getOut().flush();
+            if (doFlushOnRender.booleanValue()) {
+                pageContext.getOut().flush();
+            }
             render((HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
         } catch (java.io.IOException e) {
             Debug.logError(e, "Error rendering section: ");
@@ -101,7 +108,7 @@ public class Section extends Content {
         //long viewStartTime = System.currentTimeMillis();
         if (content != null) {
             if ("direct".equals(type)) {
-                response.getWriter().print(content);
+                response.getOutputStream().print(content);
             } else if ("default".equals(type) || "region".equals(type) || "resource".equals(type)) {
                 //if type is resource then we won't even look up the region
                 
