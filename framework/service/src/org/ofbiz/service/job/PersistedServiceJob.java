@@ -119,7 +119,7 @@ public class PersistedServiceJob extends GenericServiceJob {
         if (Debug.verboseOn()) Debug.logVerbose("Next runtime returned: " + next, module);
 
         if (next > runtime) {
-            String newJobId = job.getDelegator().getNextSeqId("JobSandbox").toString();
+            String newJobId = job.getDelegator().getNextSeqId("JobSandbox");
             String pJobId = job.getString("parentJobId");
             if (pJobId == null) {
                 pJobId = job.getString("jobId");
