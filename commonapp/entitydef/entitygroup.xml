@@ -392,6 +392,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderAndItems" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderAndPaymentPref" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderAndRoles" />
+    <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderItemAndRoles" />    
     <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderNote" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderNoteView" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderItem" />
