@@ -21,15 +21,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski 
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.0
 --%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.base.util.*, org.ofbiz.entity.*" %>
-<%@ page import="org.ofbiz.entity.EntityTypeUtil" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.entity.*, org.ofbiz.entity.util.*" %>
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 
