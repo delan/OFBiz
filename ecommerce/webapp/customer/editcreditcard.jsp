@@ -178,7 +178,7 @@
                 <ofbiz:entityfield attribute="curPostalAddress" field="attnName" prefix="<b>Attn:</b> " suffix="<br>"/>
                 <ofbiz:entityfield attribute="curPostalAddress" field="address1"/><br>
                 <ofbiz:entityfield attribute="curPostalAddress" field="address2" prefix="" suffix="<br>"/>
-                <ofbiz:entityfield attribute="postalAddress" field="city"/>,
+                <ofbiz:entityfield attribute="curPostalAddress" field="city"/>,
                 <ofbiz:entityfield attribute="curPostalAddress" field="stateProvinceGeoId"/>
                 <ofbiz:entityfield attribute="curPostalAddress" field="postalCode"/>
                 <ofbiz:entityfield attribute="curPostalAddress" field="countryGeoId" prefix="<br>" suffix=""/>
