@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.24 $
+ *@version    $Revision: 1.25 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -201,14 +201,14 @@ function addToList() {
               <#assign giftWrapOption = lineOptionalFeatures.GIFT_WRAP?if_exists>
               <#assign selectedOption = cartLine.getAdditionalProductFeatureAndAppl("GIFT_WRAP")?if_exists>
               <#if giftWrapOption?has_content>
-                <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}">
+                <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onClick="javascript:document.cartform.submit()">
                   <option value="">No Gift Wrap</option>
                   <#list giftWrapOption as option>
                     <option value="${option.productFeatureId}" <#if ((selectedOption.productFeatureId)?exists && selectedOption.productFeatureId == option.productFeatureId)>SELECTED</#if>>${option.description} : ${option.amount?default(0)?string.currency}</option>
                   </#list>
                 </select>
               <#elseif showNoGiftWrapOptions>
-                <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}">
+                <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onClick="javascript:document.cartform.submit()">
                   <option value="">No Gift Wrap</option>
                 </select>
               <#else>
@@ -361,7 +361,7 @@ function addToList() {
       </td>
     </tr>
   </table>
-  
+
 <#if showPromoText?exists && showPromoText>
   <br/>
   <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
