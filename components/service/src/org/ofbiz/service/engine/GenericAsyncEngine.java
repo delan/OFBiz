@@ -1,5 +1,5 @@
 /*
- * $Id: GenericAsyncEngine.java,v 1.5 2004/07/01 15:27:14 ajzeneski Exp $
+ * $Id: GenericAsyncEngine.java,v 1.6 2004/07/30 21:57:12 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.service.job.JobManagerException;
  * Generic Asynchronous Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public abstract class GenericAsyncEngine extends AbstractEngine {
@@ -95,7 +95,7 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
                 List toBeStored = new LinkedList();
 
                 // Create the runtime data
-                String dataId = dispatcher.getDelegator().getNextSeqId("RuntimeData").toString();
+                String dataId = dispatcher.getDelegator().getNextSeqId("RuntimeData");
 
                 GenericValue runtimeData = dispatcher.getDelegator().makeValue("RuntimeData",
                         UtilMisc.toMap("runtimeDataId", dataId));
