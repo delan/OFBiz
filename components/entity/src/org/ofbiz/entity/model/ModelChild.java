@@ -1,5 +1,5 @@
 /*
- * $Id: ModelChild.java,v 1.1 2004/07/07 05:17:15 doogie Exp $
+ * $Id: ModelChild.java,v 1.2 2004/07/13 03:44:14 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,7 @@ package org.ofbiz.entity.model;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public abstract class ModelChild {
@@ -44,7 +44,7 @@ public abstract class ModelChild {
         this.parentModelEntity = parentModelEntity;
     }
 
-    protected ModelEntity getModelEntity() {
+    public ModelEntity getModelEntity() {
         return parentModelEntity;
     }
 }
