@@ -36,6 +36,7 @@
           <td valign="middle" align="right">
             <div class='lightbuttontextdisabled'>
               <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
+              <a href="<@ofbizUrl>/editShoppingList</@ofbizUrl>" class="lightbuttontext">[Shopping&nbsp;Lists]</a>
               <#if (shoppingCartSize > 0)>
                 <a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="lightbuttontext">[Checkout]</a>
               <#else>

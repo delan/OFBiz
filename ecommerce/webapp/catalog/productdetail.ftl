@@ -155,13 +155,28 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <#else>        
           <#if inStock>
             <a href="javascript:addItem()" class="buttontext"><nobr>[Add to Cart]</nobr></a>&nbsp;
-            <input type="text" size="5" name="quantity" value="1">
+            <input type="text" class="inputBox" size="5" name="quantity" value="1">
           </#if>
           <#if requestParameters.category_id?exists>
             <input type='hidden' name='category_id' value='${requestParameters.category_id}'>
           </#if>
         </#if>
       </form>
+      
+      <#if shoppingLists?has_content>
+        <hr class="sepbar">
+        <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList</@ofbizUrl>">
+          <input type="hidden" name="productId" value="${requestParameters.product_id}">
+          <select name="shoppingListId" class="selectBox">
+            <#list shoppingLists as shoppingList>
+              <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
+            </#list>
+          </select>
+          &nbsp;
+          <input type="text" size="5" class="inputBox" name="quantity" value="1">
+          <a href="javascript:document.addToShoppingList.submit();" class="buttontext">[Add To Shopping List]</a>
+        </form>
+      </#if>
        
       <#-- Prefill first select box (virtual products only) -->
       <#if requestAttributes.variantTree?exists && 0 < requestAttributes.variantTree.size()>
