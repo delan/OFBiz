@@ -75,6 +75,8 @@ public class ServerHitBin {
     
     public static void countHit(String id, int type, String visitId, long startTime, long runningTime, GenericValue userLogin, 
             GenericDelegator delegator) {
+        //only count hits if enabled, if not specified defaults to false
+        if (!"true".equals(UtilProperties.getPropertyValue("serverstats", "stats.enable." + typeIds[type]))) return;
         countHit(id, type, visitId, startTime, runningTime, userLogin, delegator, true);
     }
 
@@ -97,7 +99,7 @@ public class ServerHitBin {
         }
     }
     
-    static void countHit(String id, int type, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+    protected static void countHit(String id, int type, String visitId, long startTime, long runningTime, GenericValue userLogin, 
             GenericDelegator delegator, boolean isOriginal) {
         ServerHitBin bin = null;
         LinkedList binList = null;
@@ -362,21 +364,11 @@ public class ServerHitBin {
             LinkedList binList = null;
             
             switch (type) {
-                case REQUEST:
-                    binList = (LinkedList) requestHistory.get(id);
-                    break;
-                case EVENT:
-                    binList = (LinkedList) eventHistory.get(id);
-                    break;
-                case VIEW:
-                    binList = (LinkedList) viewHistory.get(id);
-                    break;
-                case ENTITY:
-                    binList = (LinkedList) entityHistory.get(id);
-                    break;
-                case SERVICE:
-                    binList = (LinkedList) serviceHistory.get(id);
-                    break;
+                case REQUEST: binList = (LinkedList) requestHistory.get(id); break;
+                case EVENT: binList = (LinkedList) eventHistory.get(id); break;
+                case VIEW: binList = (LinkedList) viewHistory.get(id); break;
+                case ENTITY: binList = (LinkedList) entityHistory.get(id); break;
+                case SERVICE: binList = (LinkedList) serviceHistory.get(id); break;
             }
 
             //the first in the list will be this object, remove and copy it, 
@@ -411,6 +403,12 @@ public class ServerHitBin {
     void saveHit(String visitId, long startTime, long runningTime, GenericValue userLogin) {
         //persist record of hit in ServerHit entity if option turned on
         if (UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist." + ServerHitBin.typeIds[type] + ".hit", "true")) {
+            //if the hit type is ENTITY and the name contains "ServerHit" don't 
+            //  persist; avoids the infinite loop and a bunch of annoying data
+            if (this.type == ENTITY && this.id.indexOf("ServerHit") > 0) {
+                return;
+            }
+            
             Map hitData = new HashMap();
             hitData.put("visitId", visitId);
             hitData.put("hitStartDateTime", new java.sql.Timestamp(startTime));
