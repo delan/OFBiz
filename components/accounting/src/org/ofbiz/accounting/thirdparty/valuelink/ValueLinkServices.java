@@ -1,5 +1,5 @@
 /*
- * $Id: ValueLinkServices.java,v 1.1 2004/01/14 04:50:06 ajzeneski Exp $
+ * $Id: ValueLinkServices.java,v 1.2 2004/02/23 16:44:42 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import javax.transaction.xa.XAException;
  * ValueLinkServices - Integration with ValueLink Gift Cards
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class ValueLinkServices {
@@ -144,7 +144,7 @@ public class ValueLinkServices {
             request.put("PromoCode", vlPromoCode);
         }
         request.put("Amount", vl.getAmount(amount));
-        request.put("LocalCurr", currency);
+        request.put("LocalCurr", vl.getCurrency(currency));
 
         if (cardNumber != null && cardNumber.length() > 0) {
             request.put("CardNo", cardNumber);
@@ -328,7 +328,7 @@ public class ValueLinkServices {
         request.put("CardNo", cardNumber);
         request.put("PIN", vl.encryptPin(pin));
         request.put("Amount", vl.getAmount(amount));
-        request.put("LocalCurr", currency);
+        request.put("LocalCurr", vl.getCurrency(currency));
 
         // user defined field #1
         if (orderId != null && orderId.length() > 0) {
@@ -395,7 +395,7 @@ public class ValueLinkServices {
         request.put("CardNo", cardNumber);
         request.put("PIN", vl.encryptPin(pin));
         request.put("Amount", vl.getAmount(amount));
-        request.put("LocalCurr", currency);
+        request.put("LocalCurr", vl.getCurrency(currency));
 
         // user defined field #1
         if (orderId != null && orderId.length() > 0) {
@@ -456,7 +456,7 @@ public class ValueLinkServices {
         request.put("Interface", "Balance");
         request.put("CardNo", cardNumber);
         request.put("PIN", vl.encryptPin(pin));
-        request.put("LocalCurr", currency);
+        request.put("LocalCurr", vl.getCurrency(currency));
 
         // user defined field #1
         if (orderId != null && orderId.length() > 0) {
@@ -572,7 +572,7 @@ public class ValueLinkServices {
         request.put("CardNo", cardNumber);
         request.put("PIN", vl.encryptPin(pin));
         request.put("Amount", vl.getAmount(amount));
-        request.put("LocalCurr", currency);
+        request.put("LocalCurr", vl.getCurrency(currency));
 
         // user defined field #1
         if (orderId != null && orderId.length() > 0) {
