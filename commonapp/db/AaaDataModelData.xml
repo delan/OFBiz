@@ -113,10 +113,13 @@
   <TrackingCodeType trackingCodeTypeId="PARTNER_MGD" description="Partner Managed"/>
   
   <EnumerationType description="Tracking Code Source" enumTypeId="TRACKINGCODE_SRC" hasTable="N" parentTypeId=""/>
-
   <Enumeration description="Cookie" enumCode="COOKIE" enumId="TKCDSRC_COOKIE" sequenceId="01" enumTypeId="TRACKINGCODE_SRC"/>
   <Enumeration description="URL Parameter" enumCode="URL_PARAM" enumId="TKCDSRC_URL_PARAM" sequenceId="01" enumTypeId="TRACKINGCODE_SRC"/>
 
+  <EnumerationType description="WebSite Email Notification" enumTypeId="WEBSITE_EMAIL" hasTable="N" parentTypeId=""/>
+  <Enumeration description="Order Confirmation" enumCode="ODR_CONFIRM" enumId="WES_ODR_CONFIRM" enumTypeId="WEBSITE_EMAIL" sequenceId="01"/>
+  <Enumeration description="Order Status Change" enumCode="ODR_CHANGE" enumId="WES_ODR_CHANGE" enumTypeId="WEBSITE_EMAIL" sequenceId="02"/>
+  
   <UomType description="Currency" hasTable="N" parentTypeId="" uomTypeId="CURRENCY_MEASURE"/>
   <UomType description="Time/Frequency" hasTable="N" parentTypeId="" uomTypeId="TIME_FREQ_MEASURE"/>
   <UomType description="Length" hasTable="N" parentTypeId="" uomTypeId="LENGTH_MEASURE"/>

@@ -48,10 +48,27 @@
         <auto-attributes entity-name="WebSiteRole" include="pk" mode="IN" optional="false"/>     
     </service>
     
+    <!-- WebSite Email Setting Services -->
+    <service name="createWebSiteEmailSetting" engine="simple"
+            location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="createWebSiteEmail" auth="true">        
+        <description>Create a WebSite Email Setting</description>
+        <auto-attributes entity-name="WebSiteEmailSetting" include="all" mode="IN" optional="false"/>
+    </service>
+    <service name="updateWebSiteEmailSetting" engine="simple"
+            location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="updateWebSiteEmail" auth="true">        
+        <description>Update a WebSite Email Setting</description>
+        <auto-attributes entity-name="WebSiteEmailSetting" include="all" mode="IN" optional="false"/>
+    </service>
+    <service name="removeWebSiteEmailSetting" engine="simple"
+            location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="removeWebSiteEmail" auth="true">        
+        <description>Remove a WebSite Email Setting</description>
+        <auto-attributes entity-name="WebSiteEmailSetting" include="pk" mode="IN" optional="false"/>
+    </service>        
+        
     <!-- WebSite Payment Setting Services -->
     <service name="createWebSitePaymentSetting" engine="simple"
                 location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="createWebSitePaymentSetting" auth="true">
-        <description>Create an WebSite</description>
+        <description>Create a WebSite Payment Setting</description>
         <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
         <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="paymentAuthService" type="String" mode="IN" optional="true"/>
