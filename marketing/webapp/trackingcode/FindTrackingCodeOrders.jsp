@@ -74,7 +74,7 @@
   </div>
 <%}%>
 
-<div class="head1">Orders <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(trackingCode==null?null:trackingCode.getString("description"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(trackingCodeId)%>]</span></div>
+<div class="head1">Orders <span class='head2'>for TrackingCode <%=UtilFormatOut.ifNotEmpty(trackingCode==null?null:trackingCode.getString("description"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(trackingCodeId)%>]</span></div>
 
 <a href="<ofbiz:url>/EditTrackingCode</ofbiz:url>" class="buttontext">[New TrackingCode]</a>
 
@@ -84,13 +84,13 @@
       <td align=right>
         <b>
         <%if (viewIndex > 0) {%>
-          <a href="<ofbiz:url><%="/EditTrackingCodeInventoryItems?trackingCodeId=" + trackingCodeId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/FindTrackingCodeOrders?trackingCodeId=" + trackingCodeId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if (listSize > 0) {%>
           <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if (listSize > highIndex) {%>
-          | <a href="<ofbiz:url><%="/EditTrackingCodeInventoryItems?trackingCodeId=" + trackingCodeId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/FindTrackingCodeOrders?trackingCodeId=" + trackingCodeId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
@@ -124,13 +124,13 @@
       <td align=right>
         <b>
         <%if (viewIndex > 0) {%>
-          <a href="<ofbiz:url><%="/EditTrackingCodeInventoryItems?trackingCodeId=" + trackingCodeId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/FindTrackingCodeOrders?trackingCodeId=" + trackingCodeId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if (listSize > 0) {%>
           <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if (listSize > highIndex) {%>
-          | <a href="<ofbiz:url><%="/EditTrackingCodeInventoryItems?trackingCodeId=" + trackingCodeId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/FindTrackingCodeOrders?trackingCodeId=" + trackingCodeId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
