@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.18 2003/10/27 11:08:24 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.19 2003/10/27 11:24:39 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -53,7 +53,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -107,10 +107,9 @@ public class ProductSearch {
         }
         
         // this will use the GenericDelegator cache as much as possible, but not a dedicated cache because it would get stale to easily and is too much of a pain to maintain in development and production
-        Set subCategoryIdSet = new HashSet();
 
         // first make sure the current category id is in the Set
-        subCategoryIdSet.add(productCategoryId);
+        productCategoryIdSet.add(productCategoryId);
 
         // now find all sub-categories, filtered by effective dates, and call this routine for them
         try {
@@ -118,16 +117,21 @@ public class ProductSearch {
             Iterator productCategoryRollupIter = productCategoryRollupList.iterator();
             while (productCategoryRollupIter.hasNext()) {
                 GenericValue productCategoryRollup = (GenericValue) productCategoryRollupIter.next();
+                
+                String subProductCategoryId = productCategoryRollup.getString("productCategoryId");
+                if (productCategoryIdSet.contains(subProductCategoryId)) {
+                    // if this category has already been traversed, no use doing it again; this will also avoid infinite loops
+                    continue;
+                }
+                
                 // do the date filtering in the loop to avoid looping through the list twice
                 if (EntityUtil.isValueActive(productCategoryRollup, nowTimestamp)) {
-                    getAllSubCategoryIds(productCategoryRollup.getString("productCategoryId"), subCategoryIdSet, delegator, nowTimestamp);
+                    getAllSubCategoryIds(subProductCategoryId, productCategoryIdSet, delegator, nowTimestamp);
                 }
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error finding sub-categories for product search", module);
         }
-
-        productCategoryIdSet.addAll(subCategoryIdSet);
     }
     
     public static class ProductSearchContext {
