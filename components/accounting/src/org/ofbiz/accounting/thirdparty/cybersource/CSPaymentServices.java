@@ -1,5 +1,5 @@
 /*
- * $Id: CSPaymentServices.java,v 1.1 2003/08/18 19:37:43 jonesde Exp $
+ * $Id: CSPaymentServices.java,v 1.2 2003/09/02 02:17:15 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,6 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.ModelService;
 
 import com.cybersource.ics.base.message.*;
 import com.cybersource.ics.base.exception.*;
@@ -50,7 +49,7 @@ import com.cybersource.ics.client.*;
  * CyberSource Integration Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class CSPaymentServices {

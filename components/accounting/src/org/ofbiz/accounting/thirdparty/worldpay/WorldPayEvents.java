@@ -1,5 +1,5 @@
 /*
- * $Id: WorldPayEvents.java,v 1.2 2003/08/26 16:08:04 ajzeneski Exp $
+ * $Id: WorldPayEvents.java,v 1.3 2003/09/02 02:17:15 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.accounting.payment.PaymentWorker;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
@@ -60,7 +59,7 @@ import com.worldpay.util.CurrencyAmount;
  * WorldPay Select Pro Events/Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class WorldPayEvents {

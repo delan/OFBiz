@@ -1,5 +1,5 @@
 /*
- * $Id: OrderChangeHelper.java,v 1.2 2003/08/26 16:08:03 ajzeneski Exp $
+ * $Id: OrderChangeHelper.java,v 1.3 2003/09/02 02:17:15 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,6 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -46,7 +45,7 @@ import org.ofbiz.workflow.client.WorkflowClient;
  * Order Helper - Helper Methods For Non-Read Actions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class OrderChangeHelper {
