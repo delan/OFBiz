@@ -631,7 +631,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         try {
             this._product = this.getDelegator().findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
         } catch (GenericEntityException e) {
-            throw new RuntimeException("Error with Entity Engine (" + e.getMessage() + ")");
+            throw new RuntimeException("Entity Engine error getting Product (" + e.getMessage() + ")");
         }
         return this._product;
     }
@@ -645,19 +645,20 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
         
         try {
-            List virtualProducts = this.getDelegator().findByAndCache("ProductAssoc", UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("-fromDate"));
-            virtualProducts = EntityUtil.filterByDate(virtualProducts, true);
-            if (virtualProducts == null && virtualProducts.size() > 0) {
+            List virtualProductAssocs = this.getDelegator().findByAndCache("ProductAssoc", UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("-fromDate"));
+            virtualProductAssocs = EntityUtil.filterByDate(virtualProductAssocs, true);
+            if (virtualProductAssocs == null && virtualProductAssocs.size() > 0) {
                 //okay, not a variant, try a UNIQUE_ITEM
-                virtualProducts = this.getDelegator().findByAndCache("ProductAssoc", UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "UNIQUE_ITEM"), UtilMisc.toList("-fromDate"));
-                virtualProducts = EntityUtil.filterByDate(virtualProducts, true);
+                virtualProductAssocs = this.getDelegator().findByAndCache("ProductAssoc", UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "UNIQUE_ITEM"), UtilMisc.toList("-fromDate"));
+                virtualProductAssocs = EntityUtil.filterByDate(virtualProductAssocs, true);
             }
-            if (virtualProducts != null && virtualProducts.size() > 0) {
+            if (virtualProductAssocs != null && virtualProductAssocs.size() > 0) {
                 //found one, set this first as the parent product
-                this._parentProduct = EntityUtil.getFirst(virtualProducts);
+                GenericValue productAssoc = EntityUtil.getFirst(virtualProductAssocs);
+                this._parentProduct = productAssoc.getRelatedOneCache("MainProduct");
             }
         } catch (GenericEntityException e) {
-            throw new RuntimeException("Error with Entity Engine (" + e.getMessage() + ")");
+            throw new RuntimeException("Entity Engine error getting Parent Product (" + e.getMessage() + ")");
         }
         return this._parentProduct;
     }
