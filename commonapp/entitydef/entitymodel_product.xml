@@ -1122,6 +1122,7 @@
       <field name="containerId" type="id-ne"></field>
       <field name="containerTypeId" type="id"></field>
       <field name="facilityId" type="id"></field>
+      <field name="description" type="description"></field>
       <prim-key field="containerId"/>
       <relation type="one" rel-entity-name="ContainerType">
         <key-map field-name="containerTypeId"/>
