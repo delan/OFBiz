@@ -1787,7 +1787,7 @@ public class UpsServices {
      * @throws UpsConnectException
      */
     public static String sendUpsRequest(String upsService, String xmlString) throws UpsConnectException {
-        String conStr = UtilProperties.getPropertyValue("shipment.properties", "shipment.ups.connect.url");                
+        String conStr = UtilProperties.getPropertyValue("shipment.properties", "shipment.ups.connect.url");
         if (conStr == null) {
             throw new UpsConnectException("Incomplete connection URL; check your UPS configuration");
         }
@@ -1809,11 +1809,20 @@ public class UpsServices {
             conStr = conStr + "/";
         }
         conStr = conStr + upsService;
-               
+
+        String timeOutStr = UtilProperties.getPropertyValue("shipment.properties", "shipment.ups.connect.timeout", "60");
+        int timeout = 60;
+        try {
+            timeout = Integer.parseInt(timeOutStr);
+        } catch (NumberFormatException e) {
+            Debug.logError(e, "Unable to set timeout to " + timeOutStr + " using default " + timeout);
+        }
+
         //Debug.log("UPS Connect URL : " + conStr, module);
         //Debug.log("UPS XML String : " + xmlString, module);
         
         HttpClient http = new HttpClient(conStr);
+        http.setTimeout(timeout * 1000);
         String response = null;
         try {            
             response = http.post(xmlString);

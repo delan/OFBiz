@@ -1254,7 +1254,6 @@ public class UspsServices {
     }
 
     private static Document sendUspsRequest(String requestType, Document requestDocument) throws UspsRequestException {
-
         String conUrl = UtilProperties.getPropertyValue("shipment.properties", "shipment.usps.connect.url");
         if (UtilValidate.isEmpty(conUrl)) {
             throw new UspsRequestException("Connection URL not specified; please check your configuration");
@@ -1279,7 +1278,16 @@ public class UspsServices {
 
         Debug.logInfo("USPS XML request string: " + xmlString, module);
 
+        String timeOutStr = UtilProperties.getPropertyValue("shipment.properties", "shipment.usps.connect.timeout", "60");
+        int timeout = 60;
+        try {
+            timeout = Integer.parseInt(timeOutStr);
+        } catch (NumberFormatException e) {
+            Debug.logError(e, "Unable to set timeout to " + timeOutStr + " using default " + timeout);
+        }
+
         HttpClient http = new HttpClient(conUrl);
+        http.setTimeout(timeout * 1000);
         http.setParameter("API", requestType);
         http.setParameter("XML", xmlString);
 
