@@ -46,6 +46,20 @@ import org.xml.sax.SAXException;
 public class UpsServices {
     
     public final static String module = UpsServices.class.getName();
+    
+    public static Map unitsUpsToOfbiz = new HashMap();
+    public static Map unitsOfbizToUps = new HashMap();
+    static {
+        unitsUpsToOfbiz.put("LBS", "WT_lb");
+        unitsUpsToOfbiz.put("KGS", "WT_kg");
+        
+        Iterator unitsUpsToOfbizIter = unitsUpsToOfbiz.entrySet().iterator();
+        while (unitsUpsToOfbizIter.hasNext()) {
+            Map.Entry entry = (Map.Entry) unitsUpsToOfbizIter.next();
+            unitsOfbizToUps.put(entry.getValue(), entry.getKey());
+        }
+    }
+
 
     public static Map upsShipmentConfirm(DispatchContext dctx, Map context) {
         Map result = new HashMap();
@@ -268,15 +282,18 @@ public class UpsServices {
                     UtilXml.addChildElementValue(dimensionsElement, "Width", shipmentBoxType.get("boxWidth").toString(), shipmentConfirmRequestDoc);
                     UtilXml.addChildElementValue(dimensionsElement, "Height", shipmentBoxType.get("boxHeight").toString(), shipmentConfirmRequestDoc);
                 }
+                
                 Element packageWeightElement = UtilXml.addChildElement(packageElement, "PackageWeight", shipmentConfirmRequestDoc);
                 Element packageWeightUnitOfMeasurementElement = UtilXml.addChildElement(packageElement, "UnitOfMeasurement", shipmentConfirmRequestDoc);
-                GenericValue weightUom = shipmentPackage.getRelatedOne("WeightUom");
-                if (weightUom != null) {
-                    UtilXml.addChildElementValue(packageWeightUnitOfMeasurementElement, "Code", weightUom.getString("abbreviation"), shipmentConfirmRequestDoc);
+                String weightUomUps = (String) unitsOfbizToUps.get(shipmentPackage.get("weightUomId"));
+                if (weightUomUps != null) {
+                    UtilXml.addChildElementValue(packageWeightUnitOfMeasurementElement, "Code", weightUomUps, shipmentConfirmRequestDoc);
                 } else {
                     // might as well default to LBS
                     UtilXml.addChildElementValue(packageWeightUnitOfMeasurementElement, "Code", "LBS", shipmentConfirmRequestDoc);
                 }
+                UtilXml.addChildElementValue(packageWeightElement, "Weight", shipmentPackage.getString("weight"), shipmentConfirmRequestDoc);
+                
                 Element referenceNumberElement = UtilXml.addChildElement(packageElement, "ReferenceNumber", shipmentConfirmRequestDoc);
                 UtilXml.addChildElementValue(referenceNumberElement, "Code", "MK", shipmentConfirmRequestDoc);
                 UtilXml.addChildElementValue(referenceNumberElement, "Value", shipmentPackage.getString("shipmentPackageSeqId"), shipmentConfirmRequestDoc);
@@ -285,23 +302,38 @@ public class UpsServices {
                     UtilXml.addChildElementValue(packageElement, "OversizePackage", carrierShipmentBoxType.getString("oversizeCode"), shipmentConfirmRequestDoc);
                 }
             }
-            
-            // create AccessRequest XML doc
-            Document accessRequestDocument = createAccessRequestDocument();
-            
-            String accessRequestString = null;
+
+            String shipmentConfirmRequestString = null;
             try {
-                accessRequestString = UtilXml.writeXmlDocument(accessRequestDocument);
-            } catch (IOException e1) {
-                String ioeErrMsg = "Error writing the AccessRequest Document to a String: " + e1.toString();
-                Debug.logError(e1, ioeErrMsg);
+                shipmentConfirmRequestString = UtilXml.writeXmlDocument(shipmentConfirmRequestDoc);
+            } catch (IOException e) {
+                String ioeErrMsg = "Error writing the ShipmentConfirmRequest XML Document to a String: " + e.toString();
+                Debug.logError(e, ioeErrMsg);
                 return ServiceUtil.returnError(ioeErrMsg);
             }
             
-            // TODO: connect to UPS server, send AccessRequest to auth
-            // TODO: send ShipmentConfirmRequest String
-            // TODO: get ShipmentConfirmResponse String back
-            //shipmentConfirmResponseString = ?
+            // create AccessRequest XML doc
+            Document accessRequestDocument = createAccessRequestDocument();
+            String accessRequestString = null;
+            try {
+                accessRequestString = UtilXml.writeXmlDocument(accessRequestDocument);
+            } catch (IOException e) {
+                String ioeErrMsg = "Error writing the AccessRequest XML Document to a String: " + e.toString();
+                Debug.logError(e, ioeErrMsg);
+                return ServiceUtil.returnError(ioeErrMsg);
+            }
+            
+            // connect to UPS server, send AccessRequest to auth
+            // send ShipmentConfirmRequest String
+            // get ShipmentConfirmResponse String back
+            StringBuffer xmlString = new StringBuffer();
+            try {
+                shipmentConfirmResponseString = sendUpsRequest("ShipConfirm", xmlString.toString());
+            } catch (UpsConnectException e) {
+                String uceErrMsg = "Error sending UPS request for UPS Service ShipConfirm: " + e.toString();
+                Debug.logError(e, uceErrMsg);
+                return ServiceUtil.returnError(uceErrMsg);
+            }
 
             Document shipmentConfirmResponseDocument = null;
             try {
@@ -358,16 +390,41 @@ public class UpsServices {
                 }
             }
             
-            shipmentRouteSegment.set("actualTransportCost", Double.valueOf(transportationMonetaryValue));
-            shipmentRouteSegment.set("actualServiceCost", Double.valueOf(serviceOptionsMonetaryValue));
-            shipmentRouteSegment.set("actualCost", Double.valueOf(totalMonetaryValue));
+            try {
+                shipmentRouteSegment.set("actualTransportCost", Double.valueOf(transportationMonetaryValue));
+            } catch (NumberFormatException e) {
+                String excErrMsg = "Error parsing the transportationMonetaryValue [" + transportationMonetaryValue + "]: " + e.toString();
+                Debug.logError(e, excErrMsg);
+                errorList.add(excErrMsg);
+            }
+            try {
+                shipmentRouteSegment.set("actualServiceCost", Double.valueOf(serviceOptionsMonetaryValue));
+            } catch (NumberFormatException e) {
+                String excErrMsg = "Error parsing the serviceOptionsMonetaryValue [" + serviceOptionsMonetaryValue + "]: " + e.toString();
+                Debug.logError(e, excErrMsg);
+                errorList.add(excErrMsg);
+            }
+            try {
+                shipmentRouteSegment.set("actualCost", Double.valueOf(totalMonetaryValue));
+            } catch (NumberFormatException e) {
+                String excErrMsg = "Error parsing the totalMonetaryValue [" + totalMonetaryValue + "]: " + e.toString();
+                Debug.logError(e, excErrMsg);
+                errorList.add(excErrMsg);
+            }
             
             // handle BillingWeight element info
             Element billingWeightElement = UtilXml.firstChildElement(shipmentConfirmResponseElement, "BillingWeight");
             Element billingWeightUnitOfMeasurementElement = UtilXml.firstChildElement(billingWeightElement, "UnitOfMeasurement");
             String billingWeightUnitOfMeasurement = UtilXml.childElementValue(billingWeightUnitOfMeasurementElement, "Code");
             String billingWeight = UtilXml.childElementValue(billingWeightElement, "Weight");
-            // What to do with the billing weights that come back?
+            try {
+                shipmentRouteSegment.set("billingWeight", Double.valueOf(billingWeight));
+            } catch (NumberFormatException e) {
+                String excErrMsg = "Error parsing the billingWeight [" + billingWeight + "]: " + e.toString();
+                Debug.logError(e, excErrMsg);
+                errorList.add(excErrMsg);
+            }
+            shipmentRouteSegment.set("billingWeightUomId", unitsUpsToOfbiz.get(billingWeightUnitOfMeasurement));
 
             // store the ShipmentIdentificationNumber and ShipmentDigest
             String shipmentIdentificationNumber = UtilXml.childElementValue(shipmentConfirmResponseElement, "ShipmentIdentificationNumber");
@@ -456,6 +513,29 @@ public class UpsServices {
         return result;
     }
     
+    public static Map upsTrackShipment(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        String shipmentId = (String) context.get("shipmentId");
+        String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
+
+        try {
+            GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
+            GenericValue shipmentRouteSegment = delegator.findByPrimaryKey("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId));
+
+            if (!"UPS".equals(shipmentRouteSegment.getString("carrierPartyId"))) {
+                return ServiceUtil.returnError("ERROR: The Carrier for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is not UPS.");
+            }
+            
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+            return ServiceUtil.returnError("Error reading or writing Shipment data for UPS Track Shipment: " + e.toString());
+        }
+
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
+    }
+    
     public static Document createAccessRequestDocument() {
         Document accessRequestDocument = UtilXml.makeEmptyXmlDocument("AccessRequest");
         Element accessRequestElement = accessRequestDocument.getDocumentElement();
@@ -526,7 +606,6 @@ public class UpsServices {
      * Opens a URL to UPS and makes a request.
      * @param upsService Name of the UPS service to invoke
      * @param xmlString XML message to send
-     * @param upsProps UPS configuration properties
      * @return XML string response from UPS
      * @throws UpsConnectException
      */
@@ -596,6 +675,12 @@ class UpsConnectException extends GeneralException {
 
 /*
  * UPS Code Reference
+
+UPS Service IDs
+ShipConfirm
+ShipAccept
+Void
+Track
 
 Package Type Code
 00 Unknown
@@ -928,6 +1013,78 @@ Void Shipment Request/Response
         </StatusCode>
     </Status>
 </VoidShipmentResponse>
+
+=======================================
+Void Shipment Request/Response
+=======================================
+
+<?xml version="1.0"?>
+<TrackRequest xml:lang="en-US">
+    <Request>
+        <TransactionReference>
+            <CustomerContext>sample</CustomerContext>
+            <XpciVersion>1.0001</XpciVersion>
+        </TransactionReference>
+        <RequestAction>Track</RequestAction>
+    </Request>
+    <TrackingNumber>1Z12345E1512345676</TrackingNumber>
+</TrackRequest>
+
+=======================================
+
+<?xml version="1.0" encoding="UTF-8"?>
+<TrackResponse>
+    <Response>
+        <TransactionReference>
+            <CustomerContext>sample</CustomerContext>
+            <XpciVersion>1.0001</XpciVersion>
+        </TransactionReference>
+        <ResponseStatusCode>1</ResponseStatusCode>
+        <ResponseStatusDescription>Success</ResponseStatusDescription>
+    </Response>
+    <Shipment>
+        <Shipper>
+            <ShipperNumber>12345E</ShipperNumber>
+        </Shipper>
+        <Service>
+            <Code>15</Code>
+            <Description>NDA EAM/EXP EAM</Description>
+        </Service>
+        <ShipmentIdentificationNumber>1Z12345E1512345676</ShipmentIdentificationNumber>
+        <Package>
+            <TrackingNumber>1Z12345E1512345676</TrackingNumber>
+            <Activity>
+                <ActivityLocation>
+                    <Address>
+                        <City>CLAKVILLE</City>
+                        <StateProvinceCode>AK</StateProvinceCode>
+                        <PostalCode>99901</PostalCode>
+                        <CountryCode>US</CountryCode>
+                    </Address>
+                    <Code>MG</Code>
+                    <Description>MC MAN</Description>
+                </ActivityLocation>
+                <Status>
+                    <StatusType>
+                        <Code>D</Code>
+                        <Description>DELIVERED</Description>
+                    </StatusType>
+                    <StatusCode>
+                        <Code>FS</Code>
+                    </StatusCode>
+                </Status>
+                <Date>20020930</Date>
+                <Time>130900</Time>
+            </Activity>
+            <PackageWeight>
+                <UnitOfMeasurement>
+                    <Code>LBS</Code>
+                </UnitOfMeasurement>
+                <Weight>0.00</Weight>
+            </PackageWeight>
+        </Package>
+    </Shipment>
+</TrackResponse>
 
  */
 
