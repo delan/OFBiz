@@ -779,6 +779,7 @@
       <field name="directions" type="long-varchar"></field>
       <field name="city" type="name"></field>
       <field name="postalCode" type="short-varchar"></field>
+      <field name="postalCodeExt" type="short-varchar"></field>
       <field name="countryGeoId" type="id"></field>
       <field name="stateProvinceGeoId" type="id"></field>
       <field name="postalCodeGeoId" type="id"></field>
