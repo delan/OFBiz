@@ -712,6 +712,7 @@
       <field name="lotId" type="id"></field>
       <field name="uomId" type="id"></field>
       <field name="binNumber" type="id"></field>
+      <field name="locationSeqId" type="id"></field>
       <field name="comments" type="comment"></field>
       <field name="quantityOnHand" type="floating-point"></field>
       <field name="availableToPromise" type="floating-point"></field>
@@ -743,6 +744,10 @@
       </relation>
       <relation type="one" fk-name="INV_ITEM_LOT" rel-entity-name="Lot">
         <key-map field-name="lotId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_LOCATION" rel-entity-name="FacilityLocation">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
       </relation>
       <relation type="one" fk-name="INV_ITEM_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
@@ -2007,6 +2012,10 @@
       <prim-key field="locationSeqId"/>
       <relation type="one" fk-name="FACILITY_LOC_FAC" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItem">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
       </relation>
     </entity>
     <entity entity-name="FacilityRole"

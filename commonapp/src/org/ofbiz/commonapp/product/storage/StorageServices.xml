@@ -31,7 +31,7 @@
 <simple-methods>
 	
 	<!-- Facility Services -->
-    <simple-method method-name="createFacility" short-description="Create an Facility">
+    <simple-method method-name="createFacility" short-description="Create a Facility">
         <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run createFacility you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
@@ -45,7 +45,7 @@
         
         <create-value value-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updateFacility" short-description="Update an Facility">
+    <simple-method method-name="updateFacility" short-description="Update a Facility">
         <check-permission permission="FACILITY" action="_UPDATE"><fail-message message="Security Error: to run updateFacility you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
@@ -54,7 +54,7 @@
         <set-nonpk-fields map-name="parameters" value-name="facility"/>
         <store-value value-name="facility"/>
     </simple-method>
-    <simple-method method-name="deleteFacility" short-description="Delete an Facility">
+    <simple-method method-name="deleteFacility" short-description="Delete a Facility">
         <check-permission permission="FACILITY" action="_DELETE"><fail-message message="Security Error: to run deleteFacility you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
@@ -63,6 +63,7 @@
         <remove-value value-name="facility"/>
     </simple-method>
 
+	<!-- Facility ContactMech Services -->
     <simple-method method-name="addContactMechToFacility" short-description="Add ContactMech To Facility">
         <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run addContactMechToFacility you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -80,6 +81,43 @@
         <find-by-primary-key entity-name="FacilityContactMech" map-name="lookupPKMap" value-name="facilityContactMech"/>
         <remove-value value-name="facilityContactMech"/>
     </simple-method>
+    
+    <!-- Facility Location Services -->
+    <simple-method method-name="createFacilityLocation" short-description="Create a Facility Location">
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run createFacilityLocation you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="FacilityLocation"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <field-to-field field-name="facilityId" map-name="parameters" to-map-name="newEntity"/>
+        
+        <sequenced-id-to-env sequence-name="FacilityLocation" env-name="locationSeqId"/>
+        <to-string field-name="locationSeqId"/>
+        <env-to-field env-name="locationSeqId" map-name="newEntity"/>
+        <field-to-result field-name="locationSeqId" result-name="locationSeqId"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateFacilityLocation" short-description="Update a Facility Location">
+        <check-permission permission="FACILITY" action="_UPDATE"><fail-message message="Security Error: to run updateFacilityLocation you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="locationSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
+        
+        <find-by-primary-key entity-name="FacilityLocation" map-name="lookupPKMap" value-name="facilityLocation"/>
+        <set-nonpk-fields map-name="parameters" value-name="facilityLocation"/>
+        <store-value value-name="facilityLocation"/>
+    </simple-method>
+    <simple-method method-name="deleteFacilityLocation" short-description="Delete a Facility Location">
+        <check-permission permission="FACILITY" action="_DELETE"><fail-message message="Security Error: to run deleteFacilityLocation you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="locationSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="FacilityLocation" map-name="lookupPKMap" value-name="facilityLocation"/>
+        <remove-value value-name="facilityLocation"/>
+    </simple-method>    
     
     <!-- Facility Group Services -->
     <simple-method method-name="createFacilityGroup" short-description="Create an Facility Group">

@@ -613,6 +613,7 @@
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
         <attribute name="containerId" type="String" mode="IN" optional="true"/>
         <attribute name="lotId" type="String" mode="IN" optional="true"/>
+        <attribute name="locationSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="uomId" type="String" mode="IN" optional="true"/>
         <attribute name="binNumber" type="String" mode="IN" optional="true"/>
         <attribute name="comments" type="String" mode="IN" optional="true"/>
@@ -633,6 +634,7 @@
         <attribute name="expireDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
         <attribute name="containerId" type="String" mode="IN" optional="true"/>
+        <attribute name="locationSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="lotId" type="String" mode="IN" optional="true"/>
         <attribute name="uomId" type="String" mode="IN" optional="true"/>
         <attribute name="binNumber" type="String" mode="IN" optional="true"/>
@@ -831,7 +833,7 @@
     <!-- Product Storage Services -->
     <service name="createFacility" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="createFacility" auth="true">
-        <description>Create an Facility</description>
+        <description>Create a Facility</description>
         <attribute name="facilityTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityName" type="String" mode="IN" optional="false"/>
         <attribute name="squareFootage" type="String" mode="IN" optional="true"/>
@@ -840,7 +842,7 @@
     </service>
     <service name="updateFacility" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="updateFacility" auth="true">
-        <description>Update an Facility</description>
+        <description>Update a Facility</description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityName" type="String" mode="IN" optional="false"/>
@@ -849,13 +851,42 @@
     </service>
     <service name="deleteFacility" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="deleteFacility" auth="true">
-        <description>Delete an Facility</description>
+        <description>Delete a Facility</description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
     </service>
     
+    <service name="createFacilityLocation" engine="simple"
+                location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="createFacilityLocation" auth="true">
+        <description>Create a Facility Location</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="areaId" type="String" mode="IN" optional="true"/>
+        <attribute name="aisleId" type="String" mode="IN" optional="true"/>
+        <attribute name="sectionId" type="String" mode="IN" optional="true"/>
+        <attribute name="levelId" type="String" mode="IN" optional="true"/>
+        <attribute name="positionId" type="String" mode="IN" optional="true"/> 
+        <attribute name="locationSeqId" type="String" mode="OUT" optional="false"/>       
+    </service>
+    <service name="updateFacilityLocation" engine="simple"
+                location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="updateFacilityLocation" auth="true">
+        <description>Update a Facility Location</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="locationSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="areaId" type="String" mode="IN" optional="true"/>
+        <attribute name="aisleId" type="String" mode="IN" optional="true"/>
+        <attribute name="sectionId" type="String" mode="IN" optional="true"/>
+        <attribute name="levelId" type="String" mode="IN" optional="true"/>
+        <attribute name="positionId" type="String" mode="IN" optional="true"/>                
+    </service>
+    <service name="deleteFacilityLocation" engine="simple"
+                location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="deleteFacilityLocation" auth="true">
+        <description>Delete a Facility Location</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="locationSeqId" type="String" mode="IN" optional="false"/>
+    </service>    
+    
     <service name="createFacilityGroup" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="createFacilityGroup" auth="true">
-        <description>Create an Facility Group</description>
+        <description>Create a Facility Group</description>
         <attribute name="facilityGroupName" type="String" mode="IN" optional="false"/>
         <attribute name="facilityGroupTypeId" type="String" mode="IN" optional="true"/>        
         <attribute name="primaryParentGroupId" type="String" mode="IN" optional="true"/>
@@ -864,7 +895,7 @@
     </service>
     <service name="updateFacilityGroup" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="updateFacilityGroup" auth="true">
-        <description>Update an Facility Group</description>
+        <description>Update a Facility Group</description>
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityGroupName" type="String" mode="IN" optional="false"/>
         <attribute name="facilityGroupTypeId" type="String" mode="IN" optional="false"/>
@@ -873,7 +904,7 @@
     </service>
     <service name="deleteFacilityGroup" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="deleteFacilityGroup" auth="true">
-        <description>Delete an Facility Group</description>
+        <description>Delete a Facility Group</description>
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
     </service>    
 
