@@ -3,7 +3,7 @@
 
 <!--
 /**
- *  $Id: fieldtypehsql.xml,v 1.2 2003/10/27 10:34:35 jonesde Exp $
+ *  $Id: fieldtypehsql.xml,v 1.3 2004/06/01 06:13:24 jonesde Exp $
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
@@ -45,7 +45,7 @@
     <field-type-def type="floating-point" sql-type="DOUBLE" java-type="Double"><validate name="isSignedDouble" /></field-type-def>
     <field-type-def type="numeric" sql-type="BIGINT" java-type="Long"><validate name="isSignedLong" /></field-type-def>
     
-    <field-type-def type="id" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="id" sql-type="VARCHAR(20)" java-type="String"></field-type-def>
     <field-type-def type="id-long" sql-type="VARCHAR" java-type="String"></field-type-def>
     <field-type-def type="id-vlong" sql-type="VARCHAR" java-type="String"></field-type-def>
     

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.19 2004/05/30 10:54:02 jonesde Exp $
+ * $Id: DatabaseUtil.java,v 1.20 2004/06/01 06:13:25 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -284,7 +284,7 @@ public class DatabaseUtil {
 
                 if (addMissing) {
                     // create the table
-                    String errMsg = createTable(entity, modelEntities, false, datasourceInfo.usePkConstraintNames, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred);
+                    String errMsg = createTable(entity, modelEntities, false, datasourceInfo.usePkConstraintNames, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred, datasourceInfo.alwaysUseConstraintKeyword);
                     if (errMsg != null && errMsg.length() > 0) {
                         message = "Could not create table \"" + entity.getTableName(datasourceInfo) + "\": " + errMsg;
                         Debug.logError(message, module);
@@ -1250,7 +1250,7 @@ public class DatabaseUtil {
 
     /* ====================================================================== */
 
-    public String createTable(ModelEntity entity, Map modelEntities, boolean addFks, boolean usePkConstraintNames, int constraintNameClipLength, String fkStyle, boolean useFkInitiallyDeferred) {
+    public String createTable(ModelEntity entity, Map modelEntities, boolean addFks, boolean usePkConstraintNames, int constraintNameClipLength, String fkStyle, boolean useFkInitiallyDeferred, boolean alwaysUseConstraintKeyword) {
         if (entity == null) {
             return "ModelEntity was null and is required to create a table";
         }
@@ -1284,7 +1284,11 @@ public class DatabaseUtil {
             sqlBuf.append(" ");
             sqlBuf.append(type.getSqlType());
             if (field.getIsPk()) {
-                sqlBuf.append(" NOT NULL, ");
+                if (alwaysUseConstraintKeyword) {
+                    sqlBuf.append(" CONSTRAINT NOT NULL, ");
+                } else {
+                    sqlBuf.append(" NOT NULL, ");
+                }
             } else {
                 sqlBuf.append(", ");
             }
