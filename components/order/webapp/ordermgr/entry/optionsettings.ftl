@@ -20,9 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
+ *@version    $Rev: 3227 $
  *@since      2.2
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -31,11 +34,11 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align='left'>
-            <div class='boxhead'>&nbsp;Order Option Settings</div>
+            <div class='boxhead'>&nbsp;${uiLabelMap.OrderOrderOptionSettings}</div>
           </td> 
           <td nowrap align="right">
             <div class="tabletext">
-              <a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="submenutext">Refresh</a><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">Items</a><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">Shipping</a><a href="javascript:document.optsetupform.submit();" class="submenutextright">Continue</a>
+              <a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonRefresh}</a><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderOrderItems}</a><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">${uiLabelMap.FacilityShipping}</a><a href="javascript:document.optsetupform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
             </div>
           </td>         
         </tr>
@@ -82,14 +85,14 @@
                     <input type='radio' name='shipping_method' value="Default" checked>
                   </td>
                   <td valign="top">
-                    <div class='tabletext'>Use Default: No other shipping methods available.</div>
+                    <div class='tabletext'>${uiLabelMap.FacilityNoOtherShippingMethods}</div>
                   </td>
                 </tr>
                 </#if>
                 <tr><td colspan='2'><hr class='sepbar'></td></tr>                      
                 <tr>
                   <td colspan='2'>
-                    <div class="head2"><b>Ship all at once, or 'as available'?</b></div>
+                    <div class="head2"><b>${uiLabelMap.FacilityShipOnceOrAvailable}</b></div>
                   </td>
                 </tr>
                 <tr>
@@ -97,7 +100,7 @@
                     <input type='radio' <#if cart.getMaySplit()?default("N") == "N">checked</#if> name='may_split' value='false'>
                   </td>
                   <td valign="top">
-                    <div class="tabletext">Please wait until the entire order is ready before shipping.</div>
+                    <div class="tabletext">${uiLabelMap.FacilityWaitEntireOrderReady}</div>
                   </td>
                 </tr>
                 <tr>
@@ -105,13 +108,13 @@
                     <input <#if cart.getMaySplit()?default("N") == "Y">checked</#if> type='radio' name='may_split' value='true'>
                   </td>
                   <td valign="top">
-                    <div class="tabletext">Please ship items I ordered as they become available (you may incur additional shipping charges).</div>
+                    <div class="tabletext">${uiLabelMap.FacilityShipAvailable}</div>
                   </td>
                 </tr>
                 <tr><td colspan="2"><hr class='sepbar'></td></tr>
                 <tr>
                   <td colspan="2">
-                    <div class="head2"><b>Special Instructions</b></div>
+                    <div class="head2"><b>${uiLabelMap.FacilitySpecialInstructions}</b></div>
                   </td>
                 </tr>
                 <tr>
@@ -122,7 +125,7 @@
                 <tr><td colspan="2"><hr class='sepbar'></td></tr>       
                 <tr>
                   <td colspan="2">
-                    <span class="head2"><b>PO Number</b></span>&nbsp;
+                    <span class="head2"><b>${uiLabelMap.OrderPONumber}</b></span>&nbsp;
                     <input type="text" class='inputBox' name="corresponding_po_id" size="15" value='${cart.getPoNumber()?if_exists}'>
                   </td>
                 </tr>                                                           
@@ -130,16 +133,16 @@
                 <tr>
                   <td colspan="2">
                     <div>
-                      <span class="head2"><b>Is This a Gift?</b></span>
-                      <input type='radio' <#if cart.getIsGift()?default("Y") == "Y">checked</#if> name='is_gift' value='true'><span class='tabletext'>Yes</span>
-                      <input type='radio' <#if cart.getIsGift()?default("N") == "N">checked</#if> name='is_gift' value='false'><span class='tabletext'>No</span>
+                      <span class="head2"><b>${uiLabelMap.OrderIsThisGift}</b></span>
+                      <input type='radio' <#if cart.getIsGift()?default("Y") == "Y">checked</#if> name='is_gift' value='true'><span class='tabletext'>${uiLabelMap.CommonYes}</span>
+                      <input type='radio' <#if cart.getIsGift()?default("N") == "N">checked</#if> name='is_gift' value='false'><span class='tabletext'>${uiLabelMap.CommonNo}</span>
                     </div>
                   </td>
                 </tr>
                 <tr><td colspan="2"><hr class='sepbar'></td></tr>
                 <tr>
                   <td colspan="2">
-                    <div class="head2"><b>Gift Message</b></div>
+                    <div class="head2"><b>${uiLabelMap.OrderGiftMessage}</b></div>
                   </td>
                 </tr>
                 <tr>
@@ -158,5 +161,5 @@
 
 <br>
 <#else>
-  <h3>You do not have permission to view this page. ("ORDERMGR_CREATE" or "ORDERMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>

@@ -21,9 +21,12 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
  *@version    $Rev:$
  *@since      2.2
 -->
+
+<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
@@ -35,7 +38,7 @@
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;Order #${orderId} Information</div>
+                  <div class="boxhead">&nbsp;${uiLabelMap.OrderOrder} #${orderId} ${uiLabelMap.CommonInformation}</div>
                 </td>
               </tr>
             </table>
@@ -49,11 +52,11 @@
                   <table width="100%" border="0" cellpadding="1" cellspacing="0">
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>Status History</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderStatusHistory}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
-                        <div class="tabletext">Current Status: ${currentStatus.description}</div>
+                        <div class="tabletext">${uiLabelMap.OrderCurrentStatus}: ${currentStatus.description}</div>
                         <#if orderHeaderStatuses?has_content>
                           <hr class="sepbar">
                           <#list orderHeaderStatuses as orderHeaderStatus>
@@ -68,7 +71,7 @@
                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>Date Ordered</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderDateOrdered}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
@@ -93,7 +96,7 @@
                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>Distributor</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderDistributor}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
@@ -107,7 +110,7 @@
                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>Affiliate</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderAffiliate}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
@@ -134,7 +137,7 @@
               <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
                 <tr>
                   <td valign="middle" align="left">
-                    <div class="boxhead">&nbsp;Payment Information</div>
+                    <div class="boxhead">&nbsp;${uiLabelMap.AccountingPaymentInformation}</div>
                   </td>
                 </tr>
               </table>
@@ -173,7 +176,7 @@
                              </td>
                             <#else>
                               <td align="right">
-                                <a valign="top" href="<@ofbizUrl>/receivepayment?${paramString}</@ofbizUrl>" class="buttontext">Receive Payment</a>
+                                <a valign="top" href="<@ofbizUrl>/receivepayment?${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingReceivePayment}</a>
                               </td>
                             </#if>
                           </tr>
@@ -190,7 +193,7 @@
                           </#if>
                           <tr>
                             <td align="right" valign="top" width="15%">
-                              <div class="tabletext">&nbsp;<b>Credit Card</b></div>
+                              <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingCreditCard}</b></div>
                             </td>
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
@@ -215,21 +218,21 @@
                                     &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
                                   </#if>
                                 <#else>
-                                  Information not available
+                                  ${uiLabelMap.CommonInformationNotAvailable}
                                 </#if>
                               </div>
                               <#-- TODO: add transaction history
                               <#if orderPaymentPreference.authDate?exists>
                                 <div class="tabletext">
-                                  Auth&nbsp;:&nbsp;${orderPaymentPreference.authDate.toString()}
-                                  &nbsp;&nbsp;(<b>Ref:</b>&nbsp;${orderPaymentPreference.authRefNum?if_exists})
+                                  ${uiLabelMap.CommonAuth}&nbsp;:&nbsp;${orderPaymentPreference.authDate.toString()}
+                                  &nbsp;&nbsp;(<b>${uiLabelMap.CommonRef}:</b>&nbsp;${orderPaymentPreference.authRefNum?if_exists})
                                 </div>
                               </#if>
                               -->
                               <#if payment?exists && payment.effectiveDate?exists>
                                 <div class="tabletext">
-                                  Billed&nbsp;:&nbsp;${payment.effectiveDate.toString()}
-                                  &nbsp;&nbsp;(<b>Ref:</b>&nbsp;${payment.paymentRefNum?if_exists})
+                                  ${uiLabelMap.OrderBilled}&nbsp;:&nbsp;${payment.effectiveDate.toString()}
+                                  &nbsp;&nbsp;(<b>${uiLabelMap.CommonRef}:</b>&nbsp;${payment.paymentRefNum?if_exists})
                                 </div>
                               </#if>
                             </td>
@@ -241,7 +244,7 @@
                           </#if>
                           <tr>
                             <td align="right" valign="top" width="15%">
-                              <div class="tabletext">&nbsp;<b>EFT Account</b></div>
+                              <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingEFTAccount}</b></div>
                             </td>
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
@@ -252,7 +255,7 @@
                                   Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
                                   Account#: ${eftAccount.accountNumber}
                                 <#else>
-                                  Information not available
+                                  ${uiLabelMap.CoomonInformationNotAvailable}
                                 </#if>
                               </div>
                             </td>
@@ -264,7 +267,7 @@
                           </#if>
                           <tr>
                             <td align="right" valign="top" width="15%">
-                              <div class="tabletext">&nbsp;<b>Gift Card</b></div>
+                              <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderGiftCard}</b></div>
                             </td>
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
@@ -294,7 +297,7 @@
                                     &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
                                   </#if>
                                 <#else>
-                                  Information not available
+                                  ${uiLabelMap.CommonInformationNotAvailable}
                                 </#if>
                               </div>
                             </td>
@@ -310,8 +313,8 @@
                           <td width="5">&nbsp;</td>
                           <td align="left" valign="top" width="80%">
                             <div class="tabletext">
-                              <#if pmBillingAddress.toName?has_content><b>To:</b> ${pmBillingAddress.toName}<br></#if>
-                              <#if pmBillingAddress.attnName?has_content><b>Attn:</b> ${pmBillingAddress.attnName}<br></#if>
+                              <#if pmBillingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${pmBillingAddress.toName}<br></#if>
+                              <#if pmBillingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${pmBillingAddress.attnName}<br></#if>
                               ${pmBillingAddress.address1}<br>
                               <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}<br></#if>
                               ${pmBillingAddress.city}<#if pmBillingAddress.stateProvinceGeoId?has_content>, ${pmBillingAddress.stateProvinceGeoId} </#if>
@@ -330,7 +333,7 @@
                       </#if>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>Billing Account</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingBillingAccount}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -342,7 +345,7 @@
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>Purchase Order Number</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderPurchaseOrderNumber}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -356,7 +359,7 @@
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>Invoices</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderInvoices}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -386,7 +389,7 @@
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;Contact Information</div>
+                  <div class="boxhead">&nbsp;${uiLabelMap.OrderContactInformation}</div>
                 </td>
               </tr>
             </table>
@@ -400,7 +403,7 @@
                   <table width="100%" border="0" cellpadding="1" cellspacing="0">
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>Name</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonName}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td NOWRAP align="left" valign="top" width="80%">
@@ -429,8 +432,8 @@
                             <#assign postalAddress = orderContactMechValueMap.postalAddress>
                             <#if postalAddress?has_content>
                               <div class="tabletext">
-                                <#if postalAddress.toName?has_content><b>To:</b> ${postalAddress.toName}<br></#if>
-                                <#if postalAddress.attnName?has_content><b>Attn:</b> ${postalAddress.attnName}<br></#if>
+                                <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br></#if>
+                                <#if postalAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${postalAddress.attnName}<br></#if>
                                 ${postalAddress.address1}<br>
                                 <#if postalAddress.address2?has_content>${postalAddress.address2}<br></#if>
                                 ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>, ${postalAddress.stateProvinceGeoId} </#if>
@@ -460,7 +463,7 @@
                           <#elseif contactMech.contactMechTypeId == "EMAIL_ADDRESS">
                             <div class="tabletext">
                               ${contactMech.infoString}
-                              <a href="mailto:${contactMech.infoString}" class="buttontext">(send&nbsp;email)</a>
+                              <a href="mailto:${contactMech.infoString}" class="buttontext">(${uiLabelMap.OrderSendEmail})</a>
                             </div>
                           <#elseif contactMech.contactMechTypeId == "WEB_ADDRESS">
                             <div class="tabletext">
@@ -501,7 +504,7 @@
                 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
                   <tr>
                     <td valign="middle" align="left">
-                      <div class="boxhead">&nbsp;Shipment Information - ${shipGroup.shipGroupSeqId}</div>
+                      <div class="boxhead">&nbsp;${uiLabelMap.OrderShipmentInformation} - ${shipGroup.shipGroupSeqId}</div>
                     </td>
                   </tr>
                 </table>
@@ -529,7 +532,7 @@
 
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>Method</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonMethod}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
@@ -573,18 +576,18 @@
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>Splitting Preference</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderSplittingPreference}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <div class="tabletext">
                             <#if shipGroup.maySplit?upper_case == "N">
-                                Please wait until the entire order is ready before shipping.
+                                ${uiLabelMap.FacilityWaitEntireOrderReady}
                                 <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
                                   <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED"><a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[Allow&nbsp;Split]</a></#if>
                                 </#if>
                             <#else>
-                                Please ship items I ordered as they become available (may incur additional shipping charges).
+                                ${uiLabelMap.FacilityShipAvailable}
                             </#if>
                           </div>
                         </td>
@@ -594,7 +597,7 @@
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>Instructions</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonInstructions}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -606,12 +609,12 @@
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>Gift?</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderGift}?</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <div class="tabletext">
-                            <#if shipGroup.isGift?upper_case == "N">This order is not a gift.<#else>This order is a gift.</#if>
+                            <#if shipGroup.isGift?upper_case == "N">${uiLabelMap.OrderThisOrderNotGift}<#else>${uiLabelMap.OrderThisOrderGift}</#if>
                           </div>
                         </td>
                       </tr>
@@ -620,7 +623,7 @@
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>Gift Message</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderGiftMessage}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -634,7 +637,7 @@
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>Shipments</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.FacilityShipments}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
