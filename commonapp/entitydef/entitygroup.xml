@@ -659,7 +659,8 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowParticipantsView" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowProcess" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowSpecification" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowTransition" />
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowTransition" /> 
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowTypeDeclaration" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.workeffort.scheduler -->
