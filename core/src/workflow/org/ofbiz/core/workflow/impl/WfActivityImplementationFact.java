@@ -24,8 +24,6 @@
  */
 package org.ofbiz.core.workflow.impl;
 
-import org.ofbiz.core.workflow.*;
-
 /**
  * WfActivityImplementationFact.java
  *

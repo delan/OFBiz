@@ -24,7 +24,6 @@
  */
 package org.ofbiz.core.workflow.impl;
 
-import java.io.*;
 import java.util.*;
 
 import org.ofbiz.core.entity.*;

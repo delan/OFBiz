@@ -25,7 +25,6 @@
 package org.ofbiz.core.workflow.definition;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.net.*;
 import javax.xml.parsers.*;

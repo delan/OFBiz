@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001,  2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,7 +26,6 @@ package org.ofbiz.core.workflow.client;
 
 import java.util.*;
 
-import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;

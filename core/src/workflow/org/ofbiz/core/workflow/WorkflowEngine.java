@@ -32,7 +32,6 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.engine.*;
 import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.workflow.impl.*;
 
 /**
  * WorkflowEngine - Workflow Service Engine

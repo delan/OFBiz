@@ -27,7 +27,6 @@ package org.ofbiz.core.workflow.impl;
 import java.util.*;
 
 import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
 /**

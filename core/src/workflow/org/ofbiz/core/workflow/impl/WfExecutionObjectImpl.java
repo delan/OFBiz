@@ -28,8 +28,6 @@ import java.io.*;
 import java.util.*;
 import java.sql.Timestamp;
 
-import javax.transaction.*;
-
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.serialize.*;
 import org.ofbiz.core.service.*;

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,25 +22,21 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.view;
 
-
 import java.io.*;
-import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;
 
 import org.ofbiz.core.util.*;
 
-
 /**
  * ViewHandlerException - View Handler Exception
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@created    Feb 26, 2002
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class JspViewHandler implements ViewHandler {
 

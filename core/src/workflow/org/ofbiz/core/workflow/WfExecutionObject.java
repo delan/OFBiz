@@ -31,7 +31,6 @@ import java.util.List;
 
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericValue;
-import org.ofbiz.core.service.ServiceDispatcher;
 
 /**
  * WfExecutionObject - Workflow Execution Object Interface
