@@ -68,6 +68,7 @@
 				    		<field-to-env field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" env-name="inventoryItemOrderItemList"/>
 			    			<field-to-list field-name="orderItem" list-name="inventoryItemOrderItemList"/>
 			    			<env-to-field env-name="inventoryItemOrderItemList" field-name="${orderItemInventoryRes.inventoryItemId}" map-name="inventoryItemOrderItems"/>
+			    			<clear-field field-name="inventoryItemOrderItemList"/>
 				    		<if-not-empty field-name="inventoryItemQuantities.${inventoryItemId}">
 				    			<calculate field-name="inventoryItemQuantities.${inventoryItemId}" type="Double">
 				    				<calcop field-name="inventoryItemQuantities.${inventoryItemId}" operator="add">
@@ -150,6 +151,7 @@
 	    		<field-to-env field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation" env-name="inventoryItemIdList"/>
 	    		<field-to-list field-name="inventoryItemId" list-name="inventoryItemIdList"/>
 	    		<env-to-field env-name="inventoryItemIdList" field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation"/>
+	    		<clear-field field-name="inventoryItemIdList"/>
     		<else>
     			<field-to-list field-name="inventoryItemId" list-name="noLocationInventoryItemIds"/>
     		</else>
