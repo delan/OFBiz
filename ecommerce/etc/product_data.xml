@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
+  <Facility facilityId="WebStoreWarehouse" facilityTypeId="WAREHOUSE" facilityName="" description=""/>
+
+  <WebSite webSiteId="WebStore"/>
+
+  <ProdCatalog prodCatalogId="DemoCatalog" catalogName="Demo Catalog" title="Open For Commerce" 
+    subtitle="Part of the Open For Business Family of Open Source Software" inventoryFacilityId="WebStoreWarehouse" useQuickAdd="Y"/>
+  <ProdCatalog prodCatalogId="TestCatalog" catalogName="Test Catalog" title="Open For Commerce" 
+    subtitle="Part of the Open For Business Family of Open Source Software" inventoryFacilityId="WebStoreWarehouse" useQuickAdd="N"/>
+  <WebSiteCatalog webSiteId="WebStore" prodCatalogId="DemoCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+  <WebSiteCatalog webSiteId="WebStore" prodCatalogId="TestCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+
   <ProductCategory description="Primary Catalog"
     longDescription="Product Catalog" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Gizmos"
@@ -38,6 +49,20 @@
   <ProductCategory description="Widget Quick Add Products"
     longDescription="Get all you widgets here!" productCategoryId="CATALOG1_QUICKADD2" productCategoryTypeId="QUICKADD_CATEGORY"/>
 
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1" fromDate="2001-01-01 12:00:00.0" 
+    sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_SEARCH" fromDate="2001-01-01 12:00:00.0" 
+    sequenceNum="1" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_QUICKADD1" fromDate="2001-01-01 12:00:00.0" 
+    sequenceNum="1" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_QUICKADD2" fromDate="2001-01-01 12:00:00.0" 
+    sequenceNum="2" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="PROMOTIONS" fromDate="2001-01-01 12:00:00.0" 
+    sequenceNum="1" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
+
+  <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="100" fromDate="2001-01-01 12:00:00.0" 
+    sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
+        
   <Product defaultPrice="47.99" listPrice="48.0" description="Round Gizmo w/ Lights"
     longDescription="A small round gizmo with multi-colored lights. Works great in the dark. Small and compact."
     primaryProductCategoryId="101" productId="GZ-2644" productTypeId="FINISHED_GOOD"
