@@ -116,8 +116,8 @@
         <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeIdFrom" type="String" mode="IN" optional="true"/>
         <attribute name="roleTypeIdTo" type="String" mode="IN" optional="true"/>
-        <attribute name="fromDate" type="String" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="priorityTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
@@ -130,8 +130,8 @@
         <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeIdFrom" type="String" mode="IN" optional="true"/>
         <attribute name="roleTypeIdTo" type="String" mode="IN" optional="true"/>
-        <attribute name="fromDate" type="String" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="priorityTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
@@ -144,7 +144,7 @@
         <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeIdFrom" type="String" mode="IN" optional="true"/>
         <attribute name="roleTypeIdTo" type="String" mode="IN" optional="true"/>
-        <attribute name="fromDate" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
 
     <!-- ContactMech services -->
