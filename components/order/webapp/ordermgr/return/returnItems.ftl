@@ -20,13 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.2
 -->
 
 <div class='tabContainer'>
-    <a href="<@ofbizUrl>/returnMain?returnId=${requestParameters.returnId?if_exists}</@ofbizUrl>" class="tabButton">Return Header</a>  
-    <a href="<@ofbizUrl>/returnItems?returnId=${requestParameters.returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Return Items</a>  
+    <a href="<@ofbizUrl>/returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">Return Header</a>
+    <a href="<@ofbizUrl>/returnItems?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Return Items</a>
     <#if returnHeader?has_content && returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED">
       <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId?if_exists}${requestAttributes.externalKeyParam}" class="tabButton">Receive Return</a>
     </#if>
@@ -34,7 +34,7 @@
 
 <#if !requestParameters.orderId?exists>
 <table width="100%" border='0' cellpadding='2' cellspacing='0'>
-  <tr><td colspan="8"><div class="head3">Item(s) In Return #${requestParameters.returnId}</div></td></tr>
+  <tr><td colspan="8"><div class="head3">Item(s) In Return #${returnId}</div></td></tr>
   <tr><td colspan="8"><hr class="sepbar"></td></tr>
   <tr>
     <td><div class="tableheadtext">Order #</div></td>
@@ -76,7 +76,7 @@
 <br>
 <#if returnHeader.statusId == "RETURN_REQUESTED">
 <form name="returnItems" method="post" action="<@ofbizUrl>/returnItems</@ofbizUrl>">
-  <input type="hidden" name="returnId" value="${requestParameters.returnId}">
+  <input type="hidden" name="returnId" value="${returnId}">
   <table border='0' cellpadding='2' cellspacing='0'>
     <tr><td colspan="4"><div class="head3">Return Item(s)</div></td></tr>
     <#if partyOrders?has_content>
@@ -116,7 +116,7 @@
 </#if>
 <#else>                            
 <form name="returnItems" method="post" action="<@ofbizUrl>/createReturnItems</@ofbizUrl>">
-  <input type="hidden" name="returnId" value="${requestParameters.returnId}">
+  <input type="hidden" name="returnId" value="${returnId}">
   <input type="hidden" name="_useRowSubmit" value="Y">
   <table border='0' width='100%' cellpadding='2' cellspacing='0'>
     <tr>
@@ -141,7 +141,7 @@
       <#assign rowCount = 0>
       <#list returnableItems.keySet() as orderItem>     
       <input type="hidden" name="returnItemType_o_${rowCount}" value="ITEM">
-      <input type="hidden" name="returnId_o_${rowCount}" value="${requestParameters.returnId}">
+      <input type="hidden" name="returnId_o_${rowCount}" value="${returnId}">
       <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}">
       <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}">
       <input type="hidden" name="description_o_${rowCount}" value="${orderItem.itemDescription?if_exists}">
@@ -195,7 +195,7 @@
 
       <#-- shipping 'refund' -->
       <input type="hidden" name="returnItemType_o_${rowCount}" value="ADJUSTMENT">
-      <input type="hidden" name="returnId_o_${rowCount}" value="${requestParameters.returnId}">
+      <input type="hidden" name="returnId_o_${rowCount}" value="${returnId}">
       <input type="hidden" name="orderId_o_${rowCount}" value="${requestParameters.orderId}">    
       <input type="hidden" name="returnQuantity_o_${rowCount}" value="1">      
       <input type="hidden" name="description_o_${rowCount}" value="Shipping Adjustment">

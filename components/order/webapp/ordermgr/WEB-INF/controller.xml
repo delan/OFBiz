@@ -413,6 +413,23 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="returnlist"/>
     </request-map>
+    <request-map uri="quickreturn">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="quickReturn"/>
+    </request-map>
+    <request-map uri="makeQuickReturn">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createReturnHeader"/>
+        <response name="success" type="request" value="setQuickReturnItems"/>
+        <response name="error" type="view" value="returnhead"/>
+    </request-map>
+    <request-map uri="setQuickReturnItems">
+        <security https="true" auth="true" direct-request="false"/>
+        <event type="service-multi" invoke="createReturnItem"/>
+        <response name="success" type="view" value="returnitems"/>
+        <response name="error" type="view" value="returnhead"/>
+    </request-map>
+
     <request-map uri="returnMain">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="returnhead"/>
@@ -510,6 +527,7 @@
     <view-map name="returnlist" type="jpublish" page="/return/returnList.ftl"/>
     <view-map name="returnhead" type="jpublish" page="/return/returnHeader.ftl"/>
     <view-map name="returnitems" type="jpublish" page="/return/returnItems.ftl"/>
+    <view-map name="quickReturn" type="jpublish" page="/return/quickReturn.ftl"/>
 
     <view-map name="paysetup" type="jpublish" page="/setup/paymentsetup.ftl"/>
 

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
  
@@ -30,6 +30,10 @@ import org.ofbiz.entity.*;
 dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
 returnId = request.getParameter("returnId");
+if (returnId == null) {
+    returnId = request.getAttribute("returnId");
+}
+context.put("returnId", returnId);
 
 returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
 context.put("returnHeader", returnHeader);
