@@ -708,7 +708,7 @@
       <field name="productId" type="id"></field>
       <field name="partyId" type="id"></field>
       <field name="statusId" type="id"></field>
-      <field name="dateReceived" type="date-time"></field>
+      <field name="datetimeReceived" type="date-time"></field>
       <field name="expireDate" type="date-time"></field>
       <field name="facilityId" type="id"></field>
       <field name="containerId" type="id"></field>
