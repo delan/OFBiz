@@ -196,7 +196,7 @@ function ShowTab(lname)
 <%}%>
 <%
   String lastUpdateMode = request.getParameter("UPDATE_MODE");
-  if((session.getAttribute("ERROR_MESSAGE") != null || request.getAttribute("ERROR_MESSAGE") != null) && 
+  if((session.getAttribute(SiteDefs.ERROR_MESSAGE) != null || request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) && 
       lastUpdateMode != null && !lastUpdateMode.equals("DELETE"))
   {
     //if we are updating and there is an error, don't use the entity data for the fields, use parameters to get the old value

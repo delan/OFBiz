@@ -1,14 +1,13 @@
-<style>
-  form {margin: 0;}
-  p {margin: 0.2em; font-family: Helvetica,sans-serif; font-size: 10pt;}
+  FORM {margin: 0px;}
+  P {margin: 0.2em; font-family: Helvetica,sans-serif; font-size: 10pt;}
 
-  .head1 {font-family: Helvetica,sans-serif; margin: 0; font-size: 15pt; font-weight: bold; COLOR: #3A4C37;}
-  .head2 {font-family: Helvetica,sans-serif; margin: 0; font-size: 12pt; font-weight: bold; COLOR: #000000;}
-  .head3 {font-family: Helvetica,sans-serif; margin: 0; font-size: 10pt; font-weight: bold; COLOR: #000000;}
-  .info {font-family: Helvetica,sans-serif; margin: 0; font-size: x-small; font-style: normal; COLOR: #000000;}
+  .head1 {font-family: Helvetica,sans-serif; margin: 0px; font-size: 15pt; font-weight: bold; COLOR: #3A4C37;}
+  .head2 {font-family: Helvetica,sans-serif; margin: 0px; font-size: 12pt; font-weight: bold; COLOR: #000000;}
+  .head3 {font-family: Helvetica,sans-serif; margin: 0px; font-size: 10pt; font-weight: bold; COLOR: #000000;}
+  .info {font-family: Helvetica,sans-serif; margin: 0px; font-size: x-small; font-style: normal; COLOR: #000000;}
   .tabletext {FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
   
-  .boxhead {font-family: Helvetica,sans-serif; margin: 0; font-size: 12pt; font-weight: bold; COLOR: #FFFFFF; }
+  .boxhead {font-family: Helvetica,sans-serif; margin: 0px; font-size: 12pt; font-weight: bold; COLOR: #FFFFFF; }
 
   .button	{border-style: outset; border-color: #9999CC; border-width: 2px; background-color: #dddddd; padding-right: 5px; padding-left: 5px;}
   A.buttontext {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: blue; }
@@ -20,14 +19,14 @@
   A.buttontextbig {font-family: Helvetica,sans-serif; font-size: 14pt; font-weight: bold; text-decoration: none; color: blue; }
   A.buttontextbig:hover {color: red;}
 
-  .ontab {FONT-SIZE: 10pt; background-color: black; padding: 2; border-style: inset; border-width: 3;}
-  a.onlnk {FONT-SIZE: 10pt; FONT: bold; COLOR: white; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none; padding: 2;}
-  .offtab {FONT-SIZE: 9pt; background-color: #CCCCCC; padding: 2; border-style: outset; border-width: 3;}
-  a.offlnk {FONT-SIZE: 9pt; FONT: bold; COLOR: blue; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none;padding: 2;}
+  .ontab {FONT-SIZE: 10pt; background-color: black; padding: 2px; border-style: inset; border-width: 3px;}
+  a.onlnk {FONT-SIZE: 10pt; font-weight: bold; COLOR: white; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none; padding: 2px;}
+  .offtab {FONT-SIZE: 9pt; background-color: #CCCCCC; padding: 2px; border-style: outset; border-width: 3px;}
+  a.offlnk {FONT-SIZE: 9pt; font-weight: bold; COLOR: blue; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none; padding: 2px;}
   a.offlnk:hover {COLOR: red;}
-  .areaheader {FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif; FONT: bold; color: white; width: 100%; background-color: black; padding: 2;}
+  .areaheader {FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif; font-weight: bold; color: white; width: 100%; background-color: black; padding: 2px;}
 
-  .edittable {  border-color: #000000 #000000 #003333; border-style: solid; border-top-width: thin; border-right-width: thin; border-bottom-width: thin; border-left-width: thin}
+  .edittable {border-color: #000000 #000000 #003333; border-style: solid; border-top-width: thin; border-right-width: thin; border-bottom-width: thin; border-left-width: thin}
   .viewOneTR1 {background-color: #99CCFF; FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
   .viewOneTR2 {background-color: #CCFFFF; FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
   .viewManyHeaderTR {background-color: #99CCFF; FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
@@ -36,11 +35,20 @@
 
   .editInputBox {background-color: white; FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
 
-  A IMG.imageborder {border-style: solid; border-width: 1; border-color: black;}
+  A IMG.imageborder {border-style: solid; border-width: 1px; border-color: black;}
 
- .headerButtonLeft { BORDER-RIGHT:solid white 1px; PADDING-RIGHT: 10px; PADDING-LEFT: 10px; }
- .headerButtonRight { BORDER-LEFT:solid white 1px; PADDING-RIGHT: 10px; PADDING-LEFT: 10px; }
- .headerCenter { PADDING-RIGHT:10px; PADDING-LEFT:10px; font-size: 10pt; font-weight: bold; COLOR: #000000; }
- .headerCompanyName { margin: 0; font-size: 24pt; font-weight: bold; color: white; white-space: nowrap; }
- .headerCompanySubtitle { margin: 0; font-size: 8pt; color: white; white-space: nowrap; }
-</style>
+  .headerButtonLeft {BORDER-RIGHT: solid white 1px; PADDING-RIGHT: 10px; PADDING-LEFT: 10px;}
+  .headerButtonRight {BORDER-LEFT: solid white 1px; PADDING-RIGHT: 10px; PADDING-LEFT: 10px;}
+  .headerCenter {PADDING-RIGHT: 10px; PADDING-LEFT:10px; font-size: 10pt; font-weight: bold; COLOR: #000000;}
+  .headerCompanyName {margin: 0px; font-size: 24pt; font-weight: bold; color: white; white-space: nowrap;}
+  .headerCompanySubtitle {margin: 0px; font-size: 8pt; color: white; white-space: nowrap; }
+
+  .microCartText {FONT-SIZE: 10pt; FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: white;}
+  A.microCartLink {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: yellow;}
+  A.microCartLink:hover {color: red;}
+  .microCartDisabled {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: #CCCCCC;}
+
+  HR.sepbar {height: 1px; background-color: #999999; border-width: 0px;}
+
+  .errorMessage {font-family: Helvetica,sans-serif; margin: 0px; font-size: 10pt; font-weight: bold; COLOR: red;}
+  .eventMEssage {font-family: Helvetica,sans-serif; margin: 0px; font-size: 10pt; font-weight: bold; COLOR: blue;}
