@@ -43,7 +43,7 @@ import org.ofbiz.entity.GenericDelegator;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public abstract class XuiContainer implements Container {
@@ -146,7 +146,9 @@ public abstract class XuiContainer implements Container {
 
         public void setup(String startupFile) {
             JFrame frame = new JFrame();
-            frame.getContentPane().add(this);
+            frame.setUndecorated(true);
+            frame.setVisible(false);
+            frame.getContentPane().add(this);            
             this.setup(frame, new String[] { startupFile });
         }
     }
