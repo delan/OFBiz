@@ -197,6 +197,63 @@ public class CategoryEvents {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product-category entry (write error)");
                 return "error";
             }
+        } else if (updateMode.equals("UPDATE")) {
+            String fromDateStr = request.getParameter("FROM_DATE");
+            Timestamp fromDate = null;
+            try {
+                fromDate = Timestamp.valueOf(fromDateStr);
+            } catch (Exception e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not update product-category entry, from date \"" + fromDateStr + "\" was not valid.");
+                return "error";
+            }
+
+            String thruDateStr = request.getParameter("THRU_DATE");
+            Timestamp thruDate = null;
+            try {
+                if (UtilValidate.isNotEmpty(thruDateStr))
+                    thruDate = Timestamp.valueOf(thruDateStr);
+            } catch (Exception e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not update product-category entry, thru date \"" + thruDateStr + "\" was not valid.");
+                return "error";
+            }
+
+            String sequenceNumStr = request.getParameter("SEQUENCE_NUM");
+            Long sequenceNum = null;
+            try {
+                if (UtilValidate.isNotEmpty(sequenceNumStr))
+                    sequenceNum = Long.valueOf(sequenceNumStr);
+            } catch (Exception e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not update product-category entry, sequence number \"" + sequenceNumStr + "\" was not valid.");
+                return "error";
+            }
+            
+            GenericValue productCategoryMember = null;
+            try {
+                productCategoryMember = delegator.findByPrimaryKey("ProductCategoryMember",
+                        UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId, "fromDate", fromDate));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.toString());
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not update product-category (read error)");
+                return "error";
+            }
+            if (productCategoryMember == null) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not update product-category (does not exist)");
+                return "error";
+            }
+            
+            productCategoryMember.set("thruDate", thruDate, false);
+            productCategoryMember.set("comments", request.getParameter("COMMENTS"), false);
+            //if an empty string was passed, go ahead and set sequenceNum to null, otherwise don't
+            productCategoryMember.set("sequenceNum", sequenceNum, (thruDateStr != null));
+            
+            try {
+                productCategoryMember.store();
+                delegator.clearCacheLine("ProductCategoryMember", UtilMisc.toMap("productCategoryId", productCategoryMember.get("productCategoryId")));
+            } catch (GenericEntityException e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not update product-category (write error)");
+                Debug.logWarning("[ProductEvents.updateProductCategoryMember] Could not update product-category (write error); message: " + e.getMessage());
+                return "error";
+            }
         } else if (updateMode.equals("DELETE")) {
             String fromDateStr = request.getParameter("FROM_DATE");
             Timestamp fromDate = null;
@@ -213,7 +270,8 @@ public class CategoryEvents {
                         UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId, "fromDate", fromDate));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage());
-                productCategoryMember = null;
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove product-category (read error)");
+                return "error";
             }
             if (productCategoryMember == null) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove product-category (does not exist)");
