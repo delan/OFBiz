@@ -253,7 +253,7 @@ public class ItemConfigurationNode {
                                 try {
                                     storeResult = dispatcher.runSync("getProductVariant", context);
                                     List variantProducts = (List) storeResult.get("products");
-                                    if (variantProducts.size() > 0) {
+                                    if (variantProducts.size() == 1) {
                                         variantProduct = (GenericValue)variantProducts.get(0);
                                     }
                                 } catch (GenericServiceException e) {
@@ -427,14 +427,28 @@ public class ItemConfigurationNode {
             List pfs = getPart().getRelatedCache("ProductFacility");
             Iterator pfsIt = pfs.iterator();
             GenericValue pf = null;
+            boolean found = false;
             while(pfsIt.hasNext()) {
+                found = true;
                 pf = (GenericValue)pfsIt.next();
                 if (pf.getDouble("minimumStock") != null && pf.getDouble("minimumStock").doubleValue() > 0) {
                     isPurchased = true;
                 }
             }
+            // If no records are found, we try to search for substituted node's records
+            if (!found && getSubstitutedNode() != null) {
+                pfs = getSubstitutedNode().getPart().getRelatedCache("ProductFacility");
+                pfsIt = pfs.iterator();
+                pf = null;
+                while(pfsIt.hasNext()) {
+                    pf = (GenericValue)pfsIt.next();
+                    if (pf.getDouble("minimumStock") != null && pf.getDouble("minimumStock").doubleValue() > 0) {
+                        isPurchased = true;
+                    }
+                }
+            }
         } catch(GenericEntityException gee) {
-            System.out.println("Error in ItemConfigurationNode.needsPurchased() " + gee);
+            System.out.println("Error in ItemConfigurationNode.isPurchased() " + gee);
         }
         return isPurchased;
     }
