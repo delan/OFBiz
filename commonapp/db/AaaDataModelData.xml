@@ -445,9 +445,10 @@
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WEB_CONTENT_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_ASSIGN"/>
 
-  <StatusItem description="Available" sequenceId="01" statusCode="AVAILABLE" statusId="INV_AVAILABLE" statusTypeId="INV_SERIALIZED_STTS"/>
-  <StatusItem description="Promised" sequenceId="02" statusCode="PROMISED" statusId="INV_PROMISED" statusTypeId="INV_SERIALIZED_STTS"/>
-  <StatusItem description="Delivered" sequenceId="03" statusCode="DELIVERED" statusId="INV_DELIVERED" statusTypeId="INV_SERIALIZED_STTS"/>
+  <StatusItem description="On Order" sequenceId="01" statusCode="ON_ORDER" statusId="INV_ON_ORDER" statusTypeId="INV_SERIALIZED_STTS"/>
+  <StatusItem description="Available" sequenceId="02" statusCode="AVAILABLE" statusId="INV_AVAILABLE" statusTypeId="INV_SERIALIZED_STTS"/>
+  <StatusItem description="Promised" sequenceId="03" statusCode="PROMISED" statusId="INV_PROMISED" statusTypeId="INV_SERIALIZED_STTS"/>
+  <StatusItem description="Delivered" sequenceId="04" statusCode="DELIVERED" statusId="INV_DELIVERED" statusTypeId="INV_SERIALIZED_STTS"/>
   <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ORDERED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Paid" sequenceId="02" statusCode="PAID" statusId="PAID" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Processing" sequenceId="03" statusCode="PROCESSING" statusId="PROCESSING" statusTypeId="ORDER_STATUS"/>
@@ -475,6 +476,7 @@
   <StatusItem description="Under Test"  sequenceId="02" statusCode="UNDER_TEST" statusId="WPS_UNDER_TEST" statusTypeId="WORKFLOW_PUB_STATUS"/>
   <StatusItem description="Released"  sequenceId="03" statusCode="RELEASED" statusId="WPS_RELEASED" statusTypeId="WORKFLOW_PUB_STATUS"/>
 
+  <StatusValidChange condition="" statusId="INV_ON_ORDER" statusIdTo="INV_AVAILABLE" transitionName="Order Arrived"/>
   <StatusValidChange condition="" statusId="INV_AVAILABLE" statusIdTo="INV_PROMISED" transitionName="Promise"/>
   <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_AVAILABLE" transitionName="Cancel Promise"/>
   <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_DELIVERED" transitionName="Deliver"/>
