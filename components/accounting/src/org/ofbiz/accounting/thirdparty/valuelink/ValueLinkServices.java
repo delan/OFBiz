@@ -1,5 +1,5 @@
 /*
- * $Id: ValueLinkServices.java,v 1.7 2004/04/29 15:03:57 ajzeneski Exp $
+ * $Id: ValueLinkServices.java,v 1.8 2004/05/03 22:27:00 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import javax.transaction.xa.XAException;
  * ValueLinkServices - Integration with ValueLink Gift Cards
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  */
 public class ValueLinkServices {
@@ -809,7 +809,7 @@ public class ValueLinkServices {
                 if (previous == null) previous = new Double(0);
                 Double current = (Double) redeemResult.get("amount");
                 if (current == null) current = new Double(0);
-                double redeemed = previous.doubleValue() - current.doubleValue();
+                double redeemed = (((double) Math.round((previous.doubleValue() - current.doubleValue()) * 100)) / 100);                
                 Debug.logInfo("Redeemed (" + amount + "): " + redeemed + " / " + previous + " : " + current, module);
                 if (redeemed < amount.doubleValue()) {
                     // we didn't redeem enough void the transaction and return false
