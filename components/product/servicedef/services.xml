@@ -14,14 +14,14 @@
             <exclude field-name="lastModifiedDate"/>
             <exclude field-name="lastModifiedByUserLogin"/>
         </auto-attributes>
-        <override name="productTypeId" optional="false"/>
-        <override name="productName" optional="false"/>
     </service>
     <service name="createProduct" default-entity-name="Product" engine="simple"
                 location="org/ofbiz/product/product/ProductServices.xml" invoke="createProduct" auth="true">
         <description>Create a Product</description>
         <implements service="interfaceProduct"/>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <override name="productTypeId" optional="false"/>
+        <override name="internalName" optional="false"/>
     </service>
     <service name="updateProduct" default-entity-name="Product" engine="simple"
                 location="org/ofbiz/product/product/ProductServices.xml" invoke="updateProduct" auth="true">

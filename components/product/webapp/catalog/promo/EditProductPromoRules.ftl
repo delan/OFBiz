@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.16 $
+ *@version    $Revision: 1.17 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -154,7 +154,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                 <#assign condProduct = condProductPromoProduct.getRelatedOneCache("Product")?if_exists>
                                 <#assign condApplEnumeration = condProductPromoProduct.getRelatedOneCache("ApplEnumeration")>
                                 <div class="tabletext">
-                                    ${(condProduct.productName)?if_exists} [${condProductPromoProduct.productId}]
+                                    ${(condProduct.internalName)?if_exists} [${condProductPromoProduct.productId}]
                                     - ${(condApplEnumeration.description)?default(condProductPromoProduct.productPromoApplEnumId)}
                                     <a href="<@ofbizUrl>/deleteProductPromoProduct?productPromoId=${(condProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(condProductPromoProduct.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(condProductPromoProduct.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(condProductPromoProduct.productPromoCondSeqId)?if_exists}&productId=${(condProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
                                     [${uiLabelMap.CommonDelete}]</a>
@@ -304,7 +304,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                 <#assign actionProduct = actionProductPromoProduct.getRelatedOneCache("Product")?if_exists>
                                 <#assign actionApplEnumeration = actionProductPromoProduct.getRelatedOneCache("ApplEnumeration")>
                                 <div class="tabletext">
-                                    ${(actionProduct.productName)?if_exists} [${actionProductPromoProduct.productId}]
+                                    ${(actionProduct.internalName)?if_exists} [${actionProductPromoProduct.productId}]
                                     - ${(actionApplEnumeration.description)?default(actionProductPromoProduct.productPromoApplEnumId)}
                                     <a href="<@ofbizUrl>/deleteProductPromoProduct?productPromoId=${(actionProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoProduct.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(actionProductPromoProduct.productPromoCondSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoProduct.productPromoActionSeqId)?if_exists}&productId=${(actionProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
                                     [${uiLabelMap.CommonDelete}]</a>
@@ -424,7 +424,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
             <#assign promoProduct = promoProductPromoProduct.getRelatedOneCache("Product")?if_exists>
             <#assign promoApplEnumeration = promoProductPromoProduct.getRelatedOneCache("ApplEnumeration")>
             <div class="tabletext">
-                ${(promoProduct.productName)?if_exists} [${promoProductPromoProduct.productId}]
+                ${(promoProduct.internalName)?if_exists} [${promoProductPromoProduct.productId}]
                 - ${(promoApplEnumeration.description)?default(promoProductPromoProduct.productPromoApplEnumId)}
                 <a href="<@ofbizUrl>/deleteProductPromoProduct?productPromoId=${(promoProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(promoProductPromoProduct.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(promoProductPromoProduct.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(promoProductPromoProduct.productPromoCondSeqId)?if_exists}&productId=${(promoProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
                 [${uiLabelMap.CommonDelete}]</a>

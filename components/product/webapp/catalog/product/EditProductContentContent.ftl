@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (johan@oddjob.se)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -28,7 +28,7 @@
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">Edit Content <span class='head2'>for ${product.productName?if_exists} <#if content?has_content>[ID:${contentId}]</#if></span></div>
+    <div class="head1">Edit Content <span class='head2'>for ${product.internalName?if_exists} <#if content?has_content>[ID:${contentId}]</#if></span></div>
     
     <a href="<@ofbizUrl>/EditProductContent?productId=${productId}</@ofbizUrl>" class="buttontext">[Product Content List]</a>
     <#if contentId?has_content>

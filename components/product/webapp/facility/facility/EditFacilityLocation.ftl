@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 
@@ -128,7 +128,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <#list productFacilityLocations?if_exists as productFacilityLocation>
 	        <#assign product = productFacilityLocation.getRelatedOne("Product")?if_exists>
 	        <tr valign="middle">
-	            <td><div class="tabletext"><#if product?exists>${product.productName}</#if>[${productFacilityLocation.productId}]</div></td>
+	            <td><div class="tabletext"><#if product?exists>${product.internalName}</#if>[${productFacilityLocation.productId}]</div></td>
 	            <td align="center">
 	                <FORM method=POST action="<@ofbizUrl>/updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
 	                    <input type="hidden" name="productId" value="${(productFacilityLocation.productId)?if_exists}">

@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -31,7 +31,7 @@
 
 ${pages.get("/product/ProductTabBar.ftl")}
 
-    <div class="head1">${uiLabelMap.ProductInventorySummary} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.productName)?if_exists} </#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductInventorySummary} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.internalName)?if_exists} </#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
     <#if productId?has_content>
         <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductProductPage}]</a>
@@ -69,7 +69,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
 
     <hr class="sepbar"/>
 
-    <div class="head1">${uiLabelMap.ProductInventoryItems} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.productName)?if_exists} </#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductInventoryItems} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.internalName)?if_exists} </#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     <#if productId?has_content>
         <a href="/facility/control/EditInventoryItem?productId=${productId}${externalKeyParam}" class="buttontext">[${uiLabelMap.ProductCreateNewInventoryItemProduct}]</a>
         <#if showEmpty>

@@ -24,7 +24,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -79,7 +79,7 @@
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <#if product?has_content>
-                                    <fo:block>${product.productName} [${product.productId}]</fo:block>
+                                    <fo:block>${product.internalName} [${product.productId}]</fo:block>
                                 <#else>
                                     <fo:block> </fo:block>
                                 </#if>
@@ -128,7 +128,7 @@
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <#if product?has_content>
-                                    <fo:block>${product.productName} [${product.productId}]</fo:block>
+                                    <fo:block>${product.internalName} [${product.productId}]</fo:block>
                                 <#else>
                                     <fo:block> </fo:block>
                                 </#if>
@@ -198,7 +198,7 @@
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <#if product?has_content>
-                                    <fo:block>${product.productName} [${product.productId}]</fo:block>
+                                    <fo:block>${product.internalName} [${product.productId}]</fo:block>
                                 <#else>
                                     <fo:block>&nbsp;</fo:block>
                                 </#if>

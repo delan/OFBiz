@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -30,7 +30,7 @@
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">${uiLabelMap.ProductQuickAddVariants} <span class="head2">${uiLabelMap.CommonFor} ${(product.productName)?if_exists} [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductQuickAddVariants} <span class="head2">${uiLabelMap.CommonFor} ${(product.internalName)?if_exists} [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     
     <#if (product.isVirtual)?if_exists != "Y">
         ${uiLabelMap.ProductWarningProductNotVirtual}

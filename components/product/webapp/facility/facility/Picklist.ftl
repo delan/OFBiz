@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -73,7 +73,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                   </td>
                   <td valign="top">
                     <#if product?has_content>
-                      <div class="tabletext">${product.productName} [${product.productId}]</div>
+                      <div class="tabletext">${product.internalName} [${product.productId}]</div>
                     <#else>
                       <div class="tabletext">&nbsp;</div>
                     </#if>
@@ -128,7 +128,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                   </td>
                   <td valign="top">
                     <#if product?has_content>
-                      <div class="tabletext">${product.productName} [${product.productId}]</div>
+                      <div class="tabletext">${product.internalName} [${product.productId}]</div>
                     <#else>
                       <div class="tabletext">&nbsp;</div>
                     </#if>
@@ -216,7 +216,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 </td>
                 <td valign="top">
                   <#if product?has_content>
-                    <div class="tabletext">${product.productName} [${product.productId}]</div>
+                    <div class="tabletext">${product.internalName} [${product.productId}]</div>
                   <#else>
                     <div class="tabletext">&nbsp;</div>
                   </#if>

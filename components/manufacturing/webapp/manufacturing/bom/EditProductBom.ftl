@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -40,7 +40,7 @@ function lookupBom() {
 
 ${pages.get("/bom/BomTabBar.ftl")}
 
-    <div class="head1">${uiLabelMap.ManufacturingBillOfMaterials} <span class="head2"> <#if product?exists>${(product.productName)?if_exists}</#if>[ID:${productId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ManufacturingBillOfMaterials} <span class="head2"> <#if product?exists>${(product.internalName)?if_exists}</#if>[ID:${productId?if_exists}]</span></div>
     <#if productId?has_content>
         <a href="<@ofbizUrl>/findBom</@ofbizUrl>?productId=${productId}&partBomTypeId=${productAssocTypeId}" class="buttontext">[${uiLabelMap.ManufacturingBillOfMaterials}]</a>
     </#if>
@@ -240,7 +240,7 @@ ${pages.get("/bom/BomTabBar.ftl")}
             <#assign curProductAssocType = assocFromProduct.getRelatedOneCache("ProductAssocType")>
             <tr valign="middle">
                 <td><a href="<@ofbizUrl>/EditProductBom?PRODUCT_ID=${(assocFromProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)?if_exists}</@ofbizUrl>" class="buttontext">${(assocFromProduct.productIdTo)?if_exists}</a></td>
-                <td><#if listToProduct?exists><a href="<@ofbizUrl>/EditProductBom?PRODUCT_ID=${(assocFromProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)?if_exists}</@ofbizUrl>" class="buttontext">${(listToProduct.productName)?if_exists}</a></#if>&nbsp;</td>
+                <td><#if listToProduct?exists><a href="<@ofbizUrl>/EditProductBom?PRODUCT_ID=${(assocFromProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)?if_exists}</@ofbizUrl>" class="buttontext">${(listToProduct.internalName)?if_exists}</a></#if>&nbsp;</td>
                 <td><div class="tabletext" <#if (assocFromProduct.getTimestamp("fromDate"))?exists && nowDate.before(assocFromProduct.getTimestamp("fromDate"))> style="color: red;"</#if>>
                 ${(assocFromProduct.fromDate)?if_exists}&nbsp;</div></td>
                 <td><div class="tabletext" <#if (assocFromProduct.getTimestamp("thruDate"))?exists && nowDate.after(assocFromProduct.getTimestamp("thruDate"))> style="color: red;"</#if>>
@@ -278,8 +278,8 @@ ${pages.get("/bom/BomTabBar.ftl")}
             <#assign curProductAssocType = assocToProduct.getRelatedOneCache("ProductAssocType")>
             <tr valign="middle">
                 <td><a href="<@ofbizUrl>/EditProductBom?PRODUCT_ID=${(assocToProduct.productId)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocToProduct.productAssocTypeId)?if_exists}</@ofbizUrl>" class="buttontext">${(assocToProduct.productId)?if_exists}</a></td>
-<!--                <td><#if listToProduct?exists><a href="<@ofbizUrl>/EditProduct?productId=${(assocToProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">${(listToProduct.productName)?if_exists}</a></#if></td> -->
-                <td><#if listToProduct?exists><a href="<@ofbizUrl>/EditProductBom?PRODUCT_ID=${(assocToProduct.productId)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocToProduct.productAssocTypeId)?if_exists}</@ofbizUrl>" class="buttontext">${(listToProduct.productName)?if_exists}</a></#if></td>
+<!--                <td><#if listToProduct?exists><a href="<@ofbizUrl>/EditProduct?productId=${(assocToProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">${(listToProduct.internalName)?if_exists}</a></#if></td> -->
+                <td><#if listToProduct?exists><a href="<@ofbizUrl>/EditProductBom?PRODUCT_ID=${(assocToProduct.productId)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocToProduct.productAssocTypeId)?if_exists}</@ofbizUrl>" class="buttontext">${(listToProduct.internalName)?if_exists}</a></#if></td>
                 <td><div class="tabletext">${(assocToProduct.getTimestamp("fromDate"))?if_exists}&nbsp;</div></td>
                 <td><div class="tabletext">${(assocToProduct.getTimestamp("thruDate"))?if_exists}&nbsp;</div></td>
                 <td><div class="tabletext">${(assocToProduct.quantity)?if_exists}&nbsp;</div></td>
