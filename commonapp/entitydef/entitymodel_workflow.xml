@@ -649,6 +649,8 @@
       <field name="workingTime" type="floating-point"></field>
       <field name="waitingTime" type="floating-point"></field>
       <field name="defaultStartActivityId" type="id-long"></field>
+      <field name="processInitiateUrl" type="url"></field>
+      <field name="processTaskUrl" type="url"></field>
       <prim-key field="packageId"/>
       <prim-key field="packageVersion"/>
       <prim-key field="processId"/>

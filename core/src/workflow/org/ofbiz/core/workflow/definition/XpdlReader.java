@@ -495,6 +495,10 @@ public class XpdlReader {
         List transitions = UtilXml.childElementList(transitionsElement, "Transition");
 
         readTransitions(transitions, packageId, packageVersion, processId, processVersion);
+        
+        // ExtendedAttributes?
+        workflowProcessValue.set("processInitiateUrl", getExtendedAttributeValue(workflowProcessElement, "initateUrl", ""));
+        workflowProcessValue.set("processTaskUrl", getExtendedAttributeValue(workflowProcessElement, "taskUrl", ""));
     }
 
     // ----------------------------------------------------------------
