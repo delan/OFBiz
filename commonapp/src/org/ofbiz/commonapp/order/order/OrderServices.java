@@ -436,72 +436,66 @@ public class OrderServices {
                 toBeStored.add(trackingCodeOrder);
             }
         }
+                                    
+        try {
+            // store line items, etc so that they will be there for the foreign key checks
+            delegator.storeAll(toBeStored);
+            
+            // test
+            GenericValue ohr = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            Debug.logInfo("Order Header : " + ohr, module);
 
-        try {           
-            boolean beganTransaction = TransactionUtil.begin();                                    
-            try {
-                // store line items, etc so that they will be there for the foreign key checks
-                delegator.storeAll(toBeStored);
-
-                if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId)) {                
-                    // START inventory reservation
-                    // decrement inventory available for each item, within the same transaction
-                    List resErrorMessages = new LinkedList();
-                    Iterator invDecItemIter = orderItems.iterator();
+            if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId)) {                
+                // START inventory reservation
+                // decrement inventory available for each item, within the same transaction
+                List resErrorMessages = new LinkedList();
+                Iterator invDecItemIter = orderItems.iterator();
     
-                    while (invDecItemIter.hasNext()) {
-                        GenericValue orderItem = (GenericValue) invDecItemIter.next();                        
-                        if (orderItem.get("productId") != null) {
-                            // only reserve product items; ignore non-product items                        
-                            Double inventoryNotReserved = CatalogWorker.reserveCatalogInventory(prodCatalogId,
-                                orderItem.getString("productId"), orderItem.getDouble("quantity"),
-                                orderItem.getString("orderId"), orderItem.getString("orderItemSeqId"),
-                                userLogin, delegator, dispatcher);                        
+                while (invDecItemIter.hasNext()) {
+                    GenericValue orderItem = (GenericValue) invDecItemIter.next();                        
+                    if (orderItem.get("productId") != null) {
+                        // only reserve product items; ignore non-product items                        
+                        Double inventoryNotReserved = CatalogWorker.reserveCatalogInventory(prodCatalogId,
+                            orderItem.getString("productId"), orderItem.getDouble("quantity"),
+                            orderItem.getString("orderId"), orderItem.getString("orderItemSeqId"),
+                            userLogin, delegator, dispatcher);                        
     
-                            if (inventoryNotReserved != null) {
-                                // if inventoryNotReserved is not 0.0 then that is the amount that it couldn't reserve
-                                GenericValue product = null;
+                        if (inventoryNotReserved != null) {
+                            // if inventoryNotReserved is not 0.0 then that is the amount that it couldn't reserve
+                            GenericValue product = null;
         
-                                try {
-                                    product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.getString("productId")));
-                                } catch (GenericEntityException e) {
-                                    Debug.logError(e, "Error when looking up product in createOrder service, product failed inventory reservation");
-                                }
-                                String invErrMsg = "The product ";
-        
-                                if (product != null) {
-                                    invErrMsg += getProductName(product, orderItem);
-                                }
-                                invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
-                                resErrorMessages.add(invErrMsg);
+                            try {
+                                product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.getString("productId")));
+                            } catch (GenericEntityException e) {
+                                Debug.logError(e, "Error when looking up product in createOrder service, product failed inventory reservation");
                             }
+                            String invErrMsg = "The product ";
+        
+                            if (product != null) {
+                                invErrMsg += getProductName(product, orderItem);
+                            }
+                            invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
+                            resErrorMessages.add(invErrMsg);
                         }
                     }
-    
-                    if (resErrorMessages.size() > 0) {
-                        TransactionUtil.rollback(beganTransaction);
-                        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                        result.put(ModelService.ERROR_MESSAGE_LIST, resErrorMessages);
-                        return result;
-                    }
-                    // END inventory reservation
                 }
-
-                TransactionUtil.commit(beganTransaction);
-
-                result.put("orderId", orderId);
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-            } catch (GenericEntityException e) {
-                TransactionUtil.rollback(beganTransaction);
-                Debug.logError(e);
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not create order (write error: " + e.getMessage() + ").");
+   
+                if (resErrorMessages.size() > 0) {                                              
+                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                    result.put(ModelService.ERROR_MESSAGE_LIST, resErrorMessages);
+                    return result;
+                }
+                // END inventory reservation
             }
-        } catch (GenericTransactionException e) {
-            Debug.logError(e);
+           
+            result.put("orderId", orderId);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        } catch (GenericEntityException e) {                
+            Debug.logError(e, "Problem with reservations", module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not create order (transaction error on write: " + e.getMessage() + ").");
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not create order (write error: " + e.getMessage() + ").");
         }
+        
         return result;
     }
     
