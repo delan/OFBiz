@@ -34,6 +34,7 @@ import java.util.Iterator;
 import net.xoetrope.swing.XEdit;
 
 import org.ofbiz.base.util.collections.LifoSet;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.pos.adaptor.KeyboardAdaptor;
 import org.ofbiz.pos.adaptor.KeyboardReceiver;
@@ -172,7 +173,8 @@ public class Input implements KeyboardReceiver, KeyListener {
 
     // KeyboardReceiver
     public synchronized void receiveData(int[] codes, char[] chars) {
-        if (chars.length > 0)
+        Debug.log("Codes - " + codes.length + " / Chars - " + chars.length, module);
+        if (chars.length > 0 && checkChars(chars))
             this.appendString(new String(chars));
     }
 
@@ -190,5 +192,54 @@ public class Input implements KeyboardReceiver, KeyListener {
     }
 
     public void keyReleased(KeyEvent event) {
+    }
+
+    private boolean checkChars(char[] chars) {
+        int[] idxToRemove = new int[chars.length];
+        boolean process = false;
+        int remIdx = 0;
+        for (int i = 0; i < chars.length; i++) {
+            if (((int) chars[i]) == 10 || ((int) chars[i]) == 8) {
+                idxToRemove[remIdx++] = i+1;
+            } else {
+                process = true;
+            }
+        }
+
+        if (chars.length == 1) {
+            return process;
+        }
+
+        int toRemove = 0;
+        for (int i = 0; i < idxToRemove.length; i++) {
+            if (idxToRemove[i] > 0) {
+                toRemove++;
+            }
+        }
+
+        if (toRemove > 0) {
+            if (chars.length - toRemove < 1) {
+                return false;
+            }
+
+            char[] newChars = new char[chars.length - toRemove];
+            int currentIndex = 0;
+            for (int i = 0; i < chars.length; i++) {
+                boolean appendChar = true;
+                for (int x = 0; x < idxToRemove.length; x++) {
+                    if ((idxToRemove[x] - 1) == i) {
+                        appendChar = false;
+                        continue;
+                    } else {
+                    }
+                }
+                if (appendChar) {
+                    newChars[currentIndex] = chars[i];
+                    currentIndex++;
+                }
+            }
+        }
+
+        return process;
     }
 }

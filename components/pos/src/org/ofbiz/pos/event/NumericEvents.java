@@ -25,6 +25,7 @@
 package org.ofbiz.pos.event;
 
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.pos.component.Input;
 import org.ofbiz.pos.screen.PosScreen;
 
@@ -35,6 +36,8 @@ import org.ofbiz.pos.screen.PosScreen;
  * @since      3.1
  */
 public class NumericEvents {
+
+    public static final String module = NumericEvents.class.getName();
 
     // standard number events
     public static void triggerOne(PosScreen pos) {
@@ -113,17 +116,19 @@ public class NumericEvents {
     public static void triggerEnter(PosScreen pos) {
         // enter key maps to various different events; depending on the function
         Input input = pos.getInput();
-        String[] lastFunc = input.getLastFunction();
+        String[] lastFunc = input.getLastFunction();        
         if (lastFunc != null) {
-            if ("PLU".equals(lastFunc[0])) {
-                MenuEvents.addItem(pos);
-            } else if ("MGRLOGIN".equals(lastFunc[0])) {
+            if ("MGRLOGIN".equals(lastFunc[0])) {
                 SecurityEvents.mgrLogin(pos);
             } else if ("LOGIN".equals(lastFunc[0])) {
                 SecurityEvents.login(pos);
-            } else if ("CREDIT".equals(lastFunc[0]) || "CREDITINFO".equals(lastFunc[0])) {
+            } else if ("CREDIT".equals(lastFunc[0]) || "MSRINFO".equals(lastFunc[0])) {
                 PaymentEvents.payCredit(pos);
+            } else if ("SKU".equals(lastFunc[0])) {
+                MenuEvents.addItem(pos);
             }
+        } else if (input.value().length() > 0) {
+            MenuEvents.addItem(pos);
         }
     }
 }
