@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.86 $
+ * @version    $Revision: 1.87 $
  */
 -->
 
@@ -598,7 +598,7 @@
       <relation type="many" title="Assoc" rel-entity-name="ProductFeatureIactn">
         <key-map field-name="productFeatureId" rel-field-name="productFeatureIdTo"/>
       </relation>
-      <relation type="many" rel-entity-name="ProductFeatureContent">
+      <relation type="many" rel-entity-name="ProductFeatureDataResource">
         <key-map field-name="productFeatureId"/>
       </relation>
       <relation type="many" rel-entity-name="CostComponent">
@@ -743,18 +743,18 @@
         <key-map field-name="productFeatureGroupId"/>
       </relation>
     </entity>
-    <entity entity-name="ProductFeatureContent"
+    <entity entity-name="ProductFeatureDataResource"
             package-name="org.ofbiz.product.feature"
-            title="Feature Data Object Entity">
-      <field name="contentId" type="id-ne"></field>
+            title="Product Feature Data Resource Entity">
+      <field name="dataResourceId" type="id-ne"></field>
       <field name="productFeatureId" type="id-ne"></field>
-      <prim-key field="contentId"/>
+      <prim-key field="dataResourceId"/>
       <prim-key field="productFeatureId"/>
-      <relation type="one" fk-name="FEAT_CNT_FEATURE" rel-entity-name="ProductFeature">
-        <key-map field-name="productFeatureId"/>
+      <relation type="one" fk-name="PFEAT_DR_DATRES" rel-entity-name="DataResource">
+        <key-map field-name="dataResourceId"/>
       </relation>
-      <relation type="one" fk-name="FEAT_CNT_CNT" rel-entity-name="Content">
-        <key-map field-name="contentId"/>
+      <relation type="one" fk-name="PFEAT_DR_FEATURE" rel-entity-name="ProductFeature">
+        <key-map field-name="productFeatureId"/>
       </relation>
     </entity>
     <entity entity-name="ProductFeatureGroup"

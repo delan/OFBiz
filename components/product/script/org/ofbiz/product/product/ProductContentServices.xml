@@ -24,7 +24,7 @@
  *
  * @author     Johan Isacsson (johan@oddjob.se)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  -->
 
@@ -53,7 +53,7 @@
     <simple-method method-name="updateProductContent" short-description="Update Content For Product">
         <make-value value-name="lookupPKMap" entity-name="ProductContent"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ProductContent" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
 
@@ -63,7 +63,7 @@
     <simple-method method-name="removeProductContent" short-description="Remove Content From Product">
         <make-value value-name="lookupPKMap" entity-name="ProductContent"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ProductContent" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
@@ -113,4 +113,16 @@
         <call-service service-name="updateSimpleTextContent" in-map-name="updateSimpleText"/>
     </simple-method>
 
+    <!-- ProductFeatureDataResource -->
+    <simple-method method-name="createProductFeatureDataResource" short-description="Create ProductFeature-DataResource">
+        <make-value value-name="newEntity" entity-name="ProductFeatureDataResource"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="removeProductFeatureDataResource" short-description="Remove ProductFeature-DataResource">
+        <make-value value-name="lookupPKMap" entity-name="ProductFeatureDataResource"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
 </simple-methods>
