@@ -18,7 +18,7 @@
       <%-- check to see if salesDiscontinuationDate has passed --%>
       <div class='tabletext' style='color: red;'>No Longer Available</div>
   <%} else if ("Y".equals(miniProd.getString("isVirtual"))) {%>
-      &nbsp;
+      <a href='<ofbiz:url>/product?<ofbiz:if name="category_id">category_id=<ofbiz:print attribute="category_id"/>&</ofbiz:if>product_id=<%EntityField.run("product", "productId", pageContext);%></ofbiz:url>' class="buttontext"><nobr>[Add to Cart]</nobr></a>
   <%} else {%>
       <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="<%=miniProdFormName%>" style='margin: 0;'>
         <input type='hidden' name="add_product_id" value='<%EntityField.run("miniProduct", "productId", pageContext);%>'>
