@@ -1,5 +1,5 @@
 /*
- * $Id: ModelReader.java,v 1.8 2004/06/20 04:03:23 jonesde Exp $
+ * $Id: ModelReader.java,v 1.9 2004/06/20 07:09:20 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.w3c.dom.Node;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ModelReader {
@@ -311,8 +311,19 @@ public class ModelReader {
                                         }
                                         // decide whether it should be one or many by seeing if the key map represents the complete pk of the relEntity
                                         if (curModelEntity.containsAllPkFieldNames(curEntityKeyFields)) {
-                                            // always use one-nofk, we don't want auto-fks getting in
+                                            // always use one-nofk, we don't want auto-fks getting in for these automatic ones
                                             newRel.setType("one-nofk");
+                                            
+                                            // to keep it clean, remove any additional keys that aren't part of the PK
+                                            List curPkFieldNames = curModelEntity.getPkFieldNames();
+                                            Iterator nrkmIter = newRel.getKeyMapsIterator();
+                                            while (nrkmIter.hasNext()) {
+                                                ModelKeyMap nrkm = (ModelKeyMap) nrkmIter.next();
+                                                String checkField = nrkm.getRelFieldName();
+                                                if (!curPkFieldNames.contains(checkField)) {
+                                                    nrkmIter.remove();
+                                                }
+                                            }
                                         } else {
                                             newRel.setType("many");
                                         }
