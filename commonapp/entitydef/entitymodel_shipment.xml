@@ -392,6 +392,9 @@
         <key-map field-name="shipmentId"/>
         <key-map field-name="statusId"/>
       </relation>
+      <relation type="many" rel-entity-name="ShipmentManifestView">
+        <key-map field-name="shipmentId"/>
+      </relation>
     </entity>
     <view-entity entity-name="ShipmentAndItem"
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -645,6 +648,13 @@
       <alias entity-alias="SITM" name="productId"/>
       <alias entity-alias="SITM" name="quantity"/>
       <alias entity-alias="SITM" name="shipmentContentDescription"/>
+      <alias entity-alias="ITMI" name="itemIssuanceId"/>
+      <alias entity-alias="ITMI" name="orderId"/>
+      <alias entity-alias="ITMI" name="orderItemSeqId"/>
+      <alias entity-alias="ITMI" name="inventoryItemId"/>
+      <alias entity-alias="ITMI" name="issuedDateTime"/>
+      <alias entity-alias="ITMI" name="issuedByUserLoginId"/>
+      <alias entity-alias="ITMI" name="issuedQuantity" field="quantity"/>
       <alias entity-alias="SPCT" name="packageQuantity" field="quantity"/>
       <alias entity-alias="SPKG" name="shipmentPackageSeqId"/>
       <alias entity-alias="SPKG" name="packageDateCreated" field="dateCreated"/>
@@ -668,12 +678,26 @@
       <alias entity-alias="SRTS" name="estimatedArrivalDate"/>
       <alias entity-alias="OFAC" name="originFacilityName" field="facilityName"/>
       <alias entity-alias="DFAC" name="destFacilityName" field="facilityName"/>
+      <alias entity-alias="OPAD" name="originToName" field="toName"/>
+      <alias entity-alias="OPAD" name="originAttnName" field="attnName"/>
+      <alias entity-alias="OPAD" name="originAddress1" field="address1"/>
+      <alias entity-alias="OPAD" name="originAddress2" field="address2"/>
+      <alias entity-alias="OPAD" name="originDirections" field="directions"/>
       <alias entity-alias="OPAD" name="originCity" field="city"/>
-      <alias entity-alias="OPAD" name="originStateProvinceGeoId" field="stateProvinceGeoId"/>
+      <alias entity-alias="OPAD" name="originPostalCode" field="postalCode"/>
       <alias entity-alias="OPAD" name="originCountryGeoId" field="countryGeoId"/>
+      <alias entity-alias="OPAD" name="originStateProvinceGeoId" field="stateProvinceGeoId"/>
+      <alias entity-alias="OPAD" name="originPostalCodeGeoId" field="postalCodeGeoId"/>
+      <alias entity-alias="DPAD" name="destToName" field="toName"/>
+      <alias entity-alias="DPAD" name="destAttnName" field="attnName"/>
+      <alias entity-alias="DPAD" name="destAddress1" field="address1"/>
+      <alias entity-alias="DPAD" name="destAddress2" field="address2"/>
+      <alias entity-alias="DPAD" name="destDirections" field="directions"/>
       <alias entity-alias="DPAD" name="destCity" field="city"/>
-      <alias entity-alias="DPAD" name="destStateProvinceGeoId" field="stateProvinceGeoId"/>
+      <alias entity-alias="DPAD" name="destPostalCode" field="postalCode"/>
       <alias entity-alias="DPAD" name="destCountryGeoId" field="countryGeoId"/>
+      <alias entity-alias="DPAD" name="destStateProvinceGeoId" field="stateProvinceGeoId"/>
+      <alias entity-alias="DPAD" name="destPostalCodeGeoId" field="postalCodeGeoId"/>
       <alias entity-alias="CPER" name="carrierFirstName" field="firstName"/>
       <alias entity-alias="CPER" name="carrierLastName" field="lastName"/>
       <alias entity-alias="CPGP" name="carrierGroupName" field="groupName"/>
