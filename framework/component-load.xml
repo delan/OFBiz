@@ -36,7 +36,6 @@
     -->
     <load-component component-location="${ofbiz.home}/framework/security"/>
     <load-component component-location="${ofbiz.home}/framework/datafile"/>
-    <load-component component-location="${ofbiz.home}/framework/rules"/>
     <load-component component-location="${ofbiz.home}/framework/minilang"/>
     <load-component component-location="${ofbiz.home}/framework/tests"/>
     <load-component component-location="${ofbiz.home}/framework/common"/>
