@@ -80,7 +80,7 @@
             String password = (String) userLoginContext.get("currentPassword");
             String confirmPassword = (String) userLoginContext.get("currentPasswordVerify");
             String passwordHint = (String) userLoginContext.get("passwordHint");
-            org.ofbiz.commonapp.security.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, false);
+            org.ofbiz.commonapp.security.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true);
         ]]></call-bsh>
 
         <!-- Create the Person -->
