@@ -3,15 +3,16 @@
     <tr>
       <td valign="top">
         <%GenericValue localProduct = (GenericValue) pageContext.getAttribute("product");%>
+        <%if (request.getParameter("category_id") != null) pageContext.setAttribute("category_id", request.getParameter("category_id"));%>
         <%String smallImageUrl = localProduct.getString("smallImageUrl");%>
         <%if(smallImageUrl == null || smallImageUrl.length() <= 0) smallImageUrl = "/images/defaultImage.jpg";%>
-          <a href='<ofbiz:url>/product?product_id=<%EntityField.run("product", "productId", pageContext);%></ofbiz:url>'>
+          <a href='<ofbiz:url>/product?<ofbiz:if name="category_id">category_id=<ofbiz:print attribute="category_id"/>&</ofbiz:if>product_id=<%EntityField.run("product", "productId", pageContext);%></ofbiz:url>'>
             <img src="<%=smallImageUrl%>" align="left" height="50" class='imageborder' border='0'>
           </a>
       </td>
       <td align="left" valign="top" width="100%">
           <div class="tabletext">
-            <a href='<ofbiz:url>/product?product_id=<%EntityField.run("product", "productId", pageContext);%></ofbiz:url>' class='buttontext'><%EntityField.run("product", "productName", pageContext);%></a>
+            <a href='<ofbiz:url>/product?<ofbiz:if name="category_id">category_id=<ofbiz:print attribute="category_id"/>&</ofbiz:if>product_id=<%EntityField.run("product", "productId", pageContext);%></ofbiz:url>' class='buttontext'><%EntityField.run("product", "productName", pageContext);%></a>
           </div>
           <div class="tabletext"><%EntityField.run("product", "description", pageContext);%></div>
           <div class="tabletext">

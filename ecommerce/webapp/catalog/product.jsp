@@ -6,10 +6,20 @@
 <%-- ====================================================== --%>
 <%-- Get the requested product                              --%>
 <%-- ====================================================== --%>
+<%if (request.getParameter("product_id") != null) pageContext.setAttribute("product_id", request.getParameter("product_id"));%>
 <%String productId = request.getParameter("product_id");%>
 <ofbiz:service name='getProduct'>
-    <ofbiz:param name='productId' value='<%=productId%>'/>
+    <ofbiz:param name='productId' attribute='product_id'/>
 </ofbiz:service>
+
+<%if (request.getParameter("category_id") != null) pageContext.setAttribute("category_id", request.getParameter("category_id"));%>
+<%String categoryId = request.getParameter("category_id");%>
+<ofbiz:if name="category_id">
+    <ofbiz:service name='getPreviousNextProducts'>
+        <ofbiz:param name='categoryId' attribute='category_id'/>
+        <ofbiz:param name='productId' attribute='product_id'/>
+    </ofbiz:service>
+</ofbiz:if>
 
 <ofbiz:unless name="product">
   <center><h2>Product not found for Product ID "<%=UtilFormatOut.checkNull(productId)%>"!</h2></center>
@@ -202,6 +212,19 @@
 
   <br>
   <table border="0" width="100%" cellpadding="3">
+    <ofbiz:if name="category">
+      <tr>
+        <td colspan="2" align="right">
+          <ofbiz:if name="previousProductId">
+              <a href="<ofbiz:url>/product?category_id=<%=categoryId%>&product_id=<ofbiz:print attribute="previousProductId"/></ofbiz:url>" class="buttontext">[Previous]</a>&nbsp;|&nbsp;
+          </ofbiz:if>
+          <a href="<ofbiz:url>/category?category_id=<%=categoryId%></ofbiz:url>" class="buttontext"><ofbiz:entityfield attribute='category' field='description'/></a>
+          <ofbiz:if name="nextProductId">
+              &nbsp;|&nbsp;<a href="<ofbiz:url>/product?category_id=<%=categoryId%>&product_id=<ofbiz:print attribute="nextProductId"/></ofbiz:url>" class="buttontext">[Next]</a>
+          </ofbiz:if>
+        </td>
+      </tr>
+    </ofbiz:if>
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td align="left" valign="top" width="0">
@@ -213,11 +236,12 @@
         <div class="tabletext"><b><ofbiz:entityfield attribute="product" field="productId"/></b></div>
         <div class="tabletext"><b>Our price: <font color="#126544"><ofbiz:entityfield attribute="product" field="defaultPrice"/></font></b>
            (Reg. <ofbiz:entityfield attribute="product" field="listPrice"/>)</div>
-        <div class="tabletext">Size:
             <%if (product.get("quantityIncluded") != null && product.getDouble("quantityIncluded").doubleValue() != 0) {%>
-                <ofbiz:entityfield attribute="product" field="quantityIncluded"/>
+                <div class="tabletext">Size:
+                  <ofbiz:entityfield attribute="product" field="quantityIncluded"/>
+                  <ofbiz:entityfield attribute="product" field="quantityUomId"/>
+                </div>
             <%}%>
-            <ofbiz:entityfield attribute="product" field="quantityUomId"/>
         </div>
         <%if (product.get("piecesIncluded") != null && product.getLong("piecesIncluded").longValue() != 0) {%>
             <ofbiz:entityfield attribute="product" field="piecesIncluded" prefix="<div class='tabletext'>Pieces: " suffix="</div>"/>
