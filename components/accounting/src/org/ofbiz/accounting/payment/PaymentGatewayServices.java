@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.4 2003/08/25 21:56:55 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.5 2003/08/26 14:11:11 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class PaymentGatewayServices {    
@@ -112,7 +112,7 @@ public class PaymentGatewayServices {
         try {
             grandTotal = (Double) formatter.parse(grandTotalString);
         } catch (ParseException e) {
-            Debug.logError(e, "Problem getting parsed tax amount; using the primitive value", module);
+            Debug.logError(e, "Problem getting parsed grand total amount", module);
             return ServiceUtil.returnError("ERROR: Cannot parse grand total from formatted string; see logs");
         }
         
@@ -177,7 +177,7 @@ public class PaymentGatewayServices {
             serviceType = REAUTH_SERVICE_TYPE;   
         }      
         
-        GenericValue paymentSettings = getPaymentSettings(orh.getOrderHeader(), paymentPref, serviceType);            
+        GenericValue paymentSettings = getPaymentSettings(orh.getOrderHeader(), paymentPref, serviceType, false);            
         if (paymentSettings != null) {                        
             serviceName = paymentSettings.getString("paymentService");            
             paymentConfig = paymentSettings.getString("paymentPropertiesPath");                                
@@ -226,7 +226,7 @@ public class PaymentGatewayServices {
         return processorResult;              
     }
     
-    private static GenericValue getPaymentSettings(GenericValue orderHeader, GenericValue paymentPreference, String paymentServiceType) {
+    private static GenericValue getPaymentSettings(GenericValue orderHeader, GenericValue paymentPreference, String paymentServiceType, boolean anyServiceType) {
         GenericDelegator delegator = orderHeader.getDelegator();
         GenericValue paymentSettings = null;
         GenericValue paymentMethod = null;
@@ -239,7 +239,7 @@ public class PaymentGatewayServices {
             String productStoreId = orderHeader.getString("productStoreId");
             String paymentMethodTypeId = paymentMethod.getString("paymentMethodTypeId");
             if (productStoreId != null && paymentMethodTypeId != null) {
-                paymentSettings = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, paymentMethodTypeId, paymentServiceType);
+                paymentSettings = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, paymentMethodTypeId, paymentServiceType, anyServiceType);
             }            
         }
         return paymentSettings;        
@@ -326,6 +326,120 @@ public class PaymentGatewayServices {
         
         return contactPerson.getString("partyId");       
     }
+    
+    /**
+     * 
+     * Releases authorizations through service calls to the defined processing service for the ProductStore/PaymentMethodType
+     * @return COMPLETE|FAILED|ERROR for complete processing of ALL payments.
+     */
+    public static Map releaseOrderPayments(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String orderId = (String) context.get("orderId"); 
+        String invoiceId = (String) context.get("invoiceId");
+        Double captureAmount = (Double) context.get("captureAmount");                         
+              
+        Map result = new HashMap();               
+                
+        // get the order header and payment preferences
+        GenericValue orderHeader = null;
+        List paymentPrefs = null;
+
+        try {                       
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            
+            // get the payment prefs
+            Map lookupMap = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_AUTHORIZED");            
+            paymentPrefs = delegator.findByAnd("OrderPaymentPreference", lookupMap);
+        } catch (GenericEntityException gee) {
+            Debug.logError(gee, "Problems getting entity record(s), see stack trace", module);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + gee.getMessage() + ").");
+            return result;
+        }
+
+        // error if no order was found
+        if (orderHeader == null) {
+            return ServiceUtil.returnError("Could not find OrderHeader with orderId: " + orderId + "; not processing payments.");
+        }  
+                                                                   
+        // return complete if no payment prefs were found
+        if (paymentPrefs == null || paymentPrefs.size() == 0) {
+            Debug.logWarning("No orderPaymentPreferences available to capture", module);
+            result.put("processResult", "COMPLETE");
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            return result;   
+        }
+        
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        String productStoreId = orh.getProductStoreId();
+        String currency = orh.getCurrency();
+        
+        // iterate over the prefs and release each one
+        List finished = new ArrayList();
+        Iterator payments = paymentPrefs.iterator();
+        while (payments.hasNext()) {
+            GenericValue paymentPref = (GenericValue) payments.next();            
+            
+            // look up the payment configuration settings                                   
+            String serviceName = null;
+            String paymentConfig = null;
+            
+            // get the payment settings i.e. serviceName and config properties file name
+            GenericValue paymentSettings = getPaymentSettings(orh.getOrderHeader(), paymentPref, RELEASE_SERVICE_TYPE, false);            
+            if (paymentSettings != null) {
+                paymentConfig = paymentSettings.getString("paymentPropertiesPath");
+                serviceName = paymentSettings.getString("paymentService");
+                if (serviceName == null) {
+                    Debug.logError("Service name is null for payment setting; cannot process for : " + paymentPref, module);                   
+                }                                            
+            } else {
+                Debug.logError("Invalid payment settings entity, no payment settings found for : " + paymentPref, module);                                            
+            }
+            
+            if (paymentConfig == null || paymentConfig.length() == 0) {
+                paymentConfig = "payment.properties";
+            }            
+            
+            Map releaseContext = new HashMap();
+            releaseContext.put("orderPaymentPreference", paymentPref);
+            releaseContext.put("currency", currency);
+            releaseContext.put("paymentConfig", paymentConfig);
+            
+            // run the defined service
+            Map releaseResult = null;
+            try {
+                releaseResult = dispatcher.runSync(serviceName, releaseContext);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problem releasing payment", module);
+            }
+            
+            Boolean releaseResponse = (Boolean) releaseResult.get("releaseResult");
+            if (releaseResponse != null && releaseResponse.booleanValue()) {
+                String refNum = (String) releaseResult.get("releaseRefNum");
+                paymentPref.set("cancelRefNum", refNum);
+                paymentPref.set("statusId", "PAYMENT_CANCELLED");
+                try {
+                    paymentPref.store();
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Problem storing updated payment preference; authorization was released!", module);
+                }
+                finished.add(paymentPref);
+            } else {
+                Debug.logError("Release failed for pref : " + paymentPref, module);
+            }
+        }
+        
+        result = ServiceUtil.returnSuccess();
+        if (finished.size() == paymentPrefs.size()) {
+            result.put("processResult", "COMPLETE");
+        } else {
+            result.put("processResult", "FAILED");
+        }   
+                 
+        return result; 
+    }    
            
     /**
      * Captures payments through service calls to the defined processing service for the ProductStore/PaymentMethodType
@@ -397,115 +511,7 @@ public class PaymentGatewayServices {
             return ServiceUtil.returnError("Trouble running captureOrderPayments service");
         }                
     }
-    
-    /**
-     * 
-     * Releases authorizations through service calls to the defined processing service for the ProductStore/PaymentMethodType
-     * @return COMPLETE|FAILED|ERROR for complete processing of ALL payments.
-     */
-    public static Map releaseOrderPayments(DispatchContext dctx, Map context) {
-        GenericDelegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        String orderId = (String) context.get("orderId"); 
-        String invoiceId = (String) context.get("invoiceId");
-        Double captureAmount = (Double) context.get("captureAmount");                         
-              
-        Map result = new HashMap();               
-                
-        // get the order header and payment preferences
-        GenericValue orderHeader = null;
-        List paymentPrefs = null;
-
-        try {                       
-            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-            
-            // get the payment prefs
-            Map lookupMap = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_AUTHORIZED");            
-            paymentPrefs = delegator.findByAnd("OrderPaymentPreference", lookupMap);
-        } catch (GenericEntityException gee) {
-            Debug.logError(gee, "Problems getting entity record(s), see stack trace", module);
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + gee.getMessage() + ").");
-            return result;
-        }
-
-        // error if no order was found
-        if (orderHeader == null) {
-            return ServiceUtil.returnError("Could not find OrderHeader with orderId: " + orderId + "; not processing payments.");
-        }  
-                                                                   
-        // return complete if no payment prefs were found
-        if (paymentPrefs == null || paymentPrefs.size() == 0) {
-            Debug.logWarning("No orderPaymentPreferences available to capture", module);
-            result.put("processResult", "COMPLETE");
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-            return result;   
-        }
         
-        OrderReadHelper orh = new OrderReadHelper(orderHeader);
-        String productStoreId = orh.getProductStoreId();
-        String currency = orh.getCurrency();
-        
-        // iterate over the prefs and release each one
-        List finished = new ArrayList();
-        Iterator payments = paymentPrefs.iterator();
-        while (payments.hasNext()) {
-            GenericValue paymentPref = (GenericValue) payments.next();            
-            
-            // look up the payment configuration settings                                   
-            String serviceName = null;
-            String paymentConfig = null;
-            
-            // get the payment settings i.e. serviceName and config properties file name
-            GenericValue paymentSettings = getPaymentSettings(orh.getOrderHeader(), paymentPref, RELEASE_SERVICE_TYPE);            
-            if (paymentSettings != null) {
-                paymentConfig = paymentSettings.getString("paymentPropertiesPath");
-                serviceName = paymentSettings.getString("paymentService");
-                if (serviceName == null) {
-                    Debug.logError("Service name is null for payment setting; cannot process for : " + paymentPref, module);                   
-                }                                            
-            } else {
-                Debug.logError("Invalid payment settings entity, no payment settings found for : " + paymentPref, module);                                            
-            }
-            
-            if (paymentConfig == null || paymentConfig.length() == 0) {
-                paymentConfig = "payment.properties";
-            }            
-            
-            Map releaseContext = new HashMap();
-            releaseContext.put("orderPaymentPreference", paymentPref);
-            releaseContext.put("currency", currency);
-            releaseContext.put("paymentConfig", paymentConfig);
-            
-            // run the defined service
-            Map releaseResult = null;
-            try {
-                releaseResult = dispatcher.runSync(serviceName, releaseContext);
-            } catch (GenericServiceException e) {
-                Debug.logError(e, "Problem releasing payment", module);
-            }
-            
-            Boolean releaseResponse = (Boolean) releaseResult.get("releaseResult");
-            if (releaseResponse != null && releaseResponse.booleanValue()) {
-                String refNum = (String) releaseResult.get("releaseRefNum");
-                paymentPref.set("cancelRefNum", refNum);
-                paymentPref.set("statusId", "PAYMENT_CANCELLED");
-                try {
-                    paymentPref.store();
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Problem storing updated payment preference; authorization was released!", module);
-                }
-            } else {
-                Debug.logError("Release failed for pref : " + paymentPref, module);
-            }
-        }        
-        
-        result = ServiceUtil.returnSuccess();
-        result.put("processResult", "COMPLETE");     
-        return result; 
-    }
-    
     /**
      * Captures payments through service calls to the defined processing service for the ProductStore/PaymentMethodType
      * @return COMPLETE|FAILED|ERROR for complete processing of ALL payment methods.
@@ -554,7 +560,21 @@ public class PaymentGatewayServices {
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
         double orderTotal = orh.getOrderGrandTotal();
         double totalPayments = PaymentWorker.getPaymentsTotal(orh.getOrderPayments());
-        double remainingTotal = orderTotal - totalPayments;             
+        double remainingTotal = orderTotal - totalPayments;
+        
+        // re-format the remaining total
+        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
+        DecimalFormat formatter = new DecimalFormat(currencyFormat);
+        String remainingTotalString = formatter.format(remainingTotal);
+        Double remaining = null;
+        try {
+            remaining = (Double) formatter.parse(remainingTotalString);
+        } catch (ParseException e) {
+            Debug.logError(e, "Problem getting parsed remaining total", module);
+            return ServiceUtil.returnError("ERROR: Cannot parse grand total from formatted string; see logs");
+        }
+        remainingTotal = remaining.doubleValue();
+                                   
         if (captureAmount == null) {         
             captureAmount = new Double(remainingTotal);
         }
@@ -676,7 +696,7 @@ public class PaymentGatewayServices {
         String paymentConfig = null;
             
         // get the payment settings i.e. serviceName and config properties file name
-        GenericValue paymentSettings = getPaymentSettings(orh.getOrderHeader(), paymentPref, CAPTURE_SERVICE_TYPE);            
+        GenericValue paymentSettings = getPaymentSettings(orh.getOrderHeader(), paymentPref, CAPTURE_SERVICE_TYPE, false);            
         if (paymentSettings != null) {
             paymentConfig = paymentSettings.getString("paymentPropertiesPath");
             serviceName = paymentSettings.getString("paymentService");
@@ -894,7 +914,7 @@ public class PaymentGatewayServices {
         
         GenericValue paymentSettings = null;
         if (orderHeader != null) {
-            paymentSettings = getPaymentSettings(orderHeader, paymentPref, REFUND_SERVICE_TYPE);             
+            paymentSettings = getPaymentSettings(orderHeader, paymentPref, REFUND_SERVICE_TYPE, false);             
         }
         
         if (paymentSettings != null) {
