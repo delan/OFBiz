@@ -521,8 +521,10 @@ public class SqlJdbcUtil {
                     Object obj = null;
   
                     Blob blobLocator = rs.getBlob(ind);
-                    InputStream binaryInput = blobLocator.getBinaryStream();
-     
+                    InputStream binaryInput = null;
+                    if (blobLocator != null) {
+                        binaryInput = blobLocator.getBinaryStream();
+                    }
                     if (null != binaryInput) {
                         try {
                             ObjectInputStream in = new ObjectInputStream(binaryInput);
