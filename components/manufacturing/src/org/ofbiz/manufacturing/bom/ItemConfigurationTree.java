@@ -218,11 +218,21 @@ public class ItemConfigurationTree {
      * and it collects info of its nodes in the ArrayList.
      * Method used for bom breakdown (explosion/implosion).
      * @param arr The ArrayList used to collect tree info.
+     * @param initialDepth The depth of the root node.
+     */    
+    public void print(ArrayList arr, int initialDepth) {
+        if (root != null) {
+            root.print(arr, getRootQuantity(), initialDepth);
+        }
+    }
+    
+    /** It visits the in-memory tree that represents a bill of materials
+     * and it collects info of its nodes in the ArrayList.
+     * Method used for bom breakdown (explosion/implosion).
+     * @param arr The ArrayList used to collect tree info.
      */    
     public void print(ArrayList arr) {
-        if (root != null) {
-            root.print(arr, getRootQuantity(), 0);
-        }
+        print(arr, 0);
     }
 
     /** It visits the in-memory tree that represents a bill of materials

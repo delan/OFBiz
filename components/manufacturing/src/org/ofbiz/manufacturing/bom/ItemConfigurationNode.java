@@ -391,7 +391,7 @@ public class ItemConfigurationNode {
     }
 
     public void isConfigured(ArrayList arr) {
-        // First of all we visit the corrent node.
+        // First of all we visit the current node.
         if (isVirtual()) {
             arr.add(this);
         }
