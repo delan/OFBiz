@@ -22,7 +22,7 @@
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski) 
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -108,7 +108,7 @@
                           <td colspan="2">&nbsp;&nbsp;&nbsp;</td>
                           <td align="right"><div class="tableheadtext">${uiLabelMap.PartyPartyId}</div></td>
                           <td><input type="text" name="partyId" class="inputBox" size="30">
-							<a href="javascript:call_fieldlookup(document.partyform.partyId,'<@ofbizUrl>/fieldLookup</@ofbizUrl>', 'lookupParty');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>                          
+							<a href="javascript:call_fieldlookup2(document.partyform.partyId,'<@ofbizUrl>/LookupPartyName</@ofbizUrl>', 'lookupParty');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>                          
                           </td>
                           <td align="right"><div class="tableheadtext">${uiLabelMap.PartyRoleTypeId}</div></td>
                           <td>
