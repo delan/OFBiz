@@ -60,14 +60,14 @@
                 <set field="title" value="List Fixed Assets"/>
                 <set field="page.headerItem" value="ListFixedAssets"/>
                 <set field="page.tabButtonItem" value="ListFixedAssets"/>
-                <entity-condition entity-name="FixedAsset" list-name="fixedAssets" >
-                                    <condition-list>
-                    <condition-expr field-name="fixedAssetId" operator="greater" value=" " />
-                                        <condition-expr field-name="fixedAssetTypeId" operator="not-equals" value="GROUP_EQUIPMENT"/>
-                                    </condition-list>
+                <entity-condition entity-name="FixedAsset" list-name="fixedAssets">
+                    <!-- <condition-list>
+                        <condition-expr field-name="fixedAssetId" operator="greater" value=" "/>
+                        <!- - <condition-expr field-name="fixedAssetTypeId" operator="not-equals" value="GROUP_EQUIPMENT"/> - ->
+                    </condition-list> -->
                 </entity-condition>
             </actions>
-                    <widgets>
+            <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator">
                     <decorator-section name="body">
                         <container>
