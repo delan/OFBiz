@@ -39,7 +39,7 @@
 
 <%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
 
-<%
+<%  Debug.logError("Getting Headers");
     Collection orderHeaderList = null;
     // search by status info
     String listStatusId = request.getParameter("listStatusId");
@@ -61,7 +61,11 @@
                 GenericValue v = (GenericValue) i.next();
                 exprs.add(new EntityExpr("orderId", EntityOperator.EQUALS, v.getString("orderId")));
             }
-            orderHeaderList = delegator.findByOr("OrderHeader", exprs, UtilMisc.toList("-orderDate"));
+            if (exprs.size() > 0) {
+                try {
+                orderHeaderList = delegator.findByOr("OrderHeader", exprs, UtilMisc.toList("-orderDate"));
+                } catch (Throwable t) { Debug.logError(t); }
+            }
         }
     } else if (minDate != null || maxDate != null) {
         // lookup by date
