@@ -255,7 +255,7 @@ public class CategoryEvents {
                 return "error";
             }
             
-            productCategoryMember.set("thruDate", thruDate, false);
+            productCategoryMember.set("thruDate", thruDate, (thruDateStr != null));
             productCategoryMember.set("comments", request.getParameter("COMMENTS"), false);
             //if an empty string was passed, go ahead and set sequenceNum to null, otherwise don't
             productCategoryMember.set("sequenceNum", sequenceNum, (sequenceNumStr != null));
