@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.2
 -->
 
@@ -34,9 +34,9 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 
     <div class="head1">${uiLabelMap.ProductInventoryItemsFor} <span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
 
-    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
-    <a href="<@ofbizUrl>/EditInventoryItem?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">
-    [${uiLabelMap.ProductCreateNewInventoryItemFacility}]</a>
+    <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
+    <a href="<@ofbizUrl>EditInventoryItem?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewInventoryItemFacility}]</a>
+    <a href="<@ofbizUrl>ViewFacilityInventoryByProduct?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[View Inventory By Product]</a>
 
     <#if facilityInventoryItems?exists && (facilityInventoryItems.size() > 0)>
         <table border="0" width="100%" cellpadding="2">

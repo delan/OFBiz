@@ -159,6 +159,10 @@
         <response name="success" type="view" value="EditFacilityInventoryItems"/>
         <response name="error" type="view" value="EditFacilityInventoryItems"/>
     </request-map> -->
+    <request-map uri="ViewFacilityInventoryByProduct">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewFacilityInventoryByProduct"/>
+    </request-map>
 
     <request-map uri="FindFacilityTransfers">
         <security https="true" auth="true"/>
@@ -775,6 +779,7 @@
     <view-map name="FindFacilityLocation" type="jpublish" page="/facility/FindFacilityLocation.ftl"/>
     <view-map name="EditFacilityLocation" type="jpublish" page="/facility/EditFacilityLocation.ftl"/>
     <view-map name="EditFacilityInventoryItems" type="jpublish" page="/facility/EditFacilityInventoryItems.ftl"/>
+    <view-map name="ViewFacilityInventoryByProduct" type="jpublish" page="/facility/ViewFacilityInventoryByProduct.ftl"/>
     <view-map name="EditFacilityGroups" type="jpublish" page="/facility/EditFacilityGroups.ftl"/>
     <view-map name="EditFacilityRoles" type="jpublish" page="/facility/EditFacilityRoles.ftl"/>
 
