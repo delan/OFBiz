@@ -300,7 +300,7 @@ public class ContentManagementServices {
                     newDrContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
                     ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
                     String mimeTypeId = (String) newDrContext.get("mimeTypeId");
-                    if (byteWrapper != null && (mimeTypeId == null || (mimeTypeId.indexOf("image") > 0))) {
+                    if (byteWrapper != null && (mimeTypeId == null || (mimeTypeId.indexOf("image") >= 0))) {
                         mimeTypeId = (String) context.get("_imageData_contentType");
                         String fileName = (String) context.get("_imageData_fileName");
                         newDrContext.put("objectInfo", fileName);
