@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.3 2003/09/20 18:37:04 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.4 2003/12/04 01:51:46 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.base.util.*;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ModelEntity implements Comparable {
@@ -44,7 +44,8 @@ public class ModelEntity implements Comparable {
 
     /** The name of the time stamp field for locking/syncronization */
     public static final String STAMP_FIELD = "lastUpdatedStamp";
-
+    public static final String STAMP_TX_FIELD = "lastUpdatedTxStamp";
+    
     /** The ModelReader that created this Entity */
     protected ModelReader modelReader = null;
 
