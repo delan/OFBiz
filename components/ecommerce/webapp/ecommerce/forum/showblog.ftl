@@ -30,7 +30,7 @@
     </td>
     <td width="40" valign="bottom">
 <@checkPermission subContentId=subContentId targetOperation="CONTENT_CREATE|CONTENT_RESPOND" contentPurposeList="RESPONSE" >
-<a class="tabButton" href="<@ofbizUrl>/AddResponse?contentIdTo=${subContentId}&amp;nodeTrailCsv=${context.nodeTrailCsv?if_exists}</@ofbizUrl>" >Respond</a>
+<a class="tabButton" href="<@ofbizUrl>/AddResponse?contentIdTo=${subContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >Respond</a>
 </@checkPermission>
 <br/>
 
@@ -40,7 +40,7 @@
 <hr/>
 <#--
 <@checkPermission mode="not-equals" subContentId=subContentId targetOperation="CONTENT_CREATE|CONTENT_RESPOND" contentPurposeList="RESPONSE" >
-            ${context.permissionErrorMsg?if_exists}
+            ${permissionErrorMsg?if_exists}
 </@checkPermission>
 -->
 
@@ -61,7 +61,7 @@
                             followWhen="contentAssocTypeId != null && contentAssocTypeId.equals(\"RESPONSE\")"
                             wrapTemplateId=""
                         >
-    <#assign indentStr=context.indent?default("0")/>
+    <#assign indentStr=indent?default("0")/>
     <#assign indent=indentStr?number/>
     <#if 1 < indent >
         <#assign fillRange=1..indent/>
@@ -70,18 +70,18 @@
             <#assign indentFill = indentFill + "&nbsp;&nbsp;&nbsp;&nbsp;" />
         </#list>
         <#assign thisContentId = ""/>
-        <#if context.nodeTrailCsv?exists>
-            <#assign idList = context.nodeTrailCsv?split(",")/>
+        <#if nodeTrailCsv?exists>
+            <#assign idList = nodeTrailCsv?split(",")/>
             <#if 0 < idList?size >
                 <#assign thisContentId = idList?last>
             </#if>
         </#if>
-        <#if context.content?exists>
+        <#if content?exists>
   <tr>
   <td class="tabletext">
         ${indentFill}
-        <a class="tabButton" href="<@ofbizUrl>/ViewBlog?contentId=${thisContentId}&amp;nodeTrailCsv=${context.nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
-                     ${context.content.contentId?if_exists}-${context.content.description?if_exists}<br/>
+        <a class="tabButton" href="<@ofbizUrl>/ViewBlog?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
+                     ${content.contentId?if_exists}-${content.description?if_exists}<br/>
   </td>
   </tr>
         </#if>
@@ -97,7 +97,7 @@
 
 <#-- not used, will be deleted -->
 <#macro getCurrentContent >
-    <#assign globalNodeTrail=context.globalNodeTrail/>
+    <#assign globalNodeTrail=globalNodeTrail/>
     <#if globalNodeTrail?exists>
         <#assign currentNode=globalNodeTrail?last/>
         <#if currentNode?exists>
@@ -112,7 +112,7 @@
                         >
                 <#assign description=currentValue.description?default("No description")/>
 description[${currentValue.contentId?if_exists}]:${description}
-<a class="tabButton" href="<@ofbizUrl>/ViewBlog?contentId=${thisContentId}&amp;nodeTrailCsv=${context.nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
+<a class="tabButton" href="<@ofbizUrl>/ViewBlog?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
                    </@traverseSubContentCache >
                 </@wrapSubContentCache>
             </#if>
