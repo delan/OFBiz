@@ -142,6 +142,7 @@ public class InputValue {
             inputValue = defaultStr;
 
         if (fullattrs) {
+            inputValue = UtilFormatOut.replaceString(inputValue, "\"", "&quot;");
             pageContext.getOut().print("name=\"" + paramName + "\" value=\"" +
                     inputValue + "\"");
         } else {
