@@ -108,6 +108,7 @@
       <mkdir dir="${build.dir}/share/META-INF" />
       <mkdir dir="${build.dir}/crypto/META-INF" />
       <mkdir dir="${build.dir}/workflow/META-INF" />
+      <mkdir dir="${build.dir}/rules/META-INF" />
       <mkdir dir="${lib.dir}" />
     </target>
 	
@@ -138,6 +139,10 @@
     		<src path="${src.dir}/workflow" />    
         </javac>
 
+    	<javac destdir="${build.dir}/rules" classpath="${classpath}:${build.dir}/share:{$build.dir}/webapp">
+    		<src path="${src.dir}/rules" />    
+        </javac>
+
 <!--
   	<javac destdir="${build.dir}/crypto" classpath="${classpath}:${build.dir}/share">
     		<src path="${src.dir}/crypto" />
@@ -153,8 +158,12 @@
             basedir="${build.dir}/webapp" />
         <jar jarfile="${lib.dir}/${name}-workflow.jar"
             basedir="${build.dir}/workflow" />
+        <jar jarfile="${lib.dir}/${name}-rules.jar"
+            basedir="${build.dir}/rules" />
+<!--
         <jar jarfile="${lib.dir}/${name}-crypto.jar"
             basedir="${build.dir}/crypto" />
+-->
     </target>
 	
     <!-- ================================================================== -->
@@ -190,6 +199,7 @@
             <sourcepath path="${src.dir}/share" />
             <sourcepath path="${src.dir}/webapp" />
             <sourcepath path="${src.dir}/workflow" />
+            <sourcepath path="${src.dir}/rules" />
             <sourcepath path="${src.dir}/ejb" />
             <sourcepath path="${src.dir}/crypto" />
         </javadoc>
