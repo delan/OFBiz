@@ -68,7 +68,7 @@ public class PropertyToField extends MethodOperation {
         if (noLocale) {
             value = UtilProperties.getPropertyValue(resource, property);
         } else {
-            value = UtilProperties.getPropertyValue(resource, property, methodContext.getLocale());
+            value = UtilProperties.getMessage(resource, property, methodContext.getLocale());
         }
 
         if (value == null || value.length() == 0) {

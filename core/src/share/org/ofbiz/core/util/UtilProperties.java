@@ -312,7 +312,7 @@ public class UtilProperties {
      * @param locale The locale that the given resource will correspond to
      * @return The value of the property in the properties file
      */
-    public static String getPropertyValue(String resource, String name, Locale locale) {
+    public static String getMessage(String resource, String name, Locale locale) {
         if (resource == null || resource.length() <= 0) return "";
         if (name == null || name.length() <= 0) return "";
         if (locale == null) locale = Locale.getDefault();
@@ -352,8 +352,8 @@ public class UtilProperties {
      * @param arguments An array of Objects to insert into the message argument place holders
      * @return The value of the property in the properties file
      */
-    public static String getPropertyValue(String resource, String name, Locale locale, Object[] arguments) {
-        String value = getPropertyValue(resource, name, locale);
+    public static String getMessage(String resource, String name, Locale locale, Object[] arguments) {
+        String value = getMessage(resource, name, locale);
         
         if (value == null || value.length() == 0) {
             return "";
@@ -373,8 +373,8 @@ public class UtilProperties {
      * @param arguments A list of Objects to insert into the message argument place holders
      * @return The value of the property in the properties file
      */
-    public static String getPropertyValue(String resource, String name, Locale locale, List arguments) {
-        String value = getPropertyValue(resource, name, locale);
+    public static String getMessage(String resource, String name, Locale locale, List arguments) {
+        String value = getMessage(resource, name, locale);
         
         if (value == null || value.length() == 0) {
             return "";
