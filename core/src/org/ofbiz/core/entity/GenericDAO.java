@@ -234,10 +234,14 @@ public class GenericDAO
       while(entities != null && entities.hasNext())
       {
         GenericEntity curEntity = (GenericEntity)entities.next();
-        if(select(curEntity)) singleUpdate(curEntity, curEntity.getModelEntity(), curEntity.getModelEntity().nopks, connection);
-        else singleInsert(curEntity, curEntity.getModelEntity(), curEntity.getModelEntity().fields, connection);
+        singleStore(curEntity, connection);
       }
     }
+  }
+  
+  private void singleStore(GenericEntity entity, Connection connection) throws SQLException {
+    if(select(entity)) singleUpdate(entity, entity.getModelEntity(), entity.getModelEntity().nopks, connection);
+    else singleInsert(entity, entity.getModelEntity(), entity.getModelEntity().fields, connection);
   }
   
 /* ====================================================================== */
