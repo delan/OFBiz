@@ -62,7 +62,22 @@ public class ContextSecurityFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper((HttpServletResponse) response);
 
-        //test to see if we have come through the control servlet already, if not do the processing
+        // check if we are told to redirect everthing
+        String redirectAllTo = config.getInitParameter("forceRedirectAll");
+        if (redirectAllTo != null && redirectAllTo.length() > 0) {
+            if (request.getAttribute("_FORCE_REDIRECT_") == null) {
+                request.setAttribute("_FORCE_REDIRECT_", "true");
+                Debug.logWarning("Redirecting user to: " + redirectAllTo, module);
+                //wrapper.sendRedirect(httpRequest.getContextPath() + redirectAllTo);
+                request.getRequestDispatcher(redirectAllTo).forward(request, response);
+                return;
+            } else {
+                chain.doFilter(request, response);
+                return;
+            }
+        }
+
+        // test to see if we have come through the control servlet already, if not do the processing
         if (request.getAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET) == null) {
             String allowedPath = config.getInitParameter("allowedPaths");
             String redirectPath = config.getInitParameter("redirectPath");
