@@ -17,7 +17,8 @@
 <%
   List featureOrder = new LinkedList((Collection) pageContext.getAttribute("featureSet"));
   Map variantTree = (Map) pageContext.getAttribute("variantTree");
-  Debug.logInfo("Setup variables: " + featureOrder + " / " + variantTree);
+  Map imageMap = (Map) pageContext.getAttribute("variantSample");
+  Debug.logInfo("Setup variables: " + featureOrder + " / " + variantTree + " / " + imageMap);
 %>
 
 
@@ -61,6 +62,7 @@
 
 <script language="JavaScript">
 <!--
+var IMG = new Array(<%=variantTree.size()%>);
 var OPT = new Array(<%=featureOrder.size()%>);
 <% for (int li = 0; li < featureOrder.size(); li++) { %>
   OPT[<%=li%>] = "<%=featureOrder.get(li)%>";
@@ -87,6 +89,7 @@ function list<%=topLevelName%>() {
 
   %>
      document.forms["addform"].elements["<%=topLevelName%>"].options[<%=counter+1%>] = new Option("<%=key%>","<%=opt%>");
+     IMG[<%=counter%>] = "<%=((GenericValue) imageMap.get(key)).getString("largeImageUrl")%>";
   <%
             counter++;
         }
@@ -120,25 +123,24 @@ function findIndex(name) {
   return -1;
 }
 
-function fixList(list) {
-  //alert("FixList Running...");
-  currentOrderIndex = findIndex(list.name);
-  selectedIndex = list.selectedIndex;
-  //alert("FixList: " + currentOrderIndex + " / " + selectedIndex);
-  if (currentOrderIndex < 0 || selectedIndex < 1)
+function getList(name, value) {
+  currentOrderIndex = findIndex(name);
+  if (currentOrderIndex < 0 || value == "")
     return;
   if (currentOrderIndex < (OPT.length - 1)) {
-    eval("list" + OPT[currentOrderIndex+1] + list.options[list.selectedIndex].value + "()");
+    if (IMG[value] != null) {
+      document.images['mainImage'].src = IMG[value];
+    }
+    eval("list" + OPT[currentOrderIndex+1] + value + "()");
     document.addform.add_product_id.value = 'NULL';
   } else {
-    //document.addform.product_id.value = list.options[list.selectedIndex].value;
-    document.addform.add_product_id.value = list.options[list.selectedIndex].value;
+    document.addform.add_product_id.value = value;
   }
 }
-
+    
 function addItem() {
   if (document.addform.add_product_id.value == 'NULL') {
-    alert("Please select from the list of options.");
+    alert("Please enter all the required information.");
     return;
   } else {
     document.addform.submit();
@@ -168,7 +170,7 @@ function addItem() {
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td align="left" valign="top" width="0">
-        <ofbiz:entityfield attribute="productValue" field="largeImageUrl" prefix="<img src='" suffix="' vspace='5' hspace='5' border='1' width='200' align=left>"/>
+        <ofbiz:entityfield attribute="productValue" field="largeImageUrl" prefix="<img src='" suffix="' name='mainImage' vspace='5' hspace='5' border='1' width='200' align=left>"/>
       </td>
       <td align="right" valign="top">
         <div class="head2"><ofbiz:entityfield attribute="productValue" field="productName"/></div>
@@ -196,7 +198,7 @@ function addItem() {
             <ofbiz:iterator name="currentType" property="featureSet" type="java.lang.String">
               <%Debug.logInfo("CurrentType: " + currentType);%>
               <div class="tabletext">
-                <select name="<%=currentType%>" onChange="fixList(this)">
+                <select name="<%=currentType%>" onChange="getList(this.name, this.options[this.selectedIndex].value)">
                   <option><%=currentType%></option>
                 </select>
               </div>
