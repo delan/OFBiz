@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.ofbiz.core.start.StartupException;
 import org.ofbiz.core.start.StartupLoader;
+import org.ofbiz.core.util.Debug;
 
 /**
  * ContainerLoader - StartupLoader for the container
@@ -48,7 +49,9 @@ public class ContainerLoader implements StartupLoader {
     /**
      * @see org.ofbiz.core.start.StartupLoader#load(java.lang.String)
      */
-    public void load(String args[]) throws StartupException {        
+    public void load(String args[]) throws StartupException {
+        Debug.logInfo("[Startup] ContainerLoader : " + args, module);
+              
         // get the master ofbiz configuration file
         String configFileLocation = null;
         if (args[1] != null) {
