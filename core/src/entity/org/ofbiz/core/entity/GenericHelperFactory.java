@@ -38,7 +38,7 @@ import org.ofbiz.core.entity.config.*;
  */
 public class GenericHelperFactory {
 
-    static UtilCache helperCache = new UtilCache("GenericHelpers", 0, 0);
+    static UtilCache helperCache = new UtilCache("entity.GenericHelpers", 0, 0);
 
     public static GenericHelper getHelper(String helperName) {
         GenericHelper helper = (GenericHelper) helperCache.get(helperName);

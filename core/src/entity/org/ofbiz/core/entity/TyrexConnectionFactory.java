@@ -47,7 +47,7 @@ import tyrex.resource.jdbc.xa.*;
  */
 public class TyrexConnectionFactory {
 
-    static UtilCache dsCache = new UtilCache("TyrexDataSources", 0, 0);
+    static UtilCache dsCache = new UtilCache("entity.TyrexDataSources", 0, 0);
 
     public static Connection getConnection(String helperName, Element inlineJdbcElement) throws SQLException, GenericEntityException {
         boolean usingTyrex = true;

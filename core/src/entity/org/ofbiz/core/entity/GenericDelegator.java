@@ -102,9 +102,9 @@ public class GenericDelegator {
             modelGroupReader = ModelGroupReader.getModelGroupReader(delegatorName);
         }
 
-        primaryKeyCache = new UtilCache("FindByPrimaryKey-" + delegatorName);
-        allCache = new UtilCache("FindAll-" + delegatorName);
-        andCache = new UtilCache("FindByAnd-" + delegatorName);
+        primaryKeyCache = new UtilCache("entity.FindByPrimaryKey." + delegatorName);
+        allCache = new UtilCache("entity.FindAll." + delegatorName);
+        andCache = new UtilCache("entity.FindByAnd." + delegatorName);
 
         //initialize helpers by group
         Iterator groups = UtilMisc.toIterator(getModelGroupReader().getGroupNames());

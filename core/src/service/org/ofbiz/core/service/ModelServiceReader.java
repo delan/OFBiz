@@ -48,8 +48,8 @@ public class ModelServiceReader {
 
     public static final String module = ModelServiceReader.class.getName();
 
-    protected static UtilCache readersUrl = new UtilCache("ModelServiceReader-ByURL", 0, 0);
-    protected static UtilCache readersLoader = new UtilCache("ModelServiceReader-ByResourceLoader", 0, 0);
+    protected static UtilCache readersUrl = new UtilCache("service.ModelServiceReader.ByURL", 0, 0);
+    protected static UtilCache readersLoader = new UtilCache("service.ModelServiceReader.ByResourceLoader", 0, 0);
 
     /** is either from a URL or from a ResourceLoader (through the ResourceHandler) */
     protected boolean isFromURL;

@@ -39,12 +39,12 @@ public class UtilProperties {
     /** An instance of the generic cache for storing the ResourceBundle 
      *  corresponding to each properties file keyed by a String for the resource location
      */
-    static public UtilCache resCache = new UtilCache("UtilPropertiesResourceCache");
+    static public UtilCache resCache = new UtilCache("properties.UtilPropertiesResourceCache");
 
     /** An instance of the generic cache for storing the ResourceBundle 
      *  corresponding to each properties file keyed by a URL object
      */
-    static public UtilCache urlCache = new UtilCache("UtilPropertiesUrlCache");
+    static public UtilCache urlCache = new UtilCache("properties.UtilPropertiesUrlCache");
 
     /** Compares the specified property to the compareString, returns true if they are the same, false otherwise
      * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'

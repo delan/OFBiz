@@ -42,10 +42,10 @@ public class ConfigXMLReader {
 
     public static final String module = ConfigXMLReader.class.getName();
 
-    public static UtilCache requestCache = new UtilCache("ConfigXMLReader-Request");
-    public static UtilCache viewCache = new UtilCache("ConfigXMLReader-View");
-    public static UtilCache headCache = new UtilCache("ConfigXMLReader-Config");
-    public static UtilCache handlerCache = new UtilCache("ConfigXMLReader-Handler");
+    public static UtilCache requestCache = new UtilCache("webapp.ConfigXMLReader.Request");
+    public static UtilCache viewCache = new UtilCache("webapp.ConfigXMLReader.View");
+    public static UtilCache headCache = new UtilCache("webapp.ConfigXMLReader.Config");
+    public static UtilCache handlerCache = new UtilCache("webapp.ConfigXMLReader.Handler");
 
 
     /** Site Config Variables */

@@ -41,7 +41,7 @@ import org.ofbiz.core.entity.config.*;
  * Created on Sep 21, 2001
  */
 public class JNDIContextFactory {
-    static UtilCache contexts = new UtilCache("JNDIContexts", 0, 0);
+    static UtilCache contexts = new UtilCache("entity.JNDIContexts", 0, 0);
 
     /** Return the initial context according to the entityengine.xml parameters that correspond to the given prefix
      * @return the JNDI initial context

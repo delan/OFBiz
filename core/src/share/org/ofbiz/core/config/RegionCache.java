@@ -37,7 +37,7 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class RegionCache {
-    protected static UtilCache regionCache = new UtilCache("Config-Regions", 0, 0);
+    protected static UtilCache regionCache = new UtilCache("webapp.Regions.Config", 0, 0);
 
     public static Map getRegions(URL regionFile) {
         return (Map) regionCache.get(regionFile);

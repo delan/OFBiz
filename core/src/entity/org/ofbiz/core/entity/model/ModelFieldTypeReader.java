@@ -60,7 +60,7 @@ import org.ofbiz.core.entity.config.*;
 public class ModelFieldTypeReader {
 
     public static final String module = ModelFieldTypeReader.class.getName();
-    public static UtilCache readers = new UtilCache("ModelFieldTypeReader", 0, 0);
+    public static UtilCache readers = new UtilCache("entity.ModelFieldTypeReader", 0, 0);
 
     public Map fieldTypeCache = null;
 

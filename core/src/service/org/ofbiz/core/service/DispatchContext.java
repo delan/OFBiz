@@ -49,7 +49,7 @@ public class DispatchContext implements Serializable {
     public static final String module = DispatchContext.class.getName();
 
     protected static final String GLOBAL_KEY = "global.services";
-    protected static UtilCache modelService = new UtilCache("ModelServices", 0, 0);
+    protected static UtilCache modelService = new UtilCache("service.ModelServices", 0, 0);
 
     protected transient LocalDispatcher dispatcher;
     protected ClassLoader loader;

@@ -40,7 +40,7 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public abstract class ResourceLoader {
-    protected static UtilCache loaderCache = new UtilCache("ResourceLoaders", 0, 0);
+    protected static UtilCache loaderCache = new UtilCache("resource.ResourceLoaders", 0, 0);
     protected static Map docSaveMap = new HashMap();
 
     protected String name;

@@ -54,7 +54,7 @@ import org.ofbiz.core.entity.config.*;
 public class ModelReader {
 
     public static final String module = ModelReader.class.getName();
-    public static UtilCache readers = new UtilCache("ModelReader", 0, 0);
+    public static UtilCache readers = new UtilCache("entity.ModelReader", 0, 0);
 
     protected Map entityCache = null;
 

@@ -44,7 +44,7 @@ public class ConnectionFactory {
     //Debug module name
     public static final String module = ConnectionFactory.class.getName();
 
-    static UtilCache dsCache = new UtilCache("JNDIDataSources", 0, 0);
+    static UtilCache dsCache = new UtilCache("entity.JndiDataSources", 0, 0);
 
     public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
         //Debug.logVerbose("Getting a connection", module);

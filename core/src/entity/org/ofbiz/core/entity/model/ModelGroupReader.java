@@ -59,7 +59,7 @@ import org.ofbiz.core.entity.config.*;
 
 public class ModelGroupReader {
 
-    public static UtilCache readers = new UtilCache("ModelGroupReader", 0, 0);
+    public static UtilCache readers = new UtilCache("entity.ModelGroupReader", 0, 0);
 
     private Map groupCache = null;
     private Set groupNames = null;
