@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.12 2004/04/30 00:24:05 jonesde Exp $
+ * $Id: ModelViewEntity.java,v 1.13 2004/05/26 16:16:45 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -353,7 +353,7 @@ public class ModelViewEntity extends ModelEntity {
                 ModelEntity aliasedEntity = getAliasedEntity(alias.entityAlias, modelReader);
                 ModelField aliasedField = getAliasedField(aliasedEntity, alias.field, modelReader);
                 if (aliasedField == null) {
-                    Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelField for field name \"" +
+                    Debug.logError("[ModelViewEntity.populateFields (" + this.getEntityName() + ")] ERROR: could not find ModelField for field name \"" +
                         alias.field + "\" on entity with name: " + aliasedEntity.getEntityName(), module);
                     continue;
                 }
