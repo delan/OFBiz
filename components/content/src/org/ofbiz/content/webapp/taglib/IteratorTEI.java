@@ -1,5 +1,5 @@
 /*
- * $Id: IteratorTEI.java,v 1.1 2003/08/17 08:40:11 ajzeneski Exp $
+ * $Id: IteratorTEI.java,v 1.2 2003/08/18 18:32:07 ajzeneski Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ public class IteratorTEI extends TagExtraInfo {
         name = data.getAttributeString("name");
         className = data.getAttributeString("type");
         if (className == null)
-            className = "org.ofbiz.core.entity.GenericValue";
+            className = "org.ofbiz.entity.GenericValue";
 
         VariableInfo info =
             new VariableInfo(name, className, true, VariableInfo.NESTED);

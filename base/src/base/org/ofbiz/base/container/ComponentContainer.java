@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.7 2003/08/17 05:25:25 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.8 2003/08/18 18:32:07 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.base.util.*;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.7 $
+  *@version    $Revision: 1.8 $
  * @since      2.2
  */
 public class ComponentContainer implements Container {
@@ -51,7 +51,7 @@ public class ComponentContainer implements Container {
     protected Classpath classPath = null;    
 
     /**
-     * @see org.ofbiz.core.start.StartupContainer#start(java.lang.String)
+     * @see org.ofbiz.base.start.StartupContainer#start(java.lang.String)
      */
     public boolean start(String configFileLocation) throws ContainerException {
         if (classPath == null) {
@@ -204,7 +204,7 @@ public class ComponentContainer implements Container {
     }
     
     /**
-     * @see org.ofbiz.core.start.StartupContainer#stop()
+     * @see org.ofbiz.base.start.StartupContainer#stop()
      */
     public void stop() throws ContainerException {        
     }    

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectType.java,v 1.1 2003/08/15 20:23:19 ajzeneski Exp $
+ * $Id: ObjectType.java,v 1.2 2003/08/18 18:32:07 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import java.util.Map;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ObjectType {
@@ -638,9 +638,9 @@ public class ObjectType {
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
             }
-        } else if (obj.getClass().getName().equals("org.ofbiz.core.entity.GenericValue")) {
+        } else if (obj.getClass().getName().equals("org.ofbiz.entity.GenericValue")) {
             fromType = "GenericValue";            
-            if ("GenericValue".equals(type) || "org.ofbiz.core.entity.GenericValue".equals(type)) {
+            if ("GenericValue".equals(type) || "org.ofbiz.entity.GenericValue".equals(type)) {
                 return obj;
             } else if ("Map".equals(type) || "java.util.Map".equals(type)) {
                 return obj;           

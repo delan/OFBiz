@@ -1,5 +1,5 @@
 /*
- * $Id: IterateNextTEI.java,v 1.1 2003/08/17 08:40:11 ajzeneski Exp $
+ * $Id: IterateNextTEI.java,v 1.2 2003/08/18 18:32:07 ajzeneski Exp $
  *
  * <p><b>Title:</b> IterateNextTEI.java
  * <p><b>Description:</b> Extra-Info class for the IterateNextTag.
@@ -50,7 +50,7 @@ public class IterateNextTEI extends TagExtraInfo {
 
         className = data.getAttributeString("type");
         if (className == null)
-            className = "org.ofbiz.core.entity.GenericValue";
+            className = "org.ofbiz.entity.GenericValue";
 
         VariableInfo info =
             new VariableInfo(name, className, true, VariableInfo.NESTED);

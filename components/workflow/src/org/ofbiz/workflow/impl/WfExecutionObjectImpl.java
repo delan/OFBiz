@@ -1,5 +1,5 @@
 /*
- * $Id: WfExecutionObjectImpl.java,v 1.1 2003/08/17 09:29:34 ajzeneski Exp $
+ * $Id: WfExecutionObjectImpl.java,v 1.2 2003/08/18 18:32:07 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -69,7 +69,7 @@ import org.ofbiz.workflow.WfUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public abstract class WfExecutionObjectImpl implements WfExecutionObject {
@@ -706,7 +706,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         }
                                 
         // make sure we implement the TransitionCondition interface
-        if (!ObjectType.instanceOf(conditionObject, "org.ofbiz.core.workflow.TransitionCondition")) {
+        if (!ObjectType.instanceOf(conditionObject, "org.ofbiz.workflow.TransitionCondition")) {
             Debug.logError("Class " + className + " is not an instance of TransitionCondition", module);
             return false;
         }

@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE ofbiz-component PUBLIC "-//OFBiz//DTD Component Config//EN" "http://www.ofbiz.org/dtds/ofbiz-component.dtd">
+<?xml version="1.0"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 
-<!--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+<!-- 
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -20,14 +20,20 @@
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.6 2003/08/18 18:32:07 ajzeneski Exp $
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 -->
 
-<ofbiz-component name="security">
-    <resource-loader name="main" type="component"/>       
-    <classpath type="jar" location="build/lib/*"/>
-    <classpath type="dir" location="config"/>
-    <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
-    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>    
-</ofbiz-component>
+<web-app>
+  <display-name>Open For Business - demostore images</display-name>
+  <description>Demo Store Images for the Open For Business Project</description>
+
+  <session-config>
+    <session-timeout>1</session-timeout>    
+  </session-config>
+
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>main.jsp</welcome-file>
+  </welcome-file-list>
+
+</web-app>
