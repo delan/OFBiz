@@ -127,7 +127,8 @@ public class PaymentEvents {
     public static void clearAllPayments(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         trans.clearPayments();
-        pos.getInput().clear();
+        pos.getInput().clearFunction("CREDIT");
+        pos.getInput().clearFunction("CHECK");
         pos.refresh();
     }
 
