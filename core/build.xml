@@ -328,7 +328,7 @@
     <!-- ================================================================== -->
     <!-- JOTM/XAPool Test                                                   -->
     <!-- ================================================================== --> 
-    <target name="jotm-test" depends="classes">
+    <target name="jotm-test" depends="jar">
         <path id="jotm.class.path">
             <fileset dir="${extlib.dir}/common" includes="*.jar"/>
             <fileset dir="${extlib.dir}/jotm" includes="*.jar"/>
@@ -336,9 +336,7 @@
         </path>    
         <java classname="org.ofbiz.core.entity.JotmXaPoolTest" fork="true">
             <classpath>
-                <path refid="jotm.class.path"/>
-                <pathelement path="${build.dir}/share"/>
-                <pathelement path="${build.dir}/entity"/>
+                <path refid="jotm.class.path"/>               
             </classpath>
         </java>
         <delete dir="data"></delete>         
