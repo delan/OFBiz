@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchEvents.java,v 1.6 2004/04/11 08:28:22 jonesde Exp $
+ * $Id: ProductSearchEvents.java,v 1.7 2004/04/30 10:14:18 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.product.product.ProductSearch.ResultSortOrder;
  * Product Search Related Events
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.0
  */
 public class ProductSearchEvents {
@@ -343,11 +343,13 @@ public class ProductSearchEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         String visitId = VisitHandler.getVisitId(session);
 
-        List productSearchConstraintList = (List) session.getAttribute(ProductSearchSession.PRODUCT_SEARCH_CONSTRAINT_LIST);
+        List productSearchConstraintList = ProductSearchSession.ProductSearchOptions.getConstraintList(session);
         // if no constraints, don't do a search...
         if (productSearchConstraintList != null && productSearchConstraintList.size() > 0) {
-            ResultSortOrder resultSortOrder = ProductSearchSession.getResultSortOrder(session);
+            ResultSortOrder resultSortOrder = ProductSearchSession.ProductSearchOptions.getResultSortOrder(session);
+            ProductSearchSession.ProductSearchOptions.checkSaveSearchOptionsHistory(session);
             ProductSearchContext productSearchContext = new ProductSearchContext(delegator, visitId);
+
             productSearchContext.addProductSearchConstraints(productSearchConstraintList);
             productSearchContext.setResultSortOrder(resultSortOrder);
 
