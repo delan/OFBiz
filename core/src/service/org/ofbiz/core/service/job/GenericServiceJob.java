@@ -85,13 +85,23 @@ public class GenericServiceJob extends AbstractJob {
         }
 
         try {
-            ModelService modelService = dctx.getModelService(getServiceName());
-            ServiceDispatcher dispatcher = ServiceDispatcher.getInstance(dctx.getName(), dctx.getDelegator());
-            GenericEngine engine = GenericEngineFactory.getGenericEngine(modelService.engineName, dispatcher);
-            engine.setLoader(dctx.getName());
-            Map result = engine.runSync(modelService, getContext());
+            // get the dispatcher and invoke the service via runSync -- will run all ECAs
+            LocalDispatcher dispatcher = dctx.getDispatcher();
+            Map result = dispatcher.runSync(getServiceName(), getContext());
             if (requester != null)
                 requester.receiveResult(result);
+
+            // call the finish method
+            finish();
+
+            // commit the transaction if we started it.
+            if (trans && begunTransaction) {
+                try {
+                    TransactionUtil.commit();
+                } catch (GenericTransactionException te) {
+                    throw new GenericServiceException("Cannot commit transaction.", te.getNested());
+                }
+            }
         } catch (Exception e) {
             Debug.logError(e, "Service invocation error: " + e.getMessage(), module);
             e.printStackTrace();
@@ -99,19 +109,10 @@ public class GenericServiceJob extends AbstractJob {
                 try {
                     TransactionUtil.rollback();
                 } catch (GenericTransactionException te) {
-                    Debug.logError(te, module);
+                    Debug.logError(te, "Cannot rollback transaction", module);
                 }
             }
         }
-
-        if (trans && begunTransaction) {
-            try {
-                TransactionUtil.commit();
-            } catch (GenericTransactionException te) {
-                Debug.logError(te, module);
-            }
-        }
-        finish();
     }
 
     /**

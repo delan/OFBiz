@@ -127,8 +127,7 @@ public class ServiceDispatcher {
      * @throws ServiceAuthException
      * @throws GenericServiceException
      */
-    public Map runSync(String localName, ModelService service, Map context)
-            throws ServiceAuthException, GenericServiceException {
+    public Map runSync(String localName, ModelService service, Map context) throws GenericServiceException {
         // start the transaction
         boolean beganTrans = false;
         try {
@@ -145,38 +144,29 @@ public class ServiceDispatcher {
 
             context = checkAuth(localName, context, service);
             Object userLogin = context.get("userLogin");
-            if (service.auth && userLogin == null) {
-                try {
-                    TransactionUtil.rollback(beganTrans);
-                } catch (GenericTransactionException te) {
-                    Debug.logError(te, "Cannot rollback transaction");
-                }
+            if (service.auth && userLogin == null)
                 throw new ServiceAuthException("User authorization is required for this service");
-            }
 
             // setup the engine
             GenericEngine engine = getGenericEngine(service.engineName);
             engine.setLoader(localName);
 
             // pre-validate ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context);
+            if (eventMap != null)
+                ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context);
 
             // validate the context
             if (service.validate) {
                 try {
                     service.validate(context, ModelService.IN_PARAM);
                 } catch (ServiceValidationException e) {
-                    try {
-                        TransactionUtil.rollback(beganTrans);
-                    } catch (GenericTransactionException te) {
-                        Debug.logError(te, "Cannot rollback transaction");
-                    }
                     throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
                 }
             }
 
             // pre-invoke ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context);
+            if (eventMap != null)
+                ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context);
 
             if (Debug.verboseOn()) {
                 Debug.logVerbose("[ServiceDispatcher.runSync] : invoking service [" + service.location +
@@ -189,21 +179,18 @@ public class ServiceDispatcher {
 
             // validate the result
             if (service.validate) {
-                if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "out-validate", (DispatchContext) localContext.get(localName), context);
+                if (eventMap != null)
+                    ECAUtil.evalConditions(service.name, eventMap, "out-validate", (DispatchContext) localContext.get(localName), context);
                 try {
                     service.validate(result, ModelService.OUT_PARAM);
                 } catch (ServiceValidationException e) {
-                    try {
-                        TransactionUtil.rollback(beganTrans);
-                    } catch (GenericTransactionException te) {
-                        Debug.logError(te, "Cannot rollback transaction");
-                    }
                     throw new GenericServiceException("Result (in runSync) does not match expected requirements: ", e);
                 }
             }
 
             // pre-commit ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context);
+            if (eventMap != null)
+                ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context);
 
             // commit the transaction
             try {
@@ -213,13 +200,15 @@ public class ServiceDispatcher {
             }
 
             // pre-return ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), context);
+            if (eventMap != null)
+                ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), context);
+
             return result;
         } catch (GenericServiceException e) {
             try {
                 TransactionUtil.rollback(beganTrans);
             } catch (GenericTransactionException te) {
-                Debug.logError(te, "Cannot rollback transaction");
+                Debug.logError(te, "Cannot rollback transaction", module);
             }
             throw e;
         }
@@ -233,8 +222,7 @@ public class ServiceDispatcher {
      * @throws ServiceAuthException
      * @throws GenericServiceException
      */
-    public void runSyncIgnore(String localName, ModelService service, Map context)
-            throws ServiceAuthException, GenericServiceException {
+    public void runSyncIgnore(String localName, ModelService service, Map context) throws GenericServiceException {
         // start the transaction
         boolean beganTrans = false;
         try {
@@ -244,45 +232,37 @@ public class ServiceDispatcher {
         }
 
         try {
-            //get eventMap once for all calls for speed, don't do event calls if it is null
+            // get eventMap once for all calls for speed, don't do event calls if it is null
             Map eventMap = ECAUtil.getServiceEventMap(service.name);
+
             // pre-auth ECA
             if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context);
 
             context = checkAuth(localName, context, service);
             Object userLogin = context.get("userLogin");
-            if (service.auth && userLogin == null) {
-                try {
-                    TransactionUtil.rollback(beganTrans);
-                } catch (GenericTransactionException te) {
-                    Debug.logError(te, "Cannot rollback transaction");
-                }
+            if (service.auth && userLogin == null)
                 throw new ServiceAuthException("User authorization is required for this service");
-            }
 
             // setup the engine
             GenericEngine engine = getGenericEngine(service.engineName);
             engine.setLoader(localName);
 
             // pre-validate ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context);
+            if (eventMap != null)
+                ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context);
 
             // validate the context
             if (service.validate) {
                 try {
                     service.validate(context, ModelService.IN_PARAM);
                 } catch (ServiceValidationException e) {
-                    try {
-                        TransactionUtil.rollback(beganTrans);
-                    } catch (GenericTransactionException te) {
-                        Debug.logError(te, "Cannot rollback transaction");
-                    }
                     throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
                 }
             }
 
             // pre-invoke ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context);
+            if (eventMap != null)
+                ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context);
 
             if (Debug.verboseOn()) {
                 Debug.logVerbose("[ServiceDispatcher.runSyncIgnore] : invoking service [" + service.location + "/" + service.invoke +
@@ -292,7 +272,8 @@ public class ServiceDispatcher {
             engine.runSyncIgnore(service, context);
 
             // pre-commit ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context);
+            if (eventMap != null)
+                ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context);
 
             // commit the transaction
             try {
@@ -302,12 +283,13 @@ public class ServiceDispatcher {
             }
 
             // pre-return ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), context);
+            if (eventMap != null)
+                ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), context);
         } catch (GenericServiceException e) {
             try {
                 TransactionUtil.rollback(beganTrans);
             } catch (GenericTransactionException te) {
-                Debug.logError(te, "Cannot rollback transaction");
+                Debug.logError(te, "Cannot rollback transaction", module);
             }
             throw e;
         }
@@ -323,84 +305,42 @@ public class ServiceDispatcher {
      * @throws ServiceAuthException
      * @throws GenericServiceException
      */
-    public void runAsync(String localName, ModelService service, Map context, GenericRequester requester, boolean persist)
-            throws ServiceAuthException, GenericServiceException {
-        // start the transaction
-        boolean beganTrans = false;
-        try {
-            beganTrans = TransactionUtil.begin();
-        } catch (GenericTransactionException te) {
-            throw new GenericServiceException("Cannot start the transaction.", te.getNested());
+    public void runAsync(String localName, ModelService service, Map context, GenericRequester requester, boolean persist) throws GenericServiceException {
+        // get eventMap once for all calls for speed, don't do event calls if it is null
+        Map eventMap = ECAUtil.getServiceEventMap(service.name);
+
+        // pre-auth ECA
+        if (eventMap != null)
+            ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context);
+
+        context = checkAuth(localName, context, service);
+        Object userLogin = context.get("userLogin");
+        if (service.auth && userLogin == null)
+            throw new ServiceAuthException("User authorization is required for this service");
+
+        // setup the engine
+        GenericEngine engine = getGenericEngine(service.engineName);
+        engine.setLoader(localName);
+
+        // pre-validate ECA
+        if (eventMap != null)
+            ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context);
+
+        // validate the context
+        if (service.validate) {
+            try {
+                service.validate(context, ModelService.IN_PARAM);
+            } catch (ServiceValidationException e) {
+                throw new GenericServiceException("Context (in runAsync) does not match expected requirements: ", e);
+            }
         }
 
-        try {
-            //get eventMap once for all calls for speed, don't do event calls if it is null
-            Map eventMap = ECAUtil.getServiceEventMap(service.name);
-            // pre-auth ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context);
-
-            context = checkAuth(localName, context, service);
-            Object userLogin = context.get("userLogin");
-            if (service.auth && userLogin == null) {
-                try {
-                    TransactionUtil.rollback(beganTrans);
-                } catch (GenericTransactionException te) {
-                    Debug.logError(te, "Cannot rollback transaction");
-                }
-                throw new ServiceAuthException("User authorization is required for this service");
-            }
-
-            // setup the engine
-            GenericEngine engine = getGenericEngine(service.engineName);
-            engine.setLoader(localName);
-
-            // pre-validate ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context);
-
-            // validate the context
-            if (service.validate) {
-                try {
-                    service.validate(context, ModelService.IN_PARAM);
-                } catch (ServiceValidationException e) {
-                    try {
-                        TransactionUtil.rollback(beganTrans);
-                    } catch (GenericTransactionException te) {
-                        Debug.logError(te, "Cannot rollback transaction");
-                    }
-                    throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
-                }
-            }
-
-            // pre-invoke ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context);
-
-            if (Debug.verboseOn()) {
-                Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
-                        "] (" + service.engineName + ")", module);
-            }
-
-            engine.runAsync(service, context, requester, persist);
-
-            // pre-commit ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context);
-
-            // commit the transaction
-            try {
-                TransactionUtil.commit(beganTrans);
-            } catch (GenericTransactionException te) {
-                throw new GenericServiceException("Cannot commit transaction.", te.getNested());
-            }
-
-            // pre-return ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), context);
-        } catch (GenericServiceException e) {
-            try {
-                TransactionUtil.rollback(beganTrans);
-            } catch (GenericTransactionException te) {
-                Debug.logError(te, "Cannot rollback transaction");
-            }
-            throw e;
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
+                    "] (" + service.engineName + ")", module);
         }
+
+        engine.runAsync(service, context, requester, persist);
     }
 
     /**
@@ -412,83 +352,41 @@ public class ServiceDispatcher {
      * @throws ServiceAuthException
      * @throws GenericServiceException
      */
-    public void runAsync(String localName, ModelService service, Map context, boolean persist)
-            throws ServiceAuthException, GenericServiceException {
-        // start the transaction
-        boolean beganTrans = false;
-        try {
-            beganTrans = TransactionUtil.begin();
-        } catch (GenericTransactionException te) {
-            throw new GenericServiceException("Cannot start the transaction.", te.getNested());
+    public void runAsync(String localName, ModelService service, Map context, boolean persist) throws GenericServiceException {
+        // get eventMap once for all calls for speed, don't do event calls if it is null
+        Map eventMap = ECAUtil.getServiceEventMap(service.name);
+
+        // pre-auth ECA
+        if (eventMap != null)
+            ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context);
+
+        context = checkAuth(localName, context, service);
+        Object userLogin = context.get("userLogin");
+        if (service.auth && userLogin == null)
+            throw new ServiceAuthException("User authorization is required for this service");
+
+        // setup the engine
+        GenericEngine engine = getGenericEngine(service.engineName);
+        engine.setLoader(localName);
+
+        // pre-validate ECA
+        if (eventMap != null)
+            ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context);
+
+        // validate the context
+        if (service.validate) {
+            try {
+                service.validate(context, ModelService.IN_PARAM);
+            } catch (ServiceValidationException e) {
+                throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
+            }
         }
 
-        try {
-            //get eventMap once for all calls for speed, don't do event calls if it is null
-            Map eventMap = ECAUtil.getServiceEventMap(service.name);
-            // pre-auth ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context);
+        if (Debug.verboseOn())
+            Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
+                    "] (" + service.engineName + ")", module);
 
-            context = checkAuth(localName, context, service);
-            Object userLogin = context.get("userLogin");
-            if (service.auth && userLogin == null) {
-                try {
-                    TransactionUtil.rollback(beganTrans);
-                } catch (GenericTransactionException te) {
-                    Debug.logError(te, "Cannot rollback transaction");
-                }
-                throw new ServiceAuthException("User authorization is required for this service");
-            }
-
-            // setup the engine
-            GenericEngine engine = getGenericEngine(service.engineName);
-            engine.setLoader(localName);
-
-            // pre-validate ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context);
-
-            // validate the context
-            if (service.validate) {
-                try {
-                    service.validate(context, ModelService.IN_PARAM);
-                } catch (ServiceValidationException e) {
-                    try {
-                        TransactionUtil.rollback(beganTrans);
-                    } catch (GenericTransactionException te) {
-                        Debug.logError(te, "Cannot rollback transaction");
-                    }
-                    throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
-                }
-            }
-
-            // pre-invoke ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context);
-
-            if (Debug.verboseOn())
-                Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
-                        "] (" + service.engineName + ")", module);
-
-            engine.runAsync(service, context, persist);
-
-            // pre-commit ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context);
-
-            // commit the transaction
-            try {
-                TransactionUtil.commit(beganTrans);
-            } catch (GenericTransactionException te) {
-                throw new GenericServiceException("Cannot commit transaction.", te.getNested());
-            }
-
-            // pre-return ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), context);
-        } catch (GenericServiceException e) {
-            try {
-                TransactionUtil.rollback(beganTrans);
-            } catch (GenericTransactionException te) {
-                Debug.logError(te, "Cannot rollback transaction");
-            }
-            throw e;
-        }
+        engine.runAsync(service, context, persist);
     }
 
     /**

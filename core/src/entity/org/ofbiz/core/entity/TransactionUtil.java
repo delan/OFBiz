@@ -54,7 +54,7 @@ public class TransactionUtil implements javax.transaction.Status {
         if (ut != null) {
             try {
                 if (ut.getStatus() == TransactionUtil.STATUS_ACTIVE) {
-                    Debug.logInfo("[TransactionUtil.begin] active transaction in place, so no transaction begun", module);
+                    Debug.logVerbose("[TransactionUtil.begin] active transaction in place, so no transaction begun", module);
                     return false;
                 }
                 ut.begin();
