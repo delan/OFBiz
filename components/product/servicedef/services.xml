@@ -1064,6 +1064,11 @@
                 location="org.ofbiz.product.product.ProductUtilServices" invoke="removeCategoryMembersOfDiscProducts" auth="true" transaction-timout="36000000" require-new-transaction="true">
         <description>Remove Category Members Of Discontinued Products</description>
     </service>
+    <service name="removeDuplicateOpenEndedCategoryMembers" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="removeDuplicateOpenEndedCategoryMembers" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Remove Duplicate, excluding fromDate, Category Members that have no thruDate</description>
+    </service>
+    
     <service name="makeStandAloneFromSingleVariantVirtuals" engine="java"
                 location="org.ofbiz.product.product.ProductUtilServices" invoke="makeStandAloneFromSingleVariantVirtuals" auth="true" transaction-timout="36000000" require-new-transaction="true">
         <description>Make Stand Alone From Single Variant Virtuals</description>

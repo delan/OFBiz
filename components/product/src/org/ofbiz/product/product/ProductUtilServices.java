@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.12 2004/01/27 09:16:40 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.13 2004/01/27 17:23:57 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -170,6 +170,53 @@ public class ProductUtilServices {
         return ServiceUtil.returnSuccess();
     }
     
+    public static Map removeDuplicateOpenEndedCategoryMembers(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        
+        try {
+            DynamicViewEntity dve = new DynamicViewEntity();
+            dve.addMemberEntity("PCM", "ProductCategoryMember");
+            dve.addAlias("PCM", "productId", null, null, null, Boolean.TRUE, null);
+            dve.addAlias("PCM", "productCategoryId", null, null, null, Boolean.TRUE, null);
+            dve.addAlias("PCM", "fromDate", null, null, null, null, null);
+            dve.addAlias("PCM", "thruDate", null, null, null, null, null);
+            dve.addAlias("PCM", "productIdCount", "productId", null, null, null, "count");
+            
+            EntityCondition condition = new EntityConditionList(UtilMisc.toList(
+                    new EntityExpr("fromDate", EntityOperator.LESS_THAN, nowTimestamp),
+                    new EntityExpr("thruDate", EntityOperator.EQUALS, null)
+                    ), EntityOperator.AND);
+            EntityCondition havingCond = new EntityExpr("productIdCount", EntityOperator.GREATER_THAN, new Long(1));
+            EntityListIterator eli = delegator.findListIteratorByCondition(dve, condition, havingCond, UtilMisc.toList("productId", "productCategoryId", "productIdCount"), null, null);
+            GenericValue pcm = null;
+            int numSoFar = 0;
+            while ((pcm = (GenericValue) eli.next()) != null) {
+                List productCategoryMemberList = delegator.findByAnd("ProductCategoryMember", UtilMisc.toMap("productId", pcm.get("productId"), "productCategoryId", pcm.get("productCategoryId")));
+                if (productCategoryMemberList.size() > 1) {
+                    // remove all except the first...
+                    productCategoryMemberList.remove(0);
+                    Iterator productCategoryMemberIter = productCategoryMemberList.iterator();
+                    while (productCategoryMemberIter.hasNext()) {
+                        GenericValue productCategoryMember = (GenericValue) productCategoryMemberIter.next();
+                        productCategoryMember.remove();
+                    }
+                    numSoFar++;
+                    if (numSoFar % 500 == 0) {
+                        Debug.logInfo("Removed category members for " + numSoFar + " products with duplicate category members.", module);
+                    }
+                }
+            }
+            Debug.logInfo("Completed - Removed category members for " + numSoFar + " products with duplicate category members.", module);
+        } catch (GenericEntityException e) {
+            String errMsg = "Entity error running removeDuplicateOpenEndedCategoryMembers: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }
+        
+        return ServiceUtil.returnSuccess();
+    }
+        
     public static Map makeStandAloneFromSingleVariantVirtuals(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
