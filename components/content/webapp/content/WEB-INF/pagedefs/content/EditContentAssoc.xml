@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <property name="title">Add ContentAssoc</property>
+    <template>main_edit</template>
+    <property name="innerFtlName" >/content/contentassoc.ftl</property>
+    <property name="formDefFile">/content/ContentForms.xml</property>    
+    <property name="subMenu">/content/content_menu.ftl</property>    
+    <property name="headerItem">Content</property>    
+    <property name="entityName">ContentAssoc</property>    
+    <property name="permission">CONTENTMGR</property>    
+    <page-action name="/includes/currentvalprep.bsh" />
+    <page-action name="/content/contentassocprep.bsh" />
+</page>
