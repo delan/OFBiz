@@ -70,7 +70,7 @@ public class ShippingEvents {
         return "success";
     }
     public static Map getShipEstimate(GenericDelegator delegator, ShoppingCart cart, String shippingMethod) {
-        String standardError = "A problem occurred calculating shipping. Fees will be calculated offline.";
+        String standardMessage = "A problem occurred calculating shipping. Fees will be calculated offline.";
         List errorMessageList = new ArrayList();                             
         StringBuffer errorMessage = new StringBuffer();
         
@@ -89,7 +89,7 @@ public class ShippingEvents {
                        
         if (shipmentMethodTypeId == null || carrierPartyId == null) {
             if (cart.getOrderType().equals("SALES_ORDER")) {
-                errorMessageList.add("Please Select a Shipping Method.");
+                errorMessageList.add("Please Select Your Shipping Method.");
                 return ServiceUtil.returnError(errorMessageList);                
             } else {
                 return ServiceUtil.returnSuccess();
@@ -98,7 +98,7 @@ public class ShippingEvents {
         
         String shippingContactMechId = cart.getShippingContactMechId();
         if (shippingContactMechId == null) {
-            errorMessageList.add("Please Select a Shipping Address.");
+            errorMessageList.add("Please Select Your Shipping Address.");
             return ServiceUtil.returnError(errorMessageList);
         }
         
@@ -115,14 +115,12 @@ public class ShippingEvents {
             if (Debug.verboseOn()) Debug.logVerbose("Estimate fields: " + fields, module);
             if (Debug.verboseOn()) Debug.logVerbose("Estimate(s): " + estimates, module);
         } catch (GenericEntityException e) {
-            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping estimates.", module);
-            errorMessageList.add(standardError);           
-            return ServiceUtil.returnError(errorMessageList);
+            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping estimates.", module);            
+            return ServiceUtil.returnSuccess(standardMessage);                 
         }
         if (estimates == null || estimates.size() < 1) {
-            Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);
-            errorMessageList.add(standardError);
-            return ServiceUtil.returnError(errorMessageList);            
+            Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);            
+            return ServiceUtil.returnSuccess(standardMessage);            
         }
 
         if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Estimates begin size: " + estimates.size(), module);
@@ -133,9 +131,8 @@ public class ShippingEvents {
         try {
             shipAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shippingContactMechId));
         } catch (GenericEntityException e) {
-            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping address entity.", module);
-            errorMessageList.add(standardError);           
-            return ServiceUtil.returnError(errorMessageList);
+            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping address entity.", module);                   
+            return ServiceUtil.returnSuccess(standardMessage);
         }
 
         // Get some needed data from the cart.
@@ -153,8 +150,8 @@ public class ShippingEvents {
 
             // Make sure we have a valid GEOID.
             if (toGeo == null || toGeo.equals("") || toGeo.equals(shipAddress.getString("countryGeoId")) ||
-                toGeo.equals(shipAddress.getString("stateProvinceGeoId")) ||
-                toGeo.equals(shipAddress.getString("postalCodeGeoId"))) {
+                    toGeo.equals(shipAddress.getString("stateProvinceGeoId")) ||
+                    toGeo.equals(shipAddress.getString("postalCodeGeoId"))) {
                 GenericValue wv = null;
                 GenericValue qv = null;
                 GenericValue pv = null;
@@ -226,8 +223,7 @@ public class ShippingEvents {
 
         if (estimateList.size() < 1) {
             Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);
-            errorMessageList.add(standardError);           
-            return ServiceUtil.returnError(errorMessageList);
+            return ServiceUtil.returnSuccess(standardMessage);           
         }
 
         // Calculate priority based on available data.

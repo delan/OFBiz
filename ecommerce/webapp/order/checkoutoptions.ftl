@@ -92,10 +92,10 @@ function submitForm(form, mode, value) {
                 <tr>
                   <td>
                     <table width='100%' cellpadding='1' border='0' cellpadding='0' cellspacing='0'>
-                      <#list context.carrierShipmentMethodList as carrierShipmentMethod>                        
+                      <#list context.carrierShipmentMethodList as carrierShipmentMethod>
+                        <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
                         <tr>
-                          <td width='1%' valign="top" >
-                            <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
+                          <td width='1%' valign="top" >                            
                             <input type='radio' name='shipping_method' value='${shippingMethod}' <#if shippingMethod == context.chosenShippingMethod?default("N@A")>checked</#if>>       
                           </td>
                           <td valign="top">                            
@@ -103,7 +103,9 @@ function submitForm(form, mode, value) {
                               <#if cart.getShippingContactMechId()?exists>
                                 <#assign shippingEstMap = Static["org.ofbiz.commonapp.shipment.shipment.ShippingEvents"].getShipEstimate(delegator, cart, shippingMethod)>
                                 <#if shippingEstMap?has_content && shippingEstMap.shippingTotal?exists>
-                                  <#assign shippingEstimate = " - " + shippingEstMap.shippingTotal?string.currency>                                  
+                                  <#assign shippingEstimate = " - " + shippingEstMap.shippingTotal?string.currency>
+                                <#else>
+                                  <#assign shippingEstimate = " - Calculated Offline">
                                 </#if>                              
                               </#if>
                               <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${carrierShipmentMethod.description?if_exists}${shippingEstimate?if_exists}
