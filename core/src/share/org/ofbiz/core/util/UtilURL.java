@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/01/03 20:31:25  jonesde
+ * Now uses ClassLoader instead of context class, get Thread classloader if none is specified
+ *
  * Revision 1.2  2001/11/20 04:18:39  jonesde
  * Added return on null to url from filename/path method
  *
@@ -66,19 +69,26 @@ public class UtilURL {
     
     public static URL fromResource(String resourceName, ClassLoader loader) {
         URL url = null;
-        if(loader != null && url == null) url = loader.getResource(resourceName);
-        if(loader != null && url == null) url = loader.getResource(resourceName + ".properties");
+        if ( loader != null && url == null ) url = loader.getResource(resourceName);
+        if ( loader != null && url == null ) url = loader.getResource(resourceName + ".properties");
         
-        UtilURL utilURL = new UtilURL();
-        Class utilURLClass = utilURL.getClass();
+        if ( loader == null && url == null ) {
+            try {
+                loader = Thread.currentThread().getContextClassLoader();
+            }
+            catch ( SecurityException e ) {
+                UtilURL utilURL = new UtilURL();
+                loader = utilURL.getClass().getClassLoader();
+            }
+        }
         
-        if(url == null) url = utilURLClass.getClassLoader().getResource(resourceName);
-        if(url == null) url = utilURLClass.getClassLoader().getResource(resourceName + ".properties");
+        if ( url == null ) url = loader.getResource(resourceName);
+        if ( url == null ) url = loader.getResource(resourceName + ".properties");
         
-        if(url == null) url = ClassLoader.getSystemResource(resourceName);
-        if(url == null) url = ClassLoader.getSystemResource(resourceName + ".properties");
+        if ( url == null ) url = ClassLoader.getSystemResource(resourceName);
+        if ( url == null ) url = ClassLoader.getSystemResource(resourceName + ".properties");
         
-        if(url == null) url = fromFilename(resourceName);
+        if ( url == null ) url = fromFilename(resourceName);
         
         //Debug.log("[fromResource] got URL " + url + " from resourceName " + resourceName);
         return url;
@@ -88,8 +98,13 @@ public class UtilURL {
         if(filename == null) return null;
         File file = new File(filename);
         URL url = null;
-        try { if(file.exists()) url = file.toURL(); }
-        catch(java.net.MalformedURLException e) { Debug.log(e); url = null; }
+        try {
+            if ( file.exists() ) url = file.toURL();
+        }
+        catch ( java.net.MalformedURLException e ) {
+            Debug.log(e);
+            url = null;
+        }
         return url;
     }
 }
