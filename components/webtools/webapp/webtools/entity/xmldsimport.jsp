@@ -49,6 +49,8 @@
       %><div>ERROR: TX Timeout not a valid number, setting to 7200 seconds (2 hours): <%=e%><%
   }
   boolean mostlyInserts = request.getParameter("mostlyInserts") != null;
+  boolean keepStamps = request.getParameter("maintainTimeStamps") != null;
+  boolean createDummyFks = request.getParameter("createDummyFks") != null;
   String fulltext = request.getParameter("fulltext");
 %>
 
@@ -65,6 +67,8 @@
     <INPUT type=text class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'> 
     Is URL?:<INPUT type=checkbox name='IS_URL' <%=isUrl?"checked":""%>> 
     Mostly Inserts?:<INPUT type=checkbox name='mostlyInserts' <%=mostlyInserts?"checked":""%>>
+    Maintain Timestamps?:<INPUT type=checkbox name='maintainTimeStamps' <%=keepStamps?"checked":""%>>
+    Create "Dummy" FKs?:<INPUT type=checkbox name='createDummyFks' <%=createDummyFks?"checked":""%>>
     TX Timeout Seconds:<INPUT type="text" size="6" value="<%=txTimeoutStr%>" name='txTimeout'>
     <INPUT type=submit value='Import File'>
   </FORM>
@@ -85,8 +89,14 @@
       if (mostlyInserts) {
         reader.setUseTryInsertMethod(true);
       }
+      if (keepStamps) {
+        reader.setMaintainTxStamps(keepStamps);
+      }
       if (txTimeout != null) {
           reader.setTransactionTimeout(txTimeout.intValue());
+      }
+      if (createDummyFks) {
+          reader.setCreateDummyFks(true);
       }
       URL url = null;
       try {
@@ -162,6 +172,12 @@
   <%
       long numberRead = -1;
       EntitySaxReader reader = new EntitySaxReader(delegator);
+      if (keepStamps) {
+        reader.setMaintainTxStamps(keepStamps);
+      }
+      if (createDummyFks) {
+          reader.setCreateDummyFks(true);
+      }
       if (UtilValidate.isNotEmpty(fmfilename)) {
         FileReader templateReader = null;
         try {

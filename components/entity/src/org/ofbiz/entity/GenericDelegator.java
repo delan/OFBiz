@@ -1643,6 +1643,22 @@ public class GenericDelegator implements DelegatorInterface {
      *@return int representing number of rows effected by this operation
      */
     public int storeAll(List values, boolean doCacheClear) throws GenericEntityException {
+        return this.storeAll(values, doCacheClear, false);
+    }
+
+    /** Store the Entities from the List GenericValue instances to the persistent store.
+     *  <br>This is different than the normal store method in that the store method only does
+     *  an update, while the storeAll method checks to see if each entity exists, then
+     *  either does an insert or an update as appropriate.
+     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
+     *  if the data source supports transactions. This is just like to othersToStore feature
+     *  of the GenericEntity on a create or store.
+     *@param values List of GenericValue instances containing the entities to store
+     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
+     *@param createDummyFks boolean that specifies whether or not to automatically create "dummy" place holder FKs
+     *@return int representing number of rows effected by this operation
+     */
+    public int storeAll(List values, boolean doCacheClear, boolean createDummyFks) throws GenericEntityException {
         if (values == null) {
             return 0;
         }
@@ -1675,6 +1691,9 @@ public class GenericDelegator implements DelegatorInterface {
                 }
                 
                 if (existing == null) {
+                    if (createDummyFks) {
+                        value.checkFks(true);
+                    }
                     this.create(value, doCacheClear);
                     numberChanged++;
                 } else {
@@ -1698,6 +1717,9 @@ public class GenericDelegator implements DelegatorInterface {
                     }
 
                     if (atLeastOneField) {
+                        if (createDummyFks) {
+                            value.checkFks(true);
+                        }
                         numberChanged += this.store(toStore, doCacheClear);
                     }
                 }
