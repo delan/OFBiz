@@ -341,7 +341,7 @@ public class ProductSearchEvents {
         return "success";
     }
 
-    /** REmoves a feature from search results
+    /** Removes a feature from search results
      *@param request The HTTPRequest object for the current request
      *@param response The HTTPResponse object for the current request
      *@return String specifying the exit status of this event
