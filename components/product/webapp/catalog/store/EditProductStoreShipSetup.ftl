@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -40,17 +40,17 @@ function setAssocFields(select) {
     var delIdx = 1;
 
     for (i=0; i<optLen; i++) {
-        if (optStr[i] == '|') {
+        if (optStr.charAt(i) == '|') {
             delIdx++;
         } else {
             if (delIdx == 1) {
-                partyId = partyId + optStr[i];
+                partyId = partyId + optStr.charAt(i);
             } else if (delIdx == 2) {
-                roleTypeId = roleTypeId + optStr[i];
+                roleTypeId = roleTypeId + optStr.charAt(i);
             } else if (delIdx == 3) {
-                shipmentMethodTypeId = shipmentMethodTypeId + optStr[i];
+                shipmentMethodTypeId = shipmentMethodTypeId + optStr.charAt(i);
             } else if (delIdx == 4) {
-                sequenceNumber = sequenceNumber + optStr[i];
+                sequenceNumber = sequenceNumber + optStr.charAt(i);
             }
         }
     }
