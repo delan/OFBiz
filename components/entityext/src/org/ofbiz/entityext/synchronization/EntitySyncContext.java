@@ -688,7 +688,7 @@ public class EntitySyncContext {
             }
         }
         
-        if (Debug.infoOn()) Debug.logInfo("Finished saveFinalSyncResults: totalRows=" + totalRows + ", totalRowsToCreate=" + totalRowsToCreate + ", totalRowsToStore=" + totalRowsToStore + ", totalRowsToRemove=" + totalRowsToRemove, module);
+        if (Debug.infoOn()) Debug.logInfo("Finished saveFinalSyncResults [" + entitySyncId + "]: totalRows=" + totalRows + ", totalRowsToCreate=" + totalRowsToCreate + ", totalRowsToStore=" + totalRowsToStore + ", totalRowsToRemove=" + totalRowsToRemove, module);
     }
 
     public Set makeEntityNameToUseSet() {
