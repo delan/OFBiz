@@ -6,6 +6,11 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>	
     
+    <service name="echoService" engine="java" validate="false"
+            location="org.ofbiz.commonapp.common.CommonServices" invoke="echoService">
+        <description>Echos back all passed parameters</description>        
+    </service>
+    
     <service name="sendMailInterface" engine="interface" location="" invoke="">
     	<description>Interface service for mail services</description>
         <attribute name="sendTo" type="String" mode="IN" optional="false"/>

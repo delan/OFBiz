@@ -42,6 +42,7 @@ import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericValue;
 import org.ofbiz.core.service.DispatchContext;
+import org.ofbiz.core.service.ModelService;
 import org.ofbiz.core.service.ServiceUtil;
 import org.ofbiz.core.util.Debug;
 import org.ofbiz.core.util.HttpClient;
@@ -310,5 +311,14 @@ public class CommonServices {
 
         return ServiceUtil.returnSuccess();
     }
+    
+    /** 
+     * Echo service; returns exactly what was sent. 
+     * This service does not have required parameters and does not validate
+     */
+     public static Map echoService(DispatchContext dctx, Map context) {
+         context.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+         return context;
+     }
 }
 
