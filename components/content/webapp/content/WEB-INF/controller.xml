@@ -374,6 +374,10 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="EditElectronicText"/>
     </request-map>
+    <request-map uri="EditHtmlText">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditHtmlText"/>
+    </request-map>
     <request-map uri="addElectronicText">
         <security auth="true" https="true"/>
         <event invoke="createElectronicText" path="" type="service"/>
@@ -664,7 +668,7 @@
     </request-map>
     <request-map uri="AddDataResourceText">
         <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditDataResourceText"/>
+        <response name="success" type="view" value="AddDataResourceText"/>
         <response name="error" type="view" value="AddDataResourceText"/>
     </request-map>
     <request-map uri="AddDataResourceUrl">
@@ -965,6 +969,7 @@
     <view-map name="EditCharacterSet" page="/datasetup/EditCharacterSet.ftl" type="jpublish"/>
     <view-map name="EditFileExtension" page="/datasetup/EditFileExtension.ftl" type="jpublish"/>
     <view-map name="EditMimeType" page="/datasetup/EditMimeType.ftl" type="jpublish"/>
+    <view-map name="EditHtmlText" page="/data/EditHtmlText.ftl" type="jpublish"/>
 
     <view-map name="ContentMenu" page="/content/ContentMenu.ftl" type="jpublish"/>
     <view-map name="ContentSetupMenu" page="/contentsetup/ContentSetupMenu.ftl" type="jpublish"/>
