@@ -49,8 +49,8 @@
 
     if(orderId != null && orderId.length() > 0) {
         orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-        Collection c = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
-        orderRole = (GenericValue) (new ArrayList(c).get(0));
+        Collection orderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
+        orderRole = EntityUtil.getFirst(orderRoles);
     }
 
     if (orderHeader != null) {
@@ -107,7 +107,8 @@
 
 <%}%><%-- OrderHeader --%>
 <ofbiz:unless name="orderHeader">
-<h3>The specified order was not found, please try again.</h3>
+<br>
+<h3>The order with id "<%=orderId%>" was not found, please try again.</h3>
 </ofbiz:unless>
 
 <%}else{%>

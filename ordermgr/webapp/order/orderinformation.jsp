@@ -46,6 +46,8 @@
 <%if (billingAccount != null) pageContext.setAttribute("billingAccount", billingAccount);%>
 <%--if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);--%>
 <%if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);%>
+<%if (maySplit != null) pageContext.setAttribute("maySplit", maySplit);%>
+<%if (isGift != null) pageContext.setAttribute("isGift", isGift);%>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
