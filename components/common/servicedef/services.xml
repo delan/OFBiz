@@ -4,13 +4,13 @@
 <services>
     <description>Common Application Services</description>
     <vendor>OFBiz</vendor>
-    <version>1.0</version>	
-    
+    <version>1.0</version>
+
     <service name="echoService" engine="java" validate="false"
             location="org.ofbiz.common.CommonServices" invoke="echoService">
-        <description>Echos back all passed parameters</description>        
+        <description>Echos back all passed parameters</description>
     </service>
-    
+
     <service name="sendMailInterface" engine="interface" location="" invoke="">
     	<description>Interface service for mail services</description>
         <attribute name="sendTo" type="String" mode="IN" optional="false"/>
@@ -19,46 +19,46 @@
         <attribute name="sendFrom" type="String" mode="IN" optional="false"/>
         <attribute name="subject" type="String" mode="IN" optional="false"/>
         <attribute name="authUser" type="String" mode="IN" optional="true"/>
-        <attribute name="authPass" type="String" mode="IN" optional="true"/>        
+        <attribute name="authPass" type="String" mode="IN" optional="true"/>
         <attribute name="sendVia" type="String" mode="IN" optional="true"/>
         <attribute name="sendType" type="String" mode="IN" optional="true"/>
-        <attribute name="contentType" type="String" mode="IN" optional="true"/>    	
+        <attribute name="contentType" type="String" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="sendMail" engine="java"
             location="org.ofbiz.common.CommonServices" invoke="sendMail">
-        <description>Send E-Mail Service</description>   
-        <implements service="sendMailInterface"/>     
-        <attribute name="body" type="String" mode="IN" optional="false"/>        
+        <description>Send E-Mail Service</description>
+        <implements service="sendMailInterface"/>
+        <attribute name="body" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="prepareNotificationInterface" engine="interface"
             location="" invoke="">
-        <description>Send Template Based Notification Service</description>   
+        <description>Send Template Based Notification Service</description>
         <implements service="sendMailInterface"/>
-        <attribute name="body" type="String" mode="INOUT" optional="true"/>        
+        <attribute name="body" type="String" mode="INOUT" optional="true"/>
     	<attribute name="baseUrl" type="String" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="false"/>
         <attribute name="templateData" type="Map" mode="IN" optional="true"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="sendNotificationInterface" engine="interface"
             location="" invoke="">
-        <description>Send Template Based Notification Service</description>   
+        <description>Send Template Based Notification Service</description>
         <implements service="prepareNotificationInterface"/>
         <attribute name="body" type="String" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="false"/>
         <attribute name="templateData" type="Map" mode="IN" optional="true"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="sendGenericNotificationEmail" engine="java"
             location="org.ofbiz.common.NotificationServices" invoke="sendNotification">
-        <description>Generic Template Based Notification Service</description>   
-        <implements service="sendNotificationInterface"/>        
-    </service>    
-    
+        <description>Generic Template Based Notification Service</description>
+        <implements service="sendNotificationInterface"/>
+    </service>
+
     <service name="sendMailFromUrl" engine="java"
             location="org.ofbiz.common.CommonServices" invoke="sendMailFromUrl">
         <description>Send E-Mail From URL Service</description>
@@ -88,7 +88,7 @@
         <attribute name="error" type="Boolean" mode="IN" optional="true"/>
         <attribute name="fatal" type="Boolean" mode="IN" optional="true"/>
     </service>
-    
+
     <!-- DataSource Services -->
     <service name="interfaceDataSource" engine="interface" location="" invoke="">
         <attribute name="dataSourceId" type="String" mode="IN" optional="false"/>
@@ -110,7 +110,7 @@
         <description>Delete a DataSource record</description>
         <attribute name="dataSourceId" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <!-- CustomTimePeriod Services -->
     <service name="interfaceCustomTimePeriod" engine="interface" location="" invoke="">
         <attribute name="parentPeriodId" type="String" mode="IN" optional="true"/>
@@ -138,7 +138,7 @@
         <description>Delete a CustomTimePeriod record</description>
         <attribute name="customTimePeriodId" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <!-- Status services -->
     <service name="getStatusItems" engine="java"
             location="org.ofbiz.common.status.StatusServices" invoke="getStatusItems" auth="false">
@@ -151,8 +151,8 @@
         <description>Gets all StatusValidChangeToDetails entries for the supplied StatusTypeId</description>
         <attribute name="statusTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="statusValidChangeToDetails" type="Collection" mode="OUT" optional="true"/>
-    </service>    
-    
+    </service>
+
     <!-- Lookup services -->
     <service name="lookupParty" engine="simple"
             location="org/ofbiz/common/LookupServices.xml" invoke="lookupParty" auth="true">
@@ -160,7 +160,7 @@
         <attribute name="firstName" type="String" form-display="true" form-label="First name" mode="IN" optional="true"/>
         <attribute name="lastName" type="String" form-display="true" form-label="Last name" mode="IN" optional="true"/>
         <attribute name="lookupResult" type="List" mode="OUT" optional="false"/>
-    </service>    
+    </service>
     <service name="performFind" auth="false" engine="java" invoke="performFind"
             location="org.ofbiz.common.FindServices">
         <description>Generic service to return an entity iterator</description>
@@ -168,18 +168,24 @@
         <attribute name="inputFields" type="java.util.Map" mode="IN" optional="false"/>
         <attribute name="listIt" type="org.ofbiz.entity.util.EntityListIterator" mode="OUT" optional="true"/>
     </service>
-    
+
     <!-- Keyword Thesaurus services -->
     <service name="createKeywordThesaurus" default-entity-name="KeywordThesaurus" engine="simple"
-                location="org/ofbiz/common/CommonServices.xml" invoke="createKeywordThesaurus" auth="true">
+            location="org/ofbiz/common/CommonServices.xml" invoke="createKeywordThesaurus" auth="true">
         <description>Create a Keyword Thesaurus</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateKeywordThesaurus" default-entity-name="KeywordThesaurus" engine="simple"
+            location="org/ofbiz/common/CommonServices.xml" invoke="updateKeywordThesaurus" auth="true">
+        <description>Update a Keyword Thesaurus</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="deleteKeywordThesaurus" default-entity-name="KeywordThesaurus" engine="simple"
-                location="org/ofbiz/common/CommonServices.xml" invoke="deleteKeywordThesaurus" auth="true">
+            location="org/ofbiz/common/CommonServices.xml" invoke="deleteKeywordThesaurus" auth="true">
         <description>Delete a Keyword Thesaurus</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <override name="alternateKeyword" optional="true" />
     </service>
-   
 </services>
