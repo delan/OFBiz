@@ -155,11 +155,24 @@ public class Record implements Serializable {
      * @param value The String value to convert and set
      */
     public void setString(String name, String value) throws ParseException {
-        if (name == null || value == null)
+        if (name == null || value == null || value.equals(""))
             return;
         ModelField field = getModelRecord().getModelField(name);
         if (field == null)
             set(name, value); //this will get an error in the set() method...
+
+        // if the string is all spaces ignore
+        boolean nonSpace = false;
+        for (int i=0; i<value.length();i++) {
+            if (value.charAt(i) != ' ') {
+                nonSpace = true;
+                break;
+            }
+        }
+        if (!nonSpace)
+            return;
+
+        //Debug.logVerbose("Value: " + value);
 
         String fieldType = field.type;
         //first the custom types that need to be parsed
@@ -229,6 +242,7 @@ public class Record implements Serializable {
         if (value == null) {
             return null;
         }
+
         String fieldType = field.type;
         String str = null;
 
@@ -310,6 +324,13 @@ public class Record implements Serializable {
                     sb.append(PAD_CHAR);
                 data = new String(sb);
             }
+
+            // Pad the record
+            if (isFixedRecord) {
+                while (modelField.position > lineBuf.length())
+                    lineBuf.append(" ");
+            }
+            //Debug.logInfo("Field: " + modelField.name + " Position: " + modelField.position + " BufLen: " + lineBuf.length());
 
             //Debug.logInfo("Got data \"" + data + "\" for field " + modelField.name + " in record " + modelRecord.name);
             if (modelField.length > 0 && data.length() != modelField.length)
