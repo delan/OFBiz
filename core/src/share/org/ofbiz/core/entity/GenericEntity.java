@@ -107,6 +107,8 @@ public class GenericEntity extends Observable implements Serializable, Comparabl
         this.entityName = value.modelEntity.entityName;
         this.modelEntity = value.modelEntity;
         this.fields = (value.fields == null?new HashMap():new HashMap(value.fields));
+        this.delegatorName = value.delegatorName;
+        this.internalDelegator = value.internalDelegator;
     }
 
     public boolean isModified() {
