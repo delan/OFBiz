@@ -48,7 +48,7 @@ public class WorkEffortPartyAssignmentServices {
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters
      */
-    public static Map createWorkEffortPartyAssignment(DispatchContext ctx, Map context) {
+    public static Map assignPartyToWorkEffort(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
@@ -104,7 +104,7 @@ public class WorkEffortPartyAssignmentServices {
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters
      */
-    public static Map updateWorkEffortPartyAssignment(DispatchContext ctx, Map context) {
+    public static Map updatePartyToWorkEffortAssignment(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
@@ -189,7 +189,7 @@ public class WorkEffortPartyAssignmentServices {
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters
      */
-    public static Map deleteWorkEffortPartyAssignment(DispatchContext ctx, Map context) {
+    public static Map unassignPartyFromWorkEffort(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();

@@ -3,20 +3,18 @@
 <!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
- * <p><b>Title:</b> WorkEffortSimpleServices
- * <p><b>Description:</b> Services to handle data changes
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  Copyright (c) 2001 The Open For Business Project and repected authors.
+ *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
@@ -26,32 +24,130 @@
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version 1.0
- * Created on January 1, 2001
+ * Created on July 24, 2002
  -->
 <simple-methods>
     <simple-method method-name="createWorkEffort" short-description="Create Work Effort">
-        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
-                processor-name="serviceCreate" in-map-name="context" out-map-name="weValues"/>
-        <check-errors/>
-        <make-value value-name="newWorkEffort" entity-name="WorkEffort" map-name="weValues"/>
-        <value-to-list value-name="newWorkEffort" list-name="toStore"/>
-        <store-list list-name="toStore"/>
+        <make-value value-name="newEntity" entity-name="WorkEffort"/>
+        <sequenced-id-to-env sequence-name="WorkEffort" env-name="workEffortId"/>
+        <to-string field-name="workEffortId"/>
+        <env-to-field env-name="workEffortId" map-name="newEntity"/>
+        <field-to-result field-name="workEffortId" result-name="workEffortId"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        
+        <!-- create new status entry, and set lastStatusUpdate date -->
+        <env-to-field env-name="nowTimestamp" field-name="lastStatusUpdate" map-name="newEntity"/>
+        <make-value value-name="newWorkEffortStatus" entity-name="WorkEffortStatus"/>
+        <field-to-field field-name="workEffortId" map-name="newEntity" to-map-name="newWorkEffortStatus"/>
+        <field-to-field field-name="currentStatusId" map-name="newEntity" to-field-name="statusId" to-map-name="newWorkEffortStatus"/>
+        <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newWorkEffortStatus"/>
+        <field-to-field field-name="partyId" map-name="userLogin" to-field-name="setByPartyId" to-map-name="newWorkEffortStatus"/>
+        <create-value value-name="newWorkEffortStatus"/>
+
+        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/>
+
+        <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/>
+        <calculate field-name="revisionNumber" map-name="newEntity"><number value="1"/></calculate>
+        <if-not-empty field-name="partyId" map-name="userLogin">
+            <field-to-field field-name="partyId" map-name="userLogin" to-field-name="lastModifiedByPartyId" to-map-name="newEntity"/>
+            <field-to-field field-name="partyId" map-name="userLogin" to-field-name="createdByPartyId" to-map-name="newEntity"/>
+            <!-- add a party assignment for the creator of the event, use the list method and let the EE do the update or create... -->
+            <make-value value-name="newPartyRole" entity-name="PartyRole"/>
+            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="newPartyRole"/>
+            <string-to-field string="CAL_OWNER" field-name="roleTypeId" map-name="newPartyRole"/>
+            <field-to-list field-name="newPartyRole" list-name="newPartyRoleList"/>
+            <store-list list-name="newPartyRoleList"/>
+            
+            <make-value value-name="newWorkEffortPartyAssignment" entity-name="WorkEffortPartyAssignment"/>
+            <env-to-field env-name="workEffortId" map-name="newWorkEffortPartyAssignment"/>
+            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="newWorkEffortPartyAssignment"/>
+            <string-to-field string="CAL_OWNER" field-name="roleTypeId" map-name="newWorkEffortPartyAssignment"/>
+            <string-to-field string="CAL_ACCEPTED" field-name="statusId" map-name="newWorkEffortPartyAssignment"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newWorkEffortPartyAssignment"/>
+            <create-value value-name="newWorkEffortPartyAssignment"/>
+        </if-not-empty>
+                
+        <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateWorkEffort" short-description="Update Work Effort">
-        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
-                processor-name="serviceUpdate" in-map-name="context" out-map-name="weValues"/>
-        <check-errors/>
-        <find-value value-name="workEffort" entity-name="WorkEffort" map-name="weValues"/>
-        <clone-value value-name="workEffort" new-value-name="newWorkEffort"/>
-        <fill-value value-name="newWorkEffort" map-name="weValues"/>
-        <value-to-list value-name="newWorkEffort" list-name="toStore"/>
-        <store-list list-name="toStore"/>
+        <!-- check permissions before moving on: if update or delete logged in user must be associated OR have the corresponding UPDATE or DELETE permissions -->
+        <field-to-field field-name="workEffortId" map-name="parameters" to-map-name="findWepaMap"/>
+        <field-to-field field-name="partyId" map-name="userLogin" to-map-name="findWepaMap"/>
+        <find-by-and entity-name="WorkEffortPartyAssignment" map-name="findWepaMap" list-name="wepaList"/>
+        <if-empty field-name="wepaList">
+            <check-permission permission="WORKEFFORTMGR" action="_UPDATE"><fail-message message="Security Error: to run updateWorkEffort you must have the WORKEFFORTMGR_UPDATE or WORKEFFORTMGR_ADMIN permission"/></check-permission>
+            <check-errors/>
+        </if-empty>
+        
+        <make-value value-name="lookupPKMap" entity-name="WorkEffort"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="WorkEffort" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <clone-value value-name="lookedUpValue" new-value-name="savedValue"/>
+        
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        
+        <!-- if necessary create new status entry, and set lastStatusUpdate date -->
+        <if-compare-field field-name="currentStatusId" map-name="parameters" operator="not-equals" to-field-name="currentStatusId" to-map-name="lookedUpValue">
+            <env-to-field env-name="nowTimestamp" field-name="lastStatusUpdate" map-name="newEntity"/>
+            <make-value value-name="newWorkEffortStatus" entity-name="WorkEffortStatus"/>
+            <field-to-field field-name="workEffortId" map-name="newEntity" to-map-name="newWorkEffortStatus"/>
+            <field-to-field field-name="currentStatusId" map-name="newEntity" to-field-name="statusId" to-map-name="newWorkEffortStatus"/>
+            <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newWorkEffortStatus"/>
+            <field-to-field field-name="partyId" map-name="userLogin" to-field-name="setByPartyId" to-map-name="newWorkEffortStatus"/>
+            <create-value value-name="newWorkEffortStatus"/>
+            
+            <env-to-field env-name="nowTimestamp" field-name="lastStatusUpdate" map-name="lookedUpValue"/>
+        </if-compare-field>
+
+        <!-- after checking status change, set all parameters -->        
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+
+        <!-- only save if something has changed -->
+        <if-compare-field field-name="lookedUpValue" operator="not-equals" to-field-name="savedValue">
+            <!-- only set lastModifiedDate after comparing new & old to see if anything has changed -->
+            <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="lookedUpValue"/>
+            <field-to-field field-name="partyId" map-name="userLogin" to-field-name="lastModifiedByPartyId" to-map-name="lookedUpValue"/>
+            <if-not-empty field-name="revisionNumber" map-name="lookedUpValue">
+                <calculate field-name="revisionNumber" map-name="lookedUpValue">
+                    <calcop operator="get" field-name="revisionNumber" map-name="lookedUpValue"/>
+                    <number value="1"/>
+                </calculate>
+                <else>
+                    <calculate field-name="revisionNumber" map-name="lookedUpValue"><number value="1"/></calculate>
+                </else>
+            </if-empty>
+            <store-value value-name="lookedUpValue"/>
+        </if-compare-field>
     </simple-method>
-    <simple-method method-name="deleteWorkEffort" short-description="Update Work Effort">
-        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
-                processor-name="serviceDelete" in-map-name="context" out-map-name="weValues"/>
-        <check-errors/>
-        <make-value value-name="newWorkEffort" entity-name="WorkEffort" map-name="weValues"/>
-        <remove-value value-name="newWorkEffort"/>
+    <simple-method method-name="deleteWorkEffort" short-description="Delete Work Effort">
+        <!-- check permissions before moving on: if update or delete logged in user must be associated OR have the corresponding UPDATE or DELETE permissions -->
+        <field-to-field field-name="workEffortId" map-name="parameters" to-map-name="findWepaMap"/>
+        <field-to-field field-name="partyId" map-name="userLogin" to-map-name="findWepaMap"/>
+        <find-by-and entity-name="WorkEffortPartyAssignment" map-name="findWepaMap" list-name="wepaList"/>
+        <if-empty field-name="wepaList">
+            <check-permission permission="WORKEFFORTMGR" action="_DELETE"><fail-message message="Security Error: to run deleteWorkEffort you must have the WORKEFFORTMGR_DELETE or WORKEFFORTMGR_ADMIN permission"/></check-permission>
+            <check-errors/>
+        </if-empty>
+
+        <make-value value-name="lookupPKMap" entity-name="WorkEffort"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="WorkEffort" map-name="lookupPKMap" value-name="lookedUpValue"/>
+
+        <!-- Remove associated/dependent entries from other entities here -->
+        <remove-related value-name="lookedUpValue" relation-name="WorkEffortAttribute"/>
+        <remove-related value-name="lookedUpValue" relation-name="WorkEffortCategoryMember"/>
+        <remove-related value-name="lookedUpValue" relation-name="WorkEffortPartyAssignment"/>
+        <remove-related value-name="lookedUpValue" relation-name="FromWorkEffortAssoc"/>
+        <remove-related value-name="lookedUpValue" relation-name="ToWorkEffortAssoc"/>
+        <remove-related value-name="lookedUpValue" relation-name="WorkEffortStatus"/>
+        <remove-related value-name="lookedUpValue" relation-name="ContextRuntimeData"/>
+        <remove-related value-name="lookedUpValue" relation-name="ResultRuntimeData"/>
+        <remove-related value-name="lookedUpValue" relation-name="NoteData"/>
+        <remove-related value-name="lookedUpValue" relation-name="RecurrenceInfo"/>
+
+        <!-- Delete actual main entity last -->
+        <remove-value value-name="lookedUpValue"/>
     </simple-method>
 </simple-methods>
