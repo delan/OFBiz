@@ -137,6 +137,11 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <service name="deleteEntitySyncHistory" default-entity-name="EntitySyncHistory" engine="simple"
+            location="org/ofbiz/entityext/synchronization/EntitySyncServices.xml" invoke="deleteEntitySyncHistory" auth="true" require-new-transaction="true">
+        <description>Delete EntitySyncHistory</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 
     <!-- Entity Remote Synchronization services -->
     <service name="runEntitySync" engine="java"
