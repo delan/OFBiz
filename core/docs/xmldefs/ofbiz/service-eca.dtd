@@ -30,12 +30,12 @@
 -->
 
 <!ELEMENT service-eca ( eca+ )>
-<!ELEMENT eca ( condition+ )>
+<!ELEMENT eca ( condition*, action+ )>
 <!ATTLIST eca
 	serviceName CDATA #REQUIRED
 	event ( auth | validate | invoke | commit ) #REQUIRED
 >
-<!ELEMENT condition ( action+ )>
+<!ELEMENT condition EMPTY>
 <!ATTLIST condition
     lhs-type ( constant | field ) "constant"
     lhs-map CDATA #IMPLIED
@@ -55,10 +55,9 @@
 <!--
 <service-eca>
     <eca serviceName="testBsh" event="commit">
-      <condition lhs-value="1" operator="equals" rhs="1">
-         <action service="testScv" mode="sync"/>
-         <action service="testScv" mode="sync"/>
-      </condition>
+      <condition lhs-value="1" operator="equals" rhs="1"/>
+      <action service="testScv" mode="sync"/>
+      <action service="testScv" mode="sync"/>
     </eca>
 </service-eca>
 -->
