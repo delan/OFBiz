@@ -3,6 +3,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/11/24 06:26:04  jonesde
+ * First pass at new direction for parser using UtilXml and creating entitiy value objects
+ *
  * Revision 1.7  2001/11/11 23:30:20  rbb36
  * switched everything to using the magic parsers, including
  * the mapped entities. Wrote the first tiny piece of magic
@@ -153,15 +156,16 @@ public class XpdlParser {
     // Methods for individual entities
     // -------------------------------------------------------
 
-    protected void parsePackage(Element element) throws DefinitionParserException {
-        if(!"Package".equals(element.getTagName()))  throw new DefinitionParserException("Tried to make Package from element not named Package");
+    protected void parsePackage(Element packageElement) throws DefinitionParserException {
+        if(!"Package".equals(packageElement.getTagName()))  throw new DefinitionParserException("Tried to make Package from element not named Package");
         
         GenericValue packageValue = delegator.makeValue("WorkflowPackage", null);
-        String packageId = element.getAttribute("Id");
+        String packageId = packageElement.getAttribute("Id");
         packageValue.set("packageId", packageId);
-        packageValue.set("packageName", element.getAttribute("Name"));
+        packageValue.set("packageName", packageElement.getAttribute("Name"));
         
-        Element packageHeaderElement = UtilXml.firstChildElement(element, "PackageHeader");
+        //PackageHeader
+        Element packageHeaderElement = UtilXml.firstChildElement(packageElement, "PackageHeader");
         packageValue.set("specificationId", "XPDL");
         packageValue.set("specificationVersion", UtilXml.childElementValue(packageHeaderElement, "XPDLVersion"));
         packageValue.set("sourceVendorInfo", UtilXml.childElementValue(packageHeaderElement, "Vendor"));
@@ -172,25 +176,121 @@ public class XpdlParser {
         packageValue.set("priorityUomId", UtilXml.childElementValue(packageHeaderElement, "PriorityUnit"));
         packageValue.set("costUomId", UtilXml.childElementValue(packageHeaderElement, "CostUnit"));
         
-        Element redefinableHeaderElement = UtilXml.firstChildElement(element, "PackageHeader");
+        //RedefinableHeader
+        Element redefinableHeaderElement = UtilXml.firstChildElement(packageElement, "RedefinableHeader");
         packageValue.set("author", UtilXml.childElementValue(redefinableHeaderElement, "Author"));
         packageValue.set("packageVersion", UtilXml.childElementValue(redefinableHeaderElement, "Version"));
         packageValue.set("codepage", UtilXml.childElementValue(redefinableHeaderElement, "Codepage"));
         packageValue.set("countryGeoId", UtilXml.childElementValue(redefinableHeaderElement, "Countrykey"));
+        
+        //ConformanceClass
+        Element conformanceClass = UtilXml.firstChildElement(packageElement, "ConformanceClass");
+        packageValue.set("graphConformanceEnumId", "WGC_" + conformanceClass.getAttribute("GraphConformance"));
+        
+        //done with basic packageValue, add to list
+        values.add(packageValue);
 
+        //Responsibles
         Element responsiblesElement = UtilXml.firstChildElement(redefinableHeaderElement, "Responsibles");
         List responsibles = UtilXml.childElementList(responsiblesElement, "Responsible");
-        if(responsibles.size() > 0) {
-            Long nextSeqId = delegator.getNextSeqId("WorkflowParticipantList");
-            if(nextSeqId == null) throw new DefinitionParserException("Could not get next sequence id from data source");
-            String participantListId = nextSeqId.toString();
-            Iterator responsibleIter = responsibles.iterator();
-            while(responsibleIter.hasNext()) {
-                Element responsibleElement = (Element)responsibleIter.next();
-                String participantId = UtilXml.elementValue(responsibleElement);
-                
-            }
+        parseResponsibles(responsibles, packageValue);
+        
+        //ExternalPackages
+        Element externalPackagesElement = UtilXml.firstChildElement(packageElement, "ExternalPackages");
+        List externalPackages = UtilXml.childElementList(externalPackagesElement, "ExternalPackage");
+        parseExternalPackages(externalPackages, packageId);
+        
+        //TypeDeclarations
+        Element typeDeclarationsElement = UtilXml.firstChildElement(packageElement, "TypeDeclarations");
+        List typeDeclarations = UtilXml.childElementList(typeDeclarationsElement, "TypeDeclaration");
+        parseTypeDeclarations(typeDeclarations, packageId);
+        
+        //Participants
+        Element participantsElement = UtilXml.firstChildElement(packageElement, "Participants");
+        List participants = UtilXml.childElementList(participantsElement, "Participant");
+        parseParticipants(participants, packageValue);
+        
+        //Applications
+        Element applicationsElement = UtilXml.firstChildElement(packageElement, "Applications");
+        List applications = UtilXml.childElementList(applicationsElement, "Application");
+        parseApplications(applications, packageValue);
+        
+        //DataFields
+        Element dataFieldsElement = UtilXml.firstChildElement(packageElement, "DataFields");
+        List dataFields = UtilXml.childElementList(dataFieldsElement, "DataField");
+        parseDataFields(dataFields, packageValue);
+        
+        //WorkflowProcesses
+        Element workflowProcessesElement = UtilXml.firstChildElement(packageElement, "WorkflowProcesses");
+        List workflowProcesses = UtilXml.childElementList(workflowProcessesElement, "WorkflowProcess");
+        parseWorkflowProcesses(workflowProcesses, packageId);
+    }
+    
+    protected void parseResponsibles(List responsibles, GenericValue packageValue) throws DefinitionParserException {
+        if(responsibles == null || responsibles.size() == 0) return;
+
+        Long nextSeqId = delegator.getNextSeqId("WorkflowParticipantList");
+        if(nextSeqId == null) throw new DefinitionParserException("Could not get next sequence id from data source");
+        String responsibleListId = nextSeqId.toString();
+        packageValue.set("responsibleListId", responsibleListId);
+
+        Iterator responsibleIter = responsibles.iterator();
+        int responsibleIndex = 1;
+        while(responsibleIter.hasNext()) {
+            Element responsibleElement = (Element)responsibleIter.next();
+            String responsibleId = UtilXml.elementValue(responsibleElement);
+            GenericValue participantListValue = delegator.makeValue("WorkflowParticipantList", null);
+            participantListValue.set("participantListId",responsibleListId);
+            participantListValue.set("participantId", responsibleId);
+            participantListValue.set("participantIndex", new Long(responsibleIndex));
+            values.add(participantListValue);
+            responsibleIndex++;
         }
+    }
+    
+    protected void parseExternalPackages(List externalPackages, String packageId) {
+        if(externalPackages == null || externalPackages.size() == 0) return;
+        Iterator externalPackageIter = externalPackages.iterator();
+        while(externalPackageIter.hasNext()) {
+            Element externalPackageElement = (Element)externalPackageIter.next();
+            GenericValue externalPackageValue = delegator.makeValue("WorkflowPackageExternal", null);
+            externalPackageValue.set("packageId", packageId);
+            externalPackageValue.set("externalPackageId", externalPackageElement.getAttribute("href"));
+            values.add(externalPackageValue);
+        }
+    }
+    
+    protected void parseTypeDeclarations(List typeDeclarations, String packageId) throws DefinitionParserException {
+        if(typeDeclarations == null || typeDeclarations.size() == 0) return;
+    }
+    
+    protected void parseParticipants(List participants, GenericValue packageValue) throws DefinitionParserException {
+        if(participants == null || participants.size() == 0) return;
+    }
+    
+    protected void parseApplications(List applications, GenericValue packageValue) throws DefinitionParserException {
+        if(applications == null || applications.size() == 0) return;
+    }
+    
+    protected void parseDataFields(List dataFields, GenericValue packageValue) throws DefinitionParserException {
+        if(dataFields == null || dataFields.size() == 0) return;
+    }
+    
+    protected void parseWorkflowProcesses(List workflowProcesses, String packageId) {
+        if(workflowProcesses == null || workflowProcesses.size() == 0) return;
+        Iterator workflowProcessIter = workflowProcesses.iterator();
+        while(workflowProcessIter.hasNext()) {
+            Element workflowProcessElement = (Element)workflowProcessIter.next();
+            parseWorkflowProcess(workflowProcessElement, packageId);
+        }
+    }
+    
+    protected void parseWorkflowProcess(Element workflowProcessElement, String packageId) {
+        GenericValue workflowProcessValue = delegator.makeValue("WorkflowProcess", null);
+        workflowProcessValue.set("packageId", packageId);
+        workflowProcessValue.set("processId", workflowProcessElement.getAttribute("Id"));
+        workflowProcessValue.set("objectName", workflowProcessElement.getAttribute("Name"));
+        values.add(workflowProcessValue);
     }
     
     /**
