@@ -35,7 +35,7 @@
 <!ELEMENT vendor (#PCDATA)>
 <!ELEMENT version (#PCDATA)>
 <!ELEMENT created (#PCDATA)>
-<!ELEMENT service (description?, namespace?, implements*, attribute*)>
+<!ELEMENT service (description?, namespace?, implements*, auto-attributes, attribute*)>
 <!ATTLIST service
 	name CDATA #REQUIRED
 	engine CDATA #REQUIRED
@@ -44,6 +44,7 @@
 	auth (true|false) "false"
 	export (true|false) "false"
 	validate (true|false) "true"
+	default-entity CDATA #IMPLIED
 	use-transaction (true|false) "true"
 	require-new-transaction (true|false) "false"
 >
@@ -59,6 +60,23 @@
 	form-label CDATA #IMPLIED
 	form-display (true|false) "true"
 	optional (true|false) "false"
+>
+<!ELEMENT override EMPTY>
+<!ATTLIST override
+    field-name CDATA #REQUIRED
+    mode (IN|OUT|INOUT) #REQUIRED
+    optional (true|false) "false"
+>
+<!ELEMENT exclude EMPTY>
+<!ATTLIST exclude
+    field-name CDATA #REQUIRED
+>
+<!ELEMENT auto-attributes (override*, exclude*)>
+<!ATTLIST auto-attributes
+    entity-name CDATA #REQUIRED
+    include (pk|nonpk|all) "all"
+    default-mode (IN|OUT|INOUT) #REQUIRED
+    default-optional (true|false) "false"
 >
 
 
