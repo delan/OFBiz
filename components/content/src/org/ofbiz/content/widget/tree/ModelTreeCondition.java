@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenuCondition.java 3103 2004-08-20 21:45:49Z jaz $
+ * $Id: ModelTreeCondition.java 3103 2004-08-20 21:45:49Z jaz $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -21,7 +21,7 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.content.widget.menu;
+package org.ofbiz.content.widget.tree;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -55,16 +55,16 @@ import org.w3c.dom.Element;
  * @version    $Rev: 3103 $
  * @since      3.1
  */
-public class ModelMenuCondition {
-    public static final String module = ModelMenuCondition.class.getName();
+public class ModelTreeCondition {
+    public static final String module = ModelTreeCondition.class.getName();
 
-    protected ModelMenu modelMenu;
-    protected MenuCondition rootCondition;
+    protected ModelTree modelTree;
+    protected TreeCondition rootCondition;
 
-    public ModelMenuCondition(ModelMenu modelMenu, Element conditionElement) {
-        this.modelMenu = modelMenu;
+    public ModelTreeCondition(ModelTree modelTree, Element conditionElement) {
+        this.modelTree = modelTree;
         Element firstChildElement = UtilXml.firstChildElement(conditionElement);
-        this.rootCondition = readCondition(modelMenu, firstChildElement);
+        this.rootCondition = readCondition(modelTree, firstChildElement);
     }
 
     public boolean eval(Map context) {
@@ -74,71 +74,71 @@ public class ModelMenuCondition {
         return rootCondition.eval(context);
     }
     
-    public static abstract class MenuCondition {
-        protected ModelMenu modelMenu;
+    public static abstract class TreeCondition {
+        protected ModelTree modelTree;
 
-        public MenuCondition(ModelMenu modelMenu, Element conditionElement) {
-            this.modelMenu = modelMenu;
+        public TreeCondition(ModelTree modelTree, Element conditionElement) {
+            this.modelTree = modelTree;
         }
         
         public abstract boolean eval(Map context);
     }
     
-    public static List readSubConditions(ModelMenu modelMenu, Element conditionElement) {
+    public static List readSubConditions(ModelTree modelTree, Element conditionElement) {
         List condList = new LinkedList();
         List subElementList = UtilXml.childElementList(conditionElement);
         Iterator subElementIter = subElementList.iterator();
         while (subElementIter.hasNext()) {
             Element subElement = (Element) subElementIter.next();
-            condList.add(readCondition(modelMenu, subElement));
+            condList.add(readCondition(modelTree, subElement));
         }
         return condList;
     }
     
-    public static MenuCondition readCondition(ModelMenu modelMenu, Element conditionElement) {
+    public static TreeCondition readCondition(ModelTree modelTree, Element conditionElement) {
         if (conditionElement == null) {
             return null;
         }
         if ("and".equals(conditionElement.getNodeName())) {
-            return new And(modelMenu, conditionElement);
+            return new And(modelTree, conditionElement);
         } else if ("xor".equals(conditionElement.getNodeName())) {
-            return new Xor(modelMenu, conditionElement);
+            return new Xor(modelTree, conditionElement);
         } else if ("or".equals(conditionElement.getNodeName())) {
-            return new Or(modelMenu, conditionElement);
+            return new Or(modelTree, conditionElement);
         } else if ("not".equals(conditionElement.getNodeName())) {
-            return new Not(modelMenu, conditionElement);
+            return new Not(modelTree, conditionElement);
         } else if ("if-has-permission".equals(conditionElement.getNodeName())) {
-            return new IfHasPermission(modelMenu, conditionElement);
+            return new IfHasPermission(modelTree, conditionElement);
         } else if ("if-validate-method".equals(conditionElement.getNodeName())) {
-            return new IfValidateMethod(modelMenu, conditionElement);
+            return new IfValidateMethod(modelTree, conditionElement);
         } else if ("if-compare".equals(conditionElement.getNodeName())) {
-            return new IfCompare(modelMenu, conditionElement);
+            return new IfCompare(modelTree, conditionElement);
         } else if ("if-compare-field".equals(conditionElement.getNodeName())) {
-            return new IfCompareField(modelMenu, conditionElement);
+            return new IfCompareField(modelTree, conditionElement);
         } else if ("if-regexp".equals(conditionElement.getNodeName())) {
-            return new IfRegexp(modelMenu, conditionElement);
+            return new IfRegexp(modelTree, conditionElement);
         } else if ("if-empty".equals(conditionElement.getNodeName())) {
-            return new IfEmpty(modelMenu, conditionElement);
+            return new IfEmpty(modelTree, conditionElement);
         } else if ("if-entity-permission".equals(conditionElement.getNodeName())) {
-            return new IfEntityPermission(modelMenu, conditionElement);
+            return new IfEntityPermission(modelTree, conditionElement);
         } else {
             throw new IllegalArgumentException("Condition element not supported with name: " + conditionElement.getNodeName());
         }
     }
     
-    public static class And extends MenuCondition {
+    public static class And extends TreeCondition {
         protected List subConditions;
         
-        public And(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
-            this.subConditions = readSubConditions(modelMenu, condElement);
+        public And(ModelTree modelTree, Element condElement) {
+            super (modelTree, condElement);
+            this.subConditions = readSubConditions(modelTree, condElement);
         }
         
         public boolean eval(Map context) {
             // return false for the first one in the list that is false, basic and algo
             Iterator subConditionIter = this.subConditions.iterator();
             while (subConditionIter.hasNext()) {
-                MenuCondition subCondition = (MenuCondition) subConditionIter.next();
+                TreeCondition subCondition = (TreeCondition) subConditionIter.next();
                 if (!subCondition.eval(context)) {
                     return false;
                 }
@@ -147,12 +147,12 @@ public class ModelMenuCondition {
         }
     }
     
-    public static class Xor extends MenuCondition {
+    public static class Xor extends TreeCondition {
         protected List subConditions;
         
-        public Xor(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
-            this.subConditions = readSubConditions(modelMenu, condElement);
+        public Xor(ModelTree modelTree, Element condElement) {
+            super (modelTree, condElement);
+            this.subConditions = readSubConditions(modelTree, condElement);
         }
         
         public boolean eval(Map context) {
@@ -160,7 +160,7 @@ public class ModelMenuCondition {
             boolean foundOneTrue = false;
             Iterator subConditionIter = this.subConditions.iterator();
             while (subConditionIter.hasNext()) {
-                MenuCondition subCondition = (MenuCondition) subConditionIter.next();
+                TreeCondition subCondition = (TreeCondition) subConditionIter.next();
                 if (subCondition.eval(context)) {
                     if (foundOneTrue) {
                         // now found two true, so return false
@@ -174,19 +174,19 @@ public class ModelMenuCondition {
         }
     }
     
-    public static class Or extends MenuCondition {
+    public static class Or extends TreeCondition {
         protected List subConditions;
         
-        public Or(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
-            this.subConditions = readSubConditions(modelMenu, condElement);
+        public Or(ModelTree modelTree, Element condElement) {
+            super (modelTree, condElement);
+            this.subConditions = readSubConditions(modelTree, condElement);
         }
         
         public boolean eval(Map context) {
             // return true for the first one in the list that is true, basic or algo
             Iterator subConditionIter = this.subConditions.iterator();
             while (subConditionIter.hasNext()) {
-                MenuCondition subCondition = (MenuCondition) subConditionIter.next();
+                TreeCondition subCondition = (TreeCondition) subConditionIter.next();
                 if (subCondition.eval(context)) {
                     return true;
                 }
@@ -195,13 +195,13 @@ public class ModelMenuCondition {
         }
     }
     
-    public static class Not extends MenuCondition {
-        protected MenuCondition subCondition;
+    public static class Not extends TreeCondition {
+        protected TreeCondition subCondition;
         
-        public Not(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public Not(ModelTree modelTree, Element condElement) {
+            super (modelTree, condElement);
             Element firstChildElement = UtilXml.firstChildElement(condElement);
-            this.subCondition = readCondition(modelMenu, firstChildElement);
+            this.subCondition = readCondition(modelTree, firstChildElement);
         }
         
         public boolean eval(Map context) {
@@ -209,12 +209,12 @@ public class ModelMenuCondition {
         }
     }
     
-    public static class IfHasPermission extends MenuCondition {
+    public static class IfHasPermission extends TreeCondition {
         protected FlexibleStringExpander permissionExdr;
         protected FlexibleStringExpander actionExdr;
         
-        public IfHasPermission(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public IfHasPermission(ModelTree modelTree, Element condElement) {
+            super (modelTree, condElement);
             this.permissionExdr = new FlexibleStringExpander(condElement.getAttribute("permission"));
             this.actionExdr = new FlexibleStringExpander(condElement.getAttribute("action"));
         }
@@ -243,13 +243,13 @@ public class ModelMenuCondition {
         }
     }
 
-    public static class IfValidateMethod extends MenuCondition {
+    public static class IfValidateMethod extends TreeCondition {
         protected FlexibleMapAccessor fieldAcsr;
         protected FlexibleStringExpander methodExdr;
         protected FlexibleStringExpander classExdr;
         
-        public IfValidateMethod(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public IfValidateMethod(ModelTree modelTree, Element condElement) {
+            super (modelTree, condElement);
             this.fieldAcsr = new FlexibleMapAccessor(condElement.getAttribute("field-name"));
             this.methodExdr = new FlexibleStringExpander(condElement.getAttribute("method"));
             this.classExdr = new FlexibleStringExpander(condElement.getAttribute("class"));
@@ -302,7 +302,7 @@ public class ModelMenuCondition {
         }
     }
     
-    public static class IfCompare extends MenuCondition {
+    public static class IfCompare extends TreeCondition {
         protected FlexibleMapAccessor fieldAcsr;
         protected FlexibleStringExpander valueExdr;
 
@@ -310,8 +310,8 @@ public class ModelMenuCondition {
         protected String type;
         protected FlexibleStringExpander formatExdr;
         
-        public IfCompare(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public IfCompare(ModelTree modelTree, Element condElement) {
+            super (modelTree, condElement);
             this.fieldAcsr = new FlexibleMapAccessor(condElement.getAttribute("field-name"));
             this.valueExdr = new FlexibleStringExpander(condElement.getAttribute("value"));
             
@@ -351,7 +351,7 @@ public class ModelMenuCondition {
         }
     }
     
-    public static class IfCompareField extends MenuCondition {
+    public static class IfCompareField extends TreeCondition {
         protected FlexibleMapAccessor fieldAcsr;
         protected FlexibleMapAccessor toFieldAcsr;
 
@@ -359,8 +359,8 @@ public class ModelMenuCondition {
         protected String type;
         protected FlexibleStringExpander formatExdr;
         
-        public IfCompareField(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public IfCompareField(ModelTree modelTree, Element condElement) {
+            super (modelTree, condElement);
             this.fieldAcsr = new FlexibleMapAccessor(condElement.getAttribute("field-name"));
             this.toFieldAcsr = new FlexibleMapAccessor(condElement.getAttribute("to-field-name"));
             
@@ -400,15 +400,15 @@ public class ModelMenuCondition {
         }
     }
     
-    public static class IfRegexp extends MenuCondition {
+    public static class IfRegexp extends TreeCondition {
         static PatternMatcher matcher = new Perl5Matcher();
         static PatternCompiler compiler = new Perl5Compiler();
 
         protected FlexibleMapAccessor fieldAcsr;
         protected FlexibleStringExpander exprExdr;
         
-        public IfRegexp(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public IfRegexp(ModelTree modelTree, Element condElement) {
+            super (modelTree, condElement);
             this.fieldAcsr = new FlexibleMapAccessor(condElement.getAttribute("field-name"));
             this.exprExdr = new FlexibleStringExpander(condElement.getAttribute("expr"));
         }
@@ -438,11 +438,11 @@ public class ModelMenuCondition {
         }
     }
     
-    public static class IfEmpty extends MenuCondition {
+    public static class IfEmpty extends TreeCondition {
         protected FlexibleMapAccessor fieldAcsr;
         
-        public IfEmpty(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public IfEmpty(ModelTree modelTree, Element condElement) {
+            super (modelTree, condElement);
             this.fieldAcsr = new FlexibleMapAccessor(condElement.getAttribute("field-name"));
         }
         
@@ -451,11 +451,11 @@ public class ModelMenuCondition {
             return ObjectType.isEmpty(fieldVal);
         }
     }
-    public static class IfEntityPermission extends MenuCondition {
+    public static class IfEntityPermission extends TreeCondition {
         protected EntityPermissionChecker permissionChecker;
         
-        public IfEntityPermission(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public IfEntityPermission(ModelTree modelTree, Element condElement) {
+            super (modelTree, condElement);
             this.permissionChecker = new EntityPermissionChecker(condElement);
         }
         

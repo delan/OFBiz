@@ -27,6 +27,7 @@
 
  *  $Id$
 -->
+<!ENTITY % AllConditionals "and | xor | or | not | if-has-permission | if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-entity-permission">
 
 <!ELEMENT trees ( tree+ )>
 
@@ -43,7 +44,7 @@
     entity-name CDATA "Content"
 >
 
-<!ELEMENT node ( (entity-one | service | script ), (include-screen | label | link )?, sub-node* )>
+<!ELEMENT node ( condition?, (entity-one | service | script ), (include-screen | label | link )?, sub-node* )>
 <!ATTLIST node
     name CDATA #REQUIRED
     wrap-style CDATA #REQUIRED
@@ -178,6 +179,65 @@
             ignore-if-null ( true | false ) "false"
         >
     
+<!ELEMENT condition ( (%AllConditionals;)* )>
+
+    <!ELEMENT and ( (%AllConditionals;)+ )>
+    <!ELEMENT xor ( (%AllConditionals;)+ )>
+    <!ELEMENT or ( (%AllConditionals;)+ )>
+    <!ELEMENT not ( (%AllConditionals;) )>
+
+    <!ELEMENT if-has-permission EMPTY>
+    <!ATTLIST if-has-permission
+        permission CDATA #REQUIRED
+        action CDATA #IMPLIED
+    >
+
+    <!ELEMENT if-entity-permission EMPTY>
+    <!-- entity-id and target-operation can have multiple pipe separated values. Don't use spaces. -->
+    <!ATTLIST if-entity-permission
+        entity-name CDATA #REQUIRED
+        entity-id CDATA #REQUIRED
+        target-operation CDATA #REQUIRED
+    >
+
+    <!-- if-validate-method calls a static Java method that takes a String and returns a boolean -->
+    <!ELEMENT if-validate-method EMPTY>
+    <!ATTLIST if-validate-method
+        field-name CDATA #REQUIRED
+        method CDATA #REQUIRED
+        class CDATA "org.ofbiz.base.util.UtilValidate"
+    >
+    
+    <!ELEMENT if-compare EMPTY>
+    <!ATTLIST if-compare
+        field-name CDATA #REQUIRED
+        operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
+        value CDATA #REQUIRED
+        type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Boolean | Object ) "String"
+        format CDATA #IMPLIED
+    >
+    
+    <!ELEMENT if-compare-field EMPTY>
+    <!ATTLIST if-compare-field
+        field-name CDATA #REQUIRED
+        operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
+        to-field-name CDATA #IMPLIED
+        type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Boolean | Object ) "String"
+        format CDATA #IMPLIED
+    >
+    
+    <!ELEMENT if-regexp EMPTY>
+    <!ATTLIST if-regexp
+        field-name CDATA #REQUIRED
+        expr CDATA #REQUIRED
+    >
+    
+    <!ELEMENT if-empty EMPTY>
+    <!ATTLIST if-empty
+        field-name CDATA #REQUIRED
+    >
+
+
 
 <!-- examples
 <trees>
