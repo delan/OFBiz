@@ -19,12 +19,9 @@
     <!-- Return ECAs -->
     <eca service="updateReturnStatusFromReceipt" event="commit">
         <condition field-name="returnHeaderStatus" operator="equals" value="RETURN_RECEIVED"/>        
-        <action service="processCreditReturn" mode="sync"/>
+        <action service="processCreditReturn" mode="async"/>
+        <action service="processRefundReturn" mode="async"/>
     </eca>
-    <eca service="updateReturnStatusFromReceipt" event="commit">
-        <condition field-name="returnHeaderStatus" operator="not-equals" value="RETURN_RECEIVED"/>        
-        <action service="testScv" mode="sync"/>
-    </eca>    
     
     <!-- ShoppingList ECAs --> 
     <eca service="createShoppingListItem" event="in-validate">

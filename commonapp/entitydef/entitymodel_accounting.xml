@@ -1920,7 +1920,6 @@
       <alias entity-alias="PY" name="amount"/>
       <alias entity-alias="PY" name="comments"/>
       <alias entity-alias="PY" name="finAccountTransId"/>
-      <alias entity-alias="PY" name="originFacilityId"/>
       <alias entity-alias="PA" name="invoiceId"/>
       <alias entity-alias="PA" name="invoiceItemSeqId"/>
       <alias entity-alias="PA" name="billingAccountId"/>

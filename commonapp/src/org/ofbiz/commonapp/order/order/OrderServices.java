@@ -25,6 +25,7 @@ package org.ofbiz.commonapp.order.order;
 
 import java.io.*;
 import java.net.*;
+import java.sql.Timestamp;
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
@@ -1373,7 +1374,7 @@ public class OrderServices {
     }  
     
     // return / refund services
-    
+                    
     // credit (billingAccount) return
     public static Map processCreditReturn(DispatchContext ctx, Map context) {
         LocalDispatcher dispatcher = ctx.getDispatcher(); 
@@ -1426,7 +1427,15 @@ public class OrderServices {
                 return ServiceUtil.returnError("No available billing account");
             }
             
+            // now; to be used for all timestamps
+            Timestamp now = UtilDateTime.nowTimestamp();
+            
+            // start the response creation
+            String itemResponseId = delegator.getNextSeqId("ReturnItemResponse").toString();
+            GenericValue itemResponse = delegator.makeValue("ReturnItemResponse", UtilMisc.toMap("returnItemResponseId", itemResponseId));
+            
             // need a total for the credit
+            List toBeStored = new ArrayList();
             double creditTotal = 0.00;
             Iterator itemsIter = returnItems.iterator();
             while (itemsIter.hasNext()) {
@@ -1435,9 +1444,27 @@ public class OrderServices {
                 Double price = item.getDouble("returnPrice");
                 if (quantity == null) quantity = new Double(0);
                 if (price == null) price = new Double(0);
-                creditTotal += price.doubleValue() * quantity.doubleValue();                
+                creditTotal += price.doubleValue() * quantity.doubleValue();
+                
+                // set the response on the item and flag the item to be stored
+                item.set("returnItemResponseId", itemResponseId);
+                item.set("statusId", "RETURN_COMPLETED");
+                toBeStored.add(item);    
+                
+                // create the status change history and set it to be stored
+                String returnStatusId = delegator.getNextSeqId("ReturnStatus").toString();
+                GenericValue returnStatus = delegator.makeValue("ReturnStatus", UtilMisc.toMap("returnStatusId", returnStatusId));
+                returnStatus.set("statusId", item.get("statusId"));
+                returnStatus.set("returnId", item.get("returnId"));
+                returnStatus.set("returnItemSeqId", item.get("returnItemSeqId"));
+                returnStatus.set("statusDatetime", now);
+                toBeStored.add(returnStatus);
+                          
             }
             
+            // create a Double object for the amount
+            Double creditAmount = new Double(creditTotal);
+                        
             // create a Payment record for this credit; will look just like a normal payment
             String paymentId = delegator.getNextSeqId("Payment").toString();
             GenericValue payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", paymentId));
@@ -1445,8 +1472,8 @@ public class OrderServices {
             payment.set("paymentMethodTypeId", "EXT_BILLACT");
             payment.set("partyIdFrom", fromPartyId);
             payment.set("partyIdTo", "Company"); // TODO: need to fix this and find a partyId to use
-            payment.set("effectiveDate", UtilDateTime.nowTimestamp());
-            payment.set("amount", new Double(creditTotal));
+            payment.set("effectiveDate", now);
+            payment.set("amount", creditAmount);
             payment.set("comments", "Return Credit");
             try {
                 delegator.create(payment);
@@ -1460,13 +1487,33 @@ public class OrderServices {
             GenericValue pa = delegator.makeValue("PaymentApplication", UtilMisc.toMap("paymentApplicationId", paId));
             pa.set("paymentId", paymentId);
             pa.set("billingAccountId", billingAccountId);
-            pa.set("amountApplied", new Double(creditTotal));
+            pa.set("amountApplied", creditAmount);
             try {
                 delegator.create(pa);
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Problem creating PaymentApplication record", module);
                 return ServiceUtil.returnError("Problem creating PaymentApplication record");
-            }                                        
+            }
+            
+            // fill in the response fields
+            itemResponse.set("paymentId", paymentId);
+            itemResponse.set("billingAccountId", billingAccountId);
+            itemResponse.set("responseAmount", creditAmount);
+            itemResponse.set("responseDate", now);
+            try {
+                delegator.create(itemResponse);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem creating ReturnItemResponse record", module);
+                return ServiceUtil.returnError("Problem creating ReturnItemResponse record");
+            }
+            
+            // store the item changes (attached responseId)
+            try {
+                delegator.storeAll(toBeStored);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem storing ReturnItem updates");
+                return ServiceUtil.returnError("Problem storing ReturnItem updates");
+            }
         }
         
         return ServiceUtil.returnSuccess();
@@ -1477,6 +1524,7 @@ public class OrderServices {
         LocalDispatcher dispatcher = ctx.getDispatcher();   
         GenericDelegator delegator = ctx.getDelegator();
         String returnId = (String) context.get("returnId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         
         GenericValue returnHeader = null;
         List returnItems = null;
@@ -1572,29 +1620,32 @@ public class OrderServices {
                     
                     Double thisRefundAmount = (Double) prefsAmount.get(orderPayPref);
                     String paymentId = null;
-                    try {
-                        if (orderPayPref.getString("paymentMethodTypeId").equals("CREDIT_CARD")) {
-                            // TODO: handle credit card refund -- get paymentId
-                            throw new GenericServiceException("Not implemented");
-                        } else if (orderPayPref.getString("paymentMethodTypeId").equals("EFT_ACCOUNT")) {
-                            // TODO: handle eft account refund -- get paymentId
-                            throw new GenericServiceException("Not implemented");
-                        } else {
-                            // add additional electronic payment method types above this
-                            // this is a manual refund
-                            // TODO: send to accounts payable
-                        }
-                    } catch (GenericServiceException e) {
-                        Debug.logError(e, "Problems processing electronic refund", module);
-                        return ServiceUtil.returnError("Problems processing electronic refund");
-                    }
+                    
+                    // this can be extended to support additional electronic types
+                    List electronicTypes = UtilMisc.toList("CREDIT_CARD", "EFT_ACCOUNT");
+                    
+                    if (electronicTypes.contains(orderPayPref.getString("paymentMethodTypeId"))) {
+                        // call the refund service to refund the payment
+                        try {
+                            Map serviceResult = dispatcher.runSync("refundPayment", UtilMisc.toMap("orderPaymentPreference", orderPayPref, "refundAmount", thisRefundAmount, "userLogin", userLogin));
+                            paymentId = (String) serviceResult.get("paymentId");
+                        } catch (GenericServiceException e) {
+                            Debug.logError(e, "Problem running the refundPayment service", module);
+                            return ServiceUtil.returnError("Problems with the refund; see logs");
+                        }                          
+                    } else {
+                        // TODO: handle manual refunds (accounts payable)
+                    }                    
+                    
+                    // now; for all timestamps
+                    Timestamp now = UtilDateTime.nowTimestamp();
                                         
                     // create a new response entry
                     String responseId = delegator.getNextSeqId("ReturnItemResponse").toString();
-                    GenericValue response = delegator.makeValue("OrderItemResponse", UtilMisc.toMap("returnItemResponseId", responseId));
+                    GenericValue response = delegator.makeValue("ReturnItemResponse", UtilMisc.toMap("returnItemResponseId", responseId));
                     response.set("orderPaymentPreferenceId", orderPayPref.getString("orderPaymentPreferenceId"));
                     response.set("responseAmount", thisRefundAmount);
-                    response.set("responseDate", UtilDateTime.nowTimestamp());
+                    response.set("responseDate", now);
                     if (paymentId != null) {
                         // a null payment ID means no electronic refund was available; manual refund needed                   
                         response.set("paymentId", paymentId);
@@ -1611,11 +1662,22 @@ public class OrderServices {
                     while (itemsIter.hasNext()) {
                         GenericValue item = (GenericValue) itemsIter.next();
                         item.set("returnItemResponseId", responseId);
+                        item.set("statusId", "RETURN_COMPLETED");
+                        
+                        // create the status history
+                        String returnStatusId = delegator.getNextSeqId("ReturnStatus").toString();
+                        GenericValue returnStatus = delegator.makeValue("ReturnStatus", UtilMisc.toMap("returnStatusId", returnStatusId));
+                        returnStatus.set("statusId", item.get("statusId"));
+                        returnStatus.set("returnId", item.get("returnId"));
+                        returnStatus.set("returnItemSeqId", item.get("returnItemSeqId"));
+                        returnStatus.set("statusDatetime", now);
+                        
                         try {
                             item.store();
+                            delegator.create(returnStatus);
                         } catch (GenericEntityException e) {
-                            Debug.logError("Problem storing returnItemResponseId on the ReturnItem entity", module);
-                            return ServiceUtil.returnError("Problem storing ReturnItem (returnItemResponseId)");
+                            Debug.logError("Problem updating the ReturnItem entity", module);
+                            return ServiceUtil.returnError("Problem updating ReturnItem (returnItemResponseId)");
                         }
                     }
                 }                                                       

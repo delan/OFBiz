@@ -225,44 +225,8 @@ public class PaymentGatewayServices {
         processContext.put("paymentConfig", paymentConfig);
         processContext.put("currency", orh.getCurrency());
         
-        GenericValue paymentMethod = null;
-        GenericValue creditCard = null;
-        GenericValue eftAccount = null;
-        GenericValue billingAddress = null;
-                    
-        // gather the payment related objects.        
-        paymentMethod = paymentPreference.getRelatedOne("PaymentMethod");
-        if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD")) {
-            // type credit card
-            creditCard = paymentMethod.getRelatedOne("CreditCard");
-            billingAddress = creditCard.getRelatedOne("PostalAddress");
-            processContext.put("creditCard", creditCard);
-        } else if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("EFT_ACCOUNT")) {
-            // type eft
-            eftAccount = paymentMethod.getRelatedOne("EFT_ACCOUNT");
-            billingAddress.getRelatedOne("PostalAddress");
-        } else {
-            // add other payment types here; i.e. gift cards, etc.
-            // unknown payment type; ignoring.
-            return null;
-        }
-        processContext.put("billingAddress", billingAddress);
-                       
-        // get some contact info.
-        GenericValue contactPerson = orh.getBillToPerson();
-        GenericValue contactEmail = null;
-        Collection emails = null;
-
-        try {
-            emails = ContactHelper.getContactMech(contactPerson.getRelatedOne("Party"), "PRIMARY_EMAIL", "EMAIL_ADDRESS", false);
-        } catch (GenericEntityException gee) {
-            Debug.logError("Problems getting contact information: " + gee.getMessage(), module);
-        }
-        if (emails != null && emails.size() > 0)
-            contactEmail = (GenericValue) emails.iterator().next();        
-                                      
-        processContext.put("contactPerson", contactPerson);
-        processContext.put("contactEmail", contactEmail); 
+        // get the billing information
+        getBillingInformation(orh, paymentPreference, processContext);
 
         // get the process amount.
         double thisAmount = authTotal;
@@ -284,6 +248,46 @@ public class PaymentGatewayServices {
         processContext.put("processAmount", processAmount);    
                                 
         return processContext;
+    }
+    
+    private static String getBillingInformation(OrderReadHelper orh, GenericValue paymentPreference, Map toContext) throws GenericEntityException {                                        
+        // gather the payment related objects.              
+        GenericValue paymentMethod = paymentPreference.getRelatedOne("PaymentMethod");
+        if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD")) {
+            // type credit card
+            GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");
+            GenericValue billingAddress = creditCard.getRelatedOne("PostalAddress");
+            toContext.put("creditCard", creditCard);
+            toContext.put("billingAddress", billingAddress);
+        } else if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("EFT_ACCOUNT")) {
+            // type eft
+            GenericValue eftAccount = paymentMethod.getRelatedOne("EFT_ACCOUNT");            
+            GenericValue billingAddress = eftAccount.getRelatedOne("PostalAddress");
+            toContext.put("eftAccount", eftAccount);
+            toContext.put("billingAddress", billingAddress);
+        } else {
+            // add other payment types here; i.e. gift cards, etc.
+            // unknown payment type; ignoring.
+            return null;
+        }       
+                       
+        // get some contact info.
+        GenericValue contactPerson = orh.getBillToPerson();
+        GenericValue contactEmail = null;
+        Collection emails = null;
+
+        try {
+            emails = ContactHelper.getContactMech(contactPerson.getRelatedOne("Party"), "PRIMARY_EMAIL", "EMAIL_ADDRESS", false);
+        } catch (GenericEntityException gee) {
+            Debug.logError("Problems getting contact information: " + gee.getMessage(), module);
+        }
+        if (emails != null && emails.size() > 0)
+            contactEmail = (GenericValue) emails.iterator().next();        
+                                      
+        toContext.put("contactPerson", contactPerson);
+        toContext.put("contactEmail", contactEmail);  
+        
+        return contactPerson.getString("partyId");       
     }
            
     /**
@@ -412,6 +416,9 @@ public class PaymentGatewayServices {
         } 
             
         // pass the payTo partyId to the result processor; we just add it to the result context.
+        if (paymentConfig == null || paymentConfig.length() == 0) {
+            paymentConfig = "payment.properties";
+        }
         String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
         captureResult.put("payToPartyId", payToPartyId);  
         
@@ -598,6 +605,105 @@ public class PaymentGatewayServices {
             Debug.logError("Result pass is null, no capture available", module);
         }
     }
+    
+    public static Map refundPayment(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher(); 
+        
+        GenericValue paymentPref = (GenericValue) context.get("orderPaymentPreference");
+        Double refundAmount = (Double) context.get("refundAmount");
+                        
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = paymentPref.getRelatedOne("OrderHeader");       
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot get OrderHeader from OrderPaymentPreference", module);
+            return ServiceUtil.returnError("Problems getting OrderHeader from OrderPaymentPreference: " + e.getMessage());
+        }
+        
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        
+        GenericValue paymentSettings = null;
+        if (orderHeader != null) {
+            paymentSettings = getPaymentSettings(orderHeader, paymentPref);             
+        }
+        
+        if (paymentSettings != null) {
+            String paymentConfig = paymentSettings.getString("paymentConfiguration");
+            String serviceName = paymentSettings.getString("paymentRefundService");
+            if (serviceName != null) {
+                Map serviceContext = new HashMap();
+                serviceContext.put("paymentConfig", paymentConfig);
+                serviceContext.put("currency", orh.getCurrency());
+                
+                // get the creditCard/address/email
+                String payToPartyId = null;
+                try {
+                    payToPartyId = getBillingInformation(orh, paymentPref, serviceContext);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Problems getting billing information", module);
+                    return ServiceUtil.returnError("Problems getting billing information");
+                }
+                
+                // format the price
+                DecimalFormat formatter = new DecimalFormat("##0.00");
+                String amountString = formatter.format(refundAmount);        
+                Double processAmount = new Double(amountString);
+                serviceContext.put("refundAmount", processAmount);
+                                                         
+                // call the service
+                Map refundResponse = null;
+                try {
+                    refundResponse = dispatcher.runSync(serviceName, serviceContext);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "Problem refunding payment through processor", module);
+                    return ServiceUtil.returnError("Refund processor problems; see logs");
+                }
+                
+                // get the pay-from party
+                if (paymentConfig == null || paymentConfig.length() == 0) {
+                    paymentConfig = "payment.properties";
+                }
+                String payFromPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
+                
+                // handle the (reverse) payment                
+                Boolean refundResult = (Boolean) refundResponse.get("refundResult");
+                if (refundResult != null && refundResult.booleanValue()) {
+                    String paymentId = delegator.getNextSeqId("Payment").toString();
+                    // create a payment record
+                    GenericValue payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", paymentId));                    
+                    payment.set("paymentTypeId", "DISBURSEMENT");
+                    payment.set("paymentMethodTypeId", paymentPref.get("paymentMethodTypeId"));
+                    payment.set("paymentMethodId", paymentPref.get("paymentMethodId"));
+                    payment.set("partyIdFrom", payFromPartyId);
+                    payment.set("partyIdTo", payToPartyId);
+                    payment.set("effectiveDate", UtilDateTime.nowTimestamp());
+                    payment.set("paymentRefNum", refundResponse.get("refundRefNum"));
+                    payment.set("amount", refundResponse.get("refundAmount"));
+                    payment.set("comments", "Refund : " + refundResponse.get("refundMessage"));
+                    try {
+                        delegator.create(payment);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Problem saving payment record", module);
+                        return ServiceUtil.returnError("Error saving Payment entity");
+                    }
+                    
+                    // return the paymentId
+                    result.put("paymentId", paymentId);
+                } else {
+                    return ServiceUtil.returnError("The refund failed");
+                } 
+                
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS); 
+                return result;                            
+            } else {
+                return ServiceUtil.returnError("No refund service defined");
+            }
+        } else {
+            return ServiceUtil.returnError("No payment settings found");              
+        }
+    }
 
     /**
      * Simple test processor; declines all orders < 100.00; approves all orders > 100.00
@@ -615,8 +721,7 @@ public class PaymentGatewayServices {
 
         long nowTime = new Date().getTime();
 
-        result.put("processAmount", context.get("processAmount"));
-        result.put("authCode", context.get("processResult"));
+        result.put("processAmount", context.get("processAmount"));        
         result.put("authRefNum", new Long(nowTime).toString());
         result.put("authFlag", "X");
         result.put("authMessage", "This is a test processor; no payments were captured or authorized.");
@@ -632,10 +737,9 @@ public class PaymentGatewayServices {
         long nowTime = new Date().getTime();
 
         result.put("authResult", new Boolean(true));
-        result.put("processAmount", context.get("processAmount"));
-        result.put("authCode", context.get("processResult"));
+        result.put("processAmount", context.get("processAmount"));       
         result.put("authRefNum", new Long(nowTime).toString());
-        result.put("authFlag", "X");
+        result.put("authFlag", "A");
         result.put("authMessage", "This is a test processor; no payments were captured or authorized.");
         return result;
     }
@@ -649,11 +753,10 @@ public class PaymentGatewayServices {
         long nowTime = new Date().getTime();
 
         result.put("authResult", new Boolean(false));
-        result.put("processAmount", context.get("processAmount"));
-        result.put("authCode", context.get("processResult"));
+        result.put("processAmount", context.get("processAmount"));       
         result.put("authRefNum", new Long(nowTime).toString());
-        result.put("authFlag", "X");
-        result.put("authMessage", "This is a test processor; no payments were captured or authorized.");
+        result.put("authFlag", "D");
+        result.put("authMessage", "This is a test processor; no payments were captured or authorized");
         return result;
     }
     
@@ -668,6 +771,21 @@ public class PaymentGatewayServices {
          result.put("captureAmount", context.get("captureAmount"));
          result.put("captureRefNum", new Long(nowTime).toString());
          
+         return result;
+     }
+     
+     /**
+      * Test refund service (returns true)      
+      */
+     public static Map testRefund(DispatchContext dctx, Map context) {
+         Map result = new HashMap();
+         long nowTime = new Date().getTime();
+         
+         result.put("refundResult", new Boolean(true));
+         result.put("refundAmount", context.get("refundAmount"));
+         result.put("refundRefNum", new Long(nowTime).toString());
+         result.put("refundFlag", "R");
+         result.put("refundMessage", "This is a test refund; no money was transferred");
          return result;
      }
 

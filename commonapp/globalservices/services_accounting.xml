@@ -275,7 +275,16 @@
         <attribute name="invoiceId" type="String" mode="IN" optional="true"/>     
         <attribute name="processResult" type="String" mode="OUT" optional="false"/>        
     </service>
+    
+    <service name="refundPayment" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="refundPayment" auth="true">
+        <description>Refunds A Payment</description>
+        <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="refundAmount" type="Double" mode="IN" optional="false"/>
+        <attribute name="paymentId" type="String" mode="OUT" optional="false"/>
+    </service>
 
+    <!-- Payment Gateway Interfaces -->
 	<service name="ccAuthInterface" engine="interface" location="" invoke="">
         <description>Credit Card Authorization Interface</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
@@ -320,6 +329,7 @@
 	    <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
 	    <attribute name="currency" type="String" mode="IN" optional="true"/>
 	    <attribute name="paymentConfig" type="String" mode="IN" optional="true"/>
+	    <attribute name="refundResult" type="Boolean" mode="OUT" optional="false"/>
 	    <attribute name="refundCode" type="String" mode="OUT" optional="true"/>
 	    <attribute name="refundRefNum" type="String" mode="OUT" optional="false"/>
 	    <attribute name="refundFlag" type="String" mode="OUT" optional="false"/>
@@ -383,6 +393,13 @@
             location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testCapture">
         <description>Credit Card Test Capture</description>
         <implements service="ccCaptureInterface"/>
+    </service>
+    
+    <!-- Credit Card Refund Services -->
+    <service name="testCCRefund" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testRefund">
+        <description>Credit Card Test Refund</description>
+        <implements service="ccRefundInterface"/>
     </service>
     
     <!-- EFT Processors -->        
