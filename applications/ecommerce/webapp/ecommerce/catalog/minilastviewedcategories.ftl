@@ -25,7 +25,7 @@
 -->
 
 <#assign maxToShow = 8/>
-<#assign lastViewedCategories = sessionAttributes.lastViewedCategories/>
+<#assign lastViewedCategories = sessionAttributes.lastViewedCategories?if_exists/>
 <#if lastViewedCategories?has_content>
     <#if (lastViewedCategories?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(lastViewedCategories?size-1)/></#if>
     <div class="ecom-screenlet">

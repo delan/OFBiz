@@ -25,7 +25,7 @@
 -->
 
 <#assign maxToShow = 4/>
-<#assign searchOptionsHistoryList = Static["org.ofbiz.product.product.ProductSearchSession"].getSearchOptionsHistoryList(session)/>
+<#assign searchOptionsHistoryList = Static["org.ofbiz.product.product.ProductSearchSession"].getSearchOptionsHistoryList(session)?if_exists/>
 <#if searchOptionsHistoryList?has_content>
     <#if (searchOptionsHistoryList?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(searchOptionsHistoryList?size-1)/></#if>
     <div class="ecom-screenlet">
