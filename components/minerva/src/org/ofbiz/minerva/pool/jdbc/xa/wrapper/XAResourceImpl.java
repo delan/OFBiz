@@ -3,6 +3,8 @@
  */
 package org.ofbiz.minerva.pool.jdbc.xa.wrapper;
 
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -31,6 +33,7 @@ public class XAResourceImpl implements XAResource {
     private Xid current;
     private boolean active = false;
     private int timeout_ignored = 0;
+    private Logger log = Logger.getLogger(XAResourceImpl.class);
 
     /**
      * Creates a new instance as the transactional resource for the specified
@@ -98,11 +101,13 @@ public class XAResourceImpl implements XAResource {
                 throwXAException(XAException.XA_HEURCOM);
             }
         } catch (SQLException e) {
+            log.error(e);
         }
 
         try {
             con.commit();
         } catch (SQLException e) {
+            log.error(e);
             try {
                 con.rollback();
                 if (!twoPhase) {
@@ -199,6 +204,7 @@ public class XAResourceImpl implements XAResource {
                 throwXAException(XAException.XA_HEURCOM);
             }
         } catch (SQLException e) {
+            log.error(e);
         }
 
         return XA_OK;
@@ -228,9 +234,8 @@ public class XAResourceImpl implements XAResource {
     public void rollback(Xid id) throws XAException {
         //System.out.println("rollback: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
         if (active) // End was not called!
-            System.err.println("WARNING: Connection not closed before transaction rollback.\nConnection will not participate in any future transactions.\nAre you sure you want to be doing this?");
-        if (current == null || !id.equals(current)) // wrong Xid
-        {
+            log.error("WARNING: Connection not closed before transaction rollback. Connection will not participate in any future transactions. Are you sure you want to be doing this?");
+        if (current == null || !id.equals(current)) { // wrong Xid
             throwXAException(XAException.XAER_NOTA);
         }
         try {
@@ -238,11 +243,13 @@ public class XAResourceImpl implements XAResource {
                 throwXAException(XAException.XA_HEURCOM);
             }
         } catch (SQLException e) {
+            log.error(e);
         }
 
         try {
             con.rollback();
         } catch (SQLException e) {
+            log.error(e);
             throwXAException("Rollback failed: " + e.getMessage());
         }
         current = null;
