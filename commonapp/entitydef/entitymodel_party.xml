@@ -1049,15 +1049,14 @@
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Note View Entity">	
       <member-entity entity-alias="PR" entity-name="Person" />	
-      <member-entity entity-alias="PN" entity-name="PartyNote" />	
-      <member-entity entity-alias="PT" entity-name="Party" />	
+      <member-entity entity-alias="PN" entity-name="PartyNote" />
       <member-entity entity-alias="ND" entity-name="NoteData" />
-      <alias entity-alias="PT" name="partyId" prim-key="true" />
+      <alias entity-alias="PN" name="targetPartyId" field="partyId" prim-key="true" />
       <alias entity-alias="ND" name="noteId" prim-key="true" />
       <alias entity-alias="ND" name="noteName" />
       <alias entity-alias="ND" name="noteInfo" />
       <alias entity-alias="ND" name="noteDateTime" />
-      <alias entity-alias="PR" name="postingPartyId" field="partyId" />
+      <alias entity-alias="PR" name="partyId" />
       <alias entity-alias="PR" name="firstName" />
       <alias entity-alias="PR" name="lastName" />
       <view-link entity-alias="PN" rel-entity-alias="ND">
