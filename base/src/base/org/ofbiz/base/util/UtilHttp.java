@@ -1,5 +1,5 @@
 /*
- * $Id: UtilHttp.java,v 1.9 2003/11/08 20:53:18 ajzeneski Exp $
+ * $Id: UtilHttp.java,v 1.10 2003/12/13 17:11:38 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.1
  */
 public class UtilHttp {
@@ -106,6 +106,26 @@ public class UtilHttp {
             }
         }
         return paramMap;
+    }
+
+    public static List makeParamListWithSuffix(HttpServletRequest request, String suffix, String prefix) {
+        List paramList = new ArrayList();
+        Enumeration parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String parameterName = (String) parameterNames.nextElement();
+            if (parameterName.endsWith(suffix)) {
+                if (prefix != null && prefix.length() > 0) {
+                    if (parameterName.startsWith(prefix)) {
+                        String value = request.getParameter(parameterName);
+                        paramList.add(value);
+                    }
+                } else {
+                    String value = request.getParameter(parameterName);
+                    paramList.add(value);
+                }
+            }
+        }
+        return paramList;
     }
 
     /**

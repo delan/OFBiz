@@ -1,5 +1,5 @@
 /*
- * $Id: ModelService.java,v 1.4 2003/12/06 23:10:14 ajzeneski Exp $
+ * $Id: ModelService.java,v 1.5 2003/12/13 17:11:38 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.base.util.OrderedSet;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ModelService {
@@ -515,23 +515,63 @@ public class ModelService {
             if (param.mode.equals("INOUT") || param.mode.equals(mode)) {
                 Object key = param.name;
 
-                if (source.containsKey(key)) {
-                    if ((param.internal && includeInternal) || (!param.internal)) {
-                        Object value = source.get(key);
+                // internal map of strings
+                if (param.stringMapPrefix != null && param.stringMapPrefix.length() > 0 && !source.containsKey(key)) {
+                    Map paramMap = this.makePrefixMap(source, param);
+                    if (paramMap != null && paramMap.size() > 0) {
+                        target.put(key, paramMap);
+                    }
+                // internal list of strings
+                } else if (param.stringListSuffix != null && param.stringListSuffix.length() > 0 && !source.containsKey(key)) {
+                    List paramList = this.makeSuffixList(source, param);
+                    if (paramList != null && paramList.size() > 0) {
+                        target.put(key, paramList);
+                    }
+                // other attributes
+                } else {
+                    if (source.containsKey(key)) {
+                        if ((param.internal && includeInternal) || (!param.internal)) {
+                            Object value = source.get(key);
     
-                        try {
-                            value = ObjectType.simpleTypeConvert(value, param.type, null, null);
-                        } catch (GeneralException e) {
-                            Debug.logWarning("[ModelService.makeValid] : Simple type conversion of param " +
-                                key + " failed: " + e.toString(), module);                        
+                            try {
+                                value = ObjectType.simpleTypeConvert(value, param.type, null, null);
+                            } catch (GeneralException e) {
+                                Debug.logWarning("[ModelService.makeValid] : Simple type conversion of param " +
+                                    key + " failed: " + e.toString(), module);
+                            }
+                            target.put(key, value);
                         }
-                       
-                        target.put(key, value);
                     }
                 }
             }
         }
         return target;
+    }
+
+    private Map makePrefixMap(Map source, ModelParam param) {
+        Map paramMap = new HashMap();
+        Set sourceSet = source.keySet();
+        Iterator i = sourceSet.iterator();
+        while (i.hasNext()) {
+            String key = (String) i.next();
+            if (key.startsWith(param.stringMapPrefix)) {
+                paramMap.put(key, source.get(key));
+            }
+        }
+        return paramMap;
+    }
+
+    private List makeSuffixList(Map source, ModelParam param) {
+        List paramList = new ArrayList();
+        Set sourceSet = source.keySet();
+        Iterator i = sourceSet.iterator();
+        while (i.hasNext()) {
+            String key = (String) i.next();
+            if (key.endsWith(param.stringListSuffix)) {
+                paramList.add(source.get(key));
+            }
+        }
+        return paramList;
     }
 
     /**
