@@ -1,5 +1,5 @@
 /*
- * $Id: EntityEcaAction.java,v 1.1 2003/08/17 06:44:25 jonesde Exp $
+ * $Id: EntityEcaAction.java,v 1.2 2003/10/26 11:07:05 jonesde Exp $
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class EntityEcaAction {
@@ -80,6 +80,7 @@ public class EntityEcaAction {
                 actionContext.put(valueAttr, value);
             }
             
+            Debug.logInfo("Running Entity ECA action service " + this.serviceName + " triggered by entity: " + value.getEntityName(), module);
             //Debug.logInfo("Running Entity ECA action service " + this.serviceName + "; value=" + value + "; actionContext=" + actionContext, module);
         
             LocalDispatcher dispatcher = dctx.getDispatcher();
