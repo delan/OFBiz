@@ -289,10 +289,10 @@ public class GenericDelegator {
    *@return The GenericValue corresponding to the primaryKey
    */
   public GenericValue findByPrimaryKeyCache(GenericPK primaryKey) throws GenericEntityException {
-    GenericValue value = (GenericValue)primaryKeyCache.get(primaryKey);
+    GenericValue value = this.getFromPrimaryKeyCache(primaryKey);
     if(value == null) {
       value = findByPrimaryKey(primaryKey);
-      if(value != null) primaryKeyCache.put(primaryKey, value);
+      if(value != null) this.putInPrimaryKeyCache(primaryKey, value);
     }
     return value;
   }
@@ -358,8 +358,8 @@ public class GenericDelegator {
       Map.Entry curEntry = (Map.Entry)helperIter.next();
       String helperName = (String)curEntry.getKey();
       GenericHelper helper = GenericHelperFactory.getHelper(helperName);
-      Collection temp = helper.findAllByPrimaryKeys((Collection)curEntry.getValue());
-      results.addAll(temp);
+      Collection values = helper.findAllByPrimaryKeys((Collection)curEntry.getValue());
+      results.addAll(values);
     }
     return results;
   }
@@ -372,7 +372,43 @@ public class GenericDelegator {
    *@return Collection of GenericValue objects corresponding to the passed primaryKey objects
    */
   public Collection findAllByPrimaryKeysCache(Collection primaryKeys) throws GenericEntityException {
-    return null;
+    if(primaryKeys == null) return null;
+    Collection results = new LinkedList();
+    
+    //from the delegator level this is complicated because different GenericPK 
+    // objects in the collection may correspond to different helpers
+    HashMap pksPerHelper = new HashMap();
+    Iterator pkiter = primaryKeys.iterator();
+    while(pkiter.hasNext()) {
+      GenericPK curPK = (GenericPK)pkiter.next();
+      
+      GenericValue value = this.getFromPrimaryKeyCache(curPK);
+      if(value != null) {
+        //it is in the cache, so just put the cached value in the results
+        results.add(value);
+      }
+      else {
+        //is not in the cache, so put in a collection for a call to the helper
+        String helperName = this.getEntityHelperName(curPK.getEntityName());
+        Collection pks = (Collection)pksPerHelper.get(helperName);
+        if(pks == null) {
+          pks = new LinkedList();
+          pksPerHelper.put(helperName, pks);
+        }
+        pks.add(curPK);
+      }
+    }
+    
+    Iterator helperIter = pksPerHelper.entrySet().iterator();
+    while(helperIter.hasNext()) {
+      Map.Entry curEntry = (Map.Entry)helperIter.next();
+      String helperName = (String)curEntry.getKey();
+      GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+      Collection values = helper.findAllByPrimaryKeys((Collection)curEntry.getValue());
+      this.putAllInPrimaryKeyCache(values);
+      results.addAll(values);
+    }
+    return results;
   }
 
   /** Remove a Generic Entity corresponding to the primaryKey
@@ -399,10 +435,10 @@ public class GenericDelegator {
    *@return    Collection containing all Generic entities
    */
   public Collection findAllCache(String entityName, List orderBy) throws GenericEntityException {
-    Collection col = (Collection)allCache.get(entityName);
+    Collection col = this.getFromAllCache(entityName);
     if(col == null) {
       col = findAll(entityName, orderBy);
-      if(col != null) allCache.put(entityName, col);
+      if(col != null) this.putInAllCache(entityName, col);
     }
     return col;
   }
@@ -431,11 +467,10 @@ public class GenericDelegator {
    *@return Collection of GenericValue instances that match the query
    */
   public Collection findByAndCache(String entityName, Map fields, List orderBy) throws GenericEntityException {
-    GenericPK tempPK = new GenericPK(modelReader.getModelEntity(entityName), fields);
-    Collection col = (Collection)andCache.get(tempPK);
+    Collection col = this.getFromAndCache(entityName, fields);
     if(col == null) {
       col = findByAnd(entityName, fields, orderBy);
-      if(col != null) andCache.put(tempPK, col);
+      if(col != null) this.putInAndCache(entityName, fields, col);
     }
     return col;
   }
@@ -622,6 +657,43 @@ public class GenericDelegator {
     helper.store(value);
   }
   
+  /** Store the Entities from the Collection GenericValue instances to the persistent store.
+   *  This is different than the normal store method in that the store method only does
+   *  an update, while the storeAll method checks to see if each entity exists, then
+   *  either does an insert or an update as appropriate.
+   *  These updates all happen in one transaction, so they will either all succeed or all fail,
+   *  if the data source supports transactions. This is just like to othersToStore feature
+   *  of the GenericEntity on a create or store.
+   *@param values Collection of GenericValue instances containing the entities to store
+   */
+  public void storeAll(Collection values) throws GenericEntityException {
+    if(values == null) return;
+    
+    //from the delegator level this is complicated because different GenericValue 
+    // objects in the collection may correspond to different helpers
+    HashMap valuesPerHelper = new HashMap();
+    Iterator viter = values.iterator();
+    while(viter.hasNext()) {
+      GenericValue value = (GenericValue)viter.next();
+      String helperName = this.getEntityHelperName(value.getEntityName());
+      Collection helperValues = (Collection)valuesPerHelper.get(helperName);
+      if(helperValues == null) {
+        helperValues = new LinkedList();
+        valuesPerHelper.put(helperName, helperValues);
+      }
+      helperValues.add(value);
+    }
+    
+    Iterator helperIter = valuesPerHelper.entrySet().iterator();
+    while(helperIter.hasNext()) {
+      Map.Entry curEntry = (Map.Entry)helperIter.next();
+      String helperName = (String)curEntry.getKey();
+      GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+      this.clearAllCacheLinesByValue((Collection)curEntry.getValue());
+      helper.storeAll((Collection)curEntry.getValue());
+    }
+  }
+
   /** Remove a CACHED Generic Entity (Collection) from the cache, either a PK, ByAnd, or All
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param fields The fields of the named entity to query by with their corresponging values
@@ -666,6 +738,67 @@ public class GenericDelegator {
     if(primaryKey != null && primaryKeyCache != null) {
       primaryKeyCache.remove(primaryKey);
     }
+  }
+  
+  public void clearAllCacheLines(Collection primaryKeys) {
+    if(primaryKeys == null) return;
+    Iterator iter = primaryKeys.iterator();
+    while(iter.hasNext()) {
+      GenericPK primaryKey = (GenericPK)iter.next();
+      this.clearCacheLine(primaryKey);
+    }
+  }
+  
+  public void clearAllCacheLinesByValue(Collection values) {
+    if(values == null) return;
+    Iterator iter = values.iterator();
+    while(iter.hasNext()) {
+      GenericValue value = (GenericValue)iter.next();
+      this.clearCacheLine(value.getPrimaryKey());
+    }
+  }
+  
+  public GenericValue getFromPrimaryKeyCache(GenericPK primaryKey) {
+    if(primaryKey == null) return null;
+    return (GenericValue)primaryKeyCache.get(primaryKey);
+  }
+  
+  public Collection getFromAllCache(String entityName) {
+    if(entityName == null) return null;
+    return (Collection)allCache.get(entityName);
+  }
+  
+  public Collection getFromAndCache(String entityName, Map fields) {
+    if(entityName == null || fields == null) return null;
+    GenericPK tempPK = new GenericPK(modelReader.getModelEntity(entityName), fields);
+    if(tempPK == null) return null;
+    return (Collection)andCache.get(tempPK);
+  }
+  
+  public void putInPrimaryKeyCache(GenericPK primaryKey, GenericValue value) {
+    if(primaryKey == null || value == null) return;
+    primaryKeyCache.put(primaryKey, value);
+  }
+  
+  public void putAllInPrimaryKeyCache(Collection values) {
+    if(values == null) return;
+    Iterator iter = values.iterator();
+    while(iter.hasNext()) {
+      GenericValue value = (GenericValue)iter.next();
+      this.putInPrimaryKeyCache(value.getPrimaryKey(), value);
+    }
+  }
+  
+  public void putInAllCache(String entityName, Collection values) {
+    if(entityName == null || values == null) return;
+    allCache.put(entityName, values);
+  }
+  
+  public void putInAndCache(String entityName, Map fields, Collection values) {
+    if(entityName == null || fields == null || values == null) return;
+    GenericPK tempPK = new GenericPK(modelReader.getModelEntity(entityName), fields);
+    if(tempPK == null) return;
+    andCache.put(tempPK, values);
   }
   
   /** Get the next guaranteed unique seq id from the sequence with the given sequence name; if the named sequence doesn't exist, it will be created
