@@ -221,8 +221,6 @@ Error messages go on the error list and are handled with the check-errors tag.
     to-field-name CDATA #IMPLIED
 >
 
-<!-- TODO: handle if-* operations -->
-
 <!-- 
 Operations that conditionally execute blocks within them; they mimic the
 simple-map-processor process operations that validate incoming data
