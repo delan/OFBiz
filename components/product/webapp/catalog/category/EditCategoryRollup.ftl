@@ -20,31 +20,33 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@author     Catherine Heintz (catherine.heintz@nereide.biz)
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
 ${pages.get("/category/CategoryTabBar.ftl")}
 
-<div class="head1">Rollup <span class="head2"><#if productCategory?has_content>${productCategory.description} </#if>[ID:${productCategoryId?if_exists}]</span></div>
-
-<a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">[New Category]</a>
+<div class="head1">${uiLabelMap.ProductRollup} <span class="head2"><#if productCategory?has_content>${productCategory.description} </#if>[${uiLabelMap.CommonId}:${productCategoryId?if_exists}]</span></div>
+  
+<a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewCategory}]</a>
 <#if productCategoryId?has_content> 
-  <a href="/ecommerce/control/category?category_id=${productCategoryId}" class="buttontext" target="_blank">[Category Page]</a>
+  <a href="/ecommerce/control/category?category_id=${productCategoryId}" class="buttontext" target="_blank">[${uiLabelMap.ProductCategoryPage}]</a>
 </#if>
 <br>
 <br>
 
 <#if productCategoryId?has_content> 
-<p class="head2">Category Rollup: Parent Categories</p>
+<p class="head2">${uiLabelMap.ProductCategoryRollupParentCategories}</p>
 
 <table width="100%" border="1" cellpadding="2" cellspacing="0">
   <tr>
-    <td><div class="tabletext"><b>Parent&nbsp;Category&nbsp;[ID]</b></div></td>
-    <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
-    <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductParentCategoryId}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
+    <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <#if currentProductCategoryRollups.size() != 0>
@@ -73,14 +75,14 @@ ${pages.get("/category/CategoryTabBar.ftl")}
       </td>
       <td>
         <a href="<@ofbizUrl>/removeProductCategoryFromCategory?showProductCategoryId=${productCategoryId}&productCategoryId=${productCategoryRollup.productCategoryId}&parentProductCategoryId=${productCategoryRollup.parentProductCategoryId}&fromDate=${productCategoryRollup.fromDate}</@ofbizUrl>" class="buttontext">
-        [Delete]</a>
+        [${uiLabelMap.CommonDelete}]</a>
       </td>
     </tr>
   </#list>
 </#if>
 <#if currentProductCategoryRollups.size() == 0>
   <tr valign="middle">
-    <td colspan="5"><DIV class="tabletext">No Parent Categories found.</DIV></td>
+    <td colspan="5"><DIV class="tabletext">${uiLabelMap.ProductNoParentCategoriesFound}.</DIV></td>
   </tr>
 </#if>
 </table>
@@ -88,7 +90,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
 <form method="POST" action="<@ofbizUrl>/addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addParentForm">
   <input type="hidden" name="productCategoryId" value="${productCategoryId}">
   <input type="hidden" name="showProductCategoryId" value="${productCategoryId}">
-  <div class="tabletext">Add <b>Parent</b> Category (select Category and enter From Date):</div>
+  <div class="tabletext">${uiLabelMap.CommonAdd} <b>${uiLabelMap.ProductParent}</b> ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}:</div>
     <select name="parentProductCategoryId" class="selectBox">
     <#list productCategoryCol as curCategory>
         <#if productCategoryId != curCategory.productCategoryId>
@@ -104,13 +106,13 @@ ${pages.get("/category/CategoryTabBar.ftl")}
 <hr>
 <br>
 
-<p class="head2">Category Rollup: Child Categories</p>
+<p class="head2">${uiLabelMap.ProductCategoryRollupChildCategories}</p>
 
 <table width="100%" border="1" cellpadding="2" cellspacing="0">
   <tr>
-    <td><div class="tabletext"><b>Child&nbsp;Category&nbsp;ID</b></div></td>
-    <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
-    <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductChildCategoryId}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
+    <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <#if parentProductCategoryRollups.size() != 0>
@@ -139,14 +141,14 @@ ${pages.get("/category/CategoryTabBar.ftl")}
       </td>
       <td>
         <a href="<@ofbizUrl>/removeProductCategoryFromCategory?showProductCategoryId=${productCategoryId}&productCategoryId=${productCategoryRollup.productCategoryId}&parentProductCategoryId=${productCategoryRollup.parentProductCategoryId}&fromDate=${productCategoryRollup.fromDate}</@ofbizUrl>" class="buttontext">
-        [Delete]</a>
+        [${uiLabelMap.CommonDelete}]</a>
       </td>
     </tr>
   </#list>
 </#if>
 <#if parentProductCategoryRollups.size() == 0>
   <tr valign="middle">
-    <td colspan="5"><div class="tabletext">No Child Categories found.</div></td>
+    <td colspan="5"><div class="tabletext">${uiLabelMap.ProductNoChildCategoriesFound}.</div></td>
   </tr>
 </#if>
 </table>
@@ -155,7 +157,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
 <form method="POST" action="<@ofbizUrl>/addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addChildForm">
   <input type="hidden" name="showProductCategoryId" value="${productCategoryId}">
   <input type="hidden" name="parentProductCategoryId" value="${productCategoryId}">
-  <div class="tabletext">Add <b>Child</b> Category (select Category and enter From Date):</div>
+  <div class="tabletext">${uiLabelMap.CommonAdd} <b>${uiLabelMap.ProductChild}</b> ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}:</div>
     <select name="productCategoryId" class="selectBox">
     <#list productCategoryCol as curCategory>
         <#if productCategoryId != curCategory.productCategoryId>
@@ -170,5 +172,5 @@ ${pages.get("/category/CategoryTabBar.ftl")}
 </#if>
 
 <#else>
-  <h3>You do not have permission to view this page.  ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

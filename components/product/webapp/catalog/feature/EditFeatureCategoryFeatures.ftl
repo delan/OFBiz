@@ -20,43 +20,45 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Catherine Heintz (catherine.heintz@nereide.biz)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
-<div class="head1">Edit Features for Feature Category "${(curProductFeatureCategory.description)?if_exists}"</div>
+<div class="head1">${uiLabelMap.ProductEditFeaturesForFeatureCategory} "${(curProductFeatureCategory.description)?if_exists}"</div>
 <#if productId?has_content>
-<div class="head2">And Apply Features to Product with ID "${productId}"</div>
+<div class="head2">${uiLabelMap.ProductAndApplyFeaturesToProductWithId} "${productId}"</div>
 <div>
-  <a href="<@ofbizUrl>/EditProduct?productId=${productId}</@ofbizUrl>" class="buttontext">[Return to Edit Product]</a>
-  <a href="<@ofbizUrl>/EditProductFeatures?productId=${productId}</@ofbizUrl>" class="buttontext">[Return to Edit Product Features]</a>
+  <a href="<@ofbizUrl>/EditProduct?productId=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductReturnToEditProduct}]</a>
+  <a href="<@ofbizUrl>/EditProductFeatures?productId=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductReturnToEditProductFeatures}]</a>
 </div>
 </#if>
 
 <br>
-<p class="head2">Product Feature Maintenance</p>
+<p class="head2">${uiLabelMap.ProductProductFeatureMaintenance}</p>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr class='viewOneTR1'>
-    <td><div class="tabletext"><b>Description</b></div></td>
-    <td><div class="tabletext"><b>Feature&nbsp;Type</b></div></td>
-    <td><div class="tabletext"><b>Feature&nbsp;Category</b></div></td>
-    <td><div class="tabletext"><b>Unit of Measure ID</b></div></td>
-    <td><div class="tabletext"><b>Quantity</b></div></td>
-    <td><div class="tabletext"><b>DSeqNum</b></div></td>
-    <td><div class="tabletext"><b>ID Code</b></div></td>
-    <td><div class="tabletext"><b>Abbrev</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.CommonDescription}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductFeatureType}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductFeatureCategory}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductUnitOfMeasureId}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductQuantity}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductIdSeqNum}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductIdCode}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductAbbrev}</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
     <#if productId?has_content>
       </tr>
       <tr class='viewOneTR2'>
         <td><div class="tabletext">&nbsp;</div></td>
-        <td><div class="tabletext"><b>Appl&nbsp;Type</b></div></td>
-        <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
-        <td><div class="tabletext"><b>Thru&nbsp;Date</b></div></td>
-        <td><div class="tabletext"><b>Amount</b></div></td>
-        <td><div class="tabletext"><b>Sequence</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.ProductApplType}</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.CommonThruDate}</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.ProductAmount}</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.CommonSequence}</b></div></td>
         <td colspan='3'><div class="tabletext">&nbsp;</div></td>
     </#if>
   </tr>
@@ -121,11 +123,11 @@
 <form method="POST" action="<@ofbizUrl>/CreateProductFeature</@ofbizUrl>" style='margin: 0;'>
   <#if productId?has_content><input type="hidden" name="productId" value="${productId}"></#if>
   <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}">
-  <div class='head2'>Create ProductFeature in this Category:</div>
+  <div class='head2'>${uiLabelMap.ProductCreateProductFeatureInThisCategory}:</div>
   <br>
   <table>
     <tr>
-      <td><div class='tabletext'>Feature Type:</div></td>
+      <td><div class='tabletext'>${uiLabelMap.ProductFeatureType}:</div></td>
       <td>
         <select name='productFeatureTypeId' size=1 class='selectBox'>
         <#list productFeatureTypes as productFeatureType>
@@ -145,27 +147,27 @@
     </tr>
 -->
     <tr>
-      <td><div class='tabletext'>Description:</div></td>
+      <td><div class='tabletext'>${uiLabelMap.CommonDescription}:</div></td>
       <td><input type=text size='30' name='description' class='inputBox' value=''></td>
     </tr>
     <tr>
-      <td><div class='tabletext'>Unit of Measure ID:</div></td>
+      <td><div class='tabletext'>${uiLabelMap.ProductUnitOfMeasureId}:</div></td>
       <td><input type=text size='10' name='uomId' class='inputBox' value=''></td>
     </tr>
     <tr>
-      <td><div class='tabletext'>Number/Quantity:</div></td>
+      <td><div class='tabletext'>${uiLabelMap.ProductNumberQuantity}:</div></td>
       <td><input type=text size='10' name='numberSpecified' class='inputBox' value=''></td>
     </tr>
     <tr>
-      <td><div class='tabletext'>Default Sequence Number:</div></td>
+      <td><div class='tabletext'>${uiLabelMap.ProductDefaultSequenceNumber}:</div></td>
       <td><input type=text size='10' name='defaultSequenceNum' class='inputBox' value=''></td>
     </tr>
     <tr>
-      <td><div class='tabletext'>ID Code:</div></td>
+      <td><div class='tabletext'>${uiLabelMap.ProductIdCode}:</div></td>
       <td><input type=text size='10' name='idCode' class='inputBox' value=''></td>
     </tr>
     <tr>
-      <td><div class='tabletext'>Abbreviation:</div></td>
+      <td><div class='tabletext'>${uiLabelMap.ProductAbbreviation}:</div></td>
       <td><input type=text size='10' name='abbrev' class='inputBox' value=''></td>
     </tr>
     <tr>
@@ -175,5 +177,5 @@
 </form>
 <br>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

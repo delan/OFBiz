@@ -20,28 +20,30 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@author     Catherine Heintz (catherine.heintz@nereide.biz)
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 ${pages.get("/category/CategoryTabBar.ftl")}
-
-    <div class="head1">Products <span class="head2">for <#if productCategory?exists>${(productCategory.description)?if_exists} [ID:${productCategoryId?if_exists}]</#if></span></div>
+      
+    <div class="head1">${uiLabelMap.ProductProducts} <span class="head2">${uiLabelMap.CommonFor}<#if productCategory?exists>${(productCategory.description)?if_exists} [${uiLabelMap.CommonId}:${productCategoryId?if_exists}]</#if></span></div>
     
-    <a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">[New Category]</a>
+    <a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewCategory}]</a>
     <#if productCategoryId?has_content>
-        <a href="/ecommerce/control/category?category_id=${productCategoryId?if_exists}" class="buttontext" target="_blank">[Category Page]</a>
-        <a href="<@ofbizUrl>/createProductInCategoryStart?productCategoryId=${productCategoryId?if_exists}</@ofbizUrl>" class="buttontext">[Create Product In Category]</a>
+        <a href="/ecommerce/control/category?category_id=${productCategoryId?if_exists}" class="buttontext" target="_blank">[${uiLabelMap.ProductCategoryPage}]</a>
+        <a href="<@ofbizUrl>/createProductInCategoryStart?productCategoryId=${productCategoryId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateProductInCategory}]</a>
     </#if>
     <#if activeOnly>
-        <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&activeOnly=false</@ofbizUrl>" class="buttontext">[Active and Inactive]</a>
+        <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveAndInactive}]</a>
     <#else>
-        <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&activeOnly=true</@ofbizUrl>" class="buttontext">[Active Only]</a>
+        <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&activeOnly=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveOnly}]</a>
     </#if>    
     <p>
     <#if productCategoryId?exists && productCategory?exists>
-        <p class="head2">Product-Category Member Maintenance</p>
+        <p class="head2">${uiLabelMap.ProductProductCategoryMemberMaintenance}</p>
     
         <#if (listSize > 0)>
             <table border="0" width="100%" cellpadding="2">
@@ -49,13 +51,13 @@ ${pages.get("/category/CategoryTabBar.ftl")}
                 <td align=right>
                     <b>
                     <#if (viewIndex > 0)>
-                    <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+                    <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
                     <#if (listSize > 0)>
                         ${lowIndex+1} - ${highIndex+1} of ${listSize}
                     </#if>
                     <#if (listSize > (highIndex+1))>
-                    | <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Next]</a>
+                    | <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
                     </b>
                 </td>
@@ -65,9 +67,9 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
-            <td><div class="tabletext"><b>Product Name [ID]</b></div></td>
-            <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-            <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence&nbsp;&amp;&nbsp;Quantity</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductProductNameId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
+            <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequenceQuantity}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
         </tr>
         <#if (listSize > 0)>
@@ -96,7 +98,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
                 </td>
                 <td align="center">
                 <a href="<@ofbizUrl>/removeCategoryProductMember?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&productId=${(productCategoryMember.productId)?if_exists}&productCategoryId=${(productCategoryMember.productCategoryId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue((productCategoryMember.getTimestamp("fromDate").toString()))}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">
-                [Delete]</a>
+                [${uiLabelMap.CommonDelete}]</a>
                 </td>
             </tr>
             <#assign line = line + 1>
@@ -110,13 +112,13 @@ ${pages.get("/category/CategoryTabBar.ftl")}
                 <td align=right>
                     <b>
                     <#if (viewIndex > 0)>
-                        <a href="<@ofbizUrl>"/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+                        <a href="<@ofbizUrl>"/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                         </#if>
                         <#if (listSize > 0)>
                         ${lowIndex+1} - ${highIndex+1} of ${listSize}
                         </#if>
                         <#if (listSize > (highIndex+1))>
-                        | <a href="<@ofbizUrl>"/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Next]</a>
+                        | <a href="<@ofbizUrl>"/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
                     </b>
                 </td>
@@ -128,10 +130,10 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
         
-        <div class="head2">Add ProductCategoryMember:</div>
+        <div class="head2">${uiLabelMap.ProductAddProductCategoryMember}:</div>
         <div class="tabletext">
-            Product ID: <input type=text size="20" name="productId" class="inputBox">
-            From Date: <input type=text size="22" name="fromDate" class="inputBox">
+            ${uiLabelMap.ProductProductId}: <input type=text size="20" name="productId" class="inputBox">
+            ${uiLabelMap.CommonFromDate}: <input type=text size="22" name="fromDate" class="inputBox">
             <a href="javascript:call_cal(document.addProductCategoryMemberForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <input type="submit" value="Add">
         </div>
@@ -142,9 +144,9 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
         
-        <div class="head2">Copy ProductCategoryMembers to Another Category:</div>
+        <div class="head2">${uiLabelMap.ProductCopyProductCategoryMembersToAnotherCategory}:</div>
         <div class="tabletext">
-            Product Category:
+            ${uiLabelMap.ProductProductCategory}:
             <select name="productCategoryIdTo" class="selectBox">
             <option value=""></option>
             <#list productCategories as productCategoryTo>
@@ -152,12 +154,12 @@ ${pages.get("/category/CategoryTabBar.ftl")}
             </#list>
             </select>
             <br>
-            Optional Filter With Date: <input type=text size="20" name="validDate" class="inputBox">
+            ${uiLabelMap.ProductOptionalFilterWithDate}: <input type=text size="20" name="validDate" class="inputBox">
             <br>
-            Include Sub-Categories?
+            ${uiLabelMap.ProductIncludeSubCategories}?
             <select name="recurse" class="selectBox">
-                <option>N</option>
-                <option>Y</option>
+                <option>${uiLabelMap.CommonN}</option>
+                <option>${uiLabelMap.CommonY}</option>
             </select>
             <input type="submit" value="Copy">
         </div>
@@ -168,9 +170,9 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <input type="hidden" name="productCategoryId" value="${productCategoryId}?if_exists">
         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
         
-        <div class="head2">Expire All Product Members:</div>
+        <div class="head2">${uiLabelMap.ProductExpireAllProductMembers}:</div>
         <div class="tabletext">
-            Optional Expiration Date: <input type=text size="20" name="thruDate" class="inputBox">
+            ${uiLabelMap.ProductOptionalExpirationDate}: <input type=text size="20" name="thruDate" class="inputBox">
             <input type="submit" value="Expire All">
         </div>
         </form>
@@ -179,13 +181,13 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
         
-        <div class="head2">Remove Expired Product Members:</div>
+        <div class="head2">${uiLabelMap.ProductRemoveExpiredProductMembers}:</div>
         <div class="tabletext">
-            Optional Expired Before Date: <input type=text size="20" name="validDate" class="inputBox">
+            ${uiLabelMap.ProductOptionalExpiredBeforeDate}: <input type=text size="20" name="validDate" class="inputBox">
             <input type="submit" value="Remove Expired">
         </div>
         </form>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

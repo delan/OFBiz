@@ -20,19 +20,21 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Catherine Heintz (catherine.heintz@nereide.biz)
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
-<div class="head1">Product Catalogs List</div>
-<div><a href="<@ofbizUrl>/EditProdCatalog</@ofbizUrl>" class="buttontext">[Create New ProdCatalog]</a></div>
+<div class="head1">${uiLabelMap.ProductProductCatalogsList}</div>
+<div><a href="<@ofbizUrl>/EditProdCatalog</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewProdCatalog}]</a></div>
 <br>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
-    <td><div class="tabletext"><b>Catalog&nbsp;Name&nbsp;[ID]</b></div></td>    
-    <td><div class="tabletext"><b>Use QuickAdd?</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductCatalogNameId}</b></div></td>    
+    <td><div class="tabletext"><b>${uiLabelMap.ProductUseQuickAdd}?</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
   </tr>
 <#list prodCatalogs as prodCatalog>
@@ -41,7 +43,7 @@
     <td><div class="tabletext">&nbsp;${prodCatalog.useQuickAdd?if_exists}</div></td>
     <td>
       <a href="<@ofbizUrl>/EditProdCatalog?prodCatalogId=${prodCatalog.prodCatalogId}</@ofbizUrl>" class="buttontext">
-      [Edit]</a>
+      [${uiLabelMap.CommonEdit}]</a>
     </td>
   </tr>
 </#list>
@@ -49,5 +51,5 @@
 <br>
 
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

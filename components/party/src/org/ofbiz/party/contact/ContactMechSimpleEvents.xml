@@ -23,7 +23,8 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @author     Olivier.Heintz@nereide.biz 
+ * @version    $Revision: 1.3 $
  * @since      2.0
 -->
 
@@ -62,14 +63,14 @@
         <if-compare value="USA" operator="equals" field-name="countryGeoId" map-name="addressContext">
           <if-empty field-name="stateProvinceGeoId" map-name="addressContext">
             <add-error>
-              <fail-message message="State is missing, and is required for an address in the United States."/>
+            	<fail-property resource="PartyUiLabels" property="PartyStateInUsMissing"/>
             </add-error>                        
           </if-empty>
         </if-compare>        
         <if-compare value="CAN" operator="equals" field-name="countryGeoId" map-name="addressContext">          
           <if-empty field-name="stateProvinceGeoId" map-name="addressContext">
             <add-error>
-              <fail-message message="Province is missing, and is required for an address in Canada."/>
+              <fail-property resource="PartyUiLabels" property="PartyProveinceInCanadaMissing"/>
             </add-error>
           </if-empty>
         </if-compare>        
@@ -92,14 +93,14 @@
         <if-compare value="USA" operator="equals" field-name="countryGeoId" map-name="context">
           <if-empty field-name="stateProvinceGeoId" map-name="context">
             <add-error>
-              <fail-message message="State is missing, and is required for an address in the United States."/>
+            	<fail-property resource="PartyUiLabels" property="PartyStateInUsMissing"/>
             </add-error>                        
           </if-empty>
         </if-compare>        
         <if-compare value="CAN" operator="equals" field-name="countryGeoId" map-name="context">
           <if-empty field-name="stateProvinceGeoId" map-name="context">
             <add-error>
-              <fail-message message="Province is missing, and is required for an address in Canada."/>
+              <fail-property resource="PartyUiLabels" property="PartyProveinceInCanadaMissing"/>
             </add-error>
           </if-empty>
         </if-compare>                        
@@ -116,14 +117,14 @@
         <if-compare value="USA" operator="equals" field-name="countryGeoId" map-name="context">          
           <if-empty field-name="stateProvinceGeoId" map-name="context">            
             <add-error>
-              <fail-message message="State is missing, and is required for an address in the United States."/>
+				<fail-property resource="PartyUiLabels" property="PartyStateInUsMissing"/>
             </add-error>                        
           </if-empty>
         </if-compare>        
         <if-compare value="CAN" operator="equals" field-name="countryGeoId" map-name="context">         
           <if-empty field-name="stateProvinceGeoId" map-name="context">           
             <add-error>
-              <fail-message message="Province is missing, and is required for an address in Canada."/>
+              <fail-property resource="PartyUiLabels" property="PartyProveinceInCanadaMissing"/>
             </add-error>
           </if-empty>
         </if-compare>                  

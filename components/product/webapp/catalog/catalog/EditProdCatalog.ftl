@@ -20,25 +20,27 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Catherine Heintz (catherine.heintz@nereide.biz)
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
 <#if prodCatalogId?has_content>
   <div class='tabContainer'>
-  <a href="<@ofbizUrl>/EditProdCatalog?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButtonSelected">Catalog</a>
-  <a href="<@ofbizUrl>/EditProdCatalogStores?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">Stores</a>
-  <a href="<@ofbizUrl>/EditProdCatalogParties?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">Parties</a>
-  <a href="<@ofbizUrl>/EditProdCatalogCategories?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">Categories</a>
+  <a href="<@ofbizUrl>/EditProdCatalog?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ProductCatalog}</a>
+  <a href="<@ofbizUrl>/EditProdCatalogStores?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">${uiLabelMap.ProductStores}</a>
+  <a href="<@ofbizUrl>/EditProdCatalogParties?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyParties}</a>
+  <a href="<@ofbizUrl>/EditProdCatalogCategories?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">${uiLabelMap.ProductCategories}</a>
   </div>
 </#if>
-<div class="head1">Catalog <span class='head2'><#if (prodCatalog.catalogName)?has_content>"${prodCatalog.catalogName}"</#if> [ID:${prodCatalogId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditProdCatalog</@ofbizUrl>" class="buttontext">[New ProdCatalog]</a>
+<div class="head1">${uiLabelMap.ProductCatalog} <span class='head2'><#if (prodCatalog.catalogName)?has_content>"${prodCatalog.catalogName}"</#if> [${uiLabelMap.CommonId}:${prodCatalogId?if_exists}]</span></div>
+<a href="<@ofbizUrl>/EditProdCatalog</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProdCatalog}]</a>
 
 ${editProdCatalogWrapper.renderFormString()}
 
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>
