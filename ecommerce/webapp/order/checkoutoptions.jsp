@@ -40,6 +40,9 @@
 
 <%ShoppingCart cart = (ShoppingCart)session.getAttribute(SiteDefs.SHOPPING_CART); %>
 <%if (cart != null) pageContext.setAttribute("cart", cart);%>
+<ofbiz:if name="cart">
+    <%if (cart.getMaySplit() != null) pageContext.setAttribute("maySplit", cart.getMaySplit());%>
+</ofbiz:if>
 
 <form method="post" name="checkoutInfoForm" action="<ofbiz:url>/checkout</ofbiz:url>" style=margin:0;>
 <table width="100%" border="0">
@@ -49,13 +52,14 @@
 
   <div class="head2" nowrap><b>How shall WE ship it?</b></div>
   <table width="100%" cellpadding="0" border="0" cellpadding="0" cellspacing="0">
+  <%String chosenShippingMethod = cart.getShipmentMethodTypeId() + '@' + cart.getCarrierPartyId();%>
 <ofbiz:iterator name="carrierShipmentMethod" property="carrierShipmentMethodList">
     <tr>
       <td width=1% valign="top" >
         <%String shippingMethod = carrierShipmentMethod.getString("shipmentMethodTypeId") + "@" + carrierShipmentMethod.getString("partyId");%>
         <input
           <ofbiz:if name="cart">
-            <%=shippingMethod.equals(cart.getShippingMethod()) ? "CHECKED" : ""%>
+            <%=shippingMethod.equals(chosenShippingMethod) ? "CHECKED" : ""%>
           </ofbiz:if>
           type="radio" name="shipping_method"
           value="<%=shippingMethod%>"
@@ -93,7 +97,7 @@
     </tr>
     <tr>
       <td valign="top">
-        <input CHECKED type="radio" name="SPLITTING_PREFERENCE_CODE" value="NO_SPLIT">
+        <input <ofbiz:if name="maySplit" value="false" type="Boolean">CHECKED</ofbiz:if> type="radio" name="may_split" value="false">
       </td>
       <td valign="top">
         <div class="tabletext">Please wait until the entire order is ready before shipping.</div>
@@ -101,7 +105,7 @@
     </tr>
     <tr>
       <td valign="top">
-        <input type="radio" name="SPLITTING_PREFERENCE_CODE" value="SPLIT">
+        <input <ofbiz:if name="maySplit" value="true" type="Boolean">CHECKED</ofbiz:if> type="radio" name="may_split" value="true">
       </td>
       <td valign="top">
         <div class="tabletext">Please ship items I ordered as they become available (you may incur additional shipping charges).</div>
@@ -232,7 +236,7 @@
       <tr>
         <td width="1%" nowrap>
           <%String creditCardId = creditCardInfo.getString("creditCardId");%>
-          <input type="radio" name="payment_code" value="ccard:<%=creditCardId%>"
+          <input type="radio" name="credit_card_id" value="<%=creditCardId%>"
             <ofbiz:if name="cart"><%=creditCardId.equals(cart.getCreditCardId()) ? "CHECKED" : ""%></ofbiz:if>>
         </td>
         <td width="50%" nowrap>

@@ -101,28 +101,29 @@
 
 
 
-<%--  <tr>
-    <td align="left" colspan="2"><div class="head2">Special Instructions</div></td>
+  <tr>
+    <td align="left" colspan="2"><div class="head2">Shipping Instructions</div></td>
   </tr>
   <tr>
       <td>&nbsp;</td>
       <td align="left">
-  <div class="tabletext"><%=specialInstructions %></div>
+  <div class="tabletext"><%=UtilFormatOut.checkNull(cart.getShippingInstructions())%></div>
       </td>
-  </ tr>  --%>
+  </tr>
 
-<%--  <tr>
+  <tr>
     <td align="left" colspan="5"><div class="head2">Shipping Method</div></td>
   </tr>
   <tr>
     <td>&nbsp;</td>
     <td align="left">
         <div class="tabletext">
-          <%=UtilFormatOut.checkNull(shippingMethod)%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAccount, "<br>Use Account: ", "")%>
+          <%=UtilFormatOut.checkNull(cart.getCarrierPartyId())%> 
+          <%=UtilFormatOut.checkNull(helper.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", cart.getShipmentMethodTypeId())).getString("description"))%>
+          <%--=UtilFormatOut.ifNotEmpty(shippingAccount, "<br>Use Account: ", "")--%>
         </div>
     </td>
-  </tr> --%>
+  </tr> 
       <tr>
         <td align="left" colspan="5"><div class="head2">Payment Information</div></td>
       </tr>

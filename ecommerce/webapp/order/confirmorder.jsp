@@ -193,7 +193,7 @@
               if(cardNumber != null && cardNumber.length() > 4) {%> <%=cardNumber.substring(cardNumber.length()-4)%>  <% } %>
             <%=creditCardInfo.getString("expireDate")%>
         <%} else {%>
-            <%--FIXME--%>
+            <%--FIXME: other payment types--%>
             <%=UtilFormatOut.checkNull(paymentPreference.getString("paymentInfoId"))%>
         <%}%>
         </div></td>
