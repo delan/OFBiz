@@ -74,18 +74,17 @@
 
 <table border="1" width="100%" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>Category ID</b></div></td>
-    <td><div class="tabletext"><b>Description</b></div></td>
+    <td><div class="tabletext"><b>Category [ID]</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence&nbsp;&amp;&nbsp;Type</b></div></td>
+    <td><div class="tabletext"><b>&nbsp;</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <ofbiz:iterator name="prodCatalogCategory" property="prodCatalogCategories">
   <%GenericValue productCategory = prodCatalogCategory.getRelatedOne("ProductCategory");%>
   <%GenericValue curProdCatalogCategoryType = prodCatalogCategory.getRelatedOneCache("ProdCatalogCategoryType");%>
   <tr valign="middle">
-    <td><a href='<ofbiz:url>/EditCategory?productCategoryId=<ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId"/></a></td>
-    <td><%if (productCategory!=null) {%><a href='<ofbiz:url>/EditCategory?productCategoryId=<ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId"/></ofbiz:url>' class="buttontext"><%=productCategory.getString("description")%></a><%}%>&nbsp;</td>
+    <td><a href='<ofbiz:url>/EditCategory?productCategoryId=<ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId"/></ofbiz:url>' class="buttontext"><%if (productCategory!=null) {%><%=productCategory.getString("description")%><%}%> [<ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId"/>]</a></td>
     <td><div class='tabletext'><ofbiz:inputvalue entityAttr="prodCatalogCategory" field="fromDate"/></div></td>
     <td align="center">
         <FORM method=POST action='<ofbiz:url>/updateProductCategoryToProdCatalog</ofbiz:url>'>
@@ -111,6 +110,10 @@
     <td align="center">
       <a href='<ofbiz:url>/removeProductCategoryFromProdCatalog?prodCatalogId=<ofbiz:entityfield attribute="prodCatalogCategory" field="prodCatalogId"/>&productCategoryId=<ofbiz:entityfield attribute="prodCatalogCategory" field="productCategoryId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(prodCatalogCategory.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
       [Delete]</a>
+    </td>
+    <td align="center">
+      <a href='<ofbiz:url>/EditCategory?CATALOG_TOP_CATEGORY=<ofbiz:entityfield attribute="prodCatalogCategory" field="productCategoryId"/>&productCategoryId=<ofbiz:entityfield attribute="prodCatalogCategory" field="productCategoryId"/></ofbiz:url>' class='buttontext'>
+      [MakeTop]</a>
     </td>
   </tr>
 </ofbiz:iterator>

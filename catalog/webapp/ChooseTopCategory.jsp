@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Main Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
- */
-%>
+--%>
 <%@ page import="org.ofbiz.commonapp.product.category.*" %>
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
