@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.18 2004/03/30 23:38:28 ajzeneski Exp $
+ * $Id: ComponentConfig.java,v 1.19 2004/06/30 21:25:56 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      3.0
  */
 public class ComponentConfig {
@@ -198,6 +198,14 @@ public class ComponentConfig {
             throw new ComponentException("Could not find component with name: " + componentName);
         }
         return cc.getFullLocation(resourceLoaderName, location);
+    }
+
+    public static String getRootLocation(String componentName) throws ComponentException {
+        ComponentConfig cc = ComponentConfig.getComponentConfig(componentName);
+        if (cc == null) {
+            throw new ComponentException("Could not find component with name: " + componentName);
+        }
+        return cc.getRootLocation();
     }
 
     public static List getAppBarWebInfos(String serverName) {
