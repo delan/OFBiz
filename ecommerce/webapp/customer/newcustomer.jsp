@@ -40,23 +40,26 @@
 
 <p class="head1">Request a New Account</p>
 <br>
+<p>If you already have an account, use your browser's Back button to return to the Login page and log in from there.</p>
 <%String fontColor = "Black";%>
 
-<table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
-  <tr>
-    <td bgcolor="#678475">
-  <table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td valign="middle" align="left">
-      <p class="head2"><font color="white">&nbsp;Name and Address</font>
-    </td>
-  </tr>
-  </table>
-    </td>
-  </tr>
-  <tr>
-    <td bgcolor='white' colspan='2'>
-<p>If you already have an account, use your browser's Back button to return to the Login page and log in from there.</p>
+<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+  <TR>
+    <TD width='100%'>
+      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+        <tr>
+          <td valign="middle" align="left">
+            <p class="head2"><font color="white">&nbsp;Name and Address</font>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+        <tr>
+          <td>
 <form method="post" action="<ofbiz:url>/createcustomer</ofbiz:url>" name="newuserform" style='margin:0;'>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
@@ -140,24 +143,32 @@
     </td>
   </tr>
 </table>
-    </td>
-  </tr>
-</table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+
 <br>
-<table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
-  <tr>
-    <td bgcolor="#678475">
-  <table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td valign="middle" align="left">
-      <p class="head2"><font color="white">&nbsp;Phone Numbers and Email</font>
-    </td>
-  </tr>
-  </table>
-    </td>
-  </tr>
-  <tr>
-    <td bgcolor='white' colspan='2'>
+
+<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+  <TR>
+    <TD width='100%'>
+      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+        <tr>
+          <td valign="middle" align="left">
+            <p class="head2"><font color="white">&nbsp;Phone Numbers and Email</font>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+        <tr>
+          <td>
 <table width="100%">
   <tr>
     <td colspan='2'>All phone numbers: [Country Code] [Area Code] [Contact Number] [Extension]</td>
@@ -238,15 +249,19 @@
   </tr>
 --%>
 </table>
-    </td>
-  </tr>
-</table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+
 <br>
 
-<table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
-  <tr>
-    <td bgcolor="#678475">
-      <table width="100%" border="0" cellpadding="2" cellspacing="0">
+<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+  <TR>
+    <TD width='100%'>
+      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
         <tr>
           <td valign="middle" align="left">
             <p class="head2"><font color="white">&nbsp;Username and Password</font>
@@ -256,48 +271,54 @@
           </td>
         </tr>
       </table>
-    </td>
-  </tr>
-  <tr>
-    <td bgcolor="white">
-      <table width="100%" border="0" cellpadding="2" cellspacing="0">
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
         <tr>
-          <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Username</font></div></td>
-          <td width="74%">
-              <input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20" maxlength="50">
+          <td>
+  <table width="100%" border="0" cellpadding="2" cellspacing="0">
+    <tr>
+      <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Username</font></div></td>
+      <td width="74%">
+          <input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20" maxlength="50">
+      * </td>
+    </tr>
+    <% if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) { %>
+      <tr>
+        <td width="26%">
+            <div class="tabletext"><font color='<%=fontColor%>'>Password</font></div>
+        </td>
+        <td width="74%">
+            <input type="password" name="PASSWORD" value="" size="20" maxlength="50">
           * </td>
+      </tr>
+      <tr>
+        <td width="26%">
+            <div class="tabletext"><font color='<%=fontColor%>'>Repeat password to confirm</font></div>
+        </td>
+        <td width="74%">
+            <input type="password" name="CONFIRM_PASSWORD" value="" size="20" maxlength="50">
+        * </td>
+      </tr>
+    <% } else { %>
+      <tr>
+        <td width="26%">
+            <div class="tabletext"><font color='<%=fontColor%>'>Password</font></div>
+        </td>
+        <td>
+           <div class="commentary">You will receive a password by email when your new account is approved.</div>
+        </td>
+      </tr>
+    <% } %>
+  </table>
+          </td>
         </tr>
-        <% if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) { %>
-          <tr>
-            <td width="26%">
-                <div class="tabletext"><font color='<%=fontColor%>'>Password</font></div>
-            </td>
-            <td width="74%">
-                <input type="password" name="PASSWORD" value="" size="20" maxlength="50">
-              * </td>
-          </tr>
-          <tr>
-            <td width="26%">
-                <div class="tabletext"><font color='<%=fontColor%>'>Repeat password to confirm</font></div>
-            </td>
-            <td width="74%">
-                <input type="password" name="CONFIRM_PASSWORD" value="" size="20" maxlength="50">
-            * </td>
-          </tr>
-        <% } else { %>
-          <tr>
-            <td width="26%">
-                <div class="tabletext"><font color='<%=fontColor%>'>Password</font></div>
-            </td>
-            <td>
-               <div class="commentary">You will receive a password by email when your new account is approved.</div>
-            </td>
-          </tr>
-        <% } %>
       </table>
-    </td>
-  </tr>
-</table>
+    </TD>
+  </TR>
+</TABLE>
 
 </form>
 
