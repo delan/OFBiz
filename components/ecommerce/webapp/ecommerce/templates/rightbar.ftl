@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -32,4 +32,5 @@
     ${pages.get("/cart/minipromotext.ftl")}
     ${pages.get("/catalog/miniassocprods.ftl")}
     ${pages.get("/catalog/minilastviewedproducts.ftl")}
+    ${pages.get("/catalog/minilastproductsearches.ftl")}
   </td>
