@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  */
 -->
 
@@ -1371,5 +1371,83 @@
         <key-map field-name="webSiteId"/>
       </relation>
     </entity>
+
+
+  
+  <view-entity
+       entity-name="ContentAssocViewFrom"
+              package-name="org.ofbiz.commonapp.content"
+              title="Main Assoc To">
+    <member-entity entity-alias="AS1" entity-name="ContentAssoc"/>
+    <member-entity entity-alias="SI" entity-name="Content"/>
+    <alias entity-alias="AS1" name="contentId" field="contentId" />
+    <alias entity-alias="AS1" name="contentId_START" field="contentIdTo" />
+    <alias entity-alias="AS1" name="contentAssocTypeId" />
+    <alias entity-alias="AS1" name="fromDate" />
+    <alias entity-alias="AS1" name="thruDate" />
+    <alias entity-alias="AS1" name="contentAssocPredicateId" />
+    <alias entity-alias="AS1" name="dataSourceId" />
+    <alias entity-alias="AS1" name="sequenceNum" />
+    <alias entity-alias="AS1" name="mapKey" />
+    <alias entity-alias="AS1" name="upperCoordinate" />
+    <alias entity-alias="AS1" name="leftCoordinate" />
+    <alias entity-alias="SI" name="contentId" field="contentId" />
+    <alias entity-alias="SI" name="contentTypeId" />
+    <alias entity-alias="SI" name="ownerContentId" />
+    <alias entity-alias="SI" name="dataResourceId" />
+    <alias entity-alias="SI" name="dataSourceId" />
+    <alias entity-alias="SI" name="statusId" />
+    <alias entity-alias="SI" name="contentName" />
+    <alias entity-alias="SI" name="description" />
+    <alias entity-alias="SI" name="isTemplate" />
+    <alias entity-alias="SI" name="localeString" />
+    <alias entity-alias="SI" name="mimeTypeId" />
+    <alias entity-alias="SI" name="characterSetId" />
+    <alias entity-alias="SI" name="createdDate" />
+    <alias entity-alias="SI" name="createdByUserLogin" />
+    <alias entity-alias="SI" name="lastModifiedDate" />
+    <alias entity-alias="SI" name="lastModifiedByUserLogin" />
+    <view-link entity-alias="AS1" rel-entity-alias="SI">
+        <key-map field-name="contentId" rel-field-name="contentId"/>
+      </view-link>
+  </view-entity>
+  
+  <view-entity
+       entity-name="ContentAssocViewTo"
+              package-name="org.ofbiz.commonapp.content"
+              title="Main Assoc To">
+    <member-entity entity-alias="AS1" entity-name="ContentAssoc"/>
+    <member-entity entity-alias="SI" entity-name="Content"/>
+    <alias entity-alias="AS1" name="contentId_START" field="contentId" />
+    <alias entity-alias="AS1" name="contentIdTo" />
+    <alias entity-alias="AS1" name="contentAssocTypeId" />
+    <alias entity-alias="AS1" name="fromDate" />
+    <alias entity-alias="AS1" name="thruDate" />
+    <alias entity-alias="AS1" name="contentAssocPredicateId" />
+    <alias entity-alias="AS1" name="dataSourceId" />
+    <alias entity-alias="AS1" name="sequenceNum" />
+    <alias entity-alias="AS1" name="mapKey" />
+    <alias entity-alias="AS1" name="upperCoordinate" />
+    <alias entity-alias="AS1" name="leftCoordinate" />
+    <alias entity-alias="SI" name="contentId" field="contentId" />
+    <alias entity-alias="SI" name="contentTypeId" />
+    <alias entity-alias="SI" name="ownerContentId" />
+    <alias entity-alias="SI" name="dataResourceId" />
+    <alias entity-alias="SI" name="dataSourceId" />
+    <alias entity-alias="SI" name="statusId" />
+    <alias entity-alias="SI" name="contentName" />
+    <alias entity-alias="SI" name="description" />
+    <alias entity-alias="SI" name="isTemplate" />
+    <alias entity-alias="SI" name="localeString" />
+    <alias entity-alias="SI" name="mimeTypeId" />
+    <alias entity-alias="SI" name="characterSetId" />
+    <alias entity-alias="SI" name="createdDate" />
+    <alias entity-alias="SI" name="createdByUserLogin" />
+    <alias entity-alias="SI" name="lastModifiedDate" />
+    <alias entity-alias="SI" name="lastModifiedByUserLogin" />
+    <view-link entity-alias="AS1" rel-entity-alias="SI">
+        <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+      </view-link>
+  </view-entity>
 </entitymodel>
 
