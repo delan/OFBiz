@@ -37,24 +37,32 @@
         <property name="jboss.dir"      value="${env.JBOSS_HOME}" />
         
         <copy file="setup/jboss/bin/ofbiz.bat"
-            toFile="${jboss.dir}/bin/ofbiz.bat" />
+            toDir="${jboss.dir}/bin" />
         <copy file="setup/jboss/bin/ofbiz.sh"
-            toFile="${jboss.dir}/bin/ofbiz.sh" />
+            toDir="${jboss.dir}/bin" />
         
-        <copy dir="${jboss.dir}/conf/tomcat"
-            toDir="${jboss.dir}/conf/ofbiz" />
+        <copy toDir="${jboss.dir}/conf/ofbiz">
+          <fileset dir="${jboss.dir}/conf/tomcat"/>
+        </copy>
+        <move file="${jboss.dir}/conf/ofbiz/jboss.jcml"
+            toFile="${jboss.dir}/conf/ofbiz/jboss.orig.jcml" />
+        <move file="${jboss.dir}/conf/ofbiz/jboss.conf"
+            toFile="${jboss.dir}/conf/ofbiz/jboss.orig.conf" />
+        
         <copy file="setup/jboss/conf/ofbiz/jboss.jcml"
-            toFile="${jboss.dir}/conf/ofbiz/jboss.jcml" />
+            toDir="${jboss.dir}/conf/ofbiz" />
         <copy file="setup/jboss/conf/ofbiz/jboss.conf"
-            toFile="${jboss.dir}/conf/ofbiz/jboss.conf" />
+            toDir="${jboss.dir}/conf/ofbiz" />
     </target>
 
     <target name="install-tomcat">
         <property environment="env" />
         <property name="tomcat.dir"      value="${env.TOMCAT_HOME}" />
     
+        <move file="${tomcat.dir}/conf/server.xml"
+            toFile="${tomcat.dir}/conf/server.orig.xml" />
         <copy file="setup/tomcat/conf/server.xml"
-            toFile="${tomcat.dir}/conf/server.xml" />
+             toDir="${tomcat.dir}/conf" />
     </target>
 
     <target name="install" depends="install-jboss, install-tomcat">
