@@ -43,6 +43,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <#assign shipmentPackageRouteSegs = shipmentPackageData.shipmentPackageRouteSegs?if_exists>
     <#assign weightUom = shipmentPackageData.weightUom?if_exists>
     <form action="<@ofbizUrl>/updateShipmentPackage</@ofbizUrl>" name="updateShipmentPackageForm${shipmentPackageData_index}">
+    <input type="hidden" name="shipmentId" value="${shipmentId}"/>
+    <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
     <tr>
         <td><div class="tabletext">${shipmentPackage.shipmentPackageSeqId}</div></td>
         <td><div class="tabletext">${(shipmentPackage.dateCreated.toString())?if_exists}</div></td>
