@@ -27,13 +27,13 @@
             </limits>
         </dataSource> -->
         <!-- disabling by default so no loading errors will occur when jar, etc not available; Oracle does seem to work well though -->
-        <!-- <dataSource>
+        <dataSource>
             <name>localoracle</name>
             <jar>lib/ojdbc14.jar</jar>
             <class>oracle.jdbc.xa.client.OracleXADataSource</class>
             <config>
                 <URL>jdbc:oracle:thin:@127.0.0.1:1521:ofbiz</URL>
-                <user>ofbiz</user><password>ofbiz</password>
+                <user>bebe</user><password>bebe</password>
             </config>
             <limits>
                 <maximum>50</maximum><minimum>5</minimum><initial>5</initial>
@@ -42,7 +42,7 @@
                 <trace>false</trace>
             </limits>
         </dataSource>
-        -->
+        <!-- -->
     </resources>
 </domain>
 
