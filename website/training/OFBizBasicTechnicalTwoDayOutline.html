@@ -2,212 +2,204 @@
 <HTML>
 <HEAD>
 	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
-	<TITLE></TITLE>
-	<META NAME="GENERATOR" CONTENT="OpenOffice.org 1.0.1  (Win32)">
-	<META NAME="AUTHOR" CONTENT="David E. Jones">
-	<META NAME="CREATED" CONTENT="20030101;19474300">
-	<META NAME="CHANGEDBY" CONTENT="David E. Jones">
-	<META NAME="CHANGED" CONTENT="20030104;2223800">
-	<STYLE>
-	<!--
-		@page { margin-left: 3.18cm; margin-right: 3.18cm; margin-top: 2.54cm; margin-bottom: 2.54cm }
-	-->
-	</STYLE>
+	<TITLE>OFBiz Basic Technical Course Outline</TITLE>
 </HEAD>
 <BODY LANG="en-US">
-<P STYLE="margin-bottom: 0cm"><BR>
-</P>
-<P STYLE="margin-bottom: 0cm">OFBiz Basic Technical Course Outline</P>
-<P STYLE="margin-bottom: 0cm"><BR>
-</P>
-<P STYLE="margin-bottom: 0cm">Day 1: Architecture, Configuration &amp;
-Deployment Overview and a Simple Example</P>
-<P STYLE="margin-bottom: 0cm"><BR>
-</P>
+
+ <center><h2>OFBiz Basic Technical Course Outline</h2></center>
+
+<div>Written By: David E. Jones</div>
+<div>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a></div>
+<div><A href="http://sf.net/projects/ofbiz"><IMG src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></A></div>
+<div>Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br></div>
+<div>Last Updated: January 4th, 2003<br></div>
+
+<hr>
+<br>
+<ul>
+    <li>Length: 2 Days
+    <li>Cost: $1200
+</ul>
+
+<DIV>Day 1: Architecture, Configuration &amp; Deployment Overview and a Simple Example</DIV>
+<DIV><BR></DIV>
 <OL>
-	<LI><P STYLE="margin-bottom: 0cm">Architecture Overview</P>
+	<LI><DIV>Architecture Overview</DIV>
 	<OL>
-		<LI><P STYLE="margin-bottom: 0cm">Model-Controller-View Pattern (an
-		old story with a new name)</P>
-		<LI><P STYLE="margin-bottom: 0cm">Lots of Controllers</P>
+		<LI><DIV>Model-Controller-View Pattern (an
+		old story with a new name)</DIV>
+		<LI><DIV>Lots of Controllers</DIV>
 		<OL>
-			<LI><P STYLE="margin-bottom: 0cm">Applying the Controller Pattern</P>
-			<LI><P STYLE="margin-bottom: 0cm">Data Level Controller (Entity
-			Engine)</P>
-			<LI><P STYLE="margin-bottom: 0cm">Logic Level Controller (Service
-			Engine)</P>
-			<LI><P STYLE="margin-bottom: 0cm">Web User Interface Level
-			Controller (Control Servlet, Regions Framework, etc)</P>
+			<LI><DIV>Applying the Controller Pattern</DIV>
+			<LI><DIV>Data Level Controller (Entity
+			Engine)</DIV>
+			<LI><DIV>Logic Level Controller (Service
+			Engine)</DIV>
+			<LI><DIV>Web User Interface Level
+			Controller (Control Servlet, Regions Framework, etc)</DIV>
 		</OL>
-		<LI><P STYLE="margin-bottom: 0cm">The Model goes in the Database</P>
-		<LI><P STYLE="margin-bottom: 0cm">The View is what the user
-		interacts with</P>
-		<LI><P STYLE="margin-bottom: 0cm">Everything else follows from
+		<LI><DIV>The Model goes in the Database</DIV>
+		<LI><DIV>The View is what the user
+		interacts with</DIV>
+		<LI><DIV>Everything else follows from
 		those, and the only trick is to do it efficiently for initial
-		implementation and maintenance.</P>
-		<LI><P STYLE="margin-bottom: 0cm">Data Flow Between Components</P>
+		implementation and maintenance.</DIV>
+		<LI><DIV>Data Flow Between Components</DIV>
 		<OL>
-			<LI><P STYLE="margin-bottom: 0cm">Request from Browser</P>
-			<LI><P STYLE="margin-bottom: 0cm">Control Servlet Called</P>
-			<LI><P STYLE="margin-bottom: 0cm">Request Looked Up</P>
-			<LI><P STYLE="margin-bottom: 0cm">Security Checked (encryption,
-			authentication)</P>
-			<LI><P STYLE="margin-bottom: 0cm">Event Called (if defined)</P>
+			<LI><DIV>Request from Browser</DIV>
+			<LI><DIV>Control Servlet Called</DIV>
+			<LI><DIV>Request Looked Up</DIV>
+			<LI><DIV>Security Checked (encryption,
+			authentication)</DIV>
+			<LI><DIV>Event Called (if defined)</DIV>
 			<OL>
-				<LI><P STYLE="margin-bottom: 0cm">Service Definition Looked Up</P>
-				<LI><P STYLE="margin-bottom: 0cm">Simple Method Called As a
-				Service</P>
+				<LI><DIV>Service Definition Looked Up</DIV>
+				<LI><DIV>Simple Method Called As a
+				Service</DIV>
 				<OL>
-					<LI><P STYLE="margin-bottom: 0cm">Handle Data Coming In</P>
-					<LI><P STYLE="margin-bottom: 0cm">Look Up Information From
-					Database</P>
-					<LI><P STYLE="margin-bottom: 0cm">Save Information to Database</P>
+					<LI><DIV>Handle Data Coming In</DIV>
+					<LI><DIV>Look Up Information From
+					Database</DIV>
+					<LI><DIV>Save Information to Database</DIV>
 				</OL>
 			</OL>
-			<LI><P STYLE="margin-bottom: 0cm">Response Chosen and Called</P>
+			<LI><DIV>Response Chosen and Called</DIV>
 			<OL>
-				<LI><P STYLE="margin-bottom: 0cm">View Looked Up</P>
-				<LI><P STYLE="margin-bottom: 0cm">Region Looked Up</P>
-				<LI><P STYLE="margin-bottom: 0cm">Template Called, Sections
-				Filled In</P>
-				<LI><P STYLE="margin-bottom: 0cm">Data Looked Up (directly
-				through the Entity Engine or through a service)</P>
+				<LI><DIV>View Looked Up</DIV>
+				<LI><DIV>Region Looked Up</DIV>
+				<LI><DIV>Template Called, Sections
+				Filled In</DIV>
+				<LI><DIV>Data Looked Up (directly
+				through the Entity Engine or through a service)</DIV>
 			</OL>
 		</OL>
 	</OL>
-	<LI><P STYLE="margin-bottom: 0cm">Configuration &amp; Deployment
-	Overview</P>
+	<LI><DIV>Configuration &amp; Deployment
+	Overview</DIV>
 	<OL>
-		<LI><P STYLE="margin-bottom: 0cm">Choosing and Setting Up a
-		Database</P>
-		<LI><P STYLE="margin-bottom: 0cm">Choosing and Setting Up an
-		Application Server</P>
-		<LI><P STYLE="margin-bottom: 0cm">OFBiz Configuration</P>
+		<LI><DIV>Choosing and Setting Up a
+		Database</DIV>
+		<LI><DIV>Choosing and Setting Up an
+		Application Server</DIV>
+		<LI><DIV>OFBiz Configuration</DIV>
 		<OL>
-			<LI><P STYLE="margin-bottom: 0cm">entityengine.xml</P>
+			<LI><DIV>entityengine.xml</DIV>
 			<OL>
-				<LI><P STYLE="margin-bottom: 0cm">Transaction Manager Setup</P>
-				<LI><P STYLE="margin-bottom: 0cm">Database Setup</P>
+				<LI><DIV>Transaction Manager Setup</DIV>
+				<LI><DIV>Database Setup</DIV>
 			</OL>
-			<LI><P STYLE="margin-bottom: 0cm">serviceengine.xml</P>
-			<LI><P STYLE="margin-bottom: 0cm">debug.properties</P>
-			<LI><P STYLE="margin-bottom: 0cm">Other Configuration Files</P>
+			<LI><DIV>serviceengine.xml</DIV>
+			<LI><DIV>debug.properties</DIV>
+			<LI><DIV>Other Configuration Files</DIV>
 		</OL>
 	</OL>
-	<LI><P STYLE="margin-bottom: 0cm">Beginning With the End in Mind</P>
+	<LI><DIV>Beginning With the End in Mind</DIV>
 	<OL>
-		<LI><P STYLE="margin-bottom: 0cm">What to build?</P>
+		<LI><DIV>What to build?</DIV>
 	</OL>
-	<LI><P STYLE="margin-bottom: 0cm">Data (Entity) Layer</P>
+	<LI><DIV>Data (Entity) Layer</DIV>
 	<OL>
-		<LI><P STYLE="margin-bottom: 0cm">Define Entities (configure data
-		level controller)</P>
+		<LI><DIV>Define Entities (configure data
+		level controller)</DIV>
 	</OL>
-	<LI><P STYLE="margin-bottom: 0cm">Logic (Service) Layer</P>
+	<LI><DIV>Logic (Service) Layer</DIV>
 	<OL>
-		<LI><P STYLE="margin-bottom: 0cm">Define Services  (configure logic
-		level controller)</P>
-		<LI><P STYLE="margin-bottom: 0cm">Implement Services</P>
+		<LI><DIV>Define Services  (configure logic
+		level controller)</DIV>
+		<LI><DIV>Implement Services</DIV>
 	</OL>
-	<LI><P STYLE="margin-bottom: 0cm">User Interface Layer</P>
+	<LI><DIV>User Interface Layer</DIV>
 	<OL>
-		<LI><P STYLE="margin-bottom: 0cm">Configure Web User Interface
-		Level Controllers</P>
+		<LI><DIV>Configure Web User Interface
+		Level Controllers</DIV>
 		<OL>
-			<LI><P STYLE="margin-bottom: 0cm">Define Web Requests
-			(controller.xml)</P>
+			<LI><DIV>Define Web Requests
+			(controller.xml)</DIV>
 			<OL>
-				<LI><P STYLE="margin-bottom: 0cm">Simple Request</P>
-				<LI><P STYLE="margin-bottom: 0cm">Requests with an Event
-				implemented as a Service</P>
+				<LI><DIV>Simple Request</DIV>
+				<LI><DIV>Requests with an Event
+				implemented as a Service</DIV>
 			</OL>
-			<LI><P STYLE="margin-bottom: 0cm">Define Web Views
-			(controller.xml)</P>
-			<LI><P STYLE="margin-bottom: 0cm">Define View Regions
-			(regions.xml)</P>
+			<LI><DIV>Define Web Views
+			(controller.xml)</DIV>
+			<LI><DIV>Define View Regions
+			(regions.xml)</DIV>
 		</OL>
-		<LI><P STYLE="margin-bottom: 0cm">Create Web User Interfaces</P>
+		<LI><DIV>Create Web User Interfaces</DIV>
 		<OL>
-			<LI><P STYLE="margin-bottom: 0cm">Create a Region Template JSP</P>
-			<LI><P STYLE="margin-bottom: 0cm">Create a Header JSP</P>
-			<LI><P STYLE="margin-bottom: 0cm">Create an Editing JSP 
-			</P>
-			<LI><P STYLE="margin-bottom: 0cm">Create a Listing JSP</P>
+			<LI><DIV>Create a Region Template JSP</DIV>
+			<LI><DIV>Create a Header JSP</DIV>
+			<LI><DIV>Create an Editing JSP 
+			</DIV>
+			<LI><DIV>Create a Listing JSP</DIV>
 		</OL>
 	</OL>
-	<LI><P STYLE="margin-bottom: 0cm">Throwing a Wrench in the Works</P>
+	<LI><DIV>Throwing a Wrench in the Works</DIV>
 	<OL>
-		<LI><P STYLE="margin-bottom: 0cm">Adding a New Field</P>
-		<LI><P STYLE="margin-bottom: 0cm">Change the Entity Definition</P>
-		<LI><P STYLE="margin-bottom: 0cm">Change the Service Definition</P>
-		<LI><P STYLE="margin-bottom: 0cm">Add to the Listing JSP (if
-		needed)</P>
-		<LI><P STYLE="margin-bottom: 0cm">Add to the Editing JSP</P>
+		<LI><DIV>Adding a New Field</DIV>
+		<LI><DIV>Change the Entity Definition</DIV>
+		<LI><DIV>Change the Service Definition</DIV>
+		<LI><DIV>Add to the Listing JSP (if
+		needed)</DIV>
+		<LI><DIV>Add to the Editing JSP</DIV>
 	</OL>
-	<LI><P STYLE="margin-bottom: 0cm">Questions and Feedback</P>
+	<LI><DIV>Questions and Feedback</DIV>
 </OL>
-<P STYLE="margin-bottom: 0cm"><BR>
-</P>
-<P STYLE="margin-bottom: 0cm">Day 2: Data, Logic &amp; Applications</P>
-<P STYLE="margin-bottom: 0cm"><BR>
-</P>
+<DIV><BR></DIV>
+<DIV>Day 2: Data, Logic &amp; Applications</DIV>
+<DIV><BR></DIV>
 <OL>
-	<LI><P STYLE="margin-bottom: 0cm">The OFBiz Data Model (Common Data
-	Components)</P>
+	<LI><DIV>The OFBiz Data Model (Common Data
+	Components)</DIV>
 	<OL>
-		<LI><P STYLE="margin-bottom: 0cm">Data Model Patterns</P>
+		<LI><DIV>Data Model Patterns</DIV>
 		<OL>
-			<LI><P STYLE="margin-bottom: 0cm">Extensibility Pattern</P>
+			<LI><DIV>Extensibility Pattern</DIV>
 			<OL>
-				<LI><P STYLE="margin-bottom: 0cm">Types</P>
-				<LI><P STYLE="margin-bottom: 0cm">Attributes</P>
+				<LI><DIV>Types</DIV>
+				<LI><DIV>Attributes</DIV>
 			</OL>
-			<LI><P STYLE="margin-bottom: 0cm">Entity Relationships</P>
-			<LI><P STYLE="margin-bottom: 0cm">Effective Dating</P>
+			<LI><DIV>Entity Relationships</DIV>
+			<LI><DIV>Effective Dating</DIV>
 		</OL>
-		<LI><P STYLE="margin-bottom: 0cm">Data Model Packages</P>
+		<LI><DIV>Data Model Packages</DIV>
 		<OL>
-			<LI><P STYLE="margin-bottom: 0cm">Common</P>
+			<LI><DIV>Common</DIV>
 			<OL>
-				<LI><P STYLE="margin-bottom: 0cm">Enumeration, Status,
-				TimePeriod, etc.</P>
-				<LI><P STYLE="margin-bottom: 0cm">UserLogin, Security</P>
+				<LI><DIV>Enumeration, Status,
+				TimePeriod, etc.</DIV>
+				<LI><DIV>UserLogin, Security</DIV>
 			</OL>
-			<LI><P STYLE="margin-bottom: 0cm">Content</P>
-			<LI><P STYLE="margin-bottom: 0cm">Party</P>
-			<LI><P STYLE="margin-bottom: 0cm">Product</P>
-			<LI><P STYLE="margin-bottom: 0cm">Order</P>
-			<LI><P STYLE="margin-bottom: 0cm">Marketing</P>
-			<LI><P STYLE="margin-bottom: 0cm">Accounting</P>
-			<LI><P STYLE="margin-bottom: 0cm">Shipment</P>
-			<LI><P STYLE="margin-bottom: 0cm">Human Resources</P>
-			<LI><P STYLE="margin-bottom: 0cm">Work Effort</P>
+			<LI><DIV>Content</DIV>
+			<LI><DIV>Party</DIV>
+			<LI><DIV>Product</DIV>
+			<LI><DIV>Order</DIV>
+			<LI><DIV>Marketing</DIV>
+			<LI><DIV>Accounting</DIV>
+			<LI><DIV>Shipment</DIV>
+			<LI><DIV>Human Resources</DIV>
+			<LI><DIV>Work Effort</DIV>
 		</OL>
 	</OL>
-	<LI><P STYLE="margin-bottom: 0cm">The OFBiz Common Logic Components</P>
+	<LI><DIV>The OFBiz Common Logic Components</DIV>
 	<OL>
-		<LI><P STYLE="margin-bottom: 0cm">Parallels the Data Model Package
-		Organization</P>
-		<LI><P STYLE="margin-bottom: 0cm">Services, Events and Workers</P>
+		<LI><DIV>Parallels the Data Model Package
+		Organization</DIV>
+		<LI><DIV>Services, Events and Workers</DIV>
 	</OL>
-	<LI><P STYLE="margin-bottom: 0cm">The OFBiz Applications</P>
+	<LI><DIV>The OFBiz Applications</DIV>
 	<OL>
-		<LI><P STYLE="margin-bottom: 0cm">WebTools</P>
-		<LI><P STYLE="margin-bottom: 0cm">Content Manager</P>
-		<LI><P STYLE="margin-bottom: 0cm">Party Manager</P>
-		<LI><P STYLE="margin-bottom: 0cm">Marketing Manager</P>
-		<LI><P STYLE="margin-bottom: 0cm">Catalog Manager</P>
-		<LI><P STYLE="margin-bottom: 0cm">Facility Manager</P>
-		<LI><P STYLE="margin-bottom: 0cm">Order Manager</P>
-		<LI><P STYLE="margin-bottom: 0cm">Accounting Manager</P>
-		<LI><P STYLE="margin-bottom: 0cm">WorkEffort Manager</P>
+		<LI><DIV>WebTools</DIV>
+		<LI><DIV>Content Manager</DIV>
+		<LI><DIV>Party Manager</DIV>
+		<LI><DIV>Marketing Manager</DIV>
+		<LI><DIV>Catalog Manager</DIV>
+		<LI><DIV>Facility Manager</DIV>
+		<LI><DIV>Order Manager</DIV>
+		<LI><DIV>Accounting Manager</DIV>
+		<LI><DIV>WorkEffort Manager</DIV>
 	</OL>
 </OL>
-<P STYLE="margin-bottom: 0cm"><BR>
-</P>
-<P STYLE="margin-bottom: 0cm"><BR>
-</P>
-<P STYLE="margin-bottom: 0cm"><BR>
-</P>
 </BODY>
 </HTML>
