@@ -52,9 +52,9 @@
 [ltp]if(hasViewPermission){%>
 
 [ltp]
-  String rowColor1 = "99CCFF";
-  String rowColor2 = "CCFFFF";
-  String rowColor = "";
+  String rowClass1 = "viewOneTR1";
+  String rowClass2 = "viewOneTR2";
+  String rowClass = "";
 <%for(i=0;i<entity.pks.size();i++){Field curField=(Field)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
   String <%=curField.fieldName%> = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
   String <%=curField.fieldName%>Date = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_DATE");
@@ -78,7 +78,7 @@
 %>
 
 <br>
-<div style='color:yellow;width:100%;background-color:#330033;padding:3;'>
+<div style='color: white; width: 100%; background-color: black; padding:3;'>
   <b>View Entity: <%=entity.ejbName%> with (<%=entity.colNameString(entity.pks)%>: [ltp]=<%=entity.pkNameString("%" + ">, [ltp]=", "%" + ">")%>).</b>
 </div>
 
@@ -99,11 +99,11 @@
 
 <table border="0" cellspacing="2" cellpadding="2">
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> == null){%>
-<tr bgcolor="[ltp]=rowColor1%>"><td><h3>Specified <%=entity.ejbName%> was not found.</h3></td></tr>
+<tr class="[ltp]=rowClass1%>"><td><h3>Specified <%=entity.ejbName%> was not found.</h3></td></tr>
 [ltp]}else{%>
 <%for(i=0;i<entity.fields.size();i++){%>
-  [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="[ltp]=rowColor%>">
+  [ltp]rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="[ltp]=rowClass%>">
     <td><b><%=((Field)entity.fields.elementAt(i)).columnName%></b></td>
     <td>
     <%if(((Field)entity.fields.elementAt(i)).javaType.equals("Timestamp") || 
@@ -169,6 +169,32 @@
   [ltp]}%>
 [ltp]}%>
 <br>
+<br>
+<SCRIPT language='JavaScript'>  
+var numTabs=<%=entity.relations.size()%>;
+function ShowTab(lname) 
+{
+  for(inc=1; inc <= numTabs; inc++)
+  {
+    document.all['tab' + inc].className = (lname == 'tab' + inc) ? 'ontab' : 'offtab';
+    document.all['lnk' + inc].className = (lname == 'tab' + inc) ? 'onlnk' : 'offlnk';
+    document.all['area' + inc].style.visibility = (lname == 'tab' + inc) ? 'visible' : 'hidden';
+  }
+}
+</SCRIPT>
+[ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
+<table cellpadding='0' cellspacing='0'><tr>
+<%for(int tabIndex=0;tabIndex<entity.relations.size();tabIndex++){%>
+  <%Relation relation = (Relation)entity.relations.elementAt(tabIndex);%>
+    [ltp]if(Security.hasEntityPermission("<%=relation.relatedTableName%>", "_VIEW", session)){%>
+    <td id=tab<%=tabIndex+1%> class=<%=(tabIndex==0?"ontab":"offtab")%>>
+      <a href='javascript:ShowTab("tab<%=tabIndex+1%>")' id=lnk<%=tabIndex+1%> class=<%=(tabIndex==0?"onlnk":"offlnk")%>><%=relation.relationTitle%> <%=relation.relatedEjbName%></a>
+    </td>
+    [ltp]}%>
+<%}%>
+</tr></table>
+[ltp]}%>
+  
 <%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%>
   <%Relation relation = (Relation)entity.relations.elementAt(relIndex);%>
   <%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%>
@@ -177,8 +203,8 @@
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
   [ltp]if(Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_VIEW", session)){%>
     [ltp]<%=relatedEntity.ejbName%> <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related = <%=relatedEntity.ejbName%>Helper.findByPrimaryKey(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()")%>);%>
-    <br>
-    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+  <DIV id=area<%=relIndex+1%> style="VISIBILITY: <%=(relIndex==0?"visible":"hidden")%>; POSITION: absolute" width="100%">
+    <div class=areaheader>
      <b><%=relation.relationTitle%></b> Related Entity: <b><%=relatedEntity.ejbName%></b> with (<%=relatedEntity.colNameString(relatedEntity.pks)%>: [ltp]=<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("()%" + ">, [ltp]=" + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()%" + ">")%>)
     </div>
     [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("() != null && " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "() != null")%>){%>
@@ -202,11 +228,11 @@
     [ltp]}%>
     <table border="0" cellspacing="2" cellpadding="2">
     [ltp]if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related == null){%>
-    <tr bgcolor="[ltp]=rowColor1%>"><td><h3>Specified <%=relatedEntity.ejbName%> was not found.</h3></td></tr>
+    <tr class="[ltp]=rowClass1%>"><td><h3>Specified <%=relatedEntity.ejbName%> was not found.</h3></td></tr>
     [ltp]}else{%>
 <%for(i=0;i<relatedEntity.fields.size();i++){%>
-  [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="[ltp]=rowColor%>">
+  [ltp]rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="[ltp]=rowClass%>">
     <td><b><%=((Field)relatedEntity.fields.elementAt(i)).columnName%></b></td>
     <td>
     <%if(((Field)relatedEntity.fields.elementAt(i)).javaType.equals("Timestamp") || 
@@ -256,6 +282,7 @@
 <%}%>
     [ltp]} //end if <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related == null %>
     </table>
+  </div>
   [ltp]}%>
 [ltp]}%>
 [ltp]-- End Relation for <%=relation.relatedEjbName%>, type: <%=relation.relationType%> --%>
@@ -264,18 +291,18 @@
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
   [ltp]if(Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_VIEW", session)){%>    
     [ltp]Iterator relatedIterator = <%=relatedEntity.ejbName%>Helper.findBy<%=relation.keyMapRelatedUpperString("And","")%>Iterator(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()")%>);%>
-    <br>
-    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+  <DIV id=area<%=relIndex+1%> style="VISIBILITY: <%=(relIndex==0?"visible":"hidden")%>; POSITION: absolute" width="100%">
+    <div class=areaheader>
       <b><%=relation.relationTitle%></b> Related Entities: <b><%=relatedEntity.ejbName%></b> with (<%=relation.keyMapRelatedColumnString(", ", "")%>: [ltp]=<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("()%" + ">, [ltp]=" + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()%" + ">")%>)
     </div>
     [ltp]boolean relatedCreatePerm = Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_CREATE", session);%>
     [ltp]boolean relatedUpdatePerm = Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_UPDATE", session);%>
     [ltp]boolean relatedDeletePerm = Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_DELETE", session);%>
     [ltp]
-      String rowColorResultHeader = "99CCFF";
-      String rowColorResult1 = "99FFCC";
-      String rowColorResult2 = "CCFFCC"; 
-      String rowColorResult = "";
+      String rowClassResultHeader = "viewManyHeaderTR";
+      String rowClassResult1 = "viewManyTR1";
+      String rowClassResult2 = "viewManyTR2"; 
+      String rowClassResult = "";
     %>
       <%
         String packagePath = relatedEntity.packageName.replace('.','/');
@@ -291,8 +318,9 @@
     <%for(int j=0;j<relation.keyMaps.size();j++){%>[ltp]curFindString = curFindString + "&SEARCH_PARAMETER<%=j+1%>=" + <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((KeyMap)relation.keyMaps.elementAt(j)).fieldName)%><%}%>();%>
     <a href="[ltp]=response.encodeURL("/<%=packagePath%>/Find<%=entity.ejbName%>.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find <%=relatedEntity.ejbName%>]</a>
 
+  <div style='width:100%;height:250px;overflow:scroll;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
-    <tr bgcolor="[ltp]=rowColorResultHeader%>">
+    <tr class="[ltp]=rowClassResultHeader%>">
   <%for(i=0;i<relatedEntity.fields.size();i++){%>
       <td><div class="tabletext"><b><nobr><%=((Field)relatedEntity.fields.elementAt(i)).columnName%></nobr></b></div></td><%}%>
       <td>&nbsp;</td>
@@ -304,17 +332,17 @@
       [ltp]}%>
     </tr>
     [ltp]
+     int relatedLoopCount = 0;
      if(relatedIterator != null && relatedIterator.hasNext())
      {
-      int relatedLoopCount = 0;
       while(relatedIterator != null && relatedIterator.hasNext())
       {
-        relatedLoopCount++; if(relatedLoopCount > 10) break;
+        relatedLoopCount++; //if(relatedLoopCount > 10) break;
         <%=relatedEntity.ejbName%> <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related = (<%=relatedEntity.ejbName%>)relatedIterator.next();
         if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related != null)
         {
     %>
-    [ltp]rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="[ltp]=rowColorResult%>">
+    [ltp]rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="[ltp]=rowClassResult%>">
   <%for(i=0;i<relatedEntity.fields.size();i++){%>
       <td>
         <div class="tabletext">
@@ -381,13 +409,16 @@
     [ltp]}%>
   [ltp]}%>
 [ltp]}else{%>
-[ltp]rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="[ltp]=rowColorResult%>">
+[ltp]rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="[ltp]=rowClassResult%>">
 <td colspan="8">
 <h3>No <%=relatedEntity.ejbName%>s Found.</h3>
 </td>
 </tr>
 [ltp]}%>
-</table>
+    </table>
+  </div>
+Displaying [ltp]=relatedLoopCount%> entities.
+  </div>
   [ltp]}%>
 [ltp]}%>
 [ltp]-- End Relation for <%=relation.relatedEjbName%>, type: <%=relation.relationType%> --%>

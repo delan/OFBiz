@@ -50,14 +50,14 @@
 [ltp]boolean hasDeletePermission=Security.hasEntityPermission("<%=entity.tableName%>", "_DELETE", session);%>
 [ltp]if(hasViewPermission){%>
 [ltp]
-  String rowColorTop1 = "99CCFF";
-  String rowColorTop2 = "CCFFFF";
-  String rowColorTop = "";
-  String rowColorResultIndex = "CCFFFF";
-  String rowColorResultHeader = "99CCFF";
-  String rowColorResult1 = "99FFCC";
-  String rowColorResult2 = "CCFFCC";
-  String rowColorResult = "";
+  String rowClassTop1 = "viewOneTR1";
+  String rowClassTop2 = "viewOneTR2";
+  String rowClassTop = "";
+  String rowClassResultIndex = "viewOneTR2";
+  String rowClassResultHeader = "viewOneTR1";
+  String rowClassResult1 = "viewManyTR1";
+  String rowClassResult2 = "viewManyTR2";
+  String rowClassResult = "";
 
   String searchType = request.getParameter("SEARCH_TYPE");
   String searchParam1 = UtilFormatOut.checkNull(request.getParameter("SEARCH_PARAMETER1"));
@@ -120,7 +120,7 @@
 <h3 style=margin:0;>Find <%=entity.ejbName%>s</h3>
 Note: you may use the '%' character as a wildcard, to replace any other letters.
 <table cellpadding="2" cellspacing="2" border="0">
-  [ltp]rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="[ltp]=rowColorTop%>">
+  [ltp]rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="[ltp]=rowClassTop%>">
     <form method="post" action="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp")%>" style=margin:0;>
       <td valign="top">Primary Key:</td>
       <td valign="top">
@@ -136,7 +136,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   </tr>
 <%for(i=0;i<entity.finders.size();i++){%>
   <%Finder finderDesc = (Finder)entity.finders.elementAt(i);%>
-  [ltp]rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="[ltp]=rowColorTop%>">
+  [ltp]rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="[ltp]=rowClassTop%>">
     <td valign="top"><%=entity.classNameString(finderDesc.fields," and ","")%>: </td>
     <form method="post" action="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp")%>" style=margin:0;>
       <td valign="top">
@@ -150,7 +150,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 <%}%>
-  [ltp]rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="[ltp]=rowColorTop%>">
+  [ltp]rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="[ltp]=rowClassTop%>">
     <td valign="top">Display All: </td>
     <form method="post" action="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp")%>" style=margin:0;>
       <td valign="top">
@@ -169,7 +169,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 [ltp]}%>
 <table border="0" width="100%" cellpadding="2">
 [ltp] if(arraySize > 0) { %>
-    <tr bgcolor="[ltp]=rowColorResultIndex%>">
+    <tr class="[ltp]=rowClassResultIndex%>">
       <td align="left">
         <b>
         [ltp] if(viewIndex > 0) { %>
@@ -188,7 +188,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 </table>
 
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
-    <tr bgcolor="[ltp]=rowColorResultHeader%>">
+    <tr class="[ltp]=rowClassResultHeader%>">
   <%for(i=0;i<entity.fields.size();i++){%>
       <td><div class="tabletext"><b><nobr><%=((Field)entity.fields.elementAt(i)).columnName%></nobr></b></div></td><%}%>
       <td>&nbsp;</td>
@@ -210,7 +210,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null)
     {
 %>
-    [ltp]rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="[ltp]=rowColorResult%>">
+    [ltp]rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="[ltp]=rowClassResult%>">
   <%for(i=0;i<entity.fields.size();i++){%>
       <td>
         <div class="tabletext">
@@ -280,7 +280,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
  else
  {
 %>
-[ltp]rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="[ltp]=rowColorResult%>">
+[ltp]rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="[ltp]=rowClassResult%>">
 <td colspan="8">
 <h3>No <%=entity.ejbName%>s Found.</h3>
 </td>
@@ -290,7 +290,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 
 <table border="0" width="100%" cellpadding="2">
 [ltp] if(arraySize > 0) { %>
-    <tr bgcolor="[ltp]=rowColorResultIndex%>">
+    <tr class="[ltp]=rowClassResultIndex%>">
       <td align="left">
         <b>
         [ltp] if(viewIndex > 0) { %>

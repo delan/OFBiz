@@ -50,9 +50,9 @@
 
 [ltp]
   boolean showFields = true;
-  String rowColor1 = "99CCFF";
-  String rowColor2 = "CCFFFF";
-  String rowColor = "";
+  String rowClass1 = "viewOneTR1";
+  String rowClass2 = "viewOneTR2";
+  String rowClass = "";
 <%for(i=0;i<entity.pks.size();i++){Field curField=(Field)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
   String <%=curField.fieldName%> = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}else if(curField.javaType.indexOf("Timestamp") >= 0 || curField.javaType.equals("java.util.Date") || curField.javaType.equals("Date")){%>
   String <%=curField.fieldName%>Date = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_DATE");
@@ -113,7 +113,7 @@
     You may create a <%=entity.ejbName%> by entering the values you want, and clicking Update.
     <input type="hidden" name="UPDATE_MODE" value="CREATE">
   <%for(i=0;i<entity.pks.size();i++){%>
-    [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="[ltp]=rowColor%>">
+    [ltp]rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="[ltp]=rowClass%>">
       <td><%=((Field)entity.pks.elementAt(i)).columnName%></td>
       <td>
       <%if(((Field)entity.pks.elementAt(i)).javaType.equals("Timestamp") || 
@@ -192,7 +192,7 @@
       <input type="hidden" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE" value="[ltp]=<%=((Field)entity.pks.elementAt(i)).fieldName%>Date%>">
       <input type="hidden" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_TIME" value="[ltp]=<%=((Field)entity.pks.elementAt(i)).fieldName%>Time%>"><%}else{%>
       <input type="hidden" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=<%=((Field)entity.pks.elementAt(i)).fieldName%>%>"><%}%>
-    [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="[ltp]=rowColor%>">
+    [ltp]rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="[ltp]=rowClass%>">
       <td><%=((Field)entity.pks.elementAt(i)).columnName%></td>
       <td>
         <b>[ltp]=<%=((Field)entity.pks.elementAt(i)).fieldName%>%></b> (This cannot be changed without re-creating the <%=GenUtil.lowerFirstChar(entity.ejbName)%>.)
@@ -207,7 +207,7 @@
 [ltp]if(showFields){%>
 <%for(i=0;i<entity.fields.size();i++){%>
   <%if(!((Field)entity.fields.elementAt(i)).isPk){%>
-  [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="[ltp]=rowColor%>">
+  [ltp]rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="[ltp]=rowClass%>">
     <td><%=((Field)entity.fields.elementAt(i)).columnName%></td>
     <td>
     <%if(((Field)entity.fields.elementAt(i)).javaType.equals("Timestamp") || 
@@ -274,7 +274,7 @@
   </tr>
   <%}%>
 <%}%>
-  [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="[ltp]=rowColor%>">
+  [ltp]rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="[ltp]=rowClass%>">
     <td colspan="2"><input type="submit" name="Update" value="Update"></td>
   </tr>
 [ltp]}%>
