@@ -142,8 +142,8 @@
       <td colspan="2">
         <div>
             <span class="head2"><b>Is This a Gift?</b></span>
-            <input <ofbiz:if name="isGift" value="true" type="Boolean">CHECKED</ofbiz:if> type="radio" name="is_gift" value="true">Yes
-            <input <ofbiz:unless name="isGift" value="true" type="Boolean">CHECKED</ofbiz:unless> type="radio" name="is_gift" value="false">No
+            <input <ofbiz:if name="isGift" value="true" type="Boolean">CHECKED</ofbiz:if> type="radio" name="is_gift" value="true"><span class="tabletext">Yes</span>
+            <input <ofbiz:unless name="isGift" value="true" type="Boolean">CHECKED</ofbiz:unless> type="radio" name="is_gift" value="false"><span class="tabletext">No</span>
         </div>
       </td>
     </tr>

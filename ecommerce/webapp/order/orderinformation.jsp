@@ -157,8 +157,15 @@
               <ofbiz:unless name="paymentMethod">
                 <tr>
                   <td colspan="2" valign="top">
-                    <div class="tabletext">&nbsp;<b>Offline Payment</b></div>
+                  <div class="tabletext" align="center"><b>Offline Payment</b></div>
+                  <ofbiz:if name="orderHeader">
+                    <div class="tabletext" align="center">Please Remit Payment To:</div>
+                    <div class="tabletext" align="center">Company XYZ Inc.</div>
+                    <div class="tabletext" align="center">99 Open Ave</div>
+                    <div class="tabletext" align="center">Somewhere, OS 11111</div>
+                    <div class="tabletext" align="center"><b>Be sure to include your order #</b></div>
                   </td>
+                  </ofbiz:if>
                 </tr>
               </ofbiz:unless>
               <ofbiz:if name="paymentMethod">
