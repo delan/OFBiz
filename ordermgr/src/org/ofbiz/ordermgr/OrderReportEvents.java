@@ -89,7 +89,7 @@ public class OrderReportEvents {
             reportName = "orderitemreport.jasper";
         }
         if (groupName.equals("ship")) {
-            groupName = "concat( order_shipment_preference.carrier_party_id, ' - ', shipment_method_type.description )";
+            groupName = "concat(concat(order_shipment_preference.carrier_party_id, ' - '), shipment_method_type.description)";
             reportName = "orderreport.jasper";
         }
         if (groupName.equals("payment")) {

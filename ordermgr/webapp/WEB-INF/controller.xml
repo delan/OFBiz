@@ -356,9 +356,10 @@
     </request-map>
 
     <!-- Order Reports Requests -->
-    <request-map uri="orderreport.pdf">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="orderreport"/>
+    <request-map uri="orderreport.pdf"><security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.ordermgr.OrderReportEvents" invoke="renderOrderReports"/>
+        <response name="success" type="none" value=""/>
+        <!-- <response name="success" type="view" value="orderreport"/> -->
     </request-map>
     <request-map uri="orderreportjasper.pdf">
         <security https="true" auth="true"/>
