@@ -34,7 +34,7 @@
             <ParticipantType Type="HUMAN"/>
             <Description>First handler of each order</Description>
             <ExtendedAttributes>
-                <ExtendedAttribute Name="roleTypeId" Value="CLERK"/>
+                <ExtendedAttribute Name="roleTypeId" Value="ORDER_CLERK"/>
             </ExtendedAttributes>
         </Participant>
         

@@ -111,18 +111,13 @@
   <WorkflowFormalParam packageId="org.ofbiz.commonapp.order.order" packageVersion="1.1" processId="ProcessOrder" processVersion="1.0" applicationId="_NA_" formalParamId="orderStatusId" indexNumber="1" modeEnumId="WPM_OUT" description="The final order status" dataTypeEnumId="WDT_STRING"/>    
   <WorkflowPackage packageId="org.ofbiz.commonapp.order.order" packageVersion="1.1" packageName="" description="Demo Order Processing Workflow" specificationVersion="0.03" specificationId="XPDL" sourceVendorInfo="OFBiz.org" creationDateTime="2002-12-03 00:00:00.0" author="Andy Zeneski" publicationStatusId="WPS_UNDER_REVISION" graphConformanceEnumId="WGC_FULL_BLOCKED" priorityUomId="P" costUomId="USD" responsibleListId="10003" documentationUrl="None" participantListId="10004"/>    
   <WorkflowParticipant participantId="admin" participantName="Workflow Admin" partyId="admin" description="None" participantTypeId="HUMAN"/>
-  <WorkflowParticipant participantId="clerk" participantName="Order Clerk" roleTypeId="CLERK" description="First handler of each order" participantTypeId="HUMAN"/>
+  <WorkflowParticipant participantId="clerk" participantName="Order Clerk" roleTypeId="ORDER_CLERK" description="First handler of each order" participantTypeId="HUMAN"/>
   <WorkflowParticipant participantId="user" participantName="Dynamic User" partyId="expr:partyId" description="Dynamic user assignment" participantTypeId="RESOURCE"/>    
   <WorkflowParticipantList participantListId="10003" participantId="admin" participantIndex="1"/>
   <WorkflowParticipantList participantListId="10004" participantId="admin" participantIndex="1"/>
   <WorkflowParticipantList participantListId="10004" participantId="clerk" participantIndex="2"/>
   <WorkflowParticipantList participantListId="10004" participantId="user" participantIndex="3"/>
-  <WorkflowParticipantList participantListId="10005" participantId="admin" participantIndex="1"/>        
-  <WorkflowParticipantsView participantId="admin" partyId="admin" participantName="Workflow Admin" description="None" participantTypeId="HUMAN" participantListId="10003" participantIndex="1"/>
-  <WorkflowParticipantsView participantId="admin" partyId="admin" participantName="Workflow Admin" description="None" participantTypeId="HUMAN" participantListId="10004" participantIndex="1"/>
-  <WorkflowParticipantsView participantId="admin" partyId="admin" participantName="Workflow Admin" description="None" participantTypeId="HUMAN" participantListId="10005" participantIndex="1"/>
-  <WorkflowParticipantsView participantId="clerk" roleTypeId="CLERK" participantName="Order Clerk" description="First handler of each order" participantTypeId="HUMAN" participantListId="10004" participantIndex="2"/>
-  <WorkflowParticipantsView participantId="user" partyId="expr:partyId" participantName="Dynamic User" description="Dynamic user assignment" participantTypeId="RESOURCE" participantListId="10004" participantIndex="3"/>    
+  <WorkflowParticipantList participantListId="10005" participantId="admin" participantIndex="1"/>          
   <WorkflowProcess packageId="org.ofbiz.commonapp.order.order" packageVersion="1.1" processId="ProcessOrder" processVersion="1.0" objectName="Processes incoming orders" objectPriority="5" description="Order Processing Workflow" creationDateTime="2002-12-01 12:00:00.0" author="OFBiz" publicationStatusId="WPS_UNDER_REVISION" timeLimit="12.0" validFromDate="2002-12-01 12:00:00.0" validToDate="2012-12-01 12:00:00.0" responsibleListId="10005" durationUomId="h" duration="3.0" waitingTime="2.0" defaultStartActivityId="receiveOrder" sourceReferenceField="orderId" processInitiateUrl="" processTaskUrl=""/>    
   <WorkflowSpecification specificationId="XPDL" currentVersion="0.03"/>    
   <WorkflowTransition packageId="org.ofbiz.commonapp.order.order" packageVersion="1.1" processId="ProcessOrder" processVersion="1.0" transitionId="trans1" transitionName="Goto Order Approval" conditionTypeEnumId="WTC_OTHERWISE" fromActivityId="receiveOrder" toActivityId="clerkApprove" loopTypeEnumId="WTL_NOLOOP"/>
