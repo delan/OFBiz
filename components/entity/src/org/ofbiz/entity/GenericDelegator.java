@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.18 2004/07/03 19:54:21 jonesde Exp $
+ * $Id: GenericDelegator.java,v 1.19 2004/07/07 07:37:06 doogie Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -84,7 +84,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -1250,6 +1250,32 @@ public class GenericDelegator implements DelegatorInterface {
         return num;
     }
 
+    /** Removes/deletes Generic Entity records found by the condition
+     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param condition The condition used to restrict the removing
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeByCondition(String entityName, EntityCondition condition) throws GenericEntityException {
+        return this.removeByCondition(entityName, condition, true);
+    }
+
+    /** Removes/deletes Generic Entity records found by the condition
+     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param condition The condition used to restrict the removing
+     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be removed
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeByCondition(String entityName, EntityCondition condition, boolean doCacheClear) throws GenericEntityException {
+        if (doCacheClear) {
+            // always clear cache before the operation
+            this.clearCacheLineByCondition(entityName, condition);
+        }
+        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+        GenericHelper helper = getEntityHelper(entityName);
+
+        return helper.removeByCondition(modelEntity, condition);
+    }
+
     /**
      * Get the named Related Entity for the GenericValue from the persistent store across another Relation.
      * Helps to get related Values in a multi-to-multi relationship.
@@ -1819,6 +1845,23 @@ public class GenericDelegator implements DelegatorInterface {
 
             if (distribute && this.distributedCacheClear != null) {
                 this.distributedCacheClear.distributedClearCacheLineFlexible(dummyPK);
+            }
+        }
+    }
+
+    public void clearCacheLineByCondition(String entityName, EntityCondition condition) {
+        clearCacheLineByCondition(entityName, condition, true);
+    }
+
+    public void clearCacheLineByCondition(String entityName, EntityCondition condition, boolean distribute) {
+        if (entityName != null) {
+            //if never cached, then don't bother clearing
+            if (getModelEntity(entityName).getNeverCache()) return;
+
+            //FIXME: once findByConditionCache is implement, install cache clear hook here
+
+            if (distribute && this.distributedCacheClear != null) {
+                this.distributedCacheClear.distributedClearCacheLineByCondition(entityName, condition);
             }
         }
     }

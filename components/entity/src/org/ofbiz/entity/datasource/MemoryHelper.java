@@ -1,5 +1,5 @@
 /*
- * $Id: MemoryHelper.java,v 1.4 2004/02/03 08:14:41 jonesde Exp $
+ * $Id: MemoryHelper.java,v 1.5 2004/07/07 07:37:06 doogie Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -119,6 +119,28 @@ public class MemoryHelper implements GenericHelper {
         } else {
             return 1;
         }
+    }
+
+    private int removeFromCache(String entityName, EntityCondition condition) {
+        if (entityName == null || condition == null) {
+            return 0;
+        }
+
+        HashMap entityCache = (HashMap) cache.get(entityName);
+        if (entityCache == null) {
+            return 0;
+        }
+
+        Iterator it = entityCache.values().iterator();
+        int count = 0;
+        while (it.hasNext()) {
+            GenericValue value = (GenericValue) it.next();
+            if (condition.entityMatches(value)) {
+                it.remove();
+                count++;
+            }
+        }
+        return count;
     }
 
     private boolean isAndMatch(Map values, Map fields) {
@@ -388,6 +410,10 @@ public class MemoryHelper implements GenericHelper {
         }
 
         return removeAll(removeList);
+    }
+
+    public int removeByCondition(ModelEntity modelEntity, EntityCondition condition) throws GenericEntityException {
+        return removeFromCache(modelEntity.getEntityName(), condition);
     }
 
     public int store(GenericValue value) throws GenericEntityException {
