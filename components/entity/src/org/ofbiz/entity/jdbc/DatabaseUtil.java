@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.17 2004/05/17 22:32:41 ajzeneski Exp $
+ * $Id: DatabaseUtil.java,v 1.18 2004/05/18 02:24:40 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -67,10 +67,12 @@ public class DatabaseUtil {
     /* ====================================================================== */
 
     public void checkDb(Map modelEntities, List messages, boolean addMissing) {
-        checkDb(modelEntities, null, messages, false, addMissing);
+        checkDb(modelEntities, null, messages, (datasourceInfo.useFks && datasourceInfo.checkForeignKeysOnStart), (datasourceInfo.useFkIndices && datasourceInfo.checkFkIndicesOnStart), addMissing);
+        //checkDb(modelEntities, null, messages, false, addMissing);
     }
 
-    public void checkDb(Map modelEntities, List colWrongSize, List messages, boolean justColumns, boolean addMissing) {
+    public void checkDb(Map modelEntities, List colWrongSize, List messages, boolean checkFks, boolean checkFkIdx, boolean addMissing) {
+    //public void checkDb(Map modelEntities, List colWrongSize, List messages, boolean justColumns, boolean addMissing) {
         UtilTimer timer = new UtilTimer();
         timer.timerString("Start - Before Get Database Meta Data");
 
@@ -308,16 +310,8 @@ public class DatabaseUtil {
             if (messages != null) messages.add(message);
         }
 
-        // for each newly added table, add fks
-        if (!justColumns && datasourceInfo.useFks) {
-            Iterator eaIter = entitiesAdded.iterator();
-            while (eaIter.hasNext()) {
-                ModelEntity curEntity = (ModelEntity) eaIter.next();
-                this.createForeignKeys(curEntity, modelEntities, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred, messages);
-            }
-        }
         // for each newly added table, add fk indices
-        if (!justColumns && datasourceInfo.useFkIndices) {
+        if (datasourceInfo.useFkIndices) {
             Iterator eaIter = entitiesAdded.iterator();
             while (eaIter.hasNext()) {
                 ModelEntity curEntity = (ModelEntity) eaIter.next();
@@ -333,8 +327,18 @@ public class DatabaseUtil {
                 }
             }
         }
+
+        // for each newly added table, add fks
+        if (datasourceInfo.useFks) {
+            Iterator eaIter = entitiesAdded.iterator();
+            while (eaIter.hasNext()) {
+                ModelEntity curEntity = (ModelEntity) eaIter.next();
+                this.createForeignKeys(curEntity, modelEntities, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred, messages);
+            }
+        }
+
         // for each newly added table, add declared indexes
-        if (!justColumns && datasourceInfo.useIndices) {
+        if (datasourceInfo.useIndices) {
             Iterator eaIter = entitiesAdded.iterator();
             while (eaIter.hasNext()) {
                 ModelEntity curEntity = (ModelEntity) eaIter.next();
@@ -350,9 +354,10 @@ public class DatabaseUtil {
                 }
             }
         }
-
+        
         // make sure each one-relation has an FK
-        if (!justColumns && datasourceInfo.useFks && datasourceInfo.checkForeignKeysOnStart) {
+        if (checkFks) {
+        //if (!justColumns && datasourceInfo.useFks && datasourceInfo.checkForeignKeysOnStart) {
             // NOTE: This ISN'T working for Postgres or MySQL, who knows about others, may be from JDBC driver bugs...
             int numFksCreated = 0;
             // TODO: check each key-map to make sure it exists in the FK, if any differences warn and then remove FK and recreate it
@@ -447,7 +452,8 @@ public class DatabaseUtil {
         }
 
         // make sure each one-relation has an index
-        if (!justColumns && datasourceInfo.useFkIndices && datasourceInfo.checkFkIndicesOnStart) {
+        if (checkFkIdx) {
+        //if (!justColumns && datasourceInfo.useFkIndices && datasourceInfo.checkFkIndicesOnStart) {
             int numIndicesCreated = 0;
             // TODO: check each key-map to make sure it exists in the index, if any differences warn and then remove the index and recreate it
 
