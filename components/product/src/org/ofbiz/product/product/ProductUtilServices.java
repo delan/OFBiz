@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.15 2004/01/27 20:41:07 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.16 2004/01/27 22:20:41 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -251,9 +251,10 @@ public class ProductUtilServices {
             int numWithOneOnly = 0;
             while ((value = (GenericValue) eliOne.next()) != null) {
                 // has only one variant period, is it valid? should already be discontinued if not
-                
+
                 String productId = value.getString("productId");
                 GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+                Debug.logInfo("Processing virtual product with one variant with ID: " + productId + " and name: " + product.getString("internalName"), module);
                 
                 List paList = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT"));
                 // verify the query; tested on a bunch, looks good
@@ -268,6 +269,9 @@ public class ProductUtilServices {
                     
                     // Product
                     GenericValue variantProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", variantProductId));
+
+                    Debug.logInfo("--variant has ID: " + productId + " and name: " + product.getString("internalName"), module);
+                    
                     // start with the values from the virtual product, override from the variant...
                     GenericValue newVariantProduct = delegator.makeValue("Product", product);
                     newVariantProduct.setAllFields(variantProduct, false, "", null);
