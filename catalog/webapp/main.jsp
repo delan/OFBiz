@@ -56,7 +56,7 @@
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
   <A href='<ofbiz:url>/EditCategory</ofbiz:url>' class='buttontext'>Create New Category</A>
   <FORM method=POST action='<ofbiz:url>/EditCategory</ofbiz:url>' style='margin-top: 0;'>
-    <INPUT type=text size='20' maxlength='20' name='CATEGORY_ID' value=''>
+    <INPUT type=text size='20' maxlength='20' name='PRODUCT_CATEGORY_ID' value=''>
     <INPUT type=submit value='Edit Category'>
   </FORM>
   <A href='<ofbiz:url>/EditProduct</ofbiz:url>' class='buttontext'>Create New Product</A>

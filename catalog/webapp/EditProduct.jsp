@@ -41,12 +41,23 @@
   String productId = request.getParameter("PRODUCT_ID");
   GenericValue product = helper.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
   if(product == null) useValues = false;
+
+  Collection categoryCol = helper.findAll("ProductCategory", null);
+
+  GenericValue primaryProductCategory = null;
+  String primProdCatIdParam = request.getParameter("PRIMARY_PRODUCT_CATEGORY_ID");
+  if(product != null && useValues)
+    primaryProductCategory = product.getRelatedOne("PrimaryProductCategory");
+  else if(primProdCatIdParam != null && primProdCatIdParam.length() > 0)
+    primaryProductCategory = helper.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primProdCatIdParam));
 %>
+
+<div class="head1">Edit Product with ID "<%=productId%>"</div>
 
 <a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[Create New Product]</a>
 <%-- <%if(product != null){%><a href="<ofbiz:url>UpdateProduct?UPDATE_MODE=DELETE&PRODUCT_ID=<%=product.getSku()%></ofbiz:url>" class="buttontext">[Delete this Product]</a><%}%> --%>
 <%if(productId != null && productId.length() > 0){%>
-  <a href="/ecommerce/control/product?PRODUCT_ID=<%=productId%>" class="buttontext">[View Product Details Page]</a>
+  <a href="/ecommerce/control/product?PRODUCT_ID=<%=productId%>" class="buttontext">[View Product Page]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Keywords]</a>
 <%}%>
 
@@ -57,7 +68,12 @@
   <%if(productId != null){%>
     <h3>Could not find product with ID "<%=productId%>".</h3>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
-    <input type=hidden name="PRODUCT_ID" value="<%=productId%>">
+    <tr>
+      <td>Product ID</td>
+      <td>
+        <input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="<%=productId%>">
+      </td>
+    </tr>
   <%}else{%>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
     <tr>
@@ -80,9 +96,22 @@
 
   <%String fieldName; String paramName;%>
   <tr>
-    <%fieldName = "primaryProductCategoryId";%><%paramName = "PRIMARY_PRODUCT_CATEGORY_ID";%>    
+    <%fieldName = "primaryProductCategoryId";%><%paramName = "PRIMARY_PRODUCT_CATEGORY_ID";%>
     <td width="26%"><div class="tabletext">Primary Category Id</div></td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
+    <td width="74%">
+      <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
+      <select name="<%=paramName%>" size=1>
+        <%if(primaryProductCategory != null) {%>
+          <option selected value='<%=primaryProductCategory.getString("productCategoryId")%>'><%=primaryProductCategory.getString("description")%> [<%=primaryProductCategory.getString("productCategoryId")%>]</option>
+        <%}%>
+        <option>&nbsp;</option>
+        <%Iterator categoryIter = UtilMisc.toIterator(categoryCol);%>
+        <%while(categoryIter != null && categoryIter.hasNext()) {%>
+          <%GenericValue nextCategory=(GenericValue)categoryIter.next();%>
+          <option value='<%=nextCategory.getString("productCategoryId")%>'><%=nextCategory.getString("description")%> [<%=nextCategory.getString("productCategoryId")%>]</option>
+        <%}%>
+      </select>
+    </td>
   </tr>
   <tr>
     <%fieldName = "manufacturerPartyId";%><%paramName = "MANUFACTURER_PARTY_ID";%>    
@@ -187,7 +216,7 @@
     </td>
   </tr>
   <tr>
-    <%fieldName = "showInSearch";%><%paramName = "SHOW_IN_SEARCH";%>    
+    <%fieldName = "showInSearch";%><%paramName = "SHOW_IN_SEARCH";%>
     <td width="26%"><div class="tabletext">Show In Search?</div></td>
     <td width="74%">
       <SELECT name='<%=paramName%>'>
@@ -200,7 +229,7 @@
   </tr>
 
   <tr>
-    <td><input type="submit" name="Update" value="Update"></td>
+    <td colspan='2'><input type="submit" name="Update" value="Update"></td>
   </tr>
 </table>
 </form>
@@ -243,7 +272,7 @@
   <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
   Add ProductCategoryMember (enter Category ID):
     <select name="PRODUCT_CATEGORY_ID">
-    <%Iterator it = UtilMisc.toIterator(helper.findAll("ProductCategory", null));%>
+    <%Iterator it = UtilMisc.toIterator(categoryCol);%>
     <%while(it != null && it.hasNext()) {%>
       <%GenericValue category = (GenericValue)it.next();%>
       <option value="<%=category.getString("productCategoryId")%>"><%=category.getString("description")%> [<%=category.getString("productCategoryId")%>]</option>
