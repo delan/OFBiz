@@ -31,7 +31,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">${uiLabelMap.OrderOrderEntry}Currency: ${currencyUomId}</div>
+            <div class="boxhead">${uiLabelMap.OrderOrderEntry}</div>
           </td>
           <td valign="middle" align="right">
              <a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderClearOrder}</a>
@@ -58,8 +58,9 @@
            </tr>
       </table>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <#if agreements?has_content>
+        <#if hasAgreements=='Y'>
         <form method="post" name="agreementForm" action="<@ofbizUrl>/setOrderAgreement</@ofbizUrl>">
+        <input type='hidden' name='hasAgreements' value='${hasAgreements}'>
         <tr>
           <td width='10%'>&nbsp;</td>
           <td wdith='20%' align='right' valign='top' nowrap>
@@ -84,6 +85,7 @@
         </form>
         </#if>
         <form method="post" name="agreementForm" action="<@ofbizUrl>/setOrderCurrency</@ofbizUrl>">
+         <input type='hidden' name='hasAgreements' value='${hasAgreements}'>
          <tr>
           <td width='14%'>&nbsp;</td>
           <td wdith='6%' align='right' valign='middle' nowrap>
