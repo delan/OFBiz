@@ -44,18 +44,34 @@
     <%if (cart.getMaySplit() != null) pageContext.setAttribute("maySplit", cart.getMaySplit());%>
 </ofbiz:if>
 
-<form method="post" name="checkoutInfoForm" action="<ofbiz:url>/checkout</ofbiz:url>" style=margin:0;>
-<table width="100%" border="0">
-<tr valign="top" align="left">
-<td bgcolor="#FFCCCC">
+<BR>
+<form method="post" name="checkoutInfoForm" action="<ofbiz:url>/checkout</ofbiz:url>" style='margin:0;'>
+<table width="100%" border="0" cellpadding='0' cellspacing='0'>
+  <tr valign="top" align="left">
+    <td height='100%'>
 <% pageContext.setAttribute("carrierShipmentMethodList", helper.findAllCache("CarrierShipmentMethod", null)); %>
-
-  <div class="head2" nowrap><b>How shall WE ship it?</b></div>
+<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+  <TR>
+    <TD width='100%'>
+      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+        <tr>
+          <td valign=middle align=left>
+            <div class="boxhead" nowrap>How shall WE ship it?</div>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+        <tr>
+          <td>
   <table width="100%" cellpadding="0" border="0" cellpadding="0" cellspacing="0">
   <%String chosenShippingMethod = cart.getShipmentMethodTypeId() + '@' + cart.getCarrierPartyId();%>
 <ofbiz:iterator name="carrierShipmentMethod" property="carrierShipmentMethodList">
     <tr>
-      <td width=1% valign="top" >
+      <td width='1%' valign="top" >
         <%String shippingMethod = carrierShipmentMethod.getString("shipmentMethodTypeId") + "@" + carrierShipmentMethod.getString("partyId");%>
         <input
           <ofbiz:if name="cart">
@@ -80,11 +96,6 @@
       </td>
     </tr>
 </ofbiz:unless>
-    <%-- XXX  tr>
-      <td colspan="2">
-      Enter account code here, or ship freight collect: <input size="25" type="text" name="SHIPPING_ACCOUNT" value="">
-      </td>
-    </tr --%>
     <tr>
       <td colspan="2">
         <hr size="1">
@@ -151,22 +162,42 @@
         <div class="tabletext">Your may update these in your <a href="<ofbiz:url>/viewprofile?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">profile</a>.</div>
         <br>
         <div class="tabletext">You may add other comma separated email addresses here that will be used only for the current order:</div>
-        <input type="text" size="38" name="order_additional_emails" value='<ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getOrderAdditionalEmails())%></ofbiz:if>'>
+        <input type="text" size="30" name="order_additional_emails" value='<ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getOrderAdditionalEmails())%></ofbiz:if>'>
       </td>
     </tr>
   </table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+</td>
 
-</td>
-<td bgcolor="#888888" width="1">
-</td>
+<td bgcolor="white" width="1">&nbsp;&nbsp;</td>
 <%-- ======================================================================== --%>
 <%-- ======================================================================== --%>
-<td bgcolor="#FFFFCC">
+<td height='100%'>
 <% pageContext.setAttribute("shippingPartyContactPurposeList", helper.findByAnd("PartyContactMechPurpose", UtilMisc.toMap(
         "partyId", userLogin.getString("partyId"),
         "contactMechPurposeTypeId", "SHIPPING_LOCATION"), null)); %>  
-
-<div class="head2" nowrap><b>Where shall WE ship it?</b></div>
+<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+  <TR>
+    <TD width='100%'>
+      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+        <tr>
+          <td valign=middle align=left>
+            <div class="boxhead" nowrap><b>Where&nbsp;shall&nbsp;WE&nbsp;ship&nbsp;it?</b></div>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+        <tr>
+          <td>
 
   <a href="<ofbiz:url>/editcontactmech?CONTACT_MECH_TYPE_ID=POSTAL_ADDRESS&CM_NEW_PURPOSE_TYPE_ID=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add New Address]</a>
  <ofbiz:if name="shippingPartyContactPurposeList" size="0">
@@ -208,18 +239,38 @@
   </ofbiz:iterator>
   </table>
  </ofbiz:if>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+
 </td>
-<td bgcolor="#888888" width="1">
-</td>
+<td bgcolor="white" width="1">&nbsp;&nbsp;</td>
 <%-- ======================================================================== --%>
 <%-- ======================================================================== --%>
-<td bgcolor="#CCFFCC">
+<td>
 
 <% pageContext.setAttribute("creditCardInfoList", userLogin.getRelatedOne("Party").getRelated("CreditCardInfo")); %>
 
-
-<div class="head2" nowrap><b>How shall YOU pay?</b></div>
-<%-- the add new credit card buttons --%>
+<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+  <TR>
+    <TD width='100%'>
+      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+        <tr>
+          <td valign=middle align=left>
+            <div class="boxhead" nowrap><b>How shall YOU pay?</b></div>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+        <tr>
+          <td>
 <a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add Credit Card]</a>
 
 <ofbiz:if name="creditCardInfoList" size="0"> 
@@ -299,10 +350,16 @@
   </ofbiz:iterator>
   </table>
  </ofbiz:if>
-<%--XXX  <a href="<ofbiz:url>/requestbillingaccount?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Request Billing Account]</a> --%>
+<!--XXX  <a href="<ofbiz:url>/requestbillingaccount?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Request Billing Account]</a> -->
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
 
-</td>
-</tr>
+    </td>
+  </tr>
 </table>
 </form>
 
@@ -316,4 +373,5 @@
 </td>
 </tr>
 </table>
+<%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
