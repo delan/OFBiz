@@ -23,7 +23,7 @@
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
       <description>Verify a user is logged in.</description>
-      <security https="false" auth="false"/>
+      <security https="true" auth="false"/>
       <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="checkLogin" />
       <response name="success" type="view" value="name" />
       <response name="error" type="view" value="login" />
@@ -68,7 +68,7 @@
 	</request-map>
 	
     <request-map uri="view">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
@@ -80,7 +80,7 @@
     </request-map>
 
     <request-map uri="main">
-    	<security https="false" auth="false"/>
+    	<security https="true" auth="false"/>
     	<response name="success" type="view" value="main"/>
     </request-map>
     
