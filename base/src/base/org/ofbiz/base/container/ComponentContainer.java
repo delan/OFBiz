@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.18 2004/04/01 15:58:01 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.19 2004/06/22 19:00:41 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.base.util.UtilValidate;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.18 $
+  *@version    $Revision: 1.19 $
  * @since      3.0
  */
 public class ComponentContainer implements Container {
@@ -56,6 +56,12 @@ public class ComponentContainer implements Container {
     
     protected static List loadedComponents = null;
     protected Classpath classPath = new Classpath(System.getProperty("java.class.path"));
+
+    /**
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     */
+    public void init(String[] args) {
+    }
 
     /**
      * @see org.ofbiz.base.container.Container#start(java.lang.String)

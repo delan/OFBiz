@@ -1,5 +1,5 @@
 /*
- * $Id: JotmContainer.java,v 1.1 2004/03/19 21:45:57 ajzeneski Exp $
+ * $Id: JotmContainer.java,v 1.2 2004/06/22 19:00:48 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import javax.naming.NamingException;
  * JOTM Container
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class JotmContainer implements Container {
@@ -47,6 +47,12 @@ public class JotmContainer implements Container {
 
     protected TMService jotm = null;
 
+    /**
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     */
+    public void init(String[] args) {
+    }
+    
     public boolean start(String configFileLocation) throws ContainerException {
 
         // initialize Carol

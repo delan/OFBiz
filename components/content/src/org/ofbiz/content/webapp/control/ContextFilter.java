@@ -1,5 +1,5 @@
 /*
- * $Id: ContextFilter.java,v 1.6 2004/05/25 20:27:16 ajzeneski Exp $
+ * $Id: ContextFilter.java,v 1.7 2004/06/22 19:00:46 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.WebAppDispatcher;
  * ContextFilter - Restricts access to raw files and configures servlet objects.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  */
 public class ContextFilter implements Filter {
@@ -351,7 +351,7 @@ public class ContextFilter implements Filter {
 
     protected boolean getContainers() throws ServletException {
         try {
-            ContainerLoader.loadContainers(CONTAINER_CONFIG);
+            ContainerLoader.loadContainers(CONTAINER_CONFIG, null);
         } catch (StartupException e) {
             Debug.logError(e, module);
             throw new ServletException("Unable to load containers; cannot start ContextFilter");

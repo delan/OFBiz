@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.9 2004/06/02 20:34:03 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.10 2004/06/22 19:00:46 ajzeneski Exp $
  *
  */
 package org.ofbiz.catalina.container;
@@ -100,7 +100,7 @@ import org.xml.sax.SAXException;
  *
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.1
  */
 public class CatalinaContainer implements Container {
@@ -120,6 +120,12 @@ public class CatalinaContainer implements Container {
 
     protected boolean enableDefaultMimeTypes = true;
 
+    /**
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     */
+    public void init(String[] args) {
+    }
+    
     public boolean start(String configFileLocation) throws ContainerException {
         // set catalina_home
         System.setProperty("catalina.home", System.getProperty("ofbiz.home") + "/components/catalina");

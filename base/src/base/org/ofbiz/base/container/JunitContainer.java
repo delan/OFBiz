@@ -1,5 +1,5 @@
 /*
- * $Id: JunitContainer.java,v 1.3 2004/06/16 02:36:16 ajzeneski Exp $
+ * $Id: JunitContainer.java,v 1.4 2004/06/22 19:00:42 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.base.util.ObjectType;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class JunitContainer implements Container {
@@ -45,6 +45,12 @@ public class JunitContainer implements Container {
     public static final String module = JunitContainer.class.getName();
     protected TestResult results;
 
+    /**
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     */
+    public void init(String[] args) {
+    }
+    
     public boolean start(String configFile) throws ContainerException {
         ContainerConfig.Container jc = ContainerConfig.getContainer("junit-container", configFile);
 
