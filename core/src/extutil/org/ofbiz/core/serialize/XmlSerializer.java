@@ -28,6 +28,7 @@ import java.io.*;
 import java.net.*;
 import java.text.*;
 import java.util.*;
+import java.lang.ref.WeakReference;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -52,6 +53,7 @@ import org.ofbiz.core.entity.*;
  *@version    1.0
  */
 public class XmlSerializer {
+    private static WeakReference simpleDateFormatter;
 
     public static String serialize(Object object) throws SerializeException, FileNotFoundException, IOException {
         Document document = UtilXml.makeEmptyXmlDocument("ofbiz-ser");
@@ -93,15 +95,22 @@ public class XmlSerializer {
             return makeElement("std-Double", object, document);
         } else if (object instanceof Boolean) {
             return makeElement("std-Boolean", object, document);
-        } else if (object instanceof java.util.Date) {
-            return makeElement("std-Date", object, document);
-        } else if (object instanceof java.sql.Timestamp) {
         // - SQL Objects -
+        } else if (object instanceof java.sql.Timestamp) {
             return makeElement("sql-Timestamp", object, document);
         } else if (object instanceof java.sql.Date) {
             return makeElement("sql-Date", object, document);
         } else if (object instanceof java.sql.Time) {
             return makeElement("sql-Time", object, document);
+        } else if (object instanceof java.util.Date) {
+            //NOTE: make sure this is AFTER the java.sql date/time objects since they inherit from java.util.Date
+            DateFormat formatter = getDateFormat();
+            String stringValue = null;
+            synchronized (formatter) {
+                stringValue = formatter.format((java.util.Date) object);
+            }
+            return makeElement("std-Date", stringValue, document);
+            //return makeElement("std-Date", object, document);
         } else if (object instanceof Collection) {
             // - Collections -
             String elementName = null;
@@ -208,11 +217,12 @@ public class XmlSerializer {
                 return Boolean.valueOf(valStr);
             } else if ("std-Date".equals(tagName)) {
                 String valStr = element.getAttribute("value");
-                //DateFormat formatter = DateFormat.getDateTimeInstance();
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+                DateFormat formatter = getDateFormat();
                 java.util.Date value = null;
                 try {
-                    value = formatter.parse(valStr);
+                    synchronized (formatter) {
+                        value = formatter.parse(valStr);
+                    }
                 } catch (ParseException e) {
                     throw new SerializeException("Could not parse date String: " + valStr, e);
                 }
@@ -323,4 +333,24 @@ public class XmlSerializer {
     public static Object deserializeCustom(Element element) throws SerializeException {
         throw new SerializeException("Cannot deserialize element named " + element.getTagName());
     }
+    
+    /**
+     * Returns the DateFormat used to serialize and deserialize <code>java.util.Date</code> objects.
+     * This format is NOT used to format any of the java.sql subtypes of java.util.Date.
+     * A <code>WeakReference</code> is used to maintain a reference to the DateFormat object
+     * so that it can be created and garbage collected as needed.
+     *
+     * @return the DateFormat used to serialize and deserialize <code>java.util.Date</code> objects.
+     */
+    private static DateFormat getDateFormat() {
+        DateFormat formatter = null;
+        if (simpleDateFormatter != null) {
+            formatter = (DateFormat) simpleDateFormatter.get();
+        }
+        if (formatter == null) {
+            formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+            simpleDateFormatter = new WeakReference(formatter);
+        }
+        return formatter;
+    }    
 }
