@@ -39,16 +39,25 @@ public class SequencedIdToEnv extends MethodOperation {
     
     String seqName;
     ContextAccessor envAcsr;
+    boolean toString;
 
     public SequencedIdToEnv(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         seqName = element.getAttribute("sequence-name");
         envAcsr = new ContextAccessor(element.getAttribute("env-name"));
+        // default false, anything but true is false
+        toString = "true".equals(element.getAttribute("to-string"));
     }
 
     public boolean exec(MethodContext methodContext) {
         String seqName = methodContext.expandString(this.seqName);
-        envAcsr.put(methodContext, methodContext.getDelegator().getNextSeqId(seqName));
+        Long seqId = methodContext.getDelegator().getNextSeqId(seqName);
+        
+        if (toString) {
+            envAcsr.put(methodContext, seqId.toString());
+        } else {
+            envAcsr.put(methodContext, seqId);
+        }
         return true;
     }
 }
