@@ -1,5 +1,5 @@
 /*
- * $Id: Debug.java,v 1.4 2003/08/20 21:04:43 ajzeneski Exp $
+ * $Id: Debug.java,v 1.5 2004/06/09 18:13:02 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@ package org.ofbiz.base.util;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.File;
 import java.text.DateFormat;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -34,13 +35,14 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.spi.LoggerRepository;
+import org.apache.avalon.util.exception.ExceptionHelper;
 
 /**
  * Configurable Debug logging wrapper class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public final class Debug {
@@ -70,6 +72,7 @@ public final class Debug {
     protected static PrintWriter printWriter = new PrintWriter(printStream);
 
     protected static boolean levelOnCache[] = new boolean[8];
+    protected static boolean packException = true;
     protected static final boolean useLevelOnCache = true;
     
     protected static Logger root = Logger.getRootLogger();
@@ -103,6 +106,9 @@ public final class Debug {
                 thisLogger.setLevel(Level.DEBUG);
             }            
         }
+
+        // configure exception packing
+        packException = UtilProperties.propertyValueEqualsIgnoreCase("debug.properties", "pack.exception", "true");
     }
     
     public static PrintStream getPrintStream() {
@@ -148,6 +154,13 @@ public final class Debug {
 
     public static void log(int level, Throwable t, String msg, String module, String callingClass) {
         if (isOn(level)) {
+            // pack the exception
+            if (packException && t != null) {
+                msg = System.getProperty("line.separator") + ExceptionHelper.packException(msg, t, true);
+                t = null;
+            }
+
+            // log
             if (useLog4J) {
                 Logger logger = getLogger(module);
                 if (SYS_DEBUG != null) {
