@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/11/03 01:38:25  azeneski
+ * Renamed runTime to runtime.
+ *
  * Revision 1.2  2001/11/02 23:11:14  azeneski
  * Some non-functional services implementation.
  *
@@ -8,6 +11,7 @@
 
 package org.ofbiz.core.scheduler;
 
+import java.util.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
@@ -58,8 +62,13 @@ public class JobInvoker implements Runnable {
     
     public void run() {
         Debug.logInfo("JobInvoker: Thread (" + thread.getName() + ") Running...");
-        job.receiveNotice();
-        // invoke the service job.getString("serviceName");
-        // dispatcher.runSync(...);
+        Map result = null;
+        try {
+            result = dispatcher.runSync(job.getService(),job.getContext());
+        }
+        catch ( GenericServiceException e ) {
+            e.printStackTrace();
+        }
+        job.receiveNotice(result);
     }
 }

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/11/08 15:25:05  azeneski
+ * Started working the scheduler to use the recurrence classes.
+ *
  * Revision 1.6  2001/11/05 15:57:21  azeneski
  * reworking scheduler to use XAPIA's CSA Specification for rule grammer
  *
@@ -87,7 +90,12 @@ public class JobManager {
     
     /** Create a Job object and add to the queue. */
     public synchronized Job addJob(GenericValue value, Map context) throws JobSchedulerException {
-        Job job = new Job(value,context);
+        return addJob(value,context,null);
+    }
+    
+    /** Create a Job object and add to the queue. */
+    public synchronized Job addJob(GenericValue value, Map context, GenericRequester req) throws JobSchedulerException {
+        Job job = new Job(value,context,req);
         
         // Queue the job with the scheduler.
         // This can be modified to queue several schedulers.

@@ -7,6 +7,7 @@ package org.ofbiz.core.scheduler;
 import java.io.*;
 import java.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -40,14 +41,16 @@ public class Job implements Comparable, Serializable {
     
     private RecurrenceInfo recurrence;
     private GenericValue job;
+    private GenericRequester requester;
     private Map context;
     private long runtime;
     private long seqNum;
     
     /** Creates a new Job object. */
-    public Job(GenericValue job, Map context) {
+    public Job(GenericValue job, Map context, GenericRequester requester) {
         this.job = job;
         this.context = context;
+        this.requester = requester;
         this.runtime = -1;
         this.seqNum = 0;
         init();
@@ -80,6 +83,16 @@ public class Job implements Comparable, Serializable {
         runtime = recurrence.next();
     }
     
+    /** Returns the name of the service associated with this job. */
+    public String getService() {
+        return job.getString("serviceName");
+    }
+    
+    /** Returns the context of this job. */
+    public Map getContext() {
+        return this.context;
+    }
+    
     /** Checks to see if this Job is scheduled to run within the next second. */
     private boolean checkRuntime() {
         long delayTime = runtime - System.currentTimeMillis();
@@ -95,16 +108,25 @@ public class Job implements Comparable, Serializable {
     
     /** Receives notification when this Job is running. */
     public void receiveNotice() {
+        receiveNotice(null);
+    }
+    
+    /** Receives notification when this Job is running. */
+    public void receiveNotice(Map result) {
         Date stamp = new Date();
         int runCount = job.getInteger("runCount").intValue();
         runCount++;
         job.set("lastRuntime",stamp);
         job.set("runCount", new Integer(runCount));
-        try {
+        try {            
+            recurrence.incrementCurrentCount();
             job.store();
         }
-        catch ( GenericEntityException e ) {
-            e.printStackTrace();
+        catch ( GenericEntityException gee ) {
+            gee.printStackTrace();
+        }       
+        if ( result != null && requester != null ) {
+            requester.receiveResult(result);
         }
     }
     
@@ -170,10 +192,10 @@ public class Job implements Comparable, Serializable {
         }
         return 0;
     }
-        
+    
     /** Returns a string description of this Job. */
     public String toString() {
-        return "Not implemented yet.";        
+        return "Not implemented yet.";
     }
 }
 
