@@ -446,6 +446,23 @@
         </else>
         </if-empty>
 
+        <!-- If the given product is a SERVICE or DIGITAL_GOOD -->
+        <if>
+            <condition>
+                <or>
+                    <if-compare field-name="product.productTypeId" operator="equals" value="SERVICE"/>
+                    <if-compare field-name="product.productTypeId" operator="equals" value="DIGITAL_GOOD"/>
+                </or>
+            </condition>
+            <then>
+                <log level="verbose" message="Product with id ${product.productId}, is of type ${product.productTypeId}, returning true for inventory available check"/>
+                <string-to-field string="Y" field-name="available"/>
+                <field-to-result field-name="available"/>
+                <return/>
+            </then>
+        </if>
+        
+        <!-- TODO: what to do with ASSET_USAGE? Only done elsewhere? Would need date/time range info to check availability -->
                 
         <!-- if prodCatalog is set to not check inventory break here -->
         <if-compare value="N" field-name="productStore.checkInventory" operator="equals">
