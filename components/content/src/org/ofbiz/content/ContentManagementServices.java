@@ -367,12 +367,15 @@ public class ContentManagementServices {
                         }
                     } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
                     } else {
-                        fileContext.put("dataResourceId", dataResourceId);
-                        fileContext.put("textData", textData);
-                        thisResult = dispatcher.runSync("updateElectronicText", fileContext);
-                        errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                    	if (UtilValidate.isNotEmpty(errorMsg)) {
-                        	return ServiceUtil.returnError(errorMsg);
+                        String forceElectronicText = (String)context.get("forceElectronicText");
+                        if (UtilValidate.isNotEmpty(textData) || "true".equalsIgnoreCase(forceElectronicText)) {
+                            fileContext.put("dataResourceId", dataResourceId);
+                            fileContext.put("textData", textData);
+                            thisResult = dispatcher.runSync("updateElectronicText", fileContext);
+                            errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                        	if (UtilValidate.isNotEmpty(errorMsg)) {
+                            	return ServiceUtil.returnError(errorMsg);
+                        	}
                     	}
                     }
                 }
