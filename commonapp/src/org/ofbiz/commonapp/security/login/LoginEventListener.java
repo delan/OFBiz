@@ -24,10 +24,7 @@
 
 package org.ofbiz.commonapp.security.login;
 
-import java.util.*;
 import javax.servlet.http.*;
-
-import org.ofbiz.core.util.*;
 
 /**
  * HttpSessionListener that finalizes login information
@@ -49,7 +46,6 @@ public class LoginEventListener implements HttpSessionListener {
 
     public void sessionDestroyed(HttpSessionEvent event) {
         HttpSession session = event.getSession();
-        
         LoginEvents.cleanupExternalLoginKey(session);
     }
 }

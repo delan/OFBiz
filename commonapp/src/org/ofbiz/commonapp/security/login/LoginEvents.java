@@ -58,21 +58,26 @@ public class LoginEvents {
         
     public static final String module = LoginEvents.class.getName();
 
+    public static final String EXTERNAL_LOGIN_KEY_ATTR = "externalLoginKey";
+
+    /** This Map is keyed by the randomly generated externalLoginKey and the value is a UserLogin GenericValue object */
     public static Map externalLoginKeys = new HashMap();
-    public static String EXTERNAL_LOGIN_KEY_ATTR = "externalLoginKey";
+
+    /** This Map is keyed by userLoginId and the value is another Map keyed by the webappName and the value is the sessionId.
+     * When a user logs in an entry in this Map will be populated for the given user, webapp and session. 
+     * When checking security this Map will be checked if the user is logged in to see if we should log them out automatically; this implements the universal logout.
+     * When a user logs out this Map will be cleared so the user will be logged out automatically on subsequent requests. 
+     */
+    public static Map loggedInSessions = new HashMap();
     
     /**
      * Save USERNAME and PASSWORD for use by auth pages even if we start in non-auth pages.
      *
      * @param request The HTTP request object for the current JSP or Servlet request.
      * @param response The HTTP response object for the current JSP or Servlet request.
-     * @throws RemoteException
-     * @throws IOException
-     * @throws ServletException
      * @return
      */
-    public static String saveEntryParams(HttpServletRequest request, HttpServletResponse response)
-        throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
+    public static String saveEntryParams(HttpServletRequest request, HttpServletResponse response) {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         HttpSession session = request.getSession();
 
@@ -108,15 +113,22 @@ public class LoginEvents {
      *
      * @param request The HTTP request object for the current JSP or Servlet request.
      * @param response The HTTP response object for the current JSP or Servlet request.
-     * @throws RemoteException
-     * @throws IOException
-     * @throws ServletException
      * @return
      */
-    public static String checkLogin(HttpServletRequest request, HttpServletResponse response)
-        throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
+    public static String checkLogin(HttpServletRequest request, HttpServletResponse response) {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         HttpSession session = request.getSession();
+
+        // user is logged in; check to see if there is an entry in the loggedInSessions Map, if not log out this user 
+        if (userLogin != null) {
+            boolean loggedInSession = isLoggedInSession(userLogin, request);
+            if (!loggedInSession) {
+                doBasicLogout(userLogin, request);
+                userLogin = null;
+                // have to reget this because the old session object will be invalid
+                session = request.getSession();
+            }
+        }
 
         String username = null;
         String password = null;
@@ -136,6 +148,7 @@ public class LoginEvents {
                 password = password.toLowerCase();
             }
 
+            // in this condition log them in if not already; if not logged in or can't log in, save parameters and return error
             if ((username == null) || (password == null) || ("error".equals(login(request, response)))) {
                 String queryString = null;
                 Enumeration params = request.getParameterNames();
@@ -177,8 +190,7 @@ public class LoginEvents {
      * @exception java.rmi.RemoteException Standard RMI Remote Exception
      * @exception java.io.IOException Standard IO Exception
      */
-    public static String login(HttpServletRequest request, HttpServletResponse response)
-        throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
+    public static String login(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
 
         String username = request.getParameter("USERNAME");
@@ -213,9 +225,7 @@ public class LoginEvents {
             Map userLoginSession = (Map) result.get("userLoginSession");
 
             if (userLogin != null) {
-                session.setAttribute(SiteDefs.USER_LOGIN, userLogin);
-                // let the visit know who the user is
-                VisitHandler.setUserLogin(session, userLogin, false);
+                doBasicLogin(userLogin, request);
             }
             
             if (userLoginSession != null) {
@@ -233,6 +243,14 @@ public class LoginEvents {
         // make sure the autoUserLogin is set to the same and that the client cookie has the correct userLoginId
         return autoLoginSet(request, response);
     }
+    
+    public static void doBasicLogin(GenericValue userLogin, HttpServletRequest request) {
+        HttpSession session = request.getSession(); 
+        session.setAttribute(SiteDefs.USER_LOGIN, userLogin);
+        // let the visit know who the user is
+        VisitHandler.setUserLogin(session, userLogin, false);
+        loginToSession(userLogin, request);
+    }
 
     /**
      * An HTTP WebEvent handler that logs out a userLogin by clearing the session.
@@ -241,19 +259,31 @@ public class LoginEvents {
      * @param response The HTTP response object for the current JSP or Servlet request.
      * @return Return a boolean which specifies whether or not the calling Servlet or
      *        JSP should generate its own content. This allows an event to override the default content.
-     * @exception java.io.IOException Standard IO Exception
      */
-    public static String logout(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException {
+    public static String logout(HttpServletRequest request, HttpServletResponse response) {
         // invalidate the security group list cache
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+
+        // log out from all other sessions too; do this here so that it is only done when a user explicitly logs out
+        logoutFromAllSessions(userLogin);
+        
+        doBasicLogout(userLogin, request);
+
+        if (request.getAttribute("_AUTO_LOGIN_LOGOUT_") == null) {
+            return autoLoginCheck(request, response);
+        }
+        return "success";
+    }
+    
+    public static void doBasicLogout(GenericValue userLogin, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+
         Security security = (Security) request.getAttribute("security");
 
         if (security != null && userLogin != null) {
             Security.userLoginSecurityGroupByUserLoginId.remove(userLogin.getString("userLoginId"));
         }
-
-        HttpSession session = request.getSession();
-
+        
         // this is a setting we don't want to lose, although it would be good to have a more general solution here...
         String currCatalog = (String) session.getAttribute("CURRENT_CATALOG_ID");
         // also make sure the delegatorName is preserved, especially so that a new Visit can be created
@@ -264,11 +294,6 @@ public class LoginEvents {
 
         if (currCatalog != null) session.setAttribute("CURRENT_CATALOG_ID", currCatalog);
         if (delegatorName != null) session.setAttribute("delegatorName", delegatorName);
-
-        if (request.getAttribute("_AUTO_LOGIN_LOGOUT_") == null) {
-            return autoLoginCheck(request, response);
-        }
-        return "success";
     }
 
     /**
@@ -619,20 +644,28 @@ public class LoginEvents {
 
     public static String checkExternalLoginKey(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        if (session.getAttribute(SiteDefs.USER_LOGIN) != null) {
-            //already logged in, do nothing
-            return "success";
-        }
         
         String externalKey = request.getParameter(EXTERNAL_LOGIN_KEY_ATTR);
         if (externalKey == null) return "success";
         
         GenericValue userLogin = (GenericValue) externalLoginKeys.get(externalKey);
         if (userLogin != null) {
-            //found userLogin, do the external login...
-            session.setAttribute(SiteDefs.USER_LOGIN, userLogin);
-            // let the visit know who the user is
-            VisitHandler.setUserLogin(session, userLogin, false);
+            // found userLogin, do the external login...
+
+            // if the user is already logged in and the login is different, logout the other user
+            GenericValue currentUserLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
+            if (currentUserLogin != null) {
+                if (currentUserLogin.getString("userLoginId").equals(userLogin.getString("userLoginId"))) {
+                    // is the same user, just carry on...
+                    return "success";
+                }
+                
+                // logout the current user and login the new user...
+                String logoutRetVal = logout(request, response);
+                // ignore the return value; even if the operation failed we want to set the new UserLogin
+            }
+
+            doBasicLogin(userLogin, request);
         } else {
             Debug.logWarning("Could not find userLogin for external login key: " + externalKey);
         }
@@ -644,6 +677,42 @@ public class LoginEvents {
         String sesExtKey = (String) session.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
         if (sesExtKey != null) {
             externalLoginKeys.remove(sesExtKey);
+        }
+    }
+    
+    public static boolean isLoggedInSession(GenericValue userLogin, HttpServletRequest request) {
+        if (userLogin != null) {
+            Map webappMap = (Map) loggedInSessions.get(userLogin.get("userLoginId"));
+            if (webappMap == null) {
+                return false;
+            } else {
+                String sessionId = (String) webappMap.get(UtilHttp.getApplicationName(request));
+                if (sessionId == null || !sessionId.equals(request.getSession().getId())) { 
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public static void loginToSession(GenericValue userLogin, HttpServletRequest request) {
+        if (userLogin != null) {
+            Map webappMap = (Map) loggedInSessions.get(userLogin.get("userLoginId"));
+            if (webappMap == null) {
+                webappMap = new HashMap();
+                loggedInSessions.put(userLogin.get("userLoginId"), webappMap);
+            } 
+    
+            String webappName = UtilHttp.getApplicationName(request);
+            webappMap.put(webappName, request.getSession().getId());
+        }
+    }
+    
+    public static void logoutFromAllSessions(GenericValue userLogin) {
+        if (userLogin != null) {
+            loggedInSessions.remove(userLogin.get("userLoginId"));
         }
     }
 }
