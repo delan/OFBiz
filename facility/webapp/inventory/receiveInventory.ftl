@@ -367,7 +367,7 @@ function removeSelected() {
                     <div class="tableheadtext">Qty Rejected:</div>
                   </td>
                   <td align="right">
-                    <input type="text" class="inputBox" name="quantityRejected_o_${rowCount}" size="6">
+                    <input type="text" class="inputBox" name="quantityRejected_o_${rowCount}" value="0" size="6">
                   </td>
                 </tr>
               </table>
