@@ -67,6 +67,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
       3. Direct to manually laoded JDBC driver (uses jdbc.driver, jdbc.uri, jdbc.username, jdbc.password)
 
     Transaction Isolation Levels - For Tyrex (<helperName>.isolation.level) can be as follows:
+     * None
      * ReadCommitted
      * ReadUncommitted
      * RepeatableRead
@@ -86,7 +87,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-username="sa"
                 jdbc-password=""
                 isolation-level="Serializable"/>
-        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/HsqlDataSource"/> -->
+        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/HsqlDataSource" isolation-level="Serializable"/> -->
     </datasource>
 
     <datasource name="localcloudscape"
@@ -102,7 +103,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 isolation-level="Serializable"/>
-        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/CloudscapeDataSource"/> -->
+        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/CloudscapeDataSource" isolation-level="Serializable"/> -->
     </datasource>
 
     <datasource name="localmysql"
@@ -119,12 +120,12 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 isolation-level="Serializable"/>
-        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/MySqlDataSource"/> -->
+        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/MySqlDataSource" isolation-level="Serializable"/> -->
     </datasource>
 
     <datasource name="localpostgres"
             helper-class="org.ofbiz.core.entity.GenericHelperDAO"
-            field-type-name="postgres"
+            field-type-name="postgres72"
             check-on-start="true"
             add-missing-on-start="true">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
@@ -134,8 +135,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-uri="jdbc:postgresql://127.0.0.1/ofbiz"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
-                isolation-level="Serializable"/>
-        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/PostgresDataSource"/> -->
+                isolation-level="ReadCommitted"/>
+        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/PostgresDataSource" isolation-level="ReadCommitted"/> -->
+        <!-- <tyrex-dataSource dataSource-name="localpostgres" isolation-level="ReadCommitted"/> -->
     </datasource>
 
     <datasource name="localoracle"
@@ -147,11 +149,12 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
         <inline-jdbc
                 jdbc-driver="oracle.jdbc.driver.OracleDriver"
-                jdbc-uri="jdbc:oracle:thin:@localhost:1521:ofbiz"
+                jdbc-uri="jdbc:oracle:thin:@127.0.0.1:1521:ofbiz"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
-                isolation-level="Serializable"/>
-        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/OracleDataSource"/> -->
+                isolation-level="ReadCommitted"/>
+        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/OracleDataSource" isolation-level="Serializable"/> -->
+        <!-- <tyrex-dataSource dataSource-name="localoracle" isolation-level="ReadCommitted"/> -->
     </datasource>
 
     <datasource name="localsapdb"
@@ -167,7 +170,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 isolation-level="Serializable"/>
-        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/SapDBDataSource"/> -->
+        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/SapDBDataSource" isolation-level="Serializable"/> -->
     </datasource>
 
     <datasource name="localp6spy"
@@ -183,6 +186,6 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 isolation-level="Serializable"/>
-        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/OracleDataSource"/> -->
+        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/OracleDataSource" isolation-level="Serializable"/> -->
     </datasource>
 </entity-config>

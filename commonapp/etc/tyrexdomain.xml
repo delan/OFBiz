@@ -2,26 +2,48 @@
 
 <domain>
     <name>default</name>
-   <!--
-    <dataSource>
-      <name>db</name>
-      <jar>classes12.zip</jar>
-      <class>org.gjt.mm.mysql.xa.XADataSourceImpl</class>
-      <config>
-        <URL>jdbc:mysql://127.0.0.1/ofbiz</URL>
-        <user>mysqldb</user>
-        <password>mysqldb</password>
-      </config>
-      <limits>
-        <maximum>50</maximum>
-        <minimum>5</minimum>
-        <initial>5</initial>
-        <maxRetain>300</maxRetain>
-        <timeout>10</timeout>
-        <trace>false</trace>
-     </limits>
-    </dataSource>
-   -->
+    <maximum>0</maximum> <!-- set to 0 means no limit on the number of concurrent transactions -->
+    <timeout>120</timeout> <!-- 120 seconds is a long time for transaction timeouts, but necessary when remote authorizations and so forth are done as part of a transaction -->
+    
+    <resources>
+        <!-- NOTE: This configuration does not currently work because of this class; I can't figure out which one to use for Postgres, if there is one...
+        <dataSource>
+            <name>localpostgres</name>
+            <jar>../ofbiz/lib/common/pgjdbc2.jar</jar>
+            <class>org.postgresql.Driver</class>
+            <config>
+                <URL>jdbc:postgresql://127.0.0.1/ofbiz</URL>
+                <user>ofbiz</user><password>ofbiz</password>
+            </config>
+            <limits>
+                <!- - Start with 5 connections, never go below 5, and never go above 50 - ->
+                <maximum>50</maximum><minimum>5</minimum><initial>5</initial>
+                <!- - Discard connections idle for 5 minutes - ->
+                <maxRetain>300</maxRetain>
+                <!- - If maximum reached, block for 5 seconds - ->
+                <timeout>5</timeout>
+                <trace>true</trace>
+            </limits>
+        </dataSource>
+        -->
+        <!-- disabling by default so no loading errors will occur when jar, etc not available
+        <dataSource>
+            <name>localoracle</name>
+            <jar>lib/classes12.zip</jar>
+            <class>oracle.jdbc.xa.client.OracleXADataSource</class>
+            <config>
+                <URL>jdbc:oracle:thin:@127.0.0.1:1521:ofbiz</URL>
+                <user>ofbiz</user><password>ofbiz</password>
+            </config>
+            <limits>
+                <maximum>50</maximum><minimum>5</minimum><initial>5</initial>
+                <maxRetain>300</maxRetain>
+                <timeout>5</timeout>
+                <trace>true</trace>
+            </limits>
+        </dataSource>
+        -->
+    </resources>
 </domain>
 
 
