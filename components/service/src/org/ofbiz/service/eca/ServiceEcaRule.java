@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEcaRule.java,v 1.3 2003/11/13 21:13:45 ajzeneski Exp $
+ * $Id: ServiceEcaRule.java,v 1.4 2004/07/27 18:12:43 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * ServiceEcaRule
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ServiceEcaRule {
@@ -78,17 +78,10 @@ public class ServiceEcaRule {
 
         List actList = UtilXml.childElementList(eca, "action");
         Iterator ai = actList.iterator();
-
-        // since it is the action class which handle mode; we will set the mode for
-        // the special case "global-rollback" and "global-commit" events here.
+        
         while (ai.hasNext()) {
             Element actionElement = (Element) ai.next();
-            if ("global-rollback".equalsIgnoreCase(eventName)) {
-                actionElement.setAttribute("mode", "_rollback");
-            } else if ("global-commit".equalsIgnoreCase(eventName)) {
-                actionElement.setAttribute("mode", "_commit");
-            }
-            actions.add(new ServiceEcaAction(actionElement));
+            actions.add(new ServiceEcaAction(actionElement, eventName));
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("Actions: " + actions, module);
