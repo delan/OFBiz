@@ -152,8 +152,9 @@ public class SQLProcessor {
      *
      * @throws GenericDataSourceException
      */
-    public void close() throws GenericDataSourceException {
+    public void close() throws GenericDataSourceException {        
         if (_manualTX) {
+            if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:close() calling commit : _manualTX=" + _manualTX, module);
             commit();
         }
 
@@ -162,7 +163,7 @@ public class SQLProcessor {
         if (_rs != null) {
             try {
                 _rs.close();
-                if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor: result close() _manualTX=" + _manualTX, module);
+                if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:close() result close : _manualTX=" + _manualTX, module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
@@ -173,7 +174,7 @@ public class SQLProcessor {
         if (_ps != null) {
             try {
                 _ps.close();
-                if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor: preparedStatement close() _manualTX=" + _manualTX, module);
+                if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:close() preparedStatement close : _manualTX=" + _manualTX, module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
@@ -184,7 +185,7 @@ public class SQLProcessor {
         if (_stmt != null) {
             try {
                 _stmt.close();
-                if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor: statement close() _manualTX=" + _manualTX, module);
+                if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:close() statement close : _manualTX=" + _manualTX, module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
@@ -195,13 +196,13 @@ public class SQLProcessor {
         if ((_connection != null) && _bDeleteConnection) {
             try {
                 _connection.close();
-                if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor: connection close() _manualTX=" + _manualTX, module);
+                if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:close() connection close : _manualTX=" + _manualTX, module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
 
             _connection = null;
-        }
+        }               
     }
 
     /**
