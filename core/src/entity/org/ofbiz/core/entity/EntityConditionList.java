@@ -86,11 +86,11 @@ public class EntityConditionList extends EntityCondition {
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
         // if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName());
-        Iterator exprIter = conditionList.iterator();
+        if (conditionList == null || conditionList.size() == 0) return;
 
+        Iterator exprIter = conditionList.iterator();
         while (exprIter.hasNext()) {
             EntityCondition entityCondition = (EntityCondition) exprIter.next();
-
             entityCondition.checkCondition(modelEntity);
         }
     }
