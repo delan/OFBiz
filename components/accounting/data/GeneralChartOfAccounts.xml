@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+  <GlAccount parentGlAccountId="" glAccountId="100000" accountCode="100000" glAccountTypeId="CURRENT_ASSET" glAccountClassId="ASSET" glResourceTypeId="MONEY"
+    accountName="ASSETS" description="" postedBalance="0.0"/>
+
+  <GlAccount parentGlAccountId="100000" glAccountId="110000" accountCode="110000" glAccountTypeId="CURRENT_ASSET" glAccountClassId="ASSET" glResourceTypeId="MONEY"
+    accountName="CASH" description="" postedBalance="0.0"/>
+
+  <GlAccount parentGlAccountId="110000" glAccountId="111000" accountCode="111000" glAccountTypeId="CURRENT_ASSET" glAccountClassId="ASSET" glResourceTypeId="MONEY"
+    accountName="CASH IN BANK AND ON HAND" description="" postedBalance="0.0"/>
+
+  <GlAccount parentGlAccountId="111000" glAccountId="111100" accountCode="111100" glAccountTypeId="CURRENT_ASSET" glAccountClassId="ASSET" glResourceTypeId="MONEY"
+    accountName="GENERAL CHECKING ACCOUNT" description="" postedBalance="0.0"/>
+  <GlAccount parentGlAccountId="111000" glAccountId="111200" accountCode="111200" glAccountTypeId="CURRENT_ASSET" glAccountClassId="ASSET" glResourceTypeId="MONEY"
+    accountName="PAYROLL CHECKING ACCOUNT" description="" postedBalance="0.0"/>
+
+<!--
+  <GlAccountClass description="Resource" glAccountClassId="RESOURCE" parentClassId=""/>
+  <GlAccountClass description="Asset" glAccountClassId="ASSET" parentClassId=""/>
+  <GlAccountClass description="Liability" glAccountClassId="LIABILITY" parentClassId=""/>
+  <GlAccountClass description="Equity" glAccountClassId="EQUITY" parentClassId=""/>
+  <GlAccountClass description="Income" glAccountClassId="INCOME" parentClassId=""/>
+  <GlAccountClass description="Expense" glAccountClassId="EXPENSE" parentClassId=""/>
+  <GlAccountClass description="Non-Posting" glAccountClassId="NON_POSTING" parentClassId=""/>
+
+  <GlAccountType description="Accounts Receivable" glAccountTypeId="ACCOUNTS_RECEIVABLE" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Accounts Payable" glAccountTypeId="ACCOUNTS_PAYABLE" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Balance" glAccountTypeId="BALANCE_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Bank Settlement" glAccountTypeId="BANK_STLMNT_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Current Asset" glAccountTypeId="CURRENT_ASSET" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Fixed Asset" glAccountTypeId="FIXED_ASSET" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Credit Card" glAccountTypeId="CREDIT_CARD" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Current Liability" glAccountTypeId="CURRENT_LIABILITY" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Long Term Liability" glAccountTypeId="LONG_TERM_LIABILITY" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Customer" glAccountTypeId="CUSTOMER_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Supplier" glAccountTypeId="SUPPLIER_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Product" glAccountTypeId="PRODUCT_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Tax" glAccountTypeId="TAX_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Profit Loss" glAccountTypeId="PROFIT_LOSS_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Sales" glAccountTypeId="SALES_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Purchase" glAccountTypeId="PURCHASE_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Inventory Change" glAccountTypeId="INV_CHANGE_ACCOUNT" hasTable="N" parentTypeId=""/>
+-->
+</entity-engine-xml>
