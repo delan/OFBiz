@@ -1,7 +1,7 @@
 /*
- * $Id: GenericDelegator.java,v 1.17 2004/06/20 07:09:18 jonesde Exp $
+ * $Id: GenericDelegator.java,v 1.18 2004/07/03 19:54:21 jonesde Exp $
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -43,8 +43,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityFieldMap;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.datasource.GenericHelper;
 import org.ofbiz.entity.datasource.GenericHelperFactory;
@@ -79,7 +84,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -2203,9 +2208,9 @@ public class GenericDelegator implements DelegatorInterface {
     /** Get the next guaranteed unique seq id from the sequence with the given sequence name;
      * if the named sequence doesn't exist, it will be created
      *@param seqName The name of the sequence to get the next seq id from
-     *@return Long with the next seq id for the given sequence name
+     *@return String with the next sequenced id for the given sequence name
      */
-    public Long getNextSeqId(String seqName) {
+    public String getNextSeqId(String seqName) {
         return this.getNextSeqId(seqName, 1);
     }
 
@@ -2215,7 +2220,36 @@ public class GenericDelegator implements DelegatorInterface {
      *@param staggerMax The maximum amount to stagger the sequenced ID, if 1 the sequence will be incremented by 1, otherwise the current sequence ID will be incremented by a value between 1 and staggerMax
      *@return Long with the next seq id for the given sequence name
      */
-    public Long getNextSeqId(String seqName, long staggerMax) {
+    public String getNextSeqId(String seqName, long staggerMax) {
+        Long nextSeqLong = this.getNextSeqIdLong(seqName, staggerMax);
+        
+        if (nextSeqLong == null) {
+            throw new IllegalArgumentException("Could not get next sequenced ID for sequence name: " + seqName);
+        }
+        
+        if (UtilValidate.isNotEmpty(this.delegatorInfo.sequencedIdPrefix)) {
+            return this.delegatorInfo.sequencedIdPrefix + nextSeqLong.toString();
+        } else {
+            return nextSeqLong.toString();
+        }
+    }
+    
+    /** Get the next guaranteed unique seq id from the sequence with the given sequence name;
+     * if the named sequence doesn't exist, it will be created
+     *@param seqName The name of the sequence to get the next seq id from
+     *@return Long with the next sequenced id for the given sequence name
+     */
+    public Long getNextSeqIdLong(String seqName) {
+        return this.getNextSeqIdLong(seqName, 1);
+    }
+
+    /** Get the next guaranteed unique seq id from the sequence with the given sequence name;
+     * if the named sequence doesn't exist, it will be created
+     *@param seqName The name of the sequence to get the next seq id from
+     *@param staggerMax The maximum amount to stagger the sequenced ID, if 1 the sequence will be incremented by 1, otherwise the current sequence ID will be incremented by a value between 1 and staggerMax
+     *@return Long with the next seq id for the given sequence name
+     */
+    public Long getNextSeqIdLong(String seqName, long staggerMax) {
         if (sequencer == null) {
             synchronized (this) {
                 if (sequencer == null) {

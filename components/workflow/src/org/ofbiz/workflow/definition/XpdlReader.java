@@ -1,5 +1,5 @@
 /*
- * $Id: XpdlReader.java,v 1.1 2003/08/17 09:29:32 ajzeneski Exp $
+ * $Id: XpdlReader.java,v 1.2 2004/07/03 19:54:26 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href='mailto:jonesde@ofbiz.org'>David E. Jones</a>
  * @author     <a href='mailto:jaz@ofbiz.org'>Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class XpdlReader {
@@ -294,15 +294,11 @@ public class XpdlReader {
     }
 
     protected void readResponsibles(List responsibles, GenericValue valueObject, String prefix) throws DefinitionParserException {
-        if (responsibles == null || responsibles.size() == 0)
+        if (responsibles == null || responsibles.size() == 0) {
             return;
+        }
 
-        Long nextSeqId = delegator.getNextSeqId("WorkflowParticipantList");
-
-        if (nextSeqId == null)
-            throw new DefinitionParserException("Could not get next sequence id from data source");
-        String responsibleListId = nextSeqId.toString();
-
+        String responsibleListId = delegator.getNextSeqId("WorkflowParticipantList");
         valueObject.set("responsibleListId", responsibleListId);
 
         Iterator responsibleIter = responsibles.iterator();

@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentServices.java,v 1.8 2004/06/27 03:29:48 ajzeneski Exp $
+ * $Id: PaymentServices.java,v 1.9 2004/07/03 19:54:19 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Payment maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class PaymentServices {
@@ -169,11 +169,14 @@ public class PaymentServices {
 
         toBeStored.add(newCc);
 
-        Long newPmId = delegator.getNextSeqId("PaymentMethod");
-
-        if (newPmId == null) {
+        String newPmId = null;
+        try {
+            newPmId = delegator.getNextSeqId("PaymentMethod");
+        } catch (IllegalArgumentException e) {
             return ServiceUtil.returnError("ERROR: Could not create credit card (id generation failure)");
+            
         }
+
         newPm.set("partyId", partyId);
         newPm.set("fromDate", (context.get("fromDate") != null ? context.get("fromDate") : now));
         newPm.set("thruDate", context.get("thruDate"));
@@ -187,9 +190,9 @@ public class PaymentServices {
         newCc.set("cardNumber", context.get("cardNumber"));
         newCc.set("expireDate", context.get("expireDate"));
 
-        newPm.set("paymentMethodId", newPmId.toString());
+        newPm.set("paymentMethodId", newPmId);
         newPm.set("paymentMethodTypeId", "CREDIT_CARD");
-        newCc.set("paymentMethodId", newPmId.toString());
+        newCc.set("paymentMethodId", newPmId);
 
         GenericValue newPartyContactMechPurpose = null;
         String contactMechId = (String) context.get("contactMechId");
@@ -344,10 +347,12 @@ public class PaymentServices {
         newCc = new GenericValue(creditCard);
         toBeStored.add(newCc);
 
-        Long newPmId = delegator.getNextSeqId("PaymentMethod");
-
-        if (newPmId == null) {
+        String newPmId = null;
+        try {
+            newPmId = delegator.getNextSeqId("PaymentMethod");
+        } catch (IllegalArgumentException e) {
             return ServiceUtil.returnError("ERROR: Could not update credit card info (id generation failure)");
+            
         }
 
         newPm.set("partyId", partyId);
@@ -373,8 +378,8 @@ public class PaymentServices {
         }
 
         if (!newCc.equals(creditCard) || !newPm.equals(paymentMethod)) {
-            newPm.set("paymentMethodId", newPmId.toString());
-            newCc.set("paymentMethodId", newPmId.toString());
+            newPm.set("paymentMethodId", newPmId);
+            newCc.set("paymentMethodId", newPmId);
 
             newPm.set("fromDate", (context.get("fromDate") != null ? context.get("fromDate") : now));
             isModified = true;
@@ -476,10 +481,13 @@ public class PaymentServices {
         GenericValue newGc = delegator.makeValue("GiftCard", null);
         toBeStored.add(newGc);
 
-        Long newPmId = delegator.getNextSeqId("PaymentMethod");
-        if (newPmId == null) {
+        String newPmId = null;
+        try {
+            newPmId = delegator.getNextSeqId("PaymentMethod");
+        } catch (IllegalArgumentException e) {
             return ServiceUtil.returnError("ERROR: Could not create GiftCard (id generation failure)");
         }
+
         newPm.set("partyId", partyId);
         newPm.set("fromDate", (context.get("fromDate") != null ? context.get("fromDate") : now));
         newPm.set("thruDate", context.get("thruDate"));
@@ -488,9 +496,9 @@ public class PaymentServices {
         newGc.set("pinNumber", context.get("pinNumber"));
         newGc.set("expireDate", context.get("expireDate"));
 
-        newPm.set("paymentMethodId", newPmId.toString());
+        newPm.set("paymentMethodId", newPmId);
         newPm.set("paymentMethodTypeId", "GIFT_CARD");
-        newGc.set("paymentMethodId", newPmId.toString());
+        newGc.set("paymentMethodId", newPmId);
 
         try {
             delegator.storeAll(toBeStored);
@@ -568,9 +576,10 @@ public class PaymentServices {
         newGc = new GenericValue(giftCard);
         toBeStored.add(newGc);
 
-        Long newPmId = delegator.getNextSeqId("PaymentMethod");
-
-        if (newPmId == null) {
+        String newPmId = null;
+        try {
+            newPmId = delegator.getNextSeqId("PaymentMethod");
+        } catch (IllegalArgumentException e) {
             return ServiceUtil.returnError("ERROR: Could not update GiftCard info (id generation failure)");
         }
 
@@ -583,8 +592,8 @@ public class PaymentServices {
         newGc.set("expireDate", context.get("expireDate"));
 
         if (!newGc.equals(giftCard) || !newPm.equals(paymentMethod)) {
-            newPm.set("paymentMethodId", newPmId.toString());
-            newGc.set("paymentMethodId", newPmId.toString());
+            newPm.set("paymentMethodId", newPmId);
+            newGc.set("paymentMethodId", newPmId);
 
             newPm.set("fromDate", (context.get("fromDate") != null ? context.get("fromDate") : now));
             isModified = true;
@@ -644,11 +653,13 @@ public class PaymentServices {
 
         toBeStored.add(newEa);
 
-        Long newPmId = delegator.getNextSeqId("PaymentMethod");
-
-        if (newPmId == null) {
+        String newPmId = null;
+        try {
+            newPmId = delegator.getNextSeqId("PaymentMethod");
+        } catch (IllegalArgumentException e) {
             return ServiceUtil.returnError("ERROR: Could not create credit card (id generation failure)");
         }
+
         newPm.set("partyId", partyId);
         newPm.set("fromDate", (context.get("fromDate") != null ? context.get("fromDate") : now));
         newPm.set("thruDate", context.get("thruDate"));
@@ -660,9 +671,9 @@ public class PaymentServices {
         newEa.set("companyNameOnAccount", context.get("companyNameOnAccount"));
         newEa.set("contactMechId", context.get("contactMechId"));
 
-        newPm.set("paymentMethodId", newPmId.toString());
+        newPm.set("paymentMethodId", newPmId);
         newPm.set("paymentMethodTypeId", "EFT_ACCOUNT");
-        newEa.set("paymentMethodId", newPmId.toString());
+        newEa.set("paymentMethodId", newPmId);
 
         GenericValue newPartyContactMechPurpose = null;
         String contactMechId = (String) context.get("contactMechId");
@@ -775,9 +786,10 @@ public class PaymentServices {
         newEa = new GenericValue(eftAccount);
         toBeStored.add(newEa);
 
-        Long newPmId = delegator.getNextSeqId("PaymentMethod");
-
-        if (newPmId == null) {
+        String newPmId = null;
+        try {
+            newPmId = delegator.getNextSeqId("PaymentMethod");
+        } catch (IllegalArgumentException e) {
             return ServiceUtil.returnError("ERROR: Could not update EFT Account info (id generation failure)");
         }
 
@@ -793,8 +805,8 @@ public class PaymentServices {
         newEa.set("contactMechId", context.get("contactMechId"));
 
         if (!newEa.equals(eftAccount) || !newPm.equals(paymentMethod)) {
-            newPm.set("paymentMethodId", newPmId.toString());
-            newEa.set("paymentMethodId", newPmId.toString());
+            newPm.set("paymentMethodId", newPmId);
+            newEa.set("paymentMethodId", newPmId);
 
             newPm.set("fromDate", (context.get("fromDate") != null ? context.get("fromDate") : now));
             isModified = true;
@@ -902,15 +914,16 @@ public class PaymentServices {
             }
         }
 
-        Long newPmId = delegator.getNextSeqId("Payment");
-
-        if (newPmId == null) {
+        String newPmId = null;
+        try {
+            newPmId = delegator.getNextSeqId("PaymentMethod");
+        } catch (IllegalArgumentException e) {
             return ServiceUtil.returnError("ERROR: Could not Create Payment (id generation failure)");
         }
 
         GenericValue payment = delegator.makeValue("Payment", null);
 
-        payment.set("paymentId", newPmId.toString());
+        payment.set("paymentId", newPmId);
         payment.set("paymentTypeId", context.get("paymentTypeId"));
         payment.set("paymentMethodTypeId", context.get("paymentMethodTypeId"));
         payment.set("paymentMethodId", context.get("paymentMethodId"));

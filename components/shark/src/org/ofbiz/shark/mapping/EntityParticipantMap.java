@@ -1,5 +1,5 @@
 /*
- * $Id: EntityParticipantMap.java,v 1.1 2004/04/22 15:41:05 ajzeneski Exp $
+ * $Id: EntityParticipantMap.java,v 1.2 2004/07/03 19:54:26 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.enhydra.shark.api.RootException;
  * Shark Participant Map Implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class EntityParticipantMap implements ParticipantMap {
@@ -66,8 +66,7 @@ public class EntityParticipantMap implements ParticipantMap {
         this.newValue = true;
         this.delegator = delegator;
 
-        Long seqId = delegator.getNextSeqId("WfParticipantMap");
-        this.participant = delegator.makeValue("WfParticipantMap", UtilMisc.toMap("participantMapId", seqId.toString()));
+        this.participant = delegator.makeValue("WfParticipantMap", UtilMisc.toMap("participantMapId", delegator.getNextSeqId("WfParticipantMap")));
     }
 
     public static EntityParticipantMap getInstance(GenericValue participant) throws RootException {

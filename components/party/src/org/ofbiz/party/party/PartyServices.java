@@ -1,5 +1,5 @@
 /*
- * $Id: PartyServices.java,v 1.5 2004/02/26 09:10:48 jonesde Exp $
+ * $Id: PartyServices.java,v 1.6 2004/07/03 19:54:23 jonesde Exp $
  *
  * Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class PartyServices {
@@ -117,12 +117,10 @@ public class PartyServices {
 
         // partyId might be empty, so check it and get next seq party id if empty
         if (partyId == null || partyId.length() == 0) {
-            Long newId = delegator.getNextSeqId("Party");
-
-            if (newId == null) {
+            try {
+                partyId = delegator.getNextSeqId("Party");
+            } catch (IllegalArgumentException e) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "party.id_generation_failure", locale));
-            } else {
-                partyId = newId.toString();
             }
         }
 
@@ -244,13 +242,11 @@ public class PartyServices {
 
         // partyId might be empty, so check it and get next seq party id if empty
         if (partyId == null || partyId.length() == 0) {
-            Long newId = delegator.getNextSeqId("Party");
-
-            if (newId == null) {
+            try {
+                partyId = delegator.getNextSeqId("Party");
+            } catch (IllegalArgumentException e) {
                 errMsg = UtilProperties.getMessage(resource,"partyservices.could_not_create_party_group_generation_failure", locale);
                 return ServiceUtil.returnError(errMsg);
-            } else {
-                partyId = newId.toString();
             }
         } else {
             // if specified partyId starts with a number, return an error
@@ -403,13 +399,11 @@ public class PartyServices {
 
         // partyId might be empty, so check it and get next seq party id if empty
         if (partyId == null || partyId.length() == 0) {
-            Long newId = delegator.getNextSeqId("Party");
-
-            if (newId == null) {
+            try {
+                partyId = delegator.getNextSeqId("Party");
+            } catch (IllegalArgumentException e) {
                 errMsg = UtilProperties.getMessage(resource,"partyservices.cannot_create_affiliate_generation_failure", locale);
                 return ServiceUtil.returnError(errMsg);
-            } else {
-                partyId = newId.toString();
             }
         }
 

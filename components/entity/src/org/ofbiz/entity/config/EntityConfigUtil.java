@@ -1,7 +1,7 @@
 /*
- * $Id: EntityConfigUtil.java,v 1.10 2004/06/01 06:13:24 jonesde Exp $
+ * $Id: EntityConfigUtil.java,v 1.11 2004/07/03 19:54:21 jonesde Exp $
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class EntityConfigUtil {
@@ -284,6 +284,7 @@ public class EntityConfigUtil {
         public boolean useDistributedCacheClear;
         public String distributedCacheClearClassName;
         public String distributedCacheClearUserLoginId;
+        public String sequencedIdPrefix;
         public Map groupMap = new HashMap();
 
         public DelegatorInfo(Element element) {
@@ -299,6 +300,8 @@ public class EntityConfigUtil {
             this.distributedCacheClearUserLoginId = element.getAttribute("distributed-cache-clear-user-login-id");
             if (UtilValidate.isEmpty(this.distributedCacheClearUserLoginId)) this.distributedCacheClearUserLoginId= "admin";
 
+            this.sequencedIdPrefix = element.getAttribute("sequenced-id-prefix");
+            
             List groupMapList = UtilXml.childElementList(element, "group-map");
             Iterator groupMapIter = groupMapList.iterator();
 

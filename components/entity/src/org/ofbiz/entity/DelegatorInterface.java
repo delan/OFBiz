@@ -1,7 +1,7 @@
 /*
- * $Id: DelegatorInterface.java,v 1.5 2003/12/12 04:02:04 ajzeneski Exp $
+ * $Id: DelegatorInterface.java,v 1.6 2004/07/03 19:54:20 jonesde Exp $
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -44,7 +44,7 @@ import org.ofbiz.entity.util.SequenceUtil;
  * Delegator Interface
  *
  * @author     <a href="mailto:plightbo@cisco.com">Patrick Lightbody</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public interface DelegatorInterface {
@@ -250,7 +250,10 @@ public interface DelegatorInterface {
 
     void putInAndCache(ModelEntity entity, Map fields, List values);
 
-    Long getNextSeqId(String seqName);
+    String getNextSeqId(String seqName);
+    String getNextSeqId(String seqName, long staggerMax);
+    Long getNextSeqIdLong(String seqName);
+    Long getNextSeqIdLong(String seqName, long staggerMax);
 
     void setSequencer(SequenceUtil sequencer);
 

@@ -1,5 +1,5 @@
 /*
- * $Id: PartyWorker.java,v 1.2 2003/12/17 21:29:10 ajzeneski Exp $
+ * $Id: PartyWorker.java,v 1.3 2004/07/03 19:54:24 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.entity.GenericValue;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class PartyWorker {
@@ -105,7 +105,7 @@ public class PartyWorker {
         String clubId = prefix != null ? prefix : "";
 
         // generate the sequenced number and pad
-        Long seq = delegator.getNextSeqId(clubSeqName);
+        Long seq = delegator.getNextSeqIdLong(clubSeqName);
         clubId = clubId + UtilFormatOut.formatPaddedNumber(seq.longValue(), (length - prefix.length() - 1));
 
         // get the check digit

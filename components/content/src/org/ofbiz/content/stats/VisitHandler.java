@@ -1,5 +1,5 @@
 /*
- * $Id: VisitHandler.java,v 1.3 2004/02/11 06:04:20 jonesde Exp $
+ * $Id: VisitHandler.java,v 1.4 2004/07/03 19:54:20 jonesde Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.GenericValue;
  * Handles saving and maintaining visit information
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class VisitHandler {
@@ -130,35 +130,28 @@ public class VisitHandler {
                     Debug.logError("Could not find delegator with delegatorName [" + delegatorName + "] in session, not creating Visit entity", module);
                 } else {
                     visit = delegator.makeValue("Visit", null);
-                    Long nextId = delegator.getNextSeqId("Visit");
+                    visit.set("visitId", delegator.getNextSeqId("Visit"));
+                    visit.set("sessionId", session.getId());
+                    visit.set("fromDate", new Timestamp(session.getCreationTime()));
+                    // get localhost ip address and hostname to store
+                    try {
+                        InetAddress address = InetAddress.getLocalHost();
 
-                    if (nextId == null) {
-                        Debug.logError("Not persisting visit, could not get next seq id", module);
+                        if (address != null) {
+                            visit.set("serverIpAddress", address.getHostAddress());
+                            visit.set("serverHostName", address.getHostName());
+                        } else {
+                            Debug.logError("Unable to get localhost internet address, was null", module);
+                        }
+                    } catch (java.net.UnknownHostException e) {
+                        Debug.logError("Unable to get localhost internet address: " + e.toString(), module);
+                    }
+                    try {
+                        visit.create();
+                        session.setAttribute("visit", visit);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Could not create new visit:", module);
                         visit = null;
-                    } else {
-                        visit.set("visitId", nextId.toString());
-                        visit.set("sessionId", session.getId());
-                        visit.set("fromDate", new Timestamp(session.getCreationTime()));
-                        // get localhost ip address and hostname to store
-                        try {
-                            InetAddress address = InetAddress.getLocalHost();
-
-                            if (address != null) {
-                                visit.set("serverIpAddress", address.getHostAddress());
-                                visit.set("serverHostName", address.getHostName());
-                            } else {
-                                Debug.logError("Unable to get localhost internet address, was null", module);
-                            }
-                        } catch (java.net.UnknownHostException e) {
-                            Debug.logError("Unable to get localhost internet address: " + e.toString(), module);
-                        }
-                        try {
-                            visit.create();
-                            session.setAttribute("visit", visit);
-                        } catch (GenericEntityException e) {
-                            Debug.logError(e, "Could not create new visit:", module);
-                            visit = null;
-                        }
                     }
                 }
             }

@@ -1,7 +1,7 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.26 2004/06/29 19:03:48 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.27 2004/07/03 19:54:25 jonesde Exp $
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -52,7 +52,7 @@ import org.ofbiz.service.LocalDispatcher;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -90,11 +90,7 @@ public class ProductStoreWorker {
     }
 
     public static String makeProductStoreOrderId(GenericDelegator delegator, String productStoreId) {
-        Long orderId = delegator.getNextSeqId("OrderHeader");
-        if (orderId == null) {
-            throw new IllegalArgumentException("Unable to obtain orderId from delegator");
-        }
-        return makeProductStoreOrderId(delegator, productStoreId, orderId.toString());
+        return makeProductStoreOrderId(delegator, productStoreId, delegator.getNextSeqId("OrderHeader"));
     }
 
     public static String makeProductStoreOrderId(GenericDelegator delegator, String productStoreId, String orderId) {

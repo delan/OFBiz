@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySaxReader.java,v 1.14 2004/06/26 23:16:22 ajzeneski Exp $
+ * $Id: EntitySaxReader.java,v 1.15 2004/07/03 19:54:22 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import freemarker.template.TemplateHashModel;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler {
@@ -311,11 +311,8 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                 if (!currentValue.containsPrimaryKey()) {
                     if (currentValue.getModelEntity().getPksSize() == 1) {
                         ModelField modelField = currentValue.getModelEntity().getPk(0);
-                        Long newSeqLong = delegator.getNextSeqId(currentValue.getEntityName());
-                        if (newSeqLong == null) {
-                            throw new SAXException("Could not get next sequenced primary key for value with 1 primary key field: " + currentValue);
-                        }
-                        currentValue.setString(modelField.getName(), newSeqLong.toString());
+                        String newSeq = delegator.getNextSeqId(currentValue.getEntityName());
+                        currentValue.setString(modelField.getName(), newSeq);
                     } else {
                         throw new SAXException("Cannot store value with incomplete primary key with more than 1 primary key field: " + currentValue);
                     }

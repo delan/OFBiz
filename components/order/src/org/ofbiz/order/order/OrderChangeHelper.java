@@ -1,7 +1,7 @@
 /*
- * $Id: OrderChangeHelper.java,v 1.11 2004/04/11 08:28:20 jonesde Exp $
+ * $Id: OrderChangeHelper.java,v 1.12 2004/07/03 19:54:23 jonesde Exp $
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -47,7 +47,7 @@ import org.ofbiz.workflow.client.WorkflowClient;
  * Order Helper - Helper Methods For Non-Read Actions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class OrderChangeHelper {
@@ -250,8 +250,7 @@ public class OrderChangeHelper {
         }
         
         // create the payment
-        Long payId = delegator.getNextSeqId("Payment");
-        GenericValue payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", payId.toString()));
+        GenericValue payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", delegator.getNextSeqId("Payment")));
         payment.set("paymentTypeId", "RECEIPT");
         payment.set("paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId"));
         payment.set("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
