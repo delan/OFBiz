@@ -40,6 +40,11 @@ public class ModelService {
     public static final String OUT_PARAM = "OUT";
     public static final String IN_PARAM = "IN";
     
+    public static final String RESPONSE_MESSAGE = "responseMessage";
+    public static final String RESPOND_SUCCESS = "success";
+    public static final String RESPOND_ERROR = "error";
+    public static final String ERROR_MESSAGE ="errorMessage";    
+    
     /** The name of this service */
     public String name;
     
