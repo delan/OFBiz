@@ -58,7 +58,7 @@
 			</drop-down>
 		</field>
         
-		<field use-when="orderHeader!=null&amp;&amp;orderHeader.get(&quot;productStoreId&quot;)!=null" name="originFacilityId" title="Origin Facility [${shipment.primaryOrderId}]" widget-style="selectBox">
+		<field use-when="productStoreId!=null" name="originFacilityId" title="Origin Facility [${shipment.primaryOrderId}]" widget-style="selectBox">
 			<drop-down allow-empty="true" current="first-in-list">
 				<entity-options entity-name="ProductStoreFacilityByOrder" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
 					<entity-constraint name="orderId" value="${orderHeader.orderId}"/>

@@ -38,6 +38,7 @@ shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", s
 HtmlFormWrapper editShipmentWrapper = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "EditShipment", request, response);
 editShipmentWrapper.putInContext("shipmentId", shipmentId);
 editShipmentWrapper.putInContext("shipment", shipment);
+editShipmentWrapper.putInContext("productStoreId", null); // seems to be needed not exist != null
 
 context.put("shipmentId", shipmentId);
 context.put("shipment", shipment);
@@ -47,6 +48,7 @@ if (shipment != null) {
     orderHeader = null;
     if (shipment.get("primaryOrderId") != null) {
         orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", shipment.get("primaryOrderId")));
+        editShipmentWrapper.putInContext("productStoreId", orderHeader.get("productStoreId"));
     }    
     currentStatus = shipment.getRelatedOne("StatusItem");
     originPostalAddress = shipment.getRelatedOne("OriginPostalAddress");
