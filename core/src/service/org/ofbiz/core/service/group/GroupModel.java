@@ -98,7 +98,9 @@ public class GroupModel {
             int randomIndex = (int) (Math.random() * (double) (services.size())); 
             return runIndex(dispatcher, localName, context, randomIndex);
         } else if (this.getSendMode().equals("first-available")) {
-            return runOne(dispatcher, localName, context);                            
+            return runOne(dispatcher, localName, context);  
+        } else if (this.getSendMode().equals("none")) {
+            return new HashMap();                                 
         } else { 
             throw new GenericServiceException("This mode is not currently supported");
         }
