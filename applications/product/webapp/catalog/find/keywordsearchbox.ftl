@@ -89,6 +89,9 @@
         <div>
             <form name="productjumpform" method="POST" action="<@ofbizUrl>EditProduct</@ofbizUrl>" style="margin: 0;">
                 <input type="text" class="inputBox" name="productId" size="10" maxlength="20" value="${requestParameters.productId?if_exists}">
+                <a href="javascript:call_fieldlookup2(document.productjumpform.productId,'LookupProduct');">
+                    <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'>
+                </a> 
                 <select class="selectBox" name="DUMMYPAGE" onChange="submitProductJump()" style="width: 110px;">
                     <option value="<@ofbizUrl>EditProduct</@ofbizUrl>">-Product Jump-</option>
                     <option value="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>">${uiLabelMap.ProductQuickAdmin}</option>
@@ -99,6 +102,7 @@
                     <option value="<@ofbizUrl>EditProductCategories</@ofbizUrl>">${uiLabelMap.ProductCategories}</option>
                     <option value="<@ofbizUrl>EditProductKeyword</@ofbizUrl>">${uiLabelMap.ProductKeywords}</option>
                     <option value="<@ofbizUrl>EditProductAssoc</@ofbizUrl>">${uiLabelMap.ProductAssociations}</option>
+                    <option value="<@ofbizUrl>ViewProductManufacturing</@ofbizUrl>">${uiLabelMap.ProductManufacturing}</option>
                     <option value="<@ofbizUrl>EditProductAttributes</@ofbizUrl>">${uiLabelMap.ProductAttributes}</option>
                     <option value="<@ofbizUrl>EditProductFeatures</@ofbizUrl>">${uiLabelMap.ProductFeatures}</option>
                     <option value="<@ofbizUrl>EditProductFacilities</@ofbizUrl>">${uiLabelMap.ProductFacilities}</option>

@@ -156,9 +156,9 @@ public class ProductFeatureServices {
                     boolean hasAllFeatures = true;
                     Iterator curProductFeatureAndApplIter = curProductFeatureAndAppls.iterator();
                     while (curProductFeatureAndApplIter.hasNext()) {
-                        GenericEntity productFeatureAndAppl = (GenericEntity) curProductFeatureAndApplIter.next();
+                        String productFeatureAndAppl = (String) curProductFeatureAndApplIter.next();
                         Map findByMap = UtilMisc.toMap("productId", productAssoc.getString("productIdTo"), 
-                                "productFeatureId", productFeatureAndAppl.get("productFeatureId"),
+                                "productFeatureId", productFeatureAndAppl,
                                 "productFeatureApplTypeId", "STANDARD_FEATURE");
 
                         //Debug.log("Using findByMap: " + findByMap);
@@ -238,12 +238,15 @@ public class ProductFeatureServices {
                            if (currentFeature.getString("productFeatureApplTypeId").equals("SELECTABLE_FEATURE")) {
                                Map newCombination = new HashMap();
                                List newFeatures = new LinkedList();
+                               List newFeatureIds = new LinkedList();
                                if (currentFeature.getString("idCode") != null)
                                 newCombination.put("defaultVariantProductId", productId + currentFeature.getString("idCode"));
                             else
                                 newCombination.put("defaultVariantProductId", productId);
                             newFeatures.add(currentFeature);
+                            newFeatureIds.add(currentFeature.getString("productFeatureId"));
                             newCombination.put("curProductFeatureAndAppls", newFeatures);
+                            newCombination.put("curProductFeatureIds", newFeatureIds);
                             newCombinations.add(newCombination);
                        }
                    }
@@ -258,12 +261,15 @@ public class ProductFeatureServices {
                                   // .clone() is important, or you'll keep adding to the same List for all the variants
                                   // have to cast twice: once from get() and once from clone()
                                   List newFeatures = ((List) ((LinkedList) combination.get("curProductFeatureAndAppls")).clone());
+                                  List newFeatureIds = ((List) ((LinkedList) combination.get("curProductFeatureIds")).clone());
                                   if (currentFeature.getString("idCode") != null)
                                           newCombination.put("defaultVariantProductId", combination.get("defaultVariantProductId") + currentFeature.getString("idCode"));
                                   else
                                           newCombination.put("defaultVariantProductId", combination.get("defaultVariantProductId"));
                                   newFeatures.add(currentFeature);
+                                  newFeatureIds.add(currentFeature.getString("productFeatureId"));
                                   newCombination.put("curProductFeatureAndAppls", newFeatures);
+                                  newCombination.put("curProductFeatureIds", newFeatureIds);
                                   newCombinations.add(newCombination);
                               }
                           }
@@ -287,7 +293,7 @@ public class ProductFeatureServices {
                             }
                             defaultVariantProductIds.put(combination.get("defaultVariantProductId"), null);
                 results = dispatcher.runSync("getAllExistingVariants", UtilMisc.toMap("productId", productId, 
-                                            "productFeatureAppls", combination.get("curProductFeatureAndAppls")));
+                                            "productFeatureAppls", combination.get("curProductFeatureIds")));
                 combination.put("existingVariantProductIds", results.get("variantProductIds"));
             }
             results = ServiceUtil.returnSuccess();
