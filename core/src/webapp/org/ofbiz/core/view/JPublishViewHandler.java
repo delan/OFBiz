@@ -118,10 +118,12 @@ public class JPublishViewHandler implements ViewHandler {
         String[] extensions = {"bsh"};
         BSFManager.registerScriptingEngine("beanshell", "bsh.OfbizBshBsfEngine", extensions);
         //BSFManager.registerScriptingEngine("beanshell", "bsh.util.BeanShellBSFEngine", extensions);
-        
+
         String[] jsExtensions = {"js"};
         BSFManager.registerScriptingEngine("javascript", "org.ofbiz.core.action.OfbizJsBsfEngine", jsExtensions);
         
+        String[] smExtensions = {"sm"};
+        BSFManager.registerScriptingEngine("simplemethod", "org.ofbiz.core.minilang.SimpleMethodBsfEngine", smExtensions);
     }
 
     protected boolean executeGlobalActions(HttpServletRequest request, HttpServletResponse response, JPublishContext context, String path) throws Exception {
