@@ -139,8 +139,9 @@ public class WorldPayEvents {
         String emailAddress = null;
         GenericValue emailContact = null;
         try {
-            List emailAddrs = delegator.findByAnd("OrderContactMech", UtilMisc.toMap("orderId", orderId, "contactMechPurposeTypeId", "ORDER_EMAIL"));
-            emailContact = EntityUtil.getFirst(emailAddrs);
+            List emails = delegator.findByAnd("OrderContactMech", UtilMisc.toMap("orderId", orderId, "contactMechPurposeTypeId", "ORDER_EMAIL"));
+            GenericValue firstEmail = EntityUtil.getFirst(emails);
+            emailContact = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", firstEmail.getString("contactMechId")));                        
             emailAddress = emailContact.getString("infoString");
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Problems getting order email address", module);
