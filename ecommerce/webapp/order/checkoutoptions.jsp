@@ -24,6 +24,7 @@
  *
  *@author     Eric Pabst
  *@author     David E. Jones
+ *@author     Andy Zeneski
  *@created    May 22 2001
  *@version    1.0
  */
@@ -83,10 +84,11 @@
         >
       </td>
       <td valign="top">
-        <%String shipMethDescription = "";%>
+        <%String shipMethDescription = ""; String shipParty = "";%>
         <%GenericValue shipmentMethodType = carrierShipmentMethod.getRelatedOneCache("ShipmentMethodType");%>
         <%if(shipmentMethodType != null) shipMethDescription = shipmentMethodType.getString("description");%>
-        <div class="tabletext"><%=carrierShipmentMethod.getString("partyId") + " " + UtilFormatOut.checkNull(shipMethDescription)%></div>
+		<%if(!carrierShipmentMethod.getString("partyId").equals("_NA_")) shipParty = carrierShipmentMethod.getString("partyId");%>
+        <div class="tabletext"><%=UtilFormatOut.checkNull(shipParty) + " " + UtilFormatOut.checkNull(shipMethDescription)%></div>
       </td>
     </tr>
 </ofbiz:iterator>
