@@ -280,6 +280,17 @@
             <string-to-field string="PURCHASE_SHIPMENT" field-name="shipmentTypeId" map-name="shipment"/>
         </if-compare>
         
+        <!-- set the facility if we are from a store with a single facility -->
+        <if-compare field-name="shipmentTypeId" map-name="shipment" operator="equals" value="SALES_SHIPMENT">
+        	<if-not-empty field-name="productStoreId" map-name="orderHeader">
+        		<field-to-field field-name="productStoreId" map-name="orderHeader" to-map-name="storeLookup"/>
+        		<find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
+        		<if-compare field-name="oneInventoryFacility" map-name="productStore" operator="equals" value="Y">
+        			<field-to-field field-name="inventoryFacilityId" map-name="productStore" to-field-name="originFacilityId" to-map-name="shipment"/>
+        		</if-compare>
+        	</if-not-empty>
+        </if-compare>
+        
         <!-- partyIdFrom, partyIdTo (vendorPartyId) - NOTE: these work the same for Purchase and Sales Orders... -->
         <find-by-and entity-name="OrderRole" map-name="lookupOrderHeaderPKMap" list-name="orderRoles"/>
         
