@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
 -->
 
@@ -51,16 +51,16 @@
     </simple-method>
     
     <simple-method method-name="createNotificationLog" short-description="Log an order notification" login-required="false">    
-    	<make-value entity-name="OrderNotification" value-name="orderNotification"/>
-    	<sequenced-id-to-env sequence-name="OrderNotification" env-name="orderNotificationId"/>    	
-    	<env-to-field env-name="orderNotificationId" map-name="orderNotification"/>
-    	    	
-    	<field-to-field field-name="orderId" map-name="parameters" to-map-name="orderNotification"/>
-    	<field-to-field field-name="emailType" map-name="parameters" to-map-name="orderNotification"/>
-    	    
-    	<now-timestamp-to-env env-name="nowTimestamp"/>
-    	<env-to-field env-name="nowTimestamp" field-name="notificationDate" map-name="orderNotification"/>    	
-    	<create-value value-name="orderNotification"/>    	    	
+        <make-value entity-name="OrderNotification" value-name="orderNotification"/>
+        <sequenced-id-to-env sequence-name="OrderNotification" env-name="orderNotificationId"/>        
+        <env-to-field env-name="orderNotificationId" map-name="orderNotification"/>
+                
+        <field-to-field field-name="orderId" map-name="parameters" to-map-name="orderNotification"/>
+        <field-to-field field-name="emailType" map-name="parameters" to-map-name="orderNotification"/>
+            
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="notificationDate" map-name="orderNotification"/>        
+        <create-value value-name="orderNotification"/>                
     </simple-method>
     
     <simple-method method-name="updateOrderStatusFromReceipt" short-description="Update Order Status From ShipmentReceipt">
@@ -91,7 +91,7 @@
             <store-value value-name="orderItem"/>
             <!-- create status change history -->
             <make-value entity-name="OrderStatus" value-name="newValue"/>
-            <sequenced-id-to-env sequence-name="OrderStatus" env-name="orderStatusId"/>
+            <sequenced-id-to-env sequence-name="OrderStatus" env-name="orderStatusId" to-string="true"/>
             <env-to-field env-name="orderStatusId" map-name="newValue"/>
             
             <field-to-field field-name="orderItemSeqId" map-name="orderItem" to-map-name="newValue"/>
