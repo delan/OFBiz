@@ -59,6 +59,8 @@ import org.objectweb.transaction.jta.TMService;
 import org.w3c.dom.Element;
 
 import org.ofbiz.core.entity.config.EntityConfigUtil;
+import org.ofbiz.core.entity.jdbc.DatabaseUtil;
+import org.ofbiz.core.entity.model.ModelEntity;
 
 /**
  * JotmXaPoolTest - Program For Testing Connections (pooled) and Transactions
@@ -74,7 +76,8 @@ public class JotmXaPoolTest {
     protected Writer writer = null;
          
     protected int counter = 0;
-        
+    
+    protected GenericDelegator delegator = null;
     protected TMService jotm = null;
     protected StandardXAPoolDataSource pool = null;
     
@@ -110,9 +113,10 @@ public class JotmXaPoolTest {
     }
         
     public JotmXaPoolTest(GenericDelegator delegator, Level l) throws Exception {
+        this.delegator = delegator;
         this.setLogger(l);
         
-        GenericHelper helper = delegator.getEntityHelper("JobSandbox");
+        GenericHelper helper = delegator.getEntityHelper("JotmXapoolTest");
         EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helper.getHelperName());
         if (datasourceInfo.inlineJdbcElement == null) {
             throw new Exception("No inline jdbc element found for this helper : " + helper.getHelperName());
@@ -186,18 +190,32 @@ public class JotmXaPoolTest {
     
     public void createTest() throws SQLException {                
         // get a connection
-        Connection con = pool.getConnection();
+        if (delegator != null) {
+            // create using the delegator so we use valid SQL for the DB
+            GenericHelper helper = null;
+            try {
+                helper = delegator.getEntityHelper("JotmXapoolTest");
+            } catch (GenericEntityException e) {
+                logger.error("", e);
+                throw new SQLException();
+            }
+            ModelEntity model = delegator.getModelEntity("JotmXapoolTest");
+            DatabaseUtil dbUtil = new DatabaseUtil(helper.getHelperName());
+            dbUtil.createTable(model, null, false, false, 1, "", false);
+        } else {        
+            Connection con = pool.getConnection();
         
-        // HSQL Create Statement
-        String sql = "CREATE TABLE " + tableName + " (idx BIGINT, col_1 VARCHAR(), col2 VARCHAR(), stamp TIMESTAMP)";
+            // HSQL Create Statement
+            String sql = "CREATE TABLE " + tableName + " (idx BIGINT, col_a VARCHAR(), col_b VARCHAR(), stamp TIMESTAMP)";
         
-        // PostgreSQL Create Statement
-        //String sql = "CREATE TABLE " + tableName + " (idx NUMERIC(18,0), col_1 VARCHAR(60), col_2 VARCHAR(60), stamp TIMESTAMPTZ)";
+            // PostgreSQL Create Statement
+            //String sql = "CREATE TABLE " + tableName + " (idx NUMERIC(18,0), col_1 VARCHAR(60), col_2 VARCHAR(60), stamp TIMESTAMPTZ)";
                        
-        Statement s = con.createStatement();
-        s.executeUpdate(sql);
-        s.close();                               
-        con.close();
+            Statement s = con.createStatement();
+            s.executeUpdate(sql);
+            s.close();                               
+            con.close();
+        }
         logger.info("Table '" + tableName + "' created.");                    
     }
     

@@ -334,10 +334,11 @@
             <fileset dir="${extlib.dir}/jotm" includes="*.jar"/>
             <fileset dir="${lib.dir}" includes="*.jar"/>
         </path>    
-        <java classname="org.ofbiz.core.util.JotmXaPoolTest" fork="true">
+        <java classname="org.ofbiz.core.entity.JotmXaPoolTest" fork="true">
             <classpath>
                 <path refid="jotm.class.path"/>
                 <pathelement path="${build.dir}/share"/>
+                <pathelement path="${build.dir}/entity"/>
             </classpath>
         </java>
         <delete dir="data"></delete>         

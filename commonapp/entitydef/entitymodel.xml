@@ -54,6 +54,7 @@
   <!--  - org.ofbiz.commonapp.common.uom -->
   <!--  - org.ofbiz.commonapp.security.login -->
   <!--  - org.ofbiz.commonapp.security.securitygroup -->
+  <!--  - org.ofbiz.commonapp.test -->
   <!-- ========================================================= -->
 
 
@@ -664,5 +665,18 @@
         <key-map field-name="groupId"/>
       </relation>
     </entity>
+    
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.test -->
+  <!-- ========================================================= -->
+    <entity entity-name="JotmXapoolTest"
+            package-name="org.ofbiz.commonapp.test"
+            title="JOTM/XAPool Test Table">
+      <field name="idx" type="numeric"></field>
+      <field name="colA" type="short-varchar"></field>
+      <field name="colB" type="short-varchar"></field>
+      <field name="stamp" type="date-time"></field>
+      <prim-key field="idx"/>     
+    </entity>     
 </entitymodel>
 
