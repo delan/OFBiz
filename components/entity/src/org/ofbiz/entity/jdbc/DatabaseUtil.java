@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.8 2003/10/26 22:21:33 ajzeneski Exp $
+ * $Id: DatabaseUtil.java,v 1.9 2003/10/27 11:06:03 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -52,7 +52,7 @@ public class DatabaseUtil {
         this.datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
     }
 
-    public Connection getConnection() throws SQLException, GenericEntityException {
+    protected Connection getConnection() throws SQLException, GenericEntityException {
         Connection connection = ConnectionFactory.getConnection(helperName);
         connection.setAutoCommit(true);
         return connection;
