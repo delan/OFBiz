@@ -215,10 +215,17 @@ public class LoginServices {
                             continue;
                         }
 
-                        errMsg = "The account for user login id \"" + username + "\" has been disabled since " + disabledDateTime + ".";
+                        errMsg = "The account for user login id \"" + username + "\" has been disabled";
+                        if (disabledDateTime != null) {
+                            errMsg += " since " + disabledDateTime + ".";
+                        } else {
+                            errMsg += ".";
+                        }
 
                         if (loginDisableMinutes > 0 && reEnableTime != null) {
                             errMsg += " It will be re-enabled " + reEnableTime + ".";
+                        } else {
+                            errMsg += " It is not scheduled to be re-enabled.";
                         }
                     }
                 } else {
