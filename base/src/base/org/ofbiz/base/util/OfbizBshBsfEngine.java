@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizBshBsfEngine.java,v 1.2 2003/08/26 15:31:19 jonesde Exp $
+ * $Id: OfbizBshBsfEngine.java,v 1.3 2003/09/03 20:47:39 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -220,6 +220,7 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
         } catch (InterpreterError e) {
             throw new BSFException("BeanShell interpreter internal error: "+ e + sourceInfo(source,lineNo,columnNo));
         } catch (TargetError e2) {
+			Debug.logError(e2, module);
             Debug.logError(e2.getTarget(), module);
             throw new BSFException("The application script threw an exception: " + e2.getTarget() + " " + sourceInfo(source,lineNo,columnNo));
         } catch (EvalError e3) {
