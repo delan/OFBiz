@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      3.0
  */
 
@@ -34,6 +34,7 @@ import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
 
 delegator = request.getAttribute("delegator");
+extraInfo = request.getParameter("extInfo");
 
 externalLoginKey = LoginEvents.getExternalLoginKey(request);
 externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
@@ -110,6 +111,27 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
     if (userLoginId != null && userLoginId.length() > 0) {
         paramList = paramList + "&userLoginId=" + userLoginId;
         andExprs.add(new EntityExpr("userLoginId", true, EntityOperator.LIKE, "%"+userLoginId+"%", true));
+    }
+
+    // filter on groupName
+    groupName = request.getParameter("groupName");
+    if (groupName != null && groupName.length() > 0) {
+        paramList = paramList + "&groupName=" + groupName;
+        andExprs.add(new EntityExpr("groupName", true, EntityOperator.LIKE, "%"+groupName+"%", true));
+    }
+
+    // filter on firstName
+    firstName = request.getParameter("firstName");
+    if (firstName != null && firstName.length() > 0) {
+        paramList = paramList + "&firstName=" + firstName;
+        andExprs.add(new EntityExpr("firstName", true, EntityOperator.LIKE, "%"+firstName+"%", true));
+    }
+
+    // filter on lastName
+    lastName = request.getParameter("lastName");
+    if (lastName != null && lastName.length() > 0) {
+        paramList = paramList + "&lastName=" + lastName;
+        andExprs.add(new EntityExpr("lastName", true, EntityOperator.LIKE, "%"+lastName+"%", true));
     }
 
     // filter on address1
@@ -194,14 +216,22 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
         fieldsToSelect.add("lastName");
         fieldsToSelect.add("groupName");
         fieldsToSelect.add("partyTypeId");
-        fieldsToSelect.add("postalCode");
         fieldsToSelect.add("userLoginId");
+        if (extraInfo != null && extraInfo.equals("P")) {
+          fieldsToSelect.add("postalCode");
+        }
+        if (extraInfo != null && extraInfo.equals("T")) {
+          fieldsToSelect.add("areaCode");
+        }
 
         // sorting by return entry date newest first
         List orderBy = UtilMisc.toList("lastName", "firstName", "groupName");
 
         // set distinct on so we only get one row per order
         EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
+
+        // get the count
+        partyListSize = delegator.findCountByCondition(entityName, mainCond, null);
 
         // using list iterator
         EntityListIterator pli = delegator.findListIteratorByCondition(entityName, mainCond, null, fieldsToSelect, orderBy, findOpts);
@@ -211,14 +241,14 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
         highIndex = viewIndex * viewSize;
 
         // attempt to get the full size
-        pli.last();
-        partyListSize = pli.currentIndex();
+        //pli.last();
+        //partyListSize = pli.currentIndex();
         if (highIndex > partyListSize) {
             highIndex = partyListSize;
         }
 
         // get the partial list for this page
-        pli.first();
+        //pli.first();
         if (partyListSize > 0) {
             partyList = pli.getPartialList(lowIndex, viewSize);
         } else {
