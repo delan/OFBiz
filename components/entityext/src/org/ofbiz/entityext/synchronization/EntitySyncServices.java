@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.10 2003/12/12 04:15:33 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.11 2003/12/12 07:47:24 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,7 @@ package org.ofbiz.entityext.synchronization;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,7 +64,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -473,5 +474,61 @@ public class EntitySyncServices {
             return ServiceUtil.returnError(errorMsg);
         }
     }
-}
 
+    /**
+     * Clean EntitySyncRemove Info
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map cleanSyncRemoveInfo(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        
+        try {
+            // find the largest keepRemoveInfoHours value on an EntitySyncRemove and kill everything before that, if none found default to 10 days (240 hours)
+            double keepRemoveInfoHours = 240;
+            
+            List entitySyncRemoveList = delegator.findAll("EntitySync");
+            Iterator entitySyncRemoveIter = entitySyncRemoveList.iterator();
+            while (entitySyncRemoveIter.hasNext()) {
+                GenericValue entitySyncRemove = (GenericValue) entitySyncRemoveIter.next();
+                Double curKrih = entitySyncRemove.getDouble("keepRemoveInfoHours");
+                if (curKrih != null) {
+                    double curKrihVal = curKrih.doubleValue();
+                    if (curKrihVal > keepRemoveInfoHours) {
+                        keepRemoveInfoHours = curKrihVal;
+                    }
+                }
+            }
+            
+            
+            int keepSeconds = (int) Math.floor(keepRemoveInfoHours * 60);
+            
+            Calendar nowCal = Calendar.getInstance();
+            nowCal.setTimeInMillis(System.currentTimeMillis());
+            nowCal.add(Calendar.SECOND, -keepSeconds);
+            Timestamp keepAfterStamp = new Timestamp(nowCal.getTimeInMillis());
+            
+            EntityListIterator eli = delegator.findListIteratorByCondition("EntitySyncRemove", new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, keepAfterStamp), null, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD));
+            GenericValue entitySyncRemove = null;
+            int numRemoved = 0;
+            List valuesToRemove = new LinkedList();
+            while ((entitySyncRemove = (GenericValue) eli.next()) != null) {
+                valuesToRemove.add(entitySyncRemove.getPrimaryKey());
+                numRemoved++;
+                // do 1000 at a time to avoid possible problems with removing values while iterating over a cursor
+                if (numRemoved > 1000) {
+                    eli.close();
+                    delegator.removeAll(valuesToRemove);
+                    eli = delegator.findListIteratorByCondition("EntitySyncRemove", new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, keepAfterStamp), null, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD));
+                }
+            }
+            
+            return ServiceUtil.returnSuccess();
+        } catch (GenericEntityException e) {
+            String errorMsg = "Error cleaning out EntitySyncRemove info: " + e.toString();
+            Debug.logError(e, errorMsg, module);
+            return ServiceUtil.returnError(errorMsg);
+        }
+    }
+}
