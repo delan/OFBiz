@@ -52,12 +52,13 @@
     <p>
     <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="viewOneTR1">
-      <td nowrap><div class="tabletext"><b>State GeoId</b></div></td>
-      <td nowrap><div class="tabletext"><b>Tax Category</b></div></td>
-      <td nowrap><div class="tabletext"><b>Tax Shipping</b></div></td>
-      <td nowrap><div class="tabletext"><b>Tax Rate</b></div></td>
-      <td nowrap><div class="tabletext"><b>From-Date</b></div></td>
-      <!--<td nowrap><div class="tabletext"><b>Thru-Date</b></div></td>-->
+      <td nowrap><div class="tablehead">State GeoId</div></td>
+      <td nowrap><div class="tablehead">Tax Category</div></td>
+      <td nowrap><div class="tablehead">Min Purchase</div></td>
+      <td nowrap><div class="tablehead">Tax Shipping</div></td>
+      <td nowrap><div class="tablehead">Tax Rate</div></td>
+      <td nowrap><div class="tablehead">From-Date</div></td>
+      <!--<td nowrap><div class="tablehead">Thru-Date</div></td>-->
       <td nowrap><div class="tabletext">&nbsp;</div></td>
     </tr>
 
@@ -65,12 +66,13 @@
     <tr class="<%= viewStr = viewStr == "viewManyTR1" ? "viewManyTR2" : "viewManyTR1" %>">
       <td><div class="tabletext"><ofbiz:entityfield attribute="taxItem" field="stateProvinceGeoId"/></div></td>
       <td><div class="tabletext"><ofbiz:entityfield attribute="taxItem" field="taxCategory"/></div></td>
+      <td><div class="tabletext"><ofbiz:entityfield attribute="taxItem" field="minPurchase"/></div></td></div></td>
       <td><div class="tabletext"><ofbiz:entityfield attribute="taxItem" field="taxShipping"/></div></td>
       <td><div class="tabletext"><ofbiz:entityfield attribute="taxItem" field="salesTaxPercentage"/></div></td>
       <td><div class="tabletext"><ofbiz:entityfield attribute="taxItem" field="fromDate"/></div></td>
       <!--<td><div class="tabletext">&nbsp;</div></td>-->
       <%if(security.hasEntityPermission("TAXRATE", "_DELETE", session)) {%>
-      <td><div class="tabletext"><a href="<ofbiz:url>/removetaxrate?stateProvinceGeoId=<ofbiz:entityfield attribute="taxItem" field="stateProvinceGeoId"/>&taxCategory=<%=taxItem.getString("taxCategory")%>&fromDate=<%=taxItem.getString("fromDate")%></ofbiz:url>" class="buttontext">[Remove]</a></div></td>
+      <td><div class="tabletext"><a href="<ofbiz:url>/removetaxrate?stateProvinceGeoId=<ofbiz:entityfield attribute="taxItem" field="stateProvinceGeoId"/>&taxCategory=<%=taxItem.getString("taxCategory")%>&minPurchase=<%=taxItem.getString("minPurchase")%>&fromDate=<%=taxItem.getString("fromDate")%></ofbiz:url>" class="buttontext">[Remove]</a></div></td>
       <%} else {%>
       <td>&nbsp;</td>
       <%}%>
@@ -93,6 +95,7 @@
         </select>
       </td>
       <td><input type="text" size="20" name="taxCategory" class="inputBox"></td>
+      <td><input type="text" size="10" name="minPurchase" class="inputBox" value="0.00"></td>
       <td>
         <select name="taxShipping" class="selectBox">
           <option value="N">No</option>
