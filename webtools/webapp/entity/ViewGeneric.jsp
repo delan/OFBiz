@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Generic Find User Interface for Generic Entities
- *  Description: none
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,8 +22,7 @@
  *@author     <a href='mailto:jonesde@ofbiz.org'>David E. Jones (jonesde@ofbiz.org)</a>
  *@created    Aug 18 2001
  *@version    1.0
- */
-%>
+--%>
 
 <%@ page import="java.text.*, java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
@@ -36,6 +32,7 @@
 
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<%try {%>
 
 <%String entityName = request.getParameter("entityName");%>
 <%ModelReader reader = delegator.getModelReader();%>
@@ -626,3 +623,4 @@ Displaying <%=relatedLoopCount%> entities.
 <%}else{%>
   <h3>You do not have permission to view this page (<%=entity.getTableName()%>_ADMIN, or <%=entity.getTableName()%>_VIEW needed).</h3>
 <%}%>
+<%} catch (Exception e) { Debug.logError(e); throw e; }%>

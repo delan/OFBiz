@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Generic Find User Interface for Generic Entities
- *  Description: none
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,8 +22,7 @@
  *@author     <a href='mailto:jonesde@ofbiz.org'>David E. Jones (jonesde@ofbiz.org)</a>
  *@created    Aug 18 2001
  *@version    1.0
- */
-%>
+--%>
 
 <%@ page import="java.text.*, java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
@@ -36,15 +32,16 @@
 
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<%try {%>
 
 <%String entityName=request.getParameter("entityName");%>
 <%ModelReader reader = delegator.getModelReader();%>
-<%ModelEntity entity = reader.getModelEntity(entityName);%>
+<%ModelEntity modelEntity = reader.getModelEntity(entityName);%>
 
-<%boolean hasViewPermission = security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(entity.getTableName(), "_VIEW", session);%>
-<%boolean hasCreatePermission = security.hasEntityPermission("ENTITY_DATA", "_CREATE", session) || security.hasEntityPermission(entity.getTableName(), "_CREATE", session);%>
-<%boolean hasUpdatePermission = security.hasEntityPermission("ENTITY_DATA", "_UPDATE", session) || security.hasEntityPermission(entity.getTableName(), "_UPDATE", session);%>
-<%boolean hasDeletePermission = security.hasEntityPermission("ENTITY_DATA", "_DELETE", session) || security.hasEntityPermission(entity.getTableName(), "_DELETE", session);%>
+<%boolean hasViewPermission = security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(modelEntity.getTableName(), "_VIEW", session);%>
+<%boolean hasCreatePermission = security.hasEntityPermission("ENTITY_DATA", "_CREATE", session) || security.hasEntityPermission(modelEntity.getTableName(), "_CREATE", session);%>
+<%boolean hasUpdatePermission = security.hasEntityPermission("ENTITY_DATA", "_UPDATE", session) || security.hasEntityPermission(modelEntity.getTableName(), "_UPDATE", session);%>
+<%boolean hasDeletePermission = security.hasEntityPermission("ENTITY_DATA", "_DELETE", session) || security.hasEntityPermission(modelEntity.getTableName(), "_DELETE", session);%>
 <%if(hasViewPermission){%>
 <%
   String rowClassTop1 = "viewOneTR1";
@@ -57,15 +54,14 @@
   String rowClassResult = "";
 
   String find = request.getParameter("find");
-  if(find == null) find="false";
+  if (find == null) find="false";
   String curFindString = "entityName=" + entityName + "&find=" + find;
   GenericEntity findByEntity = delegator.makeValue(entityName, null);
-  for(int fnum=0; fnum < entity.getFieldsSize(); fnum++) {
-    ModelField field = entity.getField(fnum);
+  for (int fnum=0; fnum < modelEntity.getFieldsSize(); fnum++) {
+    ModelField field = modelEntity.getField(fnum);
     String fval = request.getParameter(field.getName());
-    if(fval != null) {
-      if(fval.length() > 0)
-      {
+    if (fval != null) {
+      if (fval.length() > 0) {
         curFindString = curFindString + "&" + field.getName() + "=" + fval;
         findByEntity.setString(field.getName(), fval);
       }
@@ -92,24 +88,19 @@
 
 //--------------
   String resultArrayName = (String)session.getAttribute("CACHE_SEARCH_RESULTS_NAME");
-  if(resultArray == null || resultArrayName == null || curFindString.compareTo(resultArrayName) != 0 || viewIndex == 0)
-  {
+  if (resultArray == null || resultArrayName == null || curFindString.compareTo(resultArrayName) != 0 || viewIndex == 0) {
     Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
     Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
 
-    if("true".equals(find))
-    {
+    if ("true".equals(find)) {
       resultCol = delegator.findByAnd(findByEntity.entityName, findByEntity.getAllFields(), null);
       if(resultCol != null) resultArray = resultCol.toArray();
-    }
-    else
-    {
+    } else {
       resultCol = new LinkedList();
       resultArray = resultCol.toArray();
     }
 
-    if(resultArray != null)
-    {
+    if (resultArray != null) {
       session.setAttribute("CACHE_SEARCH_RESULTS", resultArray);
       session.setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
     }
@@ -118,19 +109,19 @@
   int lowIndex = viewIndex*viewSize+1;
   int highIndex = (viewIndex+1)*viewSize;
   int arraySize = 0;
-  if(resultArray!=null) arraySize = resultArray.length;
-  if(arraySize<highIndex) highIndex=arraySize;
+  if (resultArray!=null) arraySize = resultArray.length;
+  if (arraySize<highIndex) highIndex=arraySize;
   //Debug.logInfo("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
 %>
-<h3 style='margin:0;'>Find <%=entity.getEntityName()%>s</h3>
+<h3 style='margin:0;'>Find <%=modelEntity.getEntityName()%>s</h3>
 <%-- Note: you may use the '%' character as a wildcard for String fields. --%>
-<br>To find ALL <%=entity.getEntityName()%>s, leave all entries blank.
+<br>To find ALL <%=modelEntity.getEntityName()%>s, leave all entries blank.
 <form method="post" action='<ofbiz:url>/FindGeneric?entityName=<%=entityName%></ofbiz:url>' style='margin:0;'>
 <INPUT type=hidden name='find' value='true'>
 <table cellpadding="2" cellspacing="2" border="0">
-  <%for (int fnum=0; fnum<entity.getFieldsSize(); fnum++) {%>
-    <%ModelField field = entity.getField(fnum);%>
-    <%ModelFieldType type = delegator.getEntityFieldType(entity, field.getType());%>
+  <%for (int fnum=0; fnum<modelEntity.getFieldsSize(); fnum++) {%>
+    <%ModelField field = modelEntity.getField(fnum);%>
+    <%ModelFieldType type = delegator.getEntityFieldType(modelEntity, field.getType());%>
     <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
       <td valign="top"><%=field.getName()%>(<%=type.getJavaType()%>,<%=type.getSqlType()%>):</td>
       <td valign="top">
@@ -143,13 +134,13 @@
   </tr>
 </table>
 </form>
-<b><%=entity.getEntityName()%>s found by: <%=findByEntity.toString()%></b><br>
-<b><%=entity.getEntityName()%>s curFindString: <%=curFindString%></b><br>
-<%if(hasCreatePermission){%>
-  <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Create New <%=entity.getEntityName()%>]</a>
+<b><%=modelEntity.getEntityName()%>s found by: <%=findByEntity.toString()%></b><br>
+<b><%=modelEntity.getEntityName()%>s curFindString: <%=curFindString%></b><br>
+<%if (hasCreatePermission){%>
+  <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Create New <%=modelEntity.getEntityName()%>]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
-<% if(arraySize > 0) { %>
+<% if (arraySize > 0) { %>
     <tr class="<%=rowClassResultIndex%>">
       <td align="left">
         <b>
@@ -171,29 +162,29 @@
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
       <td>&nbsp;</td>
-      <%if(hasDeletePermission){%>
+      <%if (hasDeletePermission) {%>
         <td>&nbsp;</td>
       <%}%>
-    <%for(int fnum = 0; fnum < entity.getFieldsSize(); fnum++){%>
-      <%ModelField field = entity.getField(fnum);%>
+    <%for (int fnum = 0; fnum < modelEntity.getFieldsSize(); fnum++) {%>
+      <%ModelField field = modelEntity.getField(fnum);%>
       <td nowrap><div class="tabletext"><b><%=field.getName()%></b></div></td>
     <%}%>
     </tr>
 <%
- if(resultArray != null && resultArray.length > 0) {
+ if (resultArray != null && resultArray.length > 0) {
   int loopIndex;
-  //for(loopIndex=resultArray.length-1; loopIndex>=0 ; loopIndex--)
-  for(loopIndex=lowIndex; loopIndex<=highIndex; loopIndex++) {
+  //for (loopIndex=resultArray.length-1; loopIndex>=0 ; loopIndex--)
+  for (loopIndex=lowIndex; loopIndex<=highIndex; loopIndex++) {
     GenericValue value = (GenericValue)resultArray[loopIndex-1];
-    if(value != null) {
+    if (value != null) {
 %>
     <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
       <td>
         <%
           String findString = "entityName=" + entityName;
-          for (int pknum = 0; pknum < entity.getPksSize(); pknum++) {
-            ModelField pkField = entity.getPk(pknum);
-            ModelFieldType type = delegator.getEntityFieldType(entity, pkField.getType());
+          for (int pknum = 0; pknum < modelEntity.getPksSize(); pknum++) {
+            ModelField pkField = modelEntity.getPk(pknum);
+            ModelFieldType type = delegator.getEntityFieldType(modelEntity, pkField.getType());
             if(type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")){
               String dtStr = value.getTimestamp(pkField.getName()).toString();
               findString += "&" + pkField.getName() + "_DATE=" + dtStr.substring(0, dtStr.indexOf(' '));
@@ -210,9 +201,9 @@
           <a href='<ofbiz:url>/UpdateGeneric?<%=findString%>&UPDATE_MODE=DELETE&<%=curFindString%></ofbiz:url>' class="buttontext">[Delete]</a>
         </td>
       <%}%>
-    <%for (int fnum = 0; fnum < entity.getFieldsSize(); fnum++) {%>
-      <%ModelField field = entity.getField(fnum);%>
-      <%ModelFieldType type = delegator.getEntityFieldType(entity, field.getType());%>
+    <%for (int fnum = 0; fnum < modelEntity.getFieldsSize(); fnum++) {%>
+      <%ModelField field = modelEntity.getField(fnum);%>
+      <%ModelFieldType type = delegator.getEntityFieldType(modelEntity, field.getType());%>
       <td>
         <div class="tabletext">
       <%if(type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")){%>
@@ -241,30 +232,28 @@
   <%}%>
 <%
    }
- }
- else
- {
+ } else {
 %>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
-<td colspan="<%=entity.getFieldsSize() + 2%>">
-<h3>No <%=entity.getEntityName()%>s Found.</h3>
+<td colspan="<%=modelEntity.getFieldsSize() + 2%>">
+<h3>No <%=modelEntity.getEntityName()%>s Found.</h3>
 </td>
 </tr>
 <%}%>
 </table>
 
 <table border="0" width="100%" cellpadding="2">
-<% if(arraySize > 0) { %>
+<% if (arraySize > 0) { %>
     <tr class="<%=rowClassResultIndex%>">
       <td align="left">
         <b>
-        <% if(viewIndex > 0) { %>
+        <% if (viewIndex > 0) { %>
           <a href='<ofbiz:url>/FindGeneric?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=(viewIndex-1)%></ofbiz:url>' class="buttontext">[Previous]</a> |
         <% } %>
-        <% if(arraySize > 0) { %>
+        <% if (arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
-        <% if(arraySize>highIndex) { %>
+        <% if (arraySize>highIndex) { %>
           | <a href='<ofbiz:url>/FindGeneric?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=(viewIndex+1)%></ofbiz:url>' class="buttontext">[Next]</a>
         <% } %>
         </b>
@@ -272,9 +261,10 @@
     </tr>
 <%}%>
 </table>
-<%if(hasCreatePermission){%>
-  <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Create New <%=entity.getEntityName()%>]</a>
+<%if (hasCreatePermission){%>
+  <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Create New <%=modelEntity.getEntityName()%>]</a>
 <%}%>
-<%}else{%>
-  <h3>You do not have permission to view this page (<%=entity.getTableName()%>_ADMIN, or <%=entity.getTableName()%>_VIEW needed).</h3>
+<%} else {%>
+  <h3>You do not have permission to view this page (<%=modelEntity.getTableName()%>_ADMIN, or <%=modelEntity.getTableName()%>_VIEW needed).</h3>
 <%}%>
+<%} catch (Exception e) { Debug.logError(e); throw e; }%>
