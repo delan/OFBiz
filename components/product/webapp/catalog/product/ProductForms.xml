@@ -171,7 +171,7 @@
         <field name="mediumImageUrl"><text size="60" maxlength="255"/></field>
         <field name="largeImageUrl"><text size="60" maxlength="255"/></field>
         <field name="detailImageUrl"><text size="60" maxlength="255"/></field>
-        <field name="detailTemplate"><text size="60" maxlength="250"/></field>
+        <field name="detailScreen"><text size="60" maxlength="250"/></field>
         -->
 
         <field name="submitButton" title="${uiLabelMap.ProductUpdateProduct}" widget-style="standardSubmit"><submit button-type="button"/></field>
