@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.4 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: Start.java,v 1.5 2003/08/18 00:38:30 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.4 $
+  *@version    $Revision: 1.5 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -113,18 +113,24 @@ public class Start implements Runnable {
         }
     }
    
-    private void startServer(String args[]) throws Exception {
-        // load the lib directory
-        File libDir = new File(config.baseLib);        
-        if (libDir.isDirectory()) {
+    private void loadLibs(String path) throws Exception {
+        File libDir = new File(path);
+        if (libDir.exists()) {
             File files[] = libDir.listFiles();
             for (int i = 0; i < files.length; i++) {
-                String file = files[i].getName();
-                if (file.endsWith(".jar") || file.endsWith(".zip")) {
-                    classPath.addComponent(files[i]);
+                String fileName = files[i].getName();
+                if (files[i].isDirectory() && !"CVS".equals(fileName)) {
+                    loadLibs(files[i].getCanonicalPath());
+                } else if (fileName.endsWith(".jar") || fileName.endsWith(".zip")) {
+                    classPath.addComponent(files[i]);   
                 }
-            }
+            }            
         }
+    }
+    
+    private void startServer(String args[]) throws Exception {
+        // load the lib directory
+        loadLibs(config.baseLib);        
         
         // load the ofbiz-base.jar        
         classPath.addComponent(config.baseJar);
