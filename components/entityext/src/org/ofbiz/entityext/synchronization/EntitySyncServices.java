@@ -114,11 +114,7 @@ public class EntitySyncServices {
         } catch (SyncAbortException e) {
             return e.returnError(module);
         } catch (SyncErrorException e) {
-            if (esc != null) {
-                List errorList = new LinkedList();
-                esc.saveSyncErrorInfo("ESR_DATA_ERROR", errorList);
-                e.addErrorMessages(errorList);
-            }
+            e.saveSyncErrorInfo(esc);
             return e.returnError(module);
         }
         
@@ -414,11 +410,7 @@ public class EntitySyncServices {
         } catch (SyncAbortException e) {
             return e.returnError(module);
         } catch (SyncErrorException e) {
-            if (esc != null) {
-                List errorList = new LinkedList();
-                esc.saveSyncErrorInfo("ESR_DATA_ERROR", errorList);
-                e.addErrorMessages(errorList);
-            }
+            e.saveSyncErrorInfo(esc);
             return e.returnError(module);
         }
         return ServiceUtil.returnSuccess();
