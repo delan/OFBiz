@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/12/30 05:24:01  jonesde
+ * Fixed little problem causing the local load to never work
+ *
  * Revision 1.8  2001/12/30 04:40:03  jonesde
  * Added support for locally reading DTDs from the classpath
  *
@@ -312,37 +315,13 @@ public class UtilXml {
      * descriptors that do not have a DOCTYPE declaration.
      */
     private static class LocalResolver implements EntityResolver {
-        private Map dtds = new HashMap();
         private boolean hasDTD = false;
         private EntityResolver defaultResolver;
         
         public LocalResolver(EntityResolver defaultResolver) {
-            initDtds();
             this.defaultResolver = defaultResolver;
         }
 
-        public void initDtds() {
-            registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN", "ejb-jar.dtd");
-            registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN", "ejb-jar_2_0.dtd");
-            registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN", "application_1_2.dtd");
-            registerDTD("-//Sun Microsystems, Inc.//DTD Connector 1.0//EN", "connector_1_0.dtd");
-            registerDTD("-//OFBiz//DTD Data Files//EN", "datafiles.dtd");
-            registerDTD("-//OFBiz//DTD Entity Group//EN", "entitygroup.dtd");
-            registerDTD("-//OFBiz//DTD Entity Model//EN", "entitymodel.dtd");
-            registerDTD("-//OFBiz//DTD Field Type Model//EN", "fieldtypemodel.dtd");
-            registerDTD("-//OFBiz//DTD Services Config//EN", "services.dtd");
-            registerDTD("-//OFBiz//DTD Request Config//EN", "site-conf.dtd");
-        }
-        
-        /**
-         * Registers available DTDs
-         * @param String publicId    - Public ID of DTD
-         * @param String dtdFileName - the file name of DTD
-         */
-        public void registerDTD(String publicId, String dtdFileName) {
-            dtds.put(publicId, dtdFileName);
-        }
-        
         /**
          * Returns DTD inputSource. If DTD was found in the dtds Map and inputSource was created
          * flag hasDTD is set to true.
@@ -352,10 +331,10 @@ public class UtilXml {
          */
         public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
             hasDTD = false;
-            String dtd = (String) dtds.get(publicId);
+            String dtd = UtilProperties.getSplitPropertyValue(UtilURL.fromResource("localdtds.properties"), publicId);
             
             //Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] resolving DTD with publicId [" + publicId + "], systemId [" + systemId + "] and the dtd file is [" + dtd + "]");
-            if (dtd != null) {
+            if (dtd != null && dtd.length() > 0) {
                 try {
                     URL dtdURL = UtilURL.fromResource(dtd);
                     InputStream dtdStream = dtdURL.openStream();
