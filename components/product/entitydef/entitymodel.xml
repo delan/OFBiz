@@ -1572,6 +1572,12 @@
       <field name="totalTimesViewed" type="numeric"></field>
       <field name="averageCustomerRating" type="floating-point"></field>
       <field name="billOfMaterialLevel" type="numeric"></field>
+	  <!-- maximum number of persons who can rent this asset at the same time -->
+	  <field name="reservMaxPersons" type="numeric"/>
+	  <!-- reservationSecondPersonPricePercentage:		percentage of the end price for the 2nd person renting this asset-->
+	  <field name="reserv2ndPPPerc" type="numeric"/>
+	  <!-- reservationNthPersonPricePercentage:		percentage of the end price for the 2nd person renting this asset-->
+	  <field name="reservNthPPPerc" type="numeric"/>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>

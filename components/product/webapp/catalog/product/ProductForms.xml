@@ -56,7 +56,7 @@
         <field name="primaryProductCategoryId" title="${uiLabelMap.ProductPrimaryCategory}" widget-style="selectBox">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ProductCategory" key-field-name="productCategoryId" description="${description} [${productCategoryId}]">
-                    <entity-constraint name="showInSelect" value="N" operator="not-equals"/>
+                    <entity-constraint name="showInSelect"  value="N" operator="not-equals"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
@@ -603,5 +603,115 @@
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
+	
+	<!-- form for AssetUsage (rental) parameters -->
+    <form name="EditProductAssetUsage" type="single"
+            target="updateProductAssetUsage" title="" default-map-name="product"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 
+        <alt-target use-when="product==null" target="createProduct"/>
+ 		<field name="productId"><hidden/></field>
+        <field name="reservMaxPersons" title="${uiLabelMap.ProductReservMaxPersons}" ><text size="4" maxlength="10"/></field>
+        <field position="1" name="reserv2ndPPPerc" title="${uiLabelMap.ProductReserv2ndPPPerc}" ><text size="4" maxlength="10"/></field>
+        <field position="2" name="reservNthPPPerc" title="${uiLabelMap.ProductReservNthPPPerc}" ><text size="4" maxlength="10"/></field>
+
+        <field name="submitButton" title="${uiLabelMap.ProductUpdateProduct}" widget-style="standardSubmit"><submit button-type="button"/></field>
+
+    </form>
+
+	<!-- linked fixed assetcs -->
+    <form name="ListProductFixedAssets" type="list"  list-name="fixedAssetProducts"  target="updateFixedAssetProduct"
+		 default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext"  >
+
+<!-- 			<display-entity entity-name="FixedAsset" description="${fixedAssetName}[${fixedAssetId}]"/> -->
+			
+		<field name="edit" title="&amp;nbsp;" widget-style="buttontext"> 
+				<hyperlink description="[${uiLabelMap.CommonEdit}]" target="showFixedAssetProduct?fixedAssetId=${fixedAssetId}&amp;productId=${productId}&amp;fixedAssetProductTypeId=${fixedAssetProductTypeId}&amp;fromDate=${fromDate}"/>
+				</field>
+		<field name="del" title="&amp;nbsp;" widget-style="buttontext" separate-column="false"> 
+				<hyperlink description="[${uiLabelMap.CommonDelete}]" target="removeFixedAssetProduct?fixedAssetId=${fixedAssetId}&amp;productId=${productId}&amp;fixedAssetProductTypeId=${fixedAssetProductTypeId}&amp;fromDate=${fromDate}"/>
+				</field>
+		<field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAsset}[${uiLabelMap.AccountingFixedAssetId}]" widget-style="buttontext" > 
+			<display-entity entity-name="FixedAsset" description="${fixedAssetName}[${fixedAssetId}]"/>
+			</field>
+       	<field name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductType}" widget-style="tabletext"><display-entity entity-name="FixedAssetProductType"/></field>
+		<field name="fromDate" title="${uiLabelMap.CommonFromDate}" widget-style="inputBox"> <display/> </field>
+		<field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"> <display/></field>
+		<field name="productId"> <hidden/> </field>
+	</form>
+	
+	<!-- create a fixed Asset link on a product -->
+	<form name="addFixedAssetProduct" type="single" target="addFixedAssetProduct" title=""   
+		 default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+
+		<field name="productId"><hidden/></field>
+        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" ><lookup target-form-name="LookupFixedAsset"/></field>
+        <field name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductType}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="FixedAssetProductType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+
+		<field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
+ 		<field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+
+ 		<field name="comments" title="${uiLabelMap.CommonComments}"><text maxlength="30" size="30"/></field>
+		<field name="sequenceNum" title="${uiLabelMap.CommonSequence}"><text maxlength="5" size="5"/></field>
+
+		<field name="quantity" title="${uiLabelMap.CommonQuantity}"><text maxlength="5" size="5"/></field>
+		
+        <field name="quantityUomId" title="${uiLabelMap.CommonUom}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+		
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+
+	<form name="showFixedAssetProduct" type="single" default-map-name="fixedAssetProduct"
+            target="updFixedAssetProduct" title="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+		<alt-target use-when="fixedAssetId==null" target="addFixedAssetProduct"/>
+
+        <field use-when="fixedAssetId!=null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" > <display-entity entity-name="FixedAsset" description="${fixedAssetName}[${fixedAssetId}]"/></field>
+        <field use-when="fixedAssetId==null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"><text size="20" maxlength="20"/></field>
+
+
+<!-- 			<auto-fields-service  service-name="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml#addFixedAssetProduct" 
+			map-name="fixedAssetProduct"/> -->
+
+ 		<field name="productId"><hidden/></field>
+        <field use-when="fixedAssetId!=null" name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductType}"><display-entity entity-name="FixedAssetProductType"/></field>
+        <field use-when="fixedAssetId==null" name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductType}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="FixedAssetProductType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+		
+		<field use-when="fixedAssetId!=null" name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+		<field use-when="fixedAssetId==null" name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
+ 		<field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+ 		<field name="comments" title="${uiLabelMap.CommonComments}"><text maxlength="30" size="30"/></field>
+		<field name="sequenceNum" title="${uiLabelMap.CommonSequence}"><text maxlength="5" size="5"/></field>
+
+		<field name="quantity" title="${uiLabelMap.CommonQuantity}"><text maxlength="5" size="5"/></field>
+		
+        <field name="quantityUomId" title="${uiLabelMap.CommonUom}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+		
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+	
 </forms>
+
