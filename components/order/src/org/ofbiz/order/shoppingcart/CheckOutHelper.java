@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.15 2003/12/12 23:07:07 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.16 2004/01/24 16:26:43 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -1214,7 +1214,7 @@ public class CheckOutHelper {
         } catch (ParseException e) {
             Debug.logError(e, "Problem getting parsed available amount", module);
         }
-        Debug.logInfo("Billing Account : " + billingAccountId + " - " + available, module);
+        //Debug.logInfo("Billing Account : " + billingAccountId + " - " + available, module);
         return available.doubleValue();
     }
 
