@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  */
 -->
 
@@ -2220,7 +2220,7 @@
       <prim-key field="facilityId"/>
       <prim-key field="locationSeqId"/>
       <relation type="one" fk-name="FACILITY_LOC_FAC" rel-entity-name="Facility">
-        <key-map fiefld-name="facilityId"/>
+        <key-map field-name="facilityId"/>
       </relation>
       <relation type="one" fk-name="FACILITY_LOC_TENM" title="Type" rel-entity-name="Enumeration">
         <key-map field-name="locationTypeEnumId" rel-field-name="enumId"/>
