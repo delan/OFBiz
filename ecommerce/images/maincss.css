@@ -72,7 +72,7 @@ border-width: 1px 1px 0px 1px;
 }
 
 .headerboxbottom {
-background-color: #CCCCCC;
+background-color: white;
 padding: 0;
 border-color: white;
 border-style: solid;
@@ -121,9 +121,12 @@ padding-right: 5px; padding-left: 5px;
 }
 
 .tabContainer {
-background-color: #CCCCCC;
-padding-bottom: 1px;
+background-color: #FFFFFF;
+padding-top: 4px;
+padding-bottom: 4px;
 margin-bottom: 5px;
+border-top: solid #CCCCCC 1px;
+border-bottom: solid #CCCCCC 1px;
 }
 
 A.tabButton {
@@ -141,7 +144,8 @@ border: solid #999999 1px;
 }
 
 A.tabButton:hover {
-color: black; background-color: #CCCCFF;
+color: black;
+background-color: #CCCCFF;
 border: solid #3333CC 1px;
 }
 
@@ -222,6 +226,11 @@ border-color: #999999;
 }
 
 .headerButtonLeft {
+font-family: Arial, Helvetica, sans-serif;
+font-size: x-small;
+font-weight: bold;
+text-decoration: none;
+color: blue;
 background-color: #CCCCCC;
 border-right: solid white 1px;
 padding-right: 10px;
@@ -229,10 +238,16 @@ padding-left: 10px;
 }
 
 .headerButtonLeft:hover {
-background-color: #EEEECC
+color: black;
+background-color: #CCCCFF;
 }
 
 .headerButtonLeftSelected {
+font-family: Arial, Helvetica, sans-serif;
+font-size: x-small;
+font-weight: bold;
+text-decoration: none;
+color: blue;
 background-color: #999999;
 border-right: solid white 1px;
 padding-right: 10px;
@@ -240,6 +255,11 @@ padding-left: 10px;
 }
 
 .headerButtonRight {
+font-family: Arial, Helvetica, sans-serif;
+font-size: x-small;
+font-weight: bold;
+text-decoration: none;
+color: blue;
 background-color: #CCCCCC;
 border-left: solid white 1px;
 padding-right: 10px;
@@ -247,10 +267,16 @@ padding-left: 10px;
 }
 
 .headerButtonRight:hover {
-background-color: #EEEECC
+color: black;
+background-color: #CCCCFF;
 }
 
 .headerButtonRightSelected {
+font-family: Arial, Helvetica, sans-serif;
+font-size: x-small;
+font-weight: bold;
+text-decoration: none;
+color: blue;
 background-color: #999999;
 border-left: solid white 1px;
 padding-right: 10px;
@@ -261,17 +287,37 @@ padding-left: 10px;
 background-color: #CCCCCC;
 padding-right: 10px;
 padding-left: 10px;
-font-size: small;
+font-family: Arial, Helvetica, sans-serif;
+font-size: x-small;
 font-weight: bold;
+text-decoration: none;
 color: #000000;
+}
+
+A.headerCenter {
+font-family: Arial, Helvetica, sans-serif;
+font-size: x-small;
+font-weight: bold;
+text-decoration: none;
+color: blue;
+background-color: #CCCCCC;
+padding-right: 10px;
+padding-left: 10px;
+}
+
+A.headerCenter:hover {
+color: black;
+background-color: #CCCCFF;
 }
 
 .headerCenterSelected {
 background-color: #999999;
 padding-right: 10px;
 padding-left: 10px;
+font-family: Arial, Helvetica, sans-serif;
 font-size: small;
 font-weight: bold;
+text-decoration: none;
 color: #000000;
 }
 
