@@ -131,6 +131,8 @@ public class CheckOutEvents {
             errorMessage.append("<li>There are no items in the cart.");
         }
 
+        // run shipping/tax services here
+
         if (errorMessage.length() > 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage.toString());
             return "error";
