@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -74,7 +74,7 @@
         <input type="hidden" name="productStoreId" value="${productStoreId?if_exists}">
         <input type="hidden" name="tryEntity" value="true">
         
-        <div class="head2">Add Catalog Promo (select Promo, enter optional From Date):</div>
+        <div class="head2">Add Store Promo (select Promo, enter optional From Date):</div>
         <br>
         <select name="productPromoId" class="selectBox">
         <#list productPromos as productPromo>
