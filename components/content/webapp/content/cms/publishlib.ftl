@@ -160,7 +160,7 @@
          </td >
          <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
          <td >
-            <a class="buttontext" href="javascript:call_fieldlookup4('${rootForumId}', '${context.content.contentId}')">Add Child Forum</a>
+            <a class="buttontext" href="<@ofbizUrl>/addSubSite?rootForumId=${rootForumId}&parentForumId=${context.content.contentId}</@ofbizUrl>" >Add Child Forum</a>
          </td >
          <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
          <td >

@@ -54,13 +54,11 @@ ${menuWrapper.renderMenuString()}
             </form>
           </td>
         </tr>
-<#--
         <tr>
-          <td colspan="1">
-<div class="standardSubmit" ><a href="javascript:submitRows('${rowCount?default(0)}')">Update</a></div>
-          </td>
+         <td >
+            <a class="buttontext" href="<@ofbizUrl>/addSubSite?rootForumId=${rootForumId}&parentForumId=${rootForumId}</@ofbizUrl>" >Add Top Level Forum</a>
+         </td >
         </tr>
--->
 
       </table>
     </TD>

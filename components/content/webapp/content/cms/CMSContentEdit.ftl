@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <SCRIPT language="javascript">
@@ -60,6 +60,11 @@ ${menuAuxWrapper.renderMenuString()}
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Content Information</div>
           </td>
+          <#if contentIdTo?has_content>
+          <td valign="middle" align="right">
+            <a href="<@ofbizUrl>/disableContent?contentId=${contentId?if_exists}?contentIdTo=${contentIdTo}&contentAssocTypeId=SUB_CONTENT</@ofbizUrl>" class="submenutextright">Disable</a>
+          </td>
+          </#if>
           <td valign="middle" align="right">
             <a href="<@ofbizUrl>/EditContentInfo?contentId=${contentId?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
           </td>
