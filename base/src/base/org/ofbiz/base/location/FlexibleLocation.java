@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleLocation.java,v 1.1 2004/06/30 21:25:57 jonesde Exp $
+ * $Id: FlexibleLocation.java,v 1.2 2004/07/08 05:59:55 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.base.util.UtilProperties;
  * A special location resolver that uses Strings like URLs, but with more options 
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.1
  */
 
@@ -45,10 +45,10 @@ public class FlexibleLocation {
     
     protected static Map defaultResolvers = new HashMap();
     
-    protected static String standardUrlResolverName = StandardUrlLocationResolver.class.getPackage().getName() + "." + StandardUrlLocationResolver.class.getName();
-    protected static String classpathResolverName = ClasspathLocationResolver.class.getPackage().getName() + "." + ClasspathLocationResolver.class.getName();
-    protected static String ofbizHomeResolverName = OFBizHomeLocationResolver.class.getPackage().getName() + "." + OFBizHomeLocationResolver.class.getName();
-    protected static String componentResolverName = ComponentLocationResolver.class.getPackage().getName() + "." + ComponentLocationResolver.class.getName();
+    protected static String standardUrlResolverName = StandardUrlLocationResolver.class.getName();
+    protected static String classpathResolverName = ClasspathLocationResolver.class.getName();
+    protected static String ofbizHomeResolverName = OFBizHomeLocationResolver.class.getName();
+    protected static String componentResolverName = ComponentLocationResolver.class.getName();
     
     static {
         defaultResolvers.put("http", standardUrlResolverName);
@@ -77,6 +77,10 @@ public class FlexibleLocation {
      * @throws MalformedURLException
      */
     public static URL resolveLocation(String location) throws MalformedURLException {
+        return resolveLocation(location, null);
+    }
+    
+    public static URL resolveLocation(String location, ClassLoader loader) throws MalformedURLException {
         if (location == null || location.length() == 0) {
             return null;
         }
@@ -126,8 +130,17 @@ public class FlexibleLocation {
                 }
             }
         }
-
-        return resolver.resolveLocation(location);
+        
+        if (resolver != null) {
+            if (loader != null && resolver instanceof ClasspathLocationResolver) {
+                ClasspathLocationResolver cplResolver = (ClasspathLocationResolver) resolver;
+                return cplResolver.resolveLocation(location, loader);
+            } else {
+                return resolver.resolveLocation(location);
+            }
+        } else {
+            throw new MalformedURLException("Could not find a LocationResolver for the location type: " + locationType);
+        }
     }
     
     /** 
