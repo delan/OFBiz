@@ -31,7 +31,7 @@
     
     layoutSettings.put("companyName", "OFBiz: Order Manager");
     layoutSettings.put("companySubtitle", "Part of the Open For Business Family of Open Source Software");
-    layoutSettings.put("headerImageUrl", null);
+    layoutSettings.put("headerImageUrl", "/images/ofb_logo.gif");
     layoutSettings.put("headerMiddleBackgroundUrl", null);
     layoutSettings.put("headerRightBackgroundUrl", null);
 %>
