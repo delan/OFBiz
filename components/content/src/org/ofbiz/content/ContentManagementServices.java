@@ -41,7 +41,7 @@ import org.ofbiz.content.content.ContentWorker;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  *
  * 
@@ -187,7 +187,6 @@ public class ContentManagementServices {
 
         boolean dataResourceExists = true;
         if (UtilValidate.isNotEmpty(dataResourceTypeId) ) {
-            if (UtilValidate.isNotEmpty(textData)) {
                 if (UtilValidate.isEmpty(dataResourceId)) {
                     dataResourceExists = false;
                     Map thisResult = DataServices.createDataResourceMethod(dctx, context);
@@ -203,8 +202,12 @@ public class ContentManagementServices {
                             return ServiceUtil.returnError(e.getMessage());
                         }
                     } else {
-                        context.put("dataResourceId", dataResourceId);
-                        thisResult = DataServices.createElectronicTextMethod(dctx, context);
+                        if (UtilValidate.isNotEmpty(textData)) {
+                            context.put("dataResourceId", dataResourceId);
+                            thisResult = DataServices.createElectronicTextMethod(dctx, context);
+                        } else {
+                            return ServiceUtil.returnError("'textData' empty when trying to create database text.");
+                        }
                     }
                 //Debug.logInfo("dataResourceId(create):" + dataResourceId, null);
                 } else {
@@ -223,7 +226,6 @@ public class ContentManagementServices {
                 }
                 result.put("dataResourceId", dataResourceId);
                 context.put("dataResourceId", dataResourceId);
-            }
         }
 
         // Do update and create permission checks on Content if warranted.
@@ -296,9 +298,9 @@ public class ContentManagementServices {
 
         // If parentContentIdTo or parentContentIdFrom exists, create association with newly created content
         String contentAssocTypeId = (String)context.get("contentAssocTypeId");
-            //Debug.logInfo("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
+            Debug.logInfo("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
         if (contentAssocTypeId != null && contentAssocTypeId.length() > 0 ) {
-            //Debug.logInfo("CREATING contentASSOC context:" +  context, null);
+            Debug.logInfo("CREATING contentASSOC context:" +  context, null);
             Map thisResult = ContentServices.createContentAssocMethod(dctx, context);
             result.put("contentIdTo", thisResult.get("contentIdTo"));
             result.put("contentIdFrom", thisResult.get("contentIdFrom"));
