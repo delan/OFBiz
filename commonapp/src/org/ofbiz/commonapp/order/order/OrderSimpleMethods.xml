@@ -59,9 +59,9 @@
         <find-by-and entity-name="ShipmentReceipt" map-name="lookupPKMap" list-name="shipmentReceipts"/>
         <iterate list-name="shipmentReceipts" entry-name="receipt">
           <if-empty field-name="${receipt.orderItemSeqId}" map-name="totalsMap">
-          	<calculate field-name="${receipt.orderItemSeqId}" map-name="totalsMap">
-          	  <number value="0"/>
-          	</calculate>
+            <calculate field-name="${receipt.orderItemSeqId}" map-name="totalsMap">
+              <number value="0"/>
+            </calculate>
           </if-empty>
           <calculate field-name="${receipt.orderItemSeqId}" map-name="totalsMap" type="Double">
             <calcop field-name="${receipt.orderItemSeqId}" map-name="totalsMap" operator="add">
@@ -72,7 +72,7 @@
           <field-to-field field-name="orderId" map-name="receipt" to-map-name="newLookupMap"/>
           <field-to-field field-name="orderItemSeqId" map-name="receipt" to-map-name="newLookupMap"/>          
           <find-by-primary-key entity-name="OrderItem" map-name="newLookupMap" value-name="orderItem"/>
-          <if-compare-field field-name="quantity" map-name="orderItem" operator="greater-equals" to-field-name="${receipt.orderItemSeqId}" to-map-name="totalsMap" type="Double">          	
+          <if-compare-field field-name="quantity" map-name="orderItem" operator="greater-equals" to-field-name="${receipt.orderItemSeqId}" to-map-name="totalsMap" type="Double">           
             <!-- update the status for the item -->
             <string-to-field field-name="statusId" map-name="orderItem" string="ITEM_RECEIVED"/>
             <store-value value-name="orderItem"/>
