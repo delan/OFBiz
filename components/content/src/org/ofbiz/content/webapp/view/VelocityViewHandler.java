@@ -1,5 +1,5 @@
 /*
- * $Id: VelocityViewHandler.java,v 1.2 2003/09/14 05:36:48 jonesde Exp $
+ * $Id: VelocityViewHandler.java,v 1.3 2004/07/01 08:37:49 jonesde Exp $
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -44,13 +44,13 @@ import org.apache.velocity.io.VelocityWriter;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.util.SimplePool;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.FlexibleProperties;
+import org.ofbiz.base.util.collections.FlexibleProperties;
 
 /**
  * VelocityViewHandler - Velocity Template Engine View Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class VelocityViewHandler implements ViewHandler {

@@ -1,5 +1,5 @@
 /*
- * $Id: WfExecutionObjectImpl.java,v 1.6 2003/09/02 02:17:15 ajzeneski Exp $
+ * $Id: WfExecutionObjectImpl.java,v 1.7 2004/07/01 08:37:56 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,9 +37,9 @@ import java.util.Map;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.FlexibleStringExpander;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -71,7 +71,7 @@ import org.ofbiz.workflow.WfUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public abstract class WfExecutionObjectImpl implements WfExecutionObject {

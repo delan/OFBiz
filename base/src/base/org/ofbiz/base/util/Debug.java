@@ -1,5 +1,5 @@
 /*
- * $Id: Debug.java,v 1.5 2004/06/09 18:13:02 ajzeneski Exp $
+ * $Id: Debug.java,v 1.6 2004/07/01 08:37:46 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,24 +25,24 @@ package org.ofbiz.base.util;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.io.File;
 import java.text.DateFormat;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.avalon.util.exception.ExceptionHelper;
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.spi.LoggerRepository;
-import org.apache.avalon.util.exception.ExceptionHelper;
+import org.ofbiz.base.util.collections.FlexibleProperties;
 
 /**
  * Configurable Debug logging wrapper class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public final class Debug {

@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleMapAccessor.java,v 1.5 2004/07/01 07:57:50 jonesde Exp $
+ * $Id: FlexibleMapAccessor.java,v 1.1 2004/07/01 08:37:47 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -21,7 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.base.util;
+package org.ofbiz.base.util.collections;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.ofbiz.base.util.collections.LocalizedMap;
+import org.ofbiz.base.util.UtilMisc;
 
 /**
  * Used to flexibly access Map values, supporting the "." (dot) syntax for
@@ -37,7 +37,7 @@ import org.ofbiz.base.util.collections.LocalizedMap;
  * list elements. See individual Map operations for more information.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.1 $
  * @since      2.1
  */
 public class FlexibleMapAccessor {

@@ -1,5 +1,5 @@
 /*
- * $Id: UtilProperties.java,v 1.11 2004/06/03 01:54:33 jonesde Exp $
+ * $Id: UtilProperties.java,v 1.12 2004/07/01 08:37:47 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -32,11 +32,15 @@ import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import org.ofbiz.base.util.collections.FlexibleProperties;
+import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
+
 /**
  * Generic Property Accessor with Cache - Utilities for working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      1.0
  */
 public class UtilProperties {

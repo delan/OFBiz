@@ -1,5 +1,5 @@
 /*
- * $Id: MethodContext.java,v 1.1 2003/08/17 06:06:12 ajzeneski Exp $
+ * $Id: MethodContext.java,v 1.2 2004/07/01 08:37:51 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,9 +31,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.util.FlexibleMapAccessor;
-import org.ofbiz.base.util.FlexibleStringExpander;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.collections.FlexibleMapAccessor;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.minilang.SimpleMethod;
@@ -46,7 +46,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class MethodContext {

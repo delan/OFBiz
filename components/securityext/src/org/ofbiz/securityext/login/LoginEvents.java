@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.14 2004/06/06 08:00:52 jonesde Exp $
+ * $Id: LoginEvents.java,v 1.15 2004/07/01 08:37:55 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,12 +35,12 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.FlexibleStringExpander;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -59,7 +59,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class LoginEvents {

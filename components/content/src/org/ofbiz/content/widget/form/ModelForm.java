@@ -1,5 +1,5 @@
 /*
- * $Id: ModelForm.java,v 1.7 2004/03/15 14:53:57 byersa Exp $
+ * $Id: ModelForm.java,v 1.8 2004/07/01 08:37:50 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,9 +34,9 @@ import java.util.TreeSet;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.FlexibleMapAccessor;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
@@ -54,7 +54,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.2
  */
 public class ModelForm {
