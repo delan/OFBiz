@@ -59,10 +59,14 @@
                         <td width="5">&nbsp;</td>
                         <#if billingPerson?has_content>
                         <td align="left" valign="top" width="80%">
-                          <div class="tabletext">                           
-                            ${billingPerson.firstName}&nbsp;
-                            <#if billingPerson.middleName?exists>${billingPerson.middleName}&nbsp;</#if>
-                            ${billingPerson.lastName}
+                          <div class="tabletext">
+                            <#if billingPerson.partyId != "_NA_">
+                              ${billingPerson.firstName?if_exists}&nbsp;
+                              <#if billingPerson.middleName?exists>${billingPerson.middleName}&nbsp;</#if>
+                              ${billingPerson.lastName?if_exists}
+                            <#else>
+                              [Anonymous Shopper]
+                            </#if>
                           </div>
                         </td>
                         </#if>

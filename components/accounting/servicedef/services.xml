@@ -447,7 +447,7 @@
         <description>Process the payment authorization result(s)</description>
         <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="processAmount" type="Double" mode="IN" optional="false"/>
-        <attribute name="authResult" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="authResult" type="Boolean" mode="IN" optional="false"/>
         <attribute name="serviceTypeEnum" type="String" mode="IN" optional="true"/>
         <attribute name="authCode" type="String" mode="IN" optional="true"/>
         <attribute name="authRefNum" type="String" mode="IN" optional="false"/>
@@ -468,7 +468,7 @@
         <attribute name="payToPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
         <attribute name="captureAmount" type="Double" mode="IN" optional="false"/>
-        <attribute name="captureResult" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="captureResult" type="Boolean" mode="IN" optional="false"/>
         <attribute name="captureRefNum" type="String" mode="IN" optional="false"/>
         <attribute name="captureCode" type="String" mode="IN" optional="true"/>
         <attribute name="captureFlag" type="String" mode="IN" optional="true"/>
@@ -596,6 +596,11 @@
     <!-- Test Implementations -->
     <service name="testCCProcessor" engine="java"
             location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="testProcessor">
+        <description>Credit Card Processing</description>
+        <implements service="ccAuthInterface"/>
+    </service>
+     <service name="testCCProcessorWithCapture" engine="java"
+            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="testProcessorWithCapture">
         <description>Credit Card Processing</description>
         <implements service="ccAuthInterface"/>
     </service>

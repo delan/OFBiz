@@ -1742,9 +1742,41 @@ public class PaymentGatewayServices {
             result.put("authResult", null);
 
         long nowTime = new Date().getTime();
+        String refNum = new Long(nowTime).toString();
 
         result.put("processAmount", context.get("processAmount"));
-        result.put("authRefNum", new Long(nowTime).toString());
+        result.put("authRefNum", refNum);
+        result.put("authFlag", "X");
+        result.put("authMessage", "This is a test processor; no payments were captured or authorized.");
+        result.put("internalRespMsgs", UtilMisc.toList("This is a test processor; no payments were captured or authorized."));
+        return result;
+    }
+
+    /**
+     * Simple test processor; declines all orders < 100.00; approves all orders > 100.00
+     */
+    public static Map testProcessorWithCapture(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        Double processAmount = (Double) context.get("processAmount");
+
+        if (processAmount != null && processAmount.doubleValue() >= 100.00)
+            result.put("authResult", new Boolean(true));
+            result.put("captureResult", new Boolean(true));
+        if (processAmount != null && processAmount.doubleValue() < 100.00)
+            result.put("authResult", new Boolean(false));
+            result.put("captureResult", new Boolean(false));
+            result.put("customerRespMsgs", UtilMisc.toList("Sorry this processor requires at least a $100.00 purchase."));
+        if (processAmount == null)
+            result.put("authResult", null);
+
+        long nowTime = new Date().getTime();
+        String refNum = new Long(nowTime).toString();
+
+        result.put("processAmount", context.get("processAmount"));
+        result.put("authRefNum", refNum);
+        result.put("captureRefNum", refNum);
+        result.put("authCode", "100");
+        result.put("captureCode", "200");
         result.put("authFlag", "X");
         result.put("authMessage", "This is a test processor; no payments were captured or authorized.");
         result.put("internalRespMsgs", UtilMisc.toList("This is a test processor; no payments were captured or authorized."));
