@@ -1,5 +1,5 @@
 /*
- * $Id: PersistedLoginContainer.java,v 1.2 2004/07/05 04:42:37 ajzeneski Exp $
+ * $Id: PersistedLoginContainer.java,v 1.3 2004/07/05 16:56:01 ajzeneski Exp $
  *
  */
 package org.ofbiz.securityext.login;
@@ -31,14 +31,14 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      Jul 4, 2004
  */
 public class PersistedLoginContainer implements Container {
 
     public static final String module = PersistedLoginContainer.class.getName();
     public static final String entityName = "PersistedLogin";
-    private static PersistedLoginContainer plc = null;
+    private static PersistedLoginContainer plc = new PersistedLoginContainer();
 
     protected Map externalLoginKeys = new HashMap();
     protected Map loggedInSessions = new HashMap();

@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.26 2004/07/04 14:50:25 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.27 2004/07/05 16:56:01 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -35,13 +35,6 @@
 
     <!-- load JNDI/JOTM -->
     <container name="jotm-container" class="org.ofbiz.jotm.container.JotmContainer"/>
-
-    <!-- load the persistent login store -->
-    <container name="login-container" class="org.ofbiz.securityext.login.PersistedLoginContainer">
-        <property name="delegator-name" value="default"/>
-        <property name="timer-period" value="5000"/>
-        <property name="timer-delay" value="5000"/>
-    </container>
 
     <!-- load Shark Workflow Engine -->
     <container name="shark-container" class="org.ofbiz.shark.container.SharkContainer">
@@ -72,7 +65,7 @@
         <property name="apps-context-reloadable" value="false"/>
         <property name="apps-cross-context" value="false"/>
         <property name="apps-distributable" value="false"/>
-        <property name="apps-persistent-mgr" value="true"/>
+        <property name="apps-db-persistent-mgr" value="false"/>
         <!-- one or more tomcat engines (servers); components map to this + host -->
         <property name="default-server" value="engine">
             <property name="default-host" value="0.0.0.0"/>
