@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
@@ -54,7 +54,7 @@ function setWeight(weight) {
             <#-- multiple routes -->
             <div class="tabletext"><font color="red">More then one route segment found. You must ship this manually.</font></div>
           <#else>
-            <form name="routeForm" method="post" action="<@ofbizUrl>/quickShipOrder</@ofbizUrl>" style='margin: 0;'>
+            <form name="routeForm" method="post" action="<@ofbizUrl>/setQuickRouteInfo</@ofbizUrl>" style='margin: 0;'>
               <#assign shipmentRoute = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentRoutes))?if_exists>
               <#assign carrierPerson = (shipmentRoute.getRelatedOne("CarrierPerson"))?if_exists>
               <#assign carrierPartyGroup = (shipmentRoute.getRelatedOne("CarrierPartyGroup"))?if_exists>

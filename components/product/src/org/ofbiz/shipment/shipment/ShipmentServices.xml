@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.2
 -->
 <simple-methods>
@@ -833,6 +833,11 @@
         <if-empty field-name="carrierServiceStatusId" map-name="newEntity">
             <string-to-field string="SHRSCS_NOT_STARTED" field-name="carrierServiceStatusId" map-name="newEntity"/>
         </if-empty>
+        
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="updatedByUserLoginId" to-map-name="lookedUpValue"/>
+        <env-to-field env-name="nowTimestamp" field-name="lastUpdatedDate" map-name="lookedUpValue"/>
         
         <store-value value-name="lookedUpValue"/>
 
