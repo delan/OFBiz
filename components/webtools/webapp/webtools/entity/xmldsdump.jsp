@@ -111,6 +111,7 @@
     <%}%>
 <%} else {%>
 <%
+  EntityFindOptions efo = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
   ModelReader reader = delegator.getModelReader();
   Collection ec = reader.getEntityNames();
   TreeSet entityNames = new TreeSet(ec);
@@ -129,14 +130,20 @@
         //boolean beganTransaction = TransactionUtil.begin(3600);
         try {
             String curEntityName = (String)i.next();
-            EntityListIterator values = delegator.findListIteratorByCondition(curEntityName, null, null, null);
+            EntityListIterator values = delegator.findListIteratorByCondition(curEntityName, null, null, null, null, efo);
 
             GenericValue value = null;
+            long curNumberWritten = 0;
             while ((value = (GenericValue) values.next()) != null) {
                 value.writeXmlText(writer, "");
                 numberWritten++;
+                curNumberWritten++;
+                if (curNumberWritten % 500 == 0 || curNumberWritten == 1) {
+                    Debug.log("Records written [" + curEntityName + "]: " + curNumberWritten + " Total: " + numberWritten);
+                }
             }
             values.close();
+            Debug.log("Wrote [" + curNumberWritten + "] from entity : " + curEntityName);
             //TransactionUtil.commit(beganTransaction);
         } catch (Exception e) {
             Debug.logError(e, "Error reading data for XML export:", "JSP");
@@ -145,6 +152,7 @@
     }
     writer.println("</entity-engine-xml>");
     writer.close();
+    Debug.log("Total records written from all entities: " + numberWritten);
   }
 
   // multiple files in a directory
@@ -169,7 +177,7 @@
                     results.add("["+fileNumber +"] [vvv] " + curEntityName + " skipping view entity");
                     continue;
                 }
-                values = delegator.findListIteratorByCondition(curEntityName, null, null, null, me.getPkFieldNames(), null);
+                values = delegator.findListIteratorByCondition(curEntityName, null, null, null, me.getPkFieldNames(), efo);
 
                 //Don't bother writing the file if there's nothing
                 //to put into it
@@ -183,22 +191,28 @@
                         value.writeXmlText(writer, "");
                         numberWritten++;
                         if (numberWritten % 500 == 0 || numberWritten == 1) {
-                           Debug.log("Records Stored [" + curEntityName + "]: " + numberWritten);
+                           Debug.log("Records written [" + curEntityName + "]: " + numberWritten);
                         }
 
                     }
                     writer.println("</entity-engine-xml>");
                     writer.close();
-                    results.add("["+fileNumber +"] [" + numberWritten + "] " + curEntityName + " wrote " + numberWritten + " records");
+                    String thisResult = "["+fileNumber +"] [" + numberWritten + "] " + curEntityName + " wrote " + numberWritten + " records";
+                    Debug.log(thisResult);
+                    results.add(thisResult);
                 } else {
-                    results.add("["+fileNumber +"] [---] " + curEntityName + " has no records, not writing file");
+                    String thisResult = "["+fileNumber +"] [---] " + curEntityName + " has no records, not writing file";
+                    Debug.log(thisResult);
+                    results.add(thisResult);
                 }
                 values.close();
             } catch (Exception ex) {
                 if (values != null) {
                     values.close();
                 }
-                results.add("["+fileNumber +"] [xxx] Error when writing " + curEntityName + ": " + ex);
+                String thisResult = "["+fileNumber +"] [xxx] Error when writing " + curEntityName + ": " + ex;
+                Debug.log(thisResult);
+                results.add(thisResult);
             }
             fileNumber++;
         }
