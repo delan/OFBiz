@@ -1,5 +1,5 @@
 /*
- * $Id: ClassLoaderContainer.java,v 1.1 2003/12/02 02:05:24 ajzeneski Exp $
+ * $Id: ClassLoaderContainer.java,v 1.2 2004/05/22 20:59:38 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,10 +33,12 @@ import java.net.URL;
  * ClassLoader Container; Created a CachedClassLoader for use by all following containers
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class ClassLoaderContainer implements Container {
+
+    protected static CachedClassLoader cl = null;
 
     /**
      * @see org.ofbiz.base.container.Container#start(java.lang.String)
@@ -49,7 +51,8 @@ public class ClassLoaderContainer implements Container {
         if (parent == null) {
             parent = ClassLoader.getSystemClassLoader();
         }
-        CachedClassLoader cl = new CachedClassLoader(new URL[0], parent);
+
+        cl = new CachedClassLoader(new URL[0], parent);
         Thread.currentThread().setContextClassLoader(cl);
         return true;
     }
@@ -58,5 +61,13 @@ public class ClassLoaderContainer implements Container {
      * @see org.ofbiz.base.container.Container#stop()
      */
     public void stop() throws ContainerException {
+    }
+
+    public static ClassLoader getClassLoader() {
+        if (cl != null) {
+            return cl;
+        } else {
+            return ClassLoader.getSystemClassLoader();
+        }
     }
 }
