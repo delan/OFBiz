@@ -101,7 +101,8 @@
     location CDATA #REQUIRED
 >
 
-<!ELEMENT datasource ( sql-load-path*, ( inline-jdbc | jndi-jdbc | ANY) )>
+<!ELEMENT datasource ANY>
+<!-- main subelements of datasource are (sql-load-path*, (inline-jdbc | jndi-jdbc | ANY), but ANY must be used alone for certain XML parsers -->
 <!ATTLIST datasource
     name CDATA #REQUIRED
     helper-class CDATA #REQUIRED
