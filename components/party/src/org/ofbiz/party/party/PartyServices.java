@@ -43,6 +43,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityFieldValue;
 import org.ofbiz.entity.condition.EntityFunction;
 import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.entity.util.EntityUtil;
@@ -56,7 +57,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class PartyServices {
@@ -565,7 +566,7 @@ public class PartyServices {
         try {
             List exprs = new LinkedList();
 
-            exprs.add(new EntityExpr(new EntityFunction.UPPER("infoString"), EntityOperator.LIKE, new EntityFunction.UPPER("%" + email.toUpperCase() + "%")));
+            exprs.add(new EntityExpr(new EntityFunction.UPPER(new EntityFieldValue("infoString")), EntityOperator.LIKE, new EntityFunction.UPPER("%" + email.toUpperCase() + "%")));
             List c = EntityUtil.filterByDate(delegator.findByAnd("PartyAndContactMech", exprs, UtilMisc.toList("infoString")), true);
 
             if (Debug.verboseOn()) Debug.logVerbose("List: " + c, module);
@@ -610,7 +611,7 @@ public class PartyServices {
         try {
             List exprs = new LinkedList();
 
-            exprs.add(new EntityExpr(new EntityFunction.UPPER("userLoginId"), EntityOperator.LIKE, new EntityFunction.UPPER("%" + userLoginId.toUpperCase() + "%")));
+            exprs.add(new EntityExpr(new EntityFunction.UPPER(new EntityFieldValue("userLoginId")), EntityOperator.LIKE, new EntityFunction.UPPER("%" + userLoginId.toUpperCase() + "%")));
             Collection ulc = delegator.findByAnd("PartyAndUserLogin", exprs, UtilMisc.toList("userloginId"));
 
             if (Debug.verboseOn()) Debug.logVerbose("Collection: " + ulc, module);
@@ -664,8 +665,8 @@ public class PartyServices {
         try {
             List exprs = new LinkedList();
 
-            exprs.add(new EntityExpr(new EntityFunction.UPPER("firstName"), EntityOperator.LIKE, new EntityFunction.UPPER("%" + firstName.toUpperCase() + "%")));
-            exprs.add(new EntityExpr(new EntityFunction.UPPER("lastName"), EntityOperator.LIKE, new EntityFunction.UPPER("%" + lastName.toUpperCase() + "%")));
+            exprs.add(new EntityExpr(new EntityFunction.UPPER(new EntityFieldValue("firstName")), EntityOperator.LIKE, new EntityFunction.UPPER("%" + firstName.toUpperCase() + "%")));
+            exprs.add(new EntityExpr(new EntityFunction.UPPER(new EntityFieldValue("lastName")), EntityOperator.LIKE, new EntityFunction.UPPER("%" + lastName.toUpperCase() + "%")));
             Collection pc = delegator.findByAnd("Person", exprs, UtilMisc.toList("lastName", "firstName", "partyId"));
 
             if (Debug.infoOn()) Debug.logInfo("PartyFromPerson number found: " + pc.size(), module);
@@ -710,7 +711,7 @@ public class PartyServices {
         try {
             List exprs = new LinkedList();
 
-            exprs.add(new EntityExpr(new EntityFunction.UPPER("groupName"), EntityOperator.LIKE, new EntityFunction.UPPER("%" + groupName.toUpperCase() + "%")));
+            exprs.add(new EntityExpr(new EntityFunction.UPPER(new EntityFieldValue("groupName")), EntityOperator.LIKE, new EntityFunction.UPPER("%" + groupName.toUpperCase() + "%")));
             Collection pc = delegator.findByAnd("PartyGroup", exprs, UtilMisc.toList("groupName", "partyId"));
 
             if (Debug.infoOn()) Debug.logInfo("PartyFromGroup number found: " + pc.size(), module);

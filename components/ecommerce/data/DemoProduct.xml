@@ -485,8 +485,14 @@
 
     <!-- a default pricing rule to play with; take 20% off all products in the PROMOTIONS category -->
     <ProductPriceRule productPriceRuleId="9000" ruleName="Test Rule 1" isSale="Y"/>
-    <ProductPriceAction amount="-20.0" productPriceActionSeqId="01" productPriceActionTypeId="PRICE_POL" productPriceRuleId="9000"/>
     <ProductPriceCond condValue="PROMOTIONS" inputParamEnumId="PRIP_PROD_CAT_ID" operatorEnumId="PRC_EQ" productPriceCondSeqId="01" productPriceRuleId="9000"/>
+    <ProductPriceAction amount="-20.0" productPriceActionSeqId="01" productPriceActionTypeId="PRICE_POL" productPriceRuleId="9000"/>
+
+    <!-- this is just an example of specifying a price for a particular product and party group membership -->
+    <ProductPriceRule productPriceRuleId="9001" ruleName="Test Rule 1" isSale="Y"/>
+    <ProductPriceCond inputParamEnumId="PRIP_PRODUCT_ID" operatorEnumId="PRC_EQ" condValue="WG-1111" productPriceCondSeqId="01" productPriceRuleId="9001"/>
+    <ProductPriceCond inputParamEnumId="PRIP_PARTY_GRP_MEM" operatorEnumId="PRC_EQ" condValue="PTR_ONE" productPriceCondSeqId="02" productPriceRuleId="9001"/>
+    <ProductPriceAction productPriceRuleId="9001" productPriceActionSeqId="01" productPriceActionTypeId="PRICE_FLAT" amount="18.95"/>
 
     <!-- example gift card product info -->
     <ProductCategory productCategoryId="GC-100" productCategoryTypeId="CATALOG_CATEGORY" description="Gift Cards"/>

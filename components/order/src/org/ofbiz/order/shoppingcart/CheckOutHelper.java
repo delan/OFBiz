@@ -46,6 +46,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityFieldValue;
 import org.ofbiz.entity.condition.EntityFunction;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
@@ -902,7 +903,7 @@ public class CheckOutHelper {
     	}
         String shippingAddress = UtilFormatOut.checkNull(shippingAddressObj.getString("address1")).toUpperCase();
         List exprs = UtilMisc.toList(new EntityExpr(
-                new EntityExpr(new EntityFunction.UPPER("blacklistString"), EntityOperator.EQUALS, new EntityFunction.UPPER(shippingAddress)), EntityOperator.AND,
+                new EntityExpr(new EntityFunction.UPPER(new EntityFieldValue("blacklistString")), EntityOperator.EQUALS, new EntityFunction.UPPER(shippingAddress)), EntityOperator.AND,
                 new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_ADDRESS")));
         String errMsg=null;
 
@@ -931,7 +932,7 @@ public class CheckOutHelper {
                 if (billingAddress != null) {
                     String address = UtilFormatOut.checkNull(billingAddress.getString("address1").toUpperCase());
                     exprs.add(new EntityExpr(
-                            new EntityExpr(new EntityFunction.UPPER("blacklistString"), EntityOperator.EQUALS, new EntityFunction.UPPER(address)), EntityOperator.AND,
+                            new EntityExpr(new EntityFunction.UPPER(new EntityFieldValue("blacklistString")), EntityOperator.EQUALS, new EntityFunction.UPPER(address)), EntityOperator.AND,
                             new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_ADDRESS")));
                 }
             }
