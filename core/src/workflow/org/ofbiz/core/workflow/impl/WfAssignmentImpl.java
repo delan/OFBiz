@@ -159,7 +159,7 @@ public class WfAssignmentImpl implements WfAssignment {
      * @throws WfException
      */
     public void complete() throws WfException {
-        changeStatus("CAL_COMPLETE");
+        changeStatus("CAL_COMPLETED");
         try {
             activity.complete();
         } catch (CannotComplete e) {

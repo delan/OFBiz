@@ -421,7 +421,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             // set the status of the assignments
             Iterator i = getIteratorAssignment();
             while (i.hasNext())
-                ((WfAssignment) i.next()).changeStatus("CAL_COMPLETE");
+                ((WfAssignment) i.next()).changeStatus("CAL_COMPLETED");
             this.complete();
         }
     }

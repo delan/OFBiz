@@ -167,7 +167,7 @@ public class WorkflowEngine implements GenericEngine {
                     GenericValue wepa = dispatcher.getDelegator().makeValue("WorkEffortPartyAssignment", fields);
                     dispatcher.getDelegator().create(wepa);
                 } catch (GenericEntityException e) {
-                    throw new GenericServiceException("Cannot set ownership of workflow");
+                    throw new GenericServiceException("Cannot set ownership of workflow", e);
                 }
             } catch (WfException we) {
                 throw new GenericServiceException("Cannot get the workflow process runtime key");
