@@ -1,5 +1,5 @@
 /*
- * $Id: CommonServices.java,v 1.9 2004/03/26 21:40:08 ajzeneski Exp $
+ * $Id: CommonServices.java,v 1.10 2004/05/07 15:48:50 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.service.ServiceXaWrapper;
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class CommonServices {
@@ -276,6 +276,38 @@ public class CommonServices {
         while (i.hasNext()) {
             Debug.log(((ModelEntity)i.next()).getEntityName(), module);
         }
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map makeALotOfVisits(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        int count = ((Integer) context.get("count")).intValue();
+
+        for (int i = 0; i < count; i++ ) {
+            GenericValue v = delegator.makeValue("Visit", null);
+            String seqId = delegator.getNextSeqId("Visit").toString();
+
+            v.set("visitId", seqId);
+            v.set("userCreated", "N");
+            v.set("sessionId", "NA-" + seqId);
+            v.set("serverIpAddress", "127.0.0.1");
+            v.set("serverHostName", "localhost");
+            v.set("webappName", "webtools");
+            v.set("initialLocale", "en_US");
+            v.set("initialRequest", "http://localhost:8080/webtools/control/main");
+            v.set("initialReferrer", "http://localhost:8080/webtools/control/main");
+            v.set("initialUserAgent", "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en-us) AppleWebKit/124 (KHTML, like Gecko) Safari/125.1");
+            v.set("clientIpAddress", "127.0.0.1");
+            v.set("clientHostName", "localhost");
+            v.set("fromDate", UtilDateTime.nowTimestamp());
+
+            try {
+                delegator.create(v);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+        }
+
         return ServiceUtil.returnSuccess();
     }
 }
