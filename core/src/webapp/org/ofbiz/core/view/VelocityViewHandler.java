@@ -55,9 +55,7 @@ public class VelocityViewHandler implements ViewHandler {
     public static final String module = VelocityViewHandler.class.getName();
 
     public static final String REQUEST = "req";
-    public static final String RESPONSE = "res";
-    public static final String DEFAULT_CONTENT_TYPE = "text/html";
-    public static final String DEFAULT_OUTPUT_ENCODING = "UTF-8";
+    public static final String RESPONSE = "res";       
 
     private static SimplePool writerPool = new SimplePool(40);
     private VelocityEngine ve = null;
@@ -127,7 +125,10 @@ public class VelocityViewHandler implements ViewHandler {
             throw new ViewHandlerException(e.getMessage(), e);
         }
 
-        response.setContentType(DEFAULT_CONTENT_TYPE);
+        // set the default content-type and charset encoding
+        if (contentType == null) contentType = "text/html";
+        if (encoding == null) encoding = "UTF-8";
+        response.setContentType(contentType + "; charset=" + encoding);               
 
         ServletOutputStream out = null;
         VelocityWriter vw = null;
@@ -141,9 +142,9 @@ public class VelocityViewHandler implements ViewHandler {
         try {
             vw = (VelocityWriter) writerPool.get();
             if (vw == null)
-                vw = new VelocityWriter(new OutputStreamWriter(out, DEFAULT_OUTPUT_ENCODING), 4 * 1024, true);
+                vw = new VelocityWriter(new OutputStreamWriter(out, encoding), 4 * 1024, true);
             else
-                vw.recycle(new OutputStreamWriter(out, DEFAULT_OUTPUT_ENCODING));
+                vw.recycle(new OutputStreamWriter(out, encoding));
 
             if (vw == null)
                 Debug.logWarning("[VelocityViewHandler.eval] : VelocityWriter is NULL");
