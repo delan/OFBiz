@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.6 2004/07/31 00:24:09 ajzeneski Exp $
+ *  $Id$
 -->
 
 <ofbiz-component name="service">
@@ -32,8 +32,8 @@
     <classpath type="jar" location="build/lib/*"/>
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/ScheduledServiceData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/ScheduledServices.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/ServiceSecurityData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/ScheduledServiceData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/ScheduledServices.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/ServiceSecurityData.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
 </ofbiz-component>

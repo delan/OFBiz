@@ -29,20 +29,20 @@
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="config"/>
     <classpath type="dir" location="script"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoMerchant.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoProduct.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoSurvey.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoShipping.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoWebSitePublishPointData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoContentPermissionsData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoTemplateData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoContent.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoTopic.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoTree.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoFactoids.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoRelatedData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoConfigurator.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoRentalProduct.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoMerchant.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoProduct.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoSurvey.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoShipping.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoWebSitePublishPointData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoContentPermissionsData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTemplateData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoContent.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTopic.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTree.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoFactoids.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoRelatedData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoConfigurator.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoRentalProduct.xml"/>
     <webapp name="ecommerce"
         title="ECommerce"
         server="default-server"
