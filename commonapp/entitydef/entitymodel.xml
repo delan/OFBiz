@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Mon Sep 10 16:43:38 PDT 2001
+ *@created    Tue Sep 11 16:59:31 PDT 2001
  *@version    1.0
  */
 -->
@@ -6457,6 +6457,16 @@
         <type>many</type>
         <rel-table-name>MARKET_INTEREST</rel-table-name>
         <key-map><col-name>PRODUCT_CATEGORY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>Current</title>
+        <rel-table-name>PRODUCT_CATEGORY_ROLLUP</rel-table-name>
+        <key-map><col-name>PRODUCT_CATEGORY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>Parent</title>
+        <rel-table-name>PRODUCT_CATEGORY_ROLLUP</rel-table-name>
+        <key-map><col-name>PRODUCT_CATEGORY_ID</col-name><rel-col-name>PARENT_PRODUCT_CATEGORY_ID</rel-col-name></key-map>
       </relation>
     </entity>	
     <entity>
