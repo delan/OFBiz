@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- ======================================================================= -->
+<!-- build-file for commonapp						     -->
+<!-- owieland, 2001-07-12                                                    -->
+<!-- Benoetigt ant 1.2 							     -->
+<!-- $Id$		-->
+<!-- ======================================================================= -->
+
+<project name="CommonApp" default="compile" basedir=".">
+	
+	<property name="Name" value="commonapp"/>
+	<property name="name" value="commonapp"/>
+	<property name="version" value="$Version$"/>
+
+	<property name="build.compiler" value="jikes"/>
+	<property name="build.compiler.emacs" value="true"/>
+	
+	<property name="build.dir" value="${basedir}/build"/>
+	<property name="classes.dir" value="${basedir}/build"/>	
+	
+	<property name="dist.dir" value="${basedir}/dist"/>
+	<property name="src.dir" value="${basedir}/src"/>
+	
+	<property name="jar.name" value="${name}-${version}.jar"/>
+	<property name="jar.file" value="${dist.dir}/${jar.name}"/>	
+	<property name="lib.dir" value="${basedir}/lib"/>
+
+	<property name="tar.file" value="${dist.dir}/${Name}-${version}.tar"/>
+	<property name="tgz.file" value="${dist.dir}/${Name}-${version}.tgz"/>
+
+	<property name="zip.file" value="${dist.dir}/${Name}-${version}.zip"/>	
+
+	<!-- =================================================================== -->
+	<!-- Prepares the build directory                                        -->
+	<!-- =================================================================== -->
+	<target name="prepare">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${dist.dir}"/>		
+	</target>
+	
+	<!-- =================================================================== -->
+	<!-- Compiles the source code                                            -->
+	<!-- =================================================================== -->
+	<target name="compile" depends="prepare">
+		<javac srcdir="${src.dir}"
+		       	destdir="${build.dir}">
+		       	<classpath>
+	           		<pathelement location="${lib.dir}/j2ee.jar"/>
+	           		<pathelement location="${lib.dir}/log4j.jar"/>
+	         	</classpath>
+		</javac>    
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Build distribution jar 						 -->
+	<!-- =================================================================== -->
+	<target name="dist" depends="compile">
+		<jar jarfile="${dist.dir}/${name}.jar"
+	         	basedir="${build.dir}"
+	        />
+        </target>
+ </project>
+
+
+
