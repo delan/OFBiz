@@ -3,8 +3,18 @@
  
   <!-- Routing status, (workEffort Template) -->
   <StatusType description="Manufacturing Task and Routing status" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="ROUTING_STATUS"/>
+  <StatusType description="Product in-out routing Association" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="ROU_PRODUCT_ASSOC"/>
 
   <StatusItem description="Well defined and usable"  sequenceId="01" statusCode="ACTIVE" statusId="ROU_ACTIVE" statusTypeId="ROUTING_STATUS"/>
+  <StatusItem description="Internal, Used for association between Product and Routing associated"  sequenceId="01" statusCode="TEMPLATE" statusId="ROU_PROD_TEMPLATE" statusTypeId="ROU_PRODUCT_ASSOC"/>
+  <StatusItem description="Wip incoming Product planned"  sequenceId="02" statusCode="WIP_INCOMING_PLAN" statusId="WIP_INCOMING_PLAN" statusTypeId="ROU_PRODUCT_ASSOC"/>
+  <StatusItem description="Wip incoming Product fulfilment"  sequenceId="04" statusCode="WIP_INCOMING_FULFIL" statusId="WIP_INCOMING_FULFIL" statusTypeId="ROU_PRODUCT_ASSOC"/>
+  <StatusItem description="Wip incoming InventoryItem Reserved"  sequenceId="06" statusCode="WIP_INCOMING_RES" statusId="WIP_INCOMING_RES" statusTypeId="ROU_PRODUCT_ASSOC"/>
+  <StatusItem description="Wip incoming InventoryItem Done"  sequenceId="08" statusCode="WIP_INCOMING_DONE" statusId="WIP_INCOMING_DONE" statusTypeId="ROU_PRODUCT_ASSOC"/>
+  <StatusItem description="Wip outgoing Product planned"  sequenceId="03" statusCode="WIP_OUTGOING_PLAN" statusId="WIP_OUTGOING_PLAN" statusTypeId="ROU_PRODUCT_ASSOC"/>
+  <StatusItem description="Wip outgoing Product fulfilment"  sequenceId="05" statusCode="WIP_OUTGOING_FULFIL" statusId="WIP_OUTGOING_FULFIL" statusTypeId="ROU_PRODUCT_ASSOC"/>
+  <StatusItem description="Wip outgoing InventoryItem Reserved"  sequenceId="07" statusCode="WIP_OUTGOING_RES" statusId="WIP_OUTGOING_RES" statusTypeId="ROU_PRODUCT_ASSOC"/>
+  <StatusItem description="Wip outgoing InventoryItem Done"  sequenceId="09" statusCode="WIP_OUTGOING_DONE" statusId="WIP_OUTGOING_DONE" statusTypeId="ROU_PRODUCT_ASSOC"/>
 
    <!-- Production Run Inventory event status -->
   <StatusType description="Product in-out routing Association" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="PRUN_PRODUCT_ASSOC"/>
