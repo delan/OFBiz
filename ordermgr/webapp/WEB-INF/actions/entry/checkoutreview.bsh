@@ -37,6 +37,9 @@ userLogin = session.getAttribute("userLogin");
 cart = session.getAttribute(SiteDefs.SHOPPING_CART);
 context.put("cart", cart);
 
+// nuke the event messages
+request.removeAttribute(SiteDefs.EVENT_MESSAGE);
+
 orderAdjustments = cart.makeAllAdjustments();
 context.put("orderAdjustments", orderAdjustments);
 

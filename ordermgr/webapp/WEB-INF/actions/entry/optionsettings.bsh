@@ -34,6 +34,9 @@ partyId = session.getAttribute("orderPartyId");
 cart = session.getAttribute(SiteDefs.SHOPPING_CART);
 context.put("cart", cart);
 
+// nuke the event messages
+request.removeAttribute(SiteDefs.EVENT_MESSAGE);
+
 partyId = session.getAttribute("orderPartyId");
 if (partyId != null) {
     party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));

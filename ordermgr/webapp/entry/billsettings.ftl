@@ -28,10 +28,13 @@
 <!-- //
 function shipBillAddr() {
     if (document.billsetupform.useShipAddr.checked) {
-        window.location.replace("/ordermgr/control/setBilling?finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}&useShipAddr=Y");
+        window.location.replace("/ordermgr/control/setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}&useShipAddr=Y");
     } else { 
-        window.location.replace("/ordermgr/control/setBilling?finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}");
+        window.location.replace("/ordermgr/control/setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}");
     }
+}
+function makeExpDate() {
+    document.billsetupform.expireDate.value = document.billsetupform.expMonth.value + "/" + document.billsetupform.expYear.value;
 }
 // -->
 </script>
@@ -59,36 +62,35 @@ function shipBillAddr() {
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>  
-            <#if party?has_content> 
+            <#if (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew?exists>
               <#-- initial screen when we have a associated party -->
               <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="billsetupform">
                 <input type="hidden" name="finalizeMode" value="payment">
                 <table width="100%" cellpadding="1" cellspacing="0" border="0">
                   <tr>
                     <td colspan="2">    
-                      <a href="/partymgr/control/editcreditcard?party_id=<%=partyId%>" target="_blank" class="buttontext">[Add Credit Card]</a>
-                      <a href="/partymgr/control/editeftaccount?party_id=<%=partyId%>" target="_blank" class="buttontext">[Add EFT Account]</a>
+                      <a href="<@ofbizUrl>/setBilling?createNew=Y</@ofbizUrl>" class="buttontext">[Create New]</a>
                     </td>
                   </tr>
-                  <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                  <tr><td colspan="3"><hr class='sepbar'></td></tr>                      
                   <tr>
                     <td width="1%" nowrap>
-                      <input type="radio" name="checkOutPaymentId" value="OFFLINE_PAYMENT" <#if checkoutPaymentId?exists && checkoutPaymentId == "OFFLINE_PAYMENT">CHECKED</#if>>
-                    </td>
-                    <td colpan="2" width="50%" nowrap>
-                      <span class="tabletext">Payment already received</span>
-                    </td>
-                  </tr>
-                  <tr><td colspan="3"><hr class='sepbar'></td></tr>    
-                  <tr>
-                    <td width="1%" nowrap>
-                      <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if checkoutPaymentId?exists && checkoutPaymentId == "EXT_OFFLINE">CHECKED</#if>>
+                      <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if checkOutPaymentId?exists && checkOutPaymentId == "EXT_OFFLINE">CHECKED</#if>>
                     </td>
                     <td colpan="2" width="50%" nowrap>
                       <span class="tabletext">Offline:&nbsp;Check/Money Order</span>
                     </td>
                   </tr>
-                  <tr><td colspan="3"><hr class='sepbar'></td></tr>    
+                  <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                  <tr>
+                    <td width="1%" nowrap>
+                      <input type="radio" name="checkOutPaymentId" value="OFFLINE_PAYMENT" <#if checkOutPaymentId?exists && checkOutPaymentId == "OFFLINE_PAYMENT">CHECKED</#if>>
+                    </td>
+                    <td colpan="2" width="50%" nowrap>
+                      <span class="tabletext">Payment already received</span>
+                    </td>
+                  </tr>
+                  <tr><td colspan="3"><hr class='sepbar'></td></tr>                  
                   <#if billingAccountList?has_content>                                                         
                     <#list billingAccountList as billingAccount>                          
                       <tr>
@@ -111,7 +113,7 @@ function shipBillAddr() {
                         <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
                         <tr>                 
                           <td width="1%" nowrap>
-                            <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkoutPaymentId?exists && paymentMethod.paymentMethodId == checkOutPaymentId>checked</#if>>
+                            <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?exists && paymentMethod.paymentMethodId == checkOutPaymentId>checked</#if>>
                           </td>
                           <td width="50%" nowrap>
                             <span class="tabletext">CC:&nbsp;${Static["org.ofbiz.commonapp.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>                            
@@ -122,7 +124,7 @@ function shipBillAddr() {
                         <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
                         <tr>
                           <td width="1%" nowrap>             
-                            <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if paymentMethod.paymentMethodId == checkOutPaymentId>checked</#if>>
+                            <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?exists && paymentMethod.paymentMethodId == checkOutPaymentId>checked</#if>>
                           </td>
                           <td width="50%" nowrap>
                             <span class="tabletext">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</span>                            
@@ -144,6 +146,8 @@ function shipBillAddr() {
                   <form method="post" action="<@ofbizUrl>/updateCreditCardAndPostalAddress</@ofbizUrl>" name="billsetupform">
                     <input type="hidden" name="paymentMethodId" value="${creditCard.paymentMethodId?if_exists}">
                     <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId?if_exists}">
+                <#elseif requestParameters.useShipAddr?exists>
+                  <form method="post" action="<@ofbizUrl>/createCreditCard</@ofbizUrl>" name="billsetupform">
                 <#else>
                   <form method="post" action="<@ofbizUrl>/createCreditCardAndPostalAddress</@ofbizUrl>" name="billsetupform">
                 </#if>
@@ -153,18 +157,24 @@ function shipBillAddr() {
                   <form method="post" action="<@ofbizUrl>/updateEftAndPostalAddress</@ofbizUrl>" name="billsetupform">
                     <input type="hidden" name="paymentMethodId" value="${eftAccount.paymentMethodId?if_exists}">
                     <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId?if_exists}">
+                <#elseif requestParameters.useShipAddr?exists>
+                  <form method="post" action="<@ofbizUrl>/createEftAccount</@ofbizUrl>" name="billsetupform">
                 <#else>                    
                   <form method="post" action="<@ofbizUrl>/createEftAndPostalAddress</@ofbizUrl>" name="billsetupform">
                 </#if>        
               </#if>
               
               <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS">
-              <input type="hidden" name="partyId" value="_NA_">
+              <input type="hidden" name="partyId" value="${sessionAttributes.orderPartyId}">
               <input type="hidden" name="paymentMethodType" value="${paymentMethodType}">
               <input type="hidden" name="finalizeMode" value="payment">
+              <input type="hidden" name="createNew" value="Y">
+              <#if requestParameters.useShipAddr?exists>
+                <input type="hidden" name="contactMechId" value="${postalFields.contactMechId}">
+              </#if>
                 
               <table width="100%" border="0" cellpadding="1" cellspacing="0">
-                <#if !checkOutPaymentId?exists && cart.getShippingContactMechId()?exists>
+                <#if cart.getShippingContactMechId()?exists>
                 <tr>
                   <td width="26%" align="right"= valign="top">
                     <input type="checkbox" name="useShipAddr" value="Y" onClick="javascript:shipBillAddr();" <#if requestParameters.useShipAddr?exists>checked</#if>>
@@ -178,67 +188,79 @@ function shipBillAddr() {
                 </tr>
                 </#if>
                 
+                <#if person?exists && person?has_content>
+                  <#assign toName = "">
+                  <#if person.personalTitle?has_content><#assign toName = person.personalTitle + " "></#if>
+                  <#assign toName = toName + person.firstName + " ">
+                  <#if person.middleName?has_content><#assign toName = toName + person.middleName + " "></#if>
+                  <#assign toName = toName + person.lastName>
+                  <#if person.suffix?has_content><#assign toName = toName + " " + person.suffix></#if>
+                <#else>
+                  <#assign toName = postalFields.toName?default("")>
+                </#if>
+                
                 <#-- generic address information -->
                 <tr>
                   <td width="26%" align=right valign=top><div class="tabletext">To Name</div></td>
                   <td width="5">&nbsp;</td>
                   <td width="74%">
-                    <input type="text" class="inputBox" size="30" maxlength="60" name="toName" value="${postalFields.toName?if_exists}">
+                    <input type="text" class="inputBox" size="30" maxlength="60" name="toName" value="${toName}" <#if requestParameters.useShipAddr?exists>disabled</#if>>
                   </td>
                 </tr>
                 <tr>
                   <td width="26%" align=right valign=top><div class="tabletext">Attention Name</div></td>
                   <td width="5">&nbsp;</td>
                   <td width="74%">
-                    <input type="text" class="inputBox" size="30" maxlength="60" name="attnName" value="${postalFields.attnName?if_exists}">
+                    <input type="text" class="inputBox" size="30" maxlength="60" name="attnName" value="${postalFields.attnName?if_exists}" <#if requestParameters.useShipAddr?exists>disabled</#if>>
                   </td>
                 </tr>
                 <tr>
                   <td width="26%" align=right valign=top><div class="tabletext">Address Line 1</div></td>
                   <td width="5">&nbsp;</td>
                   <td width="74%">
-                    <input type="text" class="inputBox" size="30" maxlength="30" name="address1" value="${postalFields.address1?if_exists}">
+                    <input type="text" class="inputBox" size="30" maxlength="30" name="address1" value="${postalFields.address1?if_exists}" <#if requestParameters.useShipAddr?exists>disabled</#if>>
                   *</td>
                 </tr>
                 <tr>
                   <td width="26%" align=right valign=top><div class="tabletext">Address Line 2</div></td>
                   <td width="5">&nbsp;</td>
                   <td width="74%">
-                    <input type="text" class="inputBox" size="30" maxlength="30" name="address2" value="${postalFields.address2?if_exists}">
+                    <input type="text" class="inputBox" size="30" maxlength="30" name="address2" value="${postalFields.address2?if_exists}" <#if requestParameters.useShipAddr?exists>disabled</#if>>
                   </td>
                 </tr>
                 <tr>
                   <td width="26%" align=right valign=top><div class="tabletext">City</div></td>
                   <td width="5">&nbsp;</td>
                   <td width="74%">
-                    <input type="text" class="inputBox" size="30" maxlength="30" name="city" value="${postalFields.city?if_exists}">
+                    <input type="text" class="inputBox" size="30" maxlength="30" name="city" value="${postalFields.city?if_exists}" <#if requestParameters.useShipAddr?exists>disabled</#if>>
                   *</td>
                 </tr>
                 <tr>
                   <td width="26%" align=right valign=top><div class="tabletext">State/Province</div></td>
                   <td width="5">&nbsp;</td>
                   <td width="74%">
-                    <select name="stateProvinceGeoId" class="selectBox">
+                    <select name="stateProvinceGeoId" class="selectBox" <#if requestParameters.useShipAddr?exists>disabled</#if>>
                       <#if postalFields.stateProvinceGeoId?exists>
                       <option>${postalFields.stateProvinceGeoId}</option>
                       <option value="${postalFields.stateProvinceGeoId}">---</option>
                       </#if>
+                      <option value=""></option>
                       ${pages.get("/includes/states.ftl")}
                     </select>
-                  *</td>
+                  </td>
                 </tr>
                 <tr>
                   <td width="26%" align=right valign=top><div class="tabletext">Zip/Postal Code</div></td>
                   <td width="5">&nbsp;</td>
                   <td width="74%">
-                    <input type="text" class="inputBox" size="12" maxlength="10" name="postalCode" value="${postalFields.postalCode?if_exists}">
+                    <input type="text" class="inputBox" size="12" maxlength="10" name="postalCode" value="${postalFields.postalCode?if_exists}" <#if requestParameters.useShipAddr?exists>disabled</#if>>
                   *</td>
                 </tr>
                 <tr>
                   <td width="26%" align=right valign=top><div class="tabletext">Country</div></td>
                   <td width="5">&nbsp;</td>
                   <td width="74%">
-                    <select name="countryGeoId" class="selectBox">
+                    <select name="countryGeoId" class="selectBox" <#if requestParameters.useShipAddr?exists>disabled</#if>>
                       <#if postalFields.countryGeoId?exists>
                       <option>${postalFields.countryGeoId}</option>
                       <option value="${postalFields.countryGeoId}">---</option>
@@ -252,7 +274,8 @@ function shipBillAddr() {
 	            <#if paymentMethodType == "CC">
 	              <#if !creditCard?has_content>
 	                <#assign creditCard = requestParameters>
-	              </#if>	              
+	              </#if>
+	              <input type='hidden' name='expireDate' value='${creditCard.expireDate?if_exists}'>
                   <tr>
                     <td colspan="3"><hr class="sepbar"></td>
                   </tr>
@@ -316,8 +339,8 @@ function shipBillAddr() {
                           <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
                         </#if>
                       </#if>
-                      <select name="expMonth" class='selectBox'>                        
-                        <option><#if creditCard?has_content>${expMonth?if_exists}<#else>${requestParameters.expMonth?if_exists}</#if></option>
+                      <select name="expMonth" class='selectBox' onChange="javascript:makeExpDate();">                        
+                        <option><#if creditCard?has_content && expMonth?has_content>${expMonth?if_exists}<#else>${requestParameters.expMonth?if_exists}</#if></option>
                         <option></option>
                         <option>01</option>
                         <option>02</option>
@@ -332,8 +355,8 @@ function shipBillAddr() {
                         <option>11</option>
                         <option>12</option>
                       </select>
-                      <select name="expYear" class='selectBox'>
-                        <option><#if creditCard?has_content>${expYear?if_exists}<#else>${requestParameters.expYear?if_exists}</#if></option>
+                      <select name="expYear" class='selectBox' onChange="javascript:makeExpDate();">
+                        <option><#if creditCard?has_content && expYear?has_content>${expYear?if_exists}<#else>${requestParameters.expYear?if_exists}</#if></option>
                         <option></option>          
                         <option>2003</option>
                         <option>2004</option>
@@ -407,30 +430,29 @@ function shipBillAddr() {
               <#-- initial screen show a list of options -->
               <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="billsetupform">
                 <input type="hidden" name="finalizeMode" value="payoption">
-                <table width="100%" border="0" cellpadding="1" cellspacing="0">
+                <input type="hidden" name="createNew" value="Y">                
+                <table width="100%" border="0" cellpadding="1" cellspacing="0"> 
+                  <#if !requestParameters.createNew?exists>                                    
                   <tr>
-                    <td width='25%' align='right' nowrap><div class="tabletext">Offline Payment: Check/Money Order</div></td>
-                    <td width='5'>&nbsp;</td>
-                    <td><input type="radio" name="paymentMethodType" value="offline" <#if paymentMethodType?exists && paymentMethodType == "offline">checked</#if>
+                    <td width='1%' nowrap><input type="radio" name="paymentMethodType" value="offline" <#if paymentMethodType?exists && paymentMethodType == "offline">checked</#if>
+                    <td width='50%'nowrap><div class="tabletext">Offline Payment: Check/Money Order</div></td>
                   </tr>
-                  <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                  <tr><td colspan="2"><hr class='sepbar'></td></tr>
                   <tr>
-                    <td width='25%' align='right' nowrap><div class="tabletext">Credit Card: Visa/Mastercard/Amex/Discover</div></td>
-                    <td width='5'>&nbsp;</td>
-                    <td><input type="radio" name="paymentMethodType" value="CC">  
+                    <td width='1%' nowrap><input type="radio" name="paymentMethodType" value="offline_payment"></td>
+                    <td width='50%' nowrap><div class="tabletext">Payment already received</div></td>                                       
                   </tr>
-                  <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                  <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                  </#if>
                   <tr>
-                    <td width='25%' align='right' nowrap><div class="tabletext">EFT Account: AHC/Electronic Check</div></td>
-                    <td width='5'>&nbsp;</td>
-                    <td><input type="radio" name="paymentMethodType" value="EFT">
+                    <td width='1%' nowrap><input type="radio" name="paymentMethodType" value="CC">  
+                    <td width='50%' nowrap><div class="tabletext">Credit Card: Visa/Mastercard/Amex/Discover</div></td>                    
                   </tr>
-                  <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                  <tr><td colspan="2"><hr class='sepbar'></td></tr>
                   <tr>
-                    <td width='25%' align='right' nowrap><div class="tabletext">Payment already received</div></td>
-                    <td width='5'>&nbsp;</td>
-                    <td><input type="radio" name="paymentMethodType" value="offline_payment"></td>
-                  </tr>
+                    <td width='1%' nowrap><input type="radio" name="paymentMethodType" value="EFT">
+                    <td width='50%' nowrap><div class="tabletext">EFT Account: AHC/Electronic Check</div></td>                    
+                  </tr>                  
                 </table>
               </form>
             </#if>                                    

@@ -35,24 +35,16 @@ partyId = session.getAttribute("orderPartyId");
 cart = session.getAttribute(SiteDefs.SHOPPING_CART);
 context.put("cart", cart);
 
+// nuke the event messages
+request.removeAttribute(SiteDefs.EVENT_MESSAGE);
+
 if (partyId != null && !partyId.equals("_NA_")) {
     party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
-    if (party != null) {        
+    if (party != null) {                
         shippingContactMechList = ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false);
+        person = party.getRelatedOne("Person");
         context.put("party", party);
+        context.put("person", person);
         context.put("shippingContactMechList", shippingContactMechList);
     }
 }
-    
-shipContactMechId = cart.getShippingContactMechId();
-if (shipContactMechId != null) {
-    postalAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shipContactMechId));
-    context.put("postalAddress", postalAddress);
-    context.put("postalFields", postalAddress);
-} else {
-    paramMap = UtilHttp.getParameterMap(request);
-    Debug.logError("paramMap: " + paramMap);
-    context.put("postalFields", paramMap);
-}
-   
-

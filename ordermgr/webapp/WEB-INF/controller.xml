@@ -245,12 +245,23 @@
     <request-map uri="finalizeOrder">
     	<security https="true" auth="true"/>
     	<event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="finalizeOrderEntry"/>
+    	<response name="customer" type="view" value="custsetting"/>
     	<response name="shipping" type="view" value="shipsetting"/>
     	<response name="options" type="view" value="optionsetting"/>
     	<response name="payment" type="view" value="billsetting"/>
     	<response name="success" type="view" value="confirm"/>
     	<response name="error" type="view" value="orderentry"/>    	
-    </request-map>  
+    </request-map>
+    <request-map uri="setCustomer">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="custsetting"/>
+    </request-map>
+    <request-map uri="createCustomer">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/ordermgr/customer/CustomerEvents.xml" invoke="createCustomer"/>
+        <response name="success" type="request" value="finalizeOrder"/>
+        <response name="error" type="view" value="custsetting"/>
+    </request-map>     
     <request-map uri="setShipping">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="shipsetting"/>
@@ -281,6 +292,12 @@
     	<response name="success" type="request" value="finalizeOrder"/>
     	<response name="error" type="view" value="billsetting"/>
     </request-map>
+    <request-map uri="createCreditCard">
+    	<security https="true" auth="true"/>
+    	<event type="service" path="" invoke="createCreditCard"/>
+    	<response name="success" type="request" value="finalizeOrder"/>
+    	<response name="error" type="view" value="billsetting"/>
+    </request-map>    
     <request-map uri="updateCreditCardAndPostalAddress">
     	<security https="true" auth="true"/>
     	<event type="service" path="" invoke="updateCreditCardAndAddress"/>
@@ -292,7 +309,13 @@
     	<event type="service" path="" invoke="createEftAccountAndAddress"/>
     	<response name="success" type="request" value="finalizeOrder"/>
     	<response name="error" type="view" value="billsetting"/>    	
-    </request-map>    
+    </request-map>
+    <request-map uri="createEftAccount">
+    	<security https="true" auth="true"/>
+    	<event type="service" path="" invoke="createEftAccount"/>
+    	<response name="success" type="request" value="finalizeOrder"/>
+    	<response name="error" type="view" value="billsetting"/>    	
+    </request-map>        
     <request-map uri="updateEftAndPostalAddress">
     	<security https="true" auth="true"/>
     	<event type="service" path="" invoke="updateEftAccountAndAddress"/>
@@ -337,9 +360,15 @@
     <request-map uri="initiateOrderWorkflow">
         <security https="true" auth="true" direct-request="false"/>
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="initiateOrderWorkflow"/>
-        <response name="success" type="view" value="ordercomplete"/>
+        <response name="success" type="request" value="emailorder"/>
         <response name="error" type="view" value="confirm"/>
-    </request-map>    
+    </request-map>
+    <request-map uri="emailorder">
+        <security https="true" direct-request="false"/>
+        <event type="service" path="async" invoke="sendOrderConfirmation"/>
+        <response name="success" type="view" value="ordercomplete"/>
+        <response name="error" type="view" value="ordercomplete"/>
+    </request-map>        
     
     <!-- Order Return Requests -->
     <request-map uri="returnlist">
@@ -472,7 +501,8 @@
     <view-map name="keywordsearch" type="jpublish" page="/entry/catalog/keywordsearch.ftl"/>
     <view-map name="advancedsearch" type="jpublish" page="/entry/catalog/advancedsearch.ftl"/>
     <view-map name="category" type="jpublish" page="/entry/catalog/category.ftl"/>
-    <view-map name="product" type="jpublish" page="/entry/catalog/product.ftl"/>  
+    <view-map name="product" type="jpublish" page="/entry/catalog/product.ftl"/>
+    <view-map name="custsetting" type="jpublish" page="/entry/custsettings.ftl"/> 
     <view-map name="shipsetting" type="jpublish" page="/entry/shipsettings.ftl"/>
     <view-map name="billsetting" type="jpublish" page="/entry/billsettings.ftl"/>
     <view-map name="optionsetting" type="jpublish" page="/entry/optionsettings.ftl"/>

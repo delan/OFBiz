@@ -31,7 +31,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align='left'>
-            <div class='boxhead'>&nbsp;Order Entry ShipTo Settings</div>
+            <div class='boxhead'>&nbsp;Order Entry Ship-To Settings</div>
           </td> 
           <td nowrap align="right">
             <div class="tabletext">
@@ -47,89 +47,98 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-            <#if party?has_content>
+            <#if shippingContactMechList?has_content && !requestParameters.createNew?exists>
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <tr>
                 <td colspan="3">
-                  <a href="/partymgr/control/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&party_id=<%=partyId%>" target="_blank" class="buttontext">[Add New Address]</a>
+                  <a href="<@ofbizUrl>/setShipping?createNew=Y</@ofbizUrl>" class="buttontext">[Create New]</a>
                 </td>
               </tr>
               <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="shipsetupform"> 
                 <input type="hidden" name="finalizeMode" value="ship">
-                
-                <#if shippingContactMechList?has_content>
+                                
+                <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                <#list shippingContactMechList as shippingContactMech>
+                  <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
+                  <tr>
+                    <td align="left" valign="top" width="1%" nowrap>
+                      <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" <#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId>checked</#if>>        
+                    </td>
+                    <td align="left" valign="top" width="99%" nowrap>
+                      <div class="tabletext">
+                        <#if shippingAddress.toName?has_content><b>To:</b>&nbsp;${shippingAddress.toName}<br></#if>
+                        <#if shippingAddress.attnName?has_content><b>Attn:</b>&nbsp;${shippingAddress.attnName}<br></#if>
+                        <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br></#if>
+                        <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>
+                        <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
+                        <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
+                        <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
+                        <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>                                                                                     
+                      </div>
+                    </td>
+                    <td>
+                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?party_id=<%=partyId%>&contactMechId=<%=shippingContactMechId%>" target="_blank" class="buttontext">[Update]</a></div>
+                    </td>                      
+                  </tr>
                   <tr><td colspan="3"><hr class='sepbar'></td></tr>
-                  <#list shippingContactMechList as shippingContactMech>
-                    <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
-                    <tr>
-                      <td align="left" valign="top" width="1%" nowrap>
-                        <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" <#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId>checked</#if>>        
-                      </td>
-                      <td align="left" valign="top" width="99%" nowrap>
-                        <div class="tabletext">
-                          <#if shippingAddress.toName?has_content><b>To:</b>&nbsp;${shippingAddress.toName}<br></#if>
-                          <#if shippingAddress.attnName?has_content><b>Attn:</b>&nbsp;${shippingAddress.attnName}<br></#if>
-                          <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br></#if>
-                          <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>
-                          <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
-                          <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
-                          <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
-                          <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>                                                                                     
-                        </div>
-                      </td>
-                      <td>
-                        <div class="tabletext"><a href="/partymgr/control/editcontactmech?party_id=<%=partyId%>&contactMechId=<%=shippingContactMechId%>" target="_blank" class="buttontext">[Update]</a></div>
-                      </td>                      
-                    </tr>
-                    <tr><td colspan="3"><hr class='sepbar'></td></tr>
-                  </#list>
-                </#if>                                                                                         
+                </#list>
               </form>
             </table>  
             <#else>
               <#if postalAddress?has_content>            
               <form method="post" action="<@ofbizUrl>/updatePostalAddress</@ofbizUrl>" name="shipsetupform">
-                <input type="hidden" name="contactMechId" value="${shipContactMechId}">
+                <input type="hidden" name="contactMechId" value="${shipContactMechId?if_exists}">
               <#else>
               <form method="post" action="<@ofbizUrl>/createPostalAddress</@ofbizUrl>" name="shipsetupform">
                 <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS">
+                <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION">
               </#if>
-                <input type="hidden" name="partyId" value="_NA_">
+                <input type="hidden" name="partyId" value="${sessionAttributes.orderPartyId?default("_NA_")}">
                 <input type="hidden" name="finalizeMode" value="ship">
+                <#if person?exists && person?has_content>
+                  <#assign toName = "">
+                  <#if person.personalTitle?has_content><#assign toName = person.personalTitle + " "></#if>
+                  <#assign toName = toName + person.firstName + " ">
+                  <#if person.middleName?has_content><#assign toName = toName + person.middleName + " "></#if>
+                  <#assign toName = toName + person.lastName>
+                  <#if person.suffix?has_content><#assign toName = toName + " " + person.suffix></#if>
+                <#else>
+                  <#assign toName = "">
+                </#if>
                 <table width="100%" border="0" cellpadding="1" cellspacing="0">
                   <tr>
                     <td width="26%" align=right valign=top><div class="tabletext">To Name</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
-                      <input type="text" class="inputBox" size="30" maxlength="60" name="toName" value="${postalFields.toName?if_exists}">
+                      <input type="text" class="inputBox" size="30" maxlength="60" name="toName" value="${toName}">
                     </td>
                   </tr>
                   <tr>
                     <td width="26%" align=right valign=top><div class="tabletext">Attention Name</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
-                      <input type="text" class="inputBox" size="30" maxlength="60" name="attnName" value="${postalFields.attnName?if_exists}">
+                      <input type="text" class="inputBox" size="30" maxlength="60" name="attnName" value="">
                     </td>
                   </tr>
                   <tr>
                     <td width="26%" align=right valign=top><div class="tabletext">Address Line 1</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
-                      <input type="text" class="inputBox" size="30" maxlength="30" name="address1" value="${postalFields.address1?if_exists}">
+                      <input type="text" class="inputBox" size="30" maxlength="30" name="address1" value="">
                     *</td>
                   </tr>
                   <tr>
                     <td width="26%" align=right valign=top><div class="tabletext">Address Line 2</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
-                      <input type="text" class="inputBox" size="30" maxlength="30" name="address2" value="${postalFields.address2?if_exists}">
+                      <input type="text" class="inputBox" size="30" maxlength="30" name="address2" value="">
                     </td>
                   </tr>
                   <tr>
                     <td width="26%" align=right valign=top><div class="tabletext">City</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
-                      <input type="text" class="inputBox" size="30" maxlength="30" name="city" value="${postalFields.city?if_exists}">
+                      <input type="text" class="inputBox" size="30" maxlength="30" name="city" value="">
                     *</td>
                   </tr>
                   <tr>
@@ -137,34 +146,37 @@
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <select name="stateProvinceGeoId" class="selectBox">
-                        <#if postalFields.stateProvinceGeoId?has_content>
-                        <option>${postalFields.stateProvinceGeoId}</option>
-                        <option value="${postalFields.stateProvinceGeoId}">---</option>
-                        </#if>
+                        <option value=""></option>                       
                         ${pages.get("/includes/states.ftl")}
                       </select>
-                    *</td>
+                    </td>
                   </tr>
                   <tr>
                     <td width="26%" align=right valign=top><div class="tabletext">Zip/Postal Code</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
-                      <input type="text" class="inputBox" size="12" maxlength="10" name="postalCode" value="${postalFields.postalCode?if_exists}">
+                      <input type="text" class="inputBox" size="12" maxlength="10" name="postalCode" value="">
                     *</td>
                   </tr>
                   <tr>
                     <td width="26%" align=right valign=top><div class="tabletext">Country</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
-                      <select name="countryGeoId" class="selectBox">
-                        <#if postalFields.countryGeoId?has_content>
-                        <option>${postalFields.countryGeoId}</option>
-                        <option value="${postalFields.countryGeoId}">---</option>
-                        </#if>
+                      <select name="countryGeoId" class="selectBox">                        
                         ${pages.get("/includes/countries.ftl")}
                       </select>
                     *</td>
                   </tr>
+                  <tr>
+                    <td width="26%" align=right valign=top><div class="tabletext">Allow Solicitation?</div></td>
+                    <td width="5">&nbsp;</td>
+                    <td width="74%">
+                      <select name="allowSolicitation" class='selectBox'>                       
+                        <option></option><option>Y</option><option>N</option>
+                      </select>
+                    </td>
+                  </tr>                                    
+                </td>
                 </table>
               </form>
             </#if>

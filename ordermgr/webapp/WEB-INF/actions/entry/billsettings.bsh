@@ -36,9 +36,14 @@ cart = session.getAttribute(SiteDefs.SHOPPING_CART);
 context.put("cart", cart);
 context.put("paymentMethodType", request.getParameter("paymentMethodType"));
 
+// nuke the event messages
+request.removeAttribute(SiteDefs.EVENT_MESSAGE);
+
 if (partyId != null && !partyId.equals("_NA_")) {
     party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+    person = party.getRelatedOne("Person");
     context.put("party", party);
+    context.put("person", person);
     if (party != null) { 
         context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod"), true));
         billingAccountRoleList = delegator.findByAnd("BillingAccountRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "BILL_TO_CUSTOMER"));

@@ -174,7 +174,7 @@ function addToList() {
                   </td>
                   <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
                   <td align="right" valign="middle">
-                    <a href="${response.encodeURL("/catalog/control/EditProduct" + externalKeyParam)}" target="catalog" class="buttontext">[Create New Product]</a>
+                    <a href="/catalog/control/EditProduct?externalLoginKey=${requestAttributes.externalLoginKey}" target="catalog" class="buttontext">[Create New Product]</a>
                   </td>
                   </#if>
                 </tr>              
