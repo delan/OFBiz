@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/12/30 04:40:03  jonesde
+ * Added support for locally reading DTDs from the classpath
+ *
  * Revision 1.7  2001/12/18 14:47:40  jonesde
  * Added a couple of useful methods for creating XML
  *
@@ -351,13 +354,15 @@ public class UtilXml {
             hasDTD = false;
             String dtd = (String) dtds.get(publicId);
             
-            Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] resolving DTD with publicId [" + publicId + "] and the dtd file is [" + dtd + "]");
+            //Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] resolving DTD with publicId [" + publicId + "], systemId [" + systemId + "] and the dtd file is [" + dtd + "]");
             if (dtd != null) {
                 try {
-                    InputStream dtdStream = getClass().getResourceAsStream(dtd);
+                    URL dtdURL = UtilURL.fromResource(dtd);
+                    InputStream dtdStream = dtdURL.openStream();
                     InputSource inputSource = new InputSource(dtdStream);
+                    inputSource.setPublicId(publicId);
                     hasDTD = true;
-                    Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] got DTD input source with publicId [" + publicId + "] and the dtd file is [" + dtd + "]");
+                    Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD input source with publicId [" + publicId + "] and the dtd file is [" + dtd + "]");
                     return inputSource;
                 } catch(Exception e) {
                     Debug.logWarning(e);
