@@ -1,6 +1,17 @@
 
 BODY {
 background-color: #D4D0C8;
+margin-top: 0px;
+margin-right: 0px;
+margin-bottom: 0px;
+margin-left: 0px;
+}
+
+.centerarea {
+margin-top: 10px;
+margin-bottom: 10px;
+margin-left: 10px;
+margin-right: 10px;
 }
 
 .contentarea,.whitearea {
@@ -52,14 +63,14 @@ color: #000000;
 }
 
 .tabupleft {
-background-image: url(/images/tab_up_left.gif);
+background-image: url(/images/tabs/tab_up_left.gif);
 background-color: #D4D0C8;    
 border-width: 0px;
 padding: 0px;
 }
 
 .tabupright {
-background-image: url(/images/tab_up_right.gif);
+background-image: url(/images/tabs/tab_up_right.gif);
 background-color: #D4D0C8;
 }
 
