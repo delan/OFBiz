@@ -40,12 +40,14 @@ import org.ofbiz.commonapp.party.contact.*;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @author     Dustin Caldwell
+ * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
  * @version    $Revision$
  * @since      2.0
  */
 public class LoginEvents {
+        
+    public static final String module = LoginEvents.class.getName();
 
     /**
      * Save USERNAME and PASSWORD for use by auth pages even if we start in non-auth pages.
@@ -490,7 +492,7 @@ public class LoginEvents {
     public static String getAutoUserLoginId(HttpServletRequest request) {
         String autoUserLoginId = null;
         Cookie[] cookies = request.getCookies();
-
+        Debug.logInfo("Cookies:" + cookies, module);
         if (cookies != null) {
             for (int i = 0; i < cookies.length; i++) {
                 if (cookies[i].getName().equals(getAutoLoginCookieName(request))) {
@@ -538,8 +540,8 @@ public class LoginEvents {
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
         Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
-
         autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
+        autoLoginCookie.setPath("/");
         response.addCookie(autoLoginCookie);
         return autoLoginCheck(delegator, session, userLogin.getString("userLoginId"));
     }
@@ -551,8 +553,8 @@ public class LoginEvents {
         // remove the cookie
         if (userLogin != null) {
             Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
-
             autoLoginCookie.setMaxAge(0);
+            autoLoginCookie.setPath("/");
             response.addCookie(autoLoginCookie);
         }
         // remove the session attributes
