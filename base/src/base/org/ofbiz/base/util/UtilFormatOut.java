@@ -1,5 +1,5 @@
 /*
- * $Id: UtilFormatOut.java,v 1.5 2003/12/28 09:01:43 jonesde Exp $
+ * $Id: UtilFormatOut.java,v 1.6 2004/02/07 09:42:52 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,13 +34,21 @@ import java.util.Currency;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class UtilFormatOut {
 
     public static final String module = UtilFormatOut.class.getName();
 
+    public static String safeToString(Object obj) {
+        if (obj != null) {
+            return obj.toString();
+        } else {
+            return "";
+        }
+    }
+    
     // ------------------- price format handlers -------------------
     static DecimalFormat priceDecimalFormat = new DecimalFormat("#,##0.00");
 
