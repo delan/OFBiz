@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.40 2004/05/22 20:25:49 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.41 2004/06/01 11:27:08 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.40 $
+ * @version    $Revision: 1.41 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -98,6 +98,8 @@ public class ShoppingCart implements Serializable {
     /** Contains the promo codes entered */
     private Set productPromoCodes = new HashSet();
     private List freeShippingProductPromoActions = new ArrayList();
+    /** Note that even though this is promotion info, it should NOT be cleared when the promos are cleared, it is a preference that will be used in the next promo calculation */
+    private Map desiredAlternateGiftByAction = new HashMap();
 
     private transient GenericDelegator delegator = null;
     private String delegatorName = null;
@@ -130,6 +132,7 @@ public class ShoppingCart implements Serializable {
         this.adjustments = new LinkedList(cart.getAdjustments());
         this.contactMechIdsMap = new HashMap(cart.getOrderContactMechIds());
         this.freeShippingProductPromoActions = new ArrayList(cart.getFreeShippingProductPromoActions());
+        this.desiredAlternateGiftByAction = cart.getAllDesiredAlternateGiftByActionCopy();
         this.productPromoUseInfoList = new LinkedList(cart.productPromoUseInfoList);
         this.productPromoCodes = new HashSet(cart.productPromoCodes);
         this.locale = cart.getLocale();
@@ -464,6 +467,7 @@ public class ShoppingCart implements Serializable {
 
         this.orderAdditionalEmails = null;
         this.freeShippingProductPromoActions.clear();
+        this.desiredAlternateGiftByAction.clear();
         this.productPromoUseInfoList.clear();
         this.productPromoCodes.clear();
 
@@ -1076,7 +1080,6 @@ public class ShoppingCart implements Serializable {
     public void removeAllFreeShippingProductPromoActions() {
         this.freeShippingProductPromoActions.clear();
     }
-
     /** Removes a free shipping ProductPromoAction by trying to find one in the list with the same primary key. */
     public void removeFreeShippingProductPromoAction(GenericPK productPromoActionPK) {
         if (productPromoActionPK == null) return;
@@ -1088,7 +1091,6 @@ public class ShoppingCart implements Serializable {
             }
         }
     }
-
     /** Adds a ProductPromoAction to be used for free shipping (must be of type free shipping, or nothing will be done). */
     public void addFreeShippingProductPromoAction(GenericValue productPromoAction) {
         if (productPromoAction == null) return;
@@ -1099,9 +1101,21 @@ public class ShoppingCart implements Serializable {
         this.removeFreeShippingProductPromoAction(productPromoAction.getPrimaryKey());
         this.freeShippingProductPromoActions.add(productPromoAction);
     }
-
     public List getFreeShippingProductPromoActions() {
         return this.freeShippingProductPromoActions;
+    }
+    
+    public void removeAllDesiredAlternateGiftByActions() {
+        this.desiredAlternateGiftByAction.clear();
+    }
+    public void setDesiredAlternateGiftByAction(GenericPK productPromoActionPK, String productId) {
+        this.desiredAlternateGiftByAction.put(productPromoActionPK, productId);
+    }
+    public String getDesiredAlternateGiftByAction(GenericPK productPromoActionPK) {
+        return (String) this.desiredAlternateGiftByAction.get(productPromoActionPK);
+    }
+    public Map getAllDesiredAlternateGiftByActionCopy() {
+        return new HashMap(this.desiredAlternateGiftByAction);
     }
 
     public void addProductPromoUse(String productPromoId, String productPromoCodeId, double totalDiscountAmount, double quantityLeftInActions) {

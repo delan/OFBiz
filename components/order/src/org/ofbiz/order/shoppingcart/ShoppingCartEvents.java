@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.12 2003/12/05 23:07:13 ajzeneski Exp $
+ * $Id: ShoppingCartEvents.java,v 1.13 2004/06/01 11:27:08 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,31 +26,37 @@ package org.ofbiz.order.shoppingcart;
 import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
-import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.product.store.ProductStoreSurveyWrapper;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
-import org.ofbiz.content.webapp.control.RequestHandler;
 
 /**
  * Shopping cart events.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -413,6 +419,50 @@ public class ShoppingCartEvents {
         return cart;
     }
 
+    /** For GWP Promotions with multiple alternatives, selects an alternative to the current GWP */
+    public static String setDesiredAlternateGwpProductId(HttpServletRequest request, HttpServletResponse response) {
+        ShoppingCart cart = getCartObject(request);
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        String alternateGwpProductId = request.getParameter("alternateGwpProductId");
+        String alternateGwpLineStr = request.getParameter("alternateGwpLine");
+        
+        if (UtilValidate.isEmpty(alternateGwpProductId)) {
+            request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, no alternateGwpProductId passed.");
+            return "error";
+        }
+        if (UtilValidate.isEmpty(alternateGwpLineStr)) {
+            request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, no alternateGwpLine passed.");
+            return "error";
+        }
+        
+        int alternateGwpLine = 0;
+        try {
+            alternateGwpLine = Integer.parseInt(alternateGwpLineStr);
+        } catch (Exception e) {
+            request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, alternateGwpLine is not a valid number.");
+            return "error";
+        }
+        
+        ShoppingCartItem cartLine = cart.findCartItem(alternateGwpLine);
+        if (cartLine == null) {
+            request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, no cart line item found for #" + alternateGwpLine + ".");
+            return "error";
+        }
+        
+        if (cartLine.getIsPromo()) {
+            // note that there should just be one adjustment, the reversal of the GWP, so use that to get the promo action key 
+            Iterator checkOrderAdjustments = UtilMisc.toIterator(cartLine.getAdjustments());
+            if (checkOrderAdjustments != null && checkOrderAdjustments.hasNext()) {
+                GenericValue checkOrderAdjustment = (GenericValue) checkOrderAdjustments.next();
+                GenericPK productPromoActionPk = delegator.makeValidValue("ProductPromoAction", checkOrderAdjustment).getPrimaryKey();
+                cart.setDesiredAlternateGiftByAction(productPromoActionPk, alternateGwpProductId);
+            }
+        }
+        
+        request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, cart line item found for #" + alternateGwpLine + " does not appear to be a valid promotional gift.");
+        return "success";
+    }
+    
     /**
      * This should be called to translate the error messages of the
      * <code>ShoppingCartHelper</code> to an appropriately formatted

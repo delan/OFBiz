@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.45 2004/05/23 07:57:27 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.46 2004/06/01 11:27:09 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.45 $
+ * @version    $Revision: 1.46 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -915,6 +915,7 @@ public class ProductPromoWorker {
                 
                 List optionProductIds = new LinkedList();
                 String productId = productPromoAction.getString("productId");
+                
                 GenericValue product = null;
                 if (UtilValidate.isNotEmpty(productId)) {
                     // Debug.logInfo("======== Got GWP productId [" + productId + "]", module);
@@ -959,6 +960,22 @@ public class ProductPromoWorker {
                     if (!ProductStoreWorker.isStoreInventoryAvailable(productStoreId, optionProductId, quantity, delegator, dispatcher)) {
                         optionProductIdIter.remove();
                     }                    
+                }
+                
+                // check to see if any desired productIds have been selected for this promo action
+                String alternateGwpProductId = cart.getDesiredAlternateGiftByAction(productPromoAction.getPrimaryKey());
+                if (UtilValidate.isNotEmpty(alternateGwpProductId)) {
+                    // also check to make sure this isn't a spoofed ID somehow, check to see if it is in the Set
+                    if (optionProductIds.contains(alternateGwpProductId)) {
+                        if (UtilValidate.isNotEmpty(productId)) {
+                            optionProductIds.add(productId);
+                        }
+                        optionProductIds.remove(alternateGwpProductId);
+                        productId = alternateGwpProductId;
+                        product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+                    } else {
+                        Debug.logWarning("An alternateGwpProductId was in place, but was either not valid or is no longer in stock for ID: " + alternateGwpProductId, module);
+                    }
                 }
                 
                 // if product is null, get one from the productIds set
@@ -1229,13 +1246,11 @@ public class ProductPromoWorker {
         for (int i = 0; i < cartItems.size(); i++) {
             ShoppingCartItem checkItem = (ShoppingCartItem) cartItems.get(i);
 
-            if (checkItem.getIsPromo() && checkItem.getProductId().equals(productPromoAction.get("productId"))) {
-                // found a promo item with the productId, see if it has a matching adjustment on it
+            if (checkItem.getIsPromo()) {
+                // found a promo item, see if it has a matching adjustment on it
                 Iterator checkOrderAdjustments = UtilMisc.toIterator(checkItem.getAdjustments());
-
                 while (checkOrderAdjustments != null && checkOrderAdjustments.hasNext()) {
                     GenericValue checkOrderAdjustment = (GenericValue) checkOrderAdjustments.next();
-
                     if (productPromoAction.getString("productPromoId").equals(checkOrderAdjustment.get("productPromoId")) &&
                         productPromoAction.getString("productPromoRuleId").equals(checkOrderAdjustment.get("productPromoRuleId")) &&
                         productPromoAction.getString("productPromoActionSeqId").equals(checkOrderAdjustment.get("productPromoActionSeqId"))) {
