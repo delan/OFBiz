@@ -72,7 +72,7 @@
                   <ofbiz:unless type="String" name="productId" value="shoppingcart.CommentLine">
                     <td valign="top">
                       <div class="tabletext">
-                      <a href="/catalog/control/EditProduct?PRODUCT_ID=<%=orderItem.getString("productId")%>" class="buttontext"><%=orderItem.getString("productId")%> - <%=orderItem.getString("itemDescription")%></a>
+                      <a href="/catalog/control/EditProduct?productId=<%=orderItem.getString("productId")%>" class="buttontext"><%=orderItem.getString("productId")%> - <%=orderItem.getString("itemDescription")%></a>
                       </div>
                     </td>
                     <td align="right" valign="top">
