@@ -32,6 +32,7 @@
     <classpath type="dir" location="screens"/>
     <classpath type="jar" location="lib/*"/>
     <classpath type="jar" location="build/lib/*"/>
+    <entity-resource type="data" reader-name="main" loader="main" location="data/PosSecurityData.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/DemoRetail.xml"/>
 </ofbiz-component>
 
