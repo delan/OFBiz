@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/11/13 15:47:15  jonesde
+ * Updated upcoming events, though one small todo left there
+ *
  * Revision 1.5  2001/11/13 02:18:27  jonesde
  * Added some stuff, fixed problems
  *
@@ -127,17 +130,13 @@ public class WorkEffortWorker {
   public static void getMonthWorkEfforts(PageContext pageContext, String attributeName) {
   }
 
-  public static void getUpcomingWorkEfforts(PageContext pageContext, String daysAttrName) {
-    int numDays = 7;
+  public static void getWorkEffortsByDays(PageContext pageContext, String daysAttrName, Timestamp startDay, int numDays) {
     GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
     GenericValue userLogin = (GenericValue)pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
     //get a timestamp (date) for the beginning of today and for beginning of numDays+1 days from now
-    Calendar tempCal = Calendar.getInstance();
-    tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-    java.sql.Timestamp startStamp = new Timestamp(tempCal.getTime().getTime());
-    tempCal.add(Calendar.DAY_OF_WEEK, numDays + 1);
-    java.sql.Timestamp endStamp = new Timestamp(tempCal.getTime().getTime());
+    Timestamp startStamp = UtilDateTime.getDayStart(startDay);
+    Timestamp endStamp = UtilDateTime.getDayStart(startDay, numDays + 1);
 
     //Get the WorkEfforts
     List validWorkEfforts = null;
@@ -184,69 +183,41 @@ public class WorkEffortWorker {
         catch(GenericEntityException e) { Debug.logWarning(e); }
       }
     }
+    if(validWorkEfforts == null || validWorkEfforts.size() <= 0) return;
     
     //Split the WorkEffort list into a list for each day
     List days = new Vector();
-    List dayStarts = new Vector();
-    List curWorkEfforts = null;
-    List spanWorkEfforts = new LinkedList();
-    
-    Timestamp curDayStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
-    Timestamp curDayEnd = UtilDateTime.getNextDayStart(UtilDateTime.nowTimestamp());;
 
-    //TODO: Change algorithm so that for each day in the set we check all work efforts
-    // to see if the fall within range; if completionDate is before the dayEnd, remove from list
-    
-    Iterator wfiter = null;
-    if(validWorkEfforts != null) wfiter = validWorkEfforts.iterator();
-    while(wfiter != null && wfiter.hasNext()) {
-      GenericValue workEffort = (GenericValue)wfiter.next();
-      //Debug.log("Got workEffort: " + workEffort.toString());      
+    //For each day in the set we check all work efforts to see if they fall within range
+    for(int i=0; i<numDays; i++) {
+      Timestamp curDayStart = UtilDateTime.getDayStart(startStamp, i);
+      Timestamp curDayEnd = UtilDateTime.getDayEnd(startStamp, i);
+      List curWorkEfforts = new Vector();
       
-      Timestamp estimatedStartDate = workEffort.getTimestamp("estimatedStartDate");
-      Timestamp estimatedCompletionDate = workEffort.getTimestamp("estimatedCompletionDate");
-      if(estimatedStartDate == null || estimatedCompletionDate == null) continue;
-      
-      //move to the next day if work effort starts after current day end
-      if(curWorkEfforts == null || estimatedStartDate.after(curDayEnd)) {
-        curWorkEfforts = new Vector();
-        days.add(curWorkEfforts);
-        dayStarts.add(curDayStart);
-        curDayStart = UtilDateTime.getDayStart(estimatedStartDate);
-        curDayEnd = UtilDateTime.getNextDayStart(estimatedStartDate);
-      }
-      //if the work effort goes beyond current day, add to span list and not the normal
-      if(estimatedCompletionDate.after(curDayEnd)) {
-        spanWorkEfforts.add(workEffort);
-      }
-      else {
-        //this should never be null at this point...
-        if(curWorkEfforts != null) {
+      for(int j=0; j<validWorkEfforts.size(); j++) {
+        GenericValue workEffort = (GenericValue)validWorkEfforts.get(j);
+        //Debug.log("Got workEffort: " + workEffort.toString());      
+
+        Timestamp estimatedStartDate = workEffort.getTimestamp("estimatedStartDate");
+        Timestamp estimatedCompletionDate = workEffort.getTimestamp("estimatedCompletionDate");
+        if(estimatedStartDate == null || estimatedCompletionDate == null) continue;
+
+        if(estimatedStartDate.before(curDayEnd) && estimatedCompletionDate.after(curDayStart)) {
           curWorkEfforts.add(workEffort);
         }
-      }
-    }
-    
-    //go over the spanning work efforts and add to all days that apply
-    Iterator spanIter = spanWorkEfforts.iterator();
-    while(spanIter.hasNext()) {
-      GenericValue workEffort = (GenericValue)spanIter.next();
-      //Debug.log("Got SPAN workEffort: " + workEffort.toString());      
-      
-      Timestamp estimatedStartDate = workEffort.getTimestamp("estimatedStartDate");
-      Timestamp estimatedCompletionDate = workEffort.getTimestamp("estimatedCompletionDate");
-      
-      for(int i=0; i<days.size(); i++) {
-        curWorkEfforts = (List)days.get(i);
-        curDayStart = (Timestamp)dayStarts.get(i);
-        curDayEnd = UtilDateTime.getNextDayStart(curDayStart);
         
-        if(estimatedStartDate.before(curDayEnd) && estimatedCompletionDate.after(curDayStart)) {
-          curWorkEfforts.add(0, workEffort);
+        //if startDate is after dayEnd, continue to the next day, we haven't gotten to this one yet...
+        if(estimatedStartDate.after(curDayEnd)) break;
+        
+        //if completionDate is before the dayEnd, remove from list, we are done with it
+        if(estimatedCompletionDate.before(curDayEnd)) {
+          validWorkEfforts.remove(j);
+          j--;
         }
       }
+      if(curWorkEfforts.size() > 0) days.add(curWorkEfforts);
     }
-
+    
     pageContext.setAttribute(daysAttrName, days);
   }
 }
