@@ -240,8 +240,8 @@
         <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
         <attribute name="postalCodeGeoId" type="String" mode="IN" optional="true"/>
         <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
-        <attribute name="newContactMechId" type="String" mode="OUT" optional="true"/>
+        <!-- <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/> don't think we need this, using technique to find all that need to be updated -->
+        <attribute name="newContactMechId" type="String" mode="OUT" optional="false"/>
     </service>
 
     <service name="createTelecomNumber" engine="java"

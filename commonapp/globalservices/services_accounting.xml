@@ -82,10 +82,10 @@
         <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="setNewPaymentMethodAddress" engine="simple"
-            location="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="setPaymentMethodAddress" auth="true">
-        <description>Set the inital payment method address.</description>
-        <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
+    <service name="updatePaymentMethodAddress" engine="simple"
+            location="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="updatePaymentMethodAddress" auth="true" use-transaction="false">
+        <description>Finds CreditCards and EftAccounts that use the contactMechId and updates to the newContactMechId</description>
+        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
         <attribute name="newContactMechId" type="String" mode="IN" optional="false"/>
     </service>
 

@@ -6,8 +6,8 @@
         <condition field-name="paymentMethodId" operator="is-not-null"/>
         <action service="setPaymentMethodAddress" mode="sync"/>
     </eca>
-    <eca service="updatePostalAddress" event="commit">
-        <condition field-name="paymentMethodId" operator="is-not-null"/>
-        <action service="setNewPaymentMethodAddress" mode="sync"/>
+    <!-- do the updatePostalAddress before the return and after the commit so it can use its own transaction and not effect the updating of the PostalAddress -->
+    <eca service="updatePostalAddress" event="return">
+        <action service="updatePaymentMethodAddress" mode="sync"/>
     </eca>
 </service-eca>

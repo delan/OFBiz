@@ -130,10 +130,6 @@
     <simple-method method-name="setPaymentMethodAddress" short-description="Set the initial payment method address">
         <make-value value-name="lookupPKMap" entity-name="PaymentMethod"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <if-empty field-name="contactMechId" map-name="lookupPKMap">
-            <!-- no contact mech id, try newContactMechId -->
-            <field-to-field field-name="newContactMechId" map-name="parameters" to-field-name="contactMechId" to-map-name="lookupPKMap"/>
-        </if-empty>
         <find-by-primary-key entity-name="PaymentMethod" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <if-compare map-name="lookedUpValue" field-name="paymentMethodTypeId" operator="equals" value="CREDIT_CARD">
             <find-by-primary-key entity-name="CreditCard" map-name="lookupPKMap" value-name="mainValue"/>
@@ -151,5 +147,24 @@
                 <store-value value-name="mainValue"/>
             </if-compare-field>
         </if-compare>
+    </simple-method>
+    <simple-method method-name="updatePaymentMethodAddress" short-description="Update payment method addresses" use-transaction="false">
+        <!-- find all CreditCard and EftAccount instances that use the current contactMechId and update them
+            through the updateCreditCard or updateEftAccount services to use the newContactMechId -->
+        <field-to-field field-name="contactMechId" map-name="parameters" to-map-name="lookupMap"/>
+        
+        <find-by-and entity-name="CreditCard" map-name="lookupMap" list-name="creditCards"/>
+        <iterate entry-name="creditCard" list-name="creditCards">
+            <field-to-field field-name="newContactMechId" map-name="parameters" to-field-name="contactMechId" to-map-name="creditCard"/>
+            <!-- use the service so it will expire the old card and create a new one; don't break on error since this is a background process, just get whatever we can done... -->
+            <call-service service-name="updateCreditCard" in-map-name="creditCard" break-on-error="false"/>
+        </iterate>
+        
+        <find-by-and entity-name="EftAccount" map-name="lookupMap" list-name="eftAccounts"/>
+        <iterate entry-name="eftAccount" list-name="eftAccounts">
+            <field-to-field field-name="newContactMechId" map-name="parameters" to-field-name="contactMechId" to-map-name="eftAccount"/>
+            <!-- use the service so it will expire the old account and create a new one; don't break on error since this is a background process, just get whatever we can done... -->
+            <call-service service-name="updateEftAccount" in-map-name="eftAccount" break-on-error="false"/>
+        </iterate>
     </simple-method>
 </simple-methods>
