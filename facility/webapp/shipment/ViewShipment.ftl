@@ -25,7 +25,7 @@
  *@since      2.2
 -->
 
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
+<#if hasPermission>
 ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
 <#if shipment?exists>

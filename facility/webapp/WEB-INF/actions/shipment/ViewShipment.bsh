@@ -29,6 +29,8 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
 delegator = request.getAttribute("delegator");
+security = request.getAttribute("security");
+userLogin = session.getAttribute("userLogin");
 
 shipmentId = request.getParameter("shipmentId");
 shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
@@ -49,3 +51,21 @@ if (shipment != null) {
     context.put("originPostalAddress", shipment.getRelatedOne("OriginPostalAddress"));
     context.put("destinationPostalAddress", shipment.getRelatedOne("DestinationPostalAddress"));
 }
+
+// check permission
+hasPermission = false;
+if (security.hasEntityPermission("FACILITY", "_VIEW", session)) {
+    hasPermission = true;
+} else {
+    if (shipment != null) {
+        if (UtilValidate.isNotEmpty(shipment.get("primaryOrderId"))) {
+            // allow if userLogin is associated with the primaryOrderId with the SUPPLIER_AGENT roleTypeId
+            orderRoleCheckMap = UtilMisc.toMap("orderId", shipment.get("primaryOrderId"), "partyId", userLogin.get("partyId"), "roleTypeId", "SUPPLIER_AGENT");
+            orderRole = delegator.findByPrimaryKey("OrderRole", orderRoleCheckMap);
+            if (orderRole != null) {
+                hasPermission = true;
+            }
+        }
+    }
+}
+context.put("hasPermission", hasPermission);
