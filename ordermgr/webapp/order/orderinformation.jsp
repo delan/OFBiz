@@ -42,6 +42,7 @@
 <%String partyId = orderRole.getString("partyId");%>
 <%GenericValue userPerson = delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId",orderRole.getString("partyId")));%>    
 <%String distributorId = orderReadHelper != null ? orderReadHelper.getDistributorId() : null;%>
+<%String affiliateId = orderReadHelper != null ? orderReadHelper.getAffiliateId() : null;%>
 <%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
 <%if (billingAccount != null) pageContext.setAttribute("billingAccount", billingAccount);%>
 <%--if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);--%>
@@ -78,7 +79,7 @@
                     <%if(userPerson!=null){%>
                       <%=PartyHelper.getPersonName(userPerson)%>
                     <%}%>        
-                    &nbsp;<a href="/partymgr/control/viewprofile?party_id=<%=partyId%>" class="buttontext">[View]</a>
+                    &nbsp;(<a href="/partymgr/control/viewprofile?party_id=<%=partyId%>" class="buttontext"><%=partyId%></a>)
                     </div>
                   </td>
                 </tr>
@@ -155,6 +156,18 @@
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                       <div class="tabletext"><%=PartyHelper.formatPartyId(distributorId, delegator)%></div>
+                  </td>
+                </tr>
+              </ofbiz:if>
+              <ofbiz:if name="affiliateId">
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Affiliate</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext"><%=PartyHelper.formatPartyId(affiliateId, delegator)%></div>
                   </td>
                 </tr>
               </ofbiz:if>

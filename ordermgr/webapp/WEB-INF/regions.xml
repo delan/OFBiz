@@ -36,7 +36,7 @@
     <!-- ====== Start View Specific Regions ====== -->
     <define id='main' region='MAIN_REGION'>
         <put section='title'>Main Page</put>
-        <put section='content' content='/main.jsp'/>
+        <put section='content' content='/order/orderlist.jsp'/>
     </define>
     <define id='login' region='MAIN_REGION'>
         <put section='title'>Login Page</put>
