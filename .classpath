@@ -8,6 +8,7 @@
     <classpathentry kind="src" path="components/service/src"/>
     <classpathentry kind="src" path="components/entityext/src"/>
     <classpathentry kind="src" path="components/minilang/src"/>
+    <classpathentry kind="src" path="components/content/src"/>
     <classpathentry kind="lib" path="components/entity/lib/jotm/carol.jar"/>
     <classpathentry kind="lib" path="components/entity/lib/jotm/commons-cli.jar"/>
     <classpathentry kind="lib" path="components/entity/lib/jotm/jonas_timer.jar"/>
@@ -35,5 +36,20 @@
     <classpathentry kind="lib" path="components/service/lib/jaxrpc.jar"/>
     <classpathentry kind="lib" path="components/service/lib/saaj.jar"/>
     <classpathentry kind="lib" path="components/minilang/lib/jakarta-oro-2.0.6.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/EdenLib.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/freemarker.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/JPublish.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/velocity-1.3.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/velocity-dep-1.3.jar"/>
+    <classpathentry kind="lib" path="base/lib/commons-logging.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/commons-vfs.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/commons-vfs-providers.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/DataVision.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/gnu-regexp-1.1.4.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/iText.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/jcalendar.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/MinML2.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/jasperreports.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/jasperreports-applet.jar"/>
     <classpathentry kind="output" path="bin"/>
 </classpath>
