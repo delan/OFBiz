@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.18 2004/01/17 17:05:44 jonesde Exp $
+ * $Id: OrderReadHelper.java,v 1.19 2004/01/22 15:36:12 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -361,25 +361,30 @@ public class OrderReadHelper {
     }
 
     public GenericValue getPlacingParty() {
+        return this.getPartyFromRole("PLACING_CUSTOMER");
+    }
+
+    public GenericValue getSupplierAgent() {
+        return this.getPartyFromRole("SUPPLIER_AGENT");
+    }
+
+    public GenericValue getPartyFromRole(String roleTypeId) {
         GenericDelegator delegator = orderHeader.getDelegator();
-
+        GenericValue partyObject = null;
         try {
-            GenericValue placingRole = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", "PLACING_CUSTOMER")));
+            GenericValue orderRole = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", roleTypeId)));
 
-            if (placingRole != null) {
-                GenericValue person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", placingRole.getString("partyId")));
+            if (orderRole != null) {
+                partyObject = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", orderRole.getString("partyId")));
 
-                if (person != null)
-                    return person;
-                else
-                    return delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", placingRole.getString("partyId")));
-            } else {
-                return null;
+                if (partyObject == null) {
+                    partyObject = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", orderRole.getString("partyId")));
+                }
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
-        return null;
+        return partyObject;
     }
 
     public String getDistributorId() {

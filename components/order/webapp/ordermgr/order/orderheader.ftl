@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.14 $
+ *@version    $Revision: 1.15 $
  *@since      2.2
 -->
 
@@ -360,7 +360,7 @@
     <td width="1">&nbsp;&nbsp;</td>
     <td width="50%" valign="top" align="left">
       <#-- contact box -->
-      <#if userPerson?has_content || orderContactMechValueMaps?has_content>
+      <#if displayParty?has_content || orderContactMechValueMaps?has_content>
       <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
         <tr>
           <td width="100%">
@@ -386,8 +386,8 @@
                       <td width="5">&nbsp;</td>
                       <td NOWRAP align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          <#if userPerson?has_content>
-                            ${Static["org.ofbiz.party.party.PartyHelper"].getPersonName(userPerson)}
+                          <#if displayParty?has_content>
+                            ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(displayParty)}
                           </#if>
                           <#if partyId?exists>
                             &nbsp;(<a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${partyId}</a>)

@@ -1,5 +1,5 @@
 /*
- * $Id: PartyHelper.java,v 1.1 2003/08/17 17:57:35 ajzeneski Exp $
+ * $Id: PartyHelper.java,v 1.2 2004/01/22 15:36:12 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.GenericValue;
  * PartyHelper
  *
  * @author     <a href="mailto:epabst@bigfoot.com">Eric Pabst</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class PartyHelper {
@@ -69,27 +69,50 @@ public class PartyHelper {
         return result.toString().trim();
     }
 
-    public static String getPartyName(GenericValue userLogin) {
+    public static String getPartyName(GenericValue partyObject) {
+        return getPartyName(partyObject, false);
+    }
+
+    public static String getPartyName(GenericValue partyObject, boolean lastNameFirst) {
         StringBuffer result = new StringBuffer(20);
 
-        if (userLogin != null) {
+        GenericValue workingObject = null;
+        if ("UserLogin".equals(partyObject.getEntityName())) {
             try {
-                GenericValue person = userLogin.getDelegator().findByPrimaryKey("Person", UtilMisc.toMap("partyId", userLogin.getString("partyId")));
+                workingObject = partyObject.getDelegator().findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyObject.getString("partyId")));
 
-                if (person == null) {
-                    GenericValue group = userLogin.getDelegator().findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", userLogin.getString("partyId")));
-
-                    if (group != null)
-                        result.append(group.getString("groupName"));
-                } else {
-                    result.append(UtilFormatOut.ifNotEmpty(person.getString("firstName"), "", " "));
-                    result.append(UtilFormatOut.ifNotEmpty(person.getString("middleName"), "", " "));
-                    result.append(UtilFormatOut.checkNull(person.getString("lastName")));
+                if (workingObject == null) {
+                    workingObject = partyObject.getDelegator().findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyObject.getString("partyId")));
                 }
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
             }
+        } else {
+            workingObject = partyObject;
         }
+
+        if (workingObject != null) {
+            if ("Person".equals(workingObject.getEntityName())) {
+                if (lastNameFirst) {
+                    if (UtilFormatOut.checkNull(workingObject.getString("lastName")) != null) {
+                        result.append(UtilFormatOut.checkNull(workingObject.getString("lastName")));
+                        if (UtilFormatOut.checkNull(workingObject.getString("firstName")) != null) {
+                            result.append(", ");
+                        }
+                    }
+                    if (UtilFormatOut.checkNull(workingObject.getString("firstName")) != null) {
+                        result.append(UtilFormatOut.checkNull(workingObject.getString("firstName")));
+                    }
+                } else {
+                    result.append(UtilFormatOut.ifNotEmpty(workingObject.getString("firstName"), "", " "));
+                    result.append(UtilFormatOut.ifNotEmpty(workingObject.getString("middleName"), "", " "));
+                    result.append(UtilFormatOut.checkNull(workingObject.getString("lastName")));
+                }
+            } else if ("PartyGroup".equals(workingObject.getEntityName())) {
+                result.append(workingObject.getString("groupName"));
+            }
+        }
+
         return result.toString().trim();
     }
 }
