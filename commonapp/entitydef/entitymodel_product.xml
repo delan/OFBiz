@@ -2075,18 +2075,55 @@
     <entity entity-name="FacilityContactMech"
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Contact Mechanism Entity">
-      <description>Data Type Of: Contact Mechanism</description>
       <field name="facilityId" type="id-ne"></field>
       <field name="contactMechId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>          
+      <field name="extension" type="very-short"></field>
+      <field name="comments" type="comment"></field>
       <prim-key field="facilityId"/>
       <prim-key field="contactMechId"/>
-      <relation type="one" fk-name="FACILITY_CM_FAC" rel-entity-name="Facility">
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="FACIL_CMECH_FACIL" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
-      <relation type="one" fk-name="FACILITY_CM_CM" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="FACIL_CMECH_CMECH" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="TelecomNumber">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityContactMechPurpose">
+        <key-map field-name="facilityId"/>
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>
+    <entity entity-name="FacilityContactMechPurpose"
+            package-name="org.ofbiz.commonapp.product.storage"
+            title="Facility Contact Mechanism Purpose Entity">
+      <field name="facilityId" type="id-ne"></field>
+      <field name="contactMechId" type="id-ne"></field>
+      <field name="contactMechPurposeTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="facilityId"/>
+      <prim-key field="contactMechId"/>
+      <prim-key field="contactMechPurposeTypeId"/>
+      <prim-key field="fromDate"/>
+      <relation type="many" rel-entity-name="FacilityContactMech">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="FACIL_CMPRP_TYPE" rel-entity-name="ContactMechPurposeType">
+        <key-map field-name="contactMechPurposeTypeId"/>
+      </relation>
+      <relation type="one" fk-name="FACIL_CMPRP_FACIL" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="FACIL_CMPRP_CMECH" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+    </entity>   
     <entity entity-name="FacilityGroup"
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Group Entity">

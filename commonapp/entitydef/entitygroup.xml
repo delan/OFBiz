@@ -706,6 +706,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="FacilityAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="FacilityCarrierShipment" />
     <entity-group group="org.ofbiz.commonapp" entity="FacilityContactMech" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityContactMechPurpose" />
     <entity-group group="org.ofbiz.commonapp" entity="FacilityGroup" />
     <entity-group group="org.ofbiz.commonapp" entity="FacilityGroupMember" />
     <entity-group group="org.ofbiz.commonapp" entity="FacilityGroupRole" />
