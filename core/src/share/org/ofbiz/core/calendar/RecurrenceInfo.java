@@ -13,22 +13,22 @@ import org.ofbiz.core.util.*;
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included 
+ * <p>The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author  Andy Zeneski (jaz@zsolv.com)
@@ -54,10 +54,10 @@ public class RecurrenceInfo {
     
     /** Initializes the rules for this RecurrenceInfo object. */
     public void init() throws RecurrenceInfoException {
-                
+        
         if ( info.get("startDateTime") == null )
             throw new RecurrenceInfoException("Recurrence startDateTime cannot be null.");
-                
+        
         // Get start date
         long startTime = info.getTimestamp("startDateTime").getTime();
         if ( startTime > 0 ) {
@@ -67,7 +67,7 @@ public class RecurrenceInfo {
         else
             throw new RecurrenceInfoException("Recurrence startDateTime must have a value.");
         startDate = new Date(startTime);
-                
+        
         // Get the recurrence rules objects
         try {
             Collection c = info.getRelated("RecurrenceRule");
@@ -82,7 +82,7 @@ public class RecurrenceInfo {
         catch ( RecurrenceRuleException rre ) {
             throw new RecurrenceInfoException("Illegal rule format.");
         }
-                
+        
         // Get the exception rules objects
         try {
             Collection c = info.getRelated("ExceptionRecurrenceRule");
@@ -97,12 +97,12 @@ public class RecurrenceInfo {
         catch ( RecurrenceRuleException rre ) {
             throw new RecurrenceInfoException("Illegal rule format.");
         }
-                
+        
         // Get the recurrence date list
         rDateList = RecurrenceUtil.parseDateList(StringUtil.split(info.getString("recurrenceDateTimes"),","));
         // Get the exception date list
         eDateList = RecurrenceUtil.parseDateList(StringUtil.split(info.getString("exceptionDateTimes"),","));
-                
+        
         // Sort the lists.
         Collections.sort(rDateList);
         Collections.sort(eDateList);
@@ -147,18 +147,18 @@ public class RecurrenceInfo {
     public long getCurrentCount() {
         if ( info.get("recurrenceCount" ) != null )
             return info.getLong("recurrenceCount").longValue();
-        return 0;        
+        return 0;
     }
     
     /** Increments the current count of this recurrence. */
-    public void incrementCurrentCount() throws GenericEntityException {       
-        Long count = new Long(getCurrentCount() + 1);                
+    public void incrementCurrentCount() throws GenericEntityException {
+        Long count = new Long(getCurrentCount() + 1);
         info.set("recurrenceCount",count);
-        info.store();                
+        info.store();
     }
     
     /** Returns the first recurrence. */
-    public long first()  {
+    public long first()  {        
         return startDate.getTime();
         // TODO: Get the recurrence of a special byXXX case.
     }
@@ -178,11 +178,11 @@ public class RecurrenceInfo {
         // Check for the first recurrence (StartTime is always the first recurrence)
         if ( getCurrentCount() == 0 || fromTime == 0 || fromTime == startDate.getTime() )
             return first();
-        
+                      
         // Check the rules and date list
         if ( rDateList == null && rRulesList == null )
             return 0;
-        
+                        
         Date fromDate = new Date(fromTime);
         Date now = new Date();
         Date next = null;
@@ -190,25 +190,23 @@ public class RecurrenceInfo {
         // Get the next recurrence from the rule(s).
         long nextTime = 0;
         Iterator rulesIterator = getRecurrenceRuleIterator();
-        while ( rulesIterator.hasNext() ) {
+        while ( rulesIterator.hasNext() && nextTime == 0 ) {            
             RecurrenceRule rule = (RecurrenceRule) rulesIterator.next();
-            if ( nextTime == 0 ) {
-                nextTime = rule.next(getStartTime(), fromTime, getCurrentCount());
-                // Loop through the date list to find an earlier time
-                Iterator dateIterator = getRecurrenceDateIterator();
-                while ( dateIterator.hasNext() ) {
-                    Date thisDate = (Date) dateIterator.next();
-                    if ( thisDate.getTime() < nextTime && thisDate.getTime() > fromTime )
-                        nextTime = thisDate.getTime();
-                }
-                // Check the exception rule(s) and dates
-                Iterator exceptRulesIterator = getExceptionRuleIterator();
-                while ( exceptRulesIterator.hasNext() ) {
-                    RecurrenceRule except = (RecurrenceRule) exceptRulesIterator.next();
-                    if ( except.isValid(getStartTime(),nextTime) || eDateList.contains(new Date(nextTime)) )
-                        nextTime = 0;
-                }
-            }
+            nextTime = rule.next(getStartTime(), fromTime, getCurrentCount());
+        }
+        // Loop through the date list to find an earlier time
+        Iterator dateIterator = getRecurrenceDateIterator();
+        while ( dateIterator.hasNext() ) {
+            Date thisDate = (Date) dateIterator.next();
+            if ( thisDate.getTime() < nextTime && thisDate.getTime() > fromTime )
+                nextTime = thisDate.getTime();
+        }
+        // Check the exception rule(s) and dates
+        Iterator exceptRulesIterator = getExceptionRuleIterator();
+        while ( exceptRulesIterator.hasNext() ) {
+            RecurrenceRule except = (RecurrenceRule) exceptRulesIterator.next();
+            if ( except.isValid(getStartTime(),nextTime) || eDateList.contains(new Date(nextTime)) )
+                nextTime = 0;
         }
         
         return nextTime;

@@ -183,10 +183,15 @@ public class RecurrenceRule {
     }
     
     /** Returns the interval of the frequency. */
-    public int getInterval() {
+    public long getInterval() {
         if ( rule.get("intervalNumber") == null )
             return 1;
-        return rule.getInteger("intervalNumber").intValue();
+        return rule.getLong("intervalNumber").longValue();
+    }
+    
+    /** Returns the interval of the frequency as an int.*/
+    public int getIntervalInt() {
+        return (int) getInterval();
     }
     
     /** Returns the next recurrence of this rule.
@@ -200,18 +205,18 @@ public class RecurrenceRule {
         if ( startTime == 0 )
             startTime = RecurrenceUtil.now();
         if ( fromTime == 0 )
-            fromTime = startTime;
-        if ( currentCount == 0 )
-            currentCount = 1;
-        
+            fromTime = startTime;                        
         // Test the end time of the recurrence.
         if ( getEndTime() >= RecurrenceUtil.now() )
             return 0;
         // Test the recurrence limit.
-        if ( getCount() >= currentCount )
+        if ( currentCount > getCount() )        
             return 0;
         
-        return 0;
+        // Get the next run time by frequency.
+        Date nextRun = getNextFreq(startTime,fromTime);        
+        
+        return nextRun.getTime();
     }
     
     /** Tests the date to see if it falls within the rules
@@ -248,25 +253,25 @@ public class RecurrenceRule {
         while ( nextStartTime < fromTime ) {
             switch(getFrequency()) {
                 case SECONDLY:
-                    cal.add(Calendar.SECOND,getInterval());
+                    cal.add(Calendar.SECOND,getIntervalInt());
                     break;
                 case MINUTELY:
-                    cal.add(Calendar.MINUTE,getInterval());
+                    cal.add(Calendar.MINUTE,getIntervalInt());
                     break;
                 case HOURLY:
-                    cal.add(Calendar.HOUR,getInterval());
+                    cal.add(Calendar.HOUR,getIntervalInt());
                     break;
                 case DAILY:
-                    cal.add(Calendar.DATE,getInterval());
+                    cal.add(Calendar.DATE,getIntervalInt());
                     break;
                 case WEEKLY:
-                    cal.add(Calendar.DATE,(7*getInterval()));
+                    cal.add(Calendar.DATE,(7*getIntervalInt()));
                     break;
                 case MONTHLY:
-                    cal.add(Calendar.MONTH,getInterval());
+                    cal.add(Calendar.MONTH,getIntervalInt());
                     break;
                 case YEARLY:
-                    cal.add(Calendar.YEAR,getInterval());
+                    cal.add(Calendar.YEAR,getIntervalInt());
                     break;
                 default:
                     return null; // should never happen
