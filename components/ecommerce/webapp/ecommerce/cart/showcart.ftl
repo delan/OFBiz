@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.27 $
+ *@version    $Revision: 1.28 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -78,7 +78,12 @@ function addToList() {
             <div class="boxhead">&nbsp;${uiLabelMap.CommonQuickAdd}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="submenutext">${uiLabelMap.EcommerceContinueShopping}</a><#if (shoppingCartSize > 0)><a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceCheckout}</a><#else><span class="submenutextrightdisabled">${uiLabelMap.EcommerceCheckout}</span></#if>
+            <#if ((sessionAttributes.lastViewedProducts)?has_content && sessionAttributes.lastViewedProducts?size > 1)>
+              <#assign continueLink = "/product?product_id=" + sessionAttributes.lastViewedProducts.get(0)>
+            <#else>
+              <#assign continueLink = "/main">
+            </#if>
+            <a href="<@ofbizUrl>${continueLink}</@ofbizUrl>" class="submenutext">${uiLabelMap.EcommerceContinueShopping}</a><#if (shoppingCartSize > 0)><a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceCheckout}</a><#else><span class="submenutextrightdisabled">${uiLabelMap.EcommerceCheckout}</span></#if>
           </td>
         </tr>
       </table>
