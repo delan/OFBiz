@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,11 +23,12 @@
  */
 package org.ofbiz.base.util.collections;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.UtilMisc;
 
@@ -48,11 +49,24 @@ public class FlexibleMapAccessor {
     protected boolean isListReference = false;
     protected boolean isAddAtIndex = false;
     protected boolean isAddAtEnd = false;
+    protected boolean isAscending = true;
     protected int listIndex = -1;
     protected SubMapAccessor subMapAccessor = null;
 
     public FlexibleMapAccessor(String name) {
         this.original = name;
+        
+        // do one quick thing before getting into the Map/List stuff: if it starts with a + or - set the isAscending variable
+        if (name != null && name.length() > 0) {
+            if (name.charAt(0) == '-') {
+                this.isAscending = false;
+                name = name.substring(1);
+            } else if (name.charAt(0) == '+') {
+                this.isAscending = true;
+                name = name.substring(1);
+            }
+        }
+
         int dotIndex = name.lastIndexOf('.');
         if (dotIndex != -1) {
             this.extName = name.substring(dotIndex+1);
@@ -84,6 +98,10 @@ public class FlexibleMapAccessor {
     
     public String getOriginalName() {
         return this.original;
+    }
+    
+    public boolean getIsAscending() {
+        return this.isAscending;
     }
     
     public boolean isEmpty() {
@@ -285,7 +303,7 @@ public class FlexibleMapAccessor {
                     extMap = (Map) lst.get(this.listIndex);
                 }
                 if (forPut && extMap == null) {
-                    extMap = new HashMap();
+                    extMap = FastMap.newInstance();
                     lst.add(this.listIndex, extMap);
                 }
                 
@@ -295,7 +313,7 @@ public class FlexibleMapAccessor {
                 
                 // this code creates a new Map if none is missing, but for a get or remove this is a bad idea...
                 if (forPut && extMap == null) {
-                    extMap = new HashMap();
+                    extMap = FastMap.newInstance();
                     base.put(this.extName, extMap);
                 }
                 return extMap;

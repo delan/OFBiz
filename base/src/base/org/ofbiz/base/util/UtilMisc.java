@@ -33,6 +33,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.ofbiz.base.util.collections.MapComparator;
@@ -176,7 +177,8 @@ public class UtilMisc {
     public static List sortMaps(List listOfMaps, List sortKeys) {
         if (listOfMaps == null || sortKeys == null)
             return null;
-        List toSort = new LinkedList(listOfMaps);
+        List toSort = FastList.newInstance();
+        toSort.addAll(listOfMaps);
         try {
             MapComparator mc = new MapComparator(sortKeys);
             Collections.sort(toSort, mc);
