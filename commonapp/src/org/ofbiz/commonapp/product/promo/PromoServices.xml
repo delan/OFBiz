@@ -144,7 +144,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
         <if-empty field-name="fromDate" map-name="newEntity">
-            <make-now-timestamp env-name="nowTimestamp"/>
+            <now-timestamp-to-env env-name="nowTimestamp"/>
             <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
         </if-empty>
         
