@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.26 2003/12/20 08:27:43 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.27 2004/01/12 17:18:19 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -639,8 +639,9 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns true if shipping charges apply to this item. */
     public boolean shippingApplies() {
-        if (_product != null) {
-            return ProductWorker.shippingApplies(getProduct());
+        GenericValue product = getProduct();
+        if (product != null) {
+            return ProductWorker.shippingApplies(product);
         } else {
             // we don't ship non-product items
             return false;
@@ -649,8 +650,9 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns true if tax charges apply to this item. */
     public boolean taxApplies() {
-        if (_product != null) {
-            return ProductWorker.taxApplies(getProduct());
+        GenericValue product = getProduct();
+        if (product != null) {
+            return ProductWorker.taxApplies(product);
         } else {
             // we do tax non-product items
             return true;
@@ -664,19 +666,24 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns the item's description. */
     public String getName() {
-        if (getProduct() != null) {
-            String productName = ProductContentWrapper.getProductContentAsText(getProduct(), "PRODUCT_NAME", this.locale, null, null);
+        GenericValue product = getProduct();
+        
+        if (product != null) {
+            String productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", this.locale);
 
             // if the productName is null or empty, see if there is an associated virtual product and get the productName of that product
             if (UtilValidate.isEmpty(productName)) {
                 GenericValue parentProduct = this.getParentProduct();
                 if (parentProduct != null) {
-                    productName = ProductContentWrapper.getProductContentAsText(parentProduct, "PRODUCT_NAME", this.locale, null, null);
-                    productName = parentProduct.getString("productName");
+                    productName = ProductContentWrapper.getProductContentAsText(parentProduct, "PRODUCT_NAME", this.locale);
                 }
             }
 
-            return productName;
+            if (productName == null) {
+                return "";
+            } else {
+                return productName;
+            }
         } else {
             return itemDescription;
         }
@@ -684,18 +691,24 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns the item's description. */
     public String getDescription() {
-        if (getProduct() != null) {
-            String description = ProductContentWrapper.getProductContentAsText(getProduct(), "DESCRIPTION", this.locale, null, null);
+        GenericValue product = getProduct();
+        
+        if (product != null) {
+            String description = ProductContentWrapper.getProductContentAsText(product, "DESCRIPTION", this.locale);
 
             // if the description is null or empty, see if there is an associated virtual product and get the description of that product
             if (UtilValidate.isEmpty(description)) {
                 GenericValue parentProduct = this.getParentProduct();
                 if (parentProduct != null) {
-                    description = ProductContentWrapper.getProductContentAsText(parentProduct, "DESCRIPTION", this.locale, null, null);
+                    description = ProductContentWrapper.getProductContentAsText(parentProduct, "DESCRIPTION", this.locale);
                 }
             }
 
-            return description;
+            if (description == null) {
+                return "";
+            } else {
+                return description;
+            }
         } else {
             return null;
         }
@@ -703,8 +716,9 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns the item's unit weight */
     public double getWeight() {
-        if (_product != null) {
-            Double weight = getProduct().getDouble("weight");
+        GenericValue product = getProduct();
+        if (product != null) {
+            Double weight = product.getDouble("weight");
 
             // if the weight is null, see if there is an associated virtual product and get the weight of that product
             if (weight == null) {
@@ -725,18 +739,19 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns the item's size (height * width * depth) */
     public double getSize() {
-        if (_product != null) {
-            Double height = getProduct().getDouble("productHeight");
-            Double width = getProduct().getDouble("productWidth");
-            Double depth = getProduct().getDouble("productDepth");
+        GenericValue product = getProduct();
+        if (product != null) {
+            Double height = product.getDouble("productHeight");
+            Double width = product.getDouble("productWidth");
+            Double depth = product.getDouble("productDepth");
 
             // if all are null, see if there is an associated virtual product and get the info of that product
             if (height == null & width == null && depth == null) {
                 GenericValue parentProduct = this.getParentProduct();
                 if (parentProduct != null) {
                     height = parentProduct.getDouble("productHeight");
-                    width = getProduct().getDouble("productWidth");
-                    depth = getProduct().getDouble("productDepth");
+                    width = product.getDouble("productWidth");
+                    depth = product.getDouble("productDepth");
                 }
             }
 
@@ -1090,13 +1105,12 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (this._product != null) {
             return this._product;
         }
-        if (this.productId == null) {
-            throw new IllegalStateException("Bad product id");
-        }
-        try {
-            this._product = this.getDelegator().findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
-        } catch (GenericEntityException e) {
-            throw new RuntimeException("Entity Engine error getting Product (" + e.getMessage() + ")");
+        if (this.productId != null) {
+            try {
+                this._product = this.getDelegator().findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+            } catch (GenericEntityException e) {
+                throw new RuntimeException("Entity Engine error getting Product (" + e.getMessage() + ")");
+            }
         }
         return this._product;
     }
