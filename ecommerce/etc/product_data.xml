@@ -3,6 +3,7 @@
   <Facility facilityId="WebStoreWarehouse" facilityTypeId="WAREHOUSE" facilityName="Web Store Warehouse" description="Warehouse exclusively for the Web Store "/>
 
   <WebSite webSiteId="WebStore" siteName="eCommerce Web Site"/>
+  <WebSite webSiteId="OrderEntry" siteName="Order Entry Web Site"/>
 
   <ProdCatalog prodCatalogId="DemoCatalog" catalogName="Demo Catalog" title="Open For Commerce" 
     subtitle="Part of the Open For Business Family of Open Source Software" inventoryFacilityId="WebStoreWarehouse" 
@@ -12,6 +13,8 @@
     oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" useQuickAdd="N"/>
   <WebSiteCatalog webSiteId="WebStore" prodCatalogId="DemoCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
   <WebSiteCatalog webSiteId="WebStore" prodCatalogId="TestCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+  <WebSiteCatalog webSiteId="OrderEntry" prodCatalogId="DemoCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+  <WebSiteCatalog webSiteId="OrderEntry" prodCatalogId="TestCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
 
   <ProductCategory description="Demo Browse Root"
     longDescription="Demo Catalog Primary Browse Root Category" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
