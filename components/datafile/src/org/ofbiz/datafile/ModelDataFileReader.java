@@ -1,5 +1,5 @@
 /*
- * $Id: ModelDataFileReader.java,v 1.1 2003/08/19 00:27:10 jonesde Exp $
+ * $Id: ModelDataFileReader.java,v 1.2 2004/04/09 21:12:31 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * Flat File definition reader
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 
@@ -148,8 +148,9 @@ public class ModelDataFileReader {
 
                             }
                         } while ((curChild = curChild.getNextSibling()) != null);
-                    } else
+                    } else {
                         Debug.logWarning("No child nodes found.", module);
+                    }
                     utilTimer.timerString("Finished file " + readerURL + " - Total Flat File Defs: " + i + " FINISHED");
                 }
             }
@@ -164,10 +165,11 @@ public class ModelDataFileReader {
     public ModelDataFile getModelDataFile(String dataFileName) {
         Map ec = getModelDataFiles();
 
-        if (ec != null)
+        if (ec != null) {
             return (ModelDataFile) ec.get(dataFileName);
-        else
+        } else {
             return null;
+        }
     }
 
     /** Creates a Iterator with the dataFileName of each DataFile defined in the specified XML DataFile Descriptor file.
@@ -176,10 +178,11 @@ public class ModelDataFileReader {
     public Iterator getDataFileNamesIterator() {
         Collection collection = getDataFileNames();
 
-        if (collection != null)
+        if (collection != null) {
             return collection.iterator();
-        else
+        } else {
             return null;
+        }
     }
 
     /** Creates a Collection with the dataFileName of each DataFile defined in the specified XML DataFile Descriptor file.
@@ -201,11 +204,13 @@ public class ModelDataFileReader {
         dataFile.receiver = UtilXml.checkEmpty(dataFileElement.getAttribute("receiver"));
 
         tempStr = UtilXml.checkEmpty(dataFileElement.getAttribute("record-length"));
-        if (tempStr != null && tempStr.length() > 0)
+        if (tempStr != null && tempStr.length() > 0) {
             dataFile.recordLength = Integer.parseInt(tempStr);
+        }
         tempStr = UtilXml.checkEmpty(dataFileElement.getAttribute("delimiter"));
-        if (tempStr != null && tempStr.length() == 1)
+        if (tempStr != null && tempStr.length() == 1) {
             dataFile.delimiter = tempStr.charAt(0);
+        }
 
         dataFile.separatorStyle = UtilXml.checkEmpty(dataFileElement.getAttribute("separator-style"));
         dataFile.description = UtilXml.checkEmpty(dataFileElement.getAttribute("description"));
@@ -216,10 +221,11 @@ public class ModelDataFileReader {
             Element recordElement = (Element) rList.item(i);
             ModelRecord modelRecord = createModelRecord(recordElement);
 
-            if (modelRecord != null)
+            if (modelRecord != null) {
                 dataFile.records.add(modelRecord);
-            else
+            } else {
                 Debug.logWarning("[ModelDataFileReader.createModelDataFile] Weird, modelRecord was null", module);
+            }
         }
 
         for (int i = 0; i < dataFile.records.size(); i++) {
@@ -253,15 +259,18 @@ public class ModelDataFileReader {
         if (record.tcMax.length() > 0) record.tcMaxNum = Long.parseLong(record.tcMax);
 
         tempStr = UtilXml.checkEmpty(recordElement.getAttribute("tc-isnum"));
-        if (tempStr != null && tempStr.length() > 0)
+        if (tempStr != null && tempStr.length() > 0) {
             record.tcIsNum = Boolean.valueOf(tempStr).booleanValue();
+        }
 
         tempStr = UtilXml.checkEmpty(recordElement.getAttribute("tc-position"));
-        if (tempStr != null && tempStr.length() > 0)
+        if (tempStr != null && tempStr.length() > 0) {
             record.tcPosition = Integer.parseInt(tempStr);
+        }
         tempStr = UtilXml.checkEmpty(recordElement.getAttribute("tc-length"));
-        if (tempStr != null && tempStr.length() > 0)
+        if (tempStr != null && tempStr.length() > 0) {
             record.tcLength = Integer.parseInt(tempStr);
+        }
 
         record.description = UtilXml.checkEmpty(recordElement.getAttribute("description"));
         record.parentName = UtilXml.checkEmpty(recordElement.getAttribute("parent-name"));
@@ -280,10 +289,11 @@ public class ModelDataFileReader {
             }
             priorEnd = modelField.position + modelField.length;
 
-            if (modelField != null)
+            if (modelField != null) {
                 record.fields.add(modelField);
-            else
+            } else {
                 Debug.logWarning("[ModelDataFileReader.createModelRecord] Weird, modelField was null", module);
+            }
         }
 
         return record;
@@ -296,11 +306,13 @@ public class ModelDataFileReader {
         field.name = UtilXml.checkEmpty(fieldElement.getAttribute("name"));
 
         tempStr = UtilXml.checkEmpty(fieldElement.getAttribute("position"));
-        if (tempStr != null && tempStr.length() > 0)
+        if (tempStr != null && tempStr.length() > 0) {
             field.position = Integer.parseInt(tempStr);
+        }
         tempStr = UtilXml.checkEmpty(fieldElement.getAttribute("length"));
-        if (tempStr != null && tempStr.length() > 0)
+        if (tempStr != null && tempStr.length() > 0) {
             field.length = Integer.parseInt(tempStr);
+        }
 
         field.type = UtilXml.checkEmpty(fieldElement.getAttribute("type"));
         field.format = UtilXml.checkEmpty(fieldElement.getAttribute("format"));
@@ -308,8 +320,9 @@ public class ModelDataFileReader {
         field.description = UtilXml.checkEmpty(fieldElement.getAttribute("description"));
 
         tempStr = UtilXml.checkEmpty(fieldElement.getAttribute("prim-key"));
-        if (tempStr != null && tempStr.length() == 1)
+        if (tempStr != null && tempStr.length() > 0) {
             field.isPk = Boolean.valueOf(tempStr).booleanValue();
+        }
 
         return field;
     }
@@ -325,8 +338,9 @@ public class ModelDataFileReader {
             // Error generated during parsing)
             Exception x = sxe;
 
-            if (sxe.getException() != null)
+            if (sxe.getException() != null) {
                 x = sxe.getException();
+            }
             x.printStackTrace();
         } catch (ParserConfigurationException pce) {
             // Parser with specified options can't be built
