@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/08/31 17:44:04  epabst
+ * added shopping cart code
+ *
  * Revision 1.4  2001/08/30 22:16:10  epabst
  * added new event for adding items from order to cart
  * improved/fixed orderstatus
@@ -204,31 +207,34 @@ public class ShoppingCartEvents {
         Iterator i = names.iterator();
         while ( i.hasNext() ) {
             String o = (String) i.next();
-            try {
-                String indexStr = o.substring(o.lastIndexOf('_')+1);
-                int index = Integer.parseInt(indexStr);
-                int quantity = Integer.parseInt((String) paramMap.get(o));
-                Debug.log("Got index: " + index + "  AND  quantity: " + quantity);
-                
-                if ( o.toUpperCase().startsWith("UPDATE") ) {
-                    if ( quantity == 0 ) {                        
-                        deleteList.add(cart.findCartItem(index));
+            int underscorePos = o.lastIndexOf('_');
+            if (underscorePos >= 0) {
+                try {
+                    String indexStr = o.substring(underscorePos+1);
+                    int index = Integer.parseInt(indexStr);
+                    int quantity = Integer.parseInt((String) paramMap.get(o));
+                    Debug.log("Got index: " + index + "  AND  quantity: " + quantity);
+
+                    if ( o.toUpperCase().startsWith("UPDATE") ) {
+                        if ( quantity == 0 ) {                        
+                            deleteList.add(cart.findCartItem(index));
+                            Debug.log("Added index: " + index + " to delete list.");
+                        }
+                        else {
+                            Debug.log("Setting quantity.");
+                            cart.findCartItem(index).setQuantity(quantity);
+                        }
+                    }
+
+                    if ( o.toUpperCase().startsWith("DELETE") ) {                    
+                        deleteList.add(cart.findCartItem(index));                    
                         Debug.log("Added index: " + index + " to delete list.");
                     }
-                    else {
-                        Debug.log("Setting quantity.");
-                        cart.findCartItem(index).setQuantity(quantity);
-                    }
                 }
-                
-                if ( o.toUpperCase().startsWith("DELETE") ) {                    
-                    deleteList.add(cart.findCartItem(index));                    
-                    Debug.log("Added index: " + index + " to delete list.");
+                catch ( NumberFormatException nfe ) {
+                    Debug.log(nfe,"Caught number format exception.");
                 }
-            }
-            catch ( NumberFormatException nfe ) {
-                Debug.log(nfe,"Caught number format exception.");
-            }
+            }//else not a parameter we need
         }
         
         Iterator di = deleteList.iterator();
