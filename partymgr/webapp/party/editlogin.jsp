@@ -38,21 +38,20 @@
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
 <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
-
 <%
-        String userLoginId = request.getParameter("userlogin_id");
-        if (userLoginId == null) userLoginId = (String) request.getSession().getAttribute("userLoginId");
-        else request.getSession().setAttribute("userLoginId", userLoginId);
+    String userLoginId = request.getParameter("userlogin_id");
+    if (userLoginId == null) userLoginId = (String) request.getSession().getAttribute("userLoginId");
+    else request.getSession().setAttribute("userLoginId", userLoginId);
 
-        GenericValue userUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
-        if (userUserLogin != null) pageContext.setAttribute("userUserLogin", userUserLogin);
+    GenericValue userUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+    if (userUserLogin != null) pageContext.setAttribute("userUserLogin", userUserLogin);
 
-        boolean tryEntity = true;
-        if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
-        pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
+    boolean tryEntity = true;
+    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+    pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 
-        String donePage = request.getParameter("DONE_PAGE");
-        if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
+    String donePage = request.getParameter("DONE_PAGE");
+    if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 %>
   <br>
   <p class="head1">Change UserLogin Password</p>
@@ -74,7 +73,7 @@
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Password Hint</div></td>
-      <td width="74%"><input type="text" size="40" maxlength="100" name="passwordHint" value="<ofbiz:entityfield attribute="userUserLogin" field="passwordHint"/>"></td>
+      <td width="74%"><input type="text" size="40" maxlength="100" name="passwordHint" value='<ofbiz:entityfield attribute="userUserLogin" field="passwordHint"/>'></td>
     </tr>
   </table>
   </form>
@@ -100,11 +99,11 @@
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Disabled Date</div></td>
-      <td width="74%"><input type="text" size="20" name="disabledDateTime" value="<ofbiz:inputvalue entityAttr="userUserLogin" field="disabledDateTime"/>"></td>
+      <td width="74%"><input type="text" size="20" name="disabledDateTime" value='<ofbiz:inputvalue entityAttr="userUserLogin" field="disabledDateTime"/>'></td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Successive Failed Logins</div></td>
-      <td width="74%"><input type="text" size="5" name="successiveFailedLogins" value="<ofbiz:inputvalue entityAttr="userUserLogin" field="successiveFailedLogins"/>"></td>
+      <td width="74%"><input type="text" size="5" name="successiveFailedLogins" value='<ofbiz:inputvalue entityAttr="userUserLogin" field="successiveFailedLogins"/>'></td>
     </tr>
   </table>
   </form>

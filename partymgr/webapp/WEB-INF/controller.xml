@@ -218,19 +218,40 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editlogin"/>
     </request-map>
-
     <request-map uri="updatePassword">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updatePassword"/>
         <response name="success" type="view" value="editlogin"/>
         <response name="error" type="view" value="editlogin"/>
     </request-map>
-
     <request-map uri="updateUserLoginSecurity">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateUserLoginSecurity"/>
         <response name="success" type="view" value="editlogin"/>
         <response name="error" type="view" value="editlogin"/>
+    </request-map>
+
+    <request-map uri="EditUserLoginSecurityGroups">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditUserLoginSecurityGroups"/>
+    </request-map>
+    <request-map uri="userLogin_addUserLoginToSecurityGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="addUserLoginToSecurityGroup"/>
+        <response name="success" type="view" value="EditUserLoginSecurityGroups"/>
+        <response name="error" type="view" value="EditUserLoginSecurityGroups"/>
+    </request-map>
+    <request-map uri="userLogin_updateUserLoginToSecurityGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateUserLoginToSecurityGroup"/>
+        <response name="success" type="view" value="EditUserLoginSecurityGroups"/>
+        <response name="error" type="view" value="EditUserLoginSecurityGroups"/>
+    </request-map>
+    <request-map uri="userLogin_removeUserLoginFromSecurityGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeUserLoginFromSecurityGroup"/>
+        <response name="success" type="view" value="EditUserLoginSecurityGroups"/>
+        <response name="error" type="view" value="EditUserLoginSecurityGroups"/>
     </request-map>
 
     <request-map uri="createnewlogin">
@@ -292,14 +313,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditSecurityGroupPermissions"/>
     </request-map>
-
     <request-map uri="addSecurityPermissionToSecurityGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="addSecurityPermissionToSecurityGroup"/>
         <response name="success" type="view" value="EditSecurityGroupPermissions"/>
         <response name="error" type="view" value="EditSecurityGroupPermissions"/>
     </request-map>
-
     <request-map uri="removeSecurityPermissionFromSecurityGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="removeSecurityPermissionFromSecurityGroup"/>
@@ -311,21 +330,18 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditSecurityGroupUserLogins"/>
     </request-map>
-
     <request-map uri="addUserLoginToSecurityGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="addUserLoginToSecurityGroup"/>
         <response name="success" type="view" value="EditSecurityGroupUserLogins"/>
         <response name="error" type="view" value="EditSecurityGroupUserLogins"/>
     </request-map>
-
     <request-map uri="updateUserLoginToSecurityGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateUserLoginToSecurityGroup"/>
         <response name="success" type="view" value="EditSecurityGroupUserLogins"/>
         <response name="error" type="view" value="EditSecurityGroupUserLogins"/>
     </request-map>
-
     <request-map uri="removeUserLoginFromSecurityGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="removeUserLoginFromSecurityGroup"/>
@@ -337,14 +353,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="createnewnote"/>
     </request-map>
-
     <request-map uri="createpartynote">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPartyNote"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="createnewnote"/>
     </request-map>
-
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -357,6 +371,7 @@
     <view-map name="editcreditcard" type="region"/>
     <view-map name="editeftaccount" type="region"/>
     <view-map name="editlogin" type="region"/>
+    <view-map name="EditUserLoginSecurityGroups" type="region"/>
     <view-map name="editperson" type="region"/>
     <view-map name="findparty" type="region"/>
     <view-map name="createnewlogin" type="region"/>

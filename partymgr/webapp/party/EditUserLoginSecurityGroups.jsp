@@ -30,14 +30,17 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
-
+<%try {%>
 <%if (security.hasEntityPermission("SECURITY", "_VIEW", session)) {%>
 <%
-    String groupId = request.getParameter("groupId");
+    String userLoginId = request.getParameter("userLoginId");
     Collection userLoginSecurityGroups = delegator.findByAnd("UserLoginSecurityGroup", 
-            UtilMisc.toMap("groupId", groupId), 
-            UtilMisc.toList("userLoginId"));
+            UtilMisc.toMap("userLoginId", userLoginId), 
+            UtilMisc.toList("groupId"));
     if (userLoginSecurityGroups != null) pageContext.setAttribute("userLoginSecurityGroups", userLoginSecurityGroups);
+
+    Collection securityGroups = delegator.findAll("SecurityGroup", UtilMisc.toList("description", "groupId"));
+    if (securityGroups != null) pageContext.setAttribute("securityGroups", securityGroups);
 
     int viewIndex = 0;
     int viewSize = 20;
@@ -66,15 +69,9 @@
 %>
 <br>
 
-<a href="<ofbiz:url>/FindSecurityGroup</ofbiz:url>" class="buttontext">[All SecurityGroups]</a>
-<a href="<ofbiz:url>/EditSecurityGroup</ofbiz:url>" class="buttontext">[New SecurityGroup]</a>
-<%if(groupId != null && groupId.length() > 0){%>
-  <a href="<ofbiz:url>/EditSecurityGroup?groupId=<%=groupId%></ofbiz:url>" class="buttontext">[SecurityGroup]</a>
-  <a href="<ofbiz:url>/EditSecurityGroupPermissions?groupId=<%=groupId%></ofbiz:url>" class="buttontext">[Permissions]</a>
-  <a href="<ofbiz:url>/EditSecurityGroupUserLogins?groupId=<%=groupId%></ofbiz:url>" class="buttontextdisabled">[UserLogins]</a>
-<%}%>
+<a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">[Back To Profile]</a>
 
-<div class="head1">UserLogins for SecurityGroup with ID "<%=UtilFormatOut.checkNull(groupId)%>"</div>
+<div class="head1">SecurityGroups for UserLogin with ID "<%=UtilFormatOut.checkNull(userLoginId)%>"</div>
 
 <ofbiz:if name="userLoginSecurityGroups" size="0">
   <table border="0" width="100%" cellpadding="2">
@@ -82,50 +79,45 @@
       <td align=right>
         <b>
         <%if (viewIndex > 0) {%>
-          <a href="<ofbiz:url><%="/EditSecurityGroupUserLogins?groupId=" + groupId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/EditUserLoginSecurityGroups?userLoginId=" + userLoginId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if (listSize > 0) {%>
           <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if (listSize > highIndex) {%>
-          | <a href="<ofbiz:url><%="/EditSecurityGroupUserLogins?groupId=" + groupId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/EditUserLoginSecurityGroups?userLoginId=" + userLoginId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
     </tr>
   </table>
 </ofbiz:if>
-<%if (groupId != null){%>
+<%if (userLoginId != null){%>
 <table border="1" cellpadding='2' cellspacing='0' width='100%'>
   <tr>
-    <td><div class="tabletext"><b>UserLogin&nbsp;ID</b></div></td>
+    <td><div class="tabletext"><b>SecurityGroup&nbsp;ID</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
     <td><div class="tabletext"><b>Thru&nbsp;Date</b></div></td>
-    <td><div class="tabletext"><b>Party&nbsp;ID</b></div></td>
     <td width='1%'><div class="tabletext">&nbsp;</div></td>
   </tr>
 <ofbiz:iterator name="userLoginSecurityGroup" property="userLoginSecurityGroups" offset="<%=lowIndex%>" limit="<%=viewSize%>">
-  <%GenericValue userLogin = userLoginSecurityGroup.getRelatedOne("UserLogin");%>
-  <%if (userLogin != null) pageContext.setAttribute("userLogin", userLogin);%>
   <tr valign="middle">
-    <td><a href='<ofbiz:url>/editlogin?userLoginId=<ofbiz:entityfield attribute="userLoginSecurityGroup" field="userLoginId"/></ofbiz:url>' class='buttontext'>
-        <ofbiz:entityfield attribute="userLoginSecurityGroup" field="userLoginId"/></a>
+    <td><a href='<ofbiz:url>/EditSecurityGroup?groupId=<ofbiz:entityfield attribute="userLoginSecurityGroup" field="groupId"/></ofbiz:url>' class='buttontext'>
+        <ofbiz:entityfield attribute="userLoginSecurityGroup" field="groupId"/></a>
     </td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="fromDate"/></div></td>
     <td>
-        <form action='<ofbiz:url>/updateUserLoginToSecurityGroup</ofbiz:url>' method=POST style='margin: 0;'>
+        <form action='<ofbiz:url>/userLogin_updateUserLoginToSecurityGroup</ofbiz:url>' method=POST style='margin: 0;'>
             <input type=hidden name='userLoginId' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="userLoginId"/>'>
             <input type=hidden name='groupId' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="groupId"/>'>
             <input type=hidden name='fromDate' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="fromDate"/>'>
-            <input type=text <ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="thruDate" fullattrs="true"/>>
+            <input type=text size='22' <ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="thruDate" fullattrs="true"/>>
             <input type=submit value='Update'>
         </form>
     </td>
-    <td><a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="userLogin" field="partyId"/></ofbiz:url>' class='buttontext'>
-        <ofbiz:entityfield attribute="userLogin" field="partyId"/></a>
     </td>
     <td>
-      <a href='<ofbiz:url>/removeUserLoginFromSecurityGroup?userLoginId=<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="userLoginId"/>&groupId=<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="groupId"/>&fromDate=<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="fromDate"/></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/userLogin_removeUserLoginFromSecurityGroup?userLoginId=<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="userLoginId"/>&groupId=<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="groupId"/>&fromDate=<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="fromDate"/></ofbiz:url>' class="buttontext">
       [Remove]</a>
     </td>
   </tr>
@@ -137,13 +129,13 @@
       <td align=right>
         <b>
         <%if (viewIndex > 0) {%>
-          <a href="<ofbiz:url><%="/EditSecurityGroupUserLogins?groupId=" + groupId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/EditUserLoginSecurityGroups?userLoginId=" + userLoginId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if (listSize > 0) {%>
           <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if (listSize > highIndex) {%>
-          | <a href="<ofbiz:url><%="/EditSecurityGroupUserLogins?groupId=" + groupId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/EditUserLoginSecurityGroups?userLoginId=" + userLoginId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
@@ -151,17 +143,22 @@
   </table>
 </ofbiz:if>
 <br>
-<form method="POST" action="<ofbiz:url>/addUserLoginToSecurityGroup</ofbiz:url>" style='margin: 0;' name='addUserLoginToSecurityGroupForm'>
-  <input type="hidden" name="groupId" value="<%=groupId%>">
+<form method="POST" action="<ofbiz:url>/userLogin_addUserLoginToSecurityGroup</ofbiz:url>" style='margin: 0;' name='addUserLoginToSecurityGroupForm'>
+  <input type="hidden" name="userLoginId" value="<%=userLoginId%>">
   <input type="hidden" name="useValues" value="true">
   <%-- <input type=hidden name='activeOnly' value='<%=new Boolean(activeOnly).toString()%>'> --%>
 
   <script language='JavaScript'>
       function setUltsgFromDate() { document.addUserLoginToSecurityGroupForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
   </script>
-  <div class='head2'>Add UserLogin to this Security Group:</div>
+  <div class='head2'>Add Security Group to this UserLogin:</div>
   <div class='tabletext'>
-    UserLogin ID: <input type=text size='60' name='userLoginId'>
+    Security Group ID: <%-- <input type=text size='60' name='groupId'> --%>
+      <select name="groupId">
+      <ofbiz:iterator name="securityGroup" property="securityGroups">
+        <option value='<ofbiz:entityfield attribute="securityGroup" field="groupId"/>'><ofbiz:entityfield attribute="securityGroup" field="description"/> [<ofbiz:entityfield attribute="securityGroup" field="groupId"/>]</option>
+      </ofbiz:iterator>
+      </select>
     <br>
     From Date: <a href='#' onclick='setUltsgFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' name='fromDate'>
     <input type="submit" value="Add">
@@ -173,3 +170,4 @@
 <%}else{%>
   <h3>You do not have permission to view this page. ("SECURITY_VIEW" or "SECURITY_ADMIN" needed)</h3>
 <%}%>
+<%} catch (Exception e) { Debug.logError(e); throw e; } %>

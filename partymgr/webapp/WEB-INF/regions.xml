@@ -64,8 +64,12 @@
     </define>
 
     <define id='editlogin' region='MAIN_REGION'>
-        <put section='title'>Change Password</put>
+        <put section='title'>Edit User Login Info</put>
         <put section='content' content='/party/editlogin.jsp'/>
+    </define>
+    <define id='EditUserLoginSecurityGroups' region='MAIN_REGION'>
+        <put section='title'>Edit User Login Info</put>
+        <put section='content' content='/party/EditUserLoginSecurityGroups.jsp'/>
     </define>
 
     <define id='editperson' region='MAIN_REGION'>

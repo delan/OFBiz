@@ -428,6 +428,9 @@
                 </td>
                 <td align="right" valign="top" width="20%">
                   <a href="<ofbiz:url>/editlogin?userlogin_id=<%entityField.run("userUserLogin", "userLoginId");%></ofbiz:url>" class="buttontext">[Edit]</a>&nbsp;
+                  <%if (security.hasEntityPermission("SECURITY", "_VIEW", session)) {%>
+                      <a href="<ofbiz:url>/EditUserLoginSecurityGroups?userLoginId=<%entityField.run("userUserLogin", "userLoginId");%></ofbiz:url>" class="buttontext">[SecurityGroups]</a>&nbsp;
+                  <%}%>
                 </td>
               </tr>
               </ofbiz:iterator>
@@ -455,7 +458,7 @@
           <td valign="middle" align="right">&nbsp;
             <select name="roleTypeId">
               <ofbiz:iterator name="role" property="roles">
-                 <option value="<ofbiz:entityfield attribute="role" field="roleTypeId"/>"><ofbiz:entityfield attribute="role" field="description"/> [<ofbiz:entityfield attribute="role" field="roleTypeId"/>]</option>
+                 <option value='<ofbiz:entityfield attribute="role" field="roleTypeId"/>'><ofbiz:entityfield attribute="role" field="description"/> [<ofbiz:entityfield attribute="role" field="roleTypeId"/>]</option>
               </ofbiz:iterator>
             </select>
             &nbsp;&nbsp;
@@ -478,7 +481,7 @@
                 <td width="5">&nbsp;</td>
                 <td align="left" valign="top" width="70%"><div class="tabletext"><ofbiz:entityfield attribute="userRole" field="description"/> [<ofbiz:entityfield attribute="userRole" field="roleTypeId"/>]</div></td>
                 <td align="right" valign="top" width="20%">
-                  <a href="<ofbiz:url>/deleterole?partyId=<%=partyId%>&roleTypeId=<ofbiz:entityfield attribute="userRole" field="roleTypeId"/></ofbiz:url>" class="buttontext">[Remove]</a>&nbsp;
+                  <a href='<ofbiz:url>/deleterole?partyId=<%=partyId%>&roleTypeId=<ofbiz:entityfield attribute="userRole" field="roleTypeId"/></ofbiz:url>' class="buttontext">[Remove]</a>&nbsp;
                 </td>
               </tr>
               </ofbiz:iterator>
