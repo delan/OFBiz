@@ -62,6 +62,8 @@
         <check-permission permission="FACILITY" action="_UPDATE">
             <fail-message message="Security Error: to run updateShipment you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Update Shipment" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusDelivered"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="Shipment"/>
@@ -88,6 +90,8 @@
         <check-permission permission="FACILITY" action="_DELETE">
             <fail-message message="Security Error: to run deleteShipment you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Delete Shipment" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="Shipment"/>
@@ -102,7 +106,11 @@
         <check-permission permission="FACILITY" action="_UPDATE">
             <fail-message message="Security Error: to run setShipmentSettingsFromOrder you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Set Shipment Settings From Primary Order" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
+
+        <!-- TODO: lookup contactMechId for Facility and set as originContactMechId - maybe do for origin and destination facilities in the create/update Shipment services? -->
 
         <!-- on Shipment set partyIdFrom, partyIdTo (vendorPartyId), originContactMechId, destinationContactMechId, estimatedShipCost -->
         <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="lookupShipmentPKMap"/>
@@ -116,28 +124,50 @@
         <field-to-field field-name="primaryOrderId" map-name="shipment" to-field-name="orderId" to-map-name="lookupOrderHeaderPKMap"/>
         <find-by-primary-key entity-name="OrderHeader" map-name="lookupOrderHeaderPKMap" value-name="orderHeader"/>
         
-        <if-compare value="SALES_ORDER" operator="equals" field-name="orderTypeId" map-name="orderHeader">
-            <!-- partyIdFrom, partyIdTo (vendorPartyId) -->
-            <find-by-and entity-name="OrderRole" map-name="lookupOrderHeaderPKMap" list-name="orderRoles"/>
-            <if-empty field-name="partyIdFrom" map-name="shipment">
-                <string-to-field string="VENDOR" field-name="roleTypeId" map-name="vendorRoleMap"/>
-                <filter-list-by-and list-name="orderRoles" map-name="vendorRoleMap" to-list-name="vendorOrderRoles"/>
-                <first-from-list entry-name="vendorOrderRole" list-name="vendorOrderRoles"/>
-                <if-not-empty field-name="vendorOrderRole">
-                    <field-to-field field-name="partyId" map-name="vendorOrderRole" to-field-name="partyIdFrom" to-map-name="shipment"/>
-                </if-not-empty>
-            </if-empty>
-            <if-empty field-name="partyIdTo" map-name="shipment">
-                <string-to-field string="SHIP_TO_CUSTOMER" field-name="roleTypeId" map-name="customerRoleMap"/>
-                <filter-list-by-and list-name="orderRoles" map-name="customerRoleMap" to-list-name="customerOrderRoles"/>
-                <first-from-list entry-name="customerOrderRole" list-name="customerOrderRoles"/>
-                <if-not-empty field-name="customerOrderRole">
-                    <field-to-field field-name="partyId" map-name="customerOrderRole" to-field-name="partyIdTo" to-map-name="shipment"/>
-                </if-not-empty>
-            </if-empty>
-            
-            <!-- TODO: lookup contactMechId for Facility and set as originContactMechId -->
-        </if-compare>
+        <!-- partyIdFrom, partyIdTo (vendorPartyId) - NOTE: these work the same for Purchase and Sales Orders... -->
+        <find-by-and entity-name="OrderRole" map-name="lookupOrderHeaderPKMap" list-name="orderRoles"/>
+        
+        <!-- From: SHIP_FROM_VENDOR -->
+        <if-empty field-name="partyIdFrom" map-name="shipment">
+            <string-to-field string="SHIP_FROM_VENDOR" field-name="roleTypeId" map-name="limitRoleMap"/>
+            <filter-list-by-and list-name="orderRoles" map-name="limitRoleMap" to-list-name="limitOrderRoles"/>
+            <first-from-list entry-name="limitOrderRole" list-name="limitOrderRoles"/>
+            <if-not-empty field-name="limitOrderRole">
+                <field-to-field field-name="partyId" map-name="limitOrderRole" to-field-name="partyIdFrom" to-map-name="shipment"/>
+            </if-not-empty>
+            <clear-field field-name="limitRoleMap"/><clear-field field-name="limitOrderRoles"/><clear-field field-name="limitOrderRole"/>
+        </if-empty>
+        <!-- From: VENDOR -->
+        <if-empty field-name="partyIdFrom" map-name="shipment">
+            <string-to-field string="VENDOR" field-name="roleTypeId" map-name="limitRoleMap"/>
+            <filter-list-by-and list-name="orderRoles" map-name="limitRoleMap" to-list-name="limitOrderRoles"/>
+            <first-from-list entry-name="limitOrderRole" list-name="limitOrderRoles"/>
+            <if-not-empty field-name="limitOrderRole">
+                <field-to-field field-name="partyId" map-name="limitOrderRole" to-field-name="partyIdFrom" to-map-name="shipment"/>
+            </if-not-empty>
+            <clear-field field-name="limitRoleMap"/><clear-field field-name="limitOrderRoles"/><clear-field field-name="limitOrderRole"/>
+        </if-empty>
+
+        <!-- To: SHIP_TO_CUSTOMER -->
+        <if-empty field-name="partyIdTo" map-name="shipment">
+            <string-to-field string="SHIP_TO_CUSTOMER" field-name="roleTypeId" map-name="limitRoleMap"/>
+            <filter-list-by-and list-name="orderRoles" map-name="limitRoleMap" to-list-name="limitOrderRoles"/>
+            <first-from-list entry-name="limitOrderRole" list-name="limitOrderRoles"/>
+            <if-not-empty field-name="limitOrderRole">
+                <field-to-field field-name="partyId" map-name="limitOrderRole" to-field-name="partyIdTo" to-map-name="shipment"/>
+            </if-not-empty>
+            <clear-field field-name="limitRoleMap"/><clear-field field-name="limitOrderRoles"/><clear-field field-name="limitOrderRole"/>
+        </if-empty>
+        <!-- To: CUSTOMER -->
+        <if-empty field-name="partyIdTo" map-name="shipment">
+            <string-to-field string="CUSTOMER" field-name="roleTypeId" map-name="limitRoleMap"/>
+            <filter-list-by-and list-name="orderRoles" map-name="limitRoleMap" to-list-name="limitOrderRoles"/>
+            <first-from-list entry-name="limitOrderRole" list-name="limitOrderRoles"/>
+            <if-not-empty field-name="limitOrderRole">
+                <field-to-field field-name="partyId" map-name="limitOrderRole" to-field-name="partyIdTo" to-map-name="shipment"/>
+            </if-not-empty>
+            <clear-field field-name="limitRoleMap"/><clear-field field-name="limitOrderRoles"/><clear-field field-name="limitOrderRole"/>
+        </if-empty>
         
         <find-by-and entity-name="OrderContactMech" map-name="lookupOrderHeaderPKMap" list-name="orderContactMechs"/>
         <!-- destinationContactMechId -->
@@ -208,6 +238,8 @@
         <check-permission permission="FACILITY" action="_CREATE">
             <fail-message message="Security Error: to run createShipmentItem you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Create ShipmentItem" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ShipmentItem"/>
@@ -224,6 +256,8 @@
         <check-permission permission="FACILITY" action="_UPDATE">
             <fail-message message="Security Error: to run updateShipmentItem you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Update ShipmentItem" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ShipmentItem"/>
@@ -236,6 +270,8 @@
         <check-permission permission="FACILITY" action="_DELETE">
             <fail-message message="Security Error: to run deleteShipmentItem you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Delete ShipmentItem" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ShipmentItem"/>
@@ -249,6 +285,8 @@
         <check-permission permission="FACILITY" action="_CREATE">
             <fail-message message="Security Error: to run createShipmentPackage you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Create ShipmentPackage" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ShipmentPackage"/>
@@ -271,6 +309,8 @@
         <check-permission permission="FACILITY" action="_UPDATE">
             <fail-message message="Security Error: to run updateShipmentPackage you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Update ShipmentPackage" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusShipped"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ShipmentPackage"/>
@@ -283,6 +323,8 @@
         <check-permission permission="FACILITY" action="_DELETE">
             <fail-message message="Security Error: to run deleteShipmentPackage you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Delete ShipmentPackage" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ShipmentPackage"/>
@@ -296,6 +338,8 @@
         <check-permission permission="FACILITY" action="_CREATE">
             <fail-message message="Security Error: to run createShipmentPackageContent you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Create ShipmentPackageContent" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ShipmentPackageContent"/>
@@ -308,6 +352,8 @@
         <check-permission permission="FACILITY" action="_UPDATE">
             <fail-message message="Security Error: to run updateShipmentPackageContent you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Update ShipmentPackageContent" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ShipmentPackageContent"/>
@@ -320,6 +366,8 @@
         <check-permission permission="FACILITY" action="_DELETE">
             <fail-message message="Security Error: to run deleteShipmentPackageContent you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Delete ShipmentPackageContent" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ShipmentPackageContent"/>
@@ -357,6 +405,8 @@
         <check-permission permission="FACILITY" action="_DELETE">
             <fail-message message="Security Error: to run deleteShipmentPackageRouteSeg you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Delete ShipmentPackageRouteSeg" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ShipmentPackageRouteSeg"/>
@@ -394,6 +444,8 @@
         <check-permission permission="FACILITY" action="_DELETE">
             <fail-message message="Security Error: to run deleteShipmentContactMech you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Delete ShipmentContactMech" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ShipmentContactMech"/>
@@ -407,6 +459,8 @@
         <check-permission permission="FACILITY" action="_CREATE">
             <fail-message message="Security Error: to run createShipmentRouteSegment you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Create ShipmentRouteSegment" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ShipmentRouteSegment"/>
@@ -423,6 +477,8 @@
         <check-permission permission="FACILITY" action="_UPDATE">
             <fail-message message="Security Error: to run updateShipmentRouteSegment you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Update ShipmentRouteSegment" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusDelivered"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ShipmentRouteSegment"/>
@@ -435,12 +491,62 @@
         <check-permission permission="FACILITY" action="_DELETE">
             <fail-message message="Security Error: to run deleteShipmentRouteSegment you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
+        <string-to-field string="Delete ShipmentRouteSegment" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ShipmentRouteSegment"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ShipmentRouteSegment" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- Check the Status of a Shipment to see if it can be changed - meant to be called in-line -->
+    <simple-method method-name="checkCanChangeShipmentStatusPacked" short-description="Check the Status of a Shipment to see if it can be changed - meant to be called in-line">
+        <string-to-field string="SHIPMENT_PACKED" field-name="fromStatusId"/>
+    </simple-method>
+    <simple-method method-name="checkCanChangeShipmentStatusShipped" short-description="Check the Status of a Shipment to see if it can be changed - meant to be called in-line">
+        <string-to-field string="SHIPMENT_SHIPPED" field-name="fromStatusId"/>
+    </simple-method>
+    <simple-method method-name="checkCanChangeShipmentStatusDelivered" short-description="Check the Status of a Shipment to see if it can be changed - meant to be called in-line">
+        <string-to-field string="SHIPMENT_DELIVERED" field-name="fromStatusId"/>
+    </simple-method>
+    <simple-method method-name="checkCanChangeShipmentStatusGeneral" short-description="Check the Status of a Shipment to see if it can be changed - meant to be called in-line">
+        <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="lookupShipmentMap"/>
+        <find-by-primary-key entity-name="Shipment" map-name="lookupShipmentMap" value-name="testShipment"/>
+        <if>
+            <condition>
+                <or>
+                    <and>
+                        <or>
+                            <if-empty field-name="fromStatusId"/>
+                            <if-compare field-name="fromStatusId" operator="equals" value="SHIPMENT_PACKED"/>
+                        </or>
+                        <if-compare field-name="shipment.statusId" operator="equals" value="SHIPMENT_PACKED"/>
+                    </and>
+                    <and>
+                        <or>
+                            <if-compare field-name="fromStatusId" operator="equals" value="SHIPMENT_PACKED"/>
+                            <if-compare field-name="fromStatusId" operator="equals" value="SHIPMENT_SHIPPED"/>
+                        </or>
+                        <if-compare field-name="shipment.statusId" operator="equals" value="SHIPMENT_SHIPPED"/>
+                    </and>
+                    <and>
+                        <or>
+                            <if-compare field-name="fromStatusId" operator="equals" value="SHIPMENT_PACKED"/>
+                            <if-compare field-name="fromStatusId" operator="equals" value="SHIPMENT_SHIPPED"/>
+                            <if-compare field-name="fromStatusId" operator="equals" value="SHIPMENT_DELIVERED"/>
+                        </or>
+                        <if-compare field-name="shipment.statusId" operator="equals" value="SHIPMENT_DELIVERED"/>
+                    </and>
+                    <if-compare field-name="shipment.statusId" operator="equals" value="SHIPMENT_CANCELLED"/>
+                </or>
+            </condition>
+            <then>
+                <get-related-one relation-name="StatusItem" value-name="testShipment" to-value-name="testShipmentStatus"/>
+                <string-to-list string="Cannot perform operation ${operationName} when the shipment is in the ${testShipmentStatus.description} [${testShipment.statusId}] status." list-name="error_list"/>
+            </then>
+        </if>
     </simple-method>
 </simple-methods>
 
