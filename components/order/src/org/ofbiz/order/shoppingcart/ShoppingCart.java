@@ -283,6 +283,7 @@ public class ShoppingCart implements Serializable {
         public String[] refNum = new String[2];
         public Double amount = null;
         public boolean singleUse = false;
+        public boolean isPresent = false;
 
         public GenericValue getValueObject(GenericDelegator delegator) {
             String entityName = null;
@@ -346,6 +347,7 @@ public class ShoppingCart implements Serializable {
                 // create the OrderPaymentPreference record
                 GenericValue opp = delegator.makeValue("OrderPaymentPreference", new HashMap());
                 opp.set("paymentMethodTypeId", valueObj.getString("paymentMethodTypeId"));
+                opp.set("presentFlag", isPresent ? "Y" : "N");
                 opp.set("paymentMethodId", paymentMethodId);
                 opp.set("billingPostalCode", postalCode);
                 opp.set("maxAmount", amount);
@@ -1056,7 +1058,7 @@ public class ShoppingCart implements Serializable {
     }
 
     /** adds a payment method/payment method type */
-    public void addPaymentAmount(String id, Double amount, String refNum, String authCode, boolean isSingleUse, boolean replace) {
+    public void addPaymentAmount(String id, Double amount, String refNum, String authCode, boolean isSingleUse, boolean isPresent, boolean replace) {
         CartPaymentInfo inf = this.getPaymentInfo(id, refNum, authCode, amount);
         inf.singleUse = isSingleUse;
         if (replace) {
@@ -1067,7 +1069,7 @@ public class ShoppingCart implements Serializable {
 
     /** adds a payment method/payment method type */
     public void addPaymentAmount(String id, Double amount, boolean isSingleUse) {
-        this.addPaymentAmount(id, amount, null, null, isSingleUse, true);
+        this.addPaymentAmount(id, amount, null, null, isSingleUse, false, true);
     }
 
     /** adds a payment method/payment method type */
