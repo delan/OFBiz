@@ -103,7 +103,7 @@ public class Security
    * @throws RemoteException Standard RMI Remote Exception
    * @return Returns true if the currently logged in userLogin has the specified permission, otherwise returns false.
    */  
-  public boolean hasPermission(String permission, HttpSession session) throws java.rmi.RemoteException
+  public boolean hasPermission(String permission, HttpSession session)
   {
     GenericValue userLogin = (GenericValue)session.getAttribute(SiteDefs.USER_LOGIN);
     if(userLogin == null) return false;
@@ -127,7 +127,7 @@ public class Security
   * @throws RemoteException Standard RMI Remote Exception
   * @return Returns true if the currently logged in userLogin has the specified permission, otherwise returns false.
   */ 
-  public boolean hasEntityPermission(String entity, String action, HttpSession session) throws java.rmi.RemoteException
+  public boolean hasEntityPermission(String entity, String action, HttpSession session)
   {
     GenericValue userLogin = (GenericValue)session.getAttribute(SiteDefs.USER_LOGIN);
     if(userLogin == null) return false;
