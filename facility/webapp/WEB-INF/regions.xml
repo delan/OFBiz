@@ -63,7 +63,12 @@
     <define id='EditFacilityLocation' region='MAIN_REGION'>
         <put section='title'>Edit Facility Location</put>
         <put section='content' content='/facility/EditFacilityLocation.jsp'/>
-    </define>     
+    </define>    
+    
+    <define id='FindFacilityTransfers' region='MAIN_REGION'>
+        <put section='title'>Find Facility Inventory Transfers</put>
+        <put section='content' content='/facility/FindFacilityTransfers.jsp'/>
+    </define>    
     
     <define id='FindFacilityGroup' region='MAIN_REGION'>
         <put section='title'>Edit Facility Group</put>
@@ -99,5 +104,9 @@
     <define id='EditInventoryItem' region='MAIN_REGION'>
         <put section='title'>Edit Inventory Item</put>
         <put section='content' content='/inventory/EditInventoryItem.jsp'/>
-    </define>             
+    </define>  
+    <define id='TransferInventoryItem' region='MAIN_REGION'>
+        <put section='title'>Edit Inventory Item</put>
+        <put section='content' content='/inventory/TransferInventoryItem.jsp'/>
+    </define>                
 </regions>
