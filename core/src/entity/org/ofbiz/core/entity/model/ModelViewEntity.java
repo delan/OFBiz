@@ -44,6 +44,7 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class ModelViewEntity extends ModelEntity {
+    public static final String module = ModelViewEntity.class.getName();
 
     /** Contains member-entity alias name definitions: key is alias, value is entity-name */
     protected Map memberEntityNames = new HashMap();
