@@ -34,6 +34,7 @@
 
 <% 
 if(security.hasPermission("ENTITY_MAINT", session)) {
+  boolean forstatic = "true".equals(request.getParameter("forstatic"));
   String search = null;
   ModelReader reader = delegator.getModelReader();
   Collection ec = reader.getEntityNames();
@@ -66,7 +67,8 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <body bgcolor="#FFFFFF">
 <div align="left">
 
-<a href="<%=response.encodeURL(controlPath + "/main")%>" target='main' class='listtext'>Pop up CommonApp main</A><BR>
+<%if (!forstatic) {%>
+<a href="<%=response.encodeURL(controlPath + "/main")%>" target='main' class='listtext'>Pop up WebTools main</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/entityref_main")%>" target="entityFrame" class='listtext'>Entity Reference Main Page</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/entityref_main?CHECK_WARNINGS=true")%>" target="entityFrame" class='listtext'>Entity Reference Main With Warnings</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/checkdb")%>" target="entityFrame" class='listtext'>Check/Update Database</A>
@@ -77,15 +79,18 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter?savetofile=true")%>" target='_blank' class='listtext'>Save Entity Group XML to File</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/ModelInduceFromDb")%>" target='_blank' class='listtext'>Induce Model XML from Database</A><BR>
 <HR>
+<%}%>
 
 <%
   Iterator piter = packageNames.iterator();
-  while(piter.hasNext())
-  {
+  while(piter.hasNext()) {
     String pName = (String)piter.next();
-%><a href="<%=response.encodeURL(controlPath + "/view/entityref_main#" + pName)%>" target="entityFrame" class='listtext'><%=pName%></a><br><%
-  }
-%>
+    if (forstatic) {%>
+	    <a href="entityref_main.html#<%=pName%>" target="entityFrame" class='listtext'><%=pName%></a><br>
+    <%} else {%>
+	    <a href="<%=response.encodeURL(controlPath + "/view/entityref_main#" + pName)%>" target="entityFrame" class='listtext'><%=pName%></a><br>
+    <%}%>
+<%}%>
 
 <HR>
 
@@ -97,8 +102,12 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 		if ( search == null || entityName.toLowerCase().indexOf(search.toLowerCase()) != -1 ) {						
 			String url = search == null ? "entityref_main#"+entityName : "entityref_main#"+entityName+"?search="+search;
 %>	
-<a href="<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName)%>" target="_blank" class='listtext'>[EditDef]</a>
-<a href="<%=response.encodeURL(controlPath + "/view/" + url)%>" target="entityFrame" class='listtext'><%= entityName %></a>
+  <%if (forstatic) {%>
+	<a href="entityref_main.html#<%=entityName%>" target="entityFrame" class='listtext'><%= entityName %></a>
+  <%} else {%>
+	<a href="<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName)%>" target="_blank" class='listtext'>[EditDef]</a>
+	<a href="<%=response.encodeURL(controlPath + "/view/" + url)%>" target="entityFrame" class='listtext'><%= entityName %></a>
+  <%}%>
 <br>
 <%
 		}	

@@ -31,13 +31,16 @@
 </HEAD>
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%
-	String search = null;
 	String list = controlPath + "/view/entityref_list";
 	String main = controlPath + "/view/entityref_main";
-	search = (String) request.getParameter("search");
-	if ( search != null ) {
+	String search = (String) request.getParameter("search");
+    String forstatic = (String) request.getParameter("forstatic");
+	if (search != null) {
 		list = list + "?search=" + search;
 		main = main + "?search=" + search;
+	} else if (forstatic != null) {
+		list = list + "?forstatic=" + forstatic;
+		main = main + "?forstatic=" + forstatic;
 	}
 %>
 <FRAMESET cols="30%,70%">

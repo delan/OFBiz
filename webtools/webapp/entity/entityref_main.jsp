@@ -36,6 +36,8 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   initReservedWords();
   //boolean checkWarnings = "true".equals(request.getParameter("CHECK_WARNINGS"));
   boolean checkWarnings = true;
+  boolean forstatic = "true".equals(request.getParameter("forstatic"));
+  if (forstatic) checkWarnings = false;
   String search = null;
   //GenericDelegator delegator = GenericHelperFactory.getDefaultHelper();
   ModelReader reader = delegator.getModelReader();
@@ -94,10 +96,12 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   <DIV class='toptext'>Entity Reference Chart<br>
     <%= numberOfEntities %> Total Entities
     </DIV>
-<%if(checkWarnings) {%>
-  <A href='#WARNINGS'>View Warnings</A>
-<%}else{%>
-  <A href='<%=response.encodeURL(controlPath + "/view/entityref_main?CHECK_WARNINGS=true")%>'>View With Warnings Check</A>  
+<%if (!forstatic) {%>
+	<%if (checkWarnings) {%>
+	  <A href='#WARNINGS'>View Warnings</A>
+	<%} else {%>
+	  <A href='<%=response.encodeURL(controlPath + "/view/entityref_main?CHECK_WARNINGS=true")%>'>View With Warnings Check</A>  
+	<%}%>
 <%}%>
 <%
   Iterator piter = packageNames.iterator();
@@ -131,7 +135,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
       <td colspan="5"> 
         <div align="center" class="titletext">ENTITY: <%=entityName%> | TABLE: <%=entity.getTableName()%></div>
         <div align="center" class="entitytext"><b><%=entity.getTitle()%></b>&nbsp;
-            <a target='main' href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName + "&find=true&VIEW_SIZE=50&VIEW_INDEX=0")%>">[view data]</a></div>
+            <%if (!forstatic) {%><a target='main' href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName + "&find=true&VIEW_SIZE=50&VIEW_INDEX=0")%>">[view data]</a><%}%></div>
         <%if (entity.getDescription() != null && !entity.getDescription().equalsIgnoreCase("NONE") && !entity.getDescription().equalsIgnoreCase("")) {%>
         <div align="center" class="entitytext"><%=entity.getDescription()%></div>
         <%}%>
