@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
  */
 
@@ -61,6 +61,7 @@ if (productPromoId != null) {
 HtmlFormWrapper productPromoCodeFormWrapper = new HtmlFormWrapper("/promo/PromoForms.xml", "EditProductPromoCode", request, response);
 productPromoCodeFormWrapper.putInContext("productPromoCodeId", productPromoCodeId);
 productPromoCodeFormWrapper.putInContext("productPromoCode", productPromoCode);
+if (productPromoCode == null) productPromoCodeFormWrapper.putInContext("productPromoId", productPromoId);
 
 productPromoCodeEmails = null;
 productPromoCodeParties = null;
