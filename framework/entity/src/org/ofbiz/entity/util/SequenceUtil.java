@@ -88,8 +88,13 @@ public class SequenceUtil {
         SequenceBank bank = (SequenceBank) sequences.get(seqName);
 
         if (bank == null) {
-            bank = new SequenceBank(seqName, this);
-            sequences.put(seqName, bank);
+            synchronized(this) {
+                bank = (SequenceBank) sequences.get(seqName);
+                if (bank == null) {
+                    bank = new SequenceBank(seqName, this);
+                    sequences.put(seqName, bank);
+                }
+            }
         }
         return bank.getNextSeqId(staggerMax);
     }
@@ -140,9 +145,8 @@ public class SequenceUtil {
         }
 
         protected synchronized void fillBank(long stagger) {
-            Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] Starting fillBank Thread Name is: " + Thread.currentThread().getName() + ":" + Thread.currentThread().toString(), module);
+            //Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] Starting fillBank Thread Name is: " + Thread.currentThread().getName() + ":" + Thread.currentThread().toString(), module);
 
-            
             long bankSize = defaultBankSize;
             if (stagger > 1) {
                 // NOTE: could use staggerMax for this, but if that is done it would be easier to guess a valid next id without a brute force attack
@@ -298,7 +302,7 @@ public class SequenceUtil {
                     }
                 }
             }
-            Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] Ending fillBank Thread Name is: " + Thread.currentThread().getName() + ":" + Thread.currentThread().toString(), module);
+            //Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] Ending fillBank Thread Name is: " + Thread.currentThread().getName() + ":" + Thread.currentThread().toString(), module);
         }
     }
 }
