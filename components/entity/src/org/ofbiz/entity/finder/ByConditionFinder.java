@@ -1,5 +1,5 @@
 /*
- * $Id: ByConditionFinder.java,v 1.2 2004/07/31 12:17:40 jonesde Exp $
+ * $Id: ByConditionFinder.java,v 1.3 2004/08/16 18:23:37 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a condition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class ByConditionFinder {
@@ -148,10 +148,16 @@ public class ByConditionFinder {
         }
 
         // create whereEntityCondition from whereCondition
-        EntityCondition whereEntityCondition = this.whereCondition.createCondition(context, entityName, delegator);
+        EntityCondition whereEntityCondition = null;
+        if (this.whereCondition != null) {
+            whereEntityCondition = this.whereCondition.createCondition(context, entityName, delegator);
+        }
 
         // create havingEntityCondition from havingCondition
-        EntityCondition havingEntityCondition = this.havingCondition.createCondition(context, entityName, delegator);
+        EntityCondition havingEntityCondition = null;
+        if (this.havingCondition != null) {
+            havingEntityCondition = this.havingCondition.createCondition(context, entityName, delegator);
+        }
 
         if (useCache) {
             // if useCache == true && outputHandler instanceof UseIterator, throw exception; not a valid combination
