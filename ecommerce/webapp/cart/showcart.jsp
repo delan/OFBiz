@@ -5,6 +5,7 @@
 <%@ include file="/includes/leftcolumn.jsp" %> 
 
 <ofbiz:object name="cart" property="_SHOPPING_CART_" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCart" />  
+<%pageContext.setAttribute("cartIter", cart.iterator());%>
 
 <BR>
 <TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
@@ -92,7 +93,7 @@
           <%-- <TD NOWRAP align=center><div class='tabletext'><b>Remove</b></div></TD> --%>
         </TR>
 
-        <ofbiz:iterator name="item" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCartItem">  
+        <ofbiz:iterator name="item" property="cartIter" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCartItem">
           <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
           <TR>
             <TD><div class='tabletext'><%-- <b><%= cart.getItemIndex(item)%></b> - --%><%= item.getProductId()%> - <%= item.getName()%> : <%= item.getDescription()%></div></TD>
