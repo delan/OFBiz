@@ -1,5 +1,5 @@
 /*
- * $Id: ConnectionFactory.java,v 1.1 2003/08/17 04:56:27 jonesde Exp $
+ * $Id: ConnectionFactory.java,v 1.2 2003/09/18 16:01:22 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ConnectionFactory {
@@ -71,10 +71,16 @@ public class ConnectionFactory {
         if (driverClassName != null && driverClassName.length() > 0) {
             try {
                 ClassLoader loader = Thread.currentThread().getContextClassLoader();
-                loader.loadClass(driverClassName);
-            } catch (ClassNotFoundException cnfe) {
-                Debug.logWarning("Could not find JDBC driver class named " + driverClassName + ".\n", module);
-                Debug.logWarning(cnfe, module);
+                Class clazz = loader.loadClass(driverClassName);
+                clazz.newInstance();
+            } catch (ClassNotFoundException e) {
+                Debug.logWarning(e, "Could not find JDBC driver class named " + driverClassName, module);
+                return null;
+            } catch (java.lang.IllegalAccessException e) {
+                Debug.logWarning(e, "Not allowed to access JDBC driver class named " + driverClassName, module);
+                return null;
+            } catch (java.lang.InstantiationException e) {
+                Debug.logWarning(e, "Could not create new instance of JDBC driver class named " + driverClassName, module);
                 return null;
             }
             return DriverManager.getConnection(inlineJdbcElement.getAttribute("jdbc-uri"),

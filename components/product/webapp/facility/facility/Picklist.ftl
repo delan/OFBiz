@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -40,85 +40,137 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       <table width="100%" border="0" cellspacing="0" cellpadding="2" class="boxbottom">
         <tr>
           <td width="10%" align="left"><div class="tableheadtext">Location</div></td>
-          <td width="10%" align="left"><div class="tableheadtext">Inventory</div></td>
           <td width="30%" align="left"><div class="tableheadtext">Product [ID]</div></td>
           <td width="10%" align="left"><div class="tableheadtext">To Pick</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">OrderItems</div></td>
+          <td width="10%" align="left"><div class="tableheadtext">InventoryItems</div></td>
+          <#--
           <td width="10%" align="left"><div class="tableheadtext">On Hand</div></td>
           <td width="10%" align="left"><div class="tableheadtext">Available</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">OrderItems</div></td>
+          -->
         </tr>
         <tr>
           <td colspan="10"><hr class="sepbar"></td>
         </tr>
-        <#if inventoryItemInfoList?has_content>
+        <#if facilityLocationInfoList?has_content || inventoryItemInfoList?has_content>
           <#assign rowClass = "viewManyTR2">
+          <#-- facilityLocationInfoList: facilityLocation, productInfoList (product, quantity, inventoryItemList, orderItemList) -->
+          <#list facilityLocationInfoList as facilityLocationInfo>
+              <#assign facilityLocation = facilityLocationInfo.facilityLocation>
+              <#assign productInfoList = facilityLocationInfo.productInfoList>
+              <#list productInfoList as productInfo>
+                <#assign product = productInfo.product>
+                <#assign quantity = productInfo.quantity>
+                <#assign inventoryItemList = productInfo.inventoryItemList>
+                <#assign orderItemList = productInfo.orderItemList>
+                <tr class="${rowClass}">
+                  <td valign="top">
+                    <div class="tabletext">${facilityLocation.facilityId}:${facilityLocation.areaId?if_exists}-${facilityLocation.aisleId?if_exists}-${facilityLocation.sectionId?if_exists}-${facilityLocation.levelId?if_exists}-${facilityLocation.positionId?if_exists}</div>
+                  </td>
+                  <td valign="top">
+                    <#if product?has_content>
+                      <div class="tabletext">${product.productName} [${product.productId}]</div>
+                    <#else>
+                      <div class="tabletext">&nbsp;</div>
+                    </#if>
+                  </td>
+                  <td valign="top">
+                      <div class="tabletext">${quantity}</div>
+                  </td>
+                  <td valign="top">
+                    <#list orderItemList as orderItem>
+                      <div class="tabletext">${orderItem.orderId}:${orderItem.orderItemSeqId}-${orderItem.quantity}</div>
+                    </#list>
+                  </td>
+                  <td valign="top">
+                    <#list inventoryItemList as inventoryItem>
+                      <div class="tabletext">${inventoryItem.inventoryItemId}:${inventoryItem.binNumber?if_exists}</div>
+                    </#list>
+                  </td>
+                  <#--
+                  <td valign="top">
+                      <div class="tabletext">&nbsp;</div>
+                  </td>
+                  <td valign="top">
+                      <div class="tabletext">&nbsp;</div>
+                  </td>
+                  -->
+                </tr>
+                <#-- toggle the row color -->
+                <#if rowClass == "viewManyTR2">
+                  <#assign rowClass = "viewManyTR1">
+                <#else>
+                  <#assign rowClass = "viewManyTR2">
+                </#if>
+              </#list>
+          </#list>
           <#list inventoryItemInfoList as inventoryItemInfo>
-            <#-- inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, product, quantity -->
-            <#assign inventoryItem = inventoryItemInfo.inventoryItem>
-            <#assign facilityLocation = inventoryItemInfo.facilityLocation?if_exists>
-            <#assign orderItems = inventoryItemInfo.orderItems>
-            <#assign product = inventoryItemInfo.product>
-            <#assign quantity = inventoryItemInfo.quantity>
-            <#assign statusItem = inventoryItemInfo.statusItem?if_exists>
-            <tr class="${rowClass}">
-              <td valign="top">
-                <#if facilityLocation?has_content>
-                  <div class="tabletext">${facilityLocation.facilityId}:${facilityLocation.areaId?if_exists}-${facilityLocation.aisleId?if_exists}-${facilityLocation.sectionId?if_exists}-${facilityLocation.levelId?if_exists}-${facilityLocation.positionId?if_exists}</div>
-                <#else>
-                  <div class="tabletext">&nbsp;</div>
-                </#if>
-              </td>
-              <td valign="top">
-                <div class="tabletext">${inventoryItem.inventoryItemId}:${inventoryItem.binNumber?if_exists}</div>
-              </td>
-              <td valign="top">
-                <#if product?has_content>
-                  <div class="tabletext">${product.productName} [${product.productId}]</div>
-                <#else>
-                  <div class="tabletext">&nbsp;</div>
-                </#if>
-              </td>
-              <td valign="top">
-                  <div class="tabletext">${quantity}</div>
-              </td>
-              <#if inventoryItem.inventoryItemTypeId == "NON_SERIAL_INV_ITEM">
-                <td valign="top">
-                  <div class="tabletext">${inventoryItem.quantityOnHand?if_exists}</div>
-                </td>
-                <td valign="top">
-                  <div class="tabletext">${inventoryItem.availableToPromise?if_exists}</div>
-                </td>
-              <#else>
-                <td colspan="2" valign="top">
-                  <#if statusItem?exists>
-                    <div class="tabletext">${statusItem.description}</div>
+            <#-- inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, product, quantity, statusItem -->
+            <#-- for this list, only display for inventoryItems with no location since those with locations will be displayed above -->
+            <#if !inventoryItemInfo.facilityLocation?exists>
+                <#assign inventoryItem = inventoryItemInfo.inventoryItem>
+                <#assign facilityLocation = inventoryItemInfo.facilityLocation?if_exists>
+                <#assign orderItems = inventoryItemInfo.orderItems>
+                <#assign product = inventoryItemInfo.product>
+                <#assign quantity = inventoryItemInfo.quantity>
+                <#assign statusItem = inventoryItemInfo.statusItem?if_exists>
+                <tr class="${rowClass}">
+                  <td valign="top">
+                    <#if facilityLocation?has_content>
+                      <div class="tabletext">${facilityLocation.facilityId}:${facilityLocation.areaId?if_exists}-${facilityLocation.aisleId?if_exists}-${facilityLocation.sectionId?if_exists}-${facilityLocation.levelId?if_exists}-${facilityLocation.positionId?if_exists}</div>
+                    <#else>
+                      <div class="tabletext">&nbsp;</div>
+                    </#if>
+                  </td>
+                  <td valign="top">
+                    <#if product?has_content>
+                      <div class="tabletext">${product.productName} [${product.productId}]</div>
+                    <#else>
+                      <div class="tabletext">&nbsp;</div>
+                    </#if>
+                  </td>
+                  <td valign="top">
+                      <div class="tabletext">${quantity}</div>
+                  </td>
+                  <td valign="top">
+                    <#list orderItems as orderItem>
+                      <div class="tabletext">${orderItem.orderId}:${orderItem.orderItemSeqId}-${orderItem.quantity}</div>
+                    </#list>
+                  </td>
+                  <td valign="top">
+                    <div class="tabletext">${inventoryItem.inventoryItemId}:${inventoryItem.binNumber?if_exists}</div>
+                  </td>
+                  <#--
+                  <#if inventoryItem.inventoryItemTypeId == "NON_SERIAL_INV_ITEM">
+                    <td valign="top">
+                      <div class="tabletext">${inventoryItem.quantityOnHand?if_exists}</div>
+                    </td>
+                    <td valign="top">
+                      <div class="tabletext">${inventoryItem.availableToPromise?if_exists}</div>
+                    </td>
                   <#else>
-                    <div class="tabletext">${inventoryItem.statusId?if_exists}</div>
+                    <td colspan="2" valign="top">
+                      <#if statusItem?exists>
+                        <div class="tabletext">${statusItem.description}</div>
+                      <#else>
+                        <div class="tabletext">${inventoryItem.statusId?if_exists}</div>
+                      </#if>
+                    </td>
                   </#if>
-                </td>
+                  -->
+                </tr>
+                <#-- toggle the row color -->
+                <#if rowClass == "viewManyTR2">
+                  <#assign rowClass = "viewManyTR1">
+                <#else>
+                  <#assign rowClass = "viewManyTR2">
+                </#if>
               </#if>
-              <td valign="top">
-              	<#list orderItems as orderItem>
-                  <div class="tabletext">${orderItem.orderId}:${orderItem.orderItemSeqId}-${orderItem.quantity}</div>
-                </#list>
-              </td>
-            </tr>
-            <#-- toggle the row color -->
-            <#if rowClass == "viewManyTR2">
-              <#assign rowClass = "viewManyTR1">
-            <#else>
-              <#assign rowClass = "viewManyTR2">
-            </#if>        
-          </#list>          
+          </#list>
         <#else>
           <tr>
             <td colspan="4"><div class="head3">No inventory found to pick.</div></td>
           </tr>        
-        </#if>
-        <#if lookupErrorMessage?exists>
-          <tr>
-            <td colspan="4"><div class="head3">${lookupErrorMessage}</div></td>
-          </tr>
         </#if>
       </table>
     </td>

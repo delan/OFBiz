@@ -1,5 +1,5 @@
 /*
- * $Id: UtilHttp.java,v 1.5 2003/09/11 03:10:07 ajzeneski Exp $
+ * $Id: UtilHttp.java,v 1.6 2003/09/18 16:01:21 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.1
  */
 public class UtilHttp {
@@ -202,7 +202,7 @@ public class UtilHttp {
     /** URL Encodes a Map of arguements */
     public static String urlEncodeArgs(Map args) {
         StringBuffer buf = new StringBuffer();
-        if (args == null) {        
+        if (args != null) {
             Iterator i = args.entrySet().iterator();
             while (i.hasNext()) {
                 Map.Entry entry = (Map.Entry) i.next();
