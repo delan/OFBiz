@@ -1,5 +1,5 @@
 /*
- * $Id: CheckPermissionTransform.java,v 1.13 2004/05/11 14:45:49 byersa Exp $
+ * $Id: CheckPermissionTransform.java,v 1.14 2004/06/11 00:32:50 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -45,7 +45,7 @@ import freemarker.template.TransformControl;
  * CheckPermissionTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  * @since 3.0
  */
 public class CheckPermissionTransform implements TemplateTransformModel {
@@ -195,7 +195,7 @@ public class CheckPermissionTransform implements TemplateTransformModel {
 
 
             public void close() throws IOException {
-                FreeMarkerWorker.reloadValues(templateCtx, savedValues);
+                FreeMarkerWorker.reloadValues(templateCtx, savedValues, env);
                 String wrappedContent = buf.toString();
                 out.write(wrappedContent);
             }

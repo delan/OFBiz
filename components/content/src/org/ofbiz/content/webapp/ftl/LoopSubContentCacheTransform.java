@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.23 2004/06/10 00:10:07 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.24 2004/06/11 00:32:52 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -49,7 +49,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -374,7 +374,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             }
 
             public int afterBody() throws TemplateModelException, IOException {
-                FreeMarkerWorker.reloadValues(templateRoot, savedValues);
+                FreeMarkerWorker.reloadValues(templateRoot, savedValues, env);
                 List list = (List)templateRoot.get("globalNodeTrail");
                 List subList = list.subList(0, list.size() - 1 );
                 templateRoot.put("globalNodeTrail", subList);
@@ -402,7 +402,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 if (view == null) {
                     return;
                 }
-                FreeMarkerWorker.reloadValues(templateRoot, savedValuesUp);
+                FreeMarkerWorker.reloadValues(templateRoot, savedValuesUp, env);
                 int outputIndex = ((Integer)templateRoot.get("outputIndex")).intValue(); 
                 if (Debug.infoOn()) Debug.logInfo("outputIndex(3):" + outputIndex , "");
                 int highIndex = ((Integer)templateRoot.get("highIndex")).intValue(); 

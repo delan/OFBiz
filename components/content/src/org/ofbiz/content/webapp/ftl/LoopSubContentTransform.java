@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentTransform.java,v 1.10 2004/04/30 23:08:26 ajzeneski Exp $
+ * $Id: LoopSubContentTransform.java,v 1.11 2004/06/11 00:32:53 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -43,7 +43,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @since 3.0
  */
 public class LoopSubContentTransform implements TemplateTransformModel {
@@ -286,7 +286,7 @@ public class LoopSubContentTransform implements TemplateTransformModel {
                         out.write(wrappedFTL);
                 }
                     FreeMarkerWorker.removeValues(templateCtx, removeKeyNames);
-                    FreeMarkerWorker.reloadValues(templateCtx, savedValues);
+                    FreeMarkerWorker.reloadValues(templateCtx, savedValues, env);
             }
         };
     }

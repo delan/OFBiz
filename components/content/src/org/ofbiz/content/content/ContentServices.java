@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.26 2004/06/10 23:09:03 byersa Exp $
+ * $Id: ContentServices.java,v 1.27 2004/06/11 00:32:49 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  * @since 2.2
  * 
  *  
@@ -211,6 +211,7 @@ public class ContentServices {
         GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("contentId", contentId));
         content.setNonPKFields(context);
         context.put("currentContent", content);
+            if (Debug.infoOn()) Debug.logInfo("in createContentMethod, context: " + context, null);
         Map permResults = ContentWorker.callContentPermissionCheckResult(delegator, dispatcher, context);
         String permissionStatus = (String)permResults.get("permissionStatus");
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
