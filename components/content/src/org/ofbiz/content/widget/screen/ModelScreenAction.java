@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenAction.java,v 1.5 2004/07/18 10:09:35 jonesde Exp $
+ * $Id: ModelScreenAction.java,v 1.6 2004/07/22 05:26:57 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.1
  */
 public abstract class ModelScreenAction {
@@ -130,7 +130,7 @@ public abstract class ModelScreenAction {
             this.field.put(context, newValue);
             
             if (global) {
-                Map globalCtx = (Map) context.get("global");
+                Map globalCtx = (Map) context.get("globalContext");
                 if (globalCtx != null) {
                     this.field.put(globalCtx, newValue);
                 }
