@@ -62,7 +62,9 @@ public abstract class GenericHelperAbstract implements GenericHelper
   /** Creates a Entity in the form of a GenericValue without persisting it */
   public GenericValue makeValue(String entityName, Map fields)
   {
-    GenericValue value = new GenericValue(modelReader.getModelEntity(entityName), fields);
+    ModelEntity entity = modelReader.getModelEntity(entityName);
+    if(entity == null) throw new IllegalArgumentException("[GenericHelperAbstract.getRelatedOne] could not find entity for entityName: " + entityName);
+    GenericValue value = new GenericValue(entity, fields);
     value.helper = this;
     return value;
   }
@@ -70,7 +72,9 @@ public abstract class GenericHelperAbstract implements GenericHelper
   /** Creates a Primary Key in the form of a GenericPK without persisting it */
   public GenericPK makePK(String entityName, Map fields)
   {
-    GenericPK pk = new GenericPK(modelReader.getModelEntity(entityName), fields);
+    ModelEntity entity = modelReader.getModelEntity(entityName);
+    if(entity == null) throw new IllegalArgumentException("[GenericHelperAbstract.getRelatedOne] could not find entity for entityName: " + entityName);
+    GenericPK pk = new GenericPK(entity, fields);
     return pk;
   }
 

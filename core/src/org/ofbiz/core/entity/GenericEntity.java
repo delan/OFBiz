@@ -51,9 +51,9 @@ public class GenericEntity implements Serializable
   /** Creates new GenericEntity */
   public GenericEntity(ModelEntity modelEntity) { this.entityName = modelEntity.entityName; this.modelEntity = modelEntity; this.fields = new HashMap(); }
   /** Creates new GenericEntity from existing Map */
-  public GenericEntity(ModelEntity modelEntity, Map fields) { this.entityName = modelEntity.entityName; this.modelEntity = modelEntity; this.fields = new HashMap(fields); }
+  public GenericEntity(ModelEntity modelEntity, Map fields) { this.entityName = modelEntity.entityName; this.modelEntity = modelEntity; this.fields = (fields==null?new HashMap():new HashMap(fields)); }
   /** Copy Constructor: Creates new GenericEntity from existing GenericEntity */
-  public GenericEntity(GenericEntity value) { this.entityName = value.modelEntity.entityName; this.modelEntity = value.modelEntity; this.fields = new HashMap(value.fields); }
+  public GenericEntity(GenericEntity value) { this.entityName = value.modelEntity.entityName; this.modelEntity = value.modelEntity; this.fields = (value.fields==null?new HashMap():new HashMap(value.fields)); }
   
   public boolean isModified() { return modified; }
   
