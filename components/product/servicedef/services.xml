@@ -1055,6 +1055,14 @@
         <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
     </service>
 
+    <service name="attachProductFeaturesToCategory" engine="simple"
+                location="org.ofbiz.product.feature.ParametricSearch" invoke="attachProductFeaturesToCategory" auth="true">
+        <description>Attach Product Features To Category Through Groups</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="doSubCategories" type="String" mode="IN" optional="true"/>
+    </service>
+
+
     <!-- Product Storage Services -->
     <service name="createFacility" default-entity-name="Facility" engine="simple"
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="createFacility" auth="true">
