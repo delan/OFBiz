@@ -1,5 +1,5 @@
 /*
- * $Id: JotmConnectionFactory.java,v 1.2 2003/08/17 04:56:27 jonesde Exp $
+ * $Id: JotmConnectionFactory.java,v 1.3 2004/04/22 22:42:15 doogie Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  * JotmFactory - Central source for JOTM JDBC Objects
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class JotmConnectionFactory {
@@ -55,7 +55,7 @@ public class JotmConnectionFactory {
         StandardXAPoolDataSource pds = (StandardXAPoolDataSource) dsCache.get(helperName);        
         if (pds != null) {                      
             if (Debug.verboseOn()) Debug.logVerbose(helperName + " pool size: " + pds.pool.getCount(), module);           
-            return pds.getConnection();
+            return TransactionFactory.getCursorConnection(helperName, pds.getConnection());
         }
         
         synchronized (JotmConnectionFactory.class) {            
@@ -141,7 +141,7 @@ public class JotmConnectionFactory {
             // cache the pool
             dsCache.put(helperName, pds);        
                                                       
-            return pds.getConnection();
+            return TransactionFactory.getCursorConnection(helperName, pds.getConnection());
         }                
     }
     

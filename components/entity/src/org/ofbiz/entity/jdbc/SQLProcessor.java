@@ -1,5 +1,5 @@
 /*
- * $Id: SQLProcessor.java,v 1.9 2004/04/20 17:31:30 ajzeneski Exp $
+ * $Id: SQLProcessor.java,v 1.10 2004/04/22 22:42:14 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,6 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericDataSourceException;
 import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 
@@ -43,7 +42,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * SQLProcessor - provides utitlity functions to ease database access
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class SQLProcessor {
@@ -371,7 +370,6 @@ public class SQLProcessor {
     public ResultSet executeQuery() throws GenericDataSourceException {
         try {
             // if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.executeQuery] ps=" + _ps.toString(), module);
-            this.setFetchSize(_ps); // set the result fetch size            
             _rs = _ps.executeQuery();
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
@@ -758,18 +756,6 @@ public class SQLProcessor {
             if (SQLProcessor.CONNECTION_TEST_LIST.size() > SQLProcessor.MAX_CONNECTIONS) {
                 SQLProcessor.CONNECTION_TEST_LIST.remove(0);    
             }
-        }
-    }
-
-    protected void setFetchSize(Statement stmt) throws SQLException {
-        EntityConfigUtil.DatasourceInfo ds = EntityConfigUtil.getDatasourceInfo(helperName);
-        if (ds != null) {
-            int fetchSize = ds.resultFetchSize;
-            if (fetchSize > 0) {
-                stmt.setFetchSize(EntityConfigUtil.getDatasourceInfo(helperName).resultFetchSize);
-            }
-        } else {
-            Debug.logWarning("DatasourceInfo is null, not setting fetch size!", module);
         }
     }
 }

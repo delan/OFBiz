@@ -1,5 +1,5 @@
 /*
- * $Id: DumbFactory.java,v 1.2 2003/08/17 04:56:26 jonesde Exp $
+ * $Id: DumbFactory.java,v 1.3 2004/04/22 22:42:15 doogie Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
  * 
  * @author     <a href="mailto:plightbo@hotmail.com">Pat Lightbody</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class DumbFactory implements TransactionFactoryInterface {
@@ -120,7 +120,7 @@ public class DumbFactory implements TransactionFactoryInterface {
 
         if (datasourceInfo.inlineJdbcElement != null) {
             Connection otherCon = ConnectionFactory.tryGenericConnectionSources(helperName, datasourceInfo.inlineJdbcElement);
-            return otherCon;
+            return TransactionFactory.getCursorConnection(helperName, otherCon);
         } else {
             Debug.logError("Dumb/Empty is the configured transaction manager but no inline-jdbc element was specified in the " + helperName + " datasource. Please check your configuration", module);
             return null;

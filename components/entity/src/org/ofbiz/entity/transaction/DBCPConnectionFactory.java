@@ -1,5 +1,5 @@
 /*
- * $Id: DBCPConnectionFactory.java,v 1.3 2003/09/18 16:01:22 jonesde Exp $
+ * $Id: DBCPConnectionFactory.java,v 1.4 2004/04/22 22:42:15 doogie Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  * transactional datasources yet (DBCP 1.0).
  *
  * @author     <a href="mailto:mike@atlassian.com">Mike Cannon-Brookes</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class DBCPConnectionFactory {
@@ -58,7 +58,7 @@ public class DBCPConnectionFactory {
         DataSource dataSource = (DataSource)dsCache.get(helperName);
 
         if (dataSource != null) {
-            return dataSource.getConnection();
+            return TransactionFactory.getCursorConnection(helperName, dataSource.getConnection());
         }
 
         try {
@@ -95,7 +95,7 @@ public class DBCPConnectionFactory {
                 dataSource = new PoolingDataSource(connectionPool);
                 dataSource.setLogWriter(Debug.getPrintWriter());
                 dsCache.put(helperName, dataSource);
-                return dataSource.getConnection();
+                return TransactionFactory.getCursorConnection(helperName, dataSource.getConnection());
             }
         } catch (Exception e) {
             String errorMsg = "Error getting datasource via DBCP.";
