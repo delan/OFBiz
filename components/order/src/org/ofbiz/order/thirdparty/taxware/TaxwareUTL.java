@@ -1,5 +1,5 @@
 /*
- * $Id: TaxwareUTL.java,v 1.1 2003/08/18 19:38:58 jonesde Exp $
+ * $Id: TaxwareUTL.java,v 1.2 2003/08/19 00:31:52 jonesde Exp $
  *
  * Copyright (c) 2002 The Open For Business Project and repective authors.
  *
@@ -39,9 +39,13 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilURL;
+import org.ofbiz.datafile.DataFile;
+import org.ofbiz.datafile.DataFileException;
+import org.ofbiz.datafile.ModelRecord;
+import org.ofbiz.datafile.ModelField;
+import org.ofbiz.datafile.Record;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.model.ModelField;
 
 
 /**
