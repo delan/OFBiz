@@ -18,7 +18,7 @@
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.content.webapp.view.VelocityViewHandler"/>
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
-    
+
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
     <handler name="jasperreportspdf" type="view" class="org.ofbiz.content.webapp.view.JasperReportsPdfViewHandler"/>
@@ -68,14 +68,14 @@
         <security https="false" auth="true"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
-    </request-map>   
+    </request-map>
 
     <request-map uri="setSessionLocale">
         <event type="java" path="org.ofbiz.base.util.UtilHttp" invoke="setSessionLocale"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
-            
+
     <request-map uri="main">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
@@ -259,21 +259,21 @@
     </request-map>
 
     <request-map uri="createnew">
-        <security https="true" auth="false"/>
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="createNew"/>
     </request-map>
-    
+
     <request-map uri="newcustomer">
-        <security https="true" auth="false"/>
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="newcustomer"/>
     </request-map>
     <request-map uri="createcustomer">
-        <security https="true" auth="false"/>
-        <event type="simple" path="org/ofbiz/partymgr/customer/CustomerEvents.xml" invoke="createCustomer"/>
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/party/customer/CustomerEvents.xml" invoke="createCustomer"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="newcustomer"/>
     </request-map>
-    
+
     <request-map uri="editperson">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editperson"/>
@@ -506,7 +506,7 @@
         <response name="success" type="view" value="viewrelationships"/>
         <response name="error" type="view" value="viewrelationships"/>
     </request-map>
-    
+
     <request-map uri="showvisits">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="showvisits"/>
@@ -514,19 +514,19 @@
     <request-map uri="visitdetail">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="visitdetail"/>
-    </request-map>    
-    
+    </request-map>
+
     <request-map uri="pushPage">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setFollowerPage"/>
-        <response name="success" type="view" value="visitdetail"/>        
+        <response name="success" type="view" value="visitdetail"/>
     </request-map>
     <request-map uri="setAppletFollower">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setAppletFollower"/>
         <response name="success" type="view" value="visitdetail"/>
     </request-map>
-    
+
     <!-- communication event requests -->
     <request-map uri="viewcommunications">
         <security https="true" auth="true"/>
@@ -559,7 +559,7 @@
         <event type="service" invoke="removeCommunicationEventPurpose"/>
         <response name="success" type="view" value="communicationEvent"/>
         <response name="success" type="view" value="communicationEvent"/>
-    </request-map> 
+    </request-map>
     <request-map uri="createCommunicationEventRole">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEventRole"/>
@@ -571,7 +571,7 @@
         <event type="service" invoke="removeCommunicationEventRole"/>
         <response name="success" type="view" value="communicationEvent"/>
         <response name="success" type="view" value="communicationEvent"/>
-    </request-map>                 
+    </request-map>
 
     <!-- end of request mappings -->
 
@@ -605,11 +605,11 @@
     <view-map name="EditSecurityGroup" type="jpublish" page="/security/EditSecurityGroup.ftl"/>
     <view-map name="EditSecurityGroupPermissions" type="jpublish" page="/security/EditSecurityGroupPermissions.ftl"/>
     <view-map name="EditSecurityGroupUserLogins" type="jpublish" page="security/EditSecurityGroupUserLogins.ftl"/>
-    
+
     <view-map name="showvisits" type="jpublish" page="/visit/showvisits.ftl"/>
     <view-map name="visitdetail" type="jpublish" page="/visit/visitdetail.ftl"/>
-    
+
     <view-map name="listCommunications" type="jpublish" page="/communication/listCommunications.ftl"/>
-    <view-map name="communicationEvent" type="jpublish" page="/communication/editCommunication.ftl"/>   
+    <view-map name="communicationEvent" type="jpublish" page="/communication/editCommunication.ftl"/>
     <!-- end of view mappings -->
 </site-conf>

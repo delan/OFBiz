@@ -1,27 +1,27 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Revision: 1.3 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz)
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -29,7 +29,7 @@
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
   <div class='head1'>${uiLabelMap.PartyVisitDetail}</div>
   <br>
-  
+
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
       <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyVisitIDSessionID}</div></td>
@@ -60,7 +60,7 @@
       <td width="74%" align="left">
         <div class="tabletext">${visit.webappName?if_exists}</div>
       </td>
-    </tr>  
+    </tr>
     <tr>
       <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyServer}</div></td>
       <td width="5">:&nbsp;</td>
@@ -127,7 +127,7 @@
       <td width="74%" align="left">
         <div class="tabletext">${(visit.fromDate?string)?if_exists} / ${(visit.thruDate?string)?default("["+uiLabelMap.PartyStillActive+"]")}</div>
       </td>
-    </tr>                             
+    </tr>
   </table>
 
   <br>
@@ -146,19 +146,19 @@
               <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
             </#if>
             <#if highIndex < listSize>
-              | <a href="<@ofbizUrl><%="/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+              | <a href="<@ofbizUrl>/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
           </b>
         </td>
       </tr>
     </table>
   </#if>
-  
+
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr>
       <td><div class="tableheadtext">${uiLabelMap.PartyContentId}</div></td>
       <td><div class="tableheadtext">${uiLabelMap.PartyType}</div></td>
-      <td><div class="tableheadtext">${uiLabelMap.PartySize}</div></td>    
+      <td><div class="tableheadtext">${uiLabelMap.PartySize}</div></td>
       <td><div class="tableheadtext">${uiLabelMap.PartyStartTime}</div></td>
       <td><div class="tableheadtext">${uiLabelMap.PartyTime}</div></td>
       <td><div class="tableheadtext">${uiLabelMap.PartyURI}</div></td>
@@ -168,7 +168,7 @@
     </tr>
     <#-- set initial row color -->
     <#assign rowClass = "viewManyTR2">
-    <#list serverHits[lowIndex..highIndex-1] as hit>  
+    <#list serverHits[lowIndex..highIndex-1] as hit>
       <tr class="${rowClass}">
         <td><div class="tabletext">${hit.contentId?if_exists}</div></td>
         <td><div class="tabletext">${hit.hitTypeId?if_exists}</div></td>
@@ -193,8 +193,8 @@
         <#assign rowClass = "viewManyTR2">
       </#if>
     </#list>
-  </table>    
-  
+  </table>
+
   <#if serverHits?has_content>
     <table border="0" width="100%" cellpadding="2">
       <tr>
@@ -207,23 +207,23 @@
               <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
             </#if>
             <#if highIndex < listSize>
-              | <a href="<@ofbizUrl><%="/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+              | <a href="<@ofbizUrl>/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
           </b>
         </td>
       </tr>
     </table>
-  </#if>  
+  </#if>
 
   <#if security.hasPermission("SEND_CONTROL_APPLET", session)>
     <br>
     <div class="head1">${uiLabelMap.PartyPagePushFollowing}</div>
     <br>
-    
+
     <table border="0" cellpadding="5" cellspacing="5">
       <form name="pushPage" method="get" action="<@ofbizUrl>/pushPage</@ofbizUrl>">
-        <tr>        
-          <td><div class="tableheadtext">${uiLabelMap.PartyPushURL}</div></td>    
+        <tr>
+          <td><div class="tableheadtext">${uiLabelMap.PartyPushURL}</div></td>
           <td>
             <input type="hidden" name="followerSid" value="${visit.sessionId}">
             <input type="hidden" name="visitId" value="${visit.visitId}">
