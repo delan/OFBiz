@@ -102,6 +102,10 @@ public class GenericDAO {
   }
   
   private void singleInsert(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave, Connection connection) throws SQLException, GenericEntityException {
+    if(modelEntity instanceof ModelViewEntity) {
+      throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation insert not supported yet for view entities");
+    }
+
     PreparedStatement ps = null;
     String sql = "INSERT INTO " + modelEntity.tableName + " (" + modelEntity.colNameString(fieldsToSave) + ") VALUES (" + modelEntity.fieldsStringList(fieldsToSave, "?", ", ") + ")";
     ps = connection.prepareStatement(sql);
@@ -178,6 +182,10 @@ public class GenericDAO {
   }
   
   private void singleUpdate(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave, Connection connection) throws SQLException, GenericEntityException {
+    if(modelEntity instanceof ModelViewEntity) {
+      throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation update not supported yet for view entities");
+    }
+
     //no non-primaryKey fields, update doesn't make sense, so don't do it
     if(fieldsToSave.size() <= 0) return;
     
@@ -280,6 +288,11 @@ public class GenericDAO {
     if(modelEntity == null) {
       throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
     }
+
+    if(modelEntity instanceof ModelViewEntity) {
+      throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation select not supported yet for view entities");
+    }
+
 /*
     if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
       Debug.logWarning("[GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.");
@@ -344,6 +357,11 @@ public class GenericDAO {
     if(modelEntity == null) {
       throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
     }
+
+    if(modelEntity instanceof ModelViewEntity) {
+      throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation partialSelect not supported yet for view entities");
+    }
+
 /*
     if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
       Debug.logWarning("[GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.");
@@ -409,6 +427,11 @@ public class GenericDAO {
   
   public Collection selectByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
     if(modelEntity == null) return null;
+    ModelViewEntity modelViewEntity = null;
+    if(modelEntity instanceof ModelViewEntity) {
+      modelViewEntity = (ModelViewEntity)modelEntity;
+    }
+
     Collection collection = new LinkedList();
     
     Connection connection = null;
@@ -439,8 +462,36 @@ public class GenericDAO {
     String sql = "SELECT ";
     if(selectFields.size() > 0) sql = sql + modelEntity.colNameString(selectFields, ", ", "");
     else sql = sql + "*";
-    sql += " FROM " + modelEntity.tableName;
+    if(modelViewEntity == null) {
+      sql += " FROM " + modelEntity.tableName;
+    }
+    else {
+      sql += " FROM ";
+      Iterator meIter = modelViewEntity.memberEntities.entrySet().iterator();
+      while(meIter.hasNext()) {
+        Map.Entry entry = (Map.Entry)meIter.next();
+        sql += (String)entry.getValue() + " " + (String)entry.getKey();
+        if(meIter.hasNext()) sql += ", ";
+      }
+    }
     if(fields != null && fields.size() > 0) sql = sql + " WHERE " + makeWhereStringAnd(whereFields, dummyValue);
+    if(modelViewEntity != null) {
+      for(int i=0; i<modelViewEntity.viewLinks.size(); i++) {
+        ModelViewEntity.ModelViewLink viewLink = (ModelViewEntity.ModelViewLink)modelViewEntity.viewLinks.get(i);
+        
+        ModelEntity linkEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(viewLink.entityAlias);
+        ModelEntity relLinkEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(viewLink.relEntityAlias);
+
+        for(int j=0; j<viewLink.keyMaps.size(); j++) {
+          ModelKeyMap keyMap = (ModelKeyMap)viewLink.keyMaps.get(j);
+          ModelField linkField = linkEntity.getField(keyMap.fieldName);
+          ModelField relLinkField = relLinkEntity.getField(keyMap.relFieldName);
+        
+          sql += " " + viewLink.entityAlias + "." + linkField.colName;
+          sql += "=" + viewLink.relEntityAlias + "." + relLinkField.colName;
+        }
+      }
+    }
     
     if(orderBy != null && orderBy.size() > 0) {
       Vector orderByStrings = new Vector();
@@ -511,6 +562,11 @@ public class GenericDAO {
   
   public Collection selectByAnd(ModelEntity modelEntity, List fields, List intraFieldOperations, List values, List orderBy) throws GenericEntityException {
     if(modelEntity == null) return null;
+    ModelViewEntity modelViewEntity = null;
+    if(modelEntity instanceof ModelViewEntity) {
+      modelViewEntity = (ModelViewEntity)modelEntity;
+    }
+
     if(intraFieldOperations == null) return null;
     Collection collection = new LinkedList();
     
@@ -537,7 +593,18 @@ public class GenericDAO {
     String sql = "SELECT ";
     if(selectFields.size() > 0) sql = sql + modelEntity.colNameString(selectFields, ", ", "");
     else sql = sql + "*";
-    sql += " FROM " + modelEntity.tableName;
+    if(modelViewEntity == null) {
+      sql += " FROM " + modelEntity.tableName;
+    }
+    else {
+      sql += " FROM ";
+      Iterator meIter = modelViewEntity.memberEntities.entrySet().iterator();
+      while(meIter.hasNext()) {
+        Map.Entry entry = (Map.Entry)meIter.next();
+        sql += (String)entry.getValue() + " " + (String)entry.getKey();
+        if(meIter.hasNext()) sql += ", ";
+      }
+    }
     sql = sql + " WHERE ";
     
     if(whereFields != null && whereFields.size() > 0) {
@@ -548,6 +615,24 @@ public class GenericDAO {
       sql = sql + ((ModelField)whereFields.elementAt(i)).colName + ((EntityOperator)intraFieldOperations.get(i)).getCode() + " ? ";
     }
     
+    if(modelViewEntity != null) {
+      for(int i=0; i<modelViewEntity.viewLinks.size(); i++) {
+        ModelViewEntity.ModelViewLink viewLink = (ModelViewEntity.ModelViewLink)modelViewEntity.viewLinks.get(i);
+        
+        ModelEntity linkEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(viewLink.entityAlias);
+        ModelEntity relLinkEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(viewLink.relEntityAlias);
+
+        for(int j=0; j<viewLink.keyMaps.size(); j++) {
+          ModelKeyMap keyMap = (ModelKeyMap)viewLink.keyMaps.get(j);
+          ModelField linkField = linkEntity.getField(keyMap.fieldName);
+          ModelField relLinkField = relLinkEntity.getField(keyMap.relFieldName);
+        
+          sql += " " + viewLink.entityAlias + "." + linkField.colName;
+          sql += "=" + viewLink.relEntityAlias + "." + relLinkField.colName;
+        }
+      }
+    }
+
     if(orderBy != null && orderBy.size() > 0) {
       Vector orderByStrings = new Vector();
       for(int fi=0; fi<modelEntity.fields.size(); fi++) {
@@ -615,6 +700,10 @@ public class GenericDAO {
   
   public Collection selectByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
     if(modelEntity == null) return null;
+    if(modelEntity instanceof ModelViewEntity) {
+      throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation selectByLike not supported yet for view entities");
+    }
+
     Collection collection = new LinkedList();
     
     Connection connection = null;
@@ -711,6 +800,11 @@ public class GenericDAO {
   }
   
   public Collection selectByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
+    if(modelEntity == null) return null;
+    if(modelEntity instanceof ModelViewEntity) {
+      throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation insert not supported yet for view entities");
+    }
+
     if(entityClauses == null) return null;
     
     Collection collection = new LinkedList();
@@ -869,6 +963,11 @@ public class GenericDAO {
     if(modelEntity == null) {
       throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
     }
+
+    if(modelEntity instanceof ModelViewEntity) {
+      throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation delete not supported yet for view entities");
+    }
+
 /*
     if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
       Debug.logWarning("[GenericDAO.delete]: Cannot delete GenericEntity: required primary key field(s) missing.");
@@ -911,6 +1010,9 @@ public class GenericDAO {
   
   public void deleteByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException {
     if(modelEntity == null || fields == null) return;
+    if(modelEntity instanceof ModelViewEntity) {
+      throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation deleteByAnd not supported yet for view entities");
+    }
     
     Connection connection = null;
     PreparedStatement ps = null;
@@ -1083,6 +1185,10 @@ public class GenericDAO {
  */
   public boolean createTable(ModelEntity entity) {
     if(entity == null) return false;
+    if(entity instanceof ModelViewEntity) {
+      Debug.logError("[GenericDAO.createTable] ERROR: Cannot create table for a view entity");
+      return false;
+    }
     
     Connection connection = null;
     Statement stmt = null;
@@ -1127,6 +1233,10 @@ public class GenericDAO {
  */
   public boolean addColumn(ModelEntity entity, ModelField field) {
     if(entity == null || field == null) return false;
+    if(entity instanceof ModelViewEntity) {
+      Debug.logError("[GenericDAO.addColumn] ERROR: Cannot add column for a view entity");
+      return false;
+    }
     
     Connection connection = null;
     Statement stmt = null;
