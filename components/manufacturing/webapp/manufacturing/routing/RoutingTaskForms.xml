@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -33,7 +33,7 @@
             >
         <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
         <field name="workEffortIdFrom"><hidden/></field>
-        <field name="seqId" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
         <field name="workEffortIdTo"  title="${uiLabelMap.ManufacturingTaskName}"><display description="${workEffortToName}" /></field>
         <field name="workEffortAssocTypeId" ><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ><display/></field>
@@ -42,7 +42,7 @@
         <field name="workEffortToRun" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}" ><display/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSelected}" widget-style="smallSubmit" ><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="RemoveRoutingTaskAssoc?workEffortIdFrom=${workEffortIdFrom}&amp;workEffortIdTo=${workEffortIdTo}&amp;seqId=${seqId}&amp;workEffortAssocTypeId=ROUTING_COMPONENT" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+            <hyperlink target="RemoveRoutingTaskAssoc?workEffortIdFrom=${workEffortIdFrom}&amp;workEffortIdTo=${workEffortIdTo}&amp;sequenceNum=${sequenceNum}&amp;workEffortAssocTypeId=ROUTING_COMPONENT" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
  
@@ -51,7 +51,7 @@
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
         <field name="workEffortIdFrom"><hidden/></field>
-        <field name="seqId" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
         <field name="workEffortIdTo"  title="${uiLabelMap.ManufacturingRoutingTaskId}">
         	<display description="${routingTask.workEffortName}"/></field>
         <field name="workEffortAssocTypeId" ><hidden/></field>

@@ -168,7 +168,7 @@
 <!--        <auto-attributes entity-name="WorkEffortAssoc" include="nopk" mode="IN" optional="true"/> -->
         <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/> 
-        <attribute name="seqIdNotOk" type="String" mode="OUT" optional="false"/> 
+        <attribute name="sequenceNumNotOk" type="String" mode="OUT" optional="false"/> 
     </service>
 
     <!-- MRP services -->
