@@ -269,6 +269,41 @@
         <key-map field-name="productCategoryId"/>
       </relation>
     </entity>
+    <view-entity entity-name="ProductCategoryAndMember"
+            package-name="org.ofbiz.commonapp.product.category"
+            title="ProductCategory And ProductCategoryMember View Entity">
+      <member-entity entity-alias="PC" entity-name="ProductCategory"/>
+      <member-entity entity-alias="PCM" entity-name="ProductCategoryMember"/>
+      <alias entity-alias="PC" name="productCategoryId"/>
+      <alias entity-alias="PC" name="productCategoryTypeId"/>
+      <alias entity-alias="PC" name="primaryParentCategoryId"/>
+      <alias entity-alias="PC" name="description"/>
+      <alias entity-alias="PC" name="longDescription"/>
+      <alias entity-alias="PC" name="categoryImageUrl"/>
+      <alias entity-alias="PC" name="linkOneImageUrl"/>
+      <alias entity-alias="PC" name="linkTwoImageUrl"/>
+      <alias entity-alias="PC" name="detailTemplate"/>
+      <alias entity-alias="PCM" name="productId"/>
+      <alias entity-alias="PCM" name="fromDate"/>
+      <alias entity-alias="PCM" name="thruDate"/>
+      <alias entity-alias="PCM" name="comments"/>
+      <alias entity-alias="PCM" name="sequenceNum"/>
+      <alias entity-alias="PCM" name="quantity"/>
+      <view-link entity-alias="PC" rel-entity-alias="PCM">
+        <key-map field-name="productCategoryId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ProductCategoryMember">
+        <key-map field-name="productCategoryId"/>
+        <key-map field-name="productId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="ProductCategoryAttribute"
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Attribute Entity">
