@@ -75,7 +75,7 @@
                 <li><div class='tabletext'>Entity Engine Tools</div>
                 <ul>
                   <li><a href="<ofbiz:url>/entitymaint</ofbiz:url>" class='buttontext'>Entity Data Maintenance</A>
-                  <li><a href="<ofbiz:url>/view/entityref</ofbiz:url>" class='buttontext' target='_blank'>Entity Reference &amp; Editing Tools</A>
+                  <li><a href="<ofbiz:url>/view/entityref</ofbiz:url>" class='buttontext' target='_blank'>Entity Reference &amp; Editing Tools</A>&nbsp;<a href="<ofbiz:url>/view/entityref?forstatic=true</ofbiz:url>" class='buttontext' target='_blank'><font color="black" size="-1">[static]</font></A>
                   <ul>
                     <li><a href="<ofbiz:url>/view/checkdb</ofbiz:url>" class='buttontext'>Check/Update Database</A>                    
                     <li><a href="<ofbiz:url>/view/ModelWriter</ofbiz:url>" class='buttontext' target='_blank'>Generate Entity Model XML (all in one)</A>
