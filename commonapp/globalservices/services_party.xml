@@ -388,14 +388,14 @@
     <service name="createVendor" engine="simple"
             location="org/ofbiz/commonapp/party/party/PartyServices.xml" invoke="createVendor" auth="false">
         <description>Create Vendor Information</description>
-        <auto-attributes entity-name="Vendor" include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="Vendor" include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes entity-name="Vendor" include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateVendor" engine="simple"
             location="org/ofbiz/commonapp/party/party/PartyServices.xml" invoke="updateVendor" auth="true">
         <description>Update Vendor Information</description>
-        <auto-attributes entity-name="Vendor" include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="Vendor" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="Vendor" include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="removeVendor" engine="simple"
             location="org/ofbiz/commonapp/party/party/PartyServices.xml" invoke="removeVendor" auth="true">
