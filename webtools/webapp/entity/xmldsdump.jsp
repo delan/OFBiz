@@ -107,7 +107,13 @@
               <%String curEntityName = (String)iter.next();%>
               <%if(entCount % 3 == 0) {%></TR><TR><%}%>
               <%entCount++;%>
-              <TD><INPUT type=checkbox name='entityName' value='<%=curEntityName%>'<%=checkAll?"checked":""%>><%=curEntityName%></TD>
+              <%-- don't check view entities... --%>
+              <%boolean check = checkAll;%>
+              <%if (check) {%>
+                <%ModelEntity curModelEntity = delegator.getModelEntity(curEntityName);%>
+                <%if (curModelEntity instanceof ModelViewEntity) check = false;%>
+              <%}%>
+              <TD><INPUT type=checkbox name='entityName' value='<%=curEntityName%>' <%=check?"checked":""%>><%=curEntityName%></TD>
             <%}%>
           </TR>
         </TABLE>
