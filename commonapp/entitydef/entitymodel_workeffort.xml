@@ -414,6 +414,7 @@
       <field name="quantityToProduce" type="numeric"></field>
       <field name="quantityProduced" type="numeric"></field>
       <field name="quantityRejected" type="numeric"></field>
+      <field name="sourceReferenceId" type="id-long"></field>
       <prim-key field="workEffortId"/>
       <relation type="one" fk-name="WK_EFFRT_TYPE" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId"/>

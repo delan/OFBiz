@@ -74,7 +74,7 @@
       <field name="productPromoActionSeqId" type="id"></field>
       <field name="productFeatureId" type="id"></field>
       <field name="correspondingProductId" type="id"></field>
-      <field name="sourceReferenceId" type="id"></field>
+      <field name="sourceReferenceId" type="id-long"></field>
       <field name="includeInTax" type="indicator"></field>
       <field name="includeInShipping" type="indicator"></field>
       <prim-key field="orderAdjustmentId"/>
