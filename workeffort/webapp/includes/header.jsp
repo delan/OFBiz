@@ -40,7 +40,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/tasklist</ofbiz:url>" class="buttontext">Task&nbsp;List</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/mytasks</ofbiz:url>" class="buttontext">Task&nbsp;List</a></td>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/month</ofbiz:url>" class="buttontext">Calendar</a></td>
 
           <td width="90%" align=center class='headerCenter'>&nbsp;</td>

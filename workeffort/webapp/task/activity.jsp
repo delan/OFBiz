@@ -54,7 +54,7 @@
             <div class='boxhead'>&nbsp;Activity Detail</div>
           </TD>
           <TD align=right width='60%'>
-            <A href='<ofbiz:url>/tasklist</ofbiz:url>' class='lightbuttontext'>[Task&nbsp;List]</A>
+            <A href='<ofbiz:url>/mytasks</ofbiz:url>' class='lightbuttontext'>[Task&nbsp;List]</A>
             <A href='<ofbiz:url>/task</ofbiz:url>' class='lightbuttontext'>[New&nbsp;Task]</A>
           </TD>
         </tr>
@@ -184,7 +184,7 @@
                 <div class='boxhead'>&nbsp;Party Assignments Detail</div>
               </TD>
               <TD align=right width='60%'>
-                <%-- <A href='<ofbiz:url>/tasklist</ofbiz:url>' class='lightbuttontext'>[Task&nbsp;List]</A> --%>
+                <%-- <A href='<ofbiz:url>/mytasks</ofbiz:url>' class='lightbuttontext'>[Task&nbsp;List]</A> --%>
               </TD>
             </tr>
           </table>

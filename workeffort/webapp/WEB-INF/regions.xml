@@ -58,9 +58,9 @@
         <put section='content' content='/task/activity.jsp'/>
     </define>
 
-    <define id='tasklist' region='MAIN_REGION'>
+    <define id='mytasks' region='MAIN_REGION'>
         <put section='title'>View Activity and Task List</put>
-        <put section='content' content='/task/tasklist.jsp'/>
+        <put section='content' content='/task/mytasks.jsp'/>
     </define>
 
     <define id='requirementlist' region='MAIN_REGION'>

@@ -144,18 +144,18 @@
 
     <request-map uri="acceptAssignment"><security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptAssignment"/>
-    	<response name="success" type="view" value="tasklist"/>
-        <response name="error" type="view" value="tasklist"/>
+    	<response name="success" type="view" value="mytasks"/>
+        <response name="error" type="view" value="mytasks"/>
     </request-map>
 
     <request-map uri="acceptRoleAssignment"><security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptRoleAssignment"/>
-    	<response name="success" type="view" value="tasklist"/>
-        <response name="error" type="view" value="tasklist"/>
+    	<response name="success" type="view" value="mytasks"/>
+        <response name="error" type="view" value="mytasks"/>
     </request-map>
 
-    <request-map uri="tasklist"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="tasklist"/>
+    <request-map uri="mytasks"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="mytasks"/>
     </request-map>
 
     <request-map uri="requirementlist"><security https="true" auth="true"/>
@@ -209,7 +209,7 @@
     <view-map name="task" type="region"/>
     <view-map name="requirement" type="region"/>
     <view-map name="activity" type="region"/>
-    <view-map name="tasklist" type="region"/>
+    <view-map name="mytasks" type="region"/>
     <view-map name="requirementlist" type="region"/>
 
     <view-map name="event" type="region"/>
