@@ -1,5 +1,5 @@
 /*
- * $Id: HttpRequestFileUpload.java,v 1.1 2003/08/24 09:33:33 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@
 package org.ofbiz.base.util;
 
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
@@ -151,8 +152,9 @@ public class HttpRequestFileUpload {
         while (requestLength > 0/* i != -1*/) {
             String newLine = "";
 
-            if (i > -1)
+            if (i > -1) {
                 newLine = new String(line, 0, i);
+            }
             if (newLine.startsWith("Content-Disposition: form-data; name=\"")) {
                 if (newLine.indexOf("filename=\"") != -1) {
                     setFilename(new String(line, 0, i - 2));
@@ -186,6 +188,11 @@ public class HttpRequestFileUpload {
                         lastTwoBytes[1] = line[i - 1];
                     }
                     System.out.println("about to create a file:" + (savePath == null ? "" : savePath) + filenameToUse);
+                    // before creating the file make sure directory exists
+                    File savePathFile = new File(savePath);
+                    if (!savePathFile.exists()) {
+                        savePathFile.mkdirs();
+                    }
                     FileOutputStream fos = new FileOutputStream((savePath == null ? "" : savePath) + filenameToUse);
                     boolean bail = (new String(line, 0, i).startsWith(boundary));
                     boolean oneByteLine = (i == 1); // handle one-byte lines
@@ -261,8 +268,9 @@ public class HttpRequestFileUpload {
                 }
             }
             i = waitingReadLine(in, line, 0, BUFFER_SIZE, requestLength);
-            if (i > -1)
+            if (i > -1) {
                 requestLength -= i;
+            }
 
         } // end while
     }
