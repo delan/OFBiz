@@ -79,7 +79,7 @@ public class EntityEcaRule {
         if (Debug.verboseOn()) Debug.logVerbose("Actions: " + actions);
     }
 
-    public void eval(String currentOperation, DispatchContext dctx, GenericEntity value, boolean isError) throws GenericEntityException {
+    public void eval(String currentOperation, DispatchContext dctx, GenericEntity value, boolean isError, Set actionsRun) throws GenericEntityException {
         //Debug.logInfo("eval eeca rule: operation=" + currentOperation + ", in event=" + this.eventName + ", on entity=" + this.entityName + ", for value=" + value);
         
         if (isError && !this.runOnError) {
@@ -104,7 +104,12 @@ public class EntityEcaRule {
             Iterator a = actions.iterator();
             while (a.hasNext()) {
                 EntityEcaAction ea = (EntityEcaAction) a.next();
-                ea.runAction(dctx, value);
+                // in order to enable OR logic without multiple calls to the given service, 
+                //only execute a given service name once per service call phase 
+                if (!actionsRun.contains(ea.serviceName)) {
+                    ea.runAction(dctx, value);
+                    actionsRun.add(ea.serviceName);
+                }
             }
         }
     }

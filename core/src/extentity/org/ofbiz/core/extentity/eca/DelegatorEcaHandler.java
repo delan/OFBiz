@@ -84,9 +84,10 @@ public class DelegatorEcaHandler implements EntityEcaHandler {
         
         Iterator i = rules.iterator();
         if (i.hasNext() && Debug.verboseOn()) Debug.logVerbose("Running ECA (" + event + ").", module);
+        Set actionsRun = new TreeSet();
         while (i.hasNext()) {
             EntityEcaRule eca = (EntityEcaRule) i.next();
-            eca.eval(currentOperation, this.dctx, value, isError);
+            eca.eval(currentOperation, this.dctx, value, isError, actionsRun);
         }
     }
 }
