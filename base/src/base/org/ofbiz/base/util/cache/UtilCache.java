@@ -50,7 +50,6 @@ public class UtilCache implements Serializable {
 
     /** An index number appended to utilCacheTable names when there are conflicts. */
     protected static Map defaultIndices = new HashMap();
-    protected static jdbm.RecordManager jdbmMgr = null;
 
     /** The name of the UtilCache instance, is also the key for the instance in utilCacheTable. */
     protected String name = null;
@@ -80,6 +79,7 @@ public class UtilCache implements Serializable {
 
     /** Specifies whether or not to use file base stored for this cache, defautls to false */
     protected boolean useFileSystemStore = false;
+    private String fileStore = "data/utilcache";
 
     /** The set of listeners to receive notifcations when items are modidfied(either delibrately or because they were expired). */
     protected HashSet listeners = new HashSet();
@@ -98,7 +98,7 @@ public class UtilCache implements Serializable {
         setPropertiesParams(cacheName);
 
         name = cacheName + this.getNextDefaultIndex(cacheName);
-        cacheLineTable = new CacheLineTable(name, useFileSystemStore, maxMemorySize);
+        cacheLineTable = new CacheLineTable(fileStore, name, useFileSystemStore, maxMemorySize);
 
         utilCacheTable.put(name, this);
     }
@@ -235,9 +235,16 @@ public class UtilCache implements Serializable {
                     useFileSystemStore = "true".equals(value);
                 }
             } catch (Exception e) {}
+            try {
+                String value = res.getString("cache.file.store");
+
+                if (value != null) {
+                    fileStore = value;
+                }
+            } catch (Exception e) {}
         }
 
-        this.cacheLineTable = new CacheLineTable(name, useFileSystemStore, (int) maxSize);
+        this.cacheLineTable = new CacheLineTable(fileStore, name, useFileSystemStore, (int) maxSize);
     }
 
     /** Puts or loads the passed element into the cache
