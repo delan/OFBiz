@@ -87,6 +87,15 @@ integration so you can get exact rates, get tracking codes immediately, and even
 packing of shipments. There is even support for serial scales to weigh each package before sending off to get an
 exact rate.</p>
 
+<p class='contenttext'>Administration of Stores is now easier (be it a web store or a physical store) as all store
+settings are centralized through the Product Store. This includes inventory settings, payment settings, tax and shipping settings, 
+email notification settings, product search keyword overrides, administration roles, catalogs, promotions, and so on.</p>
+
+<p class='contenttext'>Another big change included in this release is internationalization and varying levels
+of localization for different components. This has been a huge effort contributed by various people in various
+party of the world (special thanks to Olivier Heintz & Co. and many others). The manufacturing module also falls into 
+this category, it was developed and contributed by various parties (special thanks to Jacopo Cappellato and Olivier Heintz).
+
 <p class='contenttext'>In general, if you haven't looked at OFBiz in a while you will be amazed at what is new.
 While we have put some effort into compiling this list of new things, it is still far from complete but should
 give you a good idea about what is new and improved in OFBiz.</p>
@@ -111,14 +120,18 @@ give you a good idea about what is new and improved in OFBiz.</p>
     	also supports multiple result ordering options including by keyword relevancy and by product name (others can be easily added)</li>
     <li class='contenttext'>All search constraints are shown with search results and can be individually removed for a broader search, or you can refine the
     	search because any time you go back to the advanced search page it remembers your last search and allows you to refine the previous search, or start fresh</li>
+    <li class='contenttext'>Can now use multiple payment methods for a given order; for example multiple credit cards, electronic checks, gift cards, etc</li>
+    <li class='contenttext'>Self service order returns, cancellation, and allowing order split for faster shipping of available inventory</li>
   </ul>
   <li class='contenttext'>Content Management
   <ul>
     <li class='contenttext'>URL settings for HTTP/HTTPS now configurable by WebSite</li>
+    <li class='contenttext'>Survey implementation to flexibly gather information associated with different parts of the system; examples include gathering information when a product is purchased or getting extra information about custumers on an ad-hoc basis</li>
     <li class='contenttext'>New Form Widget: describe your form in XML, auto-create fields from services and entities, do create/edit/list/lookup-popup and many other types of forms</li>
     <li class='contenttext'>DataResource and Content creation and editing</li>
     <li class='contenttext'>Supports localized content</li>
     <li class='contenttext'>New layout editor can be used to easily create new content from existing templates and new or existing content and data resources</li>
+    <li class='contenttext'>Content can be mounted and rendered as part of any web application</li>
   </ul>
   <li class='contenttext'>Catalog Management
   <ul>
@@ -126,6 +139,7 @@ give you a good idea about what is new and improved in OFBiz.</p>
     <li class='contenttext'>Shipping and Tax rates now configurable by ProductStore</li>
     <li class='contenttext'>Payment and Email notification settings now configurable by ProductStore</li>
     <li class='contenttext'>Content can now be flexibly associated with Products for names, descriptions, images, and any additional information desired</li>
+    <li class='contenttext'>Can now setup and fulfill digital goods, or combination finished (physical) and digital goods (findig goods;)</li>
   </ul>
   <li class='contenttext'>Order Management
   <ul>
@@ -134,17 +148,23 @@ give you a good idea about what is new and improved in OFBiz.</p>
     <li class='contenttext'>Order status changes to Completed or Cancelled now automatic based on the status of the items</li>
     <li class='contenttext'>Refactor Find Order page; now uses a filtering approach and runs much more efficiently</li>
   </ul>
+  <li class='contenttext'>Party Management
+  <ul>
+    <li class='contenttext'>Refactor Find Party page; now uses a filtering approach with dynamic view entities and runs much more efficiently</li>
+    <li class='contenttext'>Initial implementation of communication event tracking and management</li>
+  </ul>
   <li class='contenttext'>Facility Management
   <ul>
     <li class='contenttext'>Implemented Inventory Receive PO and Receive Shipment</li>
     <li class='contenttext'>New Shipment functionality</li>
     <li class='contenttext'>Integration with UPS shipping services (using XPCI, the XML-based UPS interface)</li>
-    <li class='contenttext'>New product return functionality supports refunds and credits</li>
+    <li class='contenttext'>New order return functionality supports refunds and credits</li>
     <li class='contenttext'>New customizable JasperReport for shipping manifest (packing slip)</li>
-    <li class='contenttext'>New pick list and stock move functionality (pick list create PDF file using XSL:FO and FOP)</li>
+    <li class='contenttext'>New pick list and stock move functionality (pick list creates PDF files using XSL:FO and FOP)</li>
   </ul>
   <li class='contenttext'>Accounting Management
   <ul>
+    <li class='contenttext'>Billing account implementation to allow payment by account with credit limit and later billing; can associate payments and invoices with this account; direct tracking (not yet through GL) of accounts receivable</li>
     <li class='contenttext'>Create Invoice triggered on shipment status change</li>
     <li class='contenttext'>Capture payment triggered on invoice creation</li>
     <li class='contenttext'>Started Chart of Accounts functionality and infrastructure for the GL</li>
@@ -156,14 +176,17 @@ give you a good idea about what is new and improved in OFBiz.</p>
   </ul>
   <li class='contenttext'>Service Engine
   <ul>
-    <li class='contenttext'>New auto-attributes functionality; will import fields from entities into service definitions; also can exclude and override attributes now</li>  
+    <li class='contenttext'>Implemented RMI remote service engine and dispatcher that uses a compressed socket for efficient remote service calls</li>
+    <li class='contenttext'>New auto-attributes functionality; will import fields from entities into service definitions; also can exclude and override attributes now</li>
     <li class='contenttext'>New option in service definition to set the timeout for the transaction; only if the service starts a transaction</li>
     <li class='contenttext'>New option in service definition to set the timeout for the transaction; only if the service starts a transaction</li>
     <li class='contenttext'>New debug mode on services; will enable verbose debugging until the service completes</li>
     <li class='contenttext'>Now printing the service name in many error messages; helps with debugging</li>
+    <li class='contenttext'>Service validation errors can be more flexibly handled through a new service validation exception that contains extra information about the error(s)</li>
   </ul>
   <li class='contenttext'>Entity Engine
   <ul>
+    <li class='contenttext'>Better support for various databases including Oracle, Sybase, SQL Server, Postgres, SAP/Max DB, and others</li>
     <li class='contenttext'>Various extensions and new features for view entities</li>
     <li class='contenttext'>Dynamic view entities now allow you to create your view entities on the fly for improved flexibility and efficiency</li>
     <li class='contenttext'>Updated TransactionUtil.begin() to accept the transaction timeout in seconds</li>
@@ -171,7 +194,6 @@ give you a good idea about what is new and improved in OFBiz.</p>
   </ul>
   <li class='contenttext'>Workflow Engine
   <ul>
-    <li class='contenttext'>XPDL Reader now will read XPDL 1.0 generated by JAwE</li>
     <li class='contenttext'>Workflow will now auto version packages/processes if no version is passed</li>
     <li class='contenttext'>Process/Activity names/description can include variables from the context '${variable}'</li>
     <li class='contenttext'>Changed some workflow exceptions to be more informative</li>
@@ -181,8 +203,8 @@ give you a good idea about what is new and improved in OFBiz.</p>
   </ul>
   <li class='contenttext'>General &amp; Infrastructure
   <ul>
+    <li class='contenttext'>Updated lastest versions of Jetty, JPublish, JOTM; added Minerva for the default XA-aware connection pool</li>
     <li class='contenttext'>Security improvements; logging out of one application will now log out of all, can automatically login to other applications through a temporary external login key generated for each page request.</li>
-    <li class='contenttext'>Updated lastest versions of JPublish, JOTM; added Minerva for the default XA-aware connection pool</li>
     <li class='contenttext'>Added new JPublishWrapper class available in the ServletContext</li>
     <li class='contenttext'>Refactor JPublishViewHandler to use the JPublishWrapper (better reuse)</li>  
     <li class='contenttext'>Added jpublish.xml to all applications</li>
@@ -192,18 +214,9 @@ give you a good idea about what is new and improved in OFBiz.</p>
     <li class='contenttext'>New configurable options for logs dir, log4j configuration, plus all options can be overridden on the command line</li>
     <li class='contenttext'>Now prints all connections to the admin port of ofbiz.jar</li>
     <li class='contenttext'>All debug statements now pass log4j category, we can now filter to the class level using log4j</li>
+    <li class='contenttext'>HttpClient now supports SSL client certificate authentication</li>
   </ul>
 </ul>
-
-<h4>Bug Fixes</h4>
-<p class='contenttext'>Bug Fixes include:</p>
-<ul>
-  <li class='contenttext'>Bug fixes in interface implementation; parameters were being inherited wrong (SE)</li>
-  <li class='contenttext'>Bug fixes in getting parameters for limitService (WF)</li>
-  <li class='contenttext'>Bug fixes in creating dynamic assignments (WF)</li>
-  <li class='contenttext'>Bug fixes in completing multiple assignments (WF)</li>	
-</ul>
-
 
 <hr class='sepbar'/>
 <h3><a name="2.1.1">Release 2.1.1 - 06 May 2003</a></h3>
