@@ -23,32 +23,23 @@
    
   <ProductCategory description="Demo Browse Root"
     longDescription="Demo Catalog Primary Browse Root Category" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
-  <ProductCategory description="Gizmos"
-    longDescription="long description of Gizmos"
+  <ProductCategory description="Gizmos" longDescription="long description of Gizmos"
     primaryParentCategoryId="CATALOG1" productCategoryId="100" productCategoryTypeId="CATALOG_CATEGORY"/>
-  <ProductCategory description="Widgets"
-    longDescription="long description of Widgets"
+  <ProductCategory description="Widgets" longDescription="long description of Widgets"
     primaryParentCategoryId="CATALOG1" productCategoryId="200" productCategoryTypeId="CATALOG_CATEGORY"/>
-  <ProductCategory description="Small Gizmos"
-    longDescription="long description of Small Gizmos"
+  <ProductCategory description="Small Gizmos" longDescription="long description of Small Gizmos"
     primaryParentCategoryId="100" productCategoryId="101" productCategoryTypeId="CATALOG_CATEGORY"/>
-  <ProductCategory description="Large Gizmos"
-    longDescription="long description of Large Gizmos"
+  <ProductCategory description="Large Gizmos" longDescription="long description of Large Gizmos"
     primaryParentCategoryId="100" productCategoryId="102" productCategoryTypeId="CATALOG_CATEGORY"/>
-  <ProductCategory description="Small Widgets"
-    longDescription="long description of Small Widgets"
+  <ProductCategory description="Small Widgets" longDescription="long description of Small Widgets"
     primaryParentCategoryId="200" productCategoryId="201" productCategoryTypeId="CATALOG_CATEGORY"/>
-  <ProductCategory description="Large Widgets"
-    longDescription="long description of Large Widgets"
+  <ProductCategory description="Large Widgets" longDescription="long description of Large Widgets"
     primaryParentCategoryId="200" productCategoryId="202" productCategoryTypeId="CATALOG_CATEGORY"/>
-  <ProductCategory description="Mini Widgets"
-    longDescription="long description of Mini Widgets"
+  <ProductCategory description="Mini Widgets" longDescription="long description of Mini Widgets"
     primaryParentCategoryId="201" productCategoryId="2011" productCategoryTypeId="CATALOG_CATEGORY"/>
-  <ProductCategory description="Other Mini Widgets"
-    longDescription="long description of Other Mini Widgets"
+  <ProductCategory description="Other Mini Widgets" longDescription="long description of Other Mini Widgets"
     primaryParentCategoryId="201" productCategoryId="2012" productCategoryTypeId="CATALOG_CATEGORY"/>
-  <ProductCategory description="Micro Widgets"
-    longDescription="long description of Micro Widgets"
+  <ProductCategory description="Micro Widgets" longDescription="long description of Micro Widgets"
     primaryParentCategoryId="2011" productCategoryId="20111" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Featured Products" productCategoryId="PROMOTIONS" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Demo Default Search"
@@ -58,6 +49,10 @@
     longDescription="For quick orders, you have found the right place!" productCategoryId="CATALOG1_QUICKADD1" productCategoryTypeId="QUICKADD_CATEGORY"/>
   <ProductCategory description="Widget Quick Add"
     longDescription="Get all you widgets here!" productCategoryId="CATALOG1_QUICKADD2" productCategoryTypeId="QUICKADD_CATEGORY"/>
+
+  <ProductCategory description="Test Limited Admin Category"
+    longDescription="Test Limited Admin Category" productCategoryId="TSTLTDADMIN" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategoryRole productCategoryId="TSTLTDADMIN" partyId="ltdadmin" roleTypeId="LTD_ADMIN" fromDate="2001-01-01 12:00:00.0"/>
 
   <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1" fromDate="2001-01-01 12:00:00.0" 
     sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
@@ -72,14 +67,15 @@
 
   <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="100" fromDate="2001-01-01 12:00:00.0" 
     sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
+  <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="TSTLTDADMIN" fromDate="2001-01-01 12:00:00.0" 
+    sequenceNum="1" prodCatalogCategoryTypeId="PCCT_ADMIN_ALLW"/>
                 
   <Product productId="GZ-1000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Tiny Gizmo" description="The smallest gizmo in town." longDescription="This gizmo is very small and runs on solar power." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>
   <Product productId="GZ-1001" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Nan Gizmo" description="Indian style gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:57:27.248" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:57:27.248" lastModifiedByUserLogin="admin"/>
   <Product productId="GZ-1004" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Rainbow Gizmo" description="The only multi-colored gizmo" longDescription="This is the original multi-colored gizmo, only available from OFBiz!" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:50:33.463" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:50:33.463" lastModifiedByUserLogin="admin"/>
   <Product productId="GZ-1005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName=".NIT Gizmo" description="M$ gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 19:00:29.851" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:02:17.445" lastModifiedByUserLogin="admin">
-      <longDescription><![CDATA[This gizmo only works in certain areas and requires a lot of extra space to move around. 
-<br><br>
-<b>** Warning this gizmo is known to crash quite often</b>]]></longDescription>
+      <longDescription><![CDATA[This gizmo only works in certain areas and requires a lot of extra space to move around.<br><br>
+	<b>** Warning this gizmo is known to crash quite often</b>]]></longDescription>
   </Product>
   <Product productId="GZ-1006" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Open Gizmo" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 19:03:01.298" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:03:01.298" lastModifiedByUserLogin="admin"/>
   <Product productId="GZ-2002" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Square Gizmo" description="A square gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:52:03.492" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:52:03.492" lastModifiedByUserLogin="admin"/>
