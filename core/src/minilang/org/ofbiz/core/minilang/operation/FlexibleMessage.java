@@ -76,11 +76,11 @@ public class FlexibleMessage {
             //Debug.logInfo("[FlexibleMessage.getMessage] Adding message: " + message);
             return message;
         } else if (isProperty && propertyResource != null && message != null) {
-            URL propertyURL = UtilURL.fromResource(propertyResource, loader);
-            String propMsg = UtilProperties.getPropertyValue(propertyURL, message);
+            //URL propertyURL = UtilURL.fromResource(propertyResource, loader);
+            String propMsg = UtilProperties.getPropertyValue(propertyResource, message);
             //Debug.logInfo("[FlexibleMessage.getMessage] Got property message: " + propMsg);
             if (propMsg == null || propMsg.length() == 0)
-                return "In Simple Map Processing property message could not be found in resource " + propertyResource + " [" + propertyURL + "] with name " + message + ". ";
+                return "In Simple Map Processing property message could not be found in resource [" + propertyResource + "] with name [" + message + "]. ";
             else
                 return propMsg;
         } else {

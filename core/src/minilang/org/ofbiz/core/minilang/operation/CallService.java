@@ -221,17 +221,15 @@ public class CallService extends EventOperation {
         if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessageStr))
             env.put(simpleEvent.eventMessageName, defaultMessageStr);
 
-        //TODO: what to do about moving stuff from the result to request attributes?
-        //request.setAttribute("workEffortId", result.get("workEffortId"));
-
         // handle the result
         String responseCode = result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String) result.get(ModelService.RESPONSE_MESSAGE) : successCode;
         env.put(simpleEvent.responseCodeName, responseCode);
 
-        if (successCode.equals(responseCode))
+        if (successCode.equals(responseCode)) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     public static class ResultToFieldDef {
