@@ -278,6 +278,7 @@
         <delete file="${lib.dir}/ofbcore-entity${ofbiz.version}.jar" />
         <delete file="${lib.dir}/ofbcore-service${ofbiz.version}.jar" />
         <delete file="${lib.dir}/ofbcore-extutil${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-extentity${ofbiz.version}.jar" />
         <delete file="${lib.dir}/ofbcore-workflow${ofbiz.version}.jar" />
         <delete file="${lib.dir}/ofbcore-rules${ofbiz.version}.jar" />
         <delete file="${lib.dir}/ofbcore-datafile${ofbiz.version}.jar" />
@@ -596,6 +597,7 @@
         <copy file="core/lib/ofbcore-entity${ofbiz.version}.jar" toDir="${lib.dir}" />
         <copy file="core/lib/ofbcore-service${ofbiz.version}.jar" toDir="${lib.dir}" />
         <copy file="core/lib/ofbcore-extutil${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-extentity${ofbiz.version}.jar" toDir="${lib.dir}" />
         <copy file="core/lib/ofbcore-workflow${ofbiz.version}.jar" toDir="${lib.dir}" />
         <copy file="core/lib/ofbcore-rules${ofbiz.version}.jar" toDir="${lib.dir}" />
         <copy file="core/lib/ofbcore-datafile${ofbiz.version}.jar" toDir="${lib.dir}" />
