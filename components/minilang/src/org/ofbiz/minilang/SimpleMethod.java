@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleMethod.java,v 1.1 2003/08/17 06:06:13 ajzeneski Exp $
+ * $Id: SimpleMethod.java,v 1.2 2003/09/03 21:05:07 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class SimpleMethod {
@@ -506,10 +506,19 @@ public class SimpleMethod {
             }
         }
 
-        boolean finished = runSubOps(methodOperations, methodContext);
+		// declare errorMsg here just in case transaction ops fail
+		String errorMsg = "";
 
-        // declare errorMsg here just in case transaction ops fail
-        String errorMsg = "";
+        boolean finished = false;
+        try {
+			finished = runSubOps(methodOperations, methodContext);
+        } catch (Throwable t) {
+        	// make SURE nothing gets thrown through
+        	String errMsg = "Error running the simple-method: " + t.toString();
+        	Debug.log(t, errMsg, module);
+        	finished = false;
+			errorMsg += errMsg + "<br>";
+        }
 
         if (finished) {
             // if finished commit here passing beganTransaction to perform it properly
@@ -517,10 +526,9 @@ public class SimpleMethod {
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericTransactionException e) {
                 String errMsg = "Error trying to commit transaction, could not process method: " + e.getMessage();
-
-                errorMsg += errMsg + "<br>";
                 Debug.logWarning(errMsg, module);
                 Debug.logWarning(e, module);
+				errorMsg += errMsg + "<br>";
             }
         } else {
             // if NOT finished rollback here passing beganTransaction to either rollback, or set rollback only
@@ -528,10 +536,9 @@ public class SimpleMethod {
                 TransactionUtil.rollback(beganTransaction);
             } catch (GenericTransactionException e) {
                 String errMsg = "Error trying to rollback transaction, could not process method: " + e.getMessage();
-
-                errorMsg += errMsg + "<br>";
                 Debug.logWarning(errMsg, module);
                 Debug.logWarning(e, module);
+				errorMsg += errMsg + "<br>";
             }
         }
 
