@@ -26,6 +26,7 @@ package org.ofbiz.core.start;
 
 import java.io.*;
 import java.lang.reflect.*;
+import java.net.*;
 import java.util.*;
 
 /**
@@ -35,13 +36,63 @@ import java.util.*;
   *@version    $Revision$
  * @since      2.1
  */
-public class Start {
+public class Start implements Runnable {
 
     public static final String config = "org/ofbiz/core/start/start.properties";
-    private Configuration conf = new Configuration(Start.config);          
-    private Classpath classPath = new Classpath(System.getProperty("java.class.path"));   
-     
-    public void run(String args[]) throws Exception {
+    private static Configuration conf = new Configuration(Start.config);          
+    private Classpath classPath = new Classpath(System.getProperty("java.class.path")); 
+    
+    private ServerSocket serverSocket = null;
+    private Thread serverThread = null;
+    private boolean serverRunning = true; 
+    
+    public Start() throws IOException {
+        serverSocket = new ServerSocket(conf.adminPort, 1, conf.adminAddr);
+        serverThread = new Thread(this, this.toString());
+        serverThread.setDaemon(false);
+        serverThread.start();
+    }
+         
+    public void run() {        
+        while(serverRunning) {
+            try {            
+            Socket clientSocket = serverSocket.accept();
+            System.out.println("Got connection from: " + clientSocket.getPort());
+            processClientRequest(clientSocket);
+            clientSocket.close();                      
+            } catch (IOException e) {
+                e.printStackTrace();               
+            }
+        } 
+        System.exit(0);                       
+    }
+    
+    private void processClientRequest(Socket client) throws IOException {
+        BufferedReader reader = null;
+        BufferedWriter writer = null;
+        
+        reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        System.out.println("Reading line");
+        String request = reader.readLine();        
+        
+        writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+        writer.write(processRequest(request));
+        writer.flush();        
+    }
+    
+    private String processRequest(String request) {
+        String key = request.substring(0, request.indexOf(':'));
+        String command = request.substring(request.indexOf(':')+1);       
+        if (!key.equals(conf.adminKey)) {        
+            return "FAIL";
+        } else {
+            if (command.equals("SHUTDOWN")) 
+                serverRunning = false;        
+            return "OK";
+        }
+    }
+         
+    private void startServer(String args[]) throws Exception {
         ArrayList xargs = new ArrayList();
         xargs.add(conf.configFile);
         for (int i = 0; i < args.length; i++) {
@@ -134,33 +185,58 @@ public class Start {
         }        
     }
     
-    public static void invokeMain(ClassLoader classloader, String classname, String[] args) throws Exception {                
+    public void invokeMain(ClassLoader classloader, String classname, String[] args) throws Exception {                
         Class invoked_class = null;
         invoked_class = classloader.loadClass(classname);
+        
         Class[] method_param_types = new Class[1];
         method_param_types[0] = args.getClass();
+        
         Method main = null;
         main = invoked_class.getDeclaredMethod("main", method_param_types);
         Object[] method_params = new Object[1];
         method_params[0] = args;
+        
         main.invoke(null, method_params);
     }
 
     public static void main(String[] args) throws Exception {
-        Start start = new Start();        
-        start.loadLibs();
-        start.run(args);
+        if (args.length == 0 || !args[0].equals("-shutdown")) {        
+            Start start = new Start();        
+            start.loadLibs();
+            start.startServer(args);
+        } else {
+            Socket socket = new Socket(conf.adminAddr, conf.adminPort);
+            System.out.print("Shutting down server...");
+                        
+            BufferedWriter writer = null;
+            BufferedReader reader = null;
+            
+            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));            
+            writer.write(conf.adminKey + ":" + "SHUTDOWN");
+            writer.flush();
+            
+            //reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            //System.out.println(reader.readLine());
+            
+            socket.close();
+        }
     }
 }
 
 class Configuration {
         
+    protected InetAddress adminAddr;
+    protected int adminPort;
+    protected String adminKey;
+    
     protected String serverClass;
     protected String configFile;
     protected String ofbizHome;
     protected String jettyHome;
     protected String javaHome;
     protected String javaVersion;
+    
     protected List jarList;
     protected List dirList;
     
@@ -179,7 +255,7 @@ class Configuration {
         javaVersion = System.getProperty("java.version");
         jarList = new ArrayList();
         dirList = new ArrayList();
-        
+                
         InputStream propsStream = getClass().getClassLoader().getResourceAsStream(config);
         Properties props = new Properties();
         props.load(propsStream); 
@@ -263,8 +339,18 @@ class Configuration {
                     }                                  
                 }                
             }
-        }        
+        }  
         
+        // get the admin server info        
+        String serverHost = props.getProperty("ofbiz.admin.host");
+        adminAddr = InetAddress.getByName(serverHost);
+        adminKey = props.getProperty("ofbiz.admin.key");
+        try {        
+            adminPort = Integer.parseInt(props.getProperty("ofbiz.admin.port", "10523"));
+        } catch (Exception e) {
+            adminPort = 10523;
+        }
+                             
         propsStream.close();            
     }               
 }
