@@ -200,11 +200,13 @@
             <filter-list-by-date list-name="productCategoryMembers" valid-date-name="validDate"/>
         </if-not-empty>
         
+        <!-- add each to a list to store and then store all and let the entity engine do inserts or updates as needed; much more reliable/useful -->
         <iterate entry-name="productCategoryMember" list-name="productCategoryMembers">
             <clone-value value-name="productCategoryMember" new-value-name="newProductCategoryMember"/>
             <field-to-field field-name="productCategoryIdTo" map-name="parameters" to-field-name="productCategoryId" to-map-name="newProductCategoryMember"/>
-            <create-value value-name="newProductCategoryMember"/>
+            <field-to-list field-name="newProductCategoryMember" list-name="pcmsToStore"/>
         </iterate>
+        <store-list list-name="pcmsToStore"/>
 
         <if-compare field-name="recurse" map-name="parameters" operator="equals" value="Y">
             <!-- call this service for each sub-category in the rollup with the same productCategoryIdTo -->
