@@ -94,12 +94,12 @@ public class IfEmpty extends MethodOperation {
                 }
             } else if (fieldVal instanceof Collection) {
                 Collection fieldCol = (Collection) fieldVal;
-                if (fieldCol.size() > 0) {
+                if (fieldCol.size() == 0) {
                     runSubOps = true;
                 }
             } else if (fieldVal instanceof Map) {
                 Map fieldMap = (Map) fieldVal;
-                if (fieldMap.size() > 0) {
+                if (fieldMap.size() == 0) {
                     runSubOps = true;
                 }
             }
