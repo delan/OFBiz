@@ -40,17 +40,13 @@ import org.ofbiz.core.minilang.method.*;
 public class FieldToSession extends MethodOperation {
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
-    String sessionName;
+    ServletAccessor sessionAcsr;
 
     public FieldToSession(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
-        sessionName = element.getAttribute("session-name");
-
-        if (sessionName == null || sessionName.length() == 0) {
-            sessionName = element.getAttribute("field-name");
-        }
+        sessionAcsr = new ServletAccessor(element.getAttribute("session-name"), element.getAttribute("field-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -74,7 +70,7 @@ public class FieldToSession extends MethodOperation {
                 return true;
             }
 
-            methodContext.getRequest().getSession().setAttribute(sessionName, fieldVal);
+            sessionAcsr.put(methodContext.getRequest().getSession(), fieldVal, methodContext);
         }
         return true;
     }

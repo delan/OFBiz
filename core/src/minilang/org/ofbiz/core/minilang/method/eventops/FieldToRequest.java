@@ -41,17 +41,13 @@ public class FieldToRequest extends MethodOperation {
     
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
-    String requestName;
+    ServletAccessor requestAcsr;
 
     public FieldToRequest(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
-        requestName = element.getAttribute("request-name");
-
-        if (requestName == null || requestName.length() == 0) {
-            requestName = element.getAttribute("field-name");
-        }
+        requestAcsr = new ServletAccessor(element.getAttribute("request-name"), element.getAttribute("field-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -75,7 +71,7 @@ public class FieldToRequest extends MethodOperation {
                 return true;
             }
 
-            methodContext.getRequest().setAttribute(requestName, fieldVal);
+            requestAcsr.put(methodContext.getRequest(), fieldVal, methodContext);
         }
         return true;
     }

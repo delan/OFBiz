@@ -39,31 +39,28 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class SessionToField extends MethodOperation {
     
-    String mapName;
-    String fieldName;
-    String sessionName;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
+    ServletAccessor sessionAcsr;
     String defaultVal;
 
     public SessionToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        mapName = element.getAttribute("map-name");
-        fieldName = element.getAttribute("field-name");
-        sessionName = element.getAttribute("session-name");
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
+        sessionAcsr = new ServletAccessor(element.getAttribute("session-name"), element.getAttribute("field-name"));
         defaultVal = element.getAttribute("default");
-
-        if (sessionName == null || sessionName.length() == 0) {
-            sessionName = fieldName;
-        }
     }
 
     public boolean exec(MethodContext methodContext) {
-        Object fieldVal = null;
+        String defaultVal = methodContext.expandString(this.defaultVal);
 
+        Object fieldVal = null;
         // only run this if it is in an EVENT context
         if (methodContext.getMethodType() == MethodContext.EVENT) {
-            fieldVal = methodContext.getRequest().getSession().getAttribute(sessionName);
+            fieldVal = sessionAcsr.get(methodContext.getRequest().getSession(), methodContext);
             if (fieldVal == null) {
-                Debug.logWarning("Session attribute value not found with name " + sessionName);
+                Debug.logWarning("Session attribute value not found with name " + sessionAcsr);
             }
         }
 
@@ -78,18 +75,18 @@ public class SessionToField extends MethodOperation {
             }
         }
 
-        if (mapName != null && mapName.length() > 0) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
 
             if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapName + " creating a new map");
+                Debug.logWarning("Map not found with name " + mapAcsr + " creating a new map");
                 fromMap = new HashMap();
-                methodContext.putEnv(mapName, fromMap);
+                mapAcsr.put(methodContext, fromMap);
             }
 
-            fromMap.put(fieldName, fieldVal);
+            fieldAcsr.put(fromMap, fieldVal, methodContext);
         } else {
-            methodContext.putEnv(fieldName, fieldVal);
+            fieldAcsr.put(methodContext, fieldVal);
         }
         return true;
     }
