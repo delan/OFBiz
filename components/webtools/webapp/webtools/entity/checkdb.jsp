@@ -36,6 +36,9 @@
 <%
 if(security.hasPermission("ENTITY_MAINT", session)) {
   boolean addMissing = "true".equals(request.getParameter("addMissing"));
+  boolean checkFkIdx = "true".equals(request.getParameter("checkFkIdx"));
+  boolean checkFks = "true".equals(request.getParameter("checkFks"));
+  boolean repair = "true".equals(request.getParameter("repair"));
   String option = request.getParameter("option");
   String groupName = request.getParameter("groupName");
   
@@ -50,11 +53,12 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     Set modelEntityNames = new TreeSet(modelEntities.keySet());
 
     if ("checkupdatetables".equals(option)) {
-        dbUtil.checkDb(modelEntities, messages, addMissing);
-    } else if ("checkandrepair".equals(option)) {
-        List fieldsToRepair = new ArrayList();
-        dbUtil.checkDb(modelEntities, fieldsToRepair, messages, false, addMissing);
-        if (fieldsToRepair.size() > 0) {
+        List fieldsToRepair = null;
+        if (repair) {
+            fieldsToRepair = new ArrayList();
+        }
+        dbUtil.checkDb(modelEntities, fieldsToRepair, messages, checkFks, checkFkIdx, addMissing);
+        if (fieldsToRepair != null && fieldsToRepair.size() > 0) {
             dbUtil.repairColumnSizeChanges(modelEntities, fieldsToRepair, messages);
         }
     } else if ("removetables".equals(option)) {
@@ -118,18 +122,25 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="checkupdatetables"/>
   Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  &nbsp;(fks)&nbsp;<input type="checkbox" name="checkFks" value="true"/>
+  &nbsp;(fk-idx)&nbsp;<input type="checkbox" name="checkFkIdx" value="true"/>
   <input type="submit" value="Check Only"/>
 </form>
 <form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="checkupdatetables"/>
   <input type="hidden" name="addMissing" value="true"/>
   Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  &nbsp;(fks)&nbsp;<input type="checkbox" name="checkFks" value="true"/>
+  &nbsp;(fk-idx)&nbsp;<input type="checkbox" name="checkFkIdx" value="true"/>
   <input type="submit" value="Check and Add Missing"/>
 </form>
 <form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
-  <input type="hidden" name="option" value="checkandrepair"/>
+  <input type="hidden" name="option" value="checkupdatetables"/>
+  <input type="hidden" name="repair" value="true"/>
   <input type="hidden" name="addMissing" value="true"/>
   Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  &nbsp;(fks)&nbsp;<input type="checkbox" name="checkFks" value="true"/>
+  &nbsp;(fk-idx)&nbsp;<input type="checkbox" name="checkFkIdx" value="true"/>
   <input type="submit" value="Check, Add Missing and Repair Column Sizes"/>
 </form>
 
