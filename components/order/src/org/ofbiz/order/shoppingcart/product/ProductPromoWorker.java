@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.29 2003/11/30 18:06:40 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.30 2003/12/03 15:28:59 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.29 $
+ * @version    $Revision: 1.30 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -102,13 +102,13 @@ public class ProductPromoWorker {
 
                                 // evaluate the party related conditions; so we don't show the promo if it doesn't apply.
                                 if ("PPIP_PARTY_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
-                                    condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp, true);
+                                    condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp);
                                 } else if ("PRIP_PARTY_GRP_MEM".equals(productPromoCond.getString("inputParamEnumId"))) {
-                                    condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp, true);
+                                    condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp);
                                 } else if ("PRIP_PARTY_CLASS".equals(productPromoCond.getString("inputParamEnumId"))) {
-                                    condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp, true);
+                                    condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp);
                                 } else if ("PPIP_ROLE_TYPE".equals(productPromoCond.getString("inputParamEnumId"))) {
-                                    condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp, true);
+                                    condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp);
                                 }
                             }
                         }
@@ -192,7 +192,7 @@ public class ProductPromoWorker {
                 Map productPromoDiscountMap = (Map) productPromoDiscountMapIter.next();
                 GenericValue productPromo = (GenericValue) productPromoDiscountMap.get("productPromo");
                 sortedProductPromoList.add(productPromo);
-                //Debug.logInfo("Sorted Promo [" + productPromo.getString("productPromoId") + "] with total discount: " + productPromoDiscountMap.get("totalDiscountAmount"), module);
+                if (Debug.verboseOn()) Debug.logVerbose("Sorted Promo [" + productPromo.getString("productPromoId") + "] with total discount: " + productPromoDiscountMap.get("totalDiscountAmount"), module);
             }
             
             // okay, all ready, do the real run, clearing the temporary result first...
@@ -250,16 +250,22 @@ public class ProductPromoWorker {
                                 GenericValue productPromoCode = (GenericValue) productPromoCodeIter.next();
                                 String productPromoCodeId = productPromoCode.getString("productPromoCodeId");
                                 Long codeUseLimit = getProductPromoCodeUseLimit(productPromoCode, partyId, delegator);
-                                if (runProductPromoRules(cart, cartChanged, useLimit, true, productPromoCodeId, codeUseLimit, productPromo, productPromoRules, dispatcher, delegator, nowTimestamp, isolatedTestRun)) {
+                                if (runProductPromoRules(cart, cartChanged, useLimit, true, productPromoCodeId, codeUseLimit, productPromo, productPromoRules, dispatcher, delegator, nowTimestamp)) {
                                     cartChanged = true;
                                 }
                             }
                         }
                     } else {
-                        if (runProductPromoRules(cart, cartChanged, useLimit, false, null, null, productPromo, productPromoRules, dispatcher, delegator, nowTimestamp, isolatedTestRun)) {
+                        if (runProductPromoRules(cart, cartChanged, useLimit, false, null, null, productPromo, productPromoRules, dispatcher, delegator, nowTimestamp)) {
                             cartChanged = true;
                         }
                     }
+                }
+                
+                // if this is an isolatedTestRun clear out adjustments and cart item promo use info
+                if (isolatedTestRun) {
+                    cart.clearAllPromotionAdjustments();
+                    cart.clearCartItemUseInPromoInfo();
                 }
             }
             
@@ -403,7 +409,7 @@ public class ProductPromoWorker {
     }
 
     protected static boolean runProductPromoRules(ShoppingCart cart, boolean cartChanged, long useLimit, boolean requireCode, String productPromoCodeId, Long codeUseLimit,
-            GenericValue productPromo, List productPromoRules, LocalDispatcher dispatcher, GenericDelegator delegator, Timestamp nowTimestamp, boolean isolatedTestRun) throws GenericEntityException {
+            GenericValue productPromo, List productPromoRules, LocalDispatcher dispatcher, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
         String productPromoId = productPromo.getString("productPromoId");
         while ((useLimit > cart.getProductPromoUseCount(productPromoId)) &&
                 (!requireCode || UtilValidate.isNotEmpty(productPromoCodeId)) &&
@@ -427,7 +433,7 @@ public class ProductPromoWorker {
                 while (productPromoCondIter != null && productPromoCondIter.hasNext()) {
                     GenericValue productPromoCond = (GenericValue) productPromoCondIter.next();
 
-                    boolean condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp, isolatedTestRun);
+                    boolean condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp);
 
                     // any false condition will cause it to NOT perform the action
                     if (condResult == false) {
@@ -447,7 +453,7 @@ public class ProductPromoWorker {
 
                         // Debug.logInfo("Doing action: " + productPromoAction, module);
                         try {
-                            ActionResultInfo actionResultInfo = performAction(productPromoAction, cart, delegator, dispatcher, nowTimestamp, isolatedTestRun);
+                            ActionResultInfo actionResultInfo = performAction(productPromoAction, cart, delegator, dispatcher, nowTimestamp);
                             totalDiscountAmount += actionResultInfo.totalDiscountAmount;
                             quantityLeftInActions += actionResultInfo.quantityLeftInAction;
                             
@@ -475,7 +481,7 @@ public class ProductPromoWorker {
         return cartChanged;
     }
 
-    protected static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, GenericDelegator delegator, Timestamp nowTimestamp, boolean isolatedTestRun) throws GenericEntityException {
+    protected static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
         String condValue = productPromoCond.getString("condValue");
         String inputParamEnumId = productPromoCond.getString("inputParamEnumId");
         String operatorEnumId = productPromoCond.getString("operatorEnumId");
@@ -504,7 +510,7 @@ public class ProductPromoWorker {
                         (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) && 
                         (product == null || !"N".equals(product.getString("includeInPromotions")))) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
-                    quantityNeeded -= cartItem.addPromoQuantityCandidateUse(quantityNeeded, productPromoCond, isolatedTestRun);
+                    quantityNeeded -= cartItem.addPromoQuantityCandidateUse(quantityNeeded, productPromoCond, false);
                 }
             }
 
@@ -647,7 +653,7 @@ public class ProductPromoWorker {
     }
 
     /** returns true if the cart was changed and rules need to be re-evaluted */
-    protected static ActionResultInfo performAction(GenericValue productPromoAction, ShoppingCart cart, GenericDelegator delegator, LocalDispatcher dispatcher, Timestamp nowTimestamp, boolean isolatedTestRun) throws GenericEntityException, CartItemModifyException {
+    protected static ActionResultInfo performAction(GenericValue productPromoAction, ShoppingCart cart, GenericDelegator delegator, LocalDispatcher dispatcher, Timestamp nowTimestamp) throws GenericEntityException, CartItemModifyException {
         ActionResultInfo actionResultInfo = new ActionResultInfo();
         
         String productPromoActionEnumId = productPromoAction.getString("productPromoActionEnumId");
@@ -676,17 +682,11 @@ public class ProductPromoWorker {
 
                 double discountAmount = -(quantity * gwpItem.getBasePrice());
                 
-                if (isolatedTestRun) {
-                    gwpItem.setQuantity(0, dispatcher, cart, false);
-                    int gwpItemIndex = cart.getItemIndex(gwpItem);
-                    cart.removeCartItem(gwpItemIndex, dispatcher);
-                } else {
-                    doOrderItemPromoAction(productPromoAction, gwpItem, discountAmount, "amount", delegator);
-                    
-                    // set promo after create; note that to setQuantity we must clear this flag, setQuantity, then re-set the flag
-                    gwpItem.setIsPromo(true);
-                    if (Debug.verboseOn()) Debug.logVerbose("gwpItem adjustments: " + gwpItem.getAdjustments(), module);
-                }
+                doOrderItemPromoAction(productPromoAction, gwpItem, discountAmount, "amount", delegator);
+                
+                // set promo after create; note that to setQuantity we must clear this flag, setQuantity, then re-set the flag
+                gwpItem.setIsPromo(true);
+                if (Debug.verboseOn()) Debug.logVerbose("gwpItem adjustments: " + gwpItem.getAdjustments(), module);
 
                 actionResultInfo.ranAction = true;
                 actionResultInfo.totalDiscountAmount = discountAmount;
@@ -695,9 +695,7 @@ public class ProductPromoWorker {
             // this may look a bit funny: on each pass all rules that do free shipping will set their own rule id for it,
             // and on unapply if the promo and rule ids are the same then it will clear it; essentially on any pass
             // through the promos and rules if any free shipping should be there, it will be there
-            if (!isolatedTestRun) {
-                cart.addFreeShippingProductPromoAction(productPromoAction);
-            }
+            cart.addFreeShippingProductPromoAction(productPromoAction);
             // don't consider this as a cart change?
             actionResultInfo.ranAction = true;
             // should probably set the totalDiscountAmount to something, but we have no idea what it will be, so leave at 0, will still get run
@@ -719,7 +717,7 @@ public class ProductPromoWorker {
                         (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
                         (product == null || !"N".equals(product.getString("includeInPromotions")))) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
-                    double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, isolatedTestRun);
+                    double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, false);
                     if (quantityUsed > 0) {
                         quantityDesired -= quantityUsed;
 
@@ -738,10 +736,8 @@ public class ProductPromoWorker {
                 actionResultInfo.ranAction = false;
             } else {
                 double totalAmount = getCartItemsUsedTotalAmount(cart, productPromoAction);
-                if (!isolatedTestRun) {
-                    Debug.logInfo("Applying promo [" + productPromoAction.getPrimaryKey() + "]\n totalAmount=" + totalAmount + ", discountAmountTotal=" + discountAmountTotal, module);
-                    distributeDiscountAmount(discountAmountTotal, totalAmount, getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
-                }
+                if (Debug.verboseOn()) Debug.logVerbose("Applying promo [" + productPromoAction.getPrimaryKey() + "]\n totalAmount=" + totalAmount + ", discountAmountTotal=" + discountAmountTotal, module);
+                distributeDiscountAmount(discountAmountTotal, totalAmount, getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
                 actionResultInfo.ranAction = true;
                 actionResultInfo.totalDiscountAmount = discountAmountTotal;
                 actionResultInfo.quantityLeftInAction = quantityDesired;
@@ -764,7 +760,7 @@ public class ProductPromoWorker {
                         (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
                         (product == null || !"N".equals(product.getString("includeInPromotions")))) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
-                    double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, isolatedTestRun);
+                    double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, false);
                     quantityDesired -= quantityUsed;
 
                     // create an adjustment and add it to the cartItem that implements the promotion action
@@ -784,10 +780,8 @@ public class ProductPromoWorker {
                 actionResultInfo.ranAction = false;
             } else {
                 double totalAmount = getCartItemsUsedTotalAmount(cart, productPromoAction);
-                if (!isolatedTestRun) {
-                    if (Debug.verboseOn()) Debug.logVerbose("Applying promo [" + productPromoAction.getPrimaryKey() + "]\n totalAmount=" + totalAmount + ", discountAmountTotal=" + discountAmountTotal, module);
-                    distributeDiscountAmount(discountAmountTotal, totalAmount, getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
-                }
+                if (Debug.verboseOn()) Debug.logVerbose("Applying promo [" + productPromoAction.getPrimaryKey() + "]\n totalAmount=" + totalAmount + ", discountAmountTotal=" + discountAmountTotal, module);
+                distributeDiscountAmount(discountAmountTotal, totalAmount, getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
                 actionResultInfo.ranAction = true;
                 actionResultInfo.totalDiscountAmount = discountAmountTotal;
                 actionResultInfo.quantityLeftInAction = quantityDesired;
@@ -811,7 +805,7 @@ public class ProductPromoWorker {
                 if (!cartItem.getIsPromo() && (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
                         (product == null || !"N".equals(product.getString("includeInPromotions")))) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
-                    double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, isolatedTestRun);
+                    double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, false);
                     if (quantityUsed > 0) {
                         quantityDesired -= quantityUsed;
                         totalAmount += quantityUsed * cartItem.getBasePrice();
@@ -822,9 +816,7 @@ public class ProductPromoWorker {
 
             if (totalAmount > desiredAmount && quantityDesired == 0) {
                 double discountAmountTotal = -(totalAmount - desiredAmount);
-                if (!isolatedTestRun) {
-                    distributeDiscountAmount(discountAmountTotal, totalAmount, cartItemsUsed, productPromoAction, delegator);
-                }
+                distributeDiscountAmount(discountAmountTotal, totalAmount, cartItemsUsed, productPromoAction, delegator);
                 actionResultInfo.ranAction = true;
                 actionResultInfo.totalDiscountAmount = discountAmountTotal;
                 // no use setting the quantityLeftInAction because that does not apply for buy X for $Y type promotions, it is all or nothing
@@ -836,10 +828,8 @@ public class ProductPromoWorker {
         } else if ("PROMO_ORDER_PERCENT".equals(productPromoActionEnumId)) {
             double percentage = -(productPromoAction.get("amount") == null ? 0.0 : (productPromoAction.getDouble("amount").doubleValue() / 100.0));
             double amount = cart.getSubTotalForPromotions() * percentage;
-            if (amount > 0) {
-                if (!isolatedTestRun) {
-                    doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
-                }
+            if (amount != 0) {
+                doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
                 actionResultInfo.ranAction = true;
                 actionResultInfo.totalDiscountAmount = amount;
             }
@@ -850,10 +840,8 @@ public class ProductPromoWorker {
             if (-amount > subTotal) {
                 amount = -subTotal;
             }
-            if (amount > 0) {
-                if (!isolatedTestRun) {
-                    doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
-                }
+            if (amount != 0) {
+                doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
                 actionResultInfo.ranAction = true;
                 actionResultInfo.totalDiscountAmount = amount;
             }
