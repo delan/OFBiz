@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE ofbiz-component PUBLIC "-//OFBiz//DTD Component Config//EN" "http://www.ofbiz.org/dtds/ofbiz-component.dtd">
-
+<!DOCTYPE entitygroup PUBLIC "-//OFBiz//DTD Entity Group//EN" "http://www.ofbiz.org/dtds/entitygroup.dtd">
 <!--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+/**
+ *  Title: Entity Generator Group Definitions for the General Data Model
+ *  Description: None
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -22,20 +24,19 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id$
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Rev:$
+ */
 -->
 
-<ofbiz-component name="pos">
-    <resource-loader name="main" type="component"/>
-    <classpath type="dir" location="config"/>
-    <classpath type="dir" location="styles"/>
-    <classpath type="dir" location="screens"/>
-    <classpath type="jar" location="lib/*"/>
-    <classpath type="jar" location="build/lib/*"/>
-    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
-    <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/PosSecurityData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoRetail.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/PosSyncSettings.xml"/>
-</ofbiz-component>
+<entitygroup>
 
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.pos.terminal -->
+    <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="PosTerminal" />
+    <entity-group group="org.ofbiz" entity="PosTerminalState" />
+
+</entitygroup>

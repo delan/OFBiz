@@ -296,7 +296,10 @@ public class PaymentEvents {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         PosScreen.currentScreen.getOutput().print("Processing sale...");
 
-        if (trans.getTotalDue() > 0) {
+        if (trans.isEmpty()) {
+            PosScreen newPos = pos.showPage("main/pospanel");
+            newPos.showDialog("main/dialog/error/noitems");            
+        } else if (trans.getTotalDue() > 0) {
             pos.showDialog("main/dialog/error/notenoughfunds");
         } else {
             // manual locks (not secured; will be unlocked on clear)

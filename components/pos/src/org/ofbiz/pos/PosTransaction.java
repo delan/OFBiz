@@ -40,6 +40,7 @@ import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.collections.LifoSet;
 import org.ofbiz.content.xui.XuiSession;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
@@ -52,6 +53,7 @@ import org.ofbiz.pos.component.Output;
 import org.ofbiz.pos.device.DeviceLoader;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.ServiceUtil;
@@ -89,7 +91,7 @@ public class PosTransaction implements Serializable {
     protected String orderId = null;
     protected String partyId = null;
     protected Locale locale = null;
-    protected boolean isMgr = false;
+    protected boolean isOpen = false;
     protected int drawerIdx = 0;
 
     private GenericValue shipAddress = null;
@@ -111,6 +113,7 @@ public class PosTransaction implements Serializable {
         this.cart = new ShoppingCart(session.getDelegator(), productStoreId, locale, currency);
         this.transactionId = session.getDelegator().getNextSeqId("PosTransaction");
         this.ch = new CheckOutHelper(session.getDispatcher(), session.getDelegator(), cart);
+        cart.setTransactionId(transactionId);
         cart.setFacilityId(facilityId);
         cart.setTerminalId(terminalId);
         if (session.getUserLogin() != null) {
@@ -129,6 +132,10 @@ public class PosTransaction implements Serializable {
         return drawerIdx + 1;
     }
 
+    public void popDrawer() {
+        DeviceLoader.drawer[drawerIdx].openDrawer();
+    }
+
     public String getTransactionId() {
         return this.transactionId;
     }
@@ -141,8 +148,16 @@ public class PosTransaction implements Serializable {
         return this.facilityId;
     }
 
-    public boolean isMgr() {
-        return this.isMgr;
+    public boolean isOpen() {
+        if (!this.isOpen) {
+            GenericValue terminalState = this.getTerminalState();
+            if (terminalState != null) {
+                this.isOpen = true;
+            } else {
+                this.isOpen = false;
+            }
+        }
+        return this.isOpen;
     }
 
     public boolean isEmpty() {
@@ -213,7 +228,9 @@ public class PosTransaction implements Serializable {
         try {
             Map fields = new HashMap();
             fields.put("paymentMethodTypeId", inf.paymentMethodTypeId);
-            fields.put("paymentMethodId", inf.paymentMethodId);
+            if (inf.paymentMethodId != null) {
+                fields.put("paymentMethodId", inf.paymentMethodId);
+            }
             fields.put("maxAmount", inf.amount);
             fields.put("orderId", this.getOrderId());
 
@@ -553,8 +570,8 @@ public class PosTransaction implements Serializable {
         // notify the change due
         output.print(Output.CHANGE + UtilFormatOut.formatPrice(this.getTotalDue() * -1));
 
-        // open the drawer (only supports 1 drawer for now)
-        DeviceLoader.drawer[drawerIdx].openDrawer();
+        // open the drawer
+        this.popDrawer();
 
         // print the receipt
         DeviceLoader.receipt.printReceipt(this, true);
@@ -731,6 +748,18 @@ public class PosTransaction implements Serializable {
         } else {
             return (String) svcRes.get("paymentMethodId");
         }
+    }
+
+    public GenericValue getTerminalState() {
+        GenericDelegator delegator = session.getDelegator();
+        List states = null;
+        try {
+            states = delegator.findByAnd("PosTerminalState", UtilMisc.toMap("posTerminalId", this.getTerminalId()));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        states = EntityUtil.filterByDate(states, UtilDateTime.nowTimestamp(), "openedDate", "closedDate", true);
+        return EntityUtil.getFirst(states);
     }
 
     public void setPrintWriter(PrintWriter writer) {

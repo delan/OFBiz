@@ -27,6 +27,8 @@ package org.ofbiz.pos.component;
 import net.xoetrope.swing.XEdit;
 
 import org.ofbiz.pos.screen.PosScreen;
+import org.ofbiz.pos.PosTransaction;
+import org.ofbiz.content.xui.XuiSession;
 
 /**
  * 
@@ -37,23 +39,42 @@ import org.ofbiz.pos.screen.PosScreen;
 public class Output {
 
     public static final String module = Output.class.getName();
+
+    // login labels
+    public static final String ULOGIN = "Enter User ID:";
+    public static final String UPASSW = "Enter Password:";
+
+    // open/close labels
+    public static final String OPDRAM = "Starting Drawer Amount:";
+    public static final String ENTCAS = "Enter Cash Amount:";
+    public static final String ENTCHK = "Enter Check Amount:";
+    public static final String ENTCRC = "Enter Credit Card Amount:";
+    public static final String ENTGFC = "Enter Gift Card Amount:";
+    public static final String ENTOTH = "Enter Other Payment Amount:";
+
+    // complete sale labels
     public static final String PAYFIN = "Press Finish To Complete Sale";
     public static final String TOTALD = "Total Due: ";
     public static final String CHANGE = "Change Due: ";
-    public static final String ULOGIN = "Enter User ID:";
-    public static final String UPASSW = "Enter Password:";
+
+    // payment (credit/check/gc) labels
     public static final String CREDNO = "Enter Card Number:";
     public static final String CREDEX = "Enter Expiration Date (MMYY):";
     public static final String CREDCF = "Enter Last 4 Digits:";
     public static final String CREDZP = "Enter Billing ZipCode:";
     public static final String REFNUM = "Enter Reference Number:";
     public static final String AUTHCD = "Enter Auth Code:";
+
+    // standard messages
+    public static final String ISCLOSED = "Register Is Closed";
     public static final String ISOPEN = "Register Is Open";
 
+    protected XuiSession session = null;
     protected XEdit output = null;
 
     public Output(PosScreen page) {
         this.output = (XEdit) page.findComponent("pos_output");
+        this.session = page.getSession();
         this.output.setFocusable(false);
         this.clear();
     }
@@ -62,7 +83,11 @@ public class Output {
         if (lock) {
             this.print(ULOGIN);
         } else {
-            this.print(ISOPEN);
+            if (PosTransaction.getCurrentTx(session).isOpen()) {
+                this.print(ISOPEN);
+            } else {
+                this.print(ISCLOSED);
+            }
         }
     }
 

@@ -143,7 +143,9 @@ public class Receipt extends GenericDevice implements DialogCallback {
     }
 
     public void reprintReceipt(boolean reprintStoreCopy) {
-        this.printReceipt(lastTransaction, reprintStoreCopy);
+        if (lastTransaction != null) {
+            this.printReceipt(lastTransaction, reprintStoreCopy);
+        }
     }
 
     public void printReceipt(PosTransaction trans, boolean printStoreCopy) {
@@ -414,7 +416,6 @@ public class Receipt extends GenericDevice implements DialogCallback {
         expandMap.put("userId", trans.getUserId());
         expandMap.put("orderId", trans.getOrderId());
         expandMap.put("dateStamp", dateString);
-        expandMap.put("isMgr", trans.isMgr() ? "Y" : "N");
         expandMap.put("drawerNo", new Integer(trans.getDrawerNumber()).toString());
         expandMap.put("taxTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(trans.getTaxTotal()), priceLength[type], false, ' '));
         expandMap.put("grandTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(trans.getGrandTotal()), priceLength[type], false, ' '));

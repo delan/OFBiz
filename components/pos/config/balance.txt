@@ -7,14 +7,29 @@ ${CENTER}${BOLD}212.655.3052
 ${CENTER}Term: ${terminalId} Dr: ${drawerNo} Clerk: ${userId}
 ${CENTER}${dateStamp}
 
-${CENTER}${DOUBLE_HEIGHT}${BOLD}TOTALS REPORT
+${CENTER}${DOUBLE_HEIGHT}${BOLD}BALANCE REPORT
 
 ${cashTitle} ${cashTotal}
+${spacer} ${cashEnd}
+${+/-} ${cashDiff}
+
 ${checkTitle} ${checkTotal}
+${spacer} ${checkEnd}
+${+/-} ${checkDiff}
+
 ${creditCardTitle} ${ccTotal}
+${spacer} ${ccEnd}
+${+/-} ${ccDiff}
+
 ${giftCardTitle} ${gcTotal}
+${spacer} ${gcEnd}
+${+/-} ${gcDiff}
+
 ${otherTitle} ${otherTotal}
+${spacer} ${otherEnd}
+${+/-} ${otherDiff}
 
 ${grossSalesTitle} ${grossTotal}
-
+${spacer} ${grossEnd}
+${+/-} ${grossDiff}
 
