@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.37 $
+ * @version    $Revision: 1.38 $
  */
 -->
 
@@ -78,6 +78,7 @@
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <field name="templateDataResourceId" type="id"></field>
       <prim-key field="contentId"/>
       <relation type="one" fk-name="CONTENT_TO_TYPE" rel-entity-name="ContentType">
         <key-map field-name="contentTypeId"/>
@@ -147,6 +148,9 @@
       </relation>
       <relation type="many" rel-entity-name="ContentAssocDataResourceViewTo">
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
+      </relation>
+      <relation type="one" fk-name="CONTENT_TO_TMPDATA" rel-entity-name="DataResource">
+        <key-map field-name="templateDataResourceId"/>
       </relation>
     </entity>
     <entity entity-name="ContentAssoc"

@@ -26,6 +26,7 @@
         </convert>
       </process>
       <process field="lastModifiedByUserLogin"><copy to-field="lastModifiedByUserLogin" replace="true" set-if-null="false" /></process>
+      <process field="templateDataResourceId"><copy to-field="templateDataResourceId" replace="true" set-if-null="false" /></process>
   </simple-map-processor>
   <simple-map-processor name="dataResourceIn">
       <process field="drDataResourceId"><copy to-field="dataResourceId" replace="true" set-if-null="false" /></process>
@@ -110,6 +111,7 @@
         </convert>
       </process>
       <process field="lastModifiedByUserLogin"><copy to-field="lastModifiedByUserLogin" replace="true" set-if-null="false" /></process>
+      <process field="templateDataResourceId"><copy to-field="templateDataResourceId" replace="true" set-if-null="false" /></process>
   </simple-map-processor>
   <simple-map-processor name="dataResourceOut">
       <process field="dataResourceId"><copy to-field="drDataResourceId" replace="true" set-if-null="false" /></process>
