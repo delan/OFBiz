@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.37 2004/07/24 23:08:51 byersa Exp $
+ * $Id: ContentWorker.java,v 1.38 2004/07/29 16:10:59 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  * @since 2.2
  * 
  *  
@@ -862,7 +862,7 @@ public class ContentWorker {
         GenericValue view = null;
         List lst = delegator.findByAndCache("ContentDataResourceView", UtilMisc.toMap("contentId", contentId));
             //if (Debug.infoOn()) Debug.logInfo("getContentCache, lst(2):" + lst, "");
-        if (lst != null || lst.size() > 0) {
+        if (lst != null && lst.size() > 0) {
             view = (GenericValue) lst.get(0);
         }
         return view;
