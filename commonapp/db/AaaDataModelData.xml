@@ -200,10 +200,11 @@
   <EnumerationType description="Product Promotion Condition" enumTypeId="PROD_PROMO_COND" hasTable="N" parentTypeId="PROD_PROMO"/>
 
   <Enumeration description="Order Total" enumCode="ORDER_TOTAL" enumId="PPIP_ORDER_TOTAL" sequenceId="01" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="Product ID Added" enumCode="PRODUCT_ID" enumId="PPIP_PRODUCT_ID" sequenceId="02" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="Category ID Product Added Is In" enumCode="CATEGORY_ID" enumId="PPIP_CATEGORY_ID" sequenceId="03" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="Quantity Added" enumCode="QUANTITY_ADDED" enumId="PPIP_QUANTITY_ADDED" sequenceId="04" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="New Product Quantity" enumCode="NEW_PROD_QUANT" enumId="PPIP_NEW_PROD_QUANT" sequenceId="05" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="Product ID In Cart" enumCode="PRODUCT_ID_IC" enumId="PPIP_PRODUCT_ID_IC" sequenceId="02" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="Product ID Added" enumCode="PRODUCT_ID" enumId="PPIP_PRODUCT_ID" sequenceId="03" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="Category ID Product Added Is In" enumCode="CATEGORY_ID" enumId="PPIP_CATEGORY_ID" sequenceId="04" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="Quantity Added" enumCode="QUANTITY_ADDED" enumId="PPIP_QUANTITY_ADDED" sequenceId="05" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="New Product Quantity" enumCode="NEW_PROD_QUANT" enumId="PPIP_NEW_PROD_QUANT" sequenceId="06" enumTypeId="PROD_PROMO_IN_PARAM"/>
 
   <Enumeration description="==" enumCode="EQ" enumId="PPC_EQ" sequenceId="01" enumTypeId="PROD_PROMO_COND"/>
   <Enumeration description="!=" enumCode="NEQ" enumId="PPC_NEQ" sequenceId="02" enumTypeId="PROD_PROMO_COND"/>

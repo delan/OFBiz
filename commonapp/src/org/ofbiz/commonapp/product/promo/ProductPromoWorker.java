@@ -102,7 +102,7 @@ public class ProductPromoWorker {
                 GenericValue productPromo = prodCatalogPromoAppl.getRelatedOneCache("ProductPromo");
                 
                 //loop through rules for promotion
-                Iterator productPromoRules = UtilMisc.toIterator(productPromo.getRelatedCache("ProductPromoRule", null, UtilMisc.toList("productPromoActionSeqId")));
+                Iterator productPromoRules = UtilMisc.toIterator(productPromo.getRelatedCache("ProductPromoRule", null, null));
                 while (productPromoRules != null && productPromoRules.hasNext()) {
                     GenericValue productPromoRule = (GenericValue) productPromoRules.next();
 
@@ -115,7 +115,7 @@ public class ProductPromoWorker {
                     while (productPromoConds != null && productPromoConds.hasNext()) {
                         GenericValue productPromoCond = (GenericValue) productPromoConds.next();
                         
-                        boolean condResult = checkCondition(productPromoCond, cart, cartItem, oldQuantity, delegator);
+                        boolean condResult = checkCondition(prodCatalogId, productPromoCond, cart, cartItem, oldQuantity, delegator);
                         //if apply, any false condition will cause it to NOT perform the action
                         //if !apply, any false condition will cause it to PERFORM the action
                         //so, if a condition is found to be false then performActions = !apply
@@ -132,7 +132,7 @@ public class ProductPromoWorker {
                         Iterator productPromoActions = UtilMisc.toIterator(productPromoRule.getRelatedCache("ProductPromoAction", null, UtilMisc.toList("productPromoActionSeqId")));
                         while (productPromoActions != null && productPromoActions.hasNext()) {
                             GenericValue productPromoAction = (GenericValue) productPromoActions.next();
-                            Debug.logInfo("Doing action: " + productPromoAction);
+                            //Debug.logInfo("Doing action: " + productPromoAction);
                             
                             try {
                                 performAction(apply, productPromoAction, cart, cartItem, oldQuantity, prodCatalogId, delegator, dispatcher);
@@ -150,11 +150,31 @@ public class ProductPromoWorker {
         }
     }
     
-    public static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator) throws GenericEntityException {
+    public static boolean checkCondition(String prodCatalogId, GenericValue productPromoCond, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator) throws GenericEntityException {
         if (Debug.verboseOn()) Debug.logVerbose("Checking promotion condition: " + productPromoCond);
         int compare = 0;
         if ("PPIP_PRODUCT_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
             compare = cartItem.getProductId().compareTo(productPromoCond.getString("condValue"));
+        } else if ("PPIP_PRODUCT_ID_IC".equals(productPromoCond.getString("inputParamEnumId"))) {
+            String candidateProductId = productPromoCond.getString("condValue");
+            if (candidateProductId == null) {
+                //if null, then it's not in the cart
+                compare = 1;
+            } else {
+                if (candidateProductId.equals(cartItem.getProductId())) {
+                    compare = 0;
+                } else {
+                    //Debug.logInfo("Testing to see if productId \"" + candidateProductId + "\" is in the cart");
+                    List productCartItems = cart.findAllCartItems(candidateProductId);
+                    if (productCartItems.size() > 0) {
+                        //Debug.logInfo("Item with productId \"" + candidateProductId + "\" IS in the cart");
+                        compare = 0;
+                    } else {
+                        //Debug.logInfo("Item with productId \"" + candidateProductId + "\" IS NOT in the cart");
+                        compare = 1;
+                    }
+                }
+            }
         } else if ("PPIP_CATEGORY_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
             //if a ProductCategoryMember exists for this productId and the specified productCategoryId
             Collection productCategoryMembers = delegator.findByAndCache("ProductCategoryMember", 
@@ -232,6 +252,7 @@ public class ProductPromoWorker {
                 //set promo after create; note that to setQuantity we must clear this flag, setQuantity, then re-set the flag
                 gwpItem.setIsPromo(true);
                 gwpItem.addAdjustment(orderAdjustment);
+                ProductPromoWorker.doPromotions(prodCatalogId, cart, gwpItem, 0, delegator, dispatcher);
                 
                 if (Debug.infoOn()) Debug.logInfo("qwpItem adjustments: " + gwpItem.getAdjustments());
             } else {
@@ -246,6 +267,7 @@ public class ProductPromoWorker {
                     cartItemToRemove.setIsPromo(false);
                     Debug.logInfo("About to remove cart item at location " + itemLoc.intValue());
                     cart.removeCartItem(itemLoc.intValue(), dispatcher);
+                    ProductPromoWorker.doPromotions(prodCatalogId, cart, cartItem, oldQuantity, delegator, dispatcher);
                 } else {
                     if (Debug.verboseOn()) Debug.logVerbose("Could not find cart item for the action " + productPromoAction);
                 }
@@ -329,9 +351,8 @@ public class ProductPromoWorker {
             cartItem.addAdjustment(itemAdjustment);
         } else {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cartItem.getAdjustments());
-            Debug.logInfo("Finding adjustment on cartItem for productId " + cartItem.getProductId());
             if (adjLoc != null) {
-                Debug.logInfo("Found adjustment on cartItem for productId " + cartItem.getProductId() + "removing.");
+                //Debug.logInfo("Found adjustment on cartItem for productId " + cartItem.getProductId() + "removing.");
                 cartItem.removeAdjustment(adjLoc.intValue());
             }
         }

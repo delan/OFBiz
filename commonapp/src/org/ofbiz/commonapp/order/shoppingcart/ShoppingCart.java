@@ -139,6 +139,20 @@ public class ShoppingCart implements java.io.Serializable {
         return null;
     }
 
+    /** Get all ShoppingCartItems from the cart object with the given productId. */
+    public List findAllCartItems(String productId) {
+        if (productId == null) return new LinkedList(this.cartLines);
+        List itemsToReturn = new LinkedList();
+        // Check for existing cart item.
+        for (int i = 0; i < this.cartLines.size(); i++) {
+            ShoppingCartItem cartItem = (ShoppingCartItem) cartLines.get(i);
+            if (productId.equals(cartItem.getProductId())) {
+                itemsToReturn.add(cartItem);
+            }
+        }
+        return itemsToReturn;
+    }
+
     /** Remove quantity 0 ShoppingCartItems from the cart object. */
     public void removeEmptyCartItems() {
         // Check for existing cart item.
