@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -111,6 +111,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         </tr>
         </form>
     </#list>
+    <#--
     <tr>
         <form action="<@ofbizUrl>/createShipmentPackageRouteSeg</@ofbizUrl>" name="createShipmentPackageRouteSegForm${shipmentPackageData_index}">
         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
@@ -131,7 +132,9 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <td><div class="tabletext">&nbsp;</div></td>
         </form>
     </tr>
+    -->
 </#list>
+<#--
 <form action="<@ofbizUrl>/createShipmentPackage</@ofbizUrl>" name="createShipmentPackageForm">
     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
     <tr>
@@ -149,6 +152,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <td>&nbsp;</td>
     </tr>
 </form>
+-->
 </table>
 <#else>
   <h3>The Shipment was not found with ID: [${shipmentId?if_exists}]</h3>
