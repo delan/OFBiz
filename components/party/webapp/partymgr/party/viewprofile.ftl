@@ -379,11 +379,25 @@
                                       <b>
                                         ${uiLabelMap.AccountingGiftCard}:
                                         <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
-                                            ${giftCard.physicalNumber?default("N/A")} [${giftCard.physicalPin?default("N/A")}]
-                                            &nbsp;-&nbsp;
-                                            ${giftCard.virtualNumber?default("N/A")} [${giftCard.virtualPin?default("N/A")}]
+                                            ${giftCard.cardNumber?default("N/A")} [${giftCard.pinNumber?default("N/A")}]
+
                                         <#else>
-                                            ${giveCard.physicalNumber?default("N/A")} - ${giftCard.virtualNumber?default("N/A")}
+                                            <#if giftCard?has_content && giftCard.cardNumber?has_content>
+                                              <#assign giftCardNumber = "">
+                                              <#assign pcardNumber = giftCard.cardNumber>
+                                              <#if pcardNumber?has_content>
+                                                <#assign psize = pcardNumber?length - 4>
+                                                <#if 0 < psize>
+                                                  <#list 0 .. psize-1 as foo>
+                                                    <#assign giftCardNumber = giftCardNumber + "*">
+                                                  </#list>
+                                                  <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3]>
+                                                <#else>
+                                                  <#assign giftCardNumber = pcardNumber>
+                                                </#if>
+                                              </#if>
+                                            </#if>
+                                            ${giftCardNumber?default("N/A")}
                                         </#if>
                                       </b>
                                       (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})

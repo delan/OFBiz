@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -47,31 +47,17 @@
     <input type='hidden' name='partyId' value='${partyId}'>
 
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Physical Number</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Card Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" class="inputBox" size="20" maxlength="60" name="physicalNumber" value="${giftCardData.physicalNumber?if_exists}">
+        <input type="text" class="inputBox" size="20" maxlength="60" name="cardNumber" value="${giftCardData.physicalNumber?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Physical PIN</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">PIN Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" class="inputBox" size="10" maxlength="60" name="physicalPin" value="${giftCardData.physicalPin?if_exists}">
-      </td>
-    </tr>
-    <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Virtual Number</div></td>
-      <td width="5">&nbsp;</td>
-      <td width="74%">
-        <input type="text" class="inputBox" size="20" maxlength="60" name="virtualNumber" value="${giftCardData.virtualNumber?if_exists}">
-      </td>
-    </tr>
-    <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Virtual PIN</div></td>
-      <td width="5">&nbsp;</td>
-      <td width="74%">
-        <input type="text" class="inputBox" size="10" maxlength="60" name="virtualPin" value="${giftCardData.virtualPin?if_exists}">
+        <input type="text" class="inputBox" size="10" maxlength="60" name="pinNumber" value="${giftCardData.physicalPin?if_exists}">
       </td>
     </tr>
     <tr>

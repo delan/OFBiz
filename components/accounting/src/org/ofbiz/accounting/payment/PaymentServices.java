@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentServices.java,v 1.3 2003/11/04 18:46:29 ajzeneski Exp $
+ * $Id: PaymentServices.java,v 1.4 2003/11/24 17:54:34 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Payment maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class PaymentServices {
@@ -477,10 +477,8 @@ public class PaymentServices {
         newPm.set("fromDate", (context.get("fromDate") != null ? context.get("fromDate") : now));
         newPm.set("thruDate", context.get("thruDate"));
 
-        newGc.set("physicalNumber", context.get("physicalNumber"));
-        newGc.set("physicalPin", context.get("physicalPin"));
-        newGc.set("virtualNumber", context.get("virtualNumber"));
-        newGc.set("virtualPin", context.get("virtualPin"));
+        newGc.set("cardNumber", context.get("cardNumber"));
+        newGc.set("pinNumber", context.get("pinNumber"));
         newGc.set("expireDate", context.get("expireDate"));
 
         newPm.set("paymentMethodId", newPmId.toString());
@@ -534,14 +532,12 @@ public class PaymentServices {
             return ServiceUtil.returnError("ERROR: Could not find GiftCard to update with id " + paymentMethodId);
         }
 
-        // handle masked card numbers both virtual and physical
-
-        // physical
-        String updatedPhysicalNumber = StringUtil.removeSpaces((String) context.get("physicalNumber"));
-        if (updatedPhysicalNumber.startsWith("*")) {
+        // card number (masked)
+        String cardNumber = StringUtil.removeSpaces((String) context.get("cardNumber"));
+        if (cardNumber.startsWith("*")) {
             // get the masked card number from the db
-            String origCardNumber = giftCard.getString("physicalNumber");
-            Debug.log(origCardNumber);
+            String origCardNumber = giftCard.getString("cardNumber");
+            //Debug.log(origCardNumber);
             String origMaskedNumber = "";
             int cardLength = origCardNumber.length() - 4;
             if (cardLength > 0) {
@@ -554,35 +550,11 @@ public class PaymentServices {
             }
 
             // compare the two masked numbers
-            if (updatedPhysicalNumber.equals(origMaskedNumber)) {
-                updatedPhysicalNumber = origCardNumber;
+            if (cardNumber.equals(origMaskedNumber)) {
+                cardNumber = origCardNumber;
             }
         }
-        context.put("physicalNumber", updatedPhysicalNumber);
-
-        // virtual
-        String updatedVirtualNumber = StringUtil.removeSpaces((String) context.get("virtualNumber"));
-        if (updatedVirtualNumber.startsWith("*")) {
-            // get the masked card number from the db
-            String origCardNumber = giftCard.getString("virtualNumber");
-            Debug.log(origCardNumber);
-            String origMaskedNumber = "";
-            int cardLength = origCardNumber.length() - 4;
-            if (cardLength > 0) {
-                for (int i = 0; i < cardLength; i++) {
-                    origMaskedNumber = origMaskedNumber + "*";
-                }
-                origMaskedNumber = origMaskedNumber + origCardNumber.substring(cardLength);
-            } else {
-                origMaskedNumber = origCardNumber;
-            }
-
-            // compare the two masked numbers
-            if (updatedVirtualNumber.equals(origMaskedNumber)) {
-                updatedVirtualNumber = origCardNumber;
-            }
-        }
-        context.put("virtualNumber", updatedVirtualNumber);
+        context.put("cardNumber", cardNumber);
 
         newPm = new GenericValue(paymentMethod);
         toBeStored.add(newPm);
@@ -599,10 +571,8 @@ public class PaymentServices {
         newPm.set("fromDate", context.get("fromDate"), false);
         newPm.set("thruDate", context.get("thruDate"));
 
-        newGc.set("physicalNumber", context.get("physicalNumber"));
-        newGc.set("physicalPin", context.get("physicalPin"));
-        newGc.set("virtualNumber", context.get("virtualNumber"));
-        newGc.set("virtualPin", context.get("virtualPin"));
+        newGc.set("cardNumber", context.get("cardNumber"));
+        newGc.set("pinNumber", context.get("pinNumber"));
         newGc.set("expireDate", context.get("expireDate"));
 
         if (!newGc.equals(giftCard) || !newPm.equals(paymentMethod)) {
