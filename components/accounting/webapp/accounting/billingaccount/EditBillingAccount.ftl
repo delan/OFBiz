@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -60,8 +60,7 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
     <tr>
       <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingAccountLimit}</div></td>
       <td width="5">&nbsp;</td>
-      <td width="74%">
-        <input type="text" class="inputBox" size="10" name="accountLimit" value="${billingAccountData.accountLimit?default(0)?string("##0.00")}">
+      <td width="74%"><input type="text" class="inputBox" size="10" name="accountLimit" value="<#if billingAccountData.accountLimit?is_string>${billingAccountData.accountLimit}<#else>${billingAccountData.accountLimit?default(0)?string("##0.00")}</if>"> 
       *</td>
     </tr> 
     <tr>
