@@ -23,27 +23,24 @@
  */
 package org.ofbiz.commonapp.order.order;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.ftl.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.security.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericTransactionException;
+import org.ofbiz.core.entity.GenericValue;
 import org.ofbiz.core.entity.TransactionUtil;
-import org.ofbiz.commonapp.common.*;
-import org.ofbiz.commonapp.party.contact.*;
-import org.ofbiz.commonapp.product.catalog.*;
-
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.template.Configuration;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateHashModel;
-import freemarker.template.WrappingTemplateModel;
+import org.ofbiz.core.security.Security;
+import org.ofbiz.core.service.DispatchContext;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ModelService;
+import org.ofbiz.core.service.ServiceUtil;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilMisc;
 
 /**
  * Purchase Order Delivery and Schedule Processing Services
