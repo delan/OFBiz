@@ -80,6 +80,7 @@ public class PersistedServiceJob extends GenericServiceJob {
                 if (next > runtime) {
                     newJob.set("runTime", new java.sql.Timestamp(next));
                     delegator.create(newJob);
+                    if (Debug.verboseOn()) Debug.logVerbose("Created next job entry: " + newJob, module);
                 }
             }
         } catch (GenericEntityException e) {
