@@ -73,7 +73,7 @@ public class PosButtonWrapper {
             Debug.logError("ERROR: The disabled button style \"buttonDisabled\" was not found!", module);
         }
 
-        /// load the enabled style
+        // load the enabled style         
         if (name != null && name.startsWith("num")) {
             this.enabledStyle = XProjectManager.getStyleManager().getStyle(enabledNum);
             if (this.enabledStyle == null) {
