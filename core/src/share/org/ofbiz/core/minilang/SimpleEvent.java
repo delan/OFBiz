@@ -341,7 +341,13 @@ public class SimpleEvent {
         FlexibleMessage messageSuffix;
         FlexibleMessage defaultMessage;
         
+        /** A list of strings with names of new maps to create */
+        List resultsToMap = new LinkedList();
+        /** A list of ResultToFieldDef objects */
+        List resultToField = new LinkedList();
+        /** the key is the request attribute name, the value is the result name to get */
         Map resultToRequest = new HashMap();
+        /** the key is the session attribute name, the value is the result name to get */
         Map resultToSession = new HashMap();
         
         public Service(Element element, SimpleEvent simpleEvent) {
@@ -365,6 +371,32 @@ public class SimpleEvent {
             messageSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-suffix"));
             defaultMessage = new FlexibleMessage(UtilXml.firstChildElement(element, "default-message"));
             
+            List resultsToMapElements = UtilXml.childElementList(element, "results-to-map");
+            if (resultsToMapElements != null && resultsToMapElements.size() > 0) {
+                Iterator iter = resultsToMapElements.iterator();
+                while (iter.hasNext()) {
+                    Element resultsToMapElement = (Element) iter.next();
+                    resultsToMap.add(resultsToMapElement.getAttribute("map-name"));
+                }
+            }
+            
+            List resultToFieldElements = UtilXml.childElementList(element, "result-to-field");
+            if (resultToFieldElements != null && resultToFieldElements.size() > 0) {
+                Iterator iter = resultToFieldElements.iterator();
+                while (iter.hasNext()) {
+                    Element resultToFieldElement = (Element) iter.next();
+                    ResultToFieldDef rtfDef = new ResultToFieldDef();
+                    rtfDef.resultName = resultToFieldElement.getAttribute("result-name");
+                    rtfDef.mapName = resultToFieldElement.getAttribute("map-name");
+                    rtfDef.fieldName = resultToFieldElement.getAttribute("field-name");
+                    
+                    if (rtfDef.fieldName == null || rtfDef.fieldName.length() == 0) 
+                        rtfDef.fieldName = rtfDef.resultName;
+                    
+                    resultToField.add(rtfDef);
+                }
+            }
+
             //get result-to-request and result-to-session sub-ops
             List resultToRequestElements = UtilXml.childElementList(element, "result-to-request");
             if (resultToRequestElements != null && resultToRequestElements.size() > 0) {
@@ -416,6 +448,27 @@ public class SimpleEvent {
                 return false;
             }
 
+            if (resultsToMap.size() > 0) {
+                Iterator iter = resultsToMap.iterator();
+                while (iter.hasNext()) {
+                    String mapName = (String) iter.next();
+                    env.put(mapName, new HashMap(result));
+                }
+            }
+            
+            if (resultToField.size() > 0) {
+                Iterator iter = resultToField.iterator();
+                while (iter.hasNext()) {
+                    ResultToFieldDef rtfDef = (ResultToFieldDef) iter.next();
+                    Map tempMap = (Map) env.get(rtfDef.mapName);
+                    if (tempMap == null) {
+                        tempMap = new HashMap();
+                        env.put(rtfDef.mapName, tempMap);
+                    }
+                    tempMap.put(rtfDef.fieldName, result.get(rtfDef.resultName));
+                }
+            }
+            
             if (resultToRequest.size() > 0) {
                 Iterator iter = resultToRequest.entrySet().iterator();
                 while (iter.hasNext()) {
@@ -463,8 +516,14 @@ public class SimpleEvent {
             else
                 return false;
         }
+        
+        public static class ResultToFieldDef {
+            public String resultName;
+            public String mapName;
+            public String fieldName;
+        }
     }
-    
+
     /** Simple class to wrap messages that come either a straight string or a properties file */
     public static class FlexibleMessage {
         String message = null;
@@ -501,6 +560,74 @@ public class SimpleEvent {
                 return "";
                 //Debug.logInfo("[FlexibleMessage.getMessage] No message found, returning empty string");
             }
+        }
+    }
+
+    public static class FieldToRequest extends EventOperation {
+        String mapName;
+        String fieldName;
+        String requestName;
+        
+        public FieldToRequest(Element element, SimpleEvent simpleEvent) {
+            super(element, simpleEvent);
+            mapName = element.getAttribute("map-name");
+            fieldName = element.getAttribute("field-name");
+            requestName = element.getAttribute("request-name");
+            
+            if (requestName == null || requestName.length() == 0) {
+                requestName = fieldName;
+            }
+        }
+        
+        public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
+            Map fromMap = (Map) env.get(mapName);
+            if (fromMap == null) {
+                Debug.logWarning("[SimpleEvent.FieldToRequest.exec] Map not found with name " + mapName);
+                return true;
+            }
+            
+            Object fieldVal = fromMap.get(fieldName);
+            if (fieldVal == null) {
+                Debug.logWarning("[SimpleEvent.FieldToRequest.exec] Field value not found with name " + fieldName + " in Map with name " + mapName);
+                return true;
+            }
+
+            request.setAttribute(requestName, fieldVal);
+            return true;
+        }
+    }
+
+    public static class FieldToSession extends EventOperation {
+        String mapName;
+        String fieldName;
+        String sessionName;
+        
+        public FieldToSession(Element element, SimpleEvent simpleEvent) {
+            super(element, simpleEvent);
+            mapName = element.getAttribute("map-name");
+            fieldName = element.getAttribute("field-name");
+            sessionName = element.getAttribute("session-name");
+            
+            if (sessionName == null || sessionName.length() == 0) {
+                sessionName = fieldName;
+            }
+        }
+        
+        public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
+            Map fromMap = (Map) env.get(mapName);
+            if (fromMap == null) {
+                Debug.logWarning("[SimpleEvent.FieldToSession.exec] Map not found with name " + mapName);
+                return true;
+            }
+            
+            Object fieldVal = fromMap.get(fieldName);
+            if (fieldVal == null) {
+                Debug.logWarning("[SimpleEvent.FieldToSession.exec] Field value not found with name " + fieldName + " in Map with name " + mapName);
+                return true;
+            }
+
+            request.getSession().setAttribute(sessionName, fieldVal);
+            return true;
         }
     }
 }

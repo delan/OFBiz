@@ -29,7 +29,7 @@
 -->
 
 <!ELEMENT simple-events ( simple-event* )>
-<!ELEMENT simple-event ( ( parameter-map | simple-map-processor | check-errors | service )* )>
+<!ELEMENT simple-event ( ( parameter-map | simple-map-processor | check-errors | service | field-to-request | field-to-session )* )>
 <!ATTLIST simple-event
     event-name CDATA #REQUIRED
     short-description CDATA #REQUIRED
@@ -59,7 +59,7 @@
     error-list-name CDATA "_error_list_"
 >
 
-<!ELEMENT service ( error-prefix?, error-suffix?, success-prefix?, success-suffix?, message-prefix?, message-suffix?, default-message?, result-to-request*, result-to-session* )>
+<!ELEMENT service ( error-prefix?, error-suffix?, success-prefix?, success-suffix?, message-prefix?, message-suffix?, default-message?, results-to-map*, result-to-field*, result-to-request*, result-to-session* )>
 <!ATTLIST service
     service-name CDATA #REQUIRED
     in-map-name CDATA #REQUIRED
@@ -104,6 +104,16 @@
     property CDATA #IMPLIED
 >
 
+<!ELEMENT results-to-map EMPTY>
+<!ATTLIST results-to-map
+    map-name CDATA #REQUIRED
+>
+<!ELEMENT result-to-field EMPTY>
+<!ATTLIST result-to-field
+    result-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
+    field-name CDATA #IMPLIED
+>
 <!ELEMENT result-to-request EMPTY>
 <!ATTLIST result-to-request
     result-name CDATA #REQUIRED
@@ -112,5 +122,18 @@
 <!ELEMENT result-to-session EMPTY>
 <!ATTLIST result-to-session
     result-name CDATA #REQUIRED
+    session-name CDATA #IMPLIED
+>
+
+<!ELEMENT field-to-request EMPTY>
+<!ATTLIST field-to-request
+    map-name CDATA #REQUIRED
+    field-name CDATA #REQUIRED
+    request-name CDATA #IMPLIED
+>
+<!ELEMENT field-to-session EMPTY>
+<!ATTLIST field-to-session
+    map-name CDATA #REQUIRED
+    field-name CDATA #REQUIRED
     session-name CDATA #IMPLIED
 >
