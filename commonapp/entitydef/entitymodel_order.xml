@@ -871,6 +871,63 @@
         <key-map field-name="facilityId"/>
       </relation>
     </entity>
+    <view-entity entity-name="OrderTaskList"
+            package-name="org.ofbiz.commonapp.order.order"
+            title="Order WorkEffort Task List">
+        <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+        <member-entity entity-alias="OHR" entity-name="OrderRole"/>  
+        <member-entity entity-alias="PS" entity-name="Person"/>                      
+        <member-entity entity-alias="WE" entity-name="WorkEffort"/>
+        <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
+        <member-entity entity-alias="PR" entity-name="PartyRole"/>
+        <alias entity-alias="OH" name="orderId"/>
+        <alias entity-alias="OH" name="orderTypeId"/>
+        <alias entity-alias="OH" name="orderDate"/>
+        <alias entity-alias="OH" name="entryDate"/>
+        <alias entity-alias="OH" name="grandTotal"/> 
+        <alias entity-alias="OHR" name="orderRoleTypeId" field="roleTypeId"/>  
+        <alias entity-alias="OHR" name="customerPartyId" field="partyId"/>  
+        <alias entity-alias="PS" name="customerFirstName" field="firstName"/>
+        <alias entity-alias="PS" name="customerLastName" field="lastName"/>                   
+        <alias entity-alias="WE" name="workEffortId"/>
+        <alias entity-alias="WE" name="workEffortTypeId"/>
+        <alias entity-alias="WE" name="currentStatusId"/>
+        <alias entity-alias="WE" name="lastStatusUpdate"/>
+        <alias entity-alias="WE" name="priority"/>
+        <alias entity-alias="WE" name="workEffortName"/>
+        <alias entity-alias="WE" name="description"/>  
+        <alias entity-alias="WE" name="createdDate"/>
+        <alias entity-alias="WE" name="createdByPartyId"/>
+        <alias entity-alias="WE" name="lastModifiedDate"/>
+        <alias entity-alias="WE" name="lastModifiedByPartyId"/>
+        <alias entity-alias="WE" name="estimatedStartDate"/>
+        <alias entity-alias="WE" name="estimatedCompletionDate"/>              
+        <alias entity-alias="WE" name="actualStartDate"/>
+        <alias entity-alias="WE" name="actualCompletionDate"/>
+        <alias entity-alias="WE" name="infoUrl"/>
+        <alias entity-alias="WEPA" name="wepaPartyId" field="partyId"/>
+        <alias entity-alias="WEPA" name="fromDate"/>
+        <alias entity-alias="WEPA" name="thruDate"/>        
+        <alias entity-alias="WEPA" name="statusId"/>
+        <alias entity-alias="WEPA" name="statusDateTime"/>
+        <alias entity-alias="PR" name="partyId"/>
+        <alias entity-alias="PR" name="roleTypeId"/>
+        <view-link entity-alias="OH" rel-entity-alias="OHR">
+        	<key-map field-name="orderId"/>        	
+        </view-link>  
+        <view-link entity-alias="OHR" rel-entity-alias="PS">
+        	<key-map field-name="partyId"/>
+        </view-link>      
+        <view-link entity-alias="OH" rel-entity-alias="WE">
+        	<key-map field-name="orderId" rel-field-name="sourceReferenceId"/>
+        </view-link>
+        <view-link entity-alias="WE" rel-entity-alias="WEPA">
+            <key-map field-name="workEffortId"/>
+        </view-link> 
+        <view-link entity-alias="WEPA" rel-entity-alias="PR">
+            <key-map field-name="roleTypeId"/>
+        </view-link>            
+    </view-entity>    
     <entity entity-name="OrderTerm"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Term Entity">
