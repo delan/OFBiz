@@ -11,8 +11,8 @@
 	<ShipmentContactMechType description="Ship-To E-Mail" shipmentContactMechTypeId="SHIP_TO_EMAIL"/>
 	<ShipmentContactMechType description="Ship-From E-Mail" shipmentContactMechTypeId="SHIP_TO_EMAIL"/>
 	
-	<ShipmentMethodType description="Standard" shipmentMethodTypeId="standard"/>
-	<ShipmentMethodType description="Express" shipmentMethodTypeId="express"/>
+	<ShipmentMethodType description="Standard" shipmentMethodTypeId="STANDARD"/>
+	<ShipmentMethodType description="Express" shipmentMethodTypeId="EXPRESS"/>
 	<ShipmentMethodType description="Ground" shipmentMethodTypeId="GROUND"/>
 	<ShipmentMethodType description="Air" shipmentMethodTypeId="AIR"/>
 	<ShipmentMethodType description="Guaranteed Next Day" shipmentMethodTypeId="NEXT_DAY"/>
