@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2001/09/12 14:55:55  jonesde
+ * Cleanups, added cache optimizations.
+ *
  * Revision 1.15  2001/09/11 00:51:46  jonesde
  * A few changes to correspond with the moving of the KeywordSearch file, etc.
  *
@@ -259,20 +262,23 @@ public class CatalogHelper {
 
       ArrayList productIds = (ArrayList)pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
       String resultArrayName = (String)pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
-      if(productIds == null || resultArrayName == null || curFindString.compareTo(resultArrayName) != 0 || viewIndex == 0) {
+      if(productIds == null || resultArrayName == null || !curFindString.equals(resultArrayName) || viewIndex == 0) {
         Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
         Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
 
-        //sort by productId (only sort for now...)
+        //sort by productId (only available sort for now...)
         Collection unsortedIds = KeywordSearch.productsByKeywords(keywordString, helper.getServerName());
         if(unsortedIds != null && unsortedIds.size() > 0) {
-            TreeSet productIdTree = new TreeSet(unsortedIds);
-            productIds = new ArrayList(productIdTree);
+          TreeSet productIdTree = new TreeSet(unsortedIds);
+          productIds = new ArrayList(productIdTree);
+        }
+        else {
+          productIds = null;
         }
 
         if(productIds != null) {
-            pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS", productIds);
-            pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
+          pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS", productIds);
+          pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
         }
       }
 
@@ -284,7 +290,7 @@ public class CatalogHelper {
 
       ArrayList products = new ArrayList();
       for(int ind=lowIndex; ind<=highIndex; ind++) {
-        products.add(helper.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productIds.get(ind-1))));
+        products.add(helper.findByPrimaryKey("Product", UtilMisc.toMap("productId", productIds.get(ind-1))));
       }
 
       pageContext.setAttribute(attributePrefix + "viewIndex", new Integer(viewIndex));
