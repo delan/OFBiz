@@ -167,7 +167,7 @@ public abstract class Parser {
         List in = new ArrayList();
         in.add(a);
         List out = matchAndAssemble(in);
-        //Debug.logVerbose("[bestMatch] after match and assemble, before best: in=" + in + ", out=" + out);
+        //if (Debug.verboseOn()) Debug.logVerbose("[bestMatch] after match and assemble, before best: in=" + in + ", out=" + out);
         return best(out);
     }
     /**
@@ -243,7 +243,7 @@ public abstract class Parser {
      */
     public List matchAndAssemble(List in) {
         List out = match(in);
-        //Debug.logVerbose("[matchAndAssemble] after match, before assemble: in=" + in + ", out=" + out);
+        //if (Debug.verboseOn()) Debug.logVerbose("[matchAndAssemble] after match, before assemble: in=" + in + ", out=" + out);
         
         if (assembler != null) {
             Enumeration e = Collections.enumeration(out);

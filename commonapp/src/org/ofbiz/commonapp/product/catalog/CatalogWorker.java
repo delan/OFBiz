@@ -103,14 +103,14 @@ public class CatalogWorker {
         //if prodCatalog is set to not check inventory break here
         if ("N".equals(prodCatalog.getString("checkInventory"))) {
             //note: if not set, defaults to yes, check inventory
-            Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT check inventory, returning true for inventory available check");
+            if (Debug.infoOn()) Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT check inventory, returning true for inventory available check");
             return true;
         }
         
         if ("Y".equals(prodCatalog.getString("oneInventoryFacility"))) {
             String inventoryFacilityId = prodCatalog.getString("inventoryFacilityId");
             if (UtilValidate.isEmpty(inventoryFacilityId)) {
-                Debug.logWarning("Catalog with id " + prodCatalogId + " has Y for oneInventoryFacility but inventoryFacilityId is empty, return false for inventory check");
+                Debug.logWarning("Catalog with id " + prodCatalogId + " has Y for oneInventoryFacility but inventoryFacilityId is empty, returning false for inventory check");
                 return false;
             }
             
@@ -131,10 +131,10 @@ public class CatalogWorker {
             
             //whew, finally here: now check to see if we got enough back...
             if (availableToPromise.doubleValue() >= quantity) {
-                Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
+                if (Debug.infoOn()) Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
                 return true;
             } else {
-                Debug.logInfo("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
+                if (Debug.infoOn()) Debug.logInfo("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
                 return false;
             }
             
@@ -168,7 +168,7 @@ public class CatalogWorker {
         //if prodCatalog is set to not reserve inventory, break here
         if ("N".equals(prodCatalog.getString("reserveInventory"))) {
             //note: if not set, defaults to yes, reserve inventory
-            Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT reserve inventory, not reserving inventory");
+            if (Debug.infoOn()) Debug.logVerbose("Catalog with id " + prodCatalogId + ", is set to NOT reserve inventory, not reserving inventory");
             return null;
         }
         
@@ -219,10 +219,10 @@ public class CatalogWorker {
             
             //whew, finally here: now check to see if we were able to reserve...
             if (quantityNotReserved.doubleValue() == 0) {
-                Debug.logInfo("Inventory IS reserved in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity was " + quantity);
+                if (Debug.infoOn()) Debug.logVerbose("Inventory IS reserved in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity was " + quantity);
                 return null;
             } else {
-                Debug.logInfo("There is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", amount could not reserve is " + quantityNotReserved);
+                if (Debug.infoOn()) Debug.logVerbose("There is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", amount could not reserve is " + quantityNotReserved);
                 return quantityNotReserved;
             }
             
@@ -323,7 +323,7 @@ public class CatalogWorker {
         }
 
         if (!fromSession) {
-            Debug.logInfo("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId);
+            if (Debug.infoOn()) Debug.logVerbose("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId);
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
             CategoryWorker.setTrail(request, new ArrayList());
         }

@@ -78,7 +78,7 @@ public class RequestHandler implements Serializable {
         if (chain != null) {
             requestUri = RequestHandler.getRequestUri(chain);
             nextView = RequestHandler.getNextPageUri(chain);
-            Debug.logInfo("[RequestHandler]: Chain in place: requestUri=" + requestUri + " nextView=" + nextView, module);
+            if (Debug.infoOn()) Debug.logVerbose("[RequestHandler]: Chain in place: requestUri=" + requestUri + " nextView=" + nextView, module);
         } else {
             // Check if we SHOULD be secure and are not. If we are posting let it pass to not lose data. (too late now anyway)
             if (!request.isSecure() && rm.requiresHttps(requestUri) && !request.getMethod().equalsIgnoreCase("POST")) {
@@ -123,7 +123,7 @@ public class RequestHandler implements Serializable {
             }
         }
 
-        Debug.logInfo("[Processing Request]: " + requestUri, module);
+        if (Debug.infoOn()) Debug.logVerbose("[Processing Request]: " + requestUri, module);
 
         String eventReturnString = null;
         /* Perform security check. */
@@ -154,7 +154,7 @@ public class RequestHandler implements Serializable {
 
         // Make sure we have a default 'success' view
         if (nextView == null) nextView = rm.getViewName(requestUri);
-        Debug.logVerbose("[Current View]: " + nextView, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Current View]: " + nextView, module);
 
         // Invoke the defined event (unless login failed)
         if (eventReturnString == null) {
@@ -184,20 +184,20 @@ public class RequestHandler implements Serializable {
 
         // Process the eventReturn.
         String eventReturn = rm.getRequestAttribute(requestUri, eventReturnString);
-        Debug.logVerbose("[Response Qualified]: " + eventReturn, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Response Qualified]: " + eventReturn, module);
 
         // Set the next view if we aren't 'success'
         if (eventReturn != null && !"success".equalsIgnoreCase(eventReturnString)) nextView = eventReturn;
-        Debug.logVerbose("[Event Response Mapping]: " + nextView, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Event Response Mapping]: " + nextView, module);
 
         // get the previous request info
         String previousRequest = (String) request.getSession().getAttribute(SiteDefs.PREVIOUS_REQUEST);
         String loginPass = (String) request.getAttribute(SiteDefs.LOGIN_PASSED);
-        Debug.logVerbose("[RequestHandler]: previousRequest - " + previousRequest + " (" + loginPass + ")", module);
+        if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: previousRequest - " + previousRequest + " (" + loginPass + ")", module);
 
         // check for a chain request.
         if (nextView != null && nextView.startsWith("request:")) {
-            Debug.logVerbose("[RequestHandler.doRequest]: Response is a chained request.", module);
+            if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a chained request.", module);
             nextView = nextView.substring(8);
             doRequest(request, response, nextView, userLogin, delegator);
         }
@@ -205,13 +205,13 @@ public class RequestHandler implements Serializable {
         // if previous request exists, and a login just succeeded, do that now.
         else if (previousRequest != null && loginPass != null && loginPass.equalsIgnoreCase("TRUE")) {
             request.getSession().removeAttribute(SiteDefs.PREVIOUS_REQUEST);
-            Debug.logInfo("[Doing Previous Request]: " + previousRequest, module);
+            if (Debug.infoOn()) Debug.logVerbose("[Doing Previous Request]: " + previousRequest, module);
             doRequest(request, response, previousRequest, userLogin, delegator);
         }
 
         // check for a url for redirection
         else if (nextView != null && nextView.startsWith("url:")) {
-            Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect.", module);
+            if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect.", module);
             nextView = nextView.substring(4);
             callRedirect(nextView, request, response);
         }
@@ -274,7 +274,7 @@ public class RequestHandler implements Serializable {
 
     private void callRedirect(String url, HttpServletRequest req, HttpServletResponse resp)
             throws RequestHandlerException {
-        Debug.logInfo("[Sending redirect]: " + url, module);
+        if (Debug.infoOn()) Debug.logVerbose("[Sending redirect]: " + url, module);
         try {
             resp.sendRedirect(url);
         } catch (IOException ioe) {
@@ -292,7 +292,7 @@ public class RequestHandler implements Serializable {
         String oldView = view;
 
         if (view != null && view.length() > 0 && view.charAt(0) == '/') view = view.substring(1);
-        Debug.logVerbose("[Getting View Map]: " + view, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Getting View Map]: " + view, module);
 
         // before mapping the view, set a session attribute so we know where we are
         req.setAttribute(SiteDefs.CURRENT_VIEW, view);
@@ -309,11 +309,11 @@ public class RequestHandler implements Serializable {
             nextPage = tempView;
         }
 
-        Debug.logVerbose("[Mapped To]: " + nextPage, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Mapped To]: " + nextPage, module);
 
         long viewStartTime = System.currentTimeMillis();
         try {
-            Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewType + "]");
+            if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewType + "]");
             ViewHandler vh = ViewFactory.getViewHandler(this, viewType);
             vh.render(view, nextPage, rm.getViewInfo(view), req, resp);
         } catch (ViewHandlerException e) {

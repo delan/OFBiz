@@ -232,7 +232,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     public synchronized void activityComplete(WfActivity activity) throws WfException {
         if (!activity.state().equals("closed.completed"))
             throw new WfException("Activity state is not completed");
-        Debug.logVerbose("[WfProcess.activityComplete] : Activity (" + activity.name() + ") is complete", module);
+        if (Debug.verboseOn()) Debug.logVerbose("[WfProcess.activityComplete] : Activity (" + activity.name() + ") is complete", module);
         queueNext(activity);
     }
 
@@ -261,7 +261,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
                 if (toActivity.get("joinTypeEnumId") != null)
                     join = toActivity.getString("joinTypeEnumId");
 
-                Debug.logVerbose("[WfProcess.queueNext] : " + join + " join.", module);
+                if (Debug.verboseOn()) Debug.logVerbose("[WfProcess.queueNext] : " + join + " join.", module);
 
                 // activate if XOR or test the join transition(s)
                 if (join.equals("WJT_XOR"))
@@ -298,7 +298,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             throw new WfException(e.getMessage(), e);
         }
 
-        Debug.logVerbose("[WfProcess.joinTransition] : toTrans (" + toTrans.size() + ") followed (" +
+        if (Debug.verboseOn()) Debug.logVerbose("[WfProcess.joinTransition] : toTrans (" + toTrans.size() + ") followed (" +
                 (followed.size() + 1) + ")", module);
 
         // check to see if all transition requirements are met
@@ -331,7 +331,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     // Activates an activity object
     private void startActivity(GenericValue value) throws WfException {
         WfActivity activity = WfFactory.getWfActivity(value, workEffortId);
-        Debug.logVerbose("[WfProcess.startActivity] : Attempting to start activity (" + activity.name() + ")", module);
+        if (Debug.verboseOn()) Debug.logVerbose("[WfProcess.startActivity] : Attempting to start activity (" + activity.name() + ")", module);
         try {
             activity.activate();
         } catch (AlreadyRunning e) {
@@ -384,7 +384,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             Debug.logVerbose("Used OTHERWISE Transition.", module);
         }
 
-        Debug.logVerbose("[WfProcess.getTransFrom] : Transitions: " + transList.size(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("[WfProcess.getTransFrom] : Transitions: " + transList.size(), module);
         return transList;
     }
 

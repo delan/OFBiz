@@ -226,7 +226,7 @@ public class RequestManager implements Serializable {
         HashMap uri = getRequestMapMap(uriStr);
         if (uri != null) {
             String value = (String) uri.get(ConfigXMLReader.SECURITY_EXTVIEW);
-            Debug.logVerbose("Allow ExtView: " + value, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Allow ExtView: " + value, module);
             if ("false".equalsIgnoreCase(value))
                 return false;
             else

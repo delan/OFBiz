@@ -102,7 +102,7 @@ public class ServiceDispatcher {
      * @param loader the classloader of the local dispatcher
      */
     public void register(String name, DispatchContext context) {
-        Debug.logInfo("[ServiceDispatcher.register] : Registered dispatcher: " +
+        if (Debug.infoOn()) Debug.logVerbose("[ServiceDispatcher.register] : Registered dispatcher: " +
                       context.getName(), module);
         this.localContext.put(name, context);
     }
@@ -125,7 +125,7 @@ public class ServiceDispatcher {
         GenericEngine engine = getGenericEngine(service.engineName);
         engine.setLoader(localName);
 
-        Debug.logVerbose("[ServiceDispatcher.runSync] : invoking service [" + service.location + "/" + service.invoke +
+        if (Debug.verboseOn()) Debug.logVerbose("[ServiceDispatcher.runSync] : invoking service [" + service.location + "/" + service.invoke +
                 "] (" + service.engineName + ")", module);
 
         // validate the context
@@ -175,7 +175,7 @@ public class ServiceDispatcher {
             }
         }
 
-        Debug.logVerbose("[ServiceDispatcher.runSyncIgnore] : invoking service [" + service.location + "/" + service.invoke +
+        if (Debug.verboseOn()) Debug.logVerbose("[ServiceDispatcher.runSyncIgnore] : invoking service [" + service.location + "/" + service.invoke +
                 "] (" + service.engineName + ")", module);
 
         engine.runSyncIgnore(service, context);
@@ -209,7 +209,7 @@ public class ServiceDispatcher {
             }
         }
 
-        Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
+        if (Debug.verboseOn()) Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
                 "] (" + service.engineName + ")", module);
 
         engine.runAsync(service, context, requester, persist);
@@ -242,7 +242,7 @@ public class ServiceDispatcher {
             }
         }
 
-        Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
+        if (Debug.verboseOn()) Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
                 "] (" + service.engineName + ")", module);
 
         engine.runAsync(service, context, persist);
@@ -341,7 +341,7 @@ public class ServiceDispatcher {
     private GenericValue getLoginObject(String service, String localName, String username, String password)
             throws GenericServiceException {
         Map context = UtilMisc.toMap("login.username", username, "login.password", password, "isServiceAuth", new Boolean(true));
-        Debug.logVerbose("[ServiceDispathcer.authenticate] : Invoking UserLogin Service", module);
+        if (Debug.verboseOn()) Debug.logVerbose("[ServiceDispathcer.authenticate] : Invoking UserLogin Service", module);
 
         // Manually invoke the service
         DispatchContext dctx = getLocalContext(localName);

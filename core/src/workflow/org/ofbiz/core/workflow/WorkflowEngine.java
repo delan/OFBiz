@@ -189,7 +189,7 @@ public class WorkflowEngine implements GenericEngine {
 
         try {
             Job job = new WorkflowRunner(process, requester);
-            Debug.logVerbose("Created WorkflowRunner: " + job, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Created WorkflowRunner: " + job, module);
             dispatcher.getJobManager().runJob(job);
         } catch (JobManagerException je) {
             throw new GenericServiceException(je.getMessage(), je);

@@ -80,7 +80,7 @@ public class PersistedServiceJob extends GenericServiceJob {
         } catch (GenericEntityException e) {
             throw new RuntimeException(e.getMessage());
         }
-        Debug.logVerbose(this.toString() + " -- Next runtime: " + runtime, module);
+        if (Debug.verboseOn()) Debug.logVerbose(this.toString() + " -- Next runtime: " + runtime, module);
     }
 
     protected void finish() {

@@ -56,7 +56,7 @@ public class ModelDataFileReader {
                 //must check if null again as one of the blocked threads can still enter
                 reader = (ModelDataFileReader) readers.get(readerURL);
                 if (reader == null) {
-                    Debug.logInfo("[ModelDataFileReader.getModelDataFileReader] : creating reader.");
+                    if (Debug.infoOn()) Debug.logVerbose("[ModelDataFileReader.getModelDataFileReader] : creating reader.");
                     reader = new ModelDataFileReader(readerURL);
                     readers.put(readerURL, reader);
                 }
@@ -66,7 +66,7 @@ public class ModelDataFileReader {
             readers.remove(readerURL);
             return null;
         }
-        Debug.logInfo("[ModelDataFileReader.getModelDataFileReader] : returning reader.");
+        if (Debug.infoOn()) Debug.logVerbose("[ModelDataFileReader.getModelDataFileReader] : returning reader.");
         return reader;
     }
 
@@ -123,7 +123,7 @@ public class ModelDataFileReader {
                                 if (dataFile != null) {
                                     modelDataFiles.put(dataFileName, dataFile);
                                     //utilTimer.timerString("  After modelDataFiles.put -- " + i + " --");
-                                    Debug.logInfo("-- getModelDataFile: #" + i + " Loaded dataFile: " + dataFileName);
+                                    if (Debug.infoOn()) Debug.logVerbose("-- getModelDataFile: #" + i + " Loaded dataFile: " + dataFileName);
                                 } else
                                     Debug.logWarning("-- -- SERVICE ERROR:getModelDataFile: Could not create dataFile for dataFileName: " + dataFileName);
 

@@ -72,7 +72,7 @@ public class IfNotEmpty extends MethodOperation {
         if (mapName != null && mapName.length() > 0) {
             Map fromMap = (Map) methodContext.getEnv(mapName);
             if (fromMap == null) {
-                Debug.logInfo("Map not found with name " + mapName + ", not running operations");
+                if (Debug.infoOn()) Debug.logVerbose("Map not found with name " + mapName + ", not running operations");
             } else {
                 fieldVal = fromMap.get(fieldName);
             }
@@ -82,7 +82,7 @@ public class IfNotEmpty extends MethodOperation {
         }
 
         if (fieldVal == null) {
-            Debug.logInfo("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not running operations");
+            if (Debug.infoOn()) Debug.logVerbose("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not running operations");
         }
         
         //only run subOps if element is not empty/null
@@ -99,14 +99,14 @@ public class IfNotEmpty extends MethodOperation {
         }
         
         if (runSubOps) {
-            //Debug.logVerbose("IfNotEmpty: Running if operations mapName=" + mapName + " fieldName=" + fieldName);
+            //if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running if operations mapName=" + mapName + " fieldName=" + fieldName);
             return SimpleMethod.runSubOps(subOps, methodContext);
         } else {
             if (elseSubOps != null) {
-                //Debug.logVerbose("IfNotEmpty: Running else operations mapName=" + mapName + " fieldName=" + fieldName);
+                //if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running else operations mapName=" + mapName + " fieldName=" + fieldName);
                 return SimpleMethod.runSubOps(elseSubOps, methodContext);
             } else {
-                //Debug.logVerbose("IfNotEmpty: Not Running any operations mapName=" + mapName + " fieldName=" + fieldName);
+                //if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Not Running any operations mapName=" + mapName + " fieldName=" + fieldName);
                 return true;
             }
         }

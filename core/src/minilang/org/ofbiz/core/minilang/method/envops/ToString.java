@@ -56,7 +56,7 @@ public class ToString extends MethodOperation {
             if (toMap == null) {
                 //it seems silly to create a new map, but necessary since whenever
                 // an env field like a Map or List is referenced it should be created, even if empty
-                Debug.logVerbose("Map not found with name " + mapName + ", creating new map");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapName + ", creating new map");
                 toMap = new HashMap();
                 methodContext.putEnv(mapName, toMap);
             }

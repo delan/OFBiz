@@ -174,7 +174,7 @@ public class GenericDAO {
         
         //no non-primaryKey fields, update doesn't make sense, so don't do it
         if (fieldsToSave.size() <= 0) {
-            Debug.logVerbose("Trying to do an update on an entity with no non-PK fields, returning having done nothing; entity=" + entity);
+            if (Debug.verboseOn()) Debug.logVerbose("Trying to do an update on an entity with no non-PK fields, returning having done nothing; entity=" + entity);
             //returning one because it was effectively updated, ie the same thing, so don't trigger any errors elsewhere
             return 1;
         }
@@ -301,7 +301,7 @@ public class GenericDAO {
             String meName = (String) meMapEntry.getValue();
             String meAlias = (String) meMapEntry.getKey();
 
-            Debug.logInfo("[singleUpdateView]: Processing MemberEntity " + meName + " with Alias " + meAlias);
+            if (Debug.infoOn()) Debug.logVerbose("[singleUpdateView]: Processing MemberEntity " + meName + " with Alias " + meAlias);
             try {
                 memberModelEntity = delegator.getModelReader().getModelEntity(meName);
             } catch (GenericEntityException e) {
@@ -328,14 +328,14 @@ public class GenericDAO {
                             fieldName = keyMap.getRelFieldName();
                         }
 
-                        Debug.logInfo("[singleUpdateView]: --- Found field to set: " + meAlias + "." + fieldName);
+                        if (Debug.infoOn()) Debug.logVerbose("[singleUpdateView]: --- Found field to set: " + meAlias + "." + fieldName);
                         Object value = null;
                         if (modelViewEntity.isField(keyMap.getFieldName())) {
                             value = entity.get(keyMap.getFieldName());
-                            Debug.logInfo("[singleUpdateView]: --- Found map value: " + value.toString());
+                            if (Debug.infoOn()) Debug.logVerbose("[singleUpdateView]: --- Found map value: " + value.toString());
                         } else if (modelViewEntity.isField(keyMap.getRelFieldName())) {
                             value = entity.get(keyMap.getRelFieldName());
-                            Debug.logInfo("[singleUpdateView]: --- Found map value: " + value.toString());
+                            if (Debug.infoOn()) Debug.logVerbose("[singleUpdateView]: --- Found map value: " + value.toString());
                         } else {
                             throw new GenericNotImplementedException("Update on view entities: no direct link found, unable to update");
                         }
@@ -352,7 +352,7 @@ public class GenericDAO {
             } catch (GenericEntityException e) {
                 throw new GenericEntityException("Error while retrieving partial results for entity member: " + meName, e);
             }
-            Debug.logInfo("[singleUpdateView]: --- Found " + meResult.size() + " results for entity member " + meName);
+            if (Debug.infoOn()) Debug.logVerbose("[singleUpdateView]: --- Found " + meResult.size() + " results for entity member " + meName);
 
             // Got results 0 -> INSERT, 1 -> UPDATE, >1 -> View is nor updatable
             GenericValue meGenericValue = null;
@@ -383,7 +383,7 @@ public class GenericDAO {
                     if (meModelField != null) {
                         meGenericValue.set(meModelField.getName(), entity.get(modelField.getName()));
                         meFieldsToSave.add(meModelField);
-                        Debug.logInfo("[singleUpdateView]: --- Added field to save: " + meModelField.getName() + " with value " + meGenericValue.get(meModelField.getName()));
+                        if (Debug.infoOn()) Debug.logVerbose("[singleUpdateView]: --- Added field to save: " + meModelField.getName() + " with value " + meGenericValue.get(meModelField.getName()));
                     } else {
                         throw new GenericEntityException("Could not get field " + modelField.getName() + " from model entity " + memberModelEntity.getEntityName());
                     }
@@ -404,7 +404,7 @@ public class GenericDAO {
                 if (meFieldsToSave.size() > 0) {
                     retVal += singleUpdate(meGenericValue, memberModelEntity, meFieldsToSave, connection);
                 } else {
-                    Debug.logInfo("[singleUpdateView]: No update on member entity " + memberModelEntity.getEntityName() + " needed");
+                    if (Debug.infoOn()) Debug.logVerbose("[singleUpdateView]: No update on member entity " + memberModelEntity.getEntityName() + " needed");
                 }
             }
         }

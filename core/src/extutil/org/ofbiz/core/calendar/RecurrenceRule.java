@@ -226,7 +226,7 @@ public class RecurrenceRule {
      *@return The interval of this frequency as an integer.
      */
     public int getIntervalInt() {
-        Debug.logVerbose("[RecurrenceInfo.getInterval] : " + getInterval());
+        if (Debug.verboseOn()) Debug.logVerbose("[RecurrenceInfo.getInterval] : " + getInterval());
         return (int) getInterval();
     }
 
@@ -310,7 +310,7 @@ public class RecurrenceRule {
 
         long nextStartTime = startTime;
         while (nextStartTime < fromTime) {
-            Debug.logVerbose("[RecurrenceInfo.getNextFreq] : Updating time - " + getFrequency());
+            if (Debug.verboseOn()) Debug.logVerbose("[RecurrenceInfo.getNextFreq] : Updating time - " + getFrequency());
             switch (getFrequency()) {
                 case SECONDLY:
                     cal.add(Calendar.SECOND, getIntervalInt());

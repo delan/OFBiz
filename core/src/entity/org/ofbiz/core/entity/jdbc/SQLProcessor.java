@@ -245,7 +245,7 @@ public class SQLProcessor {
      * @throws GenericEntityException
      */
     public void prepareStatement(String sql, boolean specifyTypeAndConcur, int resultSetType, int resultSetConcurrency) throws GenericDataSourceException, GenericEntityException {
-        Debug.logVerbose("[SQLProcessor.prepareStatement] sql=" + sql, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.prepareStatement] sql=" + sql, module);
         
         if (_connection == null) {
             getConnection();
@@ -273,7 +273,7 @@ public class SQLProcessor {
      */
     public ResultSet executeQuery() throws GenericDataSourceException {
         try {
-            //Debug.logVerbose("[SQLProcessor.executeQuery] ps=" + _ps.toString(), module);
+            //if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.executeQuery] ps=" + _ps.toString(), module);
             _rs = _ps.executeQuery();
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
@@ -303,7 +303,7 @@ public class SQLProcessor {
      */
     public int executeUpdate() throws GenericDataSourceException {
         try {
-            //Debug.logVerbose("[SQLProcessor.executeUpdate] ps=" + _ps.toString(), module);
+            //if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.executeUpdate] ps=" + _ps.toString(), module);
             return _ps.executeUpdate();
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
@@ -383,7 +383,7 @@ public class SQLProcessor {
         }
         
         try {
-            Debug.logVerbose("[SQLProcessor.execQuery]: " + sql, module);
+            if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.execQuery]: " + sql, module);
             executeQuery(sql);
             
             // process the results by calling the listener for

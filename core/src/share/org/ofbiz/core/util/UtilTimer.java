@@ -161,7 +161,7 @@ public class UtilTimer {
 
 	String retString = retStringBuf.toString();
 //    if(!quiet) Debug.logInfo(retString);
-    Debug.logInfo(retString);
+    if (Debug.infoOn()) Debug.logVerbose(retString);
     return retString;
   }
 

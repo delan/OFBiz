@@ -72,7 +72,7 @@ public class JobPoller implements Runnable {
     }
 
     public synchronized void run() {
-        Debug.logInfo("JobPoller: (" + thread.getName() + ") Thread Running...", module);
+        if (Debug.infoOn()) Debug.logVerbose("JobPoller: (" + thread.getName() + ") Thread Running...", module);
         while (isRunning) {
             try {
                 // grab a list of jobs to run.
@@ -88,7 +88,7 @@ public class JobPoller implements Runnable {
                 stop();
             }
         }
-        Debug.logInfo("JobPoller: (" + thread.getName() + ") Thread ending...", module);
+        if (Debug.infoOn()) Debug.logVerbose("JobPoller: (" + thread.getName() + ") Thread ending...", module);
     }
 
     /**
@@ -121,7 +121,7 @@ public class JobPoller implements Runnable {
      */
     public synchronized void queueNow(Job job) {
         run.add(job);
-        Debug.logVerbose("New run queue size: " + run.size(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("New run queue size: " + run.size(), module);
         if (run.size() > pool.size() && pool.size() < maxThreads()) {
             int calcSize = (run.size() / jobsPerThread()) - (pool.size());
             int addSize = calcSize > maxThreads() ? maxThreads() : calcSize;

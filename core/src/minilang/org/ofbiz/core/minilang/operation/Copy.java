@@ -74,13 +74,13 @@ public class Copy extends SimpleMapOperation {
         
         if (replace) {
             results.put(toField, fieldValue);
-            //Debug.logInfo("[SimpleMapProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
+            //if (Debug.infoOn()) Debug.logVerbose("[SimpleMapProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
         } else {
             if (results.containsKey(toField)) {
                 //do nothing
             } else {
                 results.put(toField, fieldValue);
-                //Debug.logInfo("[SimpleMapProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
+                //if (Debug.infoOn()) Debug.logVerbose("[SimpleMapProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
             }
         }
     }

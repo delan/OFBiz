@@ -188,11 +188,11 @@ public class WorkflowClient {
      */
     public void start(String workEffortId) throws WfException {
         WfActivity activity = WfFactory.getWfActivity(context.getDelegator(), workEffortId);
-        Debug.logVerbose("Starting activity: " + activity.name(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("Starting activity: " + activity.name(), module);
         if (activityRunning(activity))
             throw new WfException("Activity is already running.");
         Job job = new StartActivityJob(activity);
-        Debug.logVerbose("Job: " + job, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Job: " + job, module);
         try {
             context.getDispatcher().getJobManager().runJob(job);
         } catch (JobManagerException e) {
@@ -233,7 +233,7 @@ public class WorkflowClient {
             Map oCtx = obj.processContext();
             oCtx.putAll(append);
             obj.setProcessContext(oCtx);
-            Debug.logVerbose("ProcessContext (" + workEffortId + ") => " + obj.processContext(), module);
+            if (Debug.verboseOn()) Debug.logVerbose("ProcessContext (" + workEffortId + ") => " + obj.processContext(), module);
         }
     }
 
@@ -245,7 +245,7 @@ public class WorkflowClient {
     public Map getContext(String workEffortId) throws WfException {
         WfExecutionObject obj = getExecutionObject(workEffortId);
         if (obj == null) throw new WfException("Invalid Execution Object (null value)");
-        Debug.logVerbose("ProcessContext (" + workEffortId + ") => " + obj.processContext(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("ProcessContext (" + workEffortId + ") => " + obj.processContext(), module);
         return obj.processContext();
     }
 
@@ -257,7 +257,7 @@ public class WorkflowClient {
     public String getState(String workEffortId) throws WfException {
         WfExecutionObject obj = getExecutionObject(workEffortId);
         if (obj == null) throw new WfException("Invalid Execution Object (null value)");
-        Debug.logVerbose("Current State (" + workEffortId + ") => " + obj.state(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("Current State (" + workEffortId + ") => " + obj.state(), module);
         return obj.state();
     }
 
@@ -272,7 +272,7 @@ public class WorkflowClient {
         WfExecutionObject obj = getExecutionObject(workEffortId);
         if (obj == null) throw new WfException("Invalid Execution Object (null value)");
         obj.changeState(state);
-        Debug.logVerbose("Current State (" + workEffortId + ") => " + obj.state(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("Current State (" + workEffortId + ") => " + obj.state(), module);
     }
 
     /**
@@ -284,7 +284,7 @@ public class WorkflowClient {
     public long getPriority(String workEffortId) throws WfException {
         WfExecutionObject obj = getExecutionObject(workEffortId);
         if (obj == null) throw new WfException("Invalid Execution Object (null value)");
-        Debug.logVerbose("Current Priority (" + workEffortId + ") => " + obj.priority(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("Current Priority (" + workEffortId + ") => " + obj.priority(), module);
         return obj.priority();
     }
 
@@ -298,7 +298,7 @@ public class WorkflowClient {
         WfExecutionObject obj = getExecutionObject(workEffortId);
         if (obj == null) throw new WfException("Invalid Execution Object (null value)");
         obj.setPriority(priority);
-        Debug.logVerbose("Current Priority (" + workEffortId + ") => " + obj.priority(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("Current Priority (" + workEffortId + ") => " + obj.priority(), module);
     }
 
     private WfExecutionObject getExecutionObject(String workEffortId) {

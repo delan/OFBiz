@@ -75,7 +75,7 @@ public class FieldToList extends MethodOperation {
 
         List toList = (List) methodContext.getEnv(listName);
         if (toList == null) {
-            Debug.logVerbose("List not found with name " + listName + ", creating new list");
+            if (Debug.verboseOn()) Debug.logVerbose("List not found with name " + listName + ", creating new list");
             toList = new LinkedList();
             methodContext.putEnv(listName, toList);
         }

@@ -164,14 +164,14 @@ public class Security {
     public boolean hasEntityPermission(String entity, String action, GenericValue userLogin) {
         if (userLogin == null) return false;
 
-        //Debug.logInfo("hasEntityPermission: entity=" + entity + ", action=" + action);
+        //if (Debug.infoOn()) Debug.logVerbose("hasEntityPermission: entity=" + entity + ", action=" + action);
         Iterator iterator = findUserLoginSecurityGroupByUserLoginId(userLogin.getString("userLoginId"));
         GenericValue userLoginSecurityGroup = null;
 
         while (iterator.hasNext()) {
             userLoginSecurityGroup = (GenericValue) iterator.next();
 
-            //Debug.logInfo("hasEntityPermission: userLoginSecurityGroup=" + userLoginSecurityGroup.toString());
+            //if (Debug.infoOn()) Debug.logVerbose("hasEntityPermission: userLoginSecurityGroup=" + userLoginSecurityGroup.toString());
 
             //always try _ADMIN first so that it will cache first, keeping the cache smaller
             if (securityGroupPermissionExists(userLoginSecurityGroup.getString("groupId"), entity + "_ADMIN"))

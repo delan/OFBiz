@@ -81,8 +81,8 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         this.processId = getRuntimeObject().getString("workflowProcessId");
         this.activityId = getRuntimeObject().getString("workflowActivityId");
         this.history = null;
-        Debug.logVerbose("Process ID: " + processId, module);
-        Debug.logVerbose("Activity ID: " + activityId, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Process ID: " + processId, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Activity ID: " + activityId, module);
     }
 
     // creates the stored runtime workeffort data.
@@ -113,7 +113,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             dataObject = getDelegator().makeValue("WorkEffort", dataMap);
             c.add(dataObject);
             getDelegator().storeAll(c);
-            Debug.logInfo("Created new runtime object (Workeffort: " + runtimeKey() + ")", module);
+            if (Debug.infoOn()) Debug.logVerbose("Created new runtime object (Workeffort: " + runtimeKey() + ")", module);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
@@ -628,7 +628,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         try {
             dataObject.set("serviceLoaderName", loader);
             dataObject.store();
-            Debug.logInfo("------- EXECUTION OBJECT : Service loader set: " +
+            if (Debug.infoOn()) Debug.logVerbose("------- EXECUTION OBJECT : Service loader set: " +
                     dataObject.getString("serviceLoaderName"), module);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
@@ -727,8 +727,8 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         if (expression == null || expression.equals(""))
             throw new WfException("Cannot evaluate empty or null expression");
 
-        Debug.logVerbose("Evaluating -- " + expression, module);
-        Debug.logVerbose("Using Context -- " + context, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Evaluating -- " + expression, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Using Context -- " + context, module);
         try {
             // Set the context for the condition
             Set keySet = context.keySet();
@@ -740,7 +740,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             }
             // evaluate the expression
             o = bsh.eval(expression);
-            Debug.logVerbose("Evaluated to -- " + o, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Evaluated to -- " + o, module);
 
             // read back the context info
             NameSpace ns = bsh.getNameSpace();

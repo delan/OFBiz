@@ -47,7 +47,7 @@ public class CategoryServices {
         try {
             category = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", categoryId));
             members = EntityUtil.filterByDate(category.getRelatedCache("ProductCategoryMember", null, UtilMisc.toList("sequenceNum")), true);
-            Debug.logVerbose("Category: " + category + " Member Size: " + members.size() + " Members: " + members);
+            if (Debug.verboseOn()) Debug.logVerbose("Category: " + category + " Member Size: " + members.size() + " Members: " + members);
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problem reading product categories: " + e.getMessage());

@@ -114,14 +114,14 @@ public class GenericServiceJob extends AbstractJob {
      * Method is called prior to running the service.
      */
     protected void init() {
-        Debug.logVerbose("Async-Service initializing.", module);
+        if (Debug.verboseOn()) Debug.logVerbose("Async-Service initializing.", module);
     }
 
     /**
      * Method is called after the service has finished.
      */
     protected void finish() {
-        Debug.logVerbose("Async-Service finished.", module);
+        if (Debug.verboseOn()) Debug.logVerbose("Async-Service finished.", module);
         runtime = 0;
     }
 

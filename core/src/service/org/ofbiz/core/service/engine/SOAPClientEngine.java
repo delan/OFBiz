@@ -96,7 +96,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
 
         List inModelParamList = modelService.getInModelParamList();
         Object[] params = new Object[inModelParamList.size()];
-        Debug.logInfo("[SOAPClientEngine.invoke] : Parameter length - " +
+        if (Debug.infoOn()) Debug.logVerbose("[SOAPClientEngine.invoke] : Parameter length - " +
                       params.length, module);
 
         call.setTargetEndpointAddress(endPoint);
@@ -108,7 +108,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
         int i = 0;
         while (iter.hasNext()) {
             ModelParam p = (ModelParam) iter.next();
-            Debug.logInfo("[SOAPClientEngine.invoke} : Parameter : " + p.name + " (" +
+            if (Debug.infoOn()) Debug.logVerbose("[SOAPClientEngine.invoke} : Parameter : " + p.name + " (" +
                           p.mode + ") - " + i, module);
 
             //if the value is null, that's fine, it will go in null...

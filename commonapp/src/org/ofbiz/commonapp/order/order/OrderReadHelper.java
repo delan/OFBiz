@@ -484,7 +484,7 @@ public class OrderReadHelper {
         if (itemAdjustment.get("percentage") != null && unitPrice != null) {
             adjustment += (itemAdjustment.getDouble("percentage").doubleValue() * unitPrice.doubleValue());
         }
-        Debug.logVerbose("calcItemAdjustment: " + itemAdjustment + ", quantity=" + quantity + ", unitPrice=" + unitPrice + ", adjustment=" + adjustment);
+        if (Debug.verboseOn()) Debug.logVerbose("calcItemAdjustment: " + itemAdjustment + ", quantity=" + quantity + ", unitPrice=" + unitPrice + ", adjustment=" + adjustment);
         return adjustment;
     }
 

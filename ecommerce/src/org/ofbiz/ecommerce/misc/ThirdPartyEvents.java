@@ -119,7 +119,7 @@ public class ThirdPartyEvents {
                     toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));
                     try {
                         delegator.storeAll(toBeStored);
-                        Debug.logInfo("Distributor for user " + party.getString("partyId") + " set to " + distributorId);
+                        if (Debug.infoOn()) Debug.logVerbose("Distributor for user " + party.getString("partyId") + " set to " + distributorId);
                     }
                     catch (GenericEntityException gee) {
                         Debug.logWarning(gee);
@@ -186,7 +186,7 @@ public class ThirdPartyEvents {
                     partyRelationship.set("partyRelationshipTypeId", "SALES_AFFILIATE");
                     try {
                         delegator.create(partyRelationship);
-                        Debug.logInfo("Affiliate for user " + party.getString("partyId") + " set to " + affiliateId);
+                        if (Debug.infoOn()) Debug.logVerbose("Affiliate for user " + party.getString("partyId") + " set to " + affiliateId);
                     }
                     catch (GenericEntityException gee) {
                         Debug.logWarning(gee);

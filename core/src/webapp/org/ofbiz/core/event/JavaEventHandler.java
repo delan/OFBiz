@@ -66,7 +66,7 @@ public class JavaEventHandler implements EventHandler {
                 eventClassMap.put(eventPath, this.eventClass);
             }
         }
-        Debug.logVerbose("[Set path/method]: " + eventPath + " / " + eventMethod, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Set path/method]: " + eventPath + " / " + eventMethod, module);
     }
 
     /** Invoke the web event
@@ -90,7 +90,7 @@ public class JavaEventHandler implements EventHandler {
         try {
             Method m = eventClass.getMethod(eventMethod, paramTypes);
             String eventReturn = (String) m.invoke(null, params);
-            Debug.logVerbose("[Event Return]: " + eventReturn, module);
+            if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + eventReturn, module);
             return eventReturn;
         } catch (java.lang.reflect.InvocationTargetException e) {
             Throwable t = e.getTargetException();

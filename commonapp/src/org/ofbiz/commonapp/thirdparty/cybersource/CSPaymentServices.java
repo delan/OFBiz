@@ -136,9 +136,9 @@ public class CSPaymentServices {
             request.setRetryEnabled(enableRetry ? "yes" : "no");
             request.setCurrency((currency == null ? defCur : currency));
 
-            Debug.logVerbose("---- CyberSource Request To: " + client.url.toString() + " ----", module);
-            Debug.logVerbose("[REQ]: " + request, module);
-            Debug.logVerbose("---- End Request ----", module);
+            if (Debug.verboseOn()) Debug.logVerbose("---- CyberSource Request To: " + client.url.toString() + " ----", module);
+            if (Debug.verboseOn()) Debug.logVerbose("[REQ]: " + request, module);
+            if (Debug.verboseOn()) Debug.logVerbose("---- End Request ----", module);
 
             try {
                 reply = client.send(request);
@@ -149,9 +149,9 @@ public class CSPaymentServices {
                 return result;
             }
 
-            Debug.logVerbose("---- CyberSource Response ----", module);
-            Debug.logVerbose("[RES]: " + reply, module);
-            Debug.logVerbose("---- End Reply ----", module);
+            if (Debug.verboseOn()) Debug.logVerbose("---- CyberSource Response ----", module);
+            if (Debug.verboseOn()) Debug.logVerbose("[RES]: " + reply, module);
+            if (Debug.verboseOn()) Debug.logVerbose("---- End Reply ----", module);
 
 
             result = processAuthResult(reply, result, paymentPreference);
@@ -239,7 +239,7 @@ public class CSPaymentServices {
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
         GenericValue paymentMethod = paymentPref.getRelatedOne("PaymentMethod");
 
-        Debug.logVerbose("PaymentMethod: " + paymentMethod, module);
+        if (Debug.verboseOn()) Debug.logVerbose("PaymentMethod: " + paymentMethod, module);
 
         if (paymentMethod.get("paymentMethodTypeId") != null &&
                 !paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD"))
@@ -248,9 +248,9 @@ public class CSPaymentServices {
         GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");
         GenericValue billingAddress = creditCard.getRelatedOne("PostalAddress");
 
-        //Debug.logVerbose("PaymentMethod: " + paymentMethod, module);
-        //Debug.logVerbose("CreditCard: " + creditCard, module);
-        //Debug.logVerbose("BillingAddress: " + billingAddress, module);
+        //if (Debug.verboseOn()) Debug.logVerbose("PaymentMethod: " + paymentMethod, module);
+        //if (Debug.verboseOn()) Debug.logVerbose("CreditCard: " + creditCard, module);
+        //if (Debug.verboseOn()) Debug.logVerbose("BillingAddress: " + billingAddress, module);
 
         if (billingAddress == null || creditCard == null)
             throw new GeneralException("Null billing or payment information");
@@ -398,9 +398,9 @@ public class CSPaymentServices {
                 throw new GeneralException("No auth reference number to process: " + paymentPreference.getString("orderPaymentPreferenceId"));
             request.setAuthRequestId(authRefNum);
 
-            Debug.logVerbose("---- CyberSource Request To: " + client.url.toString() + " ----", module);
-            Debug.logVerbose("[REQ]: " + request, module);
-            Debug.logVerbose("---- End Request ----", module);
+            if (Debug.verboseOn()) Debug.logVerbose("---- CyberSource Request To: " + client.url.toString() + " ----", module);
+            if (Debug.verboseOn()) Debug.logVerbose("[REQ]: " + request, module);
+            if (Debug.verboseOn()) Debug.logVerbose("---- End Request ----", module);
 
             try {
                 reply = client.send(request);
@@ -408,9 +408,9 @@ public class CSPaymentServices {
                 throw new GeneralException("ICS ERROR: " + ie.getMessage(), ie);
             }
 
-            Debug.logVerbose("---- CyberSource Response ----", module);
-            Debug.logVerbose("[RES]: " + reply, module);
-            Debug.logVerbose("---- End Reply ----", module);
+            if (Debug.verboseOn()) Debug.logVerbose("---- CyberSource Response ----", module);
+            if (Debug.verboseOn()) Debug.logVerbose("[RES]: " + reply, module);
+            if (Debug.verboseOn()) Debug.logVerbose("---- End Reply ----", module);
 
 
             lastWasOkay = processBillResult(reply, paymentPreference);

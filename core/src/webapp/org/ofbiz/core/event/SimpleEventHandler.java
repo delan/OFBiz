@@ -53,7 +53,7 @@ public class SimpleEventHandler implements EventHandler {
     public void initialize(String eventPath, String eventMethod) {
         this.xmlResource = eventPath;
         this.eventName = eventMethod;
-        Debug.logVerbose("[Set path/method]: " + xmlResource + " / " + eventName, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Set path/method]: " + xmlResource + " / " + eventName, module);
     }
 
     /** Invoke the web event
@@ -71,7 +71,7 @@ public class SimpleEventHandler implements EventHandler {
         Debug.logVerbose("[Processing]: SIMPLE Event", module);
         try {
             String eventReturn = SimpleMethod.runSimpleEvent(xmlResource, eventName, request);
-            Debug.logVerbose("[Event Return]: " + eventReturn, module);
+            if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + eventReturn, module);
             return eventReturn;
         } catch (MiniLangException e) {
             Debug.logError(e);

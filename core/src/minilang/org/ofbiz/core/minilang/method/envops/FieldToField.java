@@ -69,7 +69,7 @@ public class FieldToField extends MethodOperation {
         if (mapName != null && mapName.length() > 0) {
             Map fromMap = (Map) methodContext.getEnv(mapName);
             if (fromMap == null) {
-                Debug.logInfo("Map not found with name " + mapName + ", not copying from this map");
+                if (Debug.infoOn()) Debug.logVerbose("Map not found with name " + mapName + ", not copying from this map");
                 return true;
             }
 
@@ -80,7 +80,7 @@ public class FieldToField extends MethodOperation {
         }
 
         if (fieldVal == null) {
-            Debug.logVerbose("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not copying field");
+            if (Debug.verboseOn()) Debug.logVerbose("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not copying field");
             return true;
         }
         
@@ -91,7 +91,7 @@ public class FieldToField extends MethodOperation {
         if (toMapName != null && toMapName.length() > 0) {
             toMap = (Map) methodContext.getEnv(toMapName);
             if (toMap == null) {
-                Debug.logVerbose("Map not found with name " + toMapName + ", creating new map");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + toMapName + ", creating new map");
                 toMap = new HashMap();
                 methodContext.putEnv(toMapName, toMap);
             }

@@ -73,7 +73,7 @@ public class LocalDispatcher {
         this.ctx = ctx;
         ctx.setDispatcher(this);
         dispatcher = ServiceDispatcher.getInstance(name, ctx, delegator);
-        Debug.logInfo("[LocalDispatcher] : Created Dispatcher for: " + name);
+        if (Debug.infoOn()) Debug.logVerbose("[LocalDispatcher] : Created Dispatcher for: " + name);
     }
 
     /**
@@ -186,12 +186,11 @@ public class LocalDispatcher {
         try {
             getJobManager().schedule(getName(), serviceName, context, startTime,
                                      frequency, interval, count);
-            Debug.logVerbose("[LocalDispatcher.schedule] : Current time: " +
-                             (new Date()).getTime());
-            Debug.logVerbose("[LocalDispatcher.schedule] : Runtime: " + startTime);
-            Debug.logVerbose("[LocalDispatcher.schedule] : Frequency: " + frequency);
-            Debug.logVerbose("[LocalDispatcher.schedule] : Interval: " + interval);
-            Debug.logVerbose("[LocalDispatcher.schedule] : Count: " + count);
+            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Current time: " + (new Date()).getTime());
+            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Runtime: " + startTime);
+            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Frequency: " + frequency);
+            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Interval: " + interval);
+            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Count: " + count);
         } catch (JobManagerException e) {
             throw new GenericServiceException(e.getMessage(), e);
         }

@@ -71,7 +71,7 @@ public class ProductPromoWorker {
         
         //if quantity increased, then apply, otherwise unapply
         boolean apply = oldQuantity < cartItem.getQuantity();
-        Debug.logVerbose("Doing Promotions; apply=" + apply + ", oldQuantity=" + oldQuantity + ", newQuantity=" + cartItem.getQuantity() + ", productId=" + cartItem.getProductId()); 
+        if (Debug.verboseOn()) Debug.logVerbose("Doing Promotions; apply=" + apply + ", oldQuantity=" + oldQuantity + ", newQuantity=" + cartItem.getQuantity() + ", productId=" + cartItem.getProductId()); 
         
         GenericValue prodCatalog = null;
         try {
@@ -89,7 +89,7 @@ public class ProductPromoWorker {
             //loop through promotions
             Iterator prodCatalogPromoAppls = UtilMisc.toIterator(EntityUtil.filterByDate(prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum")), true));
             if (prodCatalogPromoAppls == null || !prodCatalogPromoAppls.hasNext()) {
-                Debug.logInfo("Not doing promotions, none applied to prodCatalog with ID " + prodCatalogId);
+                if (Debug.infoOn()) Debug.logVerbose("Not doing promotions, none applied to prodCatalog with ID " + prodCatalogId);
             }
             
             while (prodCatalogPromoAppls != null && prodCatalogPromoAppls.hasNext()){
@@ -119,7 +119,7 @@ public class ProductPromoWorker {
                     
                     if (performActions) {
                         //perform all actions, either apply or unapply
-                        Debug.logVerbose("Rule Conditions all true, performing actions for rule " + productPromoRule);
+                        if (Debug.verboseOn()) Debug.logVerbose("Rule Conditions all true, performing actions for rule " + productPromoRule);
                         
                         Iterator productPromoActions = UtilMisc.toIterator(productPromoRule.getRelatedCache("ProductPromoAction", null, UtilMisc.toList("productPromoActionSeqId")));
                         while (productPromoActions != null && productPromoActions.hasNext()) {
@@ -142,7 +142,7 @@ public class ProductPromoWorker {
     }
     
     public static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator) throws GenericEntityException {
-        Debug.logVerbose("Checking promotion condition: " + productPromoCond);
+        if (Debug.verboseOn()) Debug.logVerbose("Checking promotion condition: " + productPromoCond);
         int compare = 0;
         if ("PPIP_PRODUCT_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
             compare = cartItem.getProductId().compareTo(productPromoCond.getString("condValue"));
@@ -160,7 +160,7 @@ public class ProductPromoWorker {
             }
         } else if ("PPIP_ORDER_TOTAL".equals(productPromoCond.getString("inputParamEnumId"))) {
             Double orderSubTotal = new Double(cart.getSubTotal());
-            Debug.logVerbose("Doing order total compare: orderSubTotal=" + orderSubTotal);
+            if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderSubTotal=" + orderSubTotal);
             compare = orderSubTotal.compareTo(Double.valueOf(productPromoCond.getString("condValue")));
         } else if ("PPIP_QUANTITY_ADDED".equals(productPromoCond.getString("inputParamEnumId"))) {
             Double quantityAdded = new Double(cartItem.getQuantity() - oldQuantity);
@@ -172,7 +172,7 @@ public class ProductPromoWorker {
             return false;
         }
         
-        Debug.logVerbose("Condition compare done, compare=" + compare);
+        if (Debug.verboseOn()) Debug.logVerbose("Condition compare done, compare=" + compare);
 
         if ("PPC_EQ".equals(productPromoCond.getString("operatorEnumId"))) {
             if (compare == 0) return true;
@@ -198,7 +198,7 @@ public class ProductPromoWorker {
             if (apply) {
                 Integer itemLoc = findPromoItem(productPromoAction, cart);
                 if (itemLoc != null) {
-                    Debug.logInfo("Not adding promo item, already there; action: " + productPromoAction);
+                    if (Debug.infoOn()) Debug.logVerbose("Not adding promo item, already there; action: " + productPromoAction);
                     return;
                 }
 
@@ -224,7 +224,7 @@ public class ProductPromoWorker {
                 gwpItem.setIsPromo(true);
                 gwpItem.addAdjustment(orderAdjustment);
                 
-                Debug.logInfo("qwpItem adjustments: " + gwpItem.getAdjustments());
+                if (Debug.infoOn()) Debug.logVerbose("qwpItem adjustments: " + gwpItem.getAdjustments());
             } else {
                 //how to remove this? find item that isPromo with the product id and has adjustment with the same promo/rule id, then remove it
 
@@ -299,7 +299,7 @@ public class ProductPromoWorker {
         if (apply) {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cartItem.getAdjustments());
             if (adjLoc != null) {
-                Debug.logInfo("Not adding promo adjustment, already there; action: " + productPromoAction);
+                if (Debug.infoOn()) Debug.logVerbose("Not adding promo adjustment, already there; action: " + productPromoAction);
                 return;
             }
             
@@ -327,7 +327,7 @@ public class ProductPromoWorker {
         if (apply) {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cart.getAdjustments());
             if (adjLoc != null) {
-                Debug.logInfo("Not adding promo adjustment, already there; action: " + productPromoAction);
+                if (Debug.infoOn()) Debug.logVerbose("Not adding promo adjustment, already there; action: " + productPromoAction);
                 return;
             }
             

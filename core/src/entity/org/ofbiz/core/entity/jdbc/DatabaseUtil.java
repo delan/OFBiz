@@ -441,7 +441,7 @@ public class DatabaseUtil {
                             rcInfoMap.remove(relConstraintName);
                         } else {
                             //if not, create one
-                            Debug.logVerbose("No Foreign Key Constraint " + relConstraintName + " found in entity " + entityName);
+                            if (Debug.verboseOn()) Debug.logVerbose("No Foreign Key Constraint " + relConstraintName + " found in entity " + entityName);
                             String errMsg = createForeignKey(entity, modelRelation, relModelEntity, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle);
                             if (errMsg != null && errMsg.length() > 0) {
                                 String message = "Could not create foreign key " + relConstraintName + " for entity \"" + entity.getEntityName() + "\"";
@@ -477,7 +477,7 @@ public class DatabaseUtil {
                     }
                 }
             }
-            Debug.logInfo("Created " + numFksCreated + " fk refs");
+            if (Debug.infoOn()) Debug.logVerbose("Created " + numFksCreated + " fk refs");
         }
         
         //make sure each one-relation has an index
@@ -543,7 +543,7 @@ public class DatabaseUtil {
                                 tableIndexList.remove(relConstraintName);
                             } else {
                                 //if not, create one
-                                Debug.logVerbose("No Index " + relConstraintName + " found for entity " + entityName);
+                                if (Debug.verboseOn()) Debug.logVerbose("No Index " + relConstraintName + " found for entity " + entityName);
                                 String errMsg = createForeignKeyIndex(entity, modelRelation, datasourceInfo.constraintNameClipLength);
                                 if (errMsg != null && errMsg.length() > 0) {
                                     String message = "Could not create foreign key index " + relConstraintName + " for entity \"" + entity.getEntityName() + "\"";
@@ -580,7 +580,7 @@ public class DatabaseUtil {
                     }
                 }
             }
-            Debug.logInfo("Created " + numIndicesCreated + " indices");
+            if (Debug.infoOn()) Debug.logVerbose("Created " + numIndicesCreated + " indices");
         }
         
         timer.timerString("Finished Checking Entity Database");
@@ -649,19 +649,19 @@ public class DatabaseUtil {
         }
         
         try {
-            Debug.logInfo("Database Product Name is " + dbData.getDatabaseProductName(), module);
-            Debug.logInfo("Database Product Version is " + dbData.getDatabaseProductVersion(), module);
+            if (Debug.infoOn()) Debug.logVerbose("Database Product Name is " + dbData.getDatabaseProductName(), module);
+            if (Debug.infoOn()) Debug.logVerbose("Database Product Version is " + dbData.getDatabaseProductVersion(), module);
         } catch (SQLException sqle) {
             Debug.logWarning("Unable to get Database name & version information", module);
         }
         try {
-            Debug.logInfo("Database Driver Name is " + dbData.getDriverName(), module);
-            Debug.logInfo("Database Driver Version is " + dbData.getDriverVersion(), module);
+            if (Debug.infoOn()) Debug.logVerbose("Database Driver Name is " + dbData.getDriverName(), module);
+            if (Debug.infoOn()) Debug.logVerbose("Database Driver Version is " + dbData.getDriverVersion(), module);
         } catch (SQLException sqle) {
             Debug.logWarning("Unable to get Driver name & version information", module);
         }
         
-        Debug.logInfo("Getting Table Info From Database");
+        if (Debug.infoOn()) Debug.logVerbose("Getting Table Info From Database");
         
         //get ALL tables from this database
         TreeSet tableNames = new TreeSet();
@@ -706,7 +706,7 @@ public class DatabaseUtil {
                     
                         //String remarks = tableSet.getString("REMARKS");
                     tableNames.add(tableName);
-                    //Debug.logInfo("Found table named \"" + tableName + "\" of type \"" + tableType + "\" with remarks: " + remarks);
+                    //if (Debug.infoOn()) Debug.logVerbose("Found table named \"" + tableName + "\" of type \"" + tableType + "\" with remarks: " + remarks);
                 } catch (SQLException sqle) {
                     String message = "Error getting table information... Error was:" + sqle.toString();
 
@@ -794,20 +794,20 @@ public class DatabaseUtil {
         }
         /*
         try {
-            Debug.logInfo("Database Product Name is " + dbData.getDatabaseProductName(), module);
-            Debug.logInfo("Database Product Version is " + dbData.getDatabaseProductVersion(), module);
+            if (Debug.infoOn()) Debug.logVerbose("Database Product Name is " + dbData.getDatabaseProductName(), module);
+            if (Debug.infoOn()) Debug.logVerbose("Database Product Version is " + dbData.getDatabaseProductVersion(), module);
         } catch (SQLException sqle) {
             Debug.logWarning("Unable to get Database name & version information", module);
         }
         try {
-            Debug.logInfo("Database Driver Name is " + dbData.getDriverName(), module);
-            Debug.logInfo("Database Driver Version is " + dbData.getDriverVersion(), module);
+            if (Debug.infoOn()) Debug.logVerbose("Database Driver Name is " + dbData.getDriverName(), module);
+            if (Debug.infoOn()) Debug.logVerbose("Database Driver Version is " + dbData.getDriverVersion(), module);
         } catch (SQLException sqle) {
             Debug.logWarning("Unable to get Driver name & version information", module);
         }
         */
 
-        Debug.logInfo("Getting Column Info From Database");
+        if (Debug.infoOn()) Debug.logVerbose("Getting Column Info From Database");
         
         Map colInfo = new HashMap();
 
@@ -929,20 +929,20 @@ public class DatabaseUtil {
         }
         /*
         try {
-            Debug.logInfo("Database Product Name is " + dbData.getDatabaseProductName(), module);
-            Debug.logInfo("Database Product Version is " + dbData.getDatabaseProductVersion(), module);
+            if (Debug.infoOn()) Debug.logVerbose("Database Product Name is " + dbData.getDatabaseProductName(), module);
+            if (Debug.infoOn()) Debug.logVerbose("Database Product Version is " + dbData.getDatabaseProductVersion(), module);
         } catch (SQLException sqle) {
             Debug.logWarning("Unable to get Database name & version information", module);
         }
         try {
-            Debug.logInfo("Database Driver Name is " + dbData.getDriverName(), module);
-            Debug.logInfo("Database Driver Version is " + dbData.getDriverVersion(), module);
+            if (Debug.infoOn()) Debug.logVerbose("Database Driver Name is " + dbData.getDriverName(), module);
+            if (Debug.infoOn()) Debug.logVerbose("Database Driver Version is " + dbData.getDriverVersion(), module);
         } catch (SQLException sqle) {
             Debug.logWarning("Unable to get Driver name & version information", module);
         }
         */
 
-        Debug.logInfo("Getting Foreign Key (Reference) Info From Database");
+        if (Debug.infoOn()) Debug.logVerbose("Getting Foreign Key (Reference) Info From Database");
         
         Map refInfo = new HashMap();
 
@@ -979,14 +979,14 @@ public class DatabaseUtil {
                         rcInfo.fkName = rsCols.getString("FK_NAME");
                         rcInfo.fkName = (rcInfo.fkName == null) ? null : rcInfo.fkName.toUpperCase();
 
-                        Debug.logVerbose("Got: " + rcInfo.toString());
+                        if (Debug.verboseOn()) Debug.logVerbose("Got: " + rcInfo.toString());
 
                         Map tableRefInfo = (Map) refInfo.get(rcInfo.fkTableName);
 
                         if (tableRefInfo == null) {
                             tableRefInfo = new HashMap();
                             refInfo.put(rcInfo.fkTableName, tableRefInfo);
-                            Debug.logVerbose("Adding new Map for table: " + rcInfo.fkTableName);
+                            if (Debug.verboseOn()) Debug.logVerbose("Adding new Map for table: " + rcInfo.fkTableName);
                         }
                         if (!tableRefInfo.containsKey(rcInfo.fkName)) totalFkRefs++;
                         tableRefInfo.put(rcInfo.fkName, rcInfo);
@@ -1000,7 +1000,7 @@ public class DatabaseUtil {
                     }
                 }
 
-                //Debug.logInfo("There are " + totalFkRefs + " in the database");
+                //if (Debug.infoOn()) Debug.logVerbose("There are " + totalFkRefs + " in the database");
                 try {
                     rsCols.close();
                 } catch (SQLException sqle) {
@@ -1011,7 +1011,7 @@ public class DatabaseUtil {
                         messages.add(message);
                 }
             //}
-            Debug.logInfo("There are " + totalFkRefs + " foreign key refs in the database");
+            if (Debug.infoOn()) Debug.logVerbose("There are " + totalFkRefs + " foreign key refs in the database");
             
         } catch (SQLException sqle) {
             String message = "Error getting fk reference meta data Error was:" + sqle.toString() + ". Not checking fk refs.";
@@ -1078,7 +1078,7 @@ public class DatabaseUtil {
             return null;
         }
 
-        Debug.logInfo("Getting Index Info From Database");
+        if (Debug.infoOn()) Debug.logVerbose("Getting Index Info From Database");
         
         Map indexInfo = new HashMap();
 
@@ -1119,7 +1119,7 @@ public class DatabaseUtil {
                         if (tableIndexList == null) {
                             tableIndexList = new TreeSet();
                             indexInfo.put(tableName, tableIndexList);
-                            Debug.logVerbose("Adding new Map for table: " + tableName);
+                            if (Debug.verboseOn()) Debug.logVerbose("Adding new Map for table: " + tableName);
                         }
                         if (!tableIndexList.contains(indexName)) totalIndices++;
                         tableIndexList.add(indexName);
@@ -1133,7 +1133,7 @@ public class DatabaseUtil {
                     }
                 }
 
-                //Debug.logInfo("There are " + totalIndices + " indices in the database");
+                //if (Debug.infoOn()) Debug.logVerbose("There are " + totalIndices + " indices in the database");
                 if (rsCols != null) {
                     try {
                         rsCols.close();
@@ -1146,7 +1146,7 @@ public class DatabaseUtil {
                     }
                 }
             }
-            Debug.logInfo("There are " + totalIndices + " indices in the database");
+            if (Debug.infoOn()) Debug.logVerbose("There are " + totalIndices + " indices in the database");
             
         } catch (SQLException sqle) {
             String message = "Error getting fk reference meta data Error was:" + sqle.toString() + ". Not checking fk refs.";
@@ -1253,7 +1253,7 @@ public class DatabaseUtil {
         }
 
         sqlBuf.append(")");
-        Debug.logVerbose("[createTable] sql=" + sqlBuf.toString());
+        if (Debug.verboseOn()) Debug.logVerbose("[createTable] sql=" + sqlBuf.toString());
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate(sqlBuf.toString());
@@ -1298,7 +1298,7 @@ public class DatabaseUtil {
         
         String sql = "ALTER TABLE " + entity.getTableName() + " ADD " + field.getColName() + " " + type.getSqlType();
         
-        Debug.logInfo("[addColumn] sql=" + sql);
+        if (Debug.infoOn()) Debug.logVerbose("[addColumn] sql=" + sql);
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate(sql);
@@ -1398,7 +1398,7 @@ public class DatabaseUtil {
         sqlBuf.append(" ADD ");
         sqlBuf.append(makeFkConstraintClause(entity, modelRelation, relModelEntity, constraintNameClipLength, fkStyle));
     
-        Debug.logVerbose("[createForeignKey] sql=" + sqlBuf.toString());
+        if (Debug.verboseOn()) Debug.logVerbose("[createForeignKey] sql=" + sqlBuf.toString());
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate(sqlBuf.toString());
@@ -1539,7 +1539,7 @@ public class DatabaseUtil {
         sqlBuf.append(" DROP CONSTRAINT ");
         sqlBuf.append(relConstraintName);
     
-        Debug.logVerbose("[deleteForeignKey] sql=" + sqlBuf.toString());
+        if (Debug.verboseOn()) Debug.logVerbose("[deleteForeignKey] sql=" + sqlBuf.toString());
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate(sqlBuf.toString());
@@ -1606,7 +1606,7 @@ public class DatabaseUtil {
         }
 
         String createIndexSql = makeFkIndexClause(entity, modelRelation, constraintNameClipLength);
-        Debug.logVerbose("[createForeignKeyIndex] index sql=" + createIndexSql);
+        if (Debug.verboseOn()) Debug.logVerbose("[createForeignKeyIndex] index sql=" + createIndexSql);
         
         try {
             stmt = connection.createStatement();
@@ -1705,7 +1705,7 @@ public class DatabaseUtil {
         indexSqlBuf.append(relConstraintName);
 
         String deleteIndexSql = indexSqlBuf.toString();
-        Debug.logVerbose("[deleteForeignKeyIndex] index sql=" + deleteIndexSql);
+        if (Debug.verboseOn()) Debug.logVerbose("[deleteForeignKeyIndex] index sql=" + deleteIndexSql);
         
         try {
             stmt = connection.createStatement();

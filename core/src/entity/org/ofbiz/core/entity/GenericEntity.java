@@ -382,7 +382,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
             ModelField curField = (ModelField) iter.next();
             if (fields.containsKey(curField.getName())) {
                 Object field = fields.get(curField.getName());
-                //Debug.logVerbose("Setting field " + curField.getName() + ": " + field + ", setIfEmpty = " + setIfEmpty);
+                //if (Debug.verboseOn()) Debug.logVerbose("Setting field " + curField.getName() + ": " + field + ", setIfEmpty = " + setIfEmpty);
                 if (setIfEmpty) {
                     //if empty string, set to null
                     if (field != null && field instanceof String && ((String)field).length() == 0) {
@@ -553,13 +553,13 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         if (this.getClass().equals(obj.getClass())) {
             GenericEntity that = (GenericEntity) obj;
             if (this.getEntityName() != null && !this.getEntityName().equals(that.getEntityName())) {
-                //Debug.logInfo("[GenericEntity.equals] Not equal: This entityName \"" + this.getEntityName() + "\" is not equal to that entityName \"" + that.getEntityName() + "\"");
+                //if (Debug.infoOn()) Debug.logVerbose("[GenericEntity.equals] Not equal: This entityName \"" + this.getEntityName() + "\" is not equal to that entityName \"" + that.getEntityName() + "\"");
                 return false;
             }
             if (this.fields.equals(that.fields)) {
                 return true;
             } else {
-                //Debug.logInfo("[GenericEntity.equals] Not equal: Fields of this entity: \n" + this.toString() + "\n are not equal to fields of that entity:\n" + that.toString());
+                //if (Debug.infoOn()) Debug.logVerbose("[GenericEntity.equals] Not equal: Fields of this entity: \n" + this.toString() + "\n are not equal to fields of that entity:\n" + that.toString());
             }
         }
         return false;

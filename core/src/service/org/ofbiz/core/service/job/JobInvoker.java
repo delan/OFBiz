@@ -64,7 +64,7 @@ public class JobInvoker implements Runnable {
         // get a new thread
         thread = new Thread(this);
         thread.setDaemon(false);
-        Debug.logVerbose("JobInoker: Starting Invoker Thread -- " + thread.getName(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("JobInoker: Starting Invoker Thread -- " + thread.getName(), module);
         thread.start();
     }
 
@@ -110,17 +110,17 @@ public class JobInvoker implements Runnable {
                    stop();
                 }
             } else {
-                Debug.logVerbose("Invoker: " + thread.getName() + " executing job -- " + job.getJobName(), module);
+                if (Debug.verboseOn()) Debug.logVerbose("Invoker: " + thread.getName() + " executing job -- " + job.getJobName(), module);
                 job.exec();
-                Debug.logVerbose("Invoker: " + thread.getName() + " finished executing job -- " + job.getJobName(), module);
+                if (Debug.verboseOn()) Debug.logVerbose("Invoker: " + thread.getName() + " finished executing job -- " + job.getJobName(), module);
                 count++;
-                Debug.logVerbose("Invoker: " + thread.getName() + " (" + count + ") total.", module);
+                if (Debug.verboseOn()) Debug.logVerbose("Invoker: " + thread.getName() + " (" + count + ") total.", module);
             }
             long diff = (new Date().getTime() - this.getTime());
             if (getTTL() > 0 && diff > getTTL())
                 jp.removeThread(this);
         }
-        Debug.logVerbose("Invoker: " + thread.getName() + " dead -- " + UtilDateTime.nowTimestamp(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("Invoker: " + thread.getName() + " dead -- " + UtilDateTime.nowTimestamp(), module);
     }
 
     private long getTTL() {

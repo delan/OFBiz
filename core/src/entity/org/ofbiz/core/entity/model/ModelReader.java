@@ -220,9 +220,9 @@ public class ModelReader {
                                         entityCache.put(entityName, entity);
                                         //utilTimer.timerString("  After entityCache.put -- " + i + " --");
                                         if (isEntity) {
-                                            Debug.logVerbose("-- [Entity]: #" + i + ": " + entityName, module);
+                                            if (Debug.verboseOn()) Debug.logVerbose("-- [Entity]: #" + i + ": " + entityName, module);
                                         } else {
-                                            Debug.logVerbose("-- [ViewEntity]: #" + i + ": " + entityName, module);
+                                            if (Debug.verboseOn()) Debug.logVerbose("-- [ViewEntity]: #" + i + ": " + entityName, module);
                                         }
                                     } else {
                                         Debug.logWarning("-- -- ENTITYGEN ERROR:getModelEntity: Could not create " +

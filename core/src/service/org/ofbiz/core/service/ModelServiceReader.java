@@ -66,7 +66,7 @@ public class ModelServiceReader {
                 //must check if null again as one of the blocked threads can still enter
                 reader = (ModelServiceReader) readersUrl.get(readerURL);
                 if (reader == null) {
-                    Debug.logInfo("[Creating reader]: " + readerURL.toExternalForm(), module);
+                    if (Debug.infoOn()) Debug.logVerbose("[Creating reader]: " + readerURL.toExternalForm(), module);
                     reader = new ModelServiceReader(readerURL);
                     readersUrl.put(readerURL, reader);
                 }
@@ -83,7 +83,7 @@ public class ModelServiceReader {
                 //must check if null again as one of the blocked threads can still enter
                 reader = (ModelServiceReader) readersLoader.get(handler);
                 if (reader == null) {
-                    Debug.logInfo("[Creating reader]: " + handler, module);
+                    if (Debug.infoOn()) Debug.logVerbose("[Creating reader]: " + handler, module);
                     reader = new ModelServiceReader(handler);
                     readersLoader.put(handler, reader);
                 }
@@ -178,9 +178,11 @@ public class ModelServiceReader {
                                     int optIn = service.getParameterNames(ModelService.IN_PARAM, true).size() - reqIn;
                                     int reqOut = service.getParameterNames(ModelService.OUT_PARAM, false).size();
                                     int optOut = service.getParameterNames(ModelService.OUT_PARAM, true).size() - reqOut;
-                                    String msg = "-- getModelService: # " + i + " Loaded service: " + serviceName +
-                                            " (IN) " + reqIn + "/" + optIn + " (OUT) " + reqOut + "/" + optOut;
-                                    Debug.logVerbose(msg, module);
+                                    if (Debug.verboseOn()) {
+				        String msg = "-- getModelService: # " + i + " Loaded service: " + serviceName +
+                                                " (IN) " + reqIn + "/" + optIn + " (OUT) " + reqOut + "/" + optOut;
+                                        Debug.logVerbose(msg, module);
+				    }
                                 } else {
                                     Debug.logWarning(
                                             "-- -- SERVICE ERROR:getModelService: Could not create service for serviceName: " +

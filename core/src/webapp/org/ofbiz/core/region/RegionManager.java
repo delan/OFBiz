@@ -59,7 +59,7 @@ public class RegionManager {
     public static Map getRegions(URL regionFile) {
         Map regions = RegionCache.getRegions(regionFile);
         if (regions == null) {
-            Debug.logVerbose("Regions not yet loaded for " + regionFile + ", loading now");
+            if (Debug.verboseOn()) Debug.logVerbose("Regions not yet loaded for " + regionFile + ", loading now");
             regions = readRegionXml(regionFile);
             RegionCache.putRegions(regionFile, regions);
         }

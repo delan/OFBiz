@@ -66,7 +66,7 @@ public class PropertyToField extends MethodOperation {
         if (mapName != null && mapName.length() > 0) {
             Map toMap = (Map) methodContext.getEnv(mapName);
             if (toMap == null) {
-                Debug.logInfo("Map not found with name " + mapName + ", creating new map");
+                if (Debug.infoOn()) Debug.logVerbose("Map not found with name " + mapName + ", creating new map");
                 toMap = new HashMap();
                 methodContext.putEnv(mapName, toMap);
             }

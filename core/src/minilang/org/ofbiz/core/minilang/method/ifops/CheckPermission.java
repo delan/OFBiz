@@ -111,17 +111,17 @@ public class CheckPermission extends MethodOperation {
     public void addMessage(List messages, ClassLoader loader) {
         if (!isProperty && message != null) {
             messages.add(message);
-            //Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message);
+            //if (Debug.infoOn()) Debug.logVerbose("[SimpleMapOperation.addMessage] Adding message: " + message);
         } else if (isProperty && propertyResource != null && message != null) {
             String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
             if (propMsg == null || propMsg.length() == 0)
                 messages.add("Simple Map Processing error occurred, but no message was found, sorry.");
             else
                 messages.add(propMsg);
-            //Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg);
+            //if (Debug.infoOn()) Debug.logVerbose("[SimpleMapOperation.addMessage] Adding property message: " + propMsg);
         } else {
             messages.add("Simple Map Processing error occurred, but no message was found, sorry.");
-            //Debug.logInfo("[SimpleMapOperation.addMessage] ERROR: No message found");
+            //if (Debug.infoOn()) Debug.logVerbose("[SimpleMapOperation.addMessage] ERROR: No message found");
         }
     }
 }

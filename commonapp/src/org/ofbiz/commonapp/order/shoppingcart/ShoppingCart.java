@@ -94,7 +94,7 @@ public class ShoppingCart implements java.io.Serializable {
             ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
             if (sci.equals(productId, features, attributes, prodCatalogId)) {
                 double newQuantity = sci.getQuantity() + quantity;
-                Debug.logVerbose("Found a match for id " + productId + " on line " + i + ", updating quantity to " + newQuantity);
+                if (Debug.verboseOn()) Debug.logVerbose("Found a match for id " + productId + " on line " + i + ", updating quantity to " + newQuantity);
                 sci.setQuantity(newQuantity, dispatcher, this);
                 return i;
             }

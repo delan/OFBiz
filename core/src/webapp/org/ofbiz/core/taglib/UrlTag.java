@@ -91,7 +91,7 @@ public class UrlTag extends BodyTagSupport {
             }
         }
 
-        Debug.logVerbose("UseHTTPS: " + useHttps + " -- URI: " + requestUri + " -> " + rm.requiresHttps(requestUri), module);
+        if (Debug.verboseOn()) Debug.logVerbose("UseHTTPS: " + useHttps + " -- URI: " + requestUri + " -> " + rm.requiresHttps(requestUri), module);
         newURL.append(controlPath);
         newURL.append(baseURL);
 

@@ -155,7 +155,7 @@ public class ModelFieldTypeReader {
                                 if (fieldType != null) {
                                     fieldTypeCache.put(fieldTypeName, fieldType);
                                     //utilTimer.timerString("  After fieldTypeCache.put -- " + i + " --");
-                                    Debug.logVerbose("-- getModelFieldType: #" + i + " Created fieldType: " + fieldTypeName, module);
+                                    if (Debug.verboseOn()) Debug.logVerbose("-- getModelFieldType: #" + i + " Created fieldType: " + fieldTypeName, module);
                                 } else {
                                     Debug.logWarning("-- -- ENTITYGEN ERROR:getModelFieldType: Could not create fieldType for fieldTypeName: " + fieldTypeName, module);
                                 }

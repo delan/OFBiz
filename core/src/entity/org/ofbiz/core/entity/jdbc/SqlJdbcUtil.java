@@ -177,7 +177,7 @@ public class SqlJdbcUtil {
         StringBuffer sql = new StringBuffer("");
         
         if (orderBy != null && orderBy.size() > 0) {
-            Debug.logVerbose("Order by list contains: " + orderBy.size() + " entries.", module);
+            if (Debug.verboseOn()) Debug.logVerbose("Order by list contains: " + orderBy.size() + " entries.", module);
             List orderByStrings = new LinkedList();
             
             for (int oi = 0; oi < orderBy.size(); oi++) {
@@ -223,7 +223,7 @@ public class SqlJdbcUtil {
                 }
             }
         }
-        Debug.logVerbose("makeOrderByClause: " + sql.toString(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("makeOrderByClause: " + sql.toString(), module);
         return sql.toString();
     }
     

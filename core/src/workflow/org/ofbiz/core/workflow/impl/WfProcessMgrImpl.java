@@ -72,7 +72,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         buildSignatures();
         processList = new ArrayList();
         state = "enabled";
-        Debug.logVerbose("[WfProcessMgr.init] : Create process manager (" + packageId + "/" + processId + ")", module);
+        if (Debug.verboseOn()) Debug.logVerbose("[WfProcessMgr.init] : Create process manager (" + packageId + "/" + processId + ")", module);
     }
 
     /**

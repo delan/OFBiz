@@ -50,7 +50,7 @@ public class EntityExprList extends EntityCondition {
     }
     
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
-        //Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName());
+        //if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName());
         StringBuffer whereStringBuffer = new StringBuffer();
         if (exprList != null && exprList.size() > 0) {
             for (int i = 0; i < exprList.size(); i++) {
@@ -58,7 +58,7 @@ public class EntityExprList extends EntityCondition {
                 whereStringBuffer.append(expr.makeWhereString(modelEntity, entityConditionParams));
                 if (i < exprList.size() - 1) {
                     whereStringBuffer.append(' ');
-                    whereStringBuffer.append(operator);
+                    whereStringBuffer.append(operator.getCode());
                     whereStringBuffer.append(' ');
                 }
             }
@@ -67,7 +67,7 @@ public class EntityExprList extends EntityCondition {
     }
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
-        //Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName());
+        //if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName());
         Iterator exprIter = exprList.iterator();
         while (exprIter.hasNext()) {
             EntityExpr entityExpr = (EntityExpr) exprIter.next();

@@ -270,12 +270,12 @@ public class CheckOutEvents {
             } catch (GenericServiceException e) {
                 Debug.logWarning(e, module);
             }
-            Debug.logVerbose("Finsished w/ Payment Service", module);
+            if (Debug.verboseOn()) Debug.logVerbose("Finsished w/ Payment Service", module);
             if (paymentResult != null && paymentResult.containsKey("authResponse")) {
                 String authResp = (String) paymentResult.get("authResponse");
                 if (!authResp.equals("SUCCESS")) {
                     // order was NOT approved
-                    Debug.logVerbose("Payment auth was NOT a success!", module);
+                    if (Debug.verboseOn()) Debug.logVerbose("Payment auth was NOT a success!", module);
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>" + DECLINE_MESSAGE);
                     Map statusRes = null;
                     try {
@@ -304,7 +304,7 @@ public class CheckOutEvents {
                     return "error";
                 } else {
                     // order WAS approved
-                    Debug.logVerbose("Payment auth was a success!", module);
+                    if (Debug.verboseOn()) Debug.logVerbose("Payment auth was a success!", module);
                     Map statusRes = null;
                     try {
                         statusRes = dispatcher.runSync("changeOrderStatus",
@@ -375,7 +375,7 @@ public class CheckOutEvents {
             //as nice as it would be to run this through localhost, we can't because the page has to have the correct host so the urls will be created for the email, etc; we could do this and pass the base url in a parameter...
             //Debug.logInfo("Original URL: " + url, module);
             //url = new URL(url.getProtocol(), "127.0.0.1", url.getPort(), url.getFile());
-            Debug.logInfo("About to get confirmorder page from the URL: " + url, module);
+            if (Debug.infoOn()) Debug.logVerbose("About to get confirmorder page from the URL: " + url, module);
             HttpClient httpClient = new HttpClient(url);
             String content = httpClient.get();
             request.setAttribute("confirmorder", content);

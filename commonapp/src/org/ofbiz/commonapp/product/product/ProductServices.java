@@ -92,7 +92,7 @@ public class ProductServices {
             Iterator i = features.iterator();
             while (i.hasNext())
                 featureSet.add(((GenericValue) i.next()).getString("productFeatureTypeId"));
-            Debug.logInfo("" + featureSet);
+            if (Debug.infoOn()) Debug.logVerbose("" + featureSet);
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problem reading product features: " + e.getMessage());
@@ -156,17 +156,21 @@ public class ProductServices {
             java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
             //check to see if introductionDate hasn't passed yet
             if (productTo.get("introductionDate") != null && nowTimestamp.before(productTo.getTimestamp("introductionDate"))) {
-                String excMsg = "Tried to view the Product " + productTo.getString("productName") + 
-                        " (productId: " + productTo.getString("productId") + ") as a variant. This product has not yet been made available for sale, so not adding for view.";
-                Debug.logVerbose(excMsg);
+		if (Debug.verboseOn()) {
+	            String excMsg = "Tried to view the Product " + productTo.getString("productName") + 
+                            " (productId: " + productTo.getString("productId") + ") as a variant. This product has not yet been made available for sale, so not adding for view.";
+                    Debug.logVerbose(excMsg);
+		}
                 continue;
             }
 
             //check to see if salesDiscontinuationDate has passed
             if (productTo.get("salesDiscontinuationDate") != null && nowTimestamp.after(productTo.getTimestamp("salesDiscontinuationDate"))) {
-                String excMsg = "Tried to view the Product " + productTo.getString("productName") + 
-                        " (productId: " + productTo.getString("productId") + ") as a variant. This product is no longer available for sale, so not adding for view.";
-                Debug.logVerbose(excMsg);
+		if (Debug.verboseOn()) {
+                    String excMsg = "Tried to view the Product " + productTo.getString("productName") + 
+                            " (productId: " + productTo.getString("productId") + ") as a variant. This product is no longer available for sale, so not adding for view.";
+                    Debug.logVerbose(excMsg);
+		}
                 continue;
             }
             
@@ -295,14 +299,14 @@ public class ProductServices {
                 Collection c = product.getRelatedByAndCache("AssocProductAssoc",
                         UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
                 if (c != null) {
-                    Debug.logInfo("Found related: " + c);
+                    if (Debug.infoOn()) Debug.logVerbose("Found related: " + c);
                     c = EntityUtil.filterByDate(c, true);
-                    Debug.logInfo("Found Filtered related: " + c);
+                    if (Debug.infoOn()) Debug.logVerbose("Found Filtered related: " + c);
                     if (c.size() > 0) {
                         GenericValue asV = (GenericValue) c.iterator().next();
-                        Debug.logInfo("ASV: " + asV);
+                        if (Debug.infoOn()) Debug.logVerbose("ASV: " + asV);
                         mainProduct = asV.getRelatedOneCache("MainProduct");
-                        Debug.logInfo("Main product = " + mainProduct);
+                        if (Debug.infoOn()) Debug.logVerbose("Main product = " + mainProduct);
                     }
                 }
             }
@@ -402,7 +406,7 @@ public class ProductServices {
             // Gather the necessary data
             // -------------------------------
             String thisItem = (String) itemIterator.next();
-            Debug.logVerbose("ThisItem: " + thisItem);
+            if (Debug.verboseOn()) Debug.logVerbose("ThisItem: " + thisItem);
             Collection features = null;
             try {
                 Map fields = UtilMisc.toMap("productId", thisItem, "productFeatureTypeId", orderKey,
@@ -444,7 +448,7 @@ public class ProductServices {
                 group.put(featureStr, tempGroup.get(featureStr));
         }
 
-        Debug.logVerbose("Group: " + group);
+        if (Debug.verboseOn()) Debug.logVerbose("Group: " + group);
 
         // no groups; no tree
         if (group.size() == 0) {

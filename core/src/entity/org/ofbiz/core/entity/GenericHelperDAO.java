@@ -125,7 +125,7 @@ public class GenericHelperDAO implements GenericHelper {
      */
     public int removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
         if (primaryKey == null) return 0;
-        Debug.logVerbose("Removing GenericPK: " + primaryKey.toString(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("Removing GenericPK: " + primaryKey.toString(), module);
         return genericDAO.delete(primaryKey);
     }
     

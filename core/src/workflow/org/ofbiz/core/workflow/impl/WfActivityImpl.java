@@ -106,7 +106,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
 
         boolean limitAfterStart = valueObject.getBoolean("limitAfterStart").booleanValue();
-        Debug.logInfo("[WfActivity.init]: limitAfterStart - " + limitAfterStart, module);
+        if (Debug.infoOn()) Debug.logVerbose("[WfActivity.init]: limitAfterStart - " + limitAfterStart, module);
         if (!limitAfterStart && valueObject.get("limitService") != null &&
                 !valueObject.getString("limitService").equals("")) {
             Debug.logVerbose("[WfActivity.init]: limit service is not after start, setting up now.", module);
@@ -257,7 +257,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             }
         }
         if (field != null && value != null) {
-            Debug.logVerbose("Evaluated expression: " + expr + " Result: " + value, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Evaluated expression: " + expr + " Result: " + value, module);
             if (value instanceof String) {
                 String resp = (String) value;
                 newPerformer.set(field, resp);
@@ -347,7 +347,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @throws InvalidData Data is invalid
      */
     public void setResult(Map newResult) throws WfException, InvalidData {
-        Debug.logVerbose("[WfActivity.setResult]: putting (" + newResult.size() + ") keys into context.", module);
+        if (Debug.verboseOn()) Debug.logVerbose("[WfActivity.setResult]: putting (" + newResult.size() + ") keys into context.", module);
         Map context = processContext();
         context.putAll(newResult);
         setSerializedData(context);
@@ -533,7 +533,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if (tools == null)
             this.checkComplete(); // Null tools mean nothing to do (same as route?)
 
-        Debug.logVerbose("[WfActivity.runTool] : Running tools (" + tools.size() + ").", module);
+        if (Debug.verboseOn()) Debug.logVerbose("[WfActivity.runTool] : Running tools (" + tools.size() + ").", module);
         List waiters = new ArrayList();
         Iterator i = tools.iterator();
         while (i.hasNext()) {
@@ -702,7 +702,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         } catch (GenericServiceException e) {
             throw new WfException(e.getMessage(), e);
         }
-        Debug.logInfo("[WfActivity.setLimitService]: Set limit service (" + limitService + " ) to run at " + startTime, module);
+        if (Debug.infoOn()) Debug.logVerbose("[WfActivity.setLimitService]: Set limit service (" + limitService + " ) to run at " + startTime, module);
     }
 
     // Invoke the procedure (service) -- This will include sub-workflows

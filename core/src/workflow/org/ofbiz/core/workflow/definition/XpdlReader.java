@@ -69,7 +69,7 @@ public class XpdlReader {
      * GenericValue objects from the given delegator and returns them in a
      * List; does not write to the database, just gets the entities. */
     public static List readXpdl(URL location, GenericDelegator delegator) throws DefinitionParserException {
-        Debug.logInfo("Beginning XPDL File Parse: " + location.toString(), module);
+        if (Debug.infoOn()) Debug.logVerbose("Beginning XPDL File Parse: " + location.toString(), module);
 
         XpdlReader reader = new XpdlReader(delegator);
         try {

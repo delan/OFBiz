@@ -216,17 +216,17 @@ public class UtilCache {
         UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
         if (hasExpired(line)) {
             //note that print.info in debug.properties cannot be checked through UtilProperties here, it would cause infinite recursion...
-            //Debug.logInfo("Element has expired with key " + key);
+            //if (Debug.infoOn()) Debug.logVerbose("Element has expired with key " + key);
             remove(key);
             line = null;
         }
         
         if (line == null) {
-            //Debug.logInfo("Element not found with key " + key);
+            //if (Debug.infoOn()) Debug.logVerbose("Element not found with key " + key);
             missCount++;
             return null;
         }
-        //Debug.logInfo("Element found with key " + key);
+        //if (Debug.infoOn()) Debug.logVerbose("Element found with key " + key);
         hitCount++;
 
         if (maxSize > 0) {

@@ -71,14 +71,14 @@ public class FlexibleMessage {
     }
 
     public String getMessage(ClassLoader loader) {
-        //Debug.logInfo("[FlexibleMessage.getMessage] isProperty: " + isProperty + ", message: " + message + ", propertyResource: " + propertyResource);
+        //if (Debug.infoOn()) Debug.logVerbose("[FlexibleMessage.getMessage] isProperty: " + isProperty + ", message: " + message + ", propertyResource: " + propertyResource);
         if (!isProperty && message != null) {
-            //Debug.logInfo("[FlexibleMessage.getMessage] Adding message: " + message);
+            //if (Debug.infoOn()) Debug.logVerbose("[FlexibleMessage.getMessage] Adding message: " + message);
             return message;
         } else if (isProperty && propertyResource != null && message != null) {
             //URL propertyURL = UtilURL.fromResource(propertyResource, loader);
             String propMsg = UtilProperties.getPropertyValue(propertyResource, message);
-            //Debug.logInfo("[FlexibleMessage.getMessage] Got property message: " + propMsg);
+            //if (Debug.infoOn()) Debug.logVerbose("[FlexibleMessage.getMessage] Got property message: " + propMsg);
             if (propMsg == null || propMsg.length() == 0)
                 return "In Simple Map Processing property message could not be found in resource [" + propertyResource + "] with name [" + message + "]. ";
             else

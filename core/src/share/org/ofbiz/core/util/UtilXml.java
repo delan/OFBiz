@@ -377,7 +377,7 @@ public class UtilXml {
             hasDTD = false;
             String dtd = UtilProperties.getSplitPropertyValue(UtilURL.fromResource("localdtds.properties"), publicId);
 
-            Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] resolving DTD with publicId [" + publicId +
+            if (Debug.verboseOn()) Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] resolving DTD with publicId [" + publicId +
                              "], systemId [" + systemId + "] and the dtd file is [" + dtd + "]", module);
             if (dtd != null && dtd.length() > 0) {
                 try {
@@ -386,14 +386,14 @@ public class UtilXml {
                     InputSource inputSource = new InputSource(dtdStream);
                     inputSource.setPublicId(publicId);
                     hasDTD = true;
-                    Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD input source with publicId [" +
+                    if (Debug.verboseOn()) Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD input source with publicId [" +
                                   publicId + "] and the dtd file is [" + dtd + "]", module);
                     return inputSource;
                 } catch (Exception e) {
                     Debug.logWarning(e, module);
                 }
             }
-            Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] local resolve failed for DTD with publicId [" +
+            if (Debug.verboseOn()) Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] local resolve failed for DTD with publicId [" +
                           publicId + "] and the dtd file is [" + dtd + "], trying defaultResolver", module);
             return defaultResolver.resolveEntity(publicId, systemId);
         }

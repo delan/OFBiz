@@ -129,8 +129,8 @@ public class ProductWorker {
         ArrayList productIds = (ArrayList) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
         String resultArrayName = (String) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
         if (productIds == null || resultArrayName == null || !curFindString.equals(resultArrayName)) { // || viewIndex == 0
-            Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
-            Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
+            if (Debug.infoOn()) Debug.logVerbose("-=-=-=-=- Current Array not found in session, getting new one...");
+            if (Debug.infoOn()) Debug.logVerbose("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
 
             //sort by productId (only available sort for now...)
             Collection unsortedIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, anyPrefix, anySuffix, intraKeywordOperator);

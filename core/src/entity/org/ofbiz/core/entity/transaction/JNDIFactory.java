@@ -57,7 +57,7 @@ public class JNDIFactory implements TransactionFactoryInterface {
                         String jndiName = EntityConfigUtil.getTxFactoryTxMgrJndiName();
                         String jndiServerName = EntityConfigUtil.getTxFactoryTxMgrJndiServerName();
                         if (jndiName != null && jndiName.length() > 0) {
-                            //Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
+                            //if (Debug.verboseOn()) Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
 
                             try {
                                 InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);
@@ -91,7 +91,7 @@ public class JNDIFactory implements TransactionFactoryInterface {
                         String jndiName = EntityConfigUtil.getTxFactoryUserTxJndiName();
                         String jndiServerName = EntityConfigUtil.getTxFactoryUserTxJndiServerName();
                         if (jndiName != null && jndiName.length() > 0) {
-                            //Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
+                            //if (Debug.verboseOn()) Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
 
                             try {
                                 InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);

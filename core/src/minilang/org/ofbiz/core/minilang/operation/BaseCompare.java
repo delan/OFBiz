@@ -77,7 +77,8 @@ public abstract class BaseCompare extends SimpleMapOperation {
     
     public static Boolean doRealCompare(Object value1, Object value2, String operator, String type, String format, 
             List messages, Locale locale, ClassLoader loader) {
-        Debug.logVerbose("[BaseCompare.doCompare] Comparing value1: \"" + value1 + "\" " + operator + " value2:\"" + value2 + "\"");
+        boolean verboseOn = Debug.verboseOn();
+        if (verboseOn) Debug.logVerbose("[BaseCompare.doCompare] Comparing value1: \"" + value1 + "\" " + operator + " value2:\"" + value2 + "\"");
 
         int result = 0;
 
@@ -98,11 +99,11 @@ public abstract class BaseCompare extends SimpleMapOperation {
         }
 
         if (convertedValue1 == null) {
-            Debug.logVerbose("Value1 was null, cannot complete comparison");
+            if (verboseOn) Debug.logVerbose("Value1 was null, cannot complete comparison");
             return null;
         }
         if (convertedValue2 == null) {
-            Debug.logVerbose("Value2 was null, cannot complete comparison");
+            if (verboseOn) Debug.logVerbose("Value2 was null, cannot complete comparison");
             return null;
         }
 
@@ -156,7 +157,7 @@ public abstract class BaseCompare extends SimpleMapOperation {
             return null;
         }
 
-        Debug.logVerbose("[BaseCompare.doCompare] Got Compare result: " + result + ", operator: " + operator);
+        if (verboseOn) Debug.logVerbose("[BaseCompare.doCompare] Got Compare result: " + result + ", operator: " + operator);
         if ("less".equals(operator)) {
             if (result >= 0)
                 return Boolean.FALSE;
@@ -180,7 +181,7 @@ public abstract class BaseCompare extends SimpleMapOperation {
             return null;
         }
         
-        Debug.logVerbose("[BaseCompare.doCompare] Returning true");
+        if (verboseOn) Debug.logVerbose("[BaseCompare.doCompare] Returning true");
         return Boolean.TRUE;
     }
 }

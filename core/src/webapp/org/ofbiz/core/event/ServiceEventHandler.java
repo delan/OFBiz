@@ -62,7 +62,7 @@ public class ServiceEventHandler implements EventHandler {
           this.mode = eventPath;
         }
         this.serviceName = eventMethod;
-        Debug.logVerbose("[Set mode/service]: " +
+        if (Debug.verboseOn()) Debug.logVerbose("[Set mode/service]: " +
                                 mode + "/" + serviceName, module);
     }
 
@@ -98,7 +98,7 @@ public class ServiceEventHandler implements EventHandler {
             throw new EventHandlerException("Problems getting the service model");
 
         Debug.logVerbose("[Processing]: SERVICE Event", module);
-        Debug.logVerbose("[Using delegator]: " + dispatcher.getDelegator().getDelegatorName(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Using delegator]: " + dispatcher.getDelegator().getDelegatorName(), module);
 
         // we have a service and the model; build the context
         Map serviceContext = new HashMap();
@@ -185,7 +185,7 @@ public class ServiceEventHandler implements EventHandler {
             }
         }
 
-        Debug.logVerbose("[Event Return]: " + responseString, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + responseString, module);
 
         return responseString;
 

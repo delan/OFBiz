@@ -76,7 +76,7 @@ public class PayflowPro {
         }
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
         double amountToBill = orh.getTotalPrice();
-        Debug.logVerbose("Amount to charge is: " + amountToBill, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Amount to charge is: " + amountToBill, module);
 
         Iterator payments = paymentPrefs.iterator();
         while (payments.hasNext()) {
@@ -121,7 +121,7 @@ public class PayflowPro {
             amountToBill -= thisAmount;
             NumberFormat nf = NumberFormat.getCurrencyInstance();
             String totalStr = nf.format(thisAmount);
-            Debug.logVerbose("Charging amount: " + totalStr, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Charging amount: " + totalStr, module);
             if (totalStr != null) {
                 data.put("AMT", totalStr.substring(1));
             }
@@ -154,9 +154,9 @@ public class PayflowPro {
             params.append("&" + parseContext(data));
 
             // transmit the request
-            Debug.logVerbose("Sending to Verisign: " + params.toString(), module);
+            if (Debug.verboseOn()) Debug.logVerbose("Sending to Verisign: " + params.toString(), module);
             String resp = pn.SubmitTransaction(params.toString());
-            Debug.logVerbose("Response from Verisign: " + resp, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Response from Verisign: " + resp, module);
 
             // reset for next use
             pn.DestroyContext();

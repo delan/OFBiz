@@ -155,7 +155,7 @@ public class IteratorTag extends BodyTagSupport {
         Iterator newIterator = null;
         Collection thisCollection = null;
         if (property != null) {
-            Debug.logVerbose("Getting iterator from property: " + property, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Getting iterator from property: " + property, module);
             Object propertyObject = pageContext.findAttribute(property);
             if (propertyObject instanceof Iterator) {
                 newIterator = (Iterator) propertyObject;

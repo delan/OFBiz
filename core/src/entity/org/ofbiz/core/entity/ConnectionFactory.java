@@ -60,7 +60,7 @@ public class ConnectionFactory {
                 String jndiName = jndiJdbcElement.getAttribute("jndi-name");
                 String jndiServerName = jndiJdbcElement.getAttribute("jndi-server-name");
 
-                //Debug.logVerbose("Trying JNDI name " + jndiName, module);
+                //if (Debug.verboseOn()) Debug.logVerbose("Trying JNDI name " + jndiName, module);
                 Object ds;
                 ds = dsCache.get(jndiName);
                 if (ds != null) {
@@ -87,7 +87,7 @@ public class ConnectionFactory {
                     }
 
                     try {
-                        Debug.logInfo("Doing JNDI lookup for name " + jndiName, module);
+                        if (Debug.infoOn()) Debug.logVerbose("Doing JNDI lookup for name " + jndiName, module);
                         InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);
                         if (ic != null)
                             ds = ic.lookup(jndiName);
@@ -95,12 +95,12 @@ public class ConnectionFactory {
                             dsCache.put(jndiName, ds);
                             Connection con = null;
                             if (ds instanceof XADataSource) {
-                                Debug.logInfo("Got XADataSource for name " + jndiName, module);
+                                if (Debug.infoOn()) Debug.logVerbose("Got XADataSource for name " + jndiName, module);
                                 XADataSource xads = (XADataSource) ds;
                                 XAConnection xac = xads.getXAConnection();
                                 con = TransactionUtil.enlistConnection(xac);
                             } else {
-                                Debug.logInfo("Got DataSource for name " + jndiName, module);
+                                if (Debug.infoOn()) Debug.logVerbose("Got DataSource for name " + jndiName, module);
                                 DataSource nds = (DataSource) ds;
                                 con = nds.getConnection();
                             }
@@ -123,11 +123,11 @@ public class ConnectionFactory {
                             }
                              */
 
-                            //if (con != null) Debug.logInfo("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog());
+                            //if (con != null) if (Debug.infoOn()) Debug.logVerbose("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog());
                             return con;
                         }
                     } catch (NamingException ne) {
-                        Debug.logVerbose("[ConnectionFactory.getConnection] Failed to find DataSource named " + jndiName + " in JNDI. Trying normal database.", module);
+                        if (Debug.verboseOn()) Debug.logVerbose("[ConnectionFactory.getConnection] Failed to find DataSource named " + jndiName + " in JNDI. Trying normal database.", module);
                     } catch (GenericConfigException gce) {
                         throw new GenericEntityException("Problems with the JNDI configuration.", gce.getNested());
                     }
