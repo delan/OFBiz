@@ -42,11 +42,11 @@ import org.ofbiz.core.workflow.*;
  */
 
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {
-        
-    private WfProcess process;          
+    
+    private WfProcess process;
     private List assignments;
-    private Map result;       
-         
+    private Map result;
+    
     /**
      * Creates new WfProcessImpl
      * @param valueObject The GenericValue object of this WfActivity.
@@ -88,8 +88,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         
         // Default mode is MANUAL -- only start if we are automatic
         if ( mode.equals("WAM_AUTOMATIC") )
-            this.startActivity(); 
-        else 
+            this.startActivity();
+        else
             this.assignActivity();
     }
     
@@ -105,7 +105,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         
         // Default mode is MANUAL -- only finish if we are automatic
         if ( mode.equals("WAM_AUTOMATIC") )
-            this.finishActivity();                                    
+            this.finishActivity();
     }
     
     /**
@@ -136,11 +136,11 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @throws InvalidData Data is invalid
      */
     public void setResult(Map newResult) throws WfException, InvalidData {
-        this.result = result;
-        try {            
+        result.putAll(newResult);
+        try {
             GenericValue runtimeData = null;
-            if ( dataObject.get("resultDataId") == null ) {                
-                String seqId = getDelegator().getNextSeqId("RuntimeData").toString();                
+            if ( dataObject.get("resultDataId") == null ) {
+                String seqId = getDelegator().getNextSeqId("RuntimeData").toString();
                 runtimeData = getDelegator().makeValue("RuntimeData",UtilMisc.toMap("runtimeDataId",seqId));
                 dataObject.set("resultDataId",seqId);
                 dataObject.store();
@@ -162,7 +162,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
         catch ( IOException e ) {
             throw new InvalidData(e.getMessage(),e);
-        }            
+        }
     }
     
     /**
@@ -191,7 +191,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @return  List of WfAssignment objects.
      */
     public List getSequenceAssignment(int maxNumber) throws WfException {
-        if ( maxNumber > 0 ) 
+        if ( maxNumber > 0 )
             return assignments.subList(0,(maxNumber-1));
         return assignments;
     }
@@ -243,9 +243,9 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         else
             throw new WfException("Illegal activity type");
     }
-         
+    
     // Runs a TOOL activity
-    private void runTool() throws WfException {        
+    private void runTool() throws WfException {
         Collection tools = null;
         try {
             tools = valueObject.getRelated("WorkflowActivityTool");
@@ -258,19 +258,26 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         
         List waiters = new ArrayList();
         Iterator i = tools.iterator();
-        while ( i.hasNext() ) 
+        while ( i.hasNext() )
             waiters.add(this.runService(((GenericValue)i.next()).getString("toolId")));
-                    
+        
         while ( waiters.size() > 0 ) {
             i = waiters.iterator();
             while ( i.hasNext() ) {
                 GenericResultWaiter thw = (GenericResultWaiter) i.next();
-                if ( thw.isCompleted() )
-                    waiters.remove(thw);
+                if ( thw.isCompleted() ) {
+                    try {
+                        this.setResult(thw.getResult());
+                        waiters.remove(thw);
+                    }
+                    catch ( IllegalStateException e ) {
+                        throw new WfException("Unknown error",e);
+                    }
+                }
             }
         }
         
-        this.complete();            
+        this.complete();
     }
     
     // Runs a LOOP activity
@@ -286,30 +293,32 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);
-        }        
+        }
         if ( subFlow == null )
             return;
         
         String type = "WSE_SYNCHR";
         if ( subFlow.get("executionEnumId") != null )
-            type = subFlow.getString("executionEnumId");           
+            type = subFlow.getString("executionEnumId");
         
         // Build a model service
         ModelService service = new ModelService();
         service.name = service.toString();
         service.engineName = "workflow";
         service.location = subFlow.getString("packageId");
-        service.invoke = subFlow.getString("subFlowProcessId");        
+        service.invoke = subFlow.getString("subFlowProcessId");
         service.contextInfo = null;  // TODO FIXME
         service.resultInfo = null;     // TODO FIXME
-                
-        GenericResultWaiter waiter = this.runService(service); 
-        if ( type.equals("WSE_SYNCHR") ) 
-            waiter.waitForResult();
         
-        this.complete();        
+        GenericResultWaiter waiter = this.runService(service);
+        if ( type.equals("WSE_SYNCHR") ) {
+            Map subResult = waiter.waitForResult();            
+            this.setResult(subResult);
+        }
+        
+        this.complete();
     }
-        
+    
     // Finishes an automatic activity
     private void finishActivity() throws WfException, CannotComplete {
         container().receiveResults(this,result);
@@ -321,16 +330,16 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
         catch ( TransitionNotAllowed tna ) {
             throw new CannotComplete(tna.getMessage(),tna);
-        }        
+        }
         container().activityComplete(this);
     }
     
     // Invoke the procedure (service) -- This will include sub-workflows
-    private GenericResultWaiter runService(String serviceName) throws WfException {        
-        DispatchContext dctx = dispatcher.getLocalContext(serviceLoader);        
+    private GenericResultWaiter runService(String serviceName) throws WfException {
+        DispatchContext dctx = dispatcher.getLocalContext(serviceLoader);
         ModelService service = null;
         try {
-            service = dctx.getModelService(serviceName);            
+            service = dctx.getModelService(serviceName);
         }
         catch ( GenericServiceException e ) {
             throw new WfException(e.getMessage(),e);
@@ -343,12 +352,12 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     private GenericResultWaiter runService(ModelService service) throws WfException {
         GenericResultWaiter waiter = new GenericResultWaiter();
         try {
-           dispatcher.runAsync(serviceLoader,service,context,waiter);
+            dispatcher.runAsync(serviceLoader,service,context,waiter);
         }
         catch ( GenericServiceException e ) {
             throw new WfException(e.getMessage(),e);
         }
         return waiter;
     }
-                
+    
 }
