@@ -36,6 +36,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.transaction.xa.XAException;
+import javax.mail.internet.MimeMessage;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -52,6 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.ServiceXaWrapper;
+import org.ofbiz.service.mail.MimeMessageWrapper;
 
 /**
  * Common Services
@@ -425,6 +427,21 @@ public class CommonServices {
             }
         }
 
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map mcaTest(DispatchContext dctx, Map context) {
+        MimeMessageWrapper wrapper = (MimeMessageWrapper) context.get("messageWrapper");
+        MimeMessage message = wrapper.getMessage();
+        try {
+            Debug.log("To: " + message.getAllRecipients(), module);
+            Debug.log("From: " + message.getFrom(), module);
+            Debug.log("Subject: " + message.getSubject(), module);
+            Debug.log("Sent: " + message.getSentDate().toString(), module);
+            Debug.log("Received: " + message.getReceivedDate().toString(), module);
+        } catch (Exception e) {
+            Debug.logError(e, module);
+        }
         return ServiceUtil.returnSuccess();
     }
 }

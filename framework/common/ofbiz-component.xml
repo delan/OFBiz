@@ -44,4 +44,5 @@
     <service-resource type="model" loader="main" location="servicedef/services_test.xml"/>
     <service-resource type="group" loader="main" location="servicedef/groups_test.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas_test.xml"/>
+    <service-resource type="mca" loader="main" location="servicedef/smcas_test.xml"/>
 </ofbiz-component>
