@@ -42,6 +42,8 @@ import org.ofbiz.core.workflow.*;
 
 public class WfProcessMgrImpl implements WfProcessMgr {
 
+    public static final String module = WfProcessMgrImpl.class.getName();
+
     protected GenericValue processDef;
     protected String state; // will probably move to a runtime entity for the manager
     protected List processList; // will probably be a related entity to the runtime entity
@@ -70,6 +72,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         buildSignatures();
         processList = new ArrayList();
         state = "enabled";
+        Debug.logVerbose("[WfProcessMgr.init] : Create process manager (" + packageId + "/" + processId + ")", module);
     }
 
     /**
@@ -121,6 +124,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
             throw new WfException(ccr.getMessage(), ccr);
         }
         processList.add(process);
+        Debug.logVerbose("[WfProcessMgr.createProcess] : Process created.", module);
         return process;
     }
 

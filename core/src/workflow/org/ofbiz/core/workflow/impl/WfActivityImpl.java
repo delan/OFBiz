@@ -114,7 +114,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         Debug.logInfo("[WfActivity.init]: limitAfterStart - " + limitAfterStart, module);
         if (!limitAfterStart && valueObject.get("limitService") != null &&
                 !valueObject.getString("limitService").equals("")) {
-            Debug.logInfo("[WfActivity.init]: limit service is not after start, setting up now.", module);
+            Debug.logVerbose("[WfActivity.init]: limit service is not after start, setting up now.", module);
             setLimitService();
         }
     }
@@ -127,7 +127,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
         if (!assignAll) {
             if (performer != null) {
-                Debug.logInfo("[WfActivity.createAssignments] : (S) Single assignment", module);
+                Debug.logVerbose("[WfActivity.createAssignments] : (S) Single assignment", module);
                 assign(WfFactory.getWfResource(performer), false);
             }
             return;
@@ -160,7 +160,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                     throw new WfException(e.getMessage(), e);
                 }
                 // make assignments for these parties
-                Debug.logInfo("[WfActivity.createAssignments] : Group assignment", module);
+                Debug.logVerbose("[WfActivity.createAssignments] : Group assignment", module);
                 Iterator i = partyRelations.iterator();
                 while (i.hasNext()) {
                     GenericValue value = (GenericValue) i.next();
@@ -169,7 +169,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 }
             } else {
                 // not a group
-                Debug.logInfo("[WfActivity.createAssignments] : (G) Single assignment", module);
+                Debug.logVerbose("[WfActivity.createAssignments] : (G) Single assignment", module);
                 assign(WfFactory.getWfResource(performer), false);
             }
         }
@@ -184,7 +184,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 throw new WfException(e.getMessage(), e);
             }
             // loop through the roles and create assignments
-            Debug.logInfo("[WfActivity.createAssignments] : Role assignment", module);
+            Debug.logVerbose("[WfActivity.createAssignments] : Role assignment", module);
             Iterator i = partyRoles.iterator();
             while (i.hasNext()) {
                 GenericValue value = (GenericValue) i.next();
@@ -319,6 +319,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @throws InvalidData Data is invalid
      */
     public void setResult(Map newResult) throws WfException, InvalidData {
+        Debug.logVerbose("[WfActivity.setResult]: putting (" + newResult.size() + ") keys into context.", module);
         Map context = processContext();
         context.putAll(newResult);
         setSerializedData(context);
@@ -434,10 +435,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if ((type == 2 && completeAll) || (type == 1 && acceptAll)) {
             return true;
         } else {
-            Debug.logInfo("[checkAssignStatus] : need only one assignment to pass", module);
+            Debug.logVerbose("[checkAssignStatus] : need only one assignment to pass", module);
             if (foundOne)
                 return true;
-            Debug.logInfo("[checkAssignStatus] : found no assignment(s)", module);
+            Debug.logVerbose("[checkAssignStatus] : found no assignment(s)", module);
             return false;
         }
     }
@@ -455,7 +456,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         boolean limitAfterStart = getDefinitionObject().getBoolean("limitAfterStart").booleanValue();
         if (limitAfterStart && getDefinitionObject().get("limitService") != null &&
                 !getDefinitionObject().getString("limitService").equals("")) {
-            Debug.logInfo("[WfActivity.init]: limit service is after start, setting up now.", module);
+            Debug.logVerbose("[WfActivity.init]: limit service is after start, setting up now.", module);
             setLimitService();
         }
 
@@ -494,6 +495,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if (tools == null)
             this.checkComplete(); // Null tools mean nothing to do (same as route?)
 
+        Debug.logVerbose("[WfActivity.runTool] : Running tools (" + tools.size() + ").", module);
         List waiters = new ArrayList();
         Iterator i = tools.iterator();
         while (i.hasNext()) {
@@ -582,11 +584,14 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         ModelService service = null;
         try {
             service = dctx.getModelService(limitService);
+            Debug.logVerbose("[WfActivity.setLimitService] : Found service model.", module);
         } catch (GenericServiceException e) {
-            throw new WfException(e.getMessage(), e);
+            Debug.logError(e, "[WfActivity.setLimitService] : Cannot get service model.", module);
         }
-        if (service == null)
-            throw new WfException("Cannot determine model service for service name");
+        if (service == null) {
+            Debug.logWarning("[WfActivity.setLimitService] : Cannot determine limit service, ignoring.", module);
+            return;
+        }
 
         List inNames = service.getParameterNames(ModelService.IN_PARAM, false);
         String params = StringUtil.join(inNames, ",");
@@ -650,6 +655,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                                            String extend) throws WfException {
         DispatchContext dctx = getDispatcher().getLocalContext(getServiceLoader());
         ModelService service = null;
+        Debug.logVerbose("[WfActivity.runService] : Getting the service model.", module);
         try {
             service = dctx.getModelService(serviceName);
         } catch (GenericServiceException e) {
@@ -664,6 +670,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                                            String extend) throws WfException {
         Map ctx = this.actualContext(params, extend);
         GenericResultWaiter waiter = new GenericResultWaiter();
+        Debug.logVerbose("[WfActivity.runService] : Invoking the service.", module);
         try {
             getDispatcher().runAsync(getServiceLoader(), service, ctx, waiter);
         } catch (GenericServiceException e) {

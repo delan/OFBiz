@@ -121,6 +121,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         if (start == null)
             throw new CannotStart("No initial activity set");
 
+        Debug.logVerbose("[WfProcess.start] : Started the workflow process.", module);
         startActivity(start);
     }
 
@@ -231,7 +232,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     public synchronized void activityComplete(WfActivity activity) throws WfException {
         if (!activity.state().equals("closed.completed"))
             throw new WfException("Activity state is not completed");
-        Debug.logInfo("Activity: " + activity.name() + " is complete", module);
+        Debug.logVerbose("[WfProcess.activityComplete] : Activity (" + activity.name() + ") is complete", module);
         queueNext(activity);
     }
 
@@ -260,6 +261,8 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
                 if (toActivity.get("joinTypeEnumId") != null)
                     join = toActivity.getString("joinTypeEnumId");
 
+                Debug.logVerbose("[WfProcess.queueNext] : " + join + " join.", module);
+
                 // activate if XOR or test the join transition(s)
                 if (join.equals("WJT_XOR"))
                     startActivity(toActivity);
@@ -267,6 +270,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
                     joinTransition(toActivity, trans);
             }
         } else {
+            Debug.logVerbose("[WfProcess.queueNext] : No transitions left to follow.", module);
             this.finishProcess();
         }
     }
@@ -294,8 +298,12 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             throw new WfException(e.getMessage(), e);
         }
 
+        Debug.logVerbose("[WfProcess.joinTransition] : toTrans (" + toTrans.size() + ") followed (" +
+                (followed.size() + 1) + ")", module);
+
         // check to see if all transition requirements are met
         if (toTrans.size() == (followed.size() + 1)) {
+            Debug.logVerbose("[WfProcess.joinTransition] : All transitions have followed.", module);
             startActivity(toActivity);
             try {
                 Map fields = new HashMap();
@@ -306,13 +314,13 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
                 throw new WfException(e.getMessage(), e);
             }
         } else {
+            Debug.logVerbose("[WfProcess.joinTransition] : Waiting for transitions to finish.", module);
             try {
                 Map fields = new HashMap();
                 fields.put("processWorkEffortId", dataObject.getString("workEffortId"));
                 fields.put("toActivityId", toActivity.getString("activityId"));
                 fields.put("transitionId", transition.getString("transitionId"));
-                GenericValue obj =
-                        getDelegator().makeValue("WorkEffortTransBox", fields);
+                GenericValue obj = getDelegator().makeValue("WorkEffortTransBox", fields);
                 getDelegator().create(obj);
             } catch (GenericEntityException e) {
                 throw new WfException(e.getMessage(), e);
@@ -323,12 +331,13 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     // Activates an activity object
     private void startActivity(GenericValue value) throws WfException {
         WfActivity activity = WfFactory.getWfActivity(value, workEffortId);
+        Debug.logVerbose("[WfProcess.startActivity] : Attempting to start activity (" + activity.name() + ")", module);
         try {
             activity.activate();
         } catch (AlreadyRunning e) {
             throw new WfException("Activity already running", e);
         } catch (CannotStart e) {
-            Debug.logInfo("[WfProcess.startActivity] : Cannot start activity. Waiting for manual start");
+            Debug.logVerbose("[WfProcess.startActivity] : Cannot start activity. Waiting for manual start.", module);
         }
     }
 
@@ -362,7 +371,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             }
         }
 
-        Debug.logInfo("Transitions: " + transList.size(), module);
+        Debug.logVerbose("[WfProcess.getTransFrom] : Transitions: " + transList.size(), module);
         return transList;
     }
 
@@ -384,6 +393,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         Object o = null;
         if (condition == null || condition.equals(""))
             return true;
+        Debug.logVerbose("[WfProcess.evalCondition] : evaluating -- " + condition, module);
         try {
             // Set the context for the condition
             Set keySet = context.keySet();
@@ -396,6 +406,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             // evaluate the condition
             o = bsh.eval(condition);
         } catch (EvalError e) {
+            Debug.logError(e, "BSH Evaluation error.", module);
             return false;
         }
         if (o instanceof Number)
@@ -407,6 +418,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     // Complete this workflow
     private void finishProcess() throws WfException {
         changeState("closed.completed");
+        Debug.logVerbose("[WfProcess.finishProcess] : Workflow Complete. Calling back to requester.", module);
         if (requester != null) {
             WfEventAudit audit = WfFactory.getWfEventAudit(this, null); // this will need to be updated
             try {
@@ -422,8 +434,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         List steps = new ArrayList();
         Collection c = null;
         try {
-            c = getDelegator().findByAnd("WorkEffort",
-                                         UtilMisc.toMap("workEffortParentId", runtimeKey()));
+            c = getDelegator().findByAnd("WorkEffort", UtilMisc.toMap("workEffortParentId", runtimeKey()));
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
