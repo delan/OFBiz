@@ -74,19 +74,19 @@
     <!-- Removes all created files and directories                                                                                                                 -->
     <!-- ================================================================== -->
 
-    <target depends="clean-lib" name="clean">
+    <target name="clean" depends="clean-lib">
         <delete dir="${doc.dir}/api"/>
         <delete dir="${build.dir}"/>
     </target>
 
-    <target depends="init-properties" name="clean-lib">
+    <target name="clean-lib" depends="init-properties">
         <delete dir="${lib.dir}"/>
         <delete dir="${walib.dir}"/>
         <delete dir="${waclasses.dir}"/>
         <delete file="${deploy.dir}/${name}.war"/>
     </target>
 
-    <target depends="init" name="prepare-docs">
+    <target name="prepare-docs" depends="init">
         <mkdir dir="${doc.dir}"/>
         <mkdir dir="${doc.dir}/api"/>
     </target>
@@ -111,7 +111,7 @@
     <!-- Compilation of the common application components                                                                                                -->
     <!-- ================================================================== -->
 
-    <target depends="prepare" name="classes">
+    <target name="classes" depends="prepare">
         <javac classpathref="local.class.path" debug="on" deprecation="on" destdir="${build.dir}/jar" srcdir="${src.dir}">
             <!-- exclude the payment processor packages; comment if you have libs -->
             <exclude name="org/ofbiz/commonapp/thirdparty/cybersource/**"/>
@@ -127,18 +127,18 @@
         </copy>
     </target>
 
-    <target depends="classes" name="jar">
+    <target name="jar" depends="classes">
         <jar basedir="${build.dir}/jar" jarfile="${lib.dir}/${name}.jar"/>
     </target>
 
-    <target depends="jar" name="jar-deploy">
+    <target name="jar-deploy" depends="jar">
     </target>
 
     <!-- ================================================================== -->
     <!-- Build the WARs                                                                                                                                                         -->
     <!-- ================================================================== -->
 
-    <target depends="jar-deploy,prepare" name="war">
+    <target name="war" depends="jar-deploy,prepare">
         <jar basedir="${webapp.dir}" jarfile="${lib.dir}/${name}.war"/>
     </target>
 
