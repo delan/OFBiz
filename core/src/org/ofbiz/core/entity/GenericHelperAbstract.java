@@ -2,6 +2,7 @@ package org.ofbiz.core.entity;
 
 import java.util.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.model.*;
 
 /**
  * <p><b>Title:</b> Generic Entity Helper Class
@@ -30,12 +31,40 @@ import org.ofbiz.core.util.*;
  *@created    Tue Aug 07 01:10:32 MDT 2001
  *@version    1.0
  */
-public abstract class GenericHelperCache implements GenericHelper
+public abstract class GenericHelperAbstract implements GenericHelper
 {
+  ModelReader modelReader;
+
   UtilCache primaryKeyCache = null;
   UtilCache allCache = null;
   UtilCache andCache = null;
   
+  /** Gets the instance of ModelReader that corresponds to this helper
+   *@return ModelReader that corresponds to this helper
+   */
+  public ModelReader getModelReader() { return modelReader; }
+
+  /** Gets the instance of ModelEntity that corresponds to this helper and the specified entityName
+   *@param entityName The name of the entity to get
+   *@return ModelEntity that corresponds to this helper and the specified entityName
+   */
+  public ModelEntity getModelEntity(String entityName) { return modelReader.getModelEntity(entityName); }
+
+  /** Creates a Entity in the form of a GenericValue without persisting it */
+  public GenericValue makeValue(String entityName, Map fields)
+  {
+    GenericValue value = new GenericValue(modelReader.getModelEntity(entityName), fields);
+    value.helper = this;
+    return value;
+  }
+
+  /** Creates a Primary Key in the form of a GenericPK without persisting it */
+  public GenericPK makePK(String entityName, Map fields)
+  {
+    GenericPK pk = new GenericPK(modelReader.getModelEntity(entityName), fields);
+    return pk;
+  }
+
   /** Find a CACHED Generic Entity by its Primary Key
    *@param primaryKey The primary key to find by.
    *@return The GenericValue corresponding to the primaryKey
@@ -75,7 +104,7 @@ public abstract class GenericHelperCache implements GenericHelper
    */
   public Collection findByAndCache(String entityName, Map fields, List orderBy)
   {
-    GenericPK tempPK = new GenericPK(entityName, fields);
+    GenericPK tempPK = new GenericPK(modelReader.getModelEntity(entityName), fields);
     Collection col = (Collection)andCache.get(tempPK);
     if(col == null)
     {
