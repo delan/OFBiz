@@ -27,7 +27,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             UserTransaction (RexIP)
     -->
 
-    <delegator name="default" entity-model-reader="main" entity-group-reader="main" distributed-cache-clear-enabled="true">
+    <delegator name="default" entity-model-reader="main" entity-group-reader="main" distributed-cache-clear-enabled="false">
         <group-map group-name="org.ofbiz.commonapp" datasource-name="localpostgres"/>
     </delegator>
     <delegator name="other" entity-model-reader="main" entity-group-reader="main">
@@ -77,7 +77,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             add-missing-on-start="true"
             use-foreign-keys="true"
             use-foreign-key-indices="true"
-            use-fk-initially-deferred="false">
+            use-fk-initially-deferred="false"
+            join-style="theta-oracle">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
         <inline-jdbc
