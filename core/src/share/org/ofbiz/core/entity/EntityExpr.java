@@ -1,5 +1,7 @@
 package org.ofbiz.core.entity;
 
+import java.io.*;
+
 /**
  * <p><b>Title:</b> EntityExpr
  * <p><b>Description:</b> Encapsulates simple expressions used for specifying queries
@@ -27,21 +29,32 @@ package org.ofbiz.core.entity;
  *@created    Nov 13, 2001
  *@version    1.0
  */
-public class EntityExpr {
-  private Object lhs;
-  private EntityOperator operator;
-  private Object rhs;
-  
-  public EntityExpr(Object lhs, EntityOperator operator, Object rhs) {
-    if(!(lhs instanceof String)) { throw new IllegalArgumentException("At the moment left hand side must be a String"); }
-    if(lhs instanceof EntityExpr || rhs instanceof EntityExpr) { throw new IllegalArgumentException("Nested expressions not yet supported"); }
-    
-    this.lhs = lhs;
-    this.operator = operator;
-    this.rhs = rhs;
-  }
-  
-  public Object getLhs() { return lhs; }
-  public EntityOperator getOperator() { return operator; }
-  public Object getRhs() { return rhs; }
+public class EntityExpr implements Serializable {
+    private Object lhs;
+    private EntityOperator operator;
+    private Object rhs;
+
+    public EntityExpr(Object lhs, EntityOperator operator, Object rhs) {
+        if (!(lhs instanceof String)) {
+            throw new IllegalArgumentException("At the moment left hand side must be a String");
+        }
+        if (lhs instanceof EntityExpr || rhs instanceof EntityExpr) {
+            throw new IllegalArgumentException("Nested expressions not yet supported");
+        }
+
+        this.lhs = lhs;
+        this.operator = operator;
+        this.rhs = rhs;
+    }
+
+    public Object getLhs() {
+        return lhs;
+    }
+    public EntityOperator getOperator() {
+        return operator;
+    }
+    public Object getRhs() {
+        return rhs;
+    }
 }
+
