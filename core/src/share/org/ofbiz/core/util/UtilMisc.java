@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.5  2001/09/27 20:00:14  epabst
  * added toList(Collection)
  *
@@ -190,11 +193,13 @@ public class UtilMisc
   }
   
   public static List toList(Collection collection) {
-      if (collection instanceof List) {
-          return (List) collection;
-      } else {
-          return new ArrayList(collection);
-      }
+    if(collection == null) return null;
+    if(collection instanceof List) {
+      return (List) collection;
+    } 
+    else {
+      return new ArrayList(collection);
+    }
   }
   
   /** Create a map from an HttpServletRequest object
