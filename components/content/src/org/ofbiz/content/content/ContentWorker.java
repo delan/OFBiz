@@ -29,7 +29,9 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -674,6 +676,52 @@ public class ContentWorker {
             return;
         }
         return;
+    }
+    
+    public static void getContentOwners(GenericDelegator delegator, String contentId,  List contentOwnerList) throws GenericEntityException {
+        
+        GenericValue ownerContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+        String ownerContentId = ownerContent.getString("ownerContentId");
+        if (UtilValidate.isNotEmpty(ownerContentId)) {
+            contentOwnerList.add(ownerContentId);
+            getContentOwners(delegator, ownerContentId, contentOwnerList);   
+        }
+        return;
+    }
+    
+    public static int getPrivilegeEnumSeq(GenericDelegator delegator, String privilegeEnumId) throws GenericEntityException {
+            int privilegeEnumSeq = -1;
+            
+            if ( UtilValidate.isNotEmpty(privilegeEnumId)) {
+                GenericValue privEnum = delegator.findByPrimaryKeyCache("Enumeration", UtilMisc.toMap("enumId", privilegeEnumId));
+                if (privEnum != null) {
+                    String sequenceId = privEnum.getString("sequenceId");   
+                    try {
+                        privilegeEnumSeq = Integer.parseInt(sequenceId);
+                    } catch(NumberFormatException e) {
+                        // just leave it at -1   
+                    }
+                }
+            }
+            return privilegeEnumSeq;
+    }
+    
+    public static List getUserRolesFromList(GenericDelegator delegator, List idList, String partyId) throws GenericEntityException {
+        
+        EntityExpr expr = new EntityExpr("contentId", EntityOperator.IN, idList);
+        EntityExpr expr2 = new EntityExpr("partyId", EntityOperator.EQUALS, partyId);
+        EntityConditionList condList = new EntityConditionList(UtilMisc.toList(expr, expr2), EntityOperator.AND);
+        List roleList = delegator.findByConditionCache("ContentRole", condList, null, null);
+        List roleListFiltered = EntityUtil.filterByDate(roleList);
+        HashSet distinctSet = new HashSet();
+        Iterator iter = roleListFiltered.iterator();
+        while (iter.hasNext()) {
+            GenericValue contentRole = (GenericValue)iter.next();
+            String roleTypeId = contentRole.getString("roleTypeId");
+            distinctSet.add(roleTypeId);
+        }
+        List distinctList = Arrays.asList(distinctSet.toArray());
+        return distinctList;
     }
 
     public static void getContentAncestryAll(GenericDelegator delegator, String contentId, String passedContentTypeId, String direction, List contentAncestorList) {

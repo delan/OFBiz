@@ -1356,7 +1356,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
 		String webPubPt = (String)context.get("webPubPt");
         GenericValue userLogin = (GenericValue)context.get("userLogin");
 		if (UtilValidate.isEmpty(webPubPt)) {
-            webPubPt = "OFBIZDOCROOT";         
+            webPubPt = "UNDERSUNROOT";         
         }
 		String roleTypeId = (String)context.get("roleTypeId");
 		if (UtilValidate.isEmpty(roleTypeId)) {
