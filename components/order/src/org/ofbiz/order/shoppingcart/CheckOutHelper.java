@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.13 2003/11/24 20:39:50 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.14 2003/11/25 00:17:19 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -283,6 +283,91 @@ public class CheckOutHelper {
             result = ServiceUtil.returnError(errorMessages);
         } else {
             result = ServiceUtil.returnSuccess();
+        }
+
+        return result;
+    }
+
+    public Map checkGiftCard(Map params, Map selectedPaymentMethods) {
+        List errorMessages = new ArrayList();
+        Map errorMaps = new HashMap();
+        Map result = new HashMap();
+        // handle gift card payment
+        if (params.get("addGiftCard") != null) {
+            String gcNum = (String) params.get("giftCardNumber");
+            String gcPin = (String) params.get("giftCardPin");
+            String gcAmt = (String) params.get("giftCardAmount");
+            double gcAmount = -1;
+
+            boolean gcFieldsOkay = true;
+            if (gcNum == null || gcNum.length() == 0) {
+                errorMessages.add("Please enter your gift card number");
+                gcFieldsOkay = false;
+            }
+            if (gcPin == null || gcPin.length() == 0) {
+                errorMessages.add("Please enter your gift card pin number");
+                gcFieldsOkay = false;
+            }
+            if (selectedPaymentMethods != null || selectedPaymentMethods.size() > 0) {
+                if (gcAmt == null || gcAmt.length() == 0) {
+                    errorMessages.add("Please enter the amount to place on your gift card");
+                    gcFieldsOkay = false;
+                }
+            }
+            if (gcAmt != null && gcAmt.length() > 0) {
+                try {
+                    gcAmount = Double.parseDouble(gcAmt);
+                } catch (NumberFormatException e) {
+                    Debug.logError(e, module);
+                    errorMessages.add("Invalid amount for gift card entered");
+                    gcFieldsOkay = false;
+                }
+            }
+
+            if (gcFieldsOkay) {
+                // store the gift card
+                Map gcCtx = new HashMap();
+                gcCtx.put("partyId", params.get("partyId"));
+                gcCtx.put("cardNumber", gcNum);
+                gcCtx.put("pinNumber", gcPin);
+                gcCtx.put("userLogin", cart.getUserLogin());
+                Map gcResult = null;
+                try {
+                    gcResult = dispatcher.runSync("createGiftCard", gcCtx);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, module);
+                    errorMessages.add(e.getMessage());
+                }
+                if (gcResult != null) {
+                    this.addErrors(errorMessages, errorMaps, gcResult);
+
+                    if (errorMessages.size() == 0 && errorMaps.size() == 0) {
+                        // set the GC payment method
+                        Double giftCardAmount = null;
+                        if (gcAmount > 0) {
+                            giftCardAmount = new Double(gcAmount);
+                        }
+                        String gcPaymentMethodId = (String) gcResult.get("paymentMethodId");
+                        result = ServiceUtil.returnSuccess();
+                        result.put("paymentMethodId", gcPaymentMethodId);
+                        result.put("amount", giftCardAmount);
+                    }
+                } else {
+                    errorMessages.add("Problem with gift card information");
+                }
+            }
+        } else {
+            result = ServiceUtil.returnSuccess();
+        }
+
+        // see whether we need to return an error or not
+        if (errorMessages.size() > 0) {
+            result.put(ModelService.ERROR_MESSAGE_LIST, errorMessages);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+        }
+        if (errorMaps.size() > 0) {
+            result.put(ModelService.ERROR_MESSAGE_MAP, errorMaps);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
         }
 
         return result;
@@ -1022,72 +1107,19 @@ public class CheckOutHelper {
 
         // set the payment
         if (finalizeMode != null && finalizeMode.equals("payment")) {
+            Map selectedPaymentMethods = null;
             if (checkOutPaymentId != null) {
                 callResult = this.finalizeOrderEntryPayment(checkOutPaymentId, null, isSingleUsePayment, appendPayment);
                 this.addErrors(errorMessages, errorMaps, callResult);
+                selectedPaymentMethods = UtilMisc.toMap(checkOutPaymentId, null);
             }
-
-            // handle gift card payment
-            if (params.get("addGiftCard") != null) {
-                String gcNum = (String) params.get("giftCardNumber");
-                String gcPin = (String) params.get("giftCardPin");
-                String gcAmt = (String) params.get("giftCardAmount");
-                double gcAmount = -1;
-
-                boolean gcFieldsOkay = true;
-                if (gcNum == null || gcNum.length() == 0) {
-                    errorMessages.add("Please enter your gift card number");
-                    gcFieldsOkay = false;
-                }
-                if (gcPin == null || gcPin.length() == 0) {
-                    errorMessages.add("Please enter your gift card pin number");
-                    gcFieldsOkay = false;
-                }
-                if (checkOutPaymentId == null) {
-                    if (gcAmt == null || gcAmt.length() == 0) {
-                        errorMessages.add("Please enter the amount to place on your gift card");
-                        gcFieldsOkay = false;
-                    }
-                }
-                if (gcAmt != null && gcAmt.length() > 0) {
-                    try {
-                        gcAmount = Double.parseDouble(gcAmt);
-                    } catch (NumberFormatException e) {
-                        Debug.logError(e, module);
-                        errorMessages.add("Invalid amount for gift card entered");
-                        gcFieldsOkay = false;
-                    }
-                }
-
-                if (gcFieldsOkay) {
-                    // store the gift card
-                    Map gcCtx = new HashMap();
-                    gcCtx.put("partyId", params.get("partyId"));
-                    gcCtx.put("cardNumber", gcNum);
-                    gcCtx.put("pinNumber", gcPin);
-                    gcCtx.put("userLogin", cart.getUserLogin());
-                    Map gcResult = null;
-                    try {
-                        gcResult = dispatcher.runSync("createGiftCard", gcCtx);
-                    } catch (GenericServiceException e) {
-                        Debug.logError(e, module);
-                        errorMessages.add(e.getMessage());
-                    }
-                    if (gcResult != null) {
-                        this.addErrors(errorMessages, errorMaps, gcResult);
-
-                        if (errorMessages.size() == 0 && errorMaps.size() == 0) {
-                            // set the GC payment method
-                            Double giftCardAmount = null;
-                            if (gcAmount > 0) {
-                                giftCardAmount = new Double(gcAmount);
-                            }
-                            String gcPaymentMethodId = (String) gcResult.get("paymentMethodId");
-                            Map gcCallRes = this.finalizeOrderEntryPayment(gcPaymentMethodId, giftCardAmount, true, true);
-                            this.addErrors(errorMessages, errorMaps, gcCallRes);
-                        }
-                    }
-                }
+            callResult = checkGiftCard(params, selectedPaymentMethods);
+            this.addErrors(errorMessages, errorMaps, callResult);
+            if (errorMessages.size() == 0 && errorMaps.size() == 0) {
+                String gcPaymentMethodId = (String) callResult.get("paymentMethodId");
+                Double giftCardAmount = (Double) callResult.get("amount");
+                Map gcCallRes = this.finalizeOrderEntryPayment(gcPaymentMethodId, giftCardAmount, true, true);
+                this.addErrors(errorMessages, errorMaps, gcCallRes);
             }
         }
 

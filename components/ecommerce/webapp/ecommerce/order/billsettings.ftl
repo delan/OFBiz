@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      3.0
 -->
 
@@ -286,7 +286,7 @@ function shipBillAddr() {
                 </#if>
 
                 <#-- gift card fields -->
-                <#if requestParameters.useGc?default("") == "GC">
+                <#if requestParameters.useGc?default("") == "GC" || paymentMethodType == "GC">
                   <#assign giftCard = requestParameters>
                   <input type="hidden" name="addGiftCard" value="Y">
                   <#if paymentMethodType != "GC">

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.12 $
+ *@version    $Revision: 1.13 $
  *@since      2.1
 -->
 
@@ -388,42 +388,19 @@ function toggleBillingAccount(box) {
                         <#elseif paymentMethod.paymentMethodTypeId == "GIFT_CARD">
                           <#assign giftCard = paymentMethod.getRelatedOne("GiftCard")>
 
-                          <#if giftCard?has_content && giftCard.physicalNumber?has_content>
-                            <#assign pcardNumberDisplay = "">
-                            <#assign pcardNumber = giftCard.physicalNumber>
+                          <#if giftCard?has_content && giftCard.cardNumber?has_content>
+                            <#assign giftCardNumber = "">
+                            <#assign pcardNumber = giftCard.cardNumber>
                             <#if pcardNumber?has_content>
                               <#assign psize = pcardNumber?length - 4>
                               <#if 0 < psize>
                                 <#list 0 .. psize-1 as foo>
-                                  <#assign pcardNumberDisplay = pcardNumberDisplay + "*">
+                                  <#assign giftCardNumber = giftCardNumber + "*">
                                 </#list>
-                                <#assign pcardNumberDisplay = pcardNumberDisplay + pcardNumber[psize .. psize + 3]>
+                                <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3]>
                               <#else>
-                                <#assign pcardNumberDisplay = pcardNumber>
+                                <#assign giftCardNumber = pcardNumber>
                               </#if>
-                            </#if>
-
-                            <#if giftCard?has_content && giftCard.virtualNumber?has_content>
-                              <#assign vcardNumberDisplay = "">
-                              <#assign vcardNumber = giftCard.virtualNumber>
-                              <#if vcardNumber?has_content>
-                                <#assign vsize = vcardNumber?length - 4>
-                                <#if 0 < vsize>
-                                  <#list 0 .. vsize-1 as foo>
-                                    <#assign vcardNumberDisplay = vcardNumberDisplay + "*">
-                                  </#list>
-                                  <#assign vcardNumberDisplay = vcardNumberDisplay + vcardNumber[vsize .. vsize + 3]>
-                                <#else>
-                                  <#assign vcardNumberDisplay = vcardNumber>
-                                </#if>
-                              </#if>
-                            </#if>
-
-                            <#assign giftCardNumber = pcardNumberDisplay?if_exists>
-                            <if (!giftCardNumber?has_content)>
-                              <#assign giftCardNumber = vcardNumberDisplay?if_exists>
-                            <#elseif vcardNumberDisplay?has_content>
-                              <#assign giftCardNumber = giftCardNumber + " / " + vcardNumberDisplay>
                             </#if>
                           </#if>
 
@@ -477,15 +454,49 @@ function toggleBillingAccount(box) {
                       </#if>
                       <#-- end of special billing account functionality -->
 
+                      <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                      <tr>
+                        <td width="1%" nowrap>
+                          <input type="checkbox" name="addGiftCard" value="Y">
+                        </td>
+                        <td width="50%" nowrap>
+                          <span class="tabletext">Use Gift Card Not On File</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="1%" nowrap>
+                          <div class="tabletext">Number</div>
+                        </td>
+                        <td width="50%" nowrap>
+                          <input type="text" size="15" class="inputBox" name="giftCardNumber" value="${(requestParameters.giftCardNumber)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="1%" nowrap>
+                          <div class="tabletext">PIN</div>
+                        </td>
+                        <td width="50%" nowrap>
+                          <input type="text" size="10" class="inputBox" name="giftCardPin" value="${(requestParameters.giftCardPin)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="1%" nowrap>
+                          <div class="tabletext">Amount</div>
+                        </td>
+                        <td width="50%" nowrap>
+                          <input type="text" size="6" class="inputBox" name="giftCardAmount" value="${(requestParameters.giftCardAmount)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;">
+                        </td>
+                      </tr>
                     </table>
                     <#if !paymentMethodList?has_content>
                       <div class='tabletext'><b>${uiLabelMap.AccountingNoPaymentMethodsOnFile}.</b></div>
                     </#if>
                   </td>
                 </tr>
+                <tr><td colspan="2"><hr class='sepbar'></td></tr>
                 <tr>
-                  <td colspan="2" align="center">
-                    <div class="tabletext">
+                  <td colspan="2" align="center" valign="top">
+                    <div class="tabletext" valign="top">
                       <a href="javascript:submitForm(document.checkoutInfoForm, 'SP', '');" class="buttontext">[Split Payment]</a>
                     </div>
                   </td>

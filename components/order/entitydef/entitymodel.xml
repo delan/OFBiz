@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  */
 -->
 
@@ -1137,6 +1137,9 @@
         <key-map field-name="paymentMethodId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="EftAccount">
+        <key-map field-name="paymentMethodId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="GiftCard">
         <key-map field-name="paymentMethodId"/>
       </relation>
     </entity>

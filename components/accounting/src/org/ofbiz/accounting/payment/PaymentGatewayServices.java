@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.19 2003/11/14 20:58:19 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.20 2003/11/25 00:17:19 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import javax.transaction.xa.XAException;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -136,7 +136,7 @@ public class PaymentGatewayServices {
             Double maxAmount = paymentPref.getDouble("maxAmount");
             if (maxAmount == null || maxAmount.doubleValue() > 0) {
                 // call the authPayment method
-                Map processorResult = authPayment(dispatcher, orh, paymentPref, totalRemaining, reAuth);
+                Map processorResult = authPayment(dispatcher, userLogin, orh, paymentPref, totalRemaining, reAuth);
 
                 // handle the response
                 if (processorResult != null) {
@@ -195,7 +195,7 @@ public class PaymentGatewayServices {
         }
     }
 
-    private static Map authPayment(LocalDispatcher dispatcher, OrderReadHelper orh, GenericValue paymentPref, double totalRemaining, boolean reauth) {
+    private static Map authPayment(LocalDispatcher dispatcher, GenericValue userLogin, OrderReadHelper orh, GenericValue paymentPref, double totalRemaining, boolean reauth) {
         String paymentConfig = null;
         String serviceName = null;
 
@@ -223,7 +223,7 @@ public class PaymentGatewayServices {
         // get the process context
         Map processContext = null;
         try {
-            processContext = makeAuthContext(orh, paymentPref, paymentConfig, totalRemaining);
+            processContext = makeAuthContext(orh, userLogin, paymentPref, paymentConfig, totalRemaining);
         } catch (GeneralException e) {
             Debug.logError(e, "Problems creating the context for the auth service", module);
             return null;
@@ -295,9 +295,10 @@ public class PaymentGatewayServices {
         return payToPartyId;
     }
 
-    private static Map makeAuthContext(OrderReadHelper orh, GenericValue paymentPreference, String paymentConfig, double totalRemaining) throws GeneralException {
+    private static Map makeAuthContext(OrderReadHelper orh, GenericValue userLogin, GenericValue paymentPreference, String paymentConfig, double totalRemaining) throws GeneralException {
         Map processContext = new HashMap();
 
+        processContext.put("userLogin", userLogin);
         processContext.put("orderId", orh.getOrderId());
         processContext.put("orderItems", orh.getOrderItems());
         processContext.put("shippingAddress", orh.getShippingAddress());
@@ -781,7 +782,7 @@ public class PaymentGatewayServices {
                 amountThisCapture = authAmount.doubleValue();
             }
 
-            Map captureResult = capturePayment(dispatcher, orh, paymentPref, amountThisCapture);
+            Map captureResult = capturePayment(dispatcher, userLogin, orh, paymentPref, amountThisCapture);
             if (captureResult != null) {
                 GenericValue paymentSettings = (GenericValue) captureResult.get("paymentSettings");
                 Double amountCaptured = (Double) captureResult.get("captureAmount");
@@ -820,7 +821,7 @@ public class PaymentGatewayServices {
                         delegator.create(newPref);
 
                         // authorize the new preference
-                        Map processorResult = authPayment(dispatcher, orh, newPref, newAmount, false);
+                        Map processorResult = authPayment(dispatcher, userLogin, orh, newPref, newAmount, false);
                         if (processorResult != null) {
                             GenericValue pSetting = (GenericValue) processorResult.get("paymentSettings");
                             Double thisAmount = (Double) processorResult.get("processAmount");
@@ -859,7 +860,7 @@ public class PaymentGatewayServices {
         }
     }
 
-    private static Map capturePayment(LocalDispatcher dispatcher, OrderReadHelper orh, GenericValue paymentPref, double amount) {
+    private static Map capturePayment(LocalDispatcher dispatcher, GenericValue userLogin, OrderReadHelper orh, GenericValue paymentPref, double amount) {
         // look up the payment configuration settings
         String serviceName = null;
         String paymentConfig = null;
@@ -884,6 +885,7 @@ public class PaymentGatewayServices {
 
         // prepare the context for the capture service (must follow the ccCaptureInterface
         Map captureContext = new HashMap();
+        captureContext.put("userLogin", userLogin);
         captureContext.put("orderPaymentPreference", paymentPref);
         captureContext.put("paymentConfig", paymentConfig);
         captureContext.put("captureAmount", new Double(amount));
@@ -1069,7 +1071,7 @@ public class PaymentGatewayServices {
 
             if (orh != null) {
                 // first lets re-auth the card
-                Map authPayRes = authPayment(dispatcher, orh, paymentPreference, amount.doubleValue(), true);
+                Map authPayRes = authPayment(dispatcher, userLogin, orh, paymentPreference, amount.doubleValue(), true);
                 if (authPayRes != null) {
                     Boolean authResp = (Boolean) result.get("authResult");
                     Boolean capResp = (Boolean) result.get("captureResult");
@@ -1081,7 +1083,7 @@ public class PaymentGatewayServices {
                                 processCaptureResult(dctx, result, userLogin, paymentPreference, paymentSettings);
                             } else {
                                 // lets try to capture the funds now
-                                Map capPayRes = capturePayment(dispatcher, orh, paymentPreference, amount.doubleValue());
+                                Map capPayRes = capturePayment(dispatcher, userLogin, orh, paymentPreference, amount.doubleValue());
                                 if (capPayRes != null) {
                                     Boolean capPayResp = (Boolean) result.get("captureResult");
                                     if (capPayResp != null && capPayResp.booleanValue()) {
@@ -1165,6 +1167,7 @@ public class PaymentGatewayServices {
                     return ServiceUtil.returnError("Refund processor problems; see logs");
                 }
                 serviceContext.put("refundAmount", processAmount);
+                serviceContext.put("userLogin", userLogin);
 
                 // call the service
                 Map refundResponse = null;
