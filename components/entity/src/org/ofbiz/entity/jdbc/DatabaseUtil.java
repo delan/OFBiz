@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.18 2004/05/18 02:24:40 ajzeneski Exp $
+ * $Id: DatabaseUtil.java,v 1.19 2004/05/30 10:54:02 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -2319,7 +2319,7 @@ public class DatabaseUtil {
 
         StringBuffer indexSqlBuf = new StringBuffer("DROP INDEX ");
         String tableName = entity.getTableName(datasourceInfo);
-        String schemaName = (tableName == null || tableName.length() == 0) ? "" :
+        String schemaName = (tableName == null || tableName.length() == 0 || tableName.indexOf('.') == -1) ? "" :
                 tableName.substring(0, tableName.indexOf('.'));
 
         indexSqlBuf.append(schemaName);
@@ -2529,11 +2529,13 @@ public class DatabaseUtil {
         String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
 
         String tableName = entity.getTableName(datasourceInfo);
-        String schemaName = (tableName == null || tableName.length() == 0) ? "" :
+        String schemaName = (tableName == null || tableName.length() == 0 || tableName.indexOf('.') == -1) ? "" :
                 tableName.substring(0, tableName.indexOf('.'));
 
-        indexSqlBuf.append(schemaName);
-        indexSqlBuf.append(".");
+        if (UtilValidate.isNotEmpty(schemaName)) {
+            indexSqlBuf.append(schemaName);
+            indexSqlBuf.append(".");
+        }
         indexSqlBuf.append(relConstraintName);
 
         String deleteIndexSql = indexSqlBuf.toString();
