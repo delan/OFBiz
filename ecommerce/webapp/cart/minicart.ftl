@@ -30,7 +30,7 @@
       <td valign="bottom"><div class="tabletext"><b>Item<b></div></td>
       <td valign="bottom"><div class="tabletext"><b>Subtotal<b></div></td>
     </tr>
-    <#foreach cartLine in requestAttributes.shoppingCartLines>
+    <#list requestAttributes.shoppingCartLines as cartLine>
       <tr>
         <td valign="top"><div class="tabletext" nowrap>${cartLine.getQuantity()?string.number}</div>
         </td>
@@ -41,7 +41,7 @@
         <td align="right" valign="top"><div class="tabletext" nowrap>${cartLine.getItemSubTotal()?string.currency}</div>
         </td>
       </tr>
-    </#foreach>
+    </#list>
     <tr>
       <td colspan="3" align="right">
         <div class="tabletext"><b>Total: ${requestAttributes.shoppingCartGrandTotal?string.currency}</b></div>
