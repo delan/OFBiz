@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -34,8 +34,8 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tableheadtext">ID</div></td>
+    <td><div class="tableheadtext">Feature</div></td>
     <td><div class="tableheadtext">Type</div></td>
-    <td><div class="tableheadtext">Description</div></td>
     <td><div class="tableheadtext">Category</div></td>
     <td><div class="tableheadtext">&nbsp;</div></td>
   </tr>
