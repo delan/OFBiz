@@ -1,4 +1,4 @@
-/* Debug
+/* 
  * $Id$
  *
  * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
@@ -40,10 +40,10 @@ import org.ofbiz.core.util.*;
 /**
  * Generic Service - Service Definition Reader
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    October 20, 2001
- *@version    1.0
+ *@version    $Revision$
  */
 
 public class ModelServiceReader {
