@@ -1,5 +1,5 @@
 /*
- * $Id: lruadd.bsh,v 1.3 2003/09/14 05:36:47 jonesde Exp $
+ * $Id: lruadd.bsh,v 1.4 2003/12/06 00:24:51 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 
@@ -63,11 +63,16 @@ if(contentLookupCache == null){
 
 // If this event is called from a ContentAssoc req, then contentIdTo should be used.
 String contentIdTo = (String)request.getAttribute("contentIdTo");
-String contentId = request.getParameter("contentId");
+String contentId = request.getAttribute("contentId");
+String contentIdParam = request.getParameter("contentId");
+Debug.logInfo("in lruadd, contentIdParam:" + contentIdParam, null);
+Debug.logInfo("in lruadd, contentId:" + contentId, null);
 String id = null;
 if(contentIdTo != null) id = contentIdTo;
-else id = contentId;
+else if (contentId != null) id = contentId;
+else id = contentIdParam;
 
+Debug.logInfo("in lruadd, id:" + id, null);
 
 LocalDispatcher dispatcher	= (LocalDispatcher)request.getAttribute("dispatcher");
 GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
