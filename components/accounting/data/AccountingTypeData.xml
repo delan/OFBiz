@@ -50,6 +50,9 @@
   <FixedAssetType description="Vehicle" fixedAssetTypeId="VEHICLE" hasTable="N" parentTypeId=""/>
   <FixedAssetType description="Real Estate" fixedAssetTypeId="REAL_ESTATE" hasTable="N" parentTypeId=""/>
 
+  <FixedAssetProductType description="Use of Asset" fixedAssetProductTypeId="FAPT_USE"/>
+  <FixedAssetProductType description="Sale of Asset" fixedAssetProductTypeId="FAPT_SALE"/>
+
   <GlAccountClass description="Resource" glAccountClassId="RESOURCE" parentClassId=""/>
   <GlAccountClass description="Asset" glAccountClassId="ASSET" parentClassId=""/>
   <GlAccountClass description="Liability" glAccountClassId="LIABILITY" parentClassId=""/>

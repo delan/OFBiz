@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  */
 -->
 
@@ -531,6 +531,45 @@
       </relation>
       <relation type="one" fk-name="FIXDAST_DM_FXAST" rel-entity-name="FixedAsset">
         <key-map field-name="fixedAssetId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FixedAssetProduct"
+            package-name="org.ofbiz.accounting.fixedasset"
+            title="Fixed Asset Product Representation Entity">
+      <field name="fixedAssetId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="fixedAssetProductTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="comments" type="comment"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="quantityUomId" type="id"></field>
+      <prim-key field="fixedAssetId"/>
+      <prim-key field="productId"/>
+      <prim-key field="fixedAssetProductTypeId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="FIXDASTPRD_PRD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="FIXDASTPRD_FA" rel-entity-name="FixedAsset">
+        <key-map field-name="fixedAssetId"/>
+      </relation>
+      <relation type="one" fk-name="FIXDASTPRD_FAPT" rel-entity-name="FixedAssetProductType">
+        <key-map field-name="fixedAssetProductTypeId"/>
+      </relation>
+      <relation type="one" fk-name="FIXDASTPRD_UOM" rel-entity-name="Uom">
+        <key-map field-name="quantityUomId" rel-field-name="uomId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FixedAssetProductType"
+            package-name="org.ofbiz.accounting.fixedasset"
+            title="Fixed Asset Product Type Entity">
+      <field name="fixedAssetProductTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="fixedAssetProductTypeId"/>
+      <relation type="many" rel-entity-name="FixedAssetProduct">
+        <key-map field-name="fixedAssetProductTypeId"/>
       </relation>
     </entity>
     <entity entity-name="FixedAssetType"
