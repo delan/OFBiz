@@ -20,15 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
-<div class='head1'>Advanced Search in Category: ${searchCategory.description}</div>
+<div class='head1'>Advanced Search in Category: ${(searchCategory.description)?if_exists}</div>
 <br>
 <form name="advtokeywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style='margin: 0;'>
   <input type='hidden' name="VIEW_SIZE" value="10">
-  <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId}">
+  <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}">
   <table border="0" wdith="100%">
     <tr>
       <td>
@@ -48,14 +48,14 @@
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
       <tr>
         <td>
-          <div class='tabletext'>${productFeatureType.description}:</div>
+          <div class='tabletext'>${(productFeatureType.description)?if_exists}:</div>
         </td>
         <td>
           <div class='tabletext'>
             <select class="selectBox" name="pft_${productFeatureTypeId}">
               <option value="">- any -</option>
               <#list productFeatures as productFeature>
-              <option value="${productFeature.productFeatureId}">${productFeature.description}</option>
+              <option value="${productFeature.productFeatureId}">${productFeature.description?default(productFeature.productFeatureId)}</option>
               </#list>
             </select>
           </div>
