@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.33 2004/07/07 05:56:52 doogie Exp $
+ * $Id: GenericEntity.java,v 1.34 2004/07/08 05:21:18 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -61,7 +62,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.33 $
+ *@version    $Revision: 1.34 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -98,6 +99,8 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
 
     /** Denotes whether or not this entity has been modified, or is known to be out of sync with the persistent record */
     protected boolean modified = false;
+    protected boolean generateHashCode = true;
+    protected int cachedHashCode = 0;
 
     /** Used to specify whether or not this representation of the entity can be changed; generally cleared when this object comes from a cache */
     protected boolean mutable = true;
@@ -149,6 +152,8 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         }
         this.fields = newValue.fields;
         this.setDelegator(newValue.getDelegator());
+        this.generateHashCode = newValue.generateHashCode;
+        this.cachedHashCode = newValue.cachedHashCode;
         this.modified = false;
     }
 
@@ -316,6 +321,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
             }
             Object old = fields.put(name, value);
 
+            generateHashCode = true;
             modified = true;
             this.setChanged();
             this.notifyObservers(name);
@@ -327,6 +333,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
 
     public void dangerousSetNoCheckButFast(ModelField modelField, Object value) {
         if (modelField == null) throw new IllegalArgumentException("Cannot set field with a null modelField");
+        generateHashCode = true;
         this.fields.put(modelField.getName(), value);
     }
 
@@ -948,7 +955,11 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
      */
     public int hashCode() {
         // divide both by two (shift to right one bit) to maintain scale and add together
-        return getEntityName().hashCode() >> 1 + fields.hashCode() >> 1;
+        if (generateHashCode) {
+            cachedHashCode = getEntityName().hashCode() >> 1 + fields.hashCode() >> 1;
+            generateHashCode = false;
+        }
+        return cachedHashCode;
     }
 
     /** Creates a String for the entity, overrides the default toString
@@ -1061,15 +1072,15 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     // ---- Methods added to implement the Map interface: ----
 
     public Object remove(Object key) {
-        return fields.remove(key);
+        return this.fields.remove(key);
     }
 
     public boolean containsKey(Object key) {
-        return fields.containsKey(key);
+        return this.fields.containsKey(key);
     }
 
     public java.util.Set entrySet() {
-        return fields.entrySet();
+        return Collections.unmodifiableSet(this.fields.entrySet());
     }
 
     public Object put(Object key, Object value) {
@@ -1094,7 +1105,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     }
 
     public java.util.Set keySet() {
-        return this.fields.keySet();
+        return Collections.unmodifiableSet(this.fields.keySet());
     }
 
     public boolean isEmpty() {
@@ -1102,7 +1113,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     }
 
     public java.util.Collection values() {
-        return this.fields.values();
+        return Collections.unmodifiableCollection(this.fields.values());
     }
 
     public boolean containsValue(Object value) {
