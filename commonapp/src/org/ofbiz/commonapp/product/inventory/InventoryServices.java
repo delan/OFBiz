@@ -210,7 +210,8 @@ public class InventoryServices {
     
     public static Map checkInventoryAvailability(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();        
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");        
                
         Map ordersToUpdate = new HashMap();
         Map ordersToCancel = new HashMap();       
@@ -452,7 +453,7 @@ public class InventoryServices {
             String orderId = (String) orderNotifyIter.next();                                  
                        
             try {
-                dispatcher.runAsync("sendOrderBackorderNotification", UtilMisc.toMap("orderId", orderId));
+                dispatcher.runAsync("sendOrderBackorderNotification", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problems sending off the notification", module);
                 continue;

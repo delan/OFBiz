@@ -825,40 +825,7 @@ public class OrderServices {
         }
         return result;
     }
-    
-    /** Service to check and make sure no items are in BACKORDER status */
-    public static Map checkBackOrderItems(DispatchContext ctx, Map context) {
-        Map result = new HashMap();
-        GenericDelegator delegator = ctx.getDelegator();
-        String orderId = (String) context.get("orderId");
         
-        List backOrderedItems = new ArrayList();
-        List orderItems = null;
-        try {
-            orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot get OrderItem entities", module);
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get OrderItems (" + e.getMessage() + ").");
-        }
-               
-        if (orderItems != null) {
-            Iterator i = orderItems.iterator();
-            while (i.hasNext()) {
-                GenericValue item = (GenericValue) i.next();
-                if (item != null && item.get("statusId") != null) {
-                    String status = item.getString("statusId");
-                    if (status.equals("ITEM_BACKORDERED"))
-                        backOrderedItems.add(item);
-                }
-            }
-        }
-        
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        result.put("backOrderedItems", backOrderedItems);
-        return result;                        
-    }
-    
     /** Service to add a role type to an order */
     public static Map addRoleType(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -1841,41 +1808,6 @@ public class OrderServices {
         }   
     }
     
-    public static Map autoCancelItems(DispatchContext ctx, Map context) {
-        GenericDelegator delegator = ctx.getDelegator();
-        LocalDispatcher dispatcher = ctx.getDispatcher();
-        List itemsToCancel = null;
-        try {
-            List exprs = UtilMisc.toList(new EntityExpr("autoCancelDate", EntityOperator.NOT_EQUAL, null));
-            exprs.add(new EntityExpr("dontCancelSetDate", EntityOperator.EQUALS, null));
-            exprs.add(new EntityExpr("dontCancelSetUserLogin", EntityOperator.EQUALS, null));
-            exprs.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_COMPLETED"));
-            exprs.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));           
-            itemsToCancel = delegator.findByAnd("OrderItem", exprs, UtilMisc.toList("autoCancelDate"));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Problem getting OrderItem(s) to cancel", module);            
-        }
-        
-        if (itemsToCancel != null) {
-            Iterator itemsIter = itemsToCancel.iterator();
-            Timestamp now = UtilDateTime.nowTimestamp();
-            while (itemsIter.hasNext()) {
-                GenericValue item = (GenericValue) itemsIter.next();
-                Timestamp autoCancelDate = item.getTimestamp("autoCancelDate");
-                if (now.after(autoCancelDate)) {
-                    try {
-                        Map serviceContext = UtilMisc.toMap("orderId", item.get("orderId"), "orderItemSeqId", item.get("orderItemSeqId"), "statusId", "ITEM_CANCELLED");
-                        Map result = dispatcher.runSync("changeOrderItemStatus", serviceContext);                
-                    } catch (GenericServiceException e) {
-                        Debug.logError(e, "Problems calling cancel item : " + item, module);
-                    }
-                }
-            }
-        }
-        
-        return ServiceUtil.returnSuccess();     
-    }
-    
     public static Map allowOrderSplit(DispatchContext ctx, Map context) {
         GenericDelegator delegator = ctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -1926,4 +1858,104 @@ public class OrderServices {
         }
         return ServiceUtil.returnSuccess();
     }
+    
+    public static Map cancelFlaggedSalesOrders(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        
+        List ordersToCheck = null;
+        List exprs = new ArrayList();
+        
+        // create the query expressions
+        exprs.add(new EntityExpr("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
+        exprs.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_COMPLETED"));
+        exprs.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+        exprs.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"));
+        
+        // get the orders
+        try {
+            ordersToCheck = delegator.findByAnd("OrderHeader", exprs, UtilMisc.toList("orderDate"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting order headers", module);
+        }
+        
+        if (ordersToCheck == null || ordersToCheck.size() == 0) {
+            Debug.logInfo("No orders to check, finished", module);
+            return ServiceUtil.returnSuccess();
+        }
+        
+        Iterator i = ordersToCheck.iterator();
+        while (i.hasNext()) {
+            GenericValue orderHeader = (GenericValue) i.next();
+            String orderId = orderHeader.getString("orderId");
+            String orderStatus = orderHeader.getString("statusId");            
+                        
+            if (orderStatus.equals("ORDER_CREATED")) {
+                // first check for un-paid orders
+                Timestamp orderDate = orderHeader.getTimestamp("orderDate");
+                String webSiteId = orderHeader.getString("webSiteId");
+                
+                // need the payment.properties file for the website
+                String propsFile = "payment.properties"; // TODO: change this to use store settings
+                String daysStr = UtilProperties.getPropertyValue(propsFile, "payment.general.offline.cancel", "30");
+                int daysTillCancel = 30;
+                // convert days to int
+                try {
+                    daysTillCancel = Integer.parseInt(daysStr);
+                } catch (NumberFormatException e) {
+                    Debug.logError("Problem parsing days string to cancel : " + daysStr + " using default 30 days", module);
+                    daysTillCancel = 30;
+                }
+                
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(orderDate.getTime());
+                cal.add(Calendar.DAY_OF_YEAR, daysTillCancel);
+                Date cancelDate = cal.getTime();
+                Date nowDate = new Date();
+                if (cancelDate.equals(nowDate) || cancelDate.after(nowDate)) {
+                    // cancel the order item(s)
+                    Map svcCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ITEM_CANCELLED", "userLogin", userLogin);
+                    try {                        
+                        Map ores = dispatcher.runSync("changeOrderItemStatus", svcCtx);                        
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, "Problem calling change item status service : " + svcCtx, module);                        
+                    }
+                }                               
+            } else {
+                // check for auto-cancel items 
+                List orderItems = null;
+                try {
+                    orderItems = orderHeader.getRelated("OrderItem");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Problem getting order item records", module);                    
+                }
+                if (orderItems != null && orderItems.size() > 0) {
+                    Iterator oii = orderItems.iterator();                    
+                    while (oii.hasNext()) {
+                        GenericValue orderItem = (GenericValue) oii.next();
+                        String orderItemSeqId = orderItem.getString("orderItemSeqId");
+                        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+                        Timestamp autoCancelDate = orderItem.getTimestamp("autoCancelDate");
+                        Timestamp dontCancelDate = orderItem.getTimestamp("dontCancelSetDate");
+                        String dontCancelUserLogin = orderItem.getString("dontCancelSetUserLogin");
+                        
+                        if (dontCancelUserLogin == null && dontCancelDate == null && autoCancelDate != null) {
+                            if (autoCancelDate.equals(nowTimestamp) || autoCancelDate.after(nowTimestamp)) {
+                                // cancel the order item
+                                Map svcCtx = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "statusId", "ITEM_CANCELLED", "userLogin", userLogin);
+                                try {                                    
+                                    Map res = dispatcher.runSync("changeOrderItemStatus", svcCtx);
+                                } catch (GenericServiceException e) {
+                                    Debug.logError(e, "Problem calling change item status service : " + svcCtx, module);
+                                }
+                            }
+                        }                        
+                    }
+                }
+            }               
+        }        
+        return ServiceUtil.returnSuccess();
+    } 
+    
 }
