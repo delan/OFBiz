@@ -484,7 +484,7 @@
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
             title="Recurrence Info Entity">
       <field name="recurrenceInfoId" type="id-ne"></field>
-      <field name="startDateTime" type="date-time"></field>      
+      <field name="startDateTime" type="date-time"></field>
       <field name="exceptionDateTimes" type="very-long"></field>
       <field name="recurrenceDateTimes" type="very-long"></field>
       <field name="exceptionRuleId" type="id-ne"></field>
@@ -1069,7 +1069,8 @@
             title="Work Effort Status Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
-      <field name="statusDatetime" type="date-time"></field>	
+      <field name="statusDatetime" type="date-time"></field>
+      <field name="setByPartyId" type="id"></field>	
       <prim-key field="workEffortId" />	
       <prim-key field="statusId" />	
       <prim-key field="statusDatetime" />
@@ -1078,6 +1079,9 @@
       </relation>
       <relation type="one" rel-entity-name="StatusItem">
         <key-map field-name="statusId" />
+      </relation>
+      <relation type="one" title="SetBy" rel-entity-name="Party">
+        <key-map field-name="setByPartyId" rel-field-name="partyId" />
       </relation>
     </entity>
     <entity entity-name="WorkEffortType" 
