@@ -92,14 +92,6 @@
     <entity-group group="org.ofbiz" entity="OrderHeaderAndShipGroups" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.order.picklist -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz" entity="Picklist" />
-    <entity-group group="org.ofbiz" entity="PicklistBin" />
-    <entity-group group="org.ofbiz" entity="PicklistItem" />
-
-  <!-- ========================================================= -->
   <!-- org.ofbiz.order.quote -->
   <!-- ========================================================= -->
 

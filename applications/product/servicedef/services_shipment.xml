@@ -247,26 +247,6 @@
         <description>Delete ShipmentRouteSegment</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    <service name="upsShipmentConfirm" engine="java"
-            location="org.ofbiz.shipment.thirdparty.ups.UpsServices" invoke="upsShipmentConfirm" auth="true">
-        <description>UPS Shipment Confirm</description>
-        <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
-    </service>
-    <service name="upsShipmentAccept" engine="java"
-            location="org.ofbiz.shipment.thirdparty.ups.UpsServices" invoke="upsShipmentAccept" auth="true">
-        <description>UPS Shipment Accept</description>
-        <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
-    </service>
-    <service name="upsVoidShipment" engine="java"
-            location="org.ofbiz.shipment.thirdparty.ups.UpsServices" invoke="upsVoidShipment" auth="true">
-        <description>UPS Void Shipment</description>
-        <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
-    </service>
-    <service name="upsTrackShipment" engine="java"
-            location="org.ofbiz.shipment.thirdparty.ups.UpsServices" invoke="upsTrackShipment" auth="true">
-        <description>UPS Track Shipment</description>
-        <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
-    </service>
 
     <!-- ============================================================== -->
     <!-- ItemIssuance Services -->
@@ -466,16 +446,17 @@
         <attribute name="upsRateCodeMap" type="Map" mode="OUT" optional="false"/>
     </service>
 
+
     <!-- Picking Related Services -->
     <service name="findOrdersToPickMove" engine="simple"
-            location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="findOrdersToPickMove">
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="findOrdersToPickMove">
         <description>Gets Picklist Data</description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="shipmentMethodTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="pickMoveByShipmentMethodInfoList" type="List" mode="OUT" optional="true"/>
     </service>
     <service name="getPicklistData" engine="simple"
-            location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="getPicklistData">
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="getPicklistData">
         <description>Gets Picklist Data</description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="shipmentMethodTypeId" type="String" mode="IN" optional="true"/>
@@ -488,7 +469,7 @@
         <attribute name="insufficientQohList" type="List" mode="OUT" optional="true"/>
     </service>
     <service name="clearPickStarted" engine="simple"
-            location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="clearPickStarted">
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="clearPickStarted">
         <description>Clear PickStarted Dates according to specified parameters</description>
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
@@ -497,7 +478,7 @@
     </service>
     
     <service name="findStockMovesNeeded" engine="simple"
-            location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="findStockMovesNeeded">
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="findStockMovesNeeded">
         <description>
             Find all Stock Moves that need to be done.
             This service differs from the inventory transfer services in that it does not require 
@@ -510,7 +491,7 @@
         <attribute name="warningMessageList" type="List" mode="OUT" optional="true"/>
     </service>
     <service name="findStockMovesRecommended" engine="simple"
-            location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="findStockMovesRecommended">
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="findStockMovesRecommended">
         <description>
             Find all Stock Moves that should be done based on minimum quantities on each Pick/Primary ProductFacilityLocation.
         </description>
@@ -520,7 +501,7 @@
         <attribute name="warningMessageList" type="List" mode="OUT" optional="true"/>
     </service>
     <service name="processPhysicalStockMove" engine="simple"
-            location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="processPhysicalStockMove">
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="processPhysicalStockMove">
         <description>
             Process a Physical Stock Move from one FacilityLocation to another, in the same Facility.
             This service will not only move quantities from one InventoryItem to another but it will
@@ -532,6 +513,38 @@
         <attribute name="targetLocationSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="quantityMoved" type="Double" mode="IN" optional="false"/>
         <attribute name="warningMessageList" type="List" mode="INOUT" optional="true"/>
+    </service>
+
+    <!-- Persisted Picklist Services -->
+    <service name="createPicklistFromOrders" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="getPicklistData">
+        <description>Create Picklist From Orders</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentMethodTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="maxNumberOfOrders" type="Long" mode="IN" optional="true"/>
+        <attribute name="picklistId" type="String" mode="OUT" optional="false"/>
+    </service>
+    
+    <!-- UPS XPCI API Services -->
+    <service name="upsShipmentConfirm" engine="java"
+            location="org.ofbiz.shipment.thirdparty.ups.UpsServices" invoke="upsShipmentConfirm" auth="true">
+        <description>UPS Shipment Confirm</description>
+        <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="upsShipmentAccept" engine="java"
+            location="org.ofbiz.shipment.thirdparty.ups.UpsServices" invoke="upsShipmentAccept" auth="true">
+        <description>UPS Shipment Accept</description>
+        <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="upsVoidShipment" engine="java"
+            location="org.ofbiz.shipment.thirdparty.ups.UpsServices" invoke="upsVoidShipment" auth="true">
+        <description>UPS Void Shipment</description>
+        <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="upsTrackShipment" engine="java"
+            location="org.ofbiz.shipment.thirdparty.ups.UpsServices" invoke="upsTrackShipment" auth="true">
+        <description>UPS Track Shipment</description>
+        <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
     </service>
 
     <!-- USPS Webtools API Services -->
