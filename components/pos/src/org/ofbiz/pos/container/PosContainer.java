@@ -70,6 +70,7 @@ public class PosContainer extends XuiContainer {
         if (facility == null) {
             throw new ContainerException("Invalid facility; facility ID not found [" + facilityId + "]");
         }
+        session.setAttribute("facilityId", facilityId);
         session.setAttribute("facility", facility);
 
         // get the product store id
@@ -83,6 +84,7 @@ public class PosContainer extends XuiContainer {
             }
         }
         session.setAttribute("productStoreId", productStoreId);
+        session.setAttribute("productStore", productStore);
 
         // get the store locale
         String localeStr = ContainerConfig.getPropertyValue(cc, "locale", null);
