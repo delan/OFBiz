@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE regions PUBLIC "-//OFBiz//DTD Regions Config//EN" "http://www.ofbiz.org/dtds/regions.dtd">
-
 <regions>
     <define id='MAIN_REGION' template='/templates/main_template.jsp'>
         <put section='title'>Application Page</put> <!-- this is a default and is meant to overridden -->
@@ -10,15 +9,12 @@
         <put section='content' content='/main.jsp'/> <!-- this is a default and is meant to overridden -->
         <put section='footer' content='/includes/footer.jsp'/>
     </define>
-
     <define id='LEFTBAR_REGION' template='/templates/leftbar_template.jsp'>
         <!-- <put section='first' content='/first.jsp'/> -->
     </define>
-
     <define id='RIGHTBAR_REGION' template='/templates/rightbar_template.jsp'>
         <!-- <put section='first' content='/first.jsp'/> -->
     </define>
-
     <define id='LEFT_ONLY_REGION' region='MAIN_REGION'>
         <put section='leftbar' content='LEFTBAR_REGION'/>
     </define>
@@ -26,7 +22,6 @@
     <define id='RIGHT_ONLY_REGION' region='MAIN_REGION'>
         <put section='rightbar' content='RIGHTBAR_REGION'/>
     </define>
-
     <define id='LEFT_RIGHT_REGION' region='MAIN_REGION'>
         <put section='leftbar' content='LEFTBAR_REGION'/>
         <put section='rightbar' content='RIGHTBAR_REGION'/>
@@ -41,5 +36,40 @@
     <define id='login' region='MAIN_REGION'>
         <put section='title'>Login Page</put>
         <put section='content' content='/login.jsp'/>
+    </define>
+
+    <define id='viewprofile' region='MAIN_REGION'>
+        <put section='title'>View Profile</put>
+        <put section='content' content='/party/viewprofile.jsp'/>
+    </define>
+
+    <define id='newcustomer' region='MAIN_REGION'>
+        <put section='title'>New Customer</put>
+        <put section='content' content='/party/newcustomer.jsp'/>
+    </define>
+
+    <define id='editcontactmech' region='MAIN_REGION'>
+        <put section='title'>Edit Contact Mechanism (Phone, Address, etc)</put>
+        <put section='content' content='/party/editcontactmech.jsp'/>
+    </define>
+
+    <define id='editcreditcard' region='MAIN_REGION'>
+        <put section='title'>Edit Credit Card</put>
+        <put section='content' content='/party/editcreditcard.jsp'/>
+    </define>
+
+    <define id='editeftaccount' region='MAIN_REGION'>
+        <put section='title'>Edit EFT Account</put>
+        <put section='content' content='/party/editeftaccount.jsp'/>
+    </define>
+
+    <define id='changepassword' region='MAIN_REGION'>
+        <put section='title'>Change Password</put>
+        <put section='content' content='/party/changepassword.jsp'/>
+    </define>
+
+    <define id='editperson' region='MAIN_REGION'>
+        <put section='title'>Edit Personal Information</put>
+        <put section='content' content='/party/editperson.jsp'/>
     </define>
 </regions>
