@@ -32,8 +32,8 @@
 
   <enterprise-beans>
     <entity>
-      <ejb-name>Person</ejb-name>
-      <jndi-name>org.ofbiz.commonapp.person.PersonHome</jndi-name>
+      <ejb-name>UserLogin</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.security.login.UserLoginHome</jndi-name>
       <configuration-name>Standard CMP EntityBean</configuration-name>
       <resource-ref>
         <res-ref-name>jdbc/MainDataSource</res-ref-name>
@@ -41,42 +41,14 @@
       </resource-ref>
     </entity>
     <entity>
-      <ejb-name>PersonAttribute</ejb-name>
-      <jndi-name>org.ofbiz.commonapp.person.PersonAttributeHome</jndi-name>
+      <ejb-name>LoginAccountHistory</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.security.login.LoginAccountHistoryHome</jndi-name>
       <configuration-name>Standard CMP EntityBean</configuration-name>
       <resource-ref>
         <res-ref-name>jdbc/MainDataSource</res-ref-name>
         <resource-name>jdbc/MainDataSource</resource-name>
       </resource-ref>
     </entity>
-    <entity>
-      <ejb-name>PersonType</ejb-name>
-      <jndi-name>org.ofbiz.commonapp.person.PersonTypeHome</jndi-name>
-      <configuration-name>Standard CMP EntityBean</configuration-name>
-      <resource-ref>
-        <res-ref-name>jdbc/MainDataSource</res-ref-name>
-        <resource-name>jdbc/MainDataSource</resource-name>
-      </resource-ref>
-    </entity>
-    <entity>
-      <ejb-name>PersonTypeAttribute</ejb-name>
-      <jndi-name>org.ofbiz.commonapp.person.PersonTypeAttributeHome</jndi-name>
-      <configuration-name>Standard CMP EntityBean</configuration-name>
-      <resource-ref>
-        <res-ref-name>jdbc/MainDataSource</res-ref-name>
-        <resource-name>jdbc/MainDataSource</resource-name>
-      </resource-ref>
-    </entity>
-    <entity>
-      <ejb-name>PersonPersonType</ejb-name>
-      <jndi-name>org.ofbiz.commonapp.person.PersonPersonTypeHome</jndi-name>
-      <configuration-name>Standard CMP EntityBean</configuration-name>
-      <resource-ref>
-        <res-ref-name>jdbc/MainDataSource</res-ref-name>
-        <resource-name>jdbc/MainDataSource</resource-name>
-      </resource-ref>
-    </entity>
-
     <entity>
       <ejb-name>SecurityGroup</ejb-name>
       <jndi-name>org.ofbiz.commonapp.security.securitygroup.SecurityGroupHome</jndi-name>
@@ -105,43 +77,14 @@
       </resource-ref>
     </entity>
     <entity>
-      <ejb-name>PersonSecurityGroup</ejb-name>
-      <jndi-name>org.ofbiz.commonapp.security.person.PersonSecurityGroupHome</jndi-name>
+      <ejb-name>UserLoginSecurityGroup</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.security.securitygroup.UserLoginSecurityGroupHome</jndi-name>
       <configuration-name>Standard CMP EntityBean</configuration-name>
       <resource-ref>
         <res-ref-name>jdbc/MainDataSource</res-ref-name>
         <resource-name>jdbc/MainDataSource</resource-name>
       </resource-ref>
     </entity>
-<!--
-    <entity>
-      <ejb-name>Product</ejb-name>
-      <jndi-name>org.ofbiz.commonapp.catalog.product.ProductHome</jndi-name>
-      <configuration-name>Standard CMP EntityBean</configuration-name>
-      <resource-ref>
-        <res-ref-name>jdbc/MainDataSource</res-ref-name>
-        <resource-name>jdbc/MainDataSource</resource-name>
-      </resource-ref>
-    </entity>
-    <entity>
-      <ejb-name>FixedAsset</ejb-name>
-      <jndi-name>org.ofbiz.commonapp.fixedasset.fixedasset.FixedAssetHome</jndi-name>
-      <configuration-name>Standard CMP EntityBean</configuration-name>
-      <resource-ref>
-        <res-ref-name>jdbc/MainDataSource</res-ref-name>
-        <resource-name>jdbc/MainDataSource</resource-name>
-      </resource-ref>
-    </entity>
-    <entity>
-      <ejb-name>FixedAssetAttribute</ejb-name>
-      <jndi-name>org.ofbiz.commonapp.fixedasset.fixedasset.FixedAssetAttributeHome</jndi-name>
-      <configuration-name>Standard CMP EntityBean</configuration-name>
-      <resource-ref>
-        <res-ref-name>jdbc/MainDataSource</res-ref-name>
-        <resource-name>jdbc/MainDataSource</resource-name>
-      </resource-ref>
-    </entity>
--->
   </enterprise-beans>
 </jboss>
 
