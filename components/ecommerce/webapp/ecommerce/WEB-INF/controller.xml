@@ -867,6 +867,15 @@
         <response name="error" type="view" value="profilesurvey"/>
     </request-map>
 
+    <request-map uri="messagelist">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="messagelist"/>
+    </request-map>
+    <request-map uri="readmessage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="messagedetail"/>
+    </request-map>
+
     <request-map uri="contactus">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="contactus"/>
@@ -1026,7 +1035,9 @@
     <view-map name="giftcardbalance" type="jpublish" page="/customer/giftcardbalance.ftl"/>
     <view-map name="giftcardlink" type="jpublish" page="/customer/giftcardlink.ftl"/>
     <view-map name="profilesurvey" type="jpublish" page="/customer/customersurvey.ftl"/>
-    
+    <view-map name="messagelist" type="jpublish" page="/customer/messagelist.ftl"/>
+    <view-map name="messagedetail" type="jpublish" page="/customer/messagedetail.ftl"/>
+
     <view-map name="defaultcontent" type="jpublish" page="/content/defaultcontent.ftl"/>
 
     <view-map name="showforum" type="jpublish" page="/forum/showforum.ftl"/>
