@@ -36,61 +36,71 @@ import org.ofbiz.core.workflow.impl.*;
  *@version    1.0
  */
 public class WfFactory {
-  
-  
-  /** Creates a new {@link WfActivity} instance.
-   * @throws WfException
-   * @return An instance of the WfActivify Interface
-   */
-  public static WfActivity newWfActivity(GenericValue value) {
-      return new WfActivityImpl(value);      
-  }
-  
-  
-  /** Creates a new {@link WfAssignment} instance.
-   * @throws WfException
-   * @return An instance of the WfAssignment Interface
-   */
-  public static WfAssignment newWfAssignment(WfActivity activity, WfResource resource) {
-      return new WfAssignmentImpl(activity,resource);
-  }
-  
-  
-  /** Creates a new {@link WfProcess} instance.
-   * @throws WfException
-   * @return An instance of the WfProcess Interface.
-   */
-  public static WfProcess newWfProcess(GenericValue value) {
-      return new WfProcessImpl(value);      
-  }
-  
-  
-  /** Creates a new {@link WfProcessMgr} instance.
-   * @param name Initial value for attribute 'name'
-   * @param description Initial value for attribute 'description'
-   * @param category Initial value for attribute 'category'
-   * @param version Initial value for attribute 'category'
-   * @throws WfException
-   * @return An instance of the WfProcessMgr Interface.
-   */
-  public static WfProcessMgr newWfProcessMgr(String name, String description,
-                                             String category, String version)  {
-      return new WfProcessMgrImpl(name, description, category, version);
-  }
-  
-  /** Creates a new {@link WfRequester} instance.
-   * @throws WfException
-   * @return An instance of the WfRequester Interface.
-   */
-  public static WfRequester newWfRequester()  {
-      return new WfRequesterImpl();
-  }
-  
-  /** Creates a new {@link WfResource} instance.
-   * @throws WfException
-   * @return An instance of the WfResource Interface.
-   */
-  public static WfResource newWfResource(GenericValue value) {
-      return new WfResourceImpl(value);
-  }
+    
+    // A cache of WfProcessMgr implementations
+    private static Map managers = new HashMap();
+    
+    /** Creates a new {@link WfActivity} instance.
+     * @throws WfException
+     * @return An instance of the WfActivify Interface
+     */
+    public static WfActivity newWfActivity(GenericValue value) {
+        return new WfActivityImpl(value);
+    }
+    
+    
+    /** Creates a new {@link WfAssignment} instance.
+     * @throws WfException
+     * @return An instance of the WfAssignment Interface
+     */
+    public static WfAssignment newWfAssignment(WfActivity activity, WfResource resource) {
+        return new WfAssignmentImpl(activity,resource);
+    }
+    
+    
+    /** Creates a new {@link WfProcess} instance.
+     * @throws WfException
+     * @return An instance of the WfProcess Interface.
+     */
+    public static WfProcess newWfProcess(GenericValue value) {
+        return new WfProcessImpl(value);
+    }
+    
+    
+    /** Creates a new {@link WfProcessMgr} instance.
+     * @param del The GenericDelegator to use for this manager.
+     * @param pid The process ID for the workflow.          
+     * @throws WfException
+     * @return An instance of the WfProcessMgr Interface.
+     */
+    public static WfProcessMgr newWfProcessMgr(GenericDelegator del, String pid) throws WfException {
+        StringBuffer buf = new StringBuffer();
+        buf.append(pid);
+        buf.append(":");
+        String name = buf.toString();
+        buf.append(del.getDelegatorName());
+        WfProcessMgr mgr = null;
+        if ( managers.containsKey(name) )
+            mgr = (WfProcessMgr) managers.get(name);
+        else
+            mgr = new WfProcessMgrImpl(del,pid);
+        managers.put(name,mgr);
+        return mgr;
+    }
+    
+    /** Creates a new {@link WfRequester} instance.
+     * @throws WfException
+     * @return An instance of the WfRequester Interface.
+     */
+    public static WfRequester newWfRequester()  {
+        return new WfRequesterImpl();
+    }
+    
+    /** Creates a new {@link WfResource} instance.
+     * @throws WfException
+     * @return An instance of the WfResource Interface.
+     */
+    public static WfResource newWfResource(GenericValue value) {
+        return new WfResourceImpl(value);
+    }
 }

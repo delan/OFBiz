@@ -75,7 +75,7 @@ public interface WfProcessMgr  {
    * @throws WfException
    * @throws TransitionNotAllowed
    */
-  public void setProcessMgrState(int newState) throws WfException, TransitionNotAllowed;
+  public void setProcessMgrState(String newState) throws WfException, TransitionNotAllowed;
   
   /**
    * @throws WfException
