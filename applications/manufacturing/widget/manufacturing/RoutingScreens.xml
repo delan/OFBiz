@@ -259,15 +259,27 @@
                 <set field="tabButtonItem" value="routingProductLink"/>
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="routing"/>
-
-                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/routing/EditRoutingProductLink.bsh"/>
+                
+                <set field="statusId" value="ROU_PROD_TEMPLATE"/>
+                <set field="workEffortId" from-field="parameters.workEffortId"/>
+                <!--<entity-one entity-name="Agreement" value-name="agreement" auto-field-map="true"/>-->
+                <entity-and entity-name="WorkEffortGoodStandard" list-name="allRoutingProductLinks">
+                    <field-map env-name="workEffortId" field-name="workEffortId"/>
+                    <field-map env-name="statusId" field-name="statusId"/>
+                </entity-and>
+                <entity-one entity-name="WorkEffortGoodStandard" value-name="routingProductLink" auto-field-map="true"/>
+                <!--<script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/routing/EditRoutingProductLink.bsh"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonRoutingDecorator">
                     <decorator-section name="body">
+                        <!--
                         <platform-specific>
                             <html><html-template location="component://manufacturing/webapp/manufacturing/routing/EditRoutingProductLink.ftl"/></html>
                         </platform-specific>
+                        -->
+                        <include-form name="EditRoutingProductLink" location="component://manufacturing/webapp/manufacturing/routing/RoutingTaskForms.xml"/>
+                        <include-form name="ListRoutingProductLink" location="component://manufacturing/webapp/manufacturing/routing/RoutingTaskForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

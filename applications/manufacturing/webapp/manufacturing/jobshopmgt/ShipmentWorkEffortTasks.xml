@@ -160,23 +160,6 @@
 					</textElement>
 				<text><![CDATA[OPERATION RUN FOR SHIPMENT:]]></text>
 				</staticText>
-				<image  scaleImage="FillFrame" vAlign="Top" hAlign="Left" isUsingCache="false" evaluationTime="Now" hyperlinkType="None">					<reportElement
-						mode="Opaque"
-						x="2"
-						y="3"
-						width="336"
-						height="60"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="element-32"
-						stretchType="NoStretch"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
-					<imageExpression class="java.lang.String"><![CDATA["C:\\Programmi\\ofbiz\\ofbiz_head\\components\\images\\webapp\\images\\ofbiz_logo.jpg"]]></imageExpression>				</image>
 				<staticText>
 					<reportElement
 						mode="Opaque"

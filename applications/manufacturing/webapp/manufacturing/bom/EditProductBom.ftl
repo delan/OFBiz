@@ -41,8 +41,8 @@ function lookupBom() {
 
     <div class="head1">${uiLabelMap.ManufacturingBillOfMaterials} <span class="head2"> <#if product?exists>${(product.internalName)?if_exists}</#if>[ID:${productId?if_exists}]</span></div>
     <#if product?has_content>
-        <a href="<@ofbizUrl>/findBom</@ofbizUrl>?productId=${productId}&partBomTypeId=${productAssocTypeId}" class="buttontext">[${uiLabelMap.ManufacturingBillOfMaterials}]</a>
-        <a href="<@ofbizUrl>/EditRoutingProductLink?byProduct=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingProductRoutings}]</a></span>
+        <a href="<@ofbizUrl>/BomSimulation</@ofbizUrl>?productId=${productId}&bomType=${productAssocTypeId}" class="buttontext">[${uiLabelMap.ManufacturingBillOfMaterials}]</a>
+        <!--<a href="<@ofbizUrl>/EditRoutingProductLink?byProduct=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingProductRoutings}]</a></span>-->
     </#if>
 
     <br>
@@ -73,7 +73,7 @@ function lookupBom() {
             <td>&nbsp;</td>
             <td>
             <input type="text" class="inputBox" name="productId" size="20" maxlength="40" value="${productId?if_exists}">
-            <a href="javascript:call_fieldlookup(document.searchform.productId,'<@ofbizUrl>/LookupProduct</@ofbizUrl>', 'none',640,460);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
+            <a href="javascript:call_fieldlookup2(document.searchform.productId, 'LookupProduct');"><img src="/content/images/fieldlookup.gif" width="16" height="16" border="0" alt="Lookup"></a>
             <span class='tabletext'><a href="javascript:document.searchform.submit();" class="buttontext">${uiLabelMap.ManufacturingShowBOMAssocs}</a></span>
             </td>
         </tr>
@@ -85,7 +85,7 @@ function lookupBom() {
             <td>&nbsp;</td>
             <td>
             <input type="text" class="inputBox" name="copyToProductId" size="20" maxlength="40" value="">
-            <a href="javascript:call_fieldlookup(document.searchform.copyToProductId,'<@ofbizUrl>/LookupProduct</@ofbizUrl>', 'none',640,460);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
+            <a href="javascript:call_fieldlookup2(document.searchform.copyToProductId, 'LookupProduct');"><img src="/content/images/fieldlookup.gif" width="16" height="16" border="0" alt="Lookup"></a>
             <span class='tabletext'><a href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="buttontext">${uiLabelMap.ManufacturingCopyBOMAssocs}</a></span>
             </td>
         </tr>
@@ -123,8 +123,7 @@ function lookupBom() {
             <td>&nbsp;</td>
             <td>
                 <input type="text" class="inputBox" name="productId" size="20" maxlength="40" value="${productId?if_exists}">
-                <a href="javascript:call_fieldlookup(document.editProductAssocForm.productId,'<@ofbizUrl>/LookupProduct</@ofbizUrl>', 'none',640,460);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
-                
+                <a href="javascript:call_fieldlookup2(document.editProductAssocForm.productId, 'LookupProduct');"><img src="/content/images/fieldlookup.gif" width="16" height="16" border="0" alt="Lookup"></a>
             </td>
             </tr>
             <tr>
@@ -132,7 +131,7 @@ function lookupBom() {
             <td>&nbsp;</td>
             <td>
                 <input type="text" class="inputBox" name="productIdTo" size="20" maxlength="40" value="${productIdTo?if_exists}">
-                <a href="javascript:call_fieldlookup(document.editProductAssocForm.productIdTo,'<@ofbizUrl>/LookupProduct</@ofbizUrl>', 'none',640,460);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
+                <a href="javascript:call_fieldlookup2(document.editProductAssocForm.productIdTo, 'LookupProduct');"><img src="/content/images/fieldlookup.gif" width="16" height="16" border="0" alt="Lookup"></a>
             </td>
             </tr>
             <tr>

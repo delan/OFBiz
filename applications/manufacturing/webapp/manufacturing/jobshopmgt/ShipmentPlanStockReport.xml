@@ -388,23 +388,6 @@
 		</title>
 		<pageHeader>
 			<band height="41"  isSplitAllowed="true" >
-				<image  scaleImage="FillFrame" vAlign="Top" hAlign="Left" isUsingCache="false" evaluationTime="Now" hyperlinkType="None">					<reportElement
-						mode="Opaque"
-						x="0"
-						y="2"
-						width="300"
-						height="39"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="element-20"
-						stretchType="NoStretch"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
-					<imageExpression class="java.lang.String"><![CDATA["C:\\Programmi\\ofbiz\\ofbiz_head\\components\\images\\webapp\\images\\ofbiz_logo.jpg"]]></imageExpression>				</image>
 				<staticText>
 					<reportElement
 						mode="Opaque"
