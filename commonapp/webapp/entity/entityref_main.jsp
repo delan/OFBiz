@@ -149,6 +149,8 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
         ufields.add(field.name);
       if(field.colName.length() > 30)
         warningString = warningString + "<li><div style=\"color: red;\">[FieldNameGT30]</div> Column name <b>" + field.colName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is longer than 30 characters.</li>";
+      if(field.colName.length() == 0)
+        warningString = warningString + "<li><div style=\"color: red;\">[FieldNameGT30]</div> Column name for field name <b>\"" + field.name + "\"</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is empty (zero length).</li>";
       if(reservedWords.contains(field.colName.toUpperCase()))
         warningString = warningString + "<li><div style=\"color: red;\">[FieldNameRW]</div> Column name <b>" + field.colName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is a reserved word.</li>";
     }
@@ -194,15 +196,12 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
         relations.add(relation.title + relation.relEntityName);
 
       ModelEntity relatedEntity = reader.getModelEntity(relation.relEntityName);
-      if(relatedEntity != null)
-      {
+      if(relatedEntity != null) {
         //if relation is of type one, make sure keyMaps match the PK of the relatedEntity
-        if(relation.type.equalsIgnoreCase("one"))
-        {
+        if(relation.type.equalsIgnoreCase("one")) {
           if(relatedEntity.pks.size() != relation.keyMaps.size())
             warningString = warningString + "<li><div style=\"color: red;\">[RelatedOneKeyMapsWrongSize]</div> The number of primary keys (" + relatedEntity.pks.size() + ") of related entity <b>" + relation.relEntityName + "</b> does not match the number of keymaps (" + relation.keyMaps.size() + ") for relation of type one \"" +  relation.title + relation.relEntityName + "\" of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
-          for(int repks=0; repks<relatedEntity.pks.size(); repks++)
-          {
+          for(int repks=0; repks<relatedEntity.pks.size(); repks++) {
             ModelField pk = (ModelField)relatedEntity.pks.get(repks);
             if(relation.findKeyMapByRelated(pk.name) == null)
               warningString = warningString + "<li><div style=\"color: red;\">[RelationOneRelatedPrimaryKeyMissing]</div> The primary key \"<b>" + pk.name + "</b>\" of related entity <b>" + relation.relEntityName + "</b> is missing in the keymaps for relation of type one <b>" +  relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
@@ -212,16 +211,22 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 
       //make sure all keyMap 'fieldName's match fields of this entity
       //make sure all keyMap 'relFieldName's match fields of the relatedEntity
-      for(int rkm=0; rkm<relation.keyMaps.size(); rkm++)
-      {
+      for(int rkm=0; rkm<relation.keyMaps.size(); rkm++) {
         ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(rkm);
-        if(relatedEntity != null)
-        {
-          if(relatedEntity.getField(keyMap.relFieldName) == null)
-            warningString = warningString + "<li><div style=\"color: red;\">[RelationRelatedFieldNotFound]</div> The field \"<b>" + keyMap.relFieldName + "</b>\" of related entity <b>" + relation.relEntityName + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
+        
+        ModelField field = entity.getField(keyMap.fieldName);
+        ModelField rfield = null;
+        if(relatedEntity != null) {
+          rfield = relatedEntity.getField(keyMap.relFieldName);
         }
-        if(entity.getField(keyMap.fieldName) == null)
+        if(rfield == null)
+          warningString = warningString + "<li><div style=\"color: red;\">[RelationRelatedFieldNotFound]</div> The field \"<b>" + keyMap.relFieldName + "</b>\" of related entity <b>" + relation.relEntityName + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
+        if(field == null)
           warningString = warningString + "<li><div style=\"color: red;\">[RelationFieldNotFound]</div> The field <b>" + keyMap.fieldName + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
+        if(field != null && rfield != null) {
+          if(!field.type.equals(rfield.type) && !field.type.startsWith(rfield.type) && !rfield.type.startsWith(field.type))
+            warningString = warningString + "<li><div style=\"color: red;\">[RelationFieldTypesDifferent]</div> The field type (" + field.type + ") of <b>" + field.name + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is not the same as field type (" + rfield.type + ") of <b>" + rfield.name + "</b> of entity <A href=\"#" + relation.relEntityName + "\">" + relation.relEntityName + "</A> for relation <b>" +  relation.title + relation.relEntityName + "</b>.</li>";
+        }
       }
     }
 %>
