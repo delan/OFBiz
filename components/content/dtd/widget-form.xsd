@@ -112,6 +112,16 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="target-type" default="intra-app">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="intra-app"/>
+                    <xs:enumeration value="inter-app"/>
+                    <xs:enumeration value="content"/>
+                    <xs:enumeration value="plain"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="alt-target">
         <xs:complexType>
