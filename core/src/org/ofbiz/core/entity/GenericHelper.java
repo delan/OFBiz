@@ -51,6 +51,11 @@ public interface GenericHelper
    *@return The GenericValue corresponding to the primaryKey
    */
   public GenericValue findByPrimaryKey(GenericPK primaryKey);
+  /** Find a CACHED Generic Entity by its Primary Key
+   *@param primaryKey The primary key to find by.
+   *@return The GenericValue corresponding to the primaryKey
+   */
+  public GenericValue findByPrimaryKeyCache(GenericPK primaryKey);
 
   /** Remove a Generic Entity corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
@@ -63,6 +68,12 @@ public interface GenericHelper
    *@return    Collection containing all Generic entities
    */
   public Collection findAll(String entityName, List orderBy);
+  /** Finds all Generic entities, looking first in the cache; uses orderBy for lookup, but only keys results on the entityName and fields
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
+   *@return    Collection containing all Generic entities
+   */
+  public Collection findAllCache(String entityName, List orderBy);
 
   /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
    *@param entityName The Name of the Entity as defined in the entity XML file
@@ -71,6 +82,13 @@ public interface GenericHelper
    *@return Collection of GenericValue instances that match the query
    */
   public Collection findByAnd(String entityName, Map fields, List orderBy);
+  /** Finds Generic Entity records by all of the specified fields (ie: combined using AND), looking first in the cache; uses orderBy for lookup, but only keys results on the entityName and fields
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@param fields The fields of the named entity to query by with their corresponging values
+   *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
+   *@return Collection of GenericValue instances that match the query
+   */
+  public Collection findByAndCache(String entityName, Map fields, List orderBy);
   
   /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
    *@param entityName The Name of the Entity as defined in the entity XML file

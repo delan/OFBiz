@@ -32,12 +32,18 @@ import org.ofbiz.core.util.*;
  *@created    Tue Aug 07 01:10:32 MDT 2001
  *@version    1.0
  */
-public class GenericHelperEJB implements GenericHelper
+public class GenericHelperEJB extends GenericHelperCache
 {
   /** A variable to cache the Home object for the Generic EJB */
   private GenericHome genericHome;
 
-  public GenericHelperEJB(String serverName) { getGenericHome(serverName); }
+  public GenericHelperEJB(String serverName) 
+  { 
+    getGenericHome(serverName);
+    primaryKeyCache = new UtilCache("FindByPrimaryKeyEJB-" + serverName);
+    allCache = new UtilCache("FindAllEJB-" + serverName);
+    andCache = new UtilCache("FindByAndEJB-" + serverName);
+  }
   
   /** Initializes the genericHome, from a JNDI lookup */
   public void getGenericHome(String serverName)
@@ -262,7 +268,11 @@ public class GenericHelperEJB implements GenericHelper
     try { remote = (GenericRemote)MyNarrow.narrow(genericHome.findByPrimaryKey(value.getPrimaryKey()), GenericRemote.class); }
     catch(ObjectNotFoundException onfe) { }
     catch(Exception fe) { Debug.logError(fe); }
-    try { collection = remote.getRelated(relationName); }
+    try 
+    { 
+      Collection remoteCol = remote.getRelated(relationName);
+      collection = remoteToValue(remoteCol);
+    }
     catch(java.rmi.RemoteException re) { Debug.logError(re); }
     return collection;
   }  
@@ -279,6 +289,5 @@ public class GenericHelperEJB implements GenericHelper
     catch(Exception fe) { Debug.logError(fe); }
     try { remote.removeRelated(relationName); }
     catch(java.rmi.RemoteException re) { Debug.logError(re); }
-  }
-  
+  }  
 }

@@ -35,6 +35,8 @@ public class GenericValue extends GenericEntity
 {
   /** Reference to an instance of GenericHelper used to do some basic operations on this entity value. If null various methods in this class will fail. This is automatically set by the GenericHelper implementations for all GenericValue objects instantiated through them. You may set this manually for objects you instantiate manually, but it is optional. */
   public transient GenericHelper helper = null;
+  /** Hashtable to cache various related entity collections */
+  public transient Map relatedCache = null;
   
   /** Creates new GenericValue */
   public GenericValue(String entityName) { super(entityName); }
@@ -53,6 +55,22 @@ public class GenericValue extends GenericEntity
    *@return Collection of GenericValue instances as specified in the relation definition
    */
   public Collection getRelated(String relationName) { return helper.getRelated(relationName, this); }
+  /** Get the named Related Entity for the GenericValue from the persistent store, looking first in a cache associated with this entity which is destroyed with this ValueObject when no longer used.
+   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@return Collection of GenericValue instances as specified in the relation definition
+   */
+  public Collection getRelatedCache(String relationName) 
+  { 
+    if(relatedCache == null) relatedCache = new Hashtable();
+    Collection col = (Collection)relatedCache.get(relationName);
+    if(col == null)
+    {
+      col = getRelated(relationName);
+      relatedCache.put(relationName, col);
+    }
+    return col;
+  }
+
   /** Remove the named Related Entity for the GenericValue from the persistent store
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
    */
