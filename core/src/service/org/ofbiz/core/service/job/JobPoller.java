@@ -66,9 +66,11 @@ public class JobPoller implements Runnable {
         this.pool = createThreadPool();
 
         // start the thread
-        thread = new Thread(this, this.toString());
-        thread.setDaemon(false);
-        thread.start();
+        if (pollEnabled()) {
+            thread = new Thread(this, this.toString());
+            thread.setDaemon(false);
+            thread.start();
+        }
     }
 
     public synchronized void run() {
@@ -163,7 +165,7 @@ public class JobPoller implements Runnable {
         try {
             max = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "max-threads"));
         } catch (NumberFormatException nfe) {
-           Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
+            Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
         }
         return max;
     }
@@ -173,7 +175,7 @@ public class JobPoller implements Runnable {
         try {
             min = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "min-threads"));
         } catch (NumberFormatException nfe) {
-           Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
+            Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
         }
         return min;
     }
@@ -183,7 +185,7 @@ public class JobPoller implements Runnable {
         try {
             jobs = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "jobs"));
         } catch (NumberFormatException nfe) {
-           Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
+            Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
         }
         return jobs;
     }
@@ -193,7 +195,7 @@ public class JobPoller implements Runnable {
         try {
             wait = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "wait-millis"));
         } catch (NumberFormatException nfe) {
-           Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
+            Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
         }
         return wait;
     }
@@ -203,9 +205,17 @@ public class JobPoller implements Runnable {
         try {
             poll = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "poll-db-millis"));
         } catch (NumberFormatException nfe) {
-           Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
+            Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
         }
         return poll;
     }
+
+    private boolean pollEnabled() {
+        String enabled = ServiceConfigUtil.getElementAttr("thread-pool", "poll-enabled");
+        if (enabled.equalsIgnoreCase("false"))
+            return false;
+        return true;
+    }
+
 }
 
