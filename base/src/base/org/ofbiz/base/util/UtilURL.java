@@ -1,5 +1,5 @@
 /*
- * $Id: UtilURL.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: UtilURL.java,v 1.2 2003/11/20 21:58:20 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import java.net.URL;
  * URL Utilities - Simple Class for flexibly working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class UtilURL {
@@ -79,6 +79,7 @@ public class UtilURL {
         if (url == null) url = ClassLoader.getSystemResource(resourceName + ".properties");
 
         if (url == null) url = fromFilename(resourceName);
+        if (url == null) url = fromOfbizHomePath(resourceName);
         if (url == null) url = fromUrlString(resourceName);
 
         // Debug.log("[fromResource] got URL " + url + " from resourceName " + resourceName);
@@ -107,5 +108,15 @@ public class UtilURL {
         }
         
         return url;
+    }
+
+    public static URL fromOfbizHomePath(String filename) {
+        String ofbizHome = System.getProperty("ofbiz.home");
+        String newFilename = ofbizHome;
+        if (!newFilename.endsWith("/") && !newFilename.startsWith("/")) {
+            newFilename = newFilename + "/";
+        }
+        newFilename = newFilename + filename;
+        return fromFilename(newFilename);
     }
 }
