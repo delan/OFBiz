@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
+ *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -44,16 +44,39 @@ public class ProductServices {
      */
     public static Map prodFindAllVariants(DispatchContext dctx, Map context) {
         // * String productId      -- Parent (virtual) product ID
-        return new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        Map result = new HashMap();
+        String productId = (String) context.get("productId");
+
+        return result;
     }
 
     /**
      * Finds a specific product or products which contain the selected features.
      */
     public static Map prodFindSelectedVariant(DispatchContext dctx. Map context) {
-        // * String productId      -- Parent (Virtual) product ID
+        // * String productId      -- Parent (virtual) product ID
         // * Map selectedFeatures  -- Selected features
-        return new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        Map result = new HashMap();
+        String productId = (String) context.get("productId");
+        Map selectedFeatures = (Map) context.get("selectedFeatures");
+
+        return result;
+    }
+
+    /**
+     * Finds product variants based on a product ID and a distinct feature.
+     */
+    public static Map prodFindDistinctVariants(DispatchContext dctx, Map context) {
+        // * String productId      -- Parent (virtual) product ID
+        // * String feature        -- Distinct feature name
+        GenericDelegator delegator = dctx.getDelegator();
+        Map result = new HashMap();
+        String productId = (String) context.get("productId");
+        String feature = (String) context.get("feature");
+
+        return result;
     }
 
     /**
