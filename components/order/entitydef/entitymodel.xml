@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  */
 -->
 
@@ -1691,7 +1691,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="idCode" type="short-varchar"></field>
       <field name="taxable" type="short-varchar"></field>
-      <field name="condition" type="long-varchar"></field>
+      <field name="shipCond" type="long-varchar"></field>
       <prim-key field="stateCode"/>
       <prim-key field="city"/>
       <prim-key field="county"/>
