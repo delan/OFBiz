@@ -212,6 +212,7 @@
                   <%StatusWorker.getStatusValidChangeToDetails(pageContext, "taskStatusDetails", statusId);%>
                   <form action="<ofbiz:url>/updateactivityassign</ofbiz:url>" method=POST style='margin: 0;'>
                   <table border='0' cellpadding='2' cellspacing='0'>
+                    <!-- <ofbiz:inputvalue field="workEffortId" entityAttr="workEffortPartyAssignment" fullattrs="false"/> -->
                     <input type='hidden' <ofbiz:inputvalue field="workEffortId" entityAttr="workEffortPartyAssignment" fullattrs="true"/>>
                     <input type='hidden' <ofbiz:inputvalue field="partyId" entityAttr="workEffortPartyAssignment" fullattrs="true"/>>
                     <input type='hidden' <ofbiz:inputvalue field="roleTypeId" entityAttr="workEffortPartyAssignment" fullattrs="true"/>>
