@@ -1,5 +1,5 @@
 /*
- * $Id: XuiSession.java,v 1.1 2004/07/10 19:55:06 ajzeneski Exp $
+ * $Id: XuiSession.java,v 1.2 2004/07/19 02:43:03 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.base.util.Debug;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class XuiSession {
@@ -50,14 +50,16 @@ public class XuiSession {
     protected GenericDelegator delegator = null;
     protected LocalDispatcher dispatcher = null;
     protected GenericValue userLogin = null;
+    protected XuiContainer container = null;
     protected Map attributes = new HashMap();
     protected String id = null;
 
 
-    public XuiSession(String id, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public XuiSession(String id, GenericDelegator delegator, LocalDispatcher dispatcher, XuiContainer container) {
         this.id = id;
         this.delegator = delegator;
         this.dispatcher = dispatcher;
+        this.container = container;
         Debug.logInfo("Created XuiSession [" + id + "]", module);
     }
 

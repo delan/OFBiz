@@ -1,5 +1,5 @@
 /*
- * $Id: XuiContainer.java,v 1.4 2004/07/13 16:36:28 ajzeneski Exp $
+ * $Id: XuiContainer.java,v 1.5 2004/07/19 02:43:02 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -28,13 +28,13 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import net.xoetrope.swing.XApplet;
 
 import org.ofbiz.base.container.Container;
 import org.ofbiz.base.container.ContainerConfig;
 import org.ofbiz.base.container.ContainerException;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.GenericDispatcher;
 import org.ofbiz.service.GenericServiceException;
@@ -43,25 +43,30 @@ import org.ofbiz.entity.GenericDelegator;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
-public class XuiContainer implements Container {
+public abstract class XuiContainer implements Container {
 
     public static final String module = XuiContainer.class.getName();
     protected static Map sessions = new HashMap();
 
-    protected XuiScreen initial = null;
-    protected String startup = null;
+    protected XuiScreen initialScreen = null;
+    protected XuiSession session = null;
+    protected String startupFile = null;
 
     public void init(String[] args) throws ContainerException {
     }
 
     public boolean start(String configFileLocation) throws ContainerException {
+        // make sure the subclass sets the config name
+        if (this.getContainerConfigName() == null) {
+            throw new ContainerException("Unknown container config name");
+        }
         // get the container config
-        ContainerConfig.Container cc = ContainerConfig.getContainer("xui-container", configFileLocation);
+        ContainerConfig.Container cc = ContainerConfig.getContainer(this.getContainerConfigName(), configFileLocation);
         if (cc == null) {
-            throw new ContainerException("No xui-container configuration found in container config!");
+            throw new ContainerException("No " + this.getContainerConfigName() + " configuration found in container config!");
         }
 
         // get the delegator
@@ -79,12 +84,12 @@ public class XuiContainer implements Container {
 
         // get the pre-defined session ID
         String xuiSessionId = ContainerConfig.getPropertyValue(cc, "xui-session-id", null);
-        if (xuiSessionId == null) {
-            throw new ContainerException("No xui-session-id value set in xui-container!");
+        if (UtilValidate.isEmpty(xuiSessionId)) {
+            throw new ContainerException("No xui-session-id value set in " + this.getContainerConfigName() + "!");
         }
 
         String laf = ContainerConfig.getPropertyValue(cc, "look-and-feel", null);
-        if (laf != null) {
+        if (UtilValidate.isNotEmpty(laf)) {
             try {
                 UIManager.setLookAndFeel(laf);
             } catch (Exception e) {
@@ -93,19 +98,43 @@ public class XuiContainer implements Container {
         }
 
         // create and cache the session
-        XuiSession session = new XuiSession(xuiSessionId, delegator, dispatcher);
+        session = new XuiSession(xuiSessionId, delegator, dispatcher, this);
         sessions.put(xuiSessionId, session);
 
+        // configure the rest of the container
+        this.configure(cc);
+
         // load the XUI and render the initial screen
-        this.startup = ContainerConfig.getPropertyValue(cc, "startup-file", "xui.properties");
-        this.initial = new XuiScreen();
-        this.initial.setup(this.startup);
+        if (this.startupFile == null) {
+            this.startupFile = ContainerConfig.getPropertyValue(cc, "startup-file", "xui.properties");
+        }
+        this.initialScreen = new XuiScreen();
+        this.initialScreen.setup(this.startupFile);
 
         return true;
     }
 
     public void stop() throws ContainerException {
     }
+
+    public XuiSession getSession() {
+        return this.session;
+    }
+
+    /**
+     * @return String the name of the container name property
+     */
+    public abstract String getContainerConfigName();
+
+    /**
+     * Implementation specific configuration from the container config
+     * This method is called after the initial XUI configuration, after
+     * the session creation; before the initial screen is rendered.
+     *
+     * @param cc The container config object used to obtain the information
+     * @throws ContainerException
+     */
+    public abstract void configure(ContainerConfig.Container cc) throws ContainerException;
 
     public static XuiSession getSession(String sessionId) {
         return (XuiSession) sessions.get(sessionId);
