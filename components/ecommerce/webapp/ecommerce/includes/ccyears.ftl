@@ -20,11 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
- *@since      2.0
+ *@version    $Revision: 1.1 $
+ *@since      3.0
 -->
-<#assign countries = Static["org.ofbiz.common.CommonWorkers"].getCountryList(delegator)>
-<#list countries as country>
-    <option value='${country.geoId}'>${country.geoName?default(country.geoId)}</option>
-</#list>
-
+<option></option>
+<option value="2003">2003</option>
+<option value="2004">2004</option>
+<option value="2005">2005</option>
+<option value="2006">2006</option>
+<option value="2007">2007</option>
+<option value="2008">2008</option>
+<option value="2009">2009</option>

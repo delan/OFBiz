@@ -20,11 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
- *@since      2.0
+ *@version    $Revision: 1.1 $
+ *@since      3.0
 -->
-<#assign countries = Static["org.ofbiz.common.CommonWorkers"].getCountryList(delegator)>
-<#list countries as country>
-    <option value='${country.geoId}'>${country.geoName?default(country.geoId)}</option>
-</#list>
-
+<option value="Visa">Visa</option>
+<option value='MasterCard'>Master Card</option>
+<option value='AmericanExpress'>American Express</option>
+<option value='DinersClub'>Diners Club</option>
+<option value="Discover">Discover</option>
+<option value="EnRoute">EnRoute</option>
+<option value="JCB">JCB</option>
