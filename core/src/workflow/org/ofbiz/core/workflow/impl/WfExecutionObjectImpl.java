@@ -187,6 +187,8 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
 
         if (stateStr == null)
             throw new WfException("Stored state is not a valid type.");
+            
+        if (Debug.verboseOn()) Debug.logVerbose("Current state: " + stateStr, module);            
         return stateStr;
     }
 
@@ -402,14 +404,17 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @see org.ofbiz.core.workflow.WfExecutionObject#resume()
      */
     public void resume() throws WfException, CannotResume, NotRunning, NotSuspended {
-        if (state().startsWith("open.not_running")) {
-            if (!state().equals("open.not_running.suspended"))
-                throw new NotSuspended();
-            else
+        if (!state().equals("open.not_running.suspended")) {
+            if (state().equals("open.not_running.not_started")) {
                 throw new NotRunning();
-        }
-
-        changeState("open.running");
+            } else if (state().startsWith("closed")) {
+                throw new CannotResume();
+            } else {
+                throw new NotSuspended();
+            }
+        } else {
+            changeState("open.running");
+        }                                       
     }
 
     /**
