@@ -409,4 +409,37 @@
 
         <field-to-result field-name="quantityNotReserved" map-name="parameters"/>
     </simple-method>
+
+    <simple-method method-name="cancelOrderInventoryReservation" short-description="Cancel Inventory Reservation for an Order">
+        <!--
+            Iterates through each OrderItemInventoryRes on each OrderItem for the order
+            with the given orderId and cancels the reservation by changing the status
+            of the OrderItemInventoryRes and incrementing the corresponding non-serialized
+            inventoryItem's availableToPromise quantity, or setting the status of the 
+            corresponding serialized inventoryItem to available.
+        -->
+        <field-to-field field-name="orderId" map-name="parameters" to-map-name="oiirListLookupMap"/>
+        <find-by-and entity-name="OrderItemInventoryRes" map-name="orderListLookupMap" list-name="oiirList" use-cache="false"/>
+        <iterate entry-name="orderItemInventoryRes" list-name="oiirList">
+            <if-compare value="OIIR_RESERVED" operator="equals" field-name="statusId" map-name="orderItemInventoryRes">
+                <field-to-field field-name="inventoryItemId" map-name="orderItemInventoryRes" to-map-name="invItemLookupMap"/>
+                <find-by-primary-key entity-name="InventoryItem" map-name="invItemLookupMap" value-name="inventoryItem"/>
+        
+                <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
+                    <string-to-field string="INV_AVAILABLE" field-name="statusId" map-name="inventoryItem"/>
+                </if-compare>
+                <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
+                    <calculate field-name="availableToPromise" map-name="inventoryItem">
+                        <calcop operator="add" field-name="availableToPromise" map-name="inventoryItem">
+                            <calcop operator="get" field-name="quantity" map-name="orderItemInventoryRes"/>
+                        </calcop>
+                    </calculate>
+                </if-compare>
+                <store-value value-name="inventoryItem"/>
+                
+                <string-to-field string="OIIR_CANCELLED" field-name="statusId" map-name="orderItemInventoryRes"/>
+                <store-value value-name="orderItemInventoryRes"/>
+            </if-compare>
+        </iterate>
+    </simple-method>
 </simple-methods>
