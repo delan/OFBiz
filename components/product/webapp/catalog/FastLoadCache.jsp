@@ -25,7 +25,7 @@
 --%>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.base.util.*, org.ofbiz.entity.*" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.entity.*, org.ofbiz.entity.util.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
