@@ -21,22 +21,22 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if requestAttributes.product?exists>
-<#-- variable setup -->
-<#assign product = requestAttributes.product>
-<#assign price = requestAttributes.priceMap>
-<#assign targetRequestName = "product">
-<#if requestAttributes.targetRequestName?has_content>
+  <#-- variable setup -->
+  <#assign product = requestAttributes.product>
+  <#assign price = requestAttributes.priceMap>
+  <#assign targetRequestName = "product">
+  <#if requestAttributes.targetRequestName?has_content>
     <#assign targetRequestName = requestAttributes.targetRequestName>
-</#if>
-<#assign productContentWrapper = requestAttributes.productContentWrapper>
-<#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL")?if_exists>
-<#if !smallImageUrl?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
-<#-- end variable setup -->
+  </#if>
+  <#assign productContentWrapper = requestAttributes.productContentWrapper>
+  <#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL")?if_exists>
+  <#if !smallImageUrl?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
+  <#-- end variable setup -->
 
   <table border="0" width="100%" cellpadding="0" cellspacing="0">
     <tr>

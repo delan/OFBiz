@@ -2,6 +2,6 @@
 <page>
     <template>main</template> 
     <property name="title">Order Summary - Thank you for your order!</property>
-    <property name="title.property">PageTitleOrderSummary</property>
+    <property name="title-property">PageTitleOrderSummary</property>
     <content-action name="/order/orderstatus.bsh"/>
 </page>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
  */
 
@@ -40,14 +40,18 @@ category = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("pr
 if (category != null) {
     if (category.get("detailTemplate") != null) 
         detailTemplate = category.getString("detailTemplate");
-    content = context.get("page");
-    content.setProperty("title", category.getString("description"));
+    pageContext = context.get("page");
+    if (pageContext instanceof Map) {
+        pageContext.put("title", category.getString("description"));
+    } else {
+        pageContext.setProperty("title", category.getString("description"));
+    }
     context.put("metaDescription", category.getString("description"));
     context.put("metaKeywords", category.getString("description") + ", " + catalogName);
     context.put("productCategory", category);
 }
 
-// check the catalog's template path and update
+// check the catalogs template path and update
 templatePathPrefix = CatalogWorker.getTemplatePathPrefix(request);
 if (templatePathPrefix != null) {
     detailTemplate = templatePathPrefix + detailTemplate;

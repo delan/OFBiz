@@ -2,7 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Edit EFT Account</property>
-    <property name="title.property">PageTitleEditEFTAccount</property>
+    <property name="title-property">PageTitleEditEFTAccount</property>
     <content-action name="/customer/editpaymentmethod.bsh"/>
 </page>
 

@@ -2,6 +2,6 @@
 <page>
     <template>main</template>    
     <property name="title">Edit Contact Mechanism</property>
-    <property name="title.property">PageTitleEditContactMechanism</property>
+    <property name="title-property">PageTitleEditContactMechanism</property>
     <content-action name="/customer/editcontactmech.bsh"/>
 </page>

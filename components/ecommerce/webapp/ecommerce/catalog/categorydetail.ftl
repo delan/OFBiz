@@ -20,16 +20,17 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
-${pages.get("/catalog/breadcrumbs.ftl")}
+<#if pages?exists>${pages.get("/catalog/breadcrumbs.ftl")}</#if>
+<#if screens?exists>${screens.render("component://ecommerce/widget/CatalogScreens.xml#breadcrumbs")}</#if>
 
 <#if productCategory?exists>
-<table border="0" width="100%" cellpadding="3">
+<table border="0" cellpadding="3">
   <tr>
     <td colspan="2">
       <div class="head1">
@@ -67,9 +68,9 @@ ${pages.get("/catalog/breadcrumbs.ftl")}
 </#if>
 
 <#if productCategoryMembers?exists && 0 < productCategoryMembers.size()>
-<table border="0" width="100%" cellpadding="2">
+<table border="0" cellpadding="2">
   <tr>
-    <td align=right>
+    <td align="right">
       <#-- Start Page Select Drop-Down -->
       <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
       <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
@@ -95,7 +96,7 @@ ${pages.get("/catalog/breadcrumbs.ftl")}
 </table>
 
 <center>
-  <table width='100%' border='0' cellpadding='0' cellspacing='0'>    
+  <table border='0' cellpadding='0' cellspacing='0'>    
     <#assign startIndex = viewSize * viewIndex>
     <#if highIndex < listSize>
       <#assign endIndex = highIndex - 1>
@@ -110,7 +111,8 @@ ${pages.get("/catalog/breadcrumbs.ftl")}
           ${setRequestAttribute("optProductId", productCategoryMember.productId)} 
           ${setRequestAttribute("productCategoryMember", productCategoryMember)} 
           ${setRequestAttribute("listIndex", productCategoryMember_index)}         
-          ${pages.get("/catalog/productsummary.ftl")}
+          <#if pages?exists>${pages.get("/catalog/productsummary.ftl")}</#if>
+          <#if screens?exists>${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}</#if>
         </td>
       </tr>
     </#list>
@@ -118,7 +120,7 @@ ${pages.get("/catalog/breadcrumbs.ftl")}
   </table>
 </center>
 
-<table border="0" width="100%" cellpadding="2">
+<table border="0" cellpadding="2">
   <tr>
     <td align=right>
       <#-- Start Page Select Drop-Down -->
@@ -146,7 +148,7 @@ ${pages.get("/catalog/breadcrumbs.ftl")}
 </table>
 
 <#else>
-<table border="0" width="100%" cellpadding="2">
+<table border="0" cellpadding="2">
   <tr>
     <td colspan="2"><hr class='sepbar'></td>
   </tr>
