@@ -21,16 +21,14 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.order.order;
-
 
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
-
 
 /**
  * Utility class for easily extracting important information from orders
@@ -39,13 +37,15 @@ import org.ofbiz.commonapp.common.*;
  * but order item adjustments ARE included in tax and shipping calcs unless they are 
  * tax or shipping adjustments or the includeInTax or includeInShipping are set to N.</p>
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author     Eric Pabst
- *@created    Sept 7, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     Eric Pabst 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class OrderReadHelper {
+    
+    public static final String module = OrderReadHelper.class.getName();
 
     protected GenericValue orderHeader = null;
     protected List orderItems = null;
@@ -67,7 +67,7 @@ public class OrderReadHelper {
             try {
                 orderItems = orderHeader.getRelated("OrderItem");
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
         }
         return (List) orderItems;
@@ -81,7 +81,7 @@ public class OrderReadHelper {
             try {
                 orderItemPriceInfos = delegator.findByAnd("OrderItemPriceInfo", UtilMisc.toMap("orderId", orderHeader.get("orderId")));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
         }
         String orderItemSeqId = orderItem.getString("orderItemSeqId");
@@ -97,7 +97,7 @@ public class OrderReadHelper {
             try {
                 orderItemInventoryReses = delegator.findByAnd("OrderItemInventoryRes", UtilMisc.toMap("orderId", orderHeader.get("orderId")));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
         }
         String orderItemSeqId = orderItem.getString("orderItemSeqId");
@@ -110,7 +110,7 @@ public class OrderReadHelper {
             try {
                 adjustments = orderHeader.getRelated("OrderAdjustment");
             } catch (GenericEntityException e) {
-                Debug.logError(e);
+                Debug.logError(e, module);
             }
             if (adjustments == null)
                 adjustments = new ArrayList();
@@ -123,7 +123,7 @@ public class OrderReadHelper {
             try {
                 paymentPrefs = orderHeader.getRelated("OrderPaymentPreference");
             } catch (GenericEntityException e) {
-                Debug.logError(e);
+                Debug.logError(e, module);
             }
         }
         return paymentPrefs;
@@ -134,7 +134,7 @@ public class OrderReadHelper {
             try {
                 orderStatuses = orderHeader.getRelated("OrderStatus");
             } catch (GenericEntityException e) {
-                Debug.logError(e);
+                Debug.logError(e, module);
             }
         }
         return (List) orderStatuses;
@@ -162,7 +162,7 @@ public class OrderReadHelper {
             }
             return "";
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         return "";
     }
@@ -182,7 +182,7 @@ public class OrderReadHelper {
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         return null;
     }
@@ -201,7 +201,7 @@ public class OrderReadHelper {
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         return null;
     }
@@ -211,7 +211,7 @@ public class OrderReadHelper {
         try {
             statusItem = orderHeader.getRelatedOneCache("StatusItem");
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         }
         if (statusItem != null) {
             return statusItem.getString("description");
@@ -239,7 +239,7 @@ public class OrderReadHelper {
                     orderStatusIdSet.add(orderStatus.getString("statusId"));
                 }
             } catch (GenericEntityException gee) {
-                Debug.logWarning(gee);
+                Debug.logWarning(gee, module);
             }
         }
         Iterator orderStatusIdIter = orderStatusIdSet.iterator();
@@ -268,7 +268,7 @@ public class OrderReadHelper {
                 return null;
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         return null;
     }
@@ -290,7 +290,7 @@ public class OrderReadHelper {
                 return null;
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         }
         return null;
     }
@@ -303,7 +303,7 @@ public class OrderReadHelper {
 
             return distributorRole == null ? null : distributorRole.getString("partyId");
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         return null;
     }
@@ -316,7 +316,7 @@ public class OrderReadHelper {
 
             return distributorRole == null ? null : distributorRole.getString("partyId");
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         return null;
     }
@@ -450,7 +450,7 @@ public class OrderReadHelper {
         double result = 0.0;
 
         if (unitPrice == null || quantity == null) {
-            Debug.logWarning("[getOrderItemTotal] unitPrice or quantity are null, using 0 for the item base price");
+            Debug.logWarning("[getOrderItemTotal] unitPrice or quantity are null, using 0 for the item base price", module);
         } else {
             result = unitPrice.doubleValue() * quantity.doubleValue();
         }
@@ -564,7 +564,8 @@ public class OrderReadHelper {
         if (itemAdjustment.get("percentage") != null && unitPrice != null) {
             adjustment += (itemAdjustment.getDouble("percentage").doubleValue() * unitPrice.doubleValue());
         }
-        if (Debug.verboseOn()) Debug.logVerbose("calcItemAdjustment: " + itemAdjustment + ", quantity=" + quantity + ", unitPrice=" + unitPrice + ", adjustment=" + adjustment);
+        if (Debug.verboseOn()) 
+            Debug.logVerbose("calcItemAdjustment: " + itemAdjustment + ", quantity=" + quantity + ", unitPrice=" + unitPrice + ", adjustment=" + adjustment, module);
         return adjustment;
     }
 
@@ -605,7 +606,42 @@ public class OrderReadHelper {
         return newOrderAdjustmentsList;
     }
 
-    /** Getter for property orderHeader.
+    /**
+     * Checks to see if this user has read permission on the specified order     * @param userLogin The UserLogin value object to check     * @param orderHeader The OrderHeader for the specified order     * @return boolean True if we have read permission     */
+    public static boolean hasPermission(Security security, GenericValue userLogin, GenericValue orderHeader) {
+        if (userLogin == null || orderHeader == null)
+            return false;
+                    
+        if (security.hasEntityPermission("ORDERMGR", "_VIEW", userLogin)) {
+            return true;
+        } else if (security.hasEntityPermission("ORDERMGR", "_ROLEVIEW", userLogin)) {        
+            List orderRoles = null;
+            try {
+                orderRoles = orderHeader.getRelatedByAnd("OrderRole", 
+                        UtilMisc.toMap("partyId", userLogin.getString("partyId")));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Cannot get OrderRole from OrderHeader", module);                
+            }
+            
+            if (orderRoles.size() > 0) {
+                // we are in at least one role
+                return true;
+            }
+        }
+        
+        return false;        
+    }    
+    
+    /**
+     * Checks to see if this user has read permission on this order
+     * @param userLogin The UserLogin value object to check   
+     * @return boolean True if we have read permission     */
+    public boolean hasPermission(Security security, GenericValue userLogin) {
+        return OrderReadHelper.hasPermission(security, userLogin, orderHeader);
+    }
+    
+    /** 
+     * Getter for property orderHeader.
      * @return Value of property orderHeader.
      */
     public GenericValue getOrderHeader() {
