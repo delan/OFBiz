@@ -2159,7 +2159,7 @@ public class GenericDelegator implements DelegatorInterface {
                 List allValues = this.findByAnd(value.getEntityName(), lookupValue, null);
                 //Debug.logInfo("Get existing values from entity " + value.getEntityName() + " with lookupValue: " + lookupValue + ", and the seqFieldName: " + seqFieldName + ", and the results are: " + allValues, module);
                 Iterator allValueIter = allValues.iterator();
-                int highestSeqVal = 1;
+                Integer highestSeqVal = null;
                 while (allValueIter.hasNext()) {
                     GenericValue curValue = (GenericValue) allValueIter.next();
                     String currentSeqId = curValue.getString(seqFieldName);
@@ -2173,8 +2173,8 @@ public class GenericDelegator implements DelegatorInterface {
                         }
                         try {
                             int seqVal = Integer.parseInt(currentSeqId);
-                            if (seqVal > highestSeqVal) {
-                                highestSeqVal = seqVal;
+                            if (highestSeqVal == null || seqVal > highestSeqVal.intValue()) {
+                                highestSeqVal = new Integer(seqVal);
                             }
                         } catch (Exception e) {
                             Debug.logWarning("Error in make-next-seq-id converting SeqId [" + currentSeqId + "] to a number: " + e.toString(), module);
@@ -2182,8 +2182,8 @@ public class GenericDelegator implements DelegatorInterface {
                     }
                 }
 
-                String newSeqId = sequencedIdPrefix + UtilFormatOut.formatPaddedNumber(highestSeqVal + incrementBy, numericPadding);
-
+                int seqValToUse = (highestSeqVal == null ? 1 : highestSeqVal.intValue() + incrementBy);
+                String newSeqId = sequencedIdPrefix + UtilFormatOut.formatPaddedNumber(seqValToUse, numericPadding);
                 value.set(seqFieldName, newSeqId);
             } catch (Exception e) {
                 Debug.logError(e, "Error making next seqId", module);
