@@ -1372,6 +1372,99 @@ public class OrderServices {
         return adjustments;
     }  
     
+    // return / refund services
+    
+    // credit (billingAccount) return
+    public static Map processCreditRefund(DispatchContext ctx, Map context) {
+        LocalDispatcher dispatcher = ctx.getDispatcher(); 
+        GenericDelegator delegator = ctx.getDelegator();
+        String returnId = (String) context.get("returnId");        
+        
+        GenericValue returnHeader = null;
+        List returnItems = null;
+        try {
+            returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
+            if (returnHeader != null) {
+                returnItems = returnHeader.getRelatedByAnd("ReturnItem", UtilMisc.toMap("returnItemTypeId", "RTN_CREDIT"));
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems looking up return information", module);
+            return ServiceUtil.returnError("Error getting ReturnHeader/Item information");
+        }
+        
+        if (returnHeader != null && returnItems != null && returnItems.size() > 0) {
+            String billingAccountId = returnHeader.getString("billingAccountId");
+            String fromPartyId = returnHeader.getString("fromPartyId");
+            if (billingAccountId == null) {
+                // create new BillingAccount w/ 0 balance                
+                try {
+                    Map newBa = dispatcher.runSync("createBillingAccount", UtilMisc.toMap("accountLimit", new Double(0.00), "description", "Credit Account"));
+                    if (!newBa.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+                        billingAccountId = (String) newBa.get("billingAccountId");
+                        if (billingAccountId != null) {
+                            // set the role on the account
+                            Map newBaR = dispatcher.runSync("createBillingAccountRole", UtilMisc.toMap("billingAccountId", billingAccountId, "partyId", fromPartyId, "roleTypeId", "BILL_TO_CUSTOMER"));
+                        }
+                    }
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "Problems creating BillingAccount", module);
+                    return ServiceUtil.returnError("Problems creating billing account");
+                }
+            }
+            
+            // double check; make sure we have a billingAccount
+            if (billingAccountId == null) {
+                Debug.logError("No available billing account, none was created", module);
+                return ServiceUtil.returnError("No available billing account");
+            }
+            
+            // need a total for the credit
+            double creditTotal = 0.00;
+            Iterator itemsIter = returnItems.iterator();
+            while (itemsIter.hasNext()) {
+                GenericValue item = (GenericValue) itemsIter.next();
+                Double quantity = item.getDouble("returnQuantity");
+                Double price = item.getDouble("returnPrice");
+                if (quantity == null) quantity = new Double(0);
+                if (price == null) price = new Double(0);
+                creditTotal += price.doubleValue() * quantity.doubleValue();                
+            }
+            
+            // create a Payment record for this credit; will look just like a normal payment
+            String paymentId = delegator.getNextSeqId("Payment").toString();
+            GenericValue payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", paymentId));
+            payment.set("paymentTypeId", "RECEIPT");
+            payment.set("paymentMethodTypeId", "EXT_BILLACT");
+            payment.set("partyIdFrom", fromPartyId);
+            payment.set("partyIdTo", "Company"); // TODO: need to fix this and find a partyId to use
+            payment.set("effectiveDate", UtilDateTime.nowTimestamp());
+            payment.set("amount", new Double(creditTotal));
+            payment.set("comments", "Return Credit");
+            try {
+                delegator.create(payment);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem creating Payment record");
+                return ServiceUtil.returnError("Problem creating Payment record");
+            }
+            
+            // create the PaymentApplication
+            String paId = delegator.getNextSeqId("PaymentApplication").toString();
+            GenericValue pa = delegator.makeValue("PaymentApplication", UtilMisc.toMap("paymentApplicationId", paId));
+            pa.set("paymentId", paymentId);
+            pa.set("billingAccountId", billingAccountId);
+            pa.set("amountApplied", new Double(creditTotal));
+            try {
+                delegator.create(pa);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem creating PaymentApplication record", module);
+                return ServiceUtil.returnError("Problem creating PaymentApplication record");
+            }                                        
+        }
+        
+        return ServiceUtil.returnSuccess();
+    }
+    
+    // refund (cash/charge) return
     public static Map processRefundReturn(DispatchContext ctx, Map context) {    
         LocalDispatcher dispatcher = ctx.getDispatcher();   
         GenericDelegator delegator = ctx.getDelegator();
