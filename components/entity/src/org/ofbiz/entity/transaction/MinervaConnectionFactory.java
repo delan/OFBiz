@@ -96,14 +96,24 @@ public class MinervaConnectionFactory {
             // set the transaction manager in the pool
             pds.setTransactionManager(TransactionFactory.getTransactionManager());
             
-            // configure the pool settings           
+            // configure the pool settings
             try {            
-                pds.setMaxSize(new Integer(jotmJdbcElement.getAttribute("pool-maxsize")).intValue());
-                pds.setMinSize(new Integer(jotmJdbcElement.getAttribute("pool-minsize")).intValue());
+                pds.setMaxSize(Integer.parseInt(jotmJdbcElement.getAttribute("pool-maxsize")));
             } catch (NumberFormatException nfe) {
-                Debug.logError(nfe, "Problems with pool settings; the values MUST be numbers, using defaults.", module);
+                Debug.logError("Problems with pool settings [pool-maxsize=" + jotmJdbcElement.getAttribute("pool-maxsize") + "]; the values MUST be numbers, using default of 20.", module);
+                pds.setMaxSize(20);
             } catch (Exception e) {
                 Debug.logError(e, "Problems with pool settings", module);
+                pds.setMaxSize(20);
+            }
+            try {            
+                pds.setMinSize(Integer.parseInt(jotmJdbcElement.getAttribute("pool-minsize")));
+            } catch (NumberFormatException nfe) {
+                Debug.logError("Problems with pool settings [pool-minsize=" + jotmJdbcElement.getAttribute("pool-minsize") + "]; the values MUST be numbers, using default of 5.", module);
+                pds.setMinSize(2);
+            } catch (Exception e) {
+                Debug.logError(e, "Problems with pool settings", module);
+                pds.setMinSize(2);
             }
                                   
             // cache the pool
