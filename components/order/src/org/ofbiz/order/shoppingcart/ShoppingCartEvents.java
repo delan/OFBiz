@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.15 2004/06/01 13:17:57 jonesde Exp $
+ * $Id: ShoppingCartEvents.java,v 1.16 2004/07/10 06:00:31 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -417,6 +417,24 @@ public class ShoppingCartEvents {
             session.setAttribute("shoppingCart", cart);
         }
         return cart;
+    }
+
+    /** Update the cart's UserLogin object if it isn't already set. */
+    public static String setCartUserLogin(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        ShoppingCart cart = getCartObject(request);
+        if (cart.getUserLogin() == null) {
+            LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+            GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+            if (userLogin != null) {
+                try {
+                    cart.setUserLogin(userLogin, dispatcher);
+                } catch (CartItemModifyException e) {
+                    Debug.logWarning(e, module);
+                }
+            }
+        }
+        return "success";
     }
 
     /** For GWP Promotions with multiple alternatives, selects an alternative to the current GWP */
