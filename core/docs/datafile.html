@@ -33,6 +33,26 @@ $Id$ <br>
 <hr>
 <h3><a name="Introduction">Introduction</a> </h3>
 <hr>
-<p></p>
+
+<P>The Data File Library is a tool used to read and write "flat" files. It
+allows you to work with the flat file data in a more natural way using generic
+objects similar to the Entity Engine GenericValue object.</P>
+
+<P>The design is very similar to the Entity Engine in that there is an XML
+configuration file that is used to specify the format and structure of the flat
+file and a generic API used to deal with the records in the file. One major
+difference is that datafile records are hierarchical and a record can have
+various sub-records. The descriptor file is also structured this way so that
+each record type can have a parent record type.</P>
+
+<P>When the file is read the library will convert strings of various formats and
+styles into numbers, dates, etc. It also supports common flat-file formats such
+as zero padded numbers, implied fixed decimal point numbers, and dates with no 
+delimeters.</P>
+
+<P>Sorry about the lack of further documentation on this. For more info see the
+datafiles.dtd file, or throw us an email to let us know that there is further
+interest in documentation for this component.</P>
+
 </body>
 </html>
