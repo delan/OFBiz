@@ -21,7 +21,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     </transaction-factory>
     -->
     <!-- It is common to use UserTransaction for the TransactionManager, but if that doesn't work, try this: <transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/TransactionManager"/> -->
-    
+
 
     <delegator name="default" entity-model-reader="main" entity-group-reader="main">
         <group-map group-name="org.ofbiz.commonapp" datasource-name="localsapdb"/>
@@ -119,7 +119,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
 
     <datasource name="localpostgres"
             helper-class="org.ofbiz.core.entity.GenericHelperDAO"
-            field-type-name="postgres"
+            field-type-name="postgres72"
             check-on-start="true"
             add-missing-on-start="true">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
@@ -130,7 +130,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"/>
-        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/PostgresDataSource" isolation-level="ReadCommitted"/> -->
+        <!-- <jndi-jdbc jndi-server-name="default" jndi-name="java:comp/env/jdbc/PostgresDataSource" isolation-level="ReadCommitted"/> -->
         <!-- <tyrex-dataSource dataSource-name="localpostgres" isolation-level="ReadCommitted"/> -->
     </datasource>
 

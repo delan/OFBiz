@@ -125,7 +125,6 @@
   <EnumerationType description="Workflow Split Type" enumTypeId="WORKFLOW_SPLIT_TYPE" hasTable="N" parentTypeId="WORKFLOW"/>
   <EnumerationType description="Workflow Tool Type" enumTypeId="WORKFLOW_TOOL_TYPE" hasTable="N" parentTypeId="WORKFLOW"/>
   <EnumerationType description="Workflow SubFlow Execution" enumTypeId="WORKFLOW_SUB_EXEC" hasTable="N" parentTypeId="WORKFLOW"/>
-  <EnumerationType description="Workflow SubFlow Execution" enumTypeId="WORKFLOW_SUB_EXEC" hasTable="N" parentTypeId="WORKFLOW"/>
   <EnumerationType description="Workflow Loop Kind" enumTypeId="WORKFLOW_LOOP_KIND" hasTable="N" parentTypeId="WORKFLOW"/>
   <EnumerationType description="Workflow Transition Loop Type" enumTypeId="WORKFLOW_TRANS_LOOP" hasTable="N" parentTypeId="WORKFLOW"/>
   <EnumerationType description="Workflow Transition Condition Type" enumTypeId="WORKFLOW_TRANS_COND" hasTable="N" parentTypeId="WORKFLOW"/>
