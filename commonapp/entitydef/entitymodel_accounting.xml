@@ -1452,6 +1452,9 @@
       <field name="termValue" type="numeric"></field>
       <field name="uomId" type="id"></field>
       <prim-key field="billingAccountTermId"/>
+      <relation type="one" fk-name="BILLACCT_TRM_UOM" rel-entity-name="Uom">
+        <key-map field-name="uomId"/>
+      </relation>
       <relation type="one" fk-name="BILLACCT_TRM_TRM" rel-entity-name="TermType">
         <key-map field-name="termTypeId"/>
       </relation>
