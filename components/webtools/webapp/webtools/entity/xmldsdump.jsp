@@ -81,7 +81,7 @@
     passedEntityNames.add("ProductContent");
     passedEntityNames.add("ProductFacilityLocation");
     passedEntityNames.add("ProductFeatureAppl");
-    passedEntityNames.add("ProductFeatureContent");
+    passedEntityNames.add("ProductFeatureDataResource");
     passedEntityNames.add("ProductFeatureGroup");
     passedEntityNames.add("ProductPriceChange");
     passedEntityNames.add("ProductPromoAction");

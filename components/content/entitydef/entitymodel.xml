@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.38 $
+ * @version    $Revision: 1.39 $
  */
 -->
 
@@ -65,6 +65,7 @@
       <field name="contentTypeId" type="id"></field>
       <field name="ownerContentId" type="id"></field>
       <field name="dataResourceId" type="id"></field>
+      <field name="templateDataResourceId" type="id"></field>
       <field name="dataSourceId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="privilegeEnumId" type="id"></field>
@@ -78,13 +79,15 @@
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
-      <field name="templateDataResourceId" type="id"></field>
       <prim-key field="contentId"/>
       <relation type="one" fk-name="CONTENT_TO_TYPE" rel-entity-name="ContentType">
         <key-map field-name="contentTypeId"/>
       </relation>
       <relation type="one" fk-name="CONTENT_TO_DATA" rel-entity-name="DataResource">
         <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one" fk-name="CONTENT_TO_TMPDATA" title="Template" rel-entity-name="DataResource">
+        <key-map field-name="templateDataResourceId" rel-field-name="dataResourceId"/>
       </relation>
       <relation type="one" fk-name="CONTENT_STATUS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
@@ -131,8 +134,8 @@
       <relation type="many" rel-entity-name="ProductContent">
         <key-map field-name="contentId"/>
       </relation>
-      <relation type="many" rel-entity-name="ProductFeatureContent">
-        <key-map field-name="contentId"/>
+      <relation type="many" rel-entity-name="ProductFeatureDataResource">
+        <key-map field-name="dataResourceId"/>
       </relation>
       <relation type="one" fk-name="CONTENT_DTSRC" rel-entity-name="DataSource">
         <key-map field-name="dataSourceId"/>
@@ -148,9 +151,6 @@
       </relation>
       <relation type="many" rel-entity-name="ContentAssocDataResourceViewTo">
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
-      </relation>
-      <relation type="one" fk-name="CONTENT_TO_TMPDATA" rel-entity-name="DataResource">
-        <key-map field-name="templateDataResourceId"/>
       </relation>
     </entity>
     <entity entity-name="ContentAssoc"
@@ -662,6 +662,9 @@
         <key-map field-name="dataResourceId"/>
       </relation>
       <relation type="many" rel-entity-name="DataResourceRole">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFeatureDataResource">
         <key-map field-name="dataResourceId"/>
       </relation>
       <relation type="one" fk-name="DATA_REC_CB_ULGN" title="CreatedBy" rel-entity-name="UserLogin">

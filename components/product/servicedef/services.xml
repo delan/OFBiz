@@ -1083,50 +1083,6 @@
         <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
     </service>
 
-    <!-- Some Product Maintenance Utility Services -->
-    <service name="discVirtualsWithDiscVariants" engine="java"
-                location="org.ofbiz.product.product.ProductUtilServices" invoke="discVirtualsWithDiscVariants" auth="true" transaction-timout="36000000" require-new-transaction="true">
-        <description>Discontinue Virtuals With Discontinued Variants</description>
-    </service>
-    <service name="removeCategoryMembersOfDiscProducts" engine="java"
-                location="org.ofbiz.product.product.ProductUtilServices" invoke="removeCategoryMembersOfDiscProducts" auth="true" transaction-timout="36000000" require-new-transaction="true">
-        <description>Remove Category Members Of Discontinued Products</description>
-    </service>
-    <service name="removeDuplicateOpenEndedCategoryMembers" engine="java"
-                location="org.ofbiz.product.product.ProductUtilServices" invoke="removeDuplicateOpenEndedCategoryMembers" auth="true" transaction-timout="36000000" require-new-transaction="true">
-        <description>Remove Duplicate, excluding fromDate, Category Members that have no thruDate</description>
-    </service>
-    
-    <service name="makeStandAloneFromSingleVariantVirtuals" engine="java"
-                location="org.ofbiz.product.product.ProductUtilServices" invoke="makeStandAloneFromSingleVariantVirtuals" auth="true" transaction-timout="36000000" require-new-transaction="true">
-        <description>Make Stand Alone From Single Variant Virtuals</description>
-    </service>
-    <service name="mergeVirtualWithSingleVariant" engine="java"
-                location="org.ofbiz.product.product.ProductUtilServices" invoke="mergeVirtualWithSingleVariant" auth="true" transaction-timout="3600000" require-new-transaction="true">
-        <description>A service to be called by the make stand alone service to do the operation for one product.</description>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="removeOld" type="Boolean" mode="IN" optional="false"/>
-        <attribute name="test" type="Boolean" mode="IN" optional="true"/>
-    </service>
-    
-    <service name="setAllProductImageNames" engine="java"
-                location="org.ofbiz.product.product.ProductUtilServices" invoke="setAllProductImageNames" auth="true" transaction-timout="36000000" require-new-transaction="true">
-        <description>Set All Product Image Names</description>
-        <attribute name="pattern" type="String" mode="IN" optional="false"/>
-    </service>
-    <service name="clearAllVirtualProductImageNames" engine="java"
-                location="org.ofbiz.product.product.ProductUtilServices" invoke="clearAllVirtualProductImageNames" auth="true" transaction-timout="36000000" require-new-transaction="true">
-        <description>Set All Product Image Names</description>
-    </service>
-    
-    <service name="attachProductFeaturesToCategory" engine="java"
-                location="org.ofbiz.product.product.ProductUtilServices" invoke="attachProductFeaturesToCategory" auth="true" transaction-timout="36000000" require-new-transaction="true">
-        <description>Attach Product Features To Category Through Groups</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="doSubCategories" type="String" mode="IN" optional="true"/>
-    </service>
-
-
     <!-- Product Storage Services -->
     <service name="createFacility" default-entity-name="Facility" engine="simple"
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="createFacility" auth="true">
@@ -1636,7 +1592,7 @@
         <description>Remove Content From Product</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
+    </service>    
     <service name="createEmailContentForProduct" default-entity-name="ProductContent" engine="simple"
             location="org/ofbiz/product/product/ProductContentServices.xml" invoke="createEmailContentForProduct" auth="true">
         <auto-attributes include="pk" mode="IN" optional="false"/>
@@ -1693,4 +1649,58 @@
         <attribute name="text" type="String" mode="IN" optional="true"/>
     </service>
 
+    <!-- ProductFeatureDataResource services -->
+    <service name="createProductFeatureDataResource" default-entity-name="ProductFeatureDataResource" engine="simple"
+                location="org/ofbiz/product/product/ProductContentServices.xml" invoke="createProductFeatureDataResource" auth="true">
+        <description>Create ProductFeature-DataResource</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="removeProductFeatureDataResource" default-entity-name="ProductFeatureDataResource" engine="simple"
+                location="org/ofbiz/product/product/ProductContentServices.xml" invoke="removeProductFeatureDataResource" auth="true">
+        <description>Remove ProductFeature-DataResource</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- Some Product Maintenance Utility Services -->
+    <service name="discVirtualsWithDiscVariants" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="discVirtualsWithDiscVariants" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Discontinue Virtuals With Discontinued Variants</description>
+    </service>
+    <service name="removeCategoryMembersOfDiscProducts" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="removeCategoryMembersOfDiscProducts" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Remove Category Members Of Discontinued Products</description>
+    </service>
+    <service name="removeDuplicateOpenEndedCategoryMembers" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="removeDuplicateOpenEndedCategoryMembers" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Remove Duplicate, excluding fromDate, Category Members that have no thruDate</description>
+    </service>
+    
+    <service name="makeStandAloneFromSingleVariantVirtuals" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="makeStandAloneFromSingleVariantVirtuals" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Make Stand Alone From Single Variant Virtuals</description>
+    </service>
+    <service name="mergeVirtualWithSingleVariant" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="mergeVirtualWithSingleVariant" auth="true" transaction-timout="3600000" require-new-transaction="true">
+        <description>A service to be called by the make stand alone service to do the operation for one product.</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="removeOld" type="Boolean" mode="IN" optional="false"/>
+        <attribute name="test" type="Boolean" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="setAllProductImageNames" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="setAllProductImageNames" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Set All Product Image Names</description>
+        <attribute name="pattern" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="clearAllVirtualProductImageNames" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="clearAllVirtualProductImageNames" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Set All Product Image Names</description>
+    </service>
+    
+    <service name="attachProductFeaturesToCategory" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="attachProductFeaturesToCategory" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Attach Product Features To Category Through Groups</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="doSubCategories" type="String" mode="IN" optional="true"/>
+    </service>
 </services>
