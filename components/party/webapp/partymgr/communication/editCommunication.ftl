@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
 -->
 
@@ -153,15 +153,6 @@
             <form method="post" name="addeventrole" action="<@ofbizUrl>/createCommunicationEventRole</@ofbizUrl>">
               <input type="hidden" name="communicationEventId" value="${communicationEvent.communicationEventId}">
               <input type="hidden" name="party_id" value="${partyId}">
-              <#if ((requestParameters.parentCommEventId)?has_content)>
-                <input type="hidden" name="parentCommEventId" value="${requestParameters.parentCommEventId}">
-                <#if (requestParameters.origCommEventId?length > 0)>
-                  <#assign orgComm = requestParameters.origCommEventId>
-                <#else>
-                  <#assign orgComm = requestParameters.parentCommEventId>
-                </#if>
-                <input type="hidden" name="origCommEventId" value="${orgComm}">
-              </#if>
               <td bgcolor='white'>
                 <select name="roleTypeId" class="selectBox">
                   <#list roleTypes as roleType>
@@ -187,6 +178,15 @@
       <input type="hidden" name="partyIdFrom" value="${partyIdFrom}">
       <input type="hidden" name="partyIdTo" value="${partyIdTo}">
     </#if>
+    <#if parentEvent?has_content>
+      <input type="hidden" name="parentCommEventId" value="${parentEvent.communicationEventId}">
+      <#if (parentEvent.origCommEventId?exists && parentEvent.origCommEventId?length > 0)>
+        <#assign orgComm = parentEvent.origCommEventId>
+      <#else>
+        <#assign orgComm = parentEvent.communicationEventId>
+      </#if>
+      <input type="hidden" name="origCommEventId" value="${orgComm}">
+    </#if>
     <tr>
       <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.PartyEventType}</span></td>
       <td width="1">&nbsp;</td>
@@ -195,6 +195,10 @@
         <select class="selectBox" name="communicationEventTypeId">
           <#if communicationEvent?has_content && communicationEvent.communicationEventTypeId?exists>
             <#assign eventType = communicationEvent.getRelatedOne("CommunicationEventType")>
+            <option value="${eventType.communicationEventTypeId}">${eventType.description}</option>
+            <option value="${eventType.communicationEventTypeId}">----</option>
+          <#elseif parentEvent?has_content && parentEvent.communicationEventTypeId?exists>
+            <#assign eventType = parentEvent.getRelatedOne("CommunicationEventType")>
             <option value="${eventType.communicationEventTypeId}">${eventType.description}</option>
             <option value="${eventType.communicationEventTypeId}">----</option>
           </#if>
@@ -241,6 +245,10 @@
         <select class="selectBox" name="contactMechTypeId">
           <#if communicationEvent?has_content && communicationEvent.contactMechTypeId?exists>
             <#assign contactMechType = communicationEvent.getRelatedOne("ContactMechType")>
+            <option value="${contactMechType.contactMechTypeId}">${contactMechType.description}</option>
+            <option value="${contactMechType.contactMechTypeId}">----</option>
+          <#elseif parentEvent?has_content && parentEvent.contactMechTypeId?exists>
+            <#assign contactMechType = parentEvent.getRelatedOne("ContactMechType")>
             <option value="${contactMechType.contactMechTypeId}">${contactMechType.description}</option>
             <option value="${contactMechType.contactMechTypeId}">----</option>
           </#if>
@@ -297,7 +305,7 @@
           </#list>
         </select>
         <#else>
-          <#if communicationEvent?has_content && communicationEvent.communicationEventTypeId?exists>
+          <#if communicationEvent?has_content && communicationEvent.roleTypeIdTo?exists>
             <#assign roleType = (communicationEvent.getRelatedOne("ToRoleType"))?if_exists>
             <div class="tabletext">${(roleType.description)?default(uiLabelMap.CommonNone)}</div>
           </#if>
@@ -370,9 +378,14 @@
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
-        <textarea class="textAreaBox" cols="60" rows="3" name="note">${(communicationEvent.note)?if_exists}</textarea>
+          <#if parentEvent?has_content>
+            <#assign eventNote = Static["org.ofbiz.base.util.UtilHttp"].getFullRequestUrl(request).toString()>
+          <#else>
+            <#assign eventNote = (communicationEvent.note)?if_exists>
+          </#if>
+          <textarea class="textAreaBox" cols="60" rows="3" name="note">${eventNote}</textarea>
         <#else>
-        <div class="tabletext">${(communicationEvent.note)?if_exists}</div>
+          <div class="tabletext">${(communicationEvent.note)?if_exists}</div>
         </#if>
       </td>
     </tr>
