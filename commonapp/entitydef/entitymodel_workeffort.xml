@@ -1085,8 +1085,8 @@
       <view-link entity-alias="WE" rel-entity-alias="WEPA">
         <key-map field-name="workEffortId"/>
       </view-link>
-      <view-link entity-alias="PREL" rel-entity-alias="WEPA">
-        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+      <view-link entity-alias="WEPA" rel-entity-alias="PREK">
+        <key-map field-name="partyId" rel-field-name="partyIdTo"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
@@ -1165,7 +1165,7 @@
       <view-link entity-alias="WE" rel-entity-alias="WEPA">
         <key-map field-name="workEffortId"/>
       </view-link>
-      <view-link entity-alias="PR" rel-entity-alias="WEPA">
+      <view-link entity-alias="WEPA" rel-entity-alias="PR">
         <key-map field-name="roleTypeId"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="WorkEffort">
