@@ -1,5 +1,5 @@
 
-<%org.ofbiz.ecommerce.catalog.CatalogHelper.getQuickReorderProducts(pageContext, "miniReorderProducts", "miniReorderQuantities");%>
+<%org.ofbiz.ecommerce.catalog.CatalogWorker.getQuickReorderProducts(pageContext, "miniReorderProducts", "miniReorderQuantities");%>
 <ofbiz:if name="miniReorderProducts" size="0">
   <%Map miniReorderQuantities = (Map)pageContext.getAttribute("miniReorderQuantities");%>
   <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>

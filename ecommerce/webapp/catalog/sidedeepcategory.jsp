@@ -1,10 +1,10 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="org.ofbiz.ecommerce.catalog.*" %>
+<%@ page import="org.ofbiz.commonapp.product.category.*" %>
 <%@ page import="org.ofbiz.core.util.*" %>
-<%CatalogHelper.getRelatedCategories(pageContext, "topLevelList", UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "catalog.id.default"));%>
+<%CategoryWorker.getRelatedCategories(pageContext, "topLevelList", UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "catalog.id.default"));%>
 <%String curCategoryId = UtilFormatOut.checkNull(request.getParameter("category_id"), request.getParameter("CATEGORY_ID"));%>
-<%CatalogHelper.getRelatedCategories(pageContext, "curCategoryList", curCategoryId);%>
+<%CategoryWorker.setTrail(pageContext, curCategoryId);%>
 
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
@@ -12,7 +12,7 @@
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign=middle align=center>
-      <div class="boxhead">Browse&nbsp;Catalog</div>
+      <div class="boxhead">Browse&nbsp;Categories</div>
           </td>
         </tr>
       </table>

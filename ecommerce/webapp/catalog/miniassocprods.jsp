@@ -1,5 +1,5 @@
 
-<%org.ofbiz.ecommerce.catalog.CatalogHelper.getRandomCartProductAssoc(pageContext, "miniAssociatedProducts");%>
+<%org.ofbiz.ecommerce.catalog.CatalogWorker.getRandomCartProductAssoc(pageContext, "miniAssociatedProducts");%>
 <ofbiz:if name="miniAssociatedProducts" size="0">
   <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
     <TR>

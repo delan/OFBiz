@@ -8,7 +8,7 @@
 <ofbiz:object name="cart" property="_SHOPPING_CART_" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCart" />  
 <%if(cart != null && cart.size() > 0) {%>
   <%pageContext.setAttribute("cartIter", cart.iterator());%>
-  <%org.ofbiz.ecommerce.catalog.CatalogHelper.getRandomCartProductAssoc(pageContext, "associatedProducts");%>
+  <%org.ofbiz.ecommerce.catalog.CatalogWorker.getRandomCartProductAssoc(pageContext, "associatedProducts");%>
 <%}%>
 <BR>
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
@@ -43,7 +43,7 @@
               <input type='text' size="5" name="quantity" value="<%=UtilFormatOut.checkNull(request.getParameter("quantity"), "1")%>">
               <input type='submit' value="Add To Cart">
               <%-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a> --%>
-            </form>      
+            </form>
           </td>
         </tr>
       </table>
@@ -184,7 +184,7 @@
         <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
           <tr>
             <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;You might be interested in these as well:</div>
+              <div class="boxhead">&nbsp;You might also be interested in:</div>
             </td>
             <td valign="middle" align="right">&nbsp;</td>
           </tr>

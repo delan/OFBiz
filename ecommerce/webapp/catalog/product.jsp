@@ -1,6 +1,6 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.ecommerce.catalog.*"%>
+<%@ page import="org.ofbiz.commonapp.product.product.*"%>
 
 <% pageContext.setAttribute("PageName", "Product Detail"); %>
 <%@ include file="/includes/envsetup.jsp" %>
@@ -9,8 +9,8 @@
 
 <%
   // Get the value object of the request product id.
-  org.ofbiz.ecommerce.catalog.CatalogHelper.getProduct(pageContext,"productValue",request.getParameter("product_id"));
-  org.ofbiz.ecommerce.catalog.CatalogHelper.getAssociatedProducts(pageContext,"productValue","");
+  ProductWorker.getProduct(pageContext,"productValue",request.getParameter("product_id"));
+  ProductWorker.getAssociatedProducts(pageContext,"productValue","");
 %>
 
 <ofbiz:unless name="productValue">

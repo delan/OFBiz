@@ -1,15 +1,13 @@
 
-<% pageContext.setAttribute("PageName", "main"); %> 
+<% pageContext.setAttribute("PageName", "Main Page"); %> 
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %> 
+<%@ page import="org.ofbiz.commonapp.product.category.*" %>
 
-<%
-  // Get a list of all available categories.
-  //org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedCategories(pageContext,"curCategoryList",request.getParameter("category_id"));
-  // Get a list of all available products.
-  org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedProducts(pageContext,"","PROMOTIONS");
-%>
+<%-- Get a list of all available products. --%>
+<%CategoryWorker.getRelatedProducts(pageContext,"","PROMOTIONS");%>
+
 <%-- Main Heading --%>
 <br>
 <%@ include file="/catalog/categorylisting.jsp" %>

@@ -1,8 +1,8 @@
 
 <%@taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<%@page import="org.ofbiz.core.entity.*" %>
-<%@page import="org.ofbiz.ecommerce.catalog.*" %>
+<%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.commonapp.product.category.*" %>
 
 <%GenericValue category = (GenericValue)request.getAttribute("subcat");%>
 <%GenericValue pcategory = (GenericValue)request.getAttribute("category");%>
@@ -16,8 +16,8 @@
     <div style='text-indent: -10px;'><a href="<ofbiz:url>/category?category_id=<%=category.getString("productCategoryId")%><%=pstr%></ofbiz:url>" class='buttontext'>-&nbsp;<%=category.getString("description")%></a></div>
   <%}%>
 
-  <%if(CatalogHelper.checkTrailItem(topPageContext,category.getString("productCategoryId"))) {%>
-    <%CatalogHelper.getRelatedCategories(pageContext,"subCatList",category.getString("productCategoryId"));%>
+  <%if(CategoryWorker.checkTrailItem(topPageContext,category.getString("productCategoryId")) || (curcatid != null && curcatid.equals(category.getString("productCategoryId")))) {%>
+    <%CategoryWorker.getRelatedCategories(pageContext,"subCatList",category.getString("productCategoryId"));%>
     <ofbiz:if name="subCatList">
       <ofbiz:iterator name="subcat" property="subCatList">
         <div style='margin-left: 10px;'>

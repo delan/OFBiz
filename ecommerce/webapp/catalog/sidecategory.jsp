@@ -1,10 +1,10 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="org.ofbiz.ecommerce.catalog.*" %>
+<%@ page import="org.ofbiz.commonapp.product.category.*" %>
 <%@ page import="org.ofbiz.core.util.*" %>
-<%CatalogHelper.getRelatedCategories(pageContext, "topLevelList", UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "catalog.id.default"));%>
+<%CategoryWorker.getRelatedCategories(pageContext, "topLevelList", UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "catalog.id.default"));%>
 <%String curCategoryId = UtilFormatOut.checkNull(request.getParameter("category_id"), request.getParameter("CATEGORY_ID"));%>
-<%CatalogHelper.getRelatedCategories(pageContext, "curCategoryList", curCategoryId);%>
+<%CategoryWorker.getRelatedCategories(pageContext, "curCategoryList", curCategoryId);%>
 
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
@@ -31,8 +31,8 @@
           <li style='margin: 1;'><a href="<ofbiz:url>/category?category_id=<%=category.getString("productCategoryId")%></ofbiz:url>" class='buttontext'><%=category.getString("description")%></a></li>
         <%}%>
 
-        <%if(CatalogHelper.checkTrailItem(pageContext,category.getString("productCategoryId"))) {%>
-          <%CatalogHelper.getRelatedCategories(pageContext,"subCatList",category.getString("productCategoryId"));%>
+        <%if(CategoryWorker.checkTrailItem(pageContext,category.getString("productCategoryId"))) {%>
+          <%CategoryWorker.getRelatedCategories(pageContext,"subCatList",category.getString("productCategoryId"));%>
           <ofbiz:if name="subCatList">
             <ul style='margin-left: 10;'>
             <ofbiz:iterator name="subcat" property="subCatList">
