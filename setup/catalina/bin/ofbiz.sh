@@ -22,6 +22,8 @@
 ulimit -s 2048
 
 # ----- Verify and Set Required Environment Variables -------------------------
+[ -r ~/ofbiz.rc ] && ~ ~/ofbiz.rc
+[ -r ./ofbiz.rc ] && . ./ofbiz.rc
 
 if [ -z "$CATALINA_HOME" ] ; then
   export CATALINA_HOME=".."
@@ -47,4 +49,4 @@ echo " OFBIZ_HOME=$OFBIZ_HOME"
 echo " CATALINA_OPTS=$CATALINA_OPTS"
 echo " -- RUNNING $CATALINA_HOME/bin/catalina.sh $1 --"
 
-$CATALINA_HOME/bin/catalina.sh $1
+$CATALINA_HOME/bin/catalina.sh $@

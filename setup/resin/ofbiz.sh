@@ -18,6 +18,8 @@
 ulimit -s 2048
 
 # ----- Verify and Set Required Environment Variables -------------------------
+[ -r ~/ofbiz.rc ] && ~ ~/ofbiz.rc
+[ -r ./ofbiz.rc ] && . ./ofbiz.rc
 
 if [ -z "$OFBIZ_HOME" ] ; then
   export OFBIZ_HOME="../ofbiz"
@@ -61,5 +63,4 @@ echo
 echo " RESIN_OPTS=$RESIN_OPTS"
 echo " -- RUNNING ./bin/httpd.sh $RESIN_OPTS $1 --"
 
-./bin/httpd.sh $RESIN_OPTS $*
-
+./bin/httpd.sh $RESIN_OPTS $@
