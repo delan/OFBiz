@@ -336,6 +336,7 @@
         <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
         <attribute name="productPromoActionSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="productPromoActionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderAdjustmentTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="Double" mode="IN" optional="true"/>
         <attribute name="productId" type="String" mode="IN" optional="true"/>
         <attribute name="actionLimit" type="Long" mode="IN" optional="true"/>
@@ -347,6 +348,7 @@
         <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
         <attribute name="productPromoActionSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="productPromoActionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderAdjustmentTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="Double" mode="IN" optional="true"/>
         <attribute name="productId" type="String" mode="IN" optional="true"/>
         <attribute name="actionLimit" type="Long" mode="IN" optional="true"/>

@@ -1305,6 +1305,7 @@
       <field name="productPromoRuleId" type="id-ne"></field>
       <field name="productPromoActionSeqId" type="id-ne"></field>
       <field name="productPromoActionTypeId" type="id-ne"></field>
+      <field name="orderAdjustmentTypeId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="productId" type="id"></field>
       <field name="actionLimit" type="numeric"></field>
@@ -1320,6 +1321,9 @@
       <relation type="one" rel-entity-name="ProductPromoRule">
         <key-map field-name="productPromoId"/>
         <key-map field-name="productPromoRuleId"/>
+      </relation>
+      <relation type="one" rel-entity-name="OrderAdjustmentType">
+        <key-map field-name="orderAdjustmentTypeId"/>
       </relation>
     </entity>
     <entity entity-name="ProductPromoActionType"
@@ -1381,12 +1385,28 @@
     <entity entity-name="ProductPromoUsage"
             package-name="org.ofbiz.commonapp.product.promo"
             title="Product Promotion Usage Entity">
+      <field name="productPromoUsageId" type="id-ne"></field>
       <field name="productPromoId" type="id-ne"></field>
-      <field name="partyId" type="id-ne"></field>
+      <field name="productPromoRuleId" type="id"></field>
+      <field name="orderId" type="id"></field>
+      <field name="orderItemSeqId" type="id"></field>
+      <field name="orderAdjustmentId" type="id"></field>
+      <field name="partyId" type="id"></field>
       <field name="usageDateTime" type="date-time"></field>
-      <prim-key field="productPromoId"/>
+      <prim-key field="productPromoUsageId"/>
       <relation type="one" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductPromoRule">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+      </relation>
+      <relation type="one" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
       </relation>
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId"/>
