@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.13 $
+ *@version    $Revision: 1.14 $
  *@since      2.1
 -->
 
@@ -128,7 +128,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <br>
         <form method="POST" action="<@ofbizUrl>/addCategoryProductMember</@ofbizUrl>" style="margin: 0;" name="addProductCategoryMemberForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
-        <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
+        <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
         
         <div class="head2">${uiLabelMap.ProductAddProductCategoryMember}:</div>
         <div class="tabletext">
@@ -142,7 +142,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <br>
         <form method="POST" action="<@ofbizUrl>/copyCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="copyCategoryProductMembersForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
-        <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
+        <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
         
         <div class="head2">${uiLabelMap.ProductCopyProductCategoryMembersToAnotherCategory}:</div>
         <div class="tabletext">
@@ -168,8 +168,8 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         
         <br>
         <form method="POST" action="<@ofbizUrl>/expireAllCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="expireAllCategoryProductMembersForm">
-        <input type="hidden" name="productCategoryId" value="${productCategoryId}?if_exists">
-        <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
+        <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
+        <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
         
         <div class="head2">${uiLabelMap.ProductExpireAllProductMembers}:</div>
         <div class="tabletext">
