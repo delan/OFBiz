@@ -249,7 +249,7 @@ public class SQLProcessor {
                             
         // always try to set auto commit to false, but if we can't then later on we won't commit
         try {
-            if (!_connection.getAutoCommit()) {
+            if (_connection.getAutoCommit()) {
                 try {
                     _connection.setAutoCommit(false);
                     if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:setAutoCommit(false) : manualTx=" + _manualTX, module);
