@@ -442,11 +442,13 @@
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="autoApproveOrder"/>
         <response name="success" type="view" value="ordercomplete"/>
     </request-map>
+
      <request-map uri="setSessionLocale">
         <event type="java" path="org.ofbiz.base.util.UtilHttp" invoke="setSessionLocale"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
+
     <request-map uri="confirmorder">
         <response name="success" type="view" value="confirmorder"/>
     </request-map>
@@ -661,6 +663,23 @@
         <response name="error" type="view" value="editcreditcard"/>
     </request-map>
 
+    <request-map uri="editgiftcard">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editgiftcard"/>
+    </request-map>
+    <request-map uri="createGiftCard">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGiftCard"/>
+        <response name="success" type="view" value="editgiftcard"/>
+        <response name="error" type="view" value="editgiftcard"/>
+    </request-map>
+    <request-map uri="updateGiftCard">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGiftCard"/>
+        <response name="success" type="view" value="editgiftcard"/>
+        <response name="error" type="view" value="editgiftcard"/>
+    </request-map>
+
     <request-map uri="editeftaccount">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editeftaccount"/>
@@ -772,6 +791,7 @@
     <view-map name="editcontactmech" type="jpublish" page="/customer/editcontactmech.ftl"/>
     <view-map name="editcreditcard" type="jpublish" page="/customer/editcreditcard.ftl"/>
     <view-map name="editeftaccount" type="jpublish" page="/customer/editeftaccount.ftl"/>
+    <view-map name="editgiftcard" type="jpublish" page="/customer/editgiftcard.ftl"/>
     <view-map name="changepassword" type="jpublish" page="/customer/changepassword.ftl"/>
     <view-map name="editperson" type="jpublish" page="/customer/editperson.ftl"/>
     <!-- End of View Mappings -->

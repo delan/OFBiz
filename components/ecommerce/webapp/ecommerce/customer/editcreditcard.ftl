@@ -20,9 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
+
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if canNotView>
   <p><h3>${uiLabelMap.AccountingCardInfoNotBelongToYou}.</h3></p>
@@ -64,13 +65,7 @@
         <select name="cardType" class='selectBox'>
           <option>${creditCardData.cardType?if_exists}</option>
           <option></option>
-          <option>Visa</option>
-          <option value='MasterCard'>Master Card</option>
-          <option value='AmericanExpress'>American Express</option>
-          <option value='DinersClub'>Diners Club</option>
-          <option>Discover</option>
-          <option>EnRoute</option>
-          <option>JCB</option>
+          ${pages.get("/includes/cctypes.ftl")}
         </select>
       *</td>
     </tr>
@@ -114,29 +109,11 @@
         </#if>
         <select name="expMonth" class='selectBox'>
           <option><#if tryEntity>${expMonth?if_exists}<#else>${requestParameters.expMonth?if_exists}</#if></option>
-          <option></option>
-          <option>01</option>
-          <option>02</option>
-          <option>03</option>
-          <option>04</option>
-          <option>05</option>
-          <option>06</option>
-          <option>07</option>
-          <option>08</option>
-          <option>09</option>
-          <option>10</option>
-          <option>11</option>
-          <option>12</option>
+          ${pages.get("/includes/ccmonths.ftl")}
         </select>
         <select name="expYear" class='selectBox'>
           <option><#if tryEntity>${expYear?if_exists}<#else>${requestParameters.expYear?if_exists}</#if></option>
-          <option></option>          
-          <option>2003</option>
-          <option>2004</option>
-          <option>2005</option>
-          <option>2006</option>
-          <option>2007</option>
-          <option>2008</option>
+          ${pages.get("/includes/ccyears.ftl")}
         </select>
       *</td>
     </tr>

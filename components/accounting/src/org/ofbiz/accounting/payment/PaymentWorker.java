@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentWorker.java,v 1.5 2003/09/02 02:17:15 ajzeneski Exp $
+ * $Id: PaymentWorker.java,v 1.6 2003/11/04 18:46:29 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class PaymentWorker {
@@ -76,11 +76,12 @@ public class PaymentWorker {
                     valueMap.put("paymentMethod", paymentMethod);
                     if ("CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
                         GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");
-
                         if (creditCard != null) valueMap.put("creditCard", creditCard);
+                    } else if ("GIFT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
+                        GenericValue giftCard = paymentMethod.getRelatedOne("GiftCard");
+                        if (giftCard != null) valueMap.put("giftCard", giftCard);
                     } else if ("EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {
                         GenericValue eftAccount = paymentMethod.getRelatedOne("EftAccount");
-
                         if (eftAccount != null) valueMap.put("eftAccount", eftAccount);
                     }
                 }
@@ -122,17 +123,28 @@ public class PaymentWorker {
 
         String paymentMethodId = request.getParameter("paymentMethodId");
 
-        if (request.getAttribute("paymentMethodId") != null) paymentMethodId = (String) request.getAttribute("paymentMethodId");
+        // check for a create
+        if (request.getAttribute("paymentMethodId") != null) {
+            paymentMethodId = (String) request.getAttribute("paymentMethodId");
+        }
+
+        // check for an update
+        if (request.getAttribute("newPaymentMethodId") != null) {
+            paymentMethodId = (String) request.getAttribute("newPaymentMethodId");
+        }
+
         results.put("paymentMethodId", paymentMethodId);
 
         GenericValue paymentMethod = null;
         GenericValue creditCard = null;
+        GenericValue giftCard = null;
         GenericValue eftAccount = null;
 
         if (UtilValidate.isNotEmpty(paymentMethodId)) {
             try {
                 paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
                 creditCard = delegator.findByPrimaryKey("CreditCard", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+                giftCard = delegator.findByPrimaryKey("GiftCard", UtilMisc.toMap("paymentMethodId", paymentMethodId));
                 eftAccount = delegator.findByPrimaryKey("EftAccount", UtilMisc.toMap("paymentMethodId", paymentMethodId));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
@@ -147,6 +159,9 @@ public class PaymentWorker {
         if (creditCard != null) {
             results.put("creditCard", creditCard);
         }
+        if (giftCard != null) {
+            results.put("giftCard", giftCard);
+        }
         if (eftAccount != null) {
             results.put("eftAccount", eftAccount);
         }
@@ -155,6 +170,8 @@ public class PaymentWorker {
 
         if (creditCard != null) {
             curContactMechId = UtilFormatOut.checkNull(tryEntity ? creditCard.getString("contactMechId") : request.getParameter("contactMechId"));
+        } else if (giftCard != null) {
+            curContactMechId = UtilFormatOut.checkNull(tryEntity ? giftCard.getString("contactMechId") : request.getParameter("contactMechId"));
         } else if (eftAccount != null) {
             curContactMechId = UtilFormatOut.checkNull(tryEntity ? eftAccount.getString("contactMechId") : request.getParameter("contactMechId"));
         }

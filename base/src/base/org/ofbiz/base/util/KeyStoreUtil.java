@@ -1,5 +1,5 @@
 /*
- * $Id: KeyStoreUtil.java,v 1.2 2003/10/31 19:45:46 ajzeneski Exp $
+ * $Id: KeyStoreUtil.java,v 1.3 2003/11/04 18:46:29 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,6 +34,9 @@ import java.security.cert.*;
 import java.security.cert.Certificate;
 import java.security.*;
 import java.util.Collection;
+import java.util.List;
+import java.util.Enumeration;
+import java.util.ArrayList;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -48,7 +51,7 @@ import javax.crypto.SecretKey;
  * KeyStoreUtil - Utilities for getting KeyManagers and TrustManagers
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class KeyStoreUtil {
@@ -97,6 +100,10 @@ public class KeyStoreUtil {
         return ks;
     }
 
+    public static void saveTrustStore(KeyStore ks) throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException {
+        ks.store(new FileOutputStream(getTrustStoreFileName()), getTrustStorePassword().toCharArray());
+    }
+
     public static boolean keyStoreExists(String fileName) {
         File keyFile = new File(fileName);
         return keyFile.exists();
@@ -109,6 +116,28 @@ public class KeyStoreUtil {
         ks.store(new FileOutputStream(fileName), password.toCharArray());
         ks.load(new FileInputStream(fileName), password.toCharArray());
         return ks;
+    }
+
+    public static void renameKeyStoreEntry(String fromAlias, String toAlias) throws GeneralSecurityException, IOException {
+        KeyStore ks = getKeyStore();
+        String pass = getKeyStorePassword();
+        renameEntry(ks, pass, fromAlias, toAlias);
+        saveKeyStore(ks);
+    }
+
+    private static void renameEntry(KeyStore ks, String pass, String fromAlias, String toAlias) throws KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException {
+        if (ks.isKeyEntry(fromAlias)) {
+            Key fromKey = ks.getKey(fromAlias, pass.toCharArray());
+            if (fromKey instanceof PrivateKey) {
+                Certificate[] certs = ks.getCertificateChain(fromAlias);
+                ks.deleteEntry(fromAlias);
+                ks.setKeyEntry(toAlias, fromKey, pass.toCharArray(), certs);
+            }
+        } else if (ks.isCertificateEntry(fromAlias)) {
+            Certificate cert = ks.getCertificate(fromAlias);
+            ks.deleteEntry(fromAlias);
+            ks.setCertificateEntry(toAlias, cert);
+        }
     }
 
     public static void importPKCS8CertChain(KeyStore ks, String alias, byte[] keyBytes, String keyPass, byte[] certChain) throws InvalidKeySpecException, NoSuchAlgorithmException, CertificateException, KeyStoreException {

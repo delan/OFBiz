@@ -19,20 +19,62 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    1.0
+ *@version    $Revision: 1.1 $
+ *@since      3.0
  */
 
 import java.util.HashMap;
-;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.accounting.payment.PaymentWorker;
 import org.ofbiz.party.contact.ContactMechWorker;
+import org.ofbiz.securityext.login.*;
 
+// basic admin settings
+String externalLoginKey = LoginEvents.getExternalLoginKey(request);
+String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
+context.put("externalKeyParam",externalKeyParam);
+
+String partyId = request.getParameter("party_id");
+if (partyId == null) partyId = request.getParameter("partyId");
+context.put("partyId", partyId);
+
+// standard partymgr permissions
+security = request.getAttribute("security");
+if (security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {
+    context.put("hasViewPermission", true);
+} else {
+    context.put("hasViewPermission", false);
+}
+if (security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {
+    context.put("hasCreatePermission", true);
+} else {
+    context.put("hasCreatePermission", false);
+}
+if (security.hasEntityPermission("PARTYMGR", "_UPDATE", session)) {
+    context.put("hasUpdatePermission", true);
+} else {
+    context.put("hasUpdatePermission", false);
+}
+if (security.hasEntityPermission("PARTYMGR", "_DELETE", session)) {
+    context.put("hasDeletePermission", true);
+} else {
+    context.put("hasDeletePermission", false);
+}
+
+// extended pay_info permissions
+if (security.hasEntityPermission("PAY_INFO", "_VIEW", session)) {
+    context.put("hasPayInfoPermission", true);
+} else {
+    context.put("hasPayInfoPermission", false);
+}
+
+// payment info
 userLogin = session.getAttribute("userLogin");
 security = request.getAttribute("security");
 
-paymentResults = PaymentWorker.getPaymentMethodAndRelated(request, userLogin.getString("partyId"));
+paymentResults = PaymentWorker.getPaymentMethodAndRelated(request, partyId);
 //returns the following: "paymentMethod", "creditCard", "giftCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity"
 prIter = paymentResults.keySet().iterator();
 while(prIter.hasNext()) {
@@ -72,10 +114,8 @@ if (!tryEntity.booleanValue()) eftAccountData = parameterMap;
 if (eftAccountData == null) eftAccountData = new HashMap();
 if (eftAccountData != null) context.put("eftAccountData", eftAccountData);
 
-//prepare security flag
-if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && (context.get("creditCard") != null || context.get("giftCard") != null || context.get("eftAccount") != null) && context.get("paymentMethod") != null && !userLogin.get("partyId").equals((context.get("paymentMethod")).get("partyId"))) {
-    context.put("canNotView", true);
-} else {
-    context.put("canNotView", false);
-}
+String donePage = request.getParameter("DONE_PAGE");
+if (donePage == null) donePage = (String) request.getAttribute("DONE_PAGE");
+if (donePage == null || donePage.length() <= 0) donePage = "viewprofile?party_id=" + partyId;
+context.put("donePage", donePage);
 
