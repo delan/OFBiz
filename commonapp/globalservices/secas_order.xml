@@ -27,7 +27,7 @@
     <!-- Requirement / CustRequestItem association event -->
     <eca service="createRequirement" event="commit">
     	<condition field-name="custRequestId" operator="is-not-empty"/>
-    	<condition field-name="custRequestItemSeqId" operator="is-not-null"/>
+    	<condition field-name="custRequestItemSeqId" operator="is-not-empty"/>
     	<action service="associatedRequirementWithRequestItem" mode="sync"/>
     </eca>
 </service-eca>
