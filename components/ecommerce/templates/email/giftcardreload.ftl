@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -29,16 +29,16 @@
      All other fields in this template are designed to work with the values (responses) from surveyId 1001
 -->
 
-<#if cardNumber?has_content>
+<#if giftCardNumber?has_content>
   <#assign displayNumber = "">
-  <#assign numSize = cardNumber?length - 4>
+  <#assign numSize = giftCardNumber?length - 4>
   <if 0 < numSize>
     <#list 0 .. numSize-1 as foo>
-      <#assign displayNumber = displayNumner + "*">
+      <#assign displayNumber = displayNumber + "*">
     </#list>
-    <#assign displayNumber = displayNumber + cardNumber[numSize .. numSize + 3]>
+    <#assign displayNumber = displayNumber + giftCardNumber[numSize .. numSize + 3]>
   <#else>
-    <#assign displayNumber = cardNumber>
+    <#assign displayNumber = giftCardNumber>
   </#if>
 </#if>
 
