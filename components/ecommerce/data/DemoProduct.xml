@@ -25,7 +25,7 @@
   	inventoryFacilityId="WebStoreWarehouse" oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N" 
   	defaultLocaleString="en_US" defaultCurrencyUomId="USD" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" 
   	headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED" 
-  	itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" 
+  	itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS" 
   	authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service." 
   	authFraudMessage="Your order has been rejected and your account has been disabled due to fraud." 
   	authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email." 

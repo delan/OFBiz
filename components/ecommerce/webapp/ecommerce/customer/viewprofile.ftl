@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.14 $
+ *@version    $Revision: 1.15 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -284,7 +284,7 @@
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
                                       <b>
-                                        ${uiLabelMap.AccountingCreditCard}: ${creditCard.nameOnCard} - ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                                        ${uiLabelMap.AccountingCreditCard}: ${creditCard.firstNameOnCard} ${creditCard.lastNameOnCard} - ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                                       </b>
                                       (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})
                                       <#if paymentMethod.thruDate?exists><b>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</b></#if>

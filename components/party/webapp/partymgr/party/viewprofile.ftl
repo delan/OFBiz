@@ -352,7 +352,7 @@
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
                                       <b>
-                                        ${uiLabelMap.AccountingCreditCard}: ${creditCard.nameOnCard} -
+                                        ${uiLabelMap.AccountingCreditCard}: ${creditCard.firstNameOnCard} ${creditCard.lastNameOnCard} -
                                         <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
                                             ${creditCard.cardType}
                                             ${creditCard.cardNumber}

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
 -->
 
@@ -136,7 +136,7 @@ function setOrderType(po) {
           <td width='6%'>&nbsp;</td>
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
-              <select class="selectBox" name="supplierPartyId"<#if sessionAttributes.orderMode?default("") != "PURCHASE_ORDER"> disabled</#if>>
+              <select class="selectBox" name="supplierPartyId"<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> disabled</#if>>
                 <option value="">No Supplier</option>
                 <#list suppliers as supplier>
                   <option value="${supplier.partyId}"<#if supplier.partyId == thisPartyId> selected</#if>>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(supplier, true)}</option>
