@@ -76,25 +76,44 @@ public class OrderServices {
         // check inventory and other things for each item
         String prodCatalogId = (String) context.get("prodCatalogId");
         List errorMessages = new LinkedList();
-        Iterator itemIter = orderItems.iterator();
+        Map normalizedItemQuantities = new HashMap();
+        Map normalizedItemNames = new HashMap();
+        Iterator itemIter = orderItems.iterator();        
         java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-
+        
+        // need to run through the items combining any cases where multiple lines refer to the 
+        // same product so the inventory check will work correctly
         while (itemIter.hasNext()) {
-            // if the item is out of stock, return an error to that effect
             GenericValue orderItem = (GenericValue) itemIter.next();
+            String currentProductId = (String) orderItem.get("productId");
+            if (normalizedItemQuantities.get(currentProductId) == null) {
+                normalizedItemQuantities.put(currentProductId, new Double(orderItem.getDouble("quantity").doubleValue()));
+                normalizedItemNames.put(currentProductId, new String(orderItem.getString("itemDescription")));
+            } else {
+                Double currentQuantity = (Double) normalizedItemQuantities.get(currentProductId);
+                normalizedItemQuantities.put(currentProductId, new Double(currentQuantity.doubleValue() + orderItem.getDouble("quantity").doubleValue()));
+            }
+        }
+
+		Iterator normalizedIter = normalizedItemQuantities.keySet().iterator();   
+        while (normalizedIter.hasNext()) {
+            // if the item is out of stock, return an error to that effect
+            String currentProductId = (String) normalizedIter.next();
+            Double currentQuantity = (Double) normalizedItemQuantities.get(currentProductId);
+            String itemName = (String) normalizedItemNames.get(currentProductId);
             GenericValue product = null;
 
             try {
-                product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.get("productId")));
+                product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", currentProductId));
             } catch (GenericEntityException e) {
-                String errMsg = UtilProperties.getMessage(resource, "product.not_found", new Object[] { orderItem.get("productId") }, locale);
+                String errMsg = UtilProperties.getMessage(resource, "product.not_found", new Object[] { currentProductId }, locale);
                 Debug.logError(e, errMsg);
                 errorMessages.add(errMsg);
                 continue;
             }
 
             if (product == null) {
-                String errMsg = UtilProperties.getMessage(resource, "product.not_found", new Object[] { orderItem.get("productId") }, locale);
+                String errMsg = UtilProperties.getMessage(resource, "product.not_found", new Object[] { currentProductId }, locale);
                 Debug.logError(errMsg);
                 errorMessages.add(errMsg);
                 continue;
@@ -103,7 +122,7 @@ public class OrderServices {
             // check to see if introductionDate hasn't passed yet
             if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
                 String excMsg = UtilProperties.getMessage(resource, "product.not_yet_for_sale", 
-                		new Object[] { getProductName(product, orderItem), product.getString("productId") }, locale);
+                		new Object[] { getProductName(product, itemName), product.getString("productId") }, locale);
                 Debug.logWarning(excMsg);
                 errorMessages.add(excMsg);
                 continue;
@@ -112,17 +131,17 @@ public class OrderServices {
             // check to see if salesDiscontinuationDate has passed
             if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {
                 String excMsg = UtilProperties.getMessage(resource, "product.no_longer_for_sale", 
-                		new Object[] { getProductName(product, orderItem), product.getString("productId") }, locale);
+                		new Object[] { getProductName(product, itemName), product.getString("productId") }, locale);
                 Debug.logWarning(excMsg);
                 errorMessages.add(excMsg);
                 continue;
             }
-
+                     
             if (CatalogWorker.isCatalogInventoryRequired(prodCatalogId, product, delegator)) {
-                if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, orderItem.getString("productId"), 
-                		orderItem.getDouble("quantity").doubleValue(), delegator, dispatcher)) {
+                if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, currentProductId, 
+                		currentQuantity.doubleValue(), delegator, dispatcher)) {
                     String invErrMsg = UtilProperties.getMessage(resource, "product.out_of_stock", 
-                    		new Object[] { getProductName(product, orderItem), orderItem.getString("productId") }, locale);
+                    		new Object[] { getProductName(product, itemName), currentProductId }, locale);
                     Debug.logWarning(invErrMsg);
                     errorMessages.add(invErrMsg);
                     continue;
@@ -388,6 +407,14 @@ public class OrderServices {
         } else {
             return orderItem.getString("itemDescription");
         }
+    }
+    
+    public static String getProductName(GenericValue product, String orderItemName) {
+    	if (UtilValidate.isNotEmpty(product.getString("productName"))) {
+    		return product.getString("productName");
+    	} else {
+    		return orderItemName;
+    	}
     }
 
     /** Service for changing the status on an order */
