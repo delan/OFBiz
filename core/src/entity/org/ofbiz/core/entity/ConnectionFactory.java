@@ -91,7 +91,11 @@ public class ConnectionFactory {
                         InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);
                         if (ic != null)
                             ds = ic.lookup(jndiName);
+                        else if (Debug.verboseOn())
+                            Debug.logVerbose("Initial Context returned was NULL.", module);
+
                         if (ds != null) {
+                            if (Debug.verboseOn()) Debug.logVerbose("Got a Datasource object.", module);
                             dsCache.put(jndiName, ds);
                             Connection con = null;
                             if (ds instanceof XADataSource) {
@@ -125,6 +129,8 @@ public class ConnectionFactory {
 
                             //if (con != null) if (Debug.infoOn()) Debug.logInfo("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog());
                             return con;
+                        } else {
+                            Debug.logError("Datasource returned was NULL.", module);
                         }
                     } catch (NamingException ne) {
                         if (Debug.verboseOn()) Debug.logVerbose("[ConnectionFactory.getConnection] Failed to find DataSource named " + jndiName + " in JNDI. Trying normal database.", module);
