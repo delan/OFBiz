@@ -68,7 +68,7 @@ while (pri.hasNext()) {
 }
 
 custList = UtilMisc.toList(new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER"), new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, null));
-baseList = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
+baseList = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
 expressions = UtilMisc.toList(new EntityExprList(custList, EntityOperator.OR), new EntityExprList(pRolesList, EntityOperator.OR), new EntityExprList(baseList, EntityOperator.AND));
 conditions = new EntityConditionList(expressions, EntityOperator.AND);
     
