@@ -40,6 +40,7 @@
 
 <%
 	String serviceName = request.getParameter("SERVICE_NAME");
+	String loaderName = dispatcher.getName();
 %>
 
 <% if (serviceName == null) { %>
@@ -52,13 +53,11 @@
       <tr>
         <td align="right"><div class="tabletext">Service:</div></td>
         <td><input type="text" class="inputBox" size="20" name="SERVICE_NAME"></td>
-      </tr>
-      <%--
+      </tr>      
       <tr>
         <td align="right"><div class="tabletext">Loader Name:</div></td>
-        <td><input type="text" class="inputBox" size="20" name="loaderName" value="<%=selectedLoader%>"></td>
-      </tr>
-      --%>
+        <td><input type="text" class="inputBox" size="20" name="LOADER_NAME" value="<%=loaderName%>"></td>
+      </tr>      
       <tr>
         <td align="right"><div class="tabletext">Start Date/Time:</div></td>
         <td>

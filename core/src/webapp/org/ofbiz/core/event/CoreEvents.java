@@ -174,10 +174,12 @@ public class CoreEvents {
     public static String scheduleService(HttpServletRequest request, HttpServletResponse response) {
         Security security = (Security) request.getAttribute("security");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         
         Map params = UtilHttp.getParameterMap(request);
         // get the schedule parameters
         String serviceName = (String) params.remove("SERVICE_NAME");
+        String loaderName = (String) params.remove("LOADER_NAME");
         String serviceTime = (String) params.remove("SERVICE_TIME");
         String serviceEndTime = (String) params.remove("SERVICE_END_TIME");
         String serviceFreq = (String) params.remove("SERVICE_FREQUENCY");
@@ -220,7 +222,18 @@ public class CoreEvents {
         // add the userLogin to the context        
         if (userLogin != null) 
             context.put("userLogin", userLogin);
-            
+        
+        // get the service loader by name
+        if (loaderName != null && loaderName.length() > 0) {
+            ServiceDispatcher sd = ServiceDispatcher.getInstance(loaderName, delegator);
+            if (sd != null) {
+                dispatcher = sd.getLocalDispatcher(loaderName);   
+            } else {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Invalid service loader name, no dispatcher found.");
+                return "error";
+            }
+        }
+        
         // lookup the service definition to see if this service is externally available, if not require the SERVICE_INVOKE_ANY permission
         ModelService modelService = null;
         try {
