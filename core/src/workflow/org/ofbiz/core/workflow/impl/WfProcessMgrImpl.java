@@ -62,7 +62,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         if (packageVersion != null) finder.put("packageVersion", packageVersion);
         if (processVersion != null) finder.put("processVersion", processVersion);
         try {
-            Collection processes = delegator.findByAnd("WorkflowProcess", finder, order);
+            List processes = delegator.findByAnd("WorkflowProcess", finder, order);
             if (processes.size() == 0)
                 throw new WfException("No process definition found for the specified processId");
             else

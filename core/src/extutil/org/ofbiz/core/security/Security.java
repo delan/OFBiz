@@ -70,7 +70,7 @@ public class Security {
      * @return An iterator made from the Collection either cached or retrieved from the database through the UserLoginSecurityGroup Delegator.
      */
     public Iterator findUserLoginSecurityGroupByUserLoginId(String userLoginId) {
-        Collection collection = (Collection) userLoginSecurityGroupByUserLoginId.get(userLoginId);
+        List collection = (List) userLoginSecurityGroupByUserLoginId.get(userLoginId);
         if (collection == null) {
             try {
                 collection = delegator.findByAnd("UserLoginSecurityGroup", UtilMisc.toMap("userLoginId", userLoginId), null);

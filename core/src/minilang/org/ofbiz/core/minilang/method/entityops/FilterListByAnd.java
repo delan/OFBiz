@@ -59,7 +59,7 @@ public class FilterListByAnd extends MethodOperation {
         if (UtilValidate.isNotEmpty(mapName)) {
             theMap = (Map) methodContext.getEnv(mapName);
         }
-        methodContext.putEnv(toListName, EntityUtil.filterByAnd((Collection) methodContext.getEnv(listName), theMap));
+        methodContext.putEnv(toListName, EntityUtil.filterByAnd((List) methodContext.getEnv(listName), theMap));
         return true;
     }
 }

@@ -66,9 +66,9 @@ public class FilterListByDate extends MethodOperation {
 
     public boolean exec(MethodContext methodContext) {
         if (UtilValidate.isNotEmpty(validDateName)) {
-            methodContext.putEnv(toListName, EntityUtil.filterByDate((Collection) methodContext.getEnv(listName), (java.sql.Timestamp) methodContext.getEnv(validDateName), fromFieldName, thruFieldName, true));
+            methodContext.putEnv(toListName, EntityUtil.filterByDate((List) methodContext.getEnv(listName), (java.sql.Timestamp) methodContext.getEnv(validDateName), fromFieldName, thruFieldName, true));
         } else {
-            methodContext.putEnv(toListName, EntityUtil.filterByDate((Collection) methodContext.getEnv(listName), UtilDateTime.nowTimestamp(), fromFieldName, thruFieldName, true));
+            methodContext.putEnv(toListName, EntityUtil.filterByDate((List) methodContext.getEnv(listName), UtilDateTime.nowTimestamp(), fromFieldName, thruFieldName, true));
         }
         return true;
     }
