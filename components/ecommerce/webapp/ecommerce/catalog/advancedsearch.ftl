@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -37,7 +37,7 @@
           </td>
           <td valign="middle">
             <div class="tabletext">
-              ${(searchCategory.description)?if_exists}, include sub-categories?
+              <b>"${(searchCategory.description)?if_exists}"</b> Include sub-categories?
               Yes<input type="RADIO" name="SEARCH_SUB_CATEGORIES" value="Y" checked>
               No<input type="RADIO" name="SEARCH_SUB_CATEGORIES" value="N">
             </div>
