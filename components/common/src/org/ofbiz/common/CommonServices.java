@@ -1,5 +1,5 @@
 /*
- * $Id: CommonServices.java,v 1.11 2004/05/25 06:45:35 ajzeneski Exp $
+ * $Id: CommonServices.java,v 1.12 2004/06/02 15:02:58 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceXaWrapper;
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class CommonServices {
@@ -60,7 +60,7 @@ public class CommonServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map testService(DispatchContext dctx, Map context) {
-        Map response = new HashMap();
+        Map response = ServiceUtil.returnSuccess();
 
         if (context.size() > 0) {
             Iterator i = context.keySet().iterator();
