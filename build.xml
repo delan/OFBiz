@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.1 2003/08/17 03:11:29 ajzeneski Exp $
+ *  $Id: build.xml,v 1.2 2003/08/17 05:12:42 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -48,16 +48,29 @@
     <target name="sub-clean" depends="">
         <echo message="[clean] ========== Starting Clean =========="/>
         
-        <echo message="[clean]" />
+        <echo message="[clean]"/>
         <echo message="[clean] ========================================="/>
         <echo message="[clean] ========== Cleaning base tools =========="/>
         <echo message="[clean] ========================================="/>        
-        <ant dir="base" target="clean" inheritAll="false"/>        
-        <echo message="[clean]" />
+        <ant dir="base" target="clean" inheritAll="false"/>
+               
+        <echo message="[clean]"/>
         <echo message="[clean] ==============================================="/>
         <echo message="[clean] ========== Cleaning entity component =========="/>
         <echo message="[clean] ==============================================="/>                
-        <ant dir="components/entity" target="clean" inheritAll="false"/>        
+        <ant dir="components/entity" target="clean" inheritAll="false"/>
+        
+        <echo message="[clean]"/>
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning security component =========="/>
+        <echo message="[clean] ================================================="/>                
+        <ant dir="components/security" target="clean" inheritAll="false"/>
+        
+        <echo message="[clean]"/>
+        <echo message="[clean] ================================================"/>
+        <echo message="[clean] ========== Cleaning service component =========="/>
+        <echo message="[clean] ================================================"/>                
+        <ant dir="components/service" target="clean" inheritAll="false"/>                        
 
         <delete file="ofbiz.jar"/>
         <echo message="[clean] ========== Done Cleaning =========="/>
@@ -74,22 +87,34 @@
     <target name="build" depends="ofbiz-init">
         <echo message="[build] ========== Start Building (Compile) =========="/>
         
-        <echo message="[build]" />
+        <echo message="[build]"/>
         <echo message="[build] ========================================="/>
         <echo message="[build] ========== Building base tools =========="/>
         <echo message="[build] ========================================="/>
-        <ant dir="base" inheritAll="false" />
+        <ant dir="base" inheritAll="false"/>
         <!-- copy the ofbiz.jar file -->
         <copy todir="${basedir}">
           <fileset dir="base/build/lib" includes="ofbiz.jar"/>
         </copy>
         
-        <echo message="[build]" />
+        <echo message="[build]"/>
         <echo message="[build] ==============================================="/>
         <echo message="[build] ========== Building entity component =========="/>
         <echo message="[build] ==============================================="/>
-        <ant dir="components/entity" inheritAll="false" />
-                        
+        <ant dir="components/entity" inheritAll="false"/>
+        
+        <echo message="[build]"/>
+        <echo message="[build] ================================================="/>
+        <echo message="[build] ========== Building security component =========="/>
+        <echo message="[build] ================================================="/>
+        <ant dir="components/security" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] ===========================-===================="/>
+        <echo message="[build] ========== Building service component =========="/>
+        <echo message="[build] ================================================"/>
+        <ant dir="components/service" inheritAll="false" />
+                                         
         <echo message="[build] ========== Done Building (Compile) ==========" />
     </target>
 
@@ -100,17 +125,29 @@
     <target name="docs" depends="">
         <echo message="[docs] ========== Start Building (JavaDoc) =========="/>
         
-        <echo message="[docs]" />
+        <echo message="[docs]"/>
         <echo message="[docs] ========================================="/>
         <echo message="[docs] ========== Building base tools =========="/>
         <echo message="[docs] ========================================="/>
-        <ant dir="base" target="docs" inheritAll="false" />
+        <ant dir="base" target="docs" inheritAll="false"/>
         
-        <echo message="[docs]" />
+        <echo message="[docs]"/>
         <echo message="[docs] ==============================================="/>
         <echo message="[docs] ========== Building entity component =========="/>
         <echo message="[docs] ==============================================="/>
-        <ant dir="components/entity" target="docs" inheritAll="false" />
+        <ant dir="components/entity" target="docs" inheritAll="false"/>
+        
+        <echo message="[docs]"/>
+        <echo message="[docs] ======================--========================="/>
+        <echo message="[docs] ========== Building security component =========="/>
+        <echo message="[docs] ================================================="/>
+        <ant dir="components/security" target="docs" inheritAll="false"/>
+        
+        <echo message="[docs]"/>
+        <echo message="[docs] ======================-========================="/>
+        <echo message="[docs] ========== Building service component =========="/>
+        <echo message="[docs] ======================-========================="/>
+        <ant dir="components/service" target="docs" inheritAll="false"/>
         
         <echo message="[docs] ========== Done Building (JavaDocs) ==========" />              
     </target>
