@@ -1,5 +1,5 @@
 /*
- * $Id: ParametricSearch.java,v 1.6 2003/10/26 06:05:38 jonesde Exp $
+ * $Id: ParametricSearch.java,v 1.7 2003/11/25 06:05:36 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -22,8 +22,6 @@
  */
 package org.ofbiz.product.feature;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -40,14 +38,12 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.product.product.KeywordSearch;
 
 /**
  *  Utilities for parametric search based on features.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.1
  */
 public class ParametricSearch {

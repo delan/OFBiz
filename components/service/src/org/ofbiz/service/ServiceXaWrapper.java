@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceXaWrapper.java,v 1.3 2003/11/14 20:54:50 ajzeneski Exp $
+ * $Id: ServiceXaWrapper.java,v 1.4 2003/11/25 06:05:36 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -24,24 +24,24 @@
  */
 package org.ofbiz.service;
 
+import java.util.Map;
+
+import javax.transaction.InvalidTransactionException;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
+import javax.transaction.xa.XAException;
+import javax.transaction.xa.Xid;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.transaction.GenericXaResource;
-import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.transaction.TransactionFactory;
-
-import javax.transaction.xa.Xid;
-import javax.transaction.xa.XAException;
-import javax.transaction.TransactionManager;
-import javax.transaction.Transaction;
-import javax.transaction.SystemException;
-import javax.transaction.InvalidTransactionException;
-import java.util.Map;
 
 /**
  * ServiceXaWrapper - XA Resource wrapper for running services on commit() or rollback()
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class ServiceXaWrapper extends GenericXaResource {
