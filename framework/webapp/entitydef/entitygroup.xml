@@ -38,6 +38,7 @@
     <entity-group group="org.ofbiz" entity="UserAgentMethodType" />
     <entity-group group="org.ofbiz" entity="UserAgentType" />
     <entity-group group="org.ofbiz" entity="Visit" />
+    <entity-group group="org.ofbiz" entity="Visitor" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.webapp.website -->
