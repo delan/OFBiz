@@ -88,9 +88,9 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         
         // Default mode is MANUAL -- only start if we are automatic
         if ( mode.equals("WAM_AUTOMATIC") )
-            startActivity(); 
+            this.startActivity(); 
         else 
-            assignActivity();
+            this.assignActivity();
     }
     
     /**
@@ -99,8 +99,13 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @throws CannotComplete Cannot complete the activity
      */
     public void complete() throws WfException, CannotComplete {
-        changeState("closed.complete");
-        // implement me
+        String mode = valueObject.getString("finishModeEnumId");
+        if ( mode == null )
+            throw new CannotComplete("Finish mode cannot be null");
+        
+        // Default mode is MANUAL -- only finish if we are automatic
+        if ( mode.equals("WAM_AUTOMATIC") )
+            this.finishActivity();                                    
     }
     
     /**
@@ -225,21 +230,47 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if ( type == null )
             throw new WfException("Illegal activity type");
         
-        if ( type.equals("WAT_ROUTE") )
-            complete();
+        if ( type.equals("WAT_NO") )
+            return;                   // NO implementation requires MANUAL FinishMode
+        else if ( type.equals("WAT_ROUTE") )
+            this.complete();     // ROUTE goes directly to complete status
         else if ( type.equals("WAT_TOOL") )
-            runTool();
+            this.runTool();       // TOOL will invoke a procedure (service) or an application
         else if ( type.equals("WAT_SUBFLOW") )
-            runSubFlow();
+            this.runSubFlow(); // Begin a sub workflow
         else if ( type.equals("WAT_LOOP") )
-            runLoop();
+            this.runLoop();      // A LOOP control activity
         else
             throw new WfException("Illegal activity type");
     }
-    
+         
     // Runs a TOOL activity
-    private void runTool() throws WfException {
-        // implement me
+    private void runTool() throws WfException {        
+        Collection tools = null;
+        try {
+            tools = valueObject.getRelated("WorkflowActivityTool");
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+        if ( tools == null )
+            return;
+        
+        List waiters = new ArrayList();
+        Iterator i = tools.iterator();
+        while ( i.hasNext() ) 
+            waiters.add(this.runService(((GenericValue)i.next()).getString("toolId")));
+                    
+        while ( waiters.size() > 0 ) {
+            i = waiters.iterator();
+            while ( i.hasNext() ) {
+                GenericResultWaiter thw = (GenericResultWaiter) i.next();
+                if ( thw.isCompleted() )
+                    waiters.remove(thw);
+            }
+        }
+        
+        this.complete();            
     }
     
     // Runs a LOOP activity
@@ -249,7 +280,54 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     
     // Runs a SUBFLOW activity
     private void runSubFlow() throws WfException {
-        // implement me
+        GenericValue subFlow = null;
+        try {
+            subFlow = valueObject.getRelatedOne("WorkflowActivitySubFlow");
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }        
+        if ( subFlow == null )
+            return;
+        
+        String type = "WSE_SYNCHR";
+        if ( subFlow.get("executionEnumId") != null )
+            type = subFlow.getString("executionEnumId");           
+        
+        GenericResultWaiter waiter = this.runService(subFlow.getString("subFlowProcessId")); // fixme
+        if ( type.equals("WSE_SYNCHR") ) 
+            waiter.waitForResult();
+        
+        this.complete();        
     }
         
+    // Finishes an automatic activity
+    private void finishActivity() throws WfException, CannotComplete {
+        container().receiveResults(this,result);
+        try {
+            changeState("closed.complete");
+        }
+        catch ( InvalidState is ) {
+            throw new CannotComplete(is.getMessage(),is);
+        }
+        catch ( TransitionNotAllowed tna ) {
+            throw new CannotComplete(tna.getMessage(),tna);
+        }        
+        container().activityComplete(this);
+    }
+    
+    // Invoke the procedure (service) -- This will include sub-workflows
+    private GenericResultWaiter runService(String serviceName) throws WfException {
+        GenericResultWaiter waiter = new GenericResultWaiter();
+        DispatchContext dctx = dispatcher.getLocalContext(serviceLoader);        
+        try {
+            ModelService service = dctx.getModelService(serviceName);
+            dispatcher.runAsync(serviceLoader,service,context,waiter);
+        }
+        catch ( GenericServiceException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+        return waiter;
+    }
+                
 }

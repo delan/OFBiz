@@ -353,7 +353,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             if ( a.key().equals(key) )
                 return a;
         }
-        throw new WfException("Activity not a member of this process");
+        throw new WfException("Activity not an active member of this process");
     }
     
     // Evaluate the transition condition
