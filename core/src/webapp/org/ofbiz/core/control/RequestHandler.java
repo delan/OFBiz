@@ -116,7 +116,7 @@ public class RequestHandler implements Serializable {
                 checkLoginReturnString = loginEvent.invoke(request,response);
             }
             catch ( EventHandlerException e ) {
-                throw new RequestHandlerException(e.getMessage());
+                throw new RequestHandlerException(e.getMessage(),e);
             }
             if(!"success".equalsIgnoreCase(checkLoginReturnString)) {
                 //previous URL already saved by event, so just do as the return says...
@@ -144,7 +144,7 @@ public class RequestHandler implements Serializable {
                     eventReturnString = eh.invoke(request,response);
                 }
                 catch ( EventHandlerException e ) {
-                    throw new RequestHandlerException(e.getMessage());
+                    throw new RequestHandlerException(e.getMessage(),e);
                 }
             }
         }

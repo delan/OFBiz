@@ -43,7 +43,7 @@ public class ModelService {
     public static final String RESPONSE_MESSAGE = "responseMessage";
     public static final String RESPOND_SUCCESS = "success";
     public static final String RESPOND_ERROR = "error";
-    public static final String ERROR_MESSAGE ="errorMessage";    
+    public static final String ERROR_MESSAGE ="errorMessage";
     
     /** The name of this service */
     public String name;
@@ -84,47 +84,56 @@ public class ModelService {
      * @param mode Test either mode IN or mode OUT
      * @return true if the validation is successful
      */
-    public boolean validate(Map test, String mode) {                
-        Map requiredInfo = new HashMap();        
-        Map optionalInfo = new HashMap();        
+    public boolean validate(Map test, String mode) {
+        Map requiredInfo = new HashMap();
+        Map optionalInfo = new HashMap();
         
         // get the info values
-        Collection values = contextInfo.values();              
+        Collection values = contextInfo.values();
         
         Iterator i = values.iterator();
         while ( i.hasNext() ) {
-            ModelParam p = (ModelParam) i.next();            
-            if ( p.mode.equals("INOUT") || p.mode.equals(mode) ) {                
+            ModelParam p = (ModelParam) i.next();
+            if ( p.mode.equals("INOUT") || p.mode.equals(mode) ) {
                 if ( !p.optional )
                     requiredInfo.put(p.name,p.type);
                 else
                     optionalInfo.put(p.name,p.type);
             }
-        }     
-                        
+        }
+        
         // get the test values
         Map requiredTest = new HashMap();
         Map optionalTest = new HashMap();
-        if ( test != null )
-            requiredTest.putAll(test);
+        if ( test == null )
+            test = new HashMap();
+        
+        requiredTest.putAll(test);
         if ( requiredTest != null ) {
-            List keyList = new ArrayList(requiredTest.keySet());            
+            List keyList = new ArrayList(requiredTest.keySet());
             Iterator t = keyList.iterator();
             while ( t.hasNext() ) {
                 Object key = t.next();
-                Object value = requiredTest.get(key);              
-                if ( !requiredInfo.containsKey(key) ) {                    
+                Object value = requiredTest.get(key);
+                if ( !requiredInfo.containsKey(key) ) {
                     requiredTest.remove(key);
                     optionalTest.put(key,value);
                 }
             }
         }
-                        
-        boolean testRequired = validate(requiredInfo,test,true);        
+        
+        Debug.logInfo("[ModelService.validate] : (" + mode + ") Required - " + requiredInfo.size() + " / " + requiredTest.size());
+        Debug.logInfo("[ModelService.validate] : (" + mode + ") Optional - " + optionalInfo.size() + " / " + optionalTest.size());
+        
+        boolean testRequired = validate(requiredInfo,requiredTest,true);
         boolean testOptional = validate(optionalInfo,optionalTest,false);
+        
+        Debug.logInfo("[ModelService.validate] : (" + mode + ") Required test - " + testRequired);
+        Debug.logInfo("[ModelService.validate] : (" + mode + ") Optional test - " + testOptional);
+        
         if ( testRequired && testOptional )
             return true;
-        return false;                                            
+        return false;
     }
     
     
@@ -143,14 +152,17 @@ public class ModelService {
         Set testSet = test.keySet();
         Set keySet = info.keySet();
         
+        // Quick check for sizes
+        if ( info.size() == 0 && test.size() == 0 )
+            return true;
         // This is to see if the test set contains all from the info set (reverse)
-        if ( reverse && !testSet.containsAll(keySet) )         
-            return false;        
+        if ( reverse && !testSet.containsAll(keySet) )
+            return false;
         // This is to see if the info set contains all from the test set
-        if ( !keySet.containsAll(testSet) )             
+        if ( !keySet.containsAll(testSet) )
             return false;
         
-                
+        
         // * Validate types next
         // Warning - the class types MUST be accessible to this classloader
         String DEFAULT_PACKAGE = "java.lang."; // We will test both the raw value and this + raw value

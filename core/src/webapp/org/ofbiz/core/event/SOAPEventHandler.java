@@ -135,6 +135,7 @@ public class SOAPEventHandler implements EventHandler {
                 Iterator p = params.iterator();
                 while ( p.hasNext() ) {
                     RPCParam param = (RPCParam) p.next();
+                    Debug.logInfo("[EventHandler] : Reading param - " + param.getName());
                     serviceContext.put(param.getName(),param.getValue());                    
                 }
                 try {
