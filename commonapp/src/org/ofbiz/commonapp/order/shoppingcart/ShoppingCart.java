@@ -132,6 +132,10 @@ public class ShoppingCart implements java.io.Serializable {
     public String getProductStoreId() {
     	return this.productStoreId;
     }
+    
+    public void setProductStoreId(String productStoreId) {
+        this.productStoreId = productStoreId;
+    }
 
     // =======================================================================
     // Methods for cart items
