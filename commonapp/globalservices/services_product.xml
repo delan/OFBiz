@@ -806,7 +806,7 @@
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="createFacilityGroup" auth="true">
         <description>Create an Facility Group</description>
         <attribute name="facilityGroupName" type="String" mode="IN" optional="false"/>
-        <attribute name="facilityGroupTypeId" type="String" mode="IN" optional="false"/>        
+        <attribute name="facilityGroupTypeId" type="String" mode="IN" optional="true"/>        
         <attribute name="primaryParentGroupId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="facilityGroupId" type="String" mode="OUT" optional="false"/>
