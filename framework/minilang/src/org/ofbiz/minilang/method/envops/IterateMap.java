@@ -71,8 +71,14 @@ public class IterateMap extends MethodOperation {
 
         Object oldKey = keyAcsr.get(methodContext);
         Object oldValue = valueAcsr.get(methodContext);
+        if (oldKey != null) {
+            Debug.logWarning("In iterate-map the key had a non-null value before entering the loop for the operation: " + this.rawString(), module);
+        }
+        if (oldValue != null) {
+            Debug.logWarning("In iterate-map the value had a non-null value before entering the loop for the operation: " + this.rawString(), module);
+        }
+        
         Map theMap = (Map) mapAcsr.get(methodContext);
-
         if (theMap == null) {
             if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", doing nothing: " + rawString(), module);
             return true;
@@ -94,8 +100,6 @@ public class IterateMap extends MethodOperation {
             }
         }
 
-        keyAcsr.put(methodContext, oldKey);
-        valueAcsr.put(methodContext, oldValue);
         return true;
     }
 
