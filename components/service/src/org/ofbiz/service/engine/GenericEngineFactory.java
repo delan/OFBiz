@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class GenericEngineFactory {
@@ -80,8 +80,8 @@ public class GenericEngineFactory {
             synchronized (GenericEngineFactory.class) {
                 engine = (GenericEngine) engines.get(engineName);
                 if (engine == null) {
-                    Class[] paramTypes = new Class[] {ServiceDispatcher.class};
-                    Object[] params = new Object[] {dispatcher};
+                    Class[] paramTypes = new Class[] { ServiceDispatcher.class };
+                    Object[] params = new Object[] { dispatcher };
 
                     try {
                         ClassLoader loader = Thread.currentThread().getContextClassLoader();
