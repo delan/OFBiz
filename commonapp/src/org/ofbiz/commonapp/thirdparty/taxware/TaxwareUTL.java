@@ -165,7 +165,7 @@ public class TaxwareUTL {
         return itemAdjustments;
     }
 
-    public List getOrderAdjustment() {
+    public List getOrderAdjustments() {
         return orderAdjustments;
     }
 
@@ -285,9 +285,6 @@ public class TaxwareUTL {
         while (i.hasNext()) {
             Record rec = (Record) i.next();
             ModelRecord model = rec.getModelRecord();
-
-            Debug.logVerbose("Item Adjustment Size: " + itemAdjustments.size(), module);
-            Debug.logVerbose("Order Adjustment Size: " + orderAdjustments.size(), module);
 
             // make the adjustment lists
             if (itemAdjustments.size() < records.size()) {

@@ -46,7 +46,7 @@ public class TaxwareServices {
         Double shipping = (Double) context.get("orderShippingAmount");
         GenericValue address = (GenericValue) context.get("shippingAddress");
 
-        if (items.size() != amnts.size() || ishpn.size() != amnts.size()) {
+        if (items.size() != amnts.size()) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "ERROR: Items, Amount, or ItemShipping lists are not valid size.");
             return result;
@@ -71,7 +71,7 @@ public class TaxwareServices {
                 return result;
             }
 
-            result.put("orderAdjustment", utl.getOrderAdjustment());
+            result.put("orderAdjustments", utl.getOrderAdjustments());
             result.put("itemAdjustments", utl.getItemAdjustments());
 
 
