@@ -1,5 +1,5 @@
 /*
- * $Id: ValueLinkServices.java,v 1.4 2004/03/02 19:59:23 ajzeneski Exp $
+ * $Id: ValueLinkServices.java,v 1.5 2004/03/12 21:53:57 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import javax.transaction.xa.XAException;
  * ValueLinkServices - Integration with ValueLink Gift Cards
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class ValueLinkServices {
@@ -55,9 +55,63 @@ public class ValueLinkServices {
         ValueLinkApi vl = ValueLinkApi.getInstance(delegator, props);
         vl.reload();
 
-        StringBuffer buf = vl.outputKeyCreation();
+        Boolean kekOnly = context.get("kekOnly") != null ? (Boolean) context.get("kekOnly") : new Boolean(false);
+        String kekTest = (String) context.get("kekTest");
+        Debug.log("KEK Only : " + kekOnly.booleanValue(), module);
+
+        StringBuffer buf = vl.outputKeyCreation(kekOnly.booleanValue(), kekTest);
         String output = buf.toString();
         Debug.log(":: Key Generation Output ::\n\n" + output, module);
+
+        Map result = ServiceUtil.returnSuccess();
+        result.put("output", output);
+        return result;
+    }
+
+    // test the KEK encryption
+    public static Map testKekEncryption(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Properties props = getProperties(context);
+
+        // get an api instance
+        ValueLinkApi vl = ValueLinkApi.getInstance(delegator, props);
+        vl.reload();
+
+        String testString = (String) context.get("kekTest");
+        Integer mode = (Integer) context.get("mode");
+        byte[] testBytes = StringUtil.fromHexString(testString);
+
+        // place holder
+        byte[] testEncryption = new byte[0];
+        String desc = "";
+
+        if (mode.intValue() == 1) {
+            // encrypt the test bytes
+            testEncryption = vl.encryptViaKek(testBytes);
+            desc = "Encrypted";
+        } else {
+            // decrypt the test bytes
+            testEncryption = vl.decryptViaKek(testBytes);
+            desc = "Decrypted";
+        }
+
+        // setup the output
+        StringBuffer buf = new StringBuffer();
+        buf.append("======== Begin Test String (" + testString.length() + ") ========\n");
+        buf.append(testString + "\n");
+        buf.append("======== End Test String ========\n\n");
+
+        buf.append("======== Begin Test Bytes (" + testBytes.length + ") ========\n");
+        buf.append(StringUtil.toHexString(testBytes) + "\n");
+        buf.append("======== End Test Bytes ========\n\n");
+
+        buf.append("======== Begin Test Bytes " + desc + " (" + testEncryption.length + ") ========\n");
+        buf.append(StringUtil.toHexString(testEncryption) + "\n");
+        buf.append("======== End Test Bytes " + desc + " ========\n\n");
+
+        String output = buf.toString();
+        Debug.log(":: KEK Test Output ::\n\n" + output, module);
 
         Map result = ServiceUtil.returnSuccess();
         result.put("output", output);
@@ -74,8 +128,16 @@ public class ValueLinkServices {
         ValueLinkApi vl = ValueLinkApi.getInstance(delegator, props);
         vl.reload();
 
-        // generate the new mwk
-        byte[] mwk = vl.generateMwk();
+        // place holder
+        byte[] mwk = null;
+
+        // see if we passed in the DES hex string
+        String desHexString = (String) context.get("desHexString");
+        if (desHexString == null || desHexString.length() == 0) {
+            mwk = vl.generateMwk();
+        } else {
+            mwk = vl.generateMwk(StringUtil.fromHexString(desHexString));
+        }
 
         // encrypt the mwk
         String mwkHex = StringUtil.toHexString(vl.encryptViaKek(mwk));
