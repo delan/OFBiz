@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -324,6 +324,7 @@
           <td>
             <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
               <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}">
+              <input type="hidden" name="partyId" value="${shoppingList.partyId?if_exists}">
               <input type="text" class="inputBox" name="productId" value="">
               <input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity?default("1")}">
               <input type="submit" class="smallSubmit" value="${uiLabelMap.PartyAddToShoppingList}">
