@@ -267,6 +267,10 @@
             </parameter>
           </ResourceParams>
         </Context>
+        <Context path="/webtools" docBase="../../ofbiz/webtools/webapp"
+                 debug="0" reloadable="true">
+          <Logger className="org.apache.catalina.logger.FileLogger" prefix="webtools_log." suffix=".txt" timestamp="true"/>
+        </Context>
         <Context path="/commonapp" docBase="../../ofbiz/commonapp/webapp"
                  debug="0" reloadable="true">
           <Logger className="org.apache.catalina.logger.FileLogger" prefix="commonapp_log." suffix=".txt" timestamp="true"/>
