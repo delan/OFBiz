@@ -49,28 +49,28 @@
               <div class='tabletext'>Edit Catalog with Catalog ID:</div>
               <form method=POST action='<@ofbizUrl>/EditProdCatalog</@ofbizUrl>' style='margin: 0;'>
                 <input type='text' size='20' maxlength='20' name='prodCatalogId' class='inputBox' value=''>                
-                <input type='submit' value='Edit Catalog' class='standardSubmit'>
+                <input type='submit' value='Edit Catalog' class='smallSubmit'>
               </form>
               <div class='tabletext'>OR: <A href='<@ofbizUrl>/EditProdCatalog</@ofbizUrl>' class='buttontext'>Create New Catalog</A></div>
             <br>            
               <div class='tabletext'>Edit Category with Category ID:</div>
               <form method=POST action='<@ofbizUrl>/EditCategory</@ofbizUrl>' style='margin: 0;'>
                 <input type='text' size='20' maxlength='20' name='productCategoryId' class='inputBox' value=''>
-                <input type='submit' value='Edit Category' class='standardSubmit'>
+                <input type='submit' value='Edit Category' class='smallSubmit'>
               </form>
               <div class='tabletext'>OR: <A href='<@ofbizUrl>/EditCategory</@ofbizUrl>' class='buttontext'>Create New Category</A></div>
             <br>
               <div class='tabletext'>Edit Product with Product ID:</div>
               <form method=POST action='<@ofbizUrl>/EditProduct</@ofbizUrl>' style='margin: 0;'>
                 <input type='text' size='20' maxlength='20' name='productId' class='inputBox' value=''>
-                <input type='submit' value='Edit Product' class='standardSubmit'>
+                <input type='submit' value='Edit Product' class='smallSubmit'>
               </form>
               <div class='tabletext'>OR: <A href='<@ofbizUrl>/EditProduct</@ofbizUrl>' class='buttontext'>Create New Product</A></div>
             <br>
               <div class='tabletext'>Find Product with ID Value:</div>
               <form method=POST action='<@ofbizUrl>/FindProductById</@ofbizUrl>' style='margin: 0;'>
                 <input type='text' size='20' maxlength='20' name='idValue' class='inputBox' value=''>
-                <input type='submit' value='Find Product' class='standardSubmit'>
+                <input type='submit' value='Find Product' class='smallSubmit'>
               </form>
             <br>
             <br>
