@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Revision$
- *@since      2.1
+ *@since      2.2
 -->
 
 <#if hasPermission>

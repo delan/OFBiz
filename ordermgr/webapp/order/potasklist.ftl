@@ -21,6 +21,7 @@
  *
  *@author     Tristan Austin (tristana@twibble.org)
  *@version    $Revision$
+ *@since      2.2
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
