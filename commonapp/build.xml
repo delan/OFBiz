@@ -66,6 +66,7 @@
 	<mkdir dir="${lib.dir}/j2ee" />
 	<mkdir dir="${lib.dir}/j2ee/META-INF" />
         <mkdir dir="${build.dir}" />
+        <mkdir dir="${waclasses.dir}" />
         <mkdir dir="${walib.dir}" />
         <mkdir dir="${deploy.dir}" />
     </target>
@@ -103,6 +104,7 @@
     <target name="war" depends="prepare,conf">
         <copy file="${build.dir}/${name}.jar"
               tofile="${walib.dir}/${name}.jar" />
+<!-- TODO: don't copy ofbcore.jar anymore, put on the global classpath instead of in the webapp -->
         <copy file="${ofbcore.jar}"
               tofile="${walib.dir}/ofbcore.jar" />
         <jar jarfile="${build.dir}/${name}.war"

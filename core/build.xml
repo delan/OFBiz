@@ -42,7 +42,8 @@
         <property name="build.dir"      value="build"               />
         <property name="build.compiler" value="classic"             /> 
         <property name="pkg-dist.name"  value="${name}-pkg"         />
-        <property name="deploy.dir"     value="${env.JBOSS_HOME}/deploy"      /> 
+        <property name="ejbdeploy.dir"     value="${env.JBOSS_HOME}/deploy"      />
+        <property name="coredeploy.dir"     value="${env.JBOSS_HOME}/lib/ext"      />
 		
         <!-- Old JBoss 2.2.2 Jars -->
 	<!-- <property name="ejb.jar"        value="${env.JBOSS_HOME}/lib/ext/ejb.jar"  /> -->
@@ -69,7 +70,8 @@
     <target name="clean" depends="init">
         <delete dir="${lib.dir}" />
         <delete dir="${build.dir}" />
-        <delete file="${deploy.dir}/${name}-ejb.jar" />
+        <delete file="${ejbdeploy.dir}/${name}-ejb.jar" />
+        <delete file="${coredeploy.dir}/${name}.jar" />
     </target>
 
 
@@ -172,9 +174,13 @@
     <!-- Deploy the app                                                     -->
     <!-- ================================================================== -->
 	
-    <target name="deploy" depends="ejbjar">
+    <target name="deploy" depends="ejbjar, jar">
         <copy file="${build.dir}/${name}-ejb.jar"
-              tofile="${deploy.dir}/${name}-ejb.jar" />
+              tofile="${ejbdeploy.dir}/${name}-ejb.jar" />
+<!-- copy this to the global classpath later... need to fix properties problem first
+        <copy file="${build.dir}/${name}.jar"
+              tofile="${coredeploy.dir}/${name}.jar" />
+-->
     </target>
 
 </project>
