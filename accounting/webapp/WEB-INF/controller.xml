@@ -136,12 +136,15 @@
         <security https="true" auth="true"/>
         <event type="service" invoke="removeBillingAccountTerm"/>
         <response name="success" type="view" value="editBillingAccountTerms"/>
-    </request-map>    
-    
+    </request-map>        
     <request-map uri="viewBillingAccountInvoices">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="billingAccountInvoices"/>
-    </request-map>  
+    </request-map>      
+    <request-map uri="viewBillingAccountPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="billingAccountPayments"/>
+    </request-map>       
     
     <!-- invoice requests -->
     <request-map uri="findInvoices">
@@ -151,18 +154,17 @@
     <request-map uri="viewInvoice">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editInvoice"/>
-    </request-map>  
-    
+    </request-map>      
     <request-map uri="createInvoiceItem">
         <security https="true" auth="true"/>
         <event type="service" invoke="createInvoiceItem"/>
         <response name="success" type="view" value="editInvoice"/>
-    </request-map>
-    
-    <request-map uri="viewBillingAccountPayments">
+    </request-map>    
+    <request-map uri="invoicePayments">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="billingAccountPayments"/>
-    </request-map>     
+        <response name="success" type="view" value="invoicePayments"/>
+    </request-map>
+      
                 
     <!-- end of request mappings -->
 
@@ -179,6 +181,7 @@
     <view-map name="billingAccountPayments" type="jpublish" page="/billingaccount/BillingAccountPayments.ftl"/>    
     
     <view-map name="findInvoices" type="jpublish" page="/invoice/findInvoices.ftl"/>
-    <view-map name="editInvoice" type="jpublish" page="/invoice/EditInvoice.ftl"/>
+    <view-map name="editInvoice" type="jpublish" page="/invoice/editInvoice.ftl"/>
+    <view-map name="invoicePayments" type="jpublish" page="/invoice/invoicePayments.ftl"/>
     <!-- end of view mappings -->
 </site-conf>

@@ -24,27 +24,29 @@
  *@since      2.2
 -->
 
-<div class="head1">Billing Account Payments</div>
+<div class="head1">Invoice Payments</div>
 
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0"> 
   <tr>
     <td><div class="tableheadtext">Payment #</div></td>
-    <td><div class="tableheadtext">Type</div></td>  
+    <td><div class="tableheadtext">Type</div></td>
     <td><div class="tableheadtext">Invoice #</div></td>
-    <td><div class="tableheadtext">Invoice Item</div></td>
+    <td><div class="tableheadtext">Invoice Item</div></td>   
+    <td><div class="tableheadtext">Billing Acct</div></td>
     <td><div class="tableheadtext">Payment Date</div></td>
     <td align="right"><div class="tableheadtext">Amount</div></td>
   </tr> 
-  <tr><td colspan="6"><hr class="sepbar"></td></tr>
+  <tr><td colspan="7"><hr class="sepbar"></td></tr>
   <#list payments as payment>
   <#assign paymentMethodType = payment.getRelatedOne("PaymentMethodType")>
   <tr>
     <td><div class="tabletext">${payment.paymentId?if_exists}</div></td>
-    <td><div class="tabletext">${paymentMethodType.description?default("N/A")}</div></td>  
-    <td><div class="tabletext">${payment.invoiceId?default("N/A")}</div></td>
+    <td><div class="tabletext">${paymentMethodType.description?default("N/A")}</div></td>
+    <td><div class="tabletext">${payment.invoiceId}</div></td>
     <td><div class="tabletext">${payment.invoiceItemSeqId?default("N/A")}</div></td>
-    <td><div class="tabletext">${payment.effectiveDate?string}</div></td>
+    <td><div class="tabletext">${payment.billingAccountId?default("N/A")}</div></td>
+    <td><div class="tabletext">${payment.effectiveDate?string?if_exists}</div></td>    
     <td align="right"><div class="tabletext">${payment.amount?string.currency}</div></td>   
   </tr>
   </#list>
