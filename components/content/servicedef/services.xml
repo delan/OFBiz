@@ -61,8 +61,8 @@
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="java.util.List"/>
         <attribute mode="INOUT" name="contentId" optional="true" type="String"/>
     </service>
-    <service name="updateContent" default-entity-name="Content" engine="simple"
-        location="org/ofbiz/content/content/ContentServices.xml" invoke="updateContent" auth="true">
+    <service name="updateContent" default-entity-name="Content" engine="java"
+            location="org.ofbiz.content.content.ContentServices" invoke="updateContent" auth="true">
         <description>Update a Content</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
@@ -146,14 +146,14 @@
         <attribute mode="IN" name="contentAssocTypeId" optional="false" type="String"/>
     </service>
     
-    <service name="createContentAssoc" default-entity-name="ContentAssoc" engine="simple"
-        location="org/ofbiz/content/content/ContentServices.xml" invoke="createContentAssoc" auth="true">
+    <service name="createContentAssoc" default-entity-name="ContentAssoc" engine="java"
+        location="org.ofbiz.content.content.ContentServices" invoke="createContentAssoc" auth="true">
         <description>Create a ContentAssoc</description>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="updateContentAssoc" default-entity-name="ContentAssoc" engine="simple"
-            location="org/ofbiz/content/content/ContentServices.xml" invoke="updateContentAssoc" auth="true">
+    <service name="updateContentAssoc" default-entity-name="ContentAssoc" engine="java"
+            location="org.ofbiz.content.content.ContentServices" invoke="updateContentAssoc" auth="true">
         <description>Update a ContentAssoc</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
@@ -169,7 +169,7 @@
         location="org/ofbiz/content/content/ContentServices.xml"
         invoke="createContentType" auth="true">
         <description>Create a ContentType</description>
-        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateContentType" engine="simple" default-entity-name="ContentType"
@@ -189,7 +189,7 @@
         location="org/ofbiz/content/content/ContentServices.xml"
         invoke="createContentAssocType" auth="true">
         <description>Create a ContentAssocType</description>
-        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateContentAssocType" engine="simple" default-entity-name="ContentAssocType"
@@ -248,7 +248,7 @@
         invoke="createContentAssocPredicate"
         default-entity-name="ContentAssocPredicate" auth="true">
         <description>Create a ContentAssocPredicate</description>
-        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateContentAssocPredicate" engine="simple"
@@ -273,7 +273,7 @@
         invoke="createContentPurposeType"
         auth="true">
         <description>Create a ContentPurposeType</description>
-        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateContentPurposeType" engine="simple" default-entity-name="ContentPurposeType"
@@ -333,7 +333,7 @@
             invoke="updateDataResource"
             default-entity-name="DataResource" auth="true" >
         <description>Update a DataResource</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute mode="IN" name="dataResourceId" optional="false" type="String"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
@@ -366,7 +366,7 @@
             invoke="updateDataResourceAndText"
             default-entity-name="DataResource" auth="true" >
         <description>Create a DataResource and, possibly, ElectronicText or ImageDataResource</description>
-        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute mode="IN" name="textData" optional="true" type="String"/>
         <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.entity.GenericValue"/>
@@ -380,7 +380,7 @@
         invoke="createDataResourceType"
         default-entity-name="DataResourceType" auth="true">
         <description>Create a DataResourceType</description>
-        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateDataResourceType" engine="simple"
@@ -432,7 +432,7 @@
         invoke="createFileExtension"
         default-entity-name="FileExtension" auth="true">
         <description>Create a FileExtension</description>
-        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateFileExtension" engine="simple"
@@ -459,7 +459,7 @@
         invoke="createMetaDataPredicate"
         default-entity-name="MetaDataPredicate" auth="true">
         <description>Create a MetaDataPredicate</description>
-        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateMetaDataPredicate" engine="simple"
@@ -486,7 +486,7 @@
         invoke="createMimeType"
         default-entity-name="MimeType" auth="true">
         <description>Create a MimeType</description>
-        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateMimeType" engine="simple"
@@ -512,7 +512,7 @@
         invoke="createDataCategory"
         default-entity-name="DataCategory" auth="true">
         <description>Create a DataCategory</description>
-        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateDataCategory" engine="simple"
@@ -538,7 +538,7 @@
         invoke="createContentOperation"
         default-entity-name="ContentOperation" auth="true">
         <description>Create a ContentOperation</description>
-        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateContentOperation" engine="simple"
@@ -713,20 +713,20 @@
     </service>
         
     <!--ElectronicText services.-->
-    <service name="createElectronicText" engine="simple"
-        location="org/ofbiz/content/data/DataServices.xml"
+    <service name="createElectronicText" engine="java"
+        location="org.ofbiz.content.data.DataServices"
         invoke="createElectronicText"
         default-entity-name="ElectronicText" auth="true">
         <description>Create a ElectronicText</description>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="updateElectronicText" engine="simple"
-        location="org/ofbiz/content/data/DataServices.xml"
+    <service name="updateElectronicText" engine="java"
+        location="org.ofbiz.content.data.DataServices"
         invoke="updateElectronicText"
         default-entity-name="ElectronicText" auth="true">
         <description>Update a ElectronicText</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute mode="IN" name="dataResourceId" optional="false" type="String"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="removeElectronicText" engine="simple"
