@@ -1,5 +1,5 @@
 /*
- * $Id: ProductServices.java,v 1.2 2003/08/26 13:54:19 jonesde Exp $
+ * $Id: ProductServices.java,v 1.3 2003/08/26 16:01:46 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -51,7 +51,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ProductServices {
@@ -545,7 +545,7 @@ public class ProductServices {
                 group.put(key, subGroup);
             } else {
                 // do nothing, ie put nothing in the Map
-                // throw new IllegalStateException("Cannot create tree from an empty list; error on '" + key + "'");
+                //throw new IllegalStateException("Cannot create tree from an empty list; error on '" + key + "'");
             }
         }
         return group;
