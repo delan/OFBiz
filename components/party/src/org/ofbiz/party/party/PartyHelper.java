@@ -1,5 +1,5 @@
 /*
- * $Id: PartyHelper.java,v 1.4 2004/06/25 18:15:44 ajzeneski Exp $
+ * $Id: PartyHelper.java,v 1.5 2004/06/29 17:43:07 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,49 +26,22 @@ package org.ofbiz.party.party;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.model.ModelEntity;
 
 /**
  * PartyHelper
  *
  * @author     <a href="mailto:epabst@bigfoot.com">Eric Pabst</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class PartyHelper {
     
     public static final String module = PartyHelper.class.getName();
     
-    public static String formatPartyId(String partyId, GenericDelegator delegator) {
-        if (UtilValidate.isEmpty(partyId)) return "(none)";
-        GenericValue person = null;
-
-        try {
-            person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
-        } catch (GenericEntityException gee) {
-            Debug.logWarning(gee, module);
-        }
-        if (person != null) {
-            return getPersonName(person);
-        } else {
-            return partyId;
-        }
-    }
-
-    public static String getPersonName(GenericValue person) {
-        StringBuffer result = new StringBuffer(20);
-
-        if (person != null) {
-            result.append(UtilFormatOut.ifNotEmpty(person.getString("firstName"), "", " "));
-            result.append(UtilFormatOut.ifNotEmpty(person.getString("middleName"), "", " "));
-            result.append(UtilFormatOut.checkNull(person.getString("lastName")));
-        }
-        return result.toString().trim();
-    }
-
     public static String getPartyName(GenericValue partyObject) {
         return getPartyName(partyObject, false);
     }
@@ -76,78 +49,65 @@ public class PartyHelper {
     public static String getPartyName(GenericDelegator delegator, String partyId, boolean lastNameFirst) {
         GenericValue partyObject = null;
         try {
-            partyObject = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
+            partyObject = delegator.findByPrimaryKey("PartyNameView", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, module);
+            Debug.logError(e, "Error finding PartyNameView in getPartyName", module);
         }
         if (partyObject == null) {
-            try {
-                partyObject = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e, module);
-            }
-        }
-        if (partyObject == null) {
-            return null;
+            return partyId;
         } else {
-            return getPartyName(partyObject, lastNameFirst);
+            return formatPartyNameObject(partyObject, lastNameFirst);
         }        
     }
 
     public static String getPartyName(GenericValue partyObject, boolean lastNameFirst) {
-        StringBuffer result = new StringBuffer(20);
-
-        GenericValue workingObject = null;
+        if (partyObject == null) {
+            return "";
+        }
         if ("PartyGroup".equals(partyObject.getEntityName()) || "Person".equals(partyObject.getEntityName())) {
-            workingObject = partyObject;
+            return formatPartyNameObject(partyObject, lastNameFirst);
         } else {
             String partyId = null;
             try {
                 partyId = partyObject.getString("partyId");
             } catch (IllegalArgumentException e) {
-                Debug.logError("Party object does not contain a party ID", module);
+                Debug.logError(e, "Party object does not contain a party ID", module);
             }
 
             if (partyId == null) {
-                Debug.logWarning("No party ID found; cannot get name", module);
-                return null;
-            }
-
-            try {
-                workingObject = partyObject.getDelegator().findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
-
-                if (workingObject == null) {
-                    workingObject = partyObject.getDelegator().findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
-                }
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e, module);
+                Debug.logWarning("No party ID found; cannot get name based on entity: " + partyObject.getEntityName(), module);
+                return "";
+            } else {
+                return getPartyName(partyObject.getDelegator(), partyId, lastNameFirst);
             }
         }
-
-        if (workingObject != null) {
-            if ("Person".equals(workingObject.getEntityName())) {
-                if (lastNameFirst) {
-                    if (UtilFormatOut.checkNull(workingObject.getString("lastName")) != null) {
-                        result.append(UtilFormatOut.checkNull(workingObject.getString("lastName")));
-                        if (UtilFormatOut.checkNull(workingObject.getString("firstName")) != null) {
-                            result.append(", ");
-                        }
-                    }
-                    if (UtilFormatOut.checkNull(workingObject.getString("firstName")) != null) {
-                        result.append(UtilFormatOut.checkNull(workingObject.getString("firstName")));
-                    }
-                } else {
-                    result.append(UtilFormatOut.ifNotEmpty(workingObject.getString("firstName"), "", " "));
-                    result.append(UtilFormatOut.ifNotEmpty(workingObject.getString("middleName"), "", " "));
-                    result.append(UtilFormatOut.checkNull(workingObject.getString("lastName")));
-                }
-            } else if ("PartyGroup".equals(workingObject.getEntityName())) {
-                result.append(workingObject.getString("groupName"));
-            }
-        } else {
-            Debug.logWarning("No party type object found", module);
+    }
+    
+    public static String formatPartyNameObject(GenericValue partyValue, boolean lastNameFirst) {
+        if (partyValue == null) {
+            return "";
         }
-
-        return result.toString().trim();
+        StringBuffer result = new StringBuffer();
+        ModelEntity modelEntity = partyValue.getModelEntity();
+        if (modelEntity.isField("firstName") && modelEntity.isField("middleName") && modelEntity.isField("lastName")) {
+            if (lastNameFirst) {
+                if (UtilFormatOut.checkNull(partyValue.getString("lastName")) != null) {
+                    result.append(UtilFormatOut.checkNull(partyValue.getString("lastName")));
+                    if (UtilFormatOut.checkNull(partyValue.getString("firstName")) != null) {
+                        result.append(", ");
+                    }
+                }
+                if (UtilFormatOut.checkNull(partyValue.getString("firstName")) != null) {
+                    result.append(UtilFormatOut.checkNull(partyValue.getString("firstName")));
+                }
+            } else {
+                result.append(UtilFormatOut.ifNotEmpty(partyValue.getString("firstName"), "", " "));
+                result.append(UtilFormatOut.ifNotEmpty(partyValue.getString("middleName"), "", " "));
+                result.append(UtilFormatOut.checkNull(partyValue.getString("lastName")));
+            }
+        } else if (modelEntity.isField("groupName")) {
+            result.append(partyValue.getString("groupName"));
+        }
+        return result.toString();
     }
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: ProductSearch.java,v 1.36 2004/05/22 20:25:49 ajzeneski Exp $
+ * $Id: ProductSearch.java,v 1.37 2004/06/29 17:43:07 jonesde Exp $
  *
- *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
+ *  Copyright (c) 2003-2004 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -54,13 +54,14 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.party.party.PartyHelper;
 
 
 /**
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.36 $
+ * @version    $Revision: 1.37 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -949,6 +950,53 @@ public class ProductSearch {
                     }
                 } else {
                     if (!this.highPrice.equals(that.highPrice)) {
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public static class SupplierConstraint extends ProductSearchConstraint {
+        public static final String constraintName = "Supplier";
+        protected String supplierPartyId;
+
+        public SupplierConstraint(String supplierPartyId) {
+            this.supplierPartyId = supplierPartyId;
+        }
+
+        public void addConstraint(ProductSearchContext productSearchContext) {
+            // make index based values and increment
+            String entityAlias = "SP" + productSearchContext.index;
+            String prefix = "sp" + productSearchContext.index;
+            productSearchContext.index++;
+
+            productSearchContext.dynamicViewEntity.addMemberEntity(entityAlias, "SupplierProduct");
+            productSearchContext.dynamicViewEntity.addAlias(entityAlias, prefix + "SupplierPartyId", "partyId", null, null, null, null);
+            productSearchContext.dynamicViewEntity.addViewLink("PROD", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
+            productSearchContext.entityConditionList.add(new EntityExpr(prefix + "SupplierPartyId", EntityOperator.EQUALS, supplierPartyId));
+
+            // add in productSearchConstraint, don't worry about the productSearchResultId or constraintSeqId, those will be fill in later
+            productSearchContext.productSearchConstraintList.add(productSearchContext.getDelegator().makeValue("ProductSearchConstraint", UtilMisc.toMap("constraintName", constraintName, "infoString", this.supplierPartyId)));
+        }
+
+        public String prettyPrintConstraint(GenericDelegator delegator, boolean detailed) {
+            return "Supplier: " + PartyHelper.getPartyName(delegator, supplierPartyId, false);
+        }
+
+        public boolean equals(Object obj) {
+            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
+            if (psc instanceof SupplierConstraint) {
+                SupplierConstraint that = (SupplierConstraint) psc;
+                if (this.supplierPartyId == null) {
+                    if (that.supplierPartyId != null) {
+                        return false;
+                    }
+                } else {
+                    if (!this.supplierPartyId.equals(that.supplierPartyId)) {
                         return false;
                     }
                 }
