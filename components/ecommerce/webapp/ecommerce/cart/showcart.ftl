@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.12 $
+ *@version    $Revision: 1.13 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -412,17 +412,27 @@ function addToList() {
                 <div class="tableheadtext">Products Used in Promotions:</div>
                 <#list shoppingCart.items() as cartLine>
                     <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
-                    <#list cartLine.getQuantityUsedPerPromoCondIter() as quantityUsedPerPromoCondEntry>
-                        <#assign prodcutPromoCondPK = quantityUsedPerPromoCondEntry.getKey()>
-                        <#assign condQuantityUsed = quantityUsedPerPromoCondEntry.getValue()>
-                        <div class="tabletext">Line ${cartLineIndex} - Quantity ${condQuantityUsed} - Promotion [${prodcutPromoCondPK.productPromoId}]</div>
-                        <!-- productPromoRuleId ${prodcutPromoCondPK.productPromoRuleId}, productPromoActionSeqId ${prodcutPromoCondPK.productPromoActionSeqId} -->
+                    <div class="tabletext">Line ${cartLineIndex+1} - ${cartLine.getPromoQuantityUsed()?string.number}/${cartLine.getQuantity()?string.number} Used - ${cartLine.getPromoQuantityAvailable()?string.number} Available</div>
+                    <#list cartLine.getQuantityUsedPerPromoActualIter() as quantityUsedPerPromoActualEntry>
+                        <#assign productPromoActualPK = quantityUsedPerPromoActualEntry.getKey()>
+                        <#assign actualQuantityUsed = quantityUsedPerPromoActualEntry.getValue()>
+                        <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
+                        <div class="tabletext">&nbsp;&nbsp;-&nbsp;${actualQuantityUsed} Used as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoActualPK.productPromoId}]</div>
+                        <!-- productPromoActualPK ${productPromoActualPK.toString()} -->
                     </#list>
-                    <#list cartLine.getQuantityUsedPerPromoActionIter() as quantityUsedPerPromoActionEntry>
-                        <#assign prodcutPromoActionPK = quantityUsedPerPromoActionEntry.getKey()>
-                        <#assign actionQuantityUsed = quantityUsedPerPromoActionEntry.getValue()>
-                        <div class="tabletext">Line ${cartLineIndex} - Quantity ${actionQuantityUsed} - Promotion [${prodcutPromoActionPK.productPromoId}]</div>
-                        <!-- productPromoRuleId ${prodcutPromoActionPK.productPromoRuleId}, productPromoActionSeqId ${prodcutPromoActionPK.productPromoActionSeqId} -->
+                    <#list cartLine.getQuantityUsedPerPromoFailedIter() as quantityUsedPerPromoFailedEntry>
+                        <#assign productPromoFailedPK = quantityUsedPerPromoFailedEntry.getKey()>
+                        <#assign failedQuantityUsed = quantityUsedPerPromoFailedEntry.getValue()>
+                        <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
+                        <div class="tabletext">&nbsp;&nbsp;-&nbsp;${failedQuantityUsed} Could be Used as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoFailedPK.productPromoId}]</div>
+                        <!-- productPromoFailedPK ${productPromoFailedPK.toString()} -->
+                    </#list>
+                    <#list cartLine.getQuantityUsedPerPromoCandidateIter() as quantityUsedPerPromoCandidateEntry>
+                        <#assign productPromoCandidatePK = quantityUsedPerPromoCandidateEntry.getKey()>
+                        <#assign candidateQuantityUsed = quantityUsedPerPromoCandidateEntry.getValue()>
+                        <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
+                        <div class="tabletext">&nbsp;&nbsp;-&nbsp;${candidateQuantityUsed} Might be Used (Candidate) as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoCandidatePK.productPromoId}]</div>
+                        <!-- productPromoCandidatePK ${productPromoCandidatePK.toString()} -->
                     </#list>
                 </#list>
             </td>

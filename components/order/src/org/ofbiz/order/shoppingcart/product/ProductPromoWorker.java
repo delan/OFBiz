@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.13 2003/11/21 23:10:54 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.14 2003/11/22 23:51:54 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -317,9 +317,10 @@ public class ProductPromoWorker {
                         try {
                             boolean actionChangedCart = performAction(productPromoAction, cart, delegator, dispatcher, nowTimestamp);
 
-                            // if cartChanged is already true then don't set it again: implements OR logic (ie if ANY actions change content, redo loop)
-                            if (!cartChanged) {
-                                cartChanged = actionChangedCart;
+                            // only set if true, don't set back to false: implements OR logic (ie if ANY actions change content, redo loop)
+                            if (actionChangedCart) {
+                                promoUsed = true;
+                                cartChanged = true;
                             }
                         } catch (CartItemModifyException e) {
                             Debug.logError("Error modifying the cart in perform promotion action: " + e.toString(), module);
@@ -363,7 +364,7 @@ public class ProductPromoWorker {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
                 if (productIds.contains(cartItem.getProductId())) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
-                    quantityNeeded -= cartItem.addPromoQuantityCondUse(quantityNeeded, productPromoCond);
+                    quantityNeeded -= cartItem.addPromoQuantityCandidateUse(quantityNeeded, productPromoCond);
                 }
             }
 
@@ -375,6 +376,7 @@ public class ProductPromoWorker {
             } else {
                 // we got it, the conditions are in place...
                 compare = 0;
+                // NOTE: don't confirm rpomo rule use here, wait until actions are complete for the rule to do that
             }
 
 
@@ -500,14 +502,7 @@ public class ProductPromoWorker {
 
     /** returns true if the cart was changed and rules need to be re-evaluted */
     protected static boolean performAction(GenericValue productPromoAction, ShoppingCart cart, GenericDelegator delegator, LocalDispatcher dispatcher, Timestamp nowTimestamp) throws GenericEntityException, CartItemModifyException {
-        /* TODO: implement these
-        <Enumeration description="X Product for Y% Discount" enumCode="PROD_DISC" enumId="PROMO_PROD_DISC" sequenceId="03" enumTypeId="PROD_PROMO_ACTION"/>
-        <Enumeration description="X Product for Y Discount" enumCode="PROD_AMDISC" enumId="PROMO_PROD_AMDISC" sequenceId="04" enumTypeId="PROD_PROMO_ACTION"/>
-        <Enumeration description="X Product for Y Price" enumCode="PROD_PRICE" enumId="PROMO_PROD_PRICE" sequenceId="05" enumTypeId="PROD_PROMO_ACTION"/>
-        */
-
         boolean ranAction = false;
-        boolean cartChanged = false;
 
         String productPromoActionEnumId = productPromoAction.getString("productPromoActionEnumId");
 
@@ -516,7 +511,7 @@ public class ProductPromoWorker {
 
             if (itemLoc != null) {
                 if (Debug.verboseOn()) Debug.logVerbose("Not adding promo item, already there; action: " + productPromoAction, module);
-                cartChanged = false;
+                ranAction = false;
             } else {
                 GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productPromoAction.get("productId")));
                 double quantity = productPromoAction.get("quantity") == null ? 0.0 : productPromoAction.getDouble("quantity").doubleValue();
@@ -541,7 +536,6 @@ public class ProductPromoWorker {
                 if (Debug.verboseOn()) Debug.logVerbose("gwpItem adjustments: " + gwpItem.getAdjustments(), module);
 
                 ranAction = true;
-                cartChanged = true;
             }
         } else if ("PROMO_FREE_SHIPPING".equals(productPromoActionEnumId)) {
             // this may look a bit funny: on each pass all rules that do free shipping will set their own rule id for it,
@@ -550,7 +544,6 @@ public class ProductPromoWorker {
             cart.addFreeShippingProductPromoAction(productPromoAction);
             // don't consider this as a cart change...
             ranAction = true;
-            cartChanged = false;
         } else if ("PROMO_PROD_DISC".equals(productPromoActionEnumId)) {
             double quantityDesired = productPromoAction.get("quantity") == null ? 1.0 : productPromoAction.getDouble("quantity").doubleValue();
             double startingQuantity = quantityDesired;
@@ -563,13 +556,13 @@ public class ProductPromoWorker {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
                 if (productIds.contains(cartItem.getProductId())) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
-                    double quantityUsed = cartItem.addPromoQuantityActionUse(quantityDesired, productPromoAction);
+                    double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction);
                     quantityDesired -= quantityUsed;
 
                     // create an adjustment and add it to the cartItem that implements the promotion action
                     double percentModifier = productPromoAction.get("amount") == null ? 0.0 : (productPromoAction.getDouble("amount").doubleValue()/100.0);
                     double discountAmount = -(quantityUsed * cartItem.getBasePrice() * percentModifier);
-                    cartChanged = doOrderItemPromoAction(productPromoAction, cartItem, discountAmount, "amount", delegator);
+                    doOrderItemPromoAction(productPromoAction, cartItem, discountAmount, "amount", delegator);
                 }
             }
 
@@ -591,7 +584,7 @@ public class ProductPromoWorker {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
                 if (productIds.contains(cartItem.getProductId())) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
-                    double quantityUsed = cartItem.addPromoQuantityActionUse(quantityDesired, productPromoAction);
+                    double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction);
                     quantityDesired -= quantityUsed;
 
                     // create an adjustment and add it to the cartItem that implements the promotion action
@@ -601,7 +594,7 @@ public class ProductPromoWorker {
                         discount = cartItem.getBasePrice();
                     }
                     double discountAmount = -(quantityUsed * discount);
-                    cartChanged = doOrderItemPromoAction(productPromoAction, cartItem, discountAmount, "amount", delegator);
+                    doOrderItemPromoAction(productPromoAction, cartItem, discountAmount, "amount", delegator);
                 }
             }
 
@@ -627,9 +620,11 @@ public class ProductPromoWorker {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
                 if (productIds.contains(cartItem.getProductId())) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
-                    double quantityUsed = cartItem.addPromoQuantityActionUse(quantityDesired, productPromoAction);
-                    quantityDesired -= quantityUsed;
-                    totalAmount += quantityUsed * cartItem.getBasePrice();
+                    double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction);
+                    if (quantityUsed > 0) {
+                        quantityDesired -= quantityUsed;
+                        totalAmount += quantityUsed * cartItem.getBasePrice();
+                    }
                 }
             }
 
@@ -637,29 +632,32 @@ public class ProductPromoWorker {
             if (totalAmount > desiredAmount && quantityDesired == 0) {
                 ranAction = true;
                 double discountAmount = -(totalAmount - desiredAmount);
-                cartChanged = doOrderPromoAction(productPromoAction, cart, discountAmount, "amount", delegator);
+                doOrderPromoAction(productPromoAction, cart, discountAmount, "amount", delegator);
+            } else {
+                // clear out any action uses for this so they don't become part of anything else
+                cart.resetPromoRuleUse(productPromoAction.getString("productPromoId"), productPromoAction.getString("productPromoRuleId"));
             }
-
         } else if ("PROMO_ORDER_PERCENT".equals(productPromoActionEnumId)) {
             ranAction = true;
             double amount = -(productPromoAction.get("amount") == null ? 0.0 : (productPromoAction.getDouble("amount").doubleValue() / 100.0));
-            cartChanged = doOrderPromoAction(productPromoAction, cart, amount, "percentage", delegator);
+            doOrderPromoAction(productPromoAction, cart, amount, "percentage", delegator);
         } else if ("PROMO_ORDER_AMOUNT".equals(productPromoActionEnumId)) {
             ranAction = true;
             double amount = -(productPromoAction.get("amount") == null ? 0.0 : productPromoAction.getDouble("amount").doubleValue());
-            cartChanged = doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
+            doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
         } else {
             Debug.logError("An un-supported productPromoActionType was used: " + productPromoActionEnumId + ", not performing any action", module);
             ranAction = false;
-            cartChanged = false;
         }
 
         if (ranAction) {
             // in action, if doesn't have enough quantity to use the promo at all, remove candidate promo uses and increment promoQuantityUsed; this should go for all actions, if any action runs we confirm
             cart.confirmPromoRuleUse(productPromoAction.getString("productPromoId"), productPromoAction.getString("productPromoRuleId"));
+        } else {
+            cart.resetPromoRuleUse(productPromoAction.getString("productPromoId"), productPromoAction.getString("productPromoRuleId"));
         }
 
-        return cartChanged;
+        return ranAction;
     }
 
     protected static Integer findPromoItem(GenericValue productPromoAction, ShoppingCart cart) {
@@ -728,7 +726,7 @@ public class ProductPromoWorker {
         cart.clearProductPromoUses();
     }
 
-    public static boolean doOrderItemPromoAction(GenericValue productPromoAction, ShoppingCartItem cartItem, double amount, String amountField, GenericDelegator delegator) {
+    public static void doOrderItemPromoAction(GenericValue productPromoAction, ShoppingCartItem cartItem, double amount, String amountField, GenericDelegator delegator) {
         GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
                 UtilMisc.toMap("orderAdjustmentTypeId", "PROMOTION_ADJUSTMENT", amountField, new Double(amount),
                     "productPromoId", productPromoAction.get("productPromoId"),
@@ -741,20 +739,9 @@ public class ProductPromoWorker {
         }
 
         cartItem.addAdjustment(orderAdjustment);
-        return true;
     }
 
-    public static boolean doOrderPromoAction(GenericValue productPromoAction, ShoppingCart cart, double amount, String amountField, GenericDelegator delegator) {
-        /* Not doing this anymore, the use limits will take care of this....
-        // Debug.logInfo("Starting doOrderPromoAction: productPromoAction=" + productPromoAction, module);
-        Integer adjLoc = findAdjustment(productPromoAction, cart.getAdjustments());
-
-        if (adjLoc != null) {
-            if (Debug.infoOn()) Debug.logInfo("Not adding promo adjustment, already there; action: " + productPromoAction, module);
-            return false;
-        }
-        */
-
+    public static void doOrderPromoAction(GenericValue productPromoAction, ShoppingCart cart, double amount, String amountField, GenericDelegator delegator) {
         GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
                 UtilMisc.toMap("orderAdjustmentTypeId", "PROMOTION_ADJUSTMENT", amountField, new Double(amount),
                     "productPromoId", productPromoAction.get("productPromoId"),
@@ -767,7 +754,6 @@ public class ProductPromoWorker {
         }
 
         cart.addAdjustment(orderAdjustment);
-        return true;
     }
 
     protected static Integer findAdjustment(GenericValue productPromoAction, List adjustments) {

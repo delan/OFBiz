@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.13 2003/11/22 12:57:35 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.14 2003/11/22 23:51:54 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -81,9 +81,9 @@ public class ShoppingCartItem implements java.io.Serializable {
     private List itemAdjustments = new LinkedList();
     private boolean isPromo = false;
     private double promoQuantityUsed = 0;
-    private Map quantityUsedPerPromoCondCandidate = new HashMap();
-    private Map quantityUsedPerPromoCondActual = new HashMap();
-    private Map quantityUsedPerPromoActionActual = new HashMap();
+    private Map quantityUsedPerPromoCandidate = new HashMap();
+    private Map quantityUsedPerPromoFailed = new HashMap();
+    private Map quantityUsedPerPromoActual = new HashMap();
 
 
     /**
@@ -268,9 +268,9 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.listPrice = item.getListPrice();
         this.isPromo = item.getIsPromo();
         this.promoQuantityUsed = item.promoQuantityUsed;
-        this.quantityUsedPerPromoActionActual = new HashMap(item.quantityUsedPerPromoActionActual);
-        this.quantityUsedPerPromoCondActual = new HashMap(item.quantityUsedPerPromoCondActual);
-        this.quantityUsedPerPromoCondCandidate = new HashMap(item.quantityUsedPerPromoCondCandidate);
+        this.quantityUsedPerPromoCandidate = new HashMap(item.quantityUsedPerPromoCandidate);
+        this.quantityUsedPerPromoFailed = new HashMap(item.quantityUsedPerPromoFailed);
+        this.quantityUsedPerPromoActual = new HashMap(item.quantityUsedPerPromoActual);
         this.orderItemSeqId = item.getOrderItemSeqId();
         this.orderShipmentPreference = new GenericValue(item.getOrderShipmentPreference());
         this.additionalProductFeatureAndAppls = item.getAdditionalProductFeatureAndAppls() == null ?
@@ -416,19 +416,27 @@ public class ShoppingCartItem implements java.io.Serializable {
         return quantity;
     }
 
+    public double getPromoQuantityUsed() {
+        return this.promoQuantityUsed;
+    }
+
     public double getPromoQuantityAvailable() {
         return this.quantity - this.promoQuantityUsed;
     }
 
-    public Iterator getQuantityUsedPerPromoActionIter() {
-        return this.quantityUsedPerPromoActionActual.entrySet().iterator();
+    public Iterator getQuantityUsedPerPromoActualIter() {
+        return this.quantityUsedPerPromoActual.entrySet().iterator();
     }
 
-    public Iterator getQuantityUsedPerPromoCondIter() {
-        return this.quantityUsedPerPromoCondActual.entrySet().iterator();
+    public Iterator getQuantityUsedPerPromoCandidateIter() {
+        return this.quantityUsedPerPromoCandidate.entrySet().iterator();
     }
 
-    public synchronized double addPromoQuantityCondUse(double quantityDesired, GenericValue productPromoCond) {
+    public Iterator getQuantityUsedPerPromoFailedIter() {
+        return this.quantityUsedPerPromoFailed.entrySet().iterator();
+    }
+
+    public synchronized double addPromoQuantityCandidateUse(double quantityDesired, GenericValue productPromoCond) {
         if (quantityDesired == 0) return 0;
         double promoQuantityAvailable = this.getPromoQuantityAvailable();
         double promoQuantityToUse = quantityDesired;
@@ -438,60 +446,56 @@ public class ShoppingCartItem implements java.io.Serializable {
             }
 
             // keep track of candidate promo uses on cartItem
-            quantityUsedPerPromoCondCandidate.put(productPromoCond.getPrimaryKey(), new Double(promoQuantityToUse));
+            GenericPK productPromoCondPK = productPromoCond.getPrimaryKey();
+            Double existingValue = (Double) this.quantityUsedPerPromoCandidate.get(productPromoCondPK);
+            if (existingValue == null) {
+                this.quantityUsedPerPromoCandidate.put(productPromoCondPK, new Double(promoQuantityToUse));
+            } else {
+                this.quantityUsedPerPromoCandidate.put(productPromoCondPK, new Double(promoQuantityToUse + existingValue.doubleValue()));
+            }
 
             this.promoQuantityUsed += promoQuantityToUse;
+            return promoQuantityToUse;
+        } else {
+            return 0;
         }
-
-        return promoQuantityToUse;
     }
 
     public synchronized void resetPromoRuleUse(String productPromoId, String productPromoRuleId) {
-        Iterator entryIter = this.quantityUsedPerPromoCondCandidate.entrySet().iterator();
+        Iterator entryIter = this.quantityUsedPerPromoCandidate.entrySet().iterator();
         while (entryIter.hasNext()) {
             Map.Entry entry = (Map.Entry) entryIter.next();
             GenericPK productPromoCondPK = (GenericPK) entry.getKey();
             Double quantityUsed = (Double) entry.getValue();
             if (productPromoId.equals(productPromoCondPK.getString("productPromoId")) && productPromoRuleId.equals(productPromoCondPK.getString("productPromoRuleId"))) {
                 entryIter.remove();
+                Double existingValue = (Double) this.quantityUsedPerPromoFailed.get(productPromoCondPK);
+                if (existingValue == null) {
+                    this.quantityUsedPerPromoFailed.put(productPromoCondPK, quantityUsed);
+                } else {
+                    this.quantityUsedPerPromoFailed.put(productPromoCondPK, new Double(quantityUsed.doubleValue() + existingValue.doubleValue()));
+                }
                 this.promoQuantityUsed -= quantityUsed.doubleValue();
             }
         }
     }
 
     public synchronized void confirmPromoRuleUse(String productPromoId, String productPromoRuleId) {
-        Iterator entryIter = this.quantityUsedPerPromoCondCandidate.entrySet().iterator();
+        Iterator entryIter = this.quantityUsedPerPromoCandidate.entrySet().iterator();
         while (entryIter.hasNext()) {
             Map.Entry entry = (Map.Entry) entryIter.next();
             GenericPK productPromoCondPK = (GenericPK) entry.getKey();
             Double quantityUsed = (Double) entry.getValue();
             if (productPromoId.equals(productPromoCondPK.getString("productPromoId")) && productPromoRuleId.equals(productPromoCondPK.getString("productPromoRuleId"))) {
                 entryIter.remove();
-                this.quantityUsedPerPromoCondActual.put(productPromoCondPK, quantityUsed);
+                Double existingValue = (Double) this.quantityUsedPerPromoActual.get(productPromoCondPK);
+                if (existingValue == null) {
+                    this.quantityUsedPerPromoActual.put(productPromoCondPK, quantityUsed);
+                } else {
+                    this.quantityUsedPerPromoActual.put(productPromoCondPK, new Double(quantityUsed.doubleValue() + existingValue.doubleValue()));
+                }
             }
         }
-    }
-
-    public synchronized double addPromoQuantityActionUse(double quantityDesired, GenericValue productPromoAction) {
-        if (quantityDesired <= 0) return 0;
-
-        double promoQuantityAvailable = this.getPromoQuantityAvailable();
-        double promoQuantityToUse = quantityDesired;
-        if (promoQuantityAvailable > 0) {
-            if (promoQuantityToUse > promoQuantityAvailable) {
-                promoQuantityToUse = promoQuantityAvailable;
-            }
-
-            // if we are adding any actions, we can automatically confirm the corresponding conditions, if any
-            this.confirmPromoRuleUse(productPromoAction.getString("productPromoId"), productPromoAction.getString("productPromoRuleId"));
-
-            // keep track of actual promo uses on cartItem
-            quantityUsedPerPromoActionActual.put(productPromoAction.getPrimaryKey(), new Double(promoQuantityToUse));
-
-            this.promoQuantityUsed += promoQuantityToUse;
-        }
-
-        return promoQuantityToUse;
     }
 
     /** Sets the item comment. */
