@@ -31,6 +31,7 @@ import org.ofbiz.core.workflow.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@author     David Ostrovsky (d.ostrovsky@gmx.de)
  *@created    November 15, 2001
  *@version    1.0
@@ -38,17 +39,10 @@ import org.ofbiz.core.workflow.*;
 
 public class WfProcessImpl extends WfExecutionObjectImpl
 implements WfProcess {
-
-    // Attribute instance 'requester'
-    private WfRequester requester;
     
-    // Attribute instance 'steps'
-    private List steps;
-    
-    // Attribute instance 'manager'
+    private WfRequester requester;       
     private WfProcessMgr manager;
-    
-    // Attribute instance 'result'
+    private List steps;                
     private Map result;
     
     /**
@@ -59,21 +53,25 @@ implements WfProcess {
         super(valueObject);
         this.manager = manager;
         this.requester = null;
-        steps = new ArrayList();
         result = new HashMap();
-        changeState("open.not_running.not_started");
-        
+        steps = new ArrayList();
+                        
         // Build up the activities (steps)
         Collection activityEntities = null;
         try {
-            activityEntities = valueObject.getRelatedCache("WorkflowActivity");  // this relation does not exist yet.
+            activityEntities = valueObject.getRelatedCache("WorkflowActivity"); 
         }
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);
         }
-        Iterator i = activityEntities.iterator();
-        while ( i.hasNext() )
-            steps.add(WfFactory.newWfActivity((GenericValue)i.next(),this));
+        if ( activityEntities != null ) {
+            Iterator i = activityEntities.iterator();
+            while ( i.hasNext() )
+                steps.add(WfFactory.newWfActivity((GenericValue)i.next(),this));
+        }
+        
+        // Set the default state
+        changeState("open.not_running.not_started");
     }
 
     /**
@@ -172,11 +170,10 @@ implements WfProcess {
     public Iterator getActivitiesInState(String state) throws WfException, 
     InvalidState {
         ArrayList res = new ArrayList();
-        for ( Iterator i = steps.iterator(); i.hasNext(); ) {
+        Iterator i = steps.iterator();
+        while ( i.hasNext() ) {        
             WfActivity a = (WfActivity)i.next();
-            // TODO:
-            //if (a.workflowState() == StateToString(state))
-            if (false)
+            if ( a.state().equals(state) )
                 res.add(a);
         }
         return res.iterator();

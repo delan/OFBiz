@@ -221,7 +221,12 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @return Key of the object.
      */
     public String key() throws WfException {
-        return valueObject.getString("executionObjectId");
+        if ( valueObject.getEntityName().equals("WorkflowProcess") )
+            return valueObject.getString("processId");
+        else if ( valueObject.getEntityName().equals("WorkflowActivity") )
+            return valueObject.getString("activityId");
+        else
+            throw new WfException("Value object is of an unknown type.");        
     }
     
     /**

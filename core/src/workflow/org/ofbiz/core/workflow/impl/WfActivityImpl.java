@@ -57,6 +57,8 @@ implements WfActivity
         this.process = process;
         result = new HashMap();
         assignments = new ArrayList();
+                        
+        // Set the default state
         changeState("open.not_running.not_started");
     }
     
@@ -67,6 +69,9 @@ implements WfActivity
      * @throws AlreadyRunning
      */
     public void activate() throws WfException, CannotStart, AlreadyRunning {
+        if ( this.state().equals("open.running") )
+            throw new AlreadyRunning();
+        
         changeState("open.running");
         // implement me
     }
