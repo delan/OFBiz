@@ -603,10 +603,21 @@ public class LoginServices {
 
         boolean wasEnabled = !"N".equals((String) userLoginToUpdate.get("enabled"));
 
-        userLoginToUpdate.set("enabled", context.get("enabled"), false);
-        userLoginToUpdate.set("disabledDateTime", context.get("disabledDateTime"), false);
-        userLoginToUpdate.set("successiveFailedLogins", context.get("successiveFailedLogins"), false);
+        if (context.containsKey("enabled")) {
+            userLoginToUpdate.set("enabled", context.get("enabled"), true);
+        }
+        if (context.containsKey("disabledDateTime")) {
+            userLoginToUpdate.set("disabledDateTime", context.get("disabledDateTime"), true);
+        }
+        if (context.containsKey("successiveFailedLogins")) {
+            userLoginToUpdate.set("successiveFailedLogins", context.get("successiveFailedLogins"), true);
+        }
 
+        // if was disabled and we are enabling it, clear disabledDateTime
+        if (!wasEnabled && "Y".equals((String) context.get("enabled"))) {
+            userLoginToUpdate.set("disabledDateTime", null);
+        }
+     
         // if was enabled and we are disabling it, and no disabledDateTime was passed, set it to now
         if (wasEnabled && "N".equals((String) context.get("enabled")) && context.get("disabledDateTime") == null) {
             userLoginToUpdate.set("disabledDateTime", UtilDateTime.nowTimestamp());
