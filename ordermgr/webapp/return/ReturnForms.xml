@@ -29,16 +29,40 @@
 	<form name="EditReturn" type="single" target="updateReturnHeader" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<alt-target use-when="returnHeader==null" target="createReturnHeader"/>
 		<auto-fields-service service-name="updateReturnHeader"/>
+		
 		<field use-when="returnHeader!=null" name="returnId" tooltip="This cannot be changed without re-creating the Return."><display/></field>
 		<field use-when="returnHeader==null&amp;&amp;returnId!=null" name="returnId" tooltip="Could not find Return with ID [${returnId}]"><text size="20" maxlength="20"/></field>
 		<field use-when="returnHeader==null&amp;&amp;returnId==null" name="returnId"><ignored/></field>
+		
+		<field position="1" name="entryDate" title="Entry Date"/>
+		<field name="statusId" title="Return Status" widget-style="selectBox">
+			<drop-down>
+				<entity-options entity-name="StatusItem" description="${description}">
+					<entity-constraint name="statusTypeId" value="ORDER_RETURN_STTS"/>
+					<entity-order-by field-name="sequenceId"/>
+				</entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="destinationFacilityId" title="Destination Facility">
+			<radio no-current-selected-key="">
+				<option key="" description="No Facility Specified"/>				
+				<entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName}">
+					<entity-order-by field-name="facilityName"/>
+				</entity-options>				
+			</radio>
+		</field>
+		
+		<field service-name="updateReturnHeader" name="fromPartyId" title="From Party"/>
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
-	<form name="ReturnItems" type="multi" target="createReturnItem" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+	
+	<form name="ReturnItems" type="multi" list-name="orderItems" target="createReturnItem" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+		<field name="itemDescription"><display/></field>
 		<auto-fields-service service-name="createReturnItem"/>
 		<field name="returnId"><hidden/></field>
 		<field name="orderId"><hidden/></field>
 		<field name="orderItemSeqId"><hidden/></field>
-		<field name="statusId"><ignored/></field>
+		<field name="statusId"><ignored/></field>		
 	</form>
 </forms>
