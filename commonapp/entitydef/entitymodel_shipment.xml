@@ -59,7 +59,6 @@
             title="Item Issuance Entity">
       <field name="itemIssuanceId" type="id-ne"></field>
       <field name="inventoryItemId" type="id"></field>
-      <field name="picklistId" type="id"></field>
       <field name="shipmentId" type="id"></field>
       <field name="shipmentItemSeqId" type="id"></field>
       <field name="issuedDateTime" type="date-time"></field>
@@ -67,9 +66,6 @@
       <prim-key field="itemIssuanceId"/>
       <relation type="one" fk-name="ITEM_ISS_INVITM" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
-      </relation>
-      <relation type="one" fk-name="ITEM_ISS_PKLST" rel-entity-name="Picklist">
-        <key-map field-name="picklistId"/>
       </relation>
       <relation type="one" fk-name="ITEM_ISS_SHITM" rel-entity-name="ShipmentItem">
         <key-map field-name="shipmentId"/>

@@ -412,8 +412,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="OrderTermAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderType" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="Picklist" />
-    <entity-group group="org.ofbiz.commonapp" entity="PicklistItem" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductOrderItem" />
     <entity-group group="org.ofbiz.commonapp" entity="SimpleSalesTaxLookup" />
     <entity-group group="org.ofbiz.commonapp" entity="ReturnHeader" />

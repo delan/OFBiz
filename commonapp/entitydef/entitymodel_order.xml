@@ -310,6 +310,9 @@
       <relation type="many" title="Purchase" rel-entity-name="OrderItemAssociation">
         <key-map field-name="orderId" rel-field-name="purchaseOrderId"/>
       </relation>
+      <relation type="many" rel-entity-name="OrderItemInventoryRes">
+        <key-map field-name="orderId"/>
+      </relation>
       <relation type="many" rel-entity-name="OrderItemBilling">
         <key-map field-name="orderId"/>
       </relation>
@@ -357,9 +360,6 @@
       </relation>
       <relation type="one" fk-name="ORDER_HDR_SYST" title="Sync" rel-entity-name="StatusItem">
         <key-map field-name="syncStatusId" rel-field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Picklist">
-        <key-map field-name="orderId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderRequirementCommitment">
         <key-map field-name="orderId"/>
@@ -509,9 +509,6 @@
       </relation>
       <relation type="one-nofk" title="Sync" rel-entity-name="StatusItem">
         <key-map field-name="syncStatusId" rel-field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Picklist">
-        <key-map field-name="orderId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderRequirementCommitment">
         <key-map field-name="orderId"/>
@@ -1190,41 +1187,6 @@
       </relation>
       <relation type="many" rel-entity-name="OrderHeader">
         <key-map field-name="orderTypeId"/>
-      </relation>
-    </entity>
-    <entity entity-name="Picklist"
-            package-name="org.ofbiz.commonapp.order.order"
-            title="Picklist Entity">
-      <field name="picklistId" type="id-ne"></field>
-      <field name="orderId" type="id-ne"></field>
-      <field name="dateCreated" type="date-time"></field>
-      <prim-key field="picklistId"/>
-      <relation type="many" rel-entity-name="PicklistItem">
-        <key-map field-name="picklistId"/>
-      </relation>
-      <relation type="one" fk-name="PICKLIST_ORDR" rel-entity-name="OrderHeader">
-        <key-map field-name="orderId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderItem">
-        <key-map field-name="orderId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ItemIssuance">
-        <key-map field-name="picklistId"/>
-      </relation>
-    </entity>
-    <entity entity-name="PicklistItem"
-            package-name="org.ofbiz.commonapp.order.order"
-            title="Picklist Item Entity">
-      <field name="picklistId" type="id-ne"></field>
-      <field name="inventoryItemId" type="id-ne"></field>
-      <field name="quantity" type="floating-point"></field>
-      <prim-key field="picklistId"/>
-      <prim-key field="inventoryItemId"/>
-      <relation type="one" fk-name="PICKLIST_ITEM_PL" rel-entity-name="Picklist">
-        <key-map field-name="picklistId"/>
-      </relation>
-      <relation type="one" fk-name="PICKLIST_ITEM_INV" rel-entity-name="InventoryItem">
-        <key-map field-name="inventoryItemId"/>
       </relation>
     </entity>
     <entity entity-name="ProductOrderItem"
