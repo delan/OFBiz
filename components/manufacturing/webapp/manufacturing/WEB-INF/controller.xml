@@ -524,8 +524,8 @@
     <view-map name="InitLowLevelCode" type="jpublish" page="/bom/InitLowLevelCode.ftl"/>
     <view-map name="EditProductManufacturingRules" type="jpublish" page="/bom/EditProductManufacturingRules.ftl"/>
     <!-- Lookup request mappings -->
-    <view-map name="LookupProduct" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupProduct" type="screen"/>
-    <view-map name="LookupVirtualProduct" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupVirtualProduct" type="screen"/>
+    <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
+    <view-map name="LookupVirtualProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVirtualProduct" type="screen"/>
     <view-map name="LookupRouting" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupRouting" type="screen"/>
     <view-map name="LookupRoutingTask" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupRoutingTask" type="screen"/>
     
