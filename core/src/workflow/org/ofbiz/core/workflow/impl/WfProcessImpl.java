@@ -230,20 +230,11 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             catch ( GenericEntityException e ) {
                 throw new WfException(e.getMessage(),e);
             }
-                                    
-            // get the transaction restriction
-            GenericValue restriction = null;
-            try {
-                restriction = toActivity.getRelatedOne("WorkflowTransRestriction");
-            }
-            catch ( GenericEntityException e ) {
-                throw new WfException(e.getMessage(),e);
-            }
-            
+                                                            
             // check for a join
             String join = "WJT_AND"; // default join is AND
-            if ( restriction != null && restriction.get("joinTypeEnumId") != null )
-                join = restriction.getString("joinTypeEnumId");
+            if ( toActivity.get("joinTypeEnumId") != null )
+                join = toActivity.getString("joinTypeEnumId");
             
             // activate if XOR or test the join transition(s)
             if ( join.equals("WJT_XOR") )
@@ -331,20 +322,11 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);
         }
-        
-        // get the transaction restriction
-        GenericValue restriction = null;
-        try {
-            restriction = fromActivity.getDefinitionObject().getRelatedOne("WorkflowTransRestriction");
-        }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
-        }
-        
+                        
         // check for a split 
         String split = "WST_AND"; // default split is AND
-        if ( restriction != null && restriction.get("splitTypeEnumId") != null )
-            split = restriction.getString("splitTypeEnumId");
+        if ( fromActivity.getDefinitionObject().get("splitTypeEnumId") != null )
+            split = fromActivity.getDefinitionObject().getString("splitTypeEnumId");
         
         // Iterate through the possible transitions
         boolean transitionOk = false;

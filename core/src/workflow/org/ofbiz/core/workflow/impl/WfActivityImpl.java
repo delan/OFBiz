@@ -81,8 +81,16 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if ( this.state().equals("open.running") )
             throw new AlreadyRunning();
         
-        changeState("open.running");
-        // implement me
+        // test the activity mode
+        String mode = valueObject.getString("startModeEnumId");
+        if ( mode == null )
+            throw new CannotStart("Start mode cannot be null");
+        
+        // Default mode is MANUAL -- only start if we are automatic
+        if ( mode.equals("WAM_AUTOMATIC") )
+            startActivity(); 
+        else 
+            assignActivity();
     }
     
     /**
@@ -195,4 +203,53 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     public String executionObjectType() {
         return "WfActivity";
     }
+    
+    // Assigns the activity to a task list
+    private void assignActivity() throws WfException {
+        // implement me
+    }
+    
+    // Starts or activates this activity
+    private void startActivity() throws WfException, CannotStart {
+        try {
+            changeState("open.running");
+        }
+        catch ( InvalidState is ) {
+            throw new CannotStart(is.getMessage(),is);
+        }
+        catch ( TransitionNotAllowed tna ) {
+            throw new CannotStart(tna.getMessage(),tna);
+        }
+        // get the type of this activity
+        String type = valueObject.getString("activityTypeEnumId");
+        if ( type == null )
+            throw new WfException("Illegal activity type");
+        
+        if ( type.equals("WAT_ROUTE") )
+            complete();
+        else if ( type.equals("WAT_TOOL") )
+            runTool();
+        else if ( type.equals("WAT_SUBFLOW") )
+            runSubFlow();
+        else if ( type.equals("WAT_LOOP") )
+            runLoop();
+        else
+            throw new WfException("Illegal activity type");
+    }
+    
+    // Runs a TOOL activity
+    private void runTool() throws WfException {
+        // implement me
+    }
+    
+    // Runs a LOOP activity
+    private void runLoop() throws WfException {
+        // implement me
+    }
+    
+    // Runs a SUBFLOW activity
+    private void runSubFlow() throws WfException {
+        // implement me
+    }
+        
 }
