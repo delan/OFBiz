@@ -114,13 +114,15 @@ public class JmsServiceEngine implements GenericEngine {
         String topicName = server.getAttribute("topic-queue");
         String userName = server.getAttribute("username");
         String password = server.getAttribute("password");
+        String clientId = server.getAttribute("client-id");
 
         try {
             InitialContext jndi = JNDIContextFactory.getInitialContext(serverName);
             TopicConnectionFactory factory = (TopicConnectionFactory) jndi.lookup(jndiName);
             TopicConnection con = factory.createTopicConnection(userName, password);
 
-            //con.setClientID("0123456789ABCDEF");
+            if (clientId != null && clientId.length() > 1)
+                con.setClientID(clientId);
             con.start();
 
             TopicSession session = con.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -155,13 +157,15 @@ public class JmsServiceEngine implements GenericEngine {
         String queueName = server.getAttribute("topic-queue");
         String userName = server.getAttribute("username");
         String password = server.getAttribute("password");
+        String clientId = server.getAttribute("client-id");
 
         try {
             InitialContext jndi = JNDIContextFactory.getInitialContext(serverName);
             QueueConnectionFactory factory = (QueueConnectionFactory) jndi.lookup(jndiName);
             QueueConnection con = factory.createQueueConnection(userName, password);
 
-            con.setClientID(userName);
+            if (clientId != null && clientId.length() > 1)
+                con.setClientID(clientId);
             con.start();
 
             QueueSession session = con.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -195,13 +199,15 @@ public class JmsServiceEngine implements GenericEngine {
         String queueName = server.getAttribute("topic-queue");
         String userName = server.getAttribute("username");
         String password = server.getAttribute("password");
+        String clientId = server.getAttribute("client-id");
 
         try {
             InitialContext jndi = JNDIContextFactory.getInitialContext(serverName);
             XAQueueConnectionFactory factory = (XAQueueConnectionFactory) jndi.lookup(jndiName);
             XAQueueConnection con = factory.createXAQueueConnection(userName, password);
 
-            con.setClientID(userName);
+            if (clientId != null && clientId.length() > 1)
+                con.setClientID(userName);
             con.start();
 
             // enlist the XAResource

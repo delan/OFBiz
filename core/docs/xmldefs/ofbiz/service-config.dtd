@@ -86,6 +86,7 @@
     type (topic|queue) #REQUIRED
     username CDATA #IMPLIED
     password CDATA #IMPLIED
+    client-id CDATA #IMPLIED
     listen (true|false) "false"
     listener-class CDATA #IMPLIED
 >
