@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -62,7 +62,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <#else>
         <div class="head3" style="color: red;">${uiLabelMap.ProductWarningOrderStatus} ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}; ${uiLabelMap.ProductApprovedBeforeShipping}.</div>
     </#if>
-
+</#if>
+<#if orderItemDatas?exists>
     <#assign rowCount = 0>
     <#if isSalesOrder>
         <form action="<@ofbizUrl>/issueOrderItemInventoryResToShipment</@ofbizUrl>" name="selectAllForm">
@@ -73,12 +74,13 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <input type="hidden" name="_useRowSubmit" value="Y">
     <table width="100%" cellpadding="2" cellspacing="0" border="1">
         <tr>
-            <td><div class="tableheadtext">${uiLabelMap.ProductOrderItem}</div></td>
+            <td><div class="tableheadtext">${uiLabelMap.ProductOrderId}/${uiLabelMap.ProductOrderItem}</div></td>
             <td><div class="tableheadtext">${uiLabelMap.ProductProduct}</div></td>
             <#if isSalesOrder>
                 <td><div class="tableheadtext">${uiLabelMap.ProductItemsIssuedReserved}</div></td>
                 <td><div class="tableheadtext">${uiLabelMap.ProductIssuedReservedTotalOrdered}</div></td>
                 <td><div class="tableheadtext">${uiLabelMap.ProductReserved}</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.ProductNotAvailable}</div></td>
             <#else>
                 <td><div class="tableheadtext">${uiLabelMap.ProductItemsIssued}</div></td>
                 <td><div class="tableheadtext">${uiLabelMap.ProductIssedOrdered}</div></td>
@@ -98,7 +100,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             <#assign totalQuantityReserved = orderItemData.totalQuantityReserved?if_exists>
             <#assign totalQuantityIssuedAndReserved = orderItemData.totalQuantityIssuedAndReserved?if_exists>
             <tr>
-                <td><div class="tabletext">${orderItem.orderItemSeqId}</div></td>
+                <td><div class="tabletext">${orderItem.orderId} / ${orderItem.orderItemSeqId}</div></td>
                 <td><div class="tabletext">${(product.internalName)?if_exists} [${orderItem.productId?default("N/A")}]</div></td>
                 <td>
                     <#if itemIssuances?has_content>
@@ -134,6 +136,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                     <td><div class="tabletext">&nbsp;</div></td>
                     <td><div class="tabletext">&nbsp;</div></td>
                     <td><div class="tabletext">&nbsp;</div></td>
+                    <td><div class="tabletext">&nbsp;</div></td>
                 <#else>
                     <#assign quantityNotIssued = orderItem.quantity - totalQuantityIssued>
                     <#if (quantityNotIssued > 0)>
@@ -158,6 +161,10 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                     <#assign orderItemInventoryRes = orderItemInventoryResData.orderItemInventoryRes>
                     <#assign inventoryItem = orderItemInventoryResData.inventoryItem>
                     <#assign inventoryItemFacility = orderItemInventoryResData.inventoryItemFacility>
+                    <#assign availableQuantity = orderItemInventoryRes.quantity - (orderItemInventoryRes.quantityNotAvailable?default(0))>
+                    <#if availableQuantity < 0>
+                        <#assign availableQuantity = 0>
+                    </#if>
                     <tr>
                         <td><div class="tabletext">&nbsp;</div></td>
                         <td><div class="tabletext">&nbsp;</div></td>
@@ -173,13 +180,14 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                         </td>
                         <td><div class="tabletext">&nbsp;</div></td>
                         <td><div class="tabletext">${orderItemInventoryRes.quantity}</div></td>
+                        <td><div class="tabletext">${orderItemInventoryRes.quantityNotAvailable?default("&nbsp;")}</div></td>
                         <#if originFacility?exists && originFacility.facilityId == inventoryItem.facilityId?if_exists>
                             <td>
                                 <input type="hidden" name="shipmentId_o_${rowCount}" value="${shipmentId}"/>
                                 <input type="hidden" name="orderId_o_${rowCount}" value="${orderItemInventoryRes.orderId}"/>
                                 <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItemInventoryRes.orderItemSeqId}"/>
                                 <input type="hidden" name="inventoryItemId_o_${rowCount}" value="${orderItemInventoryRes.inventoryItemId}"/>
-                                <input type="text" class='inputBox' size="5" name="quantity_o_${rowCount}" value="${orderItemInventoryRes.quantity}"/>
+                                <input type="text" class='inputBox' size="5" name="quantity_o_${rowCount}" value="${(orderItemInventoryResData.shipmentPlanQuantity)?default(availableQuantity)}"/>
                             </td>
                             <td align="right">              
                               <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
@@ -194,12 +202,12 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             </#if>
         </#list>
         <tr>
-            <td colspan="7" align="right"><input type="submit" class="smallSubmit" value="${uiLabelMap.ProductIssueAll}"/></td>
+            <td colspan="8" align="right"><input type="submit" class="smallSubmit" value="${uiLabelMap.ProductIssueAll}"/></td>
         </tr>
     </table>
     <input type="hidden" name="_rowCount" value="${rowCount}">
     </form>
-    <script language="JavaScript">${uiLabelMap.CommonSelectAll} ();</script>
+    <script language="JavaScript">selectAll();</script>
 </#if>
 
 <#else>
