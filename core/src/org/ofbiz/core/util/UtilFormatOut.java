@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/16 14:45:48  azeneski
+ * Added the missing 'core' directory into the module.
+ *
  * Revision 1.1  2001/07/15 16:36:18  azeneski
  * Initial Import
  *
@@ -165,6 +168,18 @@ public class UtilFormatOut
     if(string1 != null) return string1;
     else if(string2 != null) return string2;
     else if(string3 != null) return string3;
+    else return "";
+  }
+  
+  /** Returns <code>pre + base + post</code> if base String is not null or empty, otherwise an empty but non-null String.
+   * @param base The base String
+   * @param pre The pre String
+   * @param post The post String
+   * @return <code>pre + base + post</code> if base String is not null or empty, otherwise an empty but non-null String.
+   */  
+  public static String ifNotEmpty(String base, String pre, String post)
+  {
+    if(base != null && base.length() > 0) return pre + base + post;
     else return "";
   }
   
