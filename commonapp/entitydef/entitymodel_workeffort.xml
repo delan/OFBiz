@@ -150,6 +150,12 @@
       <prim-key field="partyId"/>
       <prim-key field="rateTypeId"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PRTY_RTE_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PRTY_RTE_RTTP" rel-entity-name="RateType">
+        <key-map field-name="rateTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="RateType"
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
@@ -173,6 +179,28 @@
       <field name="hours" type="floating-point"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="timeEntryId"/>
+      <relation type="one" fk-name="TIME_ENT_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="TIME_ENT_RTYP" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="TIME_ENT_RTTP" rel-entity-name="RateType">
+        <key-map field-name="rateTypeId"/>
+      </relation>
+      <relation type="one" fk-name="TIME_ENT_UOM" rel-entity-name="Uom">
+        <key-map field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="TIME_ENT_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="TIME_ENT_TSHT" rel-entity-name="Timesheet">
+        <key-map field-name="timesheetId"/>
+      </relation>
     </entity>
     <entity entity-name="TimeEntryBilling"
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
@@ -183,6 +211,16 @@
       <prim-key field="timeEntryId"/>
       <prim-key field="invoiceId"/>
       <prim-key field="invoiceItemSeqId"/>
+      <relation type="one" fk-name="TIME_ENTBL_TENT" rel-entity-name="TimeEntry">
+        <key-map field-name="timeEntryId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Invoice">
+        <key-map field-name="invoiceId"/>
+      </relation>
+      <relation type="one" fk-name="TIME_ENTBL_INVITM" rel-entity-name="InvoiceItem">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="Timesheet"
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
@@ -194,6 +232,16 @@
       <field name="thruDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="timesheetId"/>
+      <relation type="one" fk-name="TIMESHEET_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="TIMESHEET_RTYP" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="TimesheetRole"
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
@@ -204,6 +252,19 @@
       <prim-key field="timesheetId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
+      <relation type="one" fk-name="TIMESHTRL_TSHT" rel-entity-name="Timesheet">
+        <key-map field-name="timesheetId"/>
+      </relation>
+      <relation type="one" fk-name="TIMESHTRL_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="TIMESHTRL_PTRL" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="WorkEffortAssignmentRate"
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
@@ -220,6 +281,22 @@
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="WEFF_ASRT_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="WEFF_ASRT_RATETP" rel-entity-name="RateType">
+        <key-map field-name="rateTypeId"/>
+      </relation>
+      <relation type="one" fk-name="WEFF_ASRT_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="WEFF_ASRT_ROLETP" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -234,6 +311,12 @@
       <field name="description" type="description"></field>
       <prim-key field="workEffortId"/>
       <prim-key field="communicationEventId"/>
+      <relation type="one" fk-name="COMEV_WEFF_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="COMEV_WEFF_CMEV" rel-entity-name="CommunicationEvent">
+        <key-map field-name="communicationEventId"/>
+      </relation>
     </entity>
     <entity entity-name="Deliverable"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -243,6 +326,9 @@
       <field name="deliverableName" type="name"></field>
       <field name="description" type="description"></field>
       <prim-key field="deliverableId"/>
+      <relation type="one" fk-name="DELIVERABLE_DLTYP" rel-entity-name="DeliverableType">
+        <key-map field-name="deliverableTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="DeliverableType"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -250,6 +336,9 @@
       <field name="deliverableTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="deliverableTypeId"/>
+      <relation type="many" rel-entity-name="Deliverable">
+        <key-map field-name="deliverableTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="WorkEffort"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -540,6 +629,16 @@
       <prim-key field="workEffortId"/>
       <prim-key field="invoiceId"/>
       <prim-key field="invoiceItemSeqId"/>
+      <relation type="one" fk-name="WK_EFFBLNG_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Invoice">
+        <key-map field-name="invoiceId"/>
+      </relation>
+      <relation type="one" fk-name="WK_EFFBLNG_INVITM" rel-entity-name="InvoiceItem">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="WorkEffortCategory"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -579,6 +678,12 @@
       <field name="deliverableId" type="id-ne"></field>
       <prim-key field="workEffortId"/>
       <prim-key field="deliverableId"/>
+      <relation type="one" fk-name="WKEFF_DELPRD_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="WKEFF_DELPRD_DEL" rel-entity-name="Deliverable">
+        <key-map field-name="deliverableId"/>
+      </relation>
     </entity>
     <entity entity-name="WorkEffortFixedAssetAssign"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -593,6 +698,15 @@
       <prim-key field="workEffortId"/>
       <prim-key field="fixedAssetId"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="WKEFF_FXDAA_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="WKEFF_FXDAA_FXAS" rel-entity-name="FixedAsset">
+        <key-map field-name="fixedAssetId"/>
+      </relation>
+      <relation type="one" fk-name="WKEFF_FXDAA_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
     </entity>
     <entity entity-name="WorkEffortFixedAssetStd"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -604,6 +718,12 @@
       <field name="estimatedCost" type="currency-amount"></field>
       <prim-key field="workEffortId"/>
       <prim-key field="fixedAssetTypeId"/>
+      <relation type="one" fk-name="WKEFF_FASTD_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="WKEFF_FASTD_FAT" rel-entity-name="FixedAssetType">
+        <key-map field-name="fixedAssetTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="WorkEffortGoodStandard"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -614,6 +734,12 @@
       <field name="estimatedCost" type="currency-amount"></field>
       <prim-key field="workEffortId"/>
       <prim-key field="productId"/>
+      <relation type="one" fk-name="WKEFF_GDSTD_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="WKEFF_GDSTD_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
     </entity>
     <entity entity-name="WorkEffortInventoryAssign"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -623,6 +749,12 @@
       <field name="quantity" type="floating-point"></field>
       <prim-key field="workEffortId"/>
       <prim-key field="inventoryItemId"/>
+      <relation type="one" fk-name="WKEFF_INVAS_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="WKEFF_INVAS_INVIT" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
     </entity>
     <entity entity-name="WorkEffortInventoryProduced"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -631,6 +763,12 @@
       <field name="inventoryItemId" type="id-ne"></field>
       <prim-key field="workEffortId"/>
       <prim-key field="inventoryItemId"/>
+      <relation type="one" fk-name="WKEFF_INVPD_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="WKEFF_INVPD_INVIT" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
     </entity>
     <view-entity entity-name="WorkEffortPartyAssignByGroup"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -846,6 +984,12 @@
       <field name="estimatedCost" type="currency-amount"></field>
       <prim-key field="workEffortId"/>
       <prim-key field="skillTypeId"/>
+      <relation type="one" fk-name="WKEFF_SKLSTD_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="WKEFF_SKLSTD_SKTP" rel-entity-name="SkillType">
+        <key-map field-name="skillTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="WorkEffortStatus"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"

@@ -772,10 +772,10 @@
       <relation type="one" fk-name="INVCE_RLE_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="INVCE_RLE_RLETYP" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="INVCE_RLE_PTRL" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
@@ -1108,7 +1108,7 @@
       <relation type="one" fk-name="ORG_GLACCT_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="ORG_GLACCT_RLTYP" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="one" fk-name="ORG_GLACCT_PTRLE" rel-entity-name="PartyRole">
@@ -1173,10 +1173,10 @@
       <relation type="one" fk-name="BILLACCT_RL_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="BILLACCT_RL_ROLE" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="BILLACCT_RL_PTRL" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
@@ -1309,10 +1309,10 @@
       <relation type="one" fk-name="FIN_ACT_RL_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="FIN_ACT_RL_RLTYP" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="FIN_ACT_RL_RTRL" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>

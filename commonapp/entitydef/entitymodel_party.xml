@@ -1637,37 +1637,7 @@
       <relation type="many" rel-entity-name="ValidContactMechRole">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="OrderRole">
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentCostEstimate">
-        <key-map field-name="roleTypeId"/>
-      </relation>
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTrans">
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTransDetail">
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FixedAsset">
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Invoice">
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceRole">
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AccoutingPeriod">
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FinAccountRole">
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrganizationGlAccount">
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>

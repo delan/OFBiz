@@ -65,6 +65,16 @@
       <field name="issuedDateTime" type="date-time"></field>
       <field name="quantity" type="floating-point"></field>
       <prim-key field="itemIssuanceId"/>
+      <relation type="one" fk-name="ITEM_ISS_INVITM" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one" fk-name="ITEM_ISS_PKLST" rel-entity-name="Picklist">
+        <key-map field-name="picklistId"/>
+      </relation>
+      <relation type="one" fk-name="ITEM_ISS_SHITM" rel-entity-name="ShipmentItem">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentItemSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="ItemIssuanceRole"
             package-name="org.ofbiz.commonapp.shipment.issuance"
@@ -75,6 +85,16 @@
       <prim-key field="itemIssuanceId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
+      <relation type="one" fk-name="ITEM_ISSRL_ITMIS" rel-entity-name="ItemIssuance">
+        <key-map field-name="itemIssuanceId"/>
+      </relation>
+      <relation type="one" fk-name="ITEM_ISSRL_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="ITEM_ISSRL_PTRL" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -96,6 +116,22 @@
       <field name="quantityAccepted" type="floating-point"></field>
       <field name="quantityRejected" type="floating-point"></field>
       <prim-key field="receiptId"/>
+      <relation type="one" fk-name="SHP_RCPT_INVITM" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one" fk-name="SHP_RCPT_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="SHP_RCPT_SHPKG" rel-entity-name="ShipmentPackage">
+        <key-map field-name="shipmentPackageId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="SHP_RCPT_ORDITM" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="ShipmentReceiptRole"
             package-name="org.ofbiz.commonapp.shipment.receipt"
@@ -106,6 +142,16 @@
       <prim-key field="receiptId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
+      <relation type="one" fk-name="SHP_RCPTRL_RCPT" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="receiptId"/>
+      </relation>
+      <relation type="one" fk-name="SHP_RCPTRL_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="SHP_RCPTRL_PTRL" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -131,6 +177,28 @@
       <field name="fuelUsed" type="floating-point"></field>
       <prim-key field="shipmentRouteSegmentId"/>
       <prim-key field="shipmentId"/>
+      <relation type="one" fk-name="SHPMT_RTSEG_SHPMT" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMT_RTSEG_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMT_RTSEG_RLTP" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMT_RTSEG_FXAS" rel-entity-name="FixedAsset">
+        <key-map field-name="fixedAssetId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMT_RTSEG_FCLT" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMT_RTSEG_SHMT" rel-entity-name="ShipmentMethodType">
+        <key-map field-name="shipmentMethodTypeId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -178,6 +246,16 @@
       <prim-key field="shipmentPackageId"/>
       <prim-key field="shipmentId"/>
       <prim-key field="shipmentItemSeqId"/>
+      <relation type="one" fk-name="PCK_CNTNT_SHPKG" rel-entity-name="ShipmentPackage">
+        <key-map field-name="shipmentPackageId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="one" fk-name="PCK_CNTNT_SHITM" rel-entity-name="ShipmentItem">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentItemSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="Shipment"
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -206,6 +284,12 @@
       </relation>
       <relation type="many" rel-entity-name="OrderShipment">
         <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_CMECH" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentAttribute"
@@ -301,6 +385,12 @@
         <key-map field-name="shipmentId"/>
         <key-map field-name="shipmentItemSeqId"/>
       </relation>
+      <relation type="one" fk-name="SHPMNT_ITM_SHPMT" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_ITM_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
     </entity>
     <entity entity-name="ShipmentItemBilling"
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -313,6 +403,20 @@
       <prim-key field="shipmentItemSeqId"/>
       <prim-key field="invoiceId"/>
       <prim-key field="invoiceItemSeqId"/>
+      <relation type="one-nofk" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_ITBL_SPIM" rel-entity-name="ShipmentItem">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentItemSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Invoice">
+        <key-map field-name="invoiceId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_ITBL_INIM" rel-entity-name="InvoiceItem">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="ShipmentItemFeature"
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -323,6 +427,16 @@
       <prim-key field="shipmentId"/>
       <prim-key field="shipmentItemSeqId"/>
       <prim-key field="productFeatureId"/>
+      <relation type="one-nofk" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_ITFT_SPIM" rel-entity-name="ShipmentItem">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_ITFT_FEAT" rel-entity-name="ProductFeature">
+        <key-map field-name="productFeatureId"/>
+      </relation>
     </entity>
     <entity entity-name="ShipmentMethodType"
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -349,6 +463,12 @@
       <field name="statusDate" type="date-time"></field>
       <prim-key field="statusId"/>
       <prim-key field="shipmentId"/>
+      <relation type="one" fk-name="SHPMNT_STTS_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_STTS_SHMT" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId"/>
+      </relation>
     </entity>
     <entity entity-name="ShipmentType"
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -397,6 +517,16 @@
       <field name="shipmentPackageId" type="id"></field>
       <field name="description" type="description"></field>
       <prim-key field="documentId"/>
+      <relation type="one" fk-name="SHPNG_DOC_DOC" rel-entity-name="Document">
+        <key-map field-name="documentId"/>
+      </relation>
+      <relation type="one" fk-name="SHPNG_DOC_SMITM" rel-entity-name="ShipmentItem">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="SHPNG_DOC_SHPKG" rel-entity-name="ShipmentPackage">
+        <key-map field-name="shipmentPackageId"/>
+      </relation>
     </entity>
 </entitymodel>
 

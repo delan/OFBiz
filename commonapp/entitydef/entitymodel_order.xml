@@ -481,7 +481,7 @@
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" fk-name="ORDER_ITBLNG_INV" rel-entity-name="Invoice">
+      <relation type="one-nofk" rel-entity-name="Invoice">
         <key-map field-name="invoiceId"/>
       </relation>
       <relation type="one" fk-name="ORDER_ITBLNG_IITM" rel-entity-name="InvoiceItem">
@@ -581,7 +581,7 @@
       <relation type="one" fk-name="ORDER_ITRL_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="ORDER_ITRL_ROLE" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="one" fk-name="ORDER_ITRL_PTRLE" rel-entity-name="PartyRole">
@@ -680,7 +680,7 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" fk-name="ORDER_ROLE_ROLE" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderItem">
@@ -1056,7 +1056,7 @@
       <relation type="one" fk-name="QUOTE_RL_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="QUOTE_RL_ROLE" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="one" fk-name="QUOTE_RL_PROLE" rel-entity-name="PartyRole">
@@ -1210,7 +1210,7 @@
       <relation type="one" fk-name="CUSTREQ_RL_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="CUSTREQ_RL_ROLE" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="one" fk-name="CUSTREQ_RL_PROLE" rel-entity-name="PartyRole">
