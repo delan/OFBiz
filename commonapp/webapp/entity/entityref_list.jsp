@@ -68,6 +68,7 @@
 <a href="<%=response.encodeURL(controlPath + "/sitemap")%>" target='main' class='listtext'>Pop up Site Map</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/entityref_main")%>" target="entityFrame" class='listtext'>Entity Reference Main Page</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" target="entityFrame" class='listtext'>Generate Entity Model XML</A><BR>
+<a href="<%=response.encodeURL(controlPath + "/view/ModelWriter?savetofile=true")%>" target="entityFrame" class='listtext'>Save Entity Model XML to File</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/checkdb")%>" target="entityFrame" class='listtext'>Check/Update Database</A>
 <HR>
 

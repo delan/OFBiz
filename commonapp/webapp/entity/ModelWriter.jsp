@@ -1,9 +1,38 @@
-<%@ page contentType="text/plain" %><%@ page import="java.util.*" %><%
-String title = "Entity of an Open For Business Project Component";
-String description = "None";
-String copyright = "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org";
-String author = "David E. Jones";
-String version = "1.0";
+<%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" /><%
+
+if(request.getParameter("savetofile") != null)
+{
+  //save to the file specified in the ModelReader config
+  String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
+  String filename = helper.getModelReader().entityFileName;
+  
+  java.net.URL url = new java.net.URL("http",request.getServerName(),request.getServerPort(),controlPath + "/view/ModelWriter");
+  HttpClient httpClient = new HttpClient(url, new HashMap());
+  InputStream in = httpClient.getStream();
+  
+  File newFile = new File(filename);
+  FileWriter newFileWriter = new FileWriter(newFile);
+  
+  BufferedReader post = new BufferedReader(new InputStreamReader(in));
+  String line = null;
+  while((line = post.readLine()) != null) {
+    newFileWriter.write(line);
+    newFileWriter.write("\n");
+  }
+  newFileWriter.close();
+%>If you aren't seeing any exceptions, XML was written successfully to:
+<%=filename%>
+from the URL:
+<%=url.toString()%>
+<%
+}
+else
+{
+  String title = "Entity of an Open For Business Project Component";
+  String description = "None";
+  String copyright = "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org";
+  String author = "David E. Jones";
+  String version = "1.0";
 %><?xml version="1.0"?>
 <!--
 /**
@@ -35,7 +64,7 @@ String version = "1.0";
  *@version    1.0
  */
 -->
-<%@ page import="org.ofbiz.core.entity.*" %><%@ page import="org.ofbiz.core.entity.model.*" %><jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" /><% 
+<% 
   //GenericHelper helper = GenericHelperFactory.getDefaultHelper();
   ModelReader reader = helper.getModelReader();
   Map packages = new HashMap();
@@ -142,3 +171,4 @@ String version = "1.0";
     }
   }%>  
 </entitymodel>
+<%}%>
