@@ -150,6 +150,7 @@
         <attribute mode="IN" name="entityOperation" optional="true" type="String"/>
         <attribute mode="IN" name="statusId" optional="true" type="String"/>
         <attribute mode="IN" name="privilegeEnumId" optional="true" type="String"/>
+        <attribute mode="IN" name="quickCheckContentId" optional="true" type="String"/>
         <attribute mode="OUT" name="permissionStatus" optional="true" type="String"/>
         <attribute mode="OUT" name="permissionRecorder" optional="true" type="org.ofbiz.content.content.PermissionRecorder"/>
     </service>
