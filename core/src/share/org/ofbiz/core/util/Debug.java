@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/01/31 05:05:01  jonesde
+ * Finished good first pass on Log4J stuff
+ *
  * Revision 1.4  2002/01/31 03:56:50  jonesde
  * Added Log4J stuff - pretty cool
  *
@@ -110,10 +113,14 @@ public final class Debug {
     }
     
     public static void log(int level, Throwable t, String msg, String module) {
+        log(level, t, msg, module, "org.ofbiz.core.util.Debug");
+    }
+    
+    public static void log(int level, Throwable t, String msg, String module, String callingClass) {
         if(level == Debug.ALWAYS || UtilProperties.propertyValueEqualsIgnoreCase("debug", levelProps[level], "true")) {
             if (useLog4J) {
                 Category logger = getLogger(module);
-                logger.log("org.ofbiz.core.util.Debug", levelObjs[level], msg, t);
+                logger.log(callingClass, levelObjs[level], msg, t);
             } else {
                 StringBuffer prefixBuf = new StringBuffer();
                 prefixBuf.append(dateFormat.format(new java.util.Date()));
