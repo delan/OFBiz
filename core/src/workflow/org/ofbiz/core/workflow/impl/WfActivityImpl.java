@@ -121,31 +121,25 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }                    
     }
 
-    private void createAssignments(GenericValue performer) throws WfException {
+    private void createAssignments(GenericValue currentPerformer) throws WfException {
         GenericValue valueObject = getDefinitionObject();
+        GenericValue performer = checkPerformer(currentPerformer);
         boolean assignAll = false;
 
-        if (valueObject.get("acceptAllAssignments") != null)
+        if (valueObject.get("acceptAllAssignments") != null) {        
             assignAll = valueObject.getBoolean("acceptAllAssignments").booleanValue();
-
-        String performerType = performer.getString("participantTypeId");
-
-        if (performerType != null && (performerType.equals("RESOURCE") || performerType.equals("ROLE"))) {
-            // We are a dynamic performer
-            if (Debug.verboseOn()) Debug.logVerbose("Getting dynamic performer", module);
-            performer = getDynamicPerformer(performer);
         }
-
+        
+        // first check for single assignment   
         if (!assignAll) {
             if (performer != null) {
                 Debug.logVerbose("[WfActivity.createAssignments] : (S) Single assignment", module);
                 assign(WfFactory.getWfResource(performer), false);
-            }
-            return;
+            }           
         }
 
         // check for a party group
-        if (performer.get("partyId") != null && !performer.getString("partyId").equals("_NA_")) {
+        else if (performer.get("partyId") != null && !performer.getString("partyId").equals("_NA_")) {
             GenericValue partyType = null;
             GenericValue groupType = null;
 
@@ -185,7 +179,9 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 Debug.logVerbose("[WfActivity.createAssignments] : (G) Single assignment", module);
                 assign(WfFactory.getWfResource(performer), false);
             }
-        } // check for role types
+        } 
+        
+        // check for role types
         else if (performer.get("roleTypeId") != null && !performer.getString("roleTypeId").equals("_NA_")) {
             Collection partyRoles = null;
 
@@ -258,53 +254,65 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         return assign;
     }
 
-    // check for a dynamic performer
-    private GenericValue getDynamicPerformer(GenericValue performer) throws WfException {
+    // check the performer: dynamic; defined partyId/roleTypeId
+    private GenericValue checkPerformer(GenericValue performer) throws WfException {
         GenericValue newPerformer = new GenericValue(performer);
         Map context = processContext();
-        String expr = null;
-        String field = null;
-        Object value = null;
         
-        if (newPerformer.get("partyId") != null && newPerformer.getString("partyId").length() > 0) {
-            // first try partyId
-            expr = newPerformer.getString("partyId");
-            if (expr != null && expr.trim().toLowerCase().startsWith("expr:")) {
-                if (Debug.verboseOn()) Debug.logVerbose("Found a party expression", module);
-                try {
-                    value = BshUtil.eval(expr.trim().substring(5).trim(), context);
-                    if (Debug.verboseOn()) Debug.logVerbose("Evaluated expression: " + value, module);
-                } catch (bsh.EvalError e) {
-                    throw new WfException("Bsh evaluation error occurred.", e);
+        String performerType = performer.getString("participantTypeId"); 
+        String partyId = performer.getString("partyId");
+        String roleTypeId = performer.getString("roleTypeId");
+        
+        // check for dynamic party
+        if (partyId != null && partyId.trim().toLowerCase().startsWith("expr:")) {
+            if (Debug.verboseOn()) Debug.logVerbose("Dynamic performer: Found a party expression", module);
+            Object value = null;
+            try {
+                value = BshUtil.eval(partyId.trim().substring(5).trim(), context);
+            } catch (bsh.EvalError e) {
+                throw new WfException("Bsh evaluation error occurred.", e);
+            }
+            if (value != null) {
+                if (value instanceof String) {
+                    newPerformer.set("partyId", value);
+                } else {
+                    throw new WfException("Expression did not return a String");
                 }
-                field = "partyId";
+            }            
+        }
+        
+        // check for dynamic role
+        if (roleTypeId != null && roleTypeId.trim().toLowerCase().startsWith("expr:")) {
+            if (Debug.verboseOn()) Debug.logVerbose("Dynamic performer: Found a role expression", module);
+            Object value = null;
+            try {
+                value = BshUtil.eval(partyId.trim().substring(5).trim(), context);                  
+            } catch (bsh.EvalError e) {
+                throw new WfException("Bsh evaluation error occurred.", e);
+            }
+            if (value != null) {
+                if (value instanceof String) {
+                    newPerformer.set("roleTypeId", value);
+                } else {
+                    throw new WfException("Expression did not return a String");
+                }
             }
         }
-        if (value == null) {
-            // then try roleTypeId
-            expr = newPerformer.getString("roleTypeId");
-            if (expr != null && expr.trim().toLowerCase().startsWith("expr:")) {
-                if (Debug.verboseOn()) Debug.logVerbose("Found a role expression", module);
-                try {
-                    value = BshUtil.eval(expr.trim().substring(5).trim(), context);
-                    if (Debug.verboseOn()) Debug.logVerbose("Evaluated expression: " + value, module);
-                } catch (bsh.EvalError e) {
-                    throw new WfException("Bsh evaluation error occurred.", e);
-                }                    
-                field = "roleTypeId";
+        
+        // check for un-defined party
+        if (performerType.equals("HUMAN") || performerType.equals("ORGANIZATIONAL_UNIT")) {
+            if (partyId == null) {
+                newPerformer.set("partyId", performer.getString("participantId"));
             }
         }
-        if (field != null && value != null) {
-            if (Debug.verboseOn())
-                Debug.logVerbose("Evaluated expression: " + expr + " Result: " + value, module);
-            if (value instanceof String) {
-                String resp = (String) value;
-                if (Debug.infoOn()) Debug.logInfo("Setting [" + field + "] to [" + resp + "]", module);
-                newPerformer.set(field, resp);
-            } else {
-                throw new WfException("Expression did not return a String");
+        
+        // check for un-defined role
+        if (performerType.equals("ROLE")) {
+            if (roleTypeId == null) {
+                newPerformer.set("roleTypeId", performer.getString("participantId"));
             }
         }
+                                
         return newPerformer;
     }
 
