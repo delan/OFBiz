@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -39,6 +39,24 @@
 
 
     <script language="JavaScript">
+        var obj_caller = window.opener;
+        
+        
+        // function passing selected value to calling window
+        function replaceContent(dataResourceId, contentId, contentIdTo, mapKey) {
+                if (!obj_caller) return;
+                var url = "<@ofbizUrl>/replaceSubContent?dataResourceId=" 
+                        + dataResourceId 
+                        + "&contentId=" + contentId 
+                        + "&contentIdTo=" + contentIdTo 
+                        + "&mapKey=" + mapKey 
+                        + "</@ofbizUrl>";
+                window.close();
+                obj_caller.location.replace(url);
+        }
+    </script>
+
+    <script language="JavaScript">
         // This code inserts the value lookedup by a popup window back into the associated form element
         var re_id = new RegExp('id=(\\d+)');
         var num_id = (re_id.exec(String(window.location))
@@ -52,7 +70,28 @@
                 window.close();
                 obj_caller.target.value = value;
         }
+        // function refreshes caller after posting new entry
+        function refresh_caller(value) {
+            var str = "/postSubContent";
+            <#assign separator="?"/>
+            <#if requestAttributes.contentId?exists>
+                str += '${separator}';
+                str += "contentId=" + "${requestAttributes.contentId}";
+                <#assign separator="&"/>
+            </#if>
+            <#if requestAttributes.mapKey?exists>
+                str += '${separator}';
+                str += "mapKey=" + "${requestAttributes.mapKey}";
+                <#assign separator="&"/>
+            </#if>
+                str += '${separator}';
+                str += value;
+            var requestStr = '"<@ofbizUrl>"' + escape(str)</@ofbizUrl> + '"';
+
+            window.opener.replace(requestStr);
+        }
     </script>
+
 
 </head>
 
