@@ -1,5 +1,5 @@
 /*
- * $Id: JotmFactory.java,v 1.4 2003/09/02 02:17:15 ajzeneski Exp $
+ * $Id: JotmFactory.java,v 1.5 2003/10/14 02:49:51 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
  * JotmFactory - Central source for JOTM JTA objects
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.1
  */
 public class JotmFactory implements TransactionFactoryInterface {
@@ -93,7 +93,7 @@ public class JotmFactory implements TransactionFactoryInterface {
         if (datasourceInfo != null && datasourceInfo.inlineJdbcElement != null) {
             // Use JOTM (xapool.jar) connection pooling
             try {
-                Connection con = JotmConnectionFactory.getConnection(helperName, datasourceInfo.inlineJdbcElement);
+                Connection con = MinervaConnectionFactory.getConnection(helperName, datasourceInfo.inlineJdbcElement);
                 if (con != null) return con;
             } catch (Exception ex) {
                 Debug.logError(ex, "JOTM is the configured transaction manager but there was an error getting a database Connection through JOTM for the " + helperName + " datasource. Please check your configuration, class path, etc.", module);
@@ -108,7 +108,7 @@ public class JotmFactory implements TransactionFactoryInterface {
     }
     
     public void shutdown() {
-        JotmConnectionFactory.closeAll();
+        MinervaConnectionFactory.closeAll();
         if (jotm != null) {
             jotm.stop();
             jotm = null;
