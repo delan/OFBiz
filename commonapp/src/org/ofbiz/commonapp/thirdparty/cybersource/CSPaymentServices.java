@@ -48,17 +48,16 @@ public class CSPaymentServices {
     public static final String module = CSPaymentServices.class.getName();
 
     public static Map ccProcessor(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        String orderId = (String) context.get("orderId");
+        String currency = (String) context.get("currency");        
         String configString = (String) context.get("paymentConfig");
         if (configString == null)
             configString = "payment.properties";
-        
-        boolean fraudScore = true;
-        boolean enableDav = true;
-        boolean autoBill = false;
-               
-        fraudScore = UtilProperties.propertyValueEqualsIgnoreCase(configString, "payment.cybersource.fraudScore", "Y");
-        enableDav = UtilProperties.propertyValueEqualsIgnoreCase(configString, "payment.cybersource.enableDav", "Y");
-        autoBill = UtilProperties.propertyValueEqualsIgnoreCase(configString, "payment.cybersource.autoBill", "Y");            
+                             
+        boolean fraudScore = UtilProperties.propertyValueEqualsIgnoreCase(configString, "payment.cybersource.fraudScore", "Y");
+        boolean enableDav = UtilProperties.propertyValueEqualsIgnoreCase(configString, "payment.cybersource.enableDav", "Y");
+        boolean autoBill = UtilProperties.propertyValueEqualsIgnoreCase(configString, "payment.cybersource.autoBill", "Y");            
         
         StringBuffer apps = new StringBuffer();
         apps.append("ics_auth");
@@ -67,18 +66,8 @@ public class CSPaymentServices {
         if (enableDav)
             apps.append(",ics_dav");
         if (autoBill)
-            apps.append(",ics_bill");
-        return process(dctx, context, apps.toString());
-    }
-
-    private static Map process(DispatchContext dctx, Map context, String appString) {
-        Map result = new HashMap();
-        String orderId = (String) context.get("orderId");
-        String currency = (String) context.get("currency");
-        String configString = (String) context.get("configUrl");
-        if (configString == null)
-            configString = "payment.properties";
-
+            apps.append(",ics_bill");        
+        
         // Some default values  
         String merchantId = UtilProperties.getPropertyValue(configString, "payment.cybersource.merchantID", "_NA_");
         String serverName = UtilProperties.getPropertyValue(configString, "payment.cybersource.serverName", "CyberSource_SJC_US");
@@ -134,7 +123,7 @@ public class CSPaymentServices {
 
         // basic info        
         request.setCurrency((currency == null ? defCur : currency));
-        request.addApplication(appString);
+        request.addApplication(apps.toString());
         request.setMerchantRefNo(orderId);
 
         // set the timeout/restart info
@@ -175,7 +164,7 @@ public class CSPaymentServices {
     }
 
     private static ICSClientRequest buildRequest(ICSClient client, Map context)
-        throws GenericEntityException, GeneralException, ICSException {
+            throws GenericEntityException, GeneralException, ICSException {
 
         // Create a new ICSClientRequest Object.
         ICSClientRequest request = new ICSClientRequest();

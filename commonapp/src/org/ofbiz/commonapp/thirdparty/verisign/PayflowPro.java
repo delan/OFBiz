@@ -190,26 +190,15 @@ public class PayflowPro {
         return buf;
     }
 
-    private static PFProAPI init(String resource) {
-        String hostAddress = "test-payflow.verisign.com";
-        Integer hostPort = Integer.decode("443");
-        Integer timeout = Integer.decode("80");
-        
-        String proxyAddress = "";
-        Integer proxyPort = Integer.decode("0");
-        String proxyLogon = "";
-        String proxyPassword = "";
-        
-        String certsPath = "certs";
-                                    
-        certsPath = UtilProperties.getPropertyValue(resource, "payment.verisign.certsPath", "certs");                        
-        hostAddress = UtilProperties.getPropertyValue(resource, "payment.verisign.hostAddress", "test-payflow.verisign.com");
-        hostPort = Integer.decode(UtilProperties.getPropertyValue(resource, "payment.verisign.hostPort", "443"));
-        timeout = Integer.decode(UtilProperties.getPropertyValue(resource, "payment.verisign.timeout", "80"));
-        proxyAddress = UtilProperties.getPropertyValue(resource, "payment.verisign.proxyAddress", "");
-        proxyPort = Integer.decode(UtilProperties.getPropertyValue(resource, "payment.verisign.proxyPort", "80"));
-        proxyLogon = UtilProperties.getPropertyValue(resource, "payment.verisign.proxyLogon", "");
-        proxyPassword = UtilProperties.getPropertyValue(resource, "payment.verisign.proxyPassword", "");                                    
+    private static PFProAPI init(String resource) {                                           
+        String certsPath = UtilProperties.getPropertyValue(resource, "payment.verisign.certsPath", "certs");                        
+        String hostAddress = UtilProperties.getPropertyValue(resource, "payment.verisign.hostAddress", "test-payflow.verisign.com");
+        Integer hostPort = Integer.decode(UtilProperties.getPropertyValue(resource, "payment.verisign.hostPort", "443"));
+        Integer timeout = Integer.decode(UtilProperties.getPropertyValue(resource, "payment.verisign.timeout", "80"));
+        String proxyAddress = UtilProperties.getPropertyValue(resource, "payment.verisign.proxyAddress", "");
+        Integer proxyPort = Integer.decode(UtilProperties.getPropertyValue(resource, "payment.verisign.proxyPort", "80"));
+        String proxyLogon = UtilProperties.getPropertyValue(resource, "payment.verisign.proxyLogon", "");
+        String proxyPassword = UtilProperties.getPropertyValue(resource, "payment.verisign.proxyPassword", "");                                    
 
         PFProAPI pn = new PFProAPI();
 
