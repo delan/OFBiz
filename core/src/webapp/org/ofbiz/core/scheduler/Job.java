@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/11/03 00:19:35  azeneski
+ * Changed the compareTo to not change the runtime of a job.
+ *
  * Revision 1.2  2001/11/02 23:11:14  azeneski
  * Some non-functional services implementation.
  *
@@ -49,29 +52,32 @@ public class Job implements Comparable, Serializable {
     
     private GenericValue job;
     private Map context;
-    private long runTime;
+    private long runtime;
     private long seqNum;
     
-    /* Entity Fields:
-     * String jobName
-     * String serviceName
-     * Date startDate
-     * Date endDate
-     * Date lastRun
-     * int interval
-     * int intervalType
-     * int runCount
-     * boolean isRepeated
-     * boolean isPersistant
+    /* Entity: JobSandbox
+     * jobName - string
+     * serviceName - string
+     * recurrenceInfoId - string
+     * lastRuntime - timestamp
+     * runCount - integer
+     *
+     * Entity: RecurrenceInfo
+     * startDateTime - timestamp
+     * endDateTime - timestamp
+     * exceptionDateTimes - string (';')
+     * exceptionRule - string
+     * recurrenceDateTimes - string (';')
+     * recurrenceRule - string
      */
-    
+            
     /** Creates a new Job object. */
     public Job(GenericValue job, Map context) {
         this.job = job;
         this.context = context;
-        this.runTime = -1;
+        this.runtime = -1;
         this.seqNum = 0;
-        updateRunTime();
+        updateRuntime();
         try {
             job.store();
         }
@@ -80,17 +86,17 @@ public class Job implements Comparable, Serializable {
         }
     }
     
-    /** Updates the runTime based on the interval (minutes). */
-    public void updateRunTime() {
+    /** Updates the runtime based on the interval (minutes). */
+    public void updateRuntime() {
         if ( job.getDate("startDate") == null )
             job.set("startDate", new Date());
         if ( job.getInteger("interval").intValue() != -1 )
-            runTime = getNextStartTime();
+            runtime = getNextStartTime();
     }
     
     /** Checks to see if this Job is scheduled to run within the next second. */
-    private boolean checkRunTime() {
-        long delayTime = runTime - System.currentTimeMillis();
+    private boolean checkRuntime() {
+        long delayTime = runtime - System.currentTimeMillis();
         if (delayTime <= 1000)
             return false;
         return true;
@@ -106,7 +112,7 @@ public class Job implements Comparable, Serializable {
         Date stamp = new Date();
         int runCount = job.getInteger("runCount").intValue();
         runCount++;
-        job.set("lastRunTime",stamp);
+        job.set("lastRuntime",stamp);
         job.set("runCount", new Integer(runCount));
         try {
             job.store();
@@ -122,8 +128,8 @@ public class Job implements Comparable, Serializable {
     }
     
     /** Returns the time to run in milliseconds. */
-    public long getRunTime() {
-        return runTime;
+    public long getRuntime() {
+        return runtime;
     }
     
     /** Retuns the sequence number of this job. */
@@ -132,11 +138,11 @@ public class Job implements Comparable, Serializable {
     }
     
     /** Retuns the last time the Job ran or 0 if never ran. */
-    public long lastRunTime() {
-        if ( job.getDate("lastRunTime") == null )
+    public long lastRuntime() {
+        if ( job.getDate("lastRuntime") == null )
             return 0;
         else
-            return job.getDate("lastRunTime").getTime();
+            return job.getDate("lastRuntime").getTime();
     }
     
     /** Returns the number of times this Job has run. */
@@ -155,7 +161,7 @@ public class Job implements Comparable, Serializable {
     /** Evaluates if this Job is equal to another Job. */
     public boolean equals(Object obj) {
         Job testJob = (Job) obj;
-        if (this.runTime == testJob.getRunTime() && this.seqNum == testJob.getSeqNum())
+        if (this.runtime == testJob.getRuntime() && this.seqNum == testJob.getSeqNum())
             return true;
         return false;
     }
@@ -163,7 +169,7 @@ public class Job implements Comparable, Serializable {
     /** Used by the comparable interface. */
     public int compareTo(Object obj) {
         Job testJob = (Job) obj;
-        if ( this.runTime == testJob.getRunTime()) {
+        if ( this.runtime == testJob.getRuntime()) {
             if ( this.seqNum < testJob.getSeqNum())
                 return -1;
             if ( this.seqNum > testJob.getSeqNum())
@@ -171,9 +177,9 @@ public class Job implements Comparable, Serializable {
             return 0;
         }
         else {            
-            if (this.runTime < testJob.getRunTime())
+            if (this.runtime < testJob.getRuntime())
                 return -1;
-            if (this.runTime > testJob.getRunTime())
+            if (this.runtime > testJob.getRuntime())
                 return 1;
         }
         return 0;
@@ -236,7 +242,7 @@ public class Job implements Comparable, Serializable {
         sb.append(" Name="); sb.append(job.getString("jobName"));
         sb.append(" Start="); sb.append(job.getDate("startDate"));
         sb.append(" End="); sb.append(job.getDate("endDate"));
-        sb.append(" Next-Run="); sb.append(new Date(runTime));
+        sb.append(" Next-Run="); sb.append(new Date(runtime));
         sb.append(" Interval="); sb.append(job.getInteger("interval"));
         sb.append(" Interval-Type="); sb.append(job.getInteger("intervalType"));
         sb.append(" Repeats="); sb.append(job.getBoolean("isRepeated"));

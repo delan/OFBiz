@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/02 23:11:14  azeneski
+ * Some non-functional services implementation.
+ *
  */
 
 package org.ofbiz.core.scheduler;
@@ -45,8 +48,8 @@ public class JobInvoker implements Runnable {
     public JobInvoker(Job job, ServiceDispatcher dispatcher) {
         this.job = job;
         this.dispatcher = dispatcher;
-        long runTime = job.getRunTime();
-        String threadName = (String) (new Long(runTime)).toString();
+        long runtime = job.getRuntime();
+        String threadName = (String) (new Long(runtime)).toString();
         // Start the invoker thread.
         thread = new Thread(this, threadName);
         thread.setDaemon(false);

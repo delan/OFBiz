@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/11/03 00:19:35  azeneski
+ * Changed the compareTo to not change the runtime of a job.
+ *
  * Revision 1.2  2001/11/02 23:11:14  azeneski
  * Some non-functional services implementation.
  *
@@ -65,10 +68,10 @@ public class JobScheduler implements Runnable {
     
     /** Queues a job. */
     public synchronized void queueJob(Job job) throws JobSchedulerException {
-        if ( job.getRunTime() != -1 ) {
+        if ( job.getRuntime() != -1 ) {
             if ( !containsJob(job) ) {
                 queue.add(job);
-                updateDelay( ((Job) queue.first()).getRunTime());            
+                updateDelay( ((Job) queue.first()).getRuntime());            
             }
             else {
                 throw new JobSchedulerException("Job conflicts with existing job.");
@@ -86,7 +89,7 @@ public class JobScheduler implements Runnable {
     public synchronized void removeJob(Job job)  throws JobSchedulerException {       
         if (queue.contains(job)) {
             queue.remove(job);
-            updateDelay( ((Job) queue.first()).getRunTime());   
+            updateDelay( ((Job) queue.first()).getRuntime());   
         }
         else {
             throw new JobSchedulerException("Job not in queue.");         
@@ -134,7 +137,7 @@ public class JobScheduler implements Runnable {
         
         // Re-schedule the job if it repeats.
         if (firstJob.isRepeated()) {
-            firstJob.updateRunTime();
+            firstJob.updateRuntime();
             boolean queued = false;
             while (!queued) {
                 try {
@@ -150,7 +153,7 @@ public class JobScheduler implements Runnable {
         // If the queue is not empty, check the status of the next job.
         if (!queue.isEmpty()) {
             Job nextJob = (Job) queue.first();
-            long nextDelayTime = nextJob.getRunTime();
+            long nextDelayTime = nextJob.getRuntime();
             // invoke the next job if it is less then a second away.
             if (nextDelayTime - System.currentTimeMillis() < 1000)
                 invokeJob();
