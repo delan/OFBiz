@@ -63,7 +63,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  *  Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class ProductSearchSession {
@@ -451,19 +451,25 @@ public class ProductSearchSession {
         if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_STRING"))) {
             String keywordString = (String) parameters.get("SEARCH_STRING");
             String searchOperator = (String) parameters.get("SEARCH_OPERATOR");
-            searchAddConstraint(new ProductSearch.KeywordConstraint(keywordString, true, true, null, "AND".equals(searchOperator)), session);
+            // defaults to true/Y, ie anything but N is true/Y
+            boolean anyPrefixSuffix = !"N".equals((String) parameters.get("SEARCH_ANYPRESUF"));
+            searchAddConstraint(new ProductSearch.KeywordConstraint(keywordString, anyPrefixSuffix, anyPrefixSuffix, null, "AND".equals(searchOperator)), session);
             constraintsChanged = true;
         }
         if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_STRING2"))) {
             String keywordString = (String) parameters.get("SEARCH_STRING2");
             String searchOperator = (String) parameters.get("SEARCH_OPERATOR2");
-            searchAddConstraint(new ProductSearch.KeywordConstraint(keywordString, true, true, null, "AND".equals(searchOperator)), session);
+            // defaults to true/Y, ie anything but N is true/Y
+            boolean anyPrefixSuffix = !"N".equals((String) parameters.get("SEARCH_ANYPRESUF2"));
+            searchAddConstraint(new ProductSearch.KeywordConstraint(keywordString, anyPrefixSuffix, anyPrefixSuffix, null, "AND".equals(searchOperator)), session);
             constraintsChanged = true;
         }
         if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_STRING3"))) {
             String keywordString = (String) parameters.get("SEARCH_STRING3");
             String searchOperator = (String) parameters.get("SEARCH_OPERATOR3");
-            searchAddConstraint(new ProductSearch.KeywordConstraint(keywordString, true, true, null, "AND".equals(searchOperator)), session);
+            // defaults to true/Y, ie anything but N is true/Y
+            boolean anyPrefixSuffix = !"N".equals((String) parameters.get("SEARCH_ANYPRESUF3"));
+            searchAddConstraint(new ProductSearch.KeywordConstraint(keywordString, anyPrefixSuffix, anyPrefixSuffix, null, "AND".equals(searchOperator)), session);
             constraintsChanged = true;
         }
 
