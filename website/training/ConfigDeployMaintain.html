@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE"
+ content="text/html; charset=windows-1252">
+  <title>Open Source for Business Seminar Outline</title>
+  <style>
+        DIV,LI {
+        font-size: 11px;
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        }
+    </style>
+</head>
+<body lang="en-US">
+<center>
+<h2>Configuration, Deployment and Maintenance<br>
+</h2>
+</center>
+<div>Written By: David E. Jones</div>
+<div>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a></div>
+<div><a href="http://sf.net/projects/ofbiz"><img
+ src="http://sourceforge.net/sflogo.php?group_id=27173" width="88"
+ height="31" border="0" alt="SourceForge Logo"></a></div>
+<div>Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
+</div>
+<div>Last Updated: 4 April 2004<br>
+</div>
+<hr>
+<br>
+<ol>
+  <li>Target Audience
+    <ol>
+      <li>System Administrators </li>
+      <li>Database Administrators </li>
+      <li>Application Server Administrators</li>
+      <li>Application Support Personnel<br>
+      </li>
+    </ol>
+  </li>
+  <li>Covers
+    <ol>
+      <li>Building Blocks
+        <ol>
+          <li>Operating System Recommendations</li>
+          <ol>
+            <li>Linux</li>
+            <li>OS X</li>
+            <li>Unix Varieties</li>
+            <li>Windows Server<br>
+            </li>
+          </ol>
+          <li>Database Server Recommendations</li>
+          <ol>
+            <li>MySQL MaxDB (was SAP DB)</li>
+            <li>Postgres</li>
+            <li>Oracle, Sybase, MS SQLServer, DB2, other commercial
+databases<br>
+            </li>
+          </ol>
+          <li>Application Server Recommendations</li>
+          <ol>
+            <li>Servlet/JSP Container</li>
+            <ol>
+              <li>Jetty</li>
+              <li>Tomcat</li>
+              <li>Orion, Weblogic &amp; other commercial containers<br>
+              </li>
+            </ol>
+            <li>Transaction Manager</li>
+            <ol>
+              <li>JOTM</li>
+              <li>Orion, Weblogic &amp; other commercial containers</li>
+            </ol>
+            <li>Connection Pool</li>
+            <ol>
+              <li>Minerva</li>
+              <li>XAPool</li>
+              <li>Orion, Weblogic &amp; other commercial containers</li>
+            </ol>
+          </ol>
+          <li>Server Farm &amp; Network Layout Recommendations</li>
+          <ol>
+            <li>Single Server - all in one</li>
+            <li>Separate Application &amp; Database Servers</li>
+            <li>Independent Static Content Server Option</li>
+            <li>Load Balanced Application Server Farm Options</li>
+            <ol>
+              <li>IP Based Load Balancer</li>
+              <li>Session Aware Load Balancer</li>
+              <li>Application Server Specific Load Balancers<br>
+              </li>
+            </ol>
+            <li>Load Balanced Database Options<br>
+            </li>
+          </ol>
+        </ol>
+      </li>
+      <li>Setting Up a Database </li>
+      <li>Setting Up an Application Server </li>
+      <li>Deploying &amp; Configuring OFBiz
+        <ol>
+          <li>Database Configuration</li>
+          <ol>
+            <li>jndiservers.xml</li>
+            <li>entityengine.xml<br>
+            </li>
+          </ol>
+          <li>Transaction Manager Configuration </li>
+          <li>JMS Configuration</li>
+          <li>Production Oriented Settings</li>
+          <ol>
+            <li>URL Settings</li>
+            <ol>
+              <li>HTTP &amp; HTTPS Setup and cross-forwarding</li>
+              <li>Static Content Server Location Setup</li>
+              <li>url.properties</li>
+            </ol>
+            <li>Cache Settings &amp; Analysis<br>
+            </li>
+            <ol>
+              <li>cache.properties</li>
+              <ol>
+                <li>Persistent Cache Settings (used when server starts
+up)<br>
+                </li>
+              </ol>
+              <li>WebTools Cache UI</li>
+              <ol>
+                <li>See Cache Statistics</li>
+                <li>Change Cache Parameters on-the-fly (cleared on
+server restart)<br>
+                </li>
+              </ol>
+            </ol>
+            <li>Debug &amp; Logging Settings</li>
+            <ol>
+              <li>Log4J</li>
+              <li>debug.properties<br>
+              </li>
+            </ol>
+          </ol>
+        </ol>
+      </li>
+      <li>Restarting and Hot-deployable Components </li>
+      <li>The OFBiz WebTools</li>
+      <ol>
+        <li>General Tools</li>
+        <li>Entity Engine Tools</li>
+        <li>Service Engine Tools</li>
+        <li>Workflow Engine Tools</li>
+        <li>Performance Tools<br>
+        </li>
+      </ol>
+    </ol>
+  </li>
+</ol>
+<br>
+</body>
+</html>
