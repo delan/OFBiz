@@ -30,10 +30,10 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.util.EmptyStackException;
 import java.util.Iterator;
+import java.util.Stack;
 
 import net.xoetrope.swing.XEdit;
 
-import org.ofbiz.base.util.collections.LifoSet;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.pos.adaptor.KeyboardAdaptor;
@@ -51,7 +51,7 @@ public class Input implements KeyboardReceiver, KeyListener {
     private static final String[] validFunc = { "LOGIN", "UNLOCK", "MGRLOGIN", "PAID", "TOTAL", "CREDIT",
                                                 "MSRINFO", "CHECK", "CHECKINFO", "QTY", "SHIFT" };
 
-    protected LifoSet functionStack = new LifoSet();
+    protected Stack functionStack = new Stack();
     protected Component[] pageComs = null;
     protected Color lastColor = null;
     protected XEdit input = null;
