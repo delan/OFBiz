@@ -73,8 +73,7 @@
         <response name="error" type="view" value="main"/>
     </request-map>
 
-    <request-map uri="view">
-        <security https="true" auth="false"/>
+    <request-map uri="view"><security https="true" auth="false"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
@@ -85,145 +84,119 @@
         <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map uri="main">
-    	<security https="true" auth="false"/>
+    <request-map uri="main"><security https="true" auth="false"/>
     	<response name="success" type="view" value="main"/>
     </request-map>
 
-    <request-map uri="sitemap">
-    	<security https="false" auth="false"/>
+    <request-map uri="sitemap"><security https="false" auth="false"/>
     	<response name="success" type="view" value="sitemap"/>
     </request-map>
 
-    <request-map uri="install">
-    	<security https="false" auth="false"/>
+    <request-map uri="install"><security https="false" auth="false"/>
     	<response name="success" type="view" value="install"/>
     </request-map>
 
-    <request-map uri="entitymaint">
-    	<security https="true" auth="true"/>
+    <request-map uri="entitymaint"><security https="true" auth="true"/>
     	<response name="success" type="view" value="entitymaint"/>
     </request-map>
 
-    <request-map uri="entityref">
-    	<security https="true" auth="true"/>
+    <request-map uri="entityref"><security https="true" auth="true"/>
     	<response name="success" type="view" value="entityref"/>
     </request-map>
 
-    <request-map uri="xmldsdump">
-    	<security https="true" auth="true"/>
+    <request-map uri="xmldsdump"><security https="true" auth="true"/>
     	<response name="success" type="view" value="xmldsdump"/>
     </request-map>
-    <request-map uri="xmldsrawdump">
-    	<security https="true" auth="true"/>
+    <request-map uri="xmldsrawdump"><security https="true" auth="true"/>
     	<response name="success" type="view" value="xmldsrawdump"/>
     </request-map>
 
-    <request-map uri="xmldsimport">
-    	<security https="true" auth="true"/>
+    <request-map uri="xmldsimport"><security https="true" auth="true"/>
     	<response name="success" type="view" value="xmldsimport"/>
     </request-map>
 
-    <request-map uri="FindGeneric">
-    	<security https="true" auth="true"/>
+    <request-map uri="FindGeneric"><security https="true" auth="true"/>
     	<response name="success" type="view" value="FindGeneric"/>
     </request-map>
 
-    <request-map uri="ViewGeneric">
-    	<security https="true" auth="true"/>
+    <request-map uri="ViewGeneric"><security https="true" auth="true"/>
     	<response name="success" type="view" value="ViewGeneric"/>
     </request-map>
 
-    <request-map uri="UpdateGeneric">
-    	<security https="true" auth="true"/>
+    <request-map uri="UpdateGeneric"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.generic.GenericWebEvent" invoke="updateGeneric"/>
         <response name="success" type="view" value="ViewGeneric"/>
         <response name="error" type="view" value="ViewGeneric"/>
     </request-map>
 
-    <request-map uri="FindUtilCache">
-    	<security https="true" auth="true"/>
+    <request-map uri="FindUtilCache"><security https="true" auth="true"/>
     	<response name="success" type="view" value="FindUtilCache"/>
     </request-map>
 
-    <request-map uri="FindUtilCacheClear">
-    	<security https="true" auth="true"/>
+    <request-map uri="FindUtilCacheClear"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.extutil.UtilCacheEvents" invoke="clearEvent"/>
         <response name="success" type="view" value="FindUtilCache"/>
         <response name="error" type="view" value="FindUtilCache"/>
     </request-map>
 
-    <request-map uri="FindUtilCacheClearAll">
-    	<security https="true" auth="true"/>
+    <request-map uri="FindUtilCacheClearAll"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.extutil.UtilCacheEvents" invoke="clearAllEvent"/>
         <response name="success" type="view" value="FindUtilCache"/>
         <response name="error" type="view" value="FindUtilCache"/>
     </request-map>
 
-    <request-map uri="FindUtilCacheClearAllExpired">
-    	<security https="true" auth="true"/>
+    <request-map uri="FindUtilCacheClearAllExpired"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.extutil.UtilCacheEvents" invoke="clearAllExpiredEvent"/>
         <response name="success" type="view" value="FindUtilCache"/>
         <response name="error" type="view" value="FindUtilCache"/>
     </request-map>
 
-    <request-map uri="EditUtilCache">
-    	<security https="true" auth="true"/>
+    <request-map uri="EditUtilCache"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditUtilCache"/>
     </request-map>
 
-    <request-map uri="EditUtilCacheUpdate">
-    	<security https="true" auth="true"/>
+    <request-map uri="EditUtilCacheUpdate"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.extutil.UtilCacheEvents" invoke="updateEvent"/>
         <response name="success" type="view" value="EditUtilCache"/>
         <response name="error" type="view" value="EditUtilCache"/>
     </request-map>
 
-    <request-map uri="EditUtilCacheClear">
-    	<security https="true" auth="true"/>
+    <request-map uri="EditUtilCacheClear"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.extutil.UtilCacheEvents" invoke="clearEvent"/>
         <response name="success" type="view" value="EditUtilCache"/>
         <response name="error" type="view" value="EditUtilCache"/>
     </request-map>
 
-    <request-map uri="FindUtilCacheElements">
-    	<security https="true" auth="true"/>
+    <request-map uri="FindUtilCacheElements"><security https="true" auth="true"/>
     	<response name="success" type="view" value="FindUtilCacheElements"/>
     	<response name="error" type="view" value="FindUtilCacheElements"/>
     </request-map>
 
-    <request-map uri="FindUtilCacheElementsRemoveElement">
-    	<security https="true" auth="true"/>
+    <request-map uri="FindUtilCacheElementsRemoveElement"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.extutil.UtilCacheEvents" invoke="removeElementEvent"/>
         <response name="success" type="view" value="FindUtilCacheElements"/>
         <response name="error" type="view" value="FindUtilCacheElements"/>
     </request-map>
 
-    <request-map uri="viewdatafile">
-    	<security https="true" auth="true"/>
+    <request-map uri="viewdatafile"><security https="true" auth="true"/>
     	<response name="success" type="view" value="viewdatafile"/>
     </request-map>
 
-    <request-map uri="logikus">
-    	<security https="true" auth="true"/>
+    <request-map uri="logikus"><security https="true" auth="true"/>
     	<response name="success" type="view" value="logikus"/>
     </request-map>
 
-    <request-map uri="readxpdl">
-    	<security https="true" auth="true"/>
+    <request-map uri="readxpdl"><security https="true" auth="true"/>
     	<response name="success" type="view" value="readxpdl"/>
     </request-map>
-    <request-map uri="workflowMonitor">
-    	<security https="true" auth="true"/>
+    <request-map uri="workflowMonitor"><security https="true" auth="true"/>
     	<response name="success" type="view" value="workflowMonitor"/>
     </request-map>    
 
-    <request-map uri="StatsSinceStart">
-    	<security https="true" auth="true"/>
+    <request-map uri="StatsSinceStart"><security https="true" auth="true"/>
         <response name="success" type="view" value="StatsSinceStart"/>
     </request-map>
-    <request-map uri="StatBinsHistory">
-    	<security https="true" auth="true"/>
+    <request-map uri="StatBinsHistory"><security https="true" auth="true"/>
         <response name="success" type="view" value="StatBinsHistory"/>
     </request-map>
 
@@ -237,6 +210,27 @@
         <response name="success" type="view" value="debuglevels"/>
         <response name="error" type="view" value="debuglevels"/>
     </request-map>
+
+	<!-- CustomTimePeriod requests -->
+    <request-map uri="EditCustomTimePeriod"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditCustomTimePeriod"/>
+    </request-map>
+    <request-map uri="createCustomTimePeriod"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createCustomTimePeriod"/>
+        <response name="success" type="view" value="EditCustomTimePeriod"/>
+        <response name="error" type="view" value="EditCustomTimePeriod"/>
+    </request-map>
+    <request-map uri="updateCustomTimePeriod"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateCustomTimePeriod"/>
+        <response name="success" type="view" value="EditCustomTimePeriod"/>
+        <response name="error" type="view" value="EditCustomTimePeriod"/>
+    </request-map>
+    <request-map uri="deleteCustomTimePeriod"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteCustomTimePeriod"/>
+        <response name="success" type="view" value="EditCustomTimePeriod"/>
+        <response name="error" type="view" value="EditCustomTimePeriod"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -281,6 +275,8 @@
 
     <view-map name="StatsSinceStart" type="region"/>
     <view-map name="StatBinsHistory" type="region"/>
+
+    <view-map name="EditCustomTimePeriod" type="region"/>
 
     <view-map name="UomReport" page="/UomReport.xml" type="datavision" info="Uom"/>
     <view-map name="JasperDemoPdf" page="/JasperDemo.xml" type="jasperreportspdf" info="Uom"/>
