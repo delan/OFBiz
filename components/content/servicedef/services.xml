@@ -907,6 +907,7 @@
         <attribute name="referenceId" type="String" mode="IN" optional="true"/>
         <attribute name="generalFeedback" type="String" mode="IN" optional="true"/>
         <attribute name="answers" type="Map" mode="IN" optional="false" string-map-prefix="answers_"/>
+        <attribute name="surveyResponse" type="GenericValue" mode="OUT" optional="false"/>
     </service>
 
     <!-- Util -->

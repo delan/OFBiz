@@ -71,7 +71,10 @@
   <SubscriptionType description="Newsgroup" hasTable="N" parentTypeId="" subscriptionTypeId="NEWSGROUP_SUBSCR"/>
   <SubscriptionType description="Other" hasTable="N" parentTypeId="" subscriptionTypeId="OTHER_SUBSCR"/>
   <SubscriptionType description="Product Info" hasTable="N" parentTypeId="" subscriptionTypeId="PRODUCT_INFO_SUBSCR"/>
-  
+
+  <SurveyApplType surveyApplTypeId="CART_ADD" description="Add-To Cart"/>
+  <SurveyApplType surveyApplTypeId="CHECK_OUT" description="Check-Out"/>
+  <SurveyApplType surveyApplTypeId="SORDER_PLACE" description="Sales Order Placement"/>
   <SurveyApplType surveyApplTypeId="PORDER_PLACE" description="Purchase Order Placement"/>
   <SurveyApplType surveyApplTypeId="PORDITM_PLACE" description="Purchase Order Item Placement"/>
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.8 2003/11/17 03:17:12 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.9 2003/11/19 06:52:16 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.service.ModelService;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -188,6 +188,44 @@ public class ProductStoreWorker {
         }
 
         return returnShippingMethods;
+    }
+
+    public static List getProductSurveys(GenericDelegator delegator, String productStoreId, String productId, String surveyApplTypeId) {
+        List surveys = new ArrayList();
+        List storeSurveys = null;
+        try {
+            storeSurveys = delegator.findByAndCache("ProductStoreSurveyAppl", UtilMisc.toMap("productStoreId", productStoreId, "surveyApplTypeId", surveyApplTypeId), UtilMisc.toList("sequenceNum"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to get ProductStoreSurveyAppl for store : " + productStoreId, module);
+        }
+        if (storeSurveys != null && storeSurveys.size() > 0) {
+            Iterator ssi = storeSurveys.iterator();
+            while (ssi.hasNext()) {
+                GenericValue surveyAppl = (GenericValue) ssi.next();
+                if (surveyAppl.get("productId") != null && productId.equals(surveyAppl.get("productId"))) {
+                    surveys.add(surveyAppl);
+                } else if (surveyAppl.get("productCategoryId") != null) {
+                    List categoryMembers = null;
+                    try {
+                        categoryMembers = delegator.findByAnd("ProductCategoryMember", UtilMisc.toMap("productCategoryId", surveyAppl.get("productCategoryId")));
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Unable to get ProductCategoryMemebr records for survey application : " + surveyAppl, module);
+                    }
+                    if (categoryMembers != null) {
+                        Iterator cmi = categoryMembers.iterator();
+                        while (cmi.hasNext()) {
+                            GenericValue member = (GenericValue) cmi.next();
+                            if (productId.equals(member.getString("productId"))) {
+                                surveys.add(surveyAppl);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return surveys;
     }
 
     public static boolean isStoreInventoryRequired(String productStoreId, String productId, GenericDelegator delegator) {
