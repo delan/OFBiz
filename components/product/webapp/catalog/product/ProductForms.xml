@@ -507,11 +507,11 @@
         <field name="currencyUomId" service-name="updateSupplierProduct" title="Currency"><display/></field>
 
         <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="EditProductSuppliers?productId=${productId}&amp;partyId=${partyId}"
+            <hyperlink target="EditProductSuppliers?productId=${productId}&amp;partyId=${partyId}&amp;currencyUomId=${currencyUomId}&amp;minimumOrderQuantity=${minimumOrderQuantity}"
                 description="[${uiLabelMap.CommonUpdate}]" also-hidden="false"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="removeSupplierProduct?productId=${productId}&amp;partyId=${partyId}"
+            <hyperlink target="removeSupplierProduct?productId=${productId}&amp;partyId=${partyId}&amp;currencyUomId=${currencyUomId}&amp;minimumOrderQuantity=${minimumOrderQuantity}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
