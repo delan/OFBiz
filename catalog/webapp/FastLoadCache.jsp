@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Cache Load Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
- */
-%>
+--%>
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
@@ -55,32 +51,36 @@
             <div>Loading Categories...</div>
             <%UtilTimer ctimer = new UtilTimer();%>
             <div><%=ctimer.timerString("Before category find")%></div>
-            <%Collection categoryCol = delegator.findAll("ProductCategory");%>
-            <%Iterator categories = UtilMisc.toIterator(categoryCol);%>
+            <%EntityListIterator categories = delegator.findListIteratorByCondition("ProductCategory", null, null, null);%>
             <div><%=ctimer.timerString("Before load all categories into cache")%></div>
             <%
-                while (categories != null && categories.hasNext()) {
-                    GenericValue category = (GenericValue) categories.next();
+                GenericValue category = null;
+                long numCategories = 0;
+                while ((category = (GenericValue) categories.next()) != null) {
                     delegator.putInPrimaryKeyCache(category.getPrimaryKey(), category);
+                    numCategories++;
                 }
+                categories.close();
             %>
             <div><%=ctimer.timerString("Finished Categories")%></div>
-            <div>Loaded <%=categoryCol.size()%> Categories</div>
+            <div>Loaded <%=numCategories%> Categories</div>
             <BR>
             <div>Loading Products...</div>
             <%UtilTimer ptimer = new UtilTimer();%>
             <div><%=ptimer.timerString("Before product find")%></div>
-            <%Collection productCol = delegator.findAll("Product");%>
-            <%Iterator products = UtilMisc.toIterator(productCol);%>
+            <%EntityListIterator products = delegator.findListIteratorByCondition("Product", null, null, null);%>
             <div><%=ptimer.timerString("Before load all products into cache")%></div>
             <%
-                while (products != null && products.hasNext()) {
-                    GenericValue product = (GenericValue) products.next();
+                GenericValue product = null;
+                long numProducts = 0;
+                while ((product = (GenericValue) products.next()) != null) {
                     delegator.putInPrimaryKeyCache(product.getPrimaryKey(), product);
+                    numProducts++;
                 }
+                products.close();
             %>
             <div><%=ptimer.timerString("Finished Products")%></div>
-            <div>Loaded <%=productCol.size()%> products</div>
+            <div>Loaded <%=numProducts%> products</div>
 
           </td>
         </tr>
