@@ -196,9 +196,11 @@ function cal_error (str_message) {
 	return null;
 }
 
-function call_fieldlookup(target, viewName, formName) {   
+function call_fieldlookup(target, viewName, formName,viewWidth,viewheight) {   
     var fieldLookup = new fieldLookup1(target);  
-    fieldLookup.popup(viewName, formName);
+    if (! viewWidth) viewWidth = 250;
+    if (! viewheight) viewheight = 200;
+    fieldLookup.popup(viewName, formName, viewWidth, viewheight);
 }
 
 function call_fieldlookup2(target, viewName) {   
@@ -224,8 +226,8 @@ function fieldLookup1(obj_target) {
 	lookups[this.id] = this;
 }
 
-function lookup_popup1 (view_name, form_name) {
-	var obj_lookupwindow = window.open(view_name + '?formName=' + form_name + '&id=' + this.id,'FieldLookup', 'width=250,height=200,scrollbars=auto,status=no,resizable=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
+function lookup_popup1 (view_name, form_name, viewWidth, viewheight) {
+	var obj_lookupwindow = window.open(view_name + '?formName=' + form_name + '&id=' + this.id,'FieldLookup', 'width='+viewWidth+',height='+viewheight+',scrollbars=auto,status=no,resizable=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
 	obj_lookupwindow.opener = window;
 	obj_lookupwindow.focus();
 }
