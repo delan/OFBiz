@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.10 2003/12/04 20:54:53 jonesde Exp $
+ * $Id: ModelViewEntity.java,v 1.11 2003/12/17 19:29:08 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -188,6 +188,17 @@ public class ModelViewEntity extends ModelEntity {
 
         if (modelMemberEntity == null) return;
         this.allModelMemberEntities.remove(modelMemberEntity);
+    }
+
+    /** The col-name of the Field, the alias of the field if this is on a view-entity */
+    public String getColNameOrAlias(String fieldName) {
+        ModelField modelField = this.getField(fieldName);
+        String fieldString = modelField.getColName();
+        ModelViewEntity.ModelAlias alias = getAlias(fieldName);
+        if (alias != null) {
+            fieldString = alias.getColAlias();
+        }
+        return fieldString;
     }
 
     /** List of aliases with information in addition to what is in the standard field list */
