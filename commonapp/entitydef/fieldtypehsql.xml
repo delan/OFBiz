@@ -51,25 +51,30 @@
   <!-- ===================== field-type-def ==================== -->
    <!-- General Types -->    
     <field-type-def type="blob" sql-type="OBJECT" java-type="java.lang.Object"></field-type-def>
-    <field-type-def type="comment" sql-type="VARCHAR" java-type="String"></field-type-def>
-    <field-type-def type="currency-amount" sql-type="DOUBLE" java-type="Double"><validate name="isSignedDouble" /></field-type-def>
+    
     <field-type-def type="date-time" sql-type="TIMESTAMP" java-type="java.sql.Timestamp"></field-type-def>
     <field-type-def type="date" sql-type="DATE" java-type="java.sql.Date"></field-type-def>
     <field-type-def type="time" sql-type="TIME" java-type="java.sql.Time"></field-type-def>
-    <field-type-def type="description" sql-type="VARCHAR" java-type="String"></field-type-def>
+    
+    <field-type-def type="currency-amount" sql-type="DOUBLE" java-type="Double"><validate name="isSignedDouble" /></field-type-def>
     <field-type-def type="floating-point" sql-type="DOUBLE" java-type="Double"><validate name="isSignedDouble" /></field-type-def>
+    <field-type-def type="numeric" sql-type="BIGINT" java-type="Long"><validate name="isSignedLong" /></field-type-def>
+    
     <field-type-def type="id" sql-type="VARCHAR" java-type="String"></field-type-def>
     <field-type-def type="id-long" sql-type="VARCHAR" java-type="String"></field-type-def>
     <field-type-def type="id-vlong" sql-type="VARCHAR" java-type="String"></field-type-def>
+    
     <field-type-def type="indicator" sql-type="CHAR" java-type="String"></field-type-def>
-    <field-type-def type="long-varchar" sql-type="VARCHAR" java-type="String"></field-type-def>
-    <field-type-def type="name" sql-type="VARCHAR" java-type="String"></field-type-def>
-    <field-type-def type="numeric" sql-type="BIGINT" java-type="Long"><validate name="isSignedLong" /></field-type-def>
-    <field-type-def type="short-varchar" sql-type="VARCHAR" java-type="String"></field-type-def>
-    <field-type-def type="value" sql-type="VARCHAR" java-type="String"></field-type-def>
-    <field-type-def type="very-long" sql-type="VARCHAR" java-type="String"></field-type-def>
     <field-type-def type="very-short" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="short-varchar" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="long-varchar" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="very-long" sql-type="VARCHAR" java-type="String"></field-type-def>
 	
+    <field-type-def type="comment" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="description" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="name" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="value" sql-type="VARCHAR" java-type="String"></field-type-def>
+    
    <!-- Specialized Types -->
     <field-type-def type="credit-card-number" sql-type="VARCHAR" java-type="String"><validate name="isAnyCard" /></field-type-def>
     <field-type-def type="credit-card-date" sql-type="VARCHAR" java-type="String"><validate name="isDateAfterToday" /></field-type-def>
