@@ -34,6 +34,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
 import org.jpublish.JPublishContext;
 import org.jpublish.Page;
@@ -98,17 +100,32 @@ public class FreeMarkerGenerator extends AbstractGenerator {
             Writer writer = new OutputStreamWriter(inOutput ,"UTF-8");
             
             try {
-                Map map = new JPublishContextMap(inContext);
                 SimpleHash root = new SimpleHash();
-                root.put("Static", BeansWrapper.getDefaultInstance().getStaticModels());
 
+                HttpServletRequest request = null;
+                HttpServletResponse response = null;
+                ServletContext application = null;
+                
                 //TODO: should make the config file tell us what TemplateModel to create
+                Map map = new JPublishContextMap(inContext);
                 for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
                     Map.Entry entry = (Map.Entry) iter.next();
                     String key = (String) entry.getKey();
-                    root.put(key, BeansWrapper.getDefaultInstance().wrap(inContext.get(key)));
-                    //System.out.println("==== Adding to the freemarker root " + key + ":" + inContext.get(key));
+                    Object value = entry.getValue();
+                    if ("request".equals(key)) {
+                        request = (HttpServletRequest) value;
+                    } else if ("request".equals(key)) {
+                        response = (HttpServletResponse) value;
+                    } else if ("application".equals(key)) {
+                        application = (ServletContext) value;
+                    } else {
+                        root.put(key, BeansWrapper.getDefaultInstance().wrap(value));
+                        //System.out.println("==== Adding to the freemarker root " + key + ":" + inContext.get(key));
+                    }
                 }
+                
+                FreeMarkerViewHandler.prepOfbizRoot(root, request, response, application);
+                
                 /*
                 DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
