@@ -103,7 +103,7 @@
     </module>
 
     <!-- Search  -->
-    <module classname="com.wspublisher.search.SearchModule" />
+    <module classname="com.wspublisher.modules.search.SearchModule" />
 
     <!-- This provides Web services as objects in Velocity templates -->
     <module classname="com.wspublisher.modules.soapclient.SOAPClientModule">
@@ -210,7 +210,7 @@
     <!-- this is needed only if other generators are called for -->
     <generator name="ofbiz-freemarker" classname="org.ofbiz.core.ftl.FreeMarkerGenerator"/>
     
-    <generator name="velocity" classname="com.wspublisher.generators.VelocityGenerator"/>
+    <generator name="velocity" classname="com.wspublisher.generators.VelocityGenerator" default="true"/>
     <generator name="freemarker" classname="com.wspublisher.generators.FreeMarkerGenerator"/>
     <generator classname="com.wspublisher.generators.FileGenerator"/>
 

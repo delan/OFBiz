@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
     <template/>
-    <generator name="freemarker"/>
+    <generator name="ofbiz-freemarker"/>
     <property name="title">Welcome</property>
     <pageEditor>OfbizOrderEditor</pageEditor>
 </page>

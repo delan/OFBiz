@@ -77,7 +77,6 @@
     <filter-mapping><filter-name>WSPFilter</filter-name><url-pattern>*.jsp</url-pattern></filter-mapping>
     <filter-mapping><filter-name>WSPFilter</filter-name><url-pattern>*.pdf</url-pattern></filter-mapping>
     <filter-mapping><filter-name>WSPFilter</filter-name><url-pattern>*.svg</url-pattern></filter-mapping>
-    <filter-mapping><filter-name>WSPFilter</filter-name><url-pattern>*.png</url-pattern></filter-mapping>
     <filter-mapping><filter-name>WSPFilter</filter-name><url-pattern>*.htm</url-pattern></filter-mapping>
     <filter-mapping><filter-name>WSPFilter</filter-name><url-pattern>*.html</url-pattern></filter-mapping>
     -->	

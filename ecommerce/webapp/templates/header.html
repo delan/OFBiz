@@ -1,20 +1,21 @@
-<#assign layoutSettings = request.layoutSettings>
+
+<#assign layoutSettings = requestAttributes.layoutSettings>
 
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>${layoutSettings.companyName?if_exists}: ${content.title?if_exists}</title>
-    <link rel='stylesheet' href='<ofbiz:contenturl>/images/maincss.css</ofbiz:contenturl>' type='text/css'>
+    <link rel='stylesheet' href='<transform ofbizContentUrl>/images/maincss.css</transform>' type='text/css'>
     
-    <%-- Append CSS for catalog --%>
-    <%if (CatalogWorker.getProdCatalog(pageContext) != null && CatalogWorker.getProdCatalog(pageContext).get("styleSheet") != null) {%>
-    <link rel='stylesheet' href='<%=CatalogWorker.getProdCatalog(pageContext).getString("styleSheet")%>' type="text/css">
-    <%}%>
+    <#-- Append CSS for catalog -->
+    <#if requestAttributes.catalogStyleSheet?exists>
+    <link rel='stylesheet' href='${requestAttribute.catalogStyleSheet}' type="text/css">
+    </#if>
      
-    <%-- Append CSS for tracking codes --%>
-    <%if (session.getAttribute("overrideCss") != null) {%>
-	<link rel='stylesheet' href='<%=session.getAttribute("overrideCss")%>' type="text/css">
-    <%}%>
+    <#-- Append CSS for tracking codes -->
+    <#if sessionAttributes.overrideCss?exists>
+	<link rel='stylesheet' href='${sessionAttributes.overrideCss}' type="text/css">
+    </#if>
 </head>
 <body>
 
@@ -23,19 +24,19 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
         <tr>
-          <%if (session.getAttribute("overrideLogo") != null) {%>
-            <TD align=left width='1%'><IMG src='<%=session.getAttribute("overrideLogo")%>'></TD> 
-          <%} else if (CatalogWorker.getProdCatalog(pageContext) != null && CatalogWorker.getProdCatalog(pageContext).get("headerLogo") != null) {%>       
-            <TD align=left width='1%'><IMG src='<%=CatalogWorker.getProdCatalog(pageContext).getString("headerLogo")%>'></TD> 
-          <%} else if (UtilValidate.isNotEmpty((String) layoutSettings.get("headerImageUrl"))) {%>
-            <TD align=left width='1%'><IMG src='<ofbiz:contenturl><%=(String) layoutSettings.get("headerImageUrl")%></ofbiz:contenturl>'></TD>
-          <%}%>
-          <TD align=center width='98%' <%if (UtilValidate.isNotEmpty((String) layoutSettings.get("headerMiddleBackgroundUrl"))) {%>background='<ofbiz:contenturl><%=(String) layoutSettings.get("headerMiddleBackgroundUrl")%></ofbiz:contenturl>'<%}%>>
-              <%EntityField.run("layoutSettings", "companyName", "<span class='headerCompanyName'>", "</span>", "&nbsp;", null, pageContext);%>
-              <%EntityField.run("layoutSettings", "companySubtitle", "<br><span class='headerCompanySubtitle'>", "</span>", pageContext);%>
+          <#if sessionAttributes.overrideLogo?exists>
+            <TD align=left width='1%'><IMG src='${sessionAttributes.overrideLogo}'></TD> 
+          <#elseif requestAttributes.catalogHeaderLogo?exists>
+            <TD align=left width='1%'><IMG src='${requestAttributes.catalogHeaderLogo}'></TD> 
+          <#elseif layoutSettings.headerImageUrl?has_content>
+            <TD align=left width='1%'><IMG src='<transform ofbizContentUrl>${layoutSettings.headerImageUrl}</transform>'></TD>
+          </#if>
+          <TD align=center width='98%' <#if layoutSettings.headerMiddleBackgroundUrl?has_content>background='<transform ofbizContentUrl>${layoutSettings.headerMiddleBackgroundUrl}</transform>'</#if> >
+              <#if layoutSettings.companyName?exists><span class='headerCompanyName'>${layoutSettings.companyName}</span></#if>
+              <#if layoutSettings.companySubtitle?exists><br><span class='headerCompanySubtitle'>${layoutSettings.companySubtitle}</span></#if>
           </TD>
-          <TD align=right width='1%' nowrap <%if (UtilValidate.isNotEmpty((String) layoutSettings.get("headerRightBackgroundUrl"))) {%>background='<ofbiz:contenturl><%=(String) layoutSettings.get("headerRightBackgroundUrl")%></ofbiz:contenturl>'<%}%>>
-            ${pages.get("/cart/microcart.jsp")}
+          <TD align=right width='1%' nowrap <#if layoutSettings.headerRightBackgroundUrl?has_content>background='<transform ofbizContentUrl>${layoutSettings.headerRightBackgroundUrl}</transform>'</#if> >
+            $pages.get("/cart/microcart.jsp")}
           </td>
         </tr>
       </table>
@@ -45,29 +46,27 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
-          <ofbiz:unless name="userLogin">
-            <td class="headerButtonLeft"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext, "checkLogin")%></ofbiz:url>' class='headerbuttontext'>Login</a></td>
-          </ofbiz:unless>
-          <ofbiz:if name="userLogin">
-            <td class="headerButtonLeft"><a href="<ofbiz:url>/logout</ofbiz:url>" class="headerbuttontext">Logout</a></td>
-          </ofbiz:if>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
+          <#if userLogin?exists>
+            <td class="headerButtonLeft"><a href="<transform ofbizUrl>/logout</transform>" class="headerbuttontext">Logout</a></td>
+          <#else>
+            <td class="headerButtonLeft"><a href='<transform ofbizUrl>${Static["org.ofbiz.commonapp.common.CommonWorkers"].makeLoginUrl(request, "checkLogin")}</transform>' class='headerbuttontext'>Login</a></td>
+          </#if>
+          <td class="headerButtonLeft"><a href="<transform ofbizUrl>/main</transform>" class="headerbuttontext">Main</a></td>
 
-          <ofbiz:if name="autoName">
+          <#if sessionAttributes.autoName?exists>
             <TD width="90%" align="center" class="headerCenter">
-                Welcome&nbsp;<ofbiz:print attribute="autoName"/>!
-                (Not&nbsp;You?&nbsp;<a href="<ofbiz:url>/autoLogout</ofbiz:url>" class="buttontext">click&nbsp;here</a>)
+                Welcome&nbsp;${sessionAttributes.autoName}!
+                (Not&nbsp;You?&nbsp;<a href="<transform ofbizUrl>/autoLogout</transform>" class="buttontext">click&nbsp;here</a>)
             </TD>
-          </ofbiz:if>
-          <ofbiz:unless name="autoName">
+          <#else>
               <TD width="90%" align=center class='headerCenter'>Welcome!</TD>
-          </ofbiz:unless>
+          </#if>
 
-          <%if(CatalogWorker.getCatalogQuickaddUse(pageContext)) {%>
-            <td class="headerButtonRight"><a href="<ofbiz:url>/quickadd</ofbiz:url>" class="headerbuttontext">Quick&nbsp;Add</a></td>
-          <%}%>
-          <td class="headerButtonRight"><a href="<ofbiz:url>/orderhistory</ofbiz:url>" class="headerbuttontext">Order&nbsp;History</a></td>
-          <td class="headerButtonRight"><a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="headerbuttontext">Profile</a></td>
+          <#if Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCatalogQuickaddUse(request)>
+            <td class="headerButtonRight"><a href="<transform ofbizUrl>/quickadd</transform>" class="headerbuttontext">Quick&nbsp;Add</a></td>
+          </#if>
+          <td class="headerButtonRight"><a href="<transform ofbizUrl>/orderhistory</transform>" class="headerbuttontext">Order&nbsp;History</a></td>
+          <td class="headerButtonRight"><a href="<transform ofbizUrl>/viewprofile</transform>" class="headerbuttontext">Profile</a></td>
         </TR>
       </TABLE>
     </TD>
