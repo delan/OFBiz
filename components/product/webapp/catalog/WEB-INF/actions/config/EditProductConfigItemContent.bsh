@@ -60,7 +60,7 @@ context.put("imageServerPath", imageServerPath);
 context.put("imageUrlPrefix", imageUrlPrefix);
 
 FlexibleStringExpander filenameExpander = new FlexibleStringExpander(imageFilenameFormat);
-context.put("imageNameDetail", imageUrlPrefix + "/" + filenameExpander.expandString(UtilMisc.toMap("size", "detail", "configItemId", productConfigItemId)));
+context.put("imageNameSmall", imageUrlPrefix + "/" + filenameExpander.expandString(UtilMisc.toMap("size", "small", "configItemId", productConfigItemId)));
 // Start ProdConfItemContent stuff
 productContent = null;
 if (productConfigItem != null) productContent = productConfigItem.getRelated("ProdConfItemContent", null, UtilMisc.toList("confItemContentTypeId"));

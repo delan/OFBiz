@@ -3132,6 +3132,7 @@
       <field name="sequenceNum" type="numeric"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="description" type="description"></field>
+      <field name="longDescription" type="very-long"></field>
       <field name="configTypeId" type="id"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="isMandatory" type="indicator"></field>

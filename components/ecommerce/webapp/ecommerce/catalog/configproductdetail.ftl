@@ -303,12 +303,14 @@ ${requestAttributes.virtualJavaScript?if_exists}
           <input type='hidden' name="product_id" value='${product.productId}'>
           <input type='hidden' name="add_product_id" value='${product.productId}'>
           <#if productNotAvailable?exists>
+<#--
             <#if Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
               <div class='tabletext'><b>${uiLabelMap.ProductItemOutofStock}.</b></div>
               <#assign inStock = false>
             <#else>
               <div class='tabletext'><b>${product.inventoryMessage?if_exists}</b></div>
             </#if>
+-->
           </#if>
         </#if>
 
@@ -446,14 +448,19 @@ ${requestAttributes.virtualJavaScript?if_exists}
           <tr>
             <td>
               <div class="tableheadtext">${question.question}</div>
-              <div class="tabletext">${question.content.get("LONG_DESCRIPTION")?if_exists}</div>
-              <#assign instructions = question.content.get("INSTRUCTIONS")?if_exists>
-              <#if instructions?has_content>
-                <a href="javascript:alert('${instructions}');" class="buttontext">Instructions</a>
-              </#if>
-              <#assign image = question.content.get("IMAGE_URL")?if_exists>
-              <#if image?has_content>
-                <img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${image?if_exists}</@ofbizContentUrl>' vspace='5' hspace='5' border='0' width='200' align='left'>
+              <#if question.isFirst()>
+                <a name='#${question.getConfigItem().getString("configItemId")}'></a>
+                <div class="tabletext">${question.description?if_exists}</div>
+                <#assign instructions = question.content.get("INSTRUCTIONS")?if_exists>
+                <#if instructions?has_content>
+                  <a href="javascript:alert('${instructions}');" class="buttontext">Instructions</a>
+                </#if>
+                <#assign image = question.content.get("IMAGE_URL")?if_exists>
+                <#if image?has_content>
+                  <img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${image?if_exists}</@ofbizContentUrl>' vspace='5' hspace='5' border='0' width='200' align='left'>
+                </#if>
+              <#else>
+                <div class="tabletext"><a href='#${question.getConfigItem().getString("configItemId")}' class="buttontext">Details</a></div>
               </#if>
             </td>
           </tr>
@@ -463,29 +470,41 @@ ${requestAttributes.virtualJavaScript?if_exists}
               <#-- Standard item: all the options are always included -->
               <#assign options = question.options>
               <#list options as option>
-                <div class="tabletext">${option.description} - <@ofbizCurrency amount=option.price isoCode=price.currencyUsed/> <#if !option.isAvailable()> (*)</#if></div>
+                <div class="tabletext">${option.description} <#if !option.isAvailable()> (*)</#if></div>
               </#list>
             <#else>
               <#if question.isSingleChoice()>
                 <#-- Single choice question -->
-                <#-- The single choice input can be implemented with radio buttons or a select field -->
-                <#-- This is the radio button implementation -->
-                <#-- After this one, the select box implementation is also included (commented out) -->
                 <#assign options = question.options>
+                <#assign selectedOption = question.getSelected()?if_exists>
+                <#assign selectedPrice = 0.0>
+                <#if selectedOption?has_content>
+                  <#assign selectedPrice = selectedOption.getPrice()>
+                </#if>
+                <#-- The single choice input can be implemented with radio buttons or a select field -->
+                <#if renderSingleChoiceWithRadioButtons?exists && "Y" == renderSingleChoiceWithRadioButtons>
+                <#-- This is the radio button implementation -->
                 <#if !question.isMandatory()>
                   <div class="tabletext"><input type='RADIO' name='${counter}' value='<#if !question.isSelected()>checked</#if>'> No option</div>
                 </#if>
                 <#assign optionCounter = 0>
                 <#list options as option>
+                  <#if showOffsetPrice?exists && "Y" == showOffsetPrice>
+                    <#assign shownPrice = option.price - selectedPrice>
+                  <#else>
+                    <#assign shownPrice = option.price>
+                  </#if>
                   <div class="tabletext">
                     <input type='RADIO' name='${counter}' value='${optionCounter}' <#if option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory())>checked</#if>>
-                    ${option.description} - <@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if>
+                    ${option.description}&nbsp;
+                    <#if (shownPrice > 0)>+<@ofbizCurrency amount=shownPrice isoCode=price.currencyUsed/>&nbsp;</#if>
+                    <#if (shownPrice < 0)>-<@ofbizCurrency amount=(-1*shownPrice) isoCode=price.currencyUsed/>&nbsp;</#if>
+                    <#if !option.isAvailable()>(*)</#if>
                   </div>
                   <#assign optionCounter = optionCounter + 1>
                 </#list>
+                <#else>
                 <#-- And this is the select box implementation -->
-                <#-- Uncomment the lines below if you want to see it -->
-<#--
                 <select name='${counter}' class='selectBox'>
                 <#if !question.isMandatory()>
                   <option value=''>---</option>
@@ -493,16 +512,24 @@ ${requestAttributes.virtualJavaScript?if_exists}
                 <#assign options = question.options>
                 <#assign optionCounter = 0>
                 <#list options as option>
+                  <#if showOffsetPrice?exists && "Y" == showOffsetPrice>
+                    <#assign shownPrice = option.price - selectedPrice>
+                  <#else>
+                    <#assign shownPrice = option.price>
+                  </#if>
                   <#if option.isSelected()>
                     <#assign optionCounter = optionCounter + 1>
                   </#if>
                   <option value='${optionCounter}' <#if option.isSelected()>selected</#if>>
-                    ${option.description} - <@ofbizCurrency amount=option.price isoCode=price.currencyUsed/> <#if !option.isAvailable()> (*)</#if>
+                    ${option.description}&nbsp;
+                    <#if (shownPrice > 0)>+<@ofbizCurrency amount=shownPrice isoCode=price.currencyUsed/>&nbsp;</#if>
+                    <#if (shownPrice < 0)>-<@ofbizCurrency amount=(-1*shownPrice) isoCode=price.currencyUsed/>&nbsp;</#if>
+                    <#if !option.isAvailable()> (*)</#if>
                   </option>
                   <#assign optionCounter = optionCounter + 1>
                 </#list>
                 </select>
--->
+                </#if>
               <#else>
                 <#-- Multi choice question -->
                 <#assign options = question.options>
@@ -510,7 +537,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
                 <#list options as option>
                   <div class="tabletext">
                     <input type='CHECKBOX' name='${counter}' value='${optionCounter}' <#if option.isSelected()>checked</#if>>
-                    ${option.description} - <@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if>
+                    ${option.description} +<@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if>
                   </div>
                   <#assign optionCounter = optionCounter + 1>
                 </#list>
