@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.35 2004/01/14 06:20:06 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.36 2004/01/17 10:28:57 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.35 $
+ * @version    $Revision: 1.36 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -538,7 +538,43 @@ public class ProductPromoWorker {
         if (Debug.verboseOn()) Debug.logVerbose("Checking promotion condition: " + productPromoCond, module);
         int compare = 0;
 
-        if ("PPIP_PRODUCT_QUANT".equals(inputParamEnumId)) {
+        if ("PPIP_PRODUCT_AMOUNT".equals(inputParamEnumId)) {
+            double amountNeeded = 0.0;
+            if (UtilValidate.isNotEmpty(condValue)) {
+                amountNeeded = Double.parseDouble(condValue);
+            }
+
+            Set productIds = ProductPromoWorker.getPromoRuleCondProductIds(productPromoCond, delegator, nowTimestamp);
+
+            List lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
+            Iterator lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
+            while (amountNeeded > 0 && lineOrderedByBasePriceIter.hasNext()) {
+                ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
+                // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
+                GenericValue product = cartItem.getProduct();
+                String parentProductId = cartItem.getParentProductId();
+                if (!cartItem.getIsPromo() && 
+                        (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) && 
+                        (product == null || !"N".equals(product.getString("includeInPromotions")))) {
+                    // reduce amount still needed to qualify for promo (amountNeeded)
+                    double quantity = cartItem.addPromoQuantityCandidateUse(amountNeeded, productPromoCond, false);
+                    // get pro-rated amount based on discount
+                    double proRatedPrice = cartItem.getItemSubTotal() / cartItem.getQuantity();
+                    amountNeeded -= (quantity * proRatedPrice);
+                }
+            }
+
+            // if amountNeeded > 0 then the promo condition failed, so remove candidate promo uses and increment the promoQuantityUsed to restore it
+            if (amountNeeded > 0) {
+                // failed, reset the entire rule, ie including all other conditions that might have been done before
+                cart.resetPromoRuleUse(productPromoCond.getString("productPromoId"), productPromoCond.getString("productPromoRuleId"));
+                compare = -1;
+            } else {
+                // we got it, the conditions are in place...
+                compare = 0;
+                // NOTE: don't confirm rpomo rule use here, wait until actions are complete for the rule to do that
+            }
+        } else if ("PPIP_PRODUCT_QUANT".equals(inputParamEnumId)) {
             double quantityNeeded = 1.0;
             if (UtilValidate.isNotEmpty(condValue)) {
                 quantityNeeded = Double.parseDouble(condValue);
@@ -571,7 +607,6 @@ public class ProductPromoWorker {
                 compare = 0;
                 // NOTE: don't confirm rpomo rule use here, wait until actions are complete for the rule to do that
             }
-
 
         /* replaced by PPIP_PRODUCT_QUANT
         } else if ("PPIP_PRODUCT_ID_IC".equals(inputParamEnumId)) {

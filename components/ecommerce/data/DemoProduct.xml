@@ -5,12 +5,12 @@
   <ContactMech contactMechId="9201" contactMechTypeId="TELECOM_NUMBER"/>
   <PostalAddress contactMechId="9200" toName="Company XYZ" attnName="ZJAA" address1="2003 Open Blvd" city="Orem" postalCode="84058" countryGeoId="USA" stateProvinceGeoId="UT"/>
   <TelecomNumber contactMechId="9201" areaCode="801" contactNumber="555-5555"/>
-  <FacilityContactMech facilityId="WebStoreWarehouse" contactMechId="9200" fromDate="2001-01-01 12:00:00.0"/>
-  <FacilityContactMech facilityId="WebStoreWarehouse" contactMechId="9201" fromDate="2001-01-01 12:00:00.0"/>
-  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9200" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2001-01-01 12:00:00.0"/>
-  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9200" contactMechPurposeTypeId="SHIP_ORIG_LOCATION" fromDate="2001-01-01 12:00:00.0"/>
-  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2001-01-01 12:00:00.0"/>
-  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2001-01-01 12:00:00.0"/>
+  <FacilityContactMech facilityId="WebStoreWarehouse" contactMechId="9200" fromDate="2001-05-13 12:00:00.0"/>
+  <FacilityContactMech facilityId="WebStoreWarehouse" contactMechId="9201" fromDate="2001-05-13 12:00:00.0"/>
+  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9200" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9200" contactMechPurposeTypeId="SHIP_ORIG_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2001-05-13 12:00:00.0"/>
+  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2001-05-13 12:00:00.0"/>
   <FacilityLocation facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL01" locationTypeEnumId="FLT_PICKLOC" areaId="TL" aisleId="TL" sectionId="TL" levelId="LL" positionId="01"/>
   <FacilityLocation facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL01" locationTypeEnumId="FLT_BULK" areaId="TL" aisleId="TL" sectionId="TL" levelId="UL" positionId="01"/>
   <FacilityLocation facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL02" locationTypeEnumId="FLT_PICKLOC" areaId="TL" aisleId="TL" sectionId="TL" levelId="LL" positionId="02"/>
@@ -42,9 +42,9 @@
   <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_TELL_FRIEND" templatePath="/components/ecommerce/templates/email/tellafriend.ftl" subject="${sendFrom} has sent you a link!" fromAddress="ofbiztest@yahoo.com"/>
   <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_GC_PURCHASE" templatePath="/components/ecommerce/templates/email/giftcardpurchase.ftl" fromAddress="ofbiztest@yahoo.com" subject="A Gift From ${senderName}!"/>
   <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_GC_RELOAD" templatePath="/components/ecommerce/templates/email/giftcardreload.ftl" fromAddress="ofbiztest@yahoo.com" subject="Gift Card Reload Results"/>
-  <ProductStoreFacility productStoreId="9000" facilityId="WebStoreWarehouse" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="9000" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductStoreKeywordOvrd productStoreId="9000" keyword="gizmo" fromDate="2001-01-01 12:00:00.0" target="100" targetTypeEnumId="KOTT_PRODCAT"/>
+  <ProductStoreFacility productStoreId="9000" facilityId="WebStoreWarehouse" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="9000" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductStoreKeywordOvrd productStoreId="9000" keyword="gizmo" fromDate="2001-05-13 12:00:00.0" target="100" targetTypeEnumId="KOTT_PRODCAT"/>
 
   <SimpleSalesTaxLookup productStoreId="9000" countryGeoId="_NA_" stateProvinceGeoId="_NA_" taxCategory="_NA_" fromDate="2001-01-01 00:00:00.001" description="10% OFB Tax" minPurchase="0.0" taxShipping="N" salesTaxPercentage="0.1"/>
 
@@ -53,8 +53,8 @@
 
   <ProdCatalog prodCatalogId="DemoCatalog" catalogName="Demo Catalog" useQuickAdd="Y"/>
   <ProdCatalog prodCatalogId="TestCatalog" catalogName="Test Catalog" useQuickAdd="N"/>
-  <ProductStoreCatalog productStoreId="9000" prodCatalogId="DemoCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
-  <ProductStoreCatalog productStoreId="9000" prodCatalogId="TestCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+  <ProductStoreCatalog productStoreId="9000" prodCatalogId="DemoCatalog" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
+  <ProductStoreCatalog productStoreId="9000" prodCatalogId="TestCatalog" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
 
   <ProductCategory description="Demo Browse Root"
     longDescription="Demo Catalog Primary Browse Root Category" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
@@ -87,25 +87,25 @@
 
   <ProductCategory description="Test Limited Admin Category"
     longDescription="Test Limited Admin Category" productCategoryId="TSTLTDADMIN" productCategoryTypeId="CATALOG_CATEGORY"/>
-  <ProductCategoryRole productCategoryId="TSTLTDADMIN" partyId="ltdadmin" roleTypeId="LTD_ADMIN" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryRole productCategoryId="TSTLTDADMIN" partyId="ltdadmin" roleTypeId="LTD_ADMIN" fromDate="2001-05-13 12:00:00.0"/>
 
   <ProductCategory description="Test Cross Sell Category"
     longDescription="Test Cross Sell Category" productCategoryId="TSTCSL" productCategoryTypeId="CROSS_SELL_CATEGORY"/>
 
-  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1" fromDate="2001-01-01 12:00:00.0"
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1" fromDate="2001-05-13 12:00:00.0"
     sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
-  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_SEARCH" fromDate="2001-01-01 12:00:00.0"
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_SEARCH" fromDate="2001-05-13 12:00:00.0"
     sequenceNum="1" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
-  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_QUICKADD1" fromDate="2001-01-01 12:00:00.0"
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_QUICKADD1" fromDate="2001-05-13 12:00:00.0"
     sequenceNum="1" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
-  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_QUICKADD2" fromDate="2001-01-01 12:00:00.0"
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_QUICKADD2" fromDate="2001-05-13 12:00:00.0"
     sequenceNum="2" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
-  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="PROMOTIONS" fromDate="2001-01-01 12:00:00.0"
+  <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="PROMOTIONS" fromDate="2001-05-13 12:00:00.0"
     sequenceNum="1" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
 
-  <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="100" fromDate="2001-01-01 12:00:00.0"
+  <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="100" fromDate="2001-05-13 12:00:00.0"
     sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
-  <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="TSTLTDADMIN" fromDate="2001-01-01 12:00:00.0"
+  <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="TSTLTDADMIN" fromDate="2001-05-13 12:00:00.0"
     sequenceNum="1" prodCatalogCategoryTypeId="PCCT_ADMIN_ALLW"/>
 
   <Product productId="GZ-1000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Tiny Gizmo" internalName="Tiny Gizmo" description="The smallest gizmo in town." longDescription="This gizmo is very small and runs on solar power." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>
@@ -130,37 +130,37 @@
   <Product productId="WG-9943-S3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget S3" internalName="Giant Widget S3" description="Silver Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVariant="Y"/>
   <Product productId="WG-9943-S4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget S4" internalName="Giant Widget S4" description="Silver Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVariant="Y"/>
 
-  <ProductPrice productId="GZ-1000" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:49:03.163" price="15.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-1000" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:48:49.113" price="15.0" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-1001" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:57:38.033" price="25.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-1001" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:57:29.421" price="25.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-1004" productPriceTypeId="AVERAGE_COST" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:50:35.866" price="29.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-1004" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:50:45.25" price="25.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-1005" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:00:47.616" price="2799.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-1005" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:00:32.034" price="2799.0" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-1006" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:03:12.745" price="1.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-1006" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:03:03.151" price="5.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-2002" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:52:45.463" price="47.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-2002" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:52:37.181" price="48.0" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-2644" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="47.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-2644" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="48.0" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-5005" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:06:07.516" price="47.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:06:17.991" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-5005" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:05:56.39" price="48.0" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:06:07.286" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-7000" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:12:00.424" price="599.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:12:08.765" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-7000" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:12:09.006" price="999.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:12:22.736" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-8544" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="269.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-8544" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="270.0" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-9290" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:55:00.196" price="97.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="GZ-9290" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:54:52.065" price="99.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="WG-1111" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="59.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="WG-1111" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="60.0" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="WG-5569" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="59.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="WG-5569" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="60.0" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="WG-9943" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="549.99" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  <ProductPrice productId="WG-9943" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="550.0" createdDate="2003-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1000" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:49:03.163" price="15.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1000" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:48:49.113" price="15.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1001" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:57:38.033" price="25.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1001" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:57:29.421" price="25.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1004" productPriceTypeId="AVERAGE_COST" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:50:35.866" price="29.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1004" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:50:45.25" price="25.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1005" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:00:47.616" price="2799.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1005" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:00:32.034" price="2799.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1006" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:03:12.745" price="1.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1006" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:03:03.151" price="5.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-2002" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:52:45.463" price="47.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-2002" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:52:37.181" price="48.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-2644" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="47.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-2644" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="48.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-5005" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:06:07.516" price="47.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:06:17.991" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-5005" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:05:56.39" price="48.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:06:07.286" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-7000" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:12:00.424" price="599.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:12:08.765" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-7000" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 19:12:09.006" price="999.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:12:22.736" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-8544" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="269.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-8544" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="270.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-9290" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:55:00.196" price="97.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-9290" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2003-03-04 18:54:52.065" price="99.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="WG-1111" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="59.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="WG-1111" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="60.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="WG-5569" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="59.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="WG-5569" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="60.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="WG-9943" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="549.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="WG-9943" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="550.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
 
   <ProductFeatureCategory productFeatureCategoryId="9000" description="Widget Features"/>
-  <ProductFeatureCategoryAppl productFeatureCategoryId="9000" productCategoryId="CATALOG1_SEARCH" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductFeatureCategoryAppl productFeatureCategoryId="9000" productCategoryId="CATALOG1_SEARCH" fromDate="2001-05-13 12:00:00.0"/>
 
   <ProductFeature productFeatureId="9000" productFeatureCategoryId="9000" productFeatureTypeId="COLOR" description="Black"/>
   <ProductFeature productFeatureId="9001" productFeatureCategoryId="9000" productFeatureTypeId="COLOR" description="Silver"/>
@@ -168,102 +168,102 @@
   <ProductFeature productFeatureId="9003" productFeatureCategoryId="9000" productFeatureTypeId="SIZE" description="4-Wheel"/>
 
   <ProductFeatureAppl productId="WG-9943" productFeatureId="9000"
-    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
   <ProductFeatureAppl productId="WG-9943" productFeatureId="9001"
-    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
   <ProductFeatureAppl productId="WG-9943" productFeatureId="9002"
-    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="3"/>
+    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="3"/>
   <ProductFeatureAppl productId="WG-9943" productFeatureId="9003"
-    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="4"/>
+    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="4"/>
 
   <ProductFeatureAppl productId="WG-9943-B3" productFeatureId="9000"
-    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
   <ProductFeatureAppl productId="WG-9943-B3" productFeatureId="9002"
-    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
   <ProductFeatureAppl productId="WG-9943-B4" productFeatureId="9000"
-    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
   <ProductFeatureAppl productId="WG-9943-B4" productFeatureId="9003"
-    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
   <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="9001"
-    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
   <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="9002"
-    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
   <ProductFeatureAppl productId="WG-9943-S4" productFeatureId="9001"
-    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
   <ProductFeatureAppl productId="WG-9943-S4" productFeatureId="9003"
-    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
 
-  <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
+  <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
     productIdTo="WG-9943-B3" quantity="1.0" reason=""/>
-  <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
+  <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
     productIdTo="WG-9943-B4" quantity="1.0" reason=""/>
-  <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
+  <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
     productIdTo="WG-9943-S3" quantity="1.0" reason=""/>
-  <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
+  <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
     productIdTo="WG-9943-S4" quantity="1.0" reason=""/>
 
-  <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_UPGRADE" productId="WG-5569"
+  <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_UPGRADE" productId="WG-5569"
     productIdTo="WG-9943" quantity="1.0" reason="A little bit more expensive, but worth every penny!"/>
-  <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_UPGRADE" productId="WG-1111"
+  <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_UPGRADE" productId="WG-1111"
     productIdTo="WG-5569" quantity="1.0" reason="If you like chrome, but want it a little bigger, this is the one for you!"/>
-  <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_UPGRADE" productId="GZ-2644"
+  <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_UPGRADE" productId="GZ-2644"
     productIdTo="GZ-8544" quantity="1.0" reason="A whole lot more features for the buck."/>
-  <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-5569"
+  <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-5569"
     productIdTo="GZ-2644" quantity="1.0" reason="These two are much more useful together."/>
-  <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="GZ-2644"
+  <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="GZ-2644"
     productIdTo="WG-5569" quantity="1.0" reason="These two are much more useful together."/>
-  <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
+  <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
     productIdTo="GZ-2644" quantity="1.0" reason="This makes it look much better."/>
-  <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
+  <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
     productIdTo="GZ-8544" quantity="1.0" reason="This makes it look much better."/>
-  <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
+  <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
     productIdTo="WG-1111" quantity="1.0" reason="This makes it look much better."/>
-  <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
+  <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
     productIdTo="WG-5569" quantity="1.0" reason="This makes it look much better."/>
-  <ProductAssoc fromDate="2001-01-01 12:00:00.0" productAssocTypeId="PRODUCT_OBSOLESCENCE" productId="GZ-8544"
+  <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_OBSOLESCENCE" productId="GZ-8544"
     productIdTo="WG-9943" quantity="1.0" reason="The Giant Widget is much better than the Big Gizmo, so much so that it makes the Big Gizmo obsolete."/>
 
-  <ProductCategoryMember productCategoryId="100" productId="GZ-1000" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-1001" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-1004" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-1005" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-1006" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-2002" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-5005" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-7000" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-8544" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="100" productId="GZ-9290" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="101" productId="GZ-1000" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="101" productId="GZ-1001" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="101" productId="GZ-2002" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="101" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="101" productId="GZ-5005" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="102" productId="GZ-1004" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="102" productId="GZ-1005" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="102" productId="GZ-1006" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="102" productId="GZ-7000" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="102" productId="GZ-8544" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="102" productId="GZ-9290" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="201" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="20111" productId="WG-1111" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="202" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="GZ-8544" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-1111" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-1111" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="GZ-8544" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-1111" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="PROMOTIONS" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductCategoryMember productCategoryId="PROMOTIONS" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1000" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1001" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1004" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1005" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1006" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-2002" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-2644" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-5005" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-7000" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-8544" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-9290" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-1000" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-1001" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-2002" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-2644" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-5005" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-1004" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-1005" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-1006" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-7000" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-8544" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-9290" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="201" productId="WG-5569" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="20111" productId="WG-1111" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="202" productId="WG-9943" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="GZ-2644" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="GZ-8544" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-1111" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-5569" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-9943" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-1111" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-5569" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-9943" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="GZ-2644" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="GZ-8544" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-1111" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-5569" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-9943" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GZ-2644" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="PROMOTIONS" productId="WG-5569" fromDate="2001-05-13 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="PROMOTIONS" productId="WG-9943" fromDate="2001-05-13 12:00:00.0"/>
   <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-1000" fromDate="2003-03-04 18:49:31.464"/>
   <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-1001" fromDate="2003-03-04 18:57:49.099"/>
   <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-1004" fromDate="2003-03-04 18:51:06.45"/>
@@ -276,15 +276,15 @@
   <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-8544" fromDate="2003-03-04 18:46:46.557"/>
   <ProductCategoryMember productCategoryId="TSTCSL" productId="GZ-9290" fromDate="2003-03-04 18:55:14.547"/>
 
-  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="100"/>
-  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="100" productCategoryId="101"/>
-  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="100" productCategoryId="102"/>
-  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="200"/>
-  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="200" productCategoryId="201"/>
-  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="200" productCategoryId="202"/>
-  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="201" productCategoryId="2011"/>
-  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="201" productCategoryId="2012"/>
-  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="2011" productCategoryId="20111"/>
+  <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="100"/>
+  <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="100" productCategoryId="101"/>
+  <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="100" productCategoryId="102"/>
+  <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="200"/>
+  <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="200" productCategoryId="201"/>
+  <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="200" productCategoryId="202"/>
+  <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="201" productCategoryId="2011"/>
+  <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="201" productCategoryId="2012"/>
+  <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="2011" productCategoryId="20111"/>
 
   <!-- some default product facility settings -->
   <ProductFacility productId="GZ-2644" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="15"/>
@@ -327,7 +327,7 @@
     <!-- Buy 3 Get 2 Free in category, limit to two per order -->
     <!-- Buy 1 Get 1 At 50% off with promo code, no limit -->
     <!-- 4 for $50 in set of products -->
-    <ProductPromo productPromoId="9000" promoName="Test Promo 1" promoText="Spend more than $100 on your favorite widgets and gizmos and get a free &lt;a href=&apos;/ecommerce/control/product?category_id=20111&amp;product_id=WG-1111&apos; class=&apos;buttontext&apos;&gt;Micro Chrome Widget&lt;/a&gt;!" userEntered="Y" useLimitPerOrder="1" createdDate="2003-01-01 12:00:00.0"/>
+    <ProductPromo productPromoId="9000" promoName="Test Promo 1" promoText="Spend more than $100 on your favorite widgets and gizmos and get a free &lt;a href=&apos;/ecommerce/control/product?category_id=20111&amp;product_id=WG-1111&apos; class=&apos;buttontext&apos;&gt;Micro Chrome Widget&lt;/a&gt;!" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0"/>
     <ProductPromo productPromoId="9010" promoName="Test Percent off product set " promoText="20% off any one item, either GZ-1005 (.NIT Gizmo) or GZ-1006 (Open Gizmo) with a limit of 1 per order" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" createdDate="2003-11-08 09:22:25.104" createdByUserLogin="admin" lastModifiedDate="2003-11-08 09:22:25.104" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="9011" promoName="Test percent off entire purchase, no condition" promoText="10% off entire purchase" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" createdDate="2003-11-08 10:02:58.425" createdByUserLogin="admin" lastModifiedDate="2003-11-08 10:02:58.425" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="9012" promoName="Test amount off order" promoText="$10 off entire purchase of $50 or more with promo code [9000], limit use of code to one per customer, limit for three uses total for the code" userEntered="Y" showToCustomer="Y" requireCode="Y" createdDate="2003-11-08 10:06:11.649" createdByUserLogin="admin" lastModifiedDate="2003-11-08 10:06:11.649" lastModifiedByUserLogin="admin"/>
@@ -335,6 +335,7 @@
     <ProductPromo productPromoId="9014" promoName="Test buy X get Y at Z% discount" promoText="Buy 1 Big Gizmo [GZ-8544] or Massive Gizmo [GZ-7000] Get 1 Purple Gizmo [GZ-5005] At 50% off with promo code [9001] (must be associated with Party or Email), no limit" userEntered="Y" showToCustomer="Y" requireCode="Y" createdDate="2003-11-08 10:43:54.765" createdByUserLogin="admin" lastModifiedDate="2003-11-08 10:43:54.765" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="9015" promoName="Test X products for $Y" promoText="Buy 4 items for $50 from Purple Gizmo [GZ-5005], Rainbow Gizmo [GZ-1004], Round Gizmo [GZ-2644] or Square Gizmo [GZ-2002] limit 2 per customer" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerCustomer="2" createdDate="2003-11-08 11:00:08.058" createdByUserLogin="admin" lastModifiedDate="2003-11-08 11:00:08.058" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="9016" promoName="Test $ off products in categories" promoText="Get $500 off any item in the Small Gizmos [101] category, limit 1 per order, 2 per customer, 3 for entire promotion promotion. Discount not to exceed the price of the item." userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" useLimitPerCustomer="2" useLimitPerPromotion="3" createdDate="2003-11-07 17:02:56.034" createdByUserLogin="admin" lastModifiedDate="2003-11-07 17:02:56.034" lastModifiedByUserLogin="admin"/>
+    <ProductPromo productPromoId="9017" promoName="Test Gift with Amount of Specific Product" promoText="Spend more than $150 on your favorite gizmos (all products in Gizmo [100] or sub-category) and get a free &lt;a href=&apos;/ecommerce/control/product?category_id=20111&amp;product_id=GZ-1006&apos; class=&apos;buttontext&apos;&gt;Open Gizmo&lt;/a&gt;!" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0"/>
     <ProductPromoRule productPromoId="9000" productPromoRuleId="01" ruleName="Rule 1: Free Widget"/>
     <ProductPromoRule productPromoId="9010" productPromoRuleId="01" ruleName="Test Percent off rule"/>
     <ProductPromoRule productPromoId="9011" productPromoRuleId="01" ruleName="Test percent off order"/>
@@ -343,6 +344,7 @@
     <ProductPromoRule productPromoId="9014" productPromoRuleId="01" ruleName="Test buy 1 get 1 at 50%"/>
     <ProductPromoRule productPromoId="9015" productPromoRuleId="01" ruleName="Test multiple promotion"/>
     <ProductPromoRule productPromoId="9016" productPromoRuleId="01" ruleName="Dollar discount on Small Gizmos"/>
+    <ProductPromoRule productPromoId="9017" productPromoRuleId="01" ruleName="GWP for Gizmos Only"/>
     <ProductPromoAction productPromoId="9000" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_GWP" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" productId="WG-1111"/>
     <ProductPromoAction productPromoId="9010" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_DISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="20.0"/>
     <ProductPromoAction productPromoId="9011" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_ORDER_PERCENT" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" amount="10.0"/>
@@ -351,14 +353,17 @@
     <ProductPromoAction productPromoId="9014" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_DISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="50.0"/>
     <ProductPromoAction productPromoId="9015" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_PRICE" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="4.0" amount="50.0"/>
     <ProductPromoAction productPromoId="9016" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_AMDISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="500.0"/>
+    <ProductPromoAction productPromoId="9017" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_GWP" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" productId="GZ-1006"/>
     <ProductPromoCond productPromoId="9000" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_ORDER_TOTAL" operatorEnumId="PPC_GT" condValue="100"/>
     <ProductPromoCond productPromoId="9012" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_ORDER_TOTAL" operatorEnumId="PPC_GTE" condValue="50"/>
     <ProductPromoCond productPromoId="9013" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_PRODUCT_QUANT" operatorEnumId="PPC_EQ" condValue="3"/>
     <ProductPromoCond productPromoId="9014" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_PRODUCT_QUANT" operatorEnumId="PPC_EQ" condValue="1"/>
+    <ProductPromoCond productPromoId="9017" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_PRODUCT_AMOUNT" operatorEnumId="PPC_GT" condValue="150"/>
     <ProductPromoCategory productPromoId="9013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="200" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="Y"/>
     <ProductPromoCategory productPromoId="9013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="201" andGroupId="_NA_" productPromoApplEnumId="PPPA_EXCLUDE" includeSubCategories="Y"/>
     <ProductPromoCategory productPromoId="9013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="20111" andGroupId="_NA_" productPromoApplEnumId="PPPA_ALWAYS" includeSubCategories="N"/>
     <ProductPromoCategory productPromoId="9016" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="101" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="N"/>
+    <ProductPromoCategory productPromoId="9017" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="100" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="Y"/>
     <ProductPromoProduct productPromoId="9010" productPromoRuleId="01" productPromoActionSeqId="01" productPromoCondSeqId="_NA_" productId="GZ-1005" productPromoApplEnumId="PPPA_INCLUDE"/>
     <ProductPromoProduct productPromoId="9010" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productId="GZ-1006" productPromoApplEnumId="PPPA_INCLUDE"/>
     <ProductPromoProduct productPromoId="9014" productPromoRuleId="01" productPromoActionSeqId="01" productPromoCondSeqId="_NA_" productId="GZ-5005" productPromoApplEnumId="PPPA_INCLUDE"/>
@@ -370,14 +375,15 @@
     <ProductPromoProduct productPromoId="9015" productPromoRuleId="01" productPromoActionSeqId="01" productPromoCondSeqId="_NA_" productId="GZ-5005" productPromoApplEnumId="PPPA_INCLUDE"/>
     <ProductPromoCode productPromoCodeId="9000" productPromoId="9012" userEntered="Y" requireEmailOrParty="N" useLimitPerCode="3" useLimitPerCustomer="1" createdDate="2003-11-08 10:06:44.833" createdByUserLogin="admin" lastModifiedDate="2003-11-08 10:06:44.833" lastModifiedByUserLogin="admin"/>
     <ProductPromoCode productPromoCodeId="9001" productPromoId="9014" userEntered="Y" requireEmailOrParty="Y" createdDate="2003-11-08 10:46:53.187" createdByUserLogin="admin" lastModifiedDate="2003-11-08 10:46:53.187" lastModifiedByUserLogin="admin"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9000" fromDate="2001-01-01 12:00:00.0" sequenceNum="5"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9010" fromDate="2003-11-08 11:20:42.235" sequenceNum="5"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9011" fromDate="2003-11-08 11:21:48.623" sequenceNum="5"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9012" fromDate="2003-11-08 11:21:01.769" sequenceNum="5"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9013" fromDate="2003-11-08 11:21:40.214" sequenceNum="5"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9014" fromDate="2003-11-08 11:21:33.235" sequenceNum="5"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9015" fromDate="2003-11-08 11:20:16.031" sequenceNum="2"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9016" fromDate="2003-11-08 11:20:34.725" sequenceNum="1"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="9000" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="9010" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="9011" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="9012" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="9013" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="9014" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="9015" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="9016" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="9017" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
 
     <!-- a default pricing rule to play with; take 20% off all products in the PROMOTIONS category -->
     <ProductPriceRule productPriceRuleId="9000" ruleName="Test Rule 1" isSale="Y"/>
@@ -401,45 +407,45 @@
     <Product productId="GC-001-H25" productTypeId="DIGITAL_GOOD" internalName="Gift Card Activation" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
     <Product productId="GC-001-H50" productTypeId="DIGITAL_GOOD" internalName="Gift Card Activation" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
     <Product productId="GC-001-HO" productTypeId="DIGITAL_GOOD" internalName="Gift Card Activation" productName="Gift Card Activation" description="Give the perfect gift!" requireAmount="Y" amountUomTypeId="CURRENCY_MEASURE" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
-    <ProductAssoc productId="GC-001" productIdTo="GC-001-C10" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:51:53.223"/>
-    <ProductAssoc productId="GC-001" productIdTo="GC-001-C100" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:52:19.47"/>
-    <ProductAssoc productId="GC-001" productIdTo="GC-001-C25" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:52:01.811"/>
-    <ProductAssoc productId="GC-001" productIdTo="GC-001-C50" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:52:11.058"/>
-    <ProductAssoc productId="GC-001" productIdTo="GC-001-CO" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-21 10:26:48.764"/>
-    <ProductAssoc productId="GC-001" productIdTo="GC-001-H10" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:52:28.263"/>
-    <ProductAssoc productId="GC-001" productIdTo="GC-001-H100" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:52:54.596"/>
-    <ProductAssoc productId="GC-001" productIdTo="GC-001-H25" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:52:36.444"/>
-    <ProductAssoc productId="GC-001" productIdTo="GC-001-H50" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:52:45.335"/>
-    <ProductAssoc productId="GC-001" productIdTo="GC-001-HO" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-21 10:27:33.632"/>
-    <ProductPrice productId="GC-002" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="1.0" createdDate="2003-11-20 13:53:14.512" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:53:14.512" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="GC-001-C10" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="10.0" createdDate="2003-11-20 13:53:14.512" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:53:14.512" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="GC-001-C100" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="100.0" createdDate="2003-11-20 13:54:10.973" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:54:10.973" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="GC-001-C25" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="25.0" createdDate="2003-11-20 13:53:39.985" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:53:39.985" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="GC-001-C50" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="50.0" createdDate="2003-11-20 13:53:56.117" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:53:56.117" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="GC-001-CO" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="1.0" createdDate="2003-11-20 13:53:56.117" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:53:56.117" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="GC-001-H10" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="10.0" createdDate="2003-11-20 13:54:39.665" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:54:44.287" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="GC-001-H100" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="100.0" createdDate="2003-11-20 13:55:30.586" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:55:30.586" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="GC-001-H25" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="25.0" createdDate="2003-11-20 13:55:00.324" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:55:00.324" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="GC-001-H50" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="50.0" createdDate="2003-11-20 13:55:16.788" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:55:16.788" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="GC-001-HO" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="1.0" createdDate="2003-11-20 13:54:39.665" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:54:44.287" lastModifiedByUserLogin="admin"/>
-    <ProductCategoryMember productCategoryId="GC-100" productId="GC-001" fromDate="2003-11-21 15:37:11.709"/>
-    <ProductCategoryMember productCategoryId="GC-100" productId="GC-002" fromDate="2003-11-21 15:37:20.801"/>
-    <ProductCategoryMember productCategoryId="GC-102" productId="GC-002" fromDate="2001-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001" fromDate="2001-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C10" fromDate="2001-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C100" fromDate="2001-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C25" fromDate="2001-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C50" fromDate="2001-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-CO" fromDate="2001-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H10" fromDate="2001-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H100" fromDate="2001-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H25" fromDate="2001-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H50" fromDate="2001-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-HO" fromDate="2001-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GC-001" fromDate="2001-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GC-002" fromDate="2001-01-01 12:00:00.0"/>
-    <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="GC-100" productCategoryId="GC-101"/>
-    <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="GC-100" productCategoryId="GC-102"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-C10" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-C100" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-C25" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-C50" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-CO" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-H10" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-H100" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-H25" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-H50" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-HO" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductPrice productId="GC-002" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="1.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-C10" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="10.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-C100" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="100.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-C25" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="25.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-C50" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="50.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-CO" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="1.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-H10" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="10.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-H100" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="100.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-H25" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="25.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-H50" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="50.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-HO" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="1.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductCategoryMember productCategoryId="GC-100" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-100" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-102" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C10" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C100" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C25" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C50" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-CO" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H10" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H100" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H25" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H50" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-HO" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GC-100" productCategoryId="GC-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GC-100" productCategoryId="GC-102"/>
 
     <ProductFeatureCategory productFeatureCategoryId="2000" description="Gift Card Features"/>
     <ProductFeature productFeatureId="2000" productFeatureTypeId="STYLE" productFeatureCategoryId="2000" description="Classic" defaultSequenceNum="1"/>
