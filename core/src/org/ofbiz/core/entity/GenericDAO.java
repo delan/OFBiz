@@ -35,22 +35,34 @@ import org.ofbiz.core.entity.model.*;
  */
 public class GenericDAO
 {
+  static Map genericDAOs = new Hashtable();
   String serverName;
+  ModelReader modelReader;
   
-  public GenericDAO(String serverName) 
+  public static GenericDAO getGenericDAO(String serverName)
+  {
+    GenericDAO newGenericDAO = (GenericDAO)genericDAOs.get(serverName);
+    if(newGenericDAO == null) //don't want to block here
+    {
+      synchronized(GenericDAO.class) 
+      { 
+        if(newGenericDAO == null)
+        {
+          newGenericDAO = new GenericDAO(serverName);
+          genericDAOs.put(serverName, newGenericDAO);
+        }
+      }
+    }
+    return newGenericDAO;
+  }
+  
+  public GenericDAO(String serverName)
   { 
     this.serverName = serverName;
-    initGenericDAO();
+    modelReader = ModelReader.getModelReader(serverName);
   }
     
   public Connection getConnection() throws SQLException { return ConnectionFactory.getConnection(serverName); }
-  
-  public void initGenericDAO()
-  {
-    //quick load the entities...
-    ModelReader.getFieldTypeCache();
-    ModelReader.getEntityCache();
-  }
   
   public boolean insert(GenericEntity entity)
   {
@@ -227,7 +239,7 @@ public class GenericDAO
   {
     ModelEntity entity = value.getModelEntity();
     ModelRelation relation = entity.getRelation(relationName);
-    ModelEntity relatedEntity = ModelReader.getModelEntity(relation.relEntityName);
+    ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
 
     //if entity exists, update, else insert
     Iterator entIter = UtilMisc.toIterator(entities);
@@ -368,7 +380,7 @@ public class GenericDAO
   {
     if(entityName == null || fields == null) return null;
     Collection collection = new LinkedList();
-    ModelEntity modelEntity = ModelReader.getModelEntity(entityName);
+    ModelEntity modelEntity = modelReader.getModelEntity(entityName);
     if(modelEntity == null) 
     {
       Debug.logError("[GenericDAO.selectByAnd] Could not find ModelEntity record for entityName: " + entityName);
@@ -436,14 +448,14 @@ public class GenericDAO
       GenericValue dummyValue;
       if(fields != null || fields.size() > 0)
       {
-        dummyValue = new GenericValue(entityName, fields);
+        dummyValue = new GenericValue(modelReader.getModelEntity(entityName), fields);
         for(int i=0;i<whereFields.size();i++)
         {
           ModelField curField=(ModelField)whereFields.elementAt(i);
           setValue(ps, i+1, curField, dummyValue);
         }
       }
-      else dummyValue = new GenericValue(entityName);
+      else dummyValue = new GenericValue(modelReader.getModelEntity(entityName));
       rs = ps.executeQuery();
       
       while(rs.next())
@@ -475,7 +487,7 @@ public class GenericDAO
   {
     ModelEntity modelEntity = value.getModelEntity();
     ModelRelation relation = modelEntity.getRelation(relationName);
-    ModelEntity relatedEntity = ModelReader.getModelEntity(relation.relEntityName);
+    ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
 
     Map fields = new HashMap();
     for(int i=0; i<relation.keyMaps.size(); i++)
@@ -535,7 +547,7 @@ public class GenericDAO
   public boolean deleteByAnd(String entityName, Map fields)
   {
     if(entityName == null || fields == null) return false;
-    ModelEntity modelEntity = ModelReader.getModelEntity(entityName);
+    ModelEntity modelEntity = modelReader.getModelEntity(entityName);
     if(modelEntity == null) 
     {
       Debug.logError("[GenericDAO.selectByAnd] Could not find ModelEntity record for entityName: " + entityName);
@@ -567,7 +579,7 @@ public class GenericDAO
       
       if(fields != null || fields.size() > 0)
       {
-        GenericValue dummyValue = new GenericValue(entityName, fields);
+        GenericValue dummyValue = new GenericValue(modelReader.getModelEntity(entityName), fields);
         for(int i=0;i<whereFields.size();i++)
         {
           ModelField curField=(ModelField)whereFields.elementAt(i);
@@ -590,7 +602,7 @@ public class GenericDAO
   {
     ModelEntity modelEntity = value.getModelEntity();
     ModelRelation relation = modelEntity.getRelation(relationName);
-    ModelEntity relatedEntity = ModelReader.getModelEntity(relation.relEntityName);
+    ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
 
     Map fields = new HashMap();
     for(int i=0; i<relation.keyMaps.size(); i++)
@@ -607,7 +619,7 @@ public class GenericDAO
 
   public void getValue(ResultSet rs, ModelField curField, GenericEntity entity) throws SQLException
   {
-    ModelFieldType mft = ModelReader.getModelFieldType(curField.type);
+    ModelFieldType mft = modelReader.getModelFieldType(curField.type);
     if(mft == null)
     {
       Debug.logWarning("GenericDAO.getValue: definition fieldType " + curField.type + " not found, cannot getValue for field " + entity.getEntityName() + "." + curField.name + ".");
@@ -656,7 +668,7 @@ public class GenericDAO
     
     Class fieldClass = field.getClass();    
     String fieldType = fieldClass.getName();
-    ModelFieldType mft = ModelReader.getModelFieldType(curField.type);
+    ModelFieldType mft = modelReader.getModelFieldType(curField.type);
     if(!fieldType.equals(mft.javaType) && fieldType.indexOf(mft.javaType) < 0)
     {
       Debug.logWarning("GenericDAO.setValue: type of field " + entity.getEntityName() + "." + curField.name + " is " + fieldType + ", was expecting " + mft.javaType + "; this may indicate an error in the configuration or in the class, and may result in an SQL-Java data conversion error. Will use the real field type: " + fieldType + ", not the definition.");

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/27 07:53:48  jonesde
+ * Added misc utils class UtilMisc. Currently just has a toIterator routine.
+ *
  *
  */
 
@@ -40,10 +43,85 @@ public class UtilMisc
   /** Get an iterator from a collection, returning null if collection is null
    * @param col The collection to be turned in to an iterator
    * @return The resulting Iterator
-   */  
+   */
   public static Iterator toIterator(Collection col)
   {
     if(col == null) return null;
     else return col.iterator();
+  }
+
+  /** Create a map from passed nameX, valueX parameters
+   * @return The resulting Map
+   */  
+  public static Map toMap(String name1, Object value1)
+  {
+    Map fields = new HashMap();
+    fields.put(name1, value1);
+    return fields;
+  }
+
+  /** Create a map from passed nameX, valueX parameters
+   * @return The resulting Map
+   */  
+  public static Map toMap(String name1, Object value1, String name2, Object value2)
+  {
+    Map fields = new HashMap();
+    fields.put(name1, value1);
+    fields.put(name2, value2);
+    return fields;
+  }
+
+  /** Create a map from passed nameX, valueX parameters
+   * @return The resulting Map
+   */  
+  public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3)
+  {
+    Map fields = new HashMap();
+    fields.put(name1, value1);
+    fields.put(name2, value2);
+    fields.put(name3, value3);
+    return fields;
+  }
+
+  /** Create a map from passed nameX, valueX parameters
+   * @return The resulting Map
+   */  
+  public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3, String name4, Object value4)
+  {
+    Map fields = new HashMap();
+    fields.put(name1, value1);
+    fields.put(name2, value2);
+    fields.put(name3, value3);
+    fields.put(name4, value4);
+    return fields;
+  }
+
+  /** Create a map from passed nameX, valueX parameters
+   * @return The resulting Map
+   */  
+  public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3, String name4, Object value4, String name5, Object value5)
+  {
+    Map fields = new HashMap();
+    fields.put(name1, value1);
+    fields.put(name2, value2);
+    fields.put(name3, value3);
+    fields.put(name4, value4);
+    fields.put(name5, value5);
+    return fields;
+  }
+
+  /** Create a map from passed nameX, valueX parameters
+   * @return The resulting Map
+   */  
+  public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3, String name4, Object value4, String name5, Object value5, String name6, Object value6)
+  {
+    Map fields = new HashMap();
+    fields.put(name1, value1);
+    fields.put(name2, value2);
+    fields.put(name3, value3);
+    fields.put(name4, value4);
+    fields.put(name5, value5);
+    fields.put(name6, value6);
+    return fields;
   }
 }

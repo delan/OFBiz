@@ -4,6 +4,7 @@ import java.util.*;
 import javax.naming.InitialContext;
 import javax.ejb.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.model.*;
 
 /**
  * <p><b>Title:</b> Generic Entity Helper Class
@@ -32,7 +33,7 @@ import org.ofbiz.core.util.*;
  *@created    Tue Aug 07 01:10:32 MDT 2001
  *@version    1.0
  */
-public class GenericHelperEJB extends GenericHelperCache
+public class GenericHelperEJB extends GenericHelperAbstract
 {
   /** A variable to cache the Home object for the Generic EJB */
   private GenericHome genericHome;
@@ -43,10 +44,12 @@ public class GenericHelperEJB extends GenericHelperCache
     primaryKeyCache = new UtilCache("FindByPrimaryKeyEJB-" + serverName);
     allCache = new UtilCache("FindAllEJB-" + serverName);
     andCache = new UtilCache("FindByAndEJB-" + serverName);
+
+    modelReader = ModelReader.getModelReader(serverName);
   }
   
   /** Initializes the genericHome, from a JNDI lookup */
-  public void getGenericHome(String serverName)
+  public GenericHome getGenericHome(String serverName)
   {
     JNDIContext myJNDIContext;
     myJNDIContext = new JNDIContext(serverName);
@@ -58,6 +61,7 @@ public class GenericHelperEJB extends GenericHelperCache
     }
     catch(Exception e1) { Debug.logError(e1); }
     Debug.logInfo("generic home obtained " + genericHome);
+    return genericHome;
   }
 
   /** Creates a Entity in the form of a GenericValue and write it to the database

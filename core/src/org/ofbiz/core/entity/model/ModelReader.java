@@ -50,18 +50,51 @@ import org.ofbiz.core.util.*;
 
 public class ModelReader
 {
+  public static Map readers = new Hashtable();
+  
   //public UtilCache documentCache = new UtilCache("EntityDocumentCache", 0, 0);
-  public static UtilCache fieldTypeCache = null;
-  public static UtilCache entityCache = null;
+  public UtilCache fieldTypeCache = null;
+  public UtilCache entityCache = null;
+  
+  public int numEntities = 0;
+  public int numFields = 0;
+  public int numRelations = 0;
 
-  public static String fieldTypeFileName = UtilProperties.getPropertyValue("servers", "xml.field.type");
-  public static String entityFileName = UtilProperties.getPropertyValue("servers", "xml.entity");
+  public String modelName;
+  public String fieldTypeFileName;
+  public String entityFileName;
+
+  public static ModelReader getModelReader(String serverName)
+  {
+    String tempModelName = UtilProperties.getPropertyValue("servers", serverName + ".model.name");
+    ModelReader reader = (ModelReader)readers.get(tempModelName);
+    if(reader == null) //don't want to block here
+    {
+      synchronized(ModelReader.class) 
+      { 
+        //must check if null again as one of the blocked threads can still enter 
+        if(reader == null)
+        {
+          reader = new ModelReader(tempModelName);
+          readers.put(tempModelName, reader);
+        }
+      }
+    }
+    return reader;
+  }
   
-  public static int numEntities = 0;
-  public static int numFields = 0;
-  public static int numRelations = 0;
+  public ModelReader(String modelName)
+  {
+    this.modelName = modelName;
+    fieldTypeFileName = UtilProperties.getPropertyValue("servers", modelName + ".xml.field.type");
+    entityFileName = UtilProperties.getPropertyValue("servers", modelName + ".xml.entity");
+    
+    //preload caches...
+    getFieldTypeCache();
+    getEntityCache();
+  }
   
-  public static UtilCache getFieldTypeCache()
+  public UtilCache getFieldTypeCache()
   {
     if(fieldTypeCache == null) //don't want to block here
     {
@@ -109,7 +142,7 @@ public class ModelReader
     return fieldTypeCache;
   }
   
-  public static UtilCache getEntityCache()
+  public UtilCache getEntityCache()
   {
     if(entityCache == null) //don't want to block here
     {
@@ -170,7 +203,7 @@ public class ModelReader
    * @param fieldTypeName The fieldTypeName of the FieldType definition to use.
    * @return An FieldType object describing the specified fieldType of the specified descriptor file.
    */    
-  public static ModelFieldType getModelFieldType(String fieldTypeName)
+  public ModelFieldType getModelFieldType(String fieldTypeName)
   {
     UtilCache ftc = getFieldTypeCache();
     if(ftc != null) return (ModelFieldType)ftc.get(fieldTypeName);
@@ -181,7 +214,7 @@ public class ModelReader
    * @param entityName The entityName of the Entity definition to use.
    * @return An Entity object describing the specified entity of the specified descriptor file.
    */    
-  public static ModelEntity getModelEntity(String entityName)
+  public ModelEntity getModelEntity(String entityName)
   {
     UtilCache ec = getEntityCache();
     if(ec != null) return (ModelEntity)ec.get(entityName);
@@ -191,7 +224,7 @@ public class ModelReader
   /** Creates a Iterator with the entityName of each Entity defined in the specified XML Entity Descriptor file.
    * @return A Iterator of entityName Strings
    */  
-  public static Iterator getEntityNamesIterator()
+  public Iterator getEntityNamesIterator()
   {
     Collection collection = getEntityNames();
     if(collection != null) return collection.iterator();
@@ -201,13 +234,13 @@ public class ModelReader
   /** Creates a Collection with the entityName of each Entity defined in the specified XML Entity Descriptor file.
    * @return A Collection of entityName Strings
    */  
-  public static Collection getEntityNames()
+  public Collection getEntityNames()
   {
     UtilCache ec = getEntityCache();
     return ec.valueTable.keySet();
   }
   
-  static ModelFieldType createModelFieldType(Element fieldTypeElement, Element docElement, UtilTimer utilTimer)
+  ModelFieldType createModelFieldType(Element fieldTypeElement, Element docElement, UtilTimer utilTimer)
   {
     if(fieldTypeElement == null) return null;
 
@@ -226,7 +259,7 @@ public class ModelReader
     return field;
   }
   
-  static ModelEntity createModelEntity(Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues)
+  ModelEntity createModelEntity(Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues)
   {
     if(entityElement == null) return null;
     numEntities++;
@@ -303,7 +336,7 @@ public class ModelReader
     return entity;
   }
   
-  static ModelRelation createRelation(ModelEntity entity, Element relationElement)
+  ModelRelation createRelation(ModelEntity entity, Element relationElement)
   {
     numRelations++;
     ModelRelation relation = new ModelRelation();
@@ -328,7 +361,7 @@ public class ModelReader
     return relation;
   }
 
-  static ModelKeyMap createKeyMap(Element keyMapElement)
+  ModelKeyMap createKeyMap(Element keyMapElement)
   {
     ModelKeyMap keyMap = new ModelKeyMap();
 
@@ -341,7 +374,7 @@ public class ModelReader
     return keyMap;
   }
 
-  static ModelField findModelField(ModelEntity entity, String colName)
+  ModelField findModelField(ModelEntity entity, String colName)
   {
     for(int i=0; i<entity.fields.size(); i++)
     {
@@ -351,7 +384,7 @@ public class ModelReader
     return null;
   }
   
-  static ModelField createModelField(Element fieldElement, Element docElement, Hashtable docElementValues)
+  ModelField createModelField(Element fieldElement, Element docElement, Hashtable docElementValues)
   {
     if(fieldElement == null) return null;
     
@@ -373,7 +406,7 @@ public class ModelReader
     return field;
   }
   
-  static String childElementValue(Element element, String childElementName)
+  String childElementValue(Element element, String childElementName)
   {
     if(element == null || childElementName == null) return null;
     //get the value of the first element with the given name
@@ -386,7 +419,7 @@ public class ModelReader
     return null;
   }  
 
-  static String elementValue(Element element)
+  String elementValue(Element element)
   {
     Node textNode = element.getFirstChild();
     if(textNode == null) return null;
@@ -394,7 +427,7 @@ public class ModelReader
     return textNode.getNodeValue();
   }  
 
-  static String entityEntityName(Node entityNode)
+  String entityEntityName(Node entityNode)
   {
     Element entityElement = (Element)entityNode;
 
@@ -408,19 +441,19 @@ public class ModelReader
     return "[entity-name not found]";
   }
   
-  static String checkNull(String string)
+  String checkNull(String string)
   {
     if(string != null) return string;
     else return "";
   }
   
-  static String checkNull(String string1, String string2)
+  String checkNull(String string1, String string2)
   {
     if(string1 != null) return string1;
     else if(string2 != null) return string2;
     else return "";
   }
-  static String checkNull(String string1, String string2, String string3)
+  String checkNull(String string1, String string2, String string3)
   {
     if(string1 != null) return string1;
     else if(string2 != null) return string2;
@@ -428,7 +461,7 @@ public class ModelReader
     else return "";
   }
   
-  static Document getDocument(String filename)
+  Document getDocument(String filename)
   {
     Document document = null;
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

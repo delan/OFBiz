@@ -2,6 +2,7 @@ package org.ofbiz.core.entity;
 
 import java.util.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.model.*;
 
 /**
  * <p><b>Title:</b> Generic Entity Helper Class
@@ -30,7 +31,7 @@ import org.ofbiz.core.util.*;
  *@created    Tue Aug 07 01:10:32 MDT 2001
  *@version    1.0
  */
-public class GenericHelperDAO extends GenericHelperCache
+public class GenericHelperDAO extends GenericHelperAbstract
 {
   GenericDAO genericDAO;
   
@@ -40,15 +41,17 @@ public class GenericHelperDAO extends GenericHelperCache
     primaryKeyCache = new UtilCache("FindByPrimaryKeyDAO-" + serverName);
     allCache = new UtilCache("FindAllDAO-" + serverName);
     andCache = new UtilCache("FindByAndDAO-" + serverName);
+
+    modelReader = ModelReader.getModelReader(serverName);
   }
-  
+
   /** Creates a Entity in the form of a GenericValue and write it to the database
    *@return GenericValue instance containing the new instance
    */
   public GenericValue create(String entityName, Map fields)
   {
     if(entityName == null || fields == null) { return null; }
-    GenericValue genericValue = new GenericValue(entityName, fields);
+    GenericValue genericValue = new GenericValue(modelReader.getModelEntity(entityName), fields);
     if(!genericDAO.insert(genericValue)) return null;
     genericValue.helper = this;
     return genericValue;

@@ -1,6 +1,7 @@
 package org.ofbiz.core.entity;
 
 import java.util.*;
+import org.ofbiz.core.entity.model.*;
 
 /**
  * <p><b>Title:</b> Generic Entity Helper Class
@@ -31,16 +32,30 @@ import java.util.*;
  */
 public interface GenericHelper
 {
+  /** Gets the instance of ModelReader that corresponds to this helper
+   *@return ModelReader that corresponds to this helper
+   */
+  public ModelReader getModelReader();
+  /** Gets the instance of ModelEntity that corresponds to this helper and the specified entityName
+   *@param entityName The name of the entity to get
+   *@return ModelEntity that corresponds to this helper and the specified entityName
+   */
+  public ModelEntity getModelEntity(String entityName);
+  
+  /** Creates a Entity in the form of a GenericValue without persisting it */
+  public GenericValue makeValue(String entityName, Map fields);
+
+  /** Creates a Primary Key in the form of a GenericPK without persisting it */
+  public GenericPK makePK(String entityName, Map fields);
+
   /** Creates a Entity in the form of a GenericValue and write it to the database
    *@return GenericValue instance containing the new instance
    */
   public GenericValue create(String entityName, Map fields);
-
   /** Creates a Entity in the form of a GenericValue and write it to the database
    *@return GenericValue instance containing the new instance
    */
   public GenericValue create(GenericValue value);
-
   /** Creates a Entity in the form of a GenericValue and write it to the database
    *@return GenericValue instance containing the new instance
    */

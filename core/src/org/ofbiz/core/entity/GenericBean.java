@@ -35,6 +35,7 @@ import org.ofbiz.core.entity.model.*;
 public class GenericBean extends GenericEntity implements EntityBean
 {
   GenericDAO genericDAO = null;
+  ModelReader modelReader = null;
   EntityContext entityContext;
 
   /** Sets the values from ValueObject attribute of the GenericBean object
@@ -45,7 +46,7 @@ public class GenericBean extends GenericEntity implements EntityBean
   /** Gets the ValueObject attribute of the GenericBean object
    *@return    The ValueObject value
    */
-  public GenericValue getValueObject() { return new GenericValue(entityName, fields); }
+  public GenericValue getValueObject() { return new GenericValue(modelEntity, fields); }
 
   /** Get the named Related Entity for the GenericValue from the persistent store
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
@@ -101,13 +102,15 @@ public class GenericBean extends GenericEntity implements EntityBean
     return newCol;
   }
 
-  public GenericPK ejbCreate(GenericPK primaryKey) throws CreateException { return ejbCreate(primaryKey.entityName, primaryKey.fields); }
-  public GenericPK ejbCreate(GenericValue value) throws CreateException { return ejbCreate(value.entityName, value.fields); }
+  public GenericPK ejbCreate(GenericPK primaryKey) throws CreateException 
+  { return ejbCreate(primaryKey.entityName, primaryKey.fields); }
+  public GenericPK ejbCreate(GenericValue value) throws CreateException 
+  { return ejbCreate(value.entityName, value.fields); }
   public GenericPK ejbCreate(String entityName, Map fields) throws CreateException
   {
-    this.entityName = entityName; 
+    this.entityName = entityName;
+    this.modelEntity = modelReader.getModelEntity(entityName);
     this.fields = new HashMap(fields);
-    genericDAO = new GenericDAO("default");
     if(genericDAO == null) throw new CreateException("Could not get default JDBC Data Access Object.");
     if(!genericDAO.insert(this)) throw new CreateException("DAO Insert call failed.");
     return this.getPrimaryKey();
@@ -150,7 +153,9 @@ public class GenericBean extends GenericEntity implements EntityBean
    */
   public void setEntityContext(EntityContext entityContext) 
   { 
-    if(genericDAO == null) genericDAO = new GenericDAO("default");
+    //we really need to find a way of passing the serverName into this bean in the context, look more later
+    if(genericDAO == null) genericDAO = GenericDAO.getGenericDAO("default");
+    if(modelReader == null) modelReader = ModelReader.getModelReader("default");
     this.entityContext = entityContext; 
   }
   /** Unsets the EntityContext, ie sets it to null. */

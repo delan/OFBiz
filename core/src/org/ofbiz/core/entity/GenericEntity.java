@@ -35,60 +35,29 @@ public class GenericEntity implements Serializable
 {
   /** Contains the fields for this entity */
   protected Map fields;
-  /** Contains the entityName from the XML definition of this entity */
-  protected String entityName;
-  /** Denotes whether or not this entity has been modified, or is known to be out of sync with the persistent record */
-  public boolean modified = false;
   /** Map to store related entities that will be updated if modified when this entity is stored; populated with preStoreRelated(String, Collection). This is here so that it can be implicitly stored in the same transaction context. */
   public Map relatedToStore = new HashMap();
 
+  /** Contains the entityName of this entity, necessary for efficiency when creating EJBs */
+  public String entityName = null;
+  /** Contains the ModelEntity instance that represents the definition of this entity, not to be serialized */
+  public transient ModelEntity modelEntity = null;
+  /** Denotes whether or not this entity has been modified, or is known to be out of sync with the persistent record */
+  public boolean modified = false;
+
   /** Creates new GenericEntity */
-  public GenericEntity() { this.entityName = null; this.fields = null; }
+  public GenericEntity() { this.entityName = null; this.modelEntity = null; this.fields = new HashMap(); }
   /** Creates new GenericEntity */
-  public GenericEntity(String entityName) { this.entityName = entityName; this.fields = new HashMap(); }
+  public GenericEntity(ModelEntity modelEntity) { this.entityName = modelEntity.entityName; this.modelEntity = modelEntity; this.fields = new HashMap(); }
   /** Creates new GenericEntity from existing Map */
-  public GenericEntity(String entityName, Map fields) { this.entityName = entityName; this.fields = new HashMap(fields); }
+  public GenericEntity(ModelEntity modelEntity, Map fields) { this.entityName = modelEntity.entityName; this.modelEntity = modelEntity; this.fields = new HashMap(fields); }
   /** Copy Constructor: Creates new GenericEntity from existing GenericEntity */
-  public GenericEntity(GenericEntity value) { this.entityName = value.entityName; this.fields = new HashMap(value.fields); }
-  /** Creates new GenericPK from Map based on parameters */
-  public GenericEntity(String entityName, String name1, Object value1)
-  { 
-    this.entityName = entityName;
-    fields = new HashMap();
-    fields.put(name1, value1);
-  }
-  /** Creates new GenericPK from Map based on parameters */
-  public GenericEntity(String entityName, String name1, Object value1, String name2, Object value2)
-  { 
-    this.entityName = entityName;
-    fields = new HashMap();
-    fields.put(name1, value1);
-    fields.put(name2, value2);
-  }
-  /** Creates new GenericPK from Map based on parameters */
-  public GenericEntity(String entityName, String name1, Object value1, String name2, Object value2, String name3, Object value3)
-  { 
-    this.entityName = entityName;
-    fields = new HashMap();
-    fields.put(name1, value1);
-    fields.put(name2, value2);
-    fields.put(name3, value3);
-  }
-  /** Creates new GenericPK from Map based on parameters */
-  public GenericEntity(String entityName, String name1, Object value1, String name2, Object value2, String name3, Object value3, String name4, Object value4)
-  { 
-    this.entityName = entityName;
-    fields = new HashMap();
-    fields.put(name1, value1);
-    fields.put(name2, value2);
-    fields.put(name3, value3);
-    fields.put(name4, value4);
-  }
+  public GenericEntity(GenericEntity value) { this.entityName = value.modelEntity.entityName; this.modelEntity = value.modelEntity; this.fields = new HashMap(value.fields); }
   
   public boolean isModified() { return modified; }
   
   public String getEntityName() { return entityName; }
-  public ModelEntity getModelEntity() { return ModelReader.getModelEntity(entityName); }
+  public ModelEntity getModelEntity() { return modelEntity; }
 
   public Object get(String name) { return fields.get(name); }
   //would be nice to add valid field name checking for the given entityName
@@ -113,7 +82,7 @@ public class GenericEntity implements Serializable
       ModelField curField = (ModelField)iter.next();
       pkNames.add(curField.name);
     }
-    return new GenericPK(entityName, this.getFields(pkNames));
+    return new GenericPK(getModelEntity(), this.getFields(pkNames));
   }
   public void setNonPKFields(Map fields)
   {
@@ -179,7 +148,7 @@ public class GenericEntity implements Serializable
     if(this.getClass().equals(obj.getClass()))
     {
       GenericEntity that = (GenericEntity)obj;
-      if(this.entityName != null && !this.entityName.equals(that.entityName)) return false;
+      if(this.getEntityName() != null && !this.getEntityName().equals(that.getEntityName())) return false;
       return this.fields.equals(that.fields);
     }
     return false;
@@ -190,7 +159,7 @@ public class GenericEntity implements Serializable
    */
   public int hashCode()
   {
-    return entityName.hashCode()>>1 + fields.hashCode()>>1;
+    return getEntityName().hashCode()>>1 + fields.hashCode()>>1;
   }
 
   /** Creates a String for the entity, overrides the default toString
@@ -200,7 +169,7 @@ public class GenericEntity implements Serializable
   {
     StringBuffer theString = new StringBuffer();
     theString.append("[GenericEntity:");
-    theString.append(entityName);
+    theString.append(getEntityName());
     theString.append("]");
     
     Iterator entries = fields.entrySet().iterator();
