@@ -1340,18 +1340,28 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
     public static Map updateSubscription(DispatchContext dctx, Map context) throws GenericServiceException{
 		Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
 		String partyId = (String)context.get("partyId");
 		String webPubPt = (String)context.get("webPubPt");
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+		if (UtilValidate.isEmpty(webPubPt)) {
+            webPubPt = "OFBIZDOCROOT";         
+        }
 		String roleTypeId = (String)context.get("roleTypeId");
+		if (UtilValidate.isEmpty(roleTypeId)) {
+            roleTypeId = "BLOG_USER";         
+        }
 		Integer useTime = (Integer)context.get("useTime");
 		String useTimeUomId = (String)context.get("useTimeUomId");
+		boolean hasExistingContentRole = false;
 		GenericValue contentRole = null;
         try {
             List contentRoleList = delegator.findByAndCache("ContentRole", UtilMisc.toMap("partyId", partyId, "contentId", webPubPt, "roleTypeId", roleTypeId));
             List listFiltered = EntityUtil.filterByDate(contentRoleList);
             List listOrdered = EntityUtil.orderBy(listFiltered, UtilMisc.toList("fromDate DESC"));
             if (listOrdered.size() > 0) {
-                  contentRole = (GenericValue)listOrdered.get(0);
+                contentRole = (GenericValue)listOrdered.get(0);
+		        hasExistingContentRole = true;
             }
         } catch(GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessage());
@@ -1383,7 +1393,16 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         thruDate = new Timestamp(date);
         contentRole.set("thruDate", thruDate);
         try {
-            contentRole.store();
+            if(hasExistingContentRole) {
+                contentRole.store();
+            } else {
+                Map map = new HashMap();
+                map.put("partyId", partyId);
+                map.put("roleTypeId", roleTypeId);
+                map.put("userLogin", userLogin);
+    	        Map thisResult = dispatcher.runSync("createPartyRole", map);
+                contentRole.create();
+            }
         } catch(GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
@@ -1395,12 +1414,20 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
 		String productId = (String)context.get("productId");
+		Integer qty = (Integer)context.get("quantity");
+		if (qty == null)
+            qty = new Integer(1);
+        
+		Timestamp orderCreatedDate = (Timestamp)context.get("orderCreatedDate");
+        if (orderCreatedDate == null) {
+            orderCreatedDate = UtilDateTime.nowTimestamp();   
+        }
 		GenericValue productContent = null;
        	try {
         	List lst = delegator.findByAndCache("ProductContent", UtilMisc.toMap("productId", productId, "productContentTypeId", "ONLINE_ACCESS"));
-            List listFiltered = EntityUtil.filterByDate(lst, UtilDateTime.nowTimestamp(), "purchaseFromDate", "purchaseThruDate", true);
+            List listFiltered = EntityUtil.filterByDate(lst, orderCreatedDate, "purchaseFromDate", "purchaseThruDate", true);
             List listOrdered = EntityUtil.orderBy(lst, UtilMisc.toList("purchaseFromDate ASC", "purchaseThruDate ASC"));
-            List listThrusOnly = EntityUtil.filterOutByCondition(listOrdered, new EntityExpr("purchaseThruDate", EntityOperator.NOT_EQUAL, null));
+            List listThrusOnly = EntityUtil.filterOutByCondition(listOrdered, new EntityExpr("purchaseThruDate", EntityOperator.EQUALS, null));
             if (listThrusOnly.size() > 0) {
                 productContent = (GenericValue)listThrusOnly.get(0);   
             } else {
@@ -1415,7 +1442,9 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             Debug.logError(msg, module);
             return ServiceUtil.returnError(msg); 
         }
-        context.put("useTime", productContent.get("useTime"));
+        Long useTime = (Long)productContent.get("useTime");
+        Integer newUseTime = new Integer(useTime.intValue() * qty.intValue());
+        context.put("useTime", newUseTime);
         context.put("useTimeUomId", productContent.get("useTimeUomId"));
     	ModelService subscriptionModel = dispatcher.getDispatchContext().getModelService("updateSubscription");
     	Map ctx = subscriptionModel.makeValid(context, "IN");
@@ -1430,22 +1459,37 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         String orderId = (String)context.get("orderId");
         GenericValue orderHeader = null;
         try {
+            List orderRoleList = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "END_USER_CUSTOMER"));
+            if (orderRoleList.size() > 0 ) {
+                GenericValue orderRole = (GenericValue)orderRoleList.get(0);
+                String partyId = (String)orderRole.get("partyId");
+                context.put("partyId", partyId);
+            } else {
+                String msg = "No OrderRole found for orderId:" + orderId;
+                Debug.logError(msg, module);
+                return ServiceUtil.returnError(msg); 
+                
+            }
             orderHeader = delegator.findByPrimaryKeyCache("OrderHeader", UtilMisc.toMap("orderId", orderId));
             if (orderHeader == null) {
                 String msg = "No OrderHeader found for orderId:" + orderId;
                 Debug.logError(msg, module);
                 return ServiceUtil.returnError(msg); 
             }
+            Timestamp orderCreatedDate = (Timestamp)orderHeader.get("orderDate");
+            context.put("orderCreatedDate", orderCreatedDate);
             List lst = orderHeader.getRelated("OrderItem");
             Iterator iter = lst.iterator();
     	    ModelService subscriptionModel = dispatcher.getDispatchContext().getModelService("updateSubscriptionByProduct");
             while (iter.hasNext()) {
                 GenericValue orderItem = (GenericValue)iter.next();   
-                String productId = (String)context.get("productId");
+                Double qty = (Double)orderItem.get("quantity");
+                String productId = (String)orderItem.get("productId");
                 List productContentList = delegator.findByAnd("ProductContent", UtilMisc.toMap("productId", productId, "productContentTypeId", "ONLINE_ACCESS"));
                 List productContentListFiltered = EntityUtil.filterByDate(productContentList);
                 if (productContentListFiltered.size() > 0) {
                     context.put("productId", productId);
+                    context.put("quantity", new Integer(qty.intValue()));
     	            Map ctx = subscriptionModel.makeValid(context, "IN");
                     Map thisResult = dispatcher.runSync("updateSubscriptionByProduct", ctx);   
                 }
