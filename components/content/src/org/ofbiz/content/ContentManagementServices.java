@@ -290,19 +290,24 @@ public class ContentManagementServices {
                     Map fileContext = new HashMap();
                     fileContext.put("userLogin", userLogin);
                     if ( dataResourceTypeId.indexOf("_FILE") >=0) {
+                        boolean hasData = false;
                         if (textData != null) {
                             fileContext.put("textData", textData);
+                            hasData = true;
                         }
                         if (byteWrapper != null) {
                             fileContext.put("binData", byteWrapper);
+                            hasData = true;
                         }
-                        fileContext.put("rootDir", context.get("rootDir"));
-                        fileContext.put("dataResourcetype", dataResourceTypeId);
-                        fileContext.put("objectInfo", dataResource.get("objectInfo"));
-                        thisResult = dispatcher.runSync("createFile", fileContext);
-                        errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                        if (UtilValidate.isNotEmpty(errorMsg)) {
-                            return ServiceUtil.returnError(errorMsg);
+                        if (hasData) {
+                            fileContext.put("rootDir", context.get("rootDir"));
+                            fileContext.put("dataResourcetype", dataResourceTypeId);
+                            fileContext.put("objectInfo", dataResource.get("objectInfo"));
+                            thisResult = dispatcher.runSync("createFile", fileContext);
+                            errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                            if (UtilValidate.isNotEmpty(errorMsg)) {
+                                return ServiceUtil.returnError(errorMsg);
+                            }
                         }
                     } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
                         if (byteWrapper != null) {
@@ -340,23 +345,29 @@ public class ContentManagementServices {
                         //thisResult = DataServices.updateElectronicTextMethod(dctx, context);
                     Map fileContext = new HashMap();
                     fileContext.put("userLogin", userLogin);
+                    String forceElectronicText = (String)context.get("forceElectronicText");
                     if (dataResourceTypeId.indexOf("_FILE") >=0) {
+                        boolean hasData = false;
                         if (textData != null) {
                             fileContext.put("textData", textData);
+                            hasData = true;
                         }
                         if (byteWrapper != null) {
                             fileContext.put("binData", byteWrapper);
+                            hasData = true;
                         }
-                        fileContext.put("rootDir", context.get("rootDir"));
-                        fileContext.put("dataResourcetype", dataResourceTypeId);
-                        fileContext.put("objectInfo", dataResource.get("objectInfo"));
-                        thisResult = dispatcher.runSync("updateFile", fileContext);
-                        errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                        if (UtilValidate.isNotEmpty(errorMsg)) {
-                            return ServiceUtil.returnError(errorMsg);
+                        if (hasData || "true".equalsIgnoreCase(forceElectronicText)) {
+                            fileContext.put("rootDir", context.get("rootDir"));
+                            fileContext.put("dataResourcetype", dataResourceTypeId);
+                            fileContext.put("objectInfo", dataResource.get("objectInfo"));
+                            thisResult = dispatcher.runSync("updateFile", fileContext);
+                            errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                            if (UtilValidate.isNotEmpty(errorMsg)) {
+                                return ServiceUtil.returnError(errorMsg);
+                            }
                         }
                     } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
-                        if (byteWrapper != null) {
+                        if (byteWrapper != null || "true".equalsIgnoreCase(forceElectronicText)) {
                             fileContext.put("dataResourceId", dataResourceId);
                             fileContext.put("imageData", byteWrapper);
                             thisResult = dispatcher.runSync("updateImage", fileContext);
@@ -369,7 +380,6 @@ public class ContentManagementServices {
                         }
                     } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
                     } else {
-                        String forceElectronicText = (String)context.get("forceElectronicText");
                         if (UtilValidate.isNotEmpty(textData) || "true".equalsIgnoreCase(forceElectronicText)) {
                             fileContext.put("dataResourceId", dataResourceId);
                             fileContext.put("textData", textData);
