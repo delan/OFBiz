@@ -542,7 +542,7 @@
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="productPriceRuleId" type="id-ne"></field>
       <field name="productPriceActionSeqId" type="id-ne"></field>
-      <field name="modifiedAmount" type="floating-point"></field>
+      <field name="modifyAmount" type="floating-point"></field>
       <field name="description" type="description"></field>
       <prim-key field="orderItemPriceInfoId"/>
       <relation type="one" fk-name="ORDER_OIPI_OHDR" rel-entity-name="OrderHeader">
