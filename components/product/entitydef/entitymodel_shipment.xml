@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  */
 -->
 
@@ -223,7 +223,7 @@
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
       <field name="sequenceNumber" type="numeric"></field>
-      <field name="carrierServiceCode" type="very-short"></field>
+      <field name="carrierServiceCode" type="short-varchar"></field>
       <prim-key field="shipmentMethodTypeId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
@@ -938,6 +938,7 @@
       <field name="labelImage" type="blob"></field>
       <field name="labelIntlSignImage" type="blob"></field>
       <field name="labelHtml" type="very-long"></field>
+      <field name="packageTransportCost" type="currency-amount"></field>
       <field name="packageServiceCost" type="currency-amount"></field>
       <field name="packageOtherCost" type="currency-amount"></field>
       <field name="codAmount" type="currency-amount"></field>
@@ -976,6 +977,9 @@
       <field name="carrierPartyId" type="id"></field>
       <field name="shipmentMethodTypeId" type="id"></field>
       <field name="carrierServiceStatusId" type="id"></field>
+      <field name="carrierDeliveryZone" type="short-varchar"></field>
+      <field name="carrierRestrictionCodes" type="short-varchar"></field>
+      <field name="carrierRestrictionDesc" type="very-long"></field>
       <field name="billingWeight" type="floating-point"></field>
       <field name="billingWeightUomId" type="id"></field>
       <field name="actualTransportCost" type="currency-amount"></field>
