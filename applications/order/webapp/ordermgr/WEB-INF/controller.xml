@@ -252,10 +252,16 @@
     <!-- Order Entry Requests -->
     <request-map uri="orderentry">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="initializeOrderEntry"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="routeOrderEntry"/>
         <response name="init" type="view" value="checkinits"/>
         <response name="agreements" type="view" value="orderagreements"/>
         <response name="cart" type="view" value="showcart"/>
+        <response name="error" type="view" value="checkinits"/>
+    </request-map>
+    <request-map uri="initorderentry">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="initializeOrderEntry"/>
+        <response name="success" type="request" value="orderentry"/>
         <response name="error" type="view" value="checkinits"/>
     </request-map>
     <request-map uri="orderagreements">

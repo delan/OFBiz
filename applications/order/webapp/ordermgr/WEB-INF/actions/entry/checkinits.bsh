@@ -42,11 +42,9 @@ userLogin = session.getAttribute("userLogin");
 
 context.put("dispatcher",dispatcher);
 
-// Get the Cart and Prepare Size
+// Get the Cart
 shoppingCart = ShoppingCartEvents.getCartObject(request);
 context.put("shoppingCart", shoppingCart);
-
-
 
 salesChannels = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "ORDER_SALES_CHANNEL"), UtilMisc.toList("sequenceId"));
 context.put("salesChannels", salesChannels);
@@ -56,7 +54,4 @@ context.put("productStores", productStores);
 
 suppliers = delegator.findByAnd("PartyRole", UtilMisc.toMap("roleTypeId", "SUPPLIER"));
 context.put("suppliers", suppliers);
-
-
-
 
