@@ -94,7 +94,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
         <inline-jdbc
                 jdbc-driver="org.hsqldb.jdbcDriver"
-                jdbc-uri="jdbc:hsqldb:../../data/ofbiz"
+                jdbc-uri="jdbc:hsqldb:data/ofbiz"
                 jdbc-username="sa"
                 jdbc-password=""
                 isolation-level="ReadUncommitted"
