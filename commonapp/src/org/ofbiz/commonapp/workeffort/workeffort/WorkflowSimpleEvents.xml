@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!DOCTYPE simple-events PUBLIC "-//OFBiz//DTD Simple Events//EN" "http://www.ofbiz.org/dtds/simple-events.dtd">
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
  * <p><b>Title:</b> WorkflowSimpleEvents
@@ -28,12 +28,12 @@
  * @version 1.0
  * Created on January 15, 2001
  -->
-<simple-events>
-    <simple-event event-name="acceptAssignment" short-description="Create Work Effort">
-        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkflowMapProcessors.xml" 
+<simple-methods>
+    <simple-method method-name="acceptAssignment" short-description="Create Work Effort">
+        <call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkflowMapProcessors.xml" 
                 processor-name="assignmentMap" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
-        <service service-name="acceptAssignment" in-map-name="context">
-            <default-message>Work Effort successfully created.</default-message></service>
-    </simple-event>
-</simple-events>
+        <call-service service-name="acceptAssignment" in-map-name="context">
+            <default-message>Work Effort successfully created.</default-message></call-service>
+    </simple-method>
+</simple-methods>

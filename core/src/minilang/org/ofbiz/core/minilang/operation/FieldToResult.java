@@ -31,23 +31,48 @@ import javax.servlet.http.*;
 
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
-
 import org.ofbiz.core.minilang.*;
 
 /**
- * A single operation, does the specified operation on the given field
+ * Copies a map field to a Service result entry
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    December 29, 2001
+ *@created    February 15, 2002
  *@version    1.0
  */
-public abstract class EventOperation {
-    SimpleEvent simpleEvent;
+public class FieldToResult extends MethodOperation {
+    String mapName;
+    String fieldName;
+    String resultName;
 
-    public EventOperation(Element element, SimpleEvent simpleEvent) {
-        this.simpleEvent = simpleEvent;
+    public FieldToResult(Element element, SimpleMethod simpleMethod) {
+        super(element, simpleMethod);
+        mapName = element.getAttribute("map-name");
+        fieldName = element.getAttribute("field-name");
+        resultName = element.getAttribute("result-name");
+
+        if (resultName == null || resultName.length() == 0) {
+            resultName = fieldName;
+        }
     }
 
-    /** Execute the operation; if false is returned then no further operations will be executed */
-    public abstract boolean exec(Map env, HttpServletRequest request, ClassLoader loader);
+    public boolean exec(MethodContext methodContext) {
+        //only run this if it is in an SERVICE context
+        if (methodContext.getMethodType() == MethodContext.SERVICE) {
+            Map fromMap = (Map) methodContext.getEnv(mapName);
+            if (fromMap == null) {
+                Debug.logWarning("Map not found with name " + mapName);
+                return true;
+            }
+
+            Object fieldVal = fromMap.get(fieldName);
+            if (fieldVal == null) {
+                Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName);
+                return true;
+            }
+
+            methodContext.putResult(resultName, fieldVal);
+        }
+        return true;
+    }
 }

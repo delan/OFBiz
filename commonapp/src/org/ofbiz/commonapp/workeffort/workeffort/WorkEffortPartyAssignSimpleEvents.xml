@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!DOCTYPE simple-events PUBLIC "-//OFBiz//DTD Simple Events//EN" "http://www.ofbiz.org/dtds/simple-events.dtd">
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
  * <p><b>Title:</b> WorkEffortPartyAssignment SimpleEvents
@@ -28,27 +28,27 @@
  * @version 1.0
  * Created on January 1, 2001
  -->
-<simple-events>
-    <simple-event event-name="create" short-description="Create Work Effort Party Assignment">
-        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortPartyAssignMapProcs.xml" 
+<simple-methods>
+    <simple-method method-name="create" short-description="Create Work Effort Party Assignment">
+        <call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortPartyAssignMapProcs.xml" 
                 processor-name="create" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
-        <service service-name="createWorkEffortPartyAssignment" in-map-name="context">
+        <call-service service-name="createWorkEffortPartyAssignment" in-map-name="context">
             <default-message>Work Effort Party Assignment successfully created.</default-message>
-            <result-to-request result-name="workEffortId"/></service>
-    </simple-event>
-    <simple-event event-name="update" short-description="Update Work Effort Party Assignment">
-        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortPartyAssignMapProcs.xml" 
+            <result-to-request result-name="workEffortId"/></call-service>
+    </simple-method>
+    <simple-method method-name="update" short-description="Update Work Effort Party Assignment">
+        <call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortPartyAssignMapProcs.xml" 
                 processor-name="update" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
-        <service service-name="updateWorkEffortPartyAssignment" in-map-name="context">
-            <default-message>Work Effort Party Assignment successfully updated.</default-message></service>
-    </simple-event>
-    <simple-event event-name="delete" short-description="Delete Work Effort Party Assignment">
-        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortPartyAssignMapProcs.xml" 
+        <call-service service-name="updateWorkEffortPartyAssignment" in-map-name="context">
+            <default-message>Work Effort Party Assignment successfully updated.</default-message></call-service>
+    </simple-method>
+    <simple-method method-name="delete" short-description="Delete Work Effort Party Assignment">
+        <call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortPartyAssignMapProcs.xml" 
                 processor-name="delete" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
-        <service service-name="deleteWorkEffortPartyAssignment" in-map-name="context">
-            <default-message>Work Effort Party Assignment successfully deleted.</default-message></service>
-    </simple-event>
-</simple-events>
+        <call-service service-name="deleteWorkEffortPartyAssignment" in-map-name="context">
+            <default-message>Work Effort Party Assignment successfully deleted.</default-message></call-service>
+    </simple-method>
+</simple-methods>

@@ -34,55 +34,77 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 
 /**
- * An event operation that calls a simple map processor minilang file
+ * An event operation that calls a simple map processor inlined or from a separate file
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    December 29, 2001
  *@version    1.0
  */
-public class CallSimpleMapProcessor extends EventOperation {
+public class CallSimpleMapProcessor extends MethodOperation {
     String xmlResource;
     String processorName;
     String inMapName;
     String outMapName;
     String errorListName;
+    
+    MapProcessor inlineMapProcessor = null;
 
-    public CallSimpleMapProcessor(Element element, SimpleEvent simpleEvent) {
-        super(element, simpleEvent);
+    public CallSimpleMapProcessor(Element element, SimpleMethod simpleMethod) {
+        super(element, simpleMethod);
         xmlResource = element.getAttribute("xml-resource");
         processorName = element.getAttribute("processor-name");
         inMapName = element.getAttribute("in-map-name");
         outMapName = element.getAttribute("out-map-name");
+
         errorListName = element.getAttribute("error-list-name");
         if (errorListName == null || errorListName.length() == 0)
             errorListName = "_error_list_";
+        
+        Element simpleMapProcessorElement = UtilXml.firstChildElement(element, "simple-map-processor");
+        if (simpleMapProcessorElement != null) {
+            inlineMapProcessor = new MapProcessor(simpleMapProcessorElement);
+        }
     }
 
-    public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
-        List messages = (List) env.get(errorListName);
+    public boolean exec(MethodContext methodContext) {
+        List messages = (List) methodContext.getEnv(errorListName);
         if (messages == null) {
             messages = new LinkedList();
-            env.put(errorListName, messages);
+            methodContext.putEnv(errorListName, messages);
         }
 
-        Map inMap = (Map) env.get(inMapName);
+        Map inMap = (Map) methodContext.getEnv(inMapName);
         if (inMap == null) {
             inMap = new HashMap();
-            env.put(inMapName, inMap);
+            methodContext.putEnv(inMapName, inMap);
         }
 
-        Map outMap = (Map) env.get(outMapName);
+        Map outMap = (Map) methodContext.getEnv(outMapName);
         if (outMap == null) {
             outMap = new HashMap();
-            env.put(outMapName, outMap);
+            methodContext.putEnv(outMapName, outMap);
         }
 
-        try {
-            org.ofbiz.core.minilang.SimpleMapProcessor.runSimpleMapProcessor(xmlResource, processorName, inMap, outMap, messages, request.getLocale());
-        } catch (MiniLangException e) {
-            messages.add("Error running SimpleMapProcessor in XML file \"" + xmlResource + "\": " + e.toString());
+        //run external map processor first
+        if (xmlResource != null && xmlResource.length() > 0 &&
+                processorName != null && processorName.length() > 0) {
+            try {
+                org.ofbiz.core.minilang.SimpleMapProcessor.runSimpleMapProcessor(
+                        xmlResource, processorName, inMap, outMap, messages, 
+                        (methodContext.getRequest() != null ? methodContext.getRequest().getLocale() : null),
+                        methodContext.getLoader());
+            } catch (MiniLangException e) {
+                messages.add("Error running SimpleMapProcessor in XML file \"" + xmlResource + "\": " + e.toString());
+            }
         }
 
+        //run inlined map processor last so it can override the external map processor
+        if (inlineMapProcessor != null) {
+            inlineMapProcessor.exec(inMap, outMap, messages, 
+                    (methodContext.getRequest() != null ? methodContext.getRequest().getLocale() : null),
+                    methodContext.getLoader());
+        }
+        
         return true;
     }
 }

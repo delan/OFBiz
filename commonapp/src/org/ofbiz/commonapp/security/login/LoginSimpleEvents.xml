@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!DOCTYPE simple-events PUBLIC "-//OFBiz//DTD Simple Events//EN" "http://www.ofbiz.org/dtds/simple-events.dtd">
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
  * <p><b>Title:</b> LoginSimpleEvents
@@ -28,13 +28,13 @@
  * @version 1.0
  * Created on January 18, 2001
  -->
-<simple-events>
+<simple-methods>
     <!-- UserLogin events -->
-    <simple-event event-name="updatePassword" short-description="Update Password">
-        <simple-map-processor xml-resource="org/ofbiz/commonapp/security/login/LoginMapProcs.xml" 
+    <simple-method method-name="updatePassword" short-description="Update Password">
+        <call-map-processor xml-resource="org/ofbiz/commonapp/security/login/LoginMapProcs.xml" 
                 processor-name="updatePassword" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
-        <service service-name="updatePassword" in-map-name="context">
-            <default-message>Password successfully updated.</default-message></service>
-    </simple-event>
-</simple-events>
+        <call-service service-name="updatePassword" in-map-name="context">
+            <default-message>Password successfully updated.</default-message></call-service>
+    </simple-method>
+</simple-methods>

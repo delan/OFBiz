@@ -41,7 +41,7 @@ import org.ofbiz.core.minilang.*;
  *@created    December 29, 2001
  *@version    1.0
  */
-public class CheckErrors extends EventOperation {
+public class CheckErrors extends MethodOperation {
     String errorListName;
     String errorCode;
 
@@ -50,8 +50,8 @@ public class CheckErrors extends EventOperation {
     FlexibleMessage messagePrefix;
     FlexibleMessage messageSuffix;
 
-    public CheckErrors(Element element, SimpleEvent simpleEvent) {
-        super(element, simpleEvent);
+    public CheckErrors(Element element, SimpleMethod simpleMethod) {
+        super(element, simpleMethod);
         errorCode = element.getAttribute("error-code");
         if (errorCode == null || errorCode.length() == 0)
             errorCode = "error";
@@ -65,15 +65,15 @@ public class CheckErrors extends EventOperation {
         messageSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-suffix"), "check.message.suffix");
     }
 
-    public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
-        List messages = (List) env.get(errorListName);
+    public boolean exec(MethodContext methodContext) {
+        List messages = (List) methodContext.getEnv(errorListName);
         if (messages != null && messages.size() > 0) {
-            String errMsg = errorPrefix.getMessage(loader) +
-                    ServiceUtil.makeMessageList(messages, messagePrefix.getMessage(loader), messageSuffix.getMessage(loader)) +
-                    errorSuffix.getMessage(loader);
-            env.put(simpleEvent.errorMessageName, errMsg);
+            String errMsg = errorPrefix.getMessage(methodContext.getLoader()) +
+                    ServiceUtil.makeMessageList(messages, messagePrefix.getMessage(methodContext.getLoader()), messageSuffix.getMessage(methodContext.getLoader())) +
+                    errorSuffix.getMessage(methodContext.getLoader());
+            methodContext.putEnv(simpleMethod.eventErrorMessageName, errMsg);
 
-            env.put(simpleEvent.responseCodeName, errorCode);
+            methodContext.putEnv(simpleMethod.eventResponseCodeName, errorCode);
             return false;
         }
 

@@ -36,11 +36,13 @@ import java.util.Locale;
  *@version    1.0
  */
 public class ObjectType {
+    public static final String module = ObjectType.class.getName();
 
     /** Loads a class with the current thread's context classloader
      * @param className The name of the class to load
      */
     public static Class loadClass(String className) throws ClassNotFoundException {
+        Debug.logVerbose("Loading Class: " + className, module);
         ClassLoader loader = null;
         Class c = null;
         try {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Map Processors//EN" "http://www.ofbiz.org/dtds/simple-map-processors.dtd">
+<!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
  * <p><b>Title:</b> WorkEffortPartyAssignment Processors

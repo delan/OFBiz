@@ -31,48 +31,23 @@ import javax.servlet.http.*;
 
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
+
 import org.ofbiz.core.minilang.*;
 
 /**
- * Copies a map field to a Servlet session attribute
+ * A single operation, does the specified operation on the given field
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    December 29, 2001
  *@version    1.0
  */
-public class FieldToSession extends MethodOperation {
-    String mapName;
-    String fieldName;
-    String sessionName;
+public abstract class MethodOperation {
+    SimpleMethod simpleMethod;
 
-    public FieldToSession(Element element, SimpleMethod simpleMethod) {
-        super(element, simpleMethod);
-        mapName = element.getAttribute("map-name");
-        fieldName = element.getAttribute("field-name");
-        sessionName = element.getAttribute("session-name");
-
-        if (sessionName == null || sessionName.length() == 0) {
-            sessionName = fieldName;
-        }
+    public MethodOperation(Element element, SimpleMethod simpleMethod) {
+        this.simpleMethod = simpleMethod;
     }
 
-    public boolean exec(MethodContext methodContext) {
-        //only run this if it is in an EVENT context
-        if (methodContext.getMethodType() == MethodContext.EVENT) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
-            if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapName);
-                return true;
-            }
-
-            Object fieldVal = fromMap.get(fieldName);
-            if (fieldVal == null) {
-                Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName);
-                return true;
-            }
-
-            methodContext.getRequest().getSession().setAttribute(sessionName, fieldVal);
-        }
-        return true;
-    }
+    /** Execute the operation; if false is returned then no further operations will be executed */
+    public abstract boolean exec(MethodContext methodContext);
 }

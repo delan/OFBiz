@@ -23,13 +23,13 @@
  *
  */
 
-package org.ofbiz.core.minilang;
+package org.ofbiz.core.event;
 
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import org.ofbiz.core.event.*;
+import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -66,7 +66,7 @@ public class SimpleEventHandler implements EventHandler {
             throw new EventHandlerException("Event Name (eventMethod) cannot be null");
 
         try {
-            return SimpleEvent.runSimpleEvent(xmlResource, eventName, request);
+            return SimpleMethod.runSimpleEvent(xmlResource, eventName, request);
         } catch (MiniLangException e) {
             Debug.logError(e);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not complete event: " + e.getMessage());

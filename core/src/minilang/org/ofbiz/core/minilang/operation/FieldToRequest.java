@@ -40,13 +40,13 @@ import org.ofbiz.core.minilang.*;
  *@created    December 29, 2001
  *@version    1.0
  */
-public class FieldToRequest extends EventOperation {
+public class FieldToRequest extends MethodOperation {
     String mapName;
     String fieldName;
     String requestName;
 
-    public FieldToRequest(Element element, SimpleEvent simpleEvent) {
-        super(element, simpleEvent);
+    public FieldToRequest(Element element, SimpleMethod simpleMethod) {
+        super(element, simpleMethod);
         mapName = element.getAttribute("map-name");
         fieldName = element.getAttribute("field-name");
         requestName = element.getAttribute("request-name");
@@ -56,20 +56,23 @@ public class FieldToRequest extends EventOperation {
         }
     }
 
-    public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
-        Map fromMap = (Map) env.get(mapName);
-        if (fromMap == null) {
-            Debug.logWarning("[SimpleEvent.FieldToRequest.exec] Map not found with name " + mapName);
-            return true;
-        }
+    public boolean exec(MethodContext methodContext) {
+        //only run this if it is in an EVENT context
+        if (methodContext.getMethodType() == MethodContext.EVENT) {
+            Map fromMap = (Map) methodContext.getEnv(mapName);
+            if (fromMap == null) {
+                Debug.logWarning("Map not found with name " + mapName);
+                return true;
+            }
 
-        Object fieldVal = fromMap.get(fieldName);
-        if (fieldVal == null) {
-            Debug.logWarning("[SimpleEvent.FieldToRequest.exec] Field value not found with name " + fieldName + " in Map with name " + mapName);
-            return true;
-        }
+            Object fieldVal = fromMap.get(fieldName);
+            if (fieldVal == null) {
+                Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName);
+                return true;
+            }
 
-        request.setAttribute(requestName, fieldVal);
+            methodContext.getRequest().setAttribute(requestName, fieldVal);
+        }
         return true;
     }
 }
