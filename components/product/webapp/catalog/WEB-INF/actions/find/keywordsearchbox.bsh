@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -42,7 +42,10 @@ if (state != null) {
     }
 }
 
-productCategories = delegator.findByCondition("ProductCategory", new EntityExpr("showInSelect", EntityOperator.NOT_EQUAL, "N"), null, UtilMisc.toList("description"));
+expr = new EntityExpr(new EntityExpr("showInSelect", EntityOperator.EQUALS, null),
+        EntityOperator.OR,
+        new EntityExpr("showInSelect", EntityOperator.NOT_EQUAL, "N"));
+productCategories = delegator.findByCondition("ProductCategory", expr, null, UtilMisc.toList("description"));
 
 context.put("isOpen", isOpen);
 context.put("productCategories", productCategories);
