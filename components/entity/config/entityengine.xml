@@ -170,6 +170,20 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"/>
     </datasource>
+    <datasource name="localoracledd"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
+            schema-name="OFBIZ"
+            field-type-name="oracle"
+            check-on-start="true"
+            add-missing-on-start="true"
+            join-style="ansi">
+        <read-data reader-name="main"/>
+        <inline-jdbc
+                jdbc-driver="com.ddtek.jdbc.oracle.OracleDriver"
+                jdbc-uri="jdbc:datadirect:oracle://127.0.0.1:1521;SID=ofbiz"
+                jdbc-username="ofbiz"
+                jdbc-password="ofbiz"/>
+    </datasource>
 
     <datasource name="localsybase"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
