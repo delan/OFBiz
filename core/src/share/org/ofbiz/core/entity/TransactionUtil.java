@@ -45,9 +45,11 @@ public class TransactionUtil implements javax.transaction.Status {
         if (ut != null) {
             try {
                 if (ut.getStatus() == TransactionUtil.STATUS_ACTIVE) {
+                    Debug.logInfo("[TransactionUtil.begin] active transaction in place, so no transaction begun");
                     return false;
                 }
                 ut.begin();
+                Debug.logInfo("[TransactionUtil.begin] transaction begun");
                 return true;
             } catch (NotSupportedException e) {
                 throw new GenericTransactionException("Not Supported error, could not begin transaction (probably a nesting problem)", e);
@@ -55,7 +57,7 @@ public class TransactionUtil implements javax.transaction.Status {
                 throw new GenericTransactionException("System error, could not begin transaction", e);
             }
         } else {
-            //no transaction, so none begun
+            Debug.logInfo("[TransactionUtil.begin] no user transaction, so no transaction begun");
             return false;
         }
     }
@@ -89,8 +91,12 @@ public class TransactionUtil implements javax.transaction.Status {
         if (ut != null) {
             try {
                 int status = ut.getStatus();
-                if (status != STATUS_NO_TRANSACTION)
+                if (status != STATUS_NO_TRANSACTION) {
                     ut.commit();
+                    Debug.logInfo("[TransactionUtil.commit] transaction committed");
+                } else {
+                    Debug.logInfo("[TransactionUtil.commit] Not committing transaction, status is STATUS_NO_TRANSACTION");
+                }
             } catch (RollbackException e) {
                 throw new GenericTransactionException("Roll back error, could not commit transaction, was rolled back instead", e);
             } catch (HeuristicMixedException e) {
@@ -100,6 +106,8 @@ public class TransactionUtil implements javax.transaction.Status {
             } catch (SystemException e) {
                 throw new GenericTransactionException("System error, could not commit transaction", e);
             }
+        } else {
+            Debug.logInfo("[TransactionUtil.commit] UserTransaction is null, not commiting");
         }
     }
     
@@ -121,11 +129,17 @@ public class TransactionUtil implements javax.transaction.Status {
         if (ut != null) {
             try {
                 int status = ut.getStatus();
-                if (status != STATUS_NO_TRANSACTION)
+                if (status != STATUS_NO_TRANSACTION) {
                     ut.rollback();
+                    Debug.logInfo("[TransactionUtil.rollback] transaction rolled back");
+                } else {
+                    Debug.logInfo("[TransactionUtil.rollback] transaction not rolled back, status is STATUS_NO_TRANSACTION");
+                }
             } catch (SystemException e) {
                 throw new GenericTransactionException("System error, could not roll back transaction", e);
             }
+        } else {
+            Debug.logInfo("[TransactionUtil.rollback] No UserTransaction, transaction not rolled back");
         }
     }
     
@@ -135,9 +149,12 @@ public class TransactionUtil implements javax.transaction.Status {
         if (ut != null) {
             try {
                 ut.setRollbackOnly();
+                Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction roll back only set");
             } catch (SystemException e) {
                 throw new GenericTransactionException("System error, could not set roll back only on transaction", e);
             }
+        } else {
+            Debug.logInfo("[TransactionUtil.setRollbackOnly] No UserTransaction, transaction roll back only not set");
         }
     }
     

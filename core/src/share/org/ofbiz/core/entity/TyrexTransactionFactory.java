@@ -39,6 +39,7 @@ public class TyrexTransactionFactory {
     protected static TransactionDomain td = null;
     
     static {
+      /* For Tyrex version 0.9.8.5 */
         try {
             String resourceName = "tyrexdomain.xml";
             URL url = UtilURL.fromResource(resourceName);
@@ -55,6 +56,11 @@ public class TyrexTransactionFactory {
             Debug.logError("Could not create Tyrex Transaction Domain (recovery):");
             Debug.logError(e);
         }
+
+      /* For Tyrex version 0.9.7.0 * /
+        tyrex.resource.ResourceLimits rls = new tyrex.resource.ResourceLimits();
+        td = new TransactionDomain("ofbiztx", rls);
+       */
     }
 
     public static TransactionManager getTransactionManager() {

@@ -110,35 +110,53 @@ public class SequenceUtil {
             
             String sql = null;
             try {
-                connection.setAutoCommit(true);
-                stmt = connection.createStatement();
+                //NOTE: the fancy ethernet type stuff is for the case where transactions not available
+                boolean manualTX = true;
+                try { connection.setAutoCommit(false); }
+                catch(SQLException sqle) { manualTX = false; }
                 
+                try {
+                    if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) {
+                        manualTX = false;
+                    }
+                } catch (GenericTransactionException e) {
+                    //nevermind, don't worry about it, but print the exc anyway
+                    Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] Exception was thrown trying to check transaction status: " + e.toString());
+                }
+                
+                stmt = connection.createStatement();
                 int numTries = 0;
                 while(val1+bankSize != val2) {
-                    Debug.logInfo("[SequenceUtil.SequenceBank.fillBank]: Trying to get a bank of sequenced ids for " + this.seqName + "; start of loop val1=" + val1 + ", val2=" + val2 + ", bankSize=" + bankSize);
+                    Debug.logInfo("[SequenceUtil.SequenceBank.fillBank] Trying to get a bank of sequenced ids for " + this.seqName + "; start of loop val1=" + val1 + ", val2=" + val2 + ", bankSize=" + bankSize);
                     sql = "SELECT SEQ_ID FROM SEQUENCE_VALUE_ITEM WHERE SEQ_NAME='" + this.seqName + "'";
                     rs = stmt.executeQuery(sql);
-                    if(rs.next()) { val1 = rs.getInt("SEQ_ID"); }
-                    else {
-                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: first select failed: trying to add row, result set was empty for sequence: " + seqName);
+                    if (rs.next()) { 
+                        val1 = rs.getInt("SEQ_ID");
+                    } else {
+                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] first select failed: trying to add row, result set was empty for sequence: " + seqName);
                         try { if (rs != null) rs.close(); } catch (SQLException sqle) { }
                         sql = "INSERT INTO SEQUENCE_VALUE_ITEM (SEQ_NAME, SEQ_ID) VALUES ('" + this.seqName + "', " + startSeqId + ")";
                         if(stmt.executeUpdate(sql) <= 0) return;
                         continue;
                     }
-                    try { if (rs != null) rs.close(); } catch (SQLException sqle) { }
+                    try { if (rs != null) rs.close(); }
+                    catch (SQLException sqle) { }
                     
                     sql = "UPDATE SEQUENCE_VALUE_ITEM SET SEQ_ID=SEQ_ID+" + this.bankSize + " WHERE SEQ_NAME='" + this.seqName + "'";
                     if(stmt.executeUpdate(sql) <= 0) {
-                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: update failed, no rows changes for seqName: " + seqName);
+                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] update failed, no rows changes for seqName: " + seqName);
                         return;
+                    }
+                    
+                    if (manualTX) {
+                        connection.commit();
                     }
                     
                     sql = "SELECT SEQ_ID FROM SEQUENCE_VALUE_ITEM WHERE SEQ_NAME='" + this.seqName + "'";
                     rs = stmt.executeQuery(sql);
                     if(rs.next()) { val2 = rs.getInt("SEQ_ID"); }
                     else {
-                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: second select failed: aborting, result set was empty for sequence: " + seqName);
+                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] second select failed: aborting, result set was empty for sequence: " + seqName);
                         try { if (rs != null) rs.close(); } catch (SQLException sqle) { }
                         return;
                     }
@@ -146,7 +164,7 @@ public class SequenceUtil {
                     
                     if(val1+bankSize != val2) {
                         if(numTries >= maxTries) {
-                            Debug.logError("[SequenceUtil.SequenceBank.fillBank]: maxTries (" + maxTries + ") reached, giving up.");
+                            Debug.logError("[SequenceUtil.SequenceBank.fillBank] maxTries (" + maxTries + ") reached, giving up.");
                             return;
                         }
                         //collision happened, wait a bounded random amount of time then continue
@@ -160,14 +178,12 @@ public class SequenceUtil {
                 
                 curSeqId = val1;
                 maxSeqId = val2;
-                Debug.logInfo("[SequenceUtil.SequenceBank.fillBank]: Successfully got a bank of sequenced ids for " + this.seqName + "; curSeqId=" + curSeqId + ", maxSeqId=" + maxSeqId + ", bankSize=" + bankSize);
-            }
-            catch (SQLException sqle) {
-                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+                Debug.logInfo("[SequenceUtil.SequenceBank.fillBank] Successfully got a bank of sequenced ids for " + this.seqName + "; curSeqId=" + curSeqId + ", maxSeqId=" + maxSeqId + ", bankSize=" + bankSize);
+            } catch (SQLException sqle) {
+                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] SQL Exception while executing the following:\n" + sql + "\nError was:");
                 Debug.logWarning(sqle.getMessage());
                 return;
-            }
-            finally {
+            } finally {
                 try { if (stmt != null) stmt.close(); } catch (SQLException sqle) { }
                 try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
             }
