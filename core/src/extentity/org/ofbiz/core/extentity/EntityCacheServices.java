@@ -47,7 +47,7 @@ public class EntityCacheServices implements DistributedCacheClear {
 
     public void setDelegator(GenericDelegator delegator, String userLoginId) {
         this.delegator = delegator;
-        this.dispatcher = new LocalDispatcher("entity-cache-dispatcher", delegator, null);
+        this.dispatcher = new GenericDispatcher("entity-cache-dispatcher", delegator);
         this.userLoginId = userLoginId;
     }
     

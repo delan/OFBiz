@@ -115,7 +115,7 @@ public class CoreEvents {
         ServiceDispatcher sd = ServiceDispatcher.getInstance(dispatcherName, delegator);
 
         if (sd == null)
-            dispatcher = new LocalDispatcher(dctx, delegator);
+            dispatcher = new WebAppDispatcher(dctx, delegator);
         else
             dispatcher = sd.getLocalContext(dispatcherName).getDispatcher();
 

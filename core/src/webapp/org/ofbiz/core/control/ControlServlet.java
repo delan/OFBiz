@@ -309,7 +309,7 @@ public class ControlServlet extends HttpServlet {
 
             if (dispatcherName == null)
                 Debug.logError("No localDispatcherName specified in the web.xml file", module);
-            dispatcher = new LocalDispatcher(dispatcherName, delegator, readers);
+            dispatcher = new WebAppDispatcher(dispatcherName, delegator, readers);
             getServletContext().setAttribute("dispatcher", dispatcher);
             if (dispatcher == null)
                 Debug.logError("[ControlServlet.init] ERROR: dispatcher could not be initialized.", module);
