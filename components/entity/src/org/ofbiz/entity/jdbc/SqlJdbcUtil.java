@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.11 2004/01/20 16:06:06 jonesde Exp $
+ * $Id: SqlJdbcUtil.java,v 1.12 2004/01/20 16:17:12 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,12 +23,12 @@
  */
 package org.ofbiz.entity.jdbc;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Reader;
+import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -66,7 +66,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -547,7 +547,11 @@ public class SqlJdbcUtil {
                     if (value == null || value.length() == 0) {
                         Debug.logInfo("For field " + curField.getName() + " of entity " + entity.getEntityName() + " getString was null or empty, trying getCharacterStream", module);
                         // if the String is empty, try to get a text input stream, this is required for some databases for larger fields, like CLOBs
-                        Reader valueReader = rs.getCharacterStream(ind);
+                        Clob valueClob = rs.getClob(ind);
+                        Reader valueReader = null;
+                        if (valueClob != null) {
+                            valueReader = valueClob.getCharacterStream();
+                        }
                         if (valueReader != null) {
                             char[] inCharBuffer = new char[CHAR_BUFFER_SIZE];
                             StringBuffer strBuf = new StringBuffer();
