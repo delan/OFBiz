@@ -377,13 +377,13 @@ public class WorkflowServices {
         try {
             GenericValue we = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
 
-            if (we != null && we.getString("parentWorkEffortId") == null) {
+            if (we != null && we.getString("workEffortParentId") == null) {
                 Collection c = delegator.findByAnd("WorkEffortPartyAssignment",
                         UtilMisc.toMap("workEffortId", workEffortId, "roleTypeId", "WF_OWNER"));
 
                 return (GenericValue) c.iterator().next();
             } else {
-                return getOwner(delegator, we.getString("parentWorkEffortId"));
+                return getOwner(delegator, we.getString("workEffortParentId"));
             }
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
