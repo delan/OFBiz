@@ -97,6 +97,9 @@ start "PointBase" cmd /c ""%JAVA_HOME%\bin\java" com.pointbase.net.netServer /po
 set CLASSPATH=%WEBLOGIC_CLASSPATH%;%CLASSPATH%
 
 @rem -=-=-=-=-=-=-=-=- Start OFBiz Classpath Here -=-=-=-=-=-=-=-=-
+<#list classpathDirs as dir>
+set CLASSPATH=%CLASSPATH%;${dir}
+</#list>
 <#list classpathJars as jar>
 set CLASSPATH=%CLASSPATH%;${jar}
 </#list>

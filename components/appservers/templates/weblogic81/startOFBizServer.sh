@@ -117,6 +117,9 @@ resetFd
 CLASSPATH="$WEBLOGIC_CLASSPATH$CLASSPATHSEP$CLASSPATH"
 
 # -=-=-=-=-=-=-=-=- Start OFBiz Classpath Here -=-=-=-=-=-=-=-=-
+<#list classpathDirs as dir>
+CLASSPATH="$CLASSPATH$CLASSPATHSEP${dir}"
+</#list>
 <#list classpathJars as jar>
 CLASSPATH="$CLASSPATH$CLASSPATHSEP${jar}"
 </#list>
