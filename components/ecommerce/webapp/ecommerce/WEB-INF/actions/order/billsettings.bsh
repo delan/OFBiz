@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 */
 
@@ -83,31 +83,36 @@ if (request.getParameter("useShipAddr") != null && cart.getShippingContactMechId
 }
 
 if (cart != null) {
-    if (cart.getPaymentMethodIds().size() > 0) {
+    if (cart.getPaymentMethodIds() != null && cart.getPaymentMethodIds().size() > 0) {
         checkOutPaymentId = cart.getPaymentMethodIds().get(0);
-        context.put("checkOutPaymentId", checkOutPaymentIds);
+        context.put("checkOutPaymentId", checkOutPaymentId);
         paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", checkOutPaymentId));
+        account = null;
+
         if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD")) {
-            paymentMethodType = "CC";
             account = paymentMethod.getRelatedOne("CreditCard");
             context.put("creditCard", account);
-            context.put("paymentMethodType", paymentMethodType);
+            context.put("paymentMethodType", "CC");
         } else if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("EFT_ACCOUNT")) {
-            paymentMethodType = "EFT";
             account = paymentMethod.getRelatedOne("EftAccount");
             context.put("eftAccount", account);
-            context.put("paymentMethodType", paymentMethodType);
+            context.put("paymentMethodType", "EFT");
         } else {
-            paymentMethodType = "offline";
-            context.put("paymentMethodType", paymentMethodType);
+            context.put("paymentMethodType", "offline");
         }
-        if (account != null) {
+        if (account != null && request.getParameter("useShipAddr") == null) {
             address = account.getRelatedOne("PostalAddress");
             context.put("postalAddress", address);
+            context.put("postalFields", address);
         }
-    } else if (cart.getPaymentMethodTypeIds().size() > 0) {
+    } else if (cart.getPaymentMethodTypeIds() != null && cart.getPaymentMethodTypeIds().size() > 0) {
         checkOutPaymentId = cart.getPaymentMethodTypeIds().get(0);
         context.put("checkOutPaymentId", checkOutPaymentId);
     }
+}
+
+requestPaymentMethodType = request.getParameter("paymentMethodType");
+if (requestPaymentMethodType != null && requestPaymentMethodType.length() > 0) {
+    context.put("paymentMethodType", requestPaymentMethodType);
 }
 

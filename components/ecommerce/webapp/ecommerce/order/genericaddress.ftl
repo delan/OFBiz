@@ -53,8 +53,9 @@
       <#if (postalFields.stateProvinceGeoId)?exists>
         <option>${postalFields.stateProvinceGeoId}</option>
         <option value="${postalFields.stateProvinceGeoId}">---</option>
+      <#else>
+        <option value=""></option>
       </#if>
-      <option value=""></option>
       ${pages.get("/includes/states.ftl")}
     </select>
   </td>
@@ -75,7 +76,6 @@
         <option>${postalFields.countryGeoId}</option>
         <option value="${postalFields.countryGeoId}">---</option>
       </#if>
-      <option value=""></option>
       ${pages.get("/includes/countries.ftl")}
     </select>
   *</td>
@@ -87,8 +87,9 @@
     <select name="allowSolicitation" class='selectBox' <#if requestParameters.useShipAddr?exists>disabled</#if>>
       <#if (partyContactMech.allowSolicitation)?exists>
         <option>${partyContactMech.allowSolicitation}</option>
+        <option value="${partyContactMech.allowSolicitation}">---</option>
       </#if>
-      <option></option><option>Y</option><option>N</option>
+      <option>Y</option><option>N</option>
     </select>
   </td>
 </tr>

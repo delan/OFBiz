@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
-<#if shipAddr?exists><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="${trailClass.shipAddr}">Shipping Address</a><#if shipOptions?exists><a href="<@ofbizUrl>/setShipOptions</@ofbizUrl>" class="${trailClass.shipOptions}">Shipping Options</a><#if billing?exists><a href="<@ofbizUrl>/setBilling</@ofbizUrl>" class="${trailClass.paymentType}">Payment Types</a></#if></#if></#if>
+<#if shipAddr?exists><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="${trailClass.shipAddr}">Change Shipping Address</a><#if shipOptions?exists><a href="<@ofbizUrl>/setShipOptions</@ofbizUrl>" class="${trailClass.shipOptions}">Change Shipping Options</a><#if billing?exists><a href="<@ofbizUrl>/setBilling?resetType=Y</@ofbizUrl>" class="${trailClass.paymentType}">Change Payment Info</a></#if></#if></#if>

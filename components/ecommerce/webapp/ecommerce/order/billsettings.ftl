@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -60,10 +60,10 @@ function makeExpDate() {
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-            <#if paymentMethodType?exists || finalizeMode?default("") == "payment">
+            <#if (paymentMethodType?exists && !requestParameters.resetType?has_content) || finalizeMode?default("") == "payment">
               <#-- after initial screen; show detailed screens for selected type -->
               <#if paymentMethodType == "CC">
-                <#if postalAddress?has_content>
+                <#if creditCard?has_content && postalAddress?has_content>
                   <form method="post" action="<@ofbizUrl>/changeCreditCardAndBillingAddress</@ofbizUrl>" name="billsetupform">
                     <input type="hidden" name="paymentMethodId" value="${creditCard.paymentMethodId?if_exists}">
                     <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId?if_exists}">
@@ -74,7 +74,7 @@ function makeExpDate() {
                 </#if>
               </#if>
               <#if paymentMethodType == "EFT">
-                <#if postalAddress?has_content>
+                <#if eftAccount?has_content && postalAddress?has_content>
                   <form method="post" action="<@ofbizUrl>/changeEftAccountAndBillingAddress</@ofbizUrl>" name="billsetupform">
                     <input type="hidden" name="paymentMethodId" value="${eftAccount.paymentMethodId?if_exists}">
                     <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId?if_exists}">
@@ -167,7 +167,7 @@ function makeExpDate() {
                     <td width="74%">
                       <#assign expMonth = "">
                       <#assign expYear = "">
-                      <#if creditCard?exists && creditCard.expDate?exists>
+                      <#if creditCard?exists && creditCard.expireDate?exists>
                         <#assign expDate = creditCard.expireDate>
                         <#if (expDate?exists && expDate.indexOf("/") > 0)>
                           <#assign expMonth = expDate.substring(0,expDate.indexOf("/"))>
@@ -269,18 +269,18 @@ function makeExpDate() {
                 <input type="hidden" name="createNew" value="Y">
                 <table width="100%" border="0" cellpadding="1" cellspacing="0">
                   <tr>
-                    <td width='1%' nowrap><input type="radio" name="paymentMethodType" value="offline" <#if paymentMethodType?exists && paymentMethodType == "offline">checked</#if>
-                    <td width='50%'nowrap><div class="tabletext">Offline Payment: Check/Money Order</div></td>
+                    <td width='5%' nowrap><input type="radio" name="paymentMethodType" value="offline" <#if paymentMethodType?exists && paymentMethodType == "offline">checked</#if></td>
+                    <td width='95%'nowrap><div class="tabletext">Offline Payment: Check/Money Order</div></td>
                   </tr>
                   <tr><td colspan="2"><hr class='sepbar'></td></tr>
                   <tr>
-                    <td width='1%' nowrap><input type="radio" name="paymentMethodType" value="CC">
-                    <td width='50%' nowrap><div class="tabletext">Credit Card: Visa/Mastercard/Amex/Discover</div></td>
+                    <td width='5%' nowrap><input type="radio" name="paymentMethodType" value="CC" <#if paymentMethodType?exists && paymentMethodType == "CC">checked</#if></td>
+                    <td width='95%' nowrap><div class="tabletext">Credit Card: Visa/Mastercard/Amex/Discover</div></td>
                   </tr>
                   <tr><td colspan="2"><hr class='sepbar'></td></tr>
                   <tr>
-                    <td width='1%' nowrap><input type="radio" name="paymentMethodType" value="EFT">
-                    <td width='50%' nowrap><div class="tabletext">EFT Account: AHC/Electronic Check</div></td>
+                    <td width='5%' nowrap><input type="radio" name="paymentMethodType" value="EFT" <#if paymentMethodType?exists && paymentMethodType == "EFT">checked</#if></td>
+                    <td width='95%' nowrap><div class="tabletext">EFT Account: AHC/Electronic Check</div></td>
                   </tr>
                   <tr>
                     <td align="center" colspan="2">
