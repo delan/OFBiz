@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/06 00:45:09  azeneski
+ * minor adjustments to tag files. added new format tag.
+ *
  * Revision 1.1  2001/08/05 00:48:47  azeneski
  * Added new core JSP tag library. Non-application specific taglibs.
  *
@@ -126,11 +129,19 @@ public class IteratorTag extends BodyTagSupport {
     }
     
     private boolean defineIterator() {
+        //clear the iterator, after this it may be set directly
+        iterator = null;
         Collection thisCollection = null;
         if ( property != null ) {
             Debug.log("Getting iterator from property: " + property);
-            thisCollection = (Collection) pageContext.findAttribute(property);
-        }
+            Object propertyObject = pageContext.findAttribute(property);
+            if (propertyObject instanceof Iterator) {
+                iterator = (Iterator) propertyObject;
+            } else {
+                //if ClassCastException, it should indicate looking for a Collection
+                thisCollection = (Collection) pageContext.findAttribute(property);
+            }
+        } 
         else {
             Debug.log("No property, check for Object Tag.");
             ObjectTag objectTag = (ObjectTag) findAncestorWithClass(this, ObjectTag.class);
@@ -155,11 +166,13 @@ public class IteratorTag extends BodyTagSupport {
             }
         }
         
-        if ( thisCollection == null || thisCollection.size() < 1 )
-            return false;
-        
-        iterator = thisCollection.iterator();
-        Debug.log("Got iterator.");
+        if (iterator == null) {
+            if ( thisCollection == null || thisCollection.size() < 1 )
+                return false;
+
+            iterator = thisCollection.iterator();
+            Debug.log("Got iterator.");
+        }//else already set
         return true;
     }
     
