@@ -100,7 +100,6 @@ public class ModelMenu {
      */
     protected Map menuItemMap = new HashMap();
 
-    protected EntityPermissionChecker permissionChecker;
     
    // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -228,14 +227,8 @@ public class ModelMenu {
             Element itemElement = (Element) itemElementIter.next();
             ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, this);
             modelMenuItem = this.addUpdateMenuItem(modelMenuItem);
-            //Debug.logInfo("Added item " + modelMenuItem.getName() + " from def, mapName=" + modelMenuItem.getMapName(), module);
         }
-        Element permissionElement = UtilXml.firstChildElement(menuElement, "if-entity-permission");
-        if (permissionElement != null)
-            permissionChecker = new EntityPermissionChecker(permissionElement);
-
     }
-
     /**
      * add/override modelMenuItem using the menuItemList and menuItemMap
      *
@@ -297,8 +290,6 @@ public class ModelMenu {
     public void renderMenuString(StringBuffer buffer, Map context, MenuStringRenderer menuStringRenderer) {
     	
     	boolean passed = true;
-    	if (permissionChecker != null)
-    		passed = permissionChecker.runPermissionCheck(context);
 
             Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
         if (passed) {

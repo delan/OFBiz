@@ -83,6 +83,7 @@ public class ModelMenuItem {
     
     protected EntityPermissionChecker permissionChecker;
     protected ModelMenuItem parentMenuItem;
+    protected ModelMenuCondition condition;
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
     public ModelMenuItem(ModelMenu modelMenu) {
@@ -157,9 +158,10 @@ public class ModelMenuItem {
         if (linkElement != null) {
             link = new Link(linkElement, this);
         }
-        Element permissionElement = UtilXml.firstChildElement(fieldElement, "if-entity-permission");
-        if (permissionElement != null)
-            permissionChecker = new EntityPermissionChecker(permissionElement);
+        
+//        Element permissionElement = UtilXml.firstChildElement(fieldElement, "if-entity-permission");
+//        if (permissionElement != null)
+//            permissionChecker = new EntityPermissionChecker(permissionElement);
 
         // read in add item defs, add/override one by one using the menuItemList and menuItemMap
         List itemElements = UtilXml.childElementList(fieldElement, "menu-item");
@@ -170,7 +172,13 @@ public class ModelMenuItem {
             modelMenuItem = this.addUpdateMenuItem(modelMenuItem);
             //Debug.logInfo("Added item " + modelMenuItem.getName() + " from def, mapName=" + modelMenuItem.getMapName(), module);
         }
-     }
+        // read condition under the "condition" element
+        Element conditionElement = UtilXml.firstChildElement(fieldElement, "condition");
+        if (conditionElement != null) {
+            this.condition = new ModelMenuCondition(modelMenu, conditionElement);
+        }
+
+    }
     
     public ModelMenuItem addUpdateMenuItem(ModelMenuItem modelMenuItem) {
 
@@ -233,11 +241,14 @@ public class ModelMenuItem {
     }
 
     public void renderMenuItemString(StringBuffer buffer, Map context, MenuStringRenderer menuStringRenderer) {
+        
       	boolean passed = true;
-    	if (permissionChecker != null)
-    		passed = permissionChecker.runPermissionCheck(context);
-
-            Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
+        if (this.condition != null) {
+            if (!this.condition.eval(context)) {
+                passed = false;
+            }
+        }
+           Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
         if (passed) {
             menuStringRenderer.renderMenuItem(buffer, context, this);
         }
