@@ -906,16 +906,18 @@
 
     <entity entity-name="ProductPrice"
             package-name="org.ofbiz.commonapp.product.price"
-            title="Product Pice Entity">
+            title="Product Price Entity">
       <field name="productId" type="id-ne"></field>
       <field name="productPriceTypeId" type="id-ne"></field>
       <field name="currencyUomId" type="id"></field>
+      <field name="facilityGroupId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="price" type="currency-amount"></field>
       <prim-key field="productId"/>
       <prim-key field="productPriceTypeId"/>
       <prim-key field="currencyUomId"/>
+      <prim-key field="facilityGroupId"/>
       <prim-key field="fromDate"/>
       <relation type="one" fk-name="PROD_PRICE_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
@@ -925,6 +927,9 @@
       </relation>
       <relation type="one" fk-name="PROD_PRICE_CUOM" title="Currency" rel-entity-name="Uom">
         <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRICE_FACG" rel-entity-name="FacilityGroup">
+        <key-map field-name="facilityGroupId"/>
       </relation>
     </entity>
     <entity entity-name="ProductPriceAction"
@@ -1716,6 +1721,7 @@
       <field name="facilityGroupId" type="id-ne"></field>
       <field name="facilityGroupTypeId" type="id"></field>
       <field name="primaryParentGroupId" type="id"></field>
+      <field name="facilityGroupName" type="name"></field>
       <field name="description" type="description"></field>
       <prim-key field="facilityGroupId"/>
       <relation type="one" fk-name="FACILITY_GP_TYPE" rel-entity-name="FacilityGroupType">
