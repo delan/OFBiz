@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
 import javax.xml.soap.SOAPException;
 
 import org.ofbiz.base.util.Debug;
@@ -64,6 +65,12 @@ public class SOAPEventHandler implements EventHandler {
     public static final String module = SOAPEventHandler.class.getName();
     public static Category category = Category.getInstance(SOAPEventHandler.class.getName());
 
+    /**
+     * @see org.ofbiz.webapp.event.EventHandler#init(javax.servlet.ServletContext)
+     */
+    public void init(ServletContext context) throws EventHandlerException {
+    }
+    
     /** Invoke the web event
      *@param eventPath The path or location of this event
      *@param eventMethod The method to invoke
@@ -173,14 +180,14 @@ public class SOAPEventHandler implements EventHandler {
                         resEnv.addBodyElement(resBody);                        
                         resEnv.setEncodingStyle(Constants.URI_DEFAULT_SOAP_ENC);
                     } else {
-                        sendError(response, "Request service not available");
+                        sendError(response, "Requested service not available");
                         throw new EventHandlerException("Service is not exported");
                     }
                 } catch (GenericServiceException e) {
-                    sendError(response, "Problem process the service");
+                    sendError(response, "Problem processing the service");
                     throw new EventHandlerException(e.getMessage(), e);
                 } catch (javax.xml.soap.SOAPException e) {
-                    sendError(response, "Problem process the service");
+                    sendError(response, "Problem processing the service");
                     throw new EventHandlerException(e.getMessage(), e);
                 }
             }

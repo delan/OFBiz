@@ -27,6 +27,7 @@ package org.ofbiz.webapp.event;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
@@ -59,7 +60,13 @@ public class SimpleEventHandler implements EventHandler {
      */
     private static Locale locale;
 
-    /** 
+    /**
+     * @see org.ofbiz.webapp.event.EventHandler#init(javax.servlet.ServletContext)
+     */
+    public void init(ServletContext context) throws EventHandlerException {
+    }
+    
+    /**
      * Invoke the web event
      *@param eventPath The path or location of this event
      *@param eventMethod The method to invoke

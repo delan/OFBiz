@@ -115,6 +115,7 @@ public class EventFactory {
 
         try {
             handler = (EventHandler) ObjectType.getInstance(handlerClass);
+            handler.init(context);
         } catch (ClassNotFoundException cnf) {
             throw new EventHandlerException("Cannot load handler class", cnf);
         } catch (InstantiationException ie) {

@@ -50,6 +50,12 @@ public class BsfEventHandler implements EventHandler {
     public static UtilCache eventCache = new UtilCache("webapp.BsfEvents");
 
     /**
+     * @see org.ofbiz.webapp.event.EventHandler#init(javax.servlet.ServletContext)
+     */
+    public void init(ServletContext context) throws EventHandlerException {
+    }
+
+    /**
      * @see org.ofbiz.webapp.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
