@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -20,6 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Revision$
  *@since      2.1
 -->
@@ -29,9 +30,9 @@
 <#assign reorderQuantities = reorderProductResults.quantities?if_exists> 
 
 <#if reorderProducts?has_content>
-  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-    <TR>
-      <TD width='100%'>
+  <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+    <tr>
+      <td width='100%'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
             <td valign="middle" align="center">
@@ -39,33 +40,33 @@
             </td>
           </tr>
         </table>
-      </TD>
-    </TR>
-    <TR>
-      <TD width='100%'>
+      </td>
+    </tr>
+    <tr>
+      <td width='100%'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
             <td>
-                <table width='100%' cellspacing="0" cellpadding="0" border="0">
-      <#list reorderProducts as miniProduct> 
-        <tr>
-          <td>
-            ${setRequestAttribute("miniProdQuantity", reorderQuantities.get(miniProduct.productId))}
-            ${setRequestAttribute("miniProdFormName", "theminireorderprod" + miniProduct_index + "form")}
-            ${setRequestAttribute("miniProduct", miniProduct)}
-            ${pages.get("/catalog/miniproductsummary.ftl")}
-          </td>
-        </tr>
-        <#if miniProduct_has_next>
-          <tr><td><hr class='sepbar'></td></tr>
-        </#if>
-      </#list>
-                </table>
+              <table width='100%' cellspacing="0" cellpadding="0" border="0">
+                <#list reorderProducts as miniProduct> 
+                  <tr>
+                    <td>
+                      ${setRequestAttribute("miniProdQuantity", reorderQuantities.get(miniProduct.productId))}
+                      ${setRequestAttribute("miniProdFormName", "theminireorderprod" + miniProduct_index + "form")}
+                      ${setRequestAttribute("miniProduct", miniProduct)}
+                      ${pages.get("/catalog/miniproductsummary.ftl")}
+                    </td>
+                  </tr>
+                  <#if miniProduct_has_next>
+                    <tr><td><hr class='sepbar'></td></tr>
+                  </#if>
+                </#list>
+              </table>
             </td>
           </tr>
         </table>
-      </TD>
-    </TR>
-  </TABLE>
+      </td>
+    </tr>
+  </table>
 </#if>
 

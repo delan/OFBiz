@@ -19,10 +19,10 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author     David E. Jones (jonesde@ofbiz.org)
- * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision$
- * @since      2.1
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Revision$
+ *@since      2.1
 -->
 
 <#assign associatedProducts = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getRandomCartProductAssoc(request)?if_exists>
