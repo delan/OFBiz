@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  */
 -->
 
@@ -1084,6 +1084,25 @@
       </relation>
       <relation type="one" fk-name="PROD_FAC_FAC" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductFacilityLocation"
+            package-name="org.ofbiz.product.inventory"
+            title="Product Facility Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="facilityId" type="id-ne"></field>
+      <field name="locationSeqId" type="id-ne"></field>
+      <field name="minimumStock" type="floating-point"></field>
+      <field name="moveQuantity" type="floating-point"></field>
+      <prim-key field="productId"/>
+      <prim-key field="facilityId"/>
+      <prim-key field="locationSeqId"/>
+      <relation type="one" fk-name="PROD_FCL_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FCL_FCL" rel-entity-name="FacilityLocation">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
       </relation>
     </entity>
     <entity entity-name="VarianceReason"
@@ -2186,6 +2205,7 @@
             title="Facility Location Entity">
       <field name="facilityId" type="id-ne"></field>
       <field name="locationSeqId" type="id-ne"></field>
+      <field name="locationTypeEnumId" type="id-ne"></field>
       <field name="areaId" type="id"></field>
       <field name="aisleId" type="id"></field>
       <field name="sectionId" type="id"></field>
@@ -2195,6 +2215,9 @@
       <prim-key field="locationSeqId"/>
       <relation type="one" fk-name="FACILITY_LOC_FAC" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_LOC_TENM" rel-entity-name="Enumeration">
+        <key-map field-name="locationTypeEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="many" rel-entity-name="InventoryItem">
         <key-map field-name="facilityId"/>
