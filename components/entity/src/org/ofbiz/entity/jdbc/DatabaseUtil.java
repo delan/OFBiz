@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.5 2003/09/24 12:06:27 jonesde Exp $
+ * $Id: DatabaseUtil.java,v 1.6 2003/09/24 22:02:29 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -191,8 +191,8 @@ public class DatabaseUtil {
                                         typeName = modelFieldType.getSqlTypeAlias();
                                     }
 
-                                    // NOTE: this may need a toUpperCase in some cases, keep an eye on it
-                                    if (!ccInfo.typeName.equals(typeName)) {
+                                    // NOTE: this may need a toUpperCase in some cases, keep an eye on it, okay just compare with ignore case
+                                    if (!ccInfo.typeName.equalsIgnoreCase(typeName)) {
                                         String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName(datasourceInfo) + "\" of entity \"" +
                                             entity.getEntityName() + "\" is of type \"" + ccInfo.typeName + "\" in the database, but is defined as type \"" +
                                             typeName + "\" in the entity definition.";
@@ -724,10 +724,10 @@ public class DatabaseUtil {
                         tableName = tableName.toUpperCase();
                     }
 
-                    // NOTE: this may need a toUpperCase in some cases, keep an eye on it
+                    // NOTE: this may need a toUpperCase in some cases, keep an eye on it, okay for now just do a compare with equalsIgnoreCase
                     String tableType = tableSet.getString("TABLE_TYPE");
                     // only allow certain table types
-                    if (tableType != null && !"TABLE".equals(tableType) && !"VIEW".equals(tableType) && !"ALIAS".equals(tableType) && !"SYNONYM".equals(tableType)) {
+                    if (tableType != null && !"TABLE".equalsIgnoreCase(tableType) && !"VIEW".equalsIgnoreCase(tableType) && !"ALIAS".equalsIgnoreCase(tableType) && !"SYNONYM".equalsIgnoreCase(tableType)) {
                         continue;
                     }
 
