@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.16 2003/12/07 18:02:15 ajzeneski Exp $
+ * $Id: ComponentConfig.java,v 1.17 2003/12/07 18:50:34 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,11 +52,11 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      3.0
  */
 public class ComponentConfig {
-    
+
     public static final String module = ComponentConfig.class.getName();
     public static final String OFBIZ_COMPONENT_XML_FILENAME = "ofbiz-component.xml";
 
@@ -68,7 +68,7 @@ public class ComponentConfig {
         // TODO: we need to look up the rootLocation from the container config, or this will blow up
         return getComponentConfig(globalName, null);
     }
-    
+
     public static ComponentConfig getComponentConfig(String globalName, String rootLocation) throws ComponentException {
         ComponentConfig componentConfig = null;
         if (UtilValidate.isNotEmpty(globalName)) {
@@ -85,7 +85,7 @@ public class ComponentConfig {
                         if (componentConfigs.containsKey(componentConfig.getGlobalName())) {
                             Debug.logWarning("WARNING: Loading ofbiz-component using a global name that already exists, will over-write: " + componentConfig.getGlobalName(), module);
                         }
-                        componentConfigs.put(componentConfig.getGlobalName(), componentConfig);                        
+                        componentConfigs.put(componentConfig.getGlobalName(), componentConfig);
                     }
                 }
             } else {
@@ -94,7 +94,7 @@ public class ComponentConfig {
         }
         return componentConfig;
     }
-        
+
     public static Collection getAllComponents() {
         Collection values = componentConfigs.values();
         if (values != null) {
@@ -104,7 +104,7 @@ public class ComponentConfig {
             return new LinkedList();
         }
     }
-    
+
     public static List getAllClasspathInfos() {
         List classpaths = new LinkedList();
         Iterator i = getAllComponents().iterator();
@@ -113,8 +113,8 @@ public class ComponentConfig {
             classpaths.addAll(cc.getClasspathInfos());
         }
         return classpaths;
-    } 
-    
+    }
+
     public static List getAllEntityResourceInfos(String type) {
         List entityInfos = new LinkedList();
         Iterator i = getAllComponents().iterator();
@@ -135,7 +135,7 @@ public class ComponentConfig {
         }
         return entityInfos;
     }
-    
+
     public static List getAllServiceResourceInfos(String type) {
         List serviceInfos = new LinkedList();
         Iterator i = getAllComponents().iterator();
@@ -154,9 +154,9 @@ public class ComponentConfig {
                 }
             }
         }
-        return serviceInfos;        
+        return serviceInfos;
     }
-    
+
     public static List getAllWebappResourceInfos() {
         List webappInfos = new LinkedList();
         Iterator i = getAllComponents().iterator();
@@ -164,10 +164,10 @@ public class ComponentConfig {
             ComponentConfig cc = (ComponentConfig) i.next();
             webappInfos.addAll(cc.getWebappInfos());
         }
-        return webappInfos;        
-        
+        return webappInfos;
+
     }
-    
+
     public static boolean isFileResourceLoader(String componentName, String resourceLoaderName) throws ComponentException {
         ComponentConfig cc = ComponentConfig.getComponentConfig(componentName);
         if (cc == null) {
@@ -183,7 +183,7 @@ public class ComponentConfig {
         }
         return cc.getStream(resourceLoaderName, location);
     }
-    
+
     public static URL getURL(String componentName, String resourceLoaderName, String location) throws ComponentException {
         ComponentConfig cc = ComponentConfig.getComponentConfig(componentName);
         if (cc == null) {
@@ -191,7 +191,7 @@ public class ComponentConfig {
         }
         return cc.getURL(resourceLoaderName, location);
     }
-    
+
     public static String getFullLocation(String componentName, String resourceLoaderName, String location) throws ComponentException {
         ComponentConfig cc = ComponentConfig.getComponentConfig(componentName);
         if (cc == null) {
@@ -199,11 +199,11 @@ public class ComponentConfig {
         }
         return cc.getFullLocation(resourceLoaderName, location);
     }
-    
+
     public static List getAppBarWebInfos(String serverName) {
         List webInfos = (List) serverWebApps.get(serverName);
         if (webInfos == null) {
-            synchronized(ComponentConfig.class) {                
+            synchronized(ComponentConfig.class) {
                 if (webInfos == null) {
                     Iterator i = getAllComponents().iterator();
                     TreeMap tm = new TreeMap();
@@ -219,18 +219,38 @@ public class ComponentConfig {
                     }
                     List webInfoList = new LinkedList(tm.values());
                     serverWebApps.put(serverName, webInfoList);
-                    return webInfoList;                    
-                }    
+                    return webInfoList;
+                }
             }
         }
-        return webInfos;               
+        return webInfos;
     }
-    
+
+    public static WebappInfo getWebAppInfo(String serverName, String contextRoot) {
+        ComponentConfig.WebappInfo info = null;
+        if (serverName == null || contextRoot == null) {
+            return info;
+        }
+
+        Iterator i = getAllComponents().iterator();
+        while (i.hasNext() && info == null) {
+            ComponentConfig cc = (ComponentConfig) i.next();
+            Iterator wi = cc.getWebappInfos().iterator();
+            while (wi.hasNext()) {
+                ComponentConfig.WebappInfo wInfo = (ComponentConfig.WebappInfo) wi.next();
+                if (serverName.equals(wInfo.server) && contextRoot.equals(wInfo.getContextRoot())) {
+                    info = wInfo;
+                }
+            }
+        }
+        return info;
+    }
+
     // ========== component info fields ==========
     protected String globalName = null;
-    protected String rootLocation = null;    
+    protected String rootLocation = null;
     protected String componentName = null;
-    
+
     protected Map resourceLoaderInfos = new HashMap();
     protected List classpathInfos = new LinkedList();
     protected List entityResourceInfos = new LinkedList();
@@ -238,14 +258,14 @@ public class ComponentConfig {
     protected List webappInfos = new LinkedList();
 
     protected ComponentConfig() {}
-    
+
     protected ComponentConfig(String globalName, String rootLocation) throws ComponentException {
-        this.globalName = globalName;        
+        this.globalName = globalName;
         if (!rootLocation.endsWith("/")) {
             rootLocation = rootLocation + "/";
         }
         this.rootLocation = rootLocation.replace('\\', '/');
-        
+
         File rootLocationDir = new File(rootLocation);
         if (rootLocationDir == null) {
             throw new ComponentException("The given component root location is does not exist: " + rootLocation);
@@ -253,13 +273,13 @@ public class ComponentConfig {
         if (!rootLocationDir.isDirectory()) {
             throw new ComponentException("The given component root location is not a directory: " + rootLocation);
         }
-        
+
         String xmlFilename = rootLocation + "/" + OFBIZ_COMPONENT_XML_FILENAME;
         URL xmlUrl = UtilURL.fromFilename(xmlFilename);
         if (xmlUrl == null) {
             throw new ComponentException("Could not find the " + OFBIZ_COMPONENT_XML_FILENAME + " configuration file in the component root location: " + rootLocation);
         }
-        
+
         Document ofbizComponentDocument = null;
         try {
             ofbizComponentDocument = UtilXml.readXmlDocument(xmlUrl, true);
@@ -270,14 +290,14 @@ public class ComponentConfig {
         } catch (IOException e) {
             throw new ComponentException("Error reading the component config file: " + xmlUrl, e);
         }
-        
+
         Element ofbizComponentElement = ofbizComponentDocument.getDocumentElement();
         this.componentName = ofbizComponentElement.getAttribute("name");
         if (UtilValidate.isEmpty(this.globalName)) {
-            this.globalName = this.componentName;        
+            this.globalName = this.componentName;
         }
         Iterator elementIter = null;
-        
+
         // resource-loader - resourceLoaderInfos
         elementIter = UtilXml.childElementList(ofbizComponentElement, "resource-loader").iterator();
         while (elementIter.hasNext()) {
@@ -285,7 +305,7 @@ public class ComponentConfig {
             ResourceLoaderInfo resourceLoaderInfo = new ResourceLoaderInfo(curElement);
             this.resourceLoaderInfos.put(resourceLoaderInfo.name, resourceLoaderInfo);
         }
-        
+
         // classpath - classpathInfos
         elementIter = UtilXml.childElementList(ofbizComponentElement, "classpath").iterator();
         while (elementIter.hasNext()) {
@@ -293,7 +313,7 @@ public class ComponentConfig {
             ClasspathInfo classpathInfo = new ClasspathInfo(this, curElement);
             this.classpathInfos.add(classpathInfo);
         }
-        
+
         // entity-resource - entityResourceInfos
         elementIter = UtilXml.childElementList(ofbizComponentElement, "entity-resource").iterator();
         while (elementIter.hasNext()) {
@@ -301,7 +321,7 @@ public class ComponentConfig {
             EntityResourceInfo entityResourceInfo = new EntityResourceInfo(this, curElement);
             this.entityResourceInfos.add(entityResourceInfo);
         }
-        
+
         // service-resource - serviceResourceInfos
         elementIter = UtilXml.childElementList(ofbizComponentElement, "service-resource").iterator();
         while (elementIter.hasNext()) {
@@ -309,7 +329,7 @@ public class ComponentConfig {
             ServiceResourceInfo serviceResourceInfo = new ServiceResourceInfo(this, curElement);
             this.serviceResourceInfos.add(serviceResourceInfo);
         }
-        
+
         // webapp - webappInfos
         elementIter = UtilXml.childElementList(ofbizComponentElement, "webapp").iterator();
         while (elementIter.hasNext()) {
@@ -317,10 +337,10 @@ public class ComponentConfig {
             WebappInfo webappInfo = new WebappInfo(this, curElement);
             this.webappInfos.add(webappInfo);
         }
-        
+
         if (Debug.verboseOn()) Debug.logVerbose("Read component config : [" + rootLocation + "]", module);
     }
-    
+
     public boolean isFileResource(ResourceInfo resourceInfo) throws ComponentException {
         return isFileResourceLoader(resourceInfo.loader);
     }
@@ -331,7 +351,7 @@ public class ComponentConfig {
         }
         return "file".equals(resourceLoaderInfo.type) || "component".equals(resourceLoaderInfo.type);
     }
-       
+
     public InputStream getStream(String resourceLoaderName, String location) throws ComponentException {
         URL url = getURL(resourceLoaderName, location);
         try {
@@ -340,13 +360,13 @@ public class ComponentConfig {
             throw new ComponentException("Error opening resource at location [" + url.toExternalForm() + "]", e);
         }
     }
-    
+
     public URL getURL(String resourceLoaderName, String location) throws ComponentException {
         ResourceLoaderInfo resourceLoaderInfo = (ResourceLoaderInfo) resourceLoaderInfos.get(resourceLoaderName);
         if (resourceLoaderInfo == null) {
             throw new ComponentException("Could not find resource-loader named: " + resourceLoaderName);
         }
-        
+
         if ("component".equals(resourceLoaderInfo.type) || "file".equals(resourceLoaderInfo.type)) {
             String fullLocation = getFullLocation(resourceLoaderName, location);
             URL fileUrl = UtilURL.fromFilename(fullLocation);
@@ -377,13 +397,13 @@ public class ComponentConfig {
             throw new ComponentException("The resource-loader type is not recognized: " + resourceLoaderInfo.type);
         }
     }
-       
+
     public String getFullLocation(String resourceLoaderName, String location) throws ComponentException {
         ResourceLoaderInfo resourceLoaderInfo = (ResourceLoaderInfo) resourceLoaderInfos.get(resourceLoaderName);
         if (resourceLoaderInfo == null) {
             throw new ComponentException("Could not find resource-loader named: " + resourceLoaderName);
         }
-        
+
         StringBuffer buf = new StringBuffer();
 
         // pre-pend component root location if this is a type component resource-loader
@@ -406,39 +426,39 @@ public class ComponentConfig {
         buf.append(location);
         return buf.toString();
     }
-       
+
     public List getClasspathInfos() {
         return classpathInfos;
     }
-   
+
     public String getComponentName() {
         return componentName;
     }
-    
+
     public List getEntityResourceInfos() {
         return entityResourceInfos;
     }
-    
+
     public String getGlobalName() {
         return globalName;
     }
-    
+
     public Map getResourceLoaderInfos() {
         return resourceLoaderInfos;
     }
-    
+
     public String getRootLocation() {
-        return rootLocation;                 
+        return rootLocation;
     }
-    
+
     public List getServiceResourceInfos() {
         return serviceResourceInfos;
     }
-   
+
     public List getWebappInfos() {
         return webappInfos;
-    }    
-    
+    }
+
 
     public static class ResourceLoaderInfo {
         public String name;
@@ -453,7 +473,7 @@ public class ComponentConfig {
             this.prefix = element.getAttribute("prefix");
         }
     }
-    
+
     public static class ResourceInfo {
         public ComponentConfig componentConfig;
         public String loader;
@@ -464,7 +484,7 @@ public class ComponentConfig {
             this.loader = element.getAttribute("loader");
             this.location = element.getAttribute("location");
         }
-        
+
         public ComponentResourceHandler createResourceHandler() {
             return new ComponentResourceHandler(componentConfig.getGlobalName(), loader, location);
     	}
@@ -525,12 +545,12 @@ public class ComponentConfig {
             this.location = element.getAttribute("location");
             this.basePermission = element.getAttribute("base-permission");
             this.appBarDisplay = !"false".equals(element.getAttribute("app-bar-display"));
-            
+
             // default title is name w/ upper-cased first letter
-            if (UtilValidate.isEmpty(this.title)) {                
-                this.title = Character.toUpperCase(name.charAt(0)) + name.substring(1).toLowerCase();               
+            if (UtilValidate.isEmpty(this.title)) {
+                this.title = Character.toUpperCase(name.charAt(0)) + name.substring(1).toLowerCase();
             }
-            
+
             // default mount point is name if none specified
             if (UtilValidate.isEmpty(this.mountPoint)) {
                 this.mountPoint = this.name;
@@ -550,10 +570,10 @@ public class ComponentConfig {
                     if (!this.mountPoint.endsWith("/")) {
                         this.mountPoint = this.mountPoint + "/";
                     }
-                    this.mountPoint = this.mountPoint + "*";   
+                    this.mountPoint = this.mountPoint + "*";
                 }
             }
-			
+
             // load the virtual hosts
             List virtHostList = UtilXml.childElementList(element, "virtual-host");
             if (virtHostList != null && virtHostList.size() > 0) {
@@ -563,7 +583,7 @@ public class ComponentConfig {
                     virtualHosts.add(e.getAttribute("host-name"));
                 }
             }
-			
+
             // load the init parameters
             List initParamList = UtilXml.childElementList(element, "init-param");
             if (initParamList != null && initParamList.size() > 0) {
@@ -573,8 +593,8 @@ public class ComponentConfig {
                     this.initParameters.put(e.getAttribute("name"), e.getAttribute("value"));
                 }
             }
-        } 
-        
+        }
+
         public String getContextRoot() {
             if (mountPoint.endsWith("/*")) {
                 return mountPoint.substring(0, mountPoint.length() - 2);
@@ -592,11 +612,11 @@ public class ComponentConfig {
         public String getTitle() {
             return title;
         }
-        
+
         public List getVirtualHosts() {
         	return virtualHosts;
         }
-		
+
         public Map getInitParameters() {
             return initParameters;
         }
