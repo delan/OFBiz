@@ -25,17 +25,29 @@
 package org.ofbiz.pos.event;
 
 import org.ofbiz.pos.screen.PosScreen;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.Debug;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Rev$
- * @since      Aug 8, 2004
+ * @since      3.2
  */
 public class TestEvents {
+
+    public static final String module = TestEvents.class.getName();
 
     public static void testAlert(PosScreen pos) {
         pos.showDialog("main/dialog/error/testerror");
     }
 
+    public static void testMsr(PosScreen pos) {
+        try {
+            org.ofbiz.pos.jpos.service.MsrTestService.sendTest();
+        } catch (GeneralException e) {
+            Debug.logError(e, module);
+            pos.showDialog("main/dialog/error/exception", e.getMessage());
+        }
+    }
 }

@@ -71,6 +71,16 @@ $Id$
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
     </JposEntry>
 
+    <!-- Button Triggered Test MSR Device (included w/ OFBiz) -->
+    <JposEntry logicalName="TestMsr">
+        <creation factoryClass="org.ofbiz.pos.jpos.factory.OfbizJposServiceFactory" serviceClass="org.ofbiz.pos.jpos.service.MsrTestService"/>
+        <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
+        <jpos category="MSR" version="1.7"/>
+        <product description="Button Triggered Test Msr" name="TestMsr" url="www.ofbiz.org"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+    </JposEntry>
+
     <!-- Null POSPrinter (included w/ OFBiz) -->
     <JposEntry logicalName="NullReceipt">
         <creation factoryClass="org.ofbiz.pos.jpos.factory.OfbizJposServiceFactory" serviceClass="org.ofbiz.pos.jpos.service.NullPosPrinter"/>
