@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  */
 -->
 
@@ -1489,6 +1489,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="description" type="description"></field>
+      <field name="externalAccountId" type="id"></field>
       <prim-key field="billingAccountId"/>
       <relation type="many" rel-entity-name="OrderHeader">
         <key-map field-name="billingAccountId"/>
