@@ -197,6 +197,7 @@ public class PayflowPro {
             paymentPreference.set("authRefNum", parameters.get("PNREF"));
             paymentPreference.set("authFlag", parameters.get("RESULT"));
             paymentPreference.set("authMessage", parameters.get("RESPMSG"));
+            paymentPreference.set("authDate", UtilDateTime.nowTimestamp());
             paymentPreference.store();
         } catch (GenericEntityException gee) {
             gee.printStackTrace();

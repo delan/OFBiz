@@ -474,6 +474,7 @@ public class CSPaymentServices {
             paymentPreference.set("authRefNum", reply.getField("request_id"));
             paymentPreference.set("authFlag", reply.getField("ics_rflag"));
             paymentPreference.set("authMessage", reply.getErrorMessage());
+            paymentPreference.set("authDate", UtilDateTime.nowTimestamp());
             paymentPreference.store();
         } catch (ICSException ie) {
             ie.printStackTrace();
