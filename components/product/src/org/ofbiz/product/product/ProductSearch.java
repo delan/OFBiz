@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.6 2003/10/18 05:13:07 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.7 2003/10/18 06:24:51 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -46,6 +46,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
@@ -58,7 +59,7 @@ import org.ofbiz.product.product.KeywordSearch;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -105,9 +106,17 @@ public class ProductSearch {
         }
     }
     
-    public static ArrayList parametricKeywordSearch(Map featureIdByType, String keywordsString, GenericDelegator delegator, String productCategoryId, boolean includeSubCategories, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
+    public static ArrayList parametricKeywordSearch(Map featureIdByType, String keywordsString, GenericDelegator delegator, String productCategoryId, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
+        Set featureIdSet = new HashSet();
+        if (featureIdByType != null) {
+            featureIdSet.addAll(featureIdByType.values());
+        }
+        
+        return parametricKeywordSearch(featureIdSet, keywordsString, delegator, productCategoryId, true, visitId, anyPrefix, anySuffix, isAnd);
+    }
+    
+    public static ArrayList parametricKeywordSearch(Set featureIdSet, String keywordsString, GenericDelegator delegator, String productCategoryId, boolean includeSubCategories, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
         // TODO: implement this for the new features
-        Collection featureIdCol = featureIdByType == null ? null : featureIdByType.values();
         boolean removeStems = UtilProperties.propertyValueEquals("prodsearch", "remove.stems", "true");
         
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
@@ -116,8 +125,7 @@ public class ProductSearch {
         int index = 1;
         List entityConditionList = new LinkedList();
         List orderByList = new LinkedList();
-        //List fieldsToSelect = UtilMisc.toList("productId");
-        List fieldsToSelect = null;
+        List fieldsToSelect = UtilMisc.toList("productId");
         DynamicViewEntity dynamicViewEntity = new DynamicViewEntity();
         dynamicViewEntity.addMemberEntity("PROD", "Product");
         dynamicViewEntity.addAlias("PROD", "productName");
@@ -136,15 +144,15 @@ public class ProductSearch {
             }
             
             // make index based values and increment
-            String entityAlias = "PK" + index;
-            String prefix = "pk" + index;
+            String entityAlias = "PCM" + index;
+            String prefix = "pcm" + index;
             index++;
             
-            dynamicViewEntity.addMemberEntity("PCM", "ProductCategoryMember");
+            dynamicViewEntity.addMemberEntity(entityAlias, "ProductCategoryMember");
             dynamicViewEntity.addAlias(entityAlias, prefix + "ProductCategoryId", "productCategoryId", null, null, null, null);
             dynamicViewEntity.addAlias(entityAlias, prefix + "FromDate", "fromDate", null, null, null, null);
             dynamicViewEntity.addAlias(entityAlias, prefix + "ThruDate", "thruDate", null, null, null, null);
-            dynamicViewEntity.addViewLink("PROD", "PCM", Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
+            dynamicViewEntity.addViewLink("PROD", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
             entityConditionList.add(new EntityExpr(prefix + "ProductCategoryId", EntityOperator.IN, productCategoryIdList));
             entityConditionList.add(new EntityExpr(new EntityExpr(prefix + "ThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr(prefix + "ThruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
             entityConditionList.add(new EntityExpr(prefix + "FromDate", EntityOperator.LESS_THAN, nowTimestamp));
@@ -179,10 +187,11 @@ public class ProductSearch {
                 index++;
                     
                 dynamicViewEntity.addMemberEntity(entityAlias, "ProductKeyword");
-                dynamicViewEntity.addAlias(entityAlias, prefix + "TotalRelevancy", "relevancyWeight", null, null, null, "sum");
+                dynamicViewEntity.addAlias(entityAlias, "totalRelevancy", "relevancyWeight", null, null, null, "sum");
                 dynamicViewEntity.addAlias(entityAlias, prefix + "Keyword", "keyword", null, null, null, null);
                 dynamicViewEntity.addViewLink("PROD", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
-                orderByList.add("-" + prefix + "TotalRelevancy");
+                orderByList.add("-totalRelevancy");
+                fieldsToSelect.add("totalRelevancy");
                 List keywordOrList = new LinkedList();
                 Iterator keywordIter = keywordList.iterator();
                 while (keywordIter.hasNext()) {
@@ -196,8 +205,8 @@ public class ProductSearch {
         }
         
         // Features
-        if (featureIdCol != null && featureIdCol.size() > 0) {
-            Iterator featureIdIter = featureIdCol.iterator();
+        if (featureIdSet != null && featureIdSet.size() > 0) {
+            Iterator featureIdIter = featureIdSet.iterator();
             while (featureIdIter.hasNext()) {
                 String productFeatureId = (String) featureIdIter.next();
                 
@@ -206,7 +215,7 @@ public class ProductSearch {
                 String prefix = "pfa" + index;
                 index++;
                     
-                dynamicViewEntity.addMemberEntity(entityAlias, "ProductCategoryMember");
+                dynamicViewEntity.addMemberEntity(entityAlias, "ProductFeatureAppl");
                 dynamicViewEntity.addAlias(entityAlias, prefix + "ProductFeatureId", "productFeatureId", null, null, null, null);
                 dynamicViewEntity.addAlias(entityAlias, prefix + "FromDate", "fromDate", null, null, null, null);
                 dynamicViewEntity.addAlias(entityAlias, prefix + "ThruDate", "thruDate", null, null, null, null);
@@ -219,10 +228,12 @@ public class ProductSearch {
         
         dynamicViewEntity.addAlias("PROD", "productId", null, null, null, new Boolean(productIdGroupBy), null);
         EntityCondition whereCondition = new EntityConditionList(entityConditionList, EntityOperator.AND);
+        EntityFindOptions efo = new EntityFindOptions();
+        efo.setDistinct(true);
         
         EntityListIterator eli = null;
         try {
-            eli = delegator.findListIteratorByCondition(dynamicViewEntity, whereCondition, null, fieldsToSelect, orderByList, null);
+            eli = delegator.findListIteratorByCondition(dynamicViewEntity, whereCondition, null, fieldsToSelect, orderByList, efo);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error in product search", module);
             return null;

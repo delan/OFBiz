@@ -1,5 +1,5 @@
 /*
- * $Id: ModelKeyMap.java,v 1.3 2003/10/17 11:08:05 jonesde Exp $
+ * $Id: ModelKeyMap.java,v 1.4 2003/10/18 06:24:50 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * Generic Entity - KeyMap model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ModelKeyMap {
@@ -50,11 +50,7 @@ public class ModelKeyMap {
     /** Data Constructor, if relFieldName is null defaults to fieldName */
     public ModelKeyMap(String fieldName, String relFieldName) {
         this.fieldName = fieldName;
-        if (relFieldName == null) {
-            this.relFieldName = fieldName;
-        } else {
-            this.relFieldName = relFieldName;
-        }
+        this.relFieldName = UtilXml.checkEmpty(relFieldName, this.fieldName);
     }
 
     /** XML Constructor */

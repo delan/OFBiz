@@ -1,5 +1,5 @@
 /*
- * $Id: ProductWorker.java,v 1.4 2003/10/18 05:13:07 jonesde Exp $
+ * $Id: ProductWorker.java,v 1.5 2003/10/18 06:24:51 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.product.feature.ParametricSearch;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ProductWorker {
@@ -207,11 +207,12 @@ public class ProductWorker {
             if (Debug.infoOn()) Debug.logInfo("curFindString:" + curFindString + " resultArrayName:" + resultArrayName, module);
 
             // productIds will be pre-sorted
-            if (featureIdByType.size() > 0) {
+            /*if (featureIdByType.size() > 0) {
                 productIds = ParametricSearch.parametricKeywordSearch(featureIdByType, keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, isAnd);
             } else {
                 productIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, isAnd);
-            }
+            }*/
+            productIds = ProductSearch.parametricKeywordSearch(featureIdByType, keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, isAnd);
             
 
             if (productIds != null) {
