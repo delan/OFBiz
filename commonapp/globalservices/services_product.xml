@@ -105,6 +105,7 @@
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="productPriceTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="currencyUomId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="price" type="Double" mode="IN" optional="false"/>
@@ -115,6 +116,7 @@
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="productPriceTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="currencyUomId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="price" type="Double" mode="IN" optional="false"/>
@@ -125,6 +127,7 @@
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="productPriceTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="currencyUomId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
 
@@ -357,6 +360,7 @@
         <attribute name="product" type="org.ofbiz.core.entity.GenericValue" mode="IN" optional="false"/>
         <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityGroupId" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="Double" mode="IN" optional="true"/>
         <attribute name="currencyUomId" type="String" mode="IN" optional="true"/>
         <attribute name="autoUserLogin" type="GenericValue" mode="IN" optional="true"/>
