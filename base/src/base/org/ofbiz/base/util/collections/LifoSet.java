@@ -1,5 +1,5 @@
 /*
- * $Id: LifoSet.java,v 1.2 2004/07/14 03:13:31 ajzeneski Exp $
+ * $Id: LifoSet.java,v 1.3 2004/07/14 18:46:38 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -23,6 +23,7 @@
  */
 package org.ofbiz.base.util.collections;
 
+import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -33,10 +34,10 @@ import java.util.EmptyStackException;
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
-public class LifoSet extends AbstractSet {
+public class LifoSet extends AbstractSet implements Serializable {
 
     // This set's back LinkedList
     private LinkedList backedList = new LinkedList();
