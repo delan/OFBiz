@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+/**
+ *  Title: Entity Generator Definitions for the General Data Model
+ *  Description: None
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author David E. Jones (jonesde@ofbiz.org)
+ *@created    Mon Oct 08 17:32:55 EDT 2001
+ *@version    1.0
+ */
+-->
+
+<!DOCTYPE entitymodel [
+    <!-- ====================== Root Element ======================= -->
+    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, entity* )>
+    <!-- ================= Children of entitymodel =================== -->
+    <!ELEMENT entity ( description?, field*, prim-key*, relation* )>
+    <!ELEMENT title ( #PCDATA  )>
+    <!ELEMENT description ( #PCDATA  )>
+    <!ELEMENT copyright ( #PCDATA  )>
+    <!ELEMENT author ( #PCDATA  )>
+    <!ELEMENT version ( #PCDATA  )>
+    <!-- ================== Children of entity ===================== -->
+    <!-- see the children of entitymodel section for description, etc. -->
+    <!ATTLIST entity
+	entity-name CDATA #REQUIRED >
+    <!ATTLIST entity
+	table-name CDATA #IMPLIED >
+    <!ATTLIST entity
+	package-name CDATA #REQUIRED >
+    <!ATTLIST entity
+	title CDATA #IMPLIED >
+    <!ATTLIST entity
+	copyright CDATA #IMPLIED >
+    <!ATTLIST entity
+	author CDATA #IMPLIED >
+    <!ATTLIST entity
+	version CDATA #IMPLIED >
+    <!ELEMENT field ( validate* )>
+    <!ELEMENT prim-key EMPTY>
+    <!ATTLIST prim-key
+	field CDATA #REQUIRED >
+    <!ELEMENT relation ( key-map* )>
+    <!-- ==================== Children of field ===================== -->
+    <!ATTLIST field
+	name CDATA #REQUIRED >
+    <!ATTLIST field
+	col-name CDATA #IMPLIED >
+    <!ATTLIST field
+	type CDATA #REQUIRED >
+    <!ELEMENT validate EMPTY>
+    <!ATTLIST validate
+	name CDATA #REQUIRED >
+    <!-- ==================== Children of relation ====================== -->
+    <!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
+    <!ATTLIST relation
+	type ( one | many ) #REQUIRED >
+    <!ATTLIST relation
+	title CDATA #IMPLIED >
+    <!ATTLIST relation
+	rel-entity-name CDATA #REQUIRED >
+    <!ATTLIST relation
+	rel-table-name CDATA #IMPLIED >
+    <!ELEMENT key-map EMPTY>
+    <!-- see definition of relation in entity section above -->
+    <!-- ===================== Children of key-map ====================== -->
+    <!ATTLIST key-map
+	field-name CDATA #REQUIRED >
+    <!ATTLIST key-map
+	col-name CDATA #IMPLIED >
+    <!-- this is only required if the field-name in the related table is different from the name in this table -->
+    <!ATTLIST key-map
+	rel-field-name CDATA #IMPLIED >
+    <!-- this is only required if the col-name in the related table is different from the col-name in this table -->
+    <!ATTLIST key-map
+	rel-col-namee CDATA #IMPLIED >
+]>
+
+
+<entitymodel>
+  <!-- ========================================================= -->
+  <!-- ======================== Defaults ======================= -->
+  <!-- ========================================================= -->
+    <title>Entity of an Open For Business Project Component</title>
+    <description>None</description>
+    <copyright>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org</copyright>
+    <author>None</author>
+    <version>1.0</version>
+
+  <!-- ========================================================= -->
+  <!-- ======================== Data Model ===================== -->
+  <!-- The modules in this file are as follows:                  -->
+  <!--   - Human Resources                                       -->
+  <!-- ========================================================= -->
+
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.humanres.ability -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="EmployeePerformanceReview" 
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Employee Performance Review Entity">
+      <field name="employeePartyId" type="id-ne"></field>
+      <field name="employeeRoleTypeId" type="id-ne"></field>
+      <field name="perfReviewId" type="id-ne"></field>
+      <field name="managerPartyId" type="id"></field>
+      <field name="managerRoleTypeId" type="id"></field>
+      <field name="paymentId" type="id"></field>
+      <field name="positionId" type="id"></field>
+      <field name="payHistoryRoleTypeIdFrom" type="id"></field>
+      <field name="payHistoryRoleTypeIdTo" type="id"></field>
+      <field name="payHistoryPartyIdFrom" type="id"></field>
+      <field name="payHistoryPartyIdTo" type="id"></field>
+      <field name="payHistoryFromDate" type="date-time"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="comment" type="comment"></field>	
+      <prim-key field="employeePartyId" />	
+      <prim-key field="employeeRoleTypeId" />	
+      <prim-key field="perfReviewId" />
+    </entity>	
+    <entity entity-name="PartyQual" 
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Party Qualification Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="partyQualTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>	
+      <prim-key field="partyId" />	
+      <prim-key field="partyQualTypeId" />	
+      <prim-key field="fromDate" />
+      <relation type="one" rel-entity-name="PartyQualType">
+        <key-map field-name="partyQualTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="PartyQualType" 
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Party Qualification Type Entity">
+      <field name="partyQualTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="partyQualTypeId" />
+      <relation type="one" title="Parent" rel-entity-name="PartyQualType">
+        <key-map field-name="parentTypeId" rel-field-name="partyQualTypeId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="PartyQualType">
+        <key-map field-name="partyQualTypeId" rel-field-name="parentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="PartyQual">
+        <key-map field-name="partyQualTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="PartySkill" 
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Party Skill Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="skillTypeId" type="id-ne"></field>
+      <field name="yearsExperience" type="numeric"></field>
+      <field name="rating" type="numeric"></field>
+      <field name="skillLevel" type="numeric"></field>
+      <field name="startedUsingDate" type="date-time"></field>	
+      <prim-key field="partyId" />	
+      <prim-key field="skillTypeId" />
+    </entity>	
+    <entity entity-name="PerfRatingType" 
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Performance Rating Type Entity">
+      <field name="perfRatingTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="perfRatingTypeId" />
+    </entity>	
+    <entity entity-name="PerfReviewItemType" 
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Performance Review Item Type Entity">
+      <field name="perfReviewItemTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="perfReviewItemTypeId" />
+    </entity>	
+    <entity entity-name="PerformanceNote" 
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Performance Note Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="communicationDate" type="date-time"></field>
+      <field name="comment" type="comment"></field>	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />	
+      <prim-key field="fromDate" />
+    </entity>	
+    <entity entity-name="PerformanceReviewItem" 
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Performance Review Item Entity">
+      <field name="employeePartyId" type="id-ne"></field>
+      <field name="employeeRoleTypeId" type="id-ne"></field>
+      <field name="perfReviewId" type="id-ne"></field>
+      <field name="perfReviewSeqId" type="id-ne"></field>
+      <field name="perfRatingTypeId" type="id"></field>
+      <field name="perfReviewItemTypeId" type="id"></field>
+      <field name="comment" type="comment"></field>	
+      <prim-key field="employeePartyId" />	
+      <prim-key field="employeeRoleTypeId" />	
+      <prim-key field="perfReviewId" />	
+      <prim-key field="perfReviewSeqId" />
+    </entity>	
+    <entity entity-name="PersonTraining" 
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Person Training Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="trainingClassTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>	
+      <prim-key field="partyId" />	
+      <prim-key field="trainingClassTypeId" />	
+      <prim-key field="fromDate" />
+    </entity>	
+    <entity entity-name="ResponsibilityType" 
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Responsibility Type Entity">
+      <field name="responsibilityTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="responsibilityTypeId" />
+    </entity>	
+    <entity entity-name="Resume" 
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Resume Entity">
+      <field name="resumeId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="resumeDate" type="date-time"></field>
+      <field name="resumeText" type="long-varchar"></field>	
+      <prim-key field="resumeId" />	
+      <prim-key field="partyId" />
+    </entity>	
+    <entity entity-name="SkillType" 
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Skill Type Entity">
+      <field name="skillTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="skillTypeId" />
+    </entity>	
+    <entity entity-name="TrainingClassType" 
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Training Class Type Entity">
+      <field name="trainingClassTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="trainingClassTypeId" />
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.humanres.employment -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="BenefitType" 
+            package-name="org.ofbiz.commonapp.humanres.employment"
+            title="Benefit Type Entity">
+      <field name="benefitTypeId" type="id-ne"></field>
+      <field name="name" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="employerPaidPercentage" type="floating-point"></field>	
+      <prim-key field="benefitTypeId" />
+    </entity>	
+    <entity entity-name="Employment" 
+            package-name="org.ofbiz.commonapp.humanres.employment"
+            title="Employment Entity">
+      <field name="roleTypeIdFrom" type="id-ne"></field>
+      <field name="roleTypeIdTo" type="id-ne"></field>
+      <field name="partyIdFrom" type="id-ne"></field>
+      <field name="partyIdTo" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="terminationReasonId" type="id"></field>
+      <field name="terminationTypeId" type="id"></field>	
+      <prim-key field="roleTypeIdFrom" />	
+      <prim-key field="roleTypeIdTo" />	
+      <prim-key field="partyIdFrom" />	
+      <prim-key field="partyIdTo" />	
+      <prim-key field="fromDate" />
+    </entity>	
+    <entity entity-name="EmploymentApp" 
+            package-name="org.ofbiz.commonapp.humanres.employment"
+            title="Employment Application Entity">
+      <field name="applicationId" type="id-ne"></field>
+      <field name="positionId" type="id"></field>
+      <field name="statusId" type="id"></field>
+      <field name="employmentAppSourceTypeId" type="id"></field>
+      <field name="applyingPartyId" type="id"></field>
+      <field name="referredByPartyId" type="id"></field>
+      <field name="applicationDate" type="date-time"></field>	
+      <prim-key field="applicationId" />
+    </entity>	
+    <entity entity-name="EmploymentAppSourceType" 
+            package-name="org.ofbiz.commonapp.humanres.employment"
+            title="Employment Application Source Type Entity">
+      <field name="employmentAppSourceTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="employmentAppSourceTypeId" />
+    </entity>	
+    <entity entity-name="PartyBenefit" 
+            package-name="org.ofbiz.commonapp.humanres.employment"
+            title="Party Benefit Entity">
+      <field name="roleTypeIdFrom" type="id-ne"></field>
+      <field name="roleTypeIdTo" type="id-ne"></field>
+      <field name="partyIdFrom" type="id-ne"></field>
+      <field name="partyIdTo" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="benefitTypeId" type="id-ne"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="periodTypeId" type="id"></field>
+      <field name="cost" type="currency-amount"></field>
+      <field name="actualEmployerPaidPercent" type="floating-point"></field>
+      <field name="availableTime" type="numeric"></field>	
+      <prim-key field="roleTypeIdFrom" />	
+      <prim-key field="roleTypeIdTo" />	
+      <prim-key field="partyIdFrom" />	
+      <prim-key field="partyIdTo" />	
+      <prim-key field="benefitTypeId" />	
+      <prim-key field="fromDate" />
+    </entity>	
+    <entity entity-name="PayCheck" 
+            package-name="org.ofbiz.commonapp.humanres.employment"
+            title="Pay Check Entity">
+      <field name="paymentId" type="id-ne"></field>
+      <field name="partyId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>	
+      <prim-key field="paymentId" />
+    </entity>	
+    <entity entity-name="PayGrade" 
+            package-name="org.ofbiz.commonapp.humanres.employment"
+            title="Pay Grade Entity">
+      <field name="payGradeId" type="id-ne"></field>
+      <field name="name" type="name"></field>
+      <field name="comment" type="comment"></field>	
+      <prim-key field="payGradeId" />
+    </entity>	
+    <entity entity-name="PayHistory" 
+            package-name="org.ofbiz.commonapp.humanres.employment"
+            title="Pay History Entity">
+      <field name="roleTypeIdFrom" type="id-ne"></field>
+      <field name="roleTypeIdTo" type="id-ne"></field>
+      <field name="partyIdFrom" type="id-ne"></field>
+      <field name="partyIdTo" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="salaryStepSeqId" type="id"></field>
+      <field name="payGradeId" type="id"></field>
+      <field name="periodTypeId" type="id"></field>
+      <field name="amount" type="currency-amount"></field>
+      <field name="comment" type="comment"></field>	
+      <prim-key field="roleTypeIdFrom" />	
+      <prim-key field="roleTypeIdTo" />	
+      <prim-key field="partyIdFrom" />	
+      <prim-key field="partyIdTo" />	
+      <prim-key field="fromDate" />
+    </entity>	
+    <entity entity-name="PayrollPreference" 
+            package-name="org.ofbiz.commonapp.humanres.employment"
+            title="Payroll Preference Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="payrollPreferenceSeqId" type="id-ne"></field>
+      <field name="deductionTypeId" type="id-ne"></field>
+      <field name="paymentMethodTypeId" type="id"></field>
+      <field name="periodTypeId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="percentage" type="floating-point"></field>
+      <field name="flatAmount" type="currency-amount"></field>
+      <field name="routingNumber" type="short-varchar"></field>
+      <field name="accountNumber" type="short-varchar"></field>
+      <field name="bankName" type="name"></field>	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />	
+      <prim-key field="payrollPreferenceSeqId" />
+    </entity>	
+    <entity entity-name="RejectionReason" 
+            package-name="org.ofbiz.commonapp.humanres.employment"
+            title="Rejection Reason Entity">
+      <field name="rejectionId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="rejectionId" />
+    </entity>	
+    <entity entity-name="SalaryStep" 
+            package-name="org.ofbiz.commonapp.humanres.employment"
+            title="Salary Step Entity">
+      <field name="salaryStepSeqId" type="id-ne"></field>
+      <field name="payGradeId" type="id-ne"></field>
+      <field name="dateModified" type="date-time"></field>
+      <field name="amount" type="currency-amount"></field>	
+      <prim-key field="salaryStepSeqId" />	
+      <prim-key field="payGradeId" />
+    </entity>	
+    <entity entity-name="TerminationReason" 
+            package-name="org.ofbiz.commonapp.humanres.employment"
+            title="Termination Reason Entity">
+      <field name="terminationReasonId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="terminationReasonId" />
+    </entity>	
+    <entity entity-name="TerminationType" 
+            package-name="org.ofbiz.commonapp.humanres.employment"
+            title="Termination Type Entity">
+      <field name="terminationTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="terminationTypeId" />
+    </entity>	
+    <entity entity-name="UnemploymentClaim" 
+            package-name="org.ofbiz.commonapp.humanres.employment"
+            title="Unemployment Claim Entity">
+      <field name="unemploymentClaimId" type="id-ne"></field>
+      <field name="unemploymentClaimDate" type="date-time"></field>
+      <field name="description" type="description"></field>
+      <field name="statusId" type="id"></field>
+      <field name="partyIdFrom" type="id"></field>
+      <field name="partyIdTo" type="id"></field>
+      <field name="roleTypeIdFrom" type="id"></field>
+      <field name="roleTypeIdTo" type="id"></field>
+      <field name="fromDate" type="date-time"></field>	
+      <prim-key field="unemploymentClaimId" />
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.humanres.position -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="EmplPosition" 
+            package-name="org.ofbiz.commonapp.humanres.position"
+            title="EmplPosition Entity">
+      <field name="positionId" type="id-ne"></field>
+      <field name="statusId" type="id"></field>
+      <field name="partyId" type="id"></field>
+      <field name="budgetId" type="id"></field>
+      <field name="budgetItemSeqId" type="id"></field>
+      <field name="positionTypeId" type="id"></field>
+      <field name="estimatedFromDate" type="date-time"></field>
+      <field name="estimatedThruDate" type="date-time"></field>
+      <field name="salaryFlag" type="indicator"></field>
+      <field name="exemptFlag" type="indicator"></field>
+      <field name="fulltimeFlag" type="indicator"></field>
+      <field name="temporaryFlag" type="indicator"></field>
+      <field name="actualFromDate" type="date-time"></field>
+      <field name="actualThruDate" type="date-time"></field>	
+      <prim-key field="positionId" />
+    </entity>	
+    <entity entity-name="EmplPositionClassType" 
+            package-name="org.ofbiz.commonapp.humanres.position"
+            title="EmplPosition Classification Type Entity">
+      <field name="positionClassTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="positionClassTypeId" />
+    </entity>	
+    <entity entity-name="EmplPositionFulfillment" 
+            package-name="org.ofbiz.commonapp.humanres.position"
+            title="EmplPosition Fulfillment Entity">
+      <field name="positionId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="comment" type="comment"></field>	
+      <prim-key field="positionId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="fromDate" />
+    </entity>	
+    <entity entity-name="EmplPositionReportingStruct" 
+            package-name="org.ofbiz.commonapp.humanres.position"
+            title="EmplPosition Reporting Structure Entity">
+      <field name="positionIdReportingTo" type="id-ne"></field>
+      <field name="positionIdManagedBy" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="comment" type="comment"></field>
+      <field name="primaryFlag" type="indicator"></field>	
+      <prim-key field="positionIdReportingTo" />	
+      <prim-key field="positionIdManagedBy" />	
+      <prim-key field="fromDate" />
+    </entity>	
+    <entity entity-name="EmplPositionResponsibility" 
+            package-name="org.ofbiz.commonapp.humanres.position"
+            title="EmplPosition Responsibility Entity">
+      <field name="positionId" type="id-ne"></field>
+      <field name="responsibilityTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="comment" type="comment"></field>	
+      <prim-key field="positionId" />	
+      <prim-key field="responsibilityTypeId" />	
+      <prim-key field="fromDate" />
+    </entity>	
+    <entity entity-name="EmplPositionType" 
+            package-name="org.ofbiz.commonapp.humanres.position"
+            title="EmplPosition Type Entity">
+      <field name="positionTypeId" type="id-ne"></field>
+      <field name="partyId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="positionTypeId" />
+    </entity>	
+    <entity entity-name="EmplPositionTypeClass" 
+            package-name="org.ofbiz.commonapp.humanres.position"
+            title="EmplPosition Type Class Entity">
+      <field name="positionTypeId" type="id-ne"></field>
+      <field name="positionClassTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="standardHoursPerWeek" type="floating-point"></field>	
+      <prim-key field="positionTypeId" />	
+      <prim-key field="positionClassTypeId" />	
+      <prim-key field="fromDate" />
+    </entity>	
+    <entity entity-name="ValidResponsibility" 
+            package-name="org.ofbiz.commonapp.humanres.position"
+            title="Valid Responsibility Entity">
+      <field name="positionTypeId" type="id-ne"></field>
+      <field name="responsibilityTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="comment" type="comment"></field>	
+      <prim-key field="positionTypeId" />	
+      <prim-key field="responsibilityTypeId" />	
+      <prim-key field="fromDate" />
+    </entity>
+</entitymodel>
+

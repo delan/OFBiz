@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+/**
+ *  Title: Entity Generator Definitions for the General Data Model
+ *  Description: None
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author David E. Jones (jonesde@ofbiz.org)
+ *@created    Mon Oct 08 17:32:55 EDT 2001
+ *@version    1.0
+ */
+-->
+
+<!DOCTYPE entitymodel [
+    <!-- ====================== Root Element ======================= -->
+    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, entity* )>
+    <!-- ================= Children of entitymodel =================== -->
+    <!ELEMENT entity ( description?, field*, prim-key*, relation* )>
+    <!ELEMENT title ( #PCDATA  )>
+    <!ELEMENT description ( #PCDATA  )>
+    <!ELEMENT copyright ( #PCDATA  )>
+    <!ELEMENT author ( #PCDATA  )>
+    <!ELEMENT version ( #PCDATA  )>
+    <!-- ================== Children of entity ===================== -->
+    <!-- see the children of entitymodel section for description, etc. -->
+    <!ATTLIST entity
+	entity-name CDATA #REQUIRED >
+    <!ATTLIST entity
+	table-name CDATA #IMPLIED >
+    <!ATTLIST entity
+	package-name CDATA #REQUIRED >
+    <!ATTLIST entity
+	title CDATA #IMPLIED >
+    <!ATTLIST entity
+	copyright CDATA #IMPLIED >
+    <!ATTLIST entity
+	author CDATA #IMPLIED >
+    <!ATTLIST entity
+	version CDATA #IMPLIED >
+    <!ELEMENT field ( validate* )>
+    <!ELEMENT prim-key EMPTY>
+    <!ATTLIST prim-key
+	field CDATA #REQUIRED >
+    <!ELEMENT relation ( key-map* )>
+    <!-- ==================== Children of field ===================== -->
+    <!ATTLIST field
+	name CDATA #REQUIRED >
+    <!ATTLIST field
+	col-name CDATA #IMPLIED >
+    <!ATTLIST field
+	type CDATA #REQUIRED >
+    <!ELEMENT validate EMPTY>
+    <!ATTLIST validate
+	name CDATA #REQUIRED >
+    <!-- ==================== Children of relation ====================== -->
+    <!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
+    <!ATTLIST relation
+	type ( one | many ) #REQUIRED >
+    <!ATTLIST relation
+	title CDATA #IMPLIED >
+    <!ATTLIST relation
+	rel-entity-name CDATA #REQUIRED >
+    <!ATTLIST relation
+	rel-table-name CDATA #IMPLIED >
+    <!ELEMENT key-map EMPTY>
+    <!-- see definition of relation in entity section above -->
+    <!-- ===================== Children of key-map ====================== -->
+    <!ATTLIST key-map
+	field-name CDATA #REQUIRED >
+    <!ATTLIST key-map
+	col-name CDATA #IMPLIED >
+    <!-- this is only required if the field-name in the related table is different from the name in this table -->
+    <!ATTLIST key-map
+	rel-field-name CDATA #IMPLIED >
+    <!-- this is only required if the col-name in the related table is different from the col-name in this table -->
+    <!ATTLIST key-map
+	rel-col-namee CDATA #IMPLIED >
+]>
+
+
+<entitymodel>
+  <!-- ========================================================= -->
+  <!-- ======================== Defaults ======================= -->
+  <!-- ========================================================= -->
+    <title>Entity of an Open For Business Project Component</title>
+    <description>None</description>
+    <copyright>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org</copyright>
+    <author>None</author>
+    <version>1.0</version>
+
+  <!-- ========================================================= -->
+  <!-- ======================== Data Model ===================== -->
+  <!-- The modules in this file are as follows:                  -->
+  <!--   - Shipment                                              -->
+  <!-- ========================================================= -->
+
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.shipment.issuance -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="ItemIssuance" 
+            package-name="org.ofbiz.commonapp.shipment.issuance"
+            title="Item Issuance Entity">
+      <field name="itemIssuanceId" type="id-ne"></field>
+      <field name="inventoryItemId" type="id"></field>
+      <field name="picklistId" type="id"></field>
+      <field name="shipmentId" type="id"></field>
+      <field name="shipmentItemSeqId" type="id"></field>
+      <field name="issuedDateTime" type="date-time"></field>
+      <field name="quantity" type="floating-point"></field>	
+      <prim-key field="itemIssuanceId" />
+    </entity>	
+    <entity entity-name="ItemIssuanceRole" 
+            package-name="org.ofbiz.commonapp.shipment.issuance"
+            title="Item Issuance Role Entity">
+      <field name="itemIssuanceId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>	
+      <prim-key field="itemIssuanceId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.shipment.receipt -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="ShipmentReceipt" 
+            package-name="org.ofbiz.commonapp.shipment.receipt"
+            title="Shipment Receipt Entity">
+      <field name="receiptId" type="id-ne"></field>
+      <field name="inventoryItemId" type="id"></field>
+      <field name="productId" type="id"></field>
+      <field name="shipmentPackageId" type="id"></field>
+      <field name="orderId" type="id"></field>
+      <field name="orderItemSeqId" type="id"></field>
+      <field name="rejectionId" type="id"></field>
+      <field name="datetimeReceived" type="date-time"></field>
+      <field name="itemDescription" type="description"></field>
+      <field name="quantityAccepted" type="floating-point"></field>
+      <field name="quantityRejected" type="floating-point"></field>	
+      <prim-key field="receiptId" />
+    </entity>	
+    <entity entity-name="ShipmentReceiptRole" 
+            package-name="org.ofbiz.commonapp.shipment.receipt"
+            title="Shipment Receipt Role Entity">
+      <field name="receiptId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>	
+      <prim-key field="receiptId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.shipment.route -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="ShipmentRouteSegment" 
+            package-name="org.ofbiz.commonapp.shipment.route"
+            title="Shipment Route Segment Entity">
+      <field name="shipmentRouteSegmentId" type="id-ne"></field>
+      <field name="shipmentId" type="id-ne"></field>
+      <field name="partyId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>
+      <field name="fixedAssetId" type="id"></field>
+      <field name="facilityId" type="id"></field>
+      <field name="shipmentMethodTypeId" type="id"></field>
+      <field name="actualStartDatetime" type="date-time"></field>
+      <field name="actualArrivalDatetime" type="date-time"></field>
+      <field name="estimatedStartDatetime" type="date-time"></field>
+      <field name="estimatedArrivalDate" type="date-time"></field>
+      <field name="startMileage" type="floating-point"></field>
+      <field name="endMileage" type="floating-point"></field>
+      <field name="fuelUsed" type="floating-point"></field>	
+      <prim-key field="shipmentRouteSegmentId" />	
+      <prim-key field="shipmentId" />
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.shipment.shipment -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="CarrierShipmentMethod" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Carrier Shipment Method Entity">
+      <field name="shipmentMethodTypeId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>	
+      <prim-key field="shipmentMethodTypeId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
+      <relation type="one" rel-entity-name="ShipmentMethodType">
+        <key-map field-name="shipmentMethodTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="OrderShipmentPreference">
+        <key-map field-name="shipmentMethodTypeId" />
+        <key-map field-name="partyId" rel-field-name="carrierPartyId" />
+        <key-map field-name="roleTypeId" rel-field-name="carrierRoleTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentCostEstimate">
+        <key-map field-name="shipmentMethodTypeId" />
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="PackagingContent" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Packaging Content Entity">
+      <field name="shipmentPackageId" type="id-ne"></field>
+      <field name="shipmentId" type="id-ne"></field>
+      <field name="shipmentItemSeqId" type="id-ne"></field>
+      <field name="quantity" type="floating-point"></field>	
+      <prim-key field="shipmentPackageId" />	
+      <prim-key field="shipmentId" />	
+      <prim-key field="shipmentItemSeqId" />
+    </entity>	
+    <entity entity-name="Shipment" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Entity">
+      <field name="shipmentId" type="id-ne"></field>
+      <field name="shipmentTypeId" type="id"></field>
+      <field name="contactMechId" type="id"></field>
+      <field name="partyId" type="id"></field>
+      <field name="estimatedShipDate" type="date-time"></field>
+      <field name="estimatedReadyDate" type="date-time"></field>
+      <field name="estimatedArrivalDate" type="date-time"></field>
+      <field name="estimatedShipCost" type="currency-amount"></field>
+      <field name="actualShipCost" type="currency-amount"></field>
+      <field name="latestCancelDate" type="date-time"></field>
+      <field name="handlingInstructions" type="long-varchar"></field>
+      <field name="lastUpdated" type="date-time"></field>	
+      <prim-key field="shipmentId" />
+      <relation type="one" rel-entity-name="ShipmentType">
+        <key-map field-name="shipmentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentTypeAttr">
+        <key-map field-name="shipmentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentAttribute">
+        <key-map field-name="shipmentId" />
+      </relation>
+      <relation type="many" rel-entity-name="OrderShipment">
+        <key-map field-name="shipmentId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ShipmentAttribute" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Attribute Entity">
+      <field name="shipmentId" type="id-ne"></field>
+      <field name="name" type="id-long-ne"></field>
+      <field name="value" type="value"></field>	
+      <prim-key field="shipmentId" />	
+      <prim-key field="name" />
+      <relation type="one" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId" />
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentTypeAttr">
+        <key-map field-name="name" />
+      </relation>
+    </entity>	
+    <entity entity-name="ShipmentCostEstimate" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Cost Estimate Entity">
+      <field name="shipmentCostEstimateId" type="id-ne"></field>
+      <field name="shipmentMethodTypeId" type="id"></field>
+      <field name="partyId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>
+      <field name="geoIdTo" type="id"></field>
+      <field name="geoIdFrom" type="id"></field>
+      <field name="weightBreakId" type="id"></field>
+      <field name="weightUomId" type="id"></field>
+      <field name="weightUnitPrice" type="currency-amount"></field>
+      <field name="quantityBreakId" type="id"></field>
+      <field name="quantityUomId" type="id"></field>
+      <field name="quantityUnitPrice" type="currency-amount"></field>
+      <field name="priceBreakId" type="id"></field>
+      <field name="priceUnitPrice" type="currency-amount"></field>
+      <field name="orderFlatPrice" type="currency-amount"></field>
+      <field name="orderPricePercent" type="floating-point"></field>
+      <field name="orderItemFlatPrice" type="currency-amount"></field>	
+      <prim-key field="shipmentCostEstimateId" />
+      <relation type="one" rel-entity-name="CarrierShipmentMethod">
+        <key-map field-name="shipmentMethodTypeId" />
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="PartyRole">
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="Uom">
+        <key-map field-name="weightUomId" rel-field-name="uomId" />
+      </relation>
+      <relation type="one" title="To" rel-entity-name="Geo">
+        <key-map field-name="geoIdTo" rel-field-name="geoId" />
+      </relation>
+      <relation type="one" title="From" rel-entity-name="Geo">
+        <key-map field-name="geoIdFrom" rel-field-name="geoId" />
+      </relation>
+      <relation type="one" title="Weight" rel-entity-name="QuantityBreak">
+        <key-map field-name="weightBreakId" rel-field-name="quantityBreakId" />
+      </relation>
+      <relation type="one" title="Quantity" rel-entity-name="QuantityBreak">
+        <key-map field-name="quantityBreakId" />
+      </relation>
+      <relation type="one" title="Price" rel-entity-name="QuantityBreak">
+        <key-map field-name="priceBreakId" rel-field-name="quantityBreakId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ShipmentItem" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Item Entity">
+      <field name="shipmentId" type="id-ne"></field>
+      <field name="shipmentItemSeqId" type="id-ne"></field>
+      <field name="productId" type="id"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="shipmentContentDescription" type="description"></field>	
+      <prim-key field="shipmentId" />	
+      <prim-key field="shipmentItemSeqId" />
+      <relation type="many" rel-entity-name="OrderShipment">
+        <key-map field-name="shipmentId" />
+        <key-map field-name="shipmentItemSeqId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ShipmentItemBilling" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Item Billing Entity">
+      <field name="shipmentId" type="id-ne"></field>
+      <field name="shipmentItemSeqId" type="id-ne"></field>
+      <field name="invoiceId" type="id-ne"></field>
+      <field name="invoiceItemSeqId" type="id-ne"></field>	
+      <prim-key field="shipmentId" />	
+      <prim-key field="shipmentItemSeqId" />	
+      <prim-key field="invoiceId" />	
+      <prim-key field="invoiceItemSeqId" />
+    </entity>	
+    <entity entity-name="ShipmentItemFeature" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Item Feature Entity">
+      <field name="shipmentId" type="id-ne"></field>
+      <field name="shipmentItemSeqId" type="id-ne"></field>
+      <field name="productFeatureId" type="id-ne"></field>	
+      <prim-key field="shipmentId" />	
+      <prim-key field="shipmentItemSeqId" />	
+      <prim-key field="productFeatureId" />
+    </entity>	
+    <entity entity-name="ShipmentMethodType" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Method Type Entity">
+      <field name="shipmentMethodTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="shipmentMethodTypeId" />
+      <relation type="many" rel-entity-name="OrderShipmentPreference">
+        <key-map field-name="shipmentMethodTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ShipmentPackage" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Package Entity">
+      <field name="shipmentPackageId" type="id-ne"></field>
+      <field name="dateCreated" type="date-time"></field>	
+      <prim-key field="shipmentPackageId" />
+    </entity>	
+    <entity entity-name="ShipmentStatus" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Status Entity">
+      <field name="statusId" type="id-ne"></field>
+      <field name="shipmentId" type="id-ne"></field>
+      <field name="statusDate" type="date-time"></field>	
+      <prim-key field="statusId" />	
+      <prim-key field="shipmentId" />
+    </entity>	
+    <entity entity-name="ShipmentType" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Type Entity">
+      <field name="shipmentTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="shipmentTypeId" />
+      <relation type="one" title="Parent" rel-entity-name="ShipmentType">
+        <key-map field-name="parentTypeId" rel-field-name="shipmentTypeId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="ShipmentType">
+        <key-map field-name="shipmentTypeId" rel-field-name="parentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentTypeAttr">
+        <key-map field-name="shipmentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="Shipment">
+        <key-map field-name="shipmentTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ShipmentTypeAttr" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Type Attribute Entity">
+      <field name="shipmentTypeId" type="id-ne"></field>
+      <field name="name" type="id-long-ne"></field>	
+      <prim-key field="shipmentTypeId" />	
+      <prim-key field="name" />
+      <relation type="one" rel-entity-name="ShipmentType">
+        <key-map field-name="shipmentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentAttribute">
+        <key-map field-name="name" />
+      </relation>
+      <relation type="many" rel-entity-name="Shipment">
+        <key-map field-name="shipmentTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ShippingDocument" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipping Document Entity">
+      <field name="documentId" type="id-ne"></field>
+      <field name="shipmentId" type="id"></field>
+      <field name="shipmentItemSeqId" type="id"></field>
+      <field name="shipmentPackageId" type="id"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="documentId" />
+    </entity>
+</entitymodel>
+
