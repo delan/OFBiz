@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  */
 -->
 
@@ -1818,6 +1818,7 @@
       <field name="orderByName" type="long-varchar"></field>
       <field name="isAscending" type="indicator"></field>
       <field name="numResults" type="numeric"></field>
+      <field name="secondsTotal" type="floating-point"></field>
       <field name="searchDate" type="date-time"></field>
       <prim-key field="productSearchResultId"/>
       <relation type="one" fk-name="PROD_SCHRES_VST" rel-entity-name="Visit">
