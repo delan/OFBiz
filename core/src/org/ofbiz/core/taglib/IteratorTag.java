@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/11 17:25:20  epabst
+ * debugging info added/minor changes
+ *
  * Revision 1.3  2001/09/10 21:41:29  epabst
  * made the iterator tag check for the property object being an Iterator already
  *
@@ -97,12 +100,12 @@ public class IteratorTag extends BodyTagSupport {
     }
             
     public int doStartTag() throws JspTagException {
-        Debug.log("Starting Iterator Tag...");
+        Debug.logInfo("Starting Iterator Tag...");
         
         if (  !defineIterator() )
             return SKIP_BODY;
         
-        Debug.log("We now have an iterator.");
+        Debug.logInfo("We now have an iterator.");
         
         if ( defineElement() )
             return EVAL_BODY_TAG;
@@ -126,7 +129,8 @@ public class IteratorTag extends BodyTagSupport {
             }
         }
         catch(IOException e) {
-            Debug.log(e,"IteratorTag IO Error");
+            Debug.logInfo("IteratorTag IO Error");
+            Debug.logInfo(e);
         }
         return EVAL_PAGE;
     }
@@ -136,7 +140,7 @@ public class IteratorTag extends BodyTagSupport {
         Iterator newIterator = null;
         Collection thisCollection = null;
         if ( property != null ) {
-            Debug.log("Getting iterator from property: " + property);
+            Debug.logInfo("Getting iterator from property: " + property);
             Object propertyObject = pageContext.findAttribute(property);
             if (propertyObject instanceof Iterator) {
                 newIterator = (Iterator) propertyObject;
@@ -146,7 +150,7 @@ public class IteratorTag extends BodyTagSupport {
             }
         } 
         else {
-            Debug.log("No property, check for Object Tag.");
+            Debug.logInfo("No property, check for Object Tag.");
             ObjectTag objectTag = (ObjectTag) findAncestorWithClass(this, ObjectTag.class);
             if ( objectTag == null )
                 return false;
@@ -157,7 +161,7 @@ public class IteratorTag extends BodyTagSupport {
                     Method[] m = Class.forName(objectTag.getType()).getDeclaredMethods();
                     for ( int i = 0; i <m.length; i++ ) {
                         if ( m[i].getName().equals("iterator") ) {
-                            Debug.log("Found iterator method. Using it.");
+                            Debug.logInfo("Found iterator method. Using it.");
                             newIterator = (Iterator) m[i].invoke(objectTag.getObject(),null);
                             break;
                         }
@@ -174,9 +178,9 @@ public class IteratorTag extends BodyTagSupport {
                 return false;
 
             newIterator = thisCollection.iterator();
-            Debug.log("Got iterator.");
+            Debug.logInfo("Got iterator.");
         } else {//already set
-            Debug.log("iterator already set.");
+            Debug.logInfo("iterator already set.");
         }
         this.iterator = newIterator;
         return true;
@@ -187,16 +191,16 @@ public class IteratorTag extends BodyTagSupport {
         pageContext.removeAttribute(name);
         if ( this.iterator.hasNext() ) {
             element = this.iterator.next();
-            Debug.log("iterator has another object: " + element);
+            Debug.logInfo("iterator has another object: " + element);
         } else {
-            Debug.log("iterator has no more objects");
+            Debug.logInfo("iterator has no more objects");
         }
         if ( element != null ) {
-            Debug.log("set attribute " + name + " to be " + element + " as next value from iterator");
+            Debug.logInfo("set attribute " + name + " to be " + element + " as next value from iterator");
             pageContext.setAttribute(name,element);
             return true;
         }
-        Debug.log("no more iterations; element = " + element);
+        Debug.logInfo("no more iterations; element = " + element);
         return false;        
     }
 }
