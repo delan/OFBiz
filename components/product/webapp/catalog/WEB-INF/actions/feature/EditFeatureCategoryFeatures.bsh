@@ -21,13 +21,16 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
 
 import java.util.*;
 import java.io.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.EntityFieldMap;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.base.util.*;
 import org.ofbiz.content.widget.html.*;
 
@@ -51,13 +54,57 @@ context.put("productFeatureCategoryId", productFeatureCategoryId);
 curProductFeatureCategory = delegator.findByPrimaryKey("ProductFeatureCategory", UtilMisc.toMap("productFeatureCategoryId", productFeatureCategoryId));
 context.put("curProductFeatureCategory", curProductFeatureCategory);
 
-Collection productFeatures = delegator.findByAnd("ProductFeature",
-        UtilMisc.toMap("productFeatureCategoryId", productFeatureCategoryId),
-        UtilMisc.toList("productFeatureTypeId", "description"));
-context.put("productFeatures", productFeatures);
-
 productFeatureTypes = delegator.findAll("ProductFeatureType", UtilMisc.toList("description"));
 context.put("productFeatureTypes", productFeatureTypes);
+
+productFeatureCategories = delegator.findAll("ProductFeatureCategory", UtilMisc.toList("description"));
+context.put("productFeatureCategories", productFeatureCategories);
+
+//we only need these if we will be showing the apply feature to category forms
+if (productId != null && productId.length() > 0) {
+    productFeatureApplTypes = delegator.findAll("ProductFeatureApplType", UtilMisc.toList("description"));
+    context.put("productFeatureApplTypes", productFeatureApplTypes);
+}
+
+productFeaturesSize = delegator.findCountByAnd("ProductFeature", UtilMisc.toMap("productFeatureCategoryId", productFeatureCategoryId));
+
+int viewIndex = 0;
+int viewSize = 10;
+int highIndex = 0;
+int lowIndex = 0;
+int listSize = (int) productFeaturesSize;
+
+try {
+    viewIndex = Integer.valueOf((String) context.getRequest().getParameter("VIEW_INDEX")).intValue();
+} catch (Exception e) {
+    viewIndex = 0;
+}
+
+try {
+    viewSize = Integer.valueOf((String) context.getRequest().getParameter("VIEW_SIZE")).intValue();
+} catch (Exception e) {
+    viewSize = 10;
+}
+
+lowIndex = viewIndex * viewSize;
+highIndex = (viewIndex + 1) * viewSize;
+if (listSize < highIndex) {
+    highIndex = listSize;
+}
+
+context.put("viewIndex", viewIndex);
+context.put("viewSize", viewSize);
+context.put("listSize", listSize);
+context.put("lowIndex", lowIndex);
+context.put("highIndex", highIndex);
+
+whereCondition = new EntityFieldMap(UtilMisc.toMap("productFeatureCategoryId", productFeatureCategoryId), EntityOperator.AND);
+EntityFindOptions efo = new EntityFindOptions();
+efo.setDistinct(true);
+efo.setResultSetType(EntityFindOptions.TYPE_SCROLL_INSENSITIVE);
+productFeaturesEli = delegator.findListIteratorByCondition("ProductFeature", whereCondition, null, null, UtilMisc.toList("productFeatureTypeId", "description"), efo);
+productFeatures = productFeaturesEli.getPartialList(lowIndex + 1, highIndex - lowIndex);
+context.put("productFeatures", productFeatures);
 
 productFeatureApplMap = new HashMap();
 productFeatureAppls = null;
@@ -73,12 +120,3 @@ while (productFeatureIter.hasNext()) {
     }
 }
 context.put("productFeatureApplMap", productFeatureApplMap);
-
-productFeatureCategories = delegator.findAll("ProductFeatureCategory", UtilMisc.toList("description"));
-context.put("productFeatureCategories", productFeatureCategories);
-
-//we only need these if we will be showing the apply feature to category forms
-if (productId != null && productId.length() > 0) {
-    productFeatureApplTypes = delegator.findAll("ProductFeatureApplType", UtilMisc.toList("description"));
-    context.put("productFeatureApplTypes", productFeatureApplTypes);
-}

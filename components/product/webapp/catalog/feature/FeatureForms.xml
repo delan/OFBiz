@@ -47,7 +47,7 @@
 
         <field name="productFeatureCategoryId" title="${uiLabelMap.ProductFeatureCategory}" widget-style="selectBox">
             <drop-down>
-                <entity-options entity-name="ProductFeatureCategory" description="${description}">
+                <entity-options entity-name="ProductFeatureCategory" description="${description} [${productFeatureCategoryId}]">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
