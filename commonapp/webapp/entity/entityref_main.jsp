@@ -29,10 +29,12 @@
 
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <% 
 if(security.hasPermission("ENTITY_MAINT", session)) {
   initReservedWords();
+  boolean checkWarnings = "true".equals(request.getParameter("CHECK_WARNINGS"));
   String search = null;
   //GenericDelegator delegator = GenericHelperFactory.getDefaultHelper();
   ModelReader reader = delegator.getModelReader();
@@ -86,8 +88,11 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   <DIV class='toptext'>Entity Reference Chart<br>
     <%= numberOfEntities %> Total Entities
     </DIV>
-
-<A href='#WARNINGS'>View Warnings</A>
+<%if(checkWarnings) {%>
+  <A href='#WARNINGS'>View Warnings</A>
+<%}else{%>
+  <A href='<%=response.encodeURL(controlPath + "/entityref_main?CHECK_WARNINGS=true")%>'>View With Warnings Check</A>  
+<%}%>
 <%
   Iterator piter = packageNames.iterator();
   while(piter.hasNext())
@@ -102,10 +107,12 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
       if ( search == null || entityName.toLowerCase().indexOf(search.toLowerCase()) != -1 )
       {
         ModelEntity entity = reader.getModelEntity(entityName);
-        if(entity.tableName.length() > 30)
-          warningString = warningString + "<li><div style=\"color: red;\">[TableNameGT30]</div> Table name <b>" + entity.tableName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is longer than 30 characters.</li>";
-        if(reservedWords.contains(entity.tableName.toUpperCase()))
-          warningString = warningString + "<li><div style=\"color: red;\">[TableNameRW]</div> Table name <b>" + entity.tableName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is a reserved word.</li>";
+        if(checkWarnings) {
+          if(entity.tableName.length() > 30)
+            warningString = warningString + "<li><div style=\"color: red;\">[TableNameGT30]</div> Table name <b>" + entity.tableName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is longer than 30 characters.</li>";
+          if(reservedWords.contains(entity.tableName.toUpperCase()))
+            warningString = warningString + "<li><div style=\"color: red;\">[TableNameRW]</div> Table name <b>" + entity.tableName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is a reserved word.</li>";
+        }
 %>	
   <a name="<%= entityName %>"></a>
   <table width="95%" border="1" cellpadding='2' cellspacing='0'>
@@ -134,14 +141,16 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     ModelFieldType type = delegator.getEntityFieldType(entity, field.type);
     String javaName = new String();
     javaName = field.isPk ? "<div style=\"color: red;\">" + field.name + "</div>" : field.name;
-    if(ufields.contains(field.name))
-      warningString = warningString + "<li><div style=\"color: red;\">[FieldNotUnique]</div> Field <b>" + field.name + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is not unique for that entity.</li>";
-    else
-      ufields.add(field.name);
-    if(field.colName.length() > 30)
-      warningString = warningString + "<li><div style=\"color: red;\">[FieldNameGT30]</div> Column name <b>" + field.colName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is longer than 30 characters.</li>";
-    if(reservedWords.contains(field.colName.toUpperCase()))
-      warningString = warningString + "<li><div style=\"color: red;\">[FieldNameRW]</div> Column name <b>" + field.colName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is a reserved word.</li>";
+    if(checkWarnings) {
+      if(ufields.contains(field.name))
+        warningString = warningString + "<li><div style=\"color: red;\">[FieldNotUnique]</div> Field <b>" + field.name + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is not unique for that entity.</li>";
+      else
+        ufields.add(field.name);
+      if(field.colName.length() > 30)
+        warningString = warningString + "<li><div style=\"color: red;\">[FieldNameGT30]</div> Column name <b>" + field.colName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is longer than 30 characters.</li>";
+      if(reservedWords.contains(field.colName.toUpperCase()))
+        warningString = warningString + "<li><div style=\"color: red;\">[FieldNameRW]</div> Column name <b>" + field.colName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is a reserved word.</li>";
+    }
 %>	
     <tr bgcolor="#EFFFFF">
       <td><div align="left" class='enametext'><%= javaName %></div></td>
@@ -153,7 +162,9 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     <%}else{%>
       <td><div align="left" class='entitytext'>NOT FOUND</div></td>
       <td><div align="left" class='entitytext'>NOT FOUND</div></td>
-      <%warningString = warningString + "<li><div style=\"color: red;\">[FieldTypeNotFound]</div> Field type <b>" + field.type + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> not found in field type definitions.</li>";%>
+      <%if(checkWarnings) {%>
+        <%warningString = warningString + "<li><div style=\"color: red;\">[FieldTypeNotFound]</div> Field type <b>" + field.type + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> not found in field type definitions.</li>";%>
+      <%}%>
     <%}%>
     </tr>
 <%	
@@ -174,44 +185,45 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   for ( int r = 0; r < entity.relations.size(); r++ ) {
     ModelRelation relation = (ModelRelation) entity.relations.elementAt(r);
     
-    if(!entityNames.contains(relation.relEntityName))
-      warningString = warningString + "<li><div style=\"color: red;\">[RelatedEntityNotFound]</div> Related entity <b>" + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> not found.</li>";
-    if(relations.contains(relation.title + relation.relEntityName))
-      warningString = warningString + "<li><div style=\"color: red;\">[RelationNameNotUnique]</div> Relation <b>" + relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is not unique for that entity.</li>";
-    else
-      relations.add(relation.title + relation.relEntityName);
+    if(checkWarnings) {
+      if(!entityNames.contains(relation.relEntityName))
+        warningString = warningString + "<li><div style=\"color: red;\">[RelatedEntityNotFound]</div> Related entity <b>" + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> not found.</li>";
+      if(relations.contains(relation.title + relation.relEntityName))
+        warningString = warningString + "<li><div style=\"color: red;\">[RelationNameNotUnique]</div> Relation <b>" + relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is not unique for that entity.</li>";
+      else
+        relations.add(relation.title + relation.relEntityName);
 
-    ModelEntity relatedEntity = reader.getModelEntity(relation.relEntityName);
-    if(relatedEntity != null)
-    {
-      //if relation is of type one, make sure keyMaps match the PK of the relatedEntity
-      if(relation.type.equalsIgnoreCase("one"))
-      {
-        if(relatedEntity.pks.size() != relation.keyMaps.size())
-          warningString = warningString + "<li><div style=\"color: red;\">[RelatedOneKeyMapsWrongSize]</div> The number of primary keys (" + relatedEntity.pks.size() + ") of related entity <b>" + relation.relEntityName + "</b> does not match the number of keymaps (" + relation.keyMaps.size() + ") for relation of type one \"" +  relation.title + relation.relEntityName + "\" of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
-        for(int repks=0; repks<relatedEntity.pks.size(); repks++)
-        {
-          ModelField pk = (ModelField)relatedEntity.pks.get(repks);
-          if(relation.findKeyMapByRelated(pk.name) == null)
-            warningString = warningString + "<li><div style=\"color: red;\">[RelationOneRelatedPrimaryKeyMissing]</div> The primary key \"<b>" + pk.name + "</b>\" of related entity <b>" + relation.relEntityName + "</b> is missing in the keymaps for relation of type one <b>" +  relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
-        }
-      }
-    }
-
-    //make sure all keyMap 'fieldName's match fields of this entity
-    //make sure all keyMap 'relFieldName's match fields of the relatedEntity
-    for(int rkm=0; rkm<relation.keyMaps.size(); rkm++)
-    {
-      ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(rkm);
+      ModelEntity relatedEntity = reader.getModelEntity(relation.relEntityName);
       if(relatedEntity != null)
       {
-        if(relatedEntity.getField(keyMap.relFieldName) == null)
-          warningString = warningString + "<li><div style=\"color: red;\">[RelationRelatedFieldNotFound]</div> The field \"<b>" + keyMap.relFieldName + "</b>\" of related entity <b>" + relation.relEntityName + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
+        //if relation is of type one, make sure keyMaps match the PK of the relatedEntity
+        if(relation.type.equalsIgnoreCase("one"))
+        {
+          if(relatedEntity.pks.size() != relation.keyMaps.size())
+            warningString = warningString + "<li><div style=\"color: red;\">[RelatedOneKeyMapsWrongSize]</div> The number of primary keys (" + relatedEntity.pks.size() + ") of related entity <b>" + relation.relEntityName + "</b> does not match the number of keymaps (" + relation.keyMaps.size() + ") for relation of type one \"" +  relation.title + relation.relEntityName + "\" of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
+          for(int repks=0; repks<relatedEntity.pks.size(); repks++)
+          {
+            ModelField pk = (ModelField)relatedEntity.pks.get(repks);
+            if(relation.findKeyMapByRelated(pk.name) == null)
+              warningString = warningString + "<li><div style=\"color: red;\">[RelationOneRelatedPrimaryKeyMissing]</div> The primary key \"<b>" + pk.name + "</b>\" of related entity <b>" + relation.relEntityName + "</b> is missing in the keymaps for relation of type one <b>" +  relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
+          }
+        }
       }
-      if(entity.getField(keyMap.fieldName) == null)
-        warningString = warningString + "<li><div style=\"color: red;\">[RelationFieldNotFound]</div> The field <b>" + keyMap.fieldName + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
-    }
 
+      //make sure all keyMap 'fieldName's match fields of this entity
+      //make sure all keyMap 'relFieldName's match fields of the relatedEntity
+      for(int rkm=0; rkm<relation.keyMaps.size(); rkm++)
+      {
+        ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(rkm);
+        if(relatedEntity != null)
+        {
+          if(relatedEntity.getField(keyMap.relFieldName) == null)
+            warningString = warningString + "<li><div style=\"color: red;\">[RelationRelatedFieldNotFound]</div> The field \"<b>" + keyMap.relFieldName + "</b>\" of related entity <b>" + relation.relEntityName + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
+        }
+        if(entity.getField(keyMap.fieldName) == null)
+          warningString = warningString + "<li><div style=\"color: red;\">[RelationFieldNotFound]</div> The field <b>" + keyMap.fieldName + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
+      }
+    }
 %>
     <tr bgcolor="#FEEEEE"> 
       <td> 
@@ -248,10 +260,12 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   <p align="center">Displayed: <%= numberShowed %></p>
 </div>
 
-<A name='WARNINGS'>WARNINGS:</A>
-<OL>
-<%=warningString%>
-</OL>
+<%if(checkWarnings) {%>
+  <A name='WARNINGS'>WARNINGS:</A>
+  <OL>
+  <%=warningString%>
+  </OL>
+<%}%>
 
 </body>
 </html>
