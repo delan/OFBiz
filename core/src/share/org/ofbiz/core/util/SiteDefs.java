@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/02/02 19:50:31  azeneski
+ * formatting changes (120cols)
+ *
  * Revision 1.3  2001/12/30 04:48:58  jonesde
  * Added event message def
  *
@@ -95,12 +98,15 @@ package org.ofbiz.core.util;
  */
 public final class SiteDefs {
 
-    /** Default Site Config Variables */
+    /* Default Site Config Variables */
     public static final String ERROR_PAGE = "/error/error.jsp";
     public static final String CHECK_LOGIN_REQUEST_URI = "checkLogin";
     public static final String LOGIN_REQUEST_URI = "login";
     public static final String LOGOUT_REQUEST_URI = "logout";
 
+    /** The name of the flag in the request attributes to denote that the control servlet was passed through */
+    public static final String FORWARDED_FROM_CONTROL_SERVLET = "_FORWARDED_FROM_CONTROL_SERVLET_";
+    
     /** Required context init parameter to specify the entity delegator name as defined in entityengine.properties */
     public static final String ENTITY_DELEGATOR_NAME = "entityDelegatorName";
 
