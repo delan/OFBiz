@@ -294,7 +294,7 @@ field-name and rel-field-name but in the case of view entities the field name is
 <hr>
 <h3><a name="The_Entity_Engine_API">The Entity Engine API</a></h3>
 <hr>
-<p>The Entity Engine classes in the package <b> org.ofbiz.core.entity</b> define the
+<p>The Entity Engine classes in the package <b>org.ofbiz.core.entity</b> define the
 API used to interact with Entity Engine entity data. From a users point of view
 only three classes really need to be understood. They are <b>GenericDelegator</b>,
 <b>GenericValue</b> and <b>GenericPK</b>. The <b>GenericDelegator</b> class, usually used with the
@@ -329,21 +329,70 @@ in the map. The other type of findByAnd accepts a list of <b>EntityExpr</b> obje
 are used to specify small expressions that will be anded together. Each EntityExpr specifies
 a field name, an operation, and a value for the field.</p>
 
-<p>For storing multiple entities the <b>GenericValue</b> class has methods
-called <b>preStoreOther</b> and <b>preStoreOthers</b> which take one and many
-(respectively) <b>GenericValue</b> instances and store them in the same database
-transaction when the primary entity is created or stored. Actually, to say that
+<p>To create (or insert) values into the database, use the <b>create</b> method on the
+<b>GenericValue</b> or <b>GenericDelegator</b> objects. To store (or update) existing values,
+use the <b>store</b> method on the <b>GenericValue</b> or <b>GenericDelegator</b>
+objects.</p>
+
+<p>For storing multiple entities the <b>GenericDelegator</b> class has a method
+called <b>storeAll</b> which takes many
+<b>GenericValue</b> instances and stores them in the same transaction. 
+Actually, to say that
 it stores them is incorrect. It checks to see if they exist and if so does an
 update, if not it does an insert. This may be optimized in the future for speed
 by allowing you to specify whether it should be inserted or updated based on
-prior knowledge of the existence if that entity.</p>
-
-<p>You can also store multiple entities in a single call, and transaction, through the
-delegator.storeAll method, which acts nearly the same as the preStore methods, but does
-not use a single value object to attach the others to.<p>
+prior knowledge of the existence if that entity. Note that this is a DIFFERENT
+behavior that the store method, which just does an update.</p>
 
 <p>Removal of entities is done through the <b>remove</b> method on either the <b>delegator</b>,
 or the <b>GenericValue</b>.</p>
+
+<p><b>The EntityCondition object</b></p>
+
+<p>Originally the EntityExpr object was meant to be nestable to allow for
+more flexible queries, but was never completed. Also, even if you could
+next it the types of queries you could run would be limited because you
+couldn't have two ANDs (for instance) inside a set of parenthesis. To
+address these issues, and complete the EntityExpr implementation the
+EntityCondition abstract object has been introduced along with the
+EntityExprList and EntityFieldMap objects which both extend
+EntityCondition. The EntityExpr object has also been changed to extend
+EntityCondition.<p>
+
+<p>The EntityExprList and EntityFieldMap objects are pretty simple, they
+are created with a List or Map, respectively, and an EntityOperator to
+specify operator used to join the members of these containers, generally
+AND or OR.</p>
+
+<p>The EntityExpr class now has two primary constructors: one for comparing
+a field to a value (the String, EntityOperator, Object constructor), and
+one for comparing two EntityCondition objects (the EntityCondition,
+EntityOperator, EntityCondition constructor).</p>
+
+<p>A findByCondition method is now available that accepts an
+EntityCondition argument (as well as some other useful arguments) and
+this EntityCondition can be an EntityExpr, EntityExprList or
+EntityFieldMap.</p>
+
+<p>The code inside the Entity Engine has changed somewhat because these
+EntityCondition objects now created their own WHERE clauses. This is a
+nice architectural point because other custom EntityConditions could
+also be created and used as desired by a savvy developer.</p>
+
+<p><b>The EntityListIterator object</b></p>
+
+<p>The EntityListIterator class implements the ListIterator interface for
+convenience, but also has other methods that are necessary for it's
+operation, like a close() method for when you are finished.</p>
+
+<p>This object allows you to iterate through query results efficiently in
+both directions by keeping a reference to the ResultSet that comes back
+from the query. This makes is possible to use the cursor feature in the
+database and especially for large queries uses memory much more
+efficiently. This object constructs GenericValue objects on the fly
+rather than creating a bunch all at once, so if you need to export the
+results of a huge query to a file or something, it can be done without a
+massive amount of memory.</p>
 
 <hr>
 <h3><a name="JTA_Support">JTA Support</a></h3>
