@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+	<!-- suppliers -->
+    <Party partyId="DemoSupplier" partyTypeId="PARTY_GROUP" supplierName="" supplierProductId=""/>
+    <PartyGroup partyId="DemoSupplier" groupName="Demo Supplier" supplierName="" supplierProductId=""/>
+    <PartyRole partyId="DemoSupplier" roleTypeId="SUPPLIER" supplierName="" supplierProductId=""/>
+
+    <Party partyId="BigSupplier" partyTypeId="PARTY_GROUP" supplierName="" supplierProductId=""/>
+    <PartyGroup partyId="BigSupplier" groupName="Big Supplier" supplierName="" supplierProductId=""/>
+    <PartyRole partyId="BigSupplier" roleTypeId="SUPPLIER" supplierName="" supplierProductId=""/>
+
+    <Party partyId="EuroSupplier" partyTypeId="PARTY_GROUP" supplierName="" supplierProductId=""/>
+    <PartyGroup partyId="EuroSupplier" groupName="European Supplier" supplierName="" supplierProductId=""/>
+    <PartyRole partyId="EuroSupplier" roleTypeId="SUPPLIER" supplierName="" supplierProductId=""/>
+    
+    <!-- supplier pricing -->
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-1000" lastPrice="7.5" supplierProductId="GZ-1000-0"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-1001" lastPrice="12.995" supplierProductId="GZ-1001-0"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-1005" lastPrice="1399.5" supplierProductId="GZ-1005-0"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-1006" lastPrice="2.995" supplierProductId="GZ-1006-0"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-2002" lastPrice="24.0" supplierProductId="GZ-2002-0"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-2644" lastPrice="24.0" supplierProductId="GZ-2644-0"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-5005" lastPrice="24.0" supplierProductId="GZ-5005-0"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-7000" lastPrice="499.995" supplierProductId="GZ-7000-0"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-8544" lastPrice="135.0" supplierProductId="GZ-8544-0"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-9290" lastPrice="49.995" supplierProductId="GZ-9290-0"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="WG-1111" lastPrice="30.0" supplierProductId="WG-1111-0"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="WG-5569" lastPrice="30.0" supplierProductId="WG-5569-0"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="WG-9943" lastPrice="275.0" supplierProductId="WG-9943-0"/>
+
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="GZ-1000" lastPrice="6.75" supplierName="" supplierProductId="GZ-1000-5"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="GZ-1001" lastPrice="11.6955" supplierName="" supplierProductId="GZ-1001-5"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="GZ-1005" lastPrice="1259.55" supplierName="" supplierProductId="GZ-1005-5"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="GZ-1006" lastPrice="2.6955" supplierName="" supplierProductId="GZ-1006-5"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="GZ-2002" lastPrice="21.6" supplierName="" supplierProductId="GZ-2002-5"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="GZ-2644" lastPrice="21.6" supplierName="" supplierProductId="GZ-2644-5"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="GZ-5005" lastPrice="21.6" supplierName="" supplierProductId="GZ-5005-5"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="GZ-7000" lastPrice="449.9955" supplierName="" supplierProductId="GZ-7000-5"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="GZ-8544" lastPrice="121.5" supplierName="" supplierProductId="GZ-8544-5"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="GZ-9290" lastPrice="44.9955" supplierName="" supplierProductId="GZ-9290-5"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="WG-1111" lastPrice="27.0" supplierName="" supplierProductId="WG-1111-5"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="WG-5569" lastPrice="27.0" supplierName="" supplierProductId="WG-5569-5"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="5" currencyUomId="USD" productId="WG-9943" lastPrice="247.5" supplierName="" supplierProductId="WG-9943-5"/>
+    
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="GZ-1000" lastPrice="5.65" supplierName="" supplierProductId="GZ-1000-25"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="GZ-1001" lastPrice="9.75" supplierName="" supplierProductId="GZ-1001-25"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="GZ-1005" lastPrice="1049.65" supplierName="" supplierProductId="GZ-1005-25"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="GZ-1006" lastPrice="2.25" supplierName="" supplierProductId="GZ-1006-25"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="GZ-2002" lastPrice="18.0" supplierName="" supplierProductId="GZ-2002-25"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="GZ-2644" lastPrice="18.0" supplierName="" supplierProductId="GZ-2644-25"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="GZ-5005" lastPrice="18.0" supplierName="" supplierProductId="GZ-5005-25"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="GZ-7000" lastPrice="374.00" supplierName="" supplierProductId="GZ-7000-25"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="GZ-8544" lastPrice="101.25" supplierName="" supplierProductId="GZ-8544-25"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="GZ-9290" lastPrice="37.5" supplierName="" supplierProductId="GZ-9290-25"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="WG-1111" lastPrice="22.5" supplierName="" supplierProductId="WG-1111-25"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="WG-5569" lastPrice="22.5" supplierName="" supplierProductId="WG-5569-25"/>
+    <SupplierProduct partyId="DemoSupplier" minimumOrderQuantity="25" currencyUomId="USD" productId="WG-9943" lastPrice="206.25" supplierName="" supplierProductId="WG-9943-25"/>
+
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="GZ-1000" supplierName="Bulk Tiny Gizmo" supplierProductId="BKGZ-1000" lastPrice="3.75"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="GZ-1001" supplierName="Bulk Nan Gizmo" supplierProductId="BKGZ-1001" lastPrice="6.4975"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="GZ-1005" supplierName="Bulk .NIT Gizmo" supplierProductId="BKGZ-1005" lastPrice="699.75"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="GZ-1006" supplierName="Bulk Open Gizmo" supplierProductId="BKGZ-1006" lastPrice="1.4975"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="GZ-2002" supplierName="Bulk Square Gizmo" supplierProductId="BKGZ-2002" lastPrice="12.0"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="GZ-2644" supplierName="Bulk Round Gizmo" supplierProductId="BKGZ-2644" lastPrice="12.0"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="GZ-5005" supplierName="Bulk Purple Gizmo" supplierProductId="BKGZ-5005" lastPrice="12.0"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="GZ-7000" supplierName="Bulk Massive Gizmo" supplierProductId="BKGZ-7000" lastPrice="249.9975"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="GZ-8544" supplierName="Bulk Big Gizmo" supplierProductId="BKGZ-8544" lastPrice="67.5"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="GZ-9290" supplierName="Bulk His/Her Gizmo" supplierProductId="BKGZ-9290" lastPrice="24.9975"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="WG-1111" supplierName="Bulk Micro Chrome Widget" supplierProductId="BKWG-1111" lastPrice="15.0"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="WG-5569" supplierName="Bulk Tiny Chrome Widget" supplierProductId="BKWG-5569" lastPrice="15.0"/>
+    <SupplierProduct partyId="BigSupplier" minimumOrderQuantity="500" currencyUomId="USD" productId="WG-9943" supplierName="Bulk Giant Widget" supplierProductId="BKWG-9943" lastPrice="137.5"/>
+ 
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="EUR" productId="GZ-1000" supplierName="EURO Tiny Gizmo" supplierProductId="EUGZ-1000" lastPrice="6.0"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="EUR" productId="GZ-1001" supplierName="EURO Nan Gizmo" supplierProductId="EUGZ-1001" lastPrice="10.40"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="EUR" productId="GZ-1005" supplierName="EURO .NIT Gizmo" supplierProductId="EUGZ-1005" lastPrice="1119.6"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="EUR" productId="GZ-1006" supplierName="EURO Open Gizmo" supplierProductId="EUGZ-1006" lastPrice="2.396"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="EUR" productId="GZ-2002" supplierName="EURO Square Gizmo" supplierProductId="EUGZ-2002" lastPrice="19.2"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="EUR" productId="GZ-2644" supplierName="EURO Round Gizmo" supplierProductId="EUGZ-2644" lastPrice="19.2"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="EUR" productId="GZ-5005" supplierName="EURO Purple Gizmo" supplierProductId="EUGZ-5005" lastPrice="19.2"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="EUR" productId="GZ-7000" supplierName="EURO Massive Gizmo" supplierProductId="EUGZ-7000" lastPrice="400.00"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="EUR" productId="GZ-8544" supplierName="EURO Big Gizmo" supplierProductId="EUGZ-8544" lastPrice="108.0"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="EUR" productId="GZ-9290" supplierName="EURO His/Her Gizmo" supplierProductId="EUGZ-9290" lastPrice="40.00"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="EUR" productId="WG-1111" supplierName="EURO Micro Chrome Widget" supplierProductId="EUWG-1111" lastPrice="24.0"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="EUR" productId="WG-5569" supplierName="EURO Tiny Chrome Widget" supplierProductId="EUWG-5569" lastPrice="24.0"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="EUR" productId="WG-9943" supplierName="EURO Giant Widget" supplierProductId="EUWG-9943" lastPrice="220.0"/>
+
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-1000" supplierName="US Tiny Gizmo" supplierProductId="US-GZ-1000" lastPrice="3.6"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-1001" supplierName="US Nan Gizmo" supplierProductId="US-GZ-1001" lastPrice="6.2376"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-1005" supplierName="US .NIT Gizmo" supplierProductId="US-GZ-1005" lastPrice="671.75"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-1006" supplierName="US Open Gizmo" supplierProductId="US-GZ-1006" lastPrice="1.4376"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-2002" supplierName="US Square Gizmo" supplierProductId="US-GZ-2002" lastPrice="11.52"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-2644" supplierName="US Round Gizmo" supplierProductId="US-GZ-2644" lastPrice="11.52"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-5005" supplierName="US Purple Gizmo" supplierProductId="US-GZ-5005" lastPrice="11.52"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-7000" supplierName="US Massive Gizmo" supplierProductId="US-GZ-7000" lastPrice="240.0"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-8544" supplierName="US Big Gizmo" supplierProductId="US-GZ-8544" lastPrice="64.8"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-9290" supplierName="US His/Her Gizmo" supplierProductId="US-GZ-9290" lastPrice="24.0"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="WG-1111" supplierName="US Micro Chrome Widget" supplierProductId="US-WG-1111" lastPrice="14.40"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="WG-5569" supplierName="US Tiny Chrome Widget" supplierProductId="US-WG-5569" lastPrice="14.40"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="0" currencyUomId="USD" productId="WG-9943" supplierName="US Giant Widget" supplierProductId="US-WG-9943" lastPrice="132.0"/>
+    
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="GZ-1000" supplierName="US Tiny Gizmo" supplierProductId="US1-GZ-1000" lastPrice="3.0"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="GZ-1001" supplierName="US Nan Gizmo" supplierProductId="US1-GZ-1001" lastPrice="5.20"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="GZ-1005" supplierName="US .NIT Gizmo" supplierProductId="US1-GZ-1005" lastPrice="559.8"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="GZ-1006" supplierName="US Open Gizmo" supplierProductId="US1-GZ-1006" lastPrice="1.198"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="GZ-2002" supplierName="US Square Gizmo" supplierProductId="US1-GZ-2002" lastPrice="9.6"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="GZ-2644" supplierName="US Round Gizmo" supplierProductId="US1-GZ-2644" lastPrice="9.6"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="GZ-5005" supplierName="US Purple Gizmo" supplierProductId="US1-GZ-5005" lastPrice="9.6"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="GZ-7000" supplierName="US Massive Gizmo" supplierProductId="US1-GZ-7000" lastPrice="200.00"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="GZ-8544" supplierName="US Big Gizmo" supplierProductId="US1-GZ-8544" lastPrice="54.0"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="GZ-9290" supplierName="US His/Her Gizmo" supplierProductId="US1-GZ-9290" lastPrice="20.00"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="WG-1111" supplierName="US Micro Chrome Widget" supplierProductId="US1-WG-1111" lastPrice="12.0"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="WG-5569" supplierName="US Tiny Chrome Widget" supplierProductId="US1-WG-5569" lastPrice="12.0"/>
+    <SupplierProduct partyId="EuroSupplier" minimumOrderQuantity="10" currencyUomId="USD" productId="WG-9943" supplierName="US Giant Widget" supplierProductId="US1-WG-9943" lastPrice="110.0"/>
+</entity-engine-xml>
