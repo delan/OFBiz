@@ -114,6 +114,7 @@
                     <xs:enumeration value="model"/>
                     <xs:enumeration value="group"/>
                     <xs:enumeration value="eca"/>
+                    <xs:enumeration value="mca"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
