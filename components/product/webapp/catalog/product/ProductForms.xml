@@ -295,7 +295,7 @@
         <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}"></field>
         <field name="useTime" title="Use Time"></field>
         <field name="useTimeUomId" title="Use Time Uom" widget-style="selectBox">
-            <drop-down>
+            <drop-down allow-empty="true">
                 <entity-options entity-name="Uom" key-field-name="uomId" description="${description}">
                     <entity-constraint name="uomTypeId" value="TIME_FREQ_MEASURE"/>
                     <entity-order-by field-name="description"/>
@@ -364,7 +364,7 @@
         <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}"></field>
         <field name="useTime" title="Use Time"></field>
         <field name="useTimeUomId" title="Use Time Uom" widget-style="selectBox">
-            <drop-down>
+            <drop-down allow-empty="true">
                 <entity-options entity-name="Uom" key-field-name="uomId" description="${description}">
                     <entity-constraint name="uomTypeId" value="TIME_FREQ_MEASURE"/>
                     <entity-order-by field-name="description"/>
@@ -398,7 +398,7 @@
         <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}"></field>
         <field name="useTime" title="Use Time"></field>
         <field name="useTimeUomId" title="Use Time Uom" widget-style="selectBox">
-            <drop-down>
+            <drop-down allow-empty="true">
                 <entity-options entity-name="Uom" key-field-name="uomId" description="${description}">
                     <entity-constraint name="uomTypeId" value="TIME_FREQ_MEASURE"/>
                     <entity-order-by field-name="description"/>
