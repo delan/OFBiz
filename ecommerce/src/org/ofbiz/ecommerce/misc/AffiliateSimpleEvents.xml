@@ -30,7 +30,7 @@
  
 <simple-events>
 
-    <simple-event event-name="createAffiliate" short-description="Create Affiliate">
+    <simple-event event-name="createAffiliate" short-description="Create Affiliate" login-required="false">
     
        <!-- Create the UserLogin Record -->
         <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"

@@ -31,9 +31,9 @@ import org.ofbiz.commonapp.order.order.Adjustment;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on August 4, 2001, 8:21 PM
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ * @version    1.0
+ * @created    August 4, 2001
  */
 public class ShoppingCart implements java.io.Serializable {
     private ArrayList cartLines;

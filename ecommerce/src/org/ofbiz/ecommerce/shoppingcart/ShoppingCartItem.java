@@ -6,11 +6,12 @@ package org.ofbiz.ecommerce.shoppingcart;
 
 import java.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> ShoppingCartItem.java
  * <p><b>Description:</b> Shopping cart item object.
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+ * <p>Copyright (c) 2002 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -29,13 +30,14 @@ import org.ofbiz.core.entity.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on August 4, 2001, 8:21 PM
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ * @version    1.1
+ * @created    August 4, 2001
  */
 public class ShoppingCartItem implements java.io.Serializable {
     
-    private transient GenericValue product;
+    private transient GenericValue _product;
+    private String delegatorName;    
     private String productId;    
     private String itemComment;
     private double discountAmount;
@@ -51,14 +53,15 @@ public class ShoppingCartItem implements java.io.Serializable {
        
     /** Creates new ShoppingCartItem object. */
     public ShoppingCartItem(GenericValue product, double quantity, HashMap features) {
-        this.product = product;
-        this.productId = product.getString("productId");
+        this._product = product;
+        this.productId = _product.getString("productId");        
         this.quantity = quantity;
         this.attributes = features;
         this.discountAmount = 0.00;
         this.itemComment = null;        
         this.type = 0;
         this.attributes = new HashMap();
+        this.delegatorName = _product.getDelegator().getDelegatorName();
     }
         
     /** Sets the quantity for the item. */
@@ -83,8 +86,8 @@ public class ShoppingCartItem implements java.io.Serializable {
     
     /** Returns true if shipping charges apply to this item. */
     public boolean shippingApplies() {
-        Boolean shipCharge = product.getBoolean("chargeShipping");
-        if ( shipCharge == null )
+        Boolean shipCharge = product().getBoolean("chargeShipping");
+        if (shipCharge == null)
             return true;
         else
             return shipCharge.booleanValue();      
@@ -102,12 +105,12 @@ public class ShoppingCartItem implements java.io.Serializable {
     
     /** Returns the item's description. */
     public String getName() {
-        return product.getString("productName");
+        return product().getString("productName");
     }
     
     /** Returns the item's description. */
     public String getDescription() {
-        return product.getString("description");
+        return product().getString("description");
     }
     
     /** Returns the item's comment. */
@@ -117,8 +120,8 @@ public class ShoppingCartItem implements java.io.Serializable {
     
     /** Returns the item's unit weight */
     public double getWeight() {
-        Double weight = product.getDouble("weight");
-        if ( weight == null )
+        Double weight = product().getDouble("weight");
+        if (weight == null)
             return 0;
         else 
             return weight.doubleValue();
@@ -132,7 +135,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Returns the base price. */
     public double getBasePrice() {
         // todo calculate the price using price component.
-        Double defaultPrice = product.getDouble("defaultPrice");
+        Double defaultPrice = product().getDouble("defaultPrice");
         if (defaultPrice != null)
             return defaultPrice.doubleValue();
         else
@@ -161,32 +164,50 @@ public class ShoppingCartItem implements java.io.Serializable {
     
     /** Returns a collection of attribute names. */
     public Collection getFeatureNames() {
-        if ( features == null || features.size() < 1 )
+        if (features == null || features.size() < 1)
             return null;       
         return (Collection) features.keySet();
     }
     
     /** Returns a collection of attribute values. */
     public Collection getFeatureValues() {
-        if ( features == null || features.size() < 1 )
+        if (features == null || features.size() < 1)
             return null;
         return features.values();
     }     
     
     /** Compares the specified object with this cart item. */
     public boolean equals(ShoppingCartItem item) {
-        if ( item == null ) 
+        if (item == null) 
             return false;
-        if ( item.getProductId().equals(getProductId()) ) {
-            if ( getFeatures() != null ) {
-                if ( item.getFeatures() != null ) {
-                    if ( item.getFeatures().equals(getFeatures()) )
+        if (item.getProductId().equals(getProductId())) {
+            if (getFeatures() != null ) {
+                if (item.getFeatures() != null) {
+                    if (item.getFeatures().equals(getFeatures()))
                         return true;
                 }
             } 
-            else if (item.getFeatures() == null ) 
+            else if (item.getFeatures() == null) 
                 return true;
         }
         return false;
-    }                                    
+    }      
+    
+    // Gets the Product entity if its not there
+    private GenericValue product() {
+        if (_product != null) 
+            return _product;
+        if (delegatorName == null || productId == null)
+            throw new IllegalStateException("Bad delegator name or product id");
+        GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorName);
+        try {
+            Map fields = UtilMisc.toMap("productId", productId);
+            _product = delegator.findByPrimaryKeyCache("Product", fields);
+        } catch (GenericEntityException e) {
+            throw new RuntimeException("Error with Entity Engine ("+e.getMessage()+")");
+        }
+        return _product;
+    }
+        
+        
 }
