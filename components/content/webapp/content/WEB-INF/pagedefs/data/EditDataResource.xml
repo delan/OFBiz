@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_edit</template> 
+    <property name="title">Edit DataResource</property>
+    <property name="formDefFile">/data/DataResourceForms.xml</property>    
+    <property name="singleFormName">EditDataResource</property>    
+    <property name="subMenu">/data/data_menu.ftl</property>    
+    <property name="headerItem">Data</property>    
+    <property name="entityName">DataResource</property>    
+    <property name="permission">CONTENTMGR</property>    
+    <property name="priKeyName">dataResourceId</property>    
+    <property name="defaultMapName">valueObject</property>    
+    <page-action name="/includes/currentvalprep.bsh"/>
+    <page-action name="/includes/editprep.bsh"/>
+</page>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_lookup_lru</template> 
+    <property name="title">Lookup Person</property>
+    <property name="formDefFile">/content/ContentForms.xml</property>    
+    <property name="singleFormName">lookupPerson</property>    
+    <property name="listFormName">listLookupPerson</property>    
+    <property name="lruFormName">lruLookupPerson</property>    
+    <property name="subMenu">/content/content_menu.ftl</property>    
+    <property name="headerItem">Content</property>    
+    <property name="entityName">Person</property>    
+    <property name="listName">entityList</property>    
+    <property name="permission">PARTYMGR</property>    
+    <page-action name="/includes/findprep.bsh"/>
+    <page-action name="/includes/lruprep.bsh"/>
+</page>

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<forms>
+    <!-- DataResourceType forms -->
+    <form
+        name="findDataResource" 
+        default-entity-name="DataResource" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="FindDataResource" title="" type="single">
+        <auto-fields-entity entity-name="DataResource" default-field-type="find" />
+        <field name="dataResourceTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="DataResourceType" key-field-name="dataResourceTypeId"/>
+            </drop-down>
+        </field>
+        <field name="mimeTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="MimeType" key-field-name="mimeTypeId"/>
+            </drop-down>
+        </field>
+        <field name="characterSetId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="CharacterSet" key-field-name="characterSetId"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Find" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="Create New" target="AddDataResource"/>
+        </field>
+    </form>
+    <form
+        name="listFindDataResource" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="entityList" paginate-target="/FindDataResource" 
+	title="" type="list">
+        <auto-fields-entity entity-name="DataResource" default-field-type="display"/>
+        <field name="dataResourceId" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${dataResourceId}" target="gotoDataResource?dataResourceId=${dataResourceId}"/>
+        </field>
+<!--
+	<field name="createdDate"><ignored/></field>
+	<field name="createdByUserLogin"><ignored/></field>
+	<field name="lastModifiedDate"><ignored/></field>
+	<field name="lastModifiedByUserLogin"><ignored/></field>
+-->
+    </form>
+    <form
+        name="lookupDataResource" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupDataResource" title="" type="single">
+        <auto-fields-entity entity-name="DataResource" default-field-type="find" />
+        <field name="submitButton" title="Lookup" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form
+        name="listLookupDataResource" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="entityList" paginate-target="/LookupDataResource" 
+	title="" type="list">
+        <auto-fields-entity entity-name="DataResource" default-field-type="display"/>
+        <field name="dataResourceId" title="&amp;nbsp;" widget-style="buttontext">
+		
+            <hyperlink also-hidden="false" target-type="plain" description="${dataResourceId}" target="javascript:set_value('${dataResourceId}')"/>
+        </field>
+<!--
+	<field name="createdDate"><ignored/></field>
+	<field name="createdByUserLogin"><ignored/></field>
+	<field name="lastModifiedDate"><ignored/></field>
+	<field name="lastModifiedByUserLogin"><ignored/></field>
+-->
+    </form>
+    <form 
+        name="EditDataResource" target="UpdateDataResource" title="" type="single"
+	default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+	>
+        <auto-fields-entity entity-name="DataResource" default-field-type="edit"/>
+        <field name="dataResourceTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="DataResourceType" key-field-name="dataResourceTypeId"/>
+            </drop-down>
+        </field>
+        <field name="dataCategoryId">
+            <drop-down allow-empty="true">
+                <entity-options description="${categoryName}"
+                    entity-name="DataCategory" key-field-name="dataCategoryId"/>
+            </drop-down>
+        </field>
+        <field name="mimeTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="MimeType" key-field-name="mimeTypeId"/>
+            </drop-down>
+        </field>
+        <field name="characterSetId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="CharacterSet" key-field-name="characterSetId"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="Create New" target="AddDataResource"/>
+        </field>
+    </form>
+    <form 
+        name="AddDataResource" target="createDataResource" title="" type="single"
+	default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+	>
+        <auto-fields-entity entity-name="DataResource" default-field-type="edit"/>
+        <field name="dataResourceTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="DataResourceType" key-field-name="dataResourceTypeId"/>
+            </drop-down>
+        </field>
+        <field name="dataCategoryId">
+            <drop-down allow-empty="true">
+                <entity-options description="${categoryName}"
+                    entity-name="DataCategory" key-field-name="dataCategoryId"/>
+            </drop-down>
+        </field>
+        <field name="mimeTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="MimeType" key-field-name="mimeTypeId"/>
+            </drop-down>
+        </field>
+        <field name="characterSetId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="CharacterSet" key-field-name="characterSetId"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Create" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <!-- DataResourceAttribute forms -->
+    <form
+        name="AddDataResourceAttribute" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="addDataResourceAttribute" title="" type="single">
+        <auto-fields-service service-name="createDataResourceAttribute"/>
+        <field name="dataResourceId" title="" widget-style="buttontext"> 
+		<lookup target-form-name="LookupDataResource" />
+        </field>
+        <field name="submitButton" title="Add" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form
+        name="ListDataResourceAttribute"
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        list-name="contentList" 
+        target="updateDataResourceAttribute" title="" type="list">
+        <auto-fields-service service-name="updateDataResourceAttribute"/>
+        <field name="dataResourceId" title="DataResourceAttributeId" widget-style="buttontext">
+            <display/>
+        </field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Delete]" target="removeDataResourceAttribute?dataResourceId=${contentAttributeId}"/>
+        </field>
+    </form>
+    
+
+    <!-- DataResourceRole forms -->
+    <form
+        name="AddDataResourceRole" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="addDataResourceRole" title="" type="single">
+        <auto-fields-service service-name="createDataResourceRole"/>
+        <field name="dataResourceId" title="" widget-style="buttontext"> 
+		<lookup target-form-name="LookupDataResource" />
+        </field>
+        <field name="partyId" title="" widget-style="buttontext"> 
+                <lookup target-form-name="LookupPerson" />
+        </field>
+        <field name="roleTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="RoleType" key-field-name="roleTypeId"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Add" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form
+        name="ListDataResourceRole"
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        list-name="contentList" 
+        target="updateDataResourceRole" title="" type="list">
+        <auto-fields-service service-name="updateDataResourceRole"/>
+        <field name="dataResourceId" title="DataResourceId" widget-style="buttontext">
+            <display/>
+        </field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Delete]" target="removeDataResourceRole?dataResourceId=${dataResourceId}&amp;roleTypeId=${roleTypeId}&amp;partyId=${partyId}&amp;fromDate=${fromDate}"/>
+        </field>
+    </form>
+    
+
+    <!-- ElectronicText forms -->
+    <form
+        name="AddElectronicText" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="addElectronicText" title="" type="single">
+        <auto-fields-service service-name="createElectronicText"/>
+        <field name="dataResourceId" title="" widget-style="buttontext"> 
+		<lookup target-form-name="LookupDataResource" />
+        </field>
+        <field name="textData" title="" widget-style="buttontext"> 
+		<textarea cols="55" rows="24" />
+        </field>
+        <field name="submitButton" title="Add" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form
+        name="EditElectronicText" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+       target="updateElectronicText" title="" type="single">
+        <auto-fields-service service-name="createElectronicText"/>
+        <field name="dataResourceId" title="" widget-style="buttontext"> 
+		<display/>
+        </field>
+        <field name="textData" title="" widget-style="buttontext"> 
+		<textarea cols="55" rows="24" />
+        </field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+</forms>

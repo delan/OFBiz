@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_related</template> 
+    <property name="title">Edit Content Role</property>
+    <property name="headerItem">Content</property>    
+    <property name="subMenu">/content/content_menu.ftl</property>    
+    <property name="formDefFile">/content/ContentForms.xml</property>    
+    <property name="entityName">ContentRole</property>    
+    <property name="currentEntityName">Content</property>    
+    <page-action name="/includes/relatedprep.bsh" />
+</page>
