@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 
@@ -91,84 +91,81 @@
     </tr>
 </table>
 
+<hr class="sepbar"/>
+
+<div class="tabletext">
 <form method="POST" action="<@ofbizUrl>/searchRemoveFromCategory</@ofbizUrl>"
-  <b>Remove Results From </b>
-  <select name="SE_SEARCH_CATEGORY_ID" size="1" class="selectBox">
-     ${uiLabelMap.ProductCategoryId}:
+  <b>Remove Results From </b> ${uiLabelMap.ProductCategory}:
     <select class="selectBox" name="SE_SEARCH_CATEGORY_ID">
        <option value="">- Any Category -</option>
        <#list productCategories as productCategory>
            <#assign displayDesc = productCategory.description>
-           <#if 18 < displayDesc?length>
-               <#assign displayDesc = displayDesc[0..15] + "...">
+           <#if 28 < displayDesc?length>
+               <#assign displayDesc = displayDesc[0..25] + "...">
            </#if>
            <option value="${productCategory.productCategoryId}">${displayDesc}</option>
        </#list>
     </select>
-  </select>
   <input type="hidden" name="clearSearch" value="N">
-  <input type="submit" value="Add"><br>
+  <input type="submit" value="Remove" class="smallSubmit"><br>
 </form>
+</div>
 
+<hr class="sepbar"/>
+
+<div class="tabletext">
 <form method="POST" action="<@ofbizUrl>/searchExpireFromCategory</@ofbizUrl>" name="searchExpireFromCategory">
-  <b>Expire Results From </b>
-  <select name='SE_SEARCH_CATEGORY_ID' size='1' class='selectBox'>
-     ${uiLabelMap.ProductCategoryId}:
+  <b>Expire Results From </b> ${uiLabelMap.ProductCategory}:
     <select class="selectBox" name="SE_SEARCH_CATEGORY_ID">
        <option value="">- Any Category -</option>
        <#list productCategories as productCategory>
            <#assign displayDesc = productCategory.description>
-           <#if 18 < displayDesc?length>
-               <#assign displayDesc = displayDesc[0..15] + "...">
+           <#if 28 < displayDesc?length>
+               <#assign displayDesc = displayDesc[0..25] + "...">
            </#if>
            <option value="${productCategory.productCategoryId}">${displayDesc}</option>
        </#list>
     </select>
-  </select>
-  Thru
-  <input type="text" size="25" name="thruDate" class="inputBox">
-  <a href="javascript:call_cal(document.searchExpireFromCategory.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+  Thru<input type="text" size="25" name="thruDate" class="inputBox"><a href="javascript:call_cal(document.searchExpireFromCategory.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
   <input type="hidden" name="clearSearch" value="N">
-  <input type="submit" value="Add"><br>
+  <input type="submit" value="Expire" class="smallSubmit"><br>
 </form>
+</div>
 
+<hr class="sepbar"/>
+
+<div class="tabletext">
 <form method="POST" action="<@ofbizUrl>/searchAddToCategory</@ofbizUrl>" name="searchAddToCategory">
-  <b>Add Results to </b>
-  <select name='SE_SEARCH_CATEGORY_ID' size='1' class='selectBox'>
-     ${uiLabelMap.ProductCategoryId}:
+  <b>Add Results to </b> ${uiLabelMap.ProductCategory}:
     <select class="selectBox" name="SE_SEARCH_CATEGORY_ID">
-       <option value="">- Any Category -</option>
        <#list productCategories as productCategory>
            <#assign displayDesc = productCategory.description>
-           <#if 18 < displayDesc?length>
-               <#assign displayDesc = displayDesc[0..15] + "...">
+           <#if 28 < displayDesc?length>
+               <#assign displayDesc = displayDesc[0..25] + "...">
            </#if>
            <option value="${productCategory.productCategoryId}">${displayDesc}</option>
        </#list>
     </select>
-  </select>
-  From
-  <input type="text" size="25" name="fromDate" class="inputBox">
-  <a href="javascript:call_cal(document.searchAddToCategory.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+  From<input type="text" size="25" name="fromDate" class="inputBox"><a href="javascript:call_cal(document.searchAddToCategory.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
   <input type="hidden" name="clearSearch" value="N">
-  <input type="submit" value="Add"><br>
+  <input type="submit" value="Add to Category" class="smallSubmit"><br>
 </form>
+</div>
 
+<hr class="sepbar"/>
+
+<div class="tabletext">
 <form method="POST" action="<@ofbizUrl>/searchAddFeature</@ofbizUrl>" name="searchAddFeature">
   <b>Add Feature to Results:</b><br>
   Feature ID<input type="text" size="5" name="productFeatureId" value="" class="inputBox">
-  From<input type="tex"t size="25" name="fromDate" class="inputBox">
-  <a href="javascript:call_cal(document.searchAddFeature.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a> 
-  Thru<input type="text" size="25" name="thruDate" class="inputBox">
-  <a href="javascript:call_cal(document.searchAddFeature.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+  From<input type="tex"t size="25" name="fromDate" class="inputBox"><a href="javascript:call_cal(document.searchAddFeature.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a> 
+  Thru<input type="text" size="25" name="thruDate" class="inputBox"><a href="javascript:call_cal(document.searchAddFeature.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
   <br>
   Amount<input type="text" size="5" name="amount" value="" class="inputBox">
   Sequence<input type="text" size="5" name="sequenceNum" value="" class="inputBox">
   Application Type
-  <select name='productFeatureApplTypeId' size='1' class='selectBox'>
-     ${uiLabelMap.ProductCategoryId}:
-    <select class="selectBox" name="seApplicationType">
-       <option value="">- Any Category -</option>
+    ${uiLabelMap.ProductCategoryId}:
+    <select name='productFeatureApplTypeId' size='1' class='selectBox'>
        <#list applicationTypes as applicationType>
            <#assign displayDesc = applicationType.description>
            <#if 18 < displayDesc?length>
@@ -176,9 +173,11 @@
            </#if>
            <option value="${applicationType.productFeatureApplTypeId}">${displayDesc}</option>
        </#list>
-    </select>
   </select>
   <input type="hidden" name="clearSearch" value="N">
-  <input type="submit" value="Add"><br>
+  <input type="submit" value="Add Feature" class="smallSubmit"><br>
+</form>
+</div>
+
 </#if>
 
