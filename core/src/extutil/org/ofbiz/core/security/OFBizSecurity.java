@@ -199,7 +199,13 @@ public class OFBizSecurity extends Security {
     public boolean hasRolePermission(String application, String action, String primaryKey, String role, GenericValue userLogin) {        
         String entityName = null;
         Map fields = null;
-                                
+              
+        // quick test for special cases where were just want to check the permission (find screens)              
+        if (primaryKey.equals("") && role.equals("")) {
+            if (hasEntityPermission(application, action, userLogin)) return true;
+            if (hasEntityPermission(application, action + "_ROLE", userLogin)) return true;
+        }
+                
         // now get the role info for this application
         Map simpleRoleMap = (Map) OFBizSecurity.simpleRoleEntity.get(application);
         if (simpleRoleMap != null) {
