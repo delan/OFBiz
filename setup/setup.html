@@ -14,7 +14,7 @@
   Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a> <br>
 <A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> <br>
   Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-  Last Updated: January 14, 2002 <br>
+  Last Updated: January 14, 2003<br>
 <h3 align="left"><a name="Table of Contents">Table of Contents</a></h3>
 <ul>
   <li><a href="#Introduction">Introduction</a></li>
@@ -61,32 +61,28 @@ options and explanations, see the rest of this document.</p>
 <h3><a name="External_Packages_Setup">External Packages Setup</a></h3>
 <hr>
 
-<p>You will also need the Java 2 version 1.3 or 1.4 JDK (or just the JRE) from <a href="http://java.sun.com" target="_blank">java.sun.com</a>,
-as can be expected.</p>
+<p>You will also need the Java 2 version 1.3 or 1.4 JDK (NOT just the JRE) from 
+<a href="http://java.sun.com" target="_blank">java.sun.com</a>,
+as is expected for a Java application.</p>
 
 <p>Open For Business can be run with either a simple servlet engine alone (like
-Tomcat) or with a full J2EE container (like Weblogic or JBoss &amp; Tomcat together). This
-is accomplished through the entity engine which can run straight to JDBC or
-through an EJB container. A full J2EE application server is also useful for services other than the basic
-EJB container, such as JNDI, connection pooling,
+Tomcat) or with a full J2EE container (like Weblogic or JBoss &amp; Tomcat together). 
+A full J2EE application server is also useful for services other than the basic
+EJB container, such as JNDI, connection pooling, transaction management,
 various resource and configuration management conveniences and so forth. Many
 other J2EE application servers are available for these sorts of features, and
 Open For Business should be easily adaptable to various ones.</p>
 
-<p>Tomcat 4.0 is the current default application server for Open For Business.
-At the moment the EJB components are optional and simply provide deployment
-flexibility, so an EJB container is not needed. In the future we will likely need 
-JMS and EJB services provided by
-an application like JBoss, but for now we will keep distributions as simple as
-possible. JTA (distributed transaction) support is currently done with Tyrex from Exolab, 
+<p>Tomcat 4.1 is the current default application server for Open For Business.
+JTA (distributed transaction) support is currently done with Tyrex from Exolab, 
 but could also be provided by JBoss or another J2EE application server.</p>
 
 <p>Tomcat can be downloaded at <a href="http://jakarta.apache.org/site/binindex.html">jakarta.apache.org/site/binindex.html</a>,
 and you will generally want the latest version of the Tomcat 4
-series. The latest version of OFBiz has been tested on Tomcat 4.0.1. If
+series. The latest version of OFBiz has been tested on Tomcat 4.1.18. If
 you download an OFBiz package with these included, you of course don't need to
 download them again, and you don't have to worry about copying the configuration
-files later on. It should pretty much run in place.</p>
+files later on. It should run in place, as is.</p>
 <p>You can download JBoss, a complete J2EE application server from <a href="http://sf.net/projects/jboss" target="_blank">sf.net/projects/jboss</a>,
 you will generally want the most recent version. </p>
 
@@ -349,7 +345,8 @@ a JTA implementation with a JDBC XA Wrapper and Connection Pool.</p>
         <td><b>Comments</b></td>
     </tr>
     <tr>
-        <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later (prefer 4.1.12 or later, much faster) - Catalina</a></td>
+        <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later (prefer 
+        4.1.18 or later, much faster, more stable, etc) - Catalina</a></td>
         <td><a href='http://tyrex.sf.net'>Tyrex 1.0</a></td>
         <td>Default config; freely available; comparatively slow</td>
     </tr>
@@ -359,7 +356,7 @@ a JTA implementation with a JDBC XA Wrapper and Connection Pool.</p>
         <td>Freely available; also slow, Jetty appears to run even slower than Tomcat4</td>
     </tr>
     <tr>
-        <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later (prefer 4.1.12 or later, much faster) - Catalina</a></td>
+        <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later (prefer 4.1.18 or later, much faster) - Catalina</a></td>
         <td><a href='http://www.jboss.org'>JBoss 2.4.4 or later, or many earlier too</a></td>
         <td>Freely available; similar to Catalina/Tyrex, but can interoperate 
             with other JBoss resources like EJBs, etc</td>
@@ -367,7 +364,8 @@ a JTA implementation with a JDBC XA Wrapper and Connection Pool.</p>
     <tr>
         <td><a href='http://www.caucho.com'>Caucho Resin 2.1.4</a></td>
         <td><a href='http://tyrex.sf.net'>Tyrex 1.0</a></td>
-        <td>Resin $500/server, Tyrex free; runs MUCH faster than Tomcat or Jetty</td>
+        <td>Resin $500/server, Tyrex free; runs MUCH faster than Tomcat or Jetty
+        (or used to, Jasper has been sped up a lot, and both Tomcat and Jetty use it)</td>
     </tr>
     <tr>
         <td><a href='http://www.orionserver.com'>Orion 1.5.2 or later</a></td>
@@ -394,8 +392,8 @@ a JTA implementation with a JDBC XA Wrapper and Connection Pool.</p>
 </table>
 
 <p>Full testing and deployment instructions for WebSphere, iPlanet,
-JRun, ServletExec, and others are forthcoming in future releases. If you are interested 
-in helping with this please contact one of the project administrators.</p>
+ServletExec, and others are forthcoming in future releases. If you are interested 
+in helping with this please contact one of the project admins.</p>
 
 <p>&nbsp;</p>
 </body>
