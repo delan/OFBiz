@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.36 $
+ * @version    $Revision: 1.37 $
  */
 -->
 
@@ -2121,6 +2121,7 @@
       <field name="inputParamEnumId" type="id"></field>
       <field name="operatorEnumId" type="id"></field>
       <field name="condValue" type="long-varchar"></field>
+      <field name="quantity" type="floating-point"></field>
       <prim-key field="productPromoId"/>
       <prim-key field="productPromoRuleId"/>
       <prim-key field="productPromoCondSeqId"/>
