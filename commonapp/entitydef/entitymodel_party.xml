@@ -1476,6 +1476,16 @@
         <key-map field-name="partyId"/>
       </relation>
     </entity>
+    <entity entity-name="PartyICSAVSOverride"
+            package-name="org.ofbiz.commonapp.party.party"
+            title="Party ICS AVS Override Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="avsDeclineString" type="comment"></field>
+      <prim-key field="partyId"/>
+      <relation type="one" fk-name="PARTY_ICSAVS_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+    </entity>
     <entity entity-name="PartyNote"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Note Entity">

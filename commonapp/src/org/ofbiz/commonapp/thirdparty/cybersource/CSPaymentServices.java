@@ -52,13 +52,13 @@ public class CSPaymentServices {
     public static Map ccProcessor(DispatchContext dctx, Map context) {
         StringBuffer apps = new StringBuffer();
         boolean fraudScore = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "fraudScore", "Y");
-        boolean enableDAV = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "enableDAV", "Y");
+        boolean enableDav = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "enableDav", "Y");
         boolean autoBill = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "autoBill", "Y");
 
         apps.append("ics_auth");
         if (fraudScore)
             apps.append(",ics_score");
-        if (enableDAV)
+        if (enableDav)
             apps.append(",ics_dav");
         if (autoBill)
             apps.append(",ics_bill");
@@ -74,8 +74,9 @@ public class CSPaymentServices {
         String defCur = UtilProperties.getPropertyValue("cybersource.properties", "defaultCurrency", "USD");
         String timeout = UtilProperties.getPropertyValue("cybersource.properties", "timeout", "90");
         String retryWait = UtilProperties.getPropertyValue("cybersource.properties", "retryWait", "90");
+        String avsDeclineCodes = UtilProperties.getPropertyValue("cybersource.properties", "avsDeclineCodes", "");
 
-                boolean disableAVS = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "disableAuthAVS", "Y");
+        boolean disableAvs = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "disableAuthAvs", "Y");
         boolean enableRetry = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "enableRetry", "Y");
 
         ICSClientRequest request = null;
@@ -104,20 +105,33 @@ public class CSPaymentServices {
             return result;
         }
 
-        // Basic Info
+        // some parameters
+        GenericValue person = (GenericValue) context.get("contactPerson");
+
+        // basic info
         request.setMerchantID(client.getMerchantID());
+        request.setCurrency((currency == null ? defCur : currency));
         request.addApplication(appString);
         request.setMerchantRefNo(orderId);
-        request.setDisableAVS(disableAVS);
+
+        // set the timeout/restart info
         request.setRetryStart(retryWait);
         request.setTimeout(timeout);
         request.setRetryEnabled(enableRetry ? "yes" : "no");
-        request.setCurrency((currency == null ? defCur : currency));
 
-        if (Debug.verboseOn()) Debug.logVerbose("---- CyberSource Request To: " + client.url.toString() + " ----", module);
+        // set AVS and decline codes
+        request.setDisableAVS(disableAvs);
+        if (!disableAvs && avsDeclineCodes != null && avsDeclineCodes.length() > 0) {
+            String delcineString = getAvsDeclineCodes(person, avsDeclineCodes);
+            request.setField("decline_avs_flags", avsDeclineCodes);
+        }
+
+        // verbose debugging
+        if (Debug.verboseOn()) Debug.logVerbose("---- CyberSource Request ----", module);
         if (Debug.verboseOn()) Debug.logVerbose("[REQ]: " + request, module);
         if (Debug.verboseOn()) Debug.logVerbose("---- End Request ----", module);
 
+        // send the request
         try {
             reply = client.send(request);
         } catch (ICSException ie) {
@@ -127,10 +141,12 @@ public class CSPaymentServices {
             return result;
         }
 
+        // more verbose debugging
         if (Debug.verboseOn()) Debug.logVerbose("---- CyberSource Response ----", module);
         if (Debug.verboseOn()) Debug.logVerbose("[RES]: " + reply, module);
         if (Debug.verboseOn()) Debug.logVerbose("---- End Reply ----", module);
 
+        // process the response
         processAuthResult(reply, result);
         return result;
     }
@@ -240,5 +256,19 @@ public class CSPaymentServices {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "ERROR: ICS problem (" + ie.getMessage() + ").");
         }
+    }
+
+    private static String getAvsDeclineCodes(GenericValue person, String defaultString) {
+        GenericValue avsOverride = null;
+        try {
+            avsOverride = person.getDelegator().findByPrimaryKey("PartyICSAVSOverride",
+                    UtilMisc.toMap("partyId", person.getString("partyId")));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        if (avsOverride != null && avsOverride.get("avsDeclineString") != null)
+            return avsOverride.getString("avsDeclineString");
+        else
+            return defaultString;
     }
 }

@@ -138,6 +138,8 @@ public class OrderServices {
                         "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
                         "statusId", "ORDER_ORDERED", "billingAccountId", billingAccountId));
         if (UtilValidate.isNotEmpty((String) context.get("visitId"))) order.set("visitId", context.get("visitId"));
+        if (userLogin != null && userLogin.get("userLoginId") != null)
+            order.set("createdBy", userLogin.getString("userLoginId"));
         toBeStored.add(order);
 
         // set the orderId on all adjustments; this list will include order and item adjustments...
