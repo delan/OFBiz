@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.31 2004/01/28 16:54:05 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.32 2004/01/28 22:17:05 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.31 $
+ * @version    $Revision: 1.32 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -605,11 +605,20 @@ while (allCatIter.hasNext()) {
         String excludeProp = UtilProperties.getPropertyValue("prodsearch", "attach.feature.type.exclude");
         if (UtilValidate.isNotEmpty(excludeProp)) {
             List typeList = StringUtil.split(excludeProp, ",");
-            productFeatureTypeIdsToExclude.add(typeList);
+            productFeatureTypeIdsToExclude.addAll(typeList);
         }
 
+        Set productFeatureTypeIdsToInclude = null;
+        String includeProp = UtilProperties.getPropertyValue("prodsearch", "attach.feature.type.include");
+        if (UtilValidate.isNotEmpty(includeProp)) {
+            List typeList = StringUtil.split(includeProp, ",");
+            if (typeList.size() > 0) {
+                productFeatureTypeIdsToInclude = new HashSet(typeList);
+            }
+        }
+        
         try {
-            attachProductFeaturesToCategory(productCategoryId, productFeatureTypeIdsToExclude, delegator, doSubCategories, nowTimestamp);
+            attachProductFeaturesToCategory(productCategoryId, productFeatureTypeIdsToInclude, productFeatureTypeIdsToExclude, delegator, doSubCategories, nowTimestamp);
         } catch (GenericEntityException e) {
             String errMsg = "Error in attachProductFeaturesToCategory" + e.toString();
             Debug.logError(e, errMsg, module);
@@ -622,7 +631,7 @@ while (allCatIter.hasNext()) {
     /** Get all features associated with products and associate them with a feature group attached to the category for each feature type;
      * includes products associated with this category only, but will also associate all feature groups of sub-categories with this category, optionally calls this method for all sub-categories too
      */
-    public static void attachProductFeaturesToCategory(String productCategoryId, Set productFeatureTypeIdsToExclude, GenericDelegator delegator, boolean doSubCategories, Timestamp nowTimestamp) throws GenericEntityException {
+    public static void attachProductFeaturesToCategory(String productCategoryId, Set productFeatureTypeIdsToInclude, Set productFeatureTypeIdsToExclude, GenericDelegator delegator, boolean doSubCategories, Timestamp nowTimestamp) throws GenericEntityException {
         if (nowTimestamp == null) {
             nowTimestamp = UtilDateTime.nowTimestamp();
         }
@@ -633,7 +642,7 @@ while (allCatIter.hasNext()) {
             Iterator subCategoryIter = subCategoryList.iterator();
             while (subCategoryIter.hasNext()) {
                 GenericValue productCategoryRollup = (GenericValue) subCategoryIter.next();
-                attachProductFeaturesToCategory(productCategoryRollup.getString("productCategoryId"), productFeatureTypeIdsToExclude, delegator, true, nowTimestamp);
+                attachProductFeaturesToCategory(productCategoryRollup.getString("productCategoryId"), productFeatureTypeIdsToInclude, productFeatureTypeIdsToExclude, delegator, true, nowTimestamp);
             }
         }
 
@@ -654,6 +663,9 @@ while (allCatIter.hasNext()) {
             while ((productFeatureAndAppl = (GenericValue) productFeatureAndApplEli.next()) != null) {
                 String productFeatureId = productFeatureAndAppl.getString("productFeatureId");
                 String productFeatureTypeId = productFeatureAndAppl.getString("productFeatureTypeId");
+                if (productFeatureTypeIdsToInclude != null && productFeatureTypeIdsToInclude.size() > 0 && !productFeatureTypeIdsToInclude.contains(productFeatureTypeId)) {
+                    continue;
+                }
                 if (productFeatureTypeIdsToExclude != null && productFeatureTypeIdsToExclude.contains(productFeatureTypeId)) {
                     continue;
                 }
@@ -736,4 +748,9 @@ while (allCatIter.hasNext()) {
             }
         }
     }
+
+    public static void removeAllFeatureGroupsForCategory(String productCategoryId, GenericDelegator delegator, boolean doSubCategories, Timestamp nowTimestamp) throws GenericEntityException {
+        
+    }
 }
+
