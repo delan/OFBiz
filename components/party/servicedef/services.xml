@@ -372,6 +372,16 @@
     </service>
 
     <!-- Party view services -->
+    <service name="getPartyContactMechValueMaps" engine="java"
+            transaction-timout="7200"
+            location="org.ofbiz.party.contact.ContactMechServices" invoke="getPartyContactMechValueMaps" auth="true">
+        <description>Get Contact Mechs associated with party</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="showOld" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="userLogin" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
+        <attribute name="valueMaps" type="java.util.List" mode="OUT" optional="true"/>
+    </service>
     <service name="getPerson" engine="java"
             location="org.ofbiz.party.party.PartyServices" invoke="getPerson">
         <description>Gets a person entity from the cache/database</description>
