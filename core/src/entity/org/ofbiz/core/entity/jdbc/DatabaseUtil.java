@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.entity;
+package org.ofbiz.core.entity.jdbc;
 
 
 import java.lang.reflect.*;
@@ -30,6 +30,7 @@ import java.sql.*;
 import java.util.*;
 import org.w3c.dom.Element;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.entity.model.*;
 

@@ -32,6 +32,7 @@ import org.w3c.dom.Element;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.entity.model.*;
+import org.ofbiz.core.entity.jdbc.*;
 
 
 /**
@@ -40,6 +41,7 @@ import org.ofbiz.core.entity.model.*;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  *@created    Wed Aug 08 2001
  *@version    1.0
  */
@@ -53,7 +55,7 @@ public class GenericDAO {
     
     public static GenericDAO getGenericDAO(String helperName) {
         GenericDAO newGenericDAO = (GenericDAO) genericDAOs.get(helperName);
-
+        
         if (newGenericDAO == null)//don't want to block here
         {
             synchronized (GenericDAO.class) {
@@ -72,69 +74,21 @@ public class GenericDAO {
         modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
     }
     
-    public Connection getConnection() throws SQLException, GenericEntityException {
-        Connection connection = ConnectionFactory.getConnection(helperName);
-
-        return connection;
-    }
-    
     public void insert(GenericEntity entity) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
-
+        
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
         
-        boolean manualTX = true;
-        Connection connection = null;
-
-        try {
-            connection = getConnection();
-        } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to establish a connection with the database.", sqle);
-        }
+        SQLProcessor sql = new SQLProcessor( helperName );
         
         try {
-            connection.setAutoCommit(false);
-        } catch (SQLException sqle) {
-            manualTX = false;
-        }
-        if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) {
-            manualTX = false;
-        }
-        
-        try {
-            singleInsert(entity, modelEntity, modelEntity.getFieldsCopy(), connection);
-            if (manualTX) {
-                try {
-                    connection.commit();
-                } catch (SQLException sqle) {
-                    try {
-                        if (manualTX)
-                            connection.rollback();
-                    } catch (SQLException sqle2) {
-                        Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:", module);
-                        Debug.logWarning(sqle2, module);
-                    }
-                    throw new GenericDataSourceException("SQL Exception occured on commit of insert", sqle);
-                }
-            }
+            singleInsert(entity, modelEntity, modelEntity.getFieldsCopy(), sql.getConnection());
         } catch (GenericDataSourceException e) {
-            try {
-                if (manualTX)
-                    connection.rollback();
-            } catch (SQLException sqle2) {
-                Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:", module);
-                Debug.logWarning(sqle2, module);
-            }
-            throw new GenericDataSourceException("Exception occured in insert", e);
+            sql.rollback();
         } finally {
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sql.close();
         }
     }
     
@@ -144,42 +98,30 @@ public class GenericDAO {
         }
         
         // if we have a STAMP_FIELD then set it with NOW.
-        if (modelEntity.isField(ModelEntity.STAMP_FIELD))
+        if (modelEntity.isField(ModelEntity.STAMP_FIELD)) {
             entity.set(ModelEntity.STAMP_FIELD, UtilDateTime.nowTimestamp());
+        }
         
-        PreparedStatement ps = null;
         String sql = "INSERT INTO " + modelEntity.getTableName() + " (" + modelEntity.colNameString(fieldsToSave) + ") VALUES (" +
-            modelEntity.fieldsStringList(fieldsToSave, "?", ", ") + ")";
-
+        modelEntity.fieldsStringList(fieldsToSave, "?", ", ") + ")";
+        
         Debug.logVerbose("[GenericDAO.singleInsert] sql=" + sql + "\nEntity=" + entity, module);
+        
+        SQLProcessor sqlP = new SQLProcessor( helperName, connection );
+        
         try {
-            ps = connection.prepareStatement(sql);
-            
-            for (int i = 0; i < fieldsToSave.size(); i++) {
-                ModelField curField = (ModelField) fieldsToSave.get(i);
-
-                setValue(ps, i + 1, curField, entity);
-            }
-            
-            ps.executeUpdate();
+            sqlP.prepareStatement( sql );
+            SqlJdbcUtil.setValues(sqlP, fieldsToSave, entity, modelFieldTypeReader);
+            sqlP.executeUpdate();
             entity.modified = false;
-        } catch (SQLException sqle) {
-            //Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
-            //Debug.logWarning(sqle.getMessage());
-            throw new GenericDataSourceException("SQL Exception while executing the following:\n" + sql + "\nOn the following entity:\n" + entity.toString(), sqle);
         } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
     }
     
     public void updateAll(GenericEntity entity) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
-
+        
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
@@ -189,17 +131,17 @@ public class GenericDAO {
     
     public void update(GenericEntity entity) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
-
+        
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
         //we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity
         List partialFields = new ArrayList();
         Collection keys = entity.getAllKeys();
-
+        
         for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
             ModelField curField = modelEntity.getNopk(fi);
-
+            
             if (keys.contains(curField.getName()))
                 partialFields.add(curField);
         }
@@ -208,67 +150,21 @@ public class GenericDAO {
     }
     
     private void customUpdate(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave) throws GenericEntityException {
-        boolean manualTX = true;
-        Connection connection = null;
-
-        try {
-            connection = getConnection();
-        } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
-        }
+        SQLProcessor sqlP = new SQLProcessor( helperName );
         
         try {
-            connection.setAutoCommit(false);
-        } catch (SQLException sqle) {
-            manualTX = false;
-        }
-        if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) {
-            manualTX = false;
-        }
-        
-        try {
-            singleUpdate(entity, modelEntity, fieldsToSave, connection);
-            if (manualTX) {
-                Debug.logVerbose("Committing transaction on connection, not JTA commit");
-                try {
-                    connection.commit();
-                } catch (SQLException sqle) {
-                    try {
-                        if (manualTX) {
-                            Debug.logVerbose("Rolling back transaction on connection, not JTA rollback");
-                            connection.rollback();
-                        }
-                    } catch (SQLException sqle2) {
-                        Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update. Error was:", module);
-                        Debug.logWarning(sqle2, module);
-                    }
-                    throw new GenericDataSourceException("SQL Exception occured on commit of update", sqle);
-                }
-            }
+            singleUpdate(entity, modelEntity, fieldsToSave, sqlP.getConnection());
         } catch (GenericDataSourceException e) {
-            try {
-                if (manualTX) {
-                    Debug.logVerbose("Rolling back transaction on connection, not JTA rollback");
-                    connection.rollback();
-                }
-            } catch (SQLException sqle2) {
-                Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update. Error was:", module);
-                Debug.logWarning(sqle2, module);
-            }
+            sqlP.rollback();
             throw new GenericDataSourceException("Exception occured in update", e);
         } finally {
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
     }
     
     private void singleUpdate(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave, Connection connection) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
-            throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation update not supported yet for view entities");
+            throw new GenericNotImplementedException("Operation update not supported yet for view entities");
         }
         
         //no non-primaryKey fields, update doesn't make sense, so don't do it
@@ -279,67 +175,43 @@ public class GenericDAO {
         
         if (modelEntity.lock()) {
             GenericEntity entityCopy = new GenericEntity(entity);
-
+            
             select(entityCopy, connection);
             if ((entity.get(ModelEntity.STAMP_FIELD) != null) &&
-                (!entity.get(ModelEntity.STAMP_FIELD).equals(entityCopy.get(ModelEntity.STAMP_FIELD)))) {
+            (!entity.get(ModelEntity.STAMP_FIELD).equals(entityCopy.get(ModelEntity.STAMP_FIELD)))) {
                 String lockedTime = entityCopy.getTimestamp(ModelEntity.STAMP_FIELD).toString();
-
+                
                 throw new EntityLockedException("Version locked (" + lockedTime + ")");
             }
         }
         
         // if we have a STAMP_FIELD then update it with NOW.
-        if (modelEntity.isField(ModelEntity.STAMP_FIELD))
+        if (modelEntity.isField(ModelEntity.STAMP_FIELD)) {
             entity.set(ModelEntity.STAMP_FIELD, UtilDateTime.nowTimestamp());
+        }
         
         String sql = "UPDATE " + modelEntity.getTableName() + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " +
-            makeWhereStringAnd(modelEntity.getPksCopy(), entity);
-
+        SqlJdbcUtil.makeWhereStringAnd(modelEntity.getPksCopy(), entity);
+        
         Debug.logVerbose("[GenericDAO.singleUpdate] sql=" + sql + "\nEntity=" + entity, module);
-
-        PreparedStatement ps = null;
-
+        
+        SQLProcessor sqlP = new SQLProcessor( helperName, connection );
+        
         try {
-            ps = connection.prepareStatement(sql);
-            
-            int ind = 1;
-            for (int i = 0; i < fieldsToSave.size(); i++) {
-                ModelField curField = (ModelField) fieldsToSave.get(i);
-
-                setValue(ps, ind, curField, entity);
-                ind++;
-            }
-            for (int j = 0; j < modelEntity.getPksSize(); j++) {
-                ModelField curField = modelEntity.getPk(j);
-
-                //for where clause variables only setValue if not null...
-                if (entity.get(curField.getName()) != null) {
-                    setValue(ps, ind, curField, entity);
-                    ind++;
-                }
-            }
-            
-            ps.executeUpdate();
+            sqlP.prepareStatement(sql);
+            SqlJdbcUtil.setValues(sqlP, fieldsToSave, entity, modelFieldTypeReader);
+            SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
+            sqlP.executeUpdate();
             entity.modified = false;
-        } catch (SQLException sqle) {
-            //Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
-            //Debug.logWarning(sqle.getMessage());
-            throw new GenericDataSourceException("SQL Exception while executing the following:\n" + sql + "\nOn the following entity:\n" + entity.toString(), sqle);
         } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
     }
     
     /** Store the passed entity - insert if does not exist, otherwise update */
     private void singleStore(GenericEntity entity, Connection connection) throws GenericEntityException {
         GenericPK tempPK = entity.getPrimaryKey();
-
+        
         try {
             //must use same connection for select or it won't be in the same transaction...
             select(tempPK, connection);
@@ -362,65 +234,20 @@ public class GenericDAO {
             return;
         }
         
-        boolean manualTX = true;
-        Connection connection = null;
-
-        try {
-            connection = getConnection();
-        } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
-        }
-        
-        try {
-            connection.setAutoCommit(false);
-        } catch (SQLException sqle) {
-            manualTX = false;
-        }
-        if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) {
-            manualTX = false;
-        }
+        SQLProcessor sqlP = new SQLProcessor( helperName );
         
         try {
             Iterator entityIter = entities.iterator();
-
+            
             while (entityIter != null && entityIter.hasNext()) {
                 GenericEntity curEntity = (GenericEntity) entityIter.next();
-
-                singleStore(curEntity, connection);
-            }
-            if (manualTX) {
-                Debug.logVerbose("Committing transaction on connection, not JTA commit");
-                try {
-                    connection.commit();
-                } catch (SQLException sqle) {
-                    try {
-                        if (manualTX)
-                            connection.rollback();
-                    } catch (SQLException sqle2) {
-                        Debug.logWarning("[GenericDAO.storeAll]: SQL Exception while rolling back storeAll. Error was:", module);
-                        Debug.logWarning(sqle2, module);
-                    }
-                    throw new GenericDataSourceException("SQL Exception occured on commit of storeAllr", sqle);
-                }
+                singleStore(curEntity, sqlP.getConnection());
             }
         } catch (GenericDataSourceException e) {
-            try {
-                if (manualTX) {
-                    Debug.logVerbose("Rolling back transaction on connection, not JTA rollback");
-                    connection.rollback();
-                }
-            } catch (SQLException sqle2) {
-                Debug.logWarning("[GenericDAO.storeAll]: SQL Exception while rolling back store. Error was:", module);
-                Debug.logWarning(sqle2, module);
-            }
+            sqlP.rollback();
             throw new GenericDataSourceException("Exception occured in storeAll", e);
         } finally {
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
     }
     
@@ -429,29 +256,18 @@ public class GenericDAO {
     /* ====================================================================== */
     
     public void select(GenericEntity entity) throws GenericEntityException {
-        Connection connection = null;
-
-        try {
-            connection = getConnection();
-        } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
-        }
+        SQLProcessor sqlP = new SQLProcessor( helperName );
         
         try {
-            select(entity, connection);
+            select(entity, sqlP.getConnection());
         } finally {
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
     }
     
     public void select(GenericEntity entity, Connection connection) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
-
+        
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
@@ -459,42 +275,30 @@ public class GenericDAO {
         if (modelEntity.getPksSize() <= 0)
             throw new GenericEntityException("Entity has no primary keys, cannot select by primary key");
         
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        
         String sql = "SELECT ";
-
+        
         if (modelEntity.getNopksSize() > 0)
             sql += modelEntity.colNameString(modelEntity.getNopksCopy(), ", ", "");
         else
             sql += "*";
         
-        sql += makeFromClause(modelEntity);
-        sql += makeWhereClauseAnd(modelEntity, modelEntity.getPksCopy(), entity);
+        sql += SqlJdbcUtil.makeFromClause(modelEntity);
+        sql += SqlJdbcUtil.makeWhereClauseAnd(modelEntity, modelEntity.getPksCopy(), entity);
         
         Debug.logVerbose("[GenericDAO.select] sql=" + sql, module);
+        
+        SQLProcessor sqlP = new SQLProcessor( helperName, connection );
+        
         try {
-            ps = connection.prepareStatement(sql);
+            sqlP.prepareStatement(sql);
+            SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
+            sqlP.executeQuery();
             
-            int ind = 1;
-            for (int i = 0; i < modelEntity.getPksSize(); i++) {
-                ModelField curField = modelEntity.getPk(i);
-
-                //for where clause variables only setValue if not null...
-                if (entity.get(curField.getName()) != null) {
-                    //Debug.logInfo(" setting field " + curField.getName() + " to " + (i+1) + " entity: " + entity.toString());
-                    setValue(ps, ind, curField, entity);
-                    ind++;
-                }
-            }
-            
-            rs = ps.executeQuery();
-            
-            if (rs.next()) {
+            if (sqlP.next()) {
                 for (int j = 0; j < modelEntity.getNopksSize(); j++) {
                     ModelField curField = modelEntity.getNopk(j);
-
-                    getValue(rs, j + 1, curField, entity);
+                    
+                    SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, entity, modelFieldTypeReader);
                 }
                 
                 entity.modified = false;
@@ -502,29 +306,14 @@ public class GenericDAO {
                 //Debug.logWarning("[GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString());
                 throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
             }
-        } catch (SQLException sqle) {
-            //Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
-            //Debug.logWarning(sqle.getMessage());
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
-        } finally { 
-            try {
-                if (rs != null)
-                    rs.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+        } finally {
+            sqlP.close();
         }
     }
     
     public void partialSelect(GenericEntity entity, Set keys) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
-
+        
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
@@ -539,56 +328,38 @@ public class GenericDAO {
          return false;
          }
          */
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            connection = getConnection();
-        } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
-        }
-        
         //we don't want to select ALL fields, just the nonpk fields that are in the passed GenericEntity
         List partialFields = new ArrayList();
-
+        
         for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
             ModelField curField = modelEntity.getNopk(fi);
-
+            
             if (keys.contains(curField.getName()))
                 partialFields.add(curField);
         }
         
         String sql = "SELECT ";
-
-        if (partialFields.size() > 0)
+        
+        if (partialFields.size() > 0) {
             sql += modelEntity.colNameString(partialFields, ", ", "");
-        else
+        } else {
             sql += "*";
-        sql += makeFromClause(modelEntity);
-        sql += makeWhereClauseAnd(modelEntity, modelEntity.getPksCopy(), entity);
+        }
+        sql += SqlJdbcUtil.makeFromClause(modelEntity);
+        sql += SqlJdbcUtil.makeWhereClauseAnd(modelEntity, modelEntity.getPksCopy(), entity);
+        
+        SQLProcessor sqlP = new SQLProcessor( helperName );
         
         try {
-            ps = connection.prepareStatement(sql);
+            sqlP.prepareStatement(sql);
+            SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
+            sqlP.executeQuery();
             
-            int ind = 1;
-            for (int i = 0; i < modelEntity.getPksSize(); i++) {
-                ModelField curField = modelEntity.getPk(i);
-
-                //for where clause variables only setValue if not null...
-                if (entity.get(curField.getName()) != null) {
-                    setValue(ps, ind, curField, entity);
-                    ind++;
-                }
-            }
-            
-            rs = ps.executeQuery();
-            
-            if (rs.next()) {
+            if (sqlP.next()) {
                 for (int j = 0; j < partialFields.size(); j++) {
                     ModelField curField = (ModelField) partialFields.get(j);
-
-                    getValue(rs, j + 1, curField, entity);
+                    
+                    SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, entity, modelFieldTypeReader);
                 }
                 
                 entity.modified = false;
@@ -596,29 +367,8 @@ public class GenericDAO {
                 //Debug.logWarning("[GenericDAO.select]: select failed, result set was empty.");
                 throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
             }
-        } catch (SQLException sqle) {
-            //Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
-            //Debug.logWarning(sqle.getMessage());
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
         } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
     }
     
@@ -627,27 +377,16 @@ public class GenericDAO {
             return null;
         
         Collection collection = new LinkedList();
-        
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            connection = getConnection();
-        } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
-        }
-        
         //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
         List whereFields = new ArrayList();
         List selectFields = new ArrayList();
-
+        
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
-
+            
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
-
+                
                 if (keys.contains(curField.getName()))
                     whereFields.add(curField);
                 else
@@ -658,78 +397,53 @@ public class GenericDAO {
         }
         
         GenericValue dummyValue;
-
-        if (fields != null && fields.size() > 0)
+        
+        if (fields != null && fields.size() > 0) {
             dummyValue = new GenericValue(modelEntity, fields);
-        else
+        } else {
             dummyValue = new GenericValue(modelEntity);
+        }
         
         String sql = "SELECT ";
-
-        if (selectFields.size() > 0)
-            sql += modelEntity.colNameString(selectFields, ", ", "");
-        else
-            sql += "*";
         
-        sql += makeFromClause(modelEntity);
-        sql += makeWhereClauseAnd(modelEntity, whereFields, dummyValue);
-        sql += makeOrderByClause(modelEntity, orderBy);
+        if (selectFields.size() > 0) {
+            sql += modelEntity.colNameString(selectFields, ", ", "");
+        } else {
+            sql += "*";
+        }
+        
+        sql += SqlJdbcUtil.makeFromClause(modelEntity);
+        sql += SqlJdbcUtil.makeWhereClauseAnd(modelEntity, whereFields, dummyValue);
+        sql += SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy);
         
         Debug.logVerbose("[GenericDAO.selectByAnd] sql=" + sql, module);
+        
+        SQLProcessor sqlP = new SQLProcessor( helperName );
+        
         try {
-            ps = connection.prepareStatement(sql);
-            
+            sqlP.prepareStatement(sql);
             if (fields != null && fields.size() > 0) {
-                int ind = 1;
-                for (int i = 0; i < whereFields.size(); i++) {
-                    ModelField curField = (ModelField) whereFields.get(i);
-
-                    //for where clause variables only setValue if not null...
-                    if (dummyValue.get(curField.getName()) != null) {
-                        setValue(ps, ind, curField, dummyValue);
-                        ind++;
-                    }
-                }
+                SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
             }
-            Debug.logVerbose("[GenericDAO.selectByAnd] ps=" + ps.toString(), module);
-            rs = ps.executeQuery();
+            Debug.logVerbose("[GenericDAO.selectByAnd] ps=" + sqlP.getPreparedStatement().toString(), module);
+            sqlP.executeQuery();
             
-            while (rs.next()) {
+            while (sqlP.next()) {
                 GenericValue value = new GenericValue(dummyValue);
                 
                 for (int j = 0; j < selectFields.size(); j++) {
                     ModelField curField = (ModelField) selectFields.get(j);
-
-                    getValue(rs, j + 1, curField, value);
+                    
+                    SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, value, modelFieldTypeReader);
                 }
                 
                 value.modified = false;
                 collection.add(value);
             }
-        } catch (SQLException sqle) {
-            //Debug.logWarning("[GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
-            //sqle.printStackTrace();
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
         } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
+        
         return collection;
     }
     
@@ -738,27 +452,16 @@ public class GenericDAO {
             return null;
         
         Collection collection = new LinkedList();
-        
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            connection = getConnection();
-        } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
-        }
-        
         //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
         List whereFields = new ArrayList();
         List selectFields = new ArrayList();
-
+        
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
-
+            
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
-
+                
                 if (keys.contains(curField.getName()))
                     whereFields.add(curField);
                 else
@@ -769,78 +472,51 @@ public class GenericDAO {
         }
         
         GenericValue dummyValue;
-
+        
         if (fields != null && fields.size() > 0)
             dummyValue = new GenericValue(modelEntity, fields);
         else
             dummyValue = new GenericValue(modelEntity);
         
         String sql = "SELECT ";
-
+        
         if (selectFields.size() > 0)
             sql += modelEntity.colNameString(selectFields, ", ", "");
         else
             sql += "*";
         
-        sql += makeFromClause(modelEntity);
-        sql += makeWhereClauseOr(modelEntity, whereFields, dummyValue);
-        sql += makeOrderByClause(modelEntity, orderBy);
+        sql += SqlJdbcUtil.makeFromClause(modelEntity);
+        sql += SqlJdbcUtil.makeWhereClauseOr(modelEntity, whereFields, dummyValue);
+        sql += SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy);
         
         Debug.logVerbose("[GenericDAO.selectByOr] sql=" + sql, module);
+        SQLProcessor sqlP = new SQLProcessor( helperName );
+        
         try {
-            ps = connection.prepareStatement(sql);
+            sqlP.prepareStatement(sql);
             
             if (fields != null && fields.size() > 0) {
-                int ind = 1;
-                for (int i = 0; i < whereFields.size(); i++) {
-                    ModelField curField = (ModelField) whereFields.get(i);
-
-                    //for where clause variables only setValue if not null...
-                    if (dummyValue.get(curField.getName()) != null) {
-                        setValue(ps, ind, curField, dummyValue);
-                        ind++;
-                    }
-                }
+                SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
             }
-            Debug.logVerbose("[GenericDAO.selectByOr] ps=" + ps.toString(), module);
-            rs = ps.executeQuery();
+            Debug.logVerbose("[GenericDAO.selectByOr] ps=" + sqlP.getPreparedStatement().toString(), module);
+            sqlP.executeQuery();
             
-            while (rs.next()) {
+            while (sqlP.next()) {
                 GenericValue value = new GenericValue(dummyValue);
                 
                 for (int j = 0; j < selectFields.size(); j++) {
                     ModelField curField = (ModelField) selectFields.get(j);
-
-                    getValue(rs, j + 1, curField, value);
+                    
+                    SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, value, modelFieldTypeReader);
                 }
                 
                 value.modified = false;
                 collection.add(value);
             }
-        } catch (SQLException sqle) {
-            //Debug.logWarning("[GenericDAO.selectByOr]: SQL Exception while executing the following:\n" + sql + "\nError was:");
-            //sqle.printStackTrace();
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
         } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
+        
         return collection;
     }
     
@@ -851,37 +527,26 @@ public class GenericDAO {
         if (expressions == null)
             return null;
         Collection collection = new LinkedList();
-        
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            connection = getConnection();
-        } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to establish a connection with the database.", sqle);
-        }
-        
         //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
         List selectFields = modelEntity.getFieldsCopy();
         
         StringBuffer sqlBuffer = new StringBuffer("SELECT ");
-
+        
         if (selectFields.size() > 0) {
             sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", ""));
         } else {
             sqlBuffer.append("*");
         }
         sqlBuffer.append(" ");
-        sqlBuffer.append(makeFromClause(modelEntity));
+        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity));
         
         StringBuffer whereString = new StringBuffer("");
-
+        
         if (expressions != null && expressions.size() > 0) {
             for (int i = 0; i < expressions.size(); i++) {
                 EntityExpr expr = (EntityExpr) expressions.get(i);
                 ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
-
+                
                 if (field != null) {
                     if (expr.getRhs() == null) {
                         whereString.append(field.getColName());
@@ -907,8 +572,8 @@ public class GenericDAO {
             }
         }
         
-        String viewClause = makeViewWhereClause(modelEntity);
-
+        String viewClause = SqlJdbcUtil.makeViewWhereClause(modelEntity);
+        
         if (viewClause.length() > 0) {
             whereString.append(" AND ");
             whereString.append(viewClause);
@@ -919,69 +584,48 @@ public class GenericDAO {
             sqlBuffer.append(whereString.toString());
         }
         
-        sqlBuffer.append(makeOrderByClause(modelEntity, orderBy));
+        sqlBuffer.append(SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy));
         String sql = sqlBuffer.toString();
-
+        
         Debug.logVerbose("[GenericDAO.selectByAnd] sql=" + sql, module);
         
+        SQLProcessor sqlP = new SQLProcessor( helperName );
+        
         try {
-            ps = connection.prepareStatement(sql);
+            sqlP.prepareStatement(sql);
             GenericValue dummyValue = new GenericValue(modelEntity);
-
+            
             if (expressions != null && expressions.size() > 0) {
-                int ind = 1;
                 for (int i = 0; i < expressions.size(); i++) {
                     EntityExpr expr = (EntityExpr) expressions.get(i);
-
+                    
                     if (expr.getRhs() != null) {
                         ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
-
+                        
                         //set the field in the dummyValue so that the setValue method can get it out
                         dummyValue.set(field.getName(), expr.getRhs());
-                        setValue(ps, ind, field, dummyValue);
-                        ind++;
+                        SqlJdbcUtil.setValue(sqlP, field, dummyValue, modelFieldTypeReader);
                     }
                 }
             }
-            Debug.logVerbose("[GenericDAO.selectByAnd] ps=" + ps.toString(), module);
-            rs = ps.executeQuery();
+            Debug.logVerbose("[GenericDAO.selectByAnd] ps=" + sqlP.getPreparedStatement().toString(), module);
+            sqlP.executeQuery();
             
-            while (rs.next()) {
+            while (sqlP.next()) {
                 GenericValue value = new GenericValue(modelEntity);
                 
                 for (int j = 0; j < selectFields.size(); j++) {
                     ModelField curField = (ModelField) selectFields.get(j);
-
-                    getValue(rs, j + 1, curField, value);
+                    SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, value, modelFieldTypeReader);
                 }
                 
                 value.modified = false;
                 collection.add(value);
             }
-        } catch (SQLException sqle) {
-            //Debug.logWarning("[GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
-            //sqle.printStackTrace();
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
         } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
+        
         return collection;
     }
     
@@ -992,37 +636,26 @@ public class GenericDAO {
         if (expressions == null)
             return null;
         Collection collection = new LinkedList();
-        
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            connection = getConnection();
-        } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to establish a connection with the database.", sqle);
-        }
-        
         //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
         List selectFields = modelEntity.getFieldsCopy();
         
         StringBuffer sqlBuffer = new StringBuffer("SELECT ");
-
+        
         if (selectFields.size() > 0)
             sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", ""));
         else
             sqlBuffer.append("*");
         sqlBuffer.append(" ");
-        sqlBuffer.append(makeFromClause(modelEntity));
+        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity));
         
         StringBuffer whereString = new StringBuffer("");
-
+        
         if (expressions != null && expressions.size() > 0) {
             whereString.append("(");
             for (int i = 0; i < expressions.size(); i++) {
                 EntityExpr expr = (EntityExpr) expressions.get(i);
                 ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
-
+                
                 if (field != null) {
                     if (expr.getRhs() == null) {
                         whereString.append(field.getColName());
@@ -1046,8 +679,8 @@ public class GenericDAO {
             whereString.append(")");
         }
         
-        String viewClause = makeViewWhereClause(modelEntity);
-
+        String viewClause = SqlJdbcUtil.makeViewWhereClause(modelEntity);
+        
         if (viewClause.length() > 0) {
             whereString.append(" AND ");
             whereString.append(viewClause);
@@ -1058,69 +691,49 @@ public class GenericDAO {
             sqlBuffer.append(whereString);
         }
         
-        sqlBuffer.append(makeOrderByClause(modelEntity, orderBy));
+        sqlBuffer.append(SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy));
         String sql = sqlBuffer.toString();
-
+        
         Debug.logVerbose("[GenericDAO.selectByOr] sql=" + sql, module);
         
+        SQLProcessor sqlP = new SQLProcessor( helperName );
+        
         try {
-            ps = connection.prepareStatement(sql);
+            sqlP.prepareStatement(sql);
             GenericValue dummyValue = new GenericValue(modelEntity);
-
+            
             if (expressions != null && expressions.size() > 0) {
-                int ind = 1;
                 for (int i = 0; i < expressions.size(); i++) {
                     EntityExpr expr = (EntityExpr) expressions.get(i);
-
+                    
                     if (expr.getRhs() != null) {
                         ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
-
+                        
                         //set the field in the dummyValue so that the setValue method can get it out
                         dummyValue.set(field.getName(), expr.getRhs());
-                        setValue(ps, ind, field, dummyValue);
-                        ind++;
+                        SqlJdbcUtil.setValue(sqlP, field, dummyValue, modelFieldTypeReader);
                     }
                 }
             }
-            Debug.logVerbose("[GenericDAO.selectByOr] ps=" + ps.toString(), module);
-            rs = ps.executeQuery();
+            Debug.logVerbose("[GenericDAO.selectByOr] ps=" + sqlP.getPreparedStatement().toString(), module);
+            sqlP.executeQuery();
             
-            while (rs.next()) {
+            while (sqlP.next()) {
                 GenericValue value = new GenericValue(modelEntity);
                 
                 for (int j = 0; j < selectFields.size(); j++) {
                     ModelField curField = (ModelField) selectFields.get(j);
-
-                    getValue(rs, j + 1, curField, value);
+                    
+                    SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, value, modelFieldTypeReader);
                 }
                 
                 value.modified = false;
                 collection.add(value);
             }
-        } catch (SQLException sqle) {
-            //Debug.logWarning("[GenericDAO.selectByOr]: SQL Exception while executing the following:\n" + sql + "\nError was:");
-            //sqle.printStackTrace();
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
         } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
+        
         return collection;
     }
     
@@ -1133,26 +746,16 @@ public class GenericDAO {
         
         Collection collection = new LinkedList();
         
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            connection = getConnection();
-        } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
-        }
-        
         //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
         List whereFields = new ArrayList();
         List selectFields = new ArrayList();
-
+        
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
-
+            
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
-
+                
                 if (keys.contains(curField.getName())) {
                     whereFields.add(curField);
                     selectFields.add(curField);
@@ -1164,7 +767,7 @@ public class GenericDAO {
         }
         
         String sql = "SELECT ";
-
+        
         if (selectFields.size() > 0)
             sql += modelEntity.colNameString(selectFields, ", ", "");
         else
@@ -1173,61 +776,41 @@ public class GenericDAO {
         if (fields != null && fields.size() > 0)
             sql += " WHERE " + modelEntity.colNameString(whereFields, " LIKE ? AND ", " LIKE ?");
         
-        sql += makeOrderByClause(modelEntity, orderBy);
+        sql += SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy);
         Debug.logVerbose("[GenericDAO.selectByLike] sql=" + sql, module);
         
+        SQLProcessor sqlP = new SQLProcessor( helperName );
+        
         try {
-            ps = connection.prepareStatement(sql);
+            sqlP.prepareStatement(sql);
             
             GenericValue dummyValue;
-
+            
             if (fields != null && fields.size() > 0) {
                 dummyValue = new GenericValue(modelEntity, fields);
-                for (int i = 0; i < whereFields.size(); i++) {
-                    ModelField curField = (ModelField) whereFields.get(i);
-
-                    setValue(ps, i + 1, curField, dummyValue);
-                }
-            } else
+                SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
+            } else {
                 dummyValue = new GenericValue(modelEntity);
-            Debug.logVerbose("[GenericDAO.selectByLike] ps=" + ps.toString(), module);
-            rs = ps.executeQuery();
+            }
             
-            while (rs.next()) {
+            Debug.logVerbose("[GenericDAO.selectByLike] ps=" + sqlP.getPreparedStatement().toString(), module);
+            sqlP.executeQuery();
+            
+            while (sqlP.next()) {
                 GenericValue value = new GenericValue(dummyValue);
-
+                
                 for (int j = 0; j < selectFields.size(); j++) {
                     ModelField curField = (ModelField) selectFields.get(j);
-
-                    getValue(rs, j + 1, curField, value);
+                    
+                    SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, value, modelFieldTypeReader);
                 }
                 value.modified = false;
                 collection.add(value);
             }
-        } catch (SQLException sqle) {
-            //Debug.logWarning("[GenericDAO.selectByLike]: SQL Exception while executing the following:\n" + sql + "\nError was:");
-            //sqle.printStackTrace();
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
         } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
+        
         return collection;
     }
     
@@ -1242,10 +825,6 @@ public class GenericDAO {
             return null;
         
         Collection collection = new LinkedList();
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        
         ModelEntity firstModelEntity = null;
         ModelEntity secondModelEntity = null;
         
@@ -1260,12 +839,6 @@ public class GenericDAO {
         String test = "";
         
         List whereTables = new ArrayList();
-        
-        try {
-            connection = getConnection();
-        } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
-        }
         
         //each iteration defines one relationship for the query.
         for (int i = 0; i < entityClauses.size(); i++) {
@@ -1290,10 +863,10 @@ public class GenericDAO {
             if (i > 0)
                 where.append(interFieldOperation);
             where.append(firstModelEntity.getTableName() + "." + firstModelField.getColName() + " " + intraFieldOperation + " " + secondModelEntity.getTableName() + "." +
-                secondModelField.getColName());
+            secondModelField.getColName());
         }
         int ix = 0;
-
+        
         for (; ix < whereTables.size() - 1; ix++) {
             from.append(whereTables.get(ix) + ", ");
         }
@@ -1301,13 +874,13 @@ public class GenericDAO {
         
         List whereFields = new ArrayList();
         List selectFields = new ArrayList();
-
+        
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
-
+            
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
-
+                
                 if (keys.contains(curField.getName())) {
                     whereFields.add(curField);
                     selectFields.add(curField);
@@ -1317,7 +890,7 @@ public class GenericDAO {
         }
         
         String tableNamePrefix = modelEntity.getTableName() + ".";
-
+        
         if (fields != null && fields.size() > 0) {
             test = where.toString();
             if (test.trim().length() > 0)
@@ -1329,64 +902,41 @@ public class GenericDAO {
         select.append(tableNamePrefix);
         select.append(modelEntity.colNameString(selectFields, ", " + tableNamePrefix, ""));
         
-        select.append(makeOrderByClause(modelEntity, orderBy));
+        select.append(SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy));
         
         String sql = "";
-
+        
+        SQLProcessor sqlP = new SQLProcessor( helperName );
+        
         try {
             sql = select.toString() + " " + from.toString() + " " + where.toString() + (order.toString().trim().length() > 0 ? order.toString() : "");
-            ps = connection.prepareStatement(sql);
+            sqlP.prepareStatement(sql);
             
             GenericValue dummyValue;
-
+            
             if (fields != null && fields.size() > 0) {
                 dummyValue = new GenericValue(modelEntity, fields);
-                for (int i = 0; i < whereFields.size(); i++) {
-                    ModelField curField = (ModelField) whereFields.get(i);
-
-                    setValue(ps, i + 1, curField, dummyValue);
-                }
+                SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
             } else {
                 dummyValue = new GenericValue(modelEntity);
             }
-            rs = ps.executeQuery();
+            sqlP.executeQuery();
             
-            while (rs.next()) {
+            while (sqlP.next()) {
                 GenericValue value = new GenericValue(dummyValue);
                 
                 for (int j = 0; j < selectFields.size(); j++) {
                     ModelField curField = (ModelField) selectFields.get(j);
-
-                    getValue(rs, j + 1, curField, value);
+                    SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, value, modelFieldTypeReader);
                 }
                 
                 value.modified = false;
                 collection.add(value);
             }
-        } catch (SQLException sqle) {
-            //Debug.logWarning("[GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
-            //sqle.printStackTrace();
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
         } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
+        
         return collection;
     }
     
@@ -1395,60 +945,21 @@ public class GenericDAO {
     /* ====================================================================== */
     
     public void delete(GenericEntity entity) throws GenericEntityException {
-        Connection connection = null;
-
-        try {
-            connection = getConnection();
-        } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
-        }
+        SQLProcessor sqlP = new SQLProcessor( helperName );
         
-        boolean manualTX = true;
-
         try {
-            connection.setAutoCommit(false);
-        } catch (SQLException sqle) {
-            manualTX = false;
-        }
-        if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) {
-            manualTX = false;
-        }
-
-        try {
-            delete(entity, connection);
-            if (manualTX)
-                connection.commit();
-        } catch (SQLException sqle) {
-            try {
-                if (manualTX)
-                    connection.rollback();
-            } catch (SQLException sqle2) {
-                Debug.logWarning("SQL Exception while rolling back delete. Error was:", module);
-                Debug.logWarning(sqle2, module);
-            }
-            throw new GenericDataSourceException("SQL Exception occured in delete", sqle);
+            delete(entity, sqlP.getConnection());
         } catch (GenericDataSourceException e) {
-            try {
-                if (manualTX)
-                    connection.rollback();
-            } catch (SQLException sqle2) {
-                Debug.logWarning("SQL Exception while rolling back delete. Error was:", module);
-                Debug.logWarning(sqle2, module);
-            }
+            sqlP.rollback();
             throw new GenericDataSourceException("Generic Entity Exception occured in delete", e);
         } finally {
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
     }
     
     public void delete(GenericEntity entity, Connection connection) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
-
+        
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
@@ -1457,88 +968,30 @@ public class GenericDAO {
             throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation delete not supported yet for view entities");
         }
         
-        PreparedStatement ps = null;
-        String sql = "DELETE FROM " + modelEntity.getTableName() + " WHERE " + makeWhereStringAnd(modelEntity.getPksCopy(), entity);
-
+        String sql = "DELETE FROM " + modelEntity.getTableName() + " WHERE " + SqlJdbcUtil.makeWhereStringAnd(modelEntity.getPksCopy(), entity);
+        
+        SQLProcessor sqlP = new SQLProcessor( helperName, connection );
+        
         try {
-            ps = connection.prepareStatement(sql);
-            
-            int ind = 1;
-            for (int i = 0; i < modelEntity.getPksSize(); i++) {
-                ModelField curField = modelEntity.getPk(i);
-
-                //for where clause variables only setValue if not null...
-                if (entity.get(curField.getName()) != null) {
-                    setValue(ps, ind, curField, entity);
-                    ind++;
-                }
-            }
-            
-            ps.executeUpdate();
+            sqlP.prepareStatement(sql);
+            SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
+            sqlP.executeUpdate();
             entity.modified = true;
-        } catch (SQLException sqle) {
-            //Debug.logWarning("[GenericDAO.delete]: SQL Exception while executing the following:\n" + sql + "\nError was:");
-            //Debug.logWarning(sqle.getMessage());
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
         } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
     }
     
     public void deleteByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException {
-        Connection connection = null;
-
-        try {
-            connection = getConnection();
-        } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
-        }
-        
-        boolean manualTX = true;
-
-        try {
-            connection.setAutoCommit(false);
-        } catch (SQLException sqle) {
-            manualTX = false;
-        }
-        if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) {
-            manualTX = false;
-        }
+        SQLProcessor sqlP = new SQLProcessor( helperName );
         
         try {
-            deleteByAnd(modelEntity, fields, connection);
-            if (manualTX)
-                connection.commit();
-        } catch (SQLException sqle) {
-            try {
-                if (manualTX)
-                    connection.rollback();
-            } catch (SQLException sqle2) {
-                Debug.logWarning("SQL Exception while rolling back delete. Error was:", module);
-                Debug.logWarning(sqle2, module);
-            }
-            throw new GenericDataSourceException("SQL Exception occured in deleteByAnd", sqle);
+            deleteByAnd(modelEntity, fields, sqlP.getConnection());
         } catch (GenericDataSourceException e) {
-            try {
-                if (manualTX)
-                    connection.rollback();
-            } catch (SQLException sqle2) {
-                Debug.logWarning("SQL Exception while rolling back delete. Error was:", module);
-                Debug.logWarning(sqle2, module);
-            }
+            sqlP.rollback();
             throw new GenericDataSourceException("Generic Entity Exception occured in deleteByAnd", e);
         } finally {
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
     }
     
@@ -1549,17 +1002,15 @@ public class GenericDAO {
             throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation deleteByAnd not supported yet for view entities");
         }
         
-        PreparedStatement ps = null;
-        
         //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
         List whereFields = new ArrayList();
-
+        
         if (fields != null || fields.size() > 0) {
             Set keys = fields.keySet();
-
+            
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
-
+                
                 if (keys.contains(curField.getName()))
                     whereFields.add(curField);
             }
@@ -1567,37 +1018,22 @@ public class GenericDAO {
         
         GenericValue dummyValue = new GenericValue(modelEntity, fields);
         String sql = "DELETE FROM " + modelEntity.getTableName();
-
+        
         if (fields != null || fields.size() > 0)
-            sql += " WHERE " + makeWhereStringAnd(whereFields, dummyValue);
+            sql += " WHERE " + SqlJdbcUtil.makeWhereStringAnd(whereFields, dummyValue);
+        
+        SQLProcessor sqlP = new SQLProcessor( helperName );
         
         try {
-            ps = connection.prepareStatement(sql);
+            sqlP.prepareStatement(sql);
             
             if (fields != null || fields.size() > 0) {
-                int ind = 1;
-                for (int i = 0; i < whereFields.size(); i++) {
-                    ModelField curField = (ModelField) whereFields.get(i);
-
-                    //for where clause variables only setValue if not null...
-                    if (dummyValue.get(curField.getName()) != null) {
-                        setValue(ps, ind, curField, dummyValue);
-                        ind++;
-                    }
-                }
+                SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
             }
-            ps.executeUpdate();
-        } catch (SQLException sqle) {
-            //Debug.logWarning("[GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
-            //sqle.printStackTrace();
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
+            
+            sqlP.executeUpdate();
         } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
+            sqlP.close();
         }
     }
     
@@ -1607,409 +1043,36 @@ public class GenericDAO {
             return;
         }
         
-        Connection connection = null;
-
-        try {
-            connection = getConnection();
-        } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
-        }
-        
-        boolean manualTX = true;
-
-        try {
-            connection.setAutoCommit(false);
-        } catch (SQLException sqle) {
-            manualTX = false;
-        }
-        if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) {
-            manualTX = false;
-        }
+        SQLProcessor sqlP = new SQLProcessor( helperName );
         
         try {
             Iterator iter = dummyPKs.iterator();
-
+            
             while (iter.hasNext()) {
                 GenericEntity entity = (GenericEntity) iter.next();
                 
                 //if it contains a complete primary key, delete the one, otherwise deleteByAnd
                 if (entity.containsPrimaryKey()) {
-                    delete(entity, connection);
+                    delete(entity, sqlP.getConnection());
                 } else {
-                    deleteByAnd(entity.getModelEntity(), entity.getAllFields(), connection);
+                    deleteByAnd(entity.getModelEntity(), entity.getAllFields(), sqlP.getConnection());
                 }
             }
-            if (manualTX)
-                connection.commit();
-        } catch (SQLException sqle) {
-            try {
-                if (manualTX)
-                    connection.rollback();
-            } catch (SQLException sqle2) {
-                Debug.logWarning("SQL Exception while rolling back delete. Error was:", module);
-                Debug.logWarning(sqle2, module);
-            }
-            throw new GenericDataSourceException("SQL Exception occured in deleteAll", sqle);
         } catch (GenericDataSourceException e) {
-            try {
-                if (manualTX)
-                    connection.rollback();
-            } catch (SQLException sqle2) {
-                Debug.logWarning("SQL Exception while rolling back delete. Error was:", module);
-                Debug.logWarning(sqle2, module);
-            }
+            sqlP.rollback();
             throw new GenericDataSourceException("Generic Entity Exception occured in deleteAll", e);
         } finally {
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle.getMessage(), module);
-            }
-            
+            sqlP.close();
         }
     }
-    
-    /* ====================================================================== */
-    
-    /* ====================================================================== */
-    
-    protected String makeFromClause(ModelEntity modelEntity) {
-        StringBuffer sql = new StringBuffer("");
 
-        if (modelEntity instanceof ModelViewEntity) {
-            ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
-
-            sql.append(" FROM ");
-            Iterator meIter = modelViewEntity.getMemberEntityNames().entrySet().iterator();
-
-            while (meIter.hasNext()) {
-                Map.Entry entry = (Map.Entry) meIter.next();
-                ModelEntity fromEntity = modelViewEntity.getMemberModelEntity((String) entry.getKey());
-
-                sql.append(fromEntity.getTableName());
-                sql.append(" ");
-                sql.append((String) entry.getKey());
-                if (meIter.hasNext())
-                    sql.append(", ");
-            }
-        } else {
-            sql.append(" FROM ");
-            sql.append(modelEntity.getTableName());
-        }
-        return sql.toString();
-    }
-    
-    /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
-    protected String makeWhereStringAnd(List modelFields, GenericEntity entity) {
-        StringBuffer returnString = new StringBuffer("");
-
-        if (modelFields.size() < 1) {
-            return "";
-        }
-        
-        int i = 0;
-
-        for (; i < modelFields.size() - 1; i++) {
-            ModelField modelField = (ModelField) modelFields.get(i);
-
-            returnString.append(modelField.getColName());
-            if (entity.get(modelField.getName()) != null)
-                returnString.append("=? AND ");
-            else
-                returnString.append(" IS NULL AND ");
-        }
-        ModelField modelField2 = (ModelField) modelFields.get(i);
-
-        returnString.append(modelField2.getColName());
-        if (entity.get(modelField2.getName()) != null)
-            returnString.append("=?");
-        else
-            returnString.append(" IS NULL");
-        return returnString.toString();
-    }
-    
-    protected String makeWhereClauseAnd(ModelEntity modelEntity, List modelFields, GenericEntity entity) {
-        StringBuffer whereString = new StringBuffer("");
-
-        if (modelFields != null && modelFields.size() > 0) {
-            whereString.append(makeWhereStringAnd(modelFields, entity));
-        }
-        
-        String viewClause = makeViewWhereClause(modelEntity);
-
-        if (viewClause.length() > 0) {
-            if (whereString.length() > 0)
-                whereString.append(" AND ");
-            whereString.append(viewClause);
-        }
-        
-        if (whereString.length() > 0)
-            return " WHERE " + whereString.toString();
-        else
-            return "";
-    }
-    
-    protected String makeWhereStringOr(List modelFields, GenericEntity entity) {
-        StringBuffer returnString = new StringBuffer("");
-
-        if (modelFields.size() < 1) {
-            return "";
-        }
-        
-        int i = 0;
-
-        for (; i < modelFields.size() - 1; i++) {
-            ModelField modelField = (ModelField) modelFields.get(i);
-
-            returnString.append(modelField.getColName());
-            if (entity.get(modelField.getName()) != null)
-                returnString.append("=? OR ");
-            else
-                returnString.append(" IS NULL OR ");
-        }
-        ModelField modelField2 = (ModelField) modelFields.get(i);
-
-        returnString.append(modelField2.getColName());
-        if (entity.get(modelField2.getName()) != null)
-            returnString.append("=?");
-        else
-            returnString.append(" IS NULL");
-        return returnString.toString();
-    }
-    
-    protected String makeWhereClauseOr(ModelEntity modelEntity, List modelFields, GenericEntity entity) {
-        StringBuffer whereString = new StringBuffer("");
-
-        if (modelFields != null && modelFields.size() > 0) {
-            whereString.append(makeWhereStringOr(modelFields, entity));
-        }
-        
-        String viewClause = makeViewWhereClause(modelEntity);
-
-        if (viewClause.length() > 0) {
-            if (whereString.length() > 0)
-                whereString.append(" AND ");
-            whereString.append(viewClause);
-        }
-        
-        if (whereString.length() > 0)
-            return " WHERE " + whereString.toString();
-        else
-            return "";
-    }
-    
-    protected String makeViewWhereClause(ModelEntity modelEntity) {
-        StringBuffer whereString = new StringBuffer("");
-
-        if (modelEntity instanceof ModelViewEntity) {
-            ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
-            
-            for (int i = 0; i < modelViewEntity.getViewLinksSize(); i++) {
-                ModelViewEntity.ModelViewLink viewLink = modelViewEntity.getViewLink(i);
-                
-                ModelEntity linkEntity = (ModelEntity) modelViewEntity.getMemberModelEntity(viewLink.getEntityAlias());
-                ModelEntity relLinkEntity = (ModelEntity) modelViewEntity.getMemberModelEntity(viewLink.getRelEntityAlias());
-                
-                for (int j = 0; j < viewLink.getKeyMapsSize(); j++) {
-                    ModelKeyMap keyMap = viewLink.getKeyMap(j);
-                    ModelField linkField = linkEntity.getField(keyMap.getFieldName());
-                    ModelField relLinkField = relLinkEntity.getField(keyMap.getRelFieldName());
-                    
-                    if (whereString.length() > 0)
-                        whereString.append(" AND ");
-                    whereString.append(viewLink.getEntityAlias());
-                    whereString.append(".");
-                    whereString.append(linkField.getColName());
-                    whereString.append("=");
-                    whereString.append(viewLink.getRelEntityAlias());
-                    whereString.append(".");
-                    whereString.append(relLinkField.getColName());
-                }
-            }
-        }
-        return whereString.toString();
-    }
-    
-    protected String makeOrderByClause(ModelEntity modelEntity, List orderBy) {
-        StringBuffer sql = new StringBuffer("");
-
-        if (orderBy != null && orderBy.size() > 0) {
-            Debug.logVerbose("Order by list contains: " + orderBy.size() + " entries.");
-            List orderByStrings = new LinkedList();
-            
-            for (int oi = 0; oi < orderBy.size(); oi++) {
-                String keyName = (String) orderBy.get(oi);
-                String ext = null;
-                
-                // check for ASC/DESC
-                int spaceIdx = keyName.indexOf(" ");
-
-                if (spaceIdx > 0) {
-                    ext = keyName.substring(spaceIdx);
-                    keyName = keyName.substring(0, spaceIdx);
-                }
-                // optional way -/+
-                if (keyName.startsWith("-") || keyName.startsWith("+")) {
-                    ext = keyName.startsWith("-") ? " DESC" : " ASC";
-                    keyName = keyName.substring(1);
-                }
-                
-                for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
-                    ModelField curField = modelEntity.getField(fi);
-
-                    if (curField.getName().equals(keyName)) {
-                        if (ext != null)
-                            orderByStrings.add(curField.getColName() + ext);
-                        else
-                            orderByStrings.add(curField.getColName());
-                    }
-                }
-            }
-            
-            if (orderByStrings.size() > 0) {
-                sql.append(" ORDER BY ");
-                
-                Iterator iter = orderByStrings.iterator();
-
-                while (iter.hasNext()) {
-                    String curString = (String) iter.next();
-
-                    sql.append(curString);
-                    if (iter.hasNext())
-                        sql.append(", ");
-                }
-            }
-        }
-        Debug.logVerbose("makeOrderByClause: " + sql.toString(), module);
-        return sql.toString();
-    }
-    
-    /* ====================================================================== */
-    
-    /* ====================================================================== */
-    
-    public void getValue(ResultSet rs, int ind, ModelField curField, GenericEntity entity) throws SQLException, GenericEntityException {
-        ModelFieldType mft = modelFieldTypeReader.getModelFieldType(curField.getType());
-
-        if (mft == null) {
-            throw new GenericModelException("definition fieldType " + curField.getType() + " not found, cannot getValue for field " +
-                    entity.getEntityName() + "." + curField.getName() + ".");
-        }
-        String fieldType = mft.getJavaType();
-        
-        if (fieldType.equals("java.lang.String") || fieldType.equals("String")) {
-            entity.set(curField.getName(), rs.getString(ind));
-        } else if (fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp")) {
-            entity.set(curField.getName(), rs.getTimestamp(ind));
-        } else if (fieldType.equals("java.sql.Time") || fieldType.equals("Time")) {
-            entity.set(curField.getName(), rs.getTime(ind));
-        } else if (fieldType.equals("java.sql.Date") || fieldType.equals("Date")) {
-            entity.set(curField.getName(), rs.getDate(ind));
-        } else if (fieldType.equals("java.lang.Integer") || fieldType.equals("Integer")) {
-            if (rs.getObject(ind) == null)
-                entity.set(curField.getName(), null);
-            else
-                entity.set(curField.getName(), new Integer(rs.getInt(ind)));
-        } else if (fieldType.equals("java.lang.Long") || fieldType.equals("Long")) {
-            if (rs.getObject(ind) == null)
-                entity.set(curField.getName(), null);
-            else
-                entity.set(curField.getName(), new Long(rs.getLong(ind)));
-        } else if (fieldType.equals("java.lang.Float") || fieldType.equals("Float")) {
-            if (rs.getObject(ind) == null)
-                entity.set(curField.getName(), null);
-            else
-                entity.set(curField.getName(), new Float(rs.getFloat(ind)));
-        } else if (fieldType.equals("java.lang.Double") || fieldType.equals("Double")) {
-            if (rs.getObject(ind) == null)
-                entity.set(curField.getName(), null);
-            else
-                entity.set(curField.getName(), new Double(rs.getDouble(ind)));
-        } else {
-            throw new GenericNotImplementedException("Java type " + fieldType + " not currently supported. Sorry.");
-        }
-    }
-    
-    public void setValue(PreparedStatement ps, int ind, ModelField curField, GenericEntity entity) throws SQLException, GenericEntityException {
-        Object field = entity.get(curField.getName());
-        //there should be no parameter for null fields, so we can just return and do nothing
-        
-        ModelFieldType mft = modelFieldTypeReader.getModelFieldType(curField.getType());
-
-        if (mft == null) {
-            throw new GenericModelException("GenericDAO.getValue: definition fieldType " + curField.getType() + " not found, cannot setValue for field " +
-                    entity.getEntityName() + "." + curField.getName() + ".");
-        }
-        
-        String fieldType = mft.getJavaType();
-
-        if (field != null) {
-            Class fieldClass = field.getClass();
-            String fieldClassName = fieldClass.getName();
-
-            if (!fieldClassName.equals(mft.getJavaType()) && fieldClassName.indexOf(mft.getJavaType()) < 0) {
-                Debug.logWarning("type of field " + entity.getEntityName() + "." + curField.getName() +
-                    " is " + fieldClassName + ", was expecting " + mft.getJavaType() + "; this may " +
-                    "indicate an error in the configuration or in the class, and may result " +
-                    "in an SQL-Java data conversion error. Will use the real field type: " +
-                    fieldClassName + ", not the definition.", module);
-                fieldType = fieldClassName;
-            }
-        }
-        
-        if (fieldType.equals("java.lang.String") || fieldType.equals("String")) {
-            if (field != null)
-                ps.setString(ind, (String) field);
-            else
-                ps.setNull(ind, Types.VARCHAR);
-        } else if (fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp")) {
-            if (field != null)
-                ps.setTimestamp(ind, (java.sql.Timestamp) field);
-            else
-                ps.setNull(ind, Types.TIMESTAMP);
-        } else if (fieldType.equals("java.sql.Time") || fieldType.equals("Time")) {
-            if (field != null)
-                ps.setTime(ind, (java.sql.Time) field);
-            else
-                ps.setNull(ind, Types.TIME);
-        } else if (fieldType.equals("java.sql.Date") || fieldType.equals("Date")) {
-            if (field != null)
-                ps.setDate(ind, (java.sql.Date) field);
-            else
-                ps.setNull(ind, Types.DATE);
-        } else if (fieldType.equals("java.lang.Integer") || fieldType.equals("Integer")) {
-            if (field != null)
-                ps.setInt(ind, ((java.lang.Integer) field).intValue());
-            else
-                ps.setNull(ind, Types.NUMERIC);
-        } else if (fieldType.equals("java.lang.Long") || fieldType.equals("Long")) {
-            if (field != null)
-                ps.setLong(ind, ((java.lang.Long) field).longValue());
-            else
-                ps.setNull(ind, Types.NUMERIC);
-        } else if (fieldType.equals("java.lang.Float") || fieldType.equals("Float")) {
-            if (field != null)
-                ps.setFloat(ind, ((java.lang.Float) field).floatValue());
-            else
-                ps.setNull(ind, Types.NUMERIC);
-        } else if (fieldType.equals("java.lang.Double") || fieldType.equals("Double")) {
-            if (field != null)
-                ps.setDouble(ind, ((java.lang.Double) field).doubleValue());
-            else
-                ps.setNull(ind, Types.NUMERIC);
-        } else {
-            throw new GenericNotImplementedException("Java type " + fieldType + " not currently supported. Sorry.");
-        }
-    }
-    
     /* ====================================================================== */
     
     public void checkDb(Map modelEntities, Collection messages, boolean addMissing) {
         DatabaseUtil dbUtil = new DatabaseUtil(this.helperName);
         dbUtil.checkDb(modelEntities, messages, addMissing);
     }
-
+    
     /** Creates a list of ModelEntity objects based on meta data from the database */
     public List induceModelFromDb(Collection messages) {
         DatabaseUtil dbUtil = new DatabaseUtil(this.helperName);

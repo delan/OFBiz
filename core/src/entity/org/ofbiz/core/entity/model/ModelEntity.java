@@ -33,9 +33,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
-
+import org.ofbiz.core.entity.jdbc.*;
+import org.ofbiz.core.util.*;
 
 /**
  * Generic Entity - Entity model class

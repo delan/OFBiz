@@ -34,6 +34,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.entity.jdbc.*;
 import org.ofbiz.core.util.*;
 
 
