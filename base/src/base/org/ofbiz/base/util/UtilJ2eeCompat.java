@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -29,7 +29,7 @@ import javax.servlet.ServletContext;
  * Misc J2EE Compatibility Utility Functions
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class UtilJ2eeCompat {
@@ -43,6 +43,7 @@ public class UtilJ2eeCompat {
     public static final String OC4J = "Oracle";
     public static final String JRUN = "JRun";
     public static final String JETTY = "Jetty";
+    public static final String WEBSPHERE = "Websphere";
 
     protected static Boolean doFlushOnRenderValue = null;
     protected static Boolean useOutputStreamNotWriterValue = null;
@@ -93,12 +94,14 @@ public class UtilJ2eeCompat {
             } else if (serverInfo.indexOf(ORION) >= 0) {
                 Debug.logImportant("Orion detected, using non-nested JspException", module);
                 nestjspexception = false;
+            } else if (serverInfo.indexOf(WEBSPHERE) >= 0) {
+                Debug.logImportant("IBM Websphere Application Server detected, using response.getWriter to write text out instead of response.getOutputStream", module);
+                usestream = false;
             }
 
             doFlushOnRenderValue = new Boolean(doflush);
             useOutputStreamNotWriterValue = new Boolean(usestream);
             useNestedJspException = new Boolean(nestjspexception);
-
         }
     }
 }
