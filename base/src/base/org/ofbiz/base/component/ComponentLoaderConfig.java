@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentLoaderConfig.java,v 1.1 2003/08/15 23:08:22 ajzeneski Exp $
+ * $Id: ComponentLoaderConfig.java,v 1.2 2003/08/15 23:29:45 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -24,21 +24,25 @@
  */
 package org.ofbiz.base.component;
 
-import java.util.*;
 import java.io.IOException;
-import java.net.*;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.*;
+import org.ofbiz.base.util.UtilURL;
+import org.ofbiz.base.util.UtilXml;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-import org.ofbiz.base.util.*;
 
 /**
  * ComponentLoaderConfig - Component Loader configuration
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class ComponentLoaderConfig {
@@ -51,11 +55,13 @@ public class ComponentLoaderConfig {
     
     protected static List componentsToLoad = null;
     
-    protected ComponentLoaderConfig() throws ComponentException {
-        ComponentLoaderConfig.componentsToLoad = new LinkedList();
+    protected ComponentLoaderConfig(String configFile) throws ComponentException {
+        ComponentLoaderConfig.componentsToLoad = new LinkedList();           
+        if (configFile == null) {
+            configFile = COMPONENT_LOAD_XML_FILENAME;
+        }
         
-        URL xmlUrl = UtilURL.fromResource(COMPONENT_LOAD_XML_FILENAME);
-        
+        URL xmlUrl = UtilURL.fromResource(configFile);        
         Document document = null;
         try {
             document = UtilXml.readXmlDocument(xmlUrl, true);
@@ -79,11 +85,11 @@ public class ComponentLoaderConfig {
         
     }
     
-    public static List getComponentsToLoad() throws ComponentException {
+    public static List getComponentsToLoad(String configFile) throws ComponentException {
         if (componentsToLoad == null) {
             synchronized (ComponentLoaderConfig.class) {
                 if (componentsToLoad ==  null) {
-                    new ComponentLoaderConfig();
+                    new ComponentLoaderConfig(configFile);
                 }                
             }
         }
