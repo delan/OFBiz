@@ -57,11 +57,11 @@ if (orderHeader != null) {
     orderAdjustments = orderReadHelper.getAdjustments();
     orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
     orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
-    headerAdjustmentsToShow = OrderReadHelper.getOrderHeaderAdjustmentToShow(orderHeaderAdjustments, orderSubTotal);
+    headerAdjustmentsToShow = orderReadHelper.getOrderHeaderAdjustmentsToShow();
 
-    context.put("orderHeader", OrderReadHelper.getOrderHeaderDisplay(orderHeader, orderHeaderAdjustments, orderSubTotal));
+    context.put("orderHeader", orderHeader);
     context.put("localOrderReadHelper", orderReadHelper);
-    context.put("orderItems", OrderReadHelper.getOrderItemDisplay(orderItems, orderAdjustments));
+    context.put("orderItems", orderReadHelper.getOrderItems());
     context.put("orderAdjustments", orderAdjustments);
     context.put("orderHeaderAdjustments", orderHeaderAdjustments);
     context.put("orderSubTotal", orderSubTotal);

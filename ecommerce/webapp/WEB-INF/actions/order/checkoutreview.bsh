@@ -1,22 +1,22 @@
 /*
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
@@ -41,11 +41,11 @@ orderAdjustments = cart.makeAllAdjustments();
 context.put("orderAdjustments", orderAdjustments);
 
 orderItems = cart.makeOrderItems();
-orderDisplayItems = OrderReadHelper.getOrderItemDisplay(orderItems, orderAdjustments);
-context.put("orderItems", orderDisplayItems);
+context.put("orderItems", orderItems);
 
 orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments);
 context.put("orderHeaderAdjustments", orderHeaderAdjustments);
+context.put("headerAdjustmentsToShow", OrderReadHelper.filterOrderAdjustments(orderHeaderAdjustments, true, false, false, false, false));
 
 orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments);
 context.put("orderSubTotal", orderSubTotal);
@@ -75,7 +75,7 @@ if (paymentMethodTypeIds != null && paymentMethodTypeIds.size() > 0) {
     paymentMethodTypeId = paymentMethodTypeIds.get(0);
     paymentMethodType = delegator.findByPrimaryKey("PaymentMethodType", UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId));
     context.put("paymentMethodType", paymentMethodType);
-}  
+}
 
 webSiteId = CatalogWorker.getWebSiteId(request);
 paymentAddress =  PaymentWorker.getPaymentAddress(delegator, webSiteId, paymentMethodTypeId);
@@ -94,7 +94,7 @@ if (billingAddress != null)
 billingAccount = cart.getBillingAccountId() != null ? delegator.findByPrimaryKey("BillingAccount", UtilMisc.toMap("billingAccountId", cart.getBillingAccountId())) : null;
 if (billingAccount != null)
     context.put("billingAccount", billingAccount);
-    
+
 context.put("customerPoNumber", cart.getPoNumber());
 context.put("carrierPartyId", cart.getCarrierPartyId());
 context.put("shipmentMethodTypeId", cart.getShipmentMethodTypeId());
@@ -106,7 +106,8 @@ context.put("isGift", cart.getIsGift());
 shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", cart.getShipmentMethodTypeId()));
 if (shipmentMethodType != null) context.put("shipMethDescription", shipmentMethodType.getString("description"));
 
-context.put("headerAdjustmentsToShow", OrderReadHelper.getOrderHeaderAdjustmentToShow(orderHeaderAdjustments, orderSubTotal));
+OrderReadHelper orh = new OrderReadHelper(null, orderAdjustments, orderItems);
+context.put("localOrderReadHelper", orh);
 
 shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
 shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
@@ -114,6 +115,6 @@ context.put("orderShippingTotal", shippingAmount);
 
 taxAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, true, false);
 taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, true, false);
-context.put("orderTaxTotal", taxAmount);   
+context.put("orderTaxTotal", taxAmount);
 context.put("orderGrandTotal", OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments));
-              
+

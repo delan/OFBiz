@@ -1,22 +1,22 @@
 <#--
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
@@ -48,58 +48,73 @@
           <td>
             <table width="100%" border="0" cellpadding="0">
               <tr align='left' valign='bottom'>
-                <td width="65%" align="left"><span class="tableheadtext"><b>Product</b></span></td>
-                <td width="5%" align="right"><span class="tableheadtext"><b>Quantity</b></span></td>
+                <td width="45%" align="left"><span class="tableheadtext"><b>Product</b></span></td>
+                <td width="10%" align="right"><span class="tableheadtext"><b>Qty Ordered</b></span></td>
+                <#if maySelectItems?default(false)>
+                <td width="10%" align="right"><span class="tableheadtext"><b>Qty Shipped</b></span></td>
+                <td width="10%" align="right"><span class="tableheadtext"><b>Qty Canceled</b></span></td>
+                </#if>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Unit Price</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Adjustments</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Subtotal</b></span></td>
               </tr>
               <#list orderItems as orderItem>
-                <tr><td colspan="7"><hr class='sepbar'></td></tr>
-                <tr>     
-                  <#if orderItem.productId == "_?_">           
-                    <td colspan="1" valign="top">    
+                <tr><td colspan="8"><hr class='sepbar'></td></tr>
+                <tr>
+                  <#if orderItem.productId == "_?_">
+                    <td colspan="1" valign="top">
                       <b><div class="tabletext"> &gt;&gt; ${orderItem.itemDescription}</div></b>
                     </td>
-                  <#else>                  
+                  <#else>
                     <td valign="top">
-                      <div class="tabletext">                        
+                      <div class="tabletext">
                         <a href="<@ofbizUrl>/product?product_id=${orderItem.productId}</@ofbizUrl>" class="buttontext">${orderItem.productId} - ${orderItem.itemDescription}</a>
                       </div>
                     </td>
                     <td align="right" valign="top">
                       <div class="tabletext" nowrap>${orderItem.quantity?string.number}</div>
                     </td>
+                    <#if maySelectItems?default(false)>
+                    <td align="right" valign="top">
+                      <#assign shippedQty = localOrderReadHelper.getItemShippedQuantity(orderItem)>
+                      <div class="tabletext" nowrap>${shippedQty?default(0)?string.number}</div>
+                    </td>
+                    <td align="right" valign="top">
+                      <#assign canceledQty = localOrderReadHelper.getItemCanceledQuantity(orderItem)>
+                      <div class="tabletext" nowrap>${canceledQty?default(0)?string.number}</div>
+                    </td>
+                    </#if>
                     <td align="right" valign="top">
                       <div class="tabletext" nowrap>${orderItem.unitPrice?string.currency}</div>
                     </td>
                     <td align="right" valign="top">
-                      <div class="tabletext" nowrap>${orderItem.itemAdjTotal?string.currency}</div>
+                      <div class="tabletext" nowrap>${localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem)?string.currency}</div>
                     </td>
                     <td align="right" valign="top" nowrap>
-                      <div class="tabletext">${orderItem.itemSubTotal?string.currency}</div>
+                      <div class="tabletext">${localOrderReadHelper.getOrderItemTotal(orderItem)?string.currency}</div>
                     </td>
                     <#if maySelectItems?default(false)>
-                      <td>                                 
+                      <td>
                         <input name="item_id" value="${orderItem.orderItemSeqId}" type="checkbox">
                       </td>
                     </#if>
                   </#if>
                 </tr>
-                
-                <#-- now show adjustment details per line item -->                
-                <#list orderItem.itemAdjustments as orderItemAdjustment>                                    
+
+                <#-- now show adjustment details per line item -->
+                <#assign itemAdjustments = localOrderReadHelper.getOrderItemAdjustments(orderItem)>
+                <#list itemAdjustments as orderItemAdjustment>
                   <tr>
                     <td align="right">
                       <div class="tabletext" style='font-size: xx-small;'>
-                        <b><i>Adjustment</i>:</b> <b>${orderItemAdjustment.typeDescription}</b>&nbsp;
+                        <b><i>Adjustment</i>:</b> <b>${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}</b>&nbsp;
                         <#if orderItemAdjustment.description?has_content>: ${orderItemAdjustment.description}</#if>
                       </div>
                     </td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td align="right">
-                      <div class="tabletext" style='font-size: xx-small;'>${orderItemAdjustment.itemAdjTotal?string.currency}</div>                      
+                      <div class="tabletext" style='font-size: xx-small;'>${localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment)?string.currency}</div>
                     </td>
                     <td>&nbsp;</td>
                     <#if maySelectItems?default(false)><td>&nbsp;</td></#if>
@@ -114,22 +129,22 @@
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Subtotal</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderSubTotal?string.currency}</div></td>
-              </tr>              
-              <#list headerAdjustmentsToShow as orderHeaderAdjustment>                
+              </tr>
+              <#list headerAdjustmentsToShow as orderHeaderAdjustment>
                 <tr>
-                  <td align="right" colspan="4"><div class="tabletext"><b>${orderHeaderAdjustment.typeDescription}</b></div></td>
-                  <td align="right" nowrap><div class="tabletext">${orderHeaderAdjustment.adjustmentCalc?string.currency}</div></td>
+                  <td align="right" colspan="4"><div class="tabletext"><b>${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</b></div></td>
+                  <td align="right" nowrap><div class="tabletext">${localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment)?string.currency}</div></td>
                 </tr>
-              </#list>                 
+              </#list>
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Shipping and Handling</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderShippingTotal?string.currency}</div></td>
-              </tr>              
+              </tr>
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Sales Tax</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderTaxTotal?string.currency}</div></td>
               </tr>
-              
+
               <tr><td colspan=2></td><td colspan="8"><hr class='sepbar'></td></tr>
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Grand Total</b></div></td>

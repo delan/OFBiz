@@ -24,6 +24,7 @@
  *@since      2.2
 -->
 
+<#assign localOrderReadHelper = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getHelper(orderHeader)>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -426,10 +427,10 @@
                       <div class="tabletext" nowrap>${orderItem.unitPrice?string.currency}</div>
                     </td>
                     <td align="right" valign="top">
-                      <div class="tabletext" nowrap>${orderItem.itemAdjTotal?string.currency}</div>
+                      <div class="tabletext" nowrap>${localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem)?string.currency}</div>
                     </td>
                     <td align="right" valign="top" nowrap>
-                      <div class="tabletext">${orderItem.itemSubTotal?string.currency}</div>
+                      <div class="tabletext">${localOrderReadHelper.getOrderItemTotal(orderItem)?string.currency}</div>
                     </td>
                     <#if maySelectItems?default(false)>
                       <td>                                 
@@ -439,12 +440,13 @@
                   </#if>
                 </tr>
                 
-                <#-- now show adjustment details per line item -->                
-                <#list orderItem.itemAdjustments as orderItemAdjustment>                                    
+                <#-- now show adjustment details per line item -->
+                <#assign itemAdjustments = localOrderReadHelper.getOrderItemAdjustments(orderItem)>
+                <#list itemAdjustments as orderItemAdjustment>
                   <tr>
                     <td align="right">
                       <div class="tabletext" style='font-size: xx-small;'>
-                        <b><i>Adjustment</i>:</b> <b>${orderItemAdjustment.typeDescription}</b>&nbsp;
+                        <b><i>Adjustment</i>:</b> <b>${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}</b>&nbsp;
                         <#if orderItemAdjustment.description?has_content>: ${orderItemAdjustment.description}</#if>
                       </div>
                     </td>
@@ -452,7 +454,7 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td align="right">
-                      <div class="tabletext" style='font-size: xx-small;'>${orderItemAdjustment.itemAdjTotal?string.currency}</div>                      
+                      <div class="tabletext" style='font-size: xx-small;'>${localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment)?string.currency}</div>
                     </td>
                     <td>&nbsp;</td>
                     <#if maySelectItems?default(false)><td>&nbsp;</td></#if>

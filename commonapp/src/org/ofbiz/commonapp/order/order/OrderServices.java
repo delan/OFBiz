@@ -952,13 +952,13 @@ public class OrderServices {
             List orderAdjustments = orh.getAdjustments();                 
             List orderHeaderAdjustments = orh.getOrderHeaderAdjustments();                                                           
             double orderSubTotal = orh.getOrderItemsSubTotal();
-            List headerAdjustmentsToShow = OrderReadHelper.getOrderHeaderAdjustmentToShow(orderHeaderAdjustments, orderSubTotal);
+            List headerAdjustmentsToShow = orh.getOrderHeaderAdjustmentsToShow();
            
             //templateContext.put("localOrderReadHelper", orh);
             result.put("orderId", orderId);
             result.put("orderItemSeqId", context.get("orderItemSeqId"));
-            result.put("orderHeader", OrderReadHelper.getOrderHeaderDisplay(orderHeader, orderHeaderAdjustments, orderSubTotal));
-            result.put("orderItems", OrderReadHelper.getOrderItemDisplay(orderItems, orderAdjustments));
+            result.put("orderHeader", orderHeader);
+            result.put("orderItems", orh.getOrderItems());
             result.put("statusString", orh.getStatusString());
             result.put("orderAdjustments", orderAdjustments);
             result.put("orderHeaderAdjustments", orderHeaderAdjustments);
