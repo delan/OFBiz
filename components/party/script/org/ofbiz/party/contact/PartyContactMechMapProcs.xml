@@ -24,14 +24,13 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Olivier.Heintz@nereide.biz 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
 -->
 
 <simple-map-processors>
   <!-- ContactMech map procs -->
-  <simple-map-processor name="partyContactMech">
-    <process field="contactMechTypeId"><copy/><not-empty><fail-property resource="PartyUiLabels" property="PartyContactMechTypeIdMissing"/></not-empty></process>
+  <simple-map-processor name="partyContactMech">    
     <process field="infoString"><copy/></process>
     <process field="partyId"><copy/></process>
     <process field="extension"><copy/></process>
