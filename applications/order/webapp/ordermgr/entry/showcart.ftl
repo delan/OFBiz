@@ -152,7 +152,13 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
               <table border="0">
                 <tr>
                   <td align="right"><div class="tableheadtext">${uiLabelMap.ProductProductId} :<div></td>
-                  <td><input type="text" class="inputBox" size="25" name="add_product_id" value="${requestParameters.add_product_id?if_exists}"></td>
+                  <td><input type="text" class="inputBox" size="25" name="add_product_id" value="${requestParameters.add_product_id?if_exists}">
+                    <span class='tabletext'>
+                      <a href="javascript:call_fieldlookup2(document.quickaddform.add_product_id,'LookupProduct');">
+                        <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'>
+                      </a> 
+                    </span>
+                  </td>
                 </tr>
                 <tr>
                   <td align="right"><div class="tableheadtext">${uiLabelMap.OrderQuantity} :</div></td>
