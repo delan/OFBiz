@@ -24,9 +24,11 @@
 
 package org.ofbiz.core.util;
 
-import java.util.*;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Caching Class Loader
