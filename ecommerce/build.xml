@@ -145,24 +145,12 @@
     <!-- Build the WARs                                                     -->
     <!-- ================================================================== -->
 	
-    <!-- the external deploy war file which should not include properties files or ofbcore.jar -->
-    <target name="war-ext" depends="prepare">
+    <target name="war" depends="jar,prepare">
         <copy file="${lib.dir}/${name}.jar"
               tofile="${walib.dir}/${name}.jar" />
-        <jar jarfile="${lib.dir}/${name}-ext.war"
-             basedir="${webapp.dir}" />
-    </target>
 
-    <target name="war" depends="jar,war-ext">
-        <copy file="${commonapp.etc.dir}/cache.properties"
-              tofile="${waclasses.dir}/cache.properties" />
-        <copy file="${commonapp.etc.dir}/debug.properties"
-              tofile="${waclasses.dir}/debug.properties" />
-        <copy file="${commonapp.etc.dir}/servers.properties"
-              tofile="${waclasses.dir}/servers.properties" />
-        
-        <copy file="${ofbcore.jar}"
-              tofile="${walib.dir}/ofbcore.jar" />
+        <copy file="${ofbcore-webapp.jar}"
+              tofile="${walib.dir}/ofbcore-webapp.jar" />
         <copy file="${ofbcommonapp.jar}"
               tofile="${walib.dir}/ofbcommonapp.jar" />
         
