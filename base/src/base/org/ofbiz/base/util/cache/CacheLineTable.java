@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +36,10 @@ import java.util.Set;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
-import javolution.util.FastSet;
 
 import org.apache.commons.collections.map.LRUMap;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.ObjectType;
 
 /**
  * 
@@ -158,21 +159,29 @@ public class CacheLineTable implements Serializable {
      * @return An unmodifiable Set for the keys for this cache; to remove while iterating call the remove method on this class.
      */
     public synchronized Set keySet() {
-        Set keys = FastSet.newInstance();
+        // note that this must be a HashSet and not a FastSet in order to have a null value
+        Set keys = new HashSet();
 
         if (fileTable != null) {
             try {
                 jdbm.helper.FastIterator iter = fileTable.keys();
-                Object key = iter.next();
-                while (key != null) {
-                    keys.add(key);
-                    key = iter.next();
+                Object key = null;
+                while ((key = iter.next()) != null) {
+                    if (key instanceof ObjectType.NullObject) {
+                        keys.add(null);
+                    } else {
+                        keys.add(key);
+                    }
                 }
             } catch (IOException e) {
                 Debug.logError(e, module);
             }
         } else {
             keys.addAll(memoryTable.keySet());
+            if (keys.contains(ObjectType.NULL)) {
+                keys.remove(ObjectType.NULL);
+                keys.add(null);
+            }
         }
 
         return Collections.unmodifiableSet(keys);

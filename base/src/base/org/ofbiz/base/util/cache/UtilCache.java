@@ -312,28 +312,41 @@ public class UtilCache implements Serializable {
      * @return The value of the element specified by the key
      */
     public Object get(Object key) {
+        CacheLine line = getInternal(key, true);
+        if (line == null) {
+            return null;
+        } else {
+            return line.getValue();
+        }
+    }
+
+    protected CacheLine getInternalNoCheck(Object key) {
         if (key == null) {
             if (Debug.verboseOn()) Debug.logVerbose("In UtilCache tried to get with null key, using NullObject for cache " + this.getName(), module);
             key = ObjectType.NULL;
         }
         CacheLine line = (CacheLine) cacheLineTable.get(key);
+        return line;
+    }
+    
+    protected CacheLine getInternal(Object key, boolean countGet) {
+        CacheLine line = getInternalNoCheck(key);
         if (line == null) {
-            missCountNotFound++;
-            return null;
+            if (countGet) missCountNotFound++;
         } else if (line.softReferenceCleared()) {
             removeInternal(key, false);
-            missCountSoftRef++;
-            return null;
+            if (countGet) missCountSoftRef++;
+            line = null;
         } else if (this.hasExpired(line)) {
             // note that print.info in debug.properties cannot be checked through UtilProperties here, it would cause infinite recursion...
             // if (Debug.infoOn()) Debug.logInfo("Element has expired with key " + key, module);
             removeInternal(key, false);
-            missCountExpired++;
-            return null;
+            if (countGet) missCountExpired++;
+            line = null;
         } else {
-            hitCount++;
-            return line.getValue();
+            if (countGet) hitCount++;
         }
+        return line;
     }
 
     public List values() {
@@ -386,8 +399,8 @@ public class UtilCache implements Serializable {
         Iterator it = cacheLineTable.keySet().iterator();
         while (it.hasNext()) {
             Object key = it.next();
-            Object value = cacheLineTable.get(key);
-            noteRemoval(key, value);
+            CacheLine line = getInternalNoCheck(key);
+            noteRemoval(key, line.getValue());
         }
         cacheLineTable.clear();
         clearCounters();
@@ -493,7 +506,8 @@ public class UtilCache implements Serializable {
                 CacheLine line = (CacheLine) values.next();
                 line.loadTime = currentTime;
             }
-        } else if (this.expireTime <= 0 && expireTime > 0) {// if expire time was > 0 and is now <=, do nothing, just leave the load times in place, won't hurt anything...
+        } else if (this.expireTime <= 0 && expireTime > 0) {
+            // if expire time was > 0 and is now <=, do nothing, just leave the load times in place, won't hurt anything...
         }
 
         this.expireTime = expireTime;
@@ -536,18 +550,14 @@ public class UtilCache implements Serializable {
      * @return True is the cache contains an element corresponding to the specified key, otherwise false
      */
     public boolean containsKey(Object key) {
-        CacheLine line = (CacheLine) cacheLineTable.get(key);
-        if (this.hasExpired(line)) {
-            removeInternal(key, false);
-            line = null;
-        }
+        CacheLine line = getInternal(key, false);
         if (line != null) {
             return true;
         } else {
             return false;
         }
     }
-
+    
     /** 
      * NOTE: this returns an unmodifiable copy of the keySet, so removing from here won't have an effect, 
      * and calling a remove while iterating through the set will not cause a concurrent modification exception.
@@ -570,7 +580,7 @@ public class UtilCache implements Serializable {
      * @return True is the element corresponding to the specified key has expired, otherwise false
      */
     public boolean hasExpired(Object key) {
-        CacheLine line = (CacheLine) cacheLineTable.get(key);
+        CacheLine line = getInternalNoCheck(key);
         return hasExpired(line);
     }
 
