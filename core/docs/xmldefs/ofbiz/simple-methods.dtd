@@ -409,24 +409,29 @@ engine and facilitate related operations.
 <!ELEMENT create-value EMPTY>
 <!ATTLIST create-value
     value-name CDATA #REQUIRED
+    do-cache-clear ( true | false ) "true"
 >
 <!ELEMENT store-value EMPTY>
 <!ATTLIST store-value
     value-name CDATA #REQUIRED
+    do-cache-clear ( true | false ) "true"
 >
 <!ELEMENT remove-value EMPTY>
 <!ATTLIST remove-value
     value-name CDATA #REQUIRED
+    do-cache-clear ( true | false ) "true"
 >
 <!ELEMENT remove-related EMPTY>
 <!ATTLIST remove-related
     value-name CDATA #REQUIRED
     relation-name CDATA #REQUIRED
+    do-cache-clear ( true | false ) "true"
 >
 <!ELEMENT remove-by-and EMPTY>
 <!ATTLIST remove-by-and
     entity-name CDATA #REQUIRED
     map-name CDATA #REQUIRED
+    do-cache-clear ( true | false ) "true"
 >
 <!ELEMENT clear-cache-line EMPTY>
 <!ATTLIST clear-cache-line
@@ -449,10 +454,12 @@ engine and facilitate related operations.
 <!ELEMENT store-list EMPTY>
 <!ATTLIST store-list
     list-name CDATA #REQUIRED
+    do-cache-clear ( true | false ) "true"
 >
 <!ELEMENT remove-list EMPTY>
 <!ATTLIST remove-list
     list-name CDATA #REQUIRED
+    do-cache-clear ( true | false ) "true"
 >
 
 

@@ -45,10 +45,12 @@ import org.ofbiz.core.entity.*;
  */
 public class StoreList extends MethodOperation {
     String listName;
+    boolean doCacheClear;
 
     public StoreList(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         listName = element.getAttribute("list-name");
+        doCacheClear = !"false".equals(element.getAttribute("do-cache-clear"));
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -56,12 +58,11 @@ public class StoreList extends MethodOperation {
 
         if (values == null) {
             String errMsg = "In store-list a value list was not found with the specified listName: " + listName + ", not storing";
-
             Debug.logInfo(errMsg);
         }
 
         try {
-            methodContext.getDelegator().storeAll(values);
+            methodContext.getDelegator().storeAll(values, doCacheClear);
         } catch (GenericEntityException e) {
             Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem storing the " + listName + " value list: " + e.getMessage() + "]";

@@ -160,7 +160,7 @@ public class GenericDelegator {
             String distributedCacheClearClassName = getDelegatorInfo().distributedCacheClearClassName;
 
             try {
-                Class dccClass = Class.forName(getDelegatorInfo().distributedCacheClearClassName);
+                Class dccClass = Class.forName(distributedCacheClearClassName);
 
                 this.distributedCacheClear = (DistributedCacheClear) dccClass.newInstance();
                 this.distributedCacheClear.setDelegator(this);
@@ -420,7 +420,7 @@ public class GenericDelegator {
     
     /** Creates a Entity in the form of a GenericValue and write it to the datasource
      *@param value The GenericValue to create a value in the datasource from
-     *@param doCacheClear boolean that specifies whether to clear related cache entries for this value to be created
+     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
      *@return GenericValue instance containing the new instance
      */
     public GenericValue create(GenericValue value, boolean doCacheClear) throws GenericEntityException {
@@ -971,8 +971,20 @@ public class GenericDelegator {
      *@return int representing number of rows effected by this operation
      */
     public int removeByAnd(String entityName, Map fields) throws GenericEntityException {
-        // always clear cache before the operation
-        this.clearCacheLine(entityName, fields);
+        return this.removeByAnd(entityName, fields, true);
+    }
+    
+    /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
+     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param fields The fields of the named entity to query by with their corresponging values
+     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be removed
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeByAnd(String entityName, Map fields, boolean doCacheClear) throws GenericEntityException {
+        if (doCacheClear) {
+            // always clear cache before the operation
+            this.clearCacheLine(entityName, fields);
+        }
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
         GenericHelper helper = getEntityHelper(entityName);
 
@@ -1166,13 +1178,25 @@ public class GenericDelegator {
     }
 
     /** Remove the named Related Entity for the GenericValue from the persistent store
-     * @param relationName String containing the relation name which is the
+     *@param relationName String containing the relation name which is the
      *      combination of relation.title and relation.rel-entity-name as
      *      specified in the entity XML definition file
-     * @param value GenericValue instance containing the entity
+     *@param value GenericValue instance containing the entity
      *@return int representing number of rows effected by this operation
      */
     public int removeRelated(String relationName, GenericValue value) throws GenericEntityException {
+        return this.removeRelated(relationName, value, true);
+    }
+    
+    /** Remove the named Related Entity for the GenericValue from the persistent store
+     *@param relationName String containing the relation name which is the
+     *      combination of relation.title and relation.rel-entity-name as
+     *      specified in the entity XML definition file
+     *@param value GenericValue instance containing the entity
+     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be removed
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeRelated(String relationName, GenericValue value, boolean doCacheClear) throws GenericEntityException {
         ModelEntity modelEntity = value.getModelEntity();
         ModelRelation relation = modelEntity.getRelation(relationName);
 
@@ -1188,7 +1212,7 @@ public class GenericDelegator {
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
-        return this.removeByAnd(relation.getRelEntityName(), fields);
+        return this.removeByAnd(relation.getRelEntityName(), fields, doCacheClear);
     }
 
     /** Refresh the Entity for the GenericValue from the persistent store
@@ -1200,7 +1224,7 @@ public class GenericDelegator {
     
     /** Refresh the Entity for the GenericValue from the persistent store
      *@param value GenericValue instance containing the entity to refresh
-     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be refreshed
+     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
      */
     public void refresh(GenericValue value, boolean doCacheClear) throws GenericEntityException {
         if (doCacheClear) {
@@ -1228,7 +1252,7 @@ public class GenericDelegator {
     
     /** Store the Entity from the GenericValue to the persistent store
      *@param value GenericValue instance containing the entity
-     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be stored
+     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
      *@return int representing number of rows effected by this operation
      */
     public int store(GenericValue value, boolean doCacheClear) throws GenericEntityException {
@@ -1257,6 +1281,21 @@ public class GenericDelegator {
      *@return int representing number of rows effected by this operation
      */
     public int storeAll(List values) throws GenericEntityException {
+        return this.storeAll(values, true);
+    }
+    
+    /** Store the Entities from the List GenericValue instances to the persistent store.
+     *  <br>This is different than the normal store method in that the store method only does
+     *  an update, while the storeAll method checks to see if each entity exists, then
+     *  either does an insert or an update as appropriate.
+     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
+     *  if the data source supports transactions. This is just like to othersToStore feature
+     *  of the GenericEntity on a create or store.
+     *@param values List of GenericValue instances containing the entities to store
+     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
+     *@return int representing number of rows effected by this operation
+     */
+    public int storeAll(List values, boolean doCacheClear) throws GenericEntityException {
         if (values == null) {
             return 0;
         }
@@ -1294,7 +1333,9 @@ public class GenericDelegator {
                 String helperName = (String) curEntry.getKey();
                 GenericHelper helper = GenericHelperFactory.getHelper(helperName);
 
-                this.clearAllCacheLinesByValue((List) curEntry.getValue());
+                if (doCacheClear) {
+                    this.clearAllCacheLinesByValue((List) curEntry.getValue());
+                }
                 numberChanged += helper.storeAll((List) curEntry.getValue());
             }
 
@@ -1337,6 +1378,22 @@ public class GenericDelegator {
      *@return int representing number of rows effected by this operation
      */
     public int removeAll(List dummyPKs) throws GenericEntityException {
+        return this.removeAll(dummyPKs, true);
+    }
+    
+    /** Remove the Entities from the List from the persistent store.
+     *  <br>The List contains GenericEntity objects, can be either GenericPK or GenericValue.
+     *  <br>If a certain entity contains a complete primary key, the entity in the datasource corresponding
+     *  to that primary key will be removed, this is like a removeByPrimary Key.
+     *  <br>On the other hand, if a certain entity is an incomplete or non primary key,
+     *  if will behave like the removeByAnd method.
+     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
+     *  if the data source supports transactions.
+     *@param dummyPKs Collection of GenericEntity instances containing the entities or by and fields to remove
+     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeAll(List dummyPKs, boolean doCacheClear) throws GenericEntityException {
         if (dummyPKs == null) {
             return 0;
         }
@@ -1374,7 +1431,9 @@ public class GenericDelegator {
                 String helperName = (String) curEntry.getKey();
                 GenericHelper helper = GenericHelperFactory.getHelper(helperName);
 
-                this.clearAllCacheLinesByDummyPK((List) curEntry.getValue());
+                if (doCacheClear) {
+                    this.clearAllCacheLinesByDummyPK((List) curEntry.getValue());
+                }
                 numRemoved += helper.removeAll((List) curEntry.getValue());
             }
 

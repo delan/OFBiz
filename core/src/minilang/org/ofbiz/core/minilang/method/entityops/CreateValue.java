@@ -45,10 +45,12 @@ import org.ofbiz.core.entity.*;
  */
 public class CreateValue extends MethodOperation {
     String valueName;
+    boolean doCacheClear;
 
     public CreateValue(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         valueName = element.getAttribute("value-name");
+        doCacheClear = !"false".equals(element.getAttribute("do-cache-clear"));
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -69,7 +71,7 @@ public class CreateValue extends MethodOperation {
         }
 
         try {
-            value.create();
+            methodContext.getDelegator().create(value, doCacheClear);
         } catch (GenericEntityException e) {
             Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem creating the " + valueName + " value: " + e.getMessage() + "]";

@@ -45,10 +45,12 @@ import org.ofbiz.core.entity.*;
  */
 public class StoreValue extends MethodOperation {
     String valueName;
+    boolean doCacheClear;
 
     public StoreValue(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         valueName = element.getAttribute("value-name");
+        doCacheClear = !"false".equals(element.getAttribute("do-cache-clear"));
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -69,7 +71,7 @@ public class StoreValue extends MethodOperation {
         }
 
         try {
-            value.store();
+            methodContext.getDelegator().store(value, doCacheClear);
         } catch (GenericEntityException e) {
             Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem storing the " + valueName + " value: " + e.getMessage() + "]";

@@ -45,10 +45,12 @@ import org.ofbiz.core.entity.*;
  */
 public class RemoveList extends MethodOperation {
     String listName;
+    boolean doCacheClear;
 
     public RemoveList(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         listName = element.getAttribute("list-name");
+        doCacheClear = !"false".equals(element.getAttribute("do-cache-clear"));
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -69,7 +71,7 @@ public class RemoveList extends MethodOperation {
         }
 
         try {
-            methodContext.getDelegator().removeAll(values);
+            methodContext.getDelegator().removeAll(values, doCacheClear);
         } catch (GenericEntityException e) {
             Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the " + listName + " value list: " + e.getMessage() + "]";

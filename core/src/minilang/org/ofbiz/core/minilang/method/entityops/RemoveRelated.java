@@ -46,11 +46,13 @@ import org.ofbiz.core.entity.*;
 public class RemoveRelated extends MethodOperation {
     String valueName;
     String relationName;
+    boolean doCacheClear;
 
     public RemoveRelated(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         valueName = element.getAttribute("value-name");
         relationName = element.getAttribute("relation-name");
+        doCacheClear = !"false".equals(element.getAttribute("do-cache-clear"));
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -71,7 +73,7 @@ public class RemoveRelated extends MethodOperation {
         }
 
         try {
-            value.removeRelated(relationName);
+            methodContext.getDelegator().removeRelated(relationName, value, doCacheClear);
         } catch (GenericEntityException e) {
             Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the relation " + relationName + " of the value " + valueName + " value: " + e.getMessage() + "]";
