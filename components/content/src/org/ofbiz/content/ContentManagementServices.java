@@ -760,7 +760,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         String contentId = (String)context.get("contentId");
         
         try {
-	    	GenericValue thisContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+	    	GenericValue thisContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
 	    	if (thisContent == null)
 	    		throw new RuntimeException("No entity found for id=" + contentId);
 	    	
