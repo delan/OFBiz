@@ -104,19 +104,22 @@ public class PosButton {
     public void buttonPressed(final PosScreen pos) {
         final String buttonName = ButtonEventConfig.getButtonName(pos);
         if (buttonName != null) {
+            Debug.log("Event buttonPressed - " + buttonName, module);
             final SwingWorker worker = new SwingWorker() {
                 public Object construct() {
                     try {
                         ButtonEventConfig.invokeButtonEvent(buttonName, pos);
                     } catch (ButtonEventConfig.ButtonEventNotFound e) {
-                        Debug.logWarning(e.getMessage(), module);
+                        Debug.logWarning(e, "Button not found - " + buttonName, module);
                     } catch (ButtonEventConfig.ButtonEventException e) {
-                        Debug.logError(e, module);
+                        Debug.logError(e, "Button invocation exception - " + buttonName, module);
                     }
                     return null;
                 }
             };
             worker.start();
+        } else {
+            Debug.logWarning("No button name found for buttonPressed event", module);
         }
     }
 }
