@@ -68,6 +68,7 @@
     view-size CDATA #IMPLIED
     paginate ( true | false ) "true" 
     row-count CDATA #IMPLIED
+    use-row-submit ( true | false ) "false" 
 >
 
 <!ELEMENT alt-target EMPTY>
