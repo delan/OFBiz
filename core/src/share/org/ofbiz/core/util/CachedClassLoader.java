@@ -111,11 +111,19 @@ public class CachedClassLoader extends URLClassLoader {
             Debug.logError(e, "Could not pre-initialize dynamically loaded class: ", module);
         }
     }
+        
+    public CachedClassLoader(URL[] url, ClassLoader parent, String contextName) {
+        super(url, parent);
+        this.contextName = contextName;      
+    }
     
     public CachedClassLoader(ClassLoader parent, String contextName) {
-        super (new URL[0], parent);
-        this.contextName = contextName;
+        this(new URL[0], parent, contextName);                
     }
+    
+    public CachedClassLoader(URL[] url, ClassLoader parent) {
+        this(url, parent, "__globalContext");
+    }    
     
     public String toString() {
         return "org.ofbiz.core.util.CachedClassLoader(" + contextName + ") / " + getParent().toString();
