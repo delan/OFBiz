@@ -10,25 +10,28 @@
     receiver CDATA #IMPLIED
     delimiter CDATA #IMPLIED
     record-length CDATA #IMPLIED
-    separator-style ( fixed-length| fixed-record | delimited ) #REQUIRED
+    separator-style ( fixed-length | fixed-record | delimited ) #REQUIRED
     description CDATA #IMPLIED >
 
   <!ELEMENT record ( field+ )>
   <!ATTLIST record
     name CDATA #REQUIRED
-    type-code CDATA #REQUIRED
-    tc-position CDATA #REQUIRED
+    type-code CDATA #IMPLIED
+    tc-min CDATA #IMPLIED
+    tc-max CDATA #IMPLIED
+    tc-isnum ( false | true ) "true"
+    tc-position CDATA #IMPLIED
     tc-length CDATA #IMPLIED
     description CDATA #IMPLIED
-    parent-name CDATA #REQUIRED
+    parent-name CDATA #IMPLIED
     limit ( one | many ) "many" >
 
   <!ELEMENT field EMPTY>
   <!ATTLIST field
     name CDATA #REQUIRED
     position CDATA #REQUIRED
-    length CDATA #REQUIRED
-    type CDATA #IMPLIED
+    length CDATA #IMPLIED
+    type CDATA #REQUIRED
     format CDATA #IMPLIED
     valid-exp CDATA #IMPLIED
     description CDATA #IMPLIED
@@ -37,7 +40,12 @@
 
 <data-files>
   <data-file name="" type-code="" sender="" receiver="" record-length="" delimiter="" separator-style="fixed-record" description="">
-    <record name="" type-code="" tc-position="" tc-length="" description="" parent-name="" limit="many">
+    <record name="" type-code="" tc-min="" tc-max="" tc-isnum="" tc-position="" tc-length="" description="" parent-name="" limit="many">
+      <field name="" position="" length="" type="" format="" valid-exp="" description="" prim-key="false"/>
+      <field name="" position="" length="" type="" format="" valid-exp="" description="" prim-key="false"/>
+    </record>
+    <record name="" type-code="" tc-min="" tc-max="" tc-isnum="" tc-position="" tc-length="" description="" parent-name="" limit="many">
+      <field name="" position="" length="" type="" format="" valid-exp="" description="" prim-key="false"/>
       <field name="" position="" length="" type="" format="" valid-exp="" description="" prim-key="false"/>
     </record>
   </data-file>
