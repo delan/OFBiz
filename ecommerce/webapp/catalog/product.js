@@ -44,7 +44,9 @@ if (productId != null) {
 if (productId != null) {
     var product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
     if (product != null) {
-        request.setAttribute("product", product);    
+        request.setAttribute("product", product);  
+        var content = context.get("content");
+        content.setTitle(product.getString("productName"));  
         var productTemplate = product.getString("detailTemplate");
         if (productTemplate != null && productTemplate.length() > 0) {
             detailTempalte = productTemplate;
