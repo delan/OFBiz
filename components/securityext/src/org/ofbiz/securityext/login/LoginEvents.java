@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.3 2003/09/03 02:39:40 ajzeneski Exp $
+ * $Id: LoginEvents.java,v 1.4 2003/09/04 03:31:17 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,6 +44,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.order.shoppingcart.WebShoppingCart;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
@@ -58,7 +59,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -292,7 +293,7 @@ public class LoginEvents {
 
         if (currCatalog != null) session.setAttribute("CURRENT_CATALOG_ID", currCatalog);
         if (delegatorName != null) session.setAttribute("delegatorName", delegatorName);
-        if (shoppingCart != null) session.setAttribute("shoppingCart", shoppingCart);
+        if (shoppingCart != null) session.setAttribute("shoppingCart", new WebShoppingCart(shoppingCart, session));
     }
 
     /**
