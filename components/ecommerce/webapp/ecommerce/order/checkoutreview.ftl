@@ -20,9 +20,24 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
+
+<script language="JavaScript">
+<!--
+    var clicked = 0;
+    function processOrder() {
+        if (clicked == 0) {
+            clicked++;
+            window.location.replace("<@ofbizUrl>/processorder</@ofbizUrl>");
+        } else {
+            alert("You order is being processed, this may take a moment.");
+        }
+    }
+// -->
+</script>
+
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <p class="head1">${uiLabelMap.OrderFinalCheckoutReview}</p>
@@ -38,7 +53,7 @@
         <a href="<@ofbizUrl>/${requestParameters.BACK_PAGE?default("setBilling")}</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.CommonBackToOptions}]</a>
       </td>
       <td align="right">
-        <a href="<@ofbizUrl>/processorder</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a>
+        <a href="javascript:processOrder();" class="buttontextbig">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a>
       </td>
     </tr>
   </table>
