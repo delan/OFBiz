@@ -1,6 +1,7 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.commonapp.product.catalog.*, org.ofbiz.commonapp.product.category.*" %>
+<%@ page import="org.ofbiz.core.pseudotag.*, org.ofbiz.commonapp.product.product.*"%>
 <%@ page import="java.util.*" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
@@ -68,6 +69,14 @@
   <input type='hidden' name='category_id' value='<%=categoryId%>'>
   <table border='1' width='100%' cellpadding='2' cellspacing='0'>
     <ofbiz:iterator name="product" property="productList">
+        <%-- calculate the "your" price --%>
+        <ofbiz:service name='calculateProductPrice'>
+            <ofbiz:param name='product' attribute='product'/>
+            <ofbiz:param name='prodCatalogId' value='<%=CatalogWorker.getCurrentCatalogId(pageContext)%>'/>
+            <%-- don't need to pass the partyId because it will use the one from the currently logged in user, if there user logged in --%>
+            <%-- returns: isSale, price, orderItemPriceInfos and optionally: listPrice, defaultPrice, averageCost --%>
+        </ofbiz:service>
+        <%boolean isSale = pageContext.getAttribute("isSale") != null ? ((Boolean) pageContext.getAttribute("isSale")).booleanValue() : false;%>
       <%-- <tr><td><hr class='sepbar'></td></tr> --%>
       <tr>
         <td align="left" valign="middle" width="5%">
@@ -80,16 +89,28 @@
         </td>
         <td align="left" valign="middle" width="5%">
           <div class="tabletext">
-            <nobr>Reg.<ofbiz:entityfield attribute="product" field="defaultPrice"/></nobr>
+            <nobr>List:<ofbiz:field attribute="listPrice" type="currency"/></nobr>
           </div>
         </td>
         <td align="right" valign="middle" width="5%">
-          <div class="tabletext">
-            <b><font color="#006633"><ofbiz:entityfield attribute="product" field="defaultPrice"/></font></b>
+          <div class='<%if (isSale) {%>salePrice<%} else {%>normalPrice<%}%>'>
+            <b><ofbiz:field attribute="price" type="currency"/></b>
           </div>
         </td>
         <td valign=top align=right>
-          <input type="text" size="5" name='quantity_<ofbiz:entityfield attribute="product" field="productId"/>' value="">
+          <%if (product.get("introductionDate") != null && UtilDateTime.nowTimestamp().before(product.getTimestamp("introductionDate"))) {%>
+              <%-- check to see if introductionDate hasn't passed yet --%>
+              <div class='tabletext' style='color: red;'>Not Yet Available</div>
+          <%} else if (product.get("salesDiscontinuationDate") != null && UtilDateTime.nowTimestamp().after(product.getTimestamp("salesDiscontinuationDate"))) {%>
+              <%-- check to see if salesDiscontinuationDate has passed --%>
+              <div class='tabletext' style='color: red;'>No Longer Available</div>
+          <%} else if ("Y".equals(product.getString("isVirtual"))) {%>
+              <%-- check to see if the product is a virtual product --%>
+              <%--<div class='tabletext' style='color: red;'>Virtual Product</div>--%>
+              <a href='<ofbiz:url>/product?<ofbiz:if name="category_id">category_id=<ofbiz:print attribute="category_id"/>&</ofbiz:if>product_id=<%EntityField.run("product", "productId", pageContext);%></ofbiz:url>' class="buttontext"><nobr>[Choose Variation...]</nobr></a>
+          <%} else {%>
+              <input type="text" size="5" name='quantity_<ofbiz:entityfield attribute="product" field="productId"/>' value="">
+          <%}%>
         </td>
       </tr>
     </ofbiz:iterator>
