@@ -1035,9 +1035,9 @@
     </request-map>
     <request-map uri="removeLayout">
         <security auth="true" https="true"/>
-        <event invoke="removeLayout" path="" type="service"/>
-        <response name="success" type="view" value="EditLayout"/>
-        <response name="error" type="view" value="EditLayout"/>
+        <event invoke="removeContentAssoc" path="" type="service"/>
+        <response name="success" type="view" value="ListLayout"/>
+        <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="EditLayoutHtml">
         <security auth="true" https="true"/>
