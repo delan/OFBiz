@@ -1,5 +1,5 @@
 /*
- * $Id: PosTransaction.java,v 1.2 2004/08/15 21:26:40 ajzeneski Exp $
+ * $Id: PosTransaction.java,v 1.3 2004/08/17 19:51:26 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -44,6 +44,7 @@ import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
+import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.pos.component.Journal;
 import org.ofbiz.pos.device.DeviceLoader;
 import org.ofbiz.entity.GenericValue;
@@ -55,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class PosTransaction {
@@ -140,12 +141,14 @@ public class PosTransaction {
         }
     }
 
-    public void addItem(String productId, double quantity) throws CartItemModifyException {
+    public void addItem(String productId, double quantity) throws CartItemModifyException, ItemNotFoundException {
         trace("add item", productId + "/" + quantity);
         try {
             cart.addOrIncreaseItem(productId, quantity, session.getDispatcher());
+        } catch (ItemNotFoundException e) {
+            trace("item not found", e);
+            throw e;
         } catch (CartItemModifyException e) {
-            Debug.logError(e, module);
             trace("add item error", e);
             throw e;
         }
@@ -361,7 +364,28 @@ public class PosTransaction {
         if (cart != null) {
             Iterator pm = cart.getPaymentMethods().iterator();
             while (pm.hasNext()) {
+                GenericValue paymentMethod = (GenericValue) pm.next();
+                GenericValue paymentMethodType = null;
+                try {
+                    paymentMethodType = paymentMethod.getRelatedOne("PaymentMethodType");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+                String paymentId = paymentMethod.getString("paymentMethodId");
+                String desc = paymentMethodType != null ? paymentMethodType.getString("description") : "??";
+                Double payAmt = cart.getPaymentAmount(paymentId);
+                double amount = 0;
+                if (payAmt == null) {
+                    amount = cart.getGrandTotal() - cart.getPaymentTotal();
+                } else {
+                    amount = payAmt.doubleValue();
+                }
 
+                XModel paymentLine = Journal.appendNode(model, "tr", "", "");
+                Journal.appendNode(paymentLine, "td", "sku", "");
+                Journal.appendNode(paymentLine, "td", "desc", desc);
+                Journal.appendNode(paymentLine, "td", "qty", "-");
+                Journal.appendNode(paymentLine, "td", "price", UtilFormatOut.formatPrice(-1 * amount));
             }
 
             Iterator pt = cart.getPaymentMethodTypes().iterator();

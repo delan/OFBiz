@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.16 2004/07/29 20:56:36 ajzeneski Exp $
+ * $Id: ShoppingCartHelper.java,v 1.17 2004/08/17 19:51:25 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class ShoppingCartHelper {
@@ -191,8 +191,11 @@ public class ShoppingCartHelper {
                 ShoppingCartItem item = cart.findCartItem(itemId);
                 item.setShoppingList(shoppingListId, shoppingListItemSeqId);
             }
-        } catch (CartItemModifyException cartException) {
-            result = ServiceUtil.returnError(cartException.getMessage());
+        } catch (CartItemModifyException e) {
+            result = ServiceUtil.returnError(e.getMessage());
+            return result;
+        } catch (ItemNotFoundException e) {
+            result = ServiceUtil.returnError(e.getMessage());
             return result;
         }
 
@@ -239,6 +242,8 @@ public class ShoppingCartHelper {
                             noItems = false;
                         } catch (CartItemModifyException e) {
                             errorMsgs.add(e.getMessage());
+                        } catch (ItemNotFoundException e) {
+                            errorMsgs.add(e.getMessage());
                         }
                     }
                 }
@@ -276,6 +281,8 @@ public class ShoppingCartHelper {
                                         orderItem.getDouble("quantity").doubleValue(), null, null, catalogId, dispatcher);
                                 noItems = false;
                             } catch (CartItemModifyException e) {
+                                errorMsgs.add(e.getMessage());
+                            } catch (ItemNotFoundException e) {
                                 errorMsgs.add(e.getMessage());
                             }
                         }
@@ -337,8 +344,10 @@ public class ShoppingCartHelper {
                     try {
                         if (Debug.verboseOn()) Debug.logVerbose("Bulk Adding to cart [" + quantity + "] of [" + productId + "]", module);
                         this.cart.addOrIncreaseItem(productId, 0.00, quantity, null, null, catalogId, dispatcher);
-                    } catch (CartItemModifyException cartException) {
-                        return ServiceUtil.returnError(cartException.getMessage());
+                    } catch (CartItemModifyException e) {
+                        return ServiceUtil.returnError(e.getMessage());
+                    } catch (ItemNotFoundException e) {
+                        return ServiceUtil.returnError(e.getMessage());
                     }
                 }
             }
@@ -397,6 +406,8 @@ public class ShoppingCartHelper {
                     this.cart.addOrIncreaseItem(productCategoryMember.getString("productId"), 0.00, quantity.doubleValue(), null, null, catalogId, dispatcher);
                     totalQuantity += quantity.doubleValue();
                 } catch (CartItemModifyException e) {
+                    errorMsgs.add(e.getMessage());
+                } catch (ItemNotFoundException e) {
                     errorMsgs.add(e.getMessage());
                 }
             }
