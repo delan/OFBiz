@@ -70,7 +70,7 @@ public class LoginServices {
         }
         if ( errors.size() > 0 ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,errors);
+            result.put(ModelService.ERROR_MESSAGE_LIST,errors);
         }
         return result;
     }

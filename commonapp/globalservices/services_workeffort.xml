@@ -11,7 +11,6 @@
   <service name="createWorkEffort" engine="java"
     location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="createWorkEffort">
 	  <description>Create a WorkEffort Entity</description>
-	  <attribute name="workEffortId" type="String" mode="OUT" optional="false"/>
 	  <attribute name="workEffortTypeId" type="String" mode="IN" optional="false"/>
 	  <attribute name="currentStatusId" type="String" mode="IN" optional="false"/>
 	  <attribute name="universalId" type="String" mode="IN" optional="true"/>
@@ -32,6 +31,7 @@
 	  <attribute name="specialTerms" type="String" mode="IN" optional="true"/>
 	  <attribute name="timeTransparency" type="Long" mode="IN" optional="true"/>
 	  <attribute name="infoUrl" type="String" mode="IN" optional="true"/>
+	  <attribute name="workEffortId" type="String" mode="OUT" optional="false"/>
   </service>
   <service name="updateWorkEffort" engine="java"
     location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="updateWorkEffort">
@@ -64,4 +64,41 @@
 	  <attribute name="workEffortId" type="String" mode="IN"/>
   </service>
 
+  <!-- WorkEffortPartyAssignment services -->
+  <service name="createWorkEffortPartyAssignment" engine="java"
+    location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortPartyAssignmentServices" invoke="createWorkEffortPartyAssignment">
+	  <description>Create a WorkEffortPartyAssignment Entity</description>
+	  <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
+	  <attribute name="partyId" type="String" mode="IN" optional="false"/>
+	  <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
+	  <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+	  <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+	  <attribute name="statusId" type="String" mode="IN" optional="false"/>
+	  <attribute name="comments" type="String" mode="IN" optional="true"/>
+	  <attribute name="mustRsvp" type="String" mode="IN" optional="true"/>
+	  <attribute name="expectationEnumId" type="String" mode="IN" optional="true"/>
+	  <attribute name="fromDate" type="Timestamp" mode="OUT" optional="false"/>
+  </service>
+  <service name="updateWorkEffortPartyAssignment" engine="java"
+    location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortPartyAssignmentServices" invoke="updateWorkEffortPartyAssignment">
+	  <description>Update a WorkEffortPartyAssignment Entity</description>
+	  <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
+	  <attribute name="partyId" type="String" mode="IN" optional="false"/>
+	  <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
+	  <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+	  <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+	  <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+	  <attribute name="statusId" type="String" mode="IN" optional="false"/>
+	  <attribute name="comments" type="String" mode="IN" optional="true"/>
+	  <attribute name="mustRsvp" type="String" mode="IN" optional="true"/>
+	  <attribute name="expectationEnumId" type="String" mode="IN" optional="true"/>
+  </service>
+  <service name="deleteWorkEffortPartyAssignment" engine="java"
+    location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortPartyAssignmentServices" invoke="deleteWorkEffortPartyAssignment">
+	  <description>Delete a WorkEffortPartyAssignment Entity</description>
+	  <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
+	  <attribute name="partyId" type="String" mode="IN" optional="false"/>
+	  <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
+	  <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+  </service>
 </services>
