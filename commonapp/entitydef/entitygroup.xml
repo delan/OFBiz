@@ -474,6 +474,8 @@
 
     <entity-group group="org.ofbiz.commonapp" entity="Affiliate" />
     <entity-group group="org.ofbiz.commonapp" entity="Party" />
+    <entity-group group="org.ofbiz.commonapp" entity="PartyAndContactMech" />
+    <entity-group group="org.ofbiz.commonapp" entity="PartyAndUserLogin" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyClassification" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyClassificationGroup" />
