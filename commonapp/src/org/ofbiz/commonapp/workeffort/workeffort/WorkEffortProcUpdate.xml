@@ -39,12 +39,12 @@
     <process field="description"><copy/></process>
     <process field="locationDesc"><copy/></process>
     <process field="estimatedStartDate">
-        <compare-field field="estimatedCompletionDate" operator="greater-equals" type="Timestamp"><fail-message message="Estimated End date/time cannot be BEFORE Start date/time."/></compare-field>
+        <compare-field operator="less" field="estimatedCompletionDate" type="Timestamp"><fail-message message="Estimated Start date/time must be BEFORE End date/time."/></compare-field>
         <convert type="Timestamp"><fail-message message="Estimated Start Date is not a valid Date-Time."/></convert></process>
     <process field="estimatedCompletionDate"><convert type="Timestamp">
         <fail-message message="Estimated Completion Date is not a valid Date-Time."/></convert></process>
     <process field="actualStartDate">
-        <compare-field field="actualCompletionDate" operator="greater-equals" type="Timestamp"><fail-message message="Actual End date/time cannot be BEFORE Start date/time."/></compare-field>
+        <compare-field operator="less" field="actualCompletionDate" type="Timestamp"><fail-message message="Actual Start date/time must be BEFORE End date/time."/></compare-field>
         <convert type="Timestamp"><fail-message message="Actual Start Date is not a valid Date-Time."/></convert></process>
     <process field="actualCompletionDate"><convert type="Timestamp">
         <fail-message message="Actual Completion Date is not a valid Date-Time."/></convert></process>
