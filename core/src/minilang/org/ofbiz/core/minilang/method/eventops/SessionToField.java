@@ -60,20 +60,24 @@ public class SessionToField extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         //only run this if it is in an EVENT context
         if (methodContext.getMethodType() == MethodContext.EVENT) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
-            if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapName);
-                return true;
-            }
-
-
             Object fieldVal = methodContext.getRequest().getSession().getAttribute(sessionName);
             if (fieldVal == null) {
                 Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName);
                 return true;
             }
             
-            fromMap.put(fieldName, fieldVal);
+            if (mapName != null && mapName.length() > 0) {
+                Map fromMap = (Map) methodContext.getEnv(mapName);
+                if (fromMap == null) {
+                    Debug.logWarning("Map not found with name " + mapName + " creating a new map");
+                    fromMap = new HashMap();
+                    methodContext.putEnv(mapName, fromMap);
+                }
+
+                fromMap.put(fieldName, fieldVal);
+            } else {
+                methodContext.putEnv(fieldName, fieldVal);
+            }
         }
         return true;
     }

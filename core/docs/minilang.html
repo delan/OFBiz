@@ -617,7 +617,8 @@ the control servlet.</p>
 </tr>
 <tr>
     <td>map-name</td><td>Y</td>
-    <td>The name of the map in the method environment.</td>
+    <td>The name of the map in the method environment. If not specified the 
+    field-name will be used to get the field from the method environment.</td>
 </tr>
 <tr>
     <td>field-name</td><td>Y</td>
@@ -642,7 +643,8 @@ attribute.</p>
 </tr>
 <tr>
     <td>map-name</td><td>Y</td>
-    <td>The name of the map in the method environment.</td>
+    <td>The name of the map in the method environment. If not specified the 
+    field-name will be used to get the field from the method environment.</td>
 </tr>
 <tr>
     <td>field-name</td><td>Y</td>
@@ -667,7 +669,8 @@ attribute.</p>
 </tr>
 <tr>
     <td>map-name</td><td>Y</td>
-    <td>The name of the map in the method environment.</td>
+    <td>The name of the map in the method environment. If not specified the 
+    field-name will be used to get the field from the method environment.</td>
 </tr>
 <tr>
     <td>field-name</td><td>Y</td>
@@ -692,7 +695,8 @@ map in the method environment.</p>
 </tr>
 <tr>
     <td>map-name</td><td>Y</td>
-    <td>The name of the map in the method environment.</td>
+    <td>The name of the map in the method environment. If not specified the 
+    field-name will be used to get the field from the method environment.</td>
 </tr>
 <tr>
     <td>field-name</td><td>Y</td>
@@ -705,90 +709,6 @@ map in the method environment.</p>
 </table>
 <p>The session-to-field tag copies an attribute from the servlet session to a field of a 
 map in the method environment.</p>
-
-<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
-
-<p><b><u>env-to-request</u></b></p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>env-name</td><td>Y</td>
-    <td>The name of the field in the method environment.</td>
-</tr>
-<tr>
-    <td>request-name</td><td>N</td>
-    <td>The name of the request attribute to use. Defaults to the env-name.</td>
-</tr>
-</table>
-<p>The env-to-request tag copies a field from the method environment to the specified servlet request
-attribute.</p>
-
-<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
-
-<p><b><u>env-to-session</u></b></p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>env-name</td><td>Y</td>
-    <td>The name of the field in the method environment.</td>
-</tr>
-<tr>
-    <td>session-name</td><td>N</td>
-    <td>The name of the session attribute to use. Defaults to the env-name.</td>
-</tr>
-</table>
-<p>The env-to-session tag copies a field in the method environment to the specified servlet session
-attribute.</p>
-
-<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
-
-<p><b><u>request-to-env</u></b></p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>env-name</td><td>Y</td>
-    <td>The name of the field in the method environment.</td>
-</tr>
-<tr>
-    <td>request-name</td><td>N</td>
-    <td>The name of the request attribute to use. Defaults to the env-name.</td>
-</tr>
-</table>
-<p>The request-to-env tag copies an attribute from the servlet request to a field of
-the method environment.</p>
-
-<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
-
-<p><b><u>session-to-env</u></b></p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>env-name</td><td>Y</td>
-    <td>The name of the field in the method environment.</td>
-</tr>
-<tr>
-    <td>session-name</td><td>N</td>
-    <td>The name of the session attribute to use. Defaults to the env-name.</td>
-</tr>
-</table>
-<p>The session-to-env tag copies an attribute from the servlet session to a field of  
-the method environment.</p>
 
 <p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
 

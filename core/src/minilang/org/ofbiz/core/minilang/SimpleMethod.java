@@ -445,15 +445,6 @@ public class SimpleMethod {
                 } else if ("session-to-field".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.eventops.SessionToField(curOperElem, simpleMethod));
 
-                } else if ("env-to-request".equals(nodeName)) {
-                    methodOperations.add(new org.ofbiz.core.minilang.method.eventops.EnvToRequest(curOperElem, simpleMethod));
-                } else if ("env-to-session".equals(nodeName)) {
-                    methodOperations.add(new org.ofbiz.core.minilang.method.eventops.EnvToSession(curOperElem, simpleMethod));
-                } else if ("request-to-env".equals(nodeName)) {
-                    methodOperations.add(new org.ofbiz.core.minilang.method.eventops.RequestToEnv(curOperElem, simpleMethod));
-                } else if ("session-to-env".equals(nodeName)) {
-                    methodOperations.add(new org.ofbiz.core.minilang.method.eventops.SessionToEnv(curOperElem, simpleMethod));
-
                 } else if ("field-to-result".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.serviceops.FieldToResult(curOperElem, simpleMethod));
 

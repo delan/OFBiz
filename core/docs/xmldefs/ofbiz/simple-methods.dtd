@@ -42,7 +42,6 @@
 
 <!ENTITY % CallOperations "call-map-processor | call-service | call-service-asynch | call-bsh | check-errors">
 <!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field">
-<!ENTITY % EventEnvOperations "env-to-request | env-to-session | request-to-env | session-to-env">
 <!ENTITY % ServiceOperations "field-to-result">
 <!ENTITY % EnvOperations "field-to-field | env-to-list | env-to-field | field-to-env">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env">
@@ -51,7 +50,7 @@
 <!ENTITY % EntityListOperations "store-list | remove-list">
 <!ENTITY % IfOperations "if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty">
 
-<!ENTITY % SimpleMethodOperations "%CallOperations; | %EventOperations; | %EventEnvOperations; | 
+<!ENTITY % SimpleMethodOperations "%CallOperations; | %EventOperations; | 
         %ServiceOperations; | %EnvOperations; | %EntityMiscOperations; | %EntityFindOperations; |
         %EntityValueOperations; | %EntityListOperations; | %IfOperations;">
 
@@ -224,48 +223,26 @@ Error messages go on the error list and are handled with the check-errors tag.
 <!-- Event specific operations -->    
 <!ELEMENT field-to-request EMPTY>
 <!ATTLIST field-to-request
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
     request-name CDATA #IMPLIED
 >
 <!ELEMENT field-to-session EMPTY>
 <!ATTLIST field-to-session
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
     session-name CDATA #IMPLIED
 >
 <!ELEMENT request-to-field EMPTY>
 <!ATTLIST request-to-field
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
     request-name CDATA #IMPLIED
 >
 <!ELEMENT session-to-field EMPTY>
 <!ATTLIST session-to-field
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
-    session-name CDATA #IMPLIED
->
-
-<!-- Event specific env operations -->    
-<!ELEMENT env-to-request EMPTY>
-<!ATTLIST env-to-request
-    env-name CDATA #REQUIRED
-    request-name CDATA #IMPLIED
->
-<!ELEMENT env-to-session EMPTY>
-<!ATTLIST env-to-session
-    env-name CDATA #REQUIRED
-    session-name CDATA #IMPLIED
->
-<!ELEMENT request-to-env EMPTY>
-<!ATTLIST request-to-env
-    env-name CDATA #REQUIRED
-    request-name CDATA #IMPLIED
->
-<!ELEMENT session-to-env EMPTY>
-<!ATTLIST session-to-env
-    env-name CDATA #REQUIRED
     session-name CDATA #IMPLIED
 >
 
