@@ -108,12 +108,13 @@ String version = "1.0";
       <author><%=entity.author%></author><%}%><%if(!version.equals(entity.version)){%>
       <version><%=entity.version%></version><%}%>
       <package-name><%=entity.packageName%></package-name>
-      <table-name><%=entity.tableName%></table-name>
-      <entity-name><%=entity.entityName%></entity-name><%
+      <table-name><%=entity.tableName%></table-name><%if(!entity.entityName.equals(ModelUtil.dbNameToClassName(entity.tableName))){%>
+      <entity-name><%=entity.entityName%></entity-name><%}%><%
   for(int y = 0; y < entity.fields.size(); y++)
   {
     ModelField field = (ModelField) entity.fields.elementAt(y);%>
-      <field><col-name><%=field.colName%></col-name><type><%=field.type%></type><%
+      <field><%if(!field.name.equals(ModelUtil.dbNameToVarName(field.colName))){
+      %><name><%=field.name%></name><%}%><col-name><%=field.colName%></col-name><type><%=field.type%></type><%
     for(int v = 0; v<field.validators.size(); v++)
     {
       String valName = (String)field.validators.get(v);
