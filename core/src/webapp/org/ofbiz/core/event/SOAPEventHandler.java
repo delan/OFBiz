@@ -68,7 +68,7 @@ public class SOAPEventHandler implements EventHandler {
         LocalDispatcher dispatcher = (LocalDispatcher) context.getAttribute("dispatcher");
         AxisServer axisServer;
         try {
-            axisServer = AxisServerFactory.getServer("OFBiz/Axis Server",null);
+            axisServer = AxisServer.getServer(UtilMisc.toMap("name","OFBiz/Axis Server","provider",null));
         }
         catch ( AxisFault e ) {
             sendError(response,e);
