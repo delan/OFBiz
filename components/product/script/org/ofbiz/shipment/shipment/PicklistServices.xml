@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  -->
 <simple-methods>
@@ -65,9 +65,9 @@
             <fail-message message="Security Error: to run getPicklistData you must have the FACILITY_VIEW or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
-        
+
         <now-timestamp-to-env env-name="nowTimestamp"/>
-        
+
         <string-to-field string="SALES_ORDER" field-name="orderTypeId" map-name="orderHeaderLkpMp"/>
         <string-to-field string="ORDER_APPROVED" field-name="statusId" map-name="orderHeaderLkpMp"/>
         <string-to-list string="+orderDate" list-name="orderHeaderOrdLst"/><!-- oldest first -->
@@ -78,7 +78,7 @@
             <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="orderShipmentPreferenceLkupMap"/>
             <string-to-field string="_NA_" field-name="orderItemSeqId" map-name="orderShipmentPreferenceLkupMap"/>
             <find-by-primary-key entity-name="OrderShipmentPreference" map-name="orderShipmentPreferenceLkupMap" value-name="orderShipmentPreference"/>
-            
+
             <!-- if a shipmentMethodTypeId was not passed or is the same as the current, then process this order -->
             <if>
                 <condition>
@@ -99,7 +99,7 @@
                     <get-related value-name="orderHeader" relation-name="OrderItemInventoryRes" list-name="orderItemInventoryResList"/>
                     <string-to-list string="+orderItemSeqId" list-name="orderItemOrdLst"/>
                     <get-related value-name="orderHeader" relation-name="OrderItem" list-name="orderItemList" order-by-list-name="orderItemOrdLst"/>
-        
+
                     <!-- only add to picklist if inventory is not available (quantityNotAvailable on OIIR greater than 0) when maySplit is N (wait until all available to ship) -->
                     <string-to-field string="Y" field-name="pickThisOrder"/>
                     <string-to-field string="N" field-name="needsStockMove"/>
@@ -111,7 +111,7 @@
                             <if-empty field-name="orderItemInventoryRes.pickStartDate">
                                 <!-- note that this is separate because we can't really use it as a break condition, must check all of them before any useful information is to be had -->
                                 <string-to-field string="N" field-name="allPickStarted"/>
-                                
+
                                 <if>
                                     <condition>
                                         <or>
@@ -136,7 +136,7 @@
                                                 <string-to-field string="Y" field-name="needsStockMove"/>
                                             </if-compare>
                                         </if-not-empty>
-                                        
+
                                         <!-- make the orderItemInventoryResInfo and add it to the orderItemInventoryResInfoList -->
                                         <env-to-env env-name="orderItemInventoryRes" to-env-name="orderItemInventoryResInfo.orderItemInventoryRes"/>
                                         <env-to-env env-name="inventoryItem" to-env-name="orderItemInventoryResInfo.inventoryItem"/>
@@ -148,7 +148,7 @@
                             </if-empty>
                         </if-compare>
                     </iterate>
-                    
+
                     <if>
                         <condition>
                             <and>
@@ -163,7 +163,7 @@
                             <env-to-env env-name="orderItemList" to-env-name="orderHeaderInfo.orderItemList"/>
                             <env-to-env env-name="orderItemInventoryResList" to-env-name="orderHeaderInfo.orderItemInventoryResList"/>
                             <env-to-env env-name="orderItemInventoryResInfoList" to-env-name="orderHeaderInfo.orderItemInventoryResInfoList"/>
-                    
+
                             <!-- pick now, or needs stock move first? -->
                             <!-- put in pick or move lists for the given shipmentMethodTypeId -->
                             <env-to-env env-name="orderShipmentPreference.shipmentMethodTypeId" to-env-name="shipmentMethodTypeId"/>
@@ -179,19 +179,19 @@
                             <clear-field field-name="orderHeaderInfo"/>
                         </then>
                     </if>
-                    
+
                     <clear-field field-name="orderShipmentPreference"/>
                     <clear-field field-name="orderItemList"/>
                     <clear-field field-name="orderItemInventoryResInfoList"/>
                 </then>
             </if>
-            
+
             <clear-field field-name="orderHeaderInfo"/>
             <clear-field field-name="orderShipmentPreference"/>
             <clear-field field-name="orderShipmentPreferenceLkupMap"/>
             <clear-field field-name="orderShipmentPreferenceLkupMap"/>
         </iterate>
-        
+
         <!-- find all ShipmentMethodType in order by sequenceNum, for each one get the value from the pickMoveByShipmentMethodInfoMap and add it to the pickMoveByShipmentMethodInfoList -->
         <string-to-list string="+sequenceNum" list-name="shipmentMethodTypeOrdLst"/>
         <find-by-and list-name="shipmentMethodTypeList" entity-name="ShipmentMethodType" map-name="" order-by-list-name="shipmentMethodTypeOrdLst"/>
@@ -200,10 +200,10 @@
                 <field-to-list field-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodType.shipmentMethodTypeId}" list-name="pickMoveByShipmentMethodInfoList"/>
             </if-not-empty>
         </iterate>
-        
+
         <field-to-result field-name="pickMoveByShipmentMethodInfoList"/>
     </simple-method>
-    
+
     <simple-method method-name="getPicklistData" short-description="Get Picklist Data">
         <!--
             Parameters:
@@ -217,7 +217,7 @@
                 wrongQuantityReservedList: List of Maps with reservedQuantity and orderItem
                 insufficientQohList: List of Maps with inventoryItem and quantityNeeded
         -->
-        
+
         <check-permission permission="FACILITY" action="_VIEW">
             <fail-message message="Security Error: to run getPicklistData you must have the FACILITY_VIEW or FACILITY_ADMIN permission"/>
         </check-permission>
@@ -227,12 +227,12 @@
         <check-errors/>
 
         <now-timestamp-to-env env-name="nowTimestamp"/>
-        
+
         <set-service-fields map-name="parameters" service-name="findOrdersToPickMove" to-map-name="findOrdersToPickMoveMap"/>
         <call-service service-name="findOrdersToPickMove" in-map-name="findOrdersToPickMoveMap">
             <result-to-field result-name="pickMoveByShipmentMethodInfoList"/>
         </call-service>
-        
+
         <!-- if maxNumberOfOrders is passed, get at most that many orders and go over them -->
         <calculate field-name="numberSoFar" type="Long"><number value="0"/></calculate>
         <iterate entry-name="pickMoveByShipmentMethodInfo" list-name="pickMoveByShipmentMethodInfoList">
@@ -247,18 +247,18 @@
                     <field-to-list field-name="pickMoveByShipmentMethodInfo" list-name="limitedPickMoveByShipmentMethodInfoList"/>
                 </then>
             </if>
-            
+
             <calculate field-name="numberSoFar" type="Long">
                 <calcop field-name="numberSoFar" operator="add"><number value="1"/></calcop>
             </calculate>
         </iterate>
-        
+
         <iterate entry-name="pickMoveByShipmentMethodInfo" list-name="limitedPickMoveByShipmentMethodInfoList">
             <iterate entry-name="orderReadyToPickInfo" list-name="pickMoveByShipmentMethodInfo.orderReadyToPickInfoList">
                 <iterate entry-name="orderItem" list-name="orderReadyToPickInfo.orderItemList">
                     <if-compare value="ITEM_APPROVED" operator="equals" field-name="orderItem.statusId">
                         <calculate field-name="reservedQuantity" type="Double"><number value="0"/></calculate>
-                        
+
                         <field-to-field field-name="orderItemSeqId" map-name="orderItem" to-map-name="itemFilterMap"/>
                         <filter-list-by-and to-list-name="perItemResList" map-name="itemFilterMap" list-name="orderReadyToPickInfo.orderItemInventoryResList"/>
                         <iterate entry-name="orderItemInventoryRes" list-name="perItemResList">
@@ -270,10 +270,10 @@
                                 <find-by-primary-key value-name="inventoryItem" entity-name="InventoryItem" map-name="invItmLookupMap"/>
                                 <env-to-field env-name="inventoryItem" field-name="${inventoryItemId}" map-name="inventoryItems"/>
                             </if-empty>
-                            
+
                             <if-compare-field field-name="inventoryItem.facilityId" operator="equals" to-field-name="parameters.facilityId">
                                 <field-to-list field-name="orderItemInventoryRes" list-name="perItemResListValid"/>
-                                
+
                                 <field-to-env field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" env-name="inventoryItemOrderItemList"/>
                                 <field-to-list field-name="orderItem" list-name="inventoryItemOrderItemList"/>
                                 <env-to-field env-name="inventoryItemOrderItemList" field-name="${orderItemInventoryRes.inventoryItemId}" map-name="inventoryItemOrderItems"/>
@@ -296,14 +296,14 @@
                                     <calcop field-name="orderItemInventoryRes.quantity" operator="get"/>
                                 </calcop>
                             </calculate>
-                            
+
                             <!-- if setPickStartedDate == "Y" then set the OrderItemInventoryRes.pickStartDate to now -->
                             <if-compare field-name="parameters.setPickStartedDate" operator="equals" value="Y">
                                 <env-to-env env-name="nowTimestamp" to-env-name="orderItemInventoryRes.pickStartDate"/>
                                 <store-value value-name="orderItemInventoryRes"/>
                             </if-compare>
                         </iterate>
-                        
+
                         <if-not-empty field-name="perItemResListValid">
                             <env-to-field env-name="orderItem" map-name="orderItemInfo"/>
                             <env-to-field env-name="perItemResListValid" field-name="orderItemInventoryResList" map-name="orderItemInfo"/>
@@ -312,7 +312,7 @@
                             <clear-field field-name="orderItemInfo"/>
                         </if-not-empty>
                         <clear-field field-name="perItemResListValid"/>
-                        
+
                         <!-- warn if wrong inventory has been reserved+issued -->
                         <!-- must include issued items as well, otherwise can't really do an effective check... -->
                         <get-related value-name="orderItem" relation-name="ItemIssuance" list-name="itemIssuances"/>
@@ -340,34 +340,43 @@
                         </if-compare-field>
                     </if-compare>
                 </iterate>
-                
+
                 <!-- keep the order info for easy handling of order pack info -->
                 <if-not-empty field-name="orderItemInfoList">
                     <env-to-env env-name="orderReadyToPickInfo.orderHeader" to-env-name="orderHeaderInfo.orderHeader"/>
                     <env-to-field env-name="orderItemInfoList" map-name="orderHeaderInfo"/>
                     <field-to-list field-name="orderHeaderInfo" list-name="orderHeaderInfoList"/>
                 </if-not-empty>
-                
+
                 <clear-field field-name="orderHeaderInfo"/>
                 <clear-field field-name="orderItemInfoList"/>
             </iterate>
         </iterate>
-        
+
 
         <!-- go through all quantities and get inventoryItem and facilityLocation -->
         <!-- warn if insufficient QOH for reserved amount -->
         <iterate-map key-name="inventoryItemId" value-name="quantityNeeded" map-name="inventoryItemQuantities">
             <field-to-env field-name="${inventoryItemId}" map-name="inventoryItems" env-name="inventoryItem"/>
-            
+
             <if>
                 <condition>
-                    <or>
-                        <and>
-                            <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItem.inventoryItemTypeId"/>
-                            <if-compare value="1" operator="less" field-name="quantityNeeded" type="Double"/>
-                        </and>
-                        <if-compare-field field-name="quantityNeeded" operator="greater" to-field-name="inventoryItem.quantityOnHand" type="Double"/>
-                    </or>
+                    <and>
+                        <if-compare value="1" operator="less-equals" field-name="quantityNeeded" type="Double"/>
+                        <or>
+                            <and>
+                                <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItem.inventoryItemTypeId"/>
+                                <if-compare value="1" operator="less" field-name="quantityNeeded" type="Double"/>
+                            </and>
+                            <and>
+                                <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItem.inventoryItemTypeId"/>
+                                <or>
+                                    <if-empty field-name="inventoryItem.quantityOnHand"/>
+                                    <if-compare-field field-name="quantityNeeded" operator="greater" to-field-name="inventoryItem.quantityOnHand" type="Double"/>
+                                </or>
+                            </and>
+                        </or>
+                    </and>
                 </condition>
                 <then>
                     <env-to-field env-name="inventoryItem" map-name="insufficientQoh"/>
@@ -376,7 +385,7 @@
                     <clear-field field-name="insufficientQoh"/>
                 </then>
             </if>
-            
+
             <!-- create a list of locations, then sort it, will have to create a reverse Map to go from location to inventory item -->
             <get-related-one value-name="inventoryItem" relation-name="FacilityLocation" to-value-name="facilityLocation"/>
             <if-not-empty field-name="facilityLocation">
@@ -392,12 +401,12 @@
             </if-not-empty>
             <clear-field field-name="facilityLocation"/>
         </iterate-map>
-        
+
         <!-- make a facilityLocations List from the facilityLocationMap, which was used to guarantee uniqueness -->
         <iterate-map key-name="locationSeqId" value-name="facilityLocation" map-name="facilityLocationMap">
             <field-to-list field-name="facilityLocation" list-name="facilityLocations"/>
         </iterate-map>
-        
+
         <!-- order the facilityLocations -->
         <string-to-list string="+areaId" list-name="facilityLocsOrdLst"/>
         <string-to-list string="+aisleId" list-name="facilityLocsOrdLst"/>
@@ -405,12 +414,12 @@
         <string-to-list string="+levelId" list-name="facilityLocsOrdLst"/>
         <string-to-list string="+positionId" list-name="facilityLocsOrdLst"/>
         <order-value-list list-name="facilityLocations" order-by-list-name="facilityLocsOrdLst"/>
-        
+
         <!-- for each facility location add an entry to the inventoryItemInfoList -->
         <iterate entry-name="facilityLocation" list-name="facilityLocations">
             <!-- facilityLocationInfoList: facilityLocation, productInfoList (product, quantity, inventoryItemList, orderItemList) -->
             <env-to-field env-name="facilityLocation" map-name="facilityLocationInfo"/>
-            
+
             <!-- inventoryItemInfoList: facilityLocation, inventoryItem, orderItems, quantity, product, statusItems -->
             <env-to-env env-name="inventoryItemsByLocation.${facilityLocation.locationSeqId}" to-env-name="inventoryItemIdList"/>
             <iterate entry-name="inventoryItemId" list-name="inventoryItemIdList">
@@ -422,7 +431,7 @@
                 <get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="StatusItem" to-value-name="inventoryItemInfo.statusItem"/>
 
                 <field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
-                
+
                 <!-- before destroying inventoryItemInfo, add info to the productInfoMap -->
                 <env-to-env env-name="inventoryItemInfo.product" to-env-name="productInfoMap.${inventoryItemInfo.product.productId}.product"/>
                 <calculate field-name="productInfoMap.${inventoryItemInfo.product.productId}.quantity" type="Double">
@@ -434,25 +443,25 @@
                 <iterate entry-name="orderItem" list-name="inventoryItemInfo.orderItems">
                     <env-to-env env-name="orderItem" to-env-name="orderItemMap.${orderItem.orderId}:${orderItem.orderItemSeqId}"/>
                 </iterate>
-                
+
                 <clear-field field-name="inventoryItemInfo"/>
             </iterate>
 
             <iterate-map key-name="orderItemCompositeId" value-name="orderItem" map-name="orderItemMap">
                 <field-to-list field-name="orderItem" list-name="productInfoMap.${orderItem.productId}.orderItemList"/>
             </iterate-map>
-                        
+
             <!-- move all values from productInfoMap to facilityLocationInfo.productInfoList -->
             <iterate-map key-name="productId" value-name="productInfo" map-name="productInfoMap">
                 <field-to-list field-name="productInfo" list-name="facilityLocationInfo.productInfoList"/>
             </iterate-map>
-            
+
             <field-to-list field-name="facilityLocationInfo" list-name="facilityLocationInfoList"/>
             <clear-field field-name="orderItemMap"/>
             <clear-field field-name="productInfoMap"/>
             <clear-field field-name="facilityLocationInfo"/>
         </iterate>
-        
+
         <!-- add all noLocationInventoryItemIds to inventoryItemInfoList with all entries except facilityLocation -->
         <iterate entry-name="inventoryItemId" list-name="noLocationInventoryItemIds">
             <field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
@@ -464,13 +473,13 @@
             <field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
             <clear-field field-name="inventoryItemInfo"/>
         </iterate>
-        
+
         <field-to-result field-name="facilityLocationInfoList"/>
         <field-to-result field-name="inventoryItemInfoList"/>
         <field-to-result field-name="orderHeaderInfoList"/>
         <field-to-result field-name="wrongQuantityReservedList"/>
         <field-to-result field-name="insufficientQohList"/>
-    </simple-method>    
+    </simple-method>
 
     <simple-method method-name="clearPickStarted" short-description="Clear PickStarted Dates according to specified parameters">
         <check-permission permission="FACILITY" action="_UPDATE">
@@ -502,8 +511,8 @@
         <string-to-field string="ITEM_APPROVED" field-name="orderItemStatusId" map-name="findOiirailMap"/>
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="findOiirailMap"/>
         <find-by-and entity-name="OrderItemInventoryResAndItemLocation" map-name="findOiirailMap" list-name="orderItemInventoryResAndItemLocationList"/>
-        
-        <!-- 
+
+        <!--
             Consolidate into a List of infos return as moveByOiirInfoList where each info Map contains:
              - product
              - facilityLocationFrom
@@ -523,17 +532,17 @@
             <iterate entry-name="orderItemInventoryResAndItemLocation" list-name="perLocationOiirailList">
                 <field-to-list field-name="orderItemInventoryResAndItemLocation" list-name="oiirailByProdMap.${orderItemInventoryResAndItemLocation.productId}"/>
             </iterate>
-            
+
             <iterate-map key-name="productId" value-name="perProductOiirailList" map-name="oiirailByProdMap">
                 <!-- get product -->
                 <env-to-field env-name="productId" map-name="findProductMap"/>
                 <find-by-primary-key entity-name="Product" map-name="findProductMap" value-name="moveInfo.product"/>
-                
+
                 <!-- get facilityLocationFrom -->
                 <field-to-field field-name="facilityId" map-name="parameters" to-map-name="findFacilityLocationMap"/>
                 <env-to-field env-name="locationSeqId" map-name="findFacilityLocationMap"/>
                 <find-by-primary-key entity-name="FacilityLocation" map-name="findFacilityLocationMap" value-name="moveInfo.facilityLocationFrom"/>
-                
+
                 <!-- get facilityLocationTo: a little more tricky, find the first FLT_PICKLOC  -->
                 <env-to-field env-name="productId" map-name="findProductFacilityLocationViewMap"/>
                 <field-to-field field-name="facilityId" map-name="parameters" to-map-name="findProductFacilityLocationViewMap"/>
@@ -573,7 +582,7 @@
                         <env-to-env env-name="totalQuantityOnHand" to-env-name="moveInfo.totalQuantity"/>
                     <else>
                         <!-- check ProductFacilityLocation for where this is going and see if we should do a pre-emptive transfer too... -->
-                        
+
                         <!-- get all InventoryItems and total the availableToPromise for the target location -->
                         <get-related value-name="targetProductFacilityLocation" relation-name="InventoryItem" list-name="targetInventoryItemList"/>
                         <calculate field-name="targetTotalAvailableToPromise" type="Double"><number value="0"/></calculate>
@@ -583,24 +592,24 @@
                             </calculate>
                         </iterate>
 
-                        <!-- 
-                            now if there is enough left and there is less than the minimum for the 
+                        <!--
+                            now if there is enough left and there is less than the minimum for the
                             ProductFacilityLocation, move the restock quantity from ProductFacilityLocation
                         -->
                         <if-compare-field field-name="targetTotalAvailableToPromise" operator="less" to-field-name="targetProductFacilityLocation.minimumStock" type="Double">
                             <if-empty field-name="targetLocationSimpleMoveQuantity.${targetProductFacilityLocation.locationSeqId}">
                                 <!-- if targetTotalAvailableToPromise is less than productFacilityLocation.minimumStock, move over the targetProductFacilityLocation.moveQuantity -->
-                                
+
                                 <!-- if trying to move more from the location than is there, find the difference and put it in targetLocationSimpleMoveQuantity.${targetProductFacilityLocation.locationSeqId} -->
                                 <calculate field-name="moveInfo.totalQuantity" type="Double">
                                     <calcop field-name="moveInfo.totalQuantity" operator="add"><calcop field-name="targetProductFacilityLocation.moveQuantity" operator="get"/></calcop>
                                 </calculate>
                             <else>
-                                <!-- 
-                                    see if there is enough left for the full amount in 
-                                    targetLocationSimpleMoveQuantity.${targetProductFacilityLocation.locationSeqId}, 
-                                    if not do whatever is available and put difference back in 
-                                    targetLocationSimpleMoveQuantity.${targetProductFacilityLocation.locationSeqId} 
+                                <!--
+                                    see if there is enough left for the full amount in
+                                    targetLocationSimpleMoveQuantity.${targetProductFacilityLocation.locationSeqId},
+                                    if not do whatever is available and put difference back in
+                                    targetLocationSimpleMoveQuantity.${targetProductFacilityLocation.locationSeqId}
                                 -->
                                 <calculate field-name="moveInfo.totalQuantity" type="Double">
                                     <calcop field-name="moveInfo.totalQuantity" operator="add"><calcop field-name="targetLocationSimpleMoveQuantity.${targetProductFacilityLocation.locationSeqId}" operator="get"/></calcop>
@@ -631,7 +640,7 @@
         <field-to-result field-name="stockMoveHandled"/>
 
         <!-- TODO: go through targetLocationSimpleMoveQuantity Map and if any item is not zero, add a warning message -->
-                
+
         <field-to-result field-name="warningMessageList"/>
     </simple-method>
     <simple-method method-name="findStockMovesRecommended" short-description="Find all Stock Moves recommended to be done based on ProductFacilityLocation settings">
@@ -640,10 +649,10 @@
             <fail-message message="Security Error: to run findStockMovesNeeded you must have the FACILITY_VIEW or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
-        
+
         <field-to-env field-name="stockMoveHandled" map-name="parameters"/>
 
-        <!-- 
+        <!--
             The will involve finding all stock moves for ProductFacilityLocation based pre-emptive moves.
             These will go in a separate list returned as moveByPflInfoList where each info Map contains:
              - product
@@ -675,7 +684,7 @@
                         <then>
                             <get-related-one value-name="productFacilityLocationQuantityTest" relation-name="Product" to-value-name="productSave"/>
                             <get-related-one value-name="productFacilityLocationQuantityTest" relation-name="FacilityLocation" to-value-name="targetFacilityLocationSave"/>
-                            
+
                             <!-- create a moveInfo for each from location with a corresponding quantity -->
                             <field-to-field field-name="productId" map-name="productFacilityLocationQuantityTest" to-map-name="findProductFacilityLocationViewMap"/>
                             <field-to-field field-name="facilityId" map-name="productFacilityLocationQuantityTest" to-map-name="findProductFacilityLocationViewMap"/>
@@ -693,12 +702,12 @@
                                             <calcop field-name="totalAvailableToPromise" operator="add"><calcop field-name="inventoryItem.availableToPromise" operator="get"/></calcop>
                                         </calculate>
                                     </iterate>
-                                    
+
                                     <if-compare field-name="totalAvailableToPromise" operator="greater" value="0" type="Double">
                                         <env-to-env env-name="productSave" to-env-name="moveInfo.product"/>
                                         <env-to-env env-name="targetFacilityLocationSave" to-env-name="moveInfo.facilityLocationTo"/>
                                         <get-related-one value-name="productFacilityLocationView" relation-name="FacilityLocation" to-value-name="moveInfo.facilityLocationFrom"/>
-                                        
+
                                         <!-- move over the productFacilityLocationQuantityTest.moveQuantity -->
                                         <if-empty field-name="targetLocationSimpleMoveQuantity.${moveInfo.facilityLocationTo.locationSeqId}">
 
@@ -707,11 +716,11 @@
                                                 <calcop field-name="moveInfo.totalQuantity" operator="add"><calcop field-name="productFacilityLocationQuantityTest.moveQuantity" operator="get"/></calcop>
                                             </calculate>
                                         <else>
-                                            <!-- 
-                                                see if there is enough left for the full amount in 
-                                                targetLocationSimpleMoveQuantity.${moveInfo.facilityLocationTo.locationSeqId}, 
-                                                if not do whatever is available and put difference back in 
-                                                targetLocationSimpleMoveQuantity.${moveInfo.facilityLocationTo.locationSeqId} 
+                                            <!--
+                                                see if there is enough left for the full amount in
+                                                targetLocationSimpleMoveQuantity.${moveInfo.facilityLocationTo.locationSeqId},
+                                                if not do whatever is available and put difference back in
+                                                targetLocationSimpleMoveQuantity.${moveInfo.facilityLocationTo.locationSeqId}
                                             -->
                                             <calculate field-name="moveInfo.totalQuantity" type="Double">
                                                 <calcop field-name="moveInfo.totalQuantity" operator="add"><calcop field-name="targetLocationSimpleMoveQuantity.${moveInfo.facilityLocationTo.locationSeqId}" operator="get"/></calcop>
@@ -742,7 +751,7 @@
         <field-to-result field-name="moveByPflInfoList"/>
         <field-to-result field-name="warningMessageList"/>
     </simple-method>
-        
+
     <simple-method method-name="processPhysicalStockMove" short-description="Process a Physical Stock Move from one FacilityLocation to another, in the same Facility">
         <check-permission permission="FACILITY" action="_CREATE">
             <fail-message message="Security Error: to run processPhysicalStockMove you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
@@ -755,14 +764,14 @@
         <field-to-env field-name="quantityMoved" map-name="parameters" env-name="quantityLeftToProcess"/>
         <!-- move this over just in case a list was passed in that should be appended to; used when calling multiple times in succession -->
         <field-to-env field-name="warningMessageList" map-name="parameters"/>
-        
+
         <!-- Start by processing all OrderItemInventoryRes from the origin FacilityLocation, and transfer to target, OrderItem.statusId (approved), orderBy reservedDatetime -->
         <string-to-field string="ITEM_APPROVED" field-name="orderItemStatusId" map-name="findOiirailMap"/>
         <call-simple-method method-name="processOiirMoveByStatusInline"/>
         <!-- should only need to pay attention to two statuses: ITEM_APPROVED, ITEM_CREATED, then the rest can go to non-reserved -->
         <string-to-field string="ITEM_CREATED" field-name="orderItemStatusId" map-name="findOiirailMap"/>
         <call-simple-method method-name="processOiirMoveByStatusInline"/>
-                
+
         <!-- Now for any remaining quantity, do a simple, ie non-OIIR, stock move -->
         <if-compare field-name="quantityLeftToProcess" operator="greater" value="0" type="Double">
             <!-- find InventoryItems in the origin location with some availableToPromise to move -->
@@ -772,7 +781,7 @@
             <!-- do the earliest first -->
             <string-to-list string="datetimeReceived" list-name="inventoryItemOrderByList"/>
             <find-by-and entity-name="InventoryItem" map-name="findIiMap" order-by-list-name="inventoryItemOrderByList" list-name="inventoryItemList"/>
-            
+
             <iterate entry-name="inventoryItem" list-name="inventoryItemList">
                 <!-- for each inventoryItem only process if quantityLeftToProcess > 0 and inventoryItem.availableToPromise > 0 -->
                 <if-compare field-name="quantityLeftToProcess" operator="greater" value="0" type="Double">
@@ -789,7 +798,7 @@
                         <field-to-field field-name="targetLocationSeqId" map-name="parameters" to-field-name="locationSeqId" to-map-name="targetInventoryItem"/>
                         <calculate field-name="targetInventoryItem.availableToPromise" type="Double"><calcop field-name="currentQuantityToMove" operator="get"/></calculate>
                         <calculate field-name="targetInventoryItem.quantityOnHand" type="Double"><calcop field-name="currentQuantityToMove" operator="get"/></calculate>
-                        
+
                         <!-- okay, move it over, calculate new ATP, QOH -->
                         <calculate field-name="inventoryItem.availableToPromise" type="Double">
                             <calcop field-name="inventoryItem.availableToPromise" operator="subtract"><calcop field-name="currentQuantityToMove" operator="get"/></calcop>
@@ -797,7 +806,7 @@
                         <calculate field-name="inventoryItem.quantityOnHand" type="Double">
                             <calcop field-name="inventoryItem.quantityOnHand" operator="subtract"><calcop field-name="currentQuantityToMove" operator="get"/></calcop>
                         </calculate>
-                        
+
                         <!-- now that targetInventoryItem is populated with quantities, etc, call createInventoryItem service -->
                         <set-service-fields map-name="targetInventoryItem" service-name="createInventoryItem" to-map-name="createInventoryItemMap"/>
                         <call-service service-name="createInventoryItem" in-map-name="createInventoryItemMap">
@@ -816,7 +825,7 @@
             <!-- this really isn't good, that means more was moved than we found to move, how did that happen? -->
             <string-to-list string="ERROR: Not enough available inventory found in location [${parameters.locationSeqId}] in facility [${parameters.facilityId}], did not reallocate ${quantityLeftToProcess} of the ${parameters.quantityMoved} reported as physically moved." list-name="warningMessageList"/>
         </if-compare>
-                
+
         <field-to-result field-name="warningMessageList"/>
     </simple-method>
     <simple-method method-name="processOiirMoveByStatusInline" short-description="Inline method to process OIIR stock move for a specific OrderItem.statusId">
@@ -834,15 +843,15 @@
         <iterate-map key-name="inventoryItemId" value-name="orderItemInventoryResAndItemLocationList" map-name="oiirailByInvItemMap">
             <env-to-field env-name="inventoryItemId" map-name="lkupInventoryItemMap"/>
             <find-by-primary-key entity-name="InventoryItem" map-name="lkupInventoryItemMap" value-name="inventoryItem"/>
-        
+
             <!-- if this is a serialized InventoryItem, then just update the location -->
             <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="SERIALIZED_INV_ITEM">
                 <field-to-field field-name="targetLocationSeqId" map-name="parameters" to-field-name="locationSeqId" to-map-name="inventoryItem"/>
                 <store-value value-name="inventoryItem"/>
             </if-compare>
 
-            <!-- 
-                if this is a non-serialized InventoryItem, create a new targetInventoryItem in the 
+            <!--
+                if this is a non-serialized InventoryItem, create a new targetInventoryItem in the
                 target location and start moving all OrderItemInventoryRes over, plus min move quantity from PFL
             -->
             <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="NON_SERIAL_INV_ITEM">
@@ -859,9 +868,9 @@
                 </call-service>
                 <!-- refresh the value object now that the create has been done -->
                 <refresh-value value-name="targetInventoryItem"/>
-                
+
                 <!--
-                    go through OrderItemInventoryRes and move each one over, starting with the older making 
+                    go through OrderItemInventoryRes and move each one over, starting with the older making
                     sure to stay within quantityOnHand
                 -->
                 <iterate entry-name="orderItemInventoryResAndItemLocation" list-name="orderItemInventoryResAndItemLocationList">
@@ -870,55 +879,63 @@
                         <get-related-one value-name="orderItemInventoryResAndItemLocation" relation-name="OrderItemInventoryRes" to-value-name="orderItemInventoryRes"/>
 
                         <!-- if there aren't enough to move, put this on a list for insufficient quantities and handle later -->
-                        <if-compare-field field-name="orderItemInventoryRes.quantity" operator="greater" to-field-name="inventoryItem.quantityOnHand">
-                            <field-to-list field-name="orderItemInventoryRes" list-name="insufficientQuantityOiirList"/>
-                        <else>
-                            <!-- okay, move it over, start by calculating new QOHs -->
-                            <calculate field-name="inventoryItem.quantityOnHand" type="Double">
-                                <calcop field-name="inventoryItem.quantityOnHand" operator="subtract"><calcop field-name="orderItemInventoryRes.quantity" operator="get"/></calcop>
-                            </calculate>
-                            <calculate field-name="targetInventoryItem.quantityOnHand" type="Double">
-                                <calcop field-name="targetInventoryItem.quantityOnHand" operator="add"><calcop field-name="orderItemInventoryRes.quantity" operator="get"/></calcop>
-                            </calculate>
+                        <if>
+                            <condition>
+                                <or>
+                                    <if-empty field-name="inventoryItem.quantityOnHand"/>
+                                    <if-compare-field field-name="orderItemInventoryRes.quantity" operator="greater" to-field-name="inventoryItem.quantityOnHand" type="Double"/>
+                                </or>
+                            </condition>
+                            <then>
+                                <field-to-list field-name="orderItemInventoryRes" list-name="insufficientQuantityOiirList"/>
+                            </then>
+                            <else>
+                                <!-- okay, move it over, start by calculating new QOHs -->
+                                <calculate field-name="inventoryItem.quantityOnHand" type="Double">
+                                    <calcop field-name="inventoryItem.quantityOnHand" operator="subtract"><calcop field-name="orderItemInventoryRes.quantity" operator="get"/></calcop>
+                                </calculate>
+                                <calculate field-name="targetInventoryItem.quantityOnHand" type="Double">
+                                    <calcop field-name="targetInventoryItem.quantityOnHand" operator="add"><calcop field-name="orderItemInventoryRes.quantity" operator="get"/></calcop>
+                                </calculate>
 
-                            <!-- make a new OIIR value object -->
-                            <make-value entity-name="OrderItemInventoryRes" map-name="orderItemInventoryRes" value-name="targetOrderItemInventoryRes"/>
-                            <field-to-field field-name="inventoryItemId" map-name="targetInventoryItem" to-map-name="targetOrderItemInventoryRes"/>
+                                <!-- make a new OIIR value object -->
+                                <make-value entity-name="OrderItemInventoryRes" map-name="orderItemInventoryRes" value-name="targetOrderItemInventoryRes"/>
+                                <field-to-field field-name="inventoryItemId" map-name="targetInventoryItem" to-map-name="targetOrderItemInventoryRes"/>
 
-                            <!-- 
-                                note that nothing needs to be done with the OIIR.quantity because if all is 
-                                balanced the new one should have a zero availableToPromise until the 
-                                ProductFacilityLocation based pre-emptive move is done
-                            -->
-                            <!-- if the OIIR has a quantityNotAvailable, move that over by adding it to the origin, and subtracting it from the target -->
-                            <if-not-empty field-name="orderItemInventoryRes.quantityNotAvailable">
-                                <if-compare field-name="orderItemInventoryRes.quantityNotAvailable" operator="greater" value="0" type="Double">
-                                    <calculate field-name="inventoryItem.availableToPromise" type="Double">
-                                        <calcop field-name="inventoryItem.availableToPromise" operator="add"><calcop field-name="orderItemInventoryRes.quantityNotAvailable" operator="get"/></calcop>
-                                    </calculate>
-                                    <calculate field-name="targetInventoryItem.availableToPromise" type="Double">
-                                        <calcop field-name="targetInventoryItem.availableToPromise" operator="subtract"><calcop field-name="orderItemInventoryRes.quantityNotAvailable" operator="get"/></calcop>
-                                    </calculate>
-                                </if-compare>
-                            </if-not-empty>
+                                <!--
+                                    note that nothing needs to be done with the OIIR.quantity because if all is
+                                    balanced the new one should have a zero availableToPromise until the
+                                    ProductFacilityLocation based pre-emptive move is done
+                                -->
+                                <!-- if the OIIR has a quantityNotAvailable, move that over by adding it to the origin, and subtracting it from the target -->
+                                <if-not-empty field-name="orderItemInventoryRes.quantityNotAvailable">
+                                    <if-compare field-name="orderItemInventoryRes.quantityNotAvailable" operator="greater" value="0" type="Double">
+                                        <calculate field-name="inventoryItem.availableToPromise" type="Double">
+                                            <calcop field-name="inventoryItem.availableToPromise" operator="add"><calcop field-name="orderItemInventoryRes.quantityNotAvailable" operator="get"/></calcop>
+                                        </calculate>
+                                        <calculate field-name="targetInventoryItem.availableToPromise" type="Double">
+                                            <calcop field-name="targetInventoryItem.availableToPromise" operator="subtract"><calcop field-name="orderItemInventoryRes.quantityNotAvailable" operator="get"/></calcop>
+                                        </calculate>
+                                    </if-compare>
+                                </if-not-empty>
 
-                            <!-- create the new and remove the old OIIRs -->
-                            <create-value value-name="targetOrderItemInventoryRes"/>
-                            <remove-value value-name="orderItemInventoryRes"/>
-                            
-                            <!-- deduct the orderItemInventoryRes.quantity from quantityLeftToProcess -->
-                            <calculate field-name="quantityLeftToProcess" type="Double">
-                                <calcop field-name="quantityLeftToProcess" operator="subtract"><calcop field-name="orderItemInventoryRes.quantity" operator="get"/></calcop>
-                            </calculate>
-                        </else>
-                        </if-compare-field>
+                                <!-- create the new and remove the old OIIRs -->
+                                <create-value value-name="targetOrderItemInventoryRes"/>
+                                <remove-value value-name="orderItemInventoryRes"/>
+
+                                <!-- deduct the orderItemInventoryRes.quantity from quantityLeftToProcess -->
+                                <calculate field-name="quantityLeftToProcess" type="Double">
+                                    <calcop field-name="quantityLeftToProcess" operator="subtract"><calcop field-name="orderItemInventoryRes.quantity" operator="get"/></calcop>
+                                </calculate>
+                            </else>
+                        </if>
                     </if-compare-field>
                 </iterate>
 
                 <!-- since we have changed the quantities on the new target inventory item (hopefully), store, it now... -->
                 <set-service-fields map-name="targetInventoryItem" service-name="updateInventoryItem" to-map-name="updateTargetInventoryItemMap"/>
                 <call-service service-name="updateInventoryItem" in-map-name="updateTargetInventoryItemMap"/>
-                
+
                 <!-- also need to store the origin inventoryItem, so do that now and do it through a service since there is one -->
                 <set-service-fields map-name="inventoryItem" service-name="updateInventoryItem" to-map-name="updateInventoryItemMap"/>
                 <call-service service-name="updateInventoryItem" in-map-name="updateInventoryItemMap"/>
