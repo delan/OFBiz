@@ -24,11 +24,14 @@
  */
 
 import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.party.PartyWorker;
 import org.ofbiz.product.catalog.CatalogWorker;
-import org.ofbiz.product.promo.ProductPromoWorker;
+import org.ofbiz.order.shoppingcart.product.ProductDisplayWorker;
+import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 
 delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
@@ -85,7 +88,7 @@ if (session.getAttribute("orderMode") == null && request.getParameter("finalizeM
     
 if (mode != null && mode.equals("SALES_ORDER")) {
     // Get Cart Associated Products Data
-    associatedProducts = CatalogWorker.getRandomCartProductAssoc(request, true);
+    associatedProducts = ProductDisplayWorker.getRandomCartProductAssoc(request, true);
     if (associatedProducts != null) 
         context.put("associatedProducts", associatedProducts);
 
