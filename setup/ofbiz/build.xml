@@ -83,6 +83,7 @@
             <fileset dir="lib/jasperreports" includes="*.jar"/>
             <fileset dir="lib/weka" includes="*.jar"/>
             <fileset dir="lib/wspublisher" includes="*.jar"/>
+            <fileset dir="lib/jotm" includes="*.jar"/>
         </copy>
 
         <delete file="${catalina.dir}/common/lib/tyrex-0.9.7.0.jar"/>
@@ -138,6 +139,7 @@
             <fileset dir="lib/jasperreports" includes="*.jar"/>
             <fileset dir="lib/weka" includes="*.jar"/>
             <fileset dir="lib/wspublisher" includes="*.jar"/>
+            <fileset dir="lib/jotm" includes="*.jar"/>
         </copy>
     </target>
 
@@ -671,6 +673,7 @@
             <fileset dir="lib/jasperreports" includes="*.jar"/>
             <fileset dir="lib/weka" includes="*.jar"/>
             <fileset dir="lib/wspublisher" includes="*.jar"/>
+            <fileset dir="lib/jotm" includes="*.jar"/>
         </copy>
         
         <copy file="core/lib/ofbcore-share${ofbiz.version}.jar"    toDir="${ext.dir}/lib"/>
