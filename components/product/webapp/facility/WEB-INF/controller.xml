@@ -121,6 +121,22 @@
         <response name="success" type="view" value="EditFacilityLocation"/>
         <response name="error" type="view" value="EditFacilityLocation"/>
     </request-map>    
+    <request-map uri="createProductFacilityLocation"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductFacilityLocation"/>
+    	<response name="success" type="view" value="EditFacilityLocation"/>
+        <response name="error" type="view" value="EditFacilityLocation"/>
+    </request-map>
+    <request-map uri="updateProductFacilityLocation"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductFacilityLocation"/>
+    	<response name="success" type="view" value="EditFacilityLocation"/>
+        <response name="error" type="view" value="EditFacilityLocation"/>
+    </request-map>
+    <request-map uri="deleteProductFacilityLocation"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductFacilityLocation"/>
+    	<response name="success" type="view" value="EditFacilityLocation"/>
+        <response name="error" type="view" value="EditFacilityLocation"/>
+    </request-map>
+
 
     <request-map uri="EditFacilityInventoryItems">
         <security https="true" auth="true"/>

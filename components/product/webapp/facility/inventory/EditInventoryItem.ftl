@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -31,12 +31,12 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 <div class="head1">Edit InventoryItem with ID [${inventoryItemId?if_exists}]</div>
 <a href="<@ofbizUrl>/EditInventoryItem<#if facilityId?exists>?facilityId=${facilityId}</#if></@ofbizUrl>" class="buttontext">[New InventoryItem]</a>
 <#if inventoryItemId?exists>
-<a href="<@ofbizUrl>/TransferInventoryItem?inventoryItemId=${inventoryItemId}<#if facilityId?exists>&facilityId=${facilityId}</#if></@ofbizUrl>" class="buttontext">[Transfer Item]</a>
+	<a href="<@ofbizUrl>/TransferInventoryItem?inventoryItemId=${inventoryItemId}<#if facilityId?exists>&facilityId=${facilityId}</#if></@ofbizUrl>" class="buttontext">[Transfer Item]</a>
 </#if>
 
 
 <#if inventoryItem?exists>
-  <form action="<@ofbizUrl>/UpdateInventoryItem</@ofbizUrl>" method="POST" style="margin: 0;">
+  <form action="<@ofbizUrl>/UpdateInventoryItem</@ofbizUrl>" method="POST" style="margin: 0;" name="inventoryItemForm">
   <table border="0" cellpadding="2" cellspacing="0">
   <input type=hidden name="inventoryItemId" value="${inventoryItemId}">
   <tr>
@@ -48,11 +48,11 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
   </tr>
 <#else>
   <#if inventoryItemId?exists>
-    <form action="<@ofbizUrl>/CreateInventoryItem</@ofbizUrl>" method="POST" style="margin: 0;">
+    <form action="<@ofbizUrl>/CreateInventoryItem</@ofbizUrl>" method="POST" style="margin: 0;" name="inventoryItemForm">
     <table border="0" cellpadding="2" cellspacing="0">
     <h3>Could not find inventoryItem with ID "${inventoryItemId}".</h3>
   <#else>
-    <form action="<@ofbizUrl>/CreateInventoryItem</@ofbizUrl>" method="POST" style="margin: 0;">
+    <form action="<@ofbizUrl>/CreateInventoryItem</@ofbizUrl>" method="POST" style="margin: 0;" name="inventoryItemForm">
     <table border="0" cellpadding="2" cellspacing="0">
   </#if>
 </#if>
@@ -109,12 +109,18 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       <tr>
         <td align=right><div class="tabletext">Date Received</div></td>
         <td>&nbsp;</td>
-        <td><input type="text" size="22" name="datetimeReceived" value="${(inventoryItemData.datetimeReceived.toString())?if_exists}" class="inputBox"></td>
+        <td>
+        	<input type="text" size="25" name="datetimeReceived" value="${(inventoryItemData.datetimeReceived.toString())?if_exists}" class="inputBox">
+			<a href="javascript:call_cal(document.inventoryItemForm.datetimeReceived, '${(inventoryItemData.datetimeReceived.toString())?default(nowTimestampString)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+        </td>
       </tr>
       <tr>
         <td align=right><div class="tabletext">Expire Date</div></td>
         <td>&nbsp;</td>
-        <td><input type="text" size="22" name="expireDate" value="${(inventoryItemData.expireDate.toString())?if_exists}" class="inputBox"></td>
+        <td>
+        	<input type="text" size="25" name="expireDate" value="${(inventoryItemData.expireDate.toString())?if_exists}" class="inputBox">
+			<a href="javascript:call_cal(document.inventoryItemForm.expireDate, '${(inventoryItemData.expireDate.toString())?default(nowTimestampString)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+        </td>
       </tr>
       <tr>
         <td align=right><div class="tabletext">Facility/Container</div></td>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -81,7 +81,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <td><div class="tabletext">&nbsp;${(inventoryItem.statusId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.datetimeReceived)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.expireDate)?if_exists}</div></td>
-            <td><a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)?if_exists}" class="buttontext">
+            <td><a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)?if_exists}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">
                 ${(inventoryItem.productId)?if_exists}</a></td>
             <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(inventoryItem.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">${(inventoryItem.locationSeqId)?if_exists}</a></div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.lotId)?if_exists}</div></td>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -31,17 +31,17 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     
     <div class="head1">Location <span class="head2">for&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [ID:${facilityId?if_exists}]</span></div>
     <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>
-    <a href="<@ofbizUrl>/EditFacilityLocation</@ofbizUrl>" class="buttontext">[New Facility Location]</a>
+    <a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="buttontext">[New Facility Location]</a>
     <#if facilityId?exists && locationSeqId?exists>
         <a href="<@ofbizUrl>/EditInventoryItem?facilityId=${facilityId}&locationSeqId=${locationSeqId}</@ofbizUrl>" class="buttontext">[New Inventory Item]</a>
     </#if>
     
     <#if facilityId?exists && !(facilityLocation?exists)> 
-        <form action="<@ofbizUrl>/CreateFacilityLocation</@ofbizUrl>" method=POST style="margin: 0;">
+        <form action="<@ofbizUrl>/CreateFacilityLocation</@ofbizUrl>" method="POST" style="margin: 0;">
         <table border="0" cellpadding="2" cellspacing="0">
         <input type="hidden" name="facilityId" value="${facilityId}">  
     <#elseif facilityLocation?exists>
-        <form action="<@ofbizUrl>/UpdateFacilityLocation</@ofbizUrl>" method=POST style="margin: 0;">
+        <form action="<@ofbizUrl>/UpdateFacilityLocation</@ofbizUrl>" method="POST" style="margin: 0;">
         <table border="0" cellpadding="2" cellspacing="0">
         <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
         <input type="hidden" name="locationSeqId" value="${locationSeqId}">
@@ -111,6 +111,51 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </tr>
     </table>
     </form>
+    
+    <hr class="sepbar"/>
+    
+		<#-- ProductFacilityLocation stuff -->
+        <div class="head2">Location Product(s):</div>
+        <table border="1" width="100%" cellpadding="2" cellspacing="0">
+        <tr>
+            <td><div class="tabletext"><b>Product</b></div></td>
+            <td align="center"><div class="tabletext"><b>Minimum&nbsp;Stock&nbsp;&amp;&nbsp;Move&nbsp;Quantity</b></div></td>
+            <td><div class="tabletext"><b>&nbsp;</b></div></td>
+        </tr>
+        <#list productFacilityLocations?if_exists as productFacilityLocation>
+	        <#assign product = productFacilityLocation.getRelatedOne("Product")?if_exists>
+	        <tr valign="middle">
+	            <td><div class="tabletext"><#if product?exists>${product.productName}</#if>[${productFacilityLocation.productId}]</div></td>
+	            <td align="center">
+	                <FORM method=POST action="<@ofbizUrl>/updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
+	                    <input type="hidden" name="productId" value="${(productFacilityLocation.productId)?if_exists}">
+	                    <input type="hidden" name="facilityId" value="${(productFacilityLocation.facilityId)?if_exists}">
+	                    <input type="hidden" name="locationSeqId" value="${(productFacilityLocation.facilityId)?if_exists}">
+	                    <input type="text" size="10" name="minimumStock" value="${(productFacilityLocation.minimumStock)?if_exists}" class="inputBox">
+	                    <input type="text" size="10" name="moveQuantity" value="${(productFacilityLocation.moveQuantity)?if_exists}" class="inputBox">
+	                    <INPUT type="submit" value="Update" style="font-size: x-small;">
+	                </FORM>
+	            </td>
+	            <td align="center">
+	            <a href="<@ofbizUrl>/deleteProductFacilityLocation?productId=${(productFacilityLocation.productId)?if_exists}&facilityId=${(productFacilityLocation.facilityId)?if_exists}&locationSeqId=${(productFacilityLocation.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
+	            [Delete]</a>
+	            </td>
+	        </tr>
+        </#list>
+        </table>
+        <br>
+        <form method="POST" action="<@ofbizUrl>/createProductFacilityLocation</@ofbizUrl>" style="margin: 0;" name="createProductFacilityLocationForm">
+            <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
+            <input type="hidden" name="locationSeqId" value="${locationSeqId?if_exists}">
+            <input type="hidden" name="useValues" value="true">
+            <div class="head2">Add Product:</div>
+            <div class="tabletext">
+                Product ID:&nbsp;<input type=text size="10" name="productId" class="inputBox">
+                Minimum&nbsp;Stock:&nbsp;<input type=text size="10" name="minimumStock" class="inputBox">
+                Move&nbsp;Quantity:&nbsp;<input type=text size="10" name="moveQuantity" class="inputBox">
+                <input type="submit" value="Add" style="font-size: x-small;">
+            </div>
+        </form>
     </#if>
 <#else>
   <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>

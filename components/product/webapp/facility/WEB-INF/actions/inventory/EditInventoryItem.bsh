@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
  
@@ -70,25 +70,26 @@ if(inventoryItem == null) {
     facility = inventoryItem.getRelatedOne("Facility");
 	if (facility != null && facilityId == null) facilityId = facility.getString("facilityId");
 
+	Debug.logInfo("curStatusItem=" + curStatusItem, "bsh");
+	Debug.logInfo("inventoryItem.getString(statusId)=" + inventoryItem.getString("statusId"), "bsh");
+
     //statuses
     if ("NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {
         //do nothing for non-serialized inventory
     } else if ("SERIALIZED_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {
         if (UtilValidate.isNotEmpty(inventoryItem.getString("statusId"))) {
             statusChange = delegator.findByAnd("StatusValidChange", UtilMisc.toMap("statusId", inventoryItem.getString("statusId")));
-            if (statusChange != null) {
-                statusItems = new ArrayList();
-                statusChangeIter = statusChange.iterator();
-                while (statusChangeIter.hasNext()) {
-                    curStatusChange = statusChangeIter.next();
-                    curStatusItem = delegator.findByPrimaryKey("StatusItem", UtilMisc.toMap("statusId", curStatusChange.get("statusIdTo")));
-                    if (curStatusItem != null) statusItems.add(curStatusItem);
-                }
-                context.put("statusItems", statusItems);
+            statusItems = new ArrayList();
+            statusChangeIter = statusChange.iterator();
+            while (statusChangeIter.hasNext()) {
+                iterStatusChange = statusChangeIter.next();
+                iterStatusItem = delegator.findByPrimaryKey("StatusItem", UtilMisc.toMap("statusId", iterStatusChange.get("statusIdTo")));
+                if (iterStatusItem != null) statusItems.add(iterStatusItem);
             }
+            context.put("statusItems", statusItems);
         } else {
             //no status id, just get all statusItems
-            statusItems = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "INV_SERIALIZED_STTS"));
+            statusItems = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "INV_SERIALIZED_STTS"), UtilMisc.toList("sequenceId"));
             context.put("statusItems", statusItems);
         }
     }
@@ -110,6 +111,9 @@ context.put("facilityLocation", facilityLocation);
 context.put("facility", facility);
 context.put("facilityId", facilityId);
 context.put("locationSeqId", locationSeqId);
+
+nowTimestampString = UtilDateTime.nowTimestamp().toString();
+context.put("nowTimestampString", nowTimestampString);
 
 if (tryEntity) {
 	context.put("inventoryItemData", inventoryItem);
