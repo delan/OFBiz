@@ -148,6 +148,6 @@ public class FreeMarkerViewHandler implements ViewHandler {
         root.put("response", responseBModel);
         
         // add the OFBiz transforms
-        root.put("ofbizUrl", new OFBizUrl());
+        root.put("ofbizUrl", new OfbizUrlTransform());
     }
 }
