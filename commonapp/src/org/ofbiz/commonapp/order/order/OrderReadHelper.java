@@ -403,48 +403,44 @@ public class OrderReadHelper {
     public List getOrderItemInventoryReses(GenericValue orderItem) {
         if (orderItem == null) return null;
         if (this.orderItemInventoryReses == null) {
-            GenericDelegator delegator = orderHeader.getDelegator();
+            GenericDelegator delegator = orderItem.getDelegator();
 
             try {
-                orderItemInventoryReses = delegator.findByAnd("OrderItemInventoryRes", UtilMisc.toMap("orderId", orderHeader.get("orderId")));
+                orderItemInventoryReses = delegator.findByAnd("OrderItemInventoryRes", UtilMisc.toMap("orderId", orderItem.get("orderId"), "orderItemSeqId", orderItem.getString("orderItemSeqId")));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, "Trouble getting OrderItemInventoryRes(s)", module);
             }
-        }
-        String orderItemSeqId = (String) orderItem.get("orderItemSeqId");
-
-        return EntityUtil.filterByAnd(this.orderItemInventoryReses, UtilMisc.toMap("orderItemSeqId", orderItemSeqId));
+        }        
+        return orderItemInventoryReses;
     }
 
     public List getOrderItemIssuances(GenericValue orderItem) {
         if (orderItem == null) return null;
         if (this.orderItemIssuances == null) {
-            GenericDelegator delegator = orderHeader.getDelegator();
+            GenericDelegator delegator = orderItem.getDelegator();
 
             try {
-                orderItemIssuances = delegator.findByAnd("ItemIssuance", UtilMisc.toMap("orderId", orderHeader.get("orderId")));
+                orderItemIssuances = delegator.findByAnd("ItemIssuance", UtilMisc.toMap("orderId", orderItem.get("orderId"), "orderItemSeqId", orderItem.getString("orderItemSeqId")));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, "Trouble getting ItemIssuance(s)", module);
-            }
-        }
-        String orderItemSeqId = (String) orderItem.get("orderItemSeqId");
-
-        return EntityUtil.filterByAnd(this.orderItemIssuances, UtilMisc.toMap("orderItemSeqId", orderItemSeqId));
+            }            
+        }        
+        return orderItemIssuances;
     }
 
     public double getItemShippedQuantity(GenericValue orderItem) {
         double quantityShipped = 0.00;
-        List issuance = getOrderItemIssuances(orderItem);
+        List issuance = getOrderItemIssuances(orderItem);        
         if (issuance != null) {
             Iterator i = issuance.iterator();
             while (i.hasNext()) {
                 GenericValue issue = (GenericValue) i.next();
-                Double issueQty = issue.getDouble("quantity");
-                if (issueQty == null) {
+                Double issueQty = issue.getDouble("quantity");               
+                if (issueQty != null) {
                     quantityShipped += issueQty.doubleValue();
                 }
             }
-        }
+        }        
         return quantityShipped;
     }
 
