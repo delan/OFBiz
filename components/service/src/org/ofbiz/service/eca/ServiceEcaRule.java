@@ -103,7 +103,7 @@ public class ServiceEcaRule implements java.io.Serializable {
         while (c.hasNext()) {
             ServiceEcaCondition ec = (ServiceEcaCondition) c.next();
             if (!ec.eval(serviceName, dctx, context)) {
-                if (Debug.verboseOn()) Debug.logVerbose("Got false for condition: " + ec, module);
+                if (Debug.infoOn()) Debug.logInfo("Got false for condition: " + ec, module);
                 allCondTrue = false;
                 break;
             } else {
