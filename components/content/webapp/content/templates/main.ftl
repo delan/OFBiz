@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      3.0
 -->
 
@@ -137,7 +137,7 @@ ${pages.get("/includes/appbar.ftl")}
             <#if subMenu?exists && (0 < subMenu?length ) >${pages.get(subMenu)}</#if>
             <#assign entityName= page.getProperty("entityName")?if_exists />
             <#if entityName?exists>${entityName}</#if>
-            <hr align="left" width="25%" />
+            <!--<hr align="left" width="25%" />-->
             <#assign operationTitle=page.getProperty("operationTitle")?if_exists />
             <#if operationTitle?exists>${operationTitle}</#if>
             <#assign permType=page.getProperty("permissionType")?if_exists />
