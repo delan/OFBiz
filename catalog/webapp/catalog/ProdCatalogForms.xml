@@ -105,7 +105,7 @@
 		<field name="prodCatalogId"><hidden/></field>
 		<!-- three possibilities for the Party: person, partyGroup, neither... just print everything and if it's empty, no biggie -->
 		<field name="partyId" title="Party [ID]" widget-style="buttontext">
-			<hyperlink ofbiz-url="false" target="/partymgr/control/viewprofile?partyId=${prodCatalogRole.partyId}"
+			<hyperlink ofbiz-url="false" target="/content/control/EditWebSite?webSiteId=${webSiteCatalog.webSiteId}"
 				description="${person.personalTitle} ${person.firstName} ${person.middleName} ${person.lastName} ${person.suffix} ${partyGroup.groupName} [${prodCatalogRole.partyId}]"/>
 		</field>
 		<field name="roleTypeId" title="Role" widget-style="tabletext">
@@ -116,6 +116,37 @@
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
 			<hyperlink target="removeProdCatalogFromParty?prodCatalogId=${prodCatalogRole.prodCatalogId}&amp;partyId=${prodCatalogRole.partyId}&amp;roleTypeId=${prodCatalogRole.roleTypeId}&amp;fromDate=${prodCatalogRole.fromDate}"
+				description="[Delete]" also-hidden="false"/>
+		</field>
+	</form>
+	<form name="AddProdCatalogToWebSite" type="single" 
+		target="addProdCatalogToWebSite" title=""
+		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+		<auto-fields-service service-name="addProdCatalogToWebSite"/>
+		<field name="prodCatalogId" map-name="prodCatalog"><hidden/></field>
+		<field name="webSiteId" title="Web Site" widget-style="selectBox">
+			<drop-down>
+				<entity-options entity-name="WebSite" description="${siteName}">
+					<entity-order-by field-name="siteName"/>
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+	</form>
+	<form name="UpdateProdCatalogToWebSite" type="list"
+		target="updateProdCatalogToWebSite" title="" list-name="webSiteCatalogDatas"
+		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+		<auto-fields-service service-name="updateProdCatalogToWebSite" map-name="webSiteCatalog"/>
+		<field name="prodCatalogId"><hidden/></field>
+		<field name="webSiteId" title="WebSite [ID]" widget-style="buttontext">
+			<hyperlink ofbiz-url="false" target="/content/control/EditWebSite?webSiteId=${webSiteCatalog.webSiteId}"
+				description="${webSite.siteName} [${webSiteCatalog.webSiteId}]"/>
+		</field>
+		<field name="fromDate" title="From Date &amp;amp; Time" widget-style="tabletext"><display/></field>
+		<field name="thruDate" title="Thru Date &amp;amp; Time"></field>
+		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+			<hyperlink target="removeProdCatalogFromWebSite?prodCatalogId=${webSiteCatalog.prodCatalogId}&amp;webSiteId=${webSiteCatalog.webSiteId}&amp;fromDate=${webSiteCatalog.fromDate}"
 				description="[Delete]" also-hidden="false"/>
 		</field>
 	</form>
