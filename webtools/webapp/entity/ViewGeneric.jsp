@@ -307,16 +307,16 @@ function ShowTab(lname)
         <input type="hidden" name="<%=field.getName()%>" value="<%=timeVal==null?"":timeVal.toString()%>">
         <%=timeVal==null?"":timeVal.toString()%>
       <%}else if(type.getJavaType().indexOf("Integer") >= 0){%>
-        <input type="hidden" name="<%=field.getName()%>" value="<%=UtilFormatOut.formatQuantity((Integer)value.get(field.getName()))%>">
+        <input type="hidden" name="<%=field.getName()%>" value="<%=(Integer)value.get(field.getName())%>">
         <%=UtilFormatOut.formatQuantity((Integer)value.get(field.getName()))%>
       <%}else if(type.getJavaType().indexOf("Long") >= 0){%>
-        <input type="hidden" name="<%=field.getName()%>" value="<%=UtilFormatOut.formatQuantity((Long)value.get(field.getName()))%>">
+        <input type="hidden" name="<%=field.getName()%>" value="<%=(Long)value.get(field.getName())%>">
         <%=UtilFormatOut.formatQuantity((Long)value.get(field.getName()))%>
       <%}else if(type.getJavaType().indexOf("Double") >= 0){%>
-        <input type="hidden" name="<%=field.getName()%>" value="<%=UtilFormatOut.formatQuantity((Double)value.get(field.getName()))%>">
+        <input type="hidden" name="<%=field.getName()%>" value="<%=(Double)value.get(field.getName())%>">
         <%=UtilFormatOut.formatQuantity((Double)value.get(field.getName()))%>
       <%}else if(type.getJavaType().indexOf("Float") >= 0){%>
-        <input type="hidden" name="<%=field.getName()%>" value="<%=UtilFormatOut.formatQuantity((Float)value.get(field.getName()))%>">
+        <input type="hidden" name="<%=field.getName()%>" value="<%=(Float)value.get(field.getName())%>">
         <%=UtilFormatOut.formatQuantity((Float)value.get(field.getName()))%>
       <%}else if(type.getJavaType().indexOf("String") >= 0){%>
         <input type="hidden" name="<%=field.getName()%>" value="<%=UtilFormatOut.checkNull((String)value.get(field.getName()))%>">
