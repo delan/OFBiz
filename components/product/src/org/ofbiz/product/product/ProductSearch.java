@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.17 2003/10/25 08:19:16 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.18 2003/10/27 11:08:24 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -44,6 +44,7 @@ import org.ofbiz.entity.model.ModelViewEntity.ComplexAlias;
 import org.ofbiz.entity.model.ModelViewEntity.ComplexAliasField;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 
@@ -52,16 +53,13 @@ import org.ofbiz.entity.util.EntityListIterator;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      3.0
  */
 public class ProductSearch {
     
     public static final String module = ProductSearch.class.getName();
     
-    /** This cache contains a Set with the IDs of the entire sub-category tree, including the current productCategoryId */
-    public static UtilCache subCategoryCache = new UtilCache("product.SubCategory", 0, 0, true);
-
     public static ArrayList parametricKeywordSearch(Map featureIdByType, String keywordsString, GenericDelegator delegator, String productCategoryId, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
         Set featureIdSet = new HashSet();
         if (featureIdByType != null) {
@@ -104,40 +102,32 @@ public class ProductSearch {
     }
     
     public static void getAllSubCategoryIds(String productCategoryId, Set productCategoryIdSet, GenericDelegator delegator, Timestamp nowTimestamp) {
-        // cache the sub-category so this will run faster
-        Set subCategoryIdSet = (Set) subCategoryCache.get(productCategoryId);
-        if (subCategoryIdSet == null) {
-            synchronized (ProductSearch.class) {
-                subCategoryIdSet = (Set) subCategoryCache.get(productCategoryId);
-                if (subCategoryIdSet == null) {
-                    subCategoryIdSet = new HashSet();
-                    
-                    // first make sure the current category id is in the Set
-                    subCategoryIdSet.add(productCategoryId);
+        if (nowTimestamp == null) {
+            nowTimestamp = UtilDateTime.nowTimestamp();
+        }
+        
+        // this will use the GenericDelegator cache as much as possible, but not a dedicated cache because it would get stale to easily and is too much of a pain to maintain in development and production
+        Set subCategoryIdSet = new HashSet();
 
-                    // now find all sub-categories, filtered by effective dates, and call this routine for them
-                    List conditions = new LinkedList();
-                    conditions.add(new EntityExpr("parentProductCategoryId", EntityOperator.EQUALS, productCategoryId));
-                    conditions.add(new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
-                    conditions.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN, nowTimestamp));
-                    try {
-                        List productCategoryRollupList = delegator.findByCondition("ProductCategoryRollup", new EntityConditionList(conditions, EntityOperator.AND), null, null);
-                        Iterator productCategoryRollupIter = productCategoryRollupList.iterator();
-                        while (productCategoryRollupIter.hasNext()) {
-                            GenericValue productCategoryRollup = (GenericValue) productCategoryRollupIter.next();
-                            getAllSubCategoryIds(productCategoryRollup.getString("productCategoryId"), subCategoryIdSet, delegator, nowTimestamp);
-                        }
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, "Error finding sub-categories for product search", module);
-                    }
-                    
-                    subCategoryCache.put(productCategoryId, subCategoryIdSet);
+        // first make sure the current category id is in the Set
+        subCategoryIdSet.add(productCategoryId);
+
+        // now find all sub-categories, filtered by effective dates, and call this routine for them
+        try {
+            List productCategoryRollupList = delegator.findByAndCache("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", productCategoryId));
+            Iterator productCategoryRollupIter = productCategoryRollupList.iterator();
+            while (productCategoryRollupIter.hasNext()) {
+                GenericValue productCategoryRollup = (GenericValue) productCategoryRollupIter.next();
+                // do the date filtering in the loop to avoid looping through the list twice
+                if (EntityUtil.isValueActive(productCategoryRollup, nowTimestamp)) {
+                    getAllSubCategoryIds(productCategoryRollup.getString("productCategoryId"), subCategoryIdSet, delegator, nowTimestamp);
                 }
             }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error finding sub-categories for product search", module);
         }
-        if (subCategoryIdSet != null) {
-            productCategoryIdSet.addAll(subCategoryIdSet);
-        }
+
+        productCategoryIdSet.addAll(subCategoryIdSet);
     }
     
     public static class ProductSearchContext {
