@@ -74,16 +74,29 @@
     <simple-method method-name="checkProductInventoryDiscontinuation" short-description="Check Product Inventory Discontinuation" login-required="false">
         <field-to-field field-name="productId" map-name="parameters" to-map-name="productIdMap"/>
         <find-by-primary-key entity-name="Product" map-name="productIdMap" value-name="product"/>
-        <if-compare field-name="product.salesDiscWhenNotAvail" operator="equals" value="Y">
-            <!-- now for the real fun, get the inventory available if is less-equal to zero discontinue product -->
-            <call-service service-name="getProductInventoryAvailable" in-map-name="productIdMap">
-                <result-to-field result-name="availableToPromise"/>
-            </call-service>
-            <if-compare field-name="availableToPromise" operator="less-equals" value="0" type="Double">
-                <field-to-field field-name="productId" map-name="parameters" to-map-name="discontinueProductSalesMap"/>
-                <call-service service-name="discontinueProductSales" in-map-name="discontinueProductSalesMap"/>
-            </if-compare>
-        </if-compare>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <!-- before checking inventory availability see if the product is already discontinued, and discontinued in the past (if in the future, still check availability and discontinue now if necessary) -->
+        <if>
+            <condition>
+                <and>
+                    <if-compare field-name="product.salesDiscWhenNotAvail" operator="equals" value="Y"/>
+                    <or>
+                        <if-empty field-name="product.salesDiscontinuationDate"/>
+                        <if-compare-field field-name="product.salesDiscontinuationDate" operator="greater" to-field-name="nowTimestamp" type="Timestamp"/>
+                    </or>
+                </and>
+            </condition>
+            <then>
+                <!-- now for the real fun, get the inventory available if is less-equal to zero discontinue product -->
+                <call-service service-name="getProductInventoryAvailable" in-map-name="productIdMap">
+                    <result-to-field result-name="availableToPromise"/>
+                </call-service>
+                <if-compare field-name="availableToPromise" operator="less-equals" value="0" type="Double">
+                    <field-to-field field-name="productId" map-name="parameters" to-map-name="discontinueProductSalesMap"/>
+                    <call-service service-name="discontinueProductSales" in-map-name="discontinueProductSalesMap"/>
+                </if-compare>
+            </then>
+        </if>
     </simple-method>
 
     
