@@ -122,7 +122,7 @@ public class LoginServices {
             }
         }
 
-        checkNewPassword(null, null, currentPassword, currentPasswordVerify, passwordHint, errorMessageList, adminUser);
+        checkNewPassword(null, null, currentPassword, currentPasswordVerify, passwordHint, errorMessageList, true);
 
         GenericValue userLoginToCreate = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         userLoginToCreate.set("passwordHint", passwordHint);
