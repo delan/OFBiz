@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
 -->
 
@@ -311,7 +311,7 @@
         <#if okayToUpdate>
         <input type="text" class="inputBox" size="20" name="custRequestId" value="${(communicationEvent.custRequestId)?if_exists}">
         <#else>
-        <div class="tabletext">${(communicationEvent.custRequestId)?if_exists}</div>
+        <div class="tabletext">${(communicationEvent.custRequestId)?default("[none]")}</div>
         </#if>
         <#if (!(communicationEvent.custRequestId)?has_content && (communicationEvent.communicationEventId)?has_content)>
           &nbsp;<a href="/workeffort/control/request?partyId=${partyId}&communicationEventId=${communicationEvent.communicationEventId}&subject=${communicationEvent.subject?default("")}${requestAttributes.externalKeyParam}" class="buttontext">Create New Request</a>
@@ -348,7 +348,6 @@
       <td width="20%" align="right"><span class="tableheadtext">Subject</span></td>
       <td width="1">&nbsp;</td>
       <td>
-        <#if okayToUpdate>
         <#assign defaultSubject = (communicationEvent.subject)?default("")>
         <#if (defaultSubject?length == 0)>
           <#assign replyPrefix = uiLabelMap.PartyReplyPrefix + " ">
@@ -359,6 +358,7 @@
             <#assign defaultSubject = defaultSubject + parentEvent.subject?default("")>
           </#if>
         </#if>
+        <#if okayToUpdate>
         <input type="text" class="inputBox" size="30" name="subject" value="${defaultSubject}">
         <#else>
         <div class="tabletext">${defaultSubject}</div>
