@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.84 $
+ * @version    $Revision: 1.85 $
  */
 -->
 
@@ -3251,7 +3251,8 @@
       <field name="productCategoryId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="templatePath" type="long-varchar"></field>
+      <field name="surveyTemplate" type="long-varchar"></field>
+      <field name="resultTemplate" type="long-varchar"></field>
       <field name="sequenceNum" type="numeric"></field>
       <prim-key field="productStoreSurveyId"/>
       <relation type="one" fk-name="PRDSTRSVY_PRDS" rel-entity-name="ProductStore">

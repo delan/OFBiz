@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.35 $
+ * @version    $Revision: 1.36 $
  */
 -->
 
@@ -1342,6 +1342,43 @@
         <key-map field-name="surveyResponseId"/>
       </relation>
     </entity>
+    <view-entity entity-name="SurveyResponseAndAnswer"
+            package-name="org.ofbiz.content.survey"
+            title="Survey Response And Answer View Entity">
+      <member-entity entity-alias="RA" entity-name="SurveyResponseAnswer"/>
+      <member-entity entity-alias="SR" entity-name="SurveyResponse"/>
+      <alias entity-alias="SR" name="surveyResponseId"/>
+      <alias entity-alias="SR" name="surveyId"/>
+      <alias entity-alias="SR" name="partyId"/>
+      <alias entity-alias="SR" name="responseDate"/>
+      <alias entity-alias="SR" name="lastModifiedDate"/>
+      <alias entity-alias="SR" name="referenceId"/>
+      <alias entity-alias="SR" name="generalFeedback"/>
+      <alias entity-alias="SR" name="orderId"/>
+      <alias entity-alias="SR" name="thruDate"/>
+      <alias entity-alias="SR" name="orderItemSeqId"/>
+      <alias entity-alias="RA" name="surveyQuestionId"/>
+      <alias entity-alias="RA" name="booleanResponse"/>
+      <alias entity-alias="RA" name="currencyResponse"/>
+      <alias entity-alias="RA" name="floatResponse"/>
+      <alias entity-alias="RA" name="numericResponse"/>
+      <alias entity-alias="RA" name="textResponse"/>
+      <alias entity-alias="RA" name="surveyOptionSeqId"/>
+      <alias entity-alias="RA" name="answeredDate"/>
+      <view-link entity-alias="RA" rel-entity-alias="SR">
+        <key-map field-name="surveyResponseId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="Survey">
+        <key-map field-name="surveyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="SurveyQuestion">
+        <key-map field-name="surveyQuestionId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="SurveyQuestionOption">
+        <key-map field-name="surveyQuestionId"/>
+        <key-map field-name="surveyOptionSeqId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="SurveyResponseAnswer"
             package-name="org.ofbiz.content.survey"
             title="Survey Response Answer Entity">

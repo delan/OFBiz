@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -47,8 +47,8 @@
                 <td width="90%">
                   <#-- Render the survey -->
                   <#if surveyWrapper?has_content>
-                    <form method="post" action="<@ofbizUrl>/profilesurvey/viewprofile</@ofbizUrl>" style="margin: 0;">
-                      ${surveyWrapper.renderSurvey().toString()}
+                    <form method="post" action="<@ofbizUrl>/profilesurvey/profilesurvey</@ofbizUrl>" style="margin: 0;">
+                      ${surveyWrapper.render().toString()}
                     </form>
                   <#else>
                     <div class="head1">Nothing to do here. This must have been a mistake, sorry.</div>
