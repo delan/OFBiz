@@ -494,6 +494,18 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PicklistOptions"/>
     </request-map>
+    <request-map uri="PicklistManage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PicklistManage"/>
+    </request-map>
+
+    <request-map uri="createPicklistFromOrders">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPicklistFromOrders"/>
+        <response name="success" type="view" value="PicklistOptions"/>
+        <response name="error" type="view" value="PicklistOptions"/>
+    </request-map>
+
     <request-map uri="Picklist">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="Picklist"/>
@@ -501,16 +513,6 @@
     <request-map uri="Picklist.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="Picklist.pdf"/>
-    </request-map>
-    <request-map uri="PickStarted">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="PickStarted"/>
-    </request-map>
-    <request-map uri="clearPickStarted">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="clearPickStarted"/>
-        <response name="success" type="view" value="PickStarted"/>
-        <response name="error" type="view" value="PickStarted"/>
     </request-map>
 
     <request-map uri="PickMoveStock">
@@ -819,10 +821,11 @@
     <view-map name="ReceiveInventory" type="jpublish" page="/inventory/receiveInventory.ftl"/>
     <view-map name="ReceiveReturn" type="jpublish" page="/returns/receiveReturn.ftl"/>
 
-    <view-map name="PicklistOptions" type="jpublish" page="/facility/PicklistOptions.ftl"/>
+    <view-map name="PicklistOptions" type="screen" page="component://product/widget/facility/FacilityScreens.xml#PicklistOptions"/>
+    <view-map name="PicklistManage" type="screen" page="component://product/widget/facility/FacilityScreens.xml#PicklistManage"/>
+
     <view-map name="Picklist" type="jpublish" page="/facility/Picklist.ftl"/>
     <view-map name="Picklist.pdf" type="fop" page="/facility/Picklist.fo.ftl"/>
-    <view-map name="PickStarted" type="jpublish" page="/facility/PickStarted.ftl"/>
     <view-map name="PickMoveStock" type="jpublish" page="/facility/PickMoveStock.ftl"/>
 
     <view-map name="FindFacilityGroup" type="jpublish" page="/group/FindFacilityGroup.ftl"/>
