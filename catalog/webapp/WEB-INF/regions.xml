@@ -13,8 +13,8 @@
 
     <define id='LEFTBAR_REGION' template='/templates/leftbar_template.jsp'>
         <put section='first' content='/find/keywordsearchbox.jsp'/>
-        <put section='second' content='/find/sidedeepcategory.jsp'/>
-        <put section='third' content='/find/sidecatalogs.jsp'/>
+        <put section='second' content='/find/sidecatalogs.jsp'/>
+        <put section='third' content='/find/sidedeepcategory.jsp'/>        
         <put section='fourth' content='/find/miniproductlist.jsp'/>
     </define>
 
