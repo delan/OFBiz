@@ -31,7 +31,7 @@
         files="minerva/build.xml,jotm/build.xml,entity/build.xml
                catalina/build.xml,jetty/build.xml,
                security/build.xml,service/build.xml,entityext/build.xml,
-               datafile/build.xml,rules/build.xml,minilang/build.xml,
+               datafile/build.xml,minilang/build.xml,
                tests/build.xml, 
                common/build.xml,workflow/build.xml,shark/build.xml,
                webapp/build.xml,guiapp/build.xml,widget/build.xml,
