@@ -1,5 +1,5 @@
 /*
- * $Id: UtilProperties.java,v 1.2 2003/08/20 17:29:31 ajzeneski Exp $
+ * $Id: UtilProperties.java,v 1.3 2003/09/20 18:33:41 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -25,9 +25,12 @@ package org.ofbiz.base.util;
 
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -35,7 +38,7 @@ import java.util.ResourceBundle;
  * Generic Property Accessor with Cache - Utilities for working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      1.0
  */
 public class UtilProperties {
@@ -412,21 +415,24 @@ public class UtilProperties {
      * @return The ResourceBundle
      */
     public static ResourceBundle getResourceBundle(String resource, Locale locale) {
+        Map bundleMap = getResourceBundleMap(resource, locale);
+        if (bundleMap == null) {
+            return null;
+        }
+        return (ResourceBundle) bundleMap.get("_RESOURCE_BUNDLE_");
+    }
+    
+    protected static ResourceBundle getBaseResourceBundle(String resource, Locale locale) {
         if (resource == null || resource.length() <= 0) return null;
         if (locale == null) locale = Locale.getDefault();
 
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        String resourceCacheKey = resource + "_" + locale.toString();        
-        ResourceBundle bundle = (ResourceBundle) bundleLocaleCache.get(resourceCacheKey);
-
-        if (bundle == null) {
-            try {
-                bundle = ResourceBundle.getBundle(resource, locale, loader);
-                bundleLocaleCache.put(resourceCacheKey, bundle);
-            } catch (MissingResourceException e) {
-                Debug.log(e, "[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString(), module);
-                return null;
-            }
+        ResourceBundle bundle = null;
+        try {
+            bundle = ResourceBundle.getBundle(resource, locale, loader);
+        } catch (MissingResourceException e) {
+            Debug.log(e, "[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString(), module);
+            return null;
         }
         if (bundle == null) {
             Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString(), module);
@@ -434,6 +440,41 @@ public class UtilProperties {
         }
         
         return bundle;
+    }
+    
+    /** Returns the specified resource/properties file as a Map with the original ResourceBundle in the Map under the key _RESOURCE_BUNDLE_
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param locale The locale that the given resource will correspond to
+     * @return Map containing all entries in The ResourceBundle
+     */
+    public static Map getResourceBundleMap(String resource, Locale locale) {
+        
+        String resourceCacheKey = resource + "_" + locale.toString();        
+        Map bundleMap = (Map) bundleLocaleCache.get(resourceCacheKey);
+
+        if (bundleMap == null) {
+            ResourceBundle bundle = getBaseResourceBundle(resource, locale);
+            bundleMap = resourceBundleToMap(bundle);
+            if (bundleMap != null) {
+                bundleLocaleCache.put(resourceCacheKey, bundleMap);
+            }
+        }
+        return bundleMap;
+    }
+
+    protected static Map resourceBundleToMap(ResourceBundle bundle) {
+        if (bundle == null) {
+            return new HashMap();
+        }
+        // NOTE: this should return all keys, including keys from parent ResourceBundles, if not then something else must be done here...
+        Enumeration keyNum = bundle.getKeys();
+        Map resourceBundleMap = new HashMap();
+        while (keyNum.hasMoreElements()) {
+            String key = (String) keyNum.nextElement();
+            resourceBundleMap.put(key, bundle.getObject(key));
+        }
+        resourceBundleMap.put("_RESOURCE_BUNDLE_", bundle);
+        return resourceBundleMap;
     }
     
     /** Returns the specified resource/properties file
