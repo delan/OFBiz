@@ -27,8 +27,8 @@ package org.ofbiz.entityext.eca;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -37,6 +37,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.w3c.dom.Element;
 
 /**
@@ -100,6 +101,9 @@ public class EntityEcaAction implements java.io.Serializable {
             LocalDispatcher dispatcher = dctx.getDispatcher();
             if ("sync".equals(this.serviceMode)) {
                 actionResult = dispatcher.runSync(this.serviceName, actionContext);
+                if (ServiceUtil.isError(actionResult)) {
+                    throw new GenericServiceException("Error running Entity ECA action service: " + ServiceUtil.getErrorMessage(actionResult));
+                }
             } else if ("async".equals(this.serviceMode)) {
                 dispatcher.runAsync(serviceName, actionContext, persist);
             }
@@ -111,7 +115,7 @@ public class EntityEcaAction implements java.io.Serializable {
             }
 
             if (this.abortOnError) {
-                throw new EntityEcaException("Error running Entity ECA action service", e);
+                throw new EntityEcaException("Error running Entity ECA action service: " + e.toString(), e);
             } else {
                 Debug.logError(e, "Error running Entity ECA action service", module);
             }
