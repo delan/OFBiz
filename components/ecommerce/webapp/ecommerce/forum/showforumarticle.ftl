@@ -1,8 +1,18 @@
 <#import "bloglib.ftl" as blog/>
 <div class="boxoutside" >
 <div style="margin:10px;" >
-<@blog.renderAncestryPath trail=ancestorList?default([])/>
+<@blog.renderAncestryPath trail=ancestorList?default([]) endIndexOffset=1 />
 
+<#-- Do this so that we don't have to find the content twice (again in renderSubContent) -->
+<#assign lastNode = globalNodeTrail?if_exists?last/>
+<#if lastNode?has_content>
+  <#assign subContent=lastNode.value/>
+<#else>
+<#assign subContent = delegator.findByPrimaryKeyCache("Content", Static["org.ofbiz.base.util.UtilMisc"].toMap("contentId", subContentId))/>
+<#assign dummy = globalNodeTrail.add(lastNode)/>
+</#if>
+<br/>
+<div class="head1">Content for [${subContentId}] ${subContent.contentName?if_exists} - ${subContent.description?if_exists}:</div><br/>
 <table border="0" width="100%" class="blogtext">
     <tr>
     <td width="40">&nbsp;</td>
@@ -49,7 +59,7 @@
         </#if>
         <#if content?exists>
         <a class="tabButton" href="<@ofbizUrl>/showforumresponse?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
-[${thisContentId}]-${content.description?if_exists}
+[${thisContentId}] ${content.contentName?if_exists}-${content.description?if_exists}
         </#if>
 
     </#if>

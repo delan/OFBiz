@@ -20,7 +20,7 @@
           <td class="tabletext"> <b>name:</b>${content.contentName} </td>
       <@injectNodeTrailCsv subContentId=content.contentId redo="true" contentAssocTypeId="PUBLISH_LINK">
           <td>
-  <a class="tabButton" href="<@ofbizUrl>/showforumresponse?contentId=${content.contentId}&nodeTrailCsv=${context.nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a> 
+  <a class="tabButton" href="<@ofbizUrl>/showforumresponse?contentId=${content.contentId}&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a> 
           </td>
           <td class="tabletext">
           <b>submitted:</b>
