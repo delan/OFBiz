@@ -44,6 +44,7 @@
     <li class="errorMessage">${errorMsg}</li>
   </#list>
 </ul>
+<br>
 </#if>
 <#if requestAttributes.eventMessageList?has_content>
 <div class="eventMessage">The following occurred:</div><br>
@@ -52,4 +53,5 @@
     <li class="eventMessage">${eventMsg}</li>
   </#list>
 </ul>
+<br>
 </#if>
