@@ -105,7 +105,7 @@
         <attribute name="currentContext" type="java.util.Map" mode="IN"/>
     </service>
 
-    <service name="assignActivity" engine="java"
+    <service name="wfAssignActivity" engine="java"
             location="org.ofbiz.core.workflow.WorkflowServices" invoke="assignActivity">
         <description>Assign a new party or role to a workflow activity</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
@@ -114,36 +114,38 @@
         <attribute name="removeOldAssignments" type="String" mode="IN" optional="true"/>
     </service>
 
-    <service name="activateActivity" engine="java"
+    <service name="wfActivateActivity" engine="java"
             location="org.ofbiz.core.workflow.WorkflowServices" invoke="activateActivity">
         <description>Attempt to initiate a workflow activity</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
     </service>
 
-    <service name="completeActivity" engine="java"
-            location="org.ofbiz.core.workflow.WorkflowServices" invoke="completeActivity">
-        <description>Attempt to complete a workflow activity</description>
-        <attribute name="workEffortId" type="String" mode="IN"/>
-        <attribute name="result" type="java.util.Map" mode="IN" optional="true"/>
-    </service>
-
-    <service name="changeActivityState" engine="java"
+    <service name="wfChangeActivityState" engine="java"
             location="org.ofbiz.core.workflow.WorkflowServices" invoke="changeActivityState">
         <description>Manually change the state of a workflow activity</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
         <attribute name="newState" type="String" mode="IN"/>
     </service>
 
-    <service name="acceptAssignment" engine="java"
+    <service name="wfAcceptAssignment" engine="java"
             location="org.ofbiz.core.workflow.WorkflowServices" invoke="acceptAssignment">
-        <description>Accept a workflow assignment</description>
+        <description>Accept a workflow user assignment</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
         <attribute name="partyId" type="String" mode="IN"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN"/>
     </service>
 
-    <service name="completeAssignment" engine="java"
+    <service name="wfAcceptRoleAssignment" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="acceptRoleAssignment">
+        <description>Accept a workflow role assignment</description>
+        <attribute name="workEffortId" type="String" mode="IN"/>
+        <attribute name="partyId" type="String" mode="IN"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN"/>
+    </service>
+
+    <service name="wfCompleteAssignment" engine="java"
             location="org.ofbiz.core.workflow.WorkflowServices" invoke="completeAssignment">
         <description>Complete a workflow assignment</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
@@ -152,9 +154,6 @@
         <attribute name="fromDate" type="Timestamp" mode="IN"/>
         <attribute name="result" type="java.util.Map" mode="IN" optional="true"/>
     </service>
-
-    <service name="assignApprover" engine="java"
-            location="org.ofbiz.commonapp.common.CommonServices" invoke="testService" validate="false"/>
 
     <!-- Order processing services -->
     <service name="processOrder" engine="workflow" location="TEST" invoke="ProcessOrder">

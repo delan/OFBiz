@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/01/10 08:07:56  jonesde
+ * Finished WorkEffortPartyAssignment minilang events
+ *
  * Revision 1.1  2001/12/30 04:22:56  jonesde
  * Finished WorkEffortPartyAssignment services, cleaned up WorkEffort services
  *
@@ -269,21 +272,21 @@ public class WorkEffortPartyAssignmentServices {
             if ("CAL_ACCEPTED".equals(statusId)) {
                 //accept the activity assignment
                 try {
-                    Map results = dispatcher.runSync("acceptAssignment", context);
+                    Map results = dispatcher.runSync("wfAcceptAssignment", context);
                 } catch (GenericServiceException e) {
                     Debug.logWarning(e);
                 }
             } else if ("CAL_COMPLETED".equals(statusId)) {
                 //complete the activity assignment
                 try {
-                    Map results = dispatcher.runSync("completeAssignment", context);
+                    Map results = dispatcher.runSync("wfCompleteAssignment", context);
                 } catch (GenericServiceException e) {
                     Debug.logWarning(e);
                 }
             } else if ("CAL_DECLINED".equals(statusId)) {
                 //decline the activity assignment
                 try {
-                    Map results = dispatcher.runSync("declineAssignment", context);
+                    Map results = dispatcher.runSync("wfDeclineAssignment", context);
                 } catch (GenericServiceException e) {
                     Debug.logWarning(e);
                 }
