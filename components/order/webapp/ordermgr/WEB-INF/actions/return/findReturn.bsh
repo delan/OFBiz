@@ -130,7 +130,7 @@ if (lookupFlag != null) {
 
     if (partyId != null && partyId.length() > 0) {
         paramList = paramList + "&partyId=" + partyId;
-        andExprs.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
+        andExprs.add(new EntityExpr("fromPartyId", EntityOperator.EQUALS, partyId));
     }
 
     // filter on billing account
