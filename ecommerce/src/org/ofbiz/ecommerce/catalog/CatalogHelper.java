@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.19  2001/09/23 12:06:46  jonesde
+ * Fixed, and finished, the side category box for complete hierarchy and position maintenance.
+ *
  * Revision 1.18  2001/09/19 08:42:08  jonesde
  * Initial checkin of refactored entity engine.
  *
@@ -324,6 +327,7 @@ public class CatalogHelper {
     String previousCategory = pageContext.getRequest().getParameter("pcategory");
     Debug.logInfo("[CatalogHelper.setTrail] Start: previousCategory=" + previousCategory + " currentCategory=" + currentCategory);
 
+    //if there is no current category, just return and do nothing to that the last settings will stay
     if(currentCategory == null || currentCategory.length() <= 0) return;
     
     //always get the last crumb list
