@@ -708,6 +708,7 @@
       <field name="paymentMethodTypeId" type="id"></field>
       <field name="paymentMethodId" type="id"></field>
       <field name="securityCode" type="long-varchar" encrypt="true"></field>
+      <field name="presentFlag" type="indicator"></field>
       <field name="maxAmount" type="currency-amount"></field>
       <field name="processAttempt" type="numeric"></field>
       <field name="billingPostalCode" type="short-varchar"></field>
@@ -1012,6 +1013,9 @@
       </relation>
       <relation type="one" fk-name="RTN_ITEM_TYPE" rel-entity-name="ReturnType">
         <key-map field-name="returnTypeId"/>
+      </relation>
+      <relation type="one" fk-name="RTN_ITEM_RESP" rel-entity-name="ReturnItemResponse">
+        <key-map field-name="returnItemResponseId"/>
       </relation>
       <relation type="one" fk-name="RTN_ITEM_ODR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
