@@ -165,7 +165,7 @@ public class OrderServices {
                 UtilMisc.toMap("contactMechId", shippingContactMechId,
                         "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
 
-        // set the order contact mechs; this list can store both order and item level mechs.
+        // set the order contact mechs
         List orderContactMechs = (List) context.get("orderContactMechs");
         if (orderContactMechs != null && orderContactMechs.size() > 0) {
             Iterator ocmi = orderContactMechs.iterator();
@@ -176,6 +176,17 @@ public class OrderServices {
             }
         }
 
+        // set the order item contact mechs
+        List orderItemContactMechs = (List) context.get("orderItemContactMechs");
+        if (orderItemContactMechs != null && orderItemContactMechs.size() > 0) {
+            Iterator oicmi = orderItemContactMechs.iterator();
+            while (oicmi.hasNext()) {
+                GenericValue oicm = (GenericValue) oicmi.next();
+                oicm.set("orderId", orderId);
+                toBeStored.add(oicm);
+            }
+        }
+        
         // set the shipment preference
         String shipmentMethodTypeId = (String) context.get("shipmentMethodTypeId");
         String carrierPartyId = (String) context.get("carrierPartyId");

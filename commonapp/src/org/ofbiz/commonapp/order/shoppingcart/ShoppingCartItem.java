@@ -57,6 +57,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Map attributes = null;
     private String orderItemSeqId = null;
     
+    private Map contactMechIdsMap = new HashMap();
     private List orderItemPriceInfos = null;
     private List itemAdjustments = new LinkedList();
     private boolean isPromo = false;
@@ -358,6 +359,23 @@ public class ShoppingCartItem implements java.io.Serializable {
         return orderItemPriceInfos;
     }
 
+    /** Add a contact mech to this purpose; the contactMechPurposeTypeId is required */
+    public void addContactMech(String contactMechPurposeTypeId, String contactMechId) {
+        if (contactMechPurposeTypeId == null) throw new IllegalArgumentException("You must specify a contactMechPurposeTypeId to add a ContactMech");
+        contactMechIdsMap.put(contactMechPurposeTypeId, contactMechId);
+    }
+    /** Get the contactMechId for this item given the contactMechPurposeTypeId */
+    public String getContactMech(String contactMechPurposeTypeId) {
+        return (String) contactMechIdsMap.get(contactMechPurposeTypeId);
+    }
+    /** Remove the contactMechId from this item given the contactMechPurposeTypeId */
+    public String removeContactMech(String contactMechPurposeTypeId) {
+        return (String) contactMechIdsMap.remove(contactMechPurposeTypeId);
+    }
+    public Map getOrderItemContactMechIds() {
+        return contactMechIdsMap;
+    }
+    
     public void setIsPromo(boolean isPromo) {
         this.isPromo = isPromo;
     }

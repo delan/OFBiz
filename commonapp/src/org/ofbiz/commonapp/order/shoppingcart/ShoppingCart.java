@@ -66,6 +66,7 @@ public class ShoppingCart implements java.io.Serializable {
     /** Holds value of order adjustments. */
     private List adjustments = new LinkedList();
     private List cartLines = new ArrayList();
+    private Map contactMechIdsMap = new HashMap();
 
     private GenericDelegator delegator;
     private HttpSession session;
@@ -410,6 +411,23 @@ public class ShoppingCart implements java.io.Serializable {
         return itemTotal;
     }
 
+    /** Add a contact mech to this purpose; the contactMechPurposeTypeId is required */
+    public void addContactMech(String contactMechPurposeTypeId, String contactMechId) {
+        if (contactMechPurposeTypeId == null) throw new IllegalArgumentException("You must specify a contactMechPurposeTypeId to add a ContactMech");
+        contactMechIdsMap.put(contactMechPurposeTypeId, contactMechId);
+    }
+    /** Get the contactMechId for this cart given the contactMechPurposeTypeId */
+    public String getContactMech(String contactMechPurposeTypeId) {
+        return (String) contactMechIdsMap.get(contactMechPurposeTypeId);
+    }
+    /** Remove the contactMechId from this cart given the contactMechPurposeTypeId */
+    public String removeContactMech(String contactMechPurposeTypeId) {
+        return (String) contactMechIdsMap.remove(contactMechPurposeTypeId);
+    }
+    public Map getOrderContactMechIds() {
+        return contactMechIdsMap;
+    }
+    
     /** Get a List of adjustments on the order (ie cart) */
     public List getAdjustments() {
         return adjustments;
@@ -655,6 +673,49 @@ public class ShoppingCart implements java.io.Serializable {
         return allInfos;
     }
     
+    /** make a list of OrderContactMechs from the ShoppingCart and the ShoppingCartItems */
+    public List makeAllOrderContactMechs(GenericDelegator delegator) {
+        List allOrderContactMechs = new LinkedList();
+
+        Map contactMechIds = this.getOrderContactMechIds();
+        if (contactMechIds != null) {
+            Iterator cMechIdsIter = contactMechIds.entrySet().iterator();
+            while (cMechIdsIter.hasNext()) {
+                Map.Entry entry = (Map.Entry) cMechIdsIter.next();
+                GenericValue orderContactMech = delegator.makeValue("OrderContactMech", null);
+                orderContactMech.set("contactMechPurposeTypeId", entry.getKey());
+                orderContactMech.set("contactMechId", entry.getValue());
+                allOrderContactMechs.add(orderContactMech);
+            }
+        }
+
+        return allOrderContactMechs;
+    }
+    
+    /** make a list of OrderContactMechs from the ShoppingCart and the ShoppingCartItems */
+    public List makeAllOrderItemContactMechs(GenericDelegator delegator) {
+        List allOrderContactMechs = new LinkedList();
+        
+        Iterator itemIter = cartLines.iterator();
+        while (itemIter.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
+            Map itemContactMechIds = item.getOrderItemContactMechIds();
+            if (itemContactMechIds != null) {
+                Iterator cMechIdsIter = itemContactMechIds.entrySet().iterator();
+                while (cMechIdsIter.hasNext()) {
+                    Map.Entry entry = (Map.Entry) cMechIdsIter.next();
+                    GenericValue orderContactMech = delegator.makeValue("OrderItemContactMech", null);
+                    orderContactMech.set("contactMechPurposeTypeId", entry.getKey());
+                    orderContactMech.set("contactMechId", entry.getValue());
+                    orderContactMech.set("orderItemSeqId", item.getOrderItemSeqId());
+                    allOrderContactMechs.add(orderContactMech);
+                }
+            }
+        }
+        
+        return allOrderContactMechs;
+    }
+    
     /** Returns a Map of cart values to pass to the storeOrder service */
     public Map makeCartMap(GenericDelegator delegator) {
         Map result = new HashMap();
@@ -662,14 +723,18 @@ public class ShoppingCart implements java.io.Serializable {
         result.put("orderAdjustments", makeAllAdjustments(delegator));
         result.put("orderItemPriceInfos", makeAllOrderItemPriceInfos(delegator));
 
-        result.put("billingAccountId", getBillingAccountId());
         result.put("shippingContactMechId", getShippingContactMechId());
+        result.put("orderContactMechs", makeAllOrderContactMechs(delegator));
+        result.put("orderItemContactMechs", makeAllOrderItemContactMechs(delegator));
+        
         result.put("shipmentMethodTypeId", getShipmentMethodTypeId());
         result.put("carrierPartyId", getCarrierPartyId());
         result.put("shippingInstructions", getShippingInstructions());
         result.put("maySplit", getMaySplit());
         result.put("giftMessage", getGiftMessage());
         result.put("isGift", getIsGift());
+        
+        result.put("billingAccountId", getBillingAccountId());
         result.put("paymentMethods", getPaymentMethods(delegator));
         result.put("paymentMethodTypeIds", getPaymentMethodTypeIds());
         return result;
