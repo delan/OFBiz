@@ -392,6 +392,26 @@
         <response name="error" type="view" value="EditProductFacilities"/>
     </request-map>
     
+    <!-- ================ Product Facility Locations Requests ================= -->
+    <request-map uri="EditProductFacilityLocations"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductFacilityLocations"/>
+    </request-map>
+    <request-map uri="createProductFacilityLocation"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductFacilityLocation"/>
+    	<response name="success" type="view" value="EditProductFacilityLocations"/>
+        <response name="error" type="view" value="EditProductFacilityLocations"/>
+    </request-map>
+    <request-map uri="updateProductFacilityLocation"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductFacilityLocation"/>
+    	<response name="success" type="view" value="EditProductFacilityLocations"/>
+        <response name="error" type="view" value="EditProductFacilityLocations"/>
+    </request-map>
+    <request-map uri="deleteProductFacilityLocation"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductFacilityLocation"/>
+    	<response name="success" type="view" value="EditProductFacilityLocations"/>
+        <response name="error" type="view" value="EditProductFacilityLocations"/>
+    </request-map>
+    
     <!-- ================ Inventory Requests ================= -->
     <request-map uri="EditProductInventoryItems"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductInventoryItems"/>
@@ -985,6 +1005,7 @@
     <view-map name="EditProductAttributes" type="jpublish" page="/product/EditProductAttributes.ftl"/>
     <view-map name="EditProductFeatures" type="jpublish" page="/product/EditProductFeatures.ftl"/>
     <view-map name="EditProductFacilities" type="jpublish" page="/product/EditProductFacilities.ftl"/>
+    <view-map name="EditProductFacilityLocations" type="jpublish" page="/product/EditProductFacilityLocations.ftl"/>
     <view-map name="EditProductInventoryItems" type="jpublish" page="/product/EditProductInventoryItems.ftl"/>
     <view-map name="EditProductGlAccounts" type="jpublish" page="/product/EditProductGlAccounts.ftl"/>
     <view-map name="UploadImage" type="region"/>
