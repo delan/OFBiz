@@ -311,11 +311,8 @@ public class GenericEntity extends Observable implements Serializable, Comparabl
 
 // ======= XML Related Methods ========  
   public static Document makeXmlDocument(Collection values) {
-    Document document = UtilXml.makeEmptyXmlDocument();
+    Document document = UtilXml.makeEmptyXmlDocument("entity-engine-xml");
     if(document == null) return null;
-    
-    Element rootElement = document.createElement("entity-engine-xml");
-    document.appendChild(rootElement);
     
     addToXmlDocument(values, document);
     return document;

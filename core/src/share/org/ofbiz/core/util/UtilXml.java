@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/11/15 14:55:29  jonesde
+ * Refactored XML in/out and added stream and string methods
+ *
  *
  */
 
@@ -147,6 +150,10 @@ public class UtilXml {
   }
 
   public static Document makeEmptyXmlDocument() {
+    return makeEmptyXmlDocument(null);
+  }
+
+  public static Document makeEmptyXmlDocument(String rootElementName) {
     Document document = null;
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setValidating(true);
@@ -156,6 +163,11 @@ public class UtilXml {
       document = builder.newDocument();
     }
     catch(Exception e) { Debug.logError(e); }
+    
+    if(rootElementName != null) {
+      Element rootElement = document.createElement(rootElementName);
+      document.appendChild(rootElement);
+    }
     
     if(document == null) return null;
     return document;
