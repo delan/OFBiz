@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
-    <template>main_htmlarea</template> 
+    <template>main</template> 
+    <property name="includeHtmlArea">Y</property>
     <property name="title">Add Response</property>
     <property name="formDefFile">/forum/ForumForms.xml</property>    
     <property name="singleFormName">AddResponse</property>    

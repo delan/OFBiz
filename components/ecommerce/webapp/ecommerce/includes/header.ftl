@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -27,33 +27,71 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
 <#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
+<#assign includeHtmlArea=false>
+<#if "Y"=page.includeHtmlArea><#assign includeHtmlArea=true></#if>
 
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>${(productStore.storeName)?if_exists}: ${page.title?if_exists}</title>
-    <script language="javascript" src="<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>" type="text/javascript"></script>
-    <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
-    <link rel="stylesheet" href="<@ofbizContentUrl>${(productStore.styleSheet)?default("/images/maincss.css")}</@ofbizContentUrl>" type="text/css">
+    <script language="javascript" src="<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>" type="text/javascript"/>
+    <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'/>
+    <link rel="stylesheet" href="<@ofbizContentUrl>${(productStore.styleSheet)?default("/images/maincss.css")}</@ofbizContentUrl>" type="text/css"/>
 
     <#-- Append CSS for catalog -->
     <#if catalogStyleSheet?exists>
-        <link rel="stylesheet" href="${catalogStyleSheet}" type="text/css">
+        <link rel="stylesheet" href="${catalogStyleSheet}" type="text/css"/>
     </#if>
     <#-- Append CSS for tracking codes -->
     <#if sessionAttributes.overrideCss?exists>
-        <link rel="stylesheet" href="${sessionAttributes.overrideCss}" type="text/css">
+        <link rel="stylesheet" href="${sessionAttributes.overrideCss}" type="text/css"/>
     </#if>
     <#-- Meta tags if defined by the page action -->
     <#if metaDescription?exists>
-    <meta name="description" content="${metaDescription}">
+        <meta name="description" content="${metaDescription}"/>
     </#if>
     <#if metaKeywords?exists>
-    <meta name="keywords" content="${metaKeywords}">
+        <meta name="keywords" content="${metaKeywords}"/>
+    </#if>
+
+    <#if includeHtmlArea>    
+        <#assign contextPath=request.getContextPath()/>
+        <link rel="stylesheet" href="<@ofbizContentUrl>${contextPath}/images/css/${(webSitePublishPoint.styleSheetFile)?if_exists}</@ofbizContentUrl>" type="text/css"/>
+        
+        <#assign primaryHTMLField=page.primaryHTMLField?if_exists/>
+        <#if (dynamicPrimaryHTMLField?exists)>
+          <#assign primaryHTMLField=dynamicPrimaryHTMLField/>
+        </#if>
+        <#assign secondaryHTMLField=page.secondaryHTMLField?if_exists/>
+        <#if (primaryHTMLField?exists && (primaryHTMLField?length > 0))>
+            <script type="text/javascript" language="javascript"> 
+              _editor_url = "/content/images/htmlarea/"; // omit the final slash
+            </script> 
+        
+            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/htmlarea.js</@ofbizContentUrl>" type="text/javascript"/>
+            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/lang/en.js</@ofbizContentUrl>" type="text/javascript"/>
+            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/dialog.js</@ofbizContentUrl>" type="text/javascript"/>
+            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/popupwin.js</@ofbizContentUrl>" type="text/javascript"/>
+            <style type="text/css">
+                @import url(<@ofbizContentUrl>/content/images/htmlarea/htmlarea.css</@ofbizContentUrl>);
+                textarea { background-color: #fff; border: 1px solid 00f; }
+            </style>
+        
+            <script type="text/javascript">
+                var editor = null;
+                var summary = null;
+                function init_all() {
+                    primaryHTMLArea = new HTMLArea("${primaryHTMLField}"); primaryHTMLArea.generate();
+                    <#if secondaryHTMLField?exists>
+                        secondaryHTMLArea = new HTMLArea("${secondaryHTMLField}"); secondaryHTMLArea.generate();
+                    </#if>
+                }
+            </script>
+        </#if>
     </#if>
 </head>
 
-<body class="ecbody">
+<body class="ecbody" <#if includeHtmlArea>onLoad="init_all()"</#if>>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="headerboxoutside">
   <tr>
