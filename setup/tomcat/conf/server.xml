@@ -265,6 +265,9 @@
              If security manager is enabled, you'll have read perms.
              in the webapps dir and read/write in the workdir.
          -->
+        <Context path="/webtools" docBase="../ofbiz/webtools/webapp"
+                 debug="2" reloadable="true" trusted="false" >
+        </Context>
         <Context path="/commonapp" docBase="../ofbiz/commonapp/webapp"
                  debug="2" reloadable="true" trusted="false" >
         </Context>
@@ -281,6 +284,9 @@
                  debug="2" reloadable="true" trusted="false">
         </Context>
         <Context path="/ordermgr" docBase="../ofbiz/ordermgr/webapp"
+                 debug="2" reloadable="true" trusted="false">
+        </Context>
+        <Context path="/workeffort" docBase="../ofbiz/workeffort/webapp"
                  debug="2" reloadable="true" trusted="false">
         </Context>
 <!--      
