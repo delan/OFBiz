@@ -27,7 +27,6 @@ package org.ofbiz.pos.component;
 import net.xoetrope.swing.XEdit;
 
 import org.ofbiz.pos.screen.PosScreen;
-import org.ofbiz.base.util.Debug;
 
 /**
  * 
@@ -66,7 +65,6 @@ public class Output {
     }
 
     public void print(String message) {
-        Debug.log("Setting the output message - " + message, module);
         this.output.setText(message);
     }
 

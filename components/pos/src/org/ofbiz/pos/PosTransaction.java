@@ -147,10 +147,7 @@ public class PosTransaction {
 
     public double getTotalDue() {
         double grandTotal = this.getGrandTotal();
-        double paymentAmt = this.getPaymentTotal();
-        Debug.log("GT - " + grandTotal, module);
-        Debug.log("PT - " + paymentAmt, module);
-        Debug.log("-- - " + (grandTotal - paymentAmt), module);
+        double paymentAmt = this.getPaymentTotal();       
         return (grandTotal - paymentAmt);
     }
 
