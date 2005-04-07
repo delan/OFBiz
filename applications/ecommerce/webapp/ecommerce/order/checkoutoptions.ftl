@@ -19,6 +19,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Rev$
  *@since      2.1
@@ -95,7 +96,7 @@ function toggleBillingAccount(box) {
   <input type="hidden" name="checkoutpage" value="quick">
   <input type="hidden" name="DONE_PAGE" value="quickcheckout">
   <input type="hidden" name="BACK_PAGE" value="quickcheckout">
-  <table width="100%" border="1" cellpadding='0' cellspacing='0'>
+  <table width="100%" border="0" cellpadding='0' cellspacing='0'>
     <tr valign="top" align="left">
       <td height='100%'>
         <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
