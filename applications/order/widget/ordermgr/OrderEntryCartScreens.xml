@@ -76,6 +76,11 @@
                 <decorator-screen name="CommonOrderEntryDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/showcart.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/promoCodes.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/promoText.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/associatedProducts.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/associatedProducts.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/promotionsApplied.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
