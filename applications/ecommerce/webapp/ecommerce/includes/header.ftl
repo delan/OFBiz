@@ -24,13 +24,12 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#assign includeHtmlArea=false>
+<#assign includeHtmlArea=false/>
 <#if "Y"=page.includeHtmlArea?if_exists><#assign includeHtmlArea=true/></#if>
-
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html> -->
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>${(productStore.storeName)?if_exists}: ${page.title?if_exists}</title>
