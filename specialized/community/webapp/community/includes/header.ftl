@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="/static/uscss.css" type="text/css">
 
     <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
+    <script language='javascript' src='<@ofbizContentUrl>/images/fieldlookup.js</@ofbizContentUrl>' type='text/javascript'></script>
     <script language='javascript' src='<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>' type='text/javascript'></script>
     <script language="javascript" src="<@ofbizContentUrl>/images/fieldlookup.js</@ofbizContentUrl>" type="text/javascript"></script>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
