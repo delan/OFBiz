@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -26,7 +26,6 @@
 
 <#if getUsername>
 <script language="JavaScript">
- <!--
      lastFocusedName = null;
      function setLastFocused(formElement) {
          lastFocusedName = formElement.name;
@@ -56,12 +55,10 @@
              // document.forms["newuserform"].elements["USERNAME"].disabled=false;
          }
      }
- //-->
 </script>
 </#if>
 
 <p class="head1">${uiLabelMap.PartyRequestNewAccount}</p>
-<br/>
 <p class='tabletext'>${uiLabelMap.PartyAlreadyHaveAccount}, <a href='<@ofbizUrl>/checkLogin/main</@ofbizUrl>' class='buttontext'>${uiLabelMap.CommonLoginHere}</a>.</p>
 
 <#macro fieldErrors fieldName>
@@ -85,25 +82,15 @@
   </#if>
 </#macro>
 
-<form method="post" action="<@ofbizUrl>/createcustomer${previousParams}</@ofbizUrl>" name="newuserform" style='margin:0;'>
+<form method="post" action="<@ofbizUrl>/createcustomer${previousParams}</@ofbizUrl>" name="newuserform" style="margin: 0;">
 <input type="hidden" name="productStoreId" value="${productStoreId}">
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class='boxhead'>&nbsp;${uiLabelMap.PartyNameAndShippingAddress}</div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
+
+<div class="ecom-screenlet">
+    <div class="ecom-screenlet-header">
+        <div class='boxhead'>&nbsp;${uiLabelMap.PartyNameAndShippingAddress}</div>
+    </div>
+    <div class="ecom-screenlet-body">
+
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.CommonTitle}</div></td>
@@ -199,32 +186,16 @@
     </td>
   </tr>
 </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
 
-<br/>
+    </div>
+</div>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class='boxhead'>&nbsp;${uiLabelMap.PartyPhoneNumbers}</div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
+<div class="ecom-screenlet">
+    <div class="ecom-screenlet-header">
+        <div class='boxhead'>&nbsp;${uiLabelMap.PartyPhoneNumbers}</div>
+    </div>
+    <div class="ecom-screenlet-body">
+
 <table width="100%">
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyAllPhoneNumbers}:</div></td>
@@ -289,45 +260,28 @@
     </td>
   </tr>
 </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
 
-<br/>
+    </div>
+</div>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class='boxhead'>&nbsp;${uiLabelMap.PartyEmailAddress}</div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-<table width="100%">
-  <tr>
-    <td width="26%"><div class="tabletext">${uiLabelMap.PartyEmailAddress}<BR>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
-    <td width="74%">
-      <@fieldErrors fieldName="CUSTOMER_EMAIL"/>
-        <input type="text" class='inputBox' name="CUSTOMER_EMAIL" value="${requestParameters.CUSTOMER_EMAIL?if_exists}" size="60" maxlength="255" onChange="changeEmail()" onkeyup="changeEmail()"> *
-        <br/>
-        <select name="CUSTOMER_EMAIL_ALLOW_SOL" class='selectBox'>
-          <option>${requestParameters.CUSTOMER_EMAIL_ALLOW_SOL?default("Y")}</option>
-          <option></option><option>Y</option><option>N</option>
-        </select>
-    </td>
-  </tr>
+<div class="ecom-screenlet">
+    <div class="ecom-screenlet-header">
+        <div class='boxhead'>&nbsp;${uiLabelMap.PartyEmailAddress}</div>
+    </div>
+    <div class="ecom-screenlet-body">
+        <div class="form-row">
+            <div class="form-label"><div class="tabletext">${uiLabelMap.PartyEmailAddress}</div><div class="tabletext">(${uiLabelMap.PartyAllowSolicitation}?)</div></div>
+            <div class="form-field">
+                <@fieldErrors fieldName="CUSTOMER_EMAIL"/>
+                <div class="tabletext"><input type="text" class='inputBox' name="CUSTOMER_EMAIL" value="${requestParameters.CUSTOMER_EMAIL?if_exists}" size="60" maxlength="255" onChange="changeEmail()" onkeyup="changeEmail()"> *</div>
+                <div class="tabletext">
+                    <select name="CUSTOMER_EMAIL_ALLOW_SOL" class='selectBox'>
+                        <option>${requestParameters.CUSTOMER_EMAIL_ALLOW_SOL?default("Y")}</option>
+                        <option></option><option>Y</option><option>N</option>
+                    </select>
+                </div>
+            </div>
+        </div>
 <#--
   <tr>
     <td width="26%">
@@ -338,95 +292,67 @@
     </td>
   </tr>
 -->
-</table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
+        <div class="ecom-endcolumns">&nbsp;</div>
+    </div>
+</div>
 
-<br/>
+<div class="ecom-screenlet">
+    <div class="ecom-screenlet-header">
+        <div class='boxhead'>&nbsp;<#if getUsername>${uiLabelMap.CommonUsername} & </#if>${uiLabelMap.CommonPassword}</div>
+    </div>
+    <div class="ecom-screenlet-body">
+        <#if getUsername>
+            <div class="form-row">
+                <div class="form-label"><span class="tabletext">${uiLabelMap.CommonUsername}</span></div>
+                <div class="form-field">
+                    <@fieldErrors fieldName="USERNAME"/>
+                    <div class="tabletext">Use Email Address: <input type="CHECKBOX" name="UNUSEEMAIL" value="on" onClick="setEmailUsername();" onFocus="setLastFocused(this);"/></div>
+                    <div class="tabletext"><input type="text" class='inputBox' name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20" maxlength="50" onFocus="clickUsername();" onChange="changeEmail();"/> *</div>
+                </div>
+            </div>
+        </#if>
+        <#if createAllowPassword>
+            <div class="form-row">
+                <div class="form-label"><span class="tabletext">${uiLabelMap.CommonPassword}</span></div>
+                <div class="form-field">
+                    <@fieldErrors fieldName="PASSWORD"/>
+                    <div class="tabletext"><input type="password" class='inputBox' name="PASSWORD" value="" size="20" maxlength="50" onFocus="setLastFocused(this);"/> *</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label"><span class="tabletext">${uiLabelMap.PartyRepeatPassword}</span></div>
+                <div class="form-field">
+                    <@fieldErrors fieldName="CONFIRM_PASSWORD"/>
+                    <div class="tabletext"><input type="password" class='inputBox' name="CONFIRM_PASSWORD" value="" size="20" maxlength="50"/> *</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label"><span class="tabletext">${uiLabelMap.PartyPasswordHint}</span></div>
+                <div class="form-field">
+                    <@fieldErrors fieldName="PASSWORD_HINT"/>
+                    <div class="tabletext"><input type="text" class='inputBox' name="PASSWORD_HINT" value="${requestParameters.PASSWORD_HINT?if_exists}" size="40" maxlength="100"/></div>
+                </div>
+            </div>
+        <#else/>
+            <div class="form-row">
+                <div class="form-label">${uiLabelMap.CommonPassword}</div>
+                <div class="form-field">
+                    <div class="tabletext">${uiLabelMap.PartyRecievePasswordByEmail}.</div>
+                </div>
+            </div>
+        </#if>
+        <div class="ecom-endcolumns">&nbsp;</div>
+    </div>
+</div>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class='boxhead'>&nbsp;<#if getUsername>${uiLabelMap.CommonUsername} & </#if>${uiLabelMap.CommonPassword}</div>
-          </td>          
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-  <table width="100%" border="0" cellpadding="2" cellspacing="0">
-    <#if getUsername>
-    <tr>
-      <td width="26%"><div class="tabletext">${uiLabelMap.CommonUsername}</div></td>
-      <td width="74%">
-        <@fieldErrors fieldName="USERNAME"/>
-        <div class="tabletext">Use Email Address: <input type="CHECKBOX" name="UNUSEEMAIL" value="on" onClick="setEmailUsername();" onFocus="setLastFocused(this);"/></div>
-        <div><input type="text" class='inputBox' name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20" maxlength="50" onFocus="clickUsername();" onChange="changeEmail();"/> *</div>
-     </td>
-    </tr>
-    </#if>
-    <#if createAllowPassword>
-      <tr>
-        <td width="26%">
-          <div class="tabletext">${uiLabelMap.CommonPassword}</div>
-        </td>
-        <td width="74%">
-          <@fieldErrors fieldName="PASSWORD"/>
-          <input type="password" class='inputBox' name="PASSWORD" value="" size="20" maxlength="50" onFocus="setLastFocused(this);">
-        * </td>
-      </tr>
-      <tr>
-        <td width="26%">
-          <div class="tabletext">${uiLabelMap.PartyRepeatPassword}</div>
-        </td>
-        <td width="74%">
-          <@fieldErrors fieldName="CONFIRM_PASSWORD"/>
-          <input type="password" class='inputBox' name="CONFIRM_PASSWORD" value="" size="20" maxlength="50">
-        * </td>
-      </tr>
-      <tr>
-        <td width="26%">
-          <div class="tabletext">${uiLabelMap.PartyPasswordHint}</div>
-        </td>
-        <td width="74%">
-          <@fieldErrors fieldName="PASSWORD_HINT"/>
-          <input type="text" class='inputBox' name="PASSWORD_HINT" value="${requestParameters.PASSWORD_HINT?if_exists}" size="40" maxlength="100">
-        </td>
-      </tr>
-    <#else>
-      <tr>
-        <td width="26%">
-          <div class="tabletext">${uiLabelMap.CommonPassword}</div>
-        </td>
-        <td>
-         <div class="commentary">${uiLabelMap.PartyRecievePasswordByEmail}.</div>
-        </td>
-      </tr>
-    </#if>
-  </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
 <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.newuserform.submit();">
 </form>
 
-<br/><div class="commentary">${uiLabelMap.CommonFieldsMarkedAreRequired}</div>
+<div class="tabletext">${uiLabelMap.CommonFieldsMarkedAreRequired}</div>
 
+<div>
 &nbsp;&nbsp;<a href="<@ofbizUrl>/checkLogin/main</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
 &nbsp;&nbsp;<a href="javascript:document.newuserform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
-<br/>
+</div>
+
 <br/>

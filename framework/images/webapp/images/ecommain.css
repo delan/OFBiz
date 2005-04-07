@@ -65,6 +65,7 @@ margin-right: 211px;
 
 DIV.ecom-endcolumns {
   clear: both;
+  font-size: 4pt;
 }  
 
 /* ====== eCommerce "Screenlet" Styles ====== */
@@ -111,6 +112,24 @@ font-weight: bold;
 text-decoration: none;
 color: red;
 }
+
+/* Form layout styles to simulate a table-style layout */
+div.form-row {
+clear: both;
+padding-top: 2px;
+}
+div.form-label {
+float: left;
+width: 180px;
+text-align: right;
+padding-top: 5px;
+}
+div.form-field {
+float: left;
+margin-left: 10px;
+text-align: left;
+} 
+
 
 /* ===== General Styles ===== */
 BODY {
