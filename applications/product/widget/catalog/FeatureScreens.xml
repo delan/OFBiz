@@ -67,15 +67,18 @@
                 <set field="titleProperty" value="PageTitleEditFeature"/>
                 <set field="headerItem" value="featurecats"/>
     
-                <set field="productFeatureId" from-field="parameters.productFeatureId"/>
-                <entity-one entity-name="ProductFeature" value-name="feature"/>
-                <script location="component://product/webapp/catalog/WEB-INF/actions/feature/EditFeature.bsh"/>
+                <entity-one entity-name="ProductFeature" value-name="productFeature" auto-field-map="true"/>
+                <!--<script location="component://product/webapp/catalog/WEB-INF/actions/feature/EditFeature.bsh"/>-->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/feature/EditSupplierFeature.bsh"/>
             </actions>
             <widgets>
                 <!--<decorator-screen name="main-decorator" location="component://product/widget/catalog/CommonScreens.xml">-->
                 <decorator-screen name="CommonFeatureDecorator">
                     <decorator-section name="body">
+                        <container>
+                            <label style="head1">${uiLabelMap.ProductEditFeature} : ${productFeature.description}</label>
+                        </container>
+                        <include-form name="EditProductFeature" location="component://product/webapp/catalog/feature/FeatureForms.xml"/>
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/feature/EditFeature.ftl"/></html>
                         </platform-specific>
