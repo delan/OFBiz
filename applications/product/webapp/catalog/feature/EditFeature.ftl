@@ -25,11 +25,6 @@
  *@since      2.2
 -->
 
-<#if hasPermission>
-
-<div class="head1">${uiLabelMap.ProductEditFeature} : ${(productFeature.description)?if_exists}</div>
-
-${editProductFeatureWrapper.renderFormString()}
 <hr>
 <div class="head1">Supplier Specific Feature Information</div>
 <#if editSupplierFeaturesForm?has_content>
@@ -39,7 +34,4 @@ ${editSupplierFeaturesForm.renderFormString()}
 <div class="head2">Create information for new supplier</div>
 <#if createSupplierFeatureForm?has_content>
 ${createSupplierFeatureForm.renderFormString()}
-</#if>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
 </#if>
