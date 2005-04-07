@@ -1312,11 +1312,12 @@ public class ProductionRunServices {
             String timeEntryId = delegator.getNextSeqId("TimeEntry");
             Map timeEntryFields = UtilMisc.toMap("timeEntryId", timeEntryId,
                                                  "workEffortId", workEffortId);
+            Double totalTime = new Double(addSetupTime.doubleValue() + addTaskTime.doubleValue());
             timeEntryFields.put("partyId", partyId);
             timeEntryFields.put("roleTypeId", "WORKER"); // FIXME
             timeEntryFields.put("fromDatetime", fromDate);
             timeEntryFields.put("thruDatetime", toDate);
-            timeEntryFields.put("hours", addTaskTime); // FIXME
+            timeEntryFields.put("hours", totalTime); // FIXME
             //timeEntryFields.put("setupTime", addSetupTime); // FIXME
             //timeEntryFields.put("quantityProduced", addQuantityProduced); // FIXME
             //timeEntryFields.put("quantityRejected", addQuantityRejected); // FIXME
