@@ -36,7 +36,7 @@
 <br/>
 
 <div>
-  <div style="float: left; width: 48%; margin-right: 5px; text-align: center;">
+  <div style="float: left; width: 49%; margin-right: 5px; text-align: center;">
     <div class="ecom-screenlet">
         <div class="ecom-screenlet-header">
             <div class="boxhead">${uiLabelMap.CommonRegistred}</div>
@@ -76,7 +76,7 @@
     </div>
 
   </div>
-  <div style="float: right; width: 48%; margin-left: 5px; text-align: center;">
+  <div style="float: right; width: 49%; margin-left: 5px; text-align: center;">
 
     <div class="ecom-screenlet">
         <div class="ecom-screenlet-header">
@@ -104,7 +104,7 @@
     </div>
     </#if>
   </div>
-  <div style="clear: both;"/>
+  <div class="ecom-endcolumns">&nbsp;</div>
 <div>
 
 <script language="JavaScript">
