@@ -29,7 +29,6 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.party.PartyWorker;
 import org.ofbiz.product.catalog.CatalogWorker;
-import org.ofbiz.order.shoppingcart.product.ProductDisplayWorker;
 
 delegator = request.getAttribute("delegator");
 security = request.getAttribute("security");
@@ -50,12 +49,6 @@ mode = shoppingCart.getOrderType();
 allgiftWraps = delegator.findByAnd("ProductFeature", UtilMisc.toMap("productFeatureTypeId", "GIFT_WRAP"), UtilMisc.toList("defaultSequenceNum"));
 context.put("allgiftWraps", allgiftWraps);
 
-if (mode != null && mode.equals("SALES_ORDER")) {
-    // Get Cart Associated Products Data
-    associatedProducts = ProductDisplayWorker.getRandomCartProductAssoc(request, true);
-    if (associatedProducts != null) 
-        context.put("associatedProducts", associatedProducts);
-}
 context.put("contentPathPrefix", CatalogWorker.getContentPathPrefix(request));
 
 // get productCategory list
@@ -66,18 +59,6 @@ partyId = shoppingCart.getPartyId();
 if (partyId != null && partyId.equals("_NA_")) partyId = null;
 context.put("partyId", partyId);  
 
-/*
-if (partyId != null) {
-    partyMap = PartyWorker.getPartyOtherValues(request, partyId, "party", "person", "partyGroup");
-    if (partyMap != null) {
-        iter = partyMap.entrySet().iterator();
-        while (iter.hasNext()) {
-            entry = iter.next();
-            context.put(entry.getKey(), entry.getValue());
-        }
-    }
-}
-*/
 defaultDesiredDeliveryDate = shoppingCart.getDefaultItemDeliveryDate();
 if (UtilValidate.isEmpty(defaultDesiredDeliveryDate)) {
     defaultDesiredDeliveryDate = (new java.sql.Date(System.currentTimeMillis())).toString();

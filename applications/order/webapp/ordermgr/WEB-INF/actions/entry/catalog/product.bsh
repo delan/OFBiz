@@ -85,8 +85,8 @@ if (productId != null) {
         context.put("metaKeywords", StringUtil.join(keywords, ", "));
           
         // Set the default template for aggregated product (product component configurator ui)
-        if (product.getString("productTypeId") != null && product.getString("productTypeId").equals("AGGREGATED")) {
-            detailScreen = "component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#configproductdetail";
+        if (product.getString("productTypeId") != null && product.getString("productTypeId").equals("AGGREGATED") && configproductdetailScreen != null) {
+            detailScreen = configproductdetailScreen;
         }
 
         productTemplate = product.getString("detailScreen");
