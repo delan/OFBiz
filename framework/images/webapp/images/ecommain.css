@@ -1,6 +1,26 @@
 
-/* ===== eCommerce specific styles ===== */
+/* ===== This file contains the eCommerce specific styles ===== */
 
+/* ===== Basic Element Styles ===== */
+BODY {
+background-color: #FFFFFF;
+margin-top: 10px;
+margin-right: 10px;
+margin-bottom: 10px;
+margin-left: 10px;
+}
+
+FORM {
+margin: 0px;
+}
+
+UL {
+margin-top: 0; 
+margin-bottom: 0;
+}
+
+
+/* ===== Layout/Formatting Styles ===== */
 DIV.ecom-header {
 background: #ffffff;
 height: 100px;
@@ -114,39 +134,50 @@ color: red;
 }
 
 /* Form layout styles to simulate a table-style layout */
-div.form-row {
+div.ecom-form-row {
 clear: both;
 padding-top: 2px;
 }
-div.form-label {
+div.ecom-form-label {
 float: left;
 width: 180px;
 text-align: right;
 padding-top: 5px;
 }
-div.form-field {
+div.ecom-form-field {
 float: left;
 margin-left: 10px;
 text-align: left;
 } 
 
-
-/* ===== General Styles ===== */
-BODY {
-background-color: #FFFFFF;
-margin-top: 10px;
-margin-right: 10px;
-margin-bottom: 10px;
-margin-left: 10px;
+/* ===== Text/Label Styles ===== */
+.tabletext, div.ecom-form-label, div.ecom-form-field {
+font-size: 10px;
+text-decoration: none;
+font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
-FORM {
-margin: 0px;
+A.tabletext:hover {
+font-size: 10px;
+text-decoration: underline;
+font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
-UL {
-margin-top: 0; 
-margin-bottom: 0;
+.tablebuttontext {
+font-size: 10px;
+color: #1E3C66;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.contenttext {
+font-size: 8pt;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+DIV.tabletexthidden {
+font-size: 10px;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+visibility: hidden;
 }
 
 .head1 {
@@ -192,37 +223,6 @@ margin: 2 auto;
 width: auto;
 padding: 4;
 }
-
-DIV.tabletexthidden {
-font-size: 10px;
-font-family: Verdana, Arial, Helvetica, sans-serif;
-visibility: hidden;
-}
-
-A.tabletext, DIV.tabletext, SPAN.tabletext, P.tabletext, .tabletext {
-font-size: 10px;
-text-decoration: none;
-font-family: Verdana, Arial, Helvetica, sans-serif;
-}
-
-A.tabletext:hover {
-font-size: 10px;
-text-decoration: underline;
-font-family: Verdana, Arial, Helvetica, sans-serif;
-}
-
-.tablebuttontext {
-font-size: 10px;
-color: #1E3C66;
-font-family: Verdana, Arial, Helvetica, sans-serif;
-}
-
-.contenttext {
-font-size: 8pt;
-font-family: Verdana, Arial, Helvetica, sans-serif;
-}
-
-
 
 .headerboxoutside {
 background-color: #FFFFFF;
