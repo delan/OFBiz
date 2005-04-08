@@ -259,8 +259,8 @@ public class ProductionRun {
                 GenericValue routingTask = (GenericValue) iter.next();
                 if (priority.compareTo(routingTask.getLong("priority")) <= 0){
                     // Calculate the estimatedCompletionDate
-                    long duringTime = (long)(routingTask.getDouble("estimatedSetupMillis").doubleValue() + (routingTask.getDouble("estimatedMilliSeconds").doubleValue() * quantity.doubleValue()));
-                    endDate = TechDataServices.addForward(TechDataServices.getTechDataCalendar(routingTask),startDate, duringTime);
+                    long totalTime = ProductionRun.getEstimatedTaskTime(routingTask, quantity);
+                    endDate = TechDataServices.addForward(TechDataServices.getTechDataCalendar(routingTask),startDate, totalTime);
                     // update the routingTask
                     routingTask.set("estimatedStartDate",startDate);
                     routingTask.set("estimatedCompletionDate",endDate);
@@ -389,4 +389,20 @@ public class ProductionRun {
         this.productionRunRoutingTasks = null;
     }
     
+    public static long getEstimatedTaskTime(GenericValue task, Double quantity) {
+        return getEstimatedTaskTime(task, (quantity != null? quantity.doubleValue(): 1));
+    }
+    public static long getEstimatedTaskTime(GenericValue task, double quantity) {
+        if (task == null) return 0;
+        double setupTime = 0;
+        double taskTime = 1;
+        if (task.get("estimatedSetupMillis") != null) {
+            setupTime = task.getDouble("estimatedSetupMillis").doubleValue();
+        }
+        if (task.get("estimatedMilliSeconds") != null) {
+            taskTime = task.getDouble("estimatedMilliSeconds").doubleValue();
+        }
+        return (long)(setupTime + taskTime * quantity);
+    }
+
 }

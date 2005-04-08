@@ -35,6 +35,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.manufacturing.jobshopmgt.ProductionRun;
 import org.ofbiz.manufacturing.techdata.ProductHelper;
 import org.ofbiz.manufacturing.techdata.TechDataServices;
 import org.ofbiz.service.DispatchContext;
@@ -128,8 +129,8 @@ public class ProposedOrder {
                             Debug.logError(e.getMessage(),  module);
                         }
                         // Calculate the estimatedStartDate
-                        long duringTime = (long)  (routingTask.getDouble("estimatedSetupMillis").doubleValue() + (routingTask.getDouble("estimatedMilliSeconds").doubleValue() * quantity));
-                        startDate = TechDataServices.addBackward(TechDataServices.getTechDataCalendar(routingTask),endDate, duringTime);
+                        long totalTime = ProductionRun.getEstimatedTaskTime(routingTask, quantity);
+                        startDate = TechDataServices.addBackward(TechDataServices.getTechDataCalendar(routingTask),endDate, totalTime);
                         // record the routingTask with the startDate associated
                         result.put(routingTask.getString("workEffortId"),startDate);
                         endDate = startDate;
