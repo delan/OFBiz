@@ -413,6 +413,19 @@ public class ShoppingCartHelper {
                         quantity = 0;
                     }
                     if (quantity > 0.0) {
+                        Iterator items = this.cart.iterator();
+                        boolean requirementAlreadyInCart = false;
+                        while (items.hasNext() && !requirementAlreadyInCart) {
+                            ShoppingCartItem sci = (ShoppingCartItem)items.next();
+                            if (sci.getRequirementId() != null && sci.getRequirementId().equals(requirementId)) {
+                                requirementAlreadyInCart = true;
+                                continue;
+                            }
+                        }
+                        if (requirementAlreadyInCart) {
+                            if (Debug.warningOn()) Debug.logWarning("The requirement [" + requirementId + "] is already in the cart, not adding.", module);
+                            continue;
+                        }
                         try {
                             if (Debug.verboseOn()) Debug.logVerbose("Bulk Adding to cart requirement [" + quantity + "] of [" + productId + "]", module);
                             int index = this.cart.addOrIncreaseItem(productId, 0.00, quantity, null, null, catalogId, dispatcher);
