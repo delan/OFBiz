@@ -249,10 +249,8 @@ public class ProductionRunServices {
                     Debug.logError(e.getMessage(),  module);
                 }
                 // Calculate the estimatedCompletionDate
-                double setupTime = (routingTask.getDouble("estimatedSetupMillis") != null? routingTask.getDouble("estimatedSetupMillis").doubleValue(): 0);
-                double taskTime = (routingTask.getDouble("estimatedMilliSeconds") != null? routingTask.getDouble("estimatedMilliSeconds").doubleValue(): 1);
-                long duringTime = (long)  (setupTime + (taskTime * pRQuantity.doubleValue()));
-                Timestamp endDate = TechDataServices.addForward(TechDataServices.getTechDataCalendar(routingTask),startDate, duringTime);
+                long totalTime = ProductionRun.getEstimatedTaskTime(routingTask, pRQuantity);
+                Timestamp endDate = TechDataServices.addForward(TechDataServices.getTechDataCalendar(routingTask),startDate, totalTime);
                 
                 serviceContext.clear();
                 serviceContext.put("priority", routingTaskAssoc.get("sequenceNum"));
@@ -989,8 +987,8 @@ public class ProductionRunServices {
         }
         if (estimatedCompletionDate == null) {
             // Calculate the estimatedCompletionDate
-            long duringTime = (long)(estimatedSetupMillis.doubleValue() + (estimatedMilliSeconds.doubleValue() * pRQuantity.doubleValue()));
-            estimatedCompletionDate = TechDataServices.addForward(TechDataServices.getTechDataCalendar(routingTask), estimatedStartDate, duringTime);
+            long totalTime = ProductionRun.getEstimatedTaskTime(routingTask, pRQuantity);
+            estimatedCompletionDate = TechDataServices.addForward(TechDataServices.getTechDataCalendar(routingTask), estimatedStartDate, totalTime);
         }
         Map serviceContext = new HashMap();
         serviceContext.clear();
