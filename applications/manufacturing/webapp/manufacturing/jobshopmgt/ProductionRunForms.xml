@@ -111,16 +111,15 @@
         <actions>
             <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
         </actions>
-        <field name="actionForm"><hidden value="EditRoutingTask"/></field>
-        <field name="productionRunId"><hidden value="${workEffortParentId}"/></field>
-        <field name="routingTaskId"><hidden value="${workEffortId}"/></field>
         <field name="priority" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
         <field name="workEffortId"  title="${uiLabelMap.ManufacturingTaskName}"><display description="${workEffortName} [${workEffortId}]" /></field>
         <field name="estimatedStartDate"  title="${uiLabelMap.ManufacturingStartDate}"><display/></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.ManufacturingEstimatedCompletionDate}"><display/></field>
         <field name="estimatedSetupMillis" title="${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}" ><display/></field>
         <field name="estimatedMilliSeconds" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}" ><display/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSelected}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+        <field name="editLink" title="&amp;nbsp;" widget-style="smallSubmit">
+            <hyperlink target="EditProductionRun?actionForm=EditRoutingTask&amp;routingTaskId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="[${uiLabelMap.CommonEdit}]" also-hidden="false"/>
+        </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="smallSubmit">
             <!--<hyperlink target="RemoveRoutingTaskAssoc?workEffortIdFrom=${workEffortIdFrom}&amp;workEffortIdTo=${workEffortIdTo}&amp;fromDate=${fromDate}&amp;workEffortAssocTypeId=ROUTING_COMPONENT" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>-->
             <hyperlink target="deleteProductionRunRoutingTask?workEffortId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
@@ -133,9 +132,6 @@
         <actions>
             <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
         </actions>
-        <field name="actionForm"><hidden value="EditProductComponent"/></field>
-        <field name="productionRunId"><hidden/></field>
-        <field name="productId" ><hidden/></field>
         <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingTaskId}">
             <display description="${workEffortName} [${workEffortId}]"/>
         </field>
@@ -143,7 +139,9 @@
             <display description="${productName} [${productId}]"/>
         </field> 
         <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><display/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSelected}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+        <field name="editLink" title="&amp;nbsp;" widget-style="smallSubmit">
+            <hyperlink target="EditProductionRun?actionForm=EditProductComponent&amp;workEffortId=${workEffortId}&amp;productId=${productId}&amp;productionRunId=${productionRunId}" description="[${uiLabelMap.CommonEdit}]" also-hidden="false"/>
+        </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="smallSubmit">
             <!--<hyperlink target="RemoveWorkEffortGoodStandard?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>-->
             <hyperlink target="deleteProductionRunComponent?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}&amp;productionRunId=${productionRunId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
