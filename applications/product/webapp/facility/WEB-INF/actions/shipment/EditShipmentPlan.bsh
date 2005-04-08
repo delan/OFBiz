@@ -285,6 +285,9 @@ addToShipmentPlanForm.putInContext("shipmentPlan", addRows);
 HtmlFormWrapper findOrderItemsForm = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "findOrderItems", request, response);
 findOrderItemsForm.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 findOrderItemsForm.putInContext("shipmentId", shipmentId);
+if (shipment != null && shipment.get("primaryOrderId") != null) {
+    findOrderItemsForm.putInContext("orderId", shipment.getString("primaryOrderId"));
+}
 
 HtmlFormWrapper shipmentPlanToOrderItemsForm = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "shipmentPlanToOrderItems", request, response);
 shipmentPlanToOrderItemsForm.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
