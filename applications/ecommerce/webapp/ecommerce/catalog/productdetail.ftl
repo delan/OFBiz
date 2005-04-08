@@ -563,21 +563,21 @@ ${virtualJavaScript?if_exists}
 <#assign listIndex = 1>
 ${setRequestAttribute("productValue", productValue)}
 
-<table>
-  <#-- obsolete -->
-  <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
-  <#-- cross sell -->
-  <@associated assocProducts=crossSellProducts beforeName="" showName="N" afterName="You might be interested in these as well:" formNamePrefix="cssl" targetRequestName="crosssell"/>
-  <#-- up sell -->
-  <@associated assocProducts=upSellProducts beforeName="Try these instead of " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell"/>
-  <#-- obsolescence -->
-  <@associated assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:" formNamePrefix="obce" targetRequestName=""/>
-</table>
+<div id="associated-products">
+    <#-- obsolete -->
+    <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
+    <#-- cross sell -->
+    <@associated assocProducts=crossSellProducts beforeName="" showName="N" afterName="You might be interested in these as well:" formNamePrefix="cssl" targetRequestName="crosssell"/>
+    <#-- up sell -->
+    <@associated assocProducts=upSellProducts beforeName="Try these instead of " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell"/>
+    <#-- obsolescence -->
+    <@associated assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:" formNamePrefix="obce" targetRequestName=""/>
+</div>
 
 <#-- special cross/up-sell area using commonFeatureResultIds (from common feature product search) -->
 <#if commonFeatureResultIds?has_content>
   <div class="head2">Similar Products That Might Interest You...</div>
-  <hr class="sepbar"/>
+  <div><hr class="sepbar"/></div>
 
   <#list commonFeatureResultIds as commonFeatureResultId>
     <div class="tabletext">
@@ -588,7 +588,7 @@ ${setRequestAttribute("productValue", productValue)}
       ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
     </div>
     <#if commonFeatureResultId_has_next>
-      <hr class="sepbar"/>
+        <div><hr class="sepbar"/></div>
     </#if>
   </#list>
 </#if>
