@@ -79,7 +79,6 @@
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/promoCodes.ftl"/></html></platform-specific>
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/promoText.ftl"/></html></platform-specific>
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/associatedProducts.ftl"/></html></platform-specific>
-                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/associatedProducts.ftl"/></html></platform-specific>
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/promotionsApplied.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
