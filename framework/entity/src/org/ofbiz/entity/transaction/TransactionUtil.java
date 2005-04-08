@@ -78,7 +78,7 @@ public class TransactionUtil implements Status {
      * If and on only if it begins a transaction it will return true. In other words, if
      * a transaction is already in place it will return false and do nothing.
      */   
-    public static boolean begin(int timeout) throws GenericTransactionException {
+    public static synchronized boolean begin(int timeout) throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
         if (ut != null) {
             try {
@@ -99,7 +99,7 @@ public class TransactionUtil implements Status {
                 }
                 
                 // set the timeout for THIS transaction
-                if (timeout > 0) {                    
+                if (timeout > 0) {
                     ut.setTransactionTimeout(timeout);
                     Debug.logVerbose("[TransactionUtil.begin] set transaction timeout to : " + timeout + " seconds", module);    
                 }
@@ -107,6 +107,11 @@ public class TransactionUtil implements Status {
                 // begin the transaction
                 ut.begin();
                 Debug.logVerbose("[TransactionUtil.begin] transaction begun", module);
+                
+                // reset the timeout to the default
+                if (timeout > 0) {
+                    ut.setTransactionTimeout(0);
+                }
                 
                 // reset the transaction stamps, just in case...
                 clearTransactionStamps();
