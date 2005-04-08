@@ -92,6 +92,8 @@ public class UtilJ2eeCompat {
                 Debug.logImportant("Jetty detected, using response.getWriter to write text out instead of response.getOutputStream", module);
                 usestream = false;
             } else if (serverInfo.indexOf(ORION) >= 0) {
+                Debug.logImportant("Orion detected, using response.getWriter to write text out instead of response.getOutputStream", module);
+                usestream = false;
                 Debug.logImportant("Orion detected, using non-nested JspException", module);
                 nestjspexception = false;
             } else if (serverInfo.indexOf(WEBSPHERE) >= 0) {
