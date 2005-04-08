@@ -47,15 +47,16 @@ Collection quickAddCategories = CatalogWorker.getCatalogQuickaddCategories(reque
 context.put("quickAddCats", quickAddCategories);
 context.put("categoryId", categoryId);
 
-fields = UtilMisc.toMap("productCategoryId", categoryId, "defaultViewSize", new Integer(10), 
-        "limitView", new Boolean(false), "prodCatalogId", currentCatalogId, "checkViewAllow", Boolean.TRUE);
-result = dispatcher.runSync("getProductCategoryAndLimitedMembers", fields);
-if (result != null) {
-    resultIter = result.keySet().iterator();
-    while (resultIter.hasNext()) {
-        String name = (String) resultIter.next();
-        context.put(name, result.get(name));
+if (categoryId != null) {
+    fields = UtilMisc.toMap("productCategoryId", categoryId, "defaultViewSize", new Integer(10), 
+            "limitView", new Boolean(false), "prodCatalogId", currentCatalogId, "checkViewAllow", Boolean.TRUE);
+    result = dispatcher.runSync("getProductCategoryAndLimitedMembers", fields);
+    if (result != null) {
+        resultIter = result.keySet().iterator();
+        while (resultIter.hasNext()) {
+            String name = (String) resultIter.next();
+            context.put(name, result.get(name));
+        }
     }
 }
-
 
