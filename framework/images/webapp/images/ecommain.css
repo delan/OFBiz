@@ -115,6 +115,7 @@ color: #666666;
 position: relative;
 background: #B4B0AA;
 text-align: center;
+overflow: visible;
 height: 14px;
 voice-family: "\"}\"";
 voice-family: inherit;
@@ -122,9 +123,9 @@ height: 14px;
 }
 
 #ecom-header-bar ul {
-width: auto;
 position: absolute;
 display: block;
+overflow: visible;
 list-style: none;
 background: transparent;
 vertical-align: middle;
@@ -132,12 +133,17 @@ margin: 0px;
 padding: 0px;
 }
 #ecom-header-bar ul#left-links {
+width: auto;
 top: 0;
 left: 0;
 }
 #ecom-header-bar ul#right-links {
 top: 0;
 right: 0;
+width: 50%;
+overflow: visible;
+
+/* border:1px solid #009; */
 }
 
 #ecom-header-bar ul li { 
