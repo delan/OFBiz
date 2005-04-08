@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -23,9 +23,6 @@
  *@version    $Rev$
  *@since      2.1
 -->
-
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-
 <#assign shoppingCart = sessionAttributes.shoppingCart?if_exists>
 <#if shoppingCart?has_content>
     <#assign shoppingCartSize = shoppingCart.size()>
@@ -33,20 +30,24 @@
     <#assign shoppingCartSize = 0>
 </#if>
 
-<div class='insideHeaderText'>
-<#if (shoppingCartSize > 0)>
-  ${uiLabelMap.EcommerceCartHas} <b>${shoppingCart.getTotalQuantity()}</b> ${uiLabelMap.EcommerceItem}, <b><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=shoppingCart.getCurrency()/></b>
-<#else>
-  ${uiLabelMap.EcommerceShoppingCartEmpty}</b>
-</#if>
-  &nbsp;&nbsp;
-</div>
-<div class='insideHeaderDisabled'>
-  <a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="insideHeaderLink">[${uiLabelMap.EcommerceViewCart}]</a>
-  <#if (shoppingCartSize > 0)>
-    <a href="<@ofbizUrl>/quickcheckout</@ofbizUrl>" class="insideHeaderLink">[${uiLabelMap.EcommerceCheckoutQuick}]</a>
-  <#else>
-    [${uiLabelMap.EcommerceCheckoutQuick}]
-  </#if>
-  &nbsp;&nbsp;
+<div id="microcart">
+    <div>
+        <#if (shoppingCartSize > 0)>
+            ${uiLabelMap.EcommerceCartHas} ${shoppingCart.getTotalQuantity()}
+            <#if shoppingCart.getTotalQuantity() == 1>${uiLabelMap.EcommerceItem}<#else/>${uiLabelMap.EcommerceItems}</#if>,
+            <@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=shoppingCart.getCurrency()/>
+        <#else>
+            ${uiLabelMap.EcommerceShoppingCartEmpty}
+        </#if>
+        &nbsp;&nbsp;
+    </div>
+    <div>
+      <a href="<@ofbizUrl>view/showcart</@ofbizUrl>">[${uiLabelMap.EcommerceViewCart}]</a>
+      <#if (shoppingCartSize > 0)>
+          <a href="<@ofbizUrl>quickcheckout</@ofbizUrl>">[${uiLabelMap.EcommerceCheckoutQuick}]</a>
+      <#else>
+          <span class="disabled">[${uiLabelMap.EcommerceCheckoutQuick}]</span>
+      </#if>
+      &nbsp;&nbsp;
+    </div>
 </div>
