@@ -51,8 +51,11 @@
     <form name="ListFacilityInventoryByProduct" type="list" 
             target="" title="" list-name="inventoryByProduct"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <field name="productId" widget-style="buttontext">
+        <field name="editLink" widget-style="buttontext">
             <hyperlink target="/catalog/control/EditProduct?productId=${productId}" target-type="inter-app" description="${productId}" />
+        </field>
+        <field name="productId" title="${uiLabelMap.CommonDescription}">
+            <display-entity entity-name="Product" description="${internalName}"/>
         </field>
         <field name="minimumStock"><display/></field>
         <field name="reorderQuantity"><display/></field>
