@@ -29,9 +29,6 @@
     <form name="findProductionRun" 
             default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
             target="FindProductionRun" title="" type="single">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="workEffortId" title="${uiLabelMap.ManufacturingProductionRunId}"><text-find/></field>
         <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
@@ -64,7 +61,6 @@
             list-iterator-name="listIt" paginate-target="/FindProductionRun" 
             title="" type="list">
         <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
             <set field="entityName" value="WorkEffortAndGoods"/>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
@@ -89,9 +85,6 @@
      <form name="UpdateProductionRun" type="single" 
             target="EditProductionRun" title="" default-map-name="productionRunData"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="actionForm"><hidden value="${actionForm}"/></field>
         <field name="productionRunId"><hidden/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}">
@@ -108,9 +101,6 @@
      <form name="ListProductionRunRoutingTasks" type="list" 
             target="EditProductionRun" title="" list-name="productionRunRoutingTasks"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="priority" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
         <field name="workEffortId"  title="${uiLabelMap.ManufacturingTaskName}"><display description="${workEffortName} [${workEffortId}]" /></field>
         <field name="estimatedStartDate"  title="${uiLabelMap.ManufacturingStartDate}"><display/></field>
@@ -129,9 +119,6 @@
    <form name="ListProductionRunComponents" type="list" 
             target="EditProductionRun" title="" list-name="productionRunComponentsData"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingTaskId}">
             <display description="${workEffortName} [${workEffortId}]"/>
         </field>
@@ -151,9 +138,6 @@
      <form name="EditProductionRunRoutingTask" type="single" 
             target="EditProductionRun" title="" default-map-name="routingTaskData"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="actionForm">
             <hidden value="${actionForm}"/>
         </field>
@@ -195,9 +179,6 @@
     <form name="EditProductionRunComponent" type="single" 
             target="EditProductionRun" title="" default-map-name="productComponentData"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="actionForm">
             <hidden value="${actionForm}"/>
         </field>
@@ -238,9 +219,6 @@
     <form name="ShowProductionRun" type="single" 
             target="productionRunProduce" title="" default-map-name="productionRunData"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="productionRunId"><hidden/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}">
             <display description="[${productionRunData.productId}]/${productionRunData.productName}"/>
@@ -279,9 +257,6 @@
     <form name="ListProductionRunDeclRoutingTasks" type="list" 
             target="ProductionRunDeclaration" title="" list-name="productionRunRoutingTasks"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="actionForm"><hidden value="EditRoutingTask"/></field>
         <field name="productionRunId"><hidden value="${workEffortParentId}"/></field>
         <field name="routingTaskId"><hidden value="${workEffortId}"/></field>
@@ -310,9 +285,6 @@
    <form name="ListProductionRunDeclComponents" type="list" 
             target="ProductionRunDeclaration" title="" list-name="productionRunComponentsData"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="actionForm"><hidden value="EditProductComponent"/></field>
         <field name="productionRunId"><hidden/></field>
         <field name="productId" ><hidden/></field>
@@ -329,9 +301,6 @@
      <form name="EditProductionRunDeclRoutingTask" type="single" 
             target="updateProductionRunTask" title="" default-map-name="routingTaskData"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="actionForm">
             <hidden value="${actionForm}"/>
         </field>
@@ -410,9 +379,6 @@
     <form name="listShipmentPlan" type="list" 
             target="" title="" list-name="shipmentPlan"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="orderId" title="${uiLabelMap.ProductOrderId}"><display/></field>
         <field name="orderItemSeqId" title="${uiLabelMap.ProductOrderItem}"><display/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}"><display/></field>
@@ -434,9 +400,6 @@
     <form name="listShipmentPlans" type="list" 
             target="" title="" list-name="shipmentPlans"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}"><display/></field>
         <field name="statusId" title="${uiLabelMap.ProductShipmentStatusId}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>

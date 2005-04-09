@@ -29,9 +29,6 @@
     <form name="lookupRouting" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupRouting" title="" type="single">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
 	<auto-fields-service service-name="lookupRoutingTask" default-field-type="hidden"/>
 	<field name="workEffortName"><text-find default-value="equals"/></field>
         <field name="workEffortTypeId"><hidden value="ROUTING"/></field>
@@ -48,7 +45,6 @@
         list-name="entityList" paginate-target="LookupRouting" 
         title="" type="list">
         <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
@@ -65,9 +61,6 @@
     <form name="lookupRoutingTask" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupRoutingTask" title="" type="single">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <auto-fields-service service-name="lookupRoutingTask" default-field-type="find"/>
         <field name="workEffortTypeId"><hidden value="ROU_TASK"/></field>
         <field name="fixedAssetId" >
@@ -89,7 +82,6 @@
         list-name="entityList" paginate-target="LookupRoutingTask" 
         title="" type="list">
         <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>

@@ -31,9 +31,6 @@
     <form name="FindRoutings" type="single" 
             target="FindRouting" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingId}">
             <text-find default-value="equals"/>
@@ -49,7 +46,6 @@
             title="" list-iterator-name="listIt" paginate-target="FindRouting"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
             <set field="entityName" value="WorkEffort"/>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
@@ -90,9 +86,6 @@
     <form name="FindRoutingTasks" type="single" 
             target="FindRoutingTask" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingTaskId}">
             <text-find default-value="equals"/>
@@ -115,7 +108,6 @@
             title="" list-iterator-name="listIt" paginate-target="FindRoutingTask"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
             <set field="entityName" value="WorkEffort"/>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
@@ -174,9 +166,6 @@
     <form name="ListRoutingTaskRoutings" type="list" 
             title="" list-name="allRoutings"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="workEffortIdFrom" title="${uiLabelMap.ManufacturingRouting}">
             <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="[${workEffortId}] ${workEffortName}"/>
         </field>
@@ -192,9 +181,6 @@
     <form name="ListRoutingTaskAssoc" type="list" 
             target="EditRoutingTaskAssoc" title="" list-name="allRoutingTasks"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
         <field name="workEffortIdFrom"><hidden/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
@@ -219,9 +205,6 @@
      <form name="UpdateRoutingTaskAssoc" type="single" 
             target="UpdateRoutingTaskAssoc" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
         <field name="workEffortId"><hidden value="${workEffortIdFrom}"/></field>
         <field name="workEffortIdFrom"><hidden/></field>
@@ -243,9 +226,6 @@
     <form name="EditRoutingProductLink" type="single" 
             target="UpdateRoutingProductLink" title="" default-map-name="routingProductLink"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <alt-target use-when="routingProductLink==null" target="AddRoutingProductLink"/>
         <auto-fields-entity entity-name="WorkEffortGoodStandard" default-field-type="edit"/>
         <field name="workEffortId"><hidden/></field>
@@ -265,9 +245,6 @@
    <form name="ListRoutingProductLink" type="list" 
             target="EditRoutingProductLink" title="" list-name="allRoutingProductLinks"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="productId" title="${uiLabelMap.ProductProductName}"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
