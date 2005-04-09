@@ -30,9 +30,6 @@
     <form name="FindRequirements" type="single" 
             target="FindRequirements" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
-        </actions>
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="requirementId" title="${uiLabelMap.ManufacturingRequirementId}"><text-find default-value="equals"/></field>
         <field name="requirementTypeId" title="${uiLabelMap.ManufacturingRequirementTypeId}">
@@ -61,7 +58,6 @@
             target="approveRequirements" title="" list-iterator-name="listIt" paginate-target="FindRequirements"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
-            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
             <set field="entityName" value="Requirement"/>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
