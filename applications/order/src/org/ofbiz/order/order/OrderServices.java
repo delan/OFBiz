@@ -1049,6 +1049,7 @@ public class OrderServices {
                     List products = new ArrayList(validOrderItems.size());
                     List amounts = new ArrayList(validOrderItems.size());
                     List shipAmts = new ArrayList(validOrderItems.size());
+                    List itPrices = new ArrayList(validOrderItems.size());
 
                     // adjustments and total
                     List allAdjustments = orh.getAdjustments();
@@ -1066,6 +1067,7 @@ public class OrderServices {
                             products.add(i, delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId)));  // get the product entity
                             amounts.add(i, new Double(OrderReadHelper.getOrderItemSubTotal(orderItem, allAdjustments, true, false))); // get the item amount
                             shipAmts.add(i, new Double(OrderReadHelper.getOrderItemAdjustmentsTotal(orderItem, allAdjustments, false, false, true))); // get the shipping amount
+                            itPrices.add(i, orderItem.getDouble("unitPrice"));
                         } catch (GenericEntityException e) {
                             Debug.logError(e, "Cannot read order item entity : " + orderItem, module);
                             return ServiceUtil.returnError("Cannot read the order item entity");
@@ -1099,7 +1101,8 @@ public class OrderServices {
 
                     // prepare the service context
                     Map serviceContext = UtilMisc.toMap("productStoreId", orh.getProductStoreId(), "itemProductList", products, "itemAmountList", amounts,
-                        "itemShippingList", shipAmts, "orderShippingAmount", orderShipping, "shippingAddress", shippingAddress);
+                        "itemShippingList", shipAmts, "itemPriceList", itPrices, "orderShippingAmount", orderShipping);                    
+                    serviceContext.put("shippingAddress", shippingAddress);
 
                     // invoke the calcTax service
                     Map serviceResult = null;
