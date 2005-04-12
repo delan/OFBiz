@@ -93,94 +93,94 @@
         <div class="ecom-form-row">
             <div class="ecom-form-label">${uiLabelMap.CommonTitle}</div>
             <div class="ecom-form-field">
-		        <@fieldErrors fieldName="USER_TITLE"/>
-		        <input type="text" class='inputBox' name="USER_TITLE" value="${requestParameters.USER_TITLE?if_exists}" size="10" maxlength="30"/>
+                <@fieldErrors fieldName="USER_TITLE"/>
+                <input type="text" class='inputBox' name="USER_TITLE" value="${requestParameters.USER_TITLE?if_exists}" size="10" maxlength="30"/>
             </div>
         </div>
         <div class="ecom-form-row">
             <div class="ecom-form-label">${uiLabelMap.PartyFirstName}</div>
             <div class="ecom-form-field">
-		        <@fieldErrors fieldName="USER_FIRST_NAME"/>
-		        <input type="text" class='inputBox' name="USER_FIRST_NAME" value="${requestParameters.USER_FIRST_NAME?if_exists}" size="30" maxlength="30"> *
+                <@fieldErrors fieldName="USER_FIRST_NAME"/>
+                <input type="text" class='inputBox' name="USER_FIRST_NAME" value="${requestParameters.USER_FIRST_NAME?if_exists}" size="30" maxlength="30"> *
             </div>
         </div>
         <div class="ecom-form-row">
             <div class="ecom-form-label">${uiLabelMap.PartyMiddleInitial}</div>
             <div class="ecom-form-field">
-		        <@fieldErrors fieldName="USER_MIDDLE_NAME"/>
-		        <input type="text" class='inputBox' name="USER_MIDDLE_NAME" value="${requestParameters.USER_MIDDLE_NAME?if_exists}" size="4" maxlength="4">
+                <@fieldErrors fieldName="USER_MIDDLE_NAME"/>
+                <input type="text" class='inputBox' name="USER_MIDDLE_NAME" value="${requestParameters.USER_MIDDLE_NAME?if_exists}" size="4" maxlength="4">
             </div>
         </div>
         <div class="ecom-form-row">
             <div class="ecom-form-label">${uiLabelMap.PartyLastName}</div>
             <div class="ecom-form-field">
-		        <@fieldErrors fieldName="USER_LAST_NAME"/>
-		        <input type="text" class='inputBox' name="USER_LAST_NAME" value="${requestParameters.USER_LAST_NAME?if_exists}" size="30" maxlength="30"> *
+                <@fieldErrors fieldName="USER_LAST_NAME"/>
+                <input type="text" class='inputBox' name="USER_LAST_NAME" value="${requestParameters.USER_LAST_NAME?if_exists}" size="30" maxlength="30"> *
             </div>
         </div>
         <div class="ecom-form-row">
             <div class="ecom-form-label">${uiLabelMap.PartySuffix}</div>
             <div class="ecom-form-field">
-		        <@fieldErrors fieldName="USER_SUFFIX"/>
-		        <input type="text" class='inputBox' name="USER_SUFFIX" value="${requestParameters.USER_SUFFIX?if_exists}" size="10" maxlength="30">
+                <@fieldErrors fieldName="USER_SUFFIX"/>
+                <input type="text" class='inputBox' name="USER_SUFFIX" value="${requestParameters.USER_SUFFIX?if_exists}" size="10" maxlength="30">
             </div>
         </div>
         <div class="ecom-form-row">
             <div class="ecom-form-label">${uiLabelMap.PartyAddressLine1}</div>
             <div class="ecom-form-field">
-		        <@fieldErrors fieldName="CUSTOMER_ADDRESS1"/>
-		        <input type="text" class='inputBox' name="CUSTOMER_ADDRESS1" value="${requestParameters.CUSTOMER_ADDRESS1?if_exists}" size="30" maxlength="30"> *
+                <@fieldErrors fieldName="CUSTOMER_ADDRESS1"/>
+                <input type="text" class='inputBox' name="CUSTOMER_ADDRESS1" value="${requestParameters.CUSTOMER_ADDRESS1?if_exists}" size="30" maxlength="30"> *
             </div>
         </div>
         <div class="ecom-form-row">
             <div class="ecom-form-label">${uiLabelMap.PartyAddressLine2}</div>
             <div class="ecom-form-field">
-		        <@fieldErrors fieldName="CUSTOMER_ADDRESS2"/>
-		        <input type="text" class='inputBox' name="CUSTOMER_ADDRESS2" value="${requestParameters.CUSTOMER_ADDRESS2?if_exists}" size="30" maxlength="30">
+                <@fieldErrors fieldName="CUSTOMER_ADDRESS2"/>
+                <input type="text" class='inputBox' name="CUSTOMER_ADDRESS2" value="${requestParameters.CUSTOMER_ADDRESS2?if_exists}" size="30" maxlength="30">
             </div>
         </div>
         <div class="ecom-form-row">
             <div class="ecom-form-label">${uiLabelMap.PartyCity}</div>
             <div class="ecom-form-field">
-		        <@fieldErrors fieldName="CUSTOMER_CITY"/>
-		        <input type="text" class='inputBox' name="CUSTOMER_CITY" value="${requestParameters.CUSTOMER_CITY?if_exists}" size="30" maxlength="30"> *
+                <@fieldErrors fieldName="CUSTOMER_CITY"/>
+                <input type="text" class='inputBox' name="CUSTOMER_CITY" value="${requestParameters.CUSTOMER_CITY?if_exists}" size="30" maxlength="30"> *
             </div>
         </div>
         <div class="ecom-form-row">
             <div class="ecom-form-label">${uiLabelMap.PartyState}</div>
             <div class="ecom-form-field">
-		        <@fieldErrors fieldName="CUSTOMER_STATE"/>
-		        <select name="CUSTOMER_STATE" class='selectBox'>
-		            <#if requestParameters.CUSTOMER_STATE?exists><option value='${requestParameters.CUSTOMER_STATE}'>${selectedStateName?default(requestParameters.CUSTOMER_STATE)}</option></#if>
-		            <option value="">${uiLabelMap.PartyNoState}</option>
-		            ${screens.render("component://common/widget/CommonScreens.xml#states")}
-		        </select> *
+                <@fieldErrors fieldName="CUSTOMER_STATE"/>
+                <select name="CUSTOMER_STATE" class='selectBox'>
+                    <#if requestParameters.CUSTOMER_STATE?exists><option value='${requestParameters.CUSTOMER_STATE}'>${selectedStateName?default(requestParameters.CUSTOMER_STATE)}</option></#if>
+                    <option value="">${uiLabelMap.PartyNoState}</option>
+                    ${screens.render("component://common/widget/CommonScreens.xml#states")}
+                </select> *
             </div>
         </div>
         <div class="ecom-form-row">
             <div class="ecom-form-label">${uiLabelMap.PartyZipCode}</div>
             <div class="ecom-form-field">
-		        <@fieldErrors fieldName="CUSTOMER_POSTAL_CODE"/>
-		        <input type="text" class='inputBox' name="CUSTOMER_POSTAL_CODE" value="${requestParameters.CUSTOMER_POSTAL_CODE?if_exists}" size="12" maxlength="10"> *
+                <@fieldErrors fieldName="CUSTOMER_POSTAL_CODE"/>
+                <input type="text" class='inputBox' name="CUSTOMER_POSTAL_CODE" value="${requestParameters.CUSTOMER_POSTAL_CODE?if_exists}" size="12" maxlength="10"> *
             </div>
         </div>
         <div class="ecom-form-row">
             <div class="ecom-form-label">${uiLabelMap.PartyCountry}</div>
             <div class="ecom-form-field">
-	            <@fieldErrors fieldName="CUSTOMER_COUNTRY"/>
-	            <select name="CUSTOMER_COUNTRY" class='selectBox'>
-	                <#if requestParameters.CUSTOMER_COUNTRY?exists><option value='${requestParameters.CUSTOMER_COUNTRY}'>${selectedCountryName?default(requestParameters.CUSTOMER_COUNTRY)}</option></#if>
-	                ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-	            </select> *
+                <@fieldErrors fieldName="CUSTOMER_COUNTRY"/>
+                <select name="CUSTOMER_COUNTRY" class='selectBox'>
+                    <#if requestParameters.CUSTOMER_COUNTRY?exists><option value='${requestParameters.CUSTOMER_COUNTRY}'>${selectedCountryName?default(requestParameters.CUSTOMER_COUNTRY)}</option></#if>
+                    ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+                </select> *
             </div>
         </div>
         <div class="ecom-form-row">
             <div class="ecom-form-label">${uiLabelMap.PartyAllowAddressSolicitation}</div>
             <div class="ecom-form-field">
-		        <select name="CUSTOMER_ADDRESS_ALLOW_SOL" class='selectBox'>
-		            <option>${requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL?default("Y")}</option>
-		            <option></option><option>Y</option><option>N</option>
-		        </select>
+                <select name="CUSTOMER_ADDRESS_ALLOW_SOL" class='selectBox'>
+                    <option>${requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL?default("Y")}</option>
+                    <option></option><option>Y</option><option>N</option>
+                </select>
             </div>
         </div>
         <div class="ecom-endcolumns">&nbsp;</div>
