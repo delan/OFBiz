@@ -214,7 +214,19 @@ function lookupBom() {
     <tr>
         <td width="26%" align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingFormula}:</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" class="inputBox" name="formula" <#if useValues>value="${(productAssoc.formula)?if_exists}"<#else>value="${(request.getParameter("formula"))?if_exists}"</#if> size="60" maxlength="255"></td>
+        <td width="74%">
+            <select name="formula">
+            <option value=""></option>
+            <#assign selectedFormula = "">
+            <#if useValues>
+                <#assign selectedFormula = (productAssoc.formula)?if_exists>
+            <#else>
+                <#assign selectedFormula = (request.getParameter("formula"))?if_exists>
+            </#if>
+            <#list formulas as formula>
+                <option value="${formula.enumId}" <#if selectedFormula = formula.enumId>selected</#if>>${formula.description}</option>
+            </#list>
+        </td>
     </tr>
 
     <tr>
@@ -247,6 +259,7 @@ function lookupBom() {
             <td><div class="tabletext"><b>${uiLabelMap.CommonSequenceNum}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonQuantity}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ManufacturingScrapFactor}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ManufacturingFormula}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ManufacturingRoutingTask}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -264,6 +277,7 @@ function lookupBom() {
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.sequenceNum)?if_exists}</div></td>
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.quantity)?if_exists}</div></td>
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.scrapFactor)?if_exists}</div></td>
+                <td><div class="tabletext">&nbsp;${(assocFromProduct.formula)?if_exists}</div></td>
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.routingWorkEffortId)?if_exists}</div></td>
                 <td>
                 <a href="<@ofbizUrl>/UpdateProductBom?UPDATE_MODE=DELETE&productId=${productId}&productIdTo=${(assocFromProduct.productIdTo)?if_exists}&productAssocTypeId=${(assocFromProduct.productAssocTypeId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocFromProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
