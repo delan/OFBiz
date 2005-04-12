@@ -400,11 +400,11 @@
     <form name="listShipmentPlans" type="list" 
             target="" title="" list-name="shipmentPlans"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}"><display/></field>
-        <field name="statusId" title="${uiLabelMap.ProductShipmentStatusId}">
+        <field name="shipmentId"><display/></field>
+        <field name="statusId">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
-        <field name="estimatedShipDate" title="${uiLabelMap.ProductEstimatedShipDate}"><display/></field>
+        <field name="estimatedShipDate"><display/></field>
         <field name="viewShipmentPlanLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="WorkWithShipmentPlans?shipmentId=${shipmentId}" description="[${uiLabelMap.CommonView}]" also-hidden="false"/>
         </field>
