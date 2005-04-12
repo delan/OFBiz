@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,21 +25,15 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-
-  ${pages.get("/store/ProductStoreTabBar.ftl")}
-  <div class="head1">${uiLabelMap.ProductPromotions} <span class='head2'>${uiLabelMap.CommonFor} <#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [${uiLabelMap.CommonId}:${productStoreId?if_exists}]</span></div>
-  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>
   <#if activeOnly>
-    <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}&userEntered=${userEntered?string}&activeOnly=false</@ofbizUrl>" class="buttontext">[Active and Inactive]</a>
+    <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&userEntered=${userEntered?string}&activeOnly=false</@ofbizUrl>" class="buttontext">[Active and Inactive]</a>
   <#else>
-    <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}&userEntered=${userEntered?string}</@ofbizUrl>" class="buttontext">[Active Only]</a>
+    <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&userEntered=${userEntered?string}</@ofbizUrl>" class="buttontext">[Active Only]</a>
   </#if>
   <#if userEntered>
-    <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}&activeOnly=${activeOnly?string}&userEntered=false</@ofbizUrl>" class="buttontext">[User and Auto Entered]</a>
+    <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&activeOnly=${activeOnly?string}&userEntered=false</@ofbizUrl>" class="buttontext">[User and Auto Entered]</a>
   <#else>
-    <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}&activeOnly=${activeOnly?string}</@ofbizUrl>" class="buttontext">[User Entered Only]</a>
+    <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&activeOnly=${activeOnly?string}</@ofbizUrl>" class="buttontext">[User Entered Only]</a>
   </#if>
   <br>
   <div class="head3">Showing 
@@ -50,18 +44,18 @@
 
     <#if productStoreId?exists && productStore?exists>
         <#if (listSize > 0)>
-            <table border="0" width="100%" cellpadding="2">
+            <table border="0" cellpadding="2">
                 <tr>
                 <td align=right>
                     <b>
                     <#if (viewIndex > 0)>
-                    <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}&userEntered=${userEntered.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+                    <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}&userEntered=${userEntered.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
                     <#if (listSize > 0)>
-                        ${lowIndex+1} - ${highIndex} of ${listSize}
+                        <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
                     </#if>
                     <#if (listSize > highIndex)>
-                    | <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}&userEntered=${userEntered.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+                    | <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}&userEntered=${userEntered.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
                     </b>
                 </td>
@@ -69,7 +63,7 @@
             </table>
         </#if>
         
-        <table border="1" width="100%" cellpadding="2" cellspacing="0">
+        <table border="1" cellpadding="2" cellspacing="0">
         <tr>
             <td><div class="tabletext"><b>${uiLabelMap.ProductPromoNameId}]</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
@@ -81,14 +75,14 @@
 	        <#list productStorePromoAndAppls[lowIndex..highIndex-1] as productStorePromoAndAppl>
 	        <#assign line = line+1>
 	        <tr valign="middle">
-	            <td><a href="<@ofbizUrl>/EditProductPromo?productPromoId=${(productStorePromoAndAppl.productPromoId)?if_exists}</@ofbizUrl>" class="buttontext">${(productStorePromoAndAppl.promoName)?if_exists} [${(productStorePromoAndAppl.productPromoId)?if_exists}]</a></td>
+	            <td><a href="<@ofbizUrl>EditProductPromo?productPromoId=${(productStorePromoAndAppl.productPromoId)?if_exists}</@ofbizUrl>" class="buttontext">${(productStorePromoAndAppl.promoName)?if_exists} [${(productStorePromoAndAppl.productPromoId)?if_exists}]</a></td>
 	            <#assign hasntStarted = false>
 	            <#if productStorePromoAndAppl.getTimestamp("fromDate")?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productStorePromoAndAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true> </#if>
 	            <td><div class="tabletext" <#if hasntStarted> style="color: red;"</#if> >${productStorePromoAndAppl.getTimestamp("fromDate").toString()}</div></td>
 	            <td align="center">
 	                <#assign hasExpired = false>
 	                <#if productStorePromoAndAppl.getTimestamp("thruDate")?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productStorePromoAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
-	                <FORM method=POST action="<@ofbizUrl>/updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
+	                <FORM method=POST action="<@ofbizUrl>updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
 	                    <input type=hidden name="productStoreId" value="${(productStorePromoAndAppl.productStoreId)?if_exists}">
 	                    <input type=hidden name="productPromoId" value="${(productStorePromoAndAppl.productPromoId)?if_exists}">
 	                    <input type=hidden name="fromDate" value="${(productStorePromoAndAppl.fromDate)?if_exists}">
@@ -99,7 +93,7 @@
 	                </FORM>
 	            </td>
 	            <td align="center">
-	            <a href="<@ofbizUrl>/deleteProductStorePromoAppl?productStoreId=${(productStorePromoAndAppl.productStoreId)?if_exists}&productPromoId=${(productStorePromoAndAppl.productPromoId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productStorePromoAndAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
+	            <a href="<@ofbizUrl>deleteProductStorePromoAppl?productStoreId=${(productStorePromoAndAppl.productStoreId)?if_exists}&productPromoId=${(productStorePromoAndAppl.productPromoId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productStorePromoAndAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
 	            [${uiLabelMap.CommonDelete}]</a>
 	            </td>
 	        </tr>
@@ -107,18 +101,18 @@
         </#if>
         </table>
         <#if (listSize > 0)>
-            <table border="0" width="100%" cellpadding="2">
+            <table border="0" cellpadding="2">
                 <tr>
-                <td align=right>
+                <td align="right">
                     <b>
                     <#if (viewIndex > 0)>
-                    <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}&userEntered=${userEntered.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+                    <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}&userEntered=${userEntered.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
                     <#if (listSize > 0)>
-                        ${lowIndex+1} - ${highIndex} of ${listSize}
+                        <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
                     </#if>
                     <#if (listSize > highIndex)>
-                    | <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}&userEntered=${userEntered.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+                    | <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}&userEntered=${userEntered.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
                     </b>
                 </td>
@@ -126,24 +120,21 @@
             </table>
         </#if>
         
-        <br>
-        <form method="POST" action="<@ofbizUrl>/createProductStorePromoAppl</@ofbizUrl>" style="margin: 0;" name="addNewForm">
-        <input type="hidden" name="productStoreId" value="${productStoreId?if_exists}">
-        <input type="hidden" name="tryEntity" value="true">
+        <br/>
+        <form method="POST" action="<@ofbizUrl>createProductStorePromoAppl</@ofbizUrl>" style="margin: 0;" name="addNewForm">
+        <input type="hidden" name="productStoreId" value="${productStoreId?if_exists}"/>
+        <input type="hidden" name="tryEntity" value="true"/>
         
         <div class="head2">${uiLabelMap.ProductAddStorePromoOptionalDate}:</div>
-        <br>
+        <br/>
         <select name="productPromoId" class="selectBox">
         <#list productPromos as productPromo>
             <option value="${productPromo.productPromoId?if_exists}">${productPromo.promoName?if_exists} [${productPromo.productPromoId?if_exists}]</option>
         </#list>
         </select> <span class="tabletext">NOTE: Only user entered promos included in drop-down</span> 
         <br>
-        <input type=text size="25" name="fromDate" class="inputBox">
-        <a href="javascript:call_cal(document.addNewForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-        <input type="submit" value="${uiLabelMap.CommonAdd}">
+        <input type=text size="25" name="fromDate" class="inputBox"/>
+        <a href="javascript:call_cal(document.addNewForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
+        <input type="submit" value="${uiLabelMap.CommonAdd}"/>
         </form>
     </#if>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>

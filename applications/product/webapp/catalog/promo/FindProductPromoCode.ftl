@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,12 +23,8 @@
  *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-${pages.get("/promo/PromoTabBar.ftl")}
-    <div class="head1">Promotion Codes for &nbsp;<span class='head2'><#if productPromo?exists>${(productPromo.promoName)?if_exists}</#if>[${(productPromo.productPromoId)?if_exists}]</span></div>
+<#if productPromoId?exists>
     <div>
-        <a href="<@ofbizUrl>/EditProductPromoCode?productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[New Promotion Code]</a>
         <#if manualOnly?if_exists == "Y">
             <a href="<@ofbizUrl>/FindProductPromoCode?manualOnly=N&productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[View Manual and Automatic]</a>
         <#else>
@@ -63,10 +59,10 @@ ${pages.get("/promo/PromoTabBar.ftl")}
     <br/>
     <div class="head3">Add Set of Promotion Codes:</div>
     <div class="tabletext">
-        <form method="POST" action="<@ofbizUrl>/createProductPromoCodeSet</@ofbizUrl>" style="margin: 0;">
+        <form method="POST" action="<@ofbizUrl>createProductPromoCodeSet</@ofbizUrl>" style="margin: 0;">
             <input type="hidden" name="userEntered" value="N"/>
             <input type="hidden" name="requireEmailOrParty" value="N"/>
-            <input type="hidden" name="productPromoId" value="${productPromoId?if_exists}"/>
+            <input type="hidden" name="productPromoId" value="${productPromoId}"/>
             Quantity: <input type="text" size="5" name="quantity" class="inputBox">
             Use Limits:
             Per Code<input type="text" size="5" name="useLimitPerCode" class="inputBox">
@@ -74,6 +70,5 @@ ${pages.get("/promo/PromoTabBar.ftl")}
             <input type="submit" value="${uiLabelMap.CommonAdd}">
         </form>
     </div>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
 </#if>
+    

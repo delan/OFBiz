@@ -29,21 +29,6 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.widget.html.*;
 
-security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
-
-if(security.hasEntityPermission("CONTENTMGR", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}
-
-String productStoreId = request.getParameter("productStoreId");
-context.put("productStoreId", productStoreId);
-
-GenericValue productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
-context.put("productStore", productStore);
-
 List productStoreRoles = delegator.findByAnd("ProductStoreRole", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNum"));
 if (request.getParameter("showAll") == null) {
     productStoreRoles = EntityUtil.filterByDate(productStoreRoles);

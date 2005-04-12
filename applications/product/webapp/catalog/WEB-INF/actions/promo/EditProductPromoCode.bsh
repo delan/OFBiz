@@ -31,15 +31,6 @@ import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.widget.html.*;
 
-security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
-
-if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}
-
 productPromoCodeId = request.getParameter("productPromoCodeId");
 if (UtilValidate.isEmpty(productPromoCodeId)) {
     productPromoCodeId = request.getAttribute("productPromoCodeId");
@@ -58,11 +49,6 @@ if (productPromoId != null) {
     productPromo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId));
 }
 
-HtmlFormWrapper productPromoCodeFormWrapper = new HtmlFormWrapper("/promo/PromoForms.xml", "EditProductPromoCode", request, response);
-productPromoCodeFormWrapper.putInContext("productPromoCodeId", productPromoCodeId);
-productPromoCodeFormWrapper.putInContext("productPromoCode", productPromoCode);
-if (productPromoCode == null) productPromoCodeFormWrapper.putInContext("productPromoId", productPromoId);
-
 productPromoCodeEmails = null;
 productPromoCodeParties = null;
 if (productPromoCode != null) {
@@ -74,6 +60,5 @@ context.put("productPromoId", productPromoId);
 context.put("productPromo", productPromo);
 context.put("productPromoCodeId", productPromoCodeId);
 context.put("productPromoCode", productPromoCode);
-context.put("productPromoCodeFormWrapper", productPromoCodeFormWrapper);
 context.put("productPromoCodeEmails", productPromoCodeEmails);
 context.put("productPromoCodeParties", productPromoCodeParties);

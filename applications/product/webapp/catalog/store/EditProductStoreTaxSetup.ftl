@@ -24,15 +24,7 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-  ${pages.get("/store/ProductStoreTabBar.ftl")}
-  <div class="head1">${uiLabelMap.ProductProductStoreTaxSettings} <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [${uiLabelMap.CommonId}:${productStoreId?if_exists}]</span></div>
-  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>
-  <br>
-  <br>   
-  
-  <table border="1" cellpadding="2" cellspacing="0" width="100%">
+<table border="1" cellpadding="2" cellspacing="0">
     <tr>
       <td nowrap><div class="tableheadtext">${uiLabelMap.ProductCountry}</td>
       <td nowrap><div class="tableheadtext">${uiLabelMap.ProductState}</div></td>
@@ -59,10 +51,10 @@
         </#if>
       </tr>
     </#list>
-  </table>
+</table>
   
-  <br>
-  <table>
+<br/>
+<table>
     <#if security.hasEntityPermission("TAXRATE", "_CREATE", session)>
       <form name="addrate" action="<@ofbizUrl>/storeCreateTaxRate</@ofbizUrl>">
         <input type="hidden" name="productStoreId" value="${productStoreId}">
@@ -71,7 +63,7 @@
           <td>
             <select name="countryGeoId" class="selectBox">
               <option value="_NA_">${uiLabelMap.CommonAll}</option>
-              ${pages.get("/includes/countries.ftl")}
+              ${screens.render("component://common/widget/CommonScreens.xml#countries")}
             </select>
           </td>
         </tr>
@@ -80,7 +72,7 @@
           <td>
             <select name="stateProvinceGeoId" class="selectBox">
               <option value="_NA_">${uiLabelMap.CommonAll}</option>
-              ${pages.get("/includes/states.ftl")}
+              ${screens.render("component://common/widget/CommonScreens.xml#states")}
             </select>
           </td>
         </tr>
@@ -122,12 +114,8 @@
           <td><input type="text" name="thruDate" class="inputBox"><a href="javascript:call_cal(document.addrate.thruDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a></td>
         </tr>        
         <tr>
-          <td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}"></td>
+          <td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}"/></td>
         </tr>
       </form>
     </#if>
-  </table>  
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>
-
+</table>  

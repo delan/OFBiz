@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,6 @@
  *@version    $Rev$
  *@since      3.2
 -->
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <div class="tabletext"><b>Create Virtual Product</b></div>
 <form action="<@ofbizUrl>quickCreateVirtualWithVariants</@ofbizUrl>" method="POST" style="margin: 0;" name="quickCreateVirtualWithVariants">
@@ -32,7 +31,6 @@
         <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
     </div>
     <div>
-        <#assign hazmatFeatures = delegator.findByAnd("ProductFeature", Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", "HAZMAT"))>
         <span class="tabletext">Hazmat:</span>
         <select name="productFeatureIdOne" class="standardSelect">
             <option value="">- None -</option>

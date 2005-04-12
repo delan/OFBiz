@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -26,7 +26,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <script>
 function setProductVariantId(e, value, fieldname) {
     var cform = document.selectAllForm;
@@ -56,17 +55,11 @@ function clickAll(e) {
     }     
 }
 </script>
-<#if hasPermission>
-
-${pages.get("/product/ProductTabBar.ftl")}
-    
-    <div class="head1">${uiLabelMap.ProductQuickAddVariants} <span class="head2">${uiLabelMap.CommonFor} ${(product.internalName)?if_exists} [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
-    
     <#if (product.isVirtual)?if_exists != "Y">
         ${uiLabelMap.ProductWarningProductNotVirtual}
     </#if>
     
-    <br>
+    <br/>
     <div style="float: right;">
         <div class="tabletext"><b>Add Variant Products:</b></div>
         <form action="<@ofbizUrl>addVariantsToVirtual</@ofbizUrl>" method="POST" style="margin: 0;" name="addVariantsToVirtual">
@@ -77,7 +70,6 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </form>
     </div>
     
-    <br>
     <#if (featureTypes.size() > 0)>
         <table border="1" cellpadding="2" cellspacing="0">
                 <#assign rowCount = 0>
@@ -138,6 +130,3 @@ ${pages.get("/product/ProductTabBar.ftl")}
 	<#else>
 	    <div class="tabletext"><b>${uiLabelMap.ProductNoSelectableFeaturesFound}</b></div>
 	</#if>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>

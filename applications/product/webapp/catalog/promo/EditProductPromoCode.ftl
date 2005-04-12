@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -26,45 +26,32 @@
  *@since      2.2
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-${pages.get("/promo/PromoTabBar.ftl")}
-    <div class="head1">${uiLabelMap.ProductPromotionCode}</div>
-    <div>
-        <a href="<@ofbizUrl>/EditProductPromoCode?productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewPromotionCode}]</a>
+<br/>
+<#if productPromoCode?exists>
+    <#if productPromoCode.requireEmailOrParty?if_exists == "N">
+        <div class="tableheadtext">${uiLabelMap.ProductNoteRequireEmailParty}</div>
+    </#if>
+    <div class="head3">${uiLabelMap.ProductPromoCodeEmails}</div>
+    <#list productPromoCodeEmails as productPromoCodeEmail>
+        <div class="tabletext"><a href="<@ofbizUrl>/deleteProductPromoCodeEmail?productPromoCodeId=${productPromoCodeEmail.productPromoCodeId}&emailAddress=${productPromoCodeEmail.emailAddress}</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${productPromoCodeEmail.emailAddress}</div>
+    </#list>
+    <div class="tabletext">
+        <form method="POST" action="<@ofbizUrl>/createProductPromoCodeEmail</@ofbizUrl>" style="margin: 0;">
+            <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId?if_exists}"/>
+            ${uiLabelMap.ProductAddEmail} : <input type="text" size="40" name="emailAddress" class="inputBox">
+            <input type="submit" value="${uiLabelMap.CommonAdd}">
+        </form>
     </div>
 
-    ${productPromoCodeFormWrapper.renderFormString()}
-
-    <br/>
-    <#if productPromoCode?exists>
-        <#if productPromoCode.requireEmailOrParty?if_exists == "N">
-            <div class="tableheadtext">${uiLabelMap.ProductNoteRequireEmailParty}</div>
-        </#if>
-        <div class="head3">${uiLabelMap.ProductPromoCodeEmails}</div>
-        <#list productPromoCodeEmails as productPromoCodeEmail>
-            <div class="tabletext"><a href="<@ofbizUrl>/deleteProductPromoCodeEmail?productPromoCodeId=${productPromoCodeEmail.productPromoCodeId}&emailAddress=${productPromoCodeEmail.emailAddress}</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${productPromoCodeEmail.emailAddress}</div>
-        </#list>
-        <div class="tabletext">
-            <form method="POST" action="<@ofbizUrl>/createProductPromoCodeEmail</@ofbizUrl>" style="margin: 0;">
-                <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId?if_exists}"/>
-                ${uiLabelMap.ProductAddEmail} : <input type="text" size="40" name="emailAddress" class="inputBox">
-                <input type="submit" value="${uiLabelMap.CommonAdd}">
-            </form>
-        </div>
-
-        <div class="head3">${uiLabelMap.ProductPromoCodeParties}</div>
-        <#list productPromoCodeParties as productPromoCodeParty>
-            <div class="tabletext"><a href="<@ofbizUrl>/deleteProductPromoCodeParty?productPromoCodeId=${productPromoCodeParty.productPromoCodeId}&partyId=${productPromoCodeParty.partyId}</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${productPromoCodeParty.partyId}</div>
-        </#list>
-        <div class="tabletext">
-            <form method="POST" action="<@ofbizUrl>/createProductPromoCodeParty</@ofbizUrl>" style="margin: 0;">
-                <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId?if_exists}"/>
-                ${uiLabelMap.ProductAddPartyId} : <input type="text" size="10" name="partyId" class="inputBox">
-                <input type="submit" value="${uiLabelMap.CommonAdd}">
-            </form>
-        </div>
-    </#if>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
+    <div class="head3">${uiLabelMap.ProductPromoCodeParties}</div>
+    <#list productPromoCodeParties as productPromoCodeParty>
+        <div class="tabletext"><a href="<@ofbizUrl>/deleteProductPromoCodeParty?productPromoCodeId=${productPromoCodeParty.productPromoCodeId}&partyId=${productPromoCodeParty.partyId}</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${productPromoCodeParty.partyId}</div>
+    </#list>
+    <div class="tabletext">
+        <form method="POST" action="<@ofbizUrl>/createProductPromoCodeParty</@ofbizUrl>" style="margin: 0;">
+            <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId?if_exists}"/>
+            ${uiLabelMap.ProductAddPartyId} : <input type="text" size="10" name="partyId" class="inputBox">
+            <input type="submit" value="${uiLabelMap.CommonAdd}">
+        </form>
+    </div>
 </#if>

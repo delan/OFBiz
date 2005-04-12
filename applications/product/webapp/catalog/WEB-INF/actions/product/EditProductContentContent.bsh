@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -33,21 +33,6 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.widget.html.*;
 import javax.servlet.HttpServletRequest;
 
-security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
-dispatcher = request.getAttribute("dispatcher");
-userLogin = request.getAttribute("userLogin");
-
-
-if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}
-
-productId = request.getParameter("productId");
-context.put("productId", productId);
-
 contentId = request.getParameter("contentId");
 if("".equals(contentId)) contentId = null;
 
@@ -75,13 +60,10 @@ if(productContent == null) {
 }
 context.put("productContent", productContent);
 
-
 productContentData = new HashMap();
 productContentData.putAll(productContent);
 
-
 Map content = null;
-
 context.put("contentId", contentId);
 if(contentId != null) {
     content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
@@ -90,9 +72,6 @@ if(contentId != null) {
     content = new HashMap();
     if(description != null) content.put("description", description);
 }
-
-product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-context.put("product", product);
 
 HtmlFormWrapper updateProductContentWrapper = null;
 
@@ -162,5 +141,4 @@ updateProductContentWrapper.putInContext("productContentData", productContentDat
 context.put("productContentData", productContentData);
 updateProductContentWrapper.putInContext("content", content);
 updateProductContentWrapper.putInContext("contentId", contentId);
-updateProductContentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 //context.put("log", log);

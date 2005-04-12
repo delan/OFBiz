@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -24,29 +24,14 @@
  *@version    $Rev$
  *@since      2.1
 -->
-
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-${pages.get("/category/CategoryTabBar.ftl")}
-      
-    <div class="head1">${uiLabelMap.ProductProducts} <span class="head2">${uiLabelMap.CommonFor}<#if productCategory?exists>${(productCategory.description)?if_exists} [${uiLabelMap.CommonId}:${productCategoryId?if_exists}]</#if></span></div>
-    
-    <a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewCategory}]</a>
-    <#if productCategoryId?has_content>
-        <a href="/ecommerce/control/category?category_id=${productCategoryId?if_exists}" class="buttontext" target="_blank">[${uiLabelMap.ProductCategoryPage}]</a>
-        <a href="<@ofbizUrl>/createProductInCategoryStart?productCategoryId=${productCategoryId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateProductInCategory}]</a>
-    </#if>
     <#if activeOnly>
         <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveAndInactive}]</a>
     <#else>
         <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&activeOnly=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveOnly}]</a>
     </#if>    
-    <p>
     <#if productCategoryId?exists && productCategory?exists>
-        <p class="head2">${uiLabelMap.ProductProductCategoryMemberMaintenance}</p>
-    
         <#if (listSize > 0)>
-            <table border="0" width="100%" cellpadding="2">
+            <table border="0" cellpadding="2">
                 <tr>
                 <td align=right>
                     <span class="tabletext">
@@ -65,7 +50,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
             </table>
         </#if>
         
-        <table border="1" width="100%" cellpadding="2" cellspacing="0">
+        <table border="1" cellpadding="2" cellspacing="0">
         <tr>
             <td><div class="tabletext"><b>${uiLabelMap.ProductProductNameId}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
@@ -90,7 +75,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
                         <input type=hidden name="productCategoryId" value="${(productCategoryMember.productCategoryId)?if_exists}">
                         <input type=hidden name="fromDate" value="${(productCategoryMember.fromDate)?if_exists}">
                         <input type=text size="25" name="thruDate" value="${(productCategoryMember.thruDate)?if_exists}" class="inputBox" <#if hasExpired>style="color: red;"</#if>>
-                        <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productCategoryMember.thruDate)?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+                        <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productCategoryMember.thruDate)?default(nowTimestamp?string)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
                         <input type=text size="5" name="sequenceNum" value="${(productCategoryMember.sequenceNum)?if_exists}" class="inputBox">
                         <input type=text size="5" name="quantity" value="${(productCategoryMember.quantity)?if_exists}" class="inputBox">
                         <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
@@ -107,7 +92,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         </table>
         
         <#if (listSize > 0)>
-            <table border="0" width="100%" cellpadding="2">
+            <table border="0" cellpadding="2">
                 <tr>
                 <td align=right>
                     <span class="tabletext">
@@ -135,7 +120,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
             ${uiLabelMap.ProductProductId}: <input type=text size="20" name="productId" class="inputBox">
             <a href="javascript:call_fieldlookup2(document.addProductCategoryMemberForm.productId, 'LookupProduct');"><img src="/content/images/fieldlookup.gif" width="16" height="16" border="0" alt="Lookup"></a>
             ${uiLabelMap.CommonFromDate}: <input type=text size="22" name="fromDate" class="inputBox">
-            <a href="javascript:call_cal(document.addProductCategoryMemberForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+            <a href="javascript:call_cal(document.addProductCategoryMemberForm.fromDate, '${nowTimestamp?string}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <input type="submit" value="${uiLabelMap.CommonAdd}">
         </div>
         </form>
@@ -156,7 +141,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
             </select>
             <br>
             ${uiLabelMap.ProductOptionalFilterWithDate}: <input type=text size="20" name="validDate" class="inputBox">
-            <a href="javascript:call_cal(document.copyCategoryProductMembersForm.validDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+            <a href="javascript:call_cal(document.copyCategoryProductMembersForm.validDate, '${nowTimestamp?string}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <br>
             ${uiLabelMap.ProductIncludeSubCategories}?
             <select name="recurse" class="selectBox">
@@ -175,7 +160,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <div class="head2">${uiLabelMap.ProductExpireAllProductMembers}:</div>
         <div class="tabletext">
             ${uiLabelMap.ProductOptionalExpirationDate}: <input type=text size="20" name="thruDate" class="inputBox">
-            <a href="javascript:call_cal(document.expireAllCategoryProductMembersForm.thruDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+            <a href="javascript:call_cal(document.expireAllCategoryProductMembersForm.thruDate, '${nowTimestamp?string}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             &nbsp;&nbsp;<input type="submit" value="${uiLabelMap.CommonExpireAll}">
         </div>
         </form>
@@ -187,11 +172,8 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <div class="head2">${uiLabelMap.ProductRemoveExpiredProductMembers}:</div>
         <div class="tabletext">
             ${uiLabelMap.ProductOptionalExpiredBeforeDate}: <input type=text size="20" name="validDate" class="inputBox">
-            <a href="javascript:call_cal(document.removeExpiredCategoryProductMembersForm.validDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+            <a href="javascript:call_cal(document.removeExpiredCategoryProductMembersForm.validDate, '${nowTimestamp?string}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             &nbsp;&nbsp;<input type="submit" value="${uiLabelMap.CommonRemoveExpired}">
         </div>
         </form>
     </#if>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>

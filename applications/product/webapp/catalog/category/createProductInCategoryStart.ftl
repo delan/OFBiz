@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,17 +25,15 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
+<#assign productFeaturesByTypeMap = Static["org.ofbiz.product.feature.ParametricSearch"].makeCategoryFeatureLists(productCategoryId, delegator)>
 
-<div class="head1">${uiLabelMap.ProductCreateProductInCategory }<span class="head2"><#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [${uiLabelMap.ProductCategoryId}:${productCategoryId?if_exists}]</span></div>
 <#if productCategoryId?has_content>
     <a href="<@ofbizUrl>/EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductBackToEditCategory}]</a>
 </#if>
 
-<form name="createProductInCategoryCheckExistingForm" method="POST" action="<@ofbizUrl>/createProductInCategoryCheckExisting</@ofbizUrl>" style="margin: 0;">
+<form name="createProductInCategoryCheckExistingForm" method="POST" action="<@ofbizUrl>createProductInCategoryCheckExisting</@ofbizUrl>" style="margin: 0;">
     <input type="hidden" name="productCategoryId" value="${productCategoryId}">
-    <table width="100%" cellpadding="1" cellspacing="0" border="1">
+    <table cellpadding="1" cellspacing="0" border="1">
         <#list productFeaturesByTypeMap.keySet() as productFeatureTypeId>
             <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
             <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
@@ -84,7 +82,3 @@
         </tr>
     </table>
 </form>
-
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>

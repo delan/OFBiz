@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -20,16 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
   <div class="head1">${uiLabelMap.ProductProductStoreList}</div>
-  <div><a href='<@ofbizUrl>/EditProductStore</@ofbizUrl>' class="buttontext">[${uiLabelMap.ProductCreateNewProductStore}]</a></div>
+  <div><a href="<@ofbizUrl>EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewProductStore}]</a></div>
   <br>
-  <table border="1" cellpadding='2' cellspacing='0'>
+  <table border="1" cellpadding="2" cellspacing="0">
     <tr>
       <td><div class="tabletext"><b>${uiLabelMap.ProductStoreNameId}</b></div></td>
       <td><div class="tabletext"><b>${uiLabelMap.ProductTitle}</b></div></td>
@@ -38,16 +37,12 @@
     </tr>
     <#list productStores as productStore>
       <tr valign="middle">
-        <td><div class='tabletext'>&nbsp;<a href='<@ofbizUrl>/EditProductStore?productStoreId=${productStore.productStoreId}</@ofbizUrl>' class="buttontext">${productStore.storeName} [${productStore.productStoreId}]</a></div></td>
-        <td><div class='tabletext'>&nbsp;${productStore.title?if_exists}</div></td>
-        <td><div class='tabletext'>&nbsp;${productStore.subtitle?if_exists}</div></td>
+        <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>EditProductStore?productStoreId=${productStore.productStoreId}</@ofbizUrl>" class="buttontext">${productStore.storeName} [${productStore.productStoreId}]</a></div></td>
+        <td><div class="tabletext">&nbsp;${productStore.title?if_exists}</div></td>
+        <td><div class="tabletext">&nbsp;${productStore.subtitle?if_exists}</div></td>
         <td>
-          <a href='<@ofbizUrl>/EditProductStore?productStoreId=${productStore.productStoreId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonEdit}]</a>
+          <a href="<@ofbizUrl>EditProductStore?productStoreId=${productStore.productStoreId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
         </td>
       </tr>
     </#list>
   </table>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>
-

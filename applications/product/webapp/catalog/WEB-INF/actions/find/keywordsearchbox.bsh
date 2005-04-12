@@ -26,9 +26,6 @@
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
-import org.ofbiz.entity.condition.*;
-
-delegator = request.getAttribute("delegator");
 
 state = request.getParameter("SearchProductsState");
 isOpen = true;
@@ -42,10 +39,4 @@ if (state != null) {
     }
 }
 
-expr = new EntityExpr(new EntityExpr("showInSelect", EntityOperator.EQUALS, null),
-        EntityOperator.OR,
-        new EntityExpr("showInSelect", EntityOperator.NOT_EQUAL, "N"));
-productCategories = delegator.findByCondition("ProductCategory", expr, null, UtilMisc.toList("description"));
-
 context.put("isOpen", isOpen);
-context.put("productCategories", productCategories);

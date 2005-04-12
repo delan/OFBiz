@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,17 +25,10 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-${pages.get("/promo/PromoTabBar.ftl")}
     
-    <div class="head1">${uiLabelMap.ProductStores} <span class="head2">${uiLabelMap.CommonFor} <#if productPromo?exists>${(productPromo.promoName)?if_exists}</#if> [${uiLabelMap.CommonId}:${productPromoId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditProductPromo</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductPromo}]</a>
-    
-    <br>
-    <br>
+    <br/>
     <#if productPromoId?exists && productPromo?exists>   
-        <table border="1" width="100%" cellpadding="2" cellspacing="0">
+        <table border="1" cellpadding="2" cellspacing="0">
         <tr>
             <td><div class="tabletext"><b>${uiLabelMap.ProductStoreNameId}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
@@ -73,8 +66,8 @@ ${pages.get("/promo/PromoTabBar.ftl")}
         </table>
         <br>
         <form method="POST" action="<@ofbizUrl>/promo_createProductStorePromoAppl</@ofbizUrl>" name="addProductPromoToCatalog" style="margin: 0;">
-        <input type="hidden" name="productPromoId" value="${productPromoId}">
-        <input type="hidden" name="tryEntity" value="true">
+        <input type="hidden" name="productPromoId" value="${productPromoId}"/>
+        <input type="hidden" name="tryEntity" value="true"/>
         
         <div class="head2">${uiLabelMap.ProductAddStorePromo} :</div>
         <br>
@@ -83,11 +76,8 @@ ${pages.get("/promo/PromoTabBar.ftl")}
             <option value="${(productStore.productStoreId)?if_exists}">${(productStore.storeName)?if_exists} [${(productStore.productStoreId)?if_exists}]</option>
         </#list>
         </select>
-        <input type=text size="20" name="fromDate" class="inputBox">
-        <a href="javascript:call_cal(document.addProductPromoToCatalog.fromDate, '${nowTimestamp.toString()}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>        
-        <input type="submit" value="${uiLabelMap.CommonAdd}">
+        <input type=text size="20" name="fromDate" class="inputBox"/>
+        <a href="javascript:call_cal(document.addProductPromoToCatalog.fromDate, '${nowTimestamp.toString()}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+        <input type="submit" value="${uiLabelMap.CommonAdd}"/>
         </form>
    </#if>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -24,18 +24,11 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-
 <SCRIPT language="JavaScript">
 function insertImageName(type,nameValue) {
   eval('document.productCategoryForm.' + type + 'ImageUrl.value=nameValue;');
 };
 </SCRIPT>
-
-
-${pages.get("/category/CategoryTabBar.ftl")}
-
     <#if fileType?has_content>
         <div class='head3'>${uiLabelMap.ProductResultOfImageUpload}</div>
         <#if !(clientFileName?has_content)>
@@ -50,17 +43,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
     </#if>
 
 
-<div class="head1">${uiLabelMap.ProductCategory} <span class="head2">  <#if productCategory?has_content> 
-${productCategory.description?if_exists} 
-</#if>[${uiLabelMap.CommonId}:${productCategoryId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewCategory}]</a>
-<#if productCategoryId?has_content> 
-  <a href="/ecommerce/control/category?category_id=${productCategoryId}" class="buttontext" target="_blank">[${uiLabelMap.ProductCategoryPage}]</a>
-  <a href="<@ofbizUrl>/createProductInCategoryStart?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateProductInCategory}]</a>
-  <a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${productCategoryId}</@ofbizUrl>" class="buttontext">[Search in Category]</a>
-</#if>
-<br>
-<br>
+<br/>
 
 <#if ! productCategory?has_content> 
   <#if productCategoryId?has_content> 
@@ -97,7 +80,6 @@ ${productCategory.description?if_exists}
     </td>
   </tr>
 </#if>
-
   <tr>
     <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductProductCategoryType}</div></td>
     <td>&nbsp;</td>
@@ -110,23 +92,21 @@ ${productCategory.description?if_exists}
       </select>
     </td>
   </tr>
-<#--
   <tr>
     <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductDescription}</div></td>
     <td>&nbsp;</td>
     <td width="74%"><input type="text" <#if productCategory?has_content>value="${productCategory.description?if_exists}"</#if> name="description" size="60" maxlength="60" class="inputBox"></td>
   </tr>
+<#--
   <tr>
     <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.ProductLongDescription}</div></td>
     <td>&nbsp;</td>
     <td width="74%"><textarea cols="60" rows="3" name="longDescription" maxlength="2000" class="textAreaBox"><#if productCategory?has_content>${productCategory.longDescription?if_exists}</#if></textarea></td>
   </tr>
 -->
-
-
         <tr>
             <td width="20%" align=right valign=top>
-                <div class="tabletext"><b>${uiLabelMap.ProductCategoryImageUrl}</b></div>
+                <div class="tabletext">${uiLabelMap.ProductCategoryImageUrl}</div>
                 <#if (productCategory.categoryImageUrl)?exists>
                     <a href="<@ofbizContentUrl>${(productCategory.categoryImageUrl)?if_exists}</@ofbizContentUrl>" target="_blank"><img alt="Category Image" src="<@ofbizContentUrl>${(productCategory.categoryImageUrl)?if_exists}</@ofbizContentUrl>" height="40" width="40"></a>
                 </#if>
@@ -144,10 +124,9 @@ ${productCategory.description?if_exists}
             </#if>
             </td>
         </tr>
-
         <tr>
             <td width="20%" align=right valign=top>
-                <div class="tabletext"><b>${uiLabelMap.ProductLinkOneImageUrl}</b></div>
+                <div class="tabletext">${uiLabelMap.ProductLinkOneImageUrl}</div>
                 <#if (productCategory.linkOneImageUrl)?exists>
                     <a href="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)?if_exists}</@ofbizContentUrl>" target="_blank"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)?if_exists}</@ofbizContentUrl>" height="40" width="40"></a>
                 </#if>
@@ -165,11 +144,9 @@ ${productCategory.description?if_exists}
             </#if>
             </td>
         </tr>
-
-
         <tr>
             <td width="20%" align=right valign=top>
-                <div class="tabletext"><b>${uiLabelMap.ProductLinkTwoImageUrl}</b></div>
+                <div class="tabletext">${uiLabelMap.ProductLinkTwoImageUrl}</div>
                 <#if (productCategory.linkTwoImageUrl)?exists>
                     <a href="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)?if_exists}</@ofbizContentUrl>" target="_blank"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)?if_exists}</@ofbizContentUrl>" height="40" width="40"></a>
                 </#if>
@@ -186,7 +163,7 @@ ${productCategory.description?if_exists}
                 </div>
             </#if>
             </td>
-   </tr>
+       </tr>
 
   <tr>
     <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductDetailScreen}</div></td>
@@ -232,16 +209,13 @@ ${productCategory.description?if_exists}
     </SCRIPT>
     <div class="head3">${uiLabelMap.CategoryUploadImage}</div>
     <form method="POST" enctype="multipart/form-data" action="<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId?if_exists}&upload_file_type=category</@ofbizUrl>" name="imageUploadForm">
-        <input type="file" class="inputBox" size="50" name="fname">
-        <br>
+        <input type="file" class="inputBox" size="50" name="fname"/>
+        <br/>
         <span class="tabletext">
-            <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="category" checked onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=category</@ofbizUrl>");'>${uiLabelMap.ProductCategoryImageUrl}
-            <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="linkOne" onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=linkOne</@ofbizUrl>");'>${uiLabelMap.ProductLinkOneImageUrl}
-            <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="linkTwo"onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=linkTwo</@ofbizUrl>");'>${uiLabelMap.ProductLinkOneImageUrl}
+            <input class="radioButton" type="RADIO" name="upload_file_type_bogus" value="category" checked onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=category</@ofbizUrl>");'>${uiLabelMap.ProductCategoryImageUrl}
+            <input class="radioButton" type="RADIO" name="upload_file_type_bogus" value="linkOne" onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=linkOne</@ofbizUrl>");'>${uiLabelMap.ProductLinkOneImageUrl}
+            <input class="radioButton" type="RADIO" name="upload_file_type_bogus" value="linkTwo"onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=linkTwo</@ofbizUrl>");'>${uiLabelMap.ProductLinkOneImageUrl}
         </span>
-        <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}">
+        <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}"/>
     </form>
   </#if>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>

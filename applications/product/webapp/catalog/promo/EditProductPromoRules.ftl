@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,19 +25,11 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-${pages.get("/promo/PromoTabBar.ftl")}
-
-    <div class="head1">${uiLabelMap.ProductRules} <span class="head2">${uiLabelMap.CommonFor} <#if productPromo?exists>${(productPromo.promoName)?if_exists}</#if> [${uiLabelMap.CommonId}:${productPromoId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditProductPromo</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductPromo}]</a>
-    <br>
-    <br>
     <#if productPromoId?exists && productPromo?exists>
 
         <#-- ======================= Rules ======================== -->
 
-        <table border="1" width="100%" cellpadding="2" cellspacing="0">
+        <table border="1" cellpadding="2" cellspacing="0">
         <tr>
             <td width="10%"><div class="tabletext"><b>${uiLabelMap.ProductRuleId}</b></div></td>
             <td width="80%"><div class="tabletext"><b>${uiLabelMap.ProductRuleName}</b></div></td>
@@ -66,7 +58,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
         <tr valign="top">
             <td align="right"><div class="tabletext">${uiLabelMap.ProductConditions}:</div></td>
             <td align="left" colspan="2">
-                <table border="1" width="100%" cellpadding="2" cellspacing="0">
+                <table border="1" cellpadding="2" cellspacing="0">
                 <#assign maxCondSeqId = 1>
                 <#list productPromoConds as productPromoCond>
                     <tr>
@@ -214,7 +206,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
         <tr valign="top">
             <td align="right"><div class="tabletext">${uiLabelMap.ProductActions} :</div></td>
             <td align="left" colspan="2">
-                <table border="1" width="100%" cellpadding="2" cellspacing="0">
+                <table border="1" cellpadding="2" cellspacing="0">
                 <#assign maxActionSeqId = 1>
                 <#list productPromoActions as productPromoAction>
                     <tr>
@@ -454,6 +446,3 @@ ${pages.get("/promo/PromoTabBar.ftl")}
             </form>
         </div>
     </#if>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>

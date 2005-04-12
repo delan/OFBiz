@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -24,15 +24,7 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-  ${pages.get("/store/ProductStoreTabBar.ftl")}
-  <div class="head1">${uiLabelMap.ProductProductStoreWebSites} <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [${uiLabelMap.CommonId}:${productStoreId?if_exists}]</span></div>
-  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>
-  <br>
-  <br> 
-  
-  <table border="1" cellpadding="2" cellspacing="0" width="100%">
+<table border="1" cellpadding="2" cellspacing="0">
     <tr>
       <td><span class="tableheadtext">${uiLabelMap.ProductWebSiteId}</span></td>
       <td><span class="tableheadtext">${uiLabelMap.ProductHost}</span></td>
@@ -51,11 +43,11 @@
         </tr>
       </#list>
     </#if>
-  </table>
+</table>
   
-  <br>
-  <div class="head2">${uiLabelMap.ProductSetStoreOnWebSite}:</div>
-  <form name="addWebSite" action="<@ofbizUrl>/storeUpdateWebSite</@ofbizUrl>" method="post">
+  <br/>
+<div class="head2">${uiLabelMap.ProductSetStoreOnWebSite}:</div>
+<form name="addWebSite" action="<@ofbizUrl>/storeUpdateWebSite</@ofbizUrl>" method="post">
     <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
     <input type="hidden" name="productStoreId" value="${productStoreId}">
     <select class="selectBox" name="webSiteId">
@@ -64,7 +56,4 @@
       </#list>
     </select>
     <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonUpdate}">
-  </form>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>
+</form>

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -26,55 +26,27 @@
  *@since      2.2
  */
 
-import java.util.*;
-import java.sql.*;
-import java.io.*;
-import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.widget.html.*;
 
-security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
-
-if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}    
 nowTimestamp = UtilDateTime.nowTimestamp();
 context.put("nowTimestamp", nowTimestamp);
 
 String nowTimestampString = nowTimestamp.toString();
 context.put("nowTimestampString", nowTimestampString);
 
-URL catalogPropertiesURL = application.getResource("/WEB-INF/catalog.properties");
-if (catalogPropertiesURL != null) context.put("catalogPropertiesURL", catalogPropertiesURL.toString());
-
-String productCategoryId = request.getParameter("productCategoryId");
-context.put("productCategoryId", productCategoryId);
-
-GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
-context.put("productCategory", productCategory);
-
-if (productCategoryId == null || productCategoryId.length() == 0) productCategoryId = (String) request.getAttribute("productCategoryId");
-productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
-productCategoryType = null;
-if (productCategory == null) {
-    useValues = false;
-} else {
+if (productCategory != null) {
     productCategoryType = productCategory.getRelatedOne("ProductCategoryType");
+    categoryContent = productCategory.getRelated("ProductCategoryContent", null, UtilMisc.toList("prodCatContentTypeId"));
+
+    context.put("productCategoryType", productCategoryType);
+    context.put("categoryContent", categoryContent);
 }
 //ProductCategoryTypes
 productCategoryTypes = delegator.findAll("ProductCategoryType");
-context.put("productCategoryType", productCategoryType);
 context.put("productCategoryTypes", productCategoryTypes);
 
 // Start CategoryContent stuff
-
-categoryContent = null;
-if (productCategory != null) categoryContent = productCategory.getRelated("ProductCategoryContent", null, UtilMisc.toList("prodCatContentTypeId"));
-context.put("categoryContent", categoryContent);
-
 List categoryContentDatas = new LinkedList();
 Iterator categoryContentIter = categoryContent.iterator();
 while (categoryContentIter.hasNext()) {
@@ -96,17 +68,10 @@ prepareAddCategoryContentWrapper.putInContext("productCategory", productCategory
 
 HtmlFormWrapper addCategoryContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "AddCategoryContentAssoc", request, response);
 context.put("addCategoryContentWrapper", addCategoryContentWrapper);
-
 addCategoryContentWrapper.putInContext("productCategory", productCategory);
 
 context.put("categoryContentList", categoryContentDatas);
 
 // End ProductContent stuff
-
-boolean tryEntity = true;
-if (request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
-if (product == null) tryEntity = false;
-if("true".equalsIgnoreCase((String) request.getParameter("tryEntity"))) tryEntity = true;
-context.put("tryEntity", tryEntity);
 
 // UPLOADING STUFF

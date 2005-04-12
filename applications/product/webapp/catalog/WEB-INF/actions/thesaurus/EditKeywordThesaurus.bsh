@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,21 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Nathan De Graw
+ *@author     David E. Jones
  *@version    $Rev$
  *@since      3.0
  */
 
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
-
-delegator = request.getAttribute("delegator");
-security = request.getAttribute("security");
-
-if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}
 
 relationshipEnums = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "KW_THES_REL"), UtilMisc.toList("sequenceId"));
 

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,32 +25,23 @@
  *@since      2.2
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-
-${pages.get("/product/ProductTabBar.ftl")}
 <#if curProductFeatureCategory?exists>
-<div class="head1">${uiLabelMap.ProductAddProductFeatureFromCategory} "${(curProductFeatureCategory.description)?if_exists}"</div>
-<a href="<@ofbizUrl>/EditFeature?productFeatureCategoryId=${productFeatureCategoryId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewFeature}]</a>
+<a href="<@ofbizUrl>EditFeature?productFeatureCategoryId=${productFeatureCategoryId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewFeature}]</a>
 <#elseif productFeatureGroup?exists>
-<div class="head1">${uiLabelMap.ProductAddProductFeatureFromGroup} "${(productFeatureGroup.description)?if_exists}"</div>
-<a href="<@ofbizUrl>/EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit} ${productFeatureGroup.description?if_exists}]</a>
+<a href="<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit} ${productFeatureGroup.description?if_exists}]</a>
 </#if>
 <#if productId?has_content>
-    <div class="head2">${uiLabelMap.ProductAndApplyFeaturesToProductWithId} "${productId}"</div>
     <div>
         <a href="<@ofbizUrl>/EditProduct?productId=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductReturnToEditProduct}]</a>
         <a href="<@ofbizUrl>/EditProductFeatures?productId=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductReturnToEditProductFeatures}]</a>
     </div>
 </#if>
 
-<br>
-<p class="head2">${uiLabelMap.ProductProductFeatureMaintenance}</p>
 <#if (listSize > 0)>
     <#if productId?has_content>
       <#assign productString = "&productId=" + productId>
     </#if>
-    <table border="0" width="100%" cellpadding="2">
+    <table border="0" cellpadding="2">
         <tr>
         <td align=right>
             <span class="tabletext">
@@ -116,8 +107,3 @@ ${pages.get("/product/ProductTabBar.ftl")}
 <input type="hidden" name="_rowCount" value="${rowCount?if_exists}"/>
 </form>
 </table>
-<br>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>
-
