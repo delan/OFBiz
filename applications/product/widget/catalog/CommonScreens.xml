@@ -58,7 +58,7 @@
                             <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
                             <decorator-section-include name="body"/>
                         </container>
-                        <container style="endcolumns"/>
+                        <container style="endcolumns"><label text="&amp;nbsp;"/></container>
                     </container>
                 </container>
                 
@@ -83,6 +83,10 @@
     <screen name="keywordsearchbox">
         <section>
             <actions>
+                <entity-condition entity-name="ProductCategory" list-name="productCategories">
+                    <condition-expr field-name="showInSelect" operator="not-equals" value="N"/>
+                    <order-by field-name="description"/>
+                </entity-condition>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/find/keywordsearchbox.bsh"/>
             </actions>
             <widgets>
@@ -121,6 +125,22 @@
         </section>
     </screen>
 
+    <screen name="ChooseTopCategory">
+        <section>
+            <actions>
+				<set field="titleProperty" value="PageTitleChooseTopCategory"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/choosetopcategory.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+					<decorator-section name="body">
+		                <platform-specific><html><html-template location="component://product/webapp/catalog/ChooseTopCategory.ftl"/></html></platform-specific>
+                	</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="main">
         <section>
             <actions>
@@ -155,4 +175,3 @@
         </section>
     </screen>
 </screens>
-

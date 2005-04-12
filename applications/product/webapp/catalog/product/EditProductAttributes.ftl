@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,20 +25,8 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-
-${pages.get("/product/ProductTabBar.ftl")}
-    
-    <div class="head1">${uiLabelMap.ProductAttributes} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.internalName)?if_exists}</#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
-    
-    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
-    <#if productId?has_content>
-    <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductProductPage}]</a>
-    </#if>
-    <p>    
-    <#if productId?exists && product?exists>
-        <table border="1" cellpadding="2" cellspacing="0">
+<#if productId?exists && product?exists>
+    <table border="1" cellpadding="2" cellspacing="0">
         <tr>
             <td><div class="tabletext"><b>${uiLabelMap.ProductName}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductValueType}</b></div></td>
@@ -47,35 +35,32 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <tr valign="middle">
             <td><div class="tabletext">${(productAttribute.attrName)?if_exists}</div></td>
             <td>
-                <FORM method=POST action="<@ofbizUrl>/UpdateProductAttribute?UPDATE_MODE=UPDATE</@ofbizUrl>">
-                    <input type=hidden name="PRODUCT_ID" value="${(productAttribute.productId)?if_exists}">
-                    <input type=hidden name="ATTRIBUTE_NAME" value="${(productAttribute.attrName)?if_exists}">
-                    <input type="text" class="inputBox" size="50" name="ATTRIBUTE_VALUE" value="${(productAttribute.attrValue)?if_exists}">
-                    <input type="text" class="inputBox" size="15" name="ATTRIBUTE_TYPE" value="${(productAttribute.attrType)?if_exists}">
-                    <INPUT type=submit value="Update">
-                </FORM>
+                <form method="POST" action="<@ofbizUrl>UpdateProductAttribute?UPDATE_MODE=UPDATE</@ofbizUrl>">
+                    <input type="hidden" name="productId" value="${productAttribute.productId}"/>
+                    <input type="hidden" name="PRODUCT_ID" value="${productAttribute.productId}"/>
+                    <input type="hidden" name="ATTRIBUTE_NAME" value="${productAttribute.attrName}"/>
+                    <input type="text" class="inputBox" size="50" name="ATTRIBUTE_VALUE" value="${(productAttribute.attrValue)?if_exists}"/>
+                    <input type="text" class="inputBox" size="15" name="ATTRIBUTE_TYPE" value="${(productAttribute.attrType)?if_exists}"/>
+                    <input type="submit" value="Update"/>
+                </form>
             </td>
             <td>
-            <a href="<@ofbizUrl>/UpdateProductAttribute?UPDATE_MODE=DELETE&PRODUCT_ID=${(productAttribute.productId)?if_exists}&ATTRIBUTE_NAME=${(productAttribute.attrName)?if_exists}</@ofbizUrl>" class="buttontext">
+            <a href="<@ofbizUrl>UpdateProductAttribute?UPDATE_MODE=DELETE&productId=${productAttribute.productId}&PRODUCT_ID=${productAttribute.productId}&ATTRIBUTE_NAME=${productAttribute.attrName}</@ofbizUrl>" class="buttontext">
             [${uiLabelMap.CommonDelete}]</a>
             </td>
         </tr>
         </#list>
-        </table>
-        <br>
-        <form method="POST" action="<@ofbizUrl>/UpdateProductAttribute</@ofbizUrl>" style="margin: 0;">
-        <input type="hidden" name="PRODUCT_ID" value="${productId}">
-        <input type="hidden" name="UPDATE_MODE" value="CREATE">
-        <input type="hidden" name="useValues" value="true">
-        
+    </table>
+    <br/>
+    <form method="POST" action="<@ofbizUrl>/UpdateProductAttribute</@ofbizUrl>" style="margin: 0;">
+        <input type="hidden" name="productId" value="${productId}"/>
+        <input type="hidden" name="PRODUCT_ID" value="${productId}"/>
+        <input type="hidden" name="UPDATE_MODE" value="CREATE"/>
+        <input type="hidden" name="useValues" value="true"/>
         <div class="head2">${uiLabelMap.ProductAddProductAttributeNameValueType}:</div>
-        <br>
-        <input type="text" class="inputBox" name="ATTRIBUTE_NAME" size="15">&nbsp;
-        <input type="text" class="inputBox" name="ATTRIBUTE_VALUE" size="50">&nbsp;
-        <input type="text" class="inputBox" name="ATTRIBUTE_TYPE" size="15">&nbsp;
-        <input type="submit" value="Add">
-        </form>
-    </#if>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
+        <input type="text" class="inputBox" name="ATTRIBUTE_NAME" size="15"/>&nbsp;
+        <input type="text" class="inputBox" name="ATTRIBUTE_VALUE" size="50"/>&nbsp;
+        <input type="text" class="inputBox" name="ATTRIBUTE_TYPE" size="15"/>&nbsp;
+        <input type="submit" value="Add"/>
+    </form>
 </#if>

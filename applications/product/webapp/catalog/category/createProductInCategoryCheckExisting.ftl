@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,12 +25,8 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-
-<div class="head1">${uiLabelMap.ProductCreateProductInCategory }<span class="head2"><#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [ID:${productCategoryId?if_exists}]</span></div>
 <#if productCategoryId?has_content>
-    <a href="<@ofbizUrl>/EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[uiLabelMap.ProductBackToEditCategory}]</a>
+    <a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductBackToEditCategory}]</a>
 </#if>
 
 <div class="head1">
@@ -48,7 +44,12 @@
 </div>
 
 <#if products?has_content>
-    <table width="100%" cellpadding="1" cellspacing="0" border="1">
+    <table cellpadding="1" cellspacing="0" border="1">
+        <tr>
+            <td><div class="tableheadtext">${uiLabelMap.ProductInternalName}</div></td>
+            <td><div class="tableheadtext">${uiLabelMap.ProductProductName}</div></td>
+            <td width="10%">&nbsp;</td>
+        </tr>
     <#list products as product>
         <tr>
             <td><div class="tabletext">${product.internalName?default("-no internal name-")} [${product.productId}]</div></td>
@@ -61,11 +62,11 @@
     <div class="head3">&nbsp;${uiLabelMap.ProductNoExistingProductsFound}.</div>
 </#if>
 
-<hr class="sepbar"/>
+<br/>
 
 <form name="createProductInCategoryForm" method="POST" action="<@ofbizUrl>/createProductInCategory</@ofbizUrl>" style="margin: 0;">
     <input type="hidden" name="productCategoryId" value="${productCategoryId}">
-    <table width="100%" cellpadding="1" cellspacing="0" border="1">
+    <table cellpadding="1" cellspacing="0" border="1">
         <#list productFeatureAndTypeDatas?if_exists as productFeatureAndTypeData>
             <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
             <#assign productFeature = productFeatureAndTypeData.productFeature>
@@ -134,7 +135,3 @@
         </tr>
     </table>
 </form>
-
-<#else>
-    <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>

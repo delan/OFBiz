@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,31 +25,11 @@
  *@since      2.2
  */
 
-import java.util.*;
-import java.sql.*;
-import java.io.*;
-import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
-import org.ofbiz.widget.html.*;
-
-security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
-
-if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}    
-
-nowTimestamp = UtilDateTime.nowTimestamp();
-nowTimestampString = nowTimestamp.toString();
 
 //default this to true, ie only show active
 boolean activeOnly = !"false".equals(request.getParameter("activeOnly"));
-
-productCategoryId = request.getParameter("productCategoryId");
-productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
 
 productCategoryMembers = null;
 if (productCategory != null) {
@@ -61,11 +41,7 @@ if (activeOnly) {
 
 productCategories = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
 
-context.put("nowTimestamp", nowTimestamp);
-context.put("nowTimestampString", nowTimestampString);
 context.put("activeOnly", activeOnly);
-context.put("productCategoryId", productCategoryId);
-context.put("productCategory", productCategory);
 context.put("productCategoryMembers", productCategoryMembers);
 context.put("productCategories", productCategories);
 
@@ -76,13 +52,13 @@ int lowIndex = 0;
 int listSize = 0;
 
 try {
-    viewIndex = Integer.valueOf((String) context.getRequest().getParameter("VIEW_INDEX")).intValue();
+    viewIndex = Integer.valueOf((String) parameters.get("VIEW_INDEX")).intValue();
 } catch (Exception e) {
     viewIndex = 0;
 }
 
 try {
-    viewSize = Integer.valueOf((String) context.getRequest().getParameter("VIEW_SIZE")).intValue();
+    viewSize = Integer.valueOf((String) parameters.get("VIEW_SIZE")).intValue();
 } catch (Exception e) {
     viewSize = 20;
 }

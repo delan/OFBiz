@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <script language="JavaScript">
 <!--
 function setAssocFields(select) {
@@ -63,24 +62,20 @@ function setAssocFields(select) {
 // -->
 </script>
 
-<#if hasPermission>
-  ${pages.get("/store/ProductStoreTabBar.ftl")}
-  <div class="head1">${uiLabelMap.ProductProductStoreShipmentSettings} <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [${uiLabelMap.CommonId}:${productStoreId?if_exists}]</span></div>
-  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>
   <#if !requestParameters.createNew?exists || requestParameters.createNew != "Y">
-    <a href="<@ofbizUrl>/EditProductStoreShipSetup?viewProductStoreId=${productStoreId}&createNew=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewShipmentEstimate}]</a>
+    <a href="<@ofbizUrl>EditProductStoreShipSetup?viewProductStoreId=${productStoreId}&createNew=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewShipmentEstimate}]</a>
   </#if>
   <#if !requestParameters.newShipMethod?exists || requestParameters.newShipMethod != "Y">
-    <a href="<@ofbizUrl>/EditProductStoreShipSetup?viewProductStoreId=${productStoreId}&newShipMethod=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewShipmentMethod}]</a>
+    <a href="<@ofbizUrl>EditProductStoreShipSetup?viewProductStoreId=${productStoreId}&newShipMethod=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewShipmentMethod}]</a>
   </#if>
   <#if requestParameters.newShipMethod?default("N") == "Y" || requestParameters.createNew?default("N") == "Y">
-    <a href="<@ofbizUrl>/EditProductStoreShipSetup?viewProductStoreId=${productStoreId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductViewEstimates}]</a>
+    <a href="<@ofbizUrl>EditProductStoreShipSetup?viewProductStoreId=${productStoreId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductViewEstimates}]</a>
   </#if>
   <br>
   <br>
-
+<#-- Shipping Setup From Catalog->Store->Shipping-->
   <#if !requestParameters.createNew?exists && !requestParameters.newShipMethod?exists>
-    <table border="1" cellpadding="2" cellspacing="0" width="100%">
+    <table border="1" cellpadding="2" cellspacing="0">
       <tr>
         <td nowrap><div class="tableheadtext">${uiLabelMap.ProductEstimateId}</div></td>
         <td nowrap><div class="tableheadtext">${uiLabelMap.ProductMethod}</div></td>
@@ -106,7 +101,7 @@ function setAssocFields(select) {
           <td><div class="tabletext">${estimate.orderFlatPrice?default(0)}</div></td>
           <td><div class="tabletext">${estimate.orderItemFlatPrice?default(0)}</div></td>
           <td align="center">
-            <div class="tabletext"><#if security.hasEntityPermission("SHIPRATE", "_DELETE", session)><a href="<@ofbizUrl>/storeRemoveShipRate?viewProductStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></#if> <a href="<@ofbizUrl>/EditProductStoreShipSetup?viewProductStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonView}]</a></div>
+            <div class="tabletext"><#if security.hasEntityPermission("SHIPRATE", "_DELETE", session)><a href="<@ofbizUrl>storeRemoveShipRate?viewProductStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></#if> <a href="<@ofbizUrl>EditProductStoreShipSetup?viewProductStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonView}]</a></div>
           </td>
         </tr>
       </#list>
@@ -281,7 +276,7 @@ function setAssocFields(select) {
 
   <#if requestParameters.createNew?exists>
     <div class="head2">${uiLabelMap.ProductNewShipmentEstimate} :</div>
-    <form name="addform" method="post" action="<@ofbizUrl>/storeCreateShipRate</@ofbizUrl>">
+    <form name="addform" method="post" action="<@ofbizUrl>storeCreateShipRate</@ofbizUrl>">
       <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
       <input type="hidden" name="productStoreId" value="${productStoreId}">
       <table cellspacing="2" cellpadding="2">
@@ -484,12 +479,12 @@ function setAssocFields(select) {
       </table>
     </form>
   </#if>
-
+<#-- New Shippment Methods-->
   <#if requestParameters.newShipMethod?exists>
     <div class="head2">${uiLabelMap.ProductStoreShipmentMethodAssociations}</div>
-    <table border="1" cellpadding="2" cellspacing="0" width="100%">
+    <table border="1" cellpadding="2" cellspacing="0">
       <tr>
-        <td><span class="tableheadtext">${uiLabelMap.ProductMethodType}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductMethodType}e</span></td>
         <td><span class="tableheadtext">${uiLabelMap.PartyParty}</span></td>
         <td><span class="tableheadtext">Min Sz</span></td>
         <td><span class="tableheadtext">Max Sz</span></td>
@@ -513,7 +508,7 @@ function setAssocFields(select) {
         <#assign idx = 0>
         <#list storeShipMethods as meth>
           <#assign idx = idx + 1>
-          <form name="methUpdate${idx}" method="post" action="<@ofbizUrl>/storeUpdateShipMeth</@ofbizUrl>">
+          <form name="methUpdate${idx}" method="post" action="<@ofbizUrl>storeUpdateShipMeth</@ofbizUrl>">
             <input type="hidden" name="shipmentMethodTypeId" value="${meth.shipmentMethodTypeId}">
             <input type="hidden" name="partyId" value="${meth.partyId}">
             <input type="hidden" name="roleTypeId" value="${meth.roleTypeId}">
@@ -542,7 +537,7 @@ function setAssocFields(select) {
               <td width='1' align="right">
                 <nobr>
                   <a href="javascript:document.methUpdate${idx}.submit();" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
-                  <a href="<@ofbizUrl>/storeRemoveShipMeth?viewProductStoreId=${productStoreId}&productStoreId=${meth.productStoreId}&newShipMethod=Y&shipmentMethodTypeId=${meth.shipmentMethodTypeId}&partyId=${meth.partyId}&roleTypeId=${meth.roleTypeId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
+                  <a href="<@ofbizUrl>storeRemoveShipMeth?viewProductStoreId=${productStoreId}&productStoreId=${meth.productStoreId}&newShipMethod=Y&shipmentMethodTypeId=${meth.shipmentMethodTypeId}&partyId=${meth.partyId}&roleTypeId=${meth.roleTypeId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
                 </nobr>
               </td>
             </tr>
@@ -552,7 +547,7 @@ function setAssocFields(select) {
     </table>
     <br>
     <table cellspacing="2" cellpadding="2">
-      <form name="addscarr" method="post" action="<@ofbizUrl>/storeCreateShipMeth</@ofbizUrl>">
+      <form name="addscarr" method="post" action="<@ofbizUrl>storeCreateShipMeth</@ofbizUrl>">
         <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
         <input type="hidden" name="newShipMethod" value="Y">
         <input type="hidden" name="productStoreId" value="${productStoreId}">
@@ -737,7 +732,7 @@ function setAssocFields(select) {
 
     <div class="head2">${uiLabelMap.ProductShipmentMethodType} :</div>
     <table cellspacing="2" cellpadding="2">
-      <form name="editmeth" method="post" action="<@ofbizUrl>/EditProductStoreShipSetup</@ofbizUrl>">
+      <form name="editmeth" method="post" action="<@ofbizUrl>EditProductStoreShipSetup</@ofbizUrl>">
         <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
         <input type="hidden" name="newShipMethod" value="Y">
         <tr>
@@ -789,7 +784,7 @@ function setAssocFields(select) {
 
     <div class="head2">${uiLabelMap.ProductCarrierShipmentMethod} :</div>
     <table cellspacing="2" cellpadding="2">
-      <form name="editcarr" method="post" action="<@ofbizUrl>/EditProductStoreShipSetup</@ofbizUrl>">
+      <form name="editcarr" method="post" action="<@ofbizUrl>EditProductStoreShipSetup</@ofbizUrl>">
         <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
         <input type="hidden" name="newShipMethod" value="Y">
         <tr>
@@ -878,6 +873,3 @@ function setAssocFields(select) {
       </form>
     </table>
   </#if>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>

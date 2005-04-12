@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -28,26 +28,10 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.base.util.*;
  
-security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
-
-if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}
-
 shipmentCostEstimateId = request.getParameter("shipmentCostEstimateId");
 if (shipmentCostEstimateId != null) {
     shipmentCostEstimate = delegator.findByPrimaryKey("ShipmentCostEstimate", UtilMisc.toMap("shipmentCostEstimateId", shipmentCostEstimateId));
     context.put("shipEstimate", shipmentCostEstimate);
-}
-
-productStoreId = request.getParameter("viewProductStoreId");
-if (productStoreId != null) {
-    productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));    
-    context.put("productStoreId", productStoreId);
-    context.put("productStore", productStore);    
 }
 
 estimates = delegator.findByAnd("ShipmentCostEstimate", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("geoIdFrom", "shipmentMethodTypeId", "geoIdTo"));

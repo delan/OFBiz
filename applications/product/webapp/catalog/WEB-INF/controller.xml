@@ -1996,56 +1996,54 @@
 
     <view-map name="FastLoadCache" type="region"/>
     <view-map name="FindProductById" type="region"/>
-    <view-map name="ChooseTopCategory" type="jpublish" page="/ChooseTopCategory.ftl"/>
-    <view-map name="advancedsearch" type="jpublish" page="/find/advancedsearch.ftl"/>
-    <view-map name="keywordsearch" type="jpublish" page="/find/keywordsearch.ftl"/>
+    <view-map name="ChooseTopCategory" type="screen" page="component://product/widget/catalog/CommonScreens.xml#ChooseTopCategory"/>
+    <view-map name="advancedsearch" type="screen" page="component://product/widget/catalog/FindScreens.xml#advancedsearch"/>
+    <view-map name="keywordsearch" type="screen" page="component://product/widget/catalog/FindScreens.xml#keywordsearch"/>
 
-    <!-- <view-map name="EditCategory" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategory"/> -->
-    <view-map name="EditCategory" type="jpublish" page="/category/EditCategory.ftl"/>
-    <view-map name="EditCategoryContent" type="jpublish" page="/category/EditCategoryContent.ftl"/>
-    <view-map name="EditCategoryContentContent" type="jpublish" page="/category/EditCategoryContentContent.ftl"/>
-    <view-map name="EditCategoryRollup" type="jpublish" page="/category/EditCategoryRollup.ftl"/>
-    <view-map name="EditCategoryProducts" type="jpublish" page="/category/EditCategoryProducts.ftl"/>
-    <view-map name="EditCategoryProdCatalogs" type="jpublish" page="/category/EditCategoryProdCatalogs.ftl"/>
-    <view-map name="EditCategoryFeatureCats" type="jpublish" page="/category/EditCategoryFeatureCats.ftl"/>
-    <view-map name="EditCategoryParties" type="jpublish" page="/category/EditCategoryParties.ftl"/>
+    <view-map name="EditCategory" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategory"/>
+    <view-map name="EditCategoryContent" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryContent"/>
+    <view-map name="EditCategoryContentContent" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryContentContent"/>
+    <view-map name="EditCategoryRollup" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryRollup"/>
+    <view-map name="EditCategoryProducts" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryProducts"/>
+    <view-map name="EditCategoryProdCatalogs" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryProdCatalogs"/>
+    <view-map name="EditCategoryFeatureCats" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryFeatureCats"/>
+    <view-map name="EditCategoryParties" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryParties"/>
     <view-map name="UploadCategoryImage" type="region"/>
 
-    <view-map name="createProductInCategoryStart" type="jpublish" page="/category/createProductInCategoryStart.ftl"/>
-    <view-map name="createProductInCategoryCheckExisting" type="jpublish" page="/category/createProductInCategoryCheckExisting.ftl"/>
+    <view-map name="createProductInCategoryStart" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#createProductInCategoryStart"/>
+    <view-map name="createProductInCategoryCheckExisting" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#createProductInCategoryCheckExisting"/>
 
-    <!-- This is a work in progress; but seems to be pretty stable at this point -->
     <view-map name="EditProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProduct"/>
     <view-map name="EditProductPrices" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductPrices"/>
     <view-map name="EditProductAssetUsage" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductAssetUsage"/>
     <view-map name="showFixedAssetProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#showFixedAssetProduct"/>
     <view-map name="newFixedAssetProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#newFixedAssetProduct"/>
 
-    <view-map name="EditProductContent" type="jpublish" page="/product/EditProductContent.ftl"/>
-    <view-map name="EditProductGoodIdentifications" type="jpublish" page="/product/EditProductGoodIdentifications.ftl"/>
-    <view-map name="EditProductCategories" type="jpublish" page="/product/EditProductCategories.ftl"/>
-    <view-map name="EditProductKeyword" type="jpublish" page="/product/EditProductKeyword.ftl"/>
-    <view-map name="EditProductAssoc" type="jpublish" page="/product/EditProductAssoc.ftl"/>
-    <!--<view-map name="EditProductAssoc" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductAssoc"/>-->
+    <view-map name="EditProductContent" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductContent"/>
+    <view-map name="EditProductGoodIdentifications" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductGoodIdentifications"/>
+    <view-map name="EditProductCategories" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductCategories"/>
+    <view-map name="EditProductKeyword" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductKeyword"/>
+    <view-map name="EditProductAssoc" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductAssoc"/>
     <view-map name="ViewProductManufacturing" type="screen" page="component://product/widget/catalog/ProductScreens.xml#ViewProductManufacturing"/>
-    
-    <view-map name="EditProductAttributes" type="jpublish" page="/product/EditProductAttributes.ftl"/>
-    <view-map name="EditProductFeatures" type="jpublish" page="/product/EditProductFeatures.ftl"/>
-    <view-map name="ApplyFeaturesFromCategory" type="jpublish" page="/product/ApplyFeaturesFromCategory.ftl"/>
-    <view-map name="EditProductFacilities" type="jpublish" page="/product/EditProductFacilities.ftl"/>
-    <view-map name="EditProductFacilityLocations" type="jpublish" page="/product/EditProductFacilityLocations.ftl"/>
-    <view-map name="EditProductQuickAdmin" type="jpublish" page="/product/EditProductQuickAdmin.ftl"/>
-    <view-map name="EditProductInventoryItems" type="jpublish" page="/product/EditProductInventoryItems.ftl"/>
-    <view-map name="EditProductGlAccounts" type="jpublish" page="/product/EditProductGlAccounts.ftl"/>
-    <view-map name="EditProductContentContent" type="jpublish" page="/product/EditProductContentContent.ftl"/>
-    <view-map name="EditSupplierProduct" type="jpublish" page="/product/EditSupplierProduct.ftl"/>
+
+    <view-map name="EditProductAttributes" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductAttributes"/>
+    <view-map name="EditProductFeatures" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductFeatures"/>
+    <view-map name="ApplyFeaturesFromCategory" type="screen" page="component://product/widget/catalog/ProductScreens.xml#ApplyFeaturesFromCategory"/>
+    <view-map name="EditProductFacilities" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductFacilities"/>
+    <view-map name="EditProductFacilityLocations" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductFacilityLocations"/>
+    <view-map name="EditProductQuickAdmin" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductQuickAdmin"/>
+    <view-map name="EditProductInventoryItems" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductInventoryItems"/>
+    <view-map name="EditProductGlAccounts" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductGlAccounts"/>
+    <view-map name="EditProductContentContent" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductContentContent"/>
+    <view-map name="EditSupplierProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditSupplierProduct"/>
+
     <!-- Product Configuration views -->
     <view-map name="EditProductConfigs" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductConfigs"/>
 
     <view-map name="UploadImage" type="region"/>
 
-    <view-map name="QuickAddVariants" type="jpublish" page="/product/QuickAddVariants.ftl"/>
-    <view-map name="CreateVirtualWithVariantsForm" type="jpublish" page="/product/CreateVirtualWithVariantsForm.ftl"/>
+    <view-map name="QuickAddVariants" type="screen" page="component://product/widget/catalog/ProductScreens.xml#QuickAddVariants"/>
+    <view-map name="CreateVirtualWithVariantsForm" type="screen" page="component://product/widget/catalog/ProductScreens.xml#CreateVirtualWithVariantsForm"/>
     
     <view-map name="EditFeature" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeature"/>
     <view-map name="EditFeatureCategories" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureCategories"/>
@@ -2061,38 +2059,38 @@
     <view-map name="EditProdCatalogStores" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogStores"/>
     <view-map name="EditProdCatalogParties" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogParties"/>
 
-    <view-map name="FindProductPromo" type="jpublish" page="/promo/FindProductPromo.ftl"/>
-    <view-map name="EditProductPromo" type="jpublish" page="/promo/EditProductPromo.ftl"/>
-    <view-map name="EditProductPromoRules" type="jpublish" page="/promo/EditProductPromoRules.ftl"/>
-    <view-map name="EditProductPromoStores" type="jpublish" page="/promo/EditProductPromoStores.ftl"/>
-    <view-map name="FindProductPromoCode" type="jpublish" page="/promo/FindProductPromoCode.ftl"/>
-    <view-map name="EditProductPromoCode" type="jpublish" page="/promo/EditProductPromoCode.ftl"/>
+    <view-map name="FindProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#FindProductPromo"/>
+    <view-map name="EditProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#EditProductPromo"/>
+    <view-map name="EditProductPromoRules" type="screen" page="component://product/widget/catalog/PromoScreens.xml#EditProductPromoRules"/>
+    <view-map name="EditProductPromoStores" type="screen" page="component://product/widget/catalog/PromoScreens.xml#EditProductPromoStores"/>
+    <view-map name="FindProductPromoCode" type="screen" page="component://product/widget/catalog/PromoScreens.xml#FindProductPromoCode"/>
+    <view-map name="EditProductPromoCode" type="screen" page="component://product/widget/catalog/PromoScreens.xml#EditProductPromoCode"/>
 
-    <view-map name="FindPriceRules" type="jpublish" page="/price/FindProductPriceRule.ftl"/>
-    <view-map name="EditProductPriceRules" type="jpublish" page="/price/EditProductPriceRules.ftl"/>
+    <view-map name="FindPriceRules" type="jpublish" page="/price/FindProductPriceRule.ftl"/><!--type="screen" page="component://product/widget/catalog/PriceScreens.xml#FindProductPriceRule"/>-->
+    <view-map name="EditProductPriceRules" type="jpublish" page="/price/EditProductPriceRules.ftl"/><!--type="screen" page="component://product/widget/catalog/PriceScreens.xml#EditProductPriceRules"/>-->
 
-    <view-map name="FindProductStore" type="jpublish" page="/store/FindProductStore.ftl"/>
-    <view-map name="EditProductStore" type="jpublish" page="/store/EditProductStore.ftl"/>
-    <view-map name="EditProductStoreRoles" type="jpublish" page="/store/EditProductStoreRoles.ftl"/>
-    <view-map name="EditProductStoreEmails" type="jpublish" page="/store/EditProductStoreEmails.ftl"/>
-    <view-map name="EditProductStorePromos" type="jpublish" page="/store/EditProductStorePromos.ftl"/>
-    <view-map name="EditProductStoreCatalogs" type="jpublish" page="/store/EditProductStoreCatalogs.ftl"/>
-    <view-map name="EditProductStoreShipSetup" type="jpublish" page="/store/EditProductStoreShipSetup.ftl"/>
-    <view-map name="EditProductStoreSurveys" type="jpublish" page="/store/EditProductStoreSurveys.ftl"/>
-    <view-map name="EditProductStoreTaxSetup" type="jpublish" page="/store/EditProductStoreTaxSetup.ftl"/>
-    <view-map name="EditProductStorePaySetup" type="jpublish" page="/store/EditProductStorePaySetup.ftl"/>
-    <view-map name="EditProductStoreWebSites" type="jpublish" page="/store/EditProductStoreWebSites.ftl"/>
-    <view-map name="EditProductStoreKeywordOvrd" type="jpublish" page="/store/EditProductStoreKeywordOvrd.ftl"/>
+    <view-map name="FindProductStore" type="screen" page="component://product/widget/catalog/StoreScreens.xml#FindProductStore"/>
+    <view-map name="EditProductStore" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStore"/>
+    <view-map name="EditProductStoreRoles" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreRoles"/>
+    <view-map name="EditProductStoreEmails" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreEmails"/>
+    <view-map name="EditProductStorePromos" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStorePromos"/>
+    <view-map name="EditProductStoreCatalogs" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreCatalogs"/>
+    <view-map name="EditProductStoreShipSetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreShipSetup"/>
+    <view-map name="EditProductStoreSurveys" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreSurveys"/>
+    <view-map name="EditProductStoreTaxSetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreTaxSetup"/>
+    <view-map name="EditProductStorePaySetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStorePaySetup"/>
+    <view-map name="EditProductStoreWebSites" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreWebSites"/>
+    <view-map name="EditProductStoreKeywordOvrd" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreKeywordOvrd"/>
 
-    <view-map name="EditKeywordThesaurus" type="jpublish" page="/thesaurus/EditKeywordThesaurus.ftl"/>
+    <view-map name="EditKeywordThesaurus" type="screen" page="component://product/widget/catalog/ThesaurusScreens.xml#EditKeywordThesaurus"/>
 
-    <view-map name="pendingReviews" type="jpublish" page="/reviews/pendingReviews.ftl"/>
+    <view-map name="pendingReviews" type="jpublish" page="/reviews/pendingReviews.ftl"/><!--type="screen" page="component://product/widget/catalog/ReviewsScreens.xml#pendingReviews"/>-->
     
-    <view-map name="FindProductConfigItems" page="/config/FindProductConfigItems.ftl" type="jpublish"/>
-    <view-map name="EditProductConfigItem" page="/config/EditProductConfigItem.ftl" type="jpublish"/>
-    <view-map name="EditProductConfigOptions" page="/config/EditProductConfigOptions.ftl" type="jpublish"/>
-    <view-map name="EditProductConfigItemContent" type="jpublish" page="/config/EditProductConfigItemContent.ftl"/>
-    <view-map name="EditProductConfigItemContentContent" type="jpublish" page="/config/EditProductConfigItemContentContent.ftl"/>
+    <view-map name="FindProductConfigItems" page="/config/FindProductConfigItems.ftl" type="jpublish"/><!--type="screen" page="component://product/widget/catalog/ConfigScreens.xml#FindProductConfigItems"/>-->
+    <view-map name="EditProductConfigItem" page="/config/EditProductConfigItem.ftl" type="jpublish"/><!--type="screen" page="component://product/widget/catalog/ConfigScreens.xml#EditProductConfigItem"/>-->
+    <view-map name="EditProductConfigOptions" page="/config/EditProductConfigOptions.ftl" type="jpublish"/><!--type="screen" page="component://product/widget/catalog/ConfigScreens.xml#EditProductConfigOptions"/>-->
+    <view-map name="EditProductConfigItemContent" type="jpublish" page="/config/EditProductConfigItemContent.ftl"/><!--type="screen" page="component://product/widget/catalog/ConfigScreens.xml#EditProductConfigItemContent"/>-->
+    <view-map name="EditProductConfigItemContentContent" type="jpublish" page="/config/EditProductConfigItemContentContent.ftl"/><!--type="screen" page="component://product/widget/catalog/ConfigScreens.xml#EditProductConfigItemContentContent"/>-->
 
     <!-- Lookup request mappings -->
     <view-map name="LookupFixedAsset" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset" type="screen"/>
@@ -2102,4 +2100,5 @@
     <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
     <view-map name="LookupPartyName" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName" type="screen"/>
     <!-- end of view mappings -->
+
 </site-conf>

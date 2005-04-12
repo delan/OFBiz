@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -33,17 +33,6 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.widget.html.*;
 import org.ofbiz.securityext.login.*;
 
-security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
-
-if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}
-
-productId = request.getParameter("productId");
-
 quantitySummaryByFacility = new HashMap();
 // The warehouse list is selected
 facilityList = delegator.findByAnd("Facility", UtilMisc.toMap("facilityTypeId", "WAREHOUSE"));
@@ -64,8 +53,6 @@ while (facilityIterator.hasNext()) {
     quantitySummary.put("totalAvailableToPromise", resultOutput.get("availableToPromiseTotal"));
     quantitySummaryByFacility.put(facility.getString("facilityId"), quantitySummary);
 }
-
-product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 
 productInventoryItems = delegator.findByAnd("InventoryItem", 
         UtilMisc.toMap("productId", productId), 
@@ -226,8 +213,6 @@ while (outgoingProductionRunsIter.hasNext()) {
 
 showEmpty = "true".equals(request.getParameter("showEmpty"));
 
-context.put("productId", productId);
-context.put("product", product);
 context.put("productInventoryItems", productInventoryItems);
 context.put("quantitySummaryByFacility", quantitySummaryByFacility);
 context.put("showEmpty", showEmpty);

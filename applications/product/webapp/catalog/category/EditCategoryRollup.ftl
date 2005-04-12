@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,24 +25,10 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-
-${pages.get("/category/CategoryTabBar.ftl")}
-
-<div class="head1">${uiLabelMap.ProductRollup} <span class="head2"><#if productCategory?has_content>${productCategory.description?default("No Description")} </#if>[${uiLabelMap.CommonId}:${productCategoryId?if_exists}]</span></div>
-  
-<a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewCategory}]</a>
-<#if productCategoryId?has_content> 
-  <a href="/ecommerce/control/category?category_id=${productCategoryId}" class="buttontext" target="_blank">[${uiLabelMap.ProductCategoryPage}]</a>
-</#if>
-<br>
-<br>
-
 <#if productCategoryId?has_content> 
 <p class="head2">${uiLabelMap.ProductCategoryRollupParentCategories}</p>
 
-<table width="100%" border="1" cellpadding="2" cellspacing="0">
+<table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td><div class="tabletext"><b>${uiLabelMap.ProductParentCategoryId}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
@@ -108,7 +94,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
 
 <p class="head2">${uiLabelMap.ProductCategoryRollupChildCategories}</p>
 
-<table width="100%" border="1" cellpadding="2" cellspacing="0">
+<table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td><div class="tabletext"><b>${uiLabelMap.ProductChildCategoryId}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
@@ -169,8 +155,4 @@ ${pages.get("/category/CategoryTabBar.ftl")}
   <a href="javascript:call_cal(document.addChildForm.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
   <input type="submit" value="${uiLabelMap.CommonAdd}">
 </form>
-</#if>
-
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
 </#if>

@@ -29,49 +29,20 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.string.*;
 import org.ofbiz.entity.*;
 
-security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
-
-if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}
-
-
-boolean useValues = true;
-if(request.getAttribute("_ERROR_MESSAGE_") != null) useValues = false;
-
-productCategoryId = request.getParameter("productCategoryId");
-if (productCategoryId == null || productCategoryId.length() == 0) productCategoryId = (String) request.getAttribute("productCategoryId");
-productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
 productCategoryType = null;
-if (productCategory == null) {
-    useValues = false;
-} else {
+if (productCategory != null) {
     productCategoryType = productCategory.getRelatedOne("ProductCategoryType");
+    context.put("productCategoryType", productCategoryType);
 }
-
-//ProductCategoryTypes
-productCategoryTypes = delegator.findAll("ProductCategoryType");
 
 primaryParentCategory = null;
 primParentCatIdParam = request.getParameter("primaryParentCategoryId");
-if(productCategory != null && useValues)  {
+if(productCategory != null) {
     primaryParentCategory = productCategory.getRelatedOne("PrimaryParentProductCategory");
-} else if(primParentCatIdParam != null && primParentCatIdParam.length() > 0) {
+} else if (primParentCatIdParam != null && primParentCatIdParam.length() > 0) {
     primaryParentCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primParentCatIdParam));
 }
-
-categoryList = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
-
-context.put("productCategoryId", productCategoryId);
-context.put("productCategory", productCategory);
-context.put("productCategoryType", productCategoryType);
-context.put("productCategoryTypes", productCategoryTypes);
 context.put("primaryParentCategory", primaryParentCategory);
-context.put("categoryList", categoryList);
-
 
 
 // make the image file formats
@@ -152,4 +123,3 @@ if (fileType != null) {
         }
     }
 }
-

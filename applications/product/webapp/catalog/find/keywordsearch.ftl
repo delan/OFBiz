@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,6 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <div class="head1">Product Search, <span class="head2">you searched for:</span></div>
 <#list searchConstraintStrings as searchConstraintString>
     <div class="tabletext">&nbsp;<a href="<@ofbizUrl>/keywordsearch?removeConstraint=${searchConstraintString_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${searchConstraintString}</div>
@@ -116,7 +115,7 @@
 <div class="tabletext"><b>NOTE:</b> The check boxes above are used only to add to and remove from the text box below, they will not limit the other actions for the forms below!</div>
 <hr class="sepbar"/>
 
-<#include "/product/CreateVirtualWithVariantsForm.ftl"/>
+${screens.render("component://product/widget/catalog/ProductScreens.xml#CreateVirtualWithVariantsFormInclude")}
 
 <hr class="sepbar"/>
 
@@ -216,6 +215,4 @@
   <input type="submit" value="Remove Feature" class="smallSubmit"><br>
 </form>
 </div>
-
 </#if>
-

@@ -137,18 +137,19 @@
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductStoreCatalog" type="list"
-        target="updateProductStoreCatalog" title="" list-name="productStoreCatalogDatas"
+        target="updateProductStoreCatalog" title="" list-name="productStoreCatalogs"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <auto-fields-service service-name="updateProductStoreCatalog" map-name="productStoreCatalog"/>
+        <auto-fields-service service-name="updateProductStoreCatalog" map-name=""/>
         <field name="productStoreId"><hidden/></field>
-        <field name="prodCatalogId" title="${uiLabelMap.ProductCatalogId}" widget-style="buttontext">
-            <hyperlink target-type="intra-app" target="EditProdCatalog?prodCatalogId=${productStoreCatalog.prodCatalogId}"
-                description="${prodCatalog.catalogName} [${productStoreCatalog.prodCatalogId}]"/>
+        <field name="prodCatalogId" title="${uiLabelMap.ProductCatalogId}" widget-style="tabletext">
+            <display-entity entity-name="ProdCatalog" description="${catalogName}" also-hidden="true">
+                <sub-hyperlink target="EditProdCatalog?prodCatalogId=${productStoreCatalog.prodCatalogId}" description="[${prodCatalogId}]" link-style="buttontext"/>
+            </display-entity>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="&amp;" widget-style="buttontext">
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="deleteProductStoreCatalog?prodCatalogId=${productStoreCatalog.prodCatalogId}&amp;productStoreId=${productStoreCatalog.productStoreId}&amp;fromDate=${productStoreCatalog.fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
@@ -174,7 +175,9 @@
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateProductStoreEmailSetting"/>
         <field name="productStoreId"><hidden/></field>
-        <field name="emailType" title="${uiLabelMap.CommonEmailType}"><display description="${emailType}"/></field>
+        <field name="emailType" title="${uiLabelMap.CommonEmailType}">
+            <display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}" cache="true" also-hidden="true"/>
+        </field>
         <field name="templatePath" title="${uiLabelMap.ProductTemplatePath}"></field>
         <field name="subject" title="${uiLabelMap.ProductSubject}"></field>
         <field name="fromAddress" title="${uiLabelMap.CommonFromAddress}"></field>

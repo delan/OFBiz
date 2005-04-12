@@ -24,21 +24,14 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-
-  ${pages.get("/store/ProductStoreTabBar.ftl")}
-  <div class="head1">${uiLabelMap.ProductProductStoreRoles} <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [${uiLabelMap.CommonId}:${productStoreId?if_exists}]</span></div>
-  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>
   <#if !requestParameters.showAll?exists>
     <a href="<@ofbizUrl>/EditProductStoreRoles?productStoreId=${productStoreId}&showAll=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductShowAll}]</a>
   <#else>
     <a href="<@ofbizUrl>/EditProductStoreRoles?productStoreId=${productStoreId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductShowActive}]</a>
   </#if>
-  <br>
-  <br> 
+  <br/>
   
-  <table border="1" cellpadding="2" cellspacing="0" width="100%">
+  <table border="1" cellpadding="2" cellspacing="0">
     <tr>
       <td><span class="tableheadtext">${uiLabelMap.PartyParty}</span></td>
       <td><span class="tableheadtext">${uiLabelMap.PartyRole}</span></td>
@@ -98,6 +91,3 @@
       </tr>
     </table>
   </form>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>

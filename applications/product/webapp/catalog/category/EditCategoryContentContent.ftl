@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -23,23 +23,10 @@
  *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
-<#if hasPermission>
-
-${pages.get("/category/CategoryTabBar.ftl")}
-    
-    <div class="head1">Edit Content  <span class="head2">${uiLabelMap.CommonFor} <#if productCategory?exists>${(productCategory.description)?if_exists}</#if> [${uiLabelMap.CommonId}:${productCategoryId?if_exists}]</span></div>
-    
-    <a href="<@ofbizUrl>/EditCategoryContent?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[Category Content List]</a>
     <#if contentId?has_content>
         <a href="/content/control/gotoContent?contentId=${contentId}" class='buttontext' target='_blank'>[Content Page]</a>
     </#if>
-    <br>
-
+    <br/>
     <#if productCategoryId?has_content && categoryContent?has_content>
         ${updateCategoryContentWrapper.renderFormString()}
     </#if>
-<#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
-</#if>

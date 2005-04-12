@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,20 +25,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-
-${pages.get("/product/ProductTabBar.ftl")}
-    
-    <div class="head1">${uiLabelMap.ProductAssociations} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.productName)?if_exists}</#if>[${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
-    
-    <a href="<@ofbizUrl>EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
-    <#if productId?has_content>
-        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductProductPage}]</a>
-    </#if>
-    <br>
-    <br>
-
     <form action="<@ofbizUrl>UpdateProductAssoc</@ofbizUrl>" method=POST style="margin: 0;" name="editProductAssocForm">
     <table border="0" cellpadding="2" cellspacing="0">
     
@@ -260,6 +246,3 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <br>
         <div class="tabletext">${uiLabelMap.CommonNote} : ${uiLabelMap.ProductRedExplanation}</div>
     </#if>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>

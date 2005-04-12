@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,14 +23,7 @@
  *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-  ${pages.get("/store/ProductStoreTabBar.ftl")}
-  <div class="head1">Product Store Survey Settings<span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
-  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[New Product Store]</a>
-  <br><br>
-
-  <table border="1" cellpadding="2" cellspacing="0" width="100%">
+<table border="1" cellpadding="2" cellspacing="0" width="100%">
     <tr>
       <td><span class="tableheadtext">Type</span></td>
       <td><span class="tableheadtext">Name</span></td>
@@ -53,13 +46,13 @@
         <td><span class="tabletext">${storeSurvey.productCategoryId?default("N/A")}</span></td>
         <td><span class="tabletext">${storeSurvey.fromDate?string}</span></td>
         <td><span class="tabletext">${storeSurvey.sequenceNum?if_exists}</span></td>
-        <td><a href="<@ofbizUrl>/deleteProductStoreSurveyAppl?productStoreId=${productStoreId}&productStoreSurveyId=${storeSurvey.productStoreSurveyId}</@ofbizUrl>" class="buttontext">[Delete]</a>
+        <td><a href="<@ofbizUrl>deleteProductStoreSurveyAppl?productStoreId=${productStoreId}&productStoreSurveyId=${storeSurvey.productStoreSurveyId}</@ofbizUrl>" class="buttontext">[Delete]</a>
     </#list>
-  </table>
-  <br>
+</table>
+<br/>
 
-  <div class="head2">Create Store Survey:</div>
-  <form name="addSurvey" action="<@ofbizUrl>/createProductStoreSurveyAppl</@ofbizUrl>" method="post">
+<div class="head2">Create Store Survey:</div>
+<form name="addSurvey" action="<@ofbizUrl>createProductStoreSurveyAppl</@ofbizUrl>" method="post">
     <input type="hidden" name="productStoreId" value="${productStoreId}">
     <table cellspacing="2" cellpadding="2">
       <tr>
@@ -142,7 +135,4 @@
         <td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}"></td>
       </tr>
     </table>
-  </form>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>
+</form>

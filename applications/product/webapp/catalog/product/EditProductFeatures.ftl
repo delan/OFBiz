@@ -25,10 +25,8 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if hasPermission>
-
-${pages.get("/product/ProductTabBar.ftl")}
     
     <div class="head1">${uiLabelMap.ProductFeatures} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.internalName)?if_exists} </#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     
@@ -108,7 +106,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </table>
 
         <br>
-        <form method="POST" action="<@ofbizUrl>/ApplyFeaturesFromCategory</@ofbizUrl>" style='margin: 0;'>
+        <form method="POST" action="<@ofbizUrl>/ApplyFeaturesFromCategory?productId=${productId}</@ofbizUrl>" style='margin: 0;'>
         <input type="hidden" name="productId" value="${productId}">
         <div class='head2'>${uiLabelMap.ProductAddProductFeatureFromCategory}:</div>
         <br>

@@ -26,28 +26,9 @@
  *@since      2.2
  */
 
-import java.util.*;
-import java.io.*;
-import java.sql.Timestamp;
-import java.lang.Integer;
-import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
-import org.ofbiz.widget.html.*;
 import org.ofbiz.service.GenericDispatcher;
-
-security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
-dispatcher = request.getAttribute("dispatcher");
-
-if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}
-
-productId = request.getParameter("productId");
-product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 
 result = dispatcher.runSync("getProductFeaturesByType", UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE"));
 featureTypes = result.get("productFeatureTypes");
@@ -55,8 +36,5 @@ featureTypes = result.get("productFeatureTypes");
 result = dispatcher.runSync("getVariantCombinations", UtilMisc.toMap("productId", productId));
 featureCombinationInfos = result.get("featureCombinations");
 
-context.put("productId", productId);
-context.put("product", product);
 context.put("featureTypes", featureTypes);
 context.put("featureCombinationInfos", featureCombinationInfos);
-

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Edit Category Feature Categories</property>
-    <property name="titleProperty">PageTitleEditCategoryFeatureCategories</property>
-    <property name="leftbar">/templates/leftbar.ftl</property>
-    <property name="tabButtonItem">EditCategoryFeatureCats</property>
-    <content-action name="/category/EditCategoryFeatureCats.bsh"/>
-</page>

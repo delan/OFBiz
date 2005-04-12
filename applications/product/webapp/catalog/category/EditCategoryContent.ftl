@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -26,8 +26,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
 <SCRIPT language="JavaScript">
 function insertNowTimestamp(field) {
   eval('document.categoryForm.' + field + '.value="${nowTimestampString}";');
@@ -35,23 +33,10 @@ function insertNowTimestamp(field) {
 
 </SCRIPT>
 
-<#if hasPermission>
-
-${pages.get("/category/CategoryTabBar.ftl")}
-
-    <div class="head1">${uiLabelMap.ProductCategoryContent}  <span class="head2">${uiLabelMap.CommonFor} <#if productCategory?exists>${(productCategory.description)?if_exists}</#if> [${uiLabelMap.CommonId}:${productCategoryId?if_exists}]</span></div>
- 
-    <a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewCategory}]</a>
-    <#if productCategoryId?has_content>
-        <a href="/ecommerce/control/category?category_id=${productCategoryId}" class="buttontext" target="_blank">[${uiLabelMap.ProductCategoryPage}]</a>
-    </#if>
-    
-    <p>
- 
     <#if !(productCategory?exists)>
         <h3>${uiLabelMap.ProductCouldNotFindProduct} "${productCategoryId}".</h3>
     <#else>
-        <table border="1" cellpadding="2" cellspacing="0" width="100%">
+        <table border="1" cellpadding="2" cellspacing="0">
         <tr class="tableheadtext">
             <td>Content</td>
             <td>Type</td>
@@ -145,6 +130,3 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <hr class="sepbar"/>
  
    </#if> 
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Create Product In Category - Check Existing</property>
-    <property name="titleProperty">PageTitleCreateProductCategoryCheckExisting</property>
-    <property name="leftbar">/templates/leftbar.ftl</property>
-    <content-action name="/category/createProductInCategoryCheckExisting.bsh"/>
-</page>
