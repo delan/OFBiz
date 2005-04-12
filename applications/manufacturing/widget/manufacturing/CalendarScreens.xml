@@ -107,6 +107,9 @@
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="calendar"/>
 
+                <!-- FIXME: this is a temp fix: we have to set the uiLabelMap before the bsh script --> 
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/routing/ListCalendarWeek.bsh"/>
             </actions>
             <widgets>
@@ -151,6 +154,9 @@
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="calendar"/>
 
+                <!-- FIXME: this is a temp fix: we have to set the uiLabelMap before the bsh script --> 
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/routing/EditCalendarExceptionWeek.bsh"/>
             </actions>
             <widgets>
@@ -173,6 +179,9 @@
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="calendar"/>
 
+                <!-- FIXME: this is a temp fix: we have to set the uiLabelMap before the bsh script --> 
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/routing/EditCalendarExceptionDay.bsh"/>
             </actions>
             <widgets>

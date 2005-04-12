@@ -52,6 +52,7 @@ if (shipment != null) {
     shipmentPlans = delegator.findByAnd("OrderShipment", UtilMisc.toMap("shipmentId", shipment.getString("shipmentId")));
 }
 if (shipmentPlans != null) {
+    boolean workInProgress = false;
     shipmentPlansIt = shipmentPlans.iterator();
     while (shipmentPlansIt.hasNext()) {
         shipmentPlan = shipmentPlansIt.next();
@@ -167,6 +168,7 @@ if (shipmentPlans != null) {
         // Select the production runs, if available
         productionRuns = delegator.findByAnd("WorkOrderItemFulfillment", UtilMisc.toMap("orderId", shipmentPlan.getString("orderId"), "orderItemSeqId", shipmentPlan.getString("orderItemSeqId")), UtilMisc.toList("workEffortId")); // TODO: add shipmentId
         if (productionRuns != null && productionRuns.size() > 0) {
+            workInProgress = true;
             productionRunsIt = productionRuns.iterator();
             productionRunsId = "";
             while (productionRunsIt.hasNext()) {
@@ -178,26 +180,25 @@ if (shipmentPlans != null) {
 
         rows.add(oneRow);
     }
+    context.put("workInProgress", workInProgress);
     HtmlFormWrapper listShipmentPlanForm = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "listShipmentPlan", request, response);
     listShipmentPlanForm.putInContext("shipmentPlan", rows);
-    listShipmentPlanForm.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+    listShipmentPlanForm.putInContext("uiLabelMap", uiLabelMap);
     context.put("listShipmentPlanForm", listShipmentPlanForm); // Form for ShipmentPlan list
 } else {
+    List shipments = new ArrayList();
+    List scheduledShipments = delegator.findByAndCache("Shipment", UtilMisc.toMap("shipmentTypeId", "SALES_SHIPMENT", "statusId", "SHIPMENT_SCHEDULED"));
+    Iterator scheduledShipmentsIt = scheduledShipments.iterator();
+    while (scheduledShipmentsIt.hasNext()) {
+        // TODO: put in the list only the shipments with a shipment plan
+        shipments.add(scheduledShipmentsIt.next());
+    }
+    //List confirmedShipments = delegator.findByAndCache("Shipment", UtilMisc.toMap("shipmentTypeId", "SALES_SHIPMENT", "statusId", "SCHEDULED_CONFIRMED"));
 
-List shipments = new ArrayList();
-List scheduledShipments = delegator.findByAndCache("Shipment", UtilMisc.toMap("shipmentTypeId", "SALES_SHIPMENT", "statusId", "SHIPMENT_SCHEDULED"));
-Iterator scheduledShipmentsIt = scheduledShipments.iterator();
-while (scheduledShipmentsIt.hasNext()) {
-    // TODO: put in the list only the shipments with a shipment plan
-    shipments.add(scheduledShipmentsIt.next());
-}
-//List confirmedShipments = delegator.findByAndCache("Shipment", UtilMisc.toMap("shipmentTypeId", "SALES_SHIPMENT", "statusId", "SCHEDULED_CONFIRMED"));
-
-HtmlFormWrapper listShipmentPlansForm = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "listShipmentPlans", request, response);
-listShipmentPlansForm.putInContext("shipmentPlans", shipments);
-listShipmentPlansForm.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
-context.put("listShipmentPlansForm", listShipmentPlansForm);
-
+    HtmlFormWrapper listShipmentPlansForm = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "listShipmentPlans", request, response);
+    listShipmentPlansForm.putInContext("shipmentPlans", shipments);
+    listShipmentPlansForm.putInContext("uiLabelMap", uiLabelMap);
+    context.put("listShipmentPlansForm", listShipmentPlansForm);
 }
 context.put("shipmentId", shipmentId);
 context.put("shipment", shipment);

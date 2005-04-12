@@ -50,10 +50,10 @@ if (techDataCalendar != null)
 
 HtmlFormWrapper listCalendarExceptionDayWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "ListCalendarExceptionDay", request, response);
 listCalendarExceptionDayWrapper.putInContext("calendarExceptionDays", calendarExceptionDays);
-listCalendarExceptionDayWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+listCalendarExceptionDayWrapper.putInContext("uiLabelMap", uiLabelMap);
 
 HtmlFormWrapper addCalendarExceptionDayWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "AddCalendarExceptionDay", request, response);
-addCalendarExceptionDayWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+addCalendarExceptionDayWrapper.putInContext("uiLabelMap", uiLabelMap);
 addCalendarExceptionDayWrapper.putInContext("techDataCalendar", techDataCalendar);
 
 context.put("techDataCalendar", techDataCalendar);
@@ -68,7 +68,7 @@ if (exceptionDateStartTime != null) {
 	if (calendarExceptionDay != null) {
 		HtmlFormWrapper updateCalendarExceptionDayWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "UpdateCalendarExceptionDay", request, response);
 		updateCalendarExceptionDayWrapper.putInContext("calendarExceptionDay", calendarExceptionDay);
-		updateCalendarExceptionDayWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+		updateCalendarExceptionDayWrapper.putInContext("uiLabelMap", uiLabelMap);
 		context.put("calendarExceptionDay", calendarExceptionDay);
 		context.put("updateCalendarExceptionDayWrapper", updateCalendarExceptionDayWrapper);
 	}

@@ -85,6 +85,10 @@
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="jobshop"/>
 
+                <!-- FIXME: this is a temp fix: we have to set the uiLabelMap before the bsh script --> 
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/jobshopmgt/EditProductionRun.bsh"/>
             </actions>
             <widgets>
@@ -107,6 +111,9 @@
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="jobshop"/>
 
+                <!-- FIXME: this is a temp fix: we have to set the uiLabelMap before the bsh script --> 
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/jobshopmgt/ProductionRunDeclaration.bsh"/>
             </actions>
             <widgets>
@@ -129,6 +136,9 @@
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="jobshop"/>
 
+                <!-- FIXME: this is a temp fix: we have to set the uiLabelMap before the bsh script --> 
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/jobshopmgt/WorkWithShipmentPlans.bsh"/>
             </actions>
             <widgets>
