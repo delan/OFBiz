@@ -484,6 +484,7 @@
             package-name="org.ofbiz.accounting.fixedasset"
             title="Party Fixed Asset Assignment Entity">
       <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
       <field name="fixedAssetId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
@@ -491,10 +492,18 @@
       <field name="statusId" type="id-ne"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
       <prim-key field="fixedAssetId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" fk-name="PTY_FASTAS_PTY" rel-entity-name="Party">
+      <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PTY_FASTAS_PTRL" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="one" fk-name="PTY_FASTAS_FA" rel-entity-name="FixedAsset">
         <key-map field-name="fixedAssetId"/>
