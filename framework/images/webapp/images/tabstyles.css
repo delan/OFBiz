@@ -161,24 +161,40 @@ background-color: #FFFFFF;
 padding: 4px;
 }
 
-DIV.column-container {
+#column-container {
+position: relative;
 background-color: #FFFFFF;
 margin: auto;
 width: auto;
 }
-DIV.column-left {
-float: left;
-margin-right: 10px;
+
+#column-container .left {
+float: left; margin-right: 10px;
+/* alt: position: absolute; top: 0px; left: 0px; */
 width: 220px;
 }
-DIV.column-main {
+#column-container .right {
+float: right; margin-left: 10px;
+width: 220px;
+}
+
+#column-container .leftonly {
+margin-left: 230px;
 width: auto;
 }
-DIV.column-right {
-float: right;
-margin-left: 10px;
-width: 220px;
+#column-container .rightonly {
+margin-right: 230px;
+width: auto;
 }
+#column-container .center {
+margin-left: 230px;
+margin-right: 230px;
+width: auto;
+}
+#column-container .nocolumns {
+width: auto;
+}
+
 DIV.column-left-wide {
 float: left;
 width: 300px;
