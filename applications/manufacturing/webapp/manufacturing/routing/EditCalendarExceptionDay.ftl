@@ -36,15 +36,15 @@
 	</div>
 	<br>
 	<#if techDataCalendar?has_content>
-		${listCalendarExceptionDayWrapper.renderFormString()}
+		${listCalendarExceptionDayWrapper.renderFormString(context)}
 		<br>
 		<hr class="sepbar">
 		<#if calendarExceptionDay?has_content>
-				${updateCalendarExceptionDayWrapper.renderFormString()}
+				${updateCalendarExceptionDayWrapper.renderFormString(context)}
 				<br>
 				<hr class="sepbar">
 		</#if>
-		${addCalendarExceptionDayWrapper.renderFormString()}
+		${addCalendarExceptionDayWrapper.renderFormString(context)}
 	</#if>
 	<br>
 

@@ -36,7 +36,7 @@
 	<div><a href="<@ofbizUrl>/EditCalendarWeek</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingNewCalendarWeek}]</a></div>
 	<br>
 	<#if allCalendarWeek?has_content>
-		${listCalendarWeekWrapper.renderFormString()} 
+		${listCalendarWeekWrapper.renderFormString(context)} 
 	</#if>
 	<br>
 

@@ -183,7 +183,6 @@ if (shipmentPlans != null) {
     context.put("workInProgress", workInProgress);
     HtmlFormWrapper listShipmentPlanForm = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "listShipmentPlan", request, response);
     listShipmentPlanForm.putInContext("shipmentPlan", rows);
-    listShipmentPlanForm.putInContext("uiLabelMap", uiLabelMap);
     context.put("listShipmentPlanForm", listShipmentPlanForm); // Form for ShipmentPlan list
 } else {
     List shipments = new ArrayList();
@@ -197,7 +196,6 @@ if (shipmentPlans != null) {
 
     HtmlFormWrapper listShipmentPlansForm = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "listShipmentPlans", request, response);
     listShipmentPlansForm.putInContext("shipmentPlans", shipments);
-    listShipmentPlansForm.putInContext("uiLabelMap", uiLabelMap);
     context.put("listShipmentPlansForm", listShipmentPlansForm);
 }
 context.put("shipmentId", shipmentId);

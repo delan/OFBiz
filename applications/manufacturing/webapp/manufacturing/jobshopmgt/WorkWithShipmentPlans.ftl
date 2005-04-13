@@ -28,7 +28,7 @@
 
 <#if shipment?exists>
   <div class="head1">Shipment Plan: ${shipment.shipmentId}</div>
-  ${listShipmentPlanForm.renderFormString()}
+  ${listShipmentPlanForm.renderFormString(context)}
   <#if workInProgress>
     <br>
     <div><a href="<@ofbizUrl>/ShipmentWorkEffortTasks.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingTasksReport}]</a></div>
@@ -43,7 +43,7 @@
 <#else>
 <div class="head1">Shipment Plans</div>
 <#if listShipmentPlansForm?has_content>
-  ${listShipmentPlansForm.renderFormString()}
+  ${listShipmentPlansForm.renderFormString(context)}
 </#if>
 
 </#if>

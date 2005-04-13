@@ -57,10 +57,8 @@ while (calendarExceptionWeeksIter.hasNext()) {
 
 HtmlFormWrapper listCalendarExceptionWeekWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "ListCalendarExceptionWeek", request, response);
 listCalendarExceptionWeekWrapper.putInContext("calendarExceptionWeeksDatas", calendarExceptionWeeksDatas);
-listCalendarExceptionWeekWrapper.putInContext("uiLabelMap", uiLabelMap);
 
 HtmlFormWrapper addCalendarExceptionWeekWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "AddCalendarExceptionWeek", request, response);
-addCalendarExceptionWeekWrapper.putInContext("uiLabelMap", uiLabelMap);
 addCalendarExceptionWeekWrapper.putInContext("techDatacalendar", techDataCalendar);
 
 context.put("techDataCalendar", techDataCalendar);
@@ -75,7 +73,6 @@ if (exceptionDateStart != null) {
 	if (calendarExceptionWeek != null) {
 		HtmlFormWrapper updateCalendarExceptionWeekWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "UpdateCalendarExceptionWeek", request, response);
 		updateCalendarExceptionWeekWrapper.putInContext("calendarExceptionWeek", calendarExceptionWeek);
-		updateCalendarExceptionWeekWrapper.putInContext("uiLabelMap", uiLabelMap);
 		context.put("calendarExceptionWeek", calendarExceptionWeek);
 		context.put("updateCalendarExceptionWeekWrapper", updateCalendarExceptionWeekWrapper);
 	}
