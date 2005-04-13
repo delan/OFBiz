@@ -25,5 +25,5 @@
 -->
 
 <#if productId?has_content && productContent?has_content>
-    ${updateProductContentWrapper.renderFormString()}
+    ${updateProductContentWrapper.renderFormString(context)}
 </#if>

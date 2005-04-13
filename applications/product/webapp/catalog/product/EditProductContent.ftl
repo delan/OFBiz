@@ -85,11 +85,11 @@ function insertImageName(type,nameValue) {
     </table>
     <div class="head2">${uiLabelMap.ProductCreateNewProductContent}</div>
     <#if productId?has_content && product?has_content>
-        ${prepareAddProductContentWrapper.renderFormString()}
+        ${prepareAddProductContentWrapper.renderFormString(context)}
     </#if>
     <div class="head2">${uiLabelMap.ProductAddContentProduct}</div>
     <#if productId?has_content && product?has_content>
-        ${addProductContentWrapper.renderFormString()}
+        ${addProductContentWrapper.renderFormString(context)}
     </#if>
 
     <hr class="sepbar"/>
