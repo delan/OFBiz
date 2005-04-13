@@ -49,6 +49,10 @@ public class UtilTimer {
     protected long lastMessageTime;
     protected boolean running = false;
     protected boolean log = false;
+    
+    public static UtilTimer makeTimer() {
+        return new UtilTimer();
+    }
 
     /** Default constructor. Starts the timer. */
     public UtilTimer() {
