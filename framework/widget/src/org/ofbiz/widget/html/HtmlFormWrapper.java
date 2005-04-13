@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -33,6 +33,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.widget.form.FormFactory;
 import org.ofbiz.widget.form.FormStringRenderer;
 import org.ofbiz.widget.form.ModelForm;
@@ -92,12 +93,28 @@ public class HtmlFormWrapper {
         }
         
         Map uiLabelMap = (Map) request.getAttribute("uiLabelMap");
-        Debug.logInfo("Got uiLabelMap: " + uiLabelMap, module);
         if (uiLabelMap != null && uiLabelMap.size() > 0 && context.get("uiLabelMap") == null) {
+            Debug.logInfo("Got uiLabelMap: " + uiLabelMap, module);
             context.put("uiLabelMap", uiLabelMap);
         }
     }
     
+    public String renderFormString(Object contextStack) {
+        if (contextStack instanceof MapStack) {
+            return renderFormString((MapStack) contextStack);
+        } else {
+            Debug.logWarning("WARNING: call renderFormString with a non-MapStack: " + (contextStack == null ? "null" : contextStack.getClass().getName()), module);
+            return renderFormString();
+        }
+    }
+    public String renderFormString(MapStack contextStack) {
+        // create a new context with the current context on the bottom
+        contextStack.push(this.context);
+        StringBuffer buffer = new StringBuffer();
+        modelForm.renderFormString(buffer, contextStack, renderer);
+        contextStack.pop();
+        return buffer.toString();
+    }
     public String renderFormString() {
         StringBuffer buffer = new StringBuffer();
         modelForm.renderFormString(buffer, context, renderer);
