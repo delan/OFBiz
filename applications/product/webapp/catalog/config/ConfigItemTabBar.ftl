@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -19,9 +19,9 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     Jacopo Cappellato
  *@version    $Rev$
- *@since      2.2
+ *@since      3.2
 -->
 
 <#assign unselectedClassName = "tabButton">
@@ -29,8 +29,8 @@
 
 <#if configItemId?has_content>
   <div class='tabContainer'>
-    <a href="<@ofbizUrl>/EditProductConfigItem?configItemId=${configItemId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigItem?default(unselectedClassName)}">Edit</a>
-    <a href="<@ofbizUrl>/EditProductConfigItemContent?configItemId=${configItemId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigItemContent?default(unselectedClassName)}">Content</a>
+    <a href="<@ofbizUrl>/EditProductConfigItem?configItemId=${configItemId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigItem?default(unselectedClassName)}">Config Item</a>
     <a href="<@ofbizUrl>/EditProductConfigOptions?configItemId=${configItemId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigOptions?default(unselectedClassName)}">Options</a>
+    <a href="<@ofbizUrl>/EditProductConfigItemContent?configItemId=${configItemId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigItemContent?default(unselectedClassName)}">Content</a>
   </div>
 </#if>

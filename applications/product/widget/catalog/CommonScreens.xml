@@ -32,6 +32,8 @@
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 
+                <set field="MainColumnStyle" value="nocolumns" global="true"/>
+
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.CatalogCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.ProductCompanySubtitle" global="true"/>
                 <set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.jpg" global="true"/>
@@ -50,15 +52,17 @@
                     <platform-specific><html><html-template location="component://product/webapp/catalog/includes/appheader.ftl"/></html></platform-specific>
                     
                     <container style="contentarea">
-                        <!-- by default will render left-bar only if leftbarScreen value not empty -->
-                        <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
-                    
-                        <container style="column-main">
-                            <!-- render messages -->
-                            <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
-                            <decorator-section-include name="body"/>
+                        <container id="column-container">
+                            <!-- by default will render left-bar only if leftbarScreen value not empty -->
+                            <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
+                        
+                            <container style="${MainColumnStyle}">
+                                <!-- render messages -->
+                                <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
+                                <decorator-section-include name="body"/>
+                            </container>
+                            <container style="endcolumns"><label text="&amp;nbsp;"/></container>
                         </container>
-                        <container style="endcolumns"><label text="&amp;nbsp;"/></container>
                     </container>
                 </container>
                 
@@ -71,7 +75,7 @@
     <screen name="leftbar">
         <section>
             <widgets>
-                <container style="column-left">
+                <container style="left">
                     <include-screen name="keywordsearchbox"/>
                     <include-screen name="sidecatalogs"/>
                     <include-screen name="sidedeepcategory"/>
@@ -128,14 +132,14 @@
     <screen name="ChooseTopCategory">
         <section>
             <actions>
-				<set field="titleProperty" value="PageTitleChooseTopCategory"/>
+                <set field="titleProperty" value="PageTitleChooseTopCategory"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/choosetopcategory.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
-					<decorator-section name="body">
-		                <platform-specific><html><html-template location="component://product/webapp/catalog/ChooseTopCategory.ftl"/></html></platform-specific>
-                	</decorator-section>
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://product/webapp/catalog/ChooseTopCategory.ftl"/></html></platform-specific>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -145,7 +149,7 @@
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
-                <!-- <set field="leftbarScreenLocation" value=""/> -->
+                <set field="MainColumnStyle" value="leftonly"/>
     
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-name="product"/>

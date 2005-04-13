@@ -532,6 +532,7 @@
 
         <create-value value-name="newEntity"/>
 
+        <env-to-env env-name="newEntity.productId" to-env-name="productId"/>
         <call-simple-method method-name="updateProductWithReviewRatingAvg"/>
     </simple-method>
     <simple-method method-name="updateProductReview" short-description="Update ProductReview">
@@ -544,16 +545,17 @@
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
 
+        <env-to-env env-name="lookedUpValue.productId" to-env-name="productId"/>
         <call-simple-method method-name="updateProductWithReviewRatingAvg"/>
     </simple-method>
     <simple-method method-name="updateProductWithReviewRatingAvg" short-description="Update Product with new Review Rating Avg">
     	<!-- this method is meant to be called in-line and depends in a productId parameter -->
         <!-- update the review average on the Product entity -->
         <make-value entity-name="Product" value-name="product"/>
-        <env-to-env env-name="parameters.productId" to-env-name="product.productId"/>
+        <env-to-env env-name="productId" to-env-name="product.productId"/>
         <call-class-method class-name="org.ofbiz.product.product.ProductWorker" method-name="getAverageProductRating" ret-field-name="product.averageCustomerRating">
             <field field-name="delegator" type="org.ofbiz.entity.GenericDelegator"/>
-            <field field-name="parameters.productId" type="java.lang.String"/>
+            <field field-name="productId" type="java.lang.String"/>
         </call-class-method>
         <log level="info" message="Got new average customer rating ${product.averageCustomerRating}"/>
         

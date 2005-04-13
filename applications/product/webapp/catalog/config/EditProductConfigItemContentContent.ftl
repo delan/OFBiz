@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -22,13 +22,6 @@
  *@author     Johan Isacsson (johan@oddjob.se)
  *@author     Jacopo Cappellato (tiz@sastau.it)
 -->
-
-<#if hasPermission>
-
-${pages.get("/config/ConfigItemTabBar.ftl")}
-    
-    <div class="head1">Edit Content <span class='head2'>for ${(productConfigItem.configItemName)?default("[Name Unknown]")} <#if content?has_content>[ID:${contentId}]</#if></span></div>
-    
     <a href="<@ofbizUrl>/EditProductConfigItemContent?configItemId=${configItemId}</@ofbizUrl>" class="buttontext">[Product Config Item Content List]</a>
     <#if contentId?has_content>
         <a href="/content/control/gotoContent?contentId=${contentId}" class='buttontext' target='_blank'>[Content Page]</a>
@@ -38,6 +31,3 @@ ${pages.get("/config/ConfigItemTabBar.ftl")}
     <#if configItemId?has_content && productContent?has_content>
         ${updateProductContentWrapper.renderFormString()}
     </#if>
-<#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
-</#if>

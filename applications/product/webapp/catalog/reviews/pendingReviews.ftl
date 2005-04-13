@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -27,35 +27,6 @@
 <div class="head1">Pending Product Reviews</div>
 <br>
 
-<#--
-<form name="toppagenav">
-  <table border="0" width="100%" cellpadding="2">
-    <tr>
-      <td align=right>
-        <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
-        <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
-          <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
-          <#list 1..viewIndexMax as curViewNum>
-            <option value="<@ofbizUrl>/pendingReviews/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int - 1}</@ofbizUrl>">Go to Page ${curViewNum}</option>
-          </#list>
-        </select>
-        <b>
-          <#if 0 < viewIndex?int>
-            <a href="<@ofbizUrl>/pendingReviews/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
-          </#if>
-          <#if 0 < listSize?int>
-            <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
-          </#if>
-          <#if highIndex?int < listSize?int>
-            | <a href="<@ofbizUrl>/pendingReviews/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[Next]</a>
-          </#if>
-        </b>
-      </td>
-    </tr>
-  </table>
-</form>
--->
-
 <#if !pendingReviews?has_content>
   <div class="head3">No Reviews Pending Approval</div>
 </#if>
@@ -63,7 +34,7 @@
 <#list pendingReviews as review>
   <form name="prr_${review.productReviewId}" method="post" action="<@ofbizUrl>/updateProductReview</@ofbizUrl>">
     <input type="hidden" name="productReviewId" value="${review.productReviewId}">
-    <table border="0" width="100%" cellpadding="2">
+    <table border="0" cellpadding="2">
       <#assign postedUserLogin = review.getRelatedOne("UserLogin")>
       <#assign postedPerson = postedUserLogin.getRelatedOne("Person")>
       <tr>
@@ -121,32 +92,3 @@
     </table>
   </form>
 </#list>
-
-<#--
-<form name="bottompagenav">
-  <table border="0" width="100%" cellpadding="2">
-    <tr>
-      <td align=right>
-        <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
-        <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
-          <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
-          <#list 1..viewIndexMax as curViewNum>
-            <option value="<@ofbizUrl>/pendingReviews/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int - 1}</@ofbizUrl>">Go to Page ${curViewNum}</option>
-          </#list>
-        </select>
-        <b>
-          <#if 0 < viewIndex?int>
-            <a href="<@ofbizUrl>/pendingReviews/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
-          </#if>
-          <#if 0 < listSize?int>
-            <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
-          </#if>
-          <#if highIndex?int < listSize?int>
-            | <a href="<@ofbizUrl>/pendingReviews/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[Next]</a>
-          </#if>
-        </b>
-      </td>
-    </tr>
-  </table>
-</form>
--->

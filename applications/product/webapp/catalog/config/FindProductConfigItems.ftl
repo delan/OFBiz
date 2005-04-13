@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,11 +25,8 @@
  *@since      3.0
 -->
 
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#if security.hasEntityPermission("CONTENTMGR", "_VIEW", session)>
-
 <#if itemsList?exists>
-<table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -98,8 +95,4 @@
     </td>
   </tr>
 </table>
-</#if>
-
-<#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 </#if>

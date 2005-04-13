@@ -34,7 +34,6 @@
     <handler name="simple" type="request" class="org.ofbiz.webapp.event.SimpleEventHandler"/>
     <handler name="bsf" type="request" class="org.ofbiz.webapp.event.BsfEventHandler"/>
 
-    <handler name="jpublish" type="view" class="org.ofbiz.webapp.view.JPublishViewHandler"/>
     <handler name="region" type="view" class="org.ofbiz.webapp.view.RegionViewHandler"/>    
     <handler name="screen" type="view" class="org.ofbiz.widget.screen.ScreenWidgetViewHandler"/>
 
@@ -1996,6 +1995,7 @@
 
     <view-map name="FastLoadCache" type="region"/>
     <view-map name="FindProductById" type="region"/>
+
     <view-map name="ChooseTopCategory" type="screen" page="component://product/widget/catalog/CommonScreens.xml#ChooseTopCategory"/>
     <view-map name="advancedsearch" type="screen" page="component://product/widget/catalog/FindScreens.xml#advancedsearch"/>
     <view-map name="keywordsearch" type="screen" page="component://product/widget/catalog/FindScreens.xml#keywordsearch"/>
@@ -2008,6 +2008,7 @@
     <view-map name="EditCategoryProdCatalogs" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryProdCatalogs"/>
     <view-map name="EditCategoryFeatureCats" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryFeatureCats"/>
     <view-map name="EditCategoryParties" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryParties"/>
+
     <view-map name="UploadCategoryImage" type="region"/>
 
     <view-map name="createProductInCategoryStart" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#createProductInCategoryStart"/>
@@ -2036,8 +2037,6 @@
     <view-map name="EditProductGlAccounts" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductGlAccounts"/>
     <view-map name="EditProductContentContent" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductContentContent"/>
     <view-map name="EditSupplierProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditSupplierProduct"/>
-
-    <!-- Product Configuration views -->
     <view-map name="EditProductConfigs" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductConfigs"/>
 
     <view-map name="UploadImage" type="region"/>
@@ -2066,8 +2065,8 @@
     <view-map name="FindProductPromoCode" type="screen" page="component://product/widget/catalog/PromoScreens.xml#FindProductPromoCode"/>
     <view-map name="EditProductPromoCode" type="screen" page="component://product/widget/catalog/PromoScreens.xml#EditProductPromoCode"/>
 
-    <view-map name="FindPriceRules" type="jpublish" page="/price/FindProductPriceRule.ftl"/><!--type="screen" page="component://product/widget/catalog/PriceScreens.xml#FindProductPriceRule"/>-->
-    <view-map name="EditProductPriceRules" type="jpublish" page="/price/EditProductPriceRules.ftl"/><!--type="screen" page="component://product/widget/catalog/PriceScreens.xml#EditProductPriceRules"/>-->
+    <view-map name="FindPriceRules" type="screen" page="component://product/widget/catalog/PriceScreens.xml#FindProductPriceRule"/>
+    <view-map name="EditProductPriceRules" type="screen" page="component://product/widget/catalog/PriceScreens.xml#EditProductPriceRules"/>
 
     <view-map name="FindProductStore" type="screen" page="component://product/widget/catalog/StoreScreens.xml#FindProductStore"/>
     <view-map name="EditProductStore" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStore"/>
@@ -2084,13 +2083,14 @@
 
     <view-map name="EditKeywordThesaurus" type="screen" page="component://product/widget/catalog/ThesaurusScreens.xml#EditKeywordThesaurus"/>
 
-    <view-map name="pendingReviews" type="jpublish" page="/reviews/pendingReviews.ftl"/><!--type="screen" page="component://product/widget/catalog/ReviewsScreens.xml#pendingReviews"/>-->
+    <view-map name="pendingReviews" type="screen" page="component://product/widget/catalog/ReviewScreens.xml#pendingReviews"/>
     
-    <view-map name="FindProductConfigItems" page="/config/FindProductConfigItems.ftl" type="jpublish"/><!--type="screen" page="component://product/widget/catalog/ConfigScreens.xml#FindProductConfigItems"/>-->
-    <view-map name="EditProductConfigItem" page="/config/EditProductConfigItem.ftl" type="jpublish"/><!--type="screen" page="component://product/widget/catalog/ConfigScreens.xml#EditProductConfigItem"/>-->
-    <view-map name="EditProductConfigOptions" page="/config/EditProductConfigOptions.ftl" type="jpublish"/><!--type="screen" page="component://product/widget/catalog/ConfigScreens.xml#EditProductConfigOptions"/>-->
-    <view-map name="EditProductConfigItemContent" type="jpublish" page="/config/EditProductConfigItemContent.ftl"/><!--type="screen" page="component://product/widget/catalog/ConfigScreens.xml#EditProductConfigItemContent"/>-->
-    <view-map name="EditProductConfigItemContentContent" type="jpublish" page="/config/EditProductConfigItemContentContent.ftl"/><!--type="screen" page="component://product/widget/catalog/ConfigScreens.xml#EditProductConfigItemContentContent"/>-->
+    <!-- Product Configuration views -->
+    <view-map name="FindProductConfigItems" type="screen" page="component://product/widget/catalog/ConfigScreens.xml#FindProductConfigItems"/>
+    <view-map name="EditProductConfigItem" type="screen" page="component://product/widget/catalog/ConfigScreens.xml#EditProductConfigItem"/>
+    <view-map name="EditProductConfigOptions" type="screen" page="component://product/widget/catalog/ConfigScreens.xml#EditProductConfigOptions"/>
+    <view-map name="EditProductConfigItemContent" type="screen" page="component://product/widget/catalog/ConfigScreens.xml#EditProductConfigItemContent"/>
+    <view-map name="EditProductConfigItemContentContent" type="screen" page="component://product/widget/catalog/ConfigScreens.xml#EditProductConfigItemContentContent"/>
 
     <!-- Lookup request mappings -->
     <view-map name="LookupFixedAsset" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset" type="screen"/>
@@ -2100,5 +2100,4 @@
     <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
     <view-map name="LookupPartyName" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName" type="screen"/>
     <!-- end of view mappings -->
-
 </site-conf>

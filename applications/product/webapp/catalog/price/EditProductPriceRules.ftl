@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,15 +25,10 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
-<#if hasPermission>
-
 <div class="head1">${uiLabelMap.ProductGlobalPriceRule}</div>
 <a href="<@ofbizUrl>/FindProductPriceRules</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductFindRule}]</a>
 
-<br>
-<br>
+<br/>
 
 <table border="1" width="100%" cellpadding="2" cellspacing="0">
   <tr>
@@ -208,9 +203,3 @@
   </tr>
 </#if>
 </table>
-
-<br>
-
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>

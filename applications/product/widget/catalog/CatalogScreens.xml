@@ -29,7 +29,7 @@
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
-                <!-- <set field="leftbarScreenLocation" value=""/> -->
+                <set field="MainColumnStyle" value="leftonly"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://product/widget/catalog/CommonScreens.xml">

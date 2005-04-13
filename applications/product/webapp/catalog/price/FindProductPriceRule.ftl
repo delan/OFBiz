@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,9 +25,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
-<#if hasPermission>
 
 <div class="head1">${uiLabelMap.ProductGlobalPriceRules}</div>
 <a href="<@ofbizUrl>/EditProductPriceRules</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateRule}]</a>
@@ -75,17 +72,10 @@
     <h3>${uiLabelMap.ProductNoPriceRulesFound}.</h3>
 </#if>
 
-<br>
-
+<br/>
 <form method="POST" action="<@ofbizUrl>/createProductPriceRule</@ofbizUrl>" style="margin: 0;">
   <div class="head2">${uiLabelMap.ProductAddPriceRule}:</div>
   <br>
   ${uiLabelMap.ProductName}: <input type=text size="30" class="inputBox" name="ruleName">
   <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}">
 </form>
-
-<br>
-
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>
