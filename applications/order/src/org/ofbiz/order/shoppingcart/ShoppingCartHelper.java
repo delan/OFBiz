@@ -444,6 +444,76 @@ public class ShoppingCartHelper {
         return ServiceUtil.returnSuccess();
     }
 
+    /** 
+     * Adds the quote's items to the cart.
+     */
+    public Map addToCartFromQuote(String catalogId, String quoteId) {
+        ArrayList errorMsgs = new ArrayList();
+        Map result;
+        String errMsg = null;
+        
+        if (quoteId == null || quoteId.length() <= 0) {
+            errMsg = UtilProperties.getMessage(resource,"cart.quote_not_specified_to_add_from", this.cart.getLocale());
+            result = ServiceUtil.returnError(errMsg);
+            return result;
+        }
+
+        // TODO: at now, only one quote is allowed per order
+        if (this.cart.getQuoteId() != null) {
+            errMsg = UtilProperties.getMessage(resource,"cart.quote_already_in_cart", this.cart.getLocale());
+            result = ServiceUtil.returnError(errMsg);
+            return result;
+        }
+
+        boolean noItems = true;
+        
+        Iterator itemIter = null;
+        
+        try {
+            itemIter = UtilMisc.toIterator(delegator.findByAnd("QuoteItem", UtilMisc.toMap("quoteId", quoteId), null));
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage(), module);
+            itemIter = null;
+        }
+        
+        if (itemIter != null && itemIter.hasNext()) {
+            while (itemIter.hasNext()) {
+                GenericValue quoteItem = (GenericValue) itemIter.next();
+                // never read: int itemId = -1;
+                if (quoteItem.get("productId") != null && quoteItem.get("quantity") != null) {
+                    try {
+                        this.cart.addOrIncreaseItem(quoteItem.getString("productId"),
+                                        quoteItem.getDouble("quantity").doubleValue(),
+                                        null, null, catalogId, dispatcher);
+                        noItems = false;
+                    } catch (CartItemModifyException e) {
+                        errorMsgs.add(e.getMessage());
+                    } catch (ItemNotFoundException e) {
+                        errorMsgs.add(e.getMessage());
+                    }
+                }
+            }
+            if (errorMsgs.size() > 0) {
+                result = ServiceUtil.returnError(errorMsgs);
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+                return result; // don't return error because this is a non-critical error and should go back to the same page
+            }
+        } else {
+            noItems = true;
+        }
+        
+        if (noItems) {
+            result = ServiceUtil.returnSuccess();
+            result.put("_ERROR_MESSAGE_", "No items found to add.");
+            return result; // don't return error because this is a non-critical error and should go back to the same page
+        } else {
+            this.cart.setQuoteId(quoteId);
+        }
+        
+        result = ServiceUtil.returnSuccess();
+        return result;
+    }
+
     /**
      * Adds all products in a category according to default quantity on ProductCategoryMember
      * for each; if no default for a certain product in the category, or if
