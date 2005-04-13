@@ -54,6 +54,12 @@ public abstract class AbstractEntityConditionCache extends AbstractCache {
     }
 
     protected Object put(String entityName, EntityCondition condition, Object key, Object value) {
+        ModelEntity entity = this.getDelegator().getModelEntity(entityName); 
+        if (entity.getNeverCache()) {
+            Debug.logWarning("Tried to put a value of the " + entityName + " entity in the cache but this entity has never-cache set to true, not caching.", module);
+            return null;
+        }
+        
         Map conditionCache = getOrCreateConditionCache(entityName, condition);
         synchronized (conditionCache) {
             return conditionCache.put(key, value);
