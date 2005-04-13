@@ -292,6 +292,16 @@
         <response name="success" type="request" value="orderentry"/>
         <response name="error" type="request" value="orderentry"/>
     </request-map>
+    <request-map uri="FindQuoteForCart">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindQuoteForCart"/>
+    </request-map>
+    <request-map uri="addQuoteToCart">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCartFromQuote"/>
+        <response name="success" type="request" value="orderentry"/>
+        <response name="error" type="request" value="orderentry"/>
+    </request-map>
     <request-map uri="addseperator">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>
@@ -806,6 +816,7 @@
     <view-map name="OrderPurchaseReportProduct" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#OrderPurchaseReportProduct" content-type="application/pdf" encoding="none"/>
     
     <view-map name="RequirementsForSupplier" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#RequirementsForSupplier"/>
+    <view-map name="FindQuoteForCart" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#FindQuoteForCart"/>
     
     <view-map name="FindQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#FindQuote"/>
     <view-map name="EditQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuote"/>

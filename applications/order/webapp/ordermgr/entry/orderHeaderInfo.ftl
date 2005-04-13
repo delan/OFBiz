@@ -31,6 +31,7 @@
 <#assign partyId = shoppingCart.getPartyId()>
 <#assign partyMap = Static["org.ofbiz.party.party.PartyWorker"].getPartyOtherValues(request, partyId, "party", "person", "partyGroup")>
 <#assign agreementId = shoppingCart.getAgreementId()?if_exists>
+<#assign quoteId = shoppingCart.getQuoteId()?if_exists>
 
 <#if shoppingCart?has_content>
     <#assign shoppingCartSize = shoppingCart.size()>
@@ -78,6 +79,12 @@
                 <tr>
                   <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.AccountingAgreement}<b>:</div></td>
                   <td valign="bottom"><div class="tabletext">${agreementId}</div></td>
+                </tr>
+                </#if>
+                <#if quoteId?has_content>
+                <tr>
+                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.OrderQuote}<b>:</div></td>
+                  <td valign="bottom"><div class="tabletext">${quoteId}</div></td>
                 </tr>
                 </#if>
                 <tr>

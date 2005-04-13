@@ -60,7 +60,7 @@
             <actions>
                 <set field="title" value="Find Requirements For Supplier"/>
                 <set field="entityName" value="Requirement"/>
-                <!--<set field="requestParameters.requirementTypeId" to-scope="screen" default-value="MRP_PRO_PURCH_ORDER"/>-->
+                <set field="requestParameters.requirementTypeId" to-scope="screen" default-value="MRP_PRO_PURCH_ORDER"/>
                 <set field="requestParameters.statusId" to-scope="screen" default-value="REQ_APPROVED"/>
             </actions>
             <widgets>
@@ -82,4 +82,27 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- list all assets in a tabular format -->
+    <screen name="FindQuoteForCart">
+        <section>
+            <actions>
+                <set field="title" value="Find Quotes"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderCatalogDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1">${uiLabelMap.OrderQuotes}</label>
+                        </container>
+                        <!--<include-form name="FindQuotes" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>-->
+                        <!--<include-form name="ListQuotes" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>-->
+                        <include-form name="FindQuotes" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
+                        <include-form name="ListQuotes" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+
 </screens>

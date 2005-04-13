@@ -60,6 +60,13 @@
                     </td>
                   </tr>
                 </#if>
+                <#if shoppingCart.getOrderType() == "SALES_ORDER">
+                  <tr>
+                    <td>
+                      <a href="<@ofbizUrl>/FindQuoteForCart</@ofbizUrl>" class="buttontext">[${uiLabelMap.OrderQuotes}]</a>
+                    </td>
+                  </tr>
+                </#if>
                 <tr>
                   <td>
                     <a href="/partymgr/control/findparty?${externalKeyParam?if_exists}" class="buttontext">[${uiLabelMap.PartyFindParty}]</a>

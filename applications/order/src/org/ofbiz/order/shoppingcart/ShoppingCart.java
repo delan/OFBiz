@@ -78,6 +78,7 @@ public class ShoppingCart implements Serializable {
     private double billingAccountAmt = 0.00;
     private String currencyUom = null;
     private String agreementId = null;
+    private String quoteId = null;
 
     private String defaultItemDeliveryDate = null;
     private String defaultItemComment = null;
@@ -496,6 +497,7 @@ public class ShoppingCart implements Serializable {
         this.firstAttemptOrderId = cart.getFirstAttemptOrderId();
         this.billingAccountId = cart.getBillingAccountId();
         this.agreementId = cart.getAgreementId();
+        this.quoteId = cart.getQuoteId();
         this.orderAdditionalEmails = cart.getOrderAdditionalEmails();
         this.adjustments = new LinkedList(cart.getAdjustments());
         this.contactMechIdsMap = new HashMap(cart.getOrderContactMechIds());
@@ -1008,6 +1010,8 @@ public class ShoppingCart implements Serializable {
         this.orderId = null;
 
         this.orderAdditionalEmails = null;
+        this.agreementId = null;
+        this.quoteId = null;
         this.freeShippingProductPromoActions.clear();
         this.desiredAlternateGiftByAction.clear();
         this.productPromoUseInfoList.clear();
@@ -1115,6 +1119,14 @@ public class ShoppingCart implements Serializable {
         return this.agreementId;
     }
 
+    public void setQuoteId(String quoteId) {
+        this.quoteId = quoteId;
+    }
+
+    public String getQuoteId() {
+        return this.quoteId;
+    }
+    
     // =======================================================================
     // Payment Method
     // =======================================================================

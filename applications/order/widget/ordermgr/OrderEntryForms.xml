@@ -50,4 +50,42 @@
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="submitButton" widget-style="smallSubmit"><submit/></field>
     </form>
+    <form name="FindQuotes" default-title-style="tableheadtext"
+            default-tooltip-style="tabletext" default-widget-style="inputBox"
+            target="FindQuoteForCart" title="" type="single">
+        <auto-fields-entity entity-name="Quote" default-field-type="find"/>
+        <field name="quoteTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="QuoteType" key-field-name="quoteTypeId"/>
+            </drop-down>
+        </field>
+        <field name="partyId">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="validFromDate"><hidden/></field>
+        <field name="validThruDate"><hidden/></field>
+        <field name="description"><hidden/></field>
+        <field name="submitButton" title="Find" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ListQuotes" default-title-style="tableheadtext"
+            default-tooltip-style="tabletext" default-widget-style="tabletext"
+            list-iterator-name="listIt" target="" paginate-target="FindQuoteForCart" title="" type="list">
+      	<actions>
+          <set field="entityName" value="Quote"/>
+          <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <field-map field-name="inputFields" env-name="requestParameters"/>
+            <field-map field-name="entityName" env-name="entityName"/>
+          </service>
+        </actions>
+        <auto-fields-entity entity-name="Quote" default-field-type="display"/>
+        <field name="quoteId" title="Add" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${quoteId}" target="addQuoteToCart?quoteId=${quoteId}"/>
+        </field>
+        <field name="quoteTypeId">
+            <display-entity entity-name="QuoteType"/>
+        </field>
+    </form>
+
 </forms>
