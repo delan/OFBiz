@@ -29,7 +29,7 @@
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
-                <!-- <set field="leftbarScreenLocation" value=""/> -->
+                <set field="MainColumnStyle" value="leftonly"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://product/widget/catalog/CommonScreens.xml">
@@ -71,7 +71,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductPromos"/>
-                <set field="leftbarScreenName" value="leftbar"/>
                 <set field="headerItem" value="promos"/>
                 <set field="tabButtonItem" value="ProductPromo"/>
                 
@@ -96,7 +95,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromos"/>
-                <set field="leftbarScreenName" value="leftbar"/>
                 <set field="headerItem" value="promos"/>
                 <set field="tabButtonItem" value="EditProductPromo"/>
                 <set field="labelTitleProperty" value="ProductPromotion"/>
@@ -117,7 +115,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromosRules"/>
-                <set field="leftbarScreenName" value="leftbar"/>
                 <set field="headerItem" value="promos"/>
                 <set field="tabButtonItem" value="EditProductPromoRules"/>
                 <set field="labelTitleProperty" value="ProductRules"/>
@@ -184,7 +181,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromoStores"/>
-                <set field="leftbarScreenName" value="leftbar"/>
                 <set field="headerItem" value="promos"/>
                 <set field="tabButtonItem" value="EditProductPromoStores"/>
                 <set field="labelTitleProperty" value="ProductStores"/>
@@ -216,7 +212,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductPromoCode"/>
-                <set field="leftbarScreenName" value="leftbar"/>
                 <set field="headerItem" value="promos"/>
                 <set field="tabButtonItem" value="FindProductPromoCode"/>
                 <set field="labelTitleProperty" value="ProductPromotionCode"/>
@@ -251,7 +246,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromoCode"/>
-                <set field="leftbarScreenName" value="leftbar"/>
                 <set field="headerItem" value="promos"/>
                 <set field="tabButtonItem" value="FindProductPromoCode"/>
                 <set field="labelTitleProperty" value="ProductPromotionCode"/>

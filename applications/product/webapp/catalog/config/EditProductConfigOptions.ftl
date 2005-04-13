@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,12 +25,6 @@
  *@since      3.0
 -->
 
-<#if security.hasEntityPermission("CATALOG", "_VIEW", session)>
-
-  ${pages.get("/config/ConfigItemTabBar.ftl")}
-
-  <div class="head1">Config Options - <span class="head2">ID: ${requestParameters.configItemId?if_exists}<#if configItem?exists> - ${configItem.description?if_exists}</#if></div>
-  <br><br>
   <table border="1" cellpadding='2' cellspacing='0'>
     <tr>
       <td><div class="tableheadtext">Name</div></td>
@@ -40,9 +34,7 @@
       <td><div class="tableheadtext">&nbsp;</div></td>
       <td><div class="tableheadtext">&nbsp;</div></td>
     </tr>
-
     <#list configOptionList as question>
-
       <form method="post" action="<@ofbizUrl>/updateProductConfigOption</@ofbizUrl>">
         <input type="hidden" name="configItemId" value="${question.configItemId}">
         <input type="hidden" name="configOptionId" value="${question.configOptionId}">
@@ -60,7 +52,7 @@
   <br>
 
   <hr class="sepbar">
-  <a name="edit">
+  <a name="edit"/>
   <#-- new question / category -->
 
     <#if configOptionId?has_content>
@@ -69,15 +61,12 @@
     <#else>
       <div class="head2">Create New Config Option</div>
     </#if>
-    <br><br>
-    ${createConfigOptionWrapper.renderFormString()}
+    ${sections.render("CreateConfigOptionForm")}
 
   <#if (configOption?has_content)>
     <br>
     <hr class="sepbar">
-    <br>
     <div class="head1">Components - <span class="head2">ID: ${configOption.configOptionId?if_exists} - ${configOption.description?if_exists}</div>
-    <br><br>
     <table border="1" cellpadding='2' cellspacing='0'>
       <tr>
         <td><div class="tableheadtext">Seq #</div></td>
@@ -99,17 +88,11 @@
       </#list>
     </table>
 
-    <br>
-
-    <#if !configProduct?has_content>
+    <#if !productConfigProduct?has_content>
       <div class="head2">Add a ConfigProduct:</div>
     <#else>
       <div class="head2">Edit a ConfigProduct:</div>
-      <a href="<@ofbizUrl>/EditProductConfigOptions?configItemId=${requestParameters.configItemId}&configOptionId=${configProduct.configOptionId}</@ofbizUrl>" class="buttontext">[New ConfigProduct]</a>
+      <a href="<@ofbizUrl>/EditProductConfigOptions?configItemId=${requestParameters.configItemId}&configOptionId=${productConfigProduct.configOptionId}</@ofbizUrl>" class="buttontext">[New ConfigProduct]</a>
     </#if>
-    ${createConfigProductWrapper.renderFormString()}
+    ${sections.render("CreateConfigProductForm")}
   </#if>
-<#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
-</#if>
-

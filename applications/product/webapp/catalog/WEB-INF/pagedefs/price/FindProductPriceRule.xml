@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Find Product Price Rule</property>
-    <property name="titleProperty">PageTitleFindProductPriceRule</property>
-    <property name="leftbar">/templates/leftbar.ftl</property>
-    <property name="headerItem">pricerules</property>    
-    <content-action name="/price/FindProductPriceRule.bsh"/>
-</page>

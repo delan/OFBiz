@@ -29,7 +29,7 @@
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
-                <!-- <set field="leftbarScreenLocation" value=""/> -->
+                <set field="MainColumnStyle" value="leftonly"/>
     
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-name="product"/>

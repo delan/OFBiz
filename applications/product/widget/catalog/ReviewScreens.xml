@@ -25,7 +25,7 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="CommonThesaurusDecorator">
+    <screen name="CommonReviewDecorator">
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
@@ -51,23 +51,26 @@
             </widgets>
         </section>
     </screen>
-    <screen name="EditKeywordThesaurus">
-       <section>
+    <screen name="pendingReviews">
+        <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductStore"/>
-                <set field="tabButtonItem" value="EditKeywordThesaurus"/>
-
-                <script location="component://product/webapp/catalog/WEB-INF/actions/thesaurus/EditKeywordThesaurus.bsh"/>
-			</actions>
-			<widgets>
-                <decorator-screen name="CommonThesaurusDecorator">
+                <set field="title" value="Pennding Product Reviews"/>
+                <set field="headerItem" value="reviews"/>
+                
+                <entity-condition entity-name="ProductReview" list-name="pendingReviews">
+                    <condition-expr field-name="statusId" value="PRR_PENDING"/>
+                    <order-by field-name="+postedDateTime"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonReviewDecorator">
                     <decorator-section name="body">
                         <platform-specific>
-                            <html><html-template location="component://product/webapp/catalog/thesaurus/EditKeywordThesaurus.ftl"/></html>
-						</platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/reviews/pendingReviews.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
-       </section>
-   </screen>
+        </section>
+    </screen>
 </screens>
