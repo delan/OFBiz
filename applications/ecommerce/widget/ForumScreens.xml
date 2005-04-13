@@ -45,7 +45,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title" value="Forum Summary"/>
                 <set field="headerItem" value="Forum"/>
@@ -73,7 +73,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title" value="Forum Article"/>
                 <set field="headerItem" value="Forum"/>
@@ -101,7 +101,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="includeHtmlArea" value="Y"/>
 
@@ -148,7 +148,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="includeHtmlArea" value="Y"/>
 
@@ -196,7 +196,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="includeHtmlArea" value="Y"/>
 
@@ -241,7 +241,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="includeHtmlArea" value="Y"/>
 
@@ -293,7 +293,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title" value="Edit Forum Content Info"/>
                 <set field="headerItem" value="Forum"/>
@@ -333,7 +333,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="includeHtmlArea" value="Y"/>
 
@@ -386,7 +386,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="includeHtmlArea" value="Y"/>
 

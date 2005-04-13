@@ -66,7 +66,7 @@
         <section>
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main-rightonly"/>
+                <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title" value="Billing Information"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/billsettings.bsh"/>
@@ -84,7 +84,7 @@
         <section>
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main-rightonly"/>
+                <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title" value="Shipping Information"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/shipsettings.bsh"/>
@@ -102,7 +102,7 @@
         <section>
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main-rightonly"/>
+                <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title" value="Shipping Information"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/shipsettings.bsh"/>
@@ -120,7 +120,7 @@
         <section>
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main-rightonly"/>
+                <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title" value="Shipping Options"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/optionsettings.bsh"/>
@@ -138,7 +138,7 @@
         <section>
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main-rightonly"/>
+                <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title" value="Order Confirmation"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutreview.bsh"/>
@@ -172,7 +172,7 @@
         <section>
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main-rightonly"/>
+                <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title-property" value="PageTitleCheckoutOptions"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutshippingaddress.bsh"/>
@@ -190,7 +190,7 @@
         <section>
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main-rightonly"/>
+                <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title-property" value="PageTitleCheckoutOptions"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutshippingoptions.bsh"/>
@@ -208,7 +208,7 @@
         <section>
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main-rightonly"/>
+                <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title-property" value="PageTitleCheckoutOptions"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutpayment.bsh"/>
@@ -273,7 +273,7 @@
         <section>
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main-rightonly"/>
+                <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title-property" value="PageTitleOrderHistory"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderhistory.bsh"/>
@@ -291,7 +291,7 @@
         <section>
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main-rightonly"/>
+                <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="maySelectItems" value="Y"/>
                 <set field="title-property" value="PageTitleOrderStatus"/>
@@ -310,7 +310,7 @@
         <section>
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main-rightonly"/>
+                <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title-property" value="PageTitleRequestReturn"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/requestreturn.bsh"/>

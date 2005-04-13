@@ -32,7 +32,7 @@
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 
-                <set field="MainColumnStyle" value="ecom-nocolumns" global="true"/>
+                <set field="MainColumnStyle" value="nocolumns" global="true"/>
                 
                 <script location="component://ecommerce/widget/EcommerceSetup.bsh"/>
             </actions>
@@ -40,7 +40,7 @@
                 <!-- render header -->
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/includes/header.ftl"/></html></platform-specific>
                 
-                <container style="ecom-mainarea">
+                <container id="ecom-mainarea">
                     <!-- by default will render left-bar only if left/rightbarScreenName value not empty -->
                     <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
                     <include-screen name="${rightbarScreenName}" location="${rightbarScreenLocation}"/>
@@ -64,7 +64,7 @@
     <screen name="leftbar">
         <section>
             <widgets>
-                <container style="ecom-column-left">
+                <container style="left">
                     <include-screen name="choosecatalog" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="keywordsearchbox" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="sidedeepcategory" location="component://ecommerce/widget/CatalogScreens.xml"/>
@@ -79,7 +79,7 @@
     <screen name="rightbar">
         <section>
             <widgets>
-                <container style="ecom-column-right">
+                <container style="right">
                     <include-screen name="language"/>
                     <include-screen name="minicart" location="component://ecommerce/widget/CartScreens.xml"/>
                     <include-screen name="minipromotext" location="component://ecommerce/widget/CartScreens.xml"/>
@@ -109,7 +109,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title" value="Main Page"/>
                 <set field="title-property" value="PageTitleMain"/>

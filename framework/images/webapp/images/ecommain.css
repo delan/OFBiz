@@ -175,39 +175,34 @@ text-decoration: underline;
 
 /* ===== Layout/Formatting Styles ===== */
 /* ecom-mainarea wraps what is below the header including the divs for left, main, right columns as applicable */
-DIV.ecom-mainarea {
+#ecom-mainarea {
+position: relative;
 background-color: #FFFFFF;
 width: auto;
 }
 
-DIV.ecom-column-left {
-position: absolute;
-left: 10px;
-top: 109px;
+#ecom-mainarea .left {
+position: absolute; left: 0px; top: 0px;
 /* the old way: float: left; margin-right: 10px; */
-
 width: 150px;
 background: #ffffff;
 /* border:1px solid #000; */
 }
-DIV.ecom-column-right {
-position: absolute;
-right: 10px;
-top: 109px;
+#ecom-mainarea .right {
+position: absolute; right: 0px; top: 0px;
 /* the old way: float: right; margin-left: 10px; */
-
 width: 200px;
 background: #ffffff;
 }
 
 
-DIV.ecom-column-main, DIV.ecom-column-main-leftonly, DIV.ecom-column-main-rightonly, DIV.ecom-nocolumns {
+#ecom-mainarea .center, #ecom-mainarea .leftonly, #ecom-mainarea .rightonly, #ecom-mainarea .nocolumns {
 background:#fff;
 text-align: left;
 vertical-align: top;
 margin-top: 10px;
 }
-DIV.ecom-column-main {
+#ecom-mainarea .center {
 margin-left: 160px;
 margin-right: 210px;
 voice-family: "\"}\"";
@@ -215,13 +210,13 @@ voice-family: inherit;
 margin-left: 161px;
 margin-right: 211px;
 }
-DIV.ecom-column-main-leftonly {
+#ecom-mainarea .leftonly {
 margin-left: 160px;
 voice-family: "\"}\"";
 voice-family: inherit;
 margin-left: 161px;
 }
-DIV.ecom-column-main-rightonly {
+#ecom-mainarea .rightonly {
 margin-right: 210px;
 voice-family: "\"}\"";
 voice-family: inherit;
@@ -808,3 +803,38 @@ font-size: 10px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 color: red;
 }
+
+/* ===== Product Summary Styles ===== */
+#product-prevnext {
+text-align: right;
+}
+
+#productsummary-container {
+margin-top: 5px;
+margin-bottom: 5px;
+border-top: #999 solid 1px;
+}
+
+#productsummary {
+padding: 5px;
+border-bottom: #999 solid 1px;
+}
+
+#productsummary #smallimage {
+float: left;
+width: 55px;
+height: 55px;
+}
+
+#productsummary #productbuy {
+float: right;
+width: 130px;
+margin: 5px;
+text-align: right;
+}
+
+#productsummary #productinfo {
+margin-left: 60px;
+text-align: left;
+}
+

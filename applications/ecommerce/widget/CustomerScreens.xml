@@ -31,7 +31,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title" value="Additional Info"/>
             </actions>
@@ -174,7 +174,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title" value="Gift Card Balance"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/giftcardbalance.bsh"/>
@@ -193,7 +193,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title" value="Gift Card Link"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/giftcardlink.bsh"/>
@@ -228,7 +228,7 @@
         <section>
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main-rightonly"/>
+                <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title" value="Login"/>
                 <set field="pageHeader" value="Contact Us"/>

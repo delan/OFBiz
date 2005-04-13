@@ -135,7 +135,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleCategoryPage"/>
             </actions>
@@ -186,7 +186,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleProductPage"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/product.bsh"/>
@@ -241,7 +241,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleProductReview"/>
             </actions>
@@ -259,7 +259,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleLastViewProducts"/>
             </actions>
@@ -292,7 +292,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleQuickAdd"/>
                 <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/quickadd.bsh"/>-->
@@ -324,7 +324,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleSearchResults"/>
                 <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/keywordsearch.bsh"/>-->
@@ -344,7 +344,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="ecom-column-main"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleAdvancedSearch"/>
                 <set field="headerItem" value="Advanced Search"/>
