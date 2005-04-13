@@ -183,7 +183,7 @@
                 </select>
             </div>
         </div>
-        <div class="ecom-endcolumns">&nbsp;</div>
+        <div class="ecom-endcolumns"><span></span></div>
     </div>
 </div>
 
@@ -256,7 +256,7 @@
                 </select>
             </div>
         </div>
-        <div class="ecom-endcolumns">&nbsp;</div>
+        <div class="ecom-endcolumns"><span></span></div>
     </div>
 </div>
 
@@ -282,7 +282,7 @@
         <div>Order Email addresses (comma separated)</div>
         <input type="text" name="CUSTOMER_ORDER_EMAIL" value="${requestParameters.CUSTOMER_ORDER_EMAIL?if_exists}" size="40" maxlength="80">
 -->
-        <div class="ecom-endcolumns">&nbsp;</div>
+        <div class="ecom-endcolumns"><span></span></div>
     </div>
 </div>
 
@@ -331,7 +331,7 @@
                 </div>
             </div>
         </#if>
-        <div class="ecom-endcolumns">&nbsp;</div>
+        <div class="ecom-endcolumns"><span></span></div>
     </div>
 </div>
 

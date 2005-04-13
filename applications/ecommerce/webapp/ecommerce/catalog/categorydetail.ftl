@@ -54,7 +54,7 @@
 </#if>
 
 <#if productCategoryMembers?has_content>
-    <div style="text-align: right;">
+    <div id="product-prevnext">
       <#-- Start Page Select Drop-Down -->
       <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
       <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
@@ -77,27 +77,22 @@
       </b>
     </div>
 
-    <div style="text-align: center;">
+    <div id="productsummary-container">
         <#assign startIndex = viewSize * viewIndex>
         <#if highIndex < listSize>
           <#assign endIndex = highIndex - 1>
         <#else>
           <#assign endIndex = listSize - 1>
         </#if>
-        
-        <#list productCategoryMembers[startIndex..endIndex] as productCategoryMember>              
-            <div><hr class='sepbar'/></div>
-            <div>
-              ${setRequestAttribute("optProductId", productCategoryMember.productId)} 
-              ${setRequestAttribute("productCategoryMember", productCategoryMember)} 
-              ${setRequestAttribute("listIndex", productCategoryMember_index)}         
-              ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
-            </div>
+        <#list productCategoryMembers[startIndex..endIndex] as productCategoryMember>
+            ${setRequestAttribute("optProductId", productCategoryMember.productId)}
+            ${setRequestAttribute("productCategoryMember", productCategoryMember)}
+            ${setRequestAttribute("listIndex", productCategoryMember_index)}
+            ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
         </#list>
-        <div><hr class='sepbar'/></div>
     </div>
 
-    <div style="text-align: right;">
+    <div id="product-prevnext">
       <#-- Start Page Select Drop-Down -->
       <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
       <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">

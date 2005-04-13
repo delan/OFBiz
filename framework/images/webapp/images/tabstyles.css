@@ -1,12 +1,4 @@
 
-DIV.column-left-wide {
-float: left;
-width: 300px;
-background-color: #CCCCCC;
-border: black solid 2px;
-overflow: auto;
-}
-
 .treewrapper {
 margin-left: 10pt;
 }
@@ -186,5 +178,12 @@ DIV.column-right {
 float: right;
 margin-left: 10px;
 width: 220px;
+}
+DIV.column-left-wide {
+float: left;
+width: 300px;
+background-color: #CCCCCC;
+border: black solid 2px;
+overflow: auto;
 }
 
