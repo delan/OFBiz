@@ -80,7 +80,7 @@
                                 </td>
                             </tr>
                         </table>
-                        ${updateProductionRunWrapper.renderFormString()}
+                        ${updateProductionRunWrapper.renderFormString(context)}
                     </td>
                 </tr>
                 <#if inventoryItems?has_content>
@@ -160,7 +160,7 @@
                                 </#if>
                             </tr>
                         </table>
-                        ${editPrRoutingTaskWrapper.renderFormString()}
+                        ${editPrRoutingTaskWrapper.renderFormString(context)}
                     </td>
                 </tr>
             </table>
@@ -182,7 +182,7 @@
 				    	</#if>
 				    	</tr>
 					</table>
-					${editPrProductComponentWrapper.renderFormString()}
+					${editPrProductComponentWrapper.renderFormString(context)}
 				  </td></tr>
 				</table>
 			</td>
@@ -201,7 +201,7 @@
                 </td>	
 	    	</tr>
 		</table>
-		${ListProductionRunRoutingTasksWrapper.renderFormString()}
+		${ListProductionRunRoutingTasksWrapper.renderFormString(context)}
 	  </td></tr>
 	</table>   		
 
@@ -215,7 +215,7 @@
                 </td>	
 	    	</tr>
 		</table>
-		${ListProductionRunComponentsWrapper.renderFormString()}
+		${ListProductionRunComponentsWrapper.renderFormString(context)}
 	  </td></tr>
 	</table>   		
 <#else>

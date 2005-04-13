@@ -42,6 +42,5 @@ List allCalendarWeek = delegator.findAll("TechDataCalendarWeek");
 context.put("allCalendarWeek",allCalendarWeek);
 HtmlFormWrapper listCalendarWeekWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "ListCalendarWeek", request, response);
 listCalendarWeekWrapper.putInContext("calendarWeeks", allCalendarWeek);
-listCalendarWeekWrapper.putInContext("uiLabelMap", uiLabelMap);
 context.put("listCalendarWeekWrapper",listCalendarWeekWrapper);
 
