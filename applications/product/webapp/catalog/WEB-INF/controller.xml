@@ -34,7 +34,6 @@
     <handler name="simple" type="request" class="org.ofbiz.webapp.event.SimpleEventHandler"/>
     <handler name="bsf" type="request" class="org.ofbiz.webapp.event.BsfEventHandler"/>
 
-    <handler name="region" type="view" class="org.ofbiz.webapp.view.RegionViewHandler"/>    
     <handler name="screen" type="view" class="org.ofbiz.widget.screen.ScreenWidgetViewHandler"/>
 
     <handler name="ftl" type="view" class="org.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>    
@@ -1993,12 +1992,12 @@
     <view-map name="main" type="screen" page="component://product/widget/catalog/CommonScreens.xml#main"/>
     <view-map name="login" type="screen" page="component://product/widget/catalog/CommonScreens.xml#login"/>
 
-    <view-map name="FastLoadCache" type="region"/>
-    <view-map name="FindProductById" type="region"/>
-
     <view-map name="ChooseTopCategory" type="screen" page="component://product/widget/catalog/CommonScreens.xml#ChooseTopCategory"/>
+    <view-map name="FastLoadCache" type="screen" page="component://product/widget/catalog/CommonScreens.xml#FastLoadCache"/>
+
     <view-map name="advancedsearch" type="screen" page="component://product/widget/catalog/FindScreens.xml#advancedsearch"/>
     <view-map name="keywordsearch" type="screen" page="component://product/widget/catalog/FindScreens.xml#keywordsearch"/>
+    <view-map name="FindProductById" type="screen" page="component://product/widget/catalog/FindScreens.xml#FindProductById"/>
 
     <view-map name="EditCategory" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategory"/>
     <view-map name="EditCategoryContent" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryContent"/>
@@ -2008,8 +2007,6 @@
     <view-map name="EditCategoryProdCatalogs" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryProdCatalogs"/>
     <view-map name="EditCategoryFeatureCats" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryFeatureCats"/>
     <view-map name="EditCategoryParties" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryParties"/>
-
-    <view-map name="UploadCategoryImage" type="region"/>
 
     <view-map name="createProductInCategoryStart" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#createProductInCategoryStart"/>
     <view-map name="createProductInCategoryCheckExisting" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#createProductInCategoryCheckExisting"/>
@@ -2038,8 +2035,6 @@
     <view-map name="EditProductContentContent" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductContentContent"/>
     <view-map name="EditSupplierProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditSupplierProduct"/>
     <view-map name="EditProductConfigs" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductConfigs"/>
-
-    <view-map name="UploadImage" type="region"/>
 
     <view-map name="QuickAddVariants" type="screen" page="component://product/widget/catalog/ProductScreens.xml#QuickAddVariants"/>
     <view-map name="CreateVirtualWithVariantsForm" type="screen" page="component://product/widget/catalog/ProductScreens.xml#CreateVirtualWithVariantsForm"/>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -24,34 +24,17 @@
  *@since      2.1
 -->
 
-<BR>
-<TABLE border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-  <TR>
-    <TD width="100%">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-        <tr>
-          <td valign=middle align=center>
-      <div class="boxhead">Categories With No Parent Categories</div>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width="100%">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-        <tr>
-          <td>
-          	  <#list noParentCategories as category>
-                <div>
-                  <a href="<@ofbizUrl>/EditCategory?CATALOG_TOP_CATEGORY=${category.productCategoryId}&productCategoryId=${category.productCategoryId}</@ofbizUrl>" class="buttontext">
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">Categories With No Parent Categories</div>
+    </div>
+    <div class="screenlet-body">
+        <#list noParentCategories as category>
+            <div>
+                <a href="<@ofbizUrl>/EditCategory?CATALOG_TOP_CATEGORY=${category.productCategoryId}&productCategoryId=${category.productCategoryId}</@ofbizUrl>" class="buttontext">
                     ${category.description?if_exists} [${category.productCategoryId}]
-                  </a>
-                </div>
-              </#list>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
+                </a>
+            </div>
+        </#list>
+    </div>
+</div>

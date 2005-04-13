@@ -132,13 +132,34 @@
     <screen name="ChooseTopCategory">
         <section>
             <actions>
+                <set field="leftbarScreenName" value="leftbar"/>
+                <set field="MainColumnStyle" value="leftonly"/>
+    
                 <set field="titleProperty" value="PageTitleChooseTopCategory"/>
-                <script location="component://product/webapp/catalog/WEB-INF/actions/choosetopcategory.bsh"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/ChooseTopCategory.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://product/webapp/catalog/ChooseTopCategory.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FastLoadCache">
+        <section>
+            <actions>
+                <set field="leftbarScreenName" value="leftbar"/>
+                <set field="MainColumnStyle" value="leftonly"/>
+    
+                <set field="title" value="Fast Load Cache"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/FastLoadCache.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://product/webapp/catalog/FastLoadCache.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
