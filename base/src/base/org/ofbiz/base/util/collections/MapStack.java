@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ofbiz.base.util.Debug;
+
 
 /**
  * Map Stack
@@ -191,6 +193,10 @@ public class MapStack implements Map {
      * @see java.util.Map#get(java.lang.Object)
      */
     public Object get(Object key) {
+        if ("context".equals(key)) {
+            return this;
+        }
+        
         // walk the stackList and for the first place it is found return true; otherwise refurn false
         Iterator stackIter = this.stackList.iterator();
         while (stackIter.hasNext()) {
@@ -207,6 +213,12 @@ public class MapStack implements Map {
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
     public Object put(Object key, Object value) {
+        if ("context".equals(key)) {
+            if (value == null || this != value) {
+                Debug.logWarning("WARNING: Putting a value in a MapStack with key [context] that is not this MapStack, will be hidden by the current MapStack self-reference: " + value, module);
+            }
+        }
+            
         // all write operations are local: only put in the Map on the top of the stack
         Map currentMap = (Map) this.stackList.get(0);
         return currentMap.put(key, value);
