@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -19,13 +19,13 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev: 4829 $
  *@since      2.1
 -->
 <#-- variable setup -->
-<#assign price = priceMap?if_exists>
-<#assign nowTimestamp = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()>
+<#assign price = priceMap?if_exists/>
 <#-- end variable setup -->
 
 <#-- virtual product javascript -->
@@ -81,7 +81,7 @@ ${virtualJavaScript?if_exists}
             alert("No detail image available to display.");
             return;
         }
-        popUp("<@ofbizUrl>/detailImage?detail=" + detailImageUrl + "</@ofbizUrl>", 'detailImage', '400', '550');
+        popUp("<@ofbizUrl>detailImage?detail=" + detailImageUrl + "</@ofbizUrl>", 'detailImage', '400', '550');
     }
 
     function toggleAmt(toggle) {
@@ -147,16 +147,15 @@ ${virtualJavaScript?if_exists}
         
         var y=x.split("-");
         if(y.length!=3){ alert(msg[0]);return false; }
-        if((y[2].length>2)||(parseInt(y[2])>31)) { alert(msg[0]);     return false;    }
+        if((y[2].length>2)||(parseInt(y[2])>31)) { alert(msg[0]); return false; }
         if(y[2].length==1){ y[2]="0"+y[2]; }
-        if((y[1].length>2)||(parseInt(y[1])>12)){    alert(msg[0]);    return false;    }
+        if((y[1].length>2)||(parseInt(y[1])>12)){ alert(msg[0]); return false; }
         if(y[1].length==1){ y[1]="0"+y[1]; }            
-        if(y[0].length>4){ alert(msg[0]);     return false;     }
+        if(y[0].length>4){ alert(msg[0]); return false; }
         if(y[0].length<4) {
             if(y[0].length==2) {
                 y[0]="20"+y[0];
-            }
-            else {
+            } else {
                 alert(msg[0]);
                 return false;
             }
@@ -200,6 +199,8 @@ ${virtualJavaScript?if_exists}
  //-->
  </script>
 
+<div id="productdetail">
+
 <table border="0" cellpadding="2" cellspacing="0">
   <#-- Category next/previous -->
   <#if category?exists>
@@ -233,6 +234,7 @@ ${virtualJavaScript?if_exists}
     <td align="right" valign="top">
       <div class="head2">${productContentWrapper.get("PRODUCT_NAME")?if_exists}</div>
       <div class="tabletext">${productContentWrapper.get("DESCRIPTION")?if_exists}</div>
+      <div class="tabletext"><b>${product.productId?if_exists}</b></div>
       <#-- example of showing a certain type of feature with the product -->
       <#if sizeProductFeatureAndAppls?has_content>
         <div class="tabletext">
@@ -246,7 +248,7 @@ ${virtualJavaScript?if_exists}
           </#list>
         </div>
       </#if>
-
+      
       <#-- for prices:
               - if price < competitivePrice, show competitive or "Compare At" price
               - if price < listPrice, show list price
@@ -444,81 +446,60 @@ ${virtualJavaScript?if_exists}
       </#if>
     </td>
   </tr>
-
-  <tr><td colspan="2"><hr class='sepbar'></td></tr>
+</table>
 
   <#-- Long description of product -->
-  <tr>
-    <td colspan="2">
+  <div id="long-description">
       <div class="tabletext">${productContentWrapper.get("LONG_DESCRIPTION")?if_exists}</div>
-    </td>
-  </tr>
-
-  <tr><td colspan="2"><hr class='sepbar'></td></tr>
+  </div>
 
   <#-- Any attributes/etc may go here -->
 
   <#-- Product Reviews -->
-  <tr>
-    <td colspan="2">
+  <div id="reviews">
       <div class="tableheadtext">${uiLabelMap.EcommerceCustomerReviews}:</div>
       <#if averageRating?exists && (averageRating?double > 0) && numRatings?exists && (numRatings?double > 1)>
           <div class="tabletext">${uiLabelMap.EcommerceAverageRating}: ${averageRating} <#if numRatings?exists>(${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.EcommerceRatings})</#if></div>
       </#if>
-    </td>
-  </tr>
-  <tr><td colspan="2"><hr class='sepbar'></td></tr>
-  <#if productReviews?has_content>
-    <#list productReviews as productReview>
-      <#assign postedUserLogin = productReview.getRelatedOne("UserLogin")>
-      <#assign postedPerson = postedUserLogin.getRelatedOne("Person")?if_exists>
-      <tr>
-        <td colspan="2">
-          <table border="0" cellpadding="0" cellspacing='0'>
-            <tr>
-              <td>
-                <div class="tabletext"><b>${uiLabelMap.CommonBy}: </b><#if productReview.postedAnonymous?default("N") == "Y">${uiLabelMap.EcommerceAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if></div>
-              </td>
-              <td>
-                <div class="tabletext"><b>${uiLabelMap.CommonOn}: </b>${productReview.postedDateTime?if_exists}</div>
-              </td>
-              <td>
-                <div class="tabletext"><b>${uiLabelMap.EcommerceRanking}: </b>${productReview.productRating?if_exists?string}</div>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3">
-                <div class="tabletext">&nbsp;</div>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3">
-                <div class="tabletext">${productReview.productReview?if_exists}</div>
-              </td>
-            </tr>
-            <tr><td colspan="3"><hr class="sepbar"/></td></tr>
-          </table>
-        </td>
-      </tr>
-    </#list>
-    <tr>
-      <td colspan="2">
-        <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReviewThisProduct}!</a>
-      </td>
-    </tr>
-  <#else>
-    <tr>
-      <td colspan="2">
+      <#if productReviews?has_content>
+        <#list productReviews as productReview>
+          <#assign postedUserLogin = productReview.getRelatedOne("UserLogin")>
+          <#assign postedPerson = postedUserLogin.getRelatedOne("Person")?if_exists>
+              <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td>
+                    <div class="tabletext"><b>${uiLabelMap.CommonBy}: </b><#if productReview.postedAnonymous?default("N") == "Y">${uiLabelMap.EcommerceAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if></div>
+                  </td>
+                  <td>
+                    <div class="tabletext"><b>${uiLabelMap.CommonOn}: </b>${productReview.postedDateTime?if_exists}</div>
+                  </td>
+                  <td>
+                    <div class="tabletext"><b>${uiLabelMap.EcommerceRanking}: </b>${productReview.productRating?if_exists?string}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    <div class="tabletext">&nbsp;</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    <div class="tabletext">${productReview.productReview?if_exists}</div>
+                  </td>
+                </tr>
+                <tr><td colspan="3"><hr class="sepbar"/></td></tr>
+              </table>
+        </#list>
+        <div>
+            <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReviewThisProduct}!</a>
+        </div>
+      <#else>
         <div class="tabletext">${uiLabelMap.ProductProductNotReviewedYet}.</div>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}!</a>
-      </td>
-    </tr>
-  </#if>
-</table>
+        <div>
+            <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}!</a>
+        </div>
+      </#if>
+  </div>
 
 <#-- Upgrades/Up-Sell/Cross-Sell -->
   <#macro associated assocProducts beforeName showName afterName formNamePrefix targetRequestName>
@@ -527,68 +508,59 @@ ${virtualJavaScript?if_exists}
     <#assign targetRequest = targetRequestName>
   </#if>
   <#if assocProducts?has_content>
-    <tr><td>&nbsp;</td></tr>
-    <tr><td colspan="2"><div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName}</#if>${afterName?if_exists}</div></td></tr>
-    <tr><td><hr class="sepbar"/></td></tr>
+    <div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName}</#if>${afterName?if_exists}</div>
+
+    <div id="productsummary-container">
     <#list assocProducts as productAssoc>
-      <tr><td>
         <div class="tabletext">
           <a href='<@ofbizUrl>/${targetRequest}/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo?if_exists}</@ofbizUrl>' class="buttontext">
             ${productAssoc.productIdTo?if_exists}
           </a>
           - <b>${productAssoc.reason?if_exists}</b>
         </div>
-      </td></tr>
       ${setRequestAttribute("optProductId", productAssoc.productIdTo)}
       ${setRequestAttribute("listIndex", listIndex)}
       ${setRequestAttribute("formNamePrefix", formNamePrefix)}
       <#if targetRequestName?has_content>
         ${setRequestAttribute("targetRequestName", targetRequestName)}
       </#if>
-      <tr>
-        <td>
           ${screens.render(productsummaryScreen)}
-        </td>
-      </tr>
       <#local listIndex = listIndex + 1>
-      <tr><td><hr class="sepbar"/></td></tr>
     </#list>
+    </div>
+
     ${setRequestAttribute("optProductId", "")}
     ${setRequestAttribute("formNamePrefix", "")}
     ${setRequestAttribute("targetRequestName", "")}
   </#if>
 </#macro>
+
 <#assign productValue = product>
 <#assign listIndex = 1>
 ${setRequestAttribute("productValue", productValue)}
-
-<table>
-  <#-- obsolete -->
-  <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
-  <#-- cross sell -->
-  <@associated assocProducts=crossSellProducts beforeName="" showName="N" afterName="You might be interested in these as well:" formNamePrefix="cssl" targetRequestName="crosssell"/>
-  <#-- up sell -->
-  <@associated assocProducts=upSellProducts beforeName="Try these instead of " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell"/>
-  <#-- obsolescence -->
-  <@associated assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:" formNamePrefix="obce" targetRequestName=""/>
-</table>
+<div id="associated-products">
+    <#-- obsolete -->
+    <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
+    <#-- cross sell -->
+    <@associated assocProducts=crossSellProducts beforeName="" showName="N" afterName="You might be interested in these as well:" formNamePrefix="cssl" targetRequestName="crosssell"/>
+    <#-- up sell -->
+    <@associated assocProducts=upSellProducts beforeName="Try these instead of " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell"/>
+    <#-- obsolescence -->
+    <@associated assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:" formNamePrefix="obce" targetRequestName=""/>
+</div>
 
 <#-- special cross/up-sell area using commonFeatureResultIds (from common feature product search) -->
 <#if commonFeatureResultIds?has_content>
-  <div class="head2">Similar Products That Might Interest You...</div>
-  <hr class="sepbar"/>
+    <div class="head2">Similar Products That Might Interest You...</div>
 
-  <#list commonFeatureResultIds as commonFeatureResultId>
-    <div class="tabletext">
-      ${setRequestAttribute("optProductId", commonFeatureResultId)}
-      ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
-      ${setRequestAttribute("formNamePrefix", "cfeatcssl")}
-      <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
-      ${screens.render(productsummaryScreen)}
+    <div id="productsummary-container">
+        <#list commonFeatureResultIds as commonFeatureResultId>
+            ${setRequestAttribute("optProductId", commonFeatureResultId)}
+            ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
+            ${setRequestAttribute("formNamePrefix", "cfeatcssl")}
+            <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
+            ${screens.render(productsummaryScreen)}
+        </#list>
     </div>
-    <#if commonFeatureResultId_has_next>
-      <hr class="sepbar"/>
-    </#if>
-  </#list>
 </#if>
-
+</div>

@@ -36,6 +36,8 @@
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 
+                <set field="MainColumnStyle" value="nocolumns" global="true"/>
+
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.OrderCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.OrderCompanySubtitle" global="true"/>
                 <set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.jpg" global="true"/>
@@ -54,13 +56,16 @@
                     <platform-specific><html><html-template location="component://order/webapp/ordermgr/includes/appheader.ftl"/></html></platform-specific>
                     
                     <container style="contentarea">
-                        <!-- by default will render left-bar only if leftbarScreen value not empty -->
-                        <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
+                        <container id="column-container">
+                            <!-- by default will render left-bar only if leftbarScreen value not empty -->
+                            <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
 
-                        <container style="column-main">
-                            <!-- render messages -->
-                            <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
-                            <decorator-section-include name="body"/>
+                            <container style="${MainColumnStyle}">
+                                <!-- render messages -->
+                                <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
+                                <decorator-section-include name="body"/>
+                            </container>
+                            <container style="endcolumns"><label text="&amp;nbsp;"/></container>
                         </container>
                     </container>
                 </container>

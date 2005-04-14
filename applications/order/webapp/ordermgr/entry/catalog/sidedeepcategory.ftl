@@ -23,7 +23,6 @@
  *@version    $Rev:$
  *@since      2.1
 -->
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#-- variable setup and worker calls -->
 <#if (requestAttributes.topLevelList)?exists><#assign topLevelList = requestAttributes.topLevelList></#if>
 <#if (requestAttributes.curCategoryId)?exists><#assign curCategoryId = requestAttributes.curCategoryId></#if>
@@ -64,33 +63,16 @@
 </#macro>
 
 <#if topLevelList?has_content>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign=middle align=center>
-            <div class="boxhead">${uiLabelMap.ProductBrowseCategories}</div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-            <div style='margin-left: 10px;'>
-              <#list topLevelList as category>
-                <@categoryList parentCategory=category category=category/>
-              </#list>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<br>
+<div class="ecom-screenlet">
+    <div class="ecom-screenlet-header">
+        <div class="boxhead">${uiLabelMap.ProductBrowseCategories}</div>
+    </div>
+    <div class="ecom-screenlet-body">
+        <div style='margin-left: 10px;'>
+          <#list topLevelList as category>
+            <@categoryList parentCategory=category category=category/>
+          </#list>
+        </div>
+    </div>
+</div>
 </#if>

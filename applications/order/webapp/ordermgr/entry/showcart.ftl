@@ -167,7 +167,7 @@ function gwAll(e) {
             </form>
           </td>
         </tr>
-        <#if modeStr?default("sales")?lower_case == "purchase">
+        <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
         <tr><td><hr class="sepbar"></td></tr>
         <tr>
           <td>
@@ -202,6 +202,7 @@ function gwAll(e) {
 //-->
 </script>
 <BR>
+
 <TABLE border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <TR>
     <TD>

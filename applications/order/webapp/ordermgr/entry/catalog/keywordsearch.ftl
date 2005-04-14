@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -19,8 +19,8 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@version    $Rev: 4818 $
  *@since      2.1
 -->
 
@@ -29,16 +29,14 @@
     <div class="tabletext">&nbsp;<a href="<@ofbizUrl>/keywordsearch?removeConstraint=${searchConstraintString_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${searchConstraintString}</div>
 </#list>
 <div class="tabletext">${uiLabelMap.ProductSortedBy}: ${searchSortOrderString}</div>
-<div class="tabletext"><a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductRefineSearch}]</a></div>
+<div class="tabletext"><a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${(reqeustParameters.SEARCH_CATEGORY_ID)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductRefineSearch}]</a></div>
 
 <#if !productIds?has_content>
-  <br><div class="head2">&nbsp;${uiLabelMap.ProductNoResultsFound}.</div>
+  <div class="head2">&nbsp;${uiLabelMap.ProductNoResultsFound}.</div>
 </#if>
 
 <#if productIds?has_content>
-<table border="0" cellpadding="2">
-    <tr>
-      <td align=right>
+    <div id="product-prevnext">
         <#-- Start Page Select Drop-Down -->
         <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
         <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
@@ -59,34 +57,22 @@
           | <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
         </b>
-      </td>
-    </tr>
-</table>
+    </div>
 </#if>
 
 <#if productIds?has_content>
-<center>
-  <table cellpadding="0" cellspacing="0">
-    <#assign listIndex = lowIndex>
-    <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
-      ${setRequestAttribute("optProductId", productId)}
-      ${setRequestAttribute("listIndex", productId_index)}
-      <tr><td colspan="2"><hr class="sepbar"></td></tr>
-      <tr>
-        <td>
-          ${screens.render(productsummaryScreen)}
-        </td>
-      </tr>
-    </#list>
-  </table>
-</center>
+    <div id="productsummary-container">
+        <#assign listIndex = lowIndex>
+        <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
+            ${setRequestAttribute("optProductId", productId)}
+            ${setRequestAttribute("listIndex", productId_index)}
+            ${screens.render(productsummaryScreen)}
+        </#list>
+    </div>
 </#if>
 
 <#if productIds?has_content>
-<table border="0" cellpadding="2">
-    <tr><td colspan="2"><hr class="sepbar"></td></tr>
-    <tr>
-      <td align=right>
+    <div id="product-prevnext">
         <#-- Start Page Select Drop-Down -->
         <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
         <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
@@ -107,8 +93,6 @@
           | <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
         </b>
-      </td>
-    </tr>
-</table>
+    </div>
 </#if>
 

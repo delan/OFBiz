@@ -36,6 +36,14 @@
         <field name="partyId">
             <lookup target-form-name="LookupPartyName"/>
         </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="QUOTE_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="validFromDate"><hidden/></field>
         <field name="validThruDate"><hidden/></field>
         <field name="description"><hidden/></field>
@@ -60,6 +68,9 @@
         <field name="quoteTypeId">
             <display-entity entity-name="QuoteType"/>
         </field>
+        <field name="statusId">
+            <display-entity also-hidden="false" entity-name="StatusItem"/>
+        </field>
     </form>
     <form name="EditQuote" type="single"
             target="updateQuote" title="" default-map-name="quote"
@@ -74,6 +85,14 @@
         </field>
         <field name="partyId">
             <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="statusId" title="Status" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" value="QUOTE_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
         </field>
         <field name="submitButton" title="Submit" widget-style="standardSubmit">
             <submit button-type="button"/>
