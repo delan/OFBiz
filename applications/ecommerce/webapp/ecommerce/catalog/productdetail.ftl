@@ -25,8 +25,7 @@
  *@since      2.1
 -->
 <#-- variable setup -->
-<#assign price = priceMap?if_exists>
-<#assign nowTimestamp = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()>
+<#assign price = priceMap?if_exists/>
 <#-- end variable setup -->
 
 <#-- virtual product javascript -->
@@ -199,6 +198,8 @@ ${virtualJavaScript?if_exists}
     }
  //-->
  </script>
+
+<div id="productdetail">
 
 <table border="0" cellpadding="2" cellspacing="0">
   <#-- Category next/previous -->
@@ -445,81 +446,60 @@ ${virtualJavaScript?if_exists}
       </#if>
     </td>
   </tr>
-
-  <tr><td colspan="2"><hr class='sepbar'></td></tr>
+</table>
 
   <#-- Long description of product -->
-  <tr>
-    <td colspan="2">
+  <div id="long-description">
       <div class="tabletext">${productContentWrapper.get("LONG_DESCRIPTION")?if_exists}</div>
-    </td>
-  </tr>
-
-  <tr><td colspan="2"><hr class='sepbar'></td></tr>
+  </div>
 
   <#-- Any attributes/etc may go here -->
 
   <#-- Product Reviews -->
-  <tr>
-    <td colspan="2">
+  <div id="reviews">
       <div class="tableheadtext">${uiLabelMap.EcommerceCustomerReviews}:</div>
       <#if averageRating?exists && (averageRating?double > 0) && numRatings?exists && (numRatings?double > 1)>
           <div class="tabletext">${uiLabelMap.EcommerceAverageRating}: ${averageRating} <#if numRatings?exists>(${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.EcommerceRatings})</#if></div>
       </#if>
-    </td>
-  </tr>
-  <tr><td colspan="2"><hr class='sepbar'></td></tr>
-  <#if productReviews?has_content>
-    <#list productReviews as productReview>
-      <#assign postedUserLogin = productReview.getRelatedOne("UserLogin")>
-      <#assign postedPerson = postedUserLogin.getRelatedOne("Person")?if_exists>
-      <tr>
-        <td colspan="2">
-          <table border="0" cellpadding="0" cellspacing='0'>
-            <tr>
-              <td>
-                <div class="tabletext"><b>${uiLabelMap.CommonBy}: </b><#if productReview.postedAnonymous?default("N") == "Y">${uiLabelMap.EcommerceAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if></div>
-              </td>
-              <td>
-                <div class="tabletext"><b>${uiLabelMap.CommonOn}: </b>${productReview.postedDateTime?if_exists}</div>
-              </td>
-              <td>
-                <div class="tabletext"><b>${uiLabelMap.EcommerceRanking}: </b>${productReview.productRating?if_exists?string}</div>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3">
-                <div class="tabletext">&nbsp;</div>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3">
-                <div class="tabletext">${productReview.productReview?if_exists}</div>
-              </td>
-            </tr>
-            <tr><td colspan="3"><hr class="sepbar"/></td></tr>
-          </table>
-        </td>
-      </tr>
-    </#list>
-    <tr>
-      <td colspan="2">
-        <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReviewThisProduct}!</a>
-      </td>
-    </tr>
-  <#else>
-    <tr>
-      <td colspan="2">
+      <#if productReviews?has_content>
+        <#list productReviews as productReview>
+          <#assign postedUserLogin = productReview.getRelatedOne("UserLogin")>
+          <#assign postedPerson = postedUserLogin.getRelatedOne("Person")?if_exists>
+              <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td>
+                    <div class="tabletext"><b>${uiLabelMap.CommonBy}: </b><#if productReview.postedAnonymous?default("N") == "Y">${uiLabelMap.EcommerceAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if></div>
+                  </td>
+                  <td>
+                    <div class="tabletext"><b>${uiLabelMap.CommonOn}: </b>${productReview.postedDateTime?if_exists}</div>
+                  </td>
+                  <td>
+                    <div class="tabletext"><b>${uiLabelMap.EcommerceRanking}: </b>${productReview.productRating?if_exists?string}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    <div class="tabletext">&nbsp;</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    <div class="tabletext">${productReview.productReview?if_exists}</div>
+                  </td>
+                </tr>
+                <tr><td colspan="3"><hr class="sepbar"/></td></tr>
+              </table>
+        </#list>
+        <div>
+            <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReviewThisProduct}!</a>
+        </div>
+      <#else>
         <div class="tabletext">${uiLabelMap.ProductProductNotReviewedYet}.</div>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}!</a>
-      </td>
-    </tr>
-  </#if>
-</table>
+        <div>
+            <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}!</a>
+        </div>
+      </#if>
+  </div>
 
 <#-- Upgrades/Up-Sell/Cross-Sell -->
   <#macro associated assocProducts beforeName showName afterName formNamePrefix targetRequestName>
@@ -528,41 +508,36 @@ ${virtualJavaScript?if_exists}
     <#assign targetRequest = targetRequestName>
   </#if>
   <#if assocProducts?has_content>
-    <tr><td>&nbsp;</td></tr>
-    <tr><td colspan="2"><div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName}</#if>${afterName?if_exists}</div></td></tr>
-    <tr><td><hr class="sepbar"/></td></tr>
+    <div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName}</#if>${afterName?if_exists}</div>
+
+    <div id="productsummary-container">
     <#list assocProducts as productAssoc>
-      <tr><td>
         <div class="tabletext">
           <a href='<@ofbizUrl>/${targetRequest}/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo?if_exists}</@ofbizUrl>' class="buttontext">
             ${productAssoc.productIdTo?if_exists}
           </a>
           - <b>${productAssoc.reason?if_exists}</b>
         </div>
-      </td></tr>
       ${setRequestAttribute("optProductId", productAssoc.productIdTo)}
       ${setRequestAttribute("listIndex", listIndex)}
       ${setRequestAttribute("formNamePrefix", formNamePrefix)}
       <#if targetRequestName?has_content>
         ${setRequestAttribute("targetRequestName", targetRequestName)}
       </#if>
-      <tr>
-        <td>
           ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
-        </td>
-      </tr>
       <#local listIndex = listIndex + 1>
-      <tr><td><hr class="sepbar"/></td></tr>
     </#list>
+    </div>
+
     ${setRequestAttribute("optProductId", "")}
     ${setRequestAttribute("formNamePrefix", "")}
     ${setRequestAttribute("targetRequestName", "")}
   </#if>
 </#macro>
+
 <#assign productValue = product>
 <#assign listIndex = 1>
 ${setRequestAttribute("productValue", productValue)}
-
 <div id="associated-products">
     <#-- obsolete -->
     <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
@@ -576,20 +551,16 @@ ${setRequestAttribute("productValue", productValue)}
 
 <#-- special cross/up-sell area using commonFeatureResultIds (from common feature product search) -->
 <#if commonFeatureResultIds?has_content>
-  <div class="head2">Similar Products That Might Interest You...</div>
-  <div><hr class="sepbar"/></div>
+    <div class="head2">Similar Products That Might Interest You...</div>
 
-  <#list commonFeatureResultIds as commonFeatureResultId>
-    <div class="tabletext">
-      ${setRequestAttribute("optProductId", commonFeatureResultId)}
-      ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
-      ${setRequestAttribute("formNamePrefix", "cfeatcssl")}
-      <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
-      ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
+    <div id="productsummary-container">
+        <#list commonFeatureResultIds as commonFeatureResultId>
+            ${setRequestAttribute("optProductId", commonFeatureResultId)}
+            ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
+            ${setRequestAttribute("formNamePrefix", "cfeatcssl")}
+            <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
+            ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
+        </#list>
     </div>
-    <#if commonFeatureResultId_has_next>
-        <div><hr class="sepbar"/></div>
-    </#if>
-  </#list>
 </#if>
-
+</div>

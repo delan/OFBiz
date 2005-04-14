@@ -30,47 +30,47 @@
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
-        form.action="<@ofbizUrl>/checkout</@ofbizUrl>";
+        form.action="<@ofbizUrl>checkout</@ofbizUrl>";
         form.submit();
     } else if (mode == "CS") {
         // continue shopping
-        form.action="<@ofbizUrl>/updateCheckoutOptions/showcart</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/showcart</@ofbizUrl>";
         form.submit();
     } else if (mode == "NA") {
         // new address
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?DONE_PAGE=quickcheckout&preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=quickcheckout&preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@ofbizUrl>";
         form.submit();
     } else if (mode == "EA") {
         // edit address
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?DONE_PAGE=quickcheckout&contactMechId="+value+"</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=quickcheckout&contactMechId="+value+"</@ofbizUrl>";
         form.submit();
     } else if (mode == "NC") {
         // new credit card
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?DONE_PAGE=quickcheckout</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=quickcheckout</@ofbizUrl>";
         form.submit();
     } else if (mode == "EC") {
         // edit credit card
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?DONE_PAGE=quickcheckout&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=quickcheckout&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
     } else if (mode == "GC") {
         // edit gift card
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editgiftcard?DONE_PAGE=quickcheckout&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/editgiftcard?DONE_PAGE=quickcheckout&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
     } else if (mode == "NE") {
         // new eft account
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?DONE_PAGE=quickcheckout</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=quickcheckout</@ofbizUrl>";
         form.submit();
     } else if (mode == "EE") {
         // edit eft account
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?DONE_PAGE=quickcheckout&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=quickcheckout&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
     } else if (mode == "SP") {
         // split payment
-        form.action="<@ofbizUrl>/updateCheckoutOptions/checkoutpayment</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/checkoutpayment</@ofbizUrl>";
         form.submit();
     } else if (mode == "SA") {
         // selected shipping address
-        form.action="<@ofbizUrl>/updateCheckoutOptions/quickcheckout</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/quickcheckout</@ofbizUrl>";
         form.submit();
     }
 }
@@ -92,14 +92,14 @@ function toggleBillingAccount(box) {
 
 <#assign cart = shoppingCart?if_exists>
 <#assign shipping = !cart.containAllWorkEffortCartItems()> <#-- contains items which need shipping? -->
-<form method="post" name="checkoutInfoForm" style='margin:0;'>
+<form method="post" name="checkoutInfoForm" style="margin:0;">
   <input type="hidden" name="checkoutpage" value="quick">
   <input type="hidden" name="DONE_PAGE" value="quickcheckout">
   <input type="hidden" name="BACK_PAGE" value="quickcheckout">
-  <table width="100%" border="0" cellpadding='0' cellspacing='0'>
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr valign="top" align="left">
-      <td height='100%'>
-        <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
+      <td height="100%">
+        <table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside" style="height: 100%;">
           <tr>
             <td width='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -131,7 +131,7 @@ function toggleBillingAccount(box) {
                         <tr><td colspan="2"><hr class='sepbar'></td></tr>
                         <tr>
                           <td colspan="2" align="center">
-                            <a href="<@ofbizUrl>/splitship</@ofbizUrl>" class="buttontext">Split Into Multiple Shipments</a>
+                            <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="buttontext">Split Into Multiple Shipments</a>
                             <#if (cart.getShipGroupSize() > 1)>
                               <div class="tabletext" style="color: red;">NOTE: Multiple shipments exist, use Split Shipment.</div>
                             </#if>
@@ -312,7 +312,7 @@ function toggleBillingAccount(box) {
                               </#list>
                             </b>
                           </div>
-                          <div class="tabletext">${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>/viewprofile?DONE_PAGE=quickcheckout</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyProfile}</a>.</div>
+                          <div class="tabletext">${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>viewprofile?DONE_PAGE=quickcheckout</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyProfile}</a>.</div>
                           <br>
                           <div class="tabletext">${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
                           <input type="text" class='inputBox' size="30" name="order_additional_emails" value='${cart.getOrderAdditionalEmails()?if_exists}'>
