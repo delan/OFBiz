@@ -212,6 +212,21 @@
                     </#list>
                   </#if>
 
+                  <#-- show linked quote -->
+                  <#assign linkedQuote = orderItem.getRelatedOneCache("QuoteItem")?if_exists>
+                  
+                  <#if linkedQuote?has_content>
+                    <tr>
+                      <td>&nbsp;</td>
+                      <td colspan="9">
+                        <div class="tabletext">
+                          <b><i>Linked to quote</i>:</b>
+                          <a href="<@ofbizUrl>EditQuoteItem?quoteId=${linkedQuote.quoteId}&quoteItemSeqId=${linkedQuote.quoteItemSeqId}</@ofbizUrl>" class="buttontext" style="font-size: xx-small;">${linkedQuote.quoteId}-${linkedQuote.quoteItemSeqId}</a>&nbsp;
+                        </div>
+                      </td>
+                    </tr>
+                  </#if>
+
                   <#-- now show adjustment details per line item -->
                   <#assign orderItemAdjustments = Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentList(orderItem, orderAdjustments)>
                   <#if orderItemAdjustments?exists && orderItemAdjustments?has_content>

@@ -2559,6 +2559,8 @@ public class ShoppingCart implements Serializable {
                 orderItem.set("comments", item.getItemComment());
                 orderItem.set("estimatedDeliveryDate", item.getDesiredDeliveryDate());
                 orderItem.set("correspondingPoId", this.getPoNumber());
+                orderItem.set("quoteId", item.getQuoteId());
+                orderItem.set("quoteItemSeqId", item.getQuoteItemSeqId());
                 orderItem.set("statusId", initialStatus);
 
                 result.add(orderItem);
