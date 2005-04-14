@@ -595,7 +595,8 @@ public class GenericDelegator implements DelegatorInterface {
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_CREATE, value, ecaEventMap, (ecaEventMap == null), false);
             return value;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in create operation for entity [" + value.getEntityName() + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -634,7 +635,8 @@ public class GenericDelegator implements DelegatorInterface {
             
             return value;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in createOrStore operation for entity [" + value.getEntityName() + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -726,7 +728,8 @@ public class GenericDelegator implements DelegatorInterface {
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
             return num;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in removeByPrimaryKey operation for entity [" + primaryKey.getEntityName() + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -779,7 +782,8 @@ public class GenericDelegator implements DelegatorInterface {
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
             return num;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in removeValue operation for entity [" + value.getEntityName() + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -838,7 +842,8 @@ public class GenericDelegator implements DelegatorInterface {
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
             return num;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in removeByAnd operation for entity [" + entityName + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -884,7 +889,8 @@ public class GenericDelegator implements DelegatorInterface {
             
             return helper.removeByCondition(modelEntity, condition);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in removeByCondition operation for entity [" + entityName + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -1007,7 +1013,8 @@ public class GenericDelegator implements DelegatorInterface {
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
             return retVal;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in store operation for entity [" + value.getEntityName() + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -1132,7 +1139,8 @@ public class GenericDelegator implements DelegatorInterface {
 
             return numberChanged;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in storeAll operation: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -1195,7 +1203,8 @@ public class GenericDelegator implements DelegatorInterface {
 
             return numRemoved;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in removeAll operation: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -1248,7 +1257,8 @@ public class GenericDelegator implements DelegatorInterface {
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
             return value;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in findByPrimaryKey operation for entity [" + primaryKey.getEntityName() + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -1336,7 +1346,8 @@ public class GenericDelegator implements DelegatorInterface {
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
             return value;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in findByPrimaryKeyPartial operation for entity [" + primaryKey.getEntityName() + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -1592,7 +1603,8 @@ public class GenericDelegator implements DelegatorInterface {
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
             return list;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in findByAnd operation for entity [" + modelEntity.getEntityName() + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -1641,7 +1653,8 @@ public class GenericDelegator implements DelegatorInterface {
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
             return list;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in findByOr operation for entity [" + entityName + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -1754,7 +1767,8 @@ public class GenericDelegator implements DelegatorInterface {
     
             return list;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in findByCondition operation for entity [" + entityName + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -1793,7 +1807,8 @@ public class GenericDelegator implements DelegatorInterface {
     
             return list;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in findByCondition operation for entity [" + entityName + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -1950,7 +1965,8 @@ public class GenericDelegator implements DelegatorInterface {
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
             return count;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in findListIteratorByCondition operation for entity [DynamicView]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -1996,7 +2012,8 @@ public class GenericDelegator implements DelegatorInterface {
     
             return helper.findByMultiRelation(value, modelRelationOne, modelEntityOne, modelRelationTwo, modelEntityTwo, orderBy);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in getMultiRelation operation for entity [" + value.getEntityName() + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -2517,7 +2534,7 @@ public class GenericDelegator implements DelegatorInterface {
                 return nextSeqLong.toString();
             }
         } catch (Exception e) {
-            Debug.logError(e, "Failure in getNextSeqId operation, rolling back transaction", module);
+            Debug.logError(e, "Failure in getNextSeqId operation for seqName [" + seqName + "]: " + e.toString() + ". Rolling back transaction", module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -2575,7 +2592,8 @@ public class GenericDelegator implements DelegatorInterface {
 
             return newSeqId;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in getNextSeqIdLong operation for seqName [" + seqName + "]: " + e.toString() + ". Rolling back transaction.";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -2648,7 +2666,8 @@ public class GenericDelegator implements DelegatorInterface {
                 // only commit the transaction if we started one...
                 TransactionUtil.commit(beganTransaction);
             } catch (Exception e) {
-                Debug.logError(e, "Failure in operation, rolling back transaction", module);
+                String errMsg = "Failure in setNextSubSeqId operation for entity [" + value.getEntityName() + "]: " + e.toString() + ". Rolling back transaction.";
+                Debug.logError(e, errMsg, module);
                 try {
                     // only rollback the transaction if we started one...
                     TransactionUtil.rollback(beganTransaction);

@@ -101,7 +101,8 @@ public class ModelScreen {
             // render the screen, starting with the top-level section
             this.section.renderWidgetString(writer, context, screenStringRenderer);
         } catch (RuntimeException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Error rendering screen [" + this.name + "]: " + e.toString();
+            Debug.logError(errMsg + ". Rolling back transaction.", module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -109,9 +110,10 @@ public class ModelScreen {
                 Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
             }
             // after rolling back, rethrow the exception
-            throw new GeneralException("Error rendering screen: " + e.toString(), e);
+            throw new GeneralException(errMsg, e);
         } catch (Exception e) {
-            Debug.logError("Failure in screen rendering, rolling back transaction", module);
+            String errMsg = "Error rendering screen [" + this.name + "]: " + e.toString();
+            Debug.logError(errMsg + ". Rolling back transaction.", module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -119,7 +121,6 @@ public class ModelScreen {
                 Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
             }
             
-            String errMsg = "Error rendering screen [" + this.name + "]: " + e.toString();
             // throw nested exception, don't need to log details here: Debug.logError(e, errMsg, module);
             
             // after rolling back, rethrow the exception

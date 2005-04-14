@@ -95,7 +95,7 @@ public class TransactionUtil implements Status {
                         Debug.logWarning("[TransactionUtil.begin] active transaction marked for rollback in place, so no transaction begun", module);
                     }
                     
-                    throw new GenericTransactionException("The current transaction is marked for rollback, should stop immediately.");
+                    throw new GenericTransactionException("The current transaction is marked for rollback, not beginning a new transaction and aborting current operation.");
                 }
                 
                 // set the timeout for THIS transaction
@@ -307,14 +307,14 @@ public class TransactionUtil implements Status {
                 }
             } catch (SystemException e) {
                 //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
-                throw new GenericTransactionException("System error, could not roll back transaction", e);
+                throw new GenericTransactionException("System error, could not rollback transaction", e);
             }
         } else {
             Debug.logInfo("[TransactionUtil.rollback] No UserTransaction, transaction not rolled back", module);
         }
     }
 
-    /** Makes a roll back the only possible outcome of the transaction in the current thread IF transactions are available */
+    /** Makes a rollback the only possible outcome of the transaction in the current thread IF transactions are available */
     public static void setRollbackOnly() throws GenericTransactionException {        
         UserTransaction ut = TransactionFactory.getUserTransaction();
         if (ut != null) {
@@ -323,18 +323,22 @@ public class TransactionUtil implements Status {
                 Debug.logVerbose("[TransactionUtil.setRollbackOnly] current code : " + getTransactionStateString(status), module);
 
                 if (status != STATUS_NO_TRANSACTION) {
-                    if (Debug.infoOn()) Thread.dumpStack();
-                    ut.setRollbackOnly();
-                    Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction roll back only set", module);
+                    if (status != STATUS_MARKED_ROLLBACK) {
+                        if (Debug.infoOn()) Thread.dumpStack();
+                        ut.setRollbackOnly();
+                        Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction rollback only set", module);
+                    } else {
+                        Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction rollback only not set, rollback only is already set.", module);
+                    }
                 } else {
-                    Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction roll back only not set, status is STATUS_NO_TRANSACTION", module);
+                    Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction rollback only not set, status is STATUS_NO_TRANSACTION", module);
                 }
             } catch (SystemException e) {
                 //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
-                throw new GenericTransactionException("System error, could not set roll back only on transaction", e);
+                throw new GenericTransactionException("System error, could not set rollback only on transaction", e);
             }
         } else {
-            Debug.logInfo("[TransactionUtil.setRollbackOnly] No UserTransaction, transaction roll back only not set", module);
+            Debug.logInfo("[TransactionUtil.setRollbackOnly] No UserTransaction, transaction rollback only not set", module);
         }
     }
 
