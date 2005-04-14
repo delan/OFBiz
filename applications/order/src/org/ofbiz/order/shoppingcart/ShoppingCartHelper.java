@@ -481,11 +481,29 @@ public class ShoppingCartHelper {
                 GenericValue quoteItem = (GenericValue) itemIter.next();
                 // never read: int itemId = -1;
                 if (quoteItem.get("productId") != null && quoteItem.get("quantity") != null) {
+                    Iterator scis = this.cart.iterator();
+                    boolean quoteAlreadyInCart = false;
+                    while (scis.hasNext() && !quoteAlreadyInCart) {
+                        ShoppingCartItem sci = (ShoppingCartItem)scis.next();
+                        if (sci.getQuoteId() != null && sci.getQuoteItemSeqId() != null &&
+                                sci.getQuoteId().equals(quoteId) && sci.getQuoteItemSeqId().equals(quoteItem.getString("quoteItemSeqId"))) {
+                            quoteAlreadyInCart = true;
+                            continue;
+                        }
+                    }
+                    if (quoteAlreadyInCart) {
+                        if (Debug.warningOn()) Debug.logWarning("The quote [" + quoteId + "] is already in the cart, not adding.", module);
+                        continue;
+                    }
+
                     try {
-                        this.cart.addOrIncreaseItem(quoteItem.getString("productId"),
+                        int index = this.cart.addOrIncreaseItem(quoteItem.getString("productId"),
                                         quoteItem.getDouble("quantity").doubleValue(),
                                         null, null, catalogId, dispatcher);
                         noItems = false;
+                        ShoppingCartItem sci = (ShoppingCartItem)this.cart.items().get(index);
+                        sci.setQuoteId(quoteId);
+                        sci.setQuoteItemSeqId(quoteItem.getString("quoteItemSeqId"));
                     } catch (CartItemModifyException e) {
                         errorMsgs.add(e.getMessage());
                     } catch (ItemNotFoundException e) {

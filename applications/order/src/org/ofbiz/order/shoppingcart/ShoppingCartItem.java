@@ -96,6 +96,8 @@ public class ShoppingCartItem implements java.io.Serializable {
     private double listPrice = 0.0;
     private double selectedAmount = 0.0;
     private String requirementId = null;
+    private String quoteId = null;
+    private String quoteItemSeqId = null;
     private Map attributes = null;
     private String orderItemSeqId = null;       
     private Locale locale = null;
@@ -537,6 +539,8 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.reserv2ndPPPerc = item.getReserv2ndPPPerc();
         this.reservNthPPPerc = item.getReservNthPPPerc();
         this.requirementId = item.getRequirementId();
+        this.quoteId = item.getQuoteId();
+        this.quoteItemSeqId = item.getQuoteItemSeqId();
         this.isPromo = item.getIsPromo();
         this.promoQuantityUsed = item.promoQuantityUsed;
         this.locale = item.locale;
@@ -1116,6 +1120,26 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Returns the requirementId. */
     public String getRequirementId() {
         return this.requirementId;
+    }
+
+    /** Sets the quoteId. */
+    public void setQuoteId(String quoteId) {
+        this.quoteId = quoteId;
+    }
+
+    /** Returns the quoteId. */
+    public String getQuoteId() {
+        return this.quoteId;
+    }
+    
+    /** Sets the quoteItemSeqId. */
+    public void setQuoteItemSeqId(String quoteItemSeqId) {
+        this.quoteItemSeqId = quoteItemSeqId;
+    }
+
+    /** Returns the quoteItemSeqId. */
+    public String getQuoteItemSeqId() {
+        return this.quoteItemSeqId;
     }
 
     /** Returns true if shipping charges apply to this item. */

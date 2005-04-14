@@ -39,6 +39,9 @@
         <!-- create new entity and create all the fields -->
         <make-value value-name="newEntity" entity-name="Quote"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <if-empty field-name="newEntity.statusId">
+            <string-to-field string="QUO_CREATED" field-name="newEntity.statusId"/>
+        </if-empty>
 
         <!-- create a non existing ID -->
         <sequenced-id-to-env sequence-name="Quote" env-name="quoteId"/>
@@ -172,6 +175,9 @@
         <make-value value-name="newQuoteItem" entity-name="QuoteItem"/>
         <set-nonpk-fields map-name="parameters" value-name="newQuote"/>
         <set-nonpk-fields map-name="parameters" value-name="newQuoteItem"/>
+        <if-empty field-name="newQuote.statusId">
+            <string-to-field string="QUO_CREATED" field-name="newQuote.statusId"/>
+        </if-empty>
         
         <!-- create a non existing ID -->
         <sequenced-id-to-env sequence-name="Quote" env-name="quoteId"/>

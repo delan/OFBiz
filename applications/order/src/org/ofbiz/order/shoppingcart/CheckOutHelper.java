@@ -567,6 +567,7 @@ public class CheckOutHelper {
 
         // ----------
         // The status of the requirement associated to the shopping cart lines is set to "ordered".
+        // The status of the quote associated to the shopping cart lines is set to "ordered".
         //
         Iterator shoppingCartItems = this.cart.items().iterator();
         while (shoppingCartItems.hasNext()) {
@@ -577,6 +578,22 @@ public class CheckOutHelper {
                     Map inputMap = UtilMisc.toMap("requirementId", requirementId, "statusId", "REQ_ORDERED");
                     inputMap.put("userLogin", userLogin);
                     Map outMap = dispatcher.runSync("updateRequirement", inputMap);
+                } catch (Exception e) {
+                    String service = e.getMessage();
+                    Map messageMap = UtilMisc.toMap("service", service);
+                    String errMsg = UtilProperties.getMessage(resource, "checkhelper.could_not_create_order_invoking_service", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
+                    Debug.logError(e, errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                }
+            }
+            String quoteId = shoppingCartItem.getQuoteId();
+            String quoteItemSeqId = shoppingCartItem.getQuoteItemSeqId();
+            if (quoteId != null && quoteItemSeqId != null) {
+                try {
+                    // TODO: for now, the status of the Quote (not the QuoteItem) is changed
+                    Map inputMap = UtilMisc.toMap("quoteId", quoteId, "statusId", "QUO_ORDERED");
+                    inputMap.put("userLogin", userLogin);
+                    Map outMap = dispatcher.runSync("updateQuote", inputMap);
                 } catch (Exception e) {
                     String service = e.getMessage();
                     Map messageMap = UtilMisc.toMap("service", service);
