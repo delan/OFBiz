@@ -1243,6 +1243,7 @@
       <field name="quoteTypeId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
       <field name="issueDate" type="date-time"></field>
+      <field name="statusId" type="id"></field>
       <field name="validFromDate" type="date-time"></field>
       <field name="validThruDate" type="date-time"></field>
       <field name="description" type="description"></field>
@@ -1255,6 +1256,9 @@
       </relation>
       <relation type="one" fk-name="QUOTE_PRTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="QUOTE_STATUS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
     </entity>
     <entity entity-name="QuoteAttribute"
