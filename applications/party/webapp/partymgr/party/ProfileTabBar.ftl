@@ -77,8 +77,8 @@
 </table>
 
 <#else>
-    ${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${partyId?if_exists}
+  <div class="head2">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${partyId?if_exists}</div>
 </#if>
 <#else>
-  <h3>${uiLabelMap.PartyMgrViewPermissionError}</h3>
+  <div class="head2">${uiLabelMap.PartyMgrViewPermissionError}</div>
 </#if>

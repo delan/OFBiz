@@ -30,6 +30,8 @@ import org.ofbiz.entity.util.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.transaction.*;
 
+module = "pendingCommunications.bsh";
+
 delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
 partyId = userLogin.getString("partyId");
@@ -144,6 +146,7 @@ try {
     
     // close the list iterator
     eli.close();
+    TransactionUtil.commit(beganTransaction);
 } catch (GenericEntityException e) {
     Debug.logError(e, "Failure in operation, rolling back transaction", module);
     try {
