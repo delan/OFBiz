@@ -392,6 +392,10 @@
       <relation type="one" fk-name="ORDER_ITEM_DCUL" title="DontCancelSet" rel-entity-name="UserLogin">
         <key-map field-name="dontCancelSetUserLogin" rel-field-name="userLoginId"/>
       </relation>
+      <relation type="one" fk-name="ORDER_ITEM_QUIT" rel-entity-name="QuoteItem">
+        <key-map field-name="quoteId"/>
+        <key-map field-name="quoteItemSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="OrderItemAssociation"
             package-name="org.ofbiz.order.order"
