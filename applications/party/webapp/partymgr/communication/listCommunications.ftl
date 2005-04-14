@@ -29,8 +29,10 @@
 <#assign locale = requestAttributes.locale>
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
 
-<#-- Main Heading -->
+<#-- Main Heading; only include this if we have a party, may be using this outside the profile area -->
+<#if party?has_content>
 <#include "../party/ProfileTabBar.ftl"/>
+</#if>
 
 <#if partyId?exists>
 <div style="text-align: right;">
