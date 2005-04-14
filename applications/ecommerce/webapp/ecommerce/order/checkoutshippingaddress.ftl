@@ -114,9 +114,10 @@ function toggleBillingAccount(box) {
                          <tr><td colspan="2"><hr class='sepbar'></td></tr>
                          <#list shippingContactMechList as shippingContactMech>
                            <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
+                           <#assign checkThisAddress = (shippingContactMech_index == 0 && !cart.getShippingContactMechId()?has_content) || (cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId)/>
                            <tr>
                              <td align="left" valign="top" width="1%" nowrap>
-                               <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}"  <#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId> checked</#if>>
+                               <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}"<#if checkThisAddress> checked</#if>>
                              </td>
                              <td align="left" valign="top" width="99%" nowrap>
                                <div class="tabletext">
