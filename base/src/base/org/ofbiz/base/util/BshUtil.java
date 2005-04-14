@@ -179,11 +179,16 @@ public final class BshUtil {
             String errMsg = "Error loading BSH script at [" + location + "]: " + e.toString();
             Debug.logError(e, errMsg, module);
             throw new GeneralException(errMsg, e);
-        } catch (EvalError e) {
-            String errMsg = "Error running BSH script at [" + location + "]: " + e.toString();
+        } catch (EvalError ee) {
+            Throwable t = ee.getCause();
+            if (t == null) {
+                t = ee;
+            }
+            
+            String errMsg = "Error running BSH script at [" + location + "], line [" + ee.getErrorLineNumber() + "]: " + ee.toString();
             // don't log the full exception, just the main message; more detail logged later
             //Debug.logError(e, errMsg, module);
-            throw new GeneralException(errMsg, e);
+            throw new GeneralException(errMsg, t);
         }
     }
 }
