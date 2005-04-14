@@ -83,8 +83,9 @@
     <screen name="category">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
+<!--                <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="center"/>-->
 
                 <set field="title-property" value="PageTitleCategoryPage"/>
             </actions>
@@ -132,9 +133,10 @@
     <screen name="product">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
+<!--                <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
-
+                <set field="MainColumnStyle" value="center"/>-->
+                
                 <set field="title-property" value="PageTitleProductPage"/>
                 <set field="configproductdetailScreen" value="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#configproductdetail"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/product.bsh"/>
@@ -194,7 +196,8 @@
     <screen name="keywordsearch">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
+                <!--<set field="leftbarScreenName" value="leftbar"/>
+                <set field="MainColumnStyle" value="center"/>-->
 
                 <set field="title-property" value="PageTitleSearchResults"/>
                 <set field="productsummaryScreen" value="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary"/>
@@ -212,8 +215,9 @@
     <screen name="advancedsearch">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-
+                <!--<set field="leftbarScreenName" value="leftbar"/>
+                <set field="MainColumnStyle" value="center"/>-->
+                
                 <set field="title-property" value="PageTitleAdvancedSearch"/>
                 <set field="headerItem" value="Advanced Search"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/advancedsearchoptions.bsh"/>
@@ -237,7 +241,8 @@
     <screen name="quickadd">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
+                <!--<set field="leftbarScreenName" value="leftbar"/>
+                <set field="MainColumnStyle" value="center"/>-->
                 <set field="title-property" value="PageTitleQuickAdd"/>
                 <set field="quickaddsummaryScreen" value="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#quickaddsummary"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/quickadd.bsh"/>

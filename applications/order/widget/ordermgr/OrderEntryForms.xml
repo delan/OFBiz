@@ -62,6 +62,7 @@
         <field name="partyId">
             <lookup target-form-name="LookupPartyName"/>
         </field>
+        <field name="statusId"><hidden/></field>
         <field name="validFromDate"><hidden/></field>
         <field name="validThruDate"><hidden/></field>
         <field name="description"><hidden/></field>
@@ -86,6 +87,7 @@
         <field name="quoteTypeId">
             <display-entity entity-name="QuoteType"/>
         </field>
+        <field name="statusId"><hidden/></field>
     </form>
 
 </forms>

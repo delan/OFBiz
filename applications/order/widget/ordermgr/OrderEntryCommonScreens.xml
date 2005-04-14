@@ -28,6 +28,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="leftbarScreenLocation" value="component://order/widget/ordermgr/OrderEntryCommonScreens.xml"/>
+                <set field="MainColumnStyle" value="leftonly"/>
                 <set field="headerItem" value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.bsh"/>
             </actions>
@@ -52,6 +53,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbarCatalog"/>
                 <set field="leftbarScreenLocation" value="component://order/widget/ordermgr/OrderEntryCommonScreens.xml"/>
+                <set field="MainColumnStyle" value="leftonly"/>
                 <set field="headerItem" value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.bsh"/>
             </actions>
@@ -98,7 +100,7 @@
     <screen name="leftbar">
         <section>
             <widgets>
-                <container style="column-left">
+                <container style="left">
                     <include-screen name="orderHeaderInfo" location="component://order/widget/ordermgr/OrderEntryCartScreens.xml"/>
                     <include-screen name="orderShortcuts" location="component://order/widget/ordermgr/OrderEntryCartScreens.xml"/>
                     <include-screen name="choosecatalog" location="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml"/>
@@ -111,7 +113,7 @@
     <screen name="leftbarCatalog">
         <section>
             <widgets>
-                <container style="column-left">
+                <container style="left">
                     <include-screen name="orderHeaderInfo" location="component://order/widget/ordermgr/OrderEntryCartScreens.xml"/>
                     <include-screen name="minicart" location="component://order/widget/ordermgr/OrderEntryCartScreens.xml"/>
                     <include-screen name="sidedeepcategory" location="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml"/>

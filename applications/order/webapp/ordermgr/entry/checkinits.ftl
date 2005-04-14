@@ -190,17 +190,6 @@
               <input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'>
             </div>
           </td>
-        </tr>                 
-        <tr>
-          <td>&nbsp;</td>
-          <td align='right' valign='middle' nowrap><div class='tableheadtext'>${uiLabelMap.PartyPartyId}</div></td>
-          <td>&nbsp;</td>
-          <td valign='middle'>
-            <div class='tabletext' valign='top'>
-              <input type='text' class='inputBox' name='partyId' value='${thisPartyId?if_exists}'>
-              ${uiLabelMap.CommonOverridesSelection}
-            </div>
-          </td>
         </tr>         
       </table>
       </form>

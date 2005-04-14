@@ -88,6 +88,7 @@
         <section>
             <actions>
                 <set field="title" value="Find Quotes"/>
+                <set field="requestParameters.statusId" to-scope="screen" default-value="QUO_APPROVED"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderCatalogDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
@@ -95,8 +96,6 @@
                         <container>
                             <label style="head1">${uiLabelMap.OrderQuotes}</label>
                         </container>
-                        <!--<include-form name="FindQuotes" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>-->
-                        <!--<include-form name="ListQuotes" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>-->
                         <include-form name="FindQuotes" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
                         <include-form name="ListQuotes" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
                     </decorator-section>
