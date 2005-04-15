@@ -30,11 +30,11 @@
     <resource-loader name="main" type="component"/>
     <classpath type="dir" location="config"/>
     <classpath type="dir" location="script"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/WholesaleProductData.xml"/>
+    <entity-resource type="data" reader-name="main" loader="main" location="data/WholesaleProductStoreData.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/WholesaleSecurityData.xml"/>
+    <entity-resource type="data" reader-name="main" loader="main" location="data/WholesalePeopleData.xml"/>
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services.xml"/>
 	<webapp name="wholesale" 
     	    title="Wholesale" 
     	    server="default-server" 
