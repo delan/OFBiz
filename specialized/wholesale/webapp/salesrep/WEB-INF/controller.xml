@@ -14,7 +14,6 @@
 
     <handler name="jpublish" type="view" class="org.ofbiz.webapp.view.JPublishViewHandler"/>
     <handler name="region" type="view" class="org.ofbiz.webapp.view.RegionViewHandler"/>
-    <handler name="wsp" type="view" class="org.ofbiz.webapp.view.WspViewHandler"/>
 
     <handler name="ftl" type="view" class="org.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.webapp.view.VelocityViewHandler"/>
