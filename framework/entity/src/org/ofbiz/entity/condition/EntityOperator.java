@@ -60,7 +60,8 @@ public abstract class EntityOperator extends EntityConditionBase {
     public static final int ID_OR = 11;
     public static final int ID_LIKE = 12;
     public static final int ID_NOT_IN = 13;
-    
+    public static final int ID_NOT_LIKE = 14;
+
     private static HashMap registry = new HashMap();
 
     private static void register(String name, EntityOperator operator) {
@@ -150,6 +151,10 @@ public abstract class EntityOperator extends EntityConditionBase {
         public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareLike(lhs, rhs); }
     };
     static { register( "like", LIKE ); }
+    public static final EntityComparisonOperator NOT_LIKE = new EntityComparisonOperator(ID_NOT_LIKE, "NOT LIKE") {
+        public boolean compare(Object lhs, Object rhs) { return !EntityComparisonOperator.compareLike(lhs, rhs); }
+    };
+    static { register( "not-like", NOT_LIKE); }
     public static final EntityComparisonOperator NOT_IN = new EntityComparisonOperator(ID_NOT_IN, "NOT IN") {
         public boolean compare(Object lhs, Object rhs) { return !EntityComparisonOperator.compareIn(lhs, rhs); }
         protected void makeRHSWhereStringValue(ModelEntity entity, List entityConditionParams, StringBuffer sb, ModelField field, Object rhs) { appendRHSList(entityConditionParams, sb, field, rhs); }
@@ -178,7 +183,7 @@ public abstract class EntityOperator extends EntityConditionBase {
     public String toString() {
         return codeString;
     }
-    
+
     public int hashCode() {
         return this.codeString.hashCode();
     }
@@ -191,7 +196,7 @@ public abstract class EntityOperator extends EntityConditionBase {
     public boolean entityMatches(GenericEntity entity, Object lhs, Object rhs) {
         return mapMatches(entity.getDelegator(), entity, lhs, rhs);
     }
-    
+
     protected void appendRHSList(List entityConditionParams, StringBuffer whereStringBuffer, ModelField field, Object rhs) {
         whereStringBuffer.append('(');
 

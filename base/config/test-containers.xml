@@ -24,7 +24,7 @@
  *  $Id$
 -->
 
-<ofbiz-containers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<ofbiz-containers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/ofbiz-containers.xsd">
     <!-- load the ofbiz component container (always first) -->
     <container name="component-container" class="org.ofbiz.base.container.ComponentContainer"/>
@@ -57,12 +57,15 @@
         <property name="iiop-host" value="127.0.0.1"/>
         <property name="iiop-port" value="2000"/>
     </container>
-    
+
     <!-- load JUnnit test container -->
     <container name="junit-container" class="org.ofbiz.base.container.JunitContainer">
         <property name="base-test" value="org.ofbiz.base.test.BaseUnitTests"/>
+        <property name="entity-test" value="org.ofbiz.entity.test.EntityTestSuite"/>
         <property name="service-test" value="org.ofbiz.service.test.ServiceEngineTests"/>
+        <!--
         <property name="usps-test" value="org.ofbiz.shipment.thirdparty.usps.UspsServicesTests"/>
         <property name="jxunit-test" value="net.sourceforge.jxunit.JXTestCase"/>
+        -->
     </container>
 </ofbiz-containers>
