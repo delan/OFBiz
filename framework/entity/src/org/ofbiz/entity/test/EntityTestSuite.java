@@ -34,11 +34,12 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      Apr 16, 2005
  */
 public class EntityTestSuite extends TestCase {
@@ -55,17 +56,26 @@ public class EntityTestSuite extends TestCase {
         this.delegator = GenericDelegator.getGenericDelegator(DELEGATOR_NAME);
     }
 
+    // TODO: these tests should not expect seed data to exist; fix these to insert first and then run the tests
+    
+    // test a simple find by and
+    public void testFindByAnd() throws Exception {
+        List values = delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", "admin"));
+        TestCase.assertEquals("Admin users is 5", values.size(), 5);
+    }
+
+    // test the entity operator NOT_LIKE
     public void testNotLike() throws Exception {
         EntityCondition cond  = new EntityExpr("productId", EntityOperator.NOT_LIKE, "GZ-%");
         List products = delegator.findByCondition("Product", cond, null, null);
-        TestCase.assertTrue(products != null);
+        TestCase.assertTrue("Found products", products != null);
 
         Iterator i = products.iterator();
         while (i.hasNext()) {
             GenericValue product = (GenericValue) i.next();
             String productId = product.getString("productId");
             Debug.logInfo("Testing ProductID - " + productId, module);
-            TestCase.assertTrue(!productId.startsWith("GZ-"));
+            TestCase.assertTrue("No product starting w/ GZ-", !productId.startsWith("GZ-"));
         }
     }
 }
