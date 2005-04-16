@@ -24,20 +24,19 @@
  */
 package org.ofbiz.base.container;
 
-import junit.framework.TestSuite;
-import junit.framework.TestResult;
-
-import java.util.Iterator;
 import java.util.Enumeration;
+import java.util.Iterator;
 
+import junit.framework.TestResult;
+import junit.framework.TestSuite;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
 
 
 /**
- * 
+ *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class JunitContainer implements Container {
@@ -50,9 +49,9 @@ public class JunitContainer implements Container {
      * @see org.ofbiz.base.container.Container#init(java.lang.String[], java.lang.String)
      */
     public void init(String[] args, String configFile) {
-        this.configFile = configFile;   
+        this.configFile = configFile;
     }
-    
+
     public boolean start() throws ContainerException {
         ContainerConfig.Container jc = ContainerConfig.getContainer("junit-container", configFile);
 
