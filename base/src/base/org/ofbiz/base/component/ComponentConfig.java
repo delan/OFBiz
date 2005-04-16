@@ -24,26 +24,24 @@
  */
 package org.ofbiz.base.component;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import javolution.util.FastList;
 import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -210,13 +208,24 @@ public class ComponentConfig {
     }
 
     public static List getAppBarWebInfos(String serverName) {
+        return ComponentConfig.getAppBarWebInfos(serverName, null);
+    }
+
+    public static List getAppBarWebInfos(String serverName,  Comparator comp) {
         List webInfos = (List) serverWebApps.get(serverName);
         if (webInfos == null) {
             synchronized (ComponentConfig.class) {
                 if (webInfos == null) {
+                    Map tm = null;
                     Iterator i = getAllComponents().iterator();
+
                     // use a TreeMap to sort the components alpha by title
-                    Map tm = new TreeMap();
+                    if (comp != null) {
+                        tm = new TreeMap(comp);
+                    } else {
+                        tm = new TreeMap();
+                    }
+                    
                     while (i.hasNext()) {
                         ComponentConfig cc = (ComponentConfig) i.next();
                         Iterator wi = cc.getWebappInfos().iterator();
@@ -625,7 +634,7 @@ public class ComponentConfig {
         }
 
         public String getLocation() {
-            return componentConfig.getRootLocation() + location;    
+            return componentConfig.getRootLocation() + location;
         }
 
         public String getTitle() {
