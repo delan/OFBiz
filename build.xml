@@ -32,11 +32,11 @@
                catalina/build.xml,jetty/build.xml,
                security/build.xml,service/build.xml,entityext/build.xml,
                datafile/build.xml,minilang/build.xml,
-               tests/build.xml, 
+               tests/build.xml,
                common/build.xml,workflow/build.xml,shark/build.xml,
                webapp/build.xml,guiapp/build.xml,widget/build.xml,
                appserver/build.xml,webtools/build.xml"/>
-                   
+
     <filelist id="application-builds" dir="applications"
         files="content/build.xml,party/build.xml,
                workeffort/build.xml,product/build.xml,marketing/build.xml,
@@ -105,7 +105,7 @@
 
     <target name="clean-xtra" depends="">
         <delete verbose="on">
-            <fileset dir="." includes="**/.nbattrs,**/*~,**/.#*,**/.DS_Store,**/*.rej,**/*.orig"/>                                 
+            <fileset dir="." includes="**/.nbattrs,**/*~,**/.#*,**/.DS_Store,**/*.rej,**/*.orig"/>
         </delete>
     </target>
 
@@ -254,6 +254,11 @@
             <jvmarg value="-Djava.compiler=NONE"/>
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8091"/>
+        </java>
+    </target>
+    <target name="run-tests" depends="build">
+        <java jar="ofbiz.jar" fork="true">
+            <arg value="test"/>
         </java>
     </target>
 </project>
