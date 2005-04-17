@@ -21,10 +21,6 @@
  *
 -->
 
-<#if (requestAttributes.uiLabelMap)?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-
 <#if custRequestItem?exists>
   <#if quoteId?has_content>
   <div><a href="<@ofbizUrl>/EditQuoteItemForRequest?quoteId=${quoteId}&custRequestId=${custRequestItem.custRequestId}&custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.WorkEffortNewQuoteItemForQuote}]</a> [${quoteId}]</div>
