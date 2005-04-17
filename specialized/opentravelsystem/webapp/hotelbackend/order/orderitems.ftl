@@ -62,7 +62,7 @@
                 <td width="5%">&nbsp;</td>
               </tr>
               <#if !orderItemList?has_content>
-                <tr><td><font color="red">${uiLabelMap.checkhelper.sales_order_lines_lookup_failed}</font></td></tr>
+                <tr><td><font color="red">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</font></td></tr>
               <#else>
                 <#list orderItemList as orderItem>
                   <tr><td colspan="8"><hr class="sepbar"></td></tr>
