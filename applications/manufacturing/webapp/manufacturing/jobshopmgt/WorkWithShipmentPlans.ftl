@@ -22,9 +22,6 @@
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *
 -->
-<#if (requestAttributes.uiLabelMap)?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
 
 <#if shipment?exists>
   <div class="head1">Shipment Plan: ${shipment.shipmentId}</div>

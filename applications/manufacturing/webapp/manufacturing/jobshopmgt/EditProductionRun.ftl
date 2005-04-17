@@ -23,9 +23,6 @@
  *@version    $Rev$
  *@since      3.0
 -->
-<#if (requestAttributes.uiLabelMap)?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
 
 <#if productionRunId?has_content>
 <#-- Mandatory work efforts -->
