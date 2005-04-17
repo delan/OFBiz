@@ -26,10 +26,6 @@
  *@since      2.2
 -->
 
-<#if requestAttributes.uiLabelMap?exists>
-  <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-
 <#if orderHeader?has_content>
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -143,7 +139,7 @@
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
                           <#if orderHeader.originFacilityId?has_content>
-                            <a href="/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${requestAttributes.externalKeyParam}" target="facilitymgr" class="buttontext">${orderHeader.originFacilityId}</a>
+                            <a href="/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${externalKeyParam}" target="facilitymgr" class="buttontext">${orderHeader.originFacilityId}</a>
                           <#else>
                             N/A
                           </#if>
@@ -486,7 +482,7 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <#list invoices as invoice>
-                            <div class="tabletext">#<a href="/accounting/control/viewInvoice?invoiceId=${invoice}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${invoice}</a></div>
+                            <div class="tabletext">#<a href="/accounting/control/viewInvoice?invoiceId=${invoice}&externalLoginKey=${externalLoginKey}" class="buttontext">${invoice}</a></div>
                           </#list>
                         </td>
                       </tr>
@@ -802,7 +798,7 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                             <#list shipGroupShipments as shipment>
-                                <div class="tabletext">#<a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${shipment.shipmentId}</a></div>
+                                <div class="tabletext">#<a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext">${shipment.shipmentId}</a></div>
                             </#list>
                         </td>
                       </tr>
@@ -816,7 +812,7 @@
                          </td>
                          <td width="5">&nbsp;</td>
                          <td align="left" valign="top" width="80%">
-                           <div class="tabletext"><a href="/facility/control/EditShipment?primaryOrderId=${orderId}&primaryShipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">New Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
+                           <div class="tabletext"><a href="/facility/control/EditShipment?primaryOrderId=${orderId}&primaryShipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${externalLoginKey}" class="buttontext">New Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
                          </td>
                        </tr>
                      </#if>

@@ -22,18 +22,7 @@
  *@author     Jacopo Cappellato (tiz@sastau.it)
 -->
 
-<#if requestAttributes.uiLabelMap?exists>
-  <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-<#if requestAttributes.externalKeyParam?exists>
-    <#assign externalKeyParam = requestAttributes.externalKeyParam>
-</#if>
-<#if requestAttributes.security?exists>
-    <#assign security = requestAttributes.security>
-</#if>
-
 <#assign shoppingCart = sessionAttributes.shoppingCart?if_exists>
-
     
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>

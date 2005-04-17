@@ -24,9 +24,6 @@
  *@version    $Rev: 3227 $
  *@since      2.2
 -->
-<#if requestAttributes.uiLabelMap?exists>
-  <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
 
 <script language="JavaScript">
 <!-- //
@@ -160,7 +157,7 @@
                           <td>
                             <div class="tabletext">
                               <#if task.customerPartyId?exists>
-                                <a href="/partymgr/control/viewprofile?party_id=${task.customerPartyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
+                                <a href="/partymgr/control/viewprofile?party_id=${task.customerPartyId}${externalKeyParam}" target="partymgr" class="buttontext">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
                               <#else>
                                 N/A
                               </#if>
@@ -183,7 +180,7 @@
                           </td>          
                           <td><div class='tabletext'>${task.priority?default("0")}</div></td>
                           <td>
-                            <a href="/workeffort/control/activity?workEffortId=${task.workEffortId}${requestAttributes.externalKeyParam}" target="workeffort" class="buttontext">                         
+                            <a href="/workeffort/control/activity?workEffortId=${task.workEffortId}${externalKeyParam}" target="workeffort" class="buttontext">                         
                               ${Static["org.ofbiz.order.task.TaskWorker"].getPrettyStatus(task)}
                             </a>
                           </td>
@@ -245,7 +242,7 @@
                             </td>
                             <td>
                               <#if task.customerPartyId?exists>
-                              <a href="/partymgr/control/viewprofile?party_id=${task.customerPartyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
+                              <a href="/partymgr/control/viewprofile?party_id=${task.customerPartyId}${externalKeyParam}" target="partymgr" class="buttontext">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
                               <#else>
                               &nbsp;
                               </#if>
@@ -269,7 +266,7 @@
                               <#if task.wepaPartyId == "_NA_">
                                 <div class="tabletext">N/A</div>
                               <#else>                              
-                                <a href="/partymgr/control/viewprofile?party_id=${task.wepaPartyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${task.wepaPartyId}</a>
+                                <a href="/partymgr/control/viewprofile?party_id=${task.wepaPartyId}${externalKeyParam}" target="partymgr" class="buttontext">${task.wepaPartyId}</a>
                               </#if>
                             </td>  
                             <td><div class='tabletext'>${Static["org.ofbiz.order.task.TaskWorker"].getRoleDescription(task)}</div></td>

@@ -47,7 +47,7 @@
     <td><div class="tabletext">${returnHeader.entryDate.toString()}</div></td>
     <td>
       <#if returnHeader.fromPartyId?exists>
-        <a href="/partymgr/control/viewprofile?partyId=${returnHeader.fromPartyId}${requestAttributes.externalKeyParam}" class='buttontext'>${returnHeader.fromPartyId}</a>
+        <a href="/partymgr/control/viewprofile?partyId=${returnHeader.fromPartyId}${externalKeyParam}" class='buttontext'>${returnHeader.fromPartyId}</a>
       <#else>
         <span class="tabletext">N/A</span>
       </#if>

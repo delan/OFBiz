@@ -25,9 +25,6 @@
  *@since      2.2
 -->
 
-<#if requestAttributes.uiLabelMap?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
 <#if requestParameters.updateParty?exists>
     <#assign updateParty = requestParameters.updateParty>
 </#if>
@@ -47,7 +44,7 @@
             </div>
           </td>
           <td valign="middle" align="right"> 
-            <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="submenutext">
+            <a href="/partymgr/control/findparty?externalLoginKey=${externalLoginKey}" class="submenutext">
               ${uiLabelMap.PartyFindParty}
             </a>
             <a href="javascript:document.salesentryform.submit();" class="submenutextright">
@@ -144,7 +141,7 @@
             </div>
           </td>
           <td valign="middle" align="right"> 
-            <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="submenutext">
+            <a href="/partymgr/control/findparty?externalLoginKey=${externalLoginKey}" class="submenutext">
               ${uiLabelMap.PartyFindParty}
             </a>
             <a href="javascript:document.poentryform.submit();" class="submenutextright">

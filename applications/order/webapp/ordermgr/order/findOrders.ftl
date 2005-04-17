@@ -24,9 +24,6 @@
  *@version    $Rev: 3227 $
  *@since      2.2
 -->
-<#if requestAttributes.uiLabelMap?exists>
-  <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
 
 <script language="JavaScript">
 <!-- //

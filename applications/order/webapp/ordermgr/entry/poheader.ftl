@@ -24,9 +24,6 @@
  *@since      3.1
 -->
 
-<#assign security = requestAttributes.security>
-<#assign externalKeyParam = requestAttributes.externalKeyParam>
-
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <#-- left side -->

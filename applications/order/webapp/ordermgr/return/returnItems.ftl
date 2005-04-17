@@ -28,7 +28,7 @@
     <a href="<@ofbizUrl>/returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">Return Header</a>
     <a href="<@ofbizUrl>/returnItems?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Return Items</a>
     <#if returnHeader?has_content && returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED">
-      <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId?if_exists}${requestAttributes.externalKeyParam}" class="tabButton">Receive Return</a>
+      <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId?if_exists}${externalKeyParam}" class="tabButton">Receive Return</a>
     </#if>
 </div>
 
@@ -67,11 +67,11 @@
             <#assign itemResp = item.getRelatedOne("ReturnItemResponse")?if_exists>
             <#if itemResp?has_content>
               <#if itemResp.paymentId?has_content>
-                <div class="tabletext">Payment #<a href="/accounting/control/editPayment?paymentId=${itemResp.paymentId}${requestAttributes.externalKeyParam}" class="buttontext">${itemResp.paymentId}</a></div>
+                <div class="tabletext">Payment #<a href="/accounting/control/editPayment?paymentId=${itemResp.paymentId}${externalKeyParam}" class="buttontext">${itemResp.paymentId}</a></div>
               <#elseif itemResp.replacementOrderId?has_content>
                 <div class="tabletext">Order #<a href="<@ofbizUrl>/orderview?order_id=${itemResp.replacementOrderId}</@ofbizUrl>" class="buttontext">${itemResp.replacementOrderId}</a></div>
               <#elseif itemResp.billingAccountId?has_content>
-                <div class="tabletext">Acct #<a href="/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${requestAttributes.externalKeyParam}" class="buttontext">${itemResp.billingAccountId}</a></div>
+                <div class="tabletext">Acct #<a href="/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${externalKeyParam}" class="buttontext">${itemResp.billingAccountId}</a></div>
               </#if>
             <#else>
               <div class="tabletext">None</div>

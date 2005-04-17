@@ -27,10 +27,6 @@
  *@since      2.2
 -->
 
-<#if requestAttributes.uiLabelMap?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-
 <#if shoppingCart.getOrderType() == "SALES_ORDER">
   <br/>
   <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
