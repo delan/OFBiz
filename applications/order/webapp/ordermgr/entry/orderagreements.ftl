@@ -23,10 +23,6 @@
  *@version    1.0
 -->
 
-<#if requestAttributes.uiLabelMap?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-
 <table border=0 cellspacing='0' cellpadding='0'>
   <tr>
     <td>

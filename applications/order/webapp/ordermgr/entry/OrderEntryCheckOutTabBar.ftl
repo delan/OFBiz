@@ -22,9 +22,6 @@
  *@author     Jacopo Cappellato
 -->
 
-<#if (requestAttributes.uiLabelMap)?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
 <#if stepTitleId?exists>
     <#assign stepTitle = uiLabelMap.get(stepTitleId)>
 </#if>

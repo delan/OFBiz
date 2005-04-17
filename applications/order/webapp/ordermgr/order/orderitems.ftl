@@ -25,8 +25,6 @@
  *@since      2.2
 -->
 
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-
 <#if orderHeader?has_content>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
@@ -161,7 +159,7 @@
                               <div class="tabletext">
                                 <#if orderItem.orderItemTypeId != "RENTAL_ORDER_ITEM">
                                   <b><i>Production Run</i>:</b>
-                                  <a href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${workEffort.workEffortId}</a>&nbsp;
+                                  <a href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${workEffort.workEffortId}</a>&nbsp;
                                 </#if>
                                 From: ${workEffort.estimatedStartDate?string("yyyy-MM-dd")} to: ${workEffort.estimatedCompletionDate?string("yyyy-MM-dd")} Number of persons: ${workEffort.reservPersons?default("")}
                               </div>
@@ -207,7 +205,7 @@
                         <td colspan="9">
                           <div class="tabletext">
                             <b><i>Linked to requirement</i>:</b>
-                            <a href="/manufacturing/control/EditRequirement?requirementId=${linkedRequirement.requirementId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${linkedRequirement.requirementId}</a>&nbsp;
+                            <a href="/manufacturing/control/EditRequirement?requirementId=${linkedRequirement.requirementId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${linkedRequirement.requirementId}</a>&nbsp;
                           </div>
                         </td>
                       </tr>
@@ -279,7 +277,7 @@
                         <td align="right" colspan="2">
                           <div class="tabletext" style="font-size: xx-small;">
                             <b><i>Survey</i>:</b>
-                              <a href="/content/control/ViewSurveyResponse?surveyResponseId=${survey.surveyResponseId}&surveyId=${survey.surveyId}<#if survey.partyId?exists>&partyId=${survey.partyId}</#if>&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${survey.surveyId}</a>
+                              <a href="/content/control/ViewSurveyResponse?surveyResponseId=${survey.surveyResponseId}&surveyId=${survey.surveyId}<#if survey.partyId?exists>&partyId=${survey.partyId}</#if>&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${survey.surveyId}</a>
                           </div>
                         </td>                        
                         <td>&nbsp;</td>
@@ -328,7 +326,7 @@
                         <td align="right" colspan="2">
                           <div class="tabletext" style="font-size: xx-small;">
                             <b><i>${uiLabelMap.FacilityInventory}</i>:</b>
-                              <a href="/facility/control/EditInventoryItem?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${orderItemShipGrpInvRes.inventoryItemId}</a>
+                              <a href="/facility/control/EditInventoryItem?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${orderItemShipGrpInvRes.inventoryItemId}</a>
                             <b><i>${uiLabelMap.OrderShipGroup}</i>:</b> ${orderItemShipGrpInvRes.shipGroupSeqId}
                           </div>
                         </td>
@@ -348,7 +346,7 @@
                     <#list orderShipments as orderShipment>
                       <tr>
                         <td align="right" colspan="2">
-                          <div class="tabletext" style="font-size: xx-small;"><b><i>Planned in Shipment</i>: </b><a target="facility" href="/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}</div>
+                          <div class="tabletext" style="font-size: xx-small;"><b><i>Planned in Shipment</i>: </b><a target="facility" href="/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}</div>
                         </td>
                         <td align="center">
                           <div class="tabletext" style="font-size: xx-small;">${orderShipment.quantity?string.number}&nbsp;</div>
@@ -371,7 +369,7 @@
                           <div class="tabletext" style="font-size: xx-small;">
                             <#if itemIssuance.shipmentId?has_content>
                               <b><i>${uiLabelMap.OrderIssuedToShipmentItem}</i>:</b>
-                              <a target="facility" href="/facility/control/ViewShipment?shipmentId=${itemIssuance.shipmentId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${itemIssuance.shipmentId}</a>:${itemIssuance.shipmentItemSeqId?if_exists}
+                              <a target="facility" href="/facility/control/ViewShipment?shipmentId=${itemIssuance.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${itemIssuance.shipmentId}</a>:${itemIssuance.shipmentItemSeqId?if_exists}
                             <#else>
                               <b><i>Issued Without a Shipment (Immediate, Physical Store)</i></b>
                             </#if>

@@ -27,8 +27,6 @@
  *@since      3.2
 -->
 
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <#assign showProductStore = !parameters.productStoreId?has_content>
 <#assign showOriginFacility = !parameters.originFacilityId?has_content>

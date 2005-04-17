@@ -25,10 +25,6 @@
  *@since      2.2
 -->
 
-<#if requestAttributes.uiLabelMap?exists>
-  <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-
 <#if orderHeader?exists>
   <div class="boxtop">
     <div class="boxhead" align="left">

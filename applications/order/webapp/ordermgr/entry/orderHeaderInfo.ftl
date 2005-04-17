@@ -22,10 +22,6 @@
  *@author     Jacopo Cappellato (tiz@sastau.it)
 -->
 
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#if requestAttributes.externalKeyParam?exists>
-    <#assign externalKeyParam = requestAttributes.externalKeyParam>
-</#if>
 <#assign shoppingCart = sessionAttributes.shoppingCart?if_exists>
 <#assign currencyUomId = shoppingCart.getCurrency()>
 <#assign partyId = shoppingCart.getPartyId()>

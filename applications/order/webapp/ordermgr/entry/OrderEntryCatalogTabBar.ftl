@@ -26,9 +26,6 @@
  *@since      2.2
 -->
 
-<#if (requestAttributes.uiLabelMap)?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
 <div class="boxtop">
     <div class="boxhead" align="left">
         &nbsp;${uiLabelMap.CommonCreate}

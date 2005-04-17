@@ -27,10 +27,6 @@
  *@since      2.2
 -->
 
-<#if requestAttributes.uiLabelMap?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-
 <#if (shoppingCart.getOrderType() == "SALES_ORDER")>
     <#assign associatedProducts = Static["org.ofbiz.order.shoppingcart.product.ProductDisplayWorker"].getRandomCartProductAssoc(request, true)?if_exists>
 </#if>

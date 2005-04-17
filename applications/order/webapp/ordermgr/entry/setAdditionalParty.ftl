@@ -25,10 +25,6 @@
  *@since      2.2
 -->
 
-<#if requestAttributes.uiLabelMap?exists>
-  <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-
 <#-- ==================== Party Selection dialog box ========================= -->
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
