@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,18 +25,6 @@
  *@version    $Rev: 3227 $
  *@since      2.2
 -->
-
-<#if requestAttributes.uiLabelMap?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-
-<#if requestAttributes.security?exists>
-    <#assign security = requestAttributes.security>
-</#if>
-
-<#if requestAttributes.externalKeyParam?exists>
-    <#assign externalKeyParam = requestAttributes.externalKeyParam>
-</#if>
 
 <script language="JavaScript">
 <!--
@@ -141,9 +129,7 @@ function gwAll(e) {
                   <td>
                     <div class="tabletext">
                     <input type="text" class="inputBox" size="25" maxlength="30" name="itemDesiredDeliveryDate" <#if useAsDefaultDesiredDeliveryDate?exists>value="${defaultDesiredDeliveryDate}"</#if>>
-                    <a href="javascript:call_cal(document.quickaddform.itemDesiredDeliveryDate,'${defaultDesiredDeliveryDate} 00:00:00.0');">
-                      <img src="/images/cal.gif" width="16" height="16" border="0" alt="${uiLabelMap.calendar_click_here_for_calendar}">
-                    </a>
+                    <a href="javascript:call_cal(document.quickaddform.itemDesiredDeliveryDate,'${defaultDesiredDeliveryDate} 00:00:00.0');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="${uiLabelMap.calendar_click_here_for_calendar}"/></a>
 		    <input type="checkbox" class="inputBox" name="useAsDefaultDesiredDeliveryDate" value="true" <#if useAsDefaultDesiredDeliveryDate?exists>checked</#if>>
 		    ${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}
                     </div>
@@ -320,7 +306,7 @@ function gwAll(e) {
                   <div class="tableheadtext">${uiLabelMap.OrderChooseFollowingForGift}:</div>
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                     <#assign alternativeOptionProduct = delegator.findByPrimaryKeyCache("Product", Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", alternativeOptionProductId))>
-                    <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", requestAttributes.locale)?if_exists>
+                    <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", locale)?if_exists>
                     <div class="tabletext"><a href="<@ofbizUrl>/setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="buttontext">Select: ${alternativeOptionName?default(alternativeOptionProductId)}</a></div>
                   </#list>
                 </#if>
