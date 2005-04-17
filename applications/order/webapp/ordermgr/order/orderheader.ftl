@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -29,6 +29,8 @@
 <#if requestAttributes.uiLabelMap?exists>
   <#assign uiLabelMap = requestAttributes.uiLabelMap>
 </#if>
+
+<#if orderHeader?has_content>
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
@@ -857,3 +859,6 @@
     </td>
   </tr>
 </table>
+<#else/>
+    <view class="head2">${uiLabelMap.OrderNoOrderFound} with ID: [${orderId?if_exists}]</div>
+</#if>

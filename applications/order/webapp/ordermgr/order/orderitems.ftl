@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -26,6 +26,8 @@
 -->
 
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
+
+<#if orderHeader?has_content>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
@@ -62,7 +64,7 @@
                 <td width="5%">&nbsp;</td>
               </tr>
               <#if !orderItemList?has_content>
-                <tr><td><font color="red">${uiLabelMap.checkhelper.sales_order_lines_lookup_failed}</font></td></tr>
+                <tr><td><font color="red">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</font></td></tr>
               <#else>
                 <#list orderItemList as orderItem>
                   <#assign orderItemContentWrapper = Static["org.ofbiz.order.order.OrderContentWrapper"].makeOrderContentWrapper(orderItem, request)>
@@ -465,3 +467,5 @@
     </td>
   </tr>
 </table>
+
+</#if>
