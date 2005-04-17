@@ -23,12 +23,6 @@
  *@version    $Rev$
  *@since      3.0
 -->
-<#if (requestAttributes.uiLabelMap)?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-<#if (requestAttributes.locale)?exists>
-    <#assign locale = requestAttributes.locale>
-</#if>
 
 <#if techDataCalendar?has_content>
   <div class="head1">${uiLabelMap.ManufacturingUpdateCalendar} </div>

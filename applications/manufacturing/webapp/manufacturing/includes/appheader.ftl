@@ -25,10 +25,6 @@
  *@version    $Rev$
  *@since      3.0
 -->
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#if (requestAttributes.security)?exists><#assign security = requestAttributes.security></#if>
-<#if (requestAttributes.userLogin)?exists><#assign userLogin = requestAttributes.userLogin></#if>
-<#if (requestAttributes.checkLoginUrl)?exists><#assign checkLoginUrl = requestAttributes.checkLoginUrl></#if>
 
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">

@@ -23,9 +23,6 @@
  *@version    $Rev$
  *@since      3.0
 -->
-<#if (requestAttributes.uiLabelMap)?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
 
     <div class="tabContainer">
         <a href="<@ofbizUrl>/ListCalendarWeek</@ofbizUrl>" class="tabButton">${uiLabelMap.CommonBackToList}</a>

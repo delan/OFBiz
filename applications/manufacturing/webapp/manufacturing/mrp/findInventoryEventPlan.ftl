@@ -24,10 +24,6 @@
  *@since      3.0
 -->
 
-<#if (requestAttributes.uiLabelMap)?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-
 <script language="JavaScript">
 <!-- //
 function lookupInventory() {
