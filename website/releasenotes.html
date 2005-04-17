@@ -1,26 +1,32 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 
-<HTML>
 
 <HEAD>
   <TITLE>The Open For Business Project - Release Notes</TITLE>
-  <link rel="stylesheet" href="images/maincss.css" type="text/css"/>
+  <link rel="stylesheet" href="images/ofbws.css" type="text/css"/>
+  <meta name="keywords" content="Open Source ERP,Open Source CRM,Open Source E-Commerce,Open Source eCommerce,Open Source POS,Open Source SCM,Open Source MRP,Open Source CMMS,Open Source EAM,web services,workflow,ebusiness,e-business,ecommerce,e-commerce,automation,enterprise software,open source,entity engine,service engine,erp,crm,party,accounting,facility,supply,chain,management,catalog,order,project,task,work effort,financial,ledger,content management,customer,inventory"/>
 </HEAD>
 
-<BODY>
+<body>
 
-<table width='100%'>
-  <tr>
-    <td width='50%' align='left' valign='center'>
-        <a href="http://www.ofbiz.org"><img src="images/ofbiz_logo.jpg"  border="0" alt='The Open For Business Project'></a>
-    </td>
-    <td width='50%' align='right' valign='center'>
-        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"/></a> 
-        <a href="http://www.ofbiz.org"><img src="images/ofbiz_powered.gif" width="88" border="0"/></a>
-    </td>
-  </tr>
-</table>
-<hr class='sepbar'/>
+<div class="headerboxoutside">
+    <div class="headerboxtop">
+        <div class="left">
+            <a href="http://www.ofbiz.org"><img src="images/ofbiz_logo.jpg"  border="0" alt="The Open For Business Project"/></a>
+        </div>
+        <div class="right">
+            <a href="http://www.java.net"><img src="http://today.java.net/images/javanet_button_90.gif" width="90" height="25" border="0" alt="java.net Member Button"/></a>
+            &nbsp;&nbsp;
+            <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"/></a>
+            &nbsp;&nbsp;
+            <a href="http://www.ofbiz.org"><img src="images/ofbiz_powered.gif" width="88" border="0"/></a>
+        </div>
+        <div class="endcolumns"><span>&nbsp;</span></div>
+    </div>
+</div>
+
+<div class="centerarea contentarea">
 
 <h2 align="center">The Open For Business Project - Release Notes</h2>
  
@@ -93,14 +99,14 @@ email notification settings, product search keyword overrides, administration ro
 
 <p class='contenttext'>Another big change included in this release is internationalization and varying levels
 of localization for different components. This has been a huge effort contributed by various people in various
-party of the world (special thanks to Olivier Heintz & Co. and many others). The manufacturing module also falls into 
+party of the world (special thanks to Olivier Heintz &amp; Co. and many others). The manufacturing module also falls into 
 this category, it was developed and contributed by various parties (special thanks to Jacopo Cappellato and Olivier Heintz).
 
 <p class='contenttext'>In general, if you haven't looked at OFBiz in a while you will be amazed at what is new.
 While we have put some effort into compiling this list of new things, it is still far from complete but should
 give you a good idea about what is new and improved in OFBiz.</p>
 
-<h4>New Features & Improvements</h4>
+<h4>New Features &amp; Improvements</h4>
 <p class='contenttext'>New features and improvements include:</p>
 <ul>
   <li class='contenttext'>eCommerce
@@ -143,7 +149,7 @@ give you a good idea about what is new and improved in OFBiz.</p>
   </ul>
   <li class='contenttext'>Order Management
   <ul>
-    <li class='contenttext'>Refactor Order Entry & added support for purchase orders</li>
+    <li class='contenttext'>Refactor Order Entry &amp; added support for purchase orders</li>
     <li class='contenttext'>Refactor of order processing workflow to handle getting sales and purchase orders to approved status only (optional)</li>
     <li class='contenttext'>Order status changes to Completed or Cancelled now automatic based on the status of the items</li>
     <li class='contenttext'>Refactor Find Order page; now uses a filtering approach and runs much more efficiently</li>
@@ -255,7 +261,7 @@ fixes a number of bugs. There are also a couple of new features, but not many.</
     profile pages not work, among other things).</li>    
 </ul>
 
-<h4>New Features & Improvements</h4>
+<h4>New Features &amp; Improvements</h4>
 <p class='contenttext'>New features and improvements include:</p>
 <ul>
     <li class='contenttext'>Added initial shopping list implementation (mostly
@@ -298,7 +304,7 @@ In addition to moving to Jetty, we are also introducing the new ofbiz.jar startu
 executable jar embeds Jetty/JOTM with OFBiz, auto-sets all classpath and required settings. By running
 java -jar ofbiz.jar from the root OFBiz directory will fully start OFBiz in a cross-platfrom way.</p>
 
-<h4>New Features & Improvements</h4>
+<h4>New Features &amp; Improvements</h4>
 <p class='contenttext'>New features and improvements include:</p>
 <ul>
     <li class='contenttext'>e-Commerce related</li>
@@ -417,7 +423,7 @@ getting started. Expect a lot more reports in the near future.</P>
 been done on the Facility Manager which now handles shipping, receiving,
 inventory transfers and store, warehouse and inventory management.</P>
 
-<h4>New Features & Improvements</h4>
+<h4>New Features &amp; Improvements</h4>
 <p class='contenttext'>New features and improvements include:</p>
 <ul>
     <li class='contenttext'>e-Commerce related</li>
@@ -489,7 +495,7 @@ well and are close to Orion and Resin in speed. For Tomcat you can run with Tyre
 for you, but you may want to consider using parts of JBoss for transaction management, JMS, etc. Adjustments
 have been made to OFBiz to be able to handle various quirks and funny things in these and other app servers.</p>
 
-<h4>New Features & Improvements</h4>
+<h4>New Features &amp; Improvements</h4>
 <p class='contenttext'>New features and improvements include:</p>
 <ul>
     <li class='contenttext'>e-Commerce related
@@ -727,7 +733,7 @@ to the many smaller refinements and changes that have been done. These tasks inc
 <ul>
 <li class='contenttext'><b>Core Subproject</b>
   <ul>
-  <li class='contenttext'>41462 - Have GenericEntity Implement Comparable & Cloneable
+  <li class='contenttext'>41462 - Have GenericEntity Implement Comparable &amp; Cloneable
   </ul>
 </ul>
 
@@ -796,7 +802,7 @@ to the many smaller refinements and changes that have been done. These tasks inc
 <ul>
 <li class='contenttext'><b>Core Subproject</b>
   <ul>
-  <li class='contenttext'>41462 - Have GenericEntity Implement Comparable & Cloneable
+  <li class='contenttext'>41462 - Have GenericEntity Implement Comparable &amp; Cloneable
   <li class='contenttext'>40657 - Get properties and xml files to relead when removed from cache
   <li class='contenttext'>41692 - Improve GenericEntity serialization/deserialization
   <li class='contenttext'>41463 - Add change notification listeners to GenericEntity
@@ -806,11 +812,11 @@ to the many smaller refinements and changes that have been done. These tasks inc
   <li class='contenttext'>41892 - Job Scheduler Overhaul
   <li class='contenttext'>39716 - View Entities (Really Cool)
   <li class='contenttext'>42176 - Data File read Utilities
-  <li class='contenttext'>40656 - Entity - XML String & Stream in and out routines
+  <li class='contenttext'>40656 - Entity - XML String &amp; Stream in and out routines
   <li class='contenttext'>42495 - Add string/stream in/out routines to DataFile
   <li class='contenttext'>42493 - Add code to write a DataFile object out to a file
   <li class='contenttext'>42199 - Document View Entities
-  <li class='contenttext'>42200 - Document findByAnd using EntityExpr & other new finds
+  <li class='contenttext'>42200 - Document findByAnd using EntityExpr &amp; other new finds
   <li class='contenttext'>40013 - Services Engine (Framework)
   <li class='contenttext'>43044 - Update Entity Engine BMP Entity Bean
   <li class='contenttext'>43465 - BeanShell Script Service Engine
@@ -851,14 +857,14 @@ to the many smaller refinements and changes that have been done. These tasks inc
   <li class='contenttext'>41896 - Create Workflow Service Engine
   <li class='contenttext'>41762 - Work Effort Manager - Scheduled event editor page
   <li class='contenttext'>42173 - Upcoming events view, separated by day
-  <li class='contenttext'>41754 - Context & Results Map serialization to XML
+  <li class='contenttext'>41754 - Context &amp; Results Map serialization to XML
   <li class='contenttext'>41354 - XPDL Parser to Create Process Def Entities
-  <li class='contenttext'>41760 - Work Effort Manager - "Task" viewing & editing
+  <li class='contenttext'>41760 - Work Effort Manager - "Task" viewing &amp; editing
   <li class='contenttext'>43641 - Create Client API
   <li class='contenttext'>44368 - Read all assignments params from XPDL
   <li class='contenttext'>44381 - Refactor workeffort events to make services
   <li class='contenttext'>44380 - Call workflow services in Activty page events
-  <li class='contenttext'>44800 - Update WorkEffort Events for StringProcessor & SimpleEvent
+  <li class='contenttext'>44800 - Update WorkEffort Events for StringProcessor &amp; SimpleEvent
   <li class='contenttext'>45770 - Update Context on Manual Activities
   <li class='contenttext'>45405 - Add Role and Group Activities to Task List
   </ul>
@@ -921,9 +927,9 @@ to the many smaller refinements and changes that have been done. These tasks inc
 <li class='contenttext'><b>Catalog Subproject</b>
   <ul>
   <li class='contenttext'>39631 - Support keyword groups
-  <li class='contenttext'>39632 - Category & Product: Browse & Search
+  <li class='contenttext'>39632 - Category &amp; Product: Browse &amp; Search
   <li class='contenttext'>39633 - Associated Products Editor
-  <li class='contenttext'>39634 - Visually organize prod & cat pages
+  <li class='contenttext'>39634 - Visually organize prod &amp; cat pages
   <li class='contenttext'>40588 - Support multiple top level categories
   </ul>
 <li class='contenttext'><b>CommonApp Subproject</b>
@@ -1267,5 +1273,6 @@ which resemble the ejb-jar.xml deployment descriptor.
 At the moment it is only the frameword to support the code generated by entitygen. This includes a security framework, a caching framework,
 output formatting utilities, the web event handler (removes non-display logic from JSPs), and a basic user interface layout.
 
-</BODY>
-</HTML>
+</div>
+</body>
+</html>
