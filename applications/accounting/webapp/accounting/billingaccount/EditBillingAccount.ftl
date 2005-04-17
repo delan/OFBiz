@@ -25,9 +25,6 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#if (requestAttributes.uiLabelMap)?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
 
 <#if billingAccount?has_content>
   <div class="head1">${uiLabelMap.AccountingUpdateBillingAccount}</div>

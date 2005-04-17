@@ -25,9 +25,6 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#if (requestAttributes.uiLabelMap)?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
 <div class="head1">${uiLabelMap.PageTitleEditBillingAccountRoles} - ${uiLabelMap.AccountingAccountId}: ${billingAccount.billingAccountId}</div>
 
 <br>

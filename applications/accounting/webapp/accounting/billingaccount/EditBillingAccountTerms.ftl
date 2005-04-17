@@ -25,12 +25,6 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#if (requestAttributes.uiLabelMap)?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-<#if (requestAttributes.locale)?exists>
-    <#assign locale = requestAttributes.locale>
-</#if>
 
 <div class="head1">${uiLabelMap.PageTitleEditBillingAccountTerms} - ${uiLabelMap.AccountingAccountId}: ${billingAccount.billingAccountId}</div>
 
