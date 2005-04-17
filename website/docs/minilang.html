@@ -1,27 +1,31 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+ <head>
   <title>The Open For Business Project: Mini-Language Guide</title>
-</head>
+  <link rel="stylesheet" href="../images/ofbws.css" type="text/css"/>
+  <meta name="keywords" content="Open Source ERP,Open Source CRM,Open Source E-Commerce,Open Source eCommerce,Open Source POS,Open Source SCM,Open Source MRP,Open Source CMMS,Open Source EAM,web services,workflow,ebusiness,e-business,ecommerce,e-commerce,automation,enterprise software,open source,entity engine,service engine,erp,crm,party,accounting,facility,supply,chain,management,catalog,order,project,task,work effort,financial,ledger,content management,customer,inventory"/>
+ </head>
 <body>
-<table width="100%">
-  <tbody>
-    <tr>
-      <td align="left" valign="center" width="50%"> <a
- href="http://www.ofbiz.org"><img
- src="http://www.ofbiz.org/images/ofbiz_logo.jpg"
- alt="The Open For Business Project" border="0"></a> </td>
-      <td align="right" valign="center" width="50%"> <a
- href="http://sf.net/projects/ofbiz"><img
- src="http://sourceforge.net/sflogo.php?group_id=27173"
- alt="SourceForge Logo" border="0" height="31" width="88"></a> <a
- href="http://www.ofbiz.org"><img
- src="http://www.ofbiz.org/images/ofbiz_powered.gif" border="0"
- width="88"></a> </td>
-    </tr>
-  </tbody>
-</table>
-<hr class="sepbar">
+
+<div class="headerboxoutside">
+    <div class="headerboxtop">
+        <div class="left">
+            <a href="http://www.ofbiz.org"><img src="../images/ofbiz_logo.jpg"  border="0" alt="The Open For Business Project"/></a>
+        </div>
+        <div class="right">
+            <a href="http://www.java.net"><img src="http://today.java.net/images/javanet_button_90.gif" width="90" height="25" border="0" alt="java.net Member Button"/></a>
+            &nbsp;&nbsp;
+            <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"/></a>
+            &nbsp;&nbsp;
+            <a href="http://www.ofbiz.org"><img src="../images/ofbiz_powered.gif" width="88" border="0"/></a>
+        </div>
+        <div class="endcolumns"><span>&nbsp;</span></div>
+    </div>
+</div>
+
+<div class="centerarea contentarea">
+
 <h2 align="center">The Open For Business Project: Mini-Language Guide</h2>
 <div class="contenttext">Written By: David E. Jones, <a
  href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
@@ -3177,5 +3181,7 @@ Engine)
 <hr class="sepbar">
 <h3><a name="MethodExample">Simple Methods Example</a></h3>
 <pre>&lt;!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd"&gt;<br><br>&lt;simple-methods&gt;<br> &lt;simple-method method-name="createProduct" short-description="Create an Product"&gt;<br> &lt;check-permission permission="CATALOG" action="_CREATE"&gt;&lt;fail-message message="Security Error: to run createProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/&gt;&lt;/check-permission&gt;<br> &lt;check-id field-name="productId" map-name="parameters"/&gt;<br> &lt;check-errors/&gt;<br><br> &lt;make-value value-name="newEntity" entity-name="Product"/&gt;<br> &lt;set-nonpk-fields map-name="parameters" value-name="newEntity"/&gt;<br> &lt;set-pk-fields map-name="parameters" value-name="newEntity"/&gt;<br> <br> &lt;now-timestamp-to-env env-name="nowTimestamp"/&gt;<br> &lt;env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/&gt;<br> &lt;env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/&gt;<br> &lt;field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/&gt;<br> &lt;field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/&gt;<br> <br> &lt;create-value value-name="newEntity"/&gt;<br><br> &lt;!-- induce keywords if autoCreateKeywords is emtpy or Y--&gt;<br> &lt;if-empty field-name="autoCreateKeywords" map-name="newEntity"&gt;<br> &lt;call-bsh&gt;&lt;![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newEntity);]]&gt;&lt;/call-bsh&gt;<br> &lt;else&gt;<br> &lt;if-compare field-name="autoCreateKeywords" map-name="newEntity" operator="equals" value="Y"&gt;<br> &lt;call-bsh&gt;&lt;![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newEntity);]]&gt;&lt;/call-bsh&gt;<br> &lt;/if-compare&gt;<br> &lt;/else&gt;<br> &lt;/if-empty&gt;<br> &lt;/simple-method&gt;<br> &lt;simple-method event-name="create" short-description="Create Work Effort"&gt;<br> &lt;call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" <br> processor-name="update" in-map-name="parameters" out-map-name="context"/&gt;<br> &lt;check-errors/&gt;<br> &lt;call-service service-name="createWorkEffort" in-map-name="context"&gt;<br> &lt;default-message&gt;Work Effort successfully created.&lt;/default-message&gt;<br> &lt;result-to-request result-name="workEffortId"/&gt;&lt;/service&gt;<br> &lt;/simple-method&gt;<br> &lt;simple-method event-name="update" short-description="Update Work Effort"&gt;<br> &lt;call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" <br> processor-name="update" in-map-name="parameters" out-map-name="context"/&gt;<br> &lt;check-errors/&gt;<br> &lt;call-service service-name="updateWorkEffort" in-map-name="context"&gt;<br> &lt;default-message&gt;Work Effort successfully updated.&lt;/default-message&gt;&lt;/service&gt;<br> &lt;/simple-method&gt;<br>&lt;/simple-methods&gt;<br></pre>
+
+</div>
 </body>
 </html>
