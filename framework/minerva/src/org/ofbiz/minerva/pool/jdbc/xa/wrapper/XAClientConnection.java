@@ -449,7 +449,7 @@ public class XAClientConnection implements ConnectionWrapper {
      * @see java.sql.Connection#setHoldability(int)
      */
     public void setHoldability(int arg0) throws SQLException {
-        // TODO Auto-generated method stub
+        throw new SQLException("Method not implemented!");
 
     }
 
@@ -457,31 +457,28 @@ public class XAClientConnection implements ConnectionWrapper {
      * @see java.sql.Connection#getHoldability()
      */
     public int getHoldability() throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+        throw new SQLException("Method not implemented!");
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#setSavepoint()
      */
     public Savepoint setSavepoint() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new SQLException("Method not implemented!");
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#setSavepoint(java.lang.String)
      */
     public Savepoint setSavepoint(String arg0) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new SQLException("Method not implemented!");
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#rollback(java.sql.Savepoint)
      */
     public void rollback(Savepoint arg0) throws SQLException {
-        // TODO Auto-generated method stub
+        throw new SQLException("Method not implemented!");
 
     }
 
@@ -489,7 +486,7 @@ public class XAClientConnection implements ConnectionWrapper {
      * @see java.sql.Connection#releaseSavepoint(java.sql.Savepoint)
      */
     public void releaseSavepoint(Savepoint arg0) throws SQLException {
-        // TODO Auto-generated method stub
+        throw new SQLException("Method not implemented!");
 
     }
 
@@ -497,47 +494,41 @@ public class XAClientConnection implements ConnectionWrapper {
      * @see java.sql.Connection#createStatement(int, int, int)
      */
     public Statement createStatement(int arg0, int arg1, int arg2) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new SQLException("Method not implemented!");
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#prepareStatement(java.lang.String, int, int, int)
      */
     public PreparedStatement prepareStatement(String arg0, int arg1, int arg2, int arg3) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new SQLException("Method not implemented!");
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#prepareCall(java.lang.String, int, int, int)
      */
     public CallableStatement prepareCall(String arg0, int arg1, int arg2, int arg3) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new SQLException("Method not implemented!");
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#prepareStatement(java.lang.String, int)
      */
     public PreparedStatement prepareStatement(String arg0, int arg1) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new SQLException("Method not implemented!");
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#prepareStatement(java.lang.String, int[])
      */
     public PreparedStatement prepareStatement(String arg0, int[] arg1) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new SQLException("Method not implemented!");
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#prepareStatement(java.lang.String, java.lang.String[])
      */
     public PreparedStatement prepareStatement(String arg0, String[] arg1) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new SQLException("Method not implemented!");
     }
 }

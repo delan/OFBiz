@@ -3,14 +3,6 @@
  */
 package org.ofbiz.minerva.pool.jdbc.xa;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
 import javax.sql.XAConnection;
@@ -19,6 +11,11 @@ import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAResource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ofbiz.minerva.pool.ObjectPool;
@@ -53,7 +50,6 @@ public class XAConnectionFactory extends PoolObjectFactory {
 
     public static final int DEFAULT_ISOLATION = -1;
 
-    private InitialContext ctx;
     private XADataSource source;
     private String userName;
     private String password;
@@ -74,8 +70,8 @@ public class XAConnectionFactory extends PoolObjectFactory {
      * Creates a new factory.  You must set the XADataSource and
      * TransactionManager JNDI name before the factory can be used.
      */
-    public XAConnectionFactory() throws NamingException {
-        ctx = new InitialContext();
+    public XAConnectionFactory() {
+        final boolean trace = log.isDebugEnabled();
         //wrapperTx = new HashMap();
         //rms = new HashMap();
         errorListener = new ConnectionEventListener() {
@@ -116,6 +112,8 @@ public class XAConnectionFactory extends PoolObjectFactory {
                         XAResource res = (XAResource) rms.remove(con);
                         if (res != null) {
                             trans.delistResource(res, status);
+                            if (trace)
+                                log.debug("delisted resource from TM - " + res);
                         } // end of if ()
                         else {
                             log.warn("no xares in rms for con " + con);
@@ -135,7 +133,8 @@ public class XAConnectionFactory extends PoolObjectFactory {
                         // Wrapper - we can only release it if there's no current transaction
                         // Can't just check TM because con may have been committed but left open
                         //   so if there's a current transaction it may not apply to the con.
-                        log.debug("XAConnectionImpl: " + xaCon + " has no current tx!");
+                        if (trace)
+                            log.debug("XAConnectionImpl: " + xaCon + " has no current tx!");
                         try {
                             xaCon.rollback();
                         } catch (SQLException e) {

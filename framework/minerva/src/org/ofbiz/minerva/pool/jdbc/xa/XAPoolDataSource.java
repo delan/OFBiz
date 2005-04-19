@@ -4,16 +4,6 @@
 package org.ofbiz.minerva.pool.jdbc.xa;
 
 
-import java.io.InvalidObjectException;
-import java.io.ObjectStreamException;
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.sql.Connection;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.Name;
@@ -27,6 +17,15 @@ import javax.sql.DataSource;
 import javax.sql.XAConnection;
 import javax.sql.XADataSource;
 import javax.transaction.TransactionManager;
+import java.io.InvalidObjectException;
+import java.io.ObjectStreamException;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
 import org.ofbiz.base.util.Log4jLoggerWriter;
@@ -88,12 +87,9 @@ public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactor
     public XAPoolDataSource() {
         log.debug("Creating XA Pool");
         pool = new ObjectPool();
-        try {
-            factory = new XAConnectionFactory();
-            log.debug("Created factory");
-        } catch (NamingException e) {
-            log.error("Can't get XAConnectionFactory", e);
-        }
+        factory = new XAConnectionFactory();
+        log.debug("Created factory");
+
         XAPoolDriver.instance();
         log.debug("got driver instance");
     }

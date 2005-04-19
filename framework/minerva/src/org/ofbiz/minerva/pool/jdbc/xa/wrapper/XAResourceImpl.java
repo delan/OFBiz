@@ -3,14 +3,13 @@
  */
 package org.ofbiz.minerva.pool.jdbc.xa.wrapper;
 
-import org.apache.log4j.Logger;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
 
 /**
  * JTA resource implementation for JDBC 1.0 connections.  This is somewhat
