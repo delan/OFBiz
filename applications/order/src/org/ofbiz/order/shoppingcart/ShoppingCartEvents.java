@@ -23,16 +23,15 @@
  */
 package org.ofbiz.order.shoppingcart;
 
-import java.text.NumberFormat;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.LinkedList;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.NumberFormat;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -40,21 +39,21 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
-import org.ofbiz.product.store.ProductStoreSurveyWrapper;
-import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
+import org.ofbiz.product.store.ProductStoreSurveyWrapper;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.control.RequestHandler;
 
 /**
  * Shopping cart events.
@@ -86,7 +85,7 @@ public class ShoppingCartEvents {
         }
         return "success";
     }
-    
+
     /** Event to add an item to the shopping cart. */
     public static String addToCart(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -109,7 +108,7 @@ public class ShoppingCartEvents {
         double reservLength = 0;
         String reservPersonsStr = null;
         double reservPersons = 0;
-        
+
         // not used right now: Map attributes = null;
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
         Locale locale = UtilHttp.getLocale(request);
@@ -160,7 +159,7 @@ public class ShoppingCartEvents {
         // Get the ProductConfigWrapper (it's not null only for configurable items)
         ProductConfigWrapper configWrapper = null;
         configWrapper = ProductConfigWorker.getProductConfigWrapper(productId, cart.getCurrency(), request);
-        
+
         if (configWrapper != null) {
             // The choices selected by the user are taken from request and set in the wrapper
             ProductConfigWorker.fillProductConfigWrapper(configWrapper, request);
@@ -231,7 +230,7 @@ public class ShoppingCartEvents {
                 }
             }
         }
-        
+
         // get the quantity
         if (paramMap.containsKey("QUANTITY")) {
             quantityStr = (String) paramMap.remove("QUANTITY");
@@ -322,7 +321,7 @@ public class ShoppingCartEvents {
         } else {
             if (cart.viewCartOnAdd()) {
                 return "viewcart";
-            } else {                
+            } else {
                 return "success";
             }
         }
@@ -473,7 +472,7 @@ public class ShoppingCartEvents {
         Map result;
         Map paramMap = UtilHttp.getParameterMap(request);
         // not used yet: Locale locale = UtilHttp.getLocale(request);
-        
+
         //Delegate the cart helper
         result = cartHelper.deleteFromCart(paramMap);
         controlDirective = processResult(result, request);
@@ -497,7 +496,7 @@ public class ShoppingCartEvents {
         String controlDirective;
         Map result;
         // not used yet: Locale locale = UtilHttp.getLocale(request);
-        
+
         Map paramMap = UtilHttp.getParameterMap(request);
 
         String removeSelectedFlag = request.getParameter("removeSelected");
@@ -548,7 +547,7 @@ public class ShoppingCartEvents {
             session.setAttribute("shoppingCart", cart);
         } else {
             if (locale != null && !locale.equals(cart.getLocale())) {
-                cart.setLocale(locale);                
+                cart.setLocale(locale);
             }
             if (currencyUom != null && !currencyUom.equals(cart.getCurrency())) {
                 try {
@@ -605,7 +604,7 @@ public class ShoppingCartEvents {
         if (cart.getLocale() == null || !locale.equals(cart.getLocale())) {
             cart.setLocale(locale);
         }
-        
+
         return "success";
     }
 
@@ -616,7 +615,7 @@ public class ShoppingCartEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         String alternateGwpProductId = request.getParameter("alternateGwpProductId");
         String alternateGwpLineStr = request.getParameter("alternateGwpLine");
-        
+
         if (UtilValidate.isEmpty(alternateGwpProductId)) {
             request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, no alternateGwpProductId passed.");
             return "error";
@@ -625,7 +624,7 @@ public class ShoppingCartEvents {
             request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, no alternateGwpLine passed.");
             return "error";
         }
-        
+
         int alternateGwpLine = 0;
         try {
             alternateGwpLine = Integer.parseInt(alternateGwpLineStr);
@@ -633,15 +632,15 @@ public class ShoppingCartEvents {
             request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, alternateGwpLine is not a valid number.");
             return "error";
         }
-        
+
         ShoppingCartItem cartLine = cart.findCartItem(alternateGwpLine);
         if (cartLine == null) {
             request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, no cart line item found for #" + alternateGwpLine + ".");
             return "error";
         }
-        
+
         if (cartLine.getIsPromo()) {
-            // note that there should just be one promo adjustment, the reversal of the GWP, so use that to get the promo action key 
+            // note that there should just be one promo adjustment, the reversal of the GWP, so use that to get the promo action key
             Iterator checkOrderAdjustments = UtilMisc.toIterator(cartLine.getAdjustments());
             while (checkOrderAdjustments != null && checkOrderAdjustments.hasNext()) {
                 GenericValue checkOrderAdjustment = (GenericValue) checkOrderAdjustments.next();
@@ -657,7 +656,7 @@ public class ShoppingCartEvents {
                 }
             }
         }
-        
+
         request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, cart line item found for #" + alternateGwpLine + " does not appear to be a valid promotional gift.");
         return "error";
     }
@@ -691,7 +690,7 @@ public class ShoppingCartEvents {
         request.setAttribute("_EVENT_MESSAGE_LIST_", eventList);
         return "success";
     }
-    
+
     /** Removes a previously associated party to order */
     public static String removeAdditionalParty(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);
@@ -870,9 +869,9 @@ public class ShoppingCartEvents {
       GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
       String finalizeMode = (String)session.getAttribute("finalizeMode");
       String updateParty = request.getParameter("updateParty");
-      
+
       ShoppingCart cart = getCartObject(request);
-      
+
       String orderMode = request.getParameter("orderMode");
       if (orderMode != null) {
           cart.setOrderType(orderMode);
@@ -881,14 +880,14 @@ public class ShoppingCartEvents {
           request.setAttribute("_ERROR_MESSAGE_", "Please select either sale or purchase order.");
           return "error";
       }
-      
+
       // check the selected product store
       String productStoreId = request.getParameter("productStoreId");
       GenericValue productStore = null;
       if (UtilValidate.isNotEmpty(productStoreId)) {
           productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
           if (productStore != null) {
-              
+
               // check permission for taking the order
               boolean hasPermission = false;
               if ((cart.getOrderType().equals("PURCHASE_ORDER")) && (security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session))) {
@@ -911,7 +910,7 @@ public class ShoppingCartEvents {
                       }
                   }
               }
-              
+
               if (hasPermission) {
                   cart = ShoppingCartEvents.getCartObject(request, null, productStore.getString("defaultCurrencyUomId"));
               } else {
@@ -937,7 +936,7 @@ public class ShoppingCartEvents {
       if (UtilValidate.isNotEmpty(salesChannelEnumId)) {
           cart.setChannelType(salesChannelEnumId);
       }
-      
+
       // set party info
       String partyId = request.getParameter("supplierPartyId");
       if (!UtilValidate.isEmpty(request.getParameter("partyId"))) {
@@ -979,20 +978,20 @@ public class ShoppingCartEvents {
           partyId = cart.getPartyId();
           if (partyId != null && partyId.equals("_NA_")) partyId = null;
       }
-      
+
       return "success";
   }
 
   /** Route order entry **/
   public static String routeOrderEntry(HttpServletRequest request, HttpServletResponse response) {
       HttpSession session = request.getSession();
-      
+
       ShoppingCart cart = getCartObject(request);
-      
+
       String orderMode = (String)session.getAttribute("orderMode");
       String updateParty = request.getParameter("updateParty");
       String orderModePar = request.getParameter("orderMode"); // orderModePar != null when this request is coming from the init page
-      
+
       if (orderMode == null || updateParty != null) {
           return "init";
       }
