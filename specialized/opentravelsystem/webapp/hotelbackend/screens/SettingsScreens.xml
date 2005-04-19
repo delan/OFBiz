@@ -27,6 +27,8 @@
         <section>
             <actions>
                 <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
@@ -77,12 +79,13 @@
     <screen name="EditProductStore">
         <section>
             <actions>
+                <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Settings"/>
                 <set field="page.headerItem" value="store"/>
                 <set field="page.tabButtonItem" value="EditProductStore"/>
-                <set field="productStoreId"  from-scope="application" from-field="productStoreId" />
-                <set field="productStoreId" from-field="parameters.productStoreId"/>
+                <set field="productStoreId" from-scope="user"  from-field="productStoreId"/>
                 <entity-one entity-name="ProductStore" value-name="productStore"/>
             </actions>
             <widgets>
@@ -106,12 +109,10 @@
     <screen name="EditProductStoreRoles">
         <section>
             <actions>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Settings"/>
                 <set field="page.headerItem" value="store"/>
                 <set field="page.tabButtonItem" value="EditProductStoreRoles"/>
-                <set field="productStoreId"  from-scope="application" from-field="productStoreId" />
-                <set field="productStoreId" from-field="parameters.productStoreId"/>
+                <set field="productStoreId" from-scope="user"  from-field="productStoreId"/>
                 <entity-one entity-name="ProductStore" value-name="productStore"/>
                 <entity-condition entity-name="ProductStoreRole" list-name="productStoreRoles">
                     <condition-expr field-name="productStoreId" operator="equals" value="${productStoreId}" />
@@ -151,8 +152,7 @@
                 <set field="page.appTabButtonItem" value="Settings"/>
                 <set field="page.headerItem" value="store"/>
                 <set field="page.tabButtonItem" value="EditProductStoreTaxSetup"/>
-                <set field="productStoreId"  from-scope="application" from-field="productStoreId" />
-                <set field="productStoreId" from-field="parameters.productStoreId"/>
+                <set field="productStoreId" from-scope="user"  from-field="productStoreId"/>
                 <entity-one entity-name="ProductStore" value-name="productStore"/>
                 <entity-condition entity-name="SimpleSalesTaxLookup" list-name="taxItems">
                     <condition-expr field-name="productStoreId" operator="equals" value="${productStoreId}" />
@@ -190,8 +190,7 @@
                 <set field="page.appTabButtonItem" value="Settings"/>
                 <set field="page.headerItem" value="store"/>
                 <set field="page.tabButtonItem" value="EditProductStorePaySetup"/>
-                <set field="productStoreId"  from-scope="application" from-field="productStoreId" />
-                <set field="productStoreId" from-field="parameters.productStoreId"/>
+                <set field="productStoreId" from-scope="user"  from-field="productStoreId"/>
                 <set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
                 <set field="paymentServiceTypeEnumId" from-field="parameters.paymentServiceTypeEnumId"/>
                 <entity-one entity-name="ProductStore" value-name="productStore"/>
@@ -235,11 +234,10 @@
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="productStoreId"  from-scope="application" from-field="productStoreId" />
-                <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <set field="page.appTabButtonItem" value="Settings"/>
                 <set field="page.headerItem" value="store"/>
                 <set field="page.tabButtonItem" value="EditProductStoreEmails"/>
+                <set field="productStoreId" from-scope="user"  from-field="productStoreId"/>
                 <entity-one entity-name="ProductStore" value-name="productStore"/>
                 <entity-condition entity-name="ProductStoreEmailSetting" list-name="productStoreEmailSettings">
                     <condition-expr field-name="productStoreId" operator="equals" value="${productStoreId}" />
@@ -267,5 +265,42 @@
             </widgets>
         </section>
     </screen>
-
+    <screen name="selectStore">
+        <section> 
+            <condition> 
+                <if-compare field-name="userLogin.partyId" operator="not-equals" value="admin"></if-compare>
+            </condition>
+            <actions>
+                <set field="page.appTabButtonItem" value="Settings"/>
+                <set field="page.headerItem" value="selectStore"/>
+                <set field="nowTimestamp" value="${UtilDateTime.nowTimestamp()}"/>
+                <entity-condition entity-name="ProductStoreRole" list-name="stores"><!-- filter-by-date="nowTimestamp"-->
+                       <condition-list>
+                           <condition-expr field-name="partyId"  operator="equals" value="${userLogin.partyId}" />
+                       </condition-list>
+                </entity-condition>
+                <entity-condition entity-name="ProductStore" list-name="storesAdmin">
+                       <condition-list>
+                           <condition-expr field-name="productStoreId"  operator="not-equals" value="${userLogin.partyId}" />
+                       </condition-list>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSettingsDecorator">
+                    <decorator-section name="body">
+                            <label style="head1">Select a store to work on.</label>
+                            <include-form name="selectStore" location="component://opentravelsystem/webapp/hotelbackend/screens/SettingsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+            <fail-widgets>
+                <decorator-screen name="CommonSettingsDecorator">
+                    <decorator-section name="body">
+                            <label style="head1">Select a store to work on.</label>
+                            <include-form name="selectStoreAdmin" location="component://opentravelsystem/webapp/hotelbackend/screens/SettingsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </fail-widgets>
+        </section>
+    </screen>
 </screens>

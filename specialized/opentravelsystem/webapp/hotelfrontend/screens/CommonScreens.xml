@@ -26,16 +26,12 @@
     <screen name="main-decorator">
         <section>
             <actions>
-                <set field="request.productStoreId" value="HotelDemoStore" global="true"/>
-                <set field="request.webSiteId" value="HotelDemoStore" global="true"/>
-                <set field="request.prodCatalogId" value="HotelDemoCtlg" global="true"/>
+                <!--set field="productStoreId" to-scope="user"  from-field="parameters.productStoreId" global="true"/>
+                <set field="prodCatalogId" to-scope="user" from-field="parameters.productStoreId" global="true"/>
+                <set field="webSiteId" to-scope="user" from-field="parameters.productStoreId" global="true"/-->
                 <set field="imageServerPath" to-scope="application" value="/images/"/> 
-                <property-map resource="opentravelsystemUiLabels"
-                    map-name="uiLabelMap" global="true"/>
-                <set field="layoutSettings.companyName"
-                    from-field="uiLabelMap.opentravelsystemCompanyName" global="true"/>
-                <set field="layoutSettings.headerImageUrl"
-                    value="/images/opentravelsystem_logo.jpg" global="true"/>
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.opentravelsystemCompanyName" global="true"/>
+                <set field="layoutSettings.headerImageUrl" value="/images/opentravelsystem_logo.jpg" global="true"/>
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
                 <set field="activeApp" value="hotelfrontend" global="true"/>
@@ -86,22 +82,7 @@
             </widgets>
         </section>
     </screen>
-    <!-- Side Columns -->
-    <screen name="leftbar">
-        <section>
-            <widgets>
-                <container>
-                    <include-screen name="choosecatalog" location="component://ecommerce/widget/CatalogScreens.xml"/>
-                    <include-screen name="sidedeepcategory" location="component://ecommerce/widget/CatalogScreens.xml"/>
-                    <include-screen name="minireorderprods" location="component://ecommerce/widget/CatalogScreens.xml"/>
-                    <include-screen name="forums" location="component://ecommerce/widget/ContentScreens.xml"/>
-                    <include-screen name="content_categories" location="component://ecommerce/widget/ContentScreens.xml"/>
-                    <include-screen name="minilastviewedcategories" location="component://ecommerce/widget/CatalogScreens.xml"/>
-                </container>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="rightbar">
+    <screen name="rightbar1">
         <section>
             <widgets>
                 <container style="barwidth">
@@ -120,7 +101,7 @@
         </section>
     </screen>
     <!-- Column Included Screens -->
-    <screen name="language">
+    <screen name="language1">
         <section>
             <widgets>
                 <platform-specific>
@@ -132,7 +113,7 @@
         </section>
     </screen>
     <!-- Top Level Screens -->
-    <screen name="main">
+    <screen name="startup">
         <section>
             <actions>
                 <set field="title" value="Main Page"/>
@@ -153,7 +134,7 @@
             </widgets>
         </section>
     </screen>
-    <screen name="book">
+    <screen name="main1">
         <section>
             <actions>
                 <set field="title" value="Main Page"/>
@@ -161,8 +142,12 @@
                 <set field="headerItem" value="main"/>
                 <set field="randomSurveyGroup" value="testSurveyGroup"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="productStoreId" from-scope="user"  from-field="productStoreId" global="true"/>
+                <set field="prodCatalogId" from-scope="user" from-field="prodCatalogId" global="true"/>
+                <set field="webSiteId" from-scope="user" from-field="webSiteId" global="true"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/main.bsh"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/category.bsh"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/category.bsh"/>
+                <!--script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/category.bsh"/-->
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
@@ -179,7 +164,7 @@
             </widgets>
         </section>
     </screen>
-    <screen name="login">
+    <screen name="login1">
         <section>
             <actions>
                 <set field="title" value="Login"/>
@@ -197,6 +182,96 @@
                             </html>
                         </platform-specific>
                       </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+<!-- Side Columns -->
+    <screen name="leftbar">
+        <section>
+            <widgets>
+                <container style="left">
+                    <include-screen name="choosecatalog" location="component://ecommerce/widget/CatalogScreens.xml"/>
+                    <include-screen name="keywordsearchbox" location="component://ecommerce/widget/CatalogScreens.xml"/>
+                    <include-screen name="sidedeepcategory" location="component://ecommerce/widget/CatalogScreens.xml"/>
+                    <include-screen name="minireorderprods" location="component://ecommerce/widget/CatalogScreens.xml"/>
+                    <include-screen name="minipoll" location="component://ecommerce/widget/ContentScreens.xml"/>
+                    <include-screen name="forums" location="component://ecommerce/widget/ForumScreens.xml"/>
+                    <include-screen name="content_categories" location="component://ecommerce/widget/ContentScreens.xml"/>
+                </container>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="rightbar">
+        <section>
+            <widgets>
+                <container style="barwidth">
+                    <include-screen name="language"/>
+                    <include-screen name="minicart" location="component://ecommerce/widget/CartScreens.xml"/>
+                    <!--include-screen name="minipromotext" location="component://ecommerce/widget/CartScreens.xml"/>
+                    <include-screen name="miniassocprods" location="component://ecommerce/widget/CatalogScreens.xml"/>
+                    <include-screen name="factoids" location="component://ecommerce/widget/ContentScreens.xml"/>
+                    <include-screen name="minilastviewedcategories" location="component://ecommerce/widget/CatalogScreens.xml"/-->
+                    <include-screen name="minilastviewedproducts" location="component://ecommerce/widget/CatalogScreens.xml"/>
+                    <include-screen name="minilastproductsearches" location="component://ecommerce/widget/CatalogScreens.xml"/>
+                    <include-screen name="recentlyviewed" location="component://ecommerce/widget/ContentScreens.xml"/>
+                </container>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Column Included Screens -->
+    <screen name="language">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/includes/language.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Top Level Screens -->
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="leftbarScreenName" value="leftbar"/>
+                <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="center"/>
+
+                <set field="title" value="Main Page"/>
+                <set field="title-property" value="PageTitleMain"/>
+                <set field="headerItem" value="main"/>
+                <set field="randomSurveyGroup" value="testSurveyGroup"/>
+
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/main.bsh"/>
+                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/category.bsh"/>-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/category.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://ecommerce/webapp/ecommerce/main.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="login">
+        <section>
+            <actions>
+                <set field="title" value="Login"/>
+                <set field="title-property" value="PageTitleLogin"/>
+                <set field="headerItem" value="login"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/login.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://ecommerce/webapp/ecommerce/login.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

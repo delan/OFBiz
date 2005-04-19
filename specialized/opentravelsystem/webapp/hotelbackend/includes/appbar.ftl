@@ -41,8 +41,8 @@
 
 <#if requestAttributes.userLogin?has_content>
 	<#assign displayApps = [
-		 {"title":"Main", 				"url":"main"}
- 		,{"title":"Product",				"url":"mainCatalog"}
+<#--		 {"title":"Main", 				"url":"main"} -->
+ 		{"title":"Product",				"url":"mainCatalog"}
 <#-- 		,{"title":"Assets",				"url":"ListFixedAssets?parentFixedAssetId=${productStoreId}"}-->
 		,{"title":"Reservations",		"url":"findorders?productStoreId=${productStoreId}"}
 		,{"title":"Customers",			"url":"findparty"}

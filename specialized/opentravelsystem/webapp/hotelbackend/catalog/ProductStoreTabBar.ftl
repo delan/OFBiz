@@ -29,16 +29,16 @@
   <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
   <#if productStoreId?has_content>
     <div class='tabContainer'>
-      <a href="<@ofbizUrl>/EditProductStore?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStore?default(unselectedClassName)}">${uiLabelMap.ProductStore}</a>
-      <a href="<@ofbizUrl>/EditProductStoreRoles?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreRoles?default(unselectedClassName)}">${uiLabelMap.PartyRoles}</a>
-      <!--a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStorePromos?default(unselectedClassName)}">${uiLabelMap.ProductPromos}</a>
-	  <a href="<@ofbizUrl>/EditProductStoreCatalogs?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreCatalogs?default(unselectedClassName)}">${uiLabelMap.ProductCatalogs}</a>
+      <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="${selectedClassMap.EditProductStore?default(unselectedClassName)}">${uiLabelMap.ProductStore}</a>
+      <a href="<@ofbizUrl>/EditProductStoreRoles</@ofbizUrl>" class="${selectedClassMap.EditProductStoreRoles?default(unselectedClassName)}">${uiLabelMap.PartyRoles}</a>
+      <!--a href="<@ofbizUrl>/EditProductStorePromos</@ofbizUrl>" class="${selectedClassMap.EditProductStorePromos?default(unselectedClassName)}">${uiLabelMap.ProductPromos}</a>
+	  <a href="<@ofbizUrl>/EditProductStoreCatalogs</@ofbizUrl>" class="${selectedClassMap.EditProductStoreCatalogs?default(unselectedClassName)}">${uiLabelMap.ProductCatalogs}</a>
 	  <a href="<@ofbizUrl>/EditProductStoreWebSites?viewProductStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreWebSites?default(unselectedClassName)}">${uiLabelMap.ProductWebSites}</a>
--->	  <a href="<@ofbizUrl>/EditProductStoreTaxSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreTaxSetup?default(unselectedClassName)}">${uiLabelMap.ProductSalesTax}</a>
+-->	  <a href="<@ofbizUrl>/EditProductStoreTaxSetup</@ofbizUrl>" class="${selectedClassMap.EditProductStoreTaxSetup?default(unselectedClassName)}">${uiLabelMap.ProductSalesTax}</a>
 	  <!--a href="<@ofbizUrl>/EditProductStoreShipSetup?viewProductStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreShipSetup?default(unselectedClassName)}">${uiLabelMap.OrderShipping}</a>
--->	  <a href="<@ofbizUrl>/EditProductStorePaySetup?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStorePaySetup?default(unselectedClassName)}">${uiLabelMap.AccountingPayments}</a>
-	  <a href="<@ofbizUrl>/EditProductStoreEmails?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreEmails?default(unselectedClassName)}">${uiLabelMap.CommonEmails}</a>
-	  <!--a href="<@ofbizUrl>/EditProductStoreSurveys?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreSurveys?default(unselectedClassName)}">Surveys</a>
-	  <a href="<@ofbizUrl>/editProductStoreKeywordOvrd?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreKeywordOvrd?default(unselectedClassName)}">${uiLabelMap.ProductOverride}</a>
+-->	  <a href="<@ofbizUrl>/EditProductStorePaySetup</@ofbizUrl>" class="${selectedClassMap.EditProductStorePaySetup?default(unselectedClassName)}">${uiLabelMap.AccountingPayments}</a>
+	  <a href="<@ofbizUrl>/EditProductStoreEmails</@ofbizUrl>" class="${selectedClassMap.EditProductStoreEmails?default(unselectedClassName)}">${uiLabelMap.CommonEmails}</a>
+	  <!--a href="<@ofbizUrl>/EditProductStoreSurveys</@ofbizUrl>" class="${selectedClassMap.EditProductStoreSurveys?default(unselectedClassName)}">Surveys</a>
+	  <a href="<@ofbizUrl>/editProductStoreKeywordOvrd</@ofbizUrl>" class="${selectedClassMap.EditProductStoreKeywordOvrd?default(unselectedClassName)}">${uiLabelMap.ProductOverride}</a>
 -->    </div>
   </#if>  

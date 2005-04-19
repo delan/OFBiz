@@ -26,7 +26,10 @@
    <screen name="CommonCatalogDecorator">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
@@ -57,10 +60,9 @@
     <screen name="main">
         <section>
             <actions>
-                <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="main"/>
+                <set field="prodCatalogId" from-scope="user" from-field="prodCatalogId"/>
                 <!--set field="leftbarScreenName" value="leftbar"/-->
             </actions>
             <widgets>
@@ -81,15 +83,14 @@
 
     <screen name="EditProdCatalogCategories">
         <section>
-            <condition>
+            <!--condition>
                 <if-has-permission permission="CATALOG" action="_VIEW"/>
-            </condition>
+            </condition-->
             <actions>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="categories"/>
-                <set field="prodCatalogId" from-scope="application" from-field="prodCatalogId"/>
-                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
+                <set field="prodCatalogId" from-scope="user" from-field="prodCatalogId"/>
                 <!--set field="leftbarScreenName" value="leftbar"/-->
                 <entity-one entity-name="ProdCatalog"  value-name="prodCatalog" use-cache="true"/>
                 <entity-condition entity-name="ProdCatalogCategory" list-name="prodCatalogCategories">
@@ -134,7 +135,6 @@
                 <if-has-permission permission="CATALOG" action="_VIEW"/>
             </condition>
             <actions>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="categories"/>
                 <set field="page.tabButtonItem" value="EditCategory"/>
@@ -206,7 +206,7 @@
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="products"/>
                 <!--set field="leftbarScreenName" value="leftbar"/-->
@@ -241,7 +241,7 @@
         <section>
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="fixedassets"/>
                 <!--set field="leftbarScreenName" value="leftbar"/-->
@@ -572,26 +572,26 @@
                 <set field="title" value="List Fixed Assets"/>
                 <set field="page.headerItem" value="ListFixedAssets"/>
                 <set field="page.appTabButtonItem" value="Assets"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <entity-condition entity-name="FixedAsset" list-name="fixedAssets" >
-                                    <condition-list>
-                    <condition-expr field-name="fixedAssetId" operator="greater" value=" " />
-                                        <condition-expr field-name="fixedAssetTypeId" operator="not-equals" value="GROUP_EQUIPMENT"/>
-                                    </condition-list>
+                    <!--condition-list>
+                        <condition-expr field-name="parentFixedAssetId" operator="equals" value="HotelDemoStore" />
+                    </condition-list-->
                 </entity-condition>
             </actions>
-                    <widgets>
+            <widgets>
                 <decorator-screen name="CommonCatalogDecorator">
                     <decorator-section name="body">
                         <container>
                             <label style="head1">${uiLabelMap.AccountingFixedAssets}</label>
-                             </container>
-                                <container>
-                                    <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
-                                </container>
+                        </container>
+                        <container>
+                            <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
+                        </container>
                         <include-form name="ListFixedAssets" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
-                                <container>
-                                    <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
-                                </container>
+                        <container>
+                            <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

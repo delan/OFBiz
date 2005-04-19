@@ -44,7 +44,6 @@ function lookupOrders(click) {
 // -->
 </script>
 
-<#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
 <form method='post' name="lookuporder" action="<@ofbizUrl>/findorders</@ofbizUrl>" onsubmit="javascript:lookupOrders();">
 <input type='hidden' name='lookupFlag' value='Y'>
 <input type='hidden' name='hideFields' value='Y'>
@@ -377,8 +376,4 @@ document.lookuporder.order_id.focus();
     </td>
   </tr>
 </table>
-
-</#if>
-<#else>
-  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>

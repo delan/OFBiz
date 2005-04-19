@@ -5,10 +5,6 @@
     <screen name="common-decorator">
         <section>
             <actions>
-                <property-map resource="backendConfig" map-name="configMap" global="true"/>
-                <set field="productStoreId" to-scope="application" value="${configMap.productStoreId}" global="true"/>
-                <set field="prodCatalogId" to-scope="application" value="HotelDemoCtlg" global="true"/>
-                <set field="webSiteId" to-scope="application" value="HotelDemoStore" global="true"/>
                 <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.opentravelsystemCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.opentravelsystemCompanySubtitle" global="true"/>
@@ -16,14 +12,9 @@
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
                 <set field="activeApp" value="hotelbackend" global="true"/>
-                <!--set field="nowTimestamp" value="UtilDateTime.nowTimestamp()"/>
-                <entity-condition entity-name="ProductStoreRole" list-name="producStoreRoles">
-                       <condition-list>
-                           <condition-expr field-name="partyId"  operator="equals" env-name="userLogin"/>
-                           <condition-expr field-name="roleTypeId"  operator="equals" value="ADMIN"/>
-                           <condition-expr field-name="fromDate" operator="less-equals" value="${nowTimestamp}"/>
-                       </condition-list>
-                </entity-condition-->
+                <set field="productStoreId" from-scope="user"  from-field="productStoreId" global="true"/>
+                <set field="prodCatalogId" from-scope="user" from-field="prodCatalogId" global="true"/>
+                <set field="webSiteId" from-scope="user" from-field="webSiteId" global="true"/>
             </actions>
             <widgets>
                 <!-- render header -->

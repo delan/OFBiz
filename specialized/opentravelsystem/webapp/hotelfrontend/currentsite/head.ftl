@@ -14,7 +14,8 @@
 	<script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
 	<script language='javascript' src='<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>' type='text/javascript'></script>
     <script language="javascript" src="<@ofbizContentUrl>/images/fieldlookup.js</@ofbizContentUrl>" type="text/javascript"></script>
-	<link rel='stylesheet' href='<@ofbizContentUrl>/hotelfrontend/images/frontend.css</@ofbizContentUrl>' type='text/css'>
+	<link rel='stylesheet' href='<@ofbizContentUrl>/images/ecommain.css</@ofbizContentUrl>' type='text/css'>
+	<link rel='stylesheet' href='<@ofbizContentUrl>/hotelfrontendimages/frontend.css</@ofbizContentUrl>' type='text/css'>
 	<link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>
 	<script language="JavaScript" type="text/JavaScript">
 		var ie=document.all;var gc=document.getElementById&&!document.all;var op=(window.navigator.userAgent.toLowerCase().indexOf('opera/7')!=-1)?1:0;var mac=(window.navigator.platform.toLowerCase().indexOf('mac')!=-1)?1:0;var sf=(window.navigator.userAgent.toLowerCase().indexOf('safari')!=-1)?1:0;var ns=document.layers;
