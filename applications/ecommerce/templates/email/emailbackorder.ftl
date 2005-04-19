@@ -127,7 +127,7 @@
           </td>
         </tr>
       </table>
-      <br>
+      <br/>
 
       <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
       <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -156,7 +156,7 @@
                           <td colspan="3" valign="top">
                             <div class="tabletext" align="center"><b>Offline Payment</b></div>
                             <#if orderHeader?has_content && paymentAddress?has_content>
-                              <div class="tabletext" align="center"><hr class="sepbar"></div>
+                              <div class="tabletext" align="center"><hr class="sepbar"/></div>
                               <div class="tabletext" align="center"><b>Please Send Payment To:</b></div>
                               <#if paymentAddress.toName?has_content><div class="tabletext" align="center">${paymentAddress.toName}</div></#if>
                               <#if paymentAddress.attnName?has_content><div class="tabletext" align="center"><b>Attn:</b> ${paymentAddress.attnName}</div></#if>
@@ -164,7 +164,7 @@
                               <#if paymentAddress.address2?has_content><div class="tabletext" align="center">${paymentAddress.address2}</div></#if>
                               <div class="tabletext" align="center">${paymentAddress.city}<#if paymentAddress.stateProvinceGeoId?has_content>, ${paymentAddress.stateProvinceGeoId}</#if> ${paymentAddress.postalCode?if_exists}
                               <div class="tabletext" align="center">${paymentAddress.countryGeoId}</div>
-                              <div class="tabletext" align="center"><hr class="sepbar"></div>
+                              <div class="tabletext" align="center"><hr class="sepbar"/></div>
                               <div class="tabletext" align="center"><b>Be sure to include your order #</b></div>
                             </#if>
                           </td>
@@ -199,13 +199,13 @@
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
                               <div class="tabletext">
-                                <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}<br></#if>
+                                <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}<br/></#if>
                                 <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}&nbsp</#if>
                                 ${creditCard.firstNameOnCard}&nbsp;
                                 <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}&nbsp</#if>
                                 ${creditCard.lastNameOnCard}
                                 <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
-                                <br>
+                                <br/>
                                 ${formattedCardNumber}
                               </div>
                             </td>
@@ -255,16 +255,16 @@
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
                               <div class="tabletext">
-                                ${eftAccount.nameOnAccount?if_exists}<br>
-                                <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br></#if>
-                                Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
+                                ${eftAccount.nameOnAccount?if_exists}<br/>
+                                <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br/></#if>
+                                Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br/>
                                 Account #: ${eftAccount.accountNumber}
                               </div>
                             </td>
                           </tr>
                         </#if>
                         <#if pmBillingAddress?has_content>
-                          <tr><td>&nbsp;</td><td colspan="2"><hr class="sepbar"></td></tr>
+                          <tr><td>&nbsp;</td><td colspan="2"><hr class="sepbar"/></td></tr>
                           <tr>
                             <td align="right" valign="top" width="15%">
                               <div class="tabletext">&nbsp;</div>
@@ -272,12 +272,12 @@
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
                               <div class="tabletext">
-                                <#if pmBillingAddress.toName?has_content><b>To:</b> ${pmBillingAddress.toName}<br></#if>
-                                <#if pmBillingAddress.attnName?has_content><b>Attn:</b> ${pmBillingAddress.attnName}<br></#if>
-                                ${pmBillingAddress.address1}<br>
-                                <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}<br></#if>
+                                <#if pmBillingAddress.toName?has_content><b>To:</b> ${pmBillingAddress.toName}<br/></#if>
+                                <#if pmBillingAddress.attnName?has_content><b>Attn:</b> ${pmBillingAddress.attnName}<br/></#if>
+                                ${pmBillingAddress.address1}<br/>
+                                <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}<br/></#if>
                                 ${pmBillingAddress.city}<#if pmBillingAddress.stateProvinceGeoId?has_content>, ${pmBillingAddress.stateProvinceGeoId} </#if>
-                                ${pmBillingAddress.postalCode?if_exists}<br>
+                                ${pmBillingAddress.postalCode?if_exists}<br/>
                                 ${pmBillingAddress.countryGeoId?if_exists}
                               </div>
                             </td>
@@ -353,12 +353,12 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <div class="tabletext">
-                            <#if shippingAddress.toName?has_content><b>To:</b> ${shippingAddress.toName}<br></#if>
-                            <#if shippingAddress.attnName?has_content><b>Attn:</b> ${shippingAddress.attnName}<br></#if>
-                            ${shippingAddress.address1}<br>
-                            <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>                            
+                            <#if shippingAddress.toName?has_content><b>To:</b> ${shippingAddress.toName}<br/></#if>
+                            <#if shippingAddress.attnName?has_content><b>Attn:</b> ${shippingAddress.attnName}<br/></#if>
+                            ${shippingAddress.address1}<br/>
+                            <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br/></#if>                            
                             ${shippingAddress.city}<#if shippingAddress.stateProvinceGeoId?has_content>, ${shippingAddress.stateProvinceGeoId} </#if>
-                            ${shippingAddress.postalCode?if_exists}<br>
+                            ${shippingAddress.postalCode?if_exists}<br/>
                             ${shippingAddress.countryGeoId?if_exists}
                           </div>
                         </td>
@@ -374,7 +374,7 @@
                         <div class="tabletext">
                           <#if carrierPartyId?exists && carrierPartyId != "_NA_">${carrierPartyId?if_exists}</#if>
                           ${shipMethDescription?if_exists}
-                          <#if shippingAccount?exists><br>Use Account: ${shippingAccount}</#if>
+                          <#if shippingAccount?exists><br/>Use Account: ${shippingAccount}</#if>
                         </div>
                       </td>
                     </tr>
@@ -456,7 +456,7 @@
   </tr>
 </table>
 
-<br>
+<br/>
 
 <#-- order items -->
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>

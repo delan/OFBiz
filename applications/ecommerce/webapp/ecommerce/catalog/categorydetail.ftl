@@ -29,13 +29,13 @@
     <div class="head1">
         ${productCategory.description?if_exists}
         <#if hasQuantities?exists>
-          <form method="POST" action="<@ofbizUrl>addCategoryDefaults<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="thecategoryform" style='margin: 0;'>
-            <input type='hidden' name='add_category_id' value='${productCategory.productCategoryId}'>            
-            <#if requestParameters.product_id?exists><input type='hidden' name='product_id' value='${requestParameters.product_id}'></#if>
-            <#if requestParameters.category_id?exists><input type='hidden' name='category_id' value='${requestParameters.category_id}'></#if>
-            <#if requestParameters.VIEW_INDEX?exists><input type='hidden' name='VIEW_INDEX' value='${requestParameters.VIEW_INDEX}'></#if>
-            <#if requestParameters.SEARCH_STRING?exists><input type='hidden' name='SEARCH_STRING' value='${requestParameters.SEARCH_STRING}'></#if>
-            <#if requestParameters.SEARCH_CATEGORY_ID?exists><input type='hidden' name='SEARCH_CATEGORY_ID' value='${requestParameters.SEARCH_CATEGORY_ID}'></#if>                                     
+          <form method="post" action="<@ofbizUrl>addCategoryDefaults<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="thecategoryform" style='margin: 0;'>
+            <input type='hidden' name='add_category_id' value='${productCategory.productCategoryId}'/>
+            <#if requestParameters.product_id?exists><input type='hidden' name='product_id' value='${requestParameters.product_id}'/></#if>
+            <#if requestParameters.category_id?exists><input type='hidden' name='category_id' value='${requestParameters.category_id}'/></#if>
+            <#if requestParameters.VIEW_INDEX?exists><input type='hidden' name='VIEW_INDEX' value='${requestParameters.VIEW_INDEX}'/></#if>
+            <#if requestParameters.SEARCH_STRING?exists><input type='hidden' name='SEARCH_STRING' value='${requestParameters.SEARCH_STRING}'/></#if>
+            <#if requestParameters.SEARCH_CATEGORY_ID?exists><input type='hidden' name='SEARCH_CATEGORY_ID' value='${requestParameters.SEARCH_CATEGORY_ID}'/></#if>                                     
             <a href="javascript:document.thecategoryform.submit()" class="buttontext"><nobr>[${uiLabelMap.ProductAddProductsUsingDefaultQuantities}]</nobr></a>
           </form>
         </#if>
@@ -44,7 +44,7 @@
   <#if productCategory.categoryImageUrl?exists || productCategory.longDescription?exists>
       <div class="tabletext">
         <#if productCategory.categoryImageUrl?exists>
-          <img src='<@ofbizContentUrl>${productCategory.categoryImageUrl}</@ofbizContentUrl>' vspace='5' hspace='5' border='1' height='100' align='left'>
+          <img src='<@ofbizContentUrl>${productCategory.categoryImageUrl}</@ofbizContentUrl>' vspace='5' hspace='5' border='1' height='100' align='left'/>
         </#if>
         <#if productCategory.longDescription?exists>
           ${productCategory.longDescription}
@@ -54,10 +54,10 @@
 </#if>
 
 <#if productCategoryMembers?has_content>
-    <div id="product-prevnext">
+    <div class="product-prevnext">
       <#-- Start Page Select Drop-Down -->
       <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
-      <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
+      <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
         <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
         <#list 1..viewIndexMax as curViewNum>
           <option value="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int - 1}</@ofbizUrl>">Go to Page ${curViewNum}</option>
@@ -77,12 +77,12 @@
       </b>
     </div>
 
-    <div id="productsummary-container">
-        <#assign startIndex = viewSize * viewIndex>
+    <div class="productsummary-container">
+        <#assign startIndex = viewSize * viewIndex/>
         <#if highIndex < listSize>
-          <#assign endIndex = highIndex - 1>
+          <#assign endIndex = highIndex - 1/>
         <#else>
-          <#assign endIndex = listSize - 1>
+          <#assign endIndex = listSize - 1/>
         </#if>
         <#list productCategoryMembers[startIndex..endIndex] as productCategoryMember>
             ${setRequestAttribute("optProductId", productCategoryMember.productId)}
@@ -92,10 +92,10 @@
         </#list>
     </div>
 
-    <div id="product-prevnext">
+    <div class="product-prevnext">
       <#-- Start Page Select Drop-Down -->
       <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
-      <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
+      <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
         <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
         <#list 1..viewIndexMax as curViewNum>
           <option value="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int - 1}</@ofbizUrl>">Go to Page ${curViewNum}</option>
@@ -104,13 +104,13 @@
       <#-- End Page Select Drop-Down -->
       <b>
         <#if 0 < viewIndex?int>
-          <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+          <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
         </#if>
         <#if 0 < listSize?int>
           <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+          | <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
       </b>
     </div>

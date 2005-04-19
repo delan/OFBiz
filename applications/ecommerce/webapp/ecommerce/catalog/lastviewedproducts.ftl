@@ -35,7 +35,7 @@
 </table>
 
 <#if sessionAttributes.lastViewedProducts?exists && sessionAttributes.lastViewedProducts?has_content>
-<br>
+<br/>
 <center>
   <table width='100%' border='0' cellpadding='0' cellspacing='0'>        
     <#list sessionAttributes.lastViewedProducts as productId>              

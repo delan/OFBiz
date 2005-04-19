@@ -27,16 +27,16 @@
 <#-- All fields from Person and UserLogin are available to this template -->
 
 ${person.firstName},
-<br><br>
+<br/><br/>
 Thank you for registering with MyStore.com.
-<br><br><br>
+<br/><br/><br/>
 
-Your account login is: ${userLogin.userLoginId}<br>
-With the password you set during registration.<br><br>
+Your account login is: ${userLogin.userLoginId}<br/>
+With the password you set during registration.<br/><br/>
 
-If you ever lose your password, you can request a new one at any time.<br><br>
+If you ever lose your password, you can request a new one at any time.<br/><br/>
 
-Thank-You,<br>
+Thank-You,<br/>
 MyStore.com
-<br><br>
+<br/><br/>
 

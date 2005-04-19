@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -34,18 +34,17 @@
         <div class="boxhead">${uiLabelMap.ProductChooseCatalog}</div>
     </div>
     <div class="ecom-screenlet-body" style="text-align: center;">
-        <form name="choosecatalogform" method="POST" action="<@ofbizUrl>main</@ofbizUrl>" style='margin: 0;'>
+        <form name="choosecatalogform" method="post" action="<@ofbizUrl>main</@ofbizUrl>" style='margin: 0;'>
           <select name='CURRENT_CATALOG_ID' class='selectBox'>
-            <option value='${currentCatalogId}'>${currentCatalogName}</OPTION>
-            <option value='${currentCatalogId}'></OPTION>
+            <option value='${currentCatalogId}'>${currentCatalogName}</option>
+            <option value='${currentCatalogId}'></option>
             <#list catalogCol as catalogId>
               <#assign thisCatalogName = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogName(request, catalogId)>
-              <option value='${catalogId}'>${thisCatalogName}</OPTION>
+              <option value='${catalogId}'>${thisCatalogName}</option>
             </#list>
           </select>
-          <div><a href="javascript:document.choosecatalogform.submit()" class="buttontext">${uiLabelMap.CommonChange}</a></div>
+          <div><a href="javascript:document.choosecatalogform.submit()" class="buttontext">${uiLabelMap.Commonchange}</a></div>
         </form>
     </div>
 </div>
 </#if>
-

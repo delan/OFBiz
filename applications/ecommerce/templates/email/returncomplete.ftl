@@ -26,6 +26,6 @@
 
 <#-- ReturnHeader and a List of ReturnItem records is available to this template -->
 
-<br>
+<br/>
 Your return request #${returnHeader.returnId} has been received and completed.
-<br>
+<br/>

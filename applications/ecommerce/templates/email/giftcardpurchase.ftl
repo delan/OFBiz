@@ -29,14 +29,14 @@
      from surveyId 1000 - The gift card purchase survey.
  -->
 
-${recipientName},<br>
+${recipientName},<br/>
 
-You have been sent a MyCompany.com Gift Card from ${senderName}!<br><br>
+You have been sent a MyCompany.com Gift Card from ${senderName}!<br/><br/>
 <#if giftMessage?has_content>
-  The following message came with the gift:<br><br>
+  The following message came with the gift:<br/><br/>
   ${giftMessage}
-  <br>
-  <br>
+  <br/>
+  <br/>
 </#if>
 
 <pre>

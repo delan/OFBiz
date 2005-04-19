@@ -1,5 +1,5 @@
 <hr/>
-    <form method="POST"  action="/ecommerce/control/searchContent"  name="searchQuery" style="margin: 0;">
+    <form method="post"  action="/ecommerce/control/searchContent"  name="searchQuery" style="margin: 0;">
 <table border="0" cellpadding="2" cellspacing="0">
 
 <tr>
@@ -23,8 +23,8 @@
       </td>
       <td align="right" valign="middle">
         <div class="tabletext">
-          All <input type="RADIO" name="any_or_all" value="all" checked>
-          Any <input type="RADIO" name="any_or_all" value="any">
+          All <input type="radio" name="any_or_all" value="all" checked>
+          Any <input type="radio" name="any_or_all" value="any">
         </div>
       </td>
     </tr>
@@ -68,8 +68,8 @@
             <option value="SortProductPrice:MINIMUM_PRICE">Minimum Price</option>
             <option value="SortProductPrice:MAXIMUM_PRICE">Maximum Price</option>
           </select>
-          Low to High<input type="RADIO" name="sortAscending" value="Y" checked>
-          High to Low<input type="RADIO" name="sortAscending" value="N">
+          Low to High<input type="radio" name="sortAscending" value="Y" checked>
+          High to Low<input type="radio" name="sortAscending" value="N">
         </div>
       </td>
     </tr>
@@ -85,8 +85,8 @@
             </#list>
             <div class="tabletext">Sorted by: ${searchSortOrderString}</div>
             <div class="tabletext">
-              New Search<input type="RADIO" name="clearSearch" value="Y" checked>
-              Refine Search<input type="RADIO" name="clearSearch" value="N">
+              New Search<input type="radio" name="clearSearch" value="Y" checked>
+              Refine Search<input type="radio" name="clearSearch" value="N">
             </div>
         </td>
       </tr>

@@ -148,14 +148,14 @@ function toggleBillingAccount(box) {
                              </td>
                              <td align="left" valign="top" width="99%" nowrap>
                                <div class="tabletext">
-                                 <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br></#if>
-                                 <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br></#if>
-                                 <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br></#if>
-                                 <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>
+                                 <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br/></#if>
+                                 <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br/></#if>
+                                 <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br/></#if>
+                                 <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br/></#if>
                                  <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
-                                 <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
-                                 <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
-                                 <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>
+                                 <#if shippingAddress.stateProvinceGeoId?has_content><br/>${shippingAddress.stateProvinceGeoId}</#if>
+                                 <#if shippingAddress.postalCode?has_content><br/>${shippingAddress.postalCode}</#if>
+                                 <#if shippingAddress.countryGeoId?has_content><br/>${shippingAddress.countryGeoId}</#if>
                                  <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
                                </div>
                              </td>
@@ -313,7 +313,7 @@ function toggleBillingAccount(box) {
                             </b>
                           </div>
                           <div class="tabletext">${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>viewprofile?DONE_PAGE=quickcheckout</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyProfile}</a>.</div>
-                          <br>
+                          <br/>
                           <div class="tabletext">${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
                           <input type="text" class='inputBox' size="30" name="order_additional_emails" value='${cart.getOrderAdditionalEmails()?if_exists}'>
                         </td>
@@ -470,8 +470,8 @@ function toggleBillingAccount(box) {
                             </td>
                             <td align="left" valign="top" width="99%" nowrap>
                               <div class="tabletext">
-                               ${billingAccount.description?default("Bill Account")} #<b>${billingAccount.billingAccountId}</b>&nbsp;(<@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId?default(cart.getCurrency())/>)<br>
-                               ${billingAccount.description?default("Bill Account")} #<b>${billingAccount.billingAccountId}</b>&nbsp;(${availableAmount})<br>
+                               ${billingAccount.description?default("Bill Account")} #<b>${billingAccount.billingAccountId}</b>&nbsp;(<@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId?default(cart.getCurrency())/>)<br/>
+                               ${billingAccount.description?default("Bill Account")} #<b>${billingAccount.billingAccountId}</b>&nbsp;(${availableAmount})<br/>
                                <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="amount_${billingAccount.billingAccountId}" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
                               </div>
                             </td>

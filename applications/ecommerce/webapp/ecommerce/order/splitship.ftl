@@ -79,7 +79,7 @@ function submitForm(form, mode, value) {
                   <#assign shipEstimateWrapper = Static["org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper"].getWrapper(dispatcher, cart, groupIdx)>
                   <#assign carrierShipmentMethods = shipEstimateWrapper.getShippingMethods()>
                   <#assign groupNumber = groupIdx + 1>
-                  <form method="POST" action="#" name="editgroupform${groupIdx}" style="margin: 0;">
+                  <form method="post" action="#" name="editgroupform${groupIdx}" style="margin: 0;">
                     <input type="hidden" name="groupIndex" value="${groupIdx}">
                     <tr>
                       <td>
@@ -160,7 +160,7 @@ function submitForm(form, mode, value) {
                     <#assign groupIdx = groupIdx + 1>
                     <#if group_has_next>
                       <tr>
-                        <td colspan="6"><hr class="sepbar"></td>
+                        <td colspan="6"><hr class="sepbar"/></td>
                       </tr>
                     </#if>
                   </form>
@@ -176,7 +176,7 @@ function submitForm(form, mode, value) {
   </tr>
 </table>
 
-<br>
+<br/>
 <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
@@ -209,7 +209,7 @@ function submitForm(form, mode, value) {
               <#list cart.items() as cartLine>
                 <#assign cartLineIndex = cart.getItemIndex(cartLine)>
                 <tr>
-                  <form method="POST" action="<@ofbizUrl>/updatesplit</@ofbizUrl>" name="editgroupform" style="margin: 0;">
+                  <form method="post" action="<@ofbizUrl>/updatesplit</@ofbizUrl>" name="editgroupform" style="margin: 0;">
                     <input type="hidden" name="itemIndex" value="${cartLineIndex}">
                     <td>
 

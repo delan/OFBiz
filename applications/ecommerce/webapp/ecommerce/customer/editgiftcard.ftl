@@ -85,7 +85,7 @@
             <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
           </#if>
         </#if>
-        <select name="expMonth" class='selectBox' onChange="javascript:makeExpDate();">
+        <select name="expMonth" class='selectBox' onchange="javascript:makeExpDate();">
           <#if giftCardData?has_content && expMonth?has_content>
             <#assign ccExprMonth = expMonth>
           <#else>
@@ -96,7 +96,7 @@
           </#if>
           ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
         </select>
-        <select name="expYear" class='selectBox' onChange="javascript:makeExpDate();">
+        <select name="expYear" class='selectBox' onchange="javascript:makeExpDate();">
           <#if giftCard?has_content && expYear?has_content>
             <#assign ccExprYear = expYear>
           <#else>

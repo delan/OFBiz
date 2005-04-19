@@ -44,7 +44,7 @@
 <input type="hidden" name="surveyId" value="${survey.surveyId}">
 
 <div class="head1">${survey.description?if_exists}</div>
-<br>
+<br/>
 <#if survey.comments?has_content>
 <p class="tabletext">${survey.comments}</p>
 </#if>
@@ -66,7 +66,7 @@
       <#if question.surveyQuestionTypeId == "SEPERATOR_TEXT">
         <td colspan="5"><div class="tabletext">${question.question?if_exists}</div></td>
       <#elseif question.surveyQuestionTypeId == "SEPERATOR_LINE">
-        <td colspan="5"><hr class="sepbar"></td>
+        <td colspan="5"><hr class="sepbar"/></td>
       <#else>
         <#-- standard question options -->
         <td align='right' nowrap>

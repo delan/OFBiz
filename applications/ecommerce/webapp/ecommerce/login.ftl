@@ -42,7 +42,7 @@
             <div class="boxhead">${uiLabelMap.CommonRegistred}</div>
         </div>
         <div class="ecom-screenlet-body" style="text-align: center;">
-          <form method="POST" action="<@ofbizUrl>/login${previousParams}</@ofbizUrl>" name="loginform" style="margin: 0;">
+          <form method="post" action="<@ofbizUrl>/login${previousParams}</@ofbizUrl>" name="loginform" style="margin: 0;">
               <div class="tabletext">
                   ${uiLabelMap.CommonUsername}:&nbsp;
                   <input type="text" class="inputBox" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>" size="20">
@@ -68,7 +68,7 @@
             <div class="boxhead">${uiLabelMap.CommonForgotYourPassword}?</div>
         </div>
         <div class="ecom-screenlet-body" style="text-align: center;">
-          <form method="POST" action="<@ofbizUrl>/forgotpassword${previousParams}</@ofbizUrl>" name="forgotpassword" style="margin: 0;">
+          <form method="post" action="<@ofbizUrl>/forgotpassword${previousParams}</@ofbizUrl>" name="forgotpassword" style="margin: 0;">
             <span class="tabletext">${uiLabelMap.CommonUsername}:&nbsp;</span><input type="text" size="20" class="inputBox" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>">
             <div><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonGetPasswordHint}" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" class="smallSubmit" value="${uiLabelMap.CommonEmailPassword}" name="EMAIL_PASSWORD"></div>
           </form>
@@ -83,7 +83,7 @@
             <div class="boxhead">${uiLabelMap.CommonNewUser}</div>
         </div>
         <div class="ecom-screenlet-body" style="text-align: center;">
-          <form method="POST" action="<@ofbizUrl>/newcustomer${previousParams}</@ofbizUrl>" style="margin: 0;">
+          <form method="post" action="<@ofbizUrl>/newcustomer${previousParams}</@ofbizUrl>" style="margin: 0;">
             <div class="tabletext">${uiLabelMap.CommonMayCreateNewAccountHere}:</div>
             <div><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonMayCreate}"></div>
           </form>
@@ -96,7 +96,7 @@
             <div class="boxhead">${uiLabelMap.CommonCheckoutAnonymous}</div>
         </div>
         <div class="ecom-screenlet-body">
-          <form method="POST" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" style="margin: 0;">
+          <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" style="margin: 0;">
             <div class="tabletext" align=center>${uiLabelMap.CommonCheckoutAnonymousMsg}:</div>
             <div align="center"><input type="submit" class="smallSubmit" value="Checkout"></div>
           </form>

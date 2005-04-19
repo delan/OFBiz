@@ -49,7 +49,7 @@
     </tr>
 
     <tr>
-      <td><hr class="sepbar"></td>
+      <td><hr class="sepbar"/></td>
     </tr>
     
     <tr>

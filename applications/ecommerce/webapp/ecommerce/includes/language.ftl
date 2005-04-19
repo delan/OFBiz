@@ -29,11 +29,11 @@
         <div class="boxhead">${uiLabelMap.CommonLanguageTitle}</div>
     </div>
     <div class="ecom-screenlet-body" style="text-align: center;">
-        <form method="POST" name="chooseLanguage" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
+        <form method="post" name="chooseLanguage" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
           <select name="locale" class="selectBox">
             <#assign initialDisplayName = locale.getDisplayName(locale)>
             <#if 18 < initialDisplayName?length>
-              <assign initialDisplayName = initialDisplayName[0..15] + "...">
+              <#assign initialDisplayName = initialDisplayName[0..15] + "...">
             </#if>
             <option value="${locale.toString()}">${initialDisplayName}</option>
             <option value="${locale.toString()}">----</option>
@@ -45,7 +45,7 @@
               <option value="${availableLocale.toString()}">${displayName}</option>
             </#list>
           </select>
-          <div><a href="javascript:document.chooseLanguage.submit()" class="buttontext">${uiLabelMap.CommonChange}</a></div>
+          <div><a href="javascript:document.chooseLanguage.submit()" class="buttontext">${uiLabelMap.Commonchange}</a></div>
         </form>
     </div>
 </div>

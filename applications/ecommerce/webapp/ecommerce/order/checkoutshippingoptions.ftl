@@ -209,7 +209,7 @@ function toggleBillingAccount(box) {
                             </b>
                           </div>
                           <div class="tabletext">${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>/viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyProfile}</a>.</div>
-                          <br>
+                          <br/>
                           <div class="tabletext">${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
                           <input type="text" class='inputBox' size="30" name="order_additional_emails" value='${cart.getOrderAdditionalEmails()?if_exists}'>
                         </td>

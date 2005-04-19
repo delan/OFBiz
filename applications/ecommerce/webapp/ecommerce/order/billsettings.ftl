@@ -116,7 +116,7 @@ function shipBillAddr() {
                     </td>
                   </tr>
                   <tr>
-                    <td colspan="3"><hr class="sepbar"></td>
+                    <td colspan="3"><hr class="sepbar"/></td>
                   </tr>
                 </#if>
 
@@ -135,7 +135,7 @@ function shipBillAddr() {
                     <#assign creditCard = requestParameters>
                   </#if>
                   <tr>
-                    <td colspan="3"><hr class="sepbar"></td>
+                    <td colspan="3"><hr class="sepbar"/></td>
                   </tr>
                   <tr>
                     <td width="26%" align=right valign=top><div class="tableheadtext">Credit Card Information</div></td>
@@ -273,7 +273,7 @@ function shipBillAddr() {
                     <#assign eftAccount = requestParameters>
                   </#if>
                   <tr>
-                    <td colspan="3"><hr class="sepbar"></td>
+                    <td colspan="3"><hr class="sepbar"/></td>
                   </tr>
                   <tr>
                     <td width="26%" align=right valign=top><div class="tableheadtext">EFT Account Information</div></td>
@@ -335,7 +335,7 @@ function shipBillAddr() {
                   <input type="hidden" name="addGiftCard" value="Y">
                   <#if paymentMethodType != "GC">
                     <tr>
-                      <td colspan="3"><hr class="sepbar"></td>
+                      <td colspan="3"><hr class="sepbar"/></td>
                     </tr>
                   </#if>
                   <tr>
