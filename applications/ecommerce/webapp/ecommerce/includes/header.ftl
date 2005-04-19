@@ -94,11 +94,11 @@
 <div id="ecom-header">
     <div id="left">
         <#if sessionAttributes.overrideLogo?exists>
-            <img src="${sessionAttributes.overrideLogo}"/>
+            <img src="${sessionAttributes.overrideLogo}" alt="Logo"/>
         <#elseif catalogHeaderLogo?exists>
-            <imh src="${catalogHeaderLogo}"/>
+            <imh src="${catalogHeaderLogo}" alt="Logo"/>
         <#elseif (productStore.headerLogo)?has_content>
-            <img src="<@ofbizContentUrl>${productStore.headerLogo}</@ofbizContentUrl>"/>
+            <img src="<@ofbizContentUrl>${productStore.headerLogo}</@ofbizContentUrl>" alt="Logo"/>
         </#if>
     </div>
     <div id="right"<#if (productStore.headerRightBackground)?has_content> style="background-image: <@ofbizContentUrl>${productStore.headerRightBackground}</@ofbizContentUrl>;"</#if>>

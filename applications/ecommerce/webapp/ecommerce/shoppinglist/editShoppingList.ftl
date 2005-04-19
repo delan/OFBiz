@@ -253,7 +253,7 @@
                     </td>
                     <td>&nbsp;</td>
                   </tr>
-                  <tr><td colspan="9"><hr class="sepbar"></td></tr>
+                  <tr><td colspan="9"><hr class="sepbar"/></td></tr>
                   <tr>
                     <td><div class="tableheadtext">Ship-To</div></td>
                     <td>
@@ -316,7 +316,7 @@
                     </td>
                     <td>&nbsp;</td>
                   </tr>
-                  <tr><td colspan="9"><hr class="sepbar"></td></tr>
+                  <tr><td colspan="9"><hr class="sepbar"/></td></tr>
                   <tr>
                     <td align="right" colspan="9">
                       <div class="tabletext">
@@ -328,7 +328,7 @@
                     </td>
                   </tr>
                   <#if shoppingList.isActive?default("N") == "Y">
-                    <tr><td colspan="9"><hr class="sepbar"></td></tr>
+                    <tr><td colspan="9"><hr class="sepbar"/></td></tr>
                     <tr>
                       <td align="left" colspan="9">
                         <#assign nextTime = recInfo.next(lastSlOrderTime)?if_exists>
@@ -480,7 +480,7 @@
                           </div>
                         </td>
                         <td nowrap align="center">
-                          <form method="POST" action="<@ofbizUrl>/updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
+                          <form method="post" action="<@ofbizUrl>/updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
                             <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}">
                             <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
                               <input type="hidden" name="reservStart">
@@ -511,7 +511,7 @@
                             <#assign replaceItemAction = "/replaceShoppingListItem/" + requestAttributes._CURRENT_VIEW_?if_exists>
                             <#assign addToCartAction = "/additem/" + requestAttributes._CURRENT_VIEW_?if_exists>
                             <br/>
-                            <form method="POST" action="<@ofbizUrl>${addToCartAction}</@ofbizUrl>" name='listreplform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
+                            <form method="post" action="<@ofbizUrl>${addToCartAction}</@ofbizUrl>" name='listreplform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
                               <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}">
                               <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
                               <input type="hidden" name="quantity" value="${shoppingListItem.quantity}">
@@ -607,7 +607,7 @@
   </TR>
 </TABLE>
 
-<br>
+<br/>
 <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">

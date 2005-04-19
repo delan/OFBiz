@@ -42,15 +42,15 @@
     <#elseif miniProduct.requireAmount?default("N") == "Y">
         <a href="<@ofbizUrl>product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseAmount}...]</nobr></a>
     <#else>
-        <form method="POST" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}" style="margin: 0;">
-            <input type="hidden" name="add_product_id" value="${miniProduct.productId}">
-            <input type="hidden" name="quantity" value="${miniProdQuantity?default("1")}">
-            <#if requestParameters.order_id?has_content><input type="hidden" name="order_id" value="${requestParameters.order_id}"></#if>
-            <#if requestParameters.product_id?has_content><input type="hidden" name="product_id" value="${requestParameters.product_id}"></#if>
-            <#if requestParameters.category_id?has_content><input type="hidden" name="category_id" value="${requestParameters.category_id}"></#if>
-            <#if requestParameters.VIEW_INDEX?has_content><input type="hidden" name="VIEW_INDEX" value="${requestParameters.VIEW_INDEX}"></#if>
-            <#if requestParameters.VIEW_SIZE?has_content><input type="hidden" name="VIEW_SIZE" value="${requestParameters.VIEW_SIZE}"></#if>
-            <input type="hidden" name="clearSearch" value="N">
+        <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}" style="margin: 0;">
+            <input type="hidden" name="add_product_id" value="${miniProduct.productId}"/>
+            <input type="hidden" name="quantity" value="${miniProdQuantity?default("1")}"/>
+            <#if requestParameters.order_id?has_content><input type="hidden" name="order_id" value="${requestParameters.order_id}"/></#if>
+            <#if requestParameters.product_id?has_content><input type="hidden" name="product_id" value="${requestParameters.product_id}"/></#if>
+            <#if requestParameters.category_id?has_content><input type="hidden" name="category_id" value="${requestParameters.category_id}"/></#if>
+            <#if requestParameters.VIEW_INDEX?has_content><input type="hidden" name="VIEW_INDEX" value="${requestParameters.VIEW_INDEX}"/></#if>
+            <#if requestParameters.VIEW_SIZE?has_content><input type="hidden" name="VIEW_SIZE" value="${requestParameters.VIEW_SIZE}"/></#if>
+            <input type="hidden" name="clearSearch" value="N"/>
             <a href="javascript:document.${miniProdFormName}.submit()" class="buttontext"><nobr>[${uiLabelMap.CommonAdd} ${miniProdQuantity} ${uiLabelMap.EcommerceToCart}]</nobr></a>
         </form>
     </#if>

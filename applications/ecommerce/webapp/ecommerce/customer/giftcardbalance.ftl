@@ -25,11 +25,11 @@
 -->
 
 <div class="head1">Gift Card Balance</div>
-<br>
+<br/>
 <div class="tabletext">Enter your gift card number and PIN to check the balance</div>
-<br>
+<br/>
 
-<br>
+<br/>
 <table align="center">
   <#if requestAttributes.processResult?exists>
     <tr>
@@ -69,4 +69,4 @@
     </tr>
   </form>
 </table>
-<br>
+<br/>

@@ -28,7 +28,7 @@
     <input type="hidden" name="add_all" value="false">
     <input type="hidden" name="order_id" value="${orderHeader.orderId}">
     ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderheader")}
-    <br>
+    <br/>
     ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderitems")}
   </form>
 

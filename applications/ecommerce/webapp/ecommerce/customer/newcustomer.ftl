@@ -269,7 +269,7 @@
             <div class="ecom-form-label"><div>${uiLabelMap.PartyEmailAddress}</div><div>(${uiLabelMap.PartyAllowSolicitation}?)</div></div>
             <div class="ecom-form-field">
                 <@fieldErrors fieldName="CUSTOMER_EMAIL"/>
-                <div><input type="text" class='inputBox' name="CUSTOMER_EMAIL" value="${requestParameters.CUSTOMER_EMAIL?if_exists}" size="40" maxlength="255" onChange="changeEmail()" onkeyup="changeEmail()"> *</div>
+                <div><input type="text" class='inputBox' name="CUSTOMER_EMAIL" value="${requestParameters.CUSTOMER_EMAIL?if_exists}" size="40" maxlength="255" onchange="changeEmail()" onkeyup="changeEmail()"> *</div>
                 <div>
                     <select name="CUSTOMER_EMAIL_ALLOW_SOL" class='selectBox'>
                         <option>${requestParameters.CUSTOMER_EMAIL_ALLOW_SOL?default("Y")}</option>
@@ -297,7 +297,7 @@
                 <div class="ecom-form-field">
                     <@fieldErrors fieldName="USERNAME"/>
                     <div>Use Email Address: <input type="CHECKBOX" name="UNUSEEMAIL" value="on" onClick="setEmailUsername();" onFocus="setLastFocused(this);"/></div>
-                    <div><input type="text" class='inputBox' name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20" maxlength="50" onFocus="clickUsername();" onChange="changeEmail();"/> *</div>
+                    <div><input type="text" class='inputBox' name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20" maxlength="50" onFocus="clickUsername();" onchange="changeEmail();"/> *</div>
                 </div>
             </div>
         </#if>

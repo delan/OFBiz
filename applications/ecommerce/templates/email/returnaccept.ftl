@@ -26,8 +26,8 @@
 
 <#-- ReturnHeader and a List of ReturnItem records is available to this template -->
 
-<br>
-Your return request for the following items:<br><br>
+<br/>
+Your return request for the following items:<br/><br/>
 
 <pre>
 <#list returnItems as item>
@@ -36,9 +36,9 @@ Your return request for the following items:<br><br>
   ${item.description?default("N/A")} - ${item.returnQuantity?string.number} @ ${item.returnPrice}
 </#list>
 </pre>
-<br><br>
+<br/><br/>
 
-Has been accepted. Your return authorization is #${returnHeader.returnId}<br>
+Has been accepted. Your return authorization is #${returnHeader.returnId}<br/>
 
-<br>
+<br/>
 

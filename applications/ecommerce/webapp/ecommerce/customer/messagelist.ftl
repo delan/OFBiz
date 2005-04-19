@@ -62,7 +62,7 @@
                   <td><div class="tableheadtext">Sent Date</div></td>
                   <td>&nbsp;</td>
                 </tr>
-                <tr><td colspan="4"><hr class="sepbar"></td></tr>
+                <tr><td colspan="4"><hr class="sepbar"/></td></tr>
                 <#list messages as message>
                   <#assign delegator = requestAttributes.delegator>
                   <#if useSentTo?exists>

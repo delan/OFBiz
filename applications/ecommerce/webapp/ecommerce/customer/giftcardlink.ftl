@@ -25,9 +25,9 @@
 -->
 
 <div class="head1">Gift Card Link</div>
-<br>
+<br/>
 <div class="tabletext">Enter your physical and virtual card and pin number to link your account.</div>
-<br>
+<br/>
 
 <form name="gclink" method="post" action="<@ofbizUrl>/linkgiftcard</@ofbizUrl>">
   <input type="hidden" name="paymentConfig" value="${paymentProperties?default("payment.properties")}">
@@ -72,4 +72,4 @@
     </tr>
   </table>
 </form>
-<br>
+<br/>

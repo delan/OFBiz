@@ -24,8 +24,8 @@
  *@since      3.0
 -->
 
-${sendTo},<br>
-${sendFrom} has requested we send you this link with the following message:<br><br>
+${sendTo},<br/>
+${sendFrom} has requested we send you this link with the following message:<br/><br/>
 ${message}
-<br><br>
+<br/><br/>
 <a href="${pageUrl}">${pageUrl}</a>

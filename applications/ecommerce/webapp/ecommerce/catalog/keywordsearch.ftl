@@ -36,10 +36,10 @@
 </#if>
 
 <#if productIds?has_content>
-    <div id="product-prevnext">
+    <div class="product-prevnext">
         <#-- Start Page Select Drop-Down -->
         <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
-        <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
+        <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
           <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
           <#list 1..viewIndexMax as curViewNum>
             <option value="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${curViewNum?int - 1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>">Go to Page ${curViewNum}</option>
@@ -61,7 +61,7 @@
 </#if>
 
 <#if productIds?has_content>
-    <div id="productsummary-container">
+    <div class="productsummary-container">
         <#assign listIndex = lowIndex>
         <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
             ${setRequestAttribute("optProductId", productId)}
@@ -72,10 +72,10 @@
 </#if>
 
 <#if productIds?has_content>
-    <div id="product-prevnext">
+    <div class="product-prevnext">
         <#-- Start Page Select Drop-Down -->
         <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
-        <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
+        <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
           <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
           <#list 1..viewIndexMax as curViewNum>
             <option value="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${curViewNum?int - 1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>">Go to Page ${curViewNum}</option>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -30,10 +30,10 @@
         <div class="boxhead">${uiLabelMap.ProductSearchCatalog}</div>
     </div>
     <div class="ecom-screenlet-body" style="text-align: center;">
-        <form name="keywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style='margin: 0;'>
-          <input type='hidden' name="VIEW_SIZE" value="10">
+        <form name="keywordsearchform" method="post" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style='margin: 0;'>
+          <input type='hidden' name="VIEW_SIZE" value="10"/>
           <div class='tabletext'>
-            <input type='text' class='inputBox' name="SEARCH_STRING" size="14" maxlength="50" value="${requestParameters.SEARCH_STRING?if_exists}">
+            <input type='text' class='inputBox' name="SEARCH_STRING" size="14" maxlength="50" value="${requestParameters.SEARCH_STRING?if_exists}"/>
           </div>
           <#if 0 < otherSearchProdCatalogCategories?size>
             <div class='tabletext'>
@@ -48,11 +48,11 @@
               </select>
             </div>
           <#else>
-            <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}">
+            <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}"/>
           </#if>
-          <div class='tabletext'>${uiLabelMap.CommonAny}<input type='RADIO' name='SEARCH_OPERATOR' value='OR' <#if searchOperator == "OR">checked</#if>>${uiLabelMap.CommonAll}<input type='RADIO' name='SEARCH_OPERATOR' value='AND' <#if searchOperator == "AND">checked</#if>>&nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">${uiLabelMap.CommonFind}</a></div>
+          <div class='tabletext'>${uiLabelMap.CommonAny}<input type="radio" name='SEARCH_OPERATOR' value='OR' <#if searchOperator == "OR">checked="checked"</#if>/>${uiLabelMap.CommonAll}<input type="radio" name='SEARCH_OPERATOR' value='AND' <#if searchOperator == "AND">checked="checked"</#if>/>&nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">${uiLabelMap.CommonFind}</a></div>
         </form>
-        <form name="advancedsearchform" method="POST" action="<@ofbizUrl>/advancedsearch</@ofbizUrl>" style='margin: 0;'>
+        <form name="advancedsearchform" method="post" action="<@ofbizUrl>/advancedsearch</@ofbizUrl>" style='margin: 0;'>
           <#if 0 < otherSearchProdCatalogCategories?size>
             <div class='tabletext'>${uiLabelMap.ProductAdvancedSearchIn}: </div>
             <div class='tabletext'>
@@ -67,7 +67,7 @@
               </select>
             </div>
           <#else>
-            <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}">
+            <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}"/>
           </#if>
           <div class='tabletext'>
             <a href="javascript:document.advancedsearchform.submit()" class="buttontext">${uiLabelMap.ProductAdvancedSearch}</a>

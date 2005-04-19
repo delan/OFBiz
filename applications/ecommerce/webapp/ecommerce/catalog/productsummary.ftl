@@ -34,13 +34,13 @@
     <#if !smallImageUrl?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
     <#-- end variable setup -->
 
-    <div id="productsummary">
-        <div id="smallimage">
+    <div class="productsummary">
+        <div class="smallimage">
             <a href="<@ofbizUrl>${targetRequestName}/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>">
-                <img src="<@ofbizContentUrl>${contentPathPrefix?if_exists}${smallImageUrl}</@ofbizContentUrl>" width="50" class="imageborder" border="0"/>
+                <img src="<@ofbizContentUrl>${contentPathPrefix?if_exists}${smallImageUrl}</@ofbizContentUrl>" alt="Small Image"/>
             </a>
         </div>
-        <div id="productbuy">
+        <div class="productbuy">
           <#-- check to see if introductionDate hasn't passed yet -->
           <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
             <div class="tabletext" style="color: red;">${uiLabelMap.ProductNotYetAvailable}</div>
@@ -49,45 +49,45 @@
             <div class="tabletext" style="color: red;">${uiLabelMap.ProductNoLongerAvailable}</div>
           <#-- check to see if it is a rental item so enter parameters at detail screen-->
           <#elseif product.productTypeId == "ASSET_USAGE">
-            <a href="<@ofbizUrl>product?<#if categoryId?exists>category_id=${categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceMakeBooking}...]</a>
+            <a href="<@ofbizUrl>product/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceMakeBooking}...]</a>
           <#-- check to see if the product is a virtual product -->
           <#elseif product.isVirtual?exists && product.isVirtual == "Y">
-            <a href="<@ofbizUrl>product?<#if categoryId?exists>category_id=${categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceChooseVariations}...]</a>
+            <a href="<@ofbizUrl>product/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceChooseVariations}...]</a>
           <#-- check to see if the product requires an amount -->
           <#elseif product.requireAmount?exists && product.requireAmount == "Y">
-            <a href="<@ofbizUrl>product?<#if categoryId?exists>category_id=${categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceChooseAmount}...]</a>
+            <a href="<@ofbizUrl>product/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceChooseAmount}...]</a>
           <#else>
-            <form method="POST" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form" style="margin: 0;">
-              <input type="hidden" name="add_product_id" value="${product.productId}">
-              <input type="text" class="inputBox" size="5" name="quantity" value="1">
-              <#if requestParameters.product_id?has_content><input type="hidden" name="product_id" value="${requestParameters.product_id}"></#if>
-              <#if requestParameters.category_id?has_content><input type="hidden" name="category_id" value="${requestParameters.category_id}"></#if>
-              <#if requestParameters.productPromoId?has_content><input type="hidden" name="productPromoId" value="${requestParameters.productPromoId}"></#if>
-              <#if requestParameters.VIEW_INDEX?has_content><input type="hidden" name="VIEW_INDEX" value="${requestParameters.VIEW_INDEX}"></#if>
-              <#if requestParameters.VIEW_SIZE?has_content><input type="hidden" name="VIEW_SIZE" value="${requestParameters.VIEW_SIZE}"></#if>
-              <input type="hidden" name="clearSearch" value="N">
-              <br><a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a>
+            <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form" style="margin: 0;">
+              <input type="hidden" name="add_product_id" value="${product.productId}"/>
+              <input type="text" class="inputBox" size="5" name="quantity" value="1"/>
+              <#if requestParameters.product_id?has_content><input type="hidden" name="product_id" value="${requestParameters.product_id}"/></#if>
+              <#if requestParameters.category_id?has_content><input type="hidden" name="category_id" value="${requestParameters.category_id}"/></#if>
+              <#if requestParameters.productPromoId?has_content><input type="hidden" name="productPromoId" value="${requestParameters.productPromoId}"/></#if>
+              <#if requestParameters.VIEW_INDEX?has_content><input type="hidden" name="VIEW_INDEX" value="${requestParameters.VIEW_INDEX}"/></#if>
+              <#if requestParameters.VIEW_SIZE?has_content><input type="hidden" name="VIEW_SIZE" value="${requestParameters.VIEW_SIZE}"/></#if>
+              <input type="hidden" name="clearSearch" value="N"/>
+              <br/><a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form.submit()" class="buttontext">[${uiLabelMap.EcommerceAddToCart}]</a>
             </form>
 
             <#if requestAttributes.productCategoryMember?exists>
                 <#assign prodCatMem = requestAttributes.productCategoryMember>
                 <#if prodCatMem?exists && prodCatMem.quantity?exists && 0.00 < prodCatMem.quantity?double>
-                <form method="POST" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform" style="margin: 0;">
-                  <input type="hidden" name="add_product_id" value="${prodCatMem.productId?if_exists}">
-                  <input type="hidden" name="quantity" value="${prodCatMem.quantity?if_exists}">
-                  <#if requestParameters.product_id?has_content><input type="hidden" name="product_id" value="${requestParameters.product_id}"></#if>
-                  <#if requestParameters.category_id?has_content><input type="hidden" name="category_id" value="${requestParameters.category_id}"></#if>
-                  <#if requestParameters.productPromoId?has_content><input type="hidden" name="productPromoId" value="${requestParameters.productPromoId}"></#if>
-                  <#if requestParameters.VIEW_INDEX?has_content><input type="hidden" name="VIEW_INDEX" value="${requestParameters.VIEW_INDEX}"></#if>
-                  <#if requestParameters.VIEW_SIZE?has_content><input type="hidden" name="VIEW_SIZE" value="${requestParameters.VIEW_SIZE}"></#if>
-                  <input type="hidden" name="clearSearch" value="N">
-                  <a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform.submit()" class="buttontext"><nobr>[${uiLabelMap.CommonAddDefault}(${prodCatMem.quantity?string.number}) ${uiLabelMap.EcommerceToCart}]</nobr></a>
+                <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform" style="margin: 0;">
+                  <input type="hidden" name="add_product_id" value="${prodCatMem.productId?if_exists}"/>
+                  <input type="hidden" name="quantity" value="${prodCatMem.quantity?if_exists}"/>
+                  <#if requestParameters.product_id?has_content><input type="hidden" name="product_id" value="${requestParameters.product_id}"/></#if>
+                  <#if requestParameters.category_id?has_content><input type="hidden" name="category_id" value="${requestParameters.category_id}"/></#if>
+                  <#if requestParameters.productPromoId?has_content><input type="hidden" name="productPromoId" value="${requestParameters.productPromoId}"/></#if>
+                  <#if requestParameters.VIEW_INDEX?has_content><input type="hidden" name="VIEW_INDEX" value="${requestParameters.VIEW_INDEX}"/></#if>
+                  <#if requestParameters.VIEW_SIZE?has_content><input type="hidden" name="VIEW_SIZE" value="${requestParameters.VIEW_SIZE}"/></#if>
+                  <input type="hidden" name="clearSearch" value="N"/>
+                  <a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform.submit()" class="buttontext">[${uiLabelMap.CommonAddDefault}(${prodCatMem.quantity?string.number}) ${uiLabelMap.EcommerceToCart}]</a>
                 </form>
               </#if>
             </#if>
           </#if>
         </div>
-        <div id="productinfo">
+        <div class="productinfo">
           <div class="tabletext">
             <a href="<@ofbizUrl>${targetRequestName}/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">${productContentWrapper.get("PRODUCT_NAME")?if_exists}</a>
           </div>
@@ -108,31 +108,30 @@
           <div class="tabletext">
               <b>${product.productId?if_exists}</b>
                 <#if price.competitivePrice?exists && price.price?exists && price.price?double < price.competitivePrice?double>
-                  <nobr>${uiLabelMap.ProductCompareAtPrice}: <span class='basePrice'><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span></nobr>
+                  ${uiLabelMap.ProductCompareAtPrice}: <span class='basePrice'><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span>
                 </#if>
                 <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
-                  <nobr>${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span></nobr>
+                  ${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span>
                 </#if>
                 <b>
                   <#if price.isSale>
-                    <span class="salePrice"><nobr>${uiLabelMap.EcommerceOnSale}!</nobr></span>
+                    <span class="salePrice">${uiLabelMap.EcommerceOnSale}!</span>
                   </#if>
                   <#if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
-                    <nobr>${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> from </#if><span class="<#if price.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span></nobr>
+                    ${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> from </#if><span class="<#if price.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
                   </#if>
                 </b>
                 <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
                   <#assign priceSaved = price.listPrice?double - price.price?double>
                   <#assign percentSaved = (priceSaved?double / price.listPrice?double) * 100>
-                  <nobr>${uiLabelMap.EcommerceSave}: <span class="basePrice"><@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/> (${percentSaved?int}%)</span></nobr>
+                    ${uiLabelMap.EcommerceSave}: <span class="basePrice"><@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/> (${percentSaved?int}%)</span>
                 </#if>
           </div>
           <#if averageRating?exists && (averageRating?double > 0) && numRatings?exists && (numRatings?long > 2)>
               <div class="tabletext">${uiLabelMap.EcommerceAverageRating}: ${averageRating} (${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.EcommerceRatings})</div>
           </#if>
         </div>
-        <div class="ecom-endcolumns"><span></span></div>
     </div>
 <#else>
-&nbsp;${uiLabelMap.ProductErrorProductNotFound}.<br>
+&nbsp;${uiLabelMap.ProductErrorProductNotFound}.<br/>
 </#if>

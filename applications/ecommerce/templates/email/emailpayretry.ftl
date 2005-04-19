@@ -26,18 +26,18 @@
 
 <BR>
 <#if orderHeader.statusId == "ORDER_REJECTED">
-This email is to inform you there was a problem with your payment method for order #${orderHeader.orderId}.<br>
+This email is to inform you there was a problem with your payment method for order #${orderHeader.orderId}.<br/>
 At this time your order has been cancelled and will not be processed. Please contact customer service if you
-have any questions.<br>
+have any questions.<br/>
 
 <#elseif orderHeader.statusId == "ORDER_APPROVED">
-This email is to inform you that your payment for order #${orderHeader.orderId} has been accepted.<br>
-Your order will be processed, and you will receive an email notification once the item(s) have shipped.<br>
-<br>
-Thank you for your order!<br>
+This email is to inform you that your payment for order #${orderHeader.orderId} has been accepted.<br/>
+Your order will be processed, and you will receive an email notification once the item(s) have shipped.<br/>
+<br/>
+Thank you for your order!<br/>
 
 <#else>
-  Sorry, there was a problem with this email, please contact customer service for information regarding your order #${orderHeader.orderId}.<br>
+  Sorry, there was a problem with this email, please contact customer service for information regarding your order #${orderHeader.orderId}.<br/>
 </#if>
-<br>
-Customer Service (email@email.com)<br>
+<br/>
+Customer Service (email@email.com)<br/>

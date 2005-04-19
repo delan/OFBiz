@@ -56,7 +56,7 @@
                       </td>
                     </tr>
                     <#if productPromo_has_next>
-                      <tr><td><hr class="sepbar"></td></tr>
+                      <tr><td><hr class="sepbar"/></td></tr>
                     </#if>
                   </#list>
                 </table>

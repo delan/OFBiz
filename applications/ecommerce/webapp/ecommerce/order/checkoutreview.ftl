@@ -46,7 +46,7 @@
 
 <#if cart?exists && 0 < cart.size()>
   ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderheader")}
-  <br>
+  <br/>
   ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderitems")}
   <table border="0" cellpadding="1" width="100%">
    <tr>

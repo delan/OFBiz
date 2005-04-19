@@ -34,10 +34,10 @@
         <#list productPromos as productPromo>
             <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[Details]</a> ${productPromo.promoText}</div>
             <#if productPromo_has_next>
-                <div><hr class="sepbar"></div>
+                <div><hr class="sepbar"/></div>
             </#if>
         </#list>
-        <div><hr class="sepbar"></div>
+        <div><hr class="sepbar"/></div>
         <div class="tabletext"><a href="<@ofbizUrl>/showAllPromotions</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewAllPromotions}]</a></div>
     </div>
 </div>
