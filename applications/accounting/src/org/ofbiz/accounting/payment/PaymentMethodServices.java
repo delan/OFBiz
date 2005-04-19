@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -50,9 +50,9 @@ import org.ofbiz.service.ServiceUtil;
  * @version    $Rev$
  * @since      2.0
  */
-public class PaymentServices {
+public class PaymentMethodServices {
     
-    public final static String module = PaymentServices.class.getName();
+    public final static String module = PaymentMethodServices.class.getName();
 
     /**
      * Deletes a PaymentMethod entity according to the parameters passed in the context
@@ -888,63 +888,5 @@ public class PaymentServices {
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
-
-    /**
-     * Creates a Payment entity according to the parameters passed in the context
-     * <b>security check</b>: userLogin partyId must equal partyId, or must have PAY_INFO_UPDATE permission
-     * @param ctx The DispatchContext that this service is operating in
-     * @param context Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
-     */
-    public static Map createPayment(DispatchContext ctx, Map context) {
-        Map result = new HashMap();
-        GenericDelegator delegator = ctx.getDelegator();
-        Security security = ctx.getSecurity();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-
-        Timestamp now = UtilDateTime.nowTimestamp();
-
-        String partyId =
-            ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE");
-
-        if (result.size() > 0) {
-            if (partyId != context.get("partyIdFrom") && partyId != context.get("partyIdTo")) {
-                return ServiceUtil.returnError(
-                    "ERROR: To Create a Payment you must either be the to or from party or have the PAY_INFO_CREATE or PAY_INFO_ADMIN permissions.");
-            }
-        }
-
-        String newPmId = null;
-        try {
-            newPmId = delegator.getNextSeqId("PaymentMethod");
-        } catch (IllegalArgumentException e) {
-            return ServiceUtil.returnError("ERROR: Could not Create Payment (id generation failure)");
-        }
-
-        GenericValue payment = delegator.makeValue("Payment", null);
-
-        payment.set("paymentId", newPmId);
-        payment.set("paymentTypeId", context.get("paymentTypeId"));
-        payment.set("paymentMethodTypeId", context.get("paymentMethodTypeId"));
-        payment.set("paymentMethodId", context.get("paymentMethodId"));
-        payment.set("paymentPreferenceId", context.get("paymentPreferenceId"));
-        payment.set("partyIdFrom", context.get("partyIdFrom"));
-        payment.set("partyIdTo", context.get("partyIdTo"));
-        payment.set("statusId", context.get("statusId"));
-        payment.set("effectiveDate", context.get("effectiveDate") != null ? context.get("effectiveDate") : now);
-        payment.set("paymentRefNum", context.get("paymentRefNum"));
-        payment.set("amount", context.get("amount"));
-        payment.set("comments", context.get("comments"));
-
-        try {
-            payment.create();
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError("ERROR: Could not Create Payment (write failure): " + e.getMessage());
-        }
-
-        result.put("paymentId", payment.getString("paymentId"));
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        return result;
-    }
 }
+

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -27,162 +27,6 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
-    <!-- Invoice services -->
-    <service name="createInvoice" engine="simple"
-            location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoice">
-        <description>Create Inovice Record</description>
-        <attribute name="invoiceTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="statusId" type="String" mode="IN" optional="false"/>
-        <attribute name="billingAccountId" type="String" mode="IN" optional="true"/>
-        <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
-        <attribute name="invoiceMessage" type="String" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>
-    </service>
-    <service name="createInvoiceItem" engine="simple"
-            location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceItem">
-        <description>Create Invoice Item Record</description>
-        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
-        <attribute name="invoiceItemSeqId" type="String" mode="IN" optional="false"/>
-        <attribute name="invoiceItemTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
-        <attribute name="productFeatureId" type="String" mode="IN" optional="true"/>
-        <attribute name="uomId" type="String" mode="IN" optional="true"/>
-        <attribute name="taxableFlag" type="Boolean" mode="IN" optional="false"/>
-        <attribute name="quantity" type="Double" mode="IN" optional="false"/>
-        <attribute name="amount" type="Double" mode="IN" optional="false"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
-    </service>
-    <service name="createInvoiceRole" engine="simple"
-            location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceRole">
-        <description>Create Invoice Role Record</description>
-        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
-        <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="datetimePerformed" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="percentage" type="Double" mode="IN" optional="true"/>
-    </service>
-    <service name="setInvoiceStatus" engine="simple"
-            location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="setInvoiceStatus">
-        <description>Create Invoice (Item) Term Record</description>
-        <attribute name="statusId" type="String" mode="IN" optional="false"/>
-        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
-        <attribute name="statusDate" type="Timestamp" mode="IN" optional="true"/>
-    </service>
-    <service name="createInvoiceTerm" engine="simple"
-            location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceTerm">
-        <description>Create Invoice (Item) Term Record</description>
-        <attribute name="termTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
-        <attribute name="invoiceItemSeqId" type="String" mode="IN" optional="false"/>
-        <attribute name="termValue" type="Long" mode="IN" optional="false"/>
-        <attribute name="uomId" type="String" mode="IN" optional="true"/>
-        <attribute name="invoiceTermId" type="String" mode="OUT" optional="false"/>
-    </service>
-    <service name="createInvoiceForOrder" engine="java"
-            location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoiceForOrder">
-        <description>
-                Create an invoice from existing order
-                orderId = The orderId to associate the invoice with
-                billItems = List of ItemIssuance records to use for creating the invoice
-        </description>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="billItems" type="List" mode="IN" optional="false"/>
-        <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
-    </service>
-    <service name="createInvoicesFromShipment" engine="java"
-            location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoicesFromShipment">
-        <description>
-            Create invoice(s) from a Shipment
-            invoicesCreated = List of invoiceIds which were created by this service
-        </description>
-        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
-        <attribute name="invoicesCreated" type="List" mode="OUT" optional="true"/>
-    </service>
-
-    <service name="checkInvoicePaymentApplications" engine="java"
-            location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="checkInvoicePaymentApplications">
-        <description>Checks to see if the payments applied to an invoice total up to the invoice total; if so sets to PAID</description>
-        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
-    </service>
-
-    <!-- Billing Account Services -->
-    <service name="createBillingAccount" engine="simple"
-            location="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="createBillingAccount">
-        <description>Create a Billing Account</description>
-        <attribute name="accountLimit" type="Double" mode="IN" optional="true"/>
-        <attribute name="accountCurrencyUomId" type="String" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="billingAccountId" type="String" mode="OUT" optional="false"/>
-    </service>
-    <service name="updateBillingAccount" engine="simple"
-            location="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="updateBillingAccount">
-        <description>Update a Billing Account</description>
-        <attribute name="billingAccountId" type="String" mode="IN" optional="false"/>
-        <attribute name="accountLimit" type="Double" mode="IN" optional="true"/>
-        <attribute name="accountCurrencyUomId" type="String" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-    </service>
-    <service name="createBillingAccountRole" engine="simple"
-            location="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="createBillingAccountRole">
-        <description>Create a Billing Account Role</description>
-        <attribute name="billingAccountId" type="String" mode="IN" optional="false"/>
-        <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-    </service>
-    <service name="updateBillingAccountRole" engine="simple"
-            location="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="updateBillingAccountRole">
-        <description>Update a Billing Account Role</description>
-        <attribute name="billingAccountId" type="String" mode="IN" optional="false"/>
-        <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
-    </service>
-    <service name="createBillingAccountTerm" engine="simple"
-            location="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="createBillingAccountTerm">
-        <description>Create a Billing Account Term</description>
-        <attribute name="billingAccountId" type="String" mode="IN" optional="false"/>
-        <attribute name="termTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="termValue" type="Long" mode="IN" optional="false"/>
-        <attribute name="uomId" type="String" mode="IN" optional="true"/>
-        <attribute name="billingAccountTermId" type="String" mode="OUT" optional="false"/>
-    </service>
-    <service name="updateBillingAccountTerm" engine="simple"
-            location="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="updateBillingAccountTerm">
-        <description>Update a Billing Account Term</description>
-        <attribute name="billingAccountTermId" type="String" mode="IN" optional="false"/>
-        <attribute name="billingAccountId" type="String" mode="IN" optional="true"/>
-        <attribute name="termTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="termValue" type="Long" mode="IN" optional="true"/>
-        <attribute name="uomId" type="String" mode="IN" optional="true"/>
-    </service>
-    <service name="removeBillingAccountTerm" engine="simple"
-            location="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="removeBillingAccountTerm">
-        <description>Remove a Billing Account Term</description>
-        <attribute name="billingAccountTermId" type="String" mode="IN" optional="false"/>
-    </service>
-    <service name="calcBillingAccountBalance" engine="java"
-            location="org.ofbiz.accounting.payment.BillingAccountWorker" invoke="calcBillingAccountBalance">
-        <description>Calculate the balance of a Billing Account</description>
-        <attribute name="billingAccountId" type="String" mode="IN" optional="false"/>
-        <attribute name="accountBalance" type="Double" mode="OUT" optional="false"/>
-        <attribute name="billingAccount" type="GenericValue" mode="OUT" optional="false"/>
-    </service>
-    
     <!-- ========= General Ledger Services ========= -->
 
     <!-- GlAccount & Related -->
@@ -244,12 +88,9 @@
        
         <attribute name="creditGlAccountId" type="String" mode="IN" optional="false"/>
         <attribute name="debitGlAccountId" type="String" mode="IN" optional="false"/>
-	    
         <attribute name="acctgTransId" type="String" mode="OUT" optional="true"/>
-		
         <override name="glAccountId" optional="true"/>
         <override name="debitCreditFlag" optional="true"/>
-		
     </service>
     
     <service name="createGlJournal" default-entity-name="GlJournal" engine="simple"
@@ -261,8 +102,6 @@
             <exclude field-name="postedDate"/>
         </auto-attributes>
         <override name="organizationPartyId" optional="false"/>
-        
-        
     </service>
     <service name="updateGlJournal" default-entity-name="GlJournal" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlJournal" auth="true">
