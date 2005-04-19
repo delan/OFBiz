@@ -190,8 +190,7 @@ public class SequenceUtil {
                     String sql = null;
 
                     try {
-                        // do we even need to do this?
-                        connection.setAutoCommit(false);
+                        // we shouldn't need this, and some TX managers complain about it, so not including it: connection.setAutoCommit(false);
 
                         stmt = connection.createStatement();
                         int numTries = 0;
