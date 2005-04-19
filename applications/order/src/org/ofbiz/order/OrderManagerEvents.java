@@ -88,11 +88,11 @@ public class OrderManagerEvents {
                     ppref.set("statusId", "PAYMENT_RECEIVED");
                     ppref.set("authDate", UtilDateTime.nowTimestamp());
                     toBeStored.add(ppref);
-                    
+
                     // create a payment record
                     toBeStored.add(OrderChangeHelper.createPaymentFromPreference(ppref, null, placingCustomer.getString("partyId"), "Payment received offline and manually entered."));
                 }
-                
+
                 // store the updated preferences and newly created payments
                 try {
                     delegator.storeAll(toBeStored);
@@ -101,7 +101,7 @@ public class OrderManagerEvents {
                     request.setAttribute("_ERROR_MESSAGE_", "<li>Problem storing received payment information.");
                     return "error";
                 }
-                
+
                 // set the status of the order to approved
                 OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
             }
@@ -116,8 +116,8 @@ public class OrderManagerEvents {
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 
         String orderId = request.getParameter("orderId");
-        
-        // get the order header & payment preferences       
+
+        // get the order header & payment preferences
         GenericValue orderHeader = null;
         try {
             orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
@@ -178,7 +178,7 @@ public class OrderManagerEvents {
                 }
                 if (paymentTypeAmount > 0.00) {
                     paymentTally += paymentTypeAmount;
-                    
+
                     // create the OrderPaymentPreference
                     Map prefFields = UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString());
                     GenericValue paymentPreference = delegator.makeValue("OrderPaymentPreference", prefFields);
@@ -191,7 +191,7 @@ public class OrderManagerEvents {
                         paymentPreference.set("createdByUserLogin", userLogin.getString("userLoginId"));
                     }
                     toBeStored.add(paymentPreference);
-                    
+
                     // create a payment record
                     toBeStored.add(OrderChangeHelper.createPaymentFromPreference(paymentPreference, paymentReference, placingCustomer.getString("partyId"), "Payment received offline and manually entered."));
                 }
