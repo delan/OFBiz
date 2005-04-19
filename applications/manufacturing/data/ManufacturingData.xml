@@ -20,6 +20,6 @@
     <TechDataCalendar calendarId="DEFAULT" description="Default calendar used when no specific calendar is defined" calendarWeekId="DEFAULT"/>
     
     <EnumerationType description="Formula for Bill Of Materials" enumTypeId="BOM_FORMULA" hasTable="N" parentTypeId=""/>
-    <Enumeration description="Linear product" enumCode="LINEAR_FORMULA" enumId="linearComponentFormula" sequenceId="01" enumTypeId="BOM_FORMULA"/>
+    <Enumeration description="Linear product" enumCode="LINEAR_FORMULA" enumId="BOMF_LINEAR_FORMULA" sequenceId="01" enumTypeId="BOM_FORMULA"/>
 
 </entity-engine-xml>
