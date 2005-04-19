@@ -25,7 +25,6 @@ package org.ofbiz.entity.transaction;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
@@ -104,7 +103,7 @@ public class TransactionFactory {
     public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
         return getTransactionFactory().getConnection(helperName);
     }
-    
+
     public static void shutdown() {
         getTransactionFactory().shutdown();
     }

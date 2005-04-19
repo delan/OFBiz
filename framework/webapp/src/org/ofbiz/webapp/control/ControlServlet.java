@@ -23,8 +23,6 @@
  */
 package org.ofbiz.webapp.control;
 
-import java.io.IOException;
-import java.util.Enumeration;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -33,6 +31,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Enumeration;
 
 import com.ibm.bsf.BSFManager;
 
@@ -41,24 +41,26 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilJ2eeCompat;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.webapp.stats.ServerHitBin;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.webapp.stats.ServerHitBin;
 
 /**
  * ControlServlet.java - Master servlet for the web application.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Rev$
  * @since      2.0
  */
 public class ControlServlet extends HttpServlet {
-    
+
     public static final String module = ControlServlet.class.getName();
-          
+
     public ControlServlet() {
         super();
     }
@@ -67,11 +69,11 @@ public class ControlServlet extends HttpServlet {
      * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)
      */
     public void init(ServletConfig config) throws ServletException {
-        super.init(config);        
+        super.init(config);
         if (Debug.infoOn()) {
             Debug.logInfo("[ControlServlet.init] Loading Control Servlet mounted on path " + config.getServletContext().getRealPath("/"), module);
         }
-                        
+
         // configure custom BSF engines
         configureBsf();
         // initialize the request handler
@@ -88,7 +90,7 @@ public class ControlServlet extends HttpServlet {
     /**
      * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {                
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // setup DEFAULT chararcter encoding and content type, this will be overridden in the RequestHandler for view rendering
         String charset = getServletContext().getInitParameter("charset");
         if (charset == null || charset.length() == 0) charset = request.getCharacterEncoding();
@@ -128,10 +130,10 @@ public class ControlServlet extends HttpServlet {
             timer.setLog(true);
             timer.timerString("[" + rname + "] Servlet Starting, doing setup", module);
         }
-        
+
         // Setup the CONTROL_PATH for JSP dispatching.
         request.setAttribute("_CONTROL_PATH_", request.getContextPath() + request.getServletPath());
-        if (Debug.verboseOn()) 
+        if (Debug.verboseOn())
             Debug.logVerbose("Control Path: " + request.getAttribute("_CONTROL_PATH_"), module);
 
         // for convenience, and necessity with event handlers, make security and delegator available in the request:
@@ -179,7 +181,7 @@ public class ControlServlet extends HttpServlet {
 
         // some containers call filters on EVERY request, even forwarded ones, so let it know that it came from the control servlet
         request.setAttribute(ContextFilter.FORWARDED_FROM_SERVLET, new Boolean(true));
-        
+
         String errorPage = null;
         try {
             // the ServerHitBin call for the event is done inside the doRequest method
@@ -201,7 +203,7 @@ public class ControlServlet extends HttpServlet {
 
         if (errorPage != null) {
             Debug.logError("An error occurred, going to the errorPage: " + errorPage, module);
-            
+
             RequestDispatcher rd = request.getRequestDispatcher(errorPage);
 
             // use this request parameter to avoid infinite looping on errors in the error page...
@@ -222,7 +224,7 @@ public class ControlServlet extends HttpServlet {
                 if (rd == null) {
                     Debug.logError("Could not get RequestDispatcher for errorPage: " + errorPage, module);
                 }
-                
+
                 String errorMessage = "<html><body>ERROR in error page, (infinite loop or error page not found with name [" + errorPage + "]), but here is the text just in case it helps you: " + request.getAttribute("ERROR_MESSAGE_") + "</body></html>";
                 if (UtilJ2eeCompat.useOutputStreamNotWriter(getServletContext())) {
                     response.getOutputStream().print(errorMessage);
@@ -232,17 +234,34 @@ public class ControlServlet extends HttpServlet {
             }
         }
 
+        // sanity check; make sure we don't have any transactions in place
+        try {
+            // roll back current TX first
+            if (TransactionUtil.isTransactionInPlace()) {
+                Debug.logWarning("*** NOTICE: ControlServlet finished w/ a transaction in place! Rolling back.", module);
+                TransactionUtil.rollback();
+            }
+
+            // now resume/rollback any suspended txs
+            if (TransactionUtil.suspendedTransactionsHeld()) {
+                int suspended = TransactionUtil.cleanSuspendedTranactions();
+                Debug.logWarning("Resumed/Rolled Back [" + suspended + "] transactions.", module);
+            }
+        } catch (GenericTransactionException e) {
+            Debug.logWarning(e, module);
+        }
+
         ServerHitBin.countRequest(webappName + "." + rname, request, requestStartTime, System.currentTimeMillis() - requestStartTime, userLogin, delegator);
-        if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);                
+        if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);
     }
-    
+
     /**
      * @see javax.servlet.Servlet#destroy()
      */
     public void destroy() {
-        super.destroy();                
-    }    
-    
+        super.destroy();
+    }
+
     protected RequestHandler getRequestHandler() {
         RequestHandler rh = (RequestHandler) getServletContext().getAttribute("_REQUEST_HANDLER_");
         if (rh == null) {
@@ -255,27 +274,27 @@ public class ControlServlet extends HttpServlet {
 
     protected void configureBsf() {
         String[] bshExtensions = {"bsh"};
-        BSFManager.registerScriptingEngine("beanshell", "org.ofbiz.base.util.OfbizBshBsfEngine", bshExtensions);        
+        BSFManager.registerScriptingEngine("beanshell", "org.ofbiz.base.util.OfbizBshBsfEngine", bshExtensions);
 
         String[] jsExtensions = {"js"};
         BSFManager.registerScriptingEngine("javascript", "org.ofbiz.base.util.OfbizJsBsfEngine", jsExtensions);
-        
+
         String[] smExtensions = {"sm"};
         BSFManager.registerScriptingEngine("simplemethod", "org.ofbiz.minilang.SimpleMethodBsfEngine", smExtensions);
     }
-    
+
     protected void logRequestInfo(HttpServletRequest request) {
         ServletContext servletContext = this.getServletContext();
         HttpSession session = request.getSession();
-              
+
         Debug.logVerbose("--- Start Request Headers: ---", module);
         Enumeration headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String headerName = (String) headerNames.nextElement();
             Debug.logVerbose(headerName + ":" + request.getHeader(headerName), module);
         }
-        Debug.logVerbose("--- End Request Headers: ---", module);        
-       
+        Debug.logVerbose("--- End Request Headers: ---", module);
+
         Debug.logVerbose("--- Start Request Parameters: ---", module);
         Enumeration paramNames = request.getParameterNames();
         while (paramNames.hasMoreElements()) {
@@ -283,7 +302,7 @@ public class ControlServlet extends HttpServlet {
             Debug.logVerbose(paramName + ":" + request.getParameter(paramName), module);
         }
         Debug.logVerbose("--- End Request Parameters: ---", module);
-                
+
         Debug.logVerbose("--- Start Request Attributes: ---", module);
         Enumeration reqNames = request.getAttributeNames();
         while (reqNames != null && reqNames.hasMoreElements()) {
@@ -295,22 +314,22 @@ public class ControlServlet extends HttpServlet {
         Debug.logVerbose("--- Start Session Attributes: ---", module);
         Enumeration sesNames = null;
         try {
-            sesNames = session.getAttributeNames();                
+            sesNames = session.getAttributeNames();
         } catch (IllegalStateException e) {
             Debug.logVerbose("Cannot get session attributes : " + e.getMessage(), module);
-        }        
+        }
         while (sesNames != null && sesNames.hasMoreElements()) {
             String attName = (String) sesNames.nextElement();
             Debug.logVerbose(attName + ":" + session.getAttribute(attName), module);
         }
         Debug.logVerbose("--- End Session Attributes ---", module);
-        
+
         Enumeration appNames = servletContext.getAttributeNames();
         Debug.logVerbose("--- Start ServletContext Attributes: ---", module);
         while (appNames != null && appNames.hasMoreElements()) {
             String attName = (String) appNames.nextElement();
             Debug.logVerbose(attName + ":" + servletContext.getAttribute(attName), module);
         }
-        Debug.logVerbose("--- End ServletContext Attributes ---", module);             
-    }    
+        Debug.logVerbose("--- End ServletContext Attributes ---", module);
+    }
 }
