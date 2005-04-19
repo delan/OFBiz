@@ -32,11 +32,11 @@ import org.w3c.dom.Element;
 /**
  * Generic Entity - KeyMap model class
  *
- * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Rev:$
  * @since      2.0
  */
-public class ModelKeyMap {
+public class ModelKeyMap implements java.io.Serializable {
 
     /** name of the field in this entity */
     protected String fieldName = "";
@@ -77,7 +77,7 @@ public class ModelKeyMap {
     public void setRelFieldName(String relFieldName) {
         this.relFieldName = relFieldName;
     }
-    
+
     // ======= Some Convenience Oriented Factory Methods =======
     public static List makeKeyMapList(String fieldName1) {
         return UtilMisc.toList(new ModelKeyMap(fieldName1, null));
@@ -95,13 +95,13 @@ public class ModelKeyMap {
     public int hashCode() {
         return this.fieldName.hashCode() + this.relFieldName.hashCode();
     }
-    
+
     public boolean equals(Object other) {
         ModelKeyMap otherKeyMap = (ModelKeyMap) other;
-        
+
         if (!otherKeyMap.fieldName.equals(this.fieldName)) return false;
         if (!otherKeyMap.relFieldName.equals(this.relFieldName)) return false;
-        
+
         return true;
     }
 }
