@@ -81,6 +81,11 @@
         <response name="success" type="request" value="checkLogin"/>
         <response name="error" type="view" value="main"/>
     </request-map>
+
+    <request-map uri="selectStore">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="selectStore"/>
+    </request-map>
     <!-- End of Security Mappings -->
 
     <!-- hotelbackend specific Request Mappings -->
@@ -2103,6 +2108,7 @@
     <view-map name="EditProductStoreEmails" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStoreEmails"/>
     <view-map name="EditProductStoreTaxSetup" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStoreTaxSetup"/>
     <view-map name="EditProductStorePaySetup" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStorePaySetup"/>
+    <view-map name="selectStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#selectStore"/>
     <!-- reservations /orders -->
     <view-map name="findorders" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#main"/>
     <view-map name="orderview" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#orderview"/>

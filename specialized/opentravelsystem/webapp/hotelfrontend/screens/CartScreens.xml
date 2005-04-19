@@ -66,6 +66,7 @@
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
+                <set field="MainColumnStyle" value="leftonly"/>
 
                 <set field="title-property" value="PageTitleShoppingCart"/>
                 <set field="headerItem" value="Shopping Cart"/>
@@ -73,7 +74,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showpromotext.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/screens/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/cart/showcart.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -85,13 +86,14 @@
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
+                <set field="MainColumnStyle" value="leftonly"/>
 
                 <set field="title" value="Show All Promotions"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showcart.bsh"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showpromotext.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/screens/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/cart/showAllPromotions.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -104,12 +106,13 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title" value="Show Promotion Details"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showPromotionDetails.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/screens/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/cart/showPromotionDetails.ftl"/></html></platform-specific>
                     </decorator-section>

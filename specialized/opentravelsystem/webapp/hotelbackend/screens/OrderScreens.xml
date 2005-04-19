@@ -59,8 +59,7 @@
                 <set field="page.appTabButtonItem" value="Reservations"/>
                 <set field="page.headerItem" value="findorders"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
-                <set field="productStoreId" to-scope="user" value="${productStoreId}"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <script location="component://opentravelsystem/webapp/hotelbackend/WEB-INF/actions/order/findOrders.bsh"/>
             </actions>
             <widgets>

@@ -37,7 +37,8 @@
     <screen name="keywordsearchbox">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/keywordsearchoptions.bsh"/>
+                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/keywordsearchoptions.bsh"/>-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/keywordsearchoptions.bsh"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/keywordsearchbox.ftl"/></html></platform-specific>
@@ -47,7 +48,8 @@
     <screen name="sidedeepcategory">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/sidedeepcategory.bsh"/>
+                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/sidedeepcategory.bsh"/>-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/sidedeepcategory.bsh"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/sidedeepcategory.ftl"/></html></platform-specific>
@@ -108,7 +110,8 @@
     <screen name="productsummary">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productsummary.bsh"/>
+                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productsummary.bsh"/>-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/productsummary.bsh"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/productsummary.ftl"/></html></platform-specific>
@@ -132,12 +135,14 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleCategoryPage"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
+                        <include-screen name="breadcrumbs"/>
                         <include-screen name="category-include"/>
                     </decorator-section>
                 </decorator-screen>
@@ -147,7 +152,8 @@
     <screen name="category-include">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/category.bsh"/>
+                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/category.bsh"/>-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/category.bsh"/>
             </actions>
             <widgets>
                 <section>
@@ -167,19 +173,20 @@
     <screen name="categorydetail">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/categorydetail.bsh"/>
+                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/categorydetail.bsh"/>-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/categorydetail.bsh"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/categorydetail.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
-    
     <screen name="product">
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleProductPage"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/product.bsh"/>
@@ -206,9 +213,11 @@
     <screen name="productdetail">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productdetail.bsh"/>
+                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productdetail.bsh"/>-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/productdetail.bsh"/>
             </actions>
             <widgets>
+                <include-screen name="breadcrumbs"/>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/productdetail.ftl"/></html></platform-specific>
             </widgets>
         </section>
@@ -216,8 +225,10 @@
     <screen name="configproductdetail">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productdetail.bsh"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/prepareconfigform.bsh"/>
+                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productdetail.bsh"/>-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/productdetail.bsh"/>
+                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/prepareconfigform.bsh"/>-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/prepareconfigform.bsh"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/configproductdetail.ftl"/></html></platform-specific>
@@ -230,6 +241,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleProductReview"/>
             </actions>
@@ -247,6 +259,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleLastViewProducts"/>
             </actions>
@@ -279,9 +292,11 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleQuickAdd"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/quickadd.bsh"/>
+                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/quickadd.bsh"/>-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/quickadd.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
@@ -295,7 +310,8 @@
     <screen name="quickaddsummary">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productsummary.bsh"/>
+                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productsummary.bsh"/>-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/productsummary.bsh"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/quickaddsummary.ftl"/></html></platform-specific>
@@ -308,9 +324,11 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleSearchResults"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/keywordsearch.bsh"/>
+                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/keywordsearch.bsh"/>-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/keywordsearch.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
@@ -326,10 +344,12 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleAdvancedSearch"/>
                 <set field="headerItem" value="Advanced Search"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/advancedsearchoptions.bsh"/>
+                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/advancedsearchoptions.bsh"/>-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/advancedsearchoptions.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">

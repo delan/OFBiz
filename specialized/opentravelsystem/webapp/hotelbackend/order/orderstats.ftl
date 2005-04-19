@@ -24,8 +24,6 @@
  *@since      2.2
 -->
 
-<#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
-
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -204,6 +202,3 @@
 </TABLE>
 
 <br>
-<#else>
-  <h3>You do not have permission to view this page.</h3>
-</#if>

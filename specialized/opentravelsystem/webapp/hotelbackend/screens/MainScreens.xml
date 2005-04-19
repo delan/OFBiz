@@ -42,6 +42,9 @@
                                 <container style="contentarea">
                                     <!-- by default will render left-bar only if leftbarScreen value not empty -->
                                     <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
+                        <platform-specific>
+                             <html><html-template location="component://common/webcommon/includes/messages.ftl"/></html>
+                        </platform-specific>
                                     <decorator-section-include name="body"/>
                                 </container>
                             </widgets>
@@ -59,6 +62,10 @@
             <actions>
                 <set field="page.appTabButtonItem" value="Main"/>
                 <set field="page.headerItem" value="main"/>
+                <!-- gets called from the store selection list and expect the productStorId to be passed to main. -->
+                <set field="productStoreId" to-scope="user"  from-field="parameters.productStoreId" global="true"/>
+                <set field="prodCatalogId" to-scope="user" from-field="parameters.productStoreId" global="true"/>
+                <set field="webSiteId" to-scope="user" from-field="parameters.productStoreId" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonMainDecorator">
