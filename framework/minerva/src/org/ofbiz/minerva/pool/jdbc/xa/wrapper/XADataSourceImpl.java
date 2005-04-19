@@ -3,15 +3,14 @@
  */
 package org.ofbiz.minerva.pool.jdbc.xa.wrapper;
 
+import javax.sql.XAConnection;
+import javax.sql.XADataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-
-import javax.sql.XAConnection;
-import javax.sql.XADataSource;
 
 import org.apache.log4j.Logger;
 

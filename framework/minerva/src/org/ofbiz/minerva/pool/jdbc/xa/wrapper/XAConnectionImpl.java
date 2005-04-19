@@ -3,15 +3,14 @@
  */
 package org.ofbiz.minerva.pool.jdbc.xa.wrapper;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Vector;
-
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
 import javax.sql.XAConnection;
 import javax.transaction.xa.XAResource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Vector;
 
 import org.ofbiz.minerva.pool.PoolEvent;
 import org.ofbiz.minerva.pool.PoolEventListener;
