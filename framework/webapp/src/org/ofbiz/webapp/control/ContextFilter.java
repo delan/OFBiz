@@ -24,13 +24,6 @@
  */
 package org.ofbiz.webapp.control;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -40,6 +33,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 import org.ofbiz.base.container.ContainerLoader;
 import org.ofbiz.base.start.StartupException;
@@ -57,7 +57,7 @@ import org.ofbiz.service.WebAppDispatcher;
 /**
  * ContextFilter - Restricts access to raw files and configures servlet objects.
  *
- * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Rev$
  * @since      2.2
  */
@@ -76,7 +76,7 @@ public class ContextFilter implements Filter {
      */
     public void init(FilterConfig config) throws ServletException {
         this.config = config;
-        
+
         // initialize the cached class loader for this application
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         localCachedClassLoader = new CachedClassLoader(loader, getWebSiteId());
@@ -97,7 +97,7 @@ public class ContextFilter implements Filter {
         getSecurity();
         // initialize the services dispatcher
         getDispatcher();
-        
+
         // this will speed up the initial sessionId generation
         new java.security.SecureRandom().nextLong();
     }
@@ -105,29 +105,29 @@ public class ContextFilter implements Filter {
     /**
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {                
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper((HttpServletResponse) response);
-        
+
         // Debug.logInfo("Running ContextFilter.doFilter", module);
 
-        // ----- Servlet Object Setup -----        
+        // ----- Servlet Object Setup -----
         // set the cached class loader for more speedy running in this thread
         Thread.currentThread().setContextClassLoader(localCachedClassLoader);
-        
+
         // set the webSiteId in the session
         httpRequest.getSession().setAttribute("webSiteId", getWebSiteId());
-        
+
         // set the ServletContext in the request for future use
         request.setAttribute("servletContext", config.getServletContext());
-        
+
         // set the filesystem path of context root.
         request.setAttribute("_CONTEXT_ROOT_", config.getServletContext().getRealPath("/"));
-        
+
         // set the server root url
         StringBuffer serverRootUrl = UtilHttp.getServerRootUrl(httpRequest);
         request.setAttribute("_SERVER_ROOT_URL_", serverRootUrl.toString());
-                
+
         // ----- Context Security -----
         // check if we are disabled
         String disableSecurity = config.getInitParameter("disableContextSecurity");
@@ -135,21 +135,21 @@ public class ContextFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-        
+
         // check if we are told to redirect everthing
-        String redirectAllTo = config.getInitParameter("forceRedirectAll");                        
-        if (redirectAllTo != null && redirectAllTo.length() > 0) {            
+        String redirectAllTo = config.getInitParameter("forceRedirectAll");
+        if (redirectAllTo != null && redirectAllTo.length() > 0) {
             // little trick here so we don't loop on ourself
             if (httpRequest.getSession().getAttribute("_FORCE_REDIRECT_") == null) {
                 httpRequest.getSession().setAttribute("_FORCE_REDIRECT_", "true");
                 Debug.logWarning("Redirecting user to: " + redirectAllTo, module);
-                
+
                 if (!redirectAllTo.toLowerCase().startsWith("http")) {
                     redirectAllTo = httpRequest.getContextPath() + redirectAllTo;
                 }
                 wrapper.sendRedirect(redirectAllTo);
                 return;
-            } else {                
+            } else {
                 httpRequest.getSession().removeAttribute("_FORCE_REDIRECT_");
                 chain.doFilter(request, response);
                 return;
@@ -226,7 +226,7 @@ public class ContextFilter implements Filter {
                     if (!redirectPath.toLowerCase().startsWith("http")) {
                         redirectPath = httpRequest.getContextPath() + redirectPath;
                     }
-                    wrapper.sendRedirect(redirectPath);                    
+                    wrapper.sendRedirect(redirectPath);
                 }
                 Debug.logWarning(filterMessage, module);
                 return;
@@ -244,7 +244,7 @@ public class ContextFilter implements Filter {
         getDispatcher().deregister();
         config = null;
     }
-    
+
     protected LocalDispatcher getDispatcher() {
         LocalDispatcher dispatcher = (LocalDispatcher) config.getServletContext().getAttribute("dispatcher");
         if (dispatcher == null) {
@@ -326,19 +326,19 @@ public class ContextFilter implements Filter {
         }
         return security;
     }
-    
+
     protected String getWebSiteId() {
         String webSiteId = (String) config.getServletContext().getAttribute("webSiteId");
         if (webSiteId == null) {
             webSiteId = config.getServletContext().getInitParameter("webSiteId");
             config.getServletContext().setAttribute("webSiteId", webSiteId);
             if (webSiteId == null) {
-                //Debug.logError("[ContextFilter.init] ERROR: website not defined for context.", module);    
+                //Debug.logError("[ContextFilter.init] ERROR: website not defined for context.", module);
             }
         }
         return webSiteId;
     }
-    
+
     protected String getServerId() {
         String serverId = (String) config.getServletContext().getAttribute("_serverId");
         if (serverId == null) {

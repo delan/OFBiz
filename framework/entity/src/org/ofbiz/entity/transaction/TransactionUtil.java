@@ -31,19 +31,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import javax.sql.XAConnection;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.InvalidTransactionException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.Status;
-import javax.transaction.Synchronization;
-import javax.transaction.SystemException;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
-import javax.transaction.UserTransaction;
+import javax.transaction.*;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 
@@ -72,12 +61,12 @@ public class TransactionUtil implements Status {
     public static boolean begin() throws GenericTransactionException {
         return begin(0);
     }
-    
+
     /** Begins a transaction in the current thread IF transactions are available; only
      * tries if the current transaction status is ACTIVE, if not active it returns false.
      * If and on only if it begins a transaction it will return true. In other words, if
      * a transaction is already in place it will return false and do nothing.
-     */   
+     */
     public static synchronized boolean begin(int timeout) throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
         if (ut != null) {
@@ -94,25 +83,25 @@ public class TransactionUtil implements Status {
                     } else {
                         Debug.logWarning("[TransactionUtil.begin] active transaction marked for rollback in place, so no transaction begun", module);
                     }
-                    
+
                     throw new GenericTransactionException("The current transaction is marked for rollback, not beginning a new transaction and aborting current operation.");
                 }
-                
+
                 // set the timeout for THIS transaction
                 if (timeout > 0) {
                     ut.setTransactionTimeout(timeout);
-                    Debug.logVerbose("[TransactionUtil.begin] set transaction timeout to : " + timeout + " seconds", module);    
+                    Debug.logVerbose("[TransactionUtil.begin] set transaction timeout to : " + timeout + " seconds", module);
                 }
-                
+
                 // begin the transaction
                 ut.begin();
                 Debug.logVerbose("[TransactionUtil.begin] transaction begun", module);
-                
+
                 // reset the timeout to the default
                 if (timeout > 0) {
                     ut.setTransactionTimeout(0);
                 }
-                
+
                 // reset the transaction stamps, just in case...
                 clearTransactionStamps();
                 // initialize the start stamp
@@ -124,7 +113,7 @@ public class TransactionUtil implements Status {
                 if (debugResources) {
                     DebugXaResource dxa = new DebugXaResource();
                     try {
-                        dxa.enlist();                        
+                        dxa.enlist();
                     } catch (XAException e) {
                         Debug.logError(e, module);
                     }
@@ -167,9 +156,58 @@ public class TransactionUtil implements Status {
             return true;
         }
     }
-    
+
+    private static ThreadLocal suspendedTxStack = new ThreadLocal();
+
+    // BE VERY CARFUL WHERE YOU CALL THIS!!
+    public static int cleanSuspendedTranactions() throws GenericTransactionException {
+        Transaction trans = null;
+        int num = 0;
+        while ((trans = popSuspendedTransaction()) != null) {
+            resume(trans);
+            rollback();
+            num++;
+        }
+        return num;
+    }
+
+    public static boolean suspendedTransactionsHeld() {
+        List tl = (List) suspendedTxStack.get();
+        if (tl != null && tl.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected static void pushSuspendedTransaction(Transaction t) {
+        List tl = (List) suspendedTxStack.get();
+        if (tl == null) {
+            tl = new LinkedList();
+            suspendedTxStack.set(tl);
+        }
+        tl.add(0, t);
+    }
+
+    protected static Transaction popSuspendedTransaction() {
+        List tl = (List) suspendedTxStack.get();
+        if (tl != null && tl.size() > 0) {
+            return (Transaction) tl.remove(0);
+        } else {
+            return null;
+        }
+    }
+
+    protected static void removeSuspendedTransaction(Transaction t) {
+        List tl = (List) suspendedTxStack.get();
+        if (tl != null && tl.size() > 0) {
+            tl.remove(t);
+        }
+    }
+
     private static ThreadLocal transactionBeginStack = new ThreadLocal();
     private static ThreadLocal transactionBeginStackSave = new ThreadLocal();
+
     private static void pushTransactionBeginStackSave(Exception e) {
         List el = (List) transactionBeginStackSave.get();
         if (el == null) {
@@ -186,7 +224,7 @@ public class TransactionUtil implements Status {
             return null;
         }
     }
-    
+
     private static void setTransactionBeginStack() {
         Exception e = new Exception("Tx Stack Placeholder");
         setTransactionBeginStack(e);
@@ -218,7 +256,7 @@ public class TransactionUtil implements Status {
         }
         return (Exception) transactionBeginStack.get();
     }
-    
+
     /** Commits the transaction in the current thread IF transactions are available
      *  AND if beganTransaction is true
      */
@@ -236,7 +274,7 @@ public class TransactionUtil implements Status {
             try {
                 int status = ut.getStatus();
                 Debug.logVerbose("[TransactionUtil.commit] current status : " + getTransactionStateString(status), module);
-                
+
                 if (status != STATUS_NO_TRANSACTION) {
                     // clear out the stamps to keep it clean
                     clearTransactionStamps();
@@ -315,7 +353,7 @@ public class TransactionUtil implements Status {
     }
 
     /** Makes a rollback the only possible outcome of the transaction in the current thread IF transactions are available */
-    public static void setRollbackOnly() throws GenericTransactionException {        
+    public static void setRollbackOnly() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
         if (ut != null) {
             try {
@@ -348,7 +386,9 @@ public class TransactionUtil implements Status {
                 TransactionManager txMgr = TransactionFactory.getTransactionManager();
                 if (txMgr != null ) {
                     pushTransactionBeginStackSave(clearTransactionBeginStack());
-                    return txMgr.suspend();
+                    Transaction trans = txMgr.suspend();
+                    pushSuspendedTransaction(trans);
+                    return trans;
                 } else {
                     return null;
                 }
@@ -360,7 +400,7 @@ public class TransactionUtil implements Status {
             throw new GenericTransactionException("System error, could not suspend transaction", e);
         }
     }
-    
+
     public static void resume(Transaction parentTx) throws GenericTransactionException {
         if (parentTx == null) return;
         try {
@@ -368,6 +408,7 @@ public class TransactionUtil implements Status {
             if (txMgr != null ) {
                 setTransactionBeginStack(popTransactionBeginStackSave());
                 txMgr.resume(parentTx);
+                removeSuspendedTransaction(parentTx);
             }
         } catch (InvalidTransactionException e) {
             throw new GenericTransactionException("System error, could not resume transaction", e);
@@ -375,7 +416,7 @@ public class TransactionUtil implements Status {
             throw new GenericTransactionException("System error, could not resume transaction", e);
         }
     }
-    
+
     /** Sets the timeout of the transaction in the current thread IF transactions are available */
     public static void setTransactionTimeout(int seconds) throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
@@ -485,16 +526,16 @@ public class TransactionUtil implements Status {
             throw new GenericTransactionException("System error, could not register synchronization in transaction even though transactions are available", e);
         }
     }
-    
+
     private static ThreadLocal transactionStartStamp = new ThreadLocal();
     private static ThreadLocal transactionLastNowStamp = new ThreadLocal();
-    
+
     public static Timestamp getTransactionStartStamp() {
         Timestamp curStamp = (Timestamp) transactionStartStamp.get();
         if (curStamp == null) {
             curStamp = UtilDateTime.nowTimestamp();
             transactionStartStamp.set(curStamp);
-            
+
             // we know this is the first time set for this transaction, so make sure the StampClearSync is registered
             try {
                 registerSynchronization(new StampClearSync());
@@ -508,12 +549,12 @@ public class TransactionUtil implements Status {
     public static Timestamp getTransactionUniqueNowStamp() {
         Timestamp lastNowStamp = (Timestamp) transactionLastNowStamp.get();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        
+
         // check for an overlap with the lastNowStamp, or if the lastNowStamp is in the future because of incrementing to make each stamp unique
         if (lastNowStamp != null && (lastNowStamp.equals(nowTimestamp) || lastNowStamp.after(nowTimestamp))) {
             nowTimestamp = new Timestamp(lastNowStamp.getTime() + 1);
         }
-        
+
         transactionLastNowStamp.set(nowTimestamp);
         return nowTimestamp;
     }
@@ -522,13 +563,13 @@ public class TransactionUtil implements Status {
         transactionStartStamp.set(null);
         transactionLastNowStamp.set(null);
     }
-    
+
     public static class StampClearSync implements Synchronization {
         public void afterCompletion(int status) {
             TransactionUtil.clearTransactionStamps();
         }
-        
-        public void beforeCompletion() {            
+
+        public void beforeCompletion() {
         }
     }
 }

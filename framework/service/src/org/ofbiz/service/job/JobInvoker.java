@@ -29,6 +29,8 @@ import java.util.Date;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 
 /**
  * JobInvoker
@@ -68,9 +70,11 @@ public class JobInvoker implements Runnable {
 
         // get a new thread
         this.thread = new Thread(this);
-        this.thread.setDaemon(false);
-        this.name = this.thread.getName();
+        this.name = "invoker-" + this.thread.getName();
 
+        this.thread.setDaemon(false);
+        this.thread.setName(this.name);
+        
         if (Debug.verboseOn()) Debug.logVerbose("JobInoker: Starting Invoker Thread -- " + thread.getName(), module);
         this.thread.start();
     }
@@ -222,6 +226,24 @@ public class JobInvoker implements Runnable {
                 this.statusCode = 0;
                 this.jobStart = 0;
 
+                // sanity check; make sure we don't have any transactions in place
+                try {
+                    // roll back current TX first
+                    if (TransactionUtil.isTransactionInPlace()) {
+                        Debug.logWarning("*** NOTICE: JobInvoker finished w/ a transaction in place! Rolling back.", module);
+                        TransactionUtil.rollback();
+                    }
+
+                    // now resume/rollback any suspended txs
+                    if (TransactionUtil.suspendedTransactionsHeld()) {
+                        int suspended = TransactionUtil.cleanSuspendedTranactions();
+                        Debug.logWarning("Resumed/Rolled Back [" + suspended + "] transactions.", module);
+                    }
+                } catch (GenericTransactionException e) {
+                    Debug.logWarning(e, module);
+                }
+
+                // increment the count
                 count++;
                 if (Debug.verboseOn()) Debug.logVerbose("Invoker: " + thread.getName() + " (" + count + ") total.", module);
             }
