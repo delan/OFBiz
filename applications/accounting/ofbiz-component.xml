@@ -41,11 +41,16 @@
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoGeneralChartOfAccounts.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoOrganizationData.xml"/>
 
-    <service-resource type="model" loader="main" location="servicedef/services.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_fixedasset.xml"/>
+    <!-- General Payment Service Definitions -->
     <service-resource type="model" loader="main" location="servicedef/services_agreement.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_billing.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_fixedasset.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_invoice.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_ledger.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_payment.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_paymentmethod.xml"/>
 
+    <!-- Payment Processor/Gateway Service Definitions -->
     <service-resource type="model" loader="main" location="servicedef/services_clearcommerce.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_cybersource.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_pccharge.xml"/>
