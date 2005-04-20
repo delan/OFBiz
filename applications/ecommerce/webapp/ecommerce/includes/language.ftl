@@ -24,11 +24,11 @@
  *@since      3.0
 -->
 
-<div class="ecom-screenlet">
-    <div class="ecom-screenlet-header">
+<div class="screenlet">
+    <div class="screenlet-header">
         <div class="boxhead">${uiLabelMap.CommonLanguageTitle}</div>
     </div>
-    <div class="ecom-screenlet-body" style="text-align: center;">
+    <div class="screenlet-body" style="text-align: center;">
         <form method="post" name="chooseLanguage" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
           <select name="locale" class="selectBox">
             <#assign initialDisplayName = locale.getDisplayName(locale)>

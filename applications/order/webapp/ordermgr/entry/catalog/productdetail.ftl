@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev: 4829 $
+ *@version    $Rev: 4862 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -318,7 +318,7 @@ ${virtualJavaScript?if_exists}
             <div class="tabletext">&nbsp;</div>
       </#if>
 
-      <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name='addform'  style='margin: 0;'>
+      <form method="post" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name='addform'  style='margin: 0;'>
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?exists && product.isVirtual?upper_case == "Y">
@@ -382,7 +382,7 @@ ${virtualJavaScript?if_exists}
       </form>
     <div class="tabletext">
       <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
-        <hr class="sepbar">
+        <hr class="sepbar"/>
         <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
           <input type="hidden" name="productId" value="${requestParameters.product_id}">
           <input type="hidden" name="product_id" value="${requestParameters.product_id}">
@@ -401,7 +401,7 @@ ${virtualJavaScript?if_exists}
           <#if product.productTypeId == "ASSET_USAGE"><table><tr><td>&nbsp;</td><td class="tabletext" align="right">Start Date (yyyy-mm-dd)</td><td><input type="text" class="inputBox" size="10" name="reservStartStr" ></td><td class="tabletext">Number of&nbsp;days</td><td><input type="text" class="inputBox" size="4" name="reservLength"></td><td>&nbsp;</td><td class="tabletext" align="right">Number of&nbsp;persons</td><td><input type="text" class="inputBox" size="4" name="reservPersons" value="1"></td><td class="tabletext" align="right">Qty&nbsp;</td><td><input type="text" class="inputBox" size="5" name="quantity" value="1"></td></tr></table><#else><input type="text" class="inputBox" size="5" name="quantity" value="1"><input type="hidden" name="reservStartStr" value= ""></#if>
           <a href='javascript:addShoplistSubmit();' class="buttontext">[${uiLabelMap.EcommerceAddToShoppingList}]</a>
         </form>
-      <#else> <br>
+      <#else> <br/>
         ${uiLabelMap.EcommerceYouMust} <a href="<@ofbizUrl>/checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>
         ${uiLabelMap.EcommerceToAddSelectedItemsToShoppingList}.&nbsp;
       </#if>
@@ -432,7 +432,7 @@ ${virtualJavaScript?if_exists}
                 </#if>
                 <td align="center" valign="bottom">
                   <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix?if_exists}${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60"></a>
-                  <br>
+                  <br/>
                   <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="buttontext">${key}</a>
                 </td>
               </#if>
@@ -510,7 +510,7 @@ ${virtualJavaScript?if_exists}
   <#if assocProducts?has_content>
     <div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName}</#if>${afterName?if_exists}</div>
 
-    <div id="productsummary-container">
+    <div class="productsummary-container">
     <#list assocProducts as productAssoc>
         <div class="tabletext">
           <a href='<@ofbizUrl>/${targetRequest}/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo?if_exists}</@ofbizUrl>' class="buttontext">
@@ -553,7 +553,7 @@ ${setRequestAttribute("productValue", productValue)}
 <#if commonFeatureResultIds?has_content>
     <div class="head2">Similar Products That Might Interest You...</div>
 
-    <div id="productsummary-container">
+    <div class="productsummary-container">
         <#list commonFeatureResultIds as commonFeatureResultId>
             ${setRequestAttribute("optProductId", commonFeatureResultId)}
             ${setRequestAttribute("listIndex", commonFeatureResultId_index)}

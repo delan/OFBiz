@@ -28,8 +28,8 @@
 <#assign lastViewedProducts = sessionAttributes.lastViewedProducts?if_exists/>
 <#if lastViewedProducts?has_content>
     <#if (lastViewedProducts?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(lastViewedProducts?size-1)/></#if>
-    <div class="ecom-screenlet">
-        <div class="ecom-screenlet-header">
+    <div class="screenlet">
+        <div class="screenlet-header">
             <div style="float: right;">
                 <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>" class="lightbuttontextsmall">[${uiLabelMap.CommonClear}]</a>
                 <#if (lastViewedProducts?size > maxToShow)>
@@ -38,7 +38,7 @@
             </div>
             <div class="boxhead">${uiLabelMap.EcommerceLastProducts}</div>
         </div>
-        <div class="ecom-screenlet-body">
+        <div class="screenlet-body">
             <#list lastViewedProducts[0..limit] as productId>
                 <div>
                     ${setRequestAttribute("miniProdQuantity", "1")}

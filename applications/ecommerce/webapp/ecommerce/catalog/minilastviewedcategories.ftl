@@ -28,14 +28,14 @@
 <#assign lastViewedCategories = sessionAttributes.lastViewedCategories?if_exists/>
 <#if lastViewedCategories?has_content>
     <#if (lastViewedCategories?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(lastViewedCategories?size-1)/></#if>
-    <div class="ecom-screenlet">
-        <div class="ecom-screenlet-header">
+    <div class="screenlet">
+        <div class="screenlet-header">
             <div style="float: right;">
                 <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>" class="lightbuttontextsmall">[${uiLabelMap.CommonClear}]</a>
             </div>
             <div class="boxhead">${uiLabelMap.EcommerceLastCategories}</div>
         </div>
-        <div class="ecom-screenlet-body">
+        <div class="screenlet-body">
             <#list lastViewedCategories[0..limit] as categoryId>
                 <#assign category = delegator.findByPrimaryKeyCache("ProductCategory", Static["org.ofbiz.base.util.UtilMisc"].toMap("productCategoryId", categoryId))?if_exists>
                 <#if category?has_content>

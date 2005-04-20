@@ -37,11 +37,11 @@
   </#if>
 </#if>
 
-<div class="ecom-screenlet">
-    <div class="ecom-screenlet-header">
+<div class="screenlet">
+    <div class="screenlet-header">
         <div class="boxhead">${uiLabelMap.Factoids}</div>
     </div>
-    <div class="ecom-screenlet-body">
+    <div class="screenlet-body">
         <#assign count_1=0/>
         <@limitedSubContent subContentId=factoidRootId viewIndex=0 viewSize=9999 orderBy="contentName" contentAssocTypeId="SUBSITE" limitSize="2">
             <div class="browsecategorytext" style="margin-left: 10px">

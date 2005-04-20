@@ -28,8 +28,8 @@
 <#assign searchOptionsHistoryList = Static["org.ofbiz.product.product.ProductSearchSession"].getSearchOptionsHistoryList(session)?if_exists/>
 <#if searchOptionsHistoryList?has_content>
     <#if (searchOptionsHistoryList?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(searchOptionsHistoryList?size-1)/></#if>
-    <div class="ecom-screenlet">
-        <div class="ecom-screenlet-header">
+    <div class="screenlet">
+        <div class="screenlet-header">
             <div style="float: right;">
                 <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>" class="lightbuttontextsmall">[${uiLabelMap.CommonClear}]</a>
                 <#if (searchOptionsHistoryList?size > maxToShow)>
@@ -38,7 +38,7 @@
             </div>
             <div class="boxhead">${uiLabelMap.EcommerceLastSearches}...</div>
         </div>
-        <div class="ecom-screenlet-body">
+        <div class="screenlet-body">
             <#list searchOptionsHistoryList[0..limit] as searchOptions>
             <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
                     <div class="tabletext">

@@ -27,11 +27,11 @@
 
 <#assign associatedProducts = Static["org.ofbiz.order.shoppingcart.product.ProductDisplayWorker"].getRandomCartProductAssoc(request, true)?if_exists>
 <#if associatedProducts?has_content>
-<div class="ecom-screenlet">
-    <div class="ecom-screenlet-header">
+<div class="screenlet">
+    <div class="screenlet-header">
         <div class='boxhead'><b>${uiLabelMap.EcommerceYouMightLike}...</b></div>
     </div>
-    <div class="ecom-screenlet-body">
+    <div class="screenlet-body">
         <#-- random complementary products -->
         <#list associatedProducts as miniProduct>
             <div>

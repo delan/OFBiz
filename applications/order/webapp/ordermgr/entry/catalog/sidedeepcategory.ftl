@@ -63,11 +63,11 @@
 </#macro>
 
 <#if topLevelList?has_content>
-<div class="ecom-screenlet">
-    <div class="ecom-screenlet-header">
+<div class="screenlet">
+    <div class="screenlet-header">
         <div class="boxhead">${uiLabelMap.ProductBrowseCategories}</div>
     </div>
-    <div class="ecom-screenlet-body">
+    <div class="screenlet-body">
         <div style='margin-left: 10px;'>
           <#list topLevelList as category>
             <@categoryList parentCategory=category category=category/>
