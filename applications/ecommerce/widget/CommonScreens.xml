@@ -51,7 +51,7 @@
                         <decorator-section-include name="body"/>
                     </container>
                     
-                    <container style="ecom-endcolumns"/>
+                    <container style="endcolumns"/>
                 </container>
                 
                 <!-- render footer -->

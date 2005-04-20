@@ -25,11 +25,11 @@
  *@since      2.1
 -->
 <#if reorderProducts?has_content>
-<div class="ecom-screenlet">
-    <div class="ecom-screenlet-header">
+<div class="screenlet">
+    <div class="screenlet-header">
         <div class="boxhead">${uiLabelMap.ProductQuickReorder}...</div>
     </div>
-    <div class="ecom-screenlet-body">
+    <div class="screenlet-body">
         <#list reorderProducts as miniProduct>
           <div>
               ${setRequestAttribute("miniProdQuantity", reorderQuantities.get(miniProduct.productId))}

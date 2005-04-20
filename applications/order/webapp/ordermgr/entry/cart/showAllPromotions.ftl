@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -19,25 +19,26 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev$
- *@since      3.1
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@version    $Rev: 4862 $
+ *@since      3.0
 -->
 
-<#assign groupName = page.randomSurveyGroup?if_exists>
-<#if groupName?has_content>
-  <#assign randomSurvey = Static["org.ofbiz.product.store.ProductStoreWorker"].getRandomSurveyWrapper(request, "testSurveyGroup")?if_exists>
-</#if>
-
-<#if randomSurvey?has_content>
 <div class="screenlet">
     <div class="screenlet-header">
-        <div class="boxhead">${randomSurvey.getSurveyName()?if_exists}</div>
+        <div class="boxhead">&nbsp;${uiLabelMap.EcommerceSpecialOffers}</div>
     </div>
     <div class="screenlet-body">
-        <form method="post" action="<@ofbizUrl>/minipoll<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" style="margin: 0;">
-          ${randomSurvey.render().toString()}
-        </form>
+        <#-- show promotions text -->
+        <#list productPromosAllShowable as productPromo>
+            <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a> ${productPromo.promoText}</div>
+            <#if productPromo_has_next>
+                <hr class="sepbar"/>
+            </#if>
+        </#list>
     </div>
 </div>
+
+<#if (shoppingCartSize > 0)>
+  ${screens.render(promoUseDetailsInlineScreen)}
 </#if>

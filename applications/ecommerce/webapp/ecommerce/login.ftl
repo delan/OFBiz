@@ -37,11 +37,11 @@
 
 <div>
   <div style="float: left; width: 49%; margin-right: 5px; text-align: center;">
-    <div class="ecom-screenlet">
-        <div class="ecom-screenlet-header">
+    <div class="screenlet">
+        <div class="screenlet-header">
             <div class="boxhead">${uiLabelMap.CommonRegistred}</div>
         </div>
-        <div class="ecom-screenlet-body" style="text-align: center;">
+        <div class="screenlet-body" style="text-align: center;">
           <form method="post" action="<@ofbizUrl>/login${previousParams}</@ofbizUrl>" name="loginform" style="margin: 0;">
               <div class="tabletext">
                   ${uiLabelMap.CommonUsername}:&nbsp;
@@ -63,11 +63,11 @@
         </div>
     </div>
 
-    <div class="ecom-screenlet">
-        <div class="ecom-screenlet-header">
+    <div class="screenlet">
+        <div class="screenlet-header">
             <div class="boxhead">${uiLabelMap.CommonForgotYourPassword}?</div>
         </div>
-        <div class="ecom-screenlet-body" style="text-align: center;">
+        <div class="screenlet-body" style="text-align: center;">
           <form method="post" action="<@ofbizUrl>/forgotpassword${previousParams}</@ofbizUrl>" name="forgotpassword" style="margin: 0;">
             <span class="tabletext">${uiLabelMap.CommonUsername}:&nbsp;</span><input type="text" size="20" class="inputBox" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>">
             <div><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonGetPasswordHint}" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" class="smallSubmit" value="${uiLabelMap.CommonEmailPassword}" name="EMAIL_PASSWORD"></div>
@@ -78,11 +78,11 @@
   </div>
   <div style="float: right; width: 49%; margin-left: 5px; text-align: center;">
 
-    <div class="ecom-screenlet">
-        <div class="ecom-screenlet-header">
+    <div class="screenlet">
+        <div class="screenlet-header">
             <div class="boxhead">${uiLabelMap.CommonNewUser}</div>
         </div>
-        <div class="ecom-screenlet-body" style="text-align: center;">
+        <div class="screenlet-body" style="text-align: center;">
           <form method="post" action="<@ofbizUrl>/newcustomer${previousParams}</@ofbizUrl>" style="margin: 0;">
             <div class="tabletext">${uiLabelMap.CommonMayCreateNewAccountHere}:</div>
             <div><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonMayCreate}"></div>
@@ -91,11 +91,11 @@
     </div>
 
     <#if (shoppingCartSize > 0)>
-    <div class="ecom-screenlet">
-        <div class="ecom-screenlet-header">
+    <div class="screenlet">
+        <div class="screenlet-header">
             <div class="boxhead">${uiLabelMap.CommonCheckoutAnonymous}</div>
         </div>
-        <div class="ecom-screenlet-body">
+        <div class="screenlet-body">
           <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" style="margin: 0;">
             <div class="tabletext" align=center>${uiLabelMap.CommonCheckoutAnonymousMsg}:</div>
             <div align="center"><input type="submit" class="smallSubmit" value="Checkout"></div>
@@ -104,7 +104,7 @@
     </div>
     </#if>
   </div>
-  <div class="ecom-endcolumns">&nbsp;</div>
+  <div class="endcolumns">&nbsp;</div>
 <div>
 
 <script language="JavaScript">

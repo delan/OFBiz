@@ -809,3 +809,82 @@ font-size: 10px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 color: red;
 }
+
+/* Form layout styles to simulate a table-style layout */
+.form-row {
+clear: both;
+padding-top: 2px;
+}
+.form-label {
+float: left;
+width: 180px;
+text-align: right;
+padding-top: 5px;
+}
+.form-field {
+float: left;
+margin-left: 10px;
+text-align: left;
+} 
+
+/* ===== Product Summary Styles ===== */
+.product-prevnext {
+text-align: right;
+}
+
+.productsummary-container {
+margin-top: 5px;
+margin-bottom: 5px;
+border-top: #999 solid 1px;
+}
+
+.productsummary {
+position: relative;
+padding: 5px;
+border-bottom: #999 solid 1px;
+/* using min-height as an alternative to clear: both; because that, in some browsers, will clear the top-level columns and not just in this div (Mozilla based, namely) */
+min-height: 60px;
+overflow: visible;
+}
+
+.productsummary .smallimage {
+float: left;
+/* position: absolute; top: 5px; left: 5px; */
+margin: 0px 5px 5px 0px;
+}
+.productsummary .smallimage img {
+border: #CCC solid 1px;
+width: 50px;
+}
+
+.productsummary .productbuy {
+float: right;
+width: 130px;
+margin: 5px;
+text-align: right;
+}
+
+.productsummary .productinfo {
+/* margin-left: 60px; */
+text-align: left;
+}
+
+/* ===== Product Detail Styles ===== */
+#productdetail #long-description {
+margin-top: 10px;
+padding-top: 5px;
+border-top: #999 solid 1px;
+}
+
+#productdetail #reviews {
+margin-top: 10px;
+padding-top: 5px;
+border-top: #999 solid 1px;
+}
+
+#productdetail #associated-products {
+margin-top: 10px;
+padding-top: 5px;
+border-top: #999 solid 1px;
+}
+

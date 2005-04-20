@@ -26,11 +26,11 @@
 
 <#-- Only show if there is more than 1 (one) catalog, no sense selecting when there is only one option... -->
 <#if (catalogCol?size > 1)>
-<div class="ecom-screenlet">
-    <div class="ecom-screenlet-header">
+<div class="screenlet">
+    <div class="screenlet-header">
         <div class="boxhead">${uiLabelMap.ProductChooseCatalog}</div>
     </div>
-    <div class="ecom-screenlet-body" style="text-align: center;">
+    <div class="screenlet-body" style="text-align: center;">
         <form name="choosecatalogform" method="POST" action="<@ofbizUrl>choosecatalog</@ofbizUrl>" style='margin: 0;'>
           <select name='CURRENT_CATALOG_ID' class='selectBox'>
             <option value='${currentCatalogId}'>${currentCatalogName}</OPTION>

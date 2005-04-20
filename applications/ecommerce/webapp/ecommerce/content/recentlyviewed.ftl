@@ -26,11 +26,11 @@
 -->
 
 <#if mrvList?has_content>
-    <div class="ecom-screenlet">
-        <div class="ecom-screenlet-header">
+    <div class="screenlet">
+        <div class="screenlet-header">
             <div class="boxhead">${uiLabelMap.EcommerceLastContent}</div>
         </div>
-        <div class="ecom-screenlet-body">
+        <div class="screenlet-body">
             <#list mrvList as mrvArr>
                 <div class="browsecategorytext" style="margin-left: 10px">
                   -&nbsp;<a href="<@ofbizUrl>/viewcontent?contentId=${mrvArr[0]}</@ofbizUrl>" class="browsecategorybutton">${mrvArr[1]}</a>

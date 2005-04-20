@@ -106,8 +106,8 @@ function setAlternateGwp(field) {
 <#assign fixedAssetExist = shoppingCart.containAnyWorkEffortCartItems()/> <#-- change display format when rental items exist in the shoppingcart -->
 
 
-<div class="ecom-screenlet">
-    <div class="ecom-screenlet-header">
+<div class="screenlet">
+    <div class="screenlet-header">
         <div style="float: right;">
             <#if ((sessionAttributes.lastViewedProducts)?has_content && sessionAttributes.lastViewedProducts?size > 0)>
               <#assign continueLink = "/product?product_id=" + sessionAttributes.lastViewedProducts.get(0)>
@@ -119,7 +119,7 @@ function setAlternateGwp(field) {
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.CommonQuickAdd}</div>
     </div>
-    <div class="ecom-screenlet-body">
+    <div class="screenlet-body">
         <div class="tabletext">
             <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="quickaddform" style="margin: 0;">
                 Product&nbsp;Number: <input type="text" class="inputBox" name="add_product_id" value="${requestParameters.add_product_id?if_exists}"/>
@@ -143,8 +143,8 @@ function setAlternateGwp(field) {
   document.quickaddform.add_product_id.focus();
 </script>
 
-<div class="ecom-screenlet">
-    <div class="ecom-screenlet-header">
+<div class="screenlet">
+    <div class="screenlet-header">
         <div style="float: right;">
             <div class="lightbuttontextdisabled">
               <#--<a href="<@ofbizUrl>main</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.EcommerceContinueShopping}]</a>-->
@@ -162,7 +162,7 @@ function setAlternateGwp(field) {
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.EcommerceShoppingCart}</div>
     </div>
-    <div class="ecom-screenlet-body">
+    <div class="screenlet-body">
 
   <#if (shoppingCartSize > 0)>
     <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
@@ -416,11 +416,11 @@ function setAlternateGwp(field) {
     </div>
 </div>
 
-<div class="ecom-screenlet">
-    <div class="ecom-screenlet-header">
+<div class="screenlet">
+    <div class="screenlet-header">
         <div class="boxhead">&nbsp;Promotion/Coupon Codes</div>
     </div>
-    <div class="ecom-screenlet-body">
+    <div class="screenlet-body">
         <div class="tabletext">
             <form method="post" action="<@ofbizUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform" style="margin: 0;">
                 <input type="text" class="inputBox" size="15" name="productPromoCodeId" value="">
@@ -438,11 +438,11 @@ function setAlternateGwp(field) {
 </div>
 
 <#if showPromoText?exists && showPromoText>
-<div class="ecom-screenlet">
-    <div class="ecom-screenlet-header">
+<div class="screenlet">
+    <div class="screenlet-header">
         <div class="boxhead">&nbsp;${uiLabelMap.EcommerceSpecialOffers}</div>
     </div>
-    <div class="ecom-screenlet-body">
+    <div class="screenlet-body">
         <#-- show promotions text -->
         <#list productPromos as productPromo>
             <div class="tabletext"><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a> ${productPromo.promoText?if_exists}</div>
@@ -457,11 +457,11 @@ function setAlternateGwp(field) {
 </#if>
 
 <#if associatedProducts?has_content>
-<div class="ecom-screenlet">
-    <div class="ecom-screenlet-header">
+<div class="screenlet">
+    <div class="screenlet-header">
         <div class="boxhead">&nbsp;${uiLabelMap.EcommerceYouMightAlsoIntrested}:</div>
     </div>
-    <div class="ecom-screenlet-body">
+    <div class="screenlet-body">
         <#-- random complementary products -->
         <#list associatedProducts as assocProduct>
             <div>

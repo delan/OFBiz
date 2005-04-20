@@ -59,4 +59,4 @@
     -> ${productContentWrapper.get("PRODUCT_NAME")?if_exists}
   </#if>
 </div>
-<br>
+<br/>

@@ -20,15 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Rev$
+ *@version    $Rev: 4776 $
  *@since      3.0
 -->
 
-<div class="ecom-screenlet">
-    <div class="ecom-screenlet-header">
+<div class="screenlet">
+    <div class="screenlet-header">
         <div class="boxhead">&nbsp;${uiLabelMap.EcommercePromotionInformation}:</div>
     </div>
-    <div class="ecom-screenlet-body">
+    <div class="screenlet-body">
         <div style="float: left; width: 40%;">
             <div class="tableheadtext">${uiLabelMap.EcommercePromotionsApplied}:</div>
             <#list shoppingCart.getProductPromoUseInfoIter() as productPromoUseInfo>
@@ -75,7 +75,7 @@
                 </#if>
             </#list>
         </div>
-        <div style="clear: both;"/>
+        <div class="endcolumns"><span> </span></div>
     </div>
 </div>
                 

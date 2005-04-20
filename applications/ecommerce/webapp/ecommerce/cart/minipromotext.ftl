@@ -25,11 +25,11 @@
 -->
 
 <#if showPromoText>
-<div class="ecom-screenlet">
-    <div class="ecom-screenlet-header">
+<div class="screenlet">
+    <div class="screenlet-header">
         <div class="boxhead">${uiLabelMap.EcommerceSpecialOffers}</div>
     </div>
-    <div class="ecom-screenlet-body">
+    <div class="screenlet-body">
         <#-- show promotions text -->
         <#list productPromos as productPromo>
             <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[Details]</a> ${productPromo.promoText}</div>

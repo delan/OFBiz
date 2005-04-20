@@ -232,25 +232,25 @@ voice-family: inherit;
 margin-right: 211px;
 }
 
-DIV.ecom-endcolumns {
+DIV.endcolumns {
   clear: both;
   font-size: 4pt;
 }  
 
 /* ====== eCommerce "Screenlet" Styles ====== */
-DIV.ecom-screenlet {
+#ecom-mainarea .screenlet {
 background-color: #FFFFFF;
 border: 1px solid #999999;
 margin-bottom: 10px;
 }
-DIV.ecom-screenlet-header {
+#ecom-mainarea .screenlet-header {
 background-color: #000099;
 padding-top: 1px;
 padding-bottom: 1px;
 padding-right: 4px;
 padding-left: 4px;
 }
-DIV.ecom-screenlet-body {
+#ecom-mainarea .screenlet-body {
 background-color: #FFFFFF;
 padding: 4px;
 }
@@ -283,24 +283,24 @@ color: red;
 }
 
 /* Form layout styles to simulate a table-style layout */
-div.ecom-form-row {
+#ecom-mainarea .form-row {
 clear: both;
 padding-top: 2px;
 }
-div.ecom-form-label {
+#ecom-mainarea .form-label {
 float: left;
 width: 180px;
 text-align: right;
 padding-top: 5px;
 }
-div.ecom-form-field {
+#ecom-mainarea .form-field {
 float: left;
 margin-left: 10px;
 text-align: left;
 } 
 
 /* ===== Text/Label Styles ===== */
-.tabletext, div.ecom-form-label, div.ecom-form-field {
+.tabletext, div.form-label, div.form-field {
 font-size: 10px;
 text-decoration: none;
 font-family: Verdana, Arial, Helvetica, sans-serif;
