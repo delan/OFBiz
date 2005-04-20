@@ -1,17 +1,17 @@
-.calendarempty {vertical-align: top; background-color: #FFFFFF; padding: 4px;}
-.calendarentry {vertical-align: top; background-color: #EEF3FB; padding: 4px; }
-.monthcalendarentry {vertical-align: top; background-color: #EEF3FB; padding: 4px; border-top: solid 1px #B6C7E5; }
+.calendarempty {vertical-align: top; background: #FFFFFF; padding: 4px;}
+.calendarentry {vertical-align: top; background: #EEF3FB; padding: 4px; }
+.monthcalendarentry {vertical-align: top; background: #EEF3FB; padding: 4px; border-top: solid 1px #B6C7E5; }
 .calendar {
-	background-color: #1E3C66;
+	background: #1E3C66;
 	
 }
 .bg {
-	background-color: #FFFFFF;
+	background: #FFFFFF;
 }
 
 .monthweekheader {
 	padding: 4px;
-	background-color: #AFC8D4;
+	background: #AFC8D4;
 }
 
 .monthweeknumber {
@@ -72,7 +72,7 @@ A.previousnext:hover {
 	font-size: 11px;
 	font-weight: bold;
 	color: #FFFFFF;
-	background-color: #1E3C66;
+	background: #1E3C66;
 	padding: 4px;
 }
 
@@ -80,7 +80,7 @@ A.previousnext:hover {
 	border-left: solid 1px #1E3C66;
 	border-right: solid 1px #1E3C66;
 	padding: 4px;
-	background-color: #AFC8D4;
+	background: #AFC8D4;
 }
 
 .monthheadertext {

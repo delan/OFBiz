@@ -1,6 +1,6 @@
 /* border table for feed news */
 .fd_bordertable {
-	background-color: #FFFFFF;
+	background: #FFFFFF;
 	border-style: solid; border-width: 1px; border-color: #CCCCCC;
 	padding: 0;
 	width: 100%;

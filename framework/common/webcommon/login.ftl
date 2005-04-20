@@ -65,7 +65,7 @@
                         <td align="right">
                           <span class="tabletext">${uiLabelMap.CommonUsername}&nbsp;</span>
                         </td>
-                        <td>
+                        <td align="left">
                           <input type="text" class="inputBox" name="USERNAME" value="${username}" size="20">
                         </td>
                       </tr>

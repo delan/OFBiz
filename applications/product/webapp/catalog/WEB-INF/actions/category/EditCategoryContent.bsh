@@ -28,12 +28,7 @@
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.widget.html.*;
-
-nowTimestamp = UtilDateTime.nowTimestamp();
-context.put("nowTimestamp", nowTimestamp);
-
-String nowTimestampString = nowTimestamp.toString();
-context.put("nowTimestampString", nowTimestampString);
+import org.ofbiz.entity.GenericValue;
 
 if (productCategory != null) {
     productCategoryType = productCategory.getRelatedOne("ProductCategoryType");

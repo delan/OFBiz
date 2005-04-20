@@ -43,7 +43,7 @@
               <option value='${catalogId}'>${thisCatalogName}</option>
             </#list>
           </select>
-          <div><a href="javascript:document.choosecatalogform.submit()" class="buttontext">${uiLabelMap.Commonchange}</a></div>
+          <div><a href="javascript:document.choosecatalogform.submit()" class="buttontext">${uiLabelMap.CommonChange}</a></div>
         </form>
     </div>
 </div>
