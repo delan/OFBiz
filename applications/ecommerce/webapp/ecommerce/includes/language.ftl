@@ -45,7 +45,7 @@
               <option value="${availableLocale.toString()}">${displayName}</option>
             </#list>
           </select>
-          <div><a href="javascript:document.chooseLanguage.submit()" class="buttontext">${uiLabelMap.Commonchange}</a></div>
+          <div><a href="javascript:document.chooseLanguage.submit()" class="buttontext">${uiLabelMap.CommonChange}</a></div>
         </form>
     </div>
 </div>

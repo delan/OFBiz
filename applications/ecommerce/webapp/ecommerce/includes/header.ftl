@@ -96,7 +96,7 @@
         <#if sessionAttributes.overrideLogo?exists>
             <img src="${sessionAttributes.overrideLogo}" alt="Logo"/>
         <#elseif catalogHeaderLogo?exists>
-            <imh src="${catalogHeaderLogo}" alt="Logo"/>
+            <img src="${catalogHeaderLogo}" alt="Logo"/>
         <#elseif (productStore.headerLogo)?has_content>
             <img src="<@ofbizContentUrl>${productStore.headerLogo}</@ofbizContentUrl>" alt="Logo"/>
         </#if>

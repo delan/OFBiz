@@ -4,7 +4,7 @@
 
 /* ===== General Styles ===== */
 BODY {
-background-color: #D4D0C8;
+background: #D4D0C8;
 margin-top: 0px;
 margin-right: 0px;
 margin-bottom: 0px;
@@ -19,6 +19,12 @@ UL {
 margin-top: 0; 
 margin-bottom: 0;
 }
+
+.endcolumns {
+clear: both;
+height: 0px;
+visibility: hidden;
+}  
 
 .head1 {
 font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -56,7 +62,7 @@ DIV.graybox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
-background-color: #CCCCCC;
+background: #CCCCCC;
 border: 1px solid #000000;
 text-align: center;
 margin: 2 auto;
@@ -94,12 +100,12 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .headerboxoutside {
-background-color: #FFFFFF;
+background: #FFFFFF;
 padding: 0;
 }
 
 .headerboxtop {
-background-color: #FFFFFF;
+background: #FFFFFF;
 padding: 4;
 border-color: #FFFFFF;
 border-style: solid;
@@ -107,7 +113,7 @@ border-width: 1px 1px 0px 1px;
 }
 
 .headerboxbottom {
-background-color: #FFFFFF;
+background: #FFFFFF;
 padding: 0;
 border-color: #FFFFFF;
 border-style: solid;
@@ -142,7 +148,7 @@ color: red;
 }
 
 .boxoutside {
-background-color: #FFFFFF;
+background: #FFFFFF;
 padding: 0px;
 border-color: #999999;
 border-style: solid;
@@ -150,7 +156,7 @@ border-width: 1px 1px 1px 1px;
 }
 
 .boxtop {
-background-color: #000099;
+background: #000099;
 padding-top: 1px;
 padding-bottom: 1px;
 padding-right: 4px;
@@ -161,7 +167,7 @@ border-width: 0px 0px 0px 0px;
 }
 
 .boxbottom {
-background-color: #FFFFFF;
+background: #FFFFFF;
 padding: 4px;
 border-color: #999999;
 border-style: solid;
@@ -170,13 +176,13 @@ border-width: 0px 0px 0px 0px;
 
 .button {
 border-style: outset; border-color: #9999CC; border-width: 2px;
-background-color: #dddddd;
+background: #dddddd;
 padding-right: 5px; padding-left: 5px;
 }
 
 /* ===== Tab/Button Bar Styles ===== */
 .tabContainer {
-background-color: #FFFFFF;
+background: #FFFFFF;
 padding-top: 4px;
 margin-bottom: 10px;
 }
@@ -187,7 +193,7 @@ font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: #000099;
-background-color: #D4D0C8;
+background: #D4D0C8;
 padding-right: 5px;
 padding-left: 5px;
 padding-top: 1px;
@@ -197,7 +203,7 @@ border: solid #000099 1px;
 
 A.tabButton:hover {
 color: #FFFFFF;
-background-color: #000099;
+background: #000099;
 border: solid #000099 1px;
 }
 
@@ -207,7 +213,7 @@ font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: #FFFFFF;
-background-color: #000099;
+background: #000099;
 padding-right: 5px;
 padding-left: 5px;
 padding-top: 1px;
@@ -460,14 +466,14 @@ font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: #000099;
-background-color: #B4B0AA;
+background: #B4B0AA;
 border-right: solid white 1px;
 padding-right: 10px;
 padding-left: 10px;
 }
 
 .headerButtonLeft:hover {
-background-color: #D4D0C8;
+background: #D4D0C8;
 color: black;
 text-decoration: underline;
 }
@@ -478,7 +484,7 @@ font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: #000099;
-background-color: #D4D0C8;
+background: #D4D0C8;
 border-right: solid white 1px;
 padding-right: 10px;
 padding-left: 10px;
@@ -490,7 +496,7 @@ font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: #000099;
-background-color: #B4B0AA;
+background: #B4B0AA;
 border-left: solid white 1px;
 padding-right: 10px;
 padding-left: 10px;
@@ -498,7 +504,7 @@ text-align: right;
 }
 
 .headerButtonRight:hover {
-background-color: #D4D0C8;
+background: #D4D0C8;
 color: black;
 text-decoration: underline;
 }
@@ -509,14 +515,14 @@ font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: #000099;
-background-color: #D4D0C8;
+background: #D4D0C8;
 border-left: solid white 1px;
 padding-right: 10px;
 padding-left: 10px;
 }
 
 .headerCenter {
-background-color: #B4B0AA;
+background: #B4B0AA;
 padding-right: 10px;
 padding-left: 10px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -532,19 +538,19 @@ font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: #000099;
-background-color: #D4D0C8;
+background: #D4D0C8;
 padding-right: 10px;
 padding-left: 10px;
 }
 
 A.headerCenter:hover {
-background-color: #D4D0C8;
+background: #D4D0C8;
 color: black;
 text-decoration: underline;
 }
 
 .headerCenterSelected {
-background-color: #D4D0C8;
+background: #D4D0C8;
 padding-right: 10px;
 padding-left: 10px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -620,7 +626,7 @@ HR.sepbar {
 font-size: xx-small;
 width: 100%;
 height: 1px;
-background-color: #999999;
+background: #999999;
 border-width: 0px;
 }
 
@@ -642,7 +648,7 @@ color: #000099;
 
 .ontab {
 font-size: 8pt;
-background-color: black;
+background: black;
 padding: 2px;
 border-style: inset;
 border-width: 3px;
@@ -659,7 +665,7 @@ padding: 2px;
 
 .offtab {
 font-size: 10px;
-background-color: #CCCCCC;
+background: #CCCCCC;
 padding: 2px;
 border-style: outset;
 border-width: 3px;
@@ -684,7 +690,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-weight: bold;
 color: #FFFFFF;
 width: 100%;
-background-color: black;
+background: black;
 padding: 2px;
 }
 
@@ -698,68 +704,68 @@ border-left-width: thin
 }
 
 .viewOneTR1 {
-background-color: #B4B0AA;
+background: #B4B0AA;
 font-size: 10px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .viewOneTR2 {
-background-color: #D4D0C8;
+background: #D4D0C8;
 font-size: 10px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .viewManyHeaderTR {
-background-color: #99CCFF;
+background: #99CCFF;
 font-size: 10px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .viewManyTR1 {
-background-color: #D4D0C8;
+background: #D4D0C8;
 font-size: 10px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .viewManyTR2 {
-background-color: #FFFFFF;
+background: #FFFFFF;
 font-size: 10px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .editInputBox {
-background-color: #FFFFFF;
+background: #FFFFFF;
 font-size: 8pt;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .inputBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-background-color: #FFFFFF;
+background: #FFFFFF;
 font-size: 8pt;
 }
 
 .selectBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-background-color: #FFFFFF;
+background: #FFFFFF;
 font-size: 8pt;
 }
 
 .textAreaBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-background-color: #FFFFFF;
+background: #FFFFFF;
 font-size: 8pt;
 }
 
 .radioButton {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-background-color: #FFFFFF;
+background: #FFFFFF;
 font-size: 8pt;
 }
 
 .checkBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-background-color: #FFFFFF;
+background: #FFFFFF;
 font-size: 8pt;
 }
 
@@ -769,7 +775,7 @@ font-size: 8pt;
 font-weight: bold;
 text-decoration: none;
 color: #000099;
-background-color: white;
+background: white;
 border: #999999 solid 1px;
 }
 
@@ -779,7 +785,7 @@ font-size: 10pt;
 font-weight: bold;
 text-decoration: none;
 color: #000099;
-background-color: white;
+background: white;
 border: #999999 solid 1px;
 }
 

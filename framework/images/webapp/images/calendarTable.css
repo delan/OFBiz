@@ -5,25 +5,25 @@
 	font-weight: bold;
 	color: #FFFFFF;
 	padding: 4px;
-	background-color: #FFFFFF;	
+	background: #FFFFFF;	
 	border: 1;
 	vertical-align: top;
 }
 
 .calendarHeader {
-	background-color: #1E3C66;	
+	background: #1E3C66;	
     	outline-color: #1E3C66;
     	border: 0;	
 }
 
 .calendarDayNumber {
 	color: #000000;
-	background-color: #FFFFFF;	
+	background: #FFFFFF;	
     }
 
 .calendarWeek {
 	padding: 4px;
-	background-color: #AFC8D4;
+	background: #AFC8D4;
 	}
 	
 .calendarContent    {

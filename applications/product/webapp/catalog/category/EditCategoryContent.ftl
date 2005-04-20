@@ -28,7 +28,7 @@
 -->
 <SCRIPT language="JavaScript">
 function insertNowTimestamp(field) {
-  eval('document.categoryForm.' + field + '.value="${nowTimestampString}";');
+  eval('document.categoryForm.' + field + '.value="${nowTimestamp?string}";');
 };
 
 </SCRIPT>

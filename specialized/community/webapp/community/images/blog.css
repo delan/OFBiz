@@ -39,7 +39,7 @@
         }
 .editwrapper { 
         color:black; 
-        background-color:#ffffff; 
+        background:#ffffff; 
         font-size:16; 
         text-decoration:none;
         margin-left:12px;
@@ -49,7 +49,7 @@
         }
 .contentwrapper { 
         color:black; 
-        background-color:#ffffff; 
+        background:#ffffff; 
         font-size:16; 
         text-decoration:none;
         margin-left:12px;
@@ -57,7 +57,7 @@
         }
 .tocwrapper { 
         color:black; 
-        background-color:#ffffff; 
+        background:#ffffff; 
         font-size:16; 
         text-decoration:none;
         margin-left:12px;
@@ -65,7 +65,7 @@
         }
 .menuwrapper { 
         color:#DDDDDD; 
-        background-color:#ffffff; 
+        background:#ffffff; 
         font-size:10; 
         text-decoration:none;
         margin-left:12px;
@@ -75,7 +75,7 @@
         }
 .menuButton {
         color:black;
-        background-color:#ffffff; 
+        background:#ffffff; 
         font-size:10; 
         text-decoration:none;
         border-width:1px;
@@ -115,7 +115,7 @@
 
 .contenttext { 
         color:black; 
-        background-color:#ffffff; 
+        background:#ffffff; 
         font-size:14; 
         text-decoration:none;
         margin-left:12px;
@@ -124,7 +124,7 @@
         }
 
 /*
-.expandcollapse { color:black; background-color:lightblue; font-size:16; text-decoration:none;
+.expandcollapse { color:black; background:lightblue; font-size:16; text-decoration:none;
        border-width:2px; border-color:black; border-style:solid; 
         }
 */
@@ -223,7 +223,7 @@
 		
 .blogtitle{ 
         color: black;
-        background-color:#D4D0C8;
+        background:#D4D0C8;
         font-size:22; 
 		font-weight:bold;
 		text-align:left;
@@ -235,7 +235,7 @@
         
 .blogtitleboxed { 
         color: black;
-        background-color:#D4D0C8;
+        background:#D4D0C8;
         font-size:22; 
         text-decoration:none;
         border:1px solid black;
@@ -246,14 +246,14 @@
         
 .bloghr {
         color: black;
-        background-color:#D4D0C8;
+        background:#D4D0C8;
         padding:4px;
         height:22pt;
         }        
         
 .blogwrapper {
 		position: relative;
-        background-color:#eeeeee;
+        background:#eeeeee;
         padding:4px;
         margin-top:6px;
 		font-size:12pt;
@@ -263,7 +263,7 @@
         }        
 
 .blogcontentwrapper {
-        background-color:#f8f8f8;
+        background:#f8f8f8;
         border:1px solid #000000;
         padding:4px;
         margin-top:6px;
@@ -295,7 +295,7 @@
 		
 .responseTreeWrapper { 
         color:black; 
-        background-color:#ffffff; 
+        background:#ffffff; 
         font-size:12pt; 
 		font-weight:medium;
 		font-family:verdana, arial, sans-serif;
@@ -308,12 +308,12 @@
         }
         
 .responseSelected {
-        background-color:#BBBBBB; 
+        background:#BBBBBB; 
         border:1px dashed black;
         }        
 .forummenuwrapper { 
         color:#8B008B; 
-        background-color:#D4D0C8;
+        background:#D4D0C8;
         font-size:10; 
         text-decoration:none;
         margin-left:12px;
@@ -343,7 +343,7 @@
 		
 .forumtitle{ 
         color:#8B008B; 
-        background-color:#D4D0C8;
+        background:#D4D0C8;
         font-size:22; 
 		font-weight:bold;
 		text-align:left;
@@ -355,7 +355,7 @@
         
 .forumtitleboxed { 
         color:#8B008B; 
-        background-color:#D4D0C8;
+        background:#D4D0C8;
         font-size:22; 
         text-decoration:none;
         border:1px solid black;
@@ -366,14 +366,14 @@
         
 .forumhr {
         color:#8B008B;
-        background-color:#D4D0C8;
+        background:#D4D0C8;
         border:1px solid #8B008B;
         padding:4px;
         height:22pt;
         }        
         
 .forumwrapper {
-        background-color:#D4D0C8;
+        background:#D4D0C8;
         border:1px solid #8B008B;
         padding:4px;
         margin-top:6px;
@@ -384,7 +384,7 @@
         }        
 
 .forumcontentwrapper {
-        background-color:#f8f8f8;
+        background:#f8f8f8;
         border:1px solid #000000;
         padding:4px;
         margin-top:6px;
@@ -397,7 +397,7 @@
 
 
 .blogboxoutside {
-background-color: #FFFFFF;
+background: #FFFFFF;
 padding: 0px;
 border-color: #999999;
 border-style: solid;
@@ -406,7 +406,7 @@ max-width:40%;
 }
 .boxleft {
 position: relative;
-background-color: #FFFFFF;
+background: #FFFFFF;
 padding: 0px;
 border-color: #999999;
 border-style: solid;
@@ -417,7 +417,7 @@ margin-left:40px;
 }
 .boxright {
 position: relative;
-background-color: #FFFFFF;
+background: #FFFFFF;
 padding: 0px;
 border-color: #999999;
 border-style: solid;
@@ -438,7 +438,7 @@ max-width: 19%;
 min-width: 120px;
 height: 100%;
 
-background-color: #FFFFFF;
+background: #FFFFFF;
 padding: 8px;
 border-color: #666666;
 border-style: dashed;
@@ -452,7 +452,7 @@ left: 840px;
 top: 140px;
 width: 140;
 
-background-color: white;
+background: white;
 padding: 8px;
 }
 
@@ -464,7 +464,7 @@ width: 800px;
 min-width: 356px;
 max-width:80%;
 
-background-color: #FFFFFF;
+background: #FFFFFF;
 padding: 8px;
 border-color: #666666;
 border-style: solid;
@@ -495,7 +495,7 @@ max-width:360px;
 }
  
 .topleft {
-background-color: #ffffff;
+background: #ffffff;
 border: 2px dashed black;
 padding: 8px;
 font-size:14pt;
@@ -522,7 +522,7 @@ margin-left: 10px;
 margin-right: 10px;
 margin-top: 5px;
 margin-bottom: 5px;
-background-color: #ffffff;
+background: #ffffff;
 border: 1px solid black;
 }
 
@@ -575,7 +575,7 @@ font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: #666666;
-background-color: #D4D0C8;
+background: #D4D0C8;
 padding-right: 5px;
 padding-left: 5px;
 padding-top: 1px;
@@ -585,7 +585,7 @@ border: solid #666666 1px;
 
 A.tabButton:hover {
 color: #FFFFFF;
-background-color: #666666;
+background: #666666;
 border: solid #666666 1px;
 }
 
@@ -595,7 +595,7 @@ font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: #FFFFFF;
-background-color: #666666;
+background: #666666;
 padding-right: 5px;
 padding-left: 5px;
 padding-top: 1px;
@@ -624,7 +624,7 @@ width: 800px;
 min-width: 356px;
 max-width:80%;
 
-background-color: #FFFFFF;
+background: #FFFFFF;
 padding: 8px;
 border-color: #666666;
 border-style: solid;
