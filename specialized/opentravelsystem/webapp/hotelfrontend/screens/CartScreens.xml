@@ -74,7 +74,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showpromotext.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/cart/showcart.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -93,7 +93,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showpromotext.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/cart/showAllPromotions.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -112,7 +112,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showPromotionDetails.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/cart/showPromotionDetails.ftl"/></html></platform-specific>
                     </decorator-section>
