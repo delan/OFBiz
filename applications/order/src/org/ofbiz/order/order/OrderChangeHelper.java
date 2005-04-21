@@ -52,10 +52,10 @@ import org.ofbiz.workflow.client.WorkflowClient;
  * @since      2.0
  */
 public class OrderChangeHelper {
-    
+
     public static final String module = OrderChangeHelper.class.getName();
-    
-    public static boolean approveOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) {        
+
+    public static boolean approveOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) {
         GenericValue productStore = OrderReadHelper.getProductStoreFromOrder(dispatcher.getDelegator(), orderId);
         if (productStore == null) {
             throw new IllegalArgumentException("Could not find ProductStore for orderId [" + orderId + "], cannot approve order.");
@@ -72,7 +72,7 @@ public class OrderChangeHelper {
         if (productStore.get("digitalItemApprovedStatus") != null) {
             DIGITAL_ITEM_STATUS = productStore.getString("digitalItemApprovedStatus");
         }
-        
+
         try {
             OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, "ITEM_CREATED", ITEM_STATUS, DIGITAL_ITEM_STATUS);
             OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
@@ -88,11 +88,11 @@ public class OrderChangeHelper {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
             return false;
         }
-        
+
         return true;
-    }    
-    
-    public static boolean rejectOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) {        
+    }
+
+    public static boolean rejectOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) {
         GenericValue productStore = OrderReadHelper.getProductStoreFromOrder(dispatcher.getDelegator(), orderId);
         String HEADER_STATUS = "ORDER_REJECTED";
         String ITEM_STATUS = "ITEM_REJECTED";
@@ -101,8 +101,8 @@ public class OrderChangeHelper {
           }
           if (productStore.get("itemDeclinedStatus") != null) {
               ITEM_STATUS = productStore.getString("itemDeclinedStatus");
-          }        
-        
+          }
+
         try {
             OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, null, ITEM_STATUS, null);
             OrderChangeHelper.cancelInventoryReservations(dispatcher, userLogin, orderId);
@@ -139,8 +139,8 @@ public class OrderChangeHelper {
           }
           if (productStore.get("itemCancelStatus") != null) {
               ITEM_STATUS = productStore.getString("itemCancelStatus");
-          }                  
-        
+          }
+
         try {
             OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, null, ITEM_STATUS, null);
             OrderChangeHelper.cancelInventoryReservations(dispatcher, userLogin, orderId);
@@ -151,26 +151,26 @@ public class OrderChangeHelper {
             return false;
         }
         return true;
-    }  
-    
-    public static void orderStatusChanges(LocalDispatcher dispatcher, GenericValue userLogin, String orderId, String orderStatus, String fromItemStatus, String toItemStatus, String digitalItemStatus) throws GenericServiceException {                             
+    }
+
+    public static void orderStatusChanges(LocalDispatcher dispatcher, GenericValue userLogin, String orderId, String orderStatus, String fromItemStatus, String toItemStatus, String digitalItemStatus) throws GenericServiceException {
         // set the status on the order header
         Map statusFields = UtilMisc.toMap("orderId", orderId, "statusId", orderStatus, "userLogin", userLogin);
-        Map statusResult = dispatcher.runSync("changeOrderStatus", statusFields);                               
+        Map statusResult = dispatcher.runSync("changeOrderStatus", statusFields);
         if (statusResult.containsKey(ModelService.ERROR_MESSAGE)) {
-            Debug.logError("Problems adjusting order header status for order #" + orderId, module);                            
+            Debug.logError("Problems adjusting order header status for order #" + orderId, module);
         }
-                        
+
         // set the status on the order item(s)
         Map itemStatusFields = UtilMisc.toMap("orderId", orderId, "statusId", toItemStatus, "userLogin", userLogin);
         if (fromItemStatus != null) {
             itemStatusFields.put("fromStatusId", fromItemStatus);
         }
-        Map itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);                        
+        Map itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);
         if (itemStatusResult.containsKey(ModelService.ERROR_MESSAGE)) {
             Debug.logError("Problems adjusting order item status for order #" + orderId, module);
         }
-        
+
         // now set the status for digital items
         if (digitalItemStatus != null && !digitalItemStatus.equals(toItemStatus)) {
             GenericDelegator delegator = dispatcher.getDelegator();
@@ -199,13 +199,21 @@ public class OrderChangeHelper {
                             Debug.logError(e, "ERROR: Unable to get Product record for OrderItem : " + orderId + "/" + orderItemSeqId, module);
                         }
                         if (product != null) {
-                            String productType = product.getString("productTypeId");
-                            if ("DIGITAL_GOOD".equals(productType) || "FINDIG_GOOD".equals(productType)) {
-                                // update the status
-                                Map digitalStatusFields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "statusId", digitalItemStatus, "userLogin", userLogin);
-                                Map digitalStatusChange = dispatcher.runSync("changeOrderItemStatus", digitalStatusFields);
-                                if (ModelService.RESPOND_ERROR.equals(digitalStatusChange.get(ModelService.RESPONSE_MESSAGE))) {
-                                    Debug.logError("Problems with digital product status change : " + product, module);
+                            GenericValue productType = null;
+                            try {
+                                productType = product.getRelatedOne("ProductType");
+                            } catch (GenericEntityException e) {
+                                Debug.logError(e, "ERROR: Unable to get ProductType from Product : " + product, module);
+                            }
+                            if (productType != null) {
+                                String isDigital = productType.getString("isDigital");
+                                if (isDigital != null && "Y".equalsIgnoreCase(isDigital)) {                                
+                                    // update the status
+                                    Map digitalStatusFields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "statusId", digitalItemStatus, "userLogin", userLogin);
+                                    Map digitalStatusChange = dispatcher.runSync("changeOrderItemStatus", digitalStatusFields);
+                                    if (ModelService.RESPOND_ERROR.equals(digitalStatusChange.get(ModelService.RESPONSE_MESSAGE))) {
+                                        Debug.logError("Problems with digital product status change : " + product, module);
+                                    }
                                 }
                             }
                         }
@@ -213,15 +221,15 @@ public class OrderChangeHelper {
                 }
             }
         }
-    } 
-    
+    }
+
     public static void cancelInventoryReservations(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) throws GenericServiceException {
         // cancel the inventory reservations
         Map cancelInvFields = UtilMisc.toMap("orderId", orderId, "userLogin", userLogin);
         Map cancelInvResult = dispatcher.runSync("cancelOrderInventoryReservation", cancelInvFields);
         if (ModelService.RESPOND_ERROR.equals(cancelInvResult.get(ModelService.RESPONSE_MESSAGE))) {
             Debug.logError("Problems reversing inventory reservations for order #" + orderId, module);
-        }                         
+        }
     }
 
     public static void releasePaymentAuthorizations(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) throws GenericServiceException {
@@ -285,7 +293,7 @@ public class OrderChangeHelper {
 
     public static GenericValue createPaymentFromPreference(GenericValue orderPaymentPreference, String paymentRefNumber, String paymentFromId, String comments) {
         GenericDelegator delegator = orderPaymentPreference.getDelegator();
-        
+
         // get the order header
         GenericValue orderHeader = null;
         try {
@@ -293,12 +301,12 @@ public class OrderChangeHelper {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot get OrderHeader from payment preference", module);
         }
-        
+
         // get the store for the order
-        GenericValue productStore = null;        
+        GenericValue productStore = null;
         if (orderHeader != null) {
-            try {                
-                productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", orderHeader.getString("productStoreId")));                                                   
+            try {
+                productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", orderHeader.getString("productStoreId")));
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Cannot get the ProductStore for the order header", module);
             }
@@ -306,19 +314,19 @@ public class OrderChangeHelper {
             Debug.logWarning("No order header, cannot create payment", module);
             return null;
         }
-        
+
         if (productStore == null) {
             Debug.logWarning("No product store, cannot create payment", module);
             return null;
         }
-        
-        // set the payToPartyId       
+
+        // set the payToPartyId
         String payToPartyId = productStore.getString("payToPartyId");
         if (payToPartyId == null) {
             Debug.logWarning("No payToPartyId set on ProductStore : " + productStore.getString("productStoreId"), module);
             return null;
         }
-        
+
         // create the payment
         GenericValue payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", delegator.getNextSeqId("Payment")));
         payment.set("paymentTypeId", "RECEIPT");
@@ -326,81 +334,81 @@ public class OrderChangeHelper {
         payment.set("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
         payment.set("amount", orderPaymentPreference.getDouble("maxAmount"));
         payment.set("statusId", "PMNT_RECEIVED");
-        payment.set("effectiveDate", UtilDateTime.nowTimestamp());        
-        payment.set("partyIdTo", payToPartyId); 
-        if (paymentRefNumber != null) { 
+        payment.set("effectiveDate", UtilDateTime.nowTimestamp());
+        payment.set("partyIdTo", payToPartyId);
+        if (paymentRefNumber != null) {
             payment.set("paymentRefNum", paymentRefNumber);
         }
         if (paymentFromId != null) {
             payment.set("partyIdFrom", paymentFromId);
         } else {
-            payment.set("partyIdFrom", "_NA_"); 
+            payment.set("partyIdFrom", "_NA_");
         }
         if (comments != null) {
-            payment.set("comments", comments);        
-        }        
-             
+            payment.set("comments", comments);
+        }
+
         return payment;
     }
 
     public static boolean releaseInitialOrderHold(LocalDispatcher dispatcher, String orderId) {
         // get the delegator from the dispatcher
         GenericDelegator delegator = dispatcher.getDelegator();
-        
+
         // find the workEffortId for this order
         List workEfforts = null;
         try {
-            workEfforts = delegator.findByAnd("WorkEffort", UtilMisc.toMap("currentStatusId", "WF_SUSPENDED", "sourceReferenceId", orderId));            
+            workEfforts = delegator.findByAnd("WorkEffort", UtilMisc.toMap("currentStatusId", "WF_SUSPENDED", "sourceReferenceId", orderId));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems getting WorkEffort with order ref number: " + orderId, module);
             return false;
-        }        
-                         
-        if (workEfforts != null) {            
+        }
+
+        if (workEfforts != null) {
             // attempt to release the order workflow from 'Hold' status (resume workflow)
-            boolean allPass = true; 
+            boolean allPass = true;
             Iterator wei = workEfforts.iterator();
             while (wei.hasNext()) {
-                GenericValue workEffort = (GenericValue) wei.next();                             
+                GenericValue workEffort = (GenericValue) wei.next();
                 String workEffortId = workEffort.getString("workEffortId");
-                try {                                           
+                try {
                     if (workEffort.getString("currentStatusId").equals("WF_SUSPENDED")) {
-                        WorkflowClient client = new WorkflowClient(dispatcher.getDispatchContext());                
+                        WorkflowClient client = new WorkflowClient(dispatcher.getDispatchContext());
                         client.resume(workEffortId);
                     } else {
                         Debug.logVerbose("Current : --{" + workEffort + "}-- not resuming", module);
-                    }                
+                    }
                 } catch (WfException e) {
                     Debug.logError(e, "Problem resuming activity : " + workEffortId, module);
-                    allPass = false;                                     
+                    allPass = false;
                 }
             }
             return allPass;
         } else {
             Debug.logWarning("No WF found for order ID : " + orderId, module);
         }
-        return false;               
+        return false;
     }
-    
+
     public static boolean abortOrderProcessing(LocalDispatcher dispatcher, String orderId) {
         Debug.logInfo("Aborting workflow for order " + orderId, module);
         GenericDelegator delegator = dispatcher.getDelegator();
-        
+
         // find the workEffortId for this order
         GenericValue workEffort = null;
         try {
             List workEfforts = delegator.findByAnd("WorkEffort", UtilMisc.toMap("workEffortTypeId", "WORK_FLOW", "sourceReferenceId", orderId));
             if (workEfforts != null && workEfforts.size() > 1) {
-                Debug.logWarning("More then one workflow found for defined order: " + orderId, module);                
+                Debug.logWarning("More then one workflow found for defined order: " + orderId, module);
             }
             workEffort = EntityUtil.getFirst(workEfforts);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems getting WorkEffort with order ref number: " + orderId, module);
             return false;
-        }  
-        
+        }
+
         if (workEffort != null) {
-            String workEffortId = workEffort.getString("workEffortId");            
+            String workEffortId = workEffort.getString("workEffortId");
             if (workEffort.getString("currentStatusId").equals("WF_RUNNING")) {
                 Debug.logInfo("WF is running; trying to abort", module);
                 WorkflowClient client = new WorkflowClient(dispatcher.getDispatchContext());
@@ -410,9 +418,9 @@ public class OrderChangeHelper {
                     Debug.logError(e, "Problem aborting workflow", module);
                     return false;
                 }
-                return true;               
-            }             
-        }                              
+                return true;
+            }
+        }
         return false;
     }
 }

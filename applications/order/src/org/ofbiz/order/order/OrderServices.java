@@ -100,7 +100,7 @@ public class OrderServices {
         // get the order type
         String orderTypeId = (String) context.get("orderTypeId");
         String partyId = (String) context.get("partyId");
-        
+
         // check security permissions for order:
         //  SALES ORDERS - if userLogin has ORDERMGR_SALES_CREATE or ORDERMGR_CREATE permission, or if it is same party as the partyId, or
         //                 if it is an AGENT (sales rep) creating an order for his customer
@@ -114,7 +114,7 @@ public class OrderServices {
                 // check sales agent/customer relationship
                 List repsCustomers = new LinkedList();
                 try {
-                    repsCustomers = EntityUtil.filterByDate(userLogin.getRelatedOne("Party").getRelatedByAnd("FromPartyRelationship", 
+                    repsCustomers = EntityUtil.filterByDate(userLogin.getRelatedOne("Party").getRelatedByAnd("FromPartyRelationship",
                             UtilMisc.toMap("roleTypeIdFrom", "AGENT", "roleTypeIdTo", "CUSTOMER", "partyIdTo", partyId)));
                 } catch (GenericEntityException ex) {
                     Debug.logError("Could not determine if " + partyId + " is a customer of user " + userLogin.getString("userLoginId") + " due to " + ex.getMessage(), module);
@@ -131,9 +131,9 @@ public class OrderServices {
             partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, resultSecurity, "ORDERMGR", "_CREATE");
             if (resultSecurity.size() > 0) {
                 return resultSecurity;
-            }    
+            }
         }
-        
+
         boolean isImmediatelyFulfilled = false;
         String productStoreId = (String) context.get("productStoreId");
         GenericValue productStore = null;
@@ -147,7 +147,7 @@ public class OrderServices {
         if (productStore != null) {
             isImmediatelyFulfilled = "Y".equals(productStore.getString("isImmediatelyFulfilled"));
         }
-        
+
         successResult.put("orderTypeId", orderTypeId);
 
         // lookup the order type entity
@@ -177,16 +177,16 @@ public class OrderServices {
         Iterator itemIter = orderItems.iterator();
         java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
-        //  
+        //
         // need to run through the items combining any cases where multiple lines refer to the
         // same product so the inventory check will work correctly
         // also count quantities ordered while going through the loop
         while (itemIter.hasNext()) {
             GenericValue orderItem = (GenericValue) itemIter.next();
-            
+
             // start by putting it in the itemValuesById Map
             itemValuesBySeqId.put(orderItem.getString("orderItemSeqId"), orderItem);
-            
+
             String currentProductId = (String) orderItem.get("productId");
             if (currentProductId != null) {
                 // only normalize items with a product associated (ignore non-product items)
@@ -197,7 +197,7 @@ public class OrderServices {
                     Double currentQuantity = (Double) normalizedItemQuantities.get(currentProductId);
                     normalizedItemQuantities.put(currentProductId, new Double(currentQuantity.doubleValue() + orderItem.getDouble("quantity").doubleValue()));
                 }
-                
+
                 try {
                     // count product ordered quantities
                     // run this synchronously so it will run in the same transaction
@@ -295,7 +295,7 @@ public class OrderServices {
                     return ServiceUtil.returnError("Rental order items in the order, however no workEfforts with start/end date and number of persons");
                 }
                 Iterator we = workEfforts.iterator();  // find the related workEffortItem (workEffortId = orderSeqId)
-                while (we.hasNext()) {    
+                while (we.hasNext()) {
                     // create the entity maps required.
                     GenericValue workEffort = (GenericValue) we.next();
                     if (workEffort.getString("workEffortId").equals(orderItem.getString("orderItemSeqId")))    {
@@ -338,11 +338,11 @@ public class OrderServices {
             orderId = ProductStoreWorker.makeProductStoreOrderId(delegator, productStoreId);
         } else {
             // for purchase orders, a product store id should not be required to make an order
-            orderId = delegator.getNextSeqId("OrderHeader"); 
+            orderId = delegator.getNextSeqId("OrderHeader");
         }
 
         String billingAccountId = (String) context.get("billingAccountId");
-        
+
         Map orderHeaderMap = UtilMisc.toMap("orderId", orderId, "orderTypeId", orderTypeId,
                 "orderDate", nowTimestamp, "entryDate", nowTimestamp,
                 "statusId", initialStatus, "billingAccountId", billingAccountId);
@@ -421,7 +421,7 @@ public class OrderServices {
             GenericValue orderItem = (GenericValue) oi.next();
             orderItem.set("orderId", orderId);
             toBeStored.add(orderItem);
-            
+
             // create the item status record
             String itemStatusId = delegator.getNextSeqId("OrderStatus").toString();
             GenericValue itemStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", itemStatusId));
@@ -433,7 +433,7 @@ public class OrderServices {
             toBeStored.add(itemStatus);
         }
 
-        // create the workeffort records 
+        // create the workeffort records
         // and connect them with the orderitem over the WorkOrderItemFulfillment
         // create also the techData calendars to keep track of availability of the fixed asset.
         if (workEfforts != null && workEfforts.size() > 0) {
@@ -445,9 +445,9 @@ public class OrderServices {
                 // find fixed asset supplied on the workeffort map
                 GenericValue fixedAsset = null;
                 Debug.logInfo("find the fixedAsset",module);
-                try { fixedAsset = delegator.findByPrimaryKey("FixedAsset", 
-                        UtilMisc.toMap("fixedAssetId", workEffort.get("fixedAssetId")));     
-                } 
+                try { fixedAsset = delegator.findByPrimaryKey("FixedAsset",
+                        UtilMisc.toMap("fixedAssetId", workEffort.get("fixedAssetId")));
+                }
                 catch (GenericEntityException e) {
                     return ServiceUtil.returnError("fixed_Asset_not_found. Fixed AssetId: " + workEffort.get("fixedAssetId"));
                 }
@@ -457,8 +457,8 @@ public class OrderServices {
                 // see if this fixed asset has a calendar, when no create one and attach to fixed asset
                 Debug.logInfo("find the techdatacalendar",module);
                 GenericValue techDataCalendar = null;
-                try { techDataCalendar = fixedAsset.getRelatedOne("TechDataCalendar"); 
-                } 
+                try { techDataCalendar = fixedAsset.getRelatedOne("TechDataCalendar");
+                }
                 catch (GenericEntityException e) {
                     Debug.logInfo("TechData calendar does not exist yet so create for fixedAsset: " + fixedAsset.get("fixedAssetId") ,module);
                 }
@@ -467,7 +467,7 @@ public class OrderServices {
                     Debug.logInfo("create techdata calendar because it does not exist",module);
                     String calendarId = delegator.getNextSeqId("techDataCalendar").toString();
                     techDataCalendar.set("calendarId", calendarId);
-                    toBeStored.add(techDataCalendar); 
+                    toBeStored.add(techDataCalendar);
                     Debug.logInfo("update fixed Asset",module);
                     fixedAsset.set("calendarId",calendarId);
                     toBeStored.add(fixedAsset);
@@ -476,7 +476,7 @@ public class OrderServices {
                 workOrderItemFulfillment.set("orderItemSeqId", workEffort.get("workEffortId").toString()); // orderItemSeqNo is stored here so save first
                 // workeffort
                 String workEffortId = delegator.getNextSeqId("WorkEffort").toString(); // find next available workEffortId
-                workEffort.set("workEffortId", workEffortId); 
+                workEffort.set("workEffortId", workEffortId);
                 workEffort.set("workEffortTypeId", "ASSET_USAGE");
                 toBeStored.add(workEffort);  // store workeffort before workOrderItemFulfillment because of workEffortId key constraint
                 // workOrderItemFulfillment
@@ -490,12 +490,12 @@ public class OrderServices {
                 Timestamp estimatedStartDate = workEffort.getTimestamp("estimatedStartDate");
                 Timestamp estimatedCompletionDate = workEffort.getTimestamp("estimatedCompletionDate");
                 long dayCount = (estimatedCompletionDate.getTime() - estimatedStartDate.getTime())/86400000;
-                while (--dayCount >= 0)    { 
+                while (--dayCount >= 0)    {
                     GenericValue techDataCalendarExcDay = null;
                     // find an existing Day exception record
                     Timestamp exceptionDateStartTime = new Timestamp((long)(estimatedStartDate.getTime() + (dayCount * 86400000)));
                     try {     techDataCalendarExcDay = delegator.findByPrimaryKey("TechDataCalendarExcDay",
-                            UtilMisc.toMap("calendarId", fixedAsset.get("calendarId"), "exceptionDateStartTime", exceptionDateStartTime)); 
+                            UtilMisc.toMap("calendarId", fixedAsset.get("calendarId"), "exceptionDateStartTime", exceptionDateStartTime));
                     }
                     catch (GenericEntityException e) {
                         Debug.logInfo(" techData excday record not found so creating........", module);
@@ -506,11 +506,11 @@ public class OrderServices {
                         techDataCalendarExcDay.set("exceptionDateStartTime", exceptionDateStartTime);
                         techDataCalendarExcDay.set("usedCapacity",new Double(00.00));  // initialise to zero
                         techDataCalendarExcDay.set("exceptionCapacity", fixedAsset.getDouble("productionCapacity"));
-//                       Debug.logInfo(" techData excday record not found creating for calendarId: " + techDataCalendarExcDay.getString("calendarId") + 
+//                       Debug.logInfo(" techData excday record not found creating for calendarId: " + techDataCalendarExcDay.getString("calendarId") +
 //                               " and date: " + exceptionDateStartTime.toString(), module);
                     }
                     // add the quantity to the quantity on the date record
-                    Double newUsedCapacity = new Double(techDataCalendarExcDay.getDouble("usedCapacity").doubleValue() + 
+                    Double newUsedCapacity = new Double(techDataCalendarExcDay.getDouble("usedCapacity").doubleValue() +
                             workEffort.getDouble("quantityToProduce").doubleValue());
                     // check to see if the requested quantity is available on the requested day but only when the maximum capacity is set on the fixed asset
                     if (fixedAsset.get("productionCapacity") != null)    {
@@ -526,8 +526,8 @@ public class OrderServices {
                     }
                     techDataCalendarExcDay.set("usedCapacity", newUsedCapacity);
                     toBeStored.add(techDataCalendarExcDay);
-//                  Debug.logInfo("Update success CalendarID: " + techDataCalendarExcDay.get("calendarId").toString() + 
-//                            " and for date: " + techDataCalendarExcDay.get("exceptionDateStartTime").toString() + 
+//                  Debug.logInfo("Update success CalendarID: " + techDataCalendarExcDay.get("calendarId").toString() +
+//                            " and for date: " + techDataCalendarExcDay.get("exceptionDateStartTime").toString() +
 //                            " and for quantity: " + techDataCalendarExcDay.getDouble("usedCapacity").toString(), module);
                 }
             }
@@ -535,7 +535,7 @@ public class OrderServices {
         if (errorMessages.size() > 0) {
             return ServiceUtil.returnError(errorMessages);
         }
- 
+
         // set the orderId on all adjustments; this list will include order and
         // item adjustments...
         List orderAdjustments = (List) context.get("orderAdjustments");
@@ -626,7 +626,7 @@ public class OrderServices {
                     while (apIt.hasNext()) {
                         String additionalPartyId = (String) apIt.next();
                         toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", additionalPartyId, "roleTypeId", additionalRoleTypeId)));
-                        toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", additionalPartyId, "roleTypeId", additionalRoleTypeId)));                        
+                        toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", additionalPartyId, "roleTypeId", additionalRoleTypeId)));
                     }
                 }
             }
@@ -821,7 +821,7 @@ public class OrderServices {
                         GenericValue orderItemShipGroupAssoc = (GenericValue) osiInfos.next();
                         if ("OrderItemShipGroupAssoc".equals(orderItemShipGroupAssoc.getEntityName())) {
                             GenericValue orderItem = (GenericValue) itemValuesBySeqId.get(orderItemShipGroupAssoc.get("orderItemSeqId"));
-                                
+
                             if (UtilValidate.isNotEmpty(orderItem.getString("productId")) && !"RENTAL_ORDER_ITEM".equals(orderItem.getString("orderItemTypeId"))) { // ignore for rental
                                 // only reserve product items; ignore non-product items
                                 try {
@@ -835,7 +835,7 @@ public class OrderServices {
                                     reserveInput.put("quantity", orderItemShipGroupAssoc.getDouble("quantity"));
                                     reserveInput.put("userLogin", userLogin);
                                     Map reserveResult = dispatcher.runSync("reserveStoreInventory", reserveInput);
-                                    
+
                                     if (ServiceUtil.isError(reserveResult)) {
                                         GenericValue product = null;
                                         try {
@@ -843,7 +843,7 @@ public class OrderServices {
                                         } catch (GenericEntityException e) {
                                             Debug.logError(e, "Error when looking up product in createOrder service, product failed inventory reservation", module);
                                         }
-                                        
+
                                         String invErrMsg = "The product ";
                                         if (product != null) {
                                             invErrMsg += getProductName(product, orderItem);
@@ -860,7 +860,7 @@ public class OrderServices {
                         }
                     }
                 }
-                
+
                 if (resErrorMessages.size() > 0) {
                     return ServiceUtil.returnError(resErrorMessages);
                 }
@@ -916,7 +916,7 @@ public class OrderServices {
             double updatedTotal = orh.getOrderGrandTotal();
 
             // calculate subTotal as grandTotal - returnsTotal - (tax + shipping of items not returned)
-            double remainingSubTotal = updatedTotal - orh.getOrderReturnedTotal() - orh.getOrderNonReturnedTaxAndShipping();            
+            double remainingSubTotal = updatedTotal - orh.getOrderReturnedTotal() - orh.getOrderNonReturnedTaxAndShipping();
 
             if (currentTotal == null || currentSubTotal == null || updatedTotal != currentTotal.doubleValue() ||
                     remainingSubTotal != currentSubTotal.doubleValue()) {
@@ -1101,7 +1101,7 @@ public class OrderServices {
 
                     // prepare the service context
                     Map serviceContext = UtilMisc.toMap("productStoreId", orh.getProductStoreId(), "itemProductList", products, "itemAmountList", amounts,
-                        "itemShippingList", shipAmts, "itemPriceList", itPrices, "orderShippingAmount", orderShipping);                    
+                        "itemShippingList", shipAmts, "itemPriceList", itPrices, "orderShippingAmount", orderShipping);
                     serviceContext.put("shippingAddress", shippingAddress);
 
                     // invoke the calcTax service
@@ -2048,7 +2048,7 @@ public class OrderServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         String prefId = null;
-        
+
         try {
             prefId = delegator.getNextSeqId("OrderPaymentPreference");
         } catch (IllegalArgumentException e) {
@@ -2094,7 +2094,7 @@ public class OrderServices {
         }
         return ServiceUtil.returnError("Error getting order header information; null");
     }
- 
+
     /** Service to get the total shipping for an order. */
     public static Map getOrderShippingAmount(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
@@ -3410,16 +3410,27 @@ public class OrderServices {
                     Debug.logError(e, "ERROR: Unable to get Product from OrderItem", module);
                 }
                 if (product != null) {
-                    String productType = product.getString("productTypeId");
-                    // check for digital and finished/digital goods
-                    if ("DIGITAL_GOOD".equals(productType) || "FINDIG_GOOD".equals(productType)) {
-                        // we only invoice APPROVED items
-                        if ("ITEM_APPROVED".equals(item.getString("statusId"))) {
-                            digitalItems.add(item);
-                        }
-                        if ("DIGITAL_GOOD".equals(productType)) {
-                            // 100% digital goods need status change
-                            digitalProducts.put(item, product);
+                    GenericValue productType = null;
+                    try {
+                        productType = product.getRelatedOne("ProductType");
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "ERROR: Unable to get ProductType from Product", module);
+                    }
+
+                    if (productType != null) {
+                        String isPhysical = productType.getString("isPhysical");
+                        String isDigital = productType.getString("isDigital");
+
+                        // check for digital and finished/digital goods
+                        if (isDigital != null && "Y".equalsIgnoreCase(isDigital)) {
+                            // we only invoice APPROVED items
+                            if ("ITEM_APPROVED".equals(item.getString("statusId"))) {
+                                digitalItems.add(item);
+                            }
+                            if (isPhysical == null || !"Y".equalsIgnoreCase(isPhysical)) {
+                                // 100% digital goods need status change
+                                digitalProducts.put(item, product);
+                            }
                         }
                     }
                 }
@@ -3441,14 +3452,26 @@ public class OrderServices {
                 return ServiceUtil.returnError((String) invoiceResult.get(ModelService.ERROR_MESSAGE));
             }
 
-            // update the status of DIGITAL_GOOD to COMPLETED; leave FINDIG as APPROVED for pick/ship
+            // update the status of digital goods to COMPLETED; leave physical/digital as APPROVED for pick/ship
             Iterator dii = digitalItems.iterator();
             while (dii.hasNext()) {
+                GenericValue productType = null;
                 GenericValue item = (GenericValue) dii.next();
                 GenericValue product = (GenericValue) digitalProducts.get(item);
-                if (product != null) {
+
+                try {
+                    productType = product.getRelatedOne("ProductType");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "ERROR: Unable to get ProductType from Product", module);
+                }
+
+                if (product != null && productType != null) {
+                    String isPhysical = productType.getString("isPhysical");
+                    String isDigital = productType.getString("isDigital");
+
                     // we were set as a digital good; one more check and change status
-                    if ("DIGITAL_GOOD".equals(product.getString("productTypeId"))) {
+                    if ((isDigital != null && "Y".equalsIgnoreCase(isDigital)) && (
+                            isPhysical == null || !"Y".equalsIgnoreCase(isPhysical))) {
                         Map statusCtx = new HashMap();
                         statusCtx.put("orderId", item.getString("orderId"));
                         statusCtx.put("orderItemSeqId", item.getString("orderItemSeqId"));
