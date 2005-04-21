@@ -25,7 +25,7 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="main-decorator">
+     <screen name="main-decorator">
         <section>
             <actions>
                 <!-- base/top/specific map first, then more common map added for shared labels --> 
@@ -46,15 +46,9 @@
                 </html></platform-specific>
                 
                 <container id="ecom-mainarea">
-                <container style="left">
-                        <platform-specific>
-                            <html>
-                                <html-template location="component://opentravelsystem/webapp/hotelfrontend/currentsite/left.ftl"/>
-                            </html>
-                        </platform-specific>
-                </container>
                         
                     <!-- by default will render left-bar only if left/rightbarScreenName value not empty -->
+                    <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
                     <include-screen name="${rightbarScreenName}" location="${rightbarScreenLocation}"/>
                 
                     <container style="${MainColumnStyle}">
@@ -68,7 +62,6 @@
                 
                 <!-- render footer -->
                 <platform-specific><html>
-                     <html-template location="component://opentravelsystem/webapp/hotelfrontend/currentsite/footer.ftl"/>
                      <html-template location="component://opentravelsystem/includes/footer.ftl"/>
                 </html></platform-specific>
             </widgets>
@@ -78,6 +71,7 @@
     <screen name="startup">
         <section>
             <actions>
+                <set field="leftbarScreenName" value="leftbar"/>
                 <set field="title" value="Main Page"/>
                 <set field="title-property" value="PageTitleMain"/>
                 <set field="headerItem" value="main"/>
@@ -102,13 +96,18 @@
         <section>
             <widgets>
                 <container style="left">
-                    <include-screen name="choosecatalog" location="component://ecommerce/widget/CatalogScreens.xml"/>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://opentravelsystem/webapp/hotelfrontend/currentsite/left.ftl"/>
+                            </html>
+                        </platform-specific>
+                    <!--include-screen name="choosecatalog" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="keywordsearchbox" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="sidedeepcategory" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="minireorderprods" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="minipoll" location="component://ecommerce/widget/ContentScreens.xml"/>
                     <include-screen name="forums" location="component://ecommerce/widget/ForumScreens.xml"/>
-                    <include-screen name="content_categories" location="component://ecommerce/widget/ContentScreens.xml"/>
+                    <include-screen name="content_categories" location="component://ecommerce/widget/ContentScreens.xml"/-->
                 </container>
             </widgets>
         </section>
