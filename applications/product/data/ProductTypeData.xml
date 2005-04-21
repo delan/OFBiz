@@ -280,16 +280,16 @@
 
     <ProductStoreGroup productStoreGroupName="Not Applicable" description="Not Applicable" productStoreGroupId="_NA_" productStoreGroupTypeId="" primaryParentGroupId=""/>
 
-    <ProductType description="Fixed Asset Usage" hasTable="N" parentTypeId="" productTypeId="ASSET_USAGE"/>
-    <ProductType description="Service" hasTable="N" parentTypeId="" productTypeId="SERVICE"/>
-    <ProductType description="Good" hasTable="N" parentTypeId="" productTypeId="GOOD"/>
-    <ProductType description="Raw Material" hasTable="N" parentTypeId="GOOD" productTypeId="RAW_MATERIAL"/>
-    <ProductType description="Subassembly" hasTable="N" parentTypeId="GOOD" productTypeId="SUBASSEMBLY"/>
-    <ProductType description="Finished Good" hasTable="N" parentTypeId="GOOD" productTypeId="FINISHED_GOOD"/>
-    <ProductType description="Digital Good" hasTable="N" parentTypeId="GOOD" productTypeId="DIGITAL_GOOD"/>
-    <ProductType description="Finished/Digital Good" hasTable="N" parentTypeId="GOOD" productTypeId="FINDIG_GOOD"/>
-    <ProductType description="Configurable Good" hasTable="N" parentTypeId="GOOD" productTypeId="AGGREGATED"/>
-    <ProductType description="Work In Process" hasTable="N" parentTypeId="GOOD" productTypeId="WIP"/>
+    <ProductType description="Fixed Asset Usage" isPhysical="Y" isDigital="N" hasTable="N" parentTypeId="" productTypeId="ASSET_USAGE"/>
+    <ProductType description="Service" isPhysical="Y" isDigital="N" hasTable="N" parentTypeId="" productTypeId="SERVICE"/>
+    <ProductType description="Good" isPhysical="Y" isDigital="N" hasTable="N" parentTypeId="" productTypeId="GOOD"/>
+    <ProductType description="Raw Material" isPhysical="Y" isDigital="N" hasTable="N" parentTypeId="GOOD" productTypeId="RAW_MATERIAL"/>
+    <ProductType description="Subassembly" isPhysical="Y" isDigital="N" hasTable="N" parentTypeId="GOOD" productTypeId="SUBASSEMBLY"/>
+    <ProductType description="Finished Good" isPhysical="Y" isDigital="N" hasTable="N" parentTypeId="GOOD" productTypeId="FINISHED_GOOD"/>
+    <ProductType description="Digital Good" isPhysical="N" isDigital="Y" hasTable="N" parentTypeId="GOOD" productTypeId="DIGITAL_GOOD"/>
+    <ProductType description="Finished/Digital Good" isPhysical="Y" isDigital="Y" hasTable="N" parentTypeId="GOOD" productTypeId="FINDIG_GOOD"/>
+    <ProductType description="Configurable Good" isPhysical="Y" isDigital="N" hasTable="N" parentTypeId="GOOD" productTypeId="AGGREGATED"/>
+    <ProductType description="Work In Process" isPhysical="Y" isDigital="N" hasTable="N" parentTypeId="GOOD" productTypeId="WIP"/>
 
     <EnumerationType description="Product Requirement Method" enumTypeId="PROD_REQ_METHOD" hasTable="N" parentTypeId=""/>
     <!-- NONE: no requirement is created (default) -->

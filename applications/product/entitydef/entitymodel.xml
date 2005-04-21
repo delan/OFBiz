@@ -29,7 +29,7 @@
  */
 -->
 
-<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitymodel.xsd">
   <!-- ========================================================= -->
   <!-- ======================== Defaults ======================= -->
@@ -1889,6 +1889,8 @@
             title="Product Type Entity" default-resource-name="ProductEntityLabels">
       <field name="productTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
+      <field name="isPhysical" type="indicator"></field>
+      <field name="isDigital" type="indicator"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="productTypeId"/>
@@ -2122,7 +2124,7 @@
         <key-map field-name="productPromoCodeId"/>
       </relation>
     </entity>
-    <view-entity entity-name="ProductPromoCodeEmailParty" 
+    <view-entity entity-name="ProductPromoCodeEmailParty"
             package-name="org.ofbiz.product.promo"
             title="Product Promotion Email and Party View Entity">
       <member-entity entity-alias="PPCE" entity-name="ProductPromoCodeEmail"/>
@@ -2645,7 +2647,7 @@
       </relation>
       <relation type="one" fk-name="PROD_STR_PAYTOPTY" rel-entity-name="Party">
         <key-map field-name="payToPartyId" rel-field-name="partyId"/>
-      </relation>      
+      </relation>
       <relation type="one" fk-name="PROD_STR_CURUOM" rel-entity-name="Uom">
         <key-map field-name="defaultCurrencyUomId" rel-field-name="uomId"/>
       </relation>
@@ -2967,7 +2969,7 @@
       <field name="includeGeoId" type="id"></field>
       <field name="excludeGeoId" type="id"></field>
       <field name="serviceName" type="long-varchar"></field>
-      <field name="configProps" type="long-varchar"></field>  
+      <field name="configProps" type="long-varchar"></field>
       <field name="sequenceNumber" type="numeric"></field>
       <prim-key field="productStoreId"/>
       <prim-key field="shipmentMethodTypeId"/>
@@ -3150,7 +3152,7 @@
         <key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
-    <entity entity-name="SupplierProductFeature" package-name="org.ofbiz.product.supplier" 
+    <entity entity-name="SupplierProductFeature" package-name="org.ofbiz.product.supplier"
             title="Supplier-specific product feature information">
       <field name="partyId" type="id-ne"/>
       <field name="productFeatureId" type="id-ne"/>
@@ -3176,7 +3178,7 @@
       <field name="description" type="description"></field>
       <prim-key field="supplierRatingTypeId"/>
     </entity>
-    
+
   <!-- ========================================================= -->
   <!-- org.ofbiz.product.config -->
   <!-- ========================================================= -->

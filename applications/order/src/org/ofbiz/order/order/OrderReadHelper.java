@@ -116,7 +116,7 @@ public class OrderReadHelper {
         this.adjustments = adjustments;
         this.orderItems = orderItems;
     }
-    
+
     public OrderReadHelper(GenericDelegator delegator, String orderId) {
         try {
             this.orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
@@ -172,7 +172,7 @@ public class OrderReadHelper {
         }
         return paymentPrefs;
     }
-    
+
     public List getOrderPayments() {
         return getOrderPayments(null);
     }
@@ -876,7 +876,7 @@ public class OrderReadHelper {
                 // determine girth (longest field is length)
                 double[] sizeInfo = { height.doubleValue(), width.doubleValue(), depth.doubleValue() };
                 Arrays.sort(sizeInfo);
-                
+
                 size = (sizeInfo[0] * 2) + (sizeInfo[1] * 2) + sizeInfo[2];
             }
         }
@@ -1096,43 +1096,53 @@ public class OrderReadHelper {
                     Debug.logError(e, "Unable to get Product from OrderItem", module);
                 }
                 if (product != null) {
-                    String productType = product.getString("productTypeId");
-                    if ("DIGITAL_GOOD".equals(productType) || "FINDIG_GOOD".equals(productType)) {
-                        // make sure we have an OrderItemBilling record
-                        List orderItemBillings = null;
-                        try {
-                            orderItemBillings = item.getRelated("OrderItemBilling");
-                        } catch (GenericEntityException e) {
-                            Debug.logError(e, "Unable to get OrderItemBilling from OrderItem");
-                        }
+                    GenericValue productType = null;
+                    try {
+                        productType = product.getRelatedOne("ProductType");
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "ERROR: Unable to get ProductType from Product", module);
+                    }
 
-                        if (orderItemBillings != null && orderItemBillings.size() > 0) {
-                            // get the ProductContent records
-                            List productContents = null;
+                    if (productType != null) {
+                        String isDigital = productType.getString("isDigital");
+
+                        if (isDigital != null && "Y".equalsIgnoreCase(isDigital)) {
+                            // make sure we have an OrderItemBilling record
+                            List orderItemBillings = null;
                             try {
-                                productContents = product.getRelated("ProductContent");
+                                orderItemBillings = item.getRelated("OrderItemBilling");
                             } catch (GenericEntityException e) {
-                                Debug.logError("Unable to get ProductContent from Product", module);
+                                Debug.logError(e, "Unable to get OrderItemBilling from OrderItem");
                             }
-                            List cExprs = UtilMisc.toList(
-                                    new EntityExpr("productContentTypeId", EntityOperator.EQUALS, "DIGITAL_DOWNLOAD"),
-                                    new EntityExpr("productContentTypeId", EntityOperator.EQUALS, "FULFILLMENT_EMAIL"),
-                                    new EntityExpr("productContentTypeId", EntityOperator.EQUALS, "FULFILLMENT_EXTERNAL"));
-                            // add more as needed
-                            productContents = EntityUtil.filterByDate(productContents);
-                            productContents = EntityUtil.filterByOr(productContents, cExprs);
 
-                            if (productContents != null && productContents.size() > 0) {
-                                // make sure we are still within the allowed timeframe and use limits
-                                Iterator pci = productContents.iterator();
-                                while (pci.hasNext()) {
-                                    GenericValue productContent = (GenericValue) pci.next();
-                                    Timestamp fromDate = productContent.getTimestamp("purchaseFromDate");
-                                    Timestamp thruDate = productContent.getTimestamp("purchaseThruDate");
-                                    if (fromDate == null || item.getTimestamp("orderDate").after(fromDate)) {
-                                        if (thruDate == null || item.getTimestamp("orderDate").before(thruDate)) {
-                                            // TODO: Implement use count and days
-                                            digitalItems.add(item);
+                            if (orderItemBillings != null && orderItemBillings.size() > 0) {
+                                // get the ProductContent records
+                                List productContents = null;
+                                try {
+                                    productContents = product.getRelated("ProductContent");
+                                } catch (GenericEntityException e) {
+                                    Debug.logError("Unable to get ProductContent from Product", module);
+                                }
+                                List cExprs = UtilMisc.toList(
+                                        new EntityExpr("productContentTypeId", EntityOperator.EQUALS, "DIGITAL_DOWNLOAD"),
+                                        new EntityExpr("productContentTypeId", EntityOperator.EQUALS, "FULFILLMENT_EMAIL"),
+                                        new EntityExpr("productContentTypeId", EntityOperator.EQUALS, "FULFILLMENT_EXTERNAL"));
+                                // add more as needed
+                                productContents = EntityUtil.filterByDate(productContents);
+                                productContents = EntityUtil.filterByOr(productContents, cExprs);
+
+                                if (productContents != null && productContents.size() > 0) {
+                                    // make sure we are still within the allowed timeframe and use limits
+                                    Iterator pci = productContents.iterator();
+                                    while (pci.hasNext()) {
+                                        GenericValue productContent = (GenericValue) pci.next();
+                                        Timestamp fromDate = productContent.getTimestamp("purchaseFromDate");
+                                        Timestamp thruDate = productContent.getTimestamp("purchaseThruDate");
+                                        if (fromDate == null || item.getTimestamp("orderDate").after(fromDate)) {
+                                            if (thruDate == null || item.getTimestamp("orderDate").before(thruDate)) {
+                                                // TODO: Implement use count and days
+                                                digitalItems.add(item);
+                                            }
                                         }
                                     }
                                 }
@@ -1166,7 +1176,7 @@ public class OrderReadHelper {
         }
         return workEffort.getString("workEffortId");
     }
-    
+
     public String getCurrentItemStatus(GenericValue orderItem) {
         GenericValue statusItem = null;
         try {
@@ -1223,7 +1233,7 @@ public class OrderReadHelper {
         }
         return EntityUtil.filterByAnd(orderItemIssuances, UtilMisc.toMap("orderItemSeqId", orderItem.getString("orderItemSeqId")));
     }
-    
+
     public List getOrderReturnItems() {
         GenericDelegator delegator = orderHeader.getDelegator();
         if (this.orderReturnItems == null) {
@@ -1244,7 +1254,7 @@ public class OrderReadHelper {
         // get only the RETURN_RECEIVED and RETURN_COMPLETED statusIds
         returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_RECEIVED")));
         returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_COMPLETED")));
-                
+
         double returnedQuantity = 0.00;
         if (returnedItems != null) {
             Iterator i = returnedItems.iterator();
@@ -1257,15 +1267,15 @@ public class OrderReadHelper {
         }
         return returnedQuantity;
     }
-    
+
     public double getOrderReturnedTotal() {
         List returnedItemsBase = getOrderReturnItems();
         List returnedItems = new ArrayList(returnedItemsBase.size());
-        
+
         // get only the RETURN_RECEIVED and RETURN_COMPLETED statusIds
         returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_RECEIVED")));
         returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_COMPLETED")));
-        
+
         double returnedAmount = 0.00;
         Iterator i = returnedItems.iterator();
         while (i.hasNext()) {
@@ -1276,16 +1286,16 @@ public class OrderReadHelper {
         }
         return returnedAmount;
     }
-    
+
     public double getOrderNonReturnedTaxAndShipping() {
         // first make a Map of orderItemSeqId key, returnQuantity value
         List returnedItemsBase = getOrderReturnItems();
         List returnedItems = new ArrayList(returnedItemsBase.size());
-        
+
         // get only the RETURN_RECEIVED and RETURN_COMPLETED statusIds
         returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_RECEIVED")));
         returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_COMPLETED")));
-        
+
         Map itemReturnedQuantities = new HashMap();
         Iterator i = returnedItems.iterator();
         while (i.hasNext()) {
@@ -1301,16 +1311,16 @@ public class OrderReadHelper {
                 }
             }
         }
-        
+
         // then go through all order items and for the quantity not returned calculate it's portion of the item, and of the entire order
         double totalSubTotalNotReturned = 0;
         double totalTaxNotReturned = 0;
         double totalShippingNotReturned = 0;
-        
+
         Iterator orderItems = this.getValidOrderItems().iterator();
         while (orderItems.hasNext()) {
             GenericValue orderItem = (GenericValue) orderItems.next();
-            
+
             Double itemQuantityDbl = orderItem.getDouble("quantity");
             if (itemQuantityDbl == null) {
                 continue;
@@ -1348,7 +1358,7 @@ public class OrderReadHelper {
         }
         double orderTaxNotReturned = this.getTaxTotal() * orderFactorNotReturned;
         double orderShippingNotReturned = this.getShippingTotal() * orderFactorNotReturned;
-        
+
         return totalTaxNotReturned + totalShippingNotReturned + orderTaxNotReturned + orderShippingNotReturned;
     }
 
@@ -1562,7 +1572,7 @@ public class OrderReadHelper {
 
         if (cancelQty == null) cancelQty = new Double(0.0);
         if (orderQty == null) orderQty = new Double(0.0);
-        
+
         return new Double(orderQty.doubleValue() - cancelQty.doubleValue());
     }
 
@@ -1703,9 +1713,9 @@ public class OrderReadHelper {
 
     // ================= Order Item Adjustments =================
     public static double getOrderItemsSubTotal(List orderItems, List adjustments) {
-        return getOrderItemsSubTotal(orderItems, adjustments, null); 
+        return getOrderItemsSubTotal(orderItems, adjustments, null);
         }
-    
+
     public static double getOrderItemsSubTotal(List orderItems, List adjustments, List workEfforts) {
         double result = 0.0;
         Iterator itemIter = UtilMisc.toIterator(orderItems);
@@ -1714,7 +1724,7 @@ public class OrderReadHelper {
             GenericValue orderItem = (GenericValue) itemIter.next();
             double itemTotal = getOrderItemSubTotal(orderItem, adjustments);
 //          Debug.log("Item : " + orderItem.getString("orderId") + " / " + orderItem.getString("orderItemSeqId") + " = " + itemTotal, module);
-            
+
             if (workEfforts != null && orderItem.getString("orderItemTypeId").compareTo("RENTAL_ORDER_ITEM") == 0) {
                 Iterator weIter = UtilMisc.toIterator(workEfforts);
                 while (weIter != null && weIter.hasNext()) {
@@ -1727,7 +1737,7 @@ public class OrderReadHelper {
                 }
             }
             result += itemTotal;
-            
+
         }
         return UtilFormatOut.formatPriceNumber(result).doubleValue();
     }
@@ -1764,8 +1774,8 @@ public class OrderReadHelper {
                     result *= getWorkEffortRentalQuantity(workEffort);
                 }
             }
-        }     
-    
+        }
+
         // subtotal also includes non tax and shipping adjustments; tax and shipping will be calculated using this adjusted value
         result += getOrderItemAdjustmentsTotal(orderItem, adjustments, true, false, false, forTax, forShipping);
 
@@ -1798,14 +1808,14 @@ public class OrderReadHelper {
         if (workEffort.get("reservNthPPPerc") != null)
             nthPersonPerc = workEffort.getDouble("reservNthPPPerc").doubleValue();
         long length = 1;
-        if (workEffort.get("estimatedStartDate") != null && workEffort.get("estimatedCompletionDate") != null) 
-            length = (workEffort.getTimestamp("estimatedCompletionDate").getTime() - workEffort.getTimestamp("estimatedStartDate").getTime()) / 86400000; 
-        
+        if (workEffort.get("estimatedStartDate") != null && workEffort.get("estimatedCompletionDate") != null)
+            length = (workEffort.getTimestamp("estimatedCompletionDate").getTime() - workEffort.getTimestamp("estimatedStartDate").getTime()) / 86400000;
+
         double rentalAdjustment = 0;
         if (persons > 1)    {
             if (persons > 2 ) {
-                persons -= 2; 
-                if(nthPersonPerc > 0) 
+                persons -= 2;
+                if(nthPersonPerc > 0)
                     rentalAdjustment = persons * nthPersonPerc;
                 else
                     rentalAdjustment = persons * secondPersonPerc;
@@ -1815,11 +1825,11 @@ public class OrderReadHelper {
                 rentalAdjustment += secondPersonPerc;
         }
         rentalAdjustment += 100;  // add final 100 percent for first person
-        rentalAdjustment = rentalAdjustment/100 * length; 
+        rentalAdjustment = rentalAdjustment/100 * length;
 //        Debug.logInfo("rental parameters....Nbr of persons:" + persons + " extra% 2nd person:" + secondPersonPerc + " extra% Nth person:" + nthPersonPerc + " Length: " + length + "  total rental adjustment:" + rentalAdjustment ,module);
         return rentalAdjustment; // return total rental adjustment
         }
-    
+
     public static double getAllOrderItemsAdjustmentsTotal(List orderItems, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
         double result = 0.0;
         Iterator itemIter = UtilMisc.toIterator(orderItems);
