@@ -187,6 +187,7 @@
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleProductPage"/>
+                <set field="configproductdetailScreen" value="component://ecommerce/widget/ecommerce/CatalogScreens.xml#configproductdetail"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/product.bsh"/>
             </actions>
             <widgets>
@@ -230,6 +231,7 @@
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/prepareconfigform.bsh"/>
             </actions>
             <widgets>
+                <include-screen name="breadcrumbs"/>
                 <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/configproductdetail.ftl"/></html></platform-specific>
             </widgets>
         </section>
