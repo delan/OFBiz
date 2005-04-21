@@ -187,7 +187,7 @@
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleProductPage"/>
-                <set field="configproductdetailScreen" value="component://ecommerce/widget/ecommerce/CatalogScreens.xml#configproductdetail"/>
+                <set field="configproductdetailScreen" value="component://ecommerce/widget/CatalogScreens.xml#configproductdetail"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/product.bsh"/>
             </actions>
             <widgets>
