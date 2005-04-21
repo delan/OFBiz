@@ -289,6 +289,15 @@ function gwAll(e) {
                     </td>
                   </tr>
 	        </#if>
+	        <#if cartLine.getQuoteId()?has_content>
+                <#if cartLine.getQuoteItemSeqId()?has_content>
+	          <tr>
+                    <td colspan="2" align="left">
+                      <div class="tabletext"><b>${uiLabelMap.OrderQuoteId}</b>: ${cartLine.getQuoteId()?if_exists} - ${cartLine.getQuoteItemSeqId()?if_exists}</div>
+                    </td>
+                  </tr>
+                </#if>
+	        </#if>
 	        <#if cartLine.getItemComment()?has_content>
 	          <tr><td align="left"><div class="tableheadtext">${uiLabelMap.CommonComment} : </div></td>
 	              <td align="left"><div class="tabletext">${cartLine.getItemComment()?if_exists}</div>
