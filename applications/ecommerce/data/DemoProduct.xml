@@ -550,6 +550,7 @@
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GC-100" productCategoryId="GC-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GC-100" productCategoryId="GC-102"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="GC-100"/>
 
     <ProductFeatureCategory productFeatureCategoryId="2000" description="Gift Card Features"/>
     <ProductFeature productFeatureId="2000" productFeatureTypeId="STYLE" productFeatureCategoryId="2000" description="Classic" defaultSequenceNum="1"/>
