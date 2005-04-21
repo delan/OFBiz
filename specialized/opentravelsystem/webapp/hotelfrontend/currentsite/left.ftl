@@ -23,6 +23,8 @@
 	for the use by a hotel for internet reservations.<br/><br/>
 	Only the options 'Book online', 'Order history' and 'profile' are served by this system. <br/>
 	The other options are going to the current site of this hotel.</b>
+	<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 	</font></td></tr>
 	</table></center></td></tr>
 </table>
+

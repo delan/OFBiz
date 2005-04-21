@@ -47,12 +47,12 @@
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
 
-    <webapp name="OpenTravelSystemWebsite"
+    <!--webapp name="OpenTravelSystemWebsite"
         title="Open Travel System Website"
         server="default-server"
         location="webapp/website"
         mount-point="/opentravelsystem"
-        app-bar-display="false"/>
+        app-bar-display="false"/-->
        
     <webapp name="hotelbackend"
         title="Hotel demo site Admininstrator backend"
@@ -82,7 +82,7 @@
         mount-point="/hotelfrontendimages"
         app-bar-display="false"/>        
         
-    <webapp name="HaagscheSuites"
+    <!--webapp name="HaagscheSuites"
         title="Haagsche Suites"
         server="default-server"
         location="webapp/HaagscheSuites"
@@ -93,7 +93,7 @@
         server="default-server"
         location="webapp/HaagscheSuites/images"
         mount-point="/HaagscheSuitesImages"
-        app-bar-display="false"/>        
+        app-bar-display="false"/-->        
         
     
 </ofbiz-component>
