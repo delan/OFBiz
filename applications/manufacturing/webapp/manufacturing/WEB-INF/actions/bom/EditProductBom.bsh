@@ -77,9 +77,6 @@ if(productAssoc == null) useValues = false;
 
 context.put("useValues", useValues);
 
-Collection formulas = delegator.findByAnd("Enumeration", UtilMisc.toMap("enumTypeId", "BOM_FORMULA"), UtilMisc.toList("enumId", "description"));
-context.put("formulas", formulas);
-
 Collection assocTypes = delegator.findByAnd("ProductAssocType", UtilMisc.toMap("parentTypeId", "PRODUCT_COMPONENT"), UtilMisc.toList("productAssocTypeId", "description"));
 context.put("assocTypes", assocTypes);
 

@@ -220,9 +220,8 @@ function lookupBom() {
             <#else>
                 <#assign selectedFormula = (request.getParameter("formula"))?if_exists>
             </#if>
-            <#list formulas as formula>
-                <option value="${formula.enumId}" <#if selectedFormula = formula.enumId>selected</#if>>${formula.description}</option>
-            </#list>
+            <option value="linearComponentFormula" <#if selectedFormula = "linearComponentFormula">selected</#if>>Linear product</option>
+            </select>
         </td>
     </tr>
 
