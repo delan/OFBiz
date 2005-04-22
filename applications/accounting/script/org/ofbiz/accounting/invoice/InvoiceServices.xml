@@ -54,7 +54,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         
-        <if-empty field-name="datetimeReceived" map-name="newEntity">
+        <if-empty field-name="datetimePerformed" map-name="newEntity">
             <now-timestamp-to-env env-name="nowTimestamp"/>
             <env-to-field env-name="nowTimestamp" field-name="datetimePerformed" map-name="newEntity"/>
         </if-empty>        
