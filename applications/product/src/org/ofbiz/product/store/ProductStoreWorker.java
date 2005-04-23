@@ -434,14 +434,13 @@ public class ProductStoreWorker {
     }
 
     public static List getSurveys(GenericDelegator delegator, String productStoreId, String groupName, String productId, String surveyApplTypeId) {
-        try {
-            
         List surveys = new LinkedList();
         List storeSurveys = null;
         try {
             storeSurveys = delegator.findByAndCache("ProductStoreSurveyAppl", UtilMisc.toMap("productStoreId", productStoreId, "surveyApplTypeId", surveyApplTypeId), UtilMisc.toList("sequenceNum"));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to get ProductStoreSurveyAppl for store : " + productStoreId, module);
+            return surveys;
         }
 
         // limit by date
@@ -499,16 +498,11 @@ public class ProductStoreWorker {
                     }
                 }
             }
-        } else {
+        } else if (storeSurveys != null) {
             surveys.addAll(storeSurveys);
         }
 
         return surveys;
-
-        } catch (RuntimeException e) {
-            Debug.logError(e, "Caught RuntimeException in getSurveys: " + e.toString(), module);
-            throw e;
-        }
     }
 
     /** Returns the number of responses for this survey by party */
