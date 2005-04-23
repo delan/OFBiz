@@ -38,6 +38,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * CategoryServices - Category Services
@@ -51,7 +52,6 @@ public class CategoryServices {
     public static final String module = CategoryServices.class.getName();
 
     public static Map getCategoryMembers(DispatchContext dctx, Map context) {
-        Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         String categoryId = (String) context.get("categoryId");
         GenericValue productCategory = null;
@@ -62,45 +62,38 @@ public class CategoryServices {
             members = EntityUtil.filterByDate(productCategory.getRelatedCache("ProductCategoryMember", null, UtilMisc.toList("sequenceNum")), true);
             if (Debug.verboseOn()) Debug.logVerbose("Category: " + productCategory + " Member Size: " + members.size() + " Members: " + members, module);
         } catch (GenericEntityException e) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Problem reading product categories: " + e.getMessage());
-            return result;
+            String errMsg = "Problem reading product categories: " + e.getMessage();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
         }
+        Map result = ServiceUtil.returnSuccess();
         result.put("category", productCategory);
         result.put("categoryMembers", members);
         return result;
     }
 
     public static Map getNextPreviousCategoryMembers(DispatchContext dctx, Map context) {
-        Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         String categoryId = (String) context.get("categoryId");
         String productId = (String) context.get("productId");
         Integer index = (Integer) context.get("index");
 
         if (index == null && productId == null) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Both Index and ProductID cannot be null.");
-            return result;
+            return ServiceUtil.returnError("Both Index and ProductID cannot be null.");
         }
 
         Map values = getCategoryMembers(dctx, context);
 
         if (values.containsKey(ModelService.ERROR_MESSAGE)) {
-            return result;
+            return values;
         }
         if (!values.containsKey("categoryMembers") || values.get("categoryMembers") == null) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Problem reading category data.");
-            return result;
+            return ServiceUtil.returnError("Problem reading category data.");
         }
 
         Collection memberCol = (Collection) values.get("categoryMembers");
-
         if (memberCol == null || memberCol.size() == 0) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Problem reading category member data.");
-            return result;
+            return ServiceUtil.returnError("Problem reading category member data.");
         }
 
         List memberList = new ArrayList(memberCol);
@@ -117,11 +110,11 @@ public class CategoryServices {
         }
 
         if (index == null) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Product not found in the current category.");
-            return result;
+            // this is not going to be an error condition because we don't want it to be so critical, ie rolling back the transaction and such
+            return ServiceUtil.returnSuccess("Product not found in the current category.");
         }
 
+        Map result = ServiceUtil.returnSuccess();
         result.put("category", values.get("category"));
 
         String previous = null;

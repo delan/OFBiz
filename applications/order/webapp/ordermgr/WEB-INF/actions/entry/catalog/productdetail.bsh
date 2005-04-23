@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -140,6 +140,10 @@ if (product != null) {
     Map catNextPreviousResult = null;
     if (!UtilValidate.isEmpty(categoryId)) {
         catNextPreviousResult = dispatcher.runSync("getPreviousNextProducts", UtilMisc.toMap("categoryId", categoryId, "productId", productId));
+        if (ServiceUtil.isError(catNextPreviousResult)) {
+            request.setAttribute("errorMessageList", UtilMisc.toList(ServiceUtil.getErrorMessage(catNextPreviousResult)));
+            return;
+        }
         if (catNextPreviousResult != null && catNextPreviousResult.get("category") != null) {
             context.put("category", catNextPreviousResult.get("category"));
             context.put("previousProductId", catNextPreviousResult.get("previousProductId"));
