@@ -182,12 +182,14 @@ public final class BshUtil {
         } catch (EvalError ee) {
             Throwable t = ee.getCause();
             if (t == null) {
+                Debug.logWarning(ee, "WARNING: no cause (from getCause) found for BSH EvalError: " + ee.toString(), module);
                 t = ee;
+            } else {
+                Debug.logError(t, "ERROR: Got cause (from getCause) for BSH EvalError: " + ee.toString(), module);
             }
             
-            String errMsg = "Error running BSH script at [" + location + "], line [" + ee.getErrorLineNumber() + "]: " + ee.toString();
+            String errMsg = "Error running BSH script at [" + location + "], line [" + ee.getErrorLineNumber() + "]: " + t.toString();
             // don't log the full exception, just the main message; more detail logged later
-            //Debug.logError(e, errMsg, module);
             throw new GeneralException(errMsg, t);
         }
     }
