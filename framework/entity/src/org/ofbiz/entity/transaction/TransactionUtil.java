@@ -159,7 +159,7 @@ public class TransactionUtil implements Status {
 
     private static ThreadLocal suspendedTxStack = new ThreadLocal();
 
-    // BE VERY CARFUL WHERE YOU CALL THIS!!
+    /** BE VERY CARFUL WHERE YOU CALL THIS!! */
     public static int cleanSuspendedTranactions() throws GenericTransactionException {
         Transaction trans = null;
         int num = 0;
@@ -362,9 +362,8 @@ public class TransactionUtil implements Status {
 
                 if (status != STATUS_NO_TRANSACTION) {
                     if (status != STATUS_MARKED_ROLLBACK) {
-                        if (Debug.infoOn()) Thread.dumpStack();
+                        if (Debug.warningOn()) Debug.logWarning(new Exception(), "[TransactionUtil.setRollbackOnly] Calling transaction setRollbackOnly; this stack trace shows where this is happening:", module);
                         ut.setRollbackOnly();
-                        Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction rollback only set", module);
                     } else {
                         Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction rollback only not set, rollback only is already set.", module);
                     }
