@@ -434,6 +434,8 @@ public class ProductStoreWorker {
     }
 
     public static List getSurveys(GenericDelegator delegator, String productStoreId, String groupName, String productId, String surveyApplTypeId) {
+        try {
+            
         List surveys = new LinkedList();
         List storeSurveys = null;
         try {
@@ -502,6 +504,11 @@ public class ProductStoreWorker {
         }
 
         return surveys;
+
+        } catch (RuntimeException e) {
+            Debug.logError(e, "Caught RuntimeException in getSurveys: " + e.toString(), module);
+            throw e;
+        }
     }
 
     /** Returns the number of responses for this survey by party */
