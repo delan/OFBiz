@@ -37,7 +37,7 @@
     <screen name="minicart">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/minicart.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelfrontend/updatedFtl/minicart.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

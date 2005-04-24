@@ -117,7 +117,7 @@
             <widgets>
                 <container style="right">
                     <include-screen name="language"/>
-                    <include-screen name="minicart" location="component://ecommerce/widget/CartScreens.xml"/>
+                    <include-screen name="minicart" location="component://opentravelsystem/webapp/hotelfrontend/screens/CartScreens.xml"/>
                     <include-screen name="minipromotext" location="component://ecommerce/widget/CartScreens.xml"/>
                     <include-screen name="miniassocprods" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <!--include-screen name="factoids" location="component://ecommerce/widget/ContentScreens.xml"/-->
