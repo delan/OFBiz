@@ -27,18 +27,18 @@ background: #000000;
 }
 
 .mainblock {
-background: #D4D0C8;
+background-color: #D4D0C8;
 vertical-align: top;
 }
 
 .tabdownblock {
-background: #B4B0AA;
+background-color: #B4B0AA;
 }
 
 .tabdowncenter {
 font-family: Arial, Helvetica, sans-serif;
 background-image: url(tabs/tab_down_fill.gif);
-background: #B4B0AA;
+background-color: #B4B0AA;
 font-size: 15pt;
 text-align: center;
 vertical-align: middle;
@@ -47,19 +47,19 @@ color: #000000;
 
 .tabdownleft {
 background-image: url(tabs/tab_down_left.gif);
-background: #B4B0AA;
+background-color: #B4B0AA;
 	
 }
 
 .tabdownright {
 background-image: url(tabs/tab_down_right.gif);
-background: #B4B0AA;
+background-color: #B4B0AA;
 }
 
 .tabupcenter {
 font-family: Arial, Helvetica, sans-serif;
 background-image: url(tabs/tab_up_fill.gif);
-background: #D4D0C8;	
+background-color: #D4D0C8;	
 font-size: 15pt;
 text-align: center;
 vertical-align: middle;
@@ -68,14 +68,14 @@ color: #000000;
 
 .tabupleft {
 background-image: url(tabs/tab_up_left.gif);
-background: #D4D0C8;    
+background-color: #D4D0C8;    
 border-width: 0px;
 padding: 0px;
 }
 
 .tabupright {
 background-image: url(tabs/tab_up_right.gif);
-background: #D4D0C8;
+background-color: #D4D0C8;
 }
 
 A.tablink,A.tablink:hover,A.tablinkselected,A.tablinkselected:hover {	
