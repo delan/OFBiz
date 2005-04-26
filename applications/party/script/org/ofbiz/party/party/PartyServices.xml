@@ -288,4 +288,197 @@
             <field-to-result field-name="parties"/>
         </if-not-empty>         
     </simple-method>    
+
+    <simple-method method-name="getParentOrganizations" short-description="Gets Parent Organizations for an Organization Party">
+        <env-to-env env-name="parameters.organizationPartyId" to-env-name="relatedPartyIdList[]"/>
+        <env-to-env env-name="parameters.getParentsOfParents" to-env-name="recurse"/>
+        <if-empty field-name="recurse"><string-to-field string="Y" field-name="recurse"/></if-empty>
+        
+        <string-to-field string="GROUP_ROLLUP" field-name="partyRelationshipTypeId"/>
+        <string-to-field string="ORGANIZATION_UNIT" field-name="roleTypeIdFrom"/>
+        <string-to-field string="PARENT_ORGANIZATION" field-name="roleTypeIdTo"/>
+        <string-to-field string="Y" field-name="roleTypeIdFromInclueAllChildTypes"/>
+
+        <string-to-field string="Y" field-name="includeFromToSwitched"/>
+        
+        <call-simple-method method-name="followPartyRelationshipsInline"/>
+        
+        <field-to-result field-name="relatedPartyIdList" result-name="parentOrganizationPartyIdList"/>
+    </simple-method>    
+
+    <simple-method method-name="getRelatedParties" short-description="Get Parties Related to a Party">
+        <env-to-env env-name="parameters.partyIdFrom" to-env-name="relatedPartyIdList[]"/>
+        <env-to-env env-name="parameters.partyRelationshipTypeId" to-env-name="partyRelationshipTypeId"/>
+        <env-to-env env-name="parameters.roleTypeIdFrom" to-env-name="roleTypeIdFrom"/>
+        <env-to-env env-name="parameters.roleTypeIdFromInclueAllChildTypes" to-env-name="roleTypeIdFromInclueAllChildTypes"/>
+        <env-to-env env-name="parameters.roleTypeIdTo" to-env-name="roleTypeIdTo"/>
+        <env-to-env env-name="parameters.roleTypeIdToIncludeAllChildTypes" to-env-name="roleTypeIdToIncludeAllChildTypes"/>
+        <env-to-env env-name="parameters.includeFromToSwitched" to-env-name="includeFromToSwitched"/>
+        <env-to-env env-name="parameters.recurse" to-env-name="recurse"/>
+        
+        <call-simple-method method-name="followPartyRelationshipsInline"/>
+
+        <field-to-result field-name="relatedPartyIdList"/>
+    </simple-method>
+    
+    <simple-method method-name="followPartyRelationshipsInline" short-description="followPartyRelationshipsInline">
+        <!--
+            Uses the following fields in the env (with * are required):
+             - relatedPartyIdList* (initial partyIdFrom should be in this list; accumulator of new partyIds, ie all partyIdTo found will be added to this, thus can support recursion)
+             - partyRelationshipTypeId
+             - roleTypeIdFrom
+             - roleTypeIdFromInclueAllChildTypes
+             - roleTypeIdTo
+             - roleTypeIdToIncludeAllChildTypes
+             - includeFromToSwitched
+             - recurse
+        -->
+        
+        <if-empty field-name="nowTimestamp"><now-timestamp-to-env env-name="nowTimestamp"/></if-empty>
+        
+        <!-- only create these if they don't already exist, more efficient and avoids potential problems in recursed calls -->
+        <if-empty field-name="_inline_roleTypeIdFromList">
+            <field-to-list field-name="roleTypeIdFrom" list-name="_inline_roleTypeIdFromList"/>
+            <if-compare field-name="roleTypeIdFromInclueAllChildTypes" operator="equals" value="Y">
+                <string-to-field string="_inline_roleTypeIdFromList" field-name="roleTypeIdListName"/>
+                <call-simple-method method-name="getChildRoleTypesInline"/>
+            </if-compare>
+        </if-empty>
+        <if-empty field-name="_inline_roleTypeIdToList">
+            <field-to-list field-name="roleTypeIdTo" list-name="_inline_roleTypeIdToList"/>
+            <if-compare field-name="roleTypeIdToInclueAllChildTypes" operator="equals" value="Y">
+                <string-to-field string="_inline_roleTypeIdToList" field-name="roleTypeIdListName"/>
+                <call-simple-method method-name="getChildRoleTypesInline"/>
+            </if-compare>
+        </if-empty>
+
+        <call-simple-method method-name="followPartyRelationshipsInlineRecurse"/>
+    </simple-method>
+    <simple-method method-name="followPartyRelationshipsInlineRecurse" short-description="followPartyRelationshipsInlineRecurse">
+        <iterate entry-name="relatedPartyId" list-name="relatedPartyIdList">
+            <if>
+                <condition><not><if-compare-field field-name="_inline_relatedPartyIdAlreadySearchedList" operator="contains" to-field-name="relatedPartyId"/></not></condition>
+                <then>
+                    <field-to-list field-name="relatedPartyId" list-name="_inline_relatedPartyIdAlreadySearchedList"/>
+                    
+                    <clear-field field-name="_inline_PartyRelationshipList"/>
+                    <entity-condition entity-name="PartyRelationship" list-name="_inline_PartyRelationshipList">
+                        <condition-list combine="and">
+                            <condition-expr field-name="partyIdFrom" env-name="relatedPartyId"/>
+                            <condition-expr field-name="roleTypeIdFrom" operator="in" env-name="_inline_roleTypeIdFromList" ignore-if-empty="true"/>
+                            <condition-expr field-name="roleTypeIdTo" operator="in" env-name="_inline_roleTypeIdToList" ignore-if-empty="true"/>
+                            <condition-expr field-name="partyRelationshipTypeId" env-name="partyRelationshipTypeId" ignore-if-empty="true"/>
+            
+                            <condition-expr field-name="fromDate" operator="less-equals" env-name="nowTimestamp"/>
+                            <condition-list combine="or">
+                                <condition-expr field-name="thruDate" operator="equals" env-name="nullField"/>
+                                <condition-expr field-name="thruDate" operator="greater" env-name="nowTimestamp"/>
+                            </condition-list>
+                        </condition-list>
+                        
+                        <!-- get the newest (highest date) first -->
+                        <order-by field-name="-fromDate"/>
+                    </entity-condition>
+                    <iterate entry-name="_inline_PartyRelationship" list-name="_inline_PartyRelationshipList">
+                        <if>
+                            <condition>
+                                <and>
+                                    <not><if-compare-field field-name="relatedPartyIdList" operator="contains" to-field-name="_inline_PartyRelationship.partyIdTo"/></not>
+                                    <not><if-compare-field field-name="_inline_NewRelatedPartyIdList" operator="contains" to-field-name="_inline_PartyRelationship.partyIdTo"/></not>
+                                </and>
+                            </condition>
+                            <then>
+                                <field-to-list field-name="_inline_PartyRelationship.partyIdTo" list-name="_inline_NewRelatedPartyIdList"/>
+                            </then>
+                        </if>
+                    </iterate>
+                    
+                    <if-compare field-name="includeFromToSwitched" operator="equals" value="Y">
+                        <clear-field field-name="_inline_PartyRelationshipList"/>
+                        <entity-condition entity-name="PartyRelationship" list-name="_inline_PartyRelationshipList">
+                            <condition-list combine="and">
+                                <condition-expr field-name="partyIdTo" env-name="relatedPartyId"/>
+                                <condition-expr field-name="roleTypeIdTo" operator="in" env-name="_inline_roleTypeIdFromList" ignore-if-empty="true"/>
+                                <condition-expr field-name="roleTypeIdFrom" operator="in" env-name="_inline_roleTypeIdToList" ignore-if-empty="true"/>
+                                <condition-expr field-name="partyRelationshipTypeId" env-name="partyRelationshipTypeId" ignore-if-empty="true"/>
+                
+                                <condition-expr field-name="fromDate" operator="less-equals" env-name="nowTimestamp"/>
+                                <condition-list combine="or">
+                                    <condition-expr field-name="thruDate" operator="equals" env-name="nullField"/>
+                                    <condition-expr field-name="thruDate" operator="greater" env-name="nowTimestamp"/>
+                                </condition-list>
+                            </condition-list>
+                            
+                            <!-- get the newest (highest date) first -->
+                            <order-by field-name="-fromDate"/>
+                        </entity-condition>
+                        <iterate entry-name="_inline_PartyRelationship" list-name="_inline_PartyRelationshipList">
+                            <if>
+                                <condition>
+                                    <and>
+                                        <not><if-compare-field field-name="relatedPartyIdList" operator="contains" to-field-name="_inline_PartyRelationship.partyIdFrom"/></not>
+                                        <not><if-compare-field field-name="_inline_NewRelatedPartyIdList" operator="contains" to-field-name="_inline_PartyRelationship.partyIdFrom"/></not>
+                                    </and>
+                                </condition>
+                                <then>
+                                    <field-to-list field-name="_inline_PartyRelationship.partyIdFrom" list-name="_inline_NewRelatedPartyIdList"/>
+                                </then>
+                            </if>
+                        </iterate>
+                    </if-compare>
+                </then>
+            </if>
+        </iterate>
+        
+        <!-- if we found new ones, add them to the master list and if recurse=Y then recurse -->
+        <if-not-empty field-name="_inline_NewRelatedPartyIdList">
+            <list-to-list list-name="_inline_NewRelatedPartyIdList" to-list-name="relatedPartyIdList"/>
+            <if-compare field-name="recurse" operator="equals" value="Y">
+                <call-simple-method method-name="followPartyRelationshipsInlineRecurse"/>
+            </if-compare>
+        </if-not-empty>
+    </simple-method>
+    
+    <simple-method method-name="getChildRoleTypes" short-description="Get Child RoleTypes">
+        <field-to-list field-name="roleTypeId" list-name="childRoleTypeIdList"/>
+        <string-to-field string="childRoleTypeIdList" field-name="roleTypeIdListName"/>
+        <call-simple-method method-name="getChildRoleTypesInline"/>
+        <field-to-result field-name="childRoleTypeIdList"/>
+    </simple-method>
+    <simple-method method-name="getChildRoleTypesInline" short-description="getChildRoleTypes">
+        <clear-field field-name="_inline_NewRoleTypeIdList"/>
+        
+        <iterate entry-name="roleTypeId" list-name="${roleTypeIdListName}">
+            <if>
+                <condition><not><if-compare-field field-name="_inline_roleTypeIdAlreadySearchedList" operator="contains" to-field-name="roleTypeId"/></not></condition>
+                <then>
+                    <field-to-list field-name="roleTypeId" list-name="_inline_roleTypeIdAlreadySearchedList"/>
+                    
+                    <clear-field field-name="_inline_RoleTypeIdList"/>
+                    <entity-condition entity-name="RoleType" list-name="_inline_RoleTypeIdList" use-cache="true">
+                        <condition-expr field-name="parentTypeId" operator="equals" env-name="roleTypeId"/>
+                    </entity-condition>
+                    <iterate entry-name="newRoleTypeId" list-name="_inline_RoleTypeIdList">
+                        <if>
+                            <condition>
+                                <and>
+                                    <not><if-compare-field field-name="${roleTypeIdListName}" operator="contains" to-field-name="newRoleTypeId"/></not>
+                                    <not><if-compare-field field-name="_inline_NewRoleTypeIdList" operator="contains" to-field-name="newRoleTypeId"/></not>
+                                </and>
+                            </condition>
+                            <then>
+                                <field-to-list field-name="newRoleTypeId" list-name="_inline_NewRoleTypeIdList"/>
+                            </then>
+                        </if>
+                    </iterate>
+                </then>
+            </if>
+        </iterate>
+        
+        <!-- if we found some new types, add them to the main list -->
+        <if-not-empty field-name="_inline_NewRoleTypeIdList">
+            <list-to-list list-name="_inline_NewRoleTypeIdList" to-list-name="${roleTypeIdListName}"/>
+            <call-simple-method method-name="getChildRoleTypesInline"/>
+        </if-not-empty>
+    </simple-method>    
 </simple-methods>

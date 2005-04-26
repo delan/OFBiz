@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -37,7 +37,6 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
         <sequenced-id-to-env sequence-name="CustomTimePeriod" env-name="customTimePeriodId"/>
-        <to-string field-name="customTimePeriodId"/>
         <env-to-field env-name="customTimePeriodId" map-name="newEntity"/>
         <field-to-result field-name="customTimePeriodId" result-name="customTimePeriodId"/>
         
@@ -49,7 +48,7 @@
 
         <make-value value-name="lookupPKMap" entity-name="CustomTimePeriod"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="CustomTimePeriod" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -59,7 +58,61 @@
 
         <make-value value-name="lookupPKMap" entity-name="CustomTimePeriod"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="CustomTimePeriod" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="findCustomTimePeriod" short-description="Find a CustomTimePeriod">
+        <if-not-empty field-name="parameters.organizationPartyId">
+            <!-- walk up the tree and find all party groups that this is a member of, and include the periods for all of them -->
+            <env-to-env env-name="parameters.organizationPartyId" to-env-name="getParentOrganizationsCallMap.organizationPartyId"/>
+            <call-service service-name="getParentOrganizations" in-map-name="getParentOrganizationsCallMap">
+                <result-to-field result-name="parentOrganizationPartyIdList"/>
+            </call-service>
+            
+            <iterate entry-name="curOrganizationPartyId" list-name="parentOrganizationPartyIdList">
+                <clear-field field-name="orgTimePeriodList"/>
+                <entity-condition entity-name="CustomTimePeriod" list-name="orgTimePeriodList">
+                    <condition-list combine="and">
+                        <condition-list combine="or">
+                            <condition-expr field-name="organizationPartyId" operator="equals" env-name="curOrganizationPartyId"/>
+                        </condition-list>
+                        <condition-expr field-name="fromDate" operator="less-equals" env-name="findDate"/>
+                        <condition-list combine="or">
+                            <condition-expr field-name="thruDate" operator="greater" env-name="findDate"/>
+                            <condition-expr field-name="thruDate" operator="equals" env-name="nullField"/>
+                        </condition-list>
+                        <condition-expr field-name="periodTypeId" operator="in" env-name="parameters.onlyIncludePeriodTypeIdList" ignore-if-empty="true"/>
+                    </condition-list>
+                </entity-condition>
+                <list-to-list list-name="orgTimePeriodList" to-list-name="listSoFar"/>
+            </iterate>
+        </if-not-empty>
+        
+        <if-compare field-name="parameters.excludeNoOrganizationPeriods" operator="not-equals" value="Y">
+            <entity-condition entity-name="CustomTimePeriod" list-name="generalCustomTimePeriodList">
+                <condition-list combine="and">
+                    <condition-list combine="or">
+                        <condition-expr field-name="organizationPartyId" operator="equals" env-name="nullField"/>
+                        <condition-expr field-name="organizationPartyId" operator="equals" value="_NA_"/>
+                    </condition-list>
+                    <condition-expr field-name="fromDate" operator="less-equals" env-name="findDate"/>
+                    <condition-list combine="or">
+                        <condition-expr field-name="thruDate" operator="greater" env-name="findDate"/>
+                        <condition-expr field-name="thruDate" operator="equals" env-name="nullField"/>
+                    </condition-list>
+                    <condition-expr field-name="periodTypeId" operator="in" env-name="parameters.onlyIncludePeriodTypeIdList" ignore-if-empty="true"/>
+                </condition-list>
+            </entity-condition>
+            <list-to-list list-name="generalCustomTimePeriodList" to-list-name="listSoFar"/>
+        </if-compare>
+        
+        <!--
+            * We might want to implement this sometime in the future, but for now is not needed 
+            * go through the list and check each one to see if it has a child in the list, if so don't copy it
+        <if-compare field-name="parameters.excludeParentPeriods" operator="equals" value="Y"></if-compare>
+        -->
+
+        <field-to-result field-name="listSoFar" result-name="customTimePeriodList"/>
     </simple-method>
 </simple-methods>

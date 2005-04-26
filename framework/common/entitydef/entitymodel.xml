@@ -260,6 +260,7 @@
       <field name="periodName" type="name"></field>
       <field name="fromDate" type="date"></field>
       <field name="thruDate" type="date"></field>
+      <field name="isClosed" type="indicator"></field>
       <prim-key field="customTimePeriodId"/>
       <relation type="one" fk-name="ORG_PRD_PARPER" title="Parent" rel-entity-name="CustomTimePeriod">
         <key-map field-name="parentPeriodId" rel-field-name="customTimePeriodId"/>

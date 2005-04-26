@@ -82,6 +82,49 @@
         <override name="partyIdFrom" optional="false"/>
     </service>
 
+    <service name="getRelatedParties" engine="simple"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="getRelatedParties">
+        <description>
+            Get Parties Related to a Party
+            - The relatedPartyIdList coming out will include the original partyIdFrom
+            - The includeFromToSwitched and recurse attributes default to N.
+        </description>
+        <attribute name="partyIdFrom" type="String" mode="IN" optional="false"/>
+        <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeIdFrom" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeIdFromInclueAllChildTypes" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeIdTo" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeIdToIncludeAllChildTypes" type="String" mode="IN" optional="true"/>
+        <attribute name="includeFromToSwitched" type="String" mode="IN" optional="true"/>
+        <attribute name="recurse" type="String" mode="IN" optional="true"/>
+        <attribute name="relatedPartyIdList" type="List" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="getParentOrganizations" engine="simple"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="getParentOrganizations">
+        <description>
+            Gets Parent Organizations for an Organization Party.
+            This uses the PartyRelationship table with partyRelationshipTypeId="GROUP_ROLLUP".
+            The Parent Organization will be in the relationship on either side with roleTypeId="PARENT_ORGANIZATION".
+            The Child Organization will be in the relationship on either side with roleTypeId="ORGANIZATION_UNIT", or any child of that type.
+            The getParentsOfParents attribute defaults to Y.
+            The parentOrganizationPartyIdList coming out will contain the original organizationPartyId.
+        </description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="getParentsOfParents" type="String" mode="IN" optional="true"/>
+        <attribute name="parentOrganizationPartyIdList" type="List" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="getChildRoleTypes" engine="simple"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="getChildRoleTypes">
+        <description>
+            Get Child RoleTypes.
+            The childRoleTypeIdList coming out will contain the original roleTypeId.
+        </description>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="childRoleTypeIdList" type="List" mode="OUT" optional="false"/>
+    </service>
+
     <!-- PostalAddressBoundary -->
     <service name="getPostalAddressBoundary" engine="simple"
             location="org/ofbiz/party/party/PartyServices.xml" invoke="getPostalAddressBoundary">

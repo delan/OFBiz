@@ -121,7 +121,6 @@
     <RoleType description="Internal Organization" hasTable="Y" parentTypeId="ORGANIZATION_ROLE" roleTypeId="INTERNAL_ORGANIZATIO"/>
     <RoleType description="Limited Administrator" hasTable="N" parentTypeId="ADMIN" roleTypeId="LTD_ADMIN"/>
     <RoleType description="Organization Unit" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="ORGANIZATION_UNIT"/>
-    <RoleType description="Parent Organization" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="PARENT_ORGANIZATION"/>
     <RoleType description="Partner" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="PARTNER"/>
     <RoleType description="Placing Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="PLACING_CUSTOMER"/>
     <RoleType description="Regulatory Agency" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="REGULATORY_AGENCY"/>
@@ -144,6 +143,7 @@
     <RoleType description="Order Clerk" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="ORDER_CLERK"/>
     <RoleType description="Other Internal" hasTable="N" parentTypeId="INTERNAL_ORGANIZATIO" roleTypeId="OTHER_INTERNAL_ORGAN"/>
     <RoleType description="Other Organization Unit" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="OTHER_ORGANIZATION_U"/>
+    <RoleType description="Parent Organization" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="PARENT_ORGANIZATION"/>
     <RoleType description="Packer" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="PACKER"/>
     <RoleType description="Picker" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="PICKER"/>
     <RoleType description="Receiver" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="RECEIVER"/>
