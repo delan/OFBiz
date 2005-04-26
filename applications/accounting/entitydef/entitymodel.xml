@@ -1110,7 +1110,6 @@
       <field name="postedDebits" type="currency-amount"></field>
       <field name="postedCredits" type="currency-amount"></field>
       <field name="endingBalance" type="currency-amount"></field>
-      <field name="isClosed" type="indicator"></field>
       <prim-key field="glAccountId"/>
       <prim-key field="organizationPartyId"/>
       <prim-key field="customTimePeriodId"/>
