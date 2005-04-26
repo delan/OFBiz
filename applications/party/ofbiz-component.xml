@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -29,12 +29,16 @@
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="config"/>
     <classpath type="dir" location="script"/>
+
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/PartyTypeData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/PartySecurityData.xml"/>
+
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_view.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
+
     <webapp name="party"
         title="Party"
         server="default-server"
@@ -42,4 +46,3 @@
         base-permission="PARTYMGR"
         mount-point="/partymgr"/>
 </ofbiz-component>
-
