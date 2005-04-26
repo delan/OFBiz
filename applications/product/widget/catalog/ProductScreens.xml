@@ -518,7 +518,7 @@
                 <set field="titleProperty" value="PageTitleEditProductFeatures"/>
                 <set field="headerItem" value="product"/>
                 <set field="tabButtonItem" value="EditProductFeatures"/>
-                <set field="labelTitleProperty" value=""/>
+                <set field="labelTitleProperty" value="ProductFeatures"/>
     
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-name="product"/>
