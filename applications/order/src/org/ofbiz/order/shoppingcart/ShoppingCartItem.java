@@ -670,7 +670,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         List selFixedAssetProduct = null;
         GenericValue fixedAssetProduct = null;
         try {
-            List allFixedAssetProduct = delegator.findByAnd("FixedAssetProduct", UtilMisc.toMap("productId", productId, "fixedAssetProductTypeId", "FAPT_USE "));
+            List allFixedAssetProduct = delegator.findByAnd("FixedAssetProduct", UtilMisc.toMap("productId", productId, "fixedAssetProductTypeId", "FAPT_USE"));
             selFixedAssetProduct = EntityUtil.filterByDate(allFixedAssetProduct, UtilDateTime.nowTimestamp(), "fromDate", "thruDate", true);
         } catch (GenericEntityException e) {
             return "Could not find a related Fixed Asset for the product: " + productId;
