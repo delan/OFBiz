@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,20 +25,7 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#if hasPermission>
-    
-    <div class="head1">${uiLabelMap.ProductFeatures} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.internalName)?if_exists} </#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
-    
-    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
-    <#if productId?has_content>
-        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductProductPage}]</a>
-    </#if>
-    <br>
-    <br>
-    
     <#if productId?exists>    
-
         <table border="1" cellpadding="2" cellspacing="0">
         <form method=POST action="<@ofbizUrl>/UpdateFeatureToProductApplication</@ofbizUrl>" name="selectAllForm">
         <input type="hidden" name="_useRowSubmit" value="Y">
@@ -77,7 +64,7 @@
                     <#assign hasExpired = false>
                     <#if (productFeatureAndAppl.getTimestamp("thruDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
                     <input type='text' size='25' name='thruDate_o_${rowCount}' value='${(productFeatureAndAppl.thruDate)?if_exists}' class='inputBox' <#if hasExpired> style='color: red;'</#if>>
-                    <a href="javascript:call_cal(document.selectAllForm.thruDate_o_${rowCount}, '${(productFeatureAndAppl.thruDate)?default(nowTimestampString)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+                    <a href="javascript:call_cal(document.selectAllForm.thruDate_o_${rowCount}, '${(productFeatureAndAppl.thruDate)?default(nowTimestamp?string)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                     <input type=text size='6' name='amount_o_${rowCount}' value='${(productFeatureAndAppl.amount)?if_exists}'  class='inputBox'>
                     <input type=text size='5' name='sequenceNum_o_${rowCount}' value='${(productFeatureAndAppl.sequenceNum)?if_exists}' class='inputBox'>
                 <select class='selectBox' name='productFeatureApplTypeId_o_${rowCount}' size=1>
@@ -150,9 +137,9 @@
         </select>
         <br>
         <span class='tabletext'>${uiLabelMap.CommonFrom} : </span><input type=text size='25' name='fromDate' class='inputBox'>
-        <a href="javascript:call_cal(document.addFeatureByTypeIdCode.fromDate, '${nowTimestampString}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+        <a href="javascript:call_cal(document.addFeatureByTypeIdCode.fromDate, '${nowTimestamp?string}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
         <span class='tabletext'>${uiLabelMap.CommonThru} : </span><input type=text size='25' name='thruDate' class='inputBox'>
-        <a href="javascript:call_cal(document.addFeatureByTypeIdCode.thruDate, '${nowTimestampString}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+        <a href="javascript:call_cal(document.addFeatureByTypeIdCode.thruDate, '${nowTimestamp?string}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
         <span class='tabletext'>${uiLabelMap.CommonSequence} : </span><input type=text size='5' name='sequenceNum' class='inputBox'>
         <input type="submit" value="Add" style='font-size: x-small;'>
         </form>
@@ -177,15 +164,11 @@
         </select>
         <br>
         <span class="tabletext">${uiLabelMap.CommonFrom} : </span><input type=text size="25" name="fromDate" class="inputBox">
-        <a href="javascript:call_cal(document.addFeatureById.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+        <a href="javascript:call_cal(document.addFeatureById.fromDate, '${nowTimestamp?string}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
         <span class="tabletext">${uiLabelMap.CommonThru} : </span><input type=text size="25" name="thruDate" class="inputBox">
-        <a href="javascript:call_cal(document.addFeatureById.thruDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+        <a href="javascript:call_cal(document.addFeatureById.thruDate, '${nowTimestamp?string}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
         <span class="tabletext">${uiLabelMap.CommonSequence} : </span><input type=text size="5" name="sequenceNum" class="inputBox">
         <input type="submit" value="Add" style="font-size: x-small;">
         </form>
     </#if>
-    <br>
-
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>
+    <br/>
