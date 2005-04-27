@@ -1712,7 +1712,12 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (configWrapper != null && !configWrapper.equals(this.configWrapper)) {
             return false;
         }
-        
+
+        if (quoteId != null) {
+            // all items linked to a quote are unique
+            return false;
+        }
+
         return true;
     }
 

@@ -68,7 +68,7 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     
-    <simple-method method-name="getRequirementsForSupplier" short-description="Add a task to a requirement">
+    <simple-method method-name="getRequirementsForSupplier" short-description="Get the requirements applicable to a given supplier">
         <make-value value-name="newEntity" entity-name="Requirement"/>
         <entity-condition entity-name="Requirement" list-name="requirementsForSupplier">
             <condition-object field-name="parameters.requirementConditions"/>
