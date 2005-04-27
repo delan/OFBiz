@@ -63,6 +63,7 @@
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="main"/>
                 <set field="prodCatalogId" from-scope="user" from-field="prodCatalogId"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId" global="true"/>
                 <!--set field="leftbarScreenName" value="leftbar"/-->
             </actions>
             <widgets>
@@ -138,8 +139,8 @@
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="categories"/>
                 <set field="page.tabButtonItem" value="EditCategory"/>
-                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
-                <set field="prodCatalogId" from-scope="application" from-field="prodCatalogId"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
+                <set field="prodCatalogId" from-scope="user" from-field="prodCatalogId"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <!--set field="leftbarScreenName" value="leftbar"/-->
                 <entity-one entity-name="ProductCategory" value-name="productCategory"/>
@@ -163,7 +164,7 @@
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="categories"/>
                 <set field="page.tabButtonItem" value="EditCategoryProducts"/>

@@ -1,7 +1,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
 
     <form name="selectStore" type="list" list-name="stores" 
-             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="main">
+             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="setStore">
         <field name="productStoreId" title="${uiLabelMap.productStoreId}&amp;nbsp;-&amp;nbsp;[${uiLabelMap.StoreName}]" widget-style="tabletext"><display-entity entity-name="ProductStore"  key-field-name="productStoreId" description="${productStoreId} - [${storeName}]"/></field>
         <field name="roleTypeId" title="${uiLabelMap.CommonRoleType}"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
@@ -10,7 +10,7 @@
         </form>
    
     <form name="selectStoreAdmin" type="list" list-name="storesAdmin" 
-             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="main">
+             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="setStore">
         <field name="productStoreId" title="${uiLabelMap.productStoreId}"><display/></field>
         <field name="storeName" title="${uiLabelMap.StoreName}"><display/></field>
         <field name="submitButton" title="Select" widget-style="standardSubmit"><submit button-type="button"/></field>
