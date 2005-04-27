@@ -775,7 +775,7 @@ public class OrderReadHelper {
             Iterator i = validItems.iterator();
             while (i.hasNext()) {
                 GenericValue item = (GenericValue) i.next();
-                shippableWeight += this.getItemWeight(item);
+                shippableWeight += (this.getItemWeight(item) * getOrderItemQuantity(item).doubleValue());
             }
         }
 
