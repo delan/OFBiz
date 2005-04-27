@@ -25,11 +25,6 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
     <screen name="CommonSettingsDecorator">
         <section>
-            <actions>
-                <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-            </actions>
             <widgets>
                 <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
                     <decorator-section name="body">
@@ -79,9 +74,6 @@
     <screen name="EditProductStore">
         <section>
             <actions>
-                <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Settings"/>
                 <set field="page.headerItem" value="store"/>
                 <set field="page.tabButtonItem" value="EditProductStore"/>
@@ -148,7 +140,6 @@
     <screen name="EditProductStoreTaxSetup">
         <section>
             <actions>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Settings"/>
                 <set field="page.headerItem" value="store"/>
                 <set field="page.tabButtonItem" value="EditProductStoreTaxSetup"/>
@@ -186,7 +177,6 @@
     <screen name="EditProductStorePaySetup">
         <section>
             <actions>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Settings"/>
                 <set field="page.headerItem" value="store"/>
                 <set field="page.tabButtonItem" value="EditProductStorePaySetup"/>
@@ -233,7 +223,6 @@
     <screen name="EditProductStoreEmails">
         <section>
             <actions>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Settings"/>
                 <set field="page.headerItem" value="store"/>
                 <set field="page.tabButtonItem" value="EditProductStoreEmails"/>
@@ -265,11 +254,9 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="selectStore">
         <section> 
-            <condition> 
-                <if-compare field-name="userLogin.partyId" operator="not-equals" value="admin"></if-compare>
-            </condition>
             <actions>
                 <set field="page.appTabButtonItem" value="Settings"/>
                 <set field="page.headerItem" value="selectStore"/>
@@ -280,27 +267,30 @@
                        </condition-list>
                 </entity-condition>
                 <entity-condition entity-name="ProductStore" list-name="storesAdmin">
-                       <condition-list>
-                           <condition-expr field-name="productStoreId"  operator="not-equals" value="${userLogin.partyId}" />
-                       </condition-list>
+                       <!--condition-list>
+                           <condition-expr field-name="productStoreId"  operator="not-equals" value="${userLogin.userLoginId}" />
+                       </condition-list-->
                 </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSettingsDecorator">
                     <decorator-section name="body">
-                            <label style="head1">Select a store to work on.</label>
-                            <include-form name="selectStore" location="component://opentravelsystem/webapp/hotelbackend/screens/SettingsForms.xml"/>
+                        <section>
+                            <condition> 
+                                <if-compare field-name="userLogin.partyId" operator="not-equals" value="admin"></if-compare>
+                            </condition>
+                            <widgets>
+                                <label style="head1">Select a store to work on for login: ${userLogin.partyId}</label>
+                                <include-form name="selectStore" location="component://opentravelsystem/webapp/hotelbackend/screens/SettingsForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head1">Select a store to work on.</label>
+                                <include-form name="selectStoreAdmin" location="component://opentravelsystem/webapp/hotelbackend/screens/SettingsForms.xml"/>
+                            </fail-widgets>
+                       </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
-            <fail-widgets>
-                <decorator-screen name="CommonSettingsDecorator">
-                    <decorator-section name="body">
-                            <label style="head1">Select a store to work on.</label>
-                            <include-form name="selectStoreAdmin" location="component://opentravelsystem/webapp/hotelbackend/screens/SettingsForms.xml"/>
-                    </decorator-section>
-                </decorator-screen>
-            </fail-widgets>
         </section>
     </screen>
 </screens>

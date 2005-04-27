@@ -16,7 +16,7 @@
         <tr>
           <td>
             <DIV class='tabletext'><br/><br/><br/>
-            <center><h2> Welcome to the ${productStoreId?if_exists} <br/>of the 
+            <center><h2> Welcome to the  ProductStore: ${productStoreId?if_exists} , Catalog: ${prodCatalogId?if_exists}<br/>of the 
             <a href="http://opentravelsystem.org" target="new"> OpenTravelSystem.</a><br/><br/>
             User:${userLogin.partyId?if_exists}<br/>
             </h2></center></DIV>  

@@ -64,14 +64,24 @@
         <description>Verify a user is logged in.</description>
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkLogin" />
-        <response name="success" type="view" value="main" />
+        <response name="success" type="request" value="main" />
         <response name="error" type="view" value="login" />
     </request-map>
+
+    <request-map uri="checkProductStore" edit="false">
+        <description>Check if a valid product store is selected.</description>
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.opentravelsystem.otsEvents" invoke="checkProductStore"/> 
+        <response name="selectStore" type="view" value="selectStore"/>
+        <response name="success" type="view" value="main" />
+        <response name="error" type="view" value="noAccess" />
+    </request-map>
+
 
     <request-map uri="login">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="login"/>
-        <response name="success" type="view" value="main"/>
+        <response name="success" type="request" value="main"/>
         <response name="error" type="view" value="login"/>
     </request-map>
 
@@ -82,21 +92,31 @@
         <response name="error" type="view" value="main"/>
     </request-map>
 
-    <request-map uri="selectStore">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="selectStore"/>
-    </request-map>
     <!-- End of Security Mappings -->
 
     <!-- hotelbackend specific Request Mappings -->
     <request-map uri="main">
+        <description>Check if access to productstores, when not log off, otherwise go to selectStore or main</description>
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="main"/>
+        <event type="java" path="org.ofbiz.opentravelsystem.otsEvents" invoke="checkProductStore"/> 
+        <response name="selectStore" type="view" value="selectStore"/>
+        <response name="success" type="view" value="main" />
+        <response name="error" type="view" value="noAccess" />
     </request-map>
 
     <request-map uri="intro">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="intro"/>
+    </request-map>
+
+    <request-map uri="setStore">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="setStore"/>
+    </request-map>
+
+    <request-map uri="selectStore">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="selectStore"/>
     </request-map>
 
     <request-map uri="mainSettings">
@@ -2076,7 +2096,8 @@
     <!-- Main Screens -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#main"/>
-    <view-map name="intro" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#intro"/>
+    <view-map name="setStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#setStore"/>
+    <view-map name="noAccess" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#noAccess"/>
     <view-map name="login" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#login"/>
     <!-- Catalog screens-->
     <view-map name="mainCatalog" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#main"/>

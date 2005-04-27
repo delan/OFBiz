@@ -20,15 +20,12 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id: ProductScreens.xml 4001 2004-12-01 07:24:36Z jonesde $
+ *  $Id: MainScreens.xml 4001 2004-12-01 07:24:36Z jonesde $
 -->
-<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="file:/home/hans/ofbiz/framework/widget/dtd/widget-screen.xsd">
     <screen name="CommonMainDecorator">
         <section>
-            <actions>
-                <property-map resource="opentravelsystemUiLabels"
-                    map-name="uiLabelMap" global="true"/>
-            </actions>
             <widgets>
                 <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
                     <decorator-section name="body">
@@ -42,10 +39,10 @@
                                 <container style="contentarea">
                                     <!-- by default will render left-bar only if leftbarScreen value not empty -->
                                     <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
-                        <platform-specific>
-                             <html><html-template location="component://common/webcommon/includes/messages.ftl"/></html>
-                        </platform-specific>
-                                    <decorator-section-include name="body"/>
+			                        <platform-specific>
+			                             <html><html-template location="component://common/webcommon/includes/messages.ftl"/></html>
+			                        </platform-specific>
+			                        <decorator-section-include name="body"/>
                                 </container>
                             </widgets>
                             <fail-widgets>
@@ -62,10 +59,14 @@
             <actions>
                 <set field="page.appTabButtonItem" value="Main"/>
                 <set field="page.headerItem" value="main"/>
-                <!-- gets called from the store selection list and expect the productStorId to be passed to main. -->
-                <set field="productStoreId" to-scope="user"  from-field="parameters.productStoreId" global="true"/>
-                <set field="prodCatalogId" to-scope="user" from-field="parameters.productStoreId" global="true"/>
-                <set field="webSiteId" to-scope="user" from-field="parameters.productStoreId" global="true"/>
+                
+                <!--set field="productStoreId" to-scope="user" from-field="productStoreId" global="true"/>
+                <set field="prodCatalogId" to-scope="user" from-field="productStoreId" global="true"/>
+                <set field="webSiteId" to-scope="user" from-field="productStoreId" global="true"/-->
+                
+                <set field="productStoreId" from-scope="user" from-field="productStoreId" global="true"/>
+                <set field="prodCatalogId" from-scope="user" from-field="prodCatalogId"  global="true"/>
+                <set field="webSiteId" from-scope="user" from-field="webSiteId" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonMainDecorator">
@@ -82,7 +83,36 @@
             </widgets>
         </section>
     </screen>
-    <screen name="intro">
+    <screen name="setStore"><!-- called by the selectStore screen  -->
+        <section>
+            <actions>
+                <set field="page.appTabButtonItem" value="Main"/>
+                <set field="page.headerItem" value="main"/>
+                <!-- gets called from the store selection list and expect the productStorId to be passed to main. -->
+                <set field="productStoreId" to-scope="user"  from-field="parameters.productStoreId"   global="true"/> 
+                <set field="prodCatalogId" to-scope="user" from-field="parameters.productStoreId" global="true"/>
+                <set field="webSiteId" to-scope="user" from-field="parameters.productStoreId" global="true"/>
+
+                <set field="productStoreId" from-scope="user" from-field="productStoreId" global="true"/>
+                <set field="prodCatalogId" from-scope="user" from-field="prodCatalogId"  global="true"/>
+                <set field="webSiteId" from-scope="user" from-field="webSiteId" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMainDecorator">
+                    <decorator-section name="body">
+                        <!--content content-id="otsfrontpage"/--> <!-- get page from internal cms instead of main.ftl below-->
+                        <!--content content-id="otsxmlxsl"/--> <!-- xml/xsl test-->
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/main.ftl"/>
+                            </html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="noAccess">
         <section>
             <actions>
                 <set field="page.appTabButtonItem" value="Main"/>
@@ -91,7 +121,11 @@
             <widgets>
                 <decorator-screen name="CommonMainDecorator">
                     <decorator-section name="body">
-                        <content content-id="OpenTravelSystemIntro"/>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/noAccess.ftl"/>
+                            </html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
