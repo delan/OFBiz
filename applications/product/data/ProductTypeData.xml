@@ -269,6 +269,7 @@
     <ProductPriceType description="Recurring Charge" productPriceTypeId="RECURRING_CHARGE"/>
     <ProductPriceType description="Usage Charge" productPriceTypeId="USAGE_CHARGE"/>
     <ProductPriceType description="Component Price" productPriceTypeId="COMPONENT_PRICE"/>
+    <ProductPriceType description="Wholesale Price" productPriceTypeId="WHOLESALE_PRICE"/>
 
     <ProductPriceActionType description="Percent Of List Price" productPriceActionTypeId="PRICE_POL"/>
     <ProductPriceActionType description="Percent Of Default Price" productPriceActionTypeId="PRICE_POD"/>
@@ -277,6 +278,7 @@
     <ProductPriceActionType description="Flat Amount Modify" productPriceActionTypeId="PRICE_FOL"/>
     <ProductPriceActionType description="Flat Amount Override" productPriceActionTypeId="PRICE_FLAT"/>
     <ProductPriceActionType description="Promo Amount Override" productPriceActionTypeId="PRICE_PFLAT"/>
+    <ProductPriceActionType description="Wholesale Amount Override" productPriceActionTypeId="PRICE_WFLAT"/>
 
     <ProductStoreGroup productStoreGroupName="Not Applicable" description="Not Applicable" productStoreGroupId="_NA_" productStoreGroupTypeId="" primaryParentGroupId=""/>
 
