@@ -85,7 +85,7 @@ public class PriceServices {
         String productId = product.getString("productId");
         String prodCatalogId = (String) context.get("prodCatalogId");
         String webSiteId = (String) context.get("webSiteId");
-        
+
         String productStoreGroupId = (String) context.get("productStoreGroupId");
         if (UtilValidate.isEmpty(productStoreGroupId)) productStoreGroupId = "_NA_";
 
@@ -192,6 +192,12 @@ public class PriceServices {
             if (Debug.infoOn()) Debug.logInfo("There is more than one COMPONENT_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + componentPriceValue.getDouble("price"), module);
         }
 
+        List wholesalePrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "WHOLESALE_PRICE"));
+        GenericValue wholesalePriceValue = EntityUtil.getFirst(wholesalePrices);
+        if (wholesalePrices != null && wholesalePrices.size() > 1) {
+            if (Debug.infoOn()) Debug.logInfo("There is more than one WHOLESALE_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + wholesalePriceValue.getDouble("price"), module);
+        }
+
         // if any of these prices is missing and this product is a variant, default to the corresponding price on the virtual product
         if (virtualProductPrices != null && virtualProductPrices.size() > 0) {
             if (listPriceValue == null) {
@@ -243,14 +249,21 @@ public class PriceServices {
                     if (Debug.infoOn()) Debug.logInfo("There is more than one COMPONENT_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + componentPriceValue.getDouble("price"), module);
                 }
             }
+            if (wholesalePriceValue == null) {
+                List virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "WHOLESALE_PRICE"));
+                wholesalePriceValue = EntityUtil.getFirst(virtualTempPrices);
+                if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+                    if (Debug.infoOn()) Debug.logInfo("There is more than one WHOLESALE_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + wholesalePriceValue.getDouble("price"), module);
+                }
+            }
         }
-        
+
         // now if this is a virtual product check each price type, if doesn't exist get from variant with lowest DEFAULT_PRICE
         if ("Y".equals(product.getString("isVirtual"))) {
             	// only do this if there is no default price, consider the others optional for performance reasons
             	if (defaultPriceValue == null) {
             		// Debug.logInfo("Product isVirtual and there is no default price for ID " + productId + ", trying variant prices", module);
-            		
+
             		//use the cache to find the variant with the lowest default price
             		try {
         	        		List variantAssocList = EntityUtil.filterByDate(delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("-fromDate")));
@@ -281,7 +294,7 @@ public class PriceServices {
         	        				}
         	        			}
         	        		}
-        	        		
+
         	        		if (variantProductPrices != null) {
         	        			// we have some other options, give 'em a go...
     	                    if (listPriceValue == null) {
@@ -340,6 +353,13 @@ public class PriceServices {
     	                            if (Debug.infoOn()) Debug.logInfo("There is more than one COMPONENT_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + componentPriceValue.getDouble("price"), module);
     	                        }
     	                    }
+                            if (wholesalePriceValue == null) {
+    	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "WHOLESALE_PRICE"));
+    	                        wholesalePriceValue = EntityUtil.getFirst(virtualTempPrices);
+    	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+    	                            if (Debug.infoOn()) Debug.logInfo("There is more than one WHOLESALE_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + wholesalePriceValue.getDouble("price"), module);
+    	                        }
+    	                    }
         	        		}
             		} catch (GenericEntityException e) {
                         Debug.logError(e, "An error occurred while getting the product prices", module);
@@ -352,6 +372,13 @@ public class PriceServices {
         if (promoPriceValue != null && promoPriceValue.get("price") != null) {
             promoPrice = promoPriceValue.getDouble("price").doubleValue();
             validPromoPriceFound = true;
+        }
+
+        boolean validWholesalePriceFound = false;
+        double wholesalePrice = 0;
+        if (wholesalePriceValue != null && wholesalePriceValue.get("price") != null) {
+            wholesalePrice = wholesalePriceValue.getDouble("price").doubleValue();
+            validWholesalePriceFound = true;
         }
 
         boolean validPriceFound = false;
@@ -698,6 +725,28 @@ public class PriceServices {
                                 	}
                                     isSale = false;				// reverse isSale flag, as this sale rule was actually not applied
                                 }
+                            } else if ("PRICE_WFLAT".equals(productPriceAction.getString("productPriceActionTypeId"))) {
+                                // same as promo price but using the wholesale price instead
+                                foundFlatOverride = true;
+                                price = wholesalePrice;
+                                if (productPriceAction.get("amount") != null) {
+                                    price += productPriceAction.getDouble("amount").doubleValue();
+                                }
+                                if (price == 0.00) {
+                                	if (defaultPrice != 0.00) {
+                                		Debug.logInfo("WholesalePrice and ProductPriceAction had null amount, using default price: " + defaultPrice + " for product with id " + productId, module);
+                                        price = defaultPrice;
+                                	}
+                                	else if (listPrice != 0.00) {
+                                		Debug.logInfo("WholesalePrice and ProductPriceAction had null amount and no default price was available, using list price: " + listPrice + " for product with id " + productId, module);
+                                        price = listPrice;
+                                	}
+                                	else {
+                                		Debug.logError("WholesalePrice and ProductPriceAction had null amount and no default or list price was available, so price is set to zero for product with id " + productId, module);
+                                        price = 0.00;
+                                	}
+                                    isSale = false;				// reverse isSale flag, as this sale rule was actually not applied
+                                }
                             }
 
                             // add a orderItemPriceInfo element too, without orderId or orderItemId
@@ -754,7 +803,7 @@ public class PriceServices {
                     // here we will leave validPriceFound as it was originally set for the defaultPrice since that is what we are setting the price to...
                 } else {
                     // at least one price rule action was found, so we will consider it valid
-                    validPriceFound = true;                    
+                    validPriceFound = true;
                 }
 
                 // ========= ensure calculated price is not below minSalePrice or above maxSalePrice =========
