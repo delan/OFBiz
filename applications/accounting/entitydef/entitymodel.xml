@@ -29,7 +29,7 @@
  */
 -->
 
-<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitymodel.xsd">
   <!-- ========================================================= -->
   <!-- ======================== Defaults ======================= -->
@@ -1502,6 +1502,7 @@
       <field name="finAccountId" type="id-ne"></field>
       <field name="finAccountTypeId" type="id"></field>
       <field name="finAccountName" type="name"></field>
+      <field name="finAccountCode" type="long-varchar" encrypt="true"></field> 
       <prim-key field="finAccountId"/>
       <relation type="one" fk-name="FINACCT_TYPE" rel-entity-name="FinAccountType">
         <key-map field-name="finAccountTypeId"/>
