@@ -532,7 +532,7 @@ public class MrpServices {
      * <li>Result : The date when we must order or begin to build the products and subproducts we need are calclated</li>
      *
      * <li>INPUT : parameters to get from the context :</li><ul>
-     * <li>String timePeriod</li></ul>
+     * <li>String mrpName</li></ul>
      *
      * <li>OUTPUT : Result to put in the map :</li><ul>
      * <li>none</li></ul>
@@ -549,7 +549,7 @@ public class MrpServices {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         
-        String timePeriod = (String)context.get("timePeriod");
+        String mrpName = (String)context.get("mrpName");
         String facilityId = (String)context.get("facilityId");
         // Variable declaration
         int bomLevelWithNoEvent = 0;
@@ -655,6 +655,7 @@ public class MrpServices {
                         // to be just before the requirement
                         eventDate.setTime(eventDate.getTime()-1);
                         ProposedOrder proposedOrder = new ProposedOrder(product, facilityId, isbuild, eventDate, qtyToStock);
+                        proposedOrder.setMrpName(mrpName);
                         // calculate the ProposedOrder quantity and update the quantity object property.
                         proposedOrder.calculateQuantityToSupply(reorderQuantity, iteratorListInventoryEventForMRP);
                         
